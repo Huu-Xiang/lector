@@ -1,52 +1,49 @@
 import type { Metadata } from 'next';
+import { getLocale, getTranslations } from 'next-intl/server';
 import { LegalShell, H2 } from '@/components/LegalLinks/shell';
 import { SOURCE_URL } from '@/components/LegalLinks';
 
-export const metadata: Metadata = { title: 'About – Readfox' };
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('legalPages');
+  return { title: t('about.metaTitle') };
+}
 
-export default function AboutPage() {
+function externalLink(href: string) {
+  return function ExternalLink(chunks: React.ReactNode) {
+    return (
+      <a className="underline" href={href} target="_blank" rel="noopener noreferrer">
+        {chunks}
+      </a>
+    );
+  };
+}
+
+export default async function AboutPage() {
+  const t = await getTranslations('legalPages');
+  const locale = await getLocale();
+  const isEnglish = locale.startsWith('en');
+
   return (
-    <LegalShell title="About Readfox">
+    <LegalShell title={t('about.title')}>
+      {!isEnglish && <p className="text-xs text-muted-foreground">{t('notice')}</p>}
+      <p>{t('about.intro')}</p>
+
+      <H2>{t('about.freeSoftware.heading')}</H2>
       <p>
-        Readfox lets you read real books and articles in the language you are learning, translate
-        words and phrases as you go, and turn what you meet into spaced-repetition practice.
+        {t.rich('about.freeSoftware.license', {
+          license: externalLink('https://www.gnu.org/licenses/agpl-3.0.html'),
+          lector: externalLink('https://github.com/heuwels/lector'),
+        })}
+      </p>
+      <p>
+        {t.rich('about.freeSoftware.source', {
+          url: SOURCE_URL,
+          source: externalLink(SOURCE_URL),
+        })}
       </p>
 
-      <H2>Free software</H2>
-      <p>
-        Readfox is free software under the{' '}
-        <a
-          className="underline"
-          href="https://www.gnu.org/licenses/agpl-3.0.html"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          GNU Affero General Public License v3.0
-        </a>
-        . It is based on{' '}
-        <a
-          className="underline"
-          href="https://github.com/heuwels/lector"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Lector
-        </a>{' '}
-        by heuwels and its contributors, with our modifications.
-      </p>
-      <p>
-        The complete source code of the version running on this site is available at{' '}
-        <a className="underline" href={SOURCE_URL} target="_blank" rel="noopener noreferrer">
-          {SOURCE_URL}
-        </a>
-        .
-      </p>
-
-      <H2>Data sources</H2>
-      <p>
-        Sentence banks come from Tatoeba (CC BY 2.0 FR) and dictionaries from the sources listed in
-        the repository README, each under its own licence.
-      </p>
+      <H2>{t('about.dataSources.heading')}</H2>
+      <p>{t('about.dataSources.body')}</p>
     </LegalShell>
   );
 }

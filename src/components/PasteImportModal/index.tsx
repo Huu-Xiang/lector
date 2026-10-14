@@ -2,6 +2,7 @@
 
 import { X } from 'lucide-react';
 import { useEffect, useRef, useState, useCallback } from 'react';
+import { useTranslations } from 'next-intl';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { useActiveLanguage } from '@/utils/hooks';
@@ -9,6 +10,7 @@ import { countTypedWords } from '@/lib/languages';
 import type { PasteImportModalProps } from './types';
 
 export default function PasteImportModal({ isOpen, onClose, onSave }: PasteImportModalProps) {
+  const t = useTranslations('library');
   const activeLang = useActiveLanguage();
   const titleRef = useRef<HTMLInputElement>(null);
   const [title, setTitle] = useState('');
@@ -52,10 +54,10 @@ export default function PasteImportModal({ isOpen, onClose, onSave }: PasteImpor
       >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-border px-6 py-4">
-          <DialogTitle>Paste Text</DialogTitle>
+          <DialogTitle>{t('paste.title')}</DialogTitle>
           <DialogClose
             className={buttonVariants({ variant: 'ghost', size: 'icon' })}
-            aria-label="Close"
+            aria-label={t('common.close')}
           >
             <X className="h-5 w-5" />
           </DialogClose>
@@ -69,7 +71,7 @@ export default function PasteImportModal({ isOpen, onClose, onSave }: PasteImpor
                 htmlFor="paste-title"
                 className="mb-2 block text-sm font-medium text-foreground"
               >
-                Title
+                {t('common.title')}
               </label>
               <input
                 ref={titleRef}
@@ -78,7 +80,7 @@ export default function PasteImportModal({ isOpen, onClose, onSave }: PasteImpor
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 disabled={isSaving}
-                placeholder="Article or text title"
+                placeholder={t('paste.titlePlaceholder')}
                 className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none disabled:opacity-50"
               />
             </div>
@@ -87,7 +89,7 @@ export default function PasteImportModal({ isOpen, onClose, onSave }: PasteImpor
                 htmlFor="paste-author"
                 className="mb-2 block text-sm font-medium text-foreground"
               >
-                Author / Source
+                {t('common.authorSource')}
               </label>
               <input
                 id="paste-author"
@@ -95,7 +97,7 @@ export default function PasteImportModal({ isOpen, onClose, onSave }: PasteImpor
                 value={author}
                 onChange={(e) => setAuthor(e.target.value)}
                 disabled={isSaving}
-                placeholder="Optional"
+                placeholder={t('paste.optional')}
                 className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none disabled:opacity-50"
               />
             </div>
@@ -104,11 +106,11 @@ export default function PasteImportModal({ isOpen, onClose, onSave }: PasteImpor
           <div>
             <div className="mb-2 flex items-center justify-between">
               <label htmlFor="paste-content" className="block text-sm font-medium text-foreground">
-                Text
+                {t('common.text')}
               </label>
               {wordCount > 0 && (
                 <span className="text-xs text-muted-foreground">
-                  {wordCount.toLocaleString()} words
+                  {t('common.words', { count: wordCount })}
                 </span>
               )}
             </div>
@@ -117,7 +119,7 @@ export default function PasteImportModal({ isOpen, onClose, onSave }: PasteImpor
               value={content}
               onChange={(e) => setContent(e.target.value)}
               disabled={isSaving}
-              placeholder={`Paste your ${activeLang.native} text here...`}
+              placeholder={t('paste.textPlaceholder', { language: activeLang.native })}
               rows={12}
               className="w-full resize-none rounded-lg border border-input bg-background px-4 py-3 text-sm leading-relaxed text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none disabled:opacity-50"
             />
@@ -127,16 +129,16 @@ export default function PasteImportModal({ isOpen, onClose, onSave }: PasteImpor
         {/* Footer */}
         <div className="flex items-center justify-end gap-3 border-t border-border bg-muted px-6 py-4">
           <DialogClose className={buttonVariants({ variant: 'ghost' })} disabled={isSaving}>
-            Cancel
+            {t('common.cancel')}
           </DialogClose>
           <Button onClick={handleSave} disabled={isSaving || !title.trim() || !content.trim()}>
             {isSaving ? (
               <div className="flex items-center gap-2">
                 <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground/30 border-t-primary-foreground" />
-                Saving...
+                {t('common.saving')}
               </div>
             ) : (
-              'Save to Library'
+              t('common.saveToLibrary')
             )}
           </Button>
         </div>

@@ -2,15 +2,19 @@ import { Button } from '@/components/ui/button';
 import { getAllKnownWords, getAllVocab } from '@/lib/data-layer';
 import { downloadFile } from '@/utils/browser';
 import { useActiveLanguage } from '@/utils/hooks';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 
 export default function Export() {
+  const t = useTranslations('settings.export');
   const activeLang = useActiveLanguage();
   // ASCII slug for filenames, e.g. "afrikaans" / "german" / "spanish".
   const slug = activeLang.name.toLowerCase();
 
   const notifyError = (error: Error | unknown) => {
-    toast.error(`Export failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    toast.error(
+      t('failed', { message: error instanceof Error ? error.message : t('unknownError') }),
+    );
   };
 
   const exportVocabCSV = async () => {
@@ -25,7 +29,7 @@ export default function Export() {
       ].join('\n');
 
       downloadFile(csv, `${slug}-vocab.csv`, 'text/csv');
-      toast.success('Vocab exported as CSV.');
+      toast.success(t('csvDone'));
     } catch (error) {
       notifyError(error);
     }
@@ -36,7 +40,7 @@ export default function Export() {
       const vocab = await getAllVocab();
       const json = JSON.stringify(vocab, null, 2);
       downloadFile(json, `${slug}-vocab.json`, 'application/json');
-      toast.success('Vocab exported as JSON.');
+      toast.success(t('jsonDone'));
     } catch (error) {
       notifyError(error);
     }
@@ -48,7 +52,7 @@ export default function Export() {
       const words = knownWords.filter((w) => w.state === 'known').map((w) => w.word);
       const text = words.join('\n');
       downloadFile(text, `${slug}-known-words.txt`, 'text/plain');
-      toast.success(`Exported ${words.length} known words.`);
+      toast.success(t('knownDone', { count: words.length }));
     } catch (error) {
       notifyError(error);
     }
@@ -56,11 +60,11 @@ export default function Export() {
 
   return (
     <section className="panel p-6">
-      <h2 className="mb-4 text-lg font-semibold text-foreground">Export Data</h2>
+      <h2 className="mb-4 text-lg font-semibold text-foreground">{t('title')}</h2>
       <div className="flex flex-wrap gap-3">
-        <Button onClick={exportVocabCSV}>Export Vocab (CSV)</Button>
-        <Button onClick={exportVocabJSON}>Export Vocab (JSON)</Button>
-        <Button onClick={exportKnownWords}>Export Known Words</Button>
+        <Button onClick={exportVocabCSV}>{t('vocabCsv')}</Button>
+        <Button onClick={exportVocabJSON}>{t('vocabJson')}</Button>
+        <Button onClick={exportKnownWords}>{t('knownWords')}</Button>
       </div>
     </section>
   );

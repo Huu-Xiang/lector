@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { bounceToLogin } from '@/lib/api-base';
 import { setActiveTenant } from '@/lib/language-cache';
 import { useLectorMode } from '@/lib/use-env';
@@ -23,12 +24,13 @@ import { Spinner } from '@/components/ui/spinner';
  * no /api/auth/* to answer it.
  */
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
+  const t = useTranslations('chrome.loading');
   const mode = useLectorMode();
 
   if (mode === 'unknown') {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
-        <Spinner size="lg" label="Loading Readfox" className="text-primary" />
+        <Spinner size="lg" label={t('app')} className="text-primary" />
       </div>
     );
   }
@@ -39,6 +41,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
 }
 
 function CloudSessionGate({ children }: { children: React.ReactNode }) {
+  const t = useTranslations('chrome.loading');
   const pathname = usePathname();
   const { data: session, isPending } = authClient.useSession();
   const onAuthRoute = isAuthRoute(pathname);
@@ -88,7 +91,7 @@ function CloudSessionGate({ children }: { children: React.ReactNode }) {
   if (!session) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
-        <Spinner size="lg" label="Loading session" className="text-primary" />
+        <Spinner size="lg" label={t('session')} className="text-primary" />
       </div>
     );
   }

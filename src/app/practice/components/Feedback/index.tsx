@@ -1,6 +1,7 @@
 'use client';
 import { Volume2 } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import ClozeFeedback from '@/components/ClozeFeedback';
@@ -27,6 +28,7 @@ export default function Feedback({
   onWordClicked: (word: string) => void;
   onNext: () => void;
 }) {
+  const t = useTranslations('practice.feedback');
   const activeLang = useActiveLanguage();
   const ankiTransport = useAnkiTransport();
   const [isAddingToAnki, setIsAddingToAnki] = useState(false);
@@ -71,7 +73,7 @@ export default function Feedback({
             pushedToAnki: false,
           };
           if ((await saveVocab(entry)) === null) {
-            throw new Error('Could not save the word to vocabulary');
+            throw new Error(t('saveWordFailed'));
           }
         }
         const result = await queueForAnki([
@@ -102,7 +104,7 @@ export default function Feedback({
       );
       setAnkiAdded(true);
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Failed to add to Anki';
+      const message = error instanceof Error ? error.message : t('addToAnkiFailed');
       toast.error(message);
     } finally {
       setIsAddingToAnki(false);
@@ -123,12 +125,12 @@ export default function Feedback({
       <div className="mb-4">
         <div className="mb-2 flex items-center justify-between">
           <span className="text-sm font-medium text-muted-foreground">
-            {feedbackData.isCorrect ? 'Correct!' : 'Incorrect'}
+            {feedbackData.isCorrect ? t('correct') : t('incorrect')}
           </span>
           {canSpeak() && feedbackData.isCorrect && (
             <Button type="button" onClick={handleSpeak} variant="ghost">
               <Volume2 className="h-4 w-4" />
-              Listen Again
+              {t('listenAgain')}
             </Button>
           )}
         </div>
@@ -154,7 +156,7 @@ export default function Feedback({
                             type="button"
                             data-testid="cloze-word"
                             onClick={() => onWordClicked(base)}
-                            aria-label={`Look up ${base}`}
+                            aria-label={t('lookUp', { word: base })}
                             className={`inline cursor-pointer rounded px-1 font-bold focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
                               feedbackData.isCorrect
                                 ? 'border border-primary bg-[color-mix(in_srgb,var(--primary)_14%,var(--card))] text-primary'
@@ -172,7 +174,7 @@ export default function Feedback({
                       type="button"
                       data-testid="cloze-word"
                       onClick={() => onWordClicked(word)}
-                      aria-label={`Look up ${splitTrailingPunctuation(word)[0]}`}
+                      aria-label={t('lookUp', { word: splitTrailingPunctuation(word)[0] })}
                       className="inline cursor-pointer rounded px-0.5 font-medium text-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                     >
                       {word}

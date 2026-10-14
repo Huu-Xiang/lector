@@ -1,3 +1,4 @@
+import { useTranslations } from 'next-intl';
 import type { ExtractedArticle } from '@/components/WebImportModal/types';
 
 export default function PreviewStep({
@@ -15,15 +16,13 @@ export default function PreviewStep({
   isSaving: boolean;
   article: ExtractedArticle | null;
 }) {
+  const t = useTranslations('library');
   return (
     <div className="space-y-4">
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label
-            htmlFor="title-input"
-            className="mb-2 block text-sm font-medium text-foreground"
-          >
-            Title
+          <label htmlFor="title-input" className="mb-2 block text-sm font-medium text-foreground">
+            {t('common.title')}
           </label>
           <input
             id="title-input"
@@ -35,11 +34,8 @@ export default function PreviewStep({
           />
         </div>
         <div>
-          <label
-            htmlFor="author-input"
-            className="mb-2 block text-sm font-medium text-foreground"
-          >
-            Author / Source
+          <label htmlFor="author-input" className="mb-2 block text-sm font-medium text-foreground">
+            {t('common.authorSource')}
           </label>
           <input
             id="author-input"
@@ -54,14 +50,14 @@ export default function PreviewStep({
 
       {article && (
         <div className="flex items-center gap-4 text-sm text-muted-foreground">
-          <span>{article.wordCount.toLocaleString()} words</span>
-          {article.siteName && <span>from {article.siteName}</span>}
+          <span>{t('common.words', { count: article.wordCount })}</span>
+          {article.siteName && <span>{t('web.fromSite', { site: article.siteName })}</span>}
         </div>
       )}
 
       <div>
         <label className="mb-2 block text-sm font-medium text-foreground">
-          Content Preview
+          {t('web.contentPreview')}
         </label>
         <div className="h-64 overflow-y-auto rounded-lg border border-border bg-muted p-4 text-sm whitespace-pre-wrap text-muted-foreground">
           {article?.content}

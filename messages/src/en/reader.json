@@ -1,0 +1,170 @@
+{
+  "reader": {
+    "page": {
+      "lessonNotFound": "Lesson not found",
+      "loadFailed": "Failed to load lesson",
+      "retryFailed": "Could not retry transcription",
+      "phraseFailed": "Failed to translate phrase. Check AI provider in settings.",
+      "wordFailed": "Failed to translate word. Check AI provider in settings.",
+      "contextFailed": "Failed to get contextual translation.",
+      "retranslateFailed": "Re-translate failed",
+      "saveFailed": "Could not save the word — check your connection and try again.",
+      "saveFailedShort": "Could not save the word — check your connection.",
+      "knownFailed": "Could not mark the word as known — check your connection.",
+      "ignoreFailed": "Could not ignore the word — check your connection.",
+      "levelFailed": "Could not set the word level — check your connection.",
+      "onboardingWordAdded": "“{word}” added — {count} of 3 review words ready",
+      "miniReviewFailed": "Could not start the mini-review. Please try again.",
+      "copied": "Copied",
+      "loading": "Loading lesson...",
+      "goToLibrary": "Go to Library",
+      "backToLibrary": "Back to Library",
+      "transcribing": "Transcribing audio…",
+      "transcribingBody": "“{title}” is being transcribed in the background. This usually takes a few minutes; the lesson opens automatically when it’s ready.",
+      "transcriptionFailed": "Transcription failed",
+      "retry": "Retry",
+      "listenAlong": "Listen along"
+    },
+    "markdown": {
+      "saveFailed": "Failed to save",
+      "back": "Back",
+      "cancel": "Cancel",
+      "saving": "Saving…",
+      "saveChanges": "Save changes",
+      "pronunciation": "Pronunciation: {mode}",
+      "annotation": {
+        "off": "Off",
+        "learning": "Learning words",
+        "all": "All words"
+      },
+      "editText": "Edit text",
+      "editHint": "Markdown is supported. Vocab state is keyed by word, so edits don't reset your progress.",
+      "captionsAuto": "Auto-generated captions",
+      "captionsCreator": "Creator captions",
+      "openOnYouTube": "Open on YouTube",
+      "playFromHere": "Play from here",
+      "playFrom": "Play from {time}"
+    },
+    "drawer": {
+      "wordDefinition": "Word definition",
+      "definitionOf": "Definition of {word}",
+      "clickToLookUp": "Click a word to look it up.",
+      "state": {
+        "new": "New",
+        "level1": "Level 1",
+        "level2": "Level 2",
+        "level3": "Level 3",
+        "level4": "Level 4",
+        "known": "Known",
+        "ignored": "Ignored"
+      },
+      "hearPronunciation": "Hear pronunciation",
+      "sourceAiInContext": "AI · in context",
+      "sourceLearned": "learned",
+      "sourceOnDevice": "on-device",
+      "sourceAi": "AI",
+      "close": "Close",
+      "closeEsc": "Close (Esc)",
+      "lookingUp": "Looking up…",
+      "showDictionary": "Show dictionary ({count})",
+      "noDefinition": "No definition found.",
+      "inContextTitle": "Translate using AI with sentence context",
+      "inContext": "In context",
+      "askingAi": "Asking AI…",
+      "enrichTitle": "Add IPA, etymology, full senses & related forms",
+      "enrich": "Enrich",
+      "enriching": "Enriching…",
+      "idiomaticMeaning": "Idiomatic meaning",
+      "literally": "Literally",
+      "usage": "Usage",
+      "etymology": "Etymology",
+      "relatedForms": "Related forms",
+      "showFewer": "Show fewer",
+      "showAll": "Show all ({count})",
+      "hearSentence": "Hear sentence",
+      "onboardingAdded": "Added to your first review",
+      "onboardingChoose": "Choose level 1–4 to add this word",
+      "onboardingReady": "{count}/{target} ready",
+      "saveAtLevel": "Save at learning level {level}",
+      "levelTitle": "Level {level}",
+      "markKnownTitle": "Mark as known (K)",
+      "known": "✓ Known",
+      "ignoreTitle": "Ignore (X)",
+      "ignore": "✕ Ignore",
+      "retranslateTitle": "Force fresh AI lookup (ignores dictionary)",
+      "retranslate": "Re-translate with AI",
+      "ankiAdded": "✓ Added to Anki",
+      "ankiAdding": "Adding…",
+      "ankiError": "Anki error — retry",
+      "ankiAdd": "Add to Anki",
+      "clozeAdd": "Add to Anki as Cloze",
+      "clozePick": "Pick a word to blank:",
+      "clozeSent": "✓ Sent to Anki",
+      "clozeSending": "Sending…",
+      "clozeError": "Error — retry",
+      "clozeSend": "Send to Anki",
+      "cancel": "Cancel",
+      "lookUp": "Look up {word}",
+      "announce": {
+        "lookingUp": "Looking up {word}.",
+        "lookupFailed": "Lookup failed for {word}. {error}",
+        "definitionLoaded": "Definition loaded for {word}.",
+        "noDefinitionFound": "No definition found for {word}."
+      }
+    },
+    "onboardingTip": {
+      "dismiss": "Dismiss onboarding tip"
+    },
+    "youtube": {
+      "playerTitle": "YouTube video player"
+    },
+    "wordCell": {
+      "lookUp": "Look up {text}"
+    },
+    "coach": {
+      "ariaLabel": "Guided first lesson",
+      "progressLabel": "{count} of 3 review words ready",
+      "wordPlaceholder": "Word {n}",
+      "startPractice": "Start 3-word practice",
+      "ready": "{count} of 3 ready",
+      "lookup": {
+        "eyebrow": "Try the reader",
+        "title": "Choose any highlighted word",
+        "body": "Coloured words are still new to you. Tap or click one to see its meaning here in the lesson."
+      },
+      "save": {
+        "titleFirst": "Add this word to your review",
+        "titleNext": "Choose another useful word",
+        "bodyFirst": "Choose level 1-4 in the definition panel. You will see this word fill the review progress below.",
+        "bodyNext": "Close the definition, choose a different highlighted word, then set its level to add it."
+      },
+      "phrase": {
+        "title": "Now translate a whole phrase",
+        "body": "Close the definition, then drag across two or more words (or long-press on mobile). Release to translate the highlighted phrase."
+      },
+      "practice": {
+        "eyebrow": "Your mini-review is ready",
+        "title": "Practise the words you just read",
+        "body": "Three quick cards will close the loop while the lesson is still fresh."
+      }
+    },
+    "listen": {
+      "back": "Back",
+      "readAsText": "Read as text",
+      "mode": {
+        "continuous": "continuous",
+        "shadow": "shadow"
+      },
+      "sentenceProgress": "Sentence {current} of {total}",
+      "seek": "Seek",
+      "playbackSpeed": "Playback speed",
+      "previousSentence": "Previous sentence",
+      "backSeconds": "Back {seconds} seconds",
+      "forwardSeconds": "Forward {seconds} seconds",
+      "pause": "Pause",
+      "play": "Play",
+      "repeatSentence": "Repeat sentence",
+      "nextSentence": "Next sentence"
+    }
+  }
+}

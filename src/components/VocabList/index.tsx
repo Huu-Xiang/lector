@@ -2,6 +2,7 @@
 
 import { Check, ChevronDown, ChevronUp, Loader2, RefreshCw, Trash, Upload } from 'lucide-react';
 import { useState, useMemo, useCallback, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import type { WordState } from '@/lib/data-layer';
 import { getPageCount, clampPage, paginate } from '@/lib/pagination';
 import { SETTINGS_KEYS } from '@/app/settings/constants';
@@ -26,6 +27,9 @@ export default function VocabList({
   isLoading = false,
   onBulkDelete,
 }: VocabListProps) {
+  const t = useTranslations('vocab.list');
+  const tState = useTranslations('vocab.states');
+
   // Filter state
   const [stateFilter, setStateFilter] = useState<WordState | 'all' | 'learning'>('all');
   const [bookFilter, setBookFilter] = useState<string>('all');
@@ -246,7 +250,7 @@ export default function VocabList({
   const handleBulkDeleteButtonPressed = async () => {
     if (selectedIds.size === 0) return;
 
-    if (window.confirm(`Are you sure you want to delete ${selectedIds.size} vocab entries?`)) {
+    if (window.confirm(t('confirmBulkDelete', { count: selectedIds.size }))) {
       setIsDeleting(true);
       try {
         await onBulkDelete(Array.from(selectedIds));
@@ -291,7 +295,7 @@ export default function VocabList({
         <div className="min-w-[200px] flex-1">
           <input
             type="text"
-            placeholder="Search words, translations, or sentences..."
+            placeholder={t('searchPlaceholder')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full rounded-lg border border-input bg-background px-4 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none"
@@ -306,7 +310,9 @@ export default function VocabList({
         >
           {stateFilters.map((filter) => (
             <option key={filter.value} value={filter.value}>
-              {filter.label}
+              {filter.value === 'all' || filter.value === 'learning'
+                ? t(`filter.${filter.value}`)
+                : tState(filter.value)}
             </option>
           ))}
         </select>
@@ -317,7 +323,7 @@ export default function VocabList({
           onChange={(e) => setBookFilter(e.target.value)}
           className="rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none"
         >
-          <option value="all">All Collections</option>
+          <option value="all">{t('allCollections')}</option>
           {collections.map((c) => (
             <option key={c.id} value={c.id}>
               {c.title}
@@ -332,12 +338,12 @@ export default function VocabList({
           {isExporting ? (
             <>
               <Loader2 className="h-4 w-4 animate-spin" />
-              Exporting...
+              {t('exporting')}
             </>
           ) : (
             <>
               <Upload className="h-4 w-4" />
-              Export to Anki ({selectedIds.size})
+              {t('exportToAnki', { count: selectedIds.size })}
             </>
           )}
         </Button>
@@ -346,12 +352,12 @@ export default function VocabList({
           {isMarkingKnown ? (
             <>
               <Loader2 className="h-4 w-4 animate-spin" />
-              Updating...
+              {t('updating')}
             </>
           ) : (
             <>
               <Check className="h-4 w-4" />
-              Mark as Known ({selectedIds.size})
+              {t('markAsKnown', { count: selectedIds.size })}
             </>
           )}
         </Button>
@@ -363,12 +369,12 @@ export default function VocabList({
           {isDeleting ? (
             <>
               <Loader2 className="h-4 w-4 animate-spin" />
-              Deleting...
+              {t('deleting')}
             </>
           ) : (
             <>
               <Trash className="h-4 w-4" />
-              Delete ({selectedIds.size})
+              {t('delete', { count: selectedIds.size })}
             </>
           )}
         </Button>
@@ -390,19 +396,19 @@ export default function VocabList({
               {isSyncing ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  Syncing...
+                  {t('syncing')}
                 </>
               ) : (
                 <>
                   <RefreshCw className="h-4 w-4" />
-                  Sync with Anki
+                  {t('syncWithAnki')}
                 </>
               )}
             </Button>
             {showAnkiOnboardingTip && onAnkiOnboardingTipDone && (
               <OnboardingTip
-                title="Anki setup"
-                body="Click here if you need help setting up your Anki."
+                title={t('ankiTip.title')}
+                body={t('ankiTip.body')}
                 onDismiss={onAnkiOnboardingTipDone}
                 testId="post-onboarding-anki-tip"
                 className="absolute top-[calc(100%+0.75rem)] right-0"
@@ -415,8 +421,13 @@ export default function VocabList({
       {/* Results count — the filtered total (the page footer shows the visible
           range). The page count itself is paginated below. */}
       <div className="text-sm text-muted-foreground">
-        {filteredEntries.length} of {entries.length} entries
-        {someSelected && ` (${selectedIds.size} selected)`}
+        {someSelected
+          ? t('resultsSelected', {
+              filtered: filteredEntries.length,
+              total: entries.length,
+              selected: selectedIds.size,
+            })
+          : t('results', { filtered: filteredEntries.length, total: entries.length })}
       </div>
 
       {/* Table */}
@@ -436,32 +447,36 @@ export default function VocabList({
                 className="cursor-pointer px-4 py-3 text-sm font-semibold text-foreground hover:text-foreground"
                 onClick={() => handleSort('text')}
               >
-                Word/Phrase
+                {t('columns.text')}
                 <SortIndicator field="text" />
               </th>
-              <th className="px-4 py-3 text-sm font-semibold text-foreground">Translation</th>
+              <th className="px-4 py-3 text-sm font-semibold text-foreground">
+                {t('columns.translation')}
+              </th>
               <th
                 className="cursor-pointer px-4 py-3 text-center text-sm font-semibold text-foreground hover:text-foreground"
                 onClick={() => handleSort('state')}
               >
-                State
+                {t('columns.state')}
                 <SortIndicator field="state" />
               </th>
               <th
                 className="cursor-pointer px-4 py-3 text-sm font-semibold text-foreground hover:text-foreground"
                 onClick={() => handleSort('bookId')}
               >
-                Source
+                {t('columns.source')}
                 <SortIndicator field="bookId" />
               </th>
               <th
                 className="cursor-pointer px-4 py-3 text-sm font-semibold text-foreground hover:text-foreground"
                 onClick={() => handleSort('createdAt')}
               >
-                Date Added
+                {t('columns.dateAdded')}
                 <SortIndicator field="createdAt" />
               </th>
-              <th className="px-4 py-3 text-sm font-semibold text-foreground">Anki</th>
+              <th className="px-4 py-3 text-sm font-semibold text-foreground">
+                {t('columns.anki')}
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -470,16 +485,14 @@ export default function VocabList({
                 <td colSpan={7} className="px-4 py-12 text-center">
                   <div className="flex flex-col items-center gap-3">
                     <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                    <span className="text-muted-foreground">Loading vocabulary...</span>
+                    <span className="text-muted-foreground">{t('loading')}</span>
                   </div>
                 </td>
               </tr>
             ) : filteredEntries.length === 0 ? (
               <tr>
                 <td colSpan={7} className="px-4 py-12 text-center text-muted-foreground">
-                  {entries.length === 0
-                    ? 'No vocabulary entries yet. Start reading to add words!'
-                    : 'No entries match your filters.'}
+                  {entries.length === 0 ? t('emptyNoEntries') : t('emptyNoMatches')}
                 </td>
               </tr>
             ) : (
@@ -513,10 +526,9 @@ export default function VocabList({
       {/* Export-to-Anki modal */}
       <Dialog open={exportModalOpen} onOpenChange={setExportModalOpen}>
         <DialogContent className="max-w-md rounded-xl p-6">
-          <DialogTitle className="mb-1">Export to Anki</DialogTitle>
+          <DialogTitle className="mb-1">{t('exportDialog.title')}</DialogTitle>
           <DialogDescription className="mb-5">
-            {selectedIds.size} {selectedIds.size === 1 ? 'word' : 'words'} selected. Choose a card
-            type.
+            {t('exportDialog.description', { count: selectedIds.size })}
           </DialogDescription>
 
           <div className="mb-6 grid grid-cols-2 gap-3">
@@ -532,11 +544,11 @@ export default function VocabList({
               }`}
             >
               <div className="flex items-center justify-between">
-                <span className="font-medium text-foreground">Basic</span>
+                <span className="font-medium text-foreground">{t('exportDialog.basic')}</span>
                 {cardType === 'basic' && <Check className="h-4 w-4 text-primary" strokeWidth={3} />}
               </div>
               <p className="mt-1 text-xs text-muted-foreground">
-                Front/back card. Sentence on front, translation on back.
+                {t('exportDialog.basicDescription')}
               </p>
             </button>
 
@@ -552,19 +564,21 @@ export default function VocabList({
               }`}
             >
               <div className="flex items-center justify-between">
-                <span className="font-medium text-foreground">Cloze</span>
+                <span className="font-medium text-foreground">{t('exportDialog.cloze')}</span>
                 {cardType === 'cloze' && <Check className="h-4 w-4 text-primary" strokeWidth={3} />}
               </div>
               <p className="mt-1 text-xs text-muted-foreground">
-                Word is hidden in the sentence; recall it from context.
+                {t('exportDialog.clozeDescription')}
               </p>
             </button>
           </div>
 
           <div className="flex justify-end gap-2">
-            <DialogClose className={buttonVariants({ variant: 'ghost' })}>Cancel</DialogClose>
+            <DialogClose className={buttonVariants({ variant: 'ghost' })}>
+              {t('exportDialog.cancel')}
+            </DialogClose>
             <Button type="button" data-testid="anki-export-confirm" onClick={confirmExportToAnki}>
-              Export {selectedIds.size} {selectedIds.size === 1 ? 'card' : 'cards'}
+              {t('exportDialog.confirm', { count: selectedIds.size })}
             </Button>
           </div>
         </DialogContent>

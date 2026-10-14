@@ -1,5 +1,6 @@
 'use client';
 
+import { useFormatter, useLocale, useTranslations } from 'next-intl';
 import { useIsDark } from '@/utils/hooks';
 import {
   XAxis,
@@ -24,12 +25,15 @@ export default function VocabGrowthChart({
   height = 300,
   controls,
 }: VocabGrowthChartProps) {
+  const t = useTranslations('stats.vocabGrowth');
+  const format = useFormatter();
+  const locale = useLocale();
   const isDark = useIsDark();
   const theme = isDark ? darkChartTheme : lightChartTheme;
 
   const formattedData = data.map((d) => ({
     ...d,
-    displayDate: formatDisplayDate(d.date),
+    displayDate: formatDisplayDate(d.date, locale),
   }));
 
   const latest = data.length > 0 ? data[data.length - 1] : null;
@@ -37,7 +41,7 @@ export default function VocabGrowthChart({
   return (
     <div className="panel p-6">
       <div className="mb-4 flex items-center justify-between gap-4">
-        <h3 className="text-lg font-semibold text-foreground">Vocabulary Growth</h3>
+        <h3 className="text-lg font-semibold text-foreground">{t('title')}</h3>
         {controls}
       </div>
 
@@ -73,7 +77,7 @@ export default function VocabGrowthChart({
             fontSize={12}
             tickLine={false}
             axisLine={{ stroke: theme.grid }}
-            tickFormatter={(value) => value.toLocaleString()}
+            tickFormatter={(value) => format.number(value)}
           />
 
           <Tooltip content={<CustomTooltip />} />
@@ -83,7 +87,7 @@ export default function VocabGrowthChart({
               wrapperStyle={{ paddingTop: '20px' }}
               formatter={(value: string) => (
                 <span style={{ color: theme.legend }} className="text-sm capitalize">
-                  {value}
+                  {t(`series.${value}`)}
                 </span>
               )}
             />
@@ -121,9 +125,13 @@ export default function VocabGrowthChart({
 
       {latest && (
         <div className="mt-4 grid grid-cols-3 gap-4 border-t border-border pt-4">
-          <SummaryStat value={latest.known} label="Known Words" colorClassName="text-primary" />
-          <SummaryStat value={latest.learning} label="Learning" colorClassName="text-[var(--gold-strong)]" />
-          <SummaryStat value={latest.total} label="Total" colorClassName="text-clay" />
+          <SummaryStat value={latest.known} label={t('knownWords')} colorClassName="text-primary" />
+          <SummaryStat
+            value={latest.learning}
+            label={t('learning')}
+            colorClassName="text-[var(--gold-strong)]"
+          />
+          <SummaryStat value={latest.total} label={t('total')} colorClassName="text-clay" />
         </div>
       )}
     </div>

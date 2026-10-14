@@ -9,6 +9,7 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from 'recharts';
+import { useFormatter, useTranslations } from 'next-intl';
 import { useIsDark } from '@/utils/hooks';
 import type { DomainAxis } from '@/lib/data-layer';
 
@@ -31,13 +32,14 @@ interface RadarTooltipProps {
 }
 
 function RadarTooltip({ active, payload }: RadarTooltipProps) {
+  const t = useTranslations('stats.radar');
   if (!active || !payload?.length) return null;
   const d = payload[0].payload;
   return (
     <div className="rounded-lg border border-border bg-popover p-3 shadow-xl">
       <p className="text-sm font-semibold text-foreground">{d.label}</p>
       <p className="mt-1 text-sm text-muted-foreground">
-        {d.band} · {d.knownCount.toLocaleString()} known {d.knownCount === 1 ? 'word' : 'words'}
+        {d.band} · {t('knownWords', { count: d.knownCount })}
       </p>
     </div>
   );
@@ -54,6 +56,8 @@ export default function DomainFluencyRadar({
   byDomain = [],
   pending = 0,
 }: DomainFluencyRadarProps) {
+  const t = useTranslations('stats.radar');
+  const format = useFormatter();
   const isDark = useIsDark();
   const theme = isDark ? RADAR_THEME.dark : RADAR_THEME.light;
 
@@ -63,15 +67,15 @@ export default function DomainFluencyRadar({
     <div className="panel mb-8 p-6" data-testid="domain-fluency-radar">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
         <div>
-          <h3 className="text-lg font-semibold text-foreground">Areas of Fluency</h3>
-          <p className="text-sm text-muted-foreground">Where your vocabulary is strongest</p>
+          <h3 className="text-lg font-semibold text-foreground">{t('title')}</h3>
+          <p className="text-sm text-muted-foreground">{t('subtitle')}</p>
         </div>
         {pending > 0 && (
           <span
             data-testid="domain-radar-pending"
             className="rounded-full bg-muted px-3 py-1 text-xs text-muted-foreground"
           >
-            {pending.toLocaleString()} {pending === 1 ? 'word' : 'words'} pending classification
+            {t('pending', { count: pending })}
           </span>
         )}
       </div>
@@ -81,11 +85,9 @@ export default function DomainFluencyRadar({
           data-testid="domain-radar-empty"
           className="flex min-h-[220px] flex-col items-center justify-center gap-2 text-center"
         >
-          <p className="text-sm font-medium text-foreground">No areas mapped yet</p>
+          <p className="text-sm font-medium text-foreground">{t('emptyTitle')}</p>
           <p className="max-w-sm text-sm text-muted-foreground">
-            {pending > 0
-              ? 'Your known words are still being sorted into topic areas — check back shortly.'
-              : 'Read and learn words to see which topics you’re strongest in.'}
+            {pending > 0 ? t('emptySorting') : t('emptyHint')}
           </p>
         </div>
       ) : (
@@ -100,7 +102,7 @@ export default function DomainFluencyRadar({
                 {/* Fixed 0–100 scale so a small specialised domain can't read "full". */}
                 <PolarRadiusAxis domain={[0, 100]} tick={false} axisLine={false} />
                 <Radar
-                  name="Mastery"
+                  name={t('mastery')}
                   dataKey="axisValue"
                   stroke={theme.series}
                   fill={theme.series}
@@ -120,7 +122,7 @@ export default function DomainFluencyRadar({
                   <div className="mb-1 flex justify-between text-sm">
                     <span className="text-foreground">{d.label}</span>
                     <span className="text-muted-foreground">
-                      {d.band} · {d.knownCount.toLocaleString()}
+                      {d.band} · {format.number(d.knownCount)}
                     </span>
                   </div>
                   <div className="h-2 overflow-hidden rounded-full bg-muted">

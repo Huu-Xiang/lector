@@ -1,4 +1,5 @@
 import { useCallback, useReducer } from 'react';
+import { useTranslations } from 'next-intl';
 import type { ClozeMasteryLevel, ClozeSentence } from '@/types';
 import { persistReview } from './persist-review';
 import type { CurrentSentence, PracticeState } from './types';
@@ -163,6 +164,7 @@ export async function commitRoundReview(
 }
 
 export function useClozeRound() {
+  const t = useTranslations('practice');
   const [round, dispatch] = useReducer(clozeRoundReducer, undefined, () =>
     createInitialRoundState(),
   );
@@ -190,12 +192,18 @@ export function useClozeRound() {
 
   const commitReview = useCallback(
     async (result: ReviewResult) => {
-      const action = await commitRoundReview(round, result);
+      const messages = { saveFailed: t('saveFailed'), statsFailed: t('statsFailed') };
+      const action = await commitRoundReview(
+        round,
+        result,
+        (id, word, correct, points, mastery, next) =>
+          persistReview(id, word, correct, points, mastery, next, messages),
+      );
       if (!action) return false;
       dispatch(action);
       return true;
     },
-    [round],
+    [round, t],
   );
 
   const showFeedback = useCallback(() => {

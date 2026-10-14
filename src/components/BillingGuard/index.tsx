@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { bounceToSubscribe, BILLING_ROUTE } from '@/lib/api-base';
 import { useLectorMode } from '@/lib/use-env';
 import { isAuthRoute } from '@/lib/auth-client';
@@ -30,6 +31,7 @@ export default function BillingGuard({ children }: { children: React.ReactNode }
 }
 
 function CloudBillingGate({ children }: { children: React.ReactNode }) {
+  const t = useTranslations('chrome.loading');
   const pathname = usePathname();
   // Auth routes render pre-session (a probe could only 401); /subscribe does
   // its own status fetch and must render for exactly the accounts this guard
@@ -59,7 +61,7 @@ function CloudBillingGate({ children }: { children: React.ReactNode }) {
   if (state !== 'ok') {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
-        <Spinner size="lg" label="Loading subscription" className="text-primary" />
+        <Spinner size="lg" label={t('subscription')} className="text-primary" />
       </div>
     );
   }

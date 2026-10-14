@@ -6,7 +6,7 @@
   "uiLanguage": {
     "label": "Interface language",
     "title": "Interface language",
-    "description": "The language of buttons, menus and pages. Translations and explanations use My language below."
+    "description": "The language of buttons, menus and pages. Translations and explanations use the Translation language below."
   },
   "legal": {
     "nav": "Legal",
@@ -172,11 +172,1426 @@
   },
   "settings": {
     "nativeLanguage": {
-      "title": "My language",
-      "description": "Translations, explanations, tutor replies and journal feedback are written in this language. Built-in dictionary entries stay in English.",
+      "title": "Translation language",
+      "description": "Translations, explanations, tutor replies and journal feedback are written in this language. It can differ from the interface language, for example a Chinese interface with English explanations. Built-in dictionary entries stay in English.",
       "saved": "Language saved",
       "errSave": "Could not save your language",
       "useBrowser": "Use my browser language instead"
+    },
+    "pageTitle": "Settings",
+    "practice": {
+      "title": "Practice",
+      "clozeHeading": "Cloze settings",
+      "translationLabel": "Translation",
+      "translationHint": "Hide the English translation by default while practicing. Toggle it anytime with <keys></keys>.",
+      "shown": "Shown",
+      "hidden": "Hidden"
+    },
+    "prose": {
+      "title": "Reading text",
+      "description": "How the reader draws a lesson. Set what you like under All languages, then correct one language if its script needs different treatment. These settings stay on this device.",
+      "allLanguages": "All languages",
+      "hasOwnSettings": "has its own settings",
+      "customisedNotice": "{language} has settings of its own. Everything you leave alone still follows All languages.",
+      "inheritedNotice": "{language} follows your All languages settings. Move a slider and save to correct one of them.",
+      "setFor": "· set for {language}",
+      "save": "Save",
+      "resetDefaults": "Reset to defaults",
+      "resetLanguage": "Reset {language}",
+      "statusUnsaved": "The sample above shows your changes. Save to apply them to the reader.",
+      "statusDefaults": "The defaults are {fontSize}px, weight {fontWeight}, kerning 0 and leading {lineHeight}.",
+      "statusResetLanguage": "A reset makes {language} follow All languages again.",
+      "controls": {
+        "fontSize": {
+          "label": "Font size",
+          "hint": "How big the body text of a lesson is."
+        },
+        "fontWeight": {
+          "label": "Font weight",
+          "hint": "How heavy each word looks."
+        },
+        "letterSpacing": {
+          "label": "Kerning",
+          "hint": "Space between the letters. A negative value tightens them."
+        },
+        "lineHeight": {
+          "label": "Leading",
+          "hint": "Space between the lines, as a multiple of the font size."
+        }
+      }
+    },
+    "theme": {
+      "title": "Appearance",
+      "label": "Theme",
+      "options": {
+        "light": "light",
+        "dark": "dark",
+        "system": "system"
+      }
+    },
+    "tts": {
+      "title": "Text-to-Speech",
+      "noAudioNote": "{language} has no synthesized voice. Pronunciation is disputed, so Readfox stays silent.",
+      "synthesizedVoice": "Synthesized voice",
+      "browserVoiceFree": "Browser voice · Free",
+      "managedAvailable": "Managed voice available",
+      "usingBrowser": "Using browser voice",
+      "espeakNote": "{language} is spoken by eSpeak NG, a synthesized voice hosted by Readfox — the only text-to-speech engine that exists for {language}. It sounds robotic but pronounces every word exactly, and it's included on every plan.",
+      "voiceEngine": "Voice Engine",
+      "engineHintFree": "Browser speech stays free and works across reading, practice, and dictation. Cloud adds a consistent managed voice.",
+      "engineHintPaid": "Managed voices offer more consistent pronunciation; your browser voice is always available.",
+      "managedVoice": "Managed voice",
+      "browserBuiltIn": "Browser Built-in",
+      "upsell": "Want Readfox's managed voice? <link>Upgrade to Cloud</link>. Adding your own AI key does not change audio because voice usage is hosted by Readfox.",
+      "testVoice": "Test Voice",
+      "speechSpeed": "Speech Speed",
+      "slow": "0.5x (Slow)",
+      "normal": "1.0x",
+      "fast": "1.5x (Fast)"
+    },
+    "timezone": {
+      "title": "Time Zone",
+      "description": "Daily stats, streaks and review days roll over at midnight in this time zone.",
+      "auto": "Auto — server time zone",
+      "useDevice": "Use this device's time zone ({zone})",
+      "updated": "Timezone updated to {zone}",
+      "failed": "Failed to change timezone"
+    },
+    "languages": {
+      "title": "Languages",
+      "description": "The language picker lists these languages. Remove a language to shorten the list. Your words, texts and cards in it stay on the server.",
+      "inUse": "In use",
+      "remove": "Remove {language}",
+      "added": "{language} added",
+      "removed": "{language} removed",
+      "saveFailed": "Could not save your languages",
+      "addPlaceholder": "Add a language…",
+      "add": "Add"
+    },
+    "knownWords": {
+      "title": "Import Known Words",
+      "description": "Import words you already know. Supports <strong>LingQ exports</strong> (with status levels and translations) or simple word lists.",
+      "lingqHelp": "LingQ: Vocabulary → Settings gear → Export LingQs → Upload the CSV here",
+      "uploadLabel": "Upload CSV File",
+      "uploadHint": "CSV with words in the first column, or a plain text file",
+      "pasteLabel": "Or Paste Words (one per line)",
+      "import": "Import",
+      "noWords": "No words to import.",
+      "imported": "Successfully imported {count, plural, one {# word} other {# words}} as known.",
+      "importFailed": "Failed to import known words",
+      "noData": "No data found in file.",
+      "noTermColumn": "Could not find 'term' column in LingQ export.",
+      "lingqImported": "Imported {count, plural, one {# word} other {# words}} from LingQ: {known} known, {learning} learning.",
+      "fileError": "Error importing file: {message}",
+      "unknownError": "Unknown error"
+    },
+    "export": {
+      "title": "Export Data",
+      "vocabCsv": "Export Vocab (CSV)",
+      "vocabJson": "Export Vocab (JSON)",
+      "knownWords": "Export Known Words",
+      "failed": "Export failed: {message}",
+      "unknownError": "Unknown error",
+      "csvDone": "Vocab exported as CSV.",
+      "jsonDone": "Vocab exported as JSON.",
+      "knownDone": "Exported {count, plural, one {# known word} other {# known words}}."
+    },
+    "data": {
+      "title": "Learning data",
+      "description": "Download your collections and lessons, reading position, vocabulary, sentence practice and review schedule, journal, and stats. API keys and provider endpoints are never included.",
+      "export": "Export all learning data",
+      "import": "Import learning data",
+      "invalidFormat": "Invalid backup file format",
+      "importFailedShort": "Import failed",
+      "imported": "Learning data imported",
+      "importedDetail": "{collections, plural, one {# collection} other {# collections}}, {lessons, plural, one {# lesson} other {# lessons}}, {vocab} vocab, {knownWords, plural, one {# known word} other {# known words}}, {clozeSentences, plural, one {# cloze sentence} other {# cloze sentences}}.",
+      "importFailed": "Import failed: {message}",
+      "unknownError": "Unknown error"
+    },
+    "about": {
+      "title": "About",
+      "build": "Build",
+      "commit": "Commit",
+      "built": "Built"
+    },
+    "plan": {
+      "labels": {
+        "free": "Free",
+        "cloud": "Cloud",
+        "plus": "Cloud Plus",
+        "unlimited": "Unlimited"
+      },
+      "cycle": {
+        "year": "annual",
+        "month": "monthly"
+      },
+      "unlimited": "unlimited",
+      "priceLabel": "{plan} — {cycle}",
+      "errors": {
+        "pastDue": "Update your payment method in Paddle before changing plans.",
+        "ambiguous": "Paddle found more than one active subscription. Open billing management to resolve it.",
+        "alreadyCurrent": "That is already your current plan.",
+        "generic": "Paddle could not complete that billing action. Please try again."
+      },
+      "toast": {
+        "updated": "Your Paddle subscription has been updated",
+        "accepted": "Paddle accepted the change. Updating your plan…"
+      },
+      "heading": "Readfox plan",
+      "currentWithCycle": "{plan} ({cycle} billing) is active for this account.",
+      "current": "{plan} is active for this account.",
+      "loading": "Loading your plan…",
+      "ownKey": "Own AI key",
+      "lapsed": "Your paid subscription ended, so the account moved to Free. Your texts, saved vocabulary, Anki links, history, and exports are all still here.",
+      "freeIntro": "Free keeps the whole learning loop: starter and imported texts, phrase-aware lookups, saved vocabulary, practice, Anki sync, and portable data.",
+      "libraryAllowance": "Library allowance: {collections} collections, {lessons} lessons, and {words} journal words each month. Existing data is never deleted when a paid plan ends.",
+      "fairUse": "Generous fair-use safeguards apply to unusually large individual texts and bulk saved-data growth. They do not remove existing learner data or block exports.",
+      "byokActive": "Your own AI key is active, so translations and rich AI actions use your provider instead of Readfox's managed allowance. Free library and journal limits still apply, and audio stays on your browser voice.",
+      "managedAllowance": "Managed allowance: {glosses} dictionary-miss glosses each month, {phrases} simple phrases and {context} in-context translations each day. On-device dictionary lookups and browser voices remain free.",
+      "comparePlans": "Compare paid plans",
+      "bringKey": "Or bring your own AI key",
+      "openingPaddle": "Opening Paddle…",
+      "billingHistory": "Billing history",
+      "manageBilling": "Manage billing",
+      "paidIntro": "Your plan includes larger managed AI allowances and managed voices. Browser voices and data export remain available as fallbacks.",
+      "pendingAccepted": "Paddle accepted your change to {price}. This page will update as soon as the signed webhook arrives.",
+      "paddleHandles": "Paddle handles payment methods, invoices, and cancellation securely.",
+      "changePlan": "Change plan",
+      "changeIntro": "You are on {plan} with {cycle} billing. Select a different plan below. Review Paddle's tax and proration calculation before you confirm.",
+      "choosePlanAria": "Choose a new plan",
+      "choosePlanOption": "Choose a new plan…",
+      "calculating": "Calculating…",
+      "reviewChange": "Review change",
+      "changeTo": "Change to {price}",
+      "prorationImmediate": "The plan changes immediately and Paddle applies the prorated charge or credit now.",
+      "prorationNextInvoice": "The plan changes immediately and Paddle applies the prorated adjustment to your next invoice.",
+      "dueNow": "Due now",
+      "noImmediateCharge": "No immediate charge",
+      "nextInvoice": "Next invoice",
+      "calculatedAtRenewal": "Calculated at renewal",
+      "regularRenewal": "Regular renewal",
+      "unavailable": "Unavailable",
+      "applying": "Applying…",
+      "confirmPaddle": "Confirm with Paddle",
+      "cancel": "Cancel",
+      "changesUnavailable": "Plan changes are unavailable while Paddle is processing this subscription. Use billing management to update your payment method or review its status."
+    },
+    "byok": {
+      "loadFailed": "Could not load BYOK settings",
+      "enableFailed": "Could not enable BYOK",
+      "disableFailed": "Could not disable BYOK",
+      "keyActive": "Your {provider} key is active",
+      "reverted": "Reverted to your Readfox managed AI allowance",
+      "heading": "Bring your own AI key",
+      "active": "Active",
+      "introFree": "Free includes a small managed Gemini allowance. Add your own OpenRouter or Anthropic key to keep translating after that allowance and unlock richer AI actions without subscribing.",
+      "introPaid": "Use your own OpenRouter or Anthropic account for translations, explanations, journal corrections, and chat instead of the managed AI allowance.",
+      "introTail": "Your key is encrypted at rest and never shown again. BYOK does not enable managed voices; those remain a Cloud benefit.",
+      "compareCloud": "Prefer Readfox to handle both AI and higher-quality audio? <link>Compare Cloud plans</link>. Browser voices stay free either way.",
+      "notConfigured": "BYOK is not configured on this deployment yet.",
+      "provider": "Provider",
+      "evalNote": "Evaluated models are ordered by Afrikaans COMET score in Readfox's <link>reproducible translation eval</link>. Gaps below roughly 1.5 points are statistical ties; Flash Lite is the unevaluated low-cost default.",
+      "model": "Model",
+      "replaceKey": "Replace key or model",
+      "useManaged": "Use managed allowance",
+      "apiKeyLabel": "{provider} API key",
+      "leaveBlank": "(leave blank to keep it)",
+      "saving": "Saving…",
+      "saveChanges": "Save changes",
+      "validateEnable": "Validate and enable",
+      "cancel": "Cancel",
+      "validates": "Readfox validates the key with {provider} before saving it. Provider errors never include your key.",
+      "protectedTitle": "How your API key is protected",
+      "protectedEncryption": "Keys are encrypted before they reach the database using AES-256-GCM with a fresh random nonce. Authentication data binds each ciphertext to your account and chosen provider, so an encrypted row cannot be moved to another account.",
+      "protectedStorage": "The deployment encryption key is held separately in AWS Parameter Store. Your API key is write-only: Readfox never sends it back to the browser, includes it in exports, or logs upstream credential details.",
+      "protectedOpenSource": "Readfox is open source, so you can verify how credentials are encrypted, stored, and selected at request time. <link>Inspect the implementation</link>.",
+      "loading": "Loading…"
+    },
+    "llm": {
+      "fetchStatusFailed": "Failed to fetch LLM Status",
+      "saveFailed": "Failed to save setting",
+      "statusError": "Status {status}",
+      "noModels": "No models reported by this endpoint — type the model name instead.",
+      "fetchModelsFailed": "Failed to fetch models",
+      "unreachable": "Failed to reach server",
+      "heading": "AI Provider",
+      "connected": "Connected",
+      "notConnected": "Not connected",
+      "checking": "Checking...",
+      "refresh": "Refresh",
+      "intro": "Choose how translations are powered. Anthropic uses cloud AI for the highest quality. Local & self-hosted covers any OpenAI-compatible server — Ollama, LM Studio, Apfel, vLLM, and friends — with one endpoint, an optional API key, and a model name.",
+      "provider": "Provider",
+      "providerAnthropic": "Anthropic (cloud)",
+      "providerOpenai": "Local / self-hosted (OpenAI-compatible)",
+      "authMethod": "Authentication Method",
+      "apiKey": "API Key",
+      "oauthToken": "OAuth Token",
+      "bothConfigured": "Both credentials are configured. Choose which to use — connection will be tested automatically.",
+      "getKeyFrom": "Get your API key from <link>console.anthropic.com</link>",
+      "configured": "Configured",
+      "replace": "Replace",
+      "clear": "Clear",
+      "save": "Save",
+      "cancel": "Cancel",
+      "or": "or",
+      "oauthPlan": "(Pro/Team plan)",
+      "oauthHelp": "Uses your Claude Pro or Team subscription credits. Run <code>claude setup-token</code> to obtain a token. Note: slower initial startup than API keys.",
+      "preset": "Preset",
+      "presetCustom": "Custom / other OpenAI-compatible server",
+      "presetHelp": "A shortcut that fills in the endpoint below. You can edit it afterwards.",
+      "endpoint": "Endpoint",
+      "endpointHelp": "Base URL of your server — the app appends <code>/v1</code>. It's called server-side, so localhost works even when lector is hosted elsewhere.",
+      "apiKeyOptional": "API Key (optional)",
+      "apiKeyPlaceholder": "leave empty for local servers without auth",
+      "apiKeyHelp": "Sent as a Bearer token from the server (never exposed to the browser after save). Only needed for reverse-proxied, cloud, or otherwise authenticated endpoints.",
+      "model": "Model",
+      "fetchingModels": "Fetching models…",
+      "modelPlaceholder": "Type a model name, or fetch the list",
+      "fetching": "Fetching...",
+      "fetchModels": "Fetch models",
+      "modelHelp": "Pick from the fetched list (servers like LM Studio & Ollama report it via <code>/v1/models</code>) or just type any model name your server accepts."
+    },
+    "anki": {
+      "addonIntro": "The add-on syncs from inside Anki itself, so it works no matter where this Lector runs: words you queue become cards the next time Anki opens, and your review results flow back automatically.",
+      "addonStep1": "Create an API token in <strong>API Tokens</strong> below, scoped to <code>anki</code>.",
+      "addonStep2": "Install the add-on from <link>anki-addon in the Lector repository</link> (Anki Desktop 2.1.50+).",
+      "addonStep3": "In Anki, open Tools → Add-ons → Lector Sync → Config and set <code>api_url</code> to the address below and <code>api_token</code> to your token.",
+      "apiUrl": "API URL",
+      "addonMobile": "AnkiDroid and AnkiMobile can't run add-ons — sync on desktop and AnkiWeb carries the results to your devices.",
+      "saveTransportFailed": "Failed to save Anki transport",
+      "connectFailed": "Failed to connect to Anki. Make sure Anki is running with AnkiConnect installed.",
+      "heading": "Anki Integration",
+      "connected": "Connected",
+      "notConnected": "Not connected",
+      "checking": "Checking...",
+      "refresh": "Refresh",
+      "connection": "Connection",
+      "connectionHelp": "AnkiConnect reaches Anki on this computer from the browser. The add-on syncs from inside Anki instead — use it when Lector is served over HTTPS or runs on another machine.",
+      "transportAnkiConnect": "AnkiConnect (browser)",
+      "transportAddon": "Lector Sync add-on",
+      "ankiConnectUrl": "AnkiConnect URL",
+      "urlHint": "Hint: Use Tailscale IP for remote Anki (e.g., http://100.x.x.x:8765)",
+      "saveUrlFailed": "Failed to save Anki URL",
+      "vocabDeck": "Vocab Deck",
+      "vocabDeckHelp": "Deck for basic cards from reader vocabulary",
+      "deckName": "Deck name",
+      "clozeDeck": "Cloze Practice Deck",
+      "clozeDeckHelp": "Deck for cloze cards from practice mode",
+      "clozeDeckName": "Cloze deck name",
+      "defaultCardType": "Default Card Type",
+      "cardTypeHelp": "Basic shows front/back, Cloze creates fill-in-the-blank cards",
+      "basic": "Basic",
+      "cloze": "Cloze"
+    },
+    "twoFactor": {
+      "actions": {
+        "enable": {
+          "title": "Confirm your password to set up two-factor authentication",
+          "cta": "Continue"
+        },
+        "disable": {
+          "title": "Confirm your password to turn off two-factor authentication",
+          "cta": "Turn off"
+        },
+        "regenerate": {
+          "title": "Confirm your password to replace your backup codes",
+          "cta": "Generate new codes"
+        }
+      },
+      "wrongPassword": "Wrong password.",
+      "startFailed": "Could not start setup.",
+      "disableFailed": "Could not turn off 2FA.",
+      "generateFailed": "Could not generate codes.",
+      "toastOff": "Two-factor authentication is off.",
+      "toastOn": "Two-factor authentication is on.",
+      "toastNewCodes": "New backup codes generated — the old ones no longer work.",
+      "codeMismatch": "That code didn’t match — scan the QR code and try the current one.",
+      "codesCopied": "Backup codes copied to clipboard",
+      "heading": "Two-Factor Authentication",
+      "enable": "Enable 2FA",
+      "intro": "Protect your account with one-time codes from an authenticator app (Google Authenticator, 1Password, Authy, …) on top of your password.",
+      "statusOn": "Two-factor authentication is on. Signing in asks for a code from your authenticator app.",
+      "statusOff": "Two-factor authentication is off.",
+      "working": "Working…",
+      "cancel": "Cancel",
+      "step1": "1. Scan this QR code with your authenticator app",
+      "cantScan": "Can’t scan? Enter this key manually:",
+      "step2": "2. Enter the 6-digit code the app shows now",
+      "verifying": "Verifying…",
+      "verifyActivate": "Verify & activate",
+      "saveCodes": "Save these backup codes somewhere safe — each one signs you in once if you lose your authenticator, and they won’t be shown again.",
+      "copy": "Copy",
+      "savedCodes": "I’ve saved these codes",
+      "newCodes": "New backup codes",
+      "turnOff": "Turn off 2FA"
+    },
+    "apiTokens": {
+      "fetchFailed": "Failed to fetch API tokens",
+      "copied": "Token copied to clipboard",
+      "heading": "API Tokens",
+      "generate": "Generate Token",
+      "intro": "Create personal access tokens for CLI or API access. Tokens are scoped to specific permissions.",
+      "copyNow": "Copy this token now — it won't be shown again.",
+      "copy": "Copy",
+      "saved": "I've saved this token",
+      "tokenName": "Token Name",
+      "tokenNamePlaceholder": "e.g. CLI, Automation, Backup script",
+      "scopes": "Scopes",
+      "scopeLabels": {
+        "all": "Full Access",
+        "collectionsRead": "Collections (read)",
+        "collectionsWrite": "Collections (write)",
+        "vocabRead": "Vocabulary (read)",
+        "vocabWrite": "Vocabulary (write)",
+        "statsRead": "Stats (read)",
+        "statsWrite": "Stats (write)",
+        "settingsRead": "Settings (read)",
+        "settingsWrite": "Settings (write)",
+        "dataExport": "Data Export",
+        "dataImport": "Data Import",
+        "chatRead": "Chat / LLM (read)",
+        "chatWrite": "Chat / LLM (write)",
+        "ankiRead": "Anki sync (read)",
+        "ankiWrite": "Anki sync (write)"
+      },
+      "nameRequired": "Token name is required",
+      "scopeRequired": "Select at least one scope",
+      "createFailed": "Failed to create token",
+      "create": "Create Token",
+      "cancel": "Cancel",
+      "created": "Created {date}",
+      "lastUsed": "Last used {date}",
+      "neverUsed": "Never used",
+      "revokeConfirm": "Revoke token \"{name}\"? This cannot be undone.",
+      "revokeFailed": "Failed to revoke token",
+      "revoke": "Revoke",
+      "empty": "No tokens created yet. Generate one to use the CLI or access the API remotely."
+    },
+    "deleteAccount": {
+      "startFailed": "Could not start account deletion. Please try again.",
+      "heading": "Delete account",
+      "intro": "Permanently delete your account and <strong>all</strong> of your data — books, vocabulary, cloze progress, journal entries, chat history, and settings. This cannot be undone, and is separate from exporting a backup above.",
+      "billingWarning": "If you have a paid subscription, cancel it first: deleting your account here does <strong>not</strong> cancel billing (payments are handled by Paddle, our merchant of record — the manage-subscription link is in your Paddle receipt emails).",
+      "sent": "Check your email and open the link we just sent <strong>in this browser</strong> to permanently delete your account. The link expires in 24 hours.",
+      "start": "Delete account…",
+      "typeToConfirm": "Type <mono>{phrase}</mono> to confirm",
+      "sending": "Sending…",
+      "confirm": "Delete my account",
+      "cancel": "Cancel"
     }
+  },
+  "journal": {
+    "title": "Journal",
+    "newEntry": "New Entry",
+    "cancel": "Cancel",
+    "placeholder": "Write today's journal entry in {language}...",
+    "words": "{count, plural, one {# word} other {# words}}",
+    "draftSaved": "Draft saved",
+    "saving": "Saving...",
+    "saveDraft": "Save Draft",
+    "correcting": "Correcting...",
+    "submitForCorrection": "Submit for Correction",
+    "failedToSave": "Failed to save",
+    "correctionFailed": "Correction failed",
+    "deleteConfirm": "Delete this journal entry?",
+    "deleteFailed": "Could not delete journal entry",
+    "entries": "{count, plural, one {# entry} other {# entries}}",
+    "empty": "No journal entries yet",
+    "writeFirst": "Write your first entry",
+    "card": {
+      "corrections": "{count, plural, one {# correction} other {# corrections}}",
+      "perfect": "Perfect",
+      "draft": "Draft",
+      "deleteEntry": "Delete entry",
+      "words": "{count, plural, one {# word} other {# words}}"
+    },
+    "modal": {
+      "close": "Close"
+    },
+    "correction": {
+      "yourText": "Your text",
+      "clickHint": "Click highlighted words to see corrections",
+      "corrected": "Corrected",
+      "summary": "{count, plural, one {# correction} other {# corrections}}:",
+      "perfect": "Perfect! No corrections needed."
+    },
+    "types": {
+      "grammar": "Grammar",
+      "spelling": "Spelling",
+      "wordChoice": "Word choice",
+      "wordOrder": "Word order",
+      "missingWord": "Missing word",
+      "extraWord": "Extra word"
+    }
+  },
+  "stats": {
+    "title": "Statistics",
+    "loadFailed": "Failed to load statistics",
+    "returnHome": "Return home",
+    "cards": {
+      "wordsKnown": "Words Known",
+      "learning": "Learning (L1-L4)",
+      "learningSub": "Words in progress",
+      "wordsRead": "Words Read",
+      "wordsReadSub": "Estimated from reading position",
+      "currentStreak": "Current Streak",
+      "days": "{count, plural, one {# day} other {# days}}",
+      "longest": "Longest: {count, plural, one {# day} other {# days}}"
+    },
+    "range": {
+      "d30": "30d",
+      "d90": "90d",
+      "y1": "1y",
+      "all": "All"
+    },
+    "states": {
+      "known": "Known",
+      "level4": "Level 4",
+      "level3": "Level 3",
+      "level2": "Level 2",
+      "level1": "Level 1",
+      "new": "New",
+      "ignored": "Ignored"
+    },
+    "wordStates": {
+      "title": "Words by State"
+    },
+    "cloze": {
+      "title": "Cloze Practice",
+      "sentencesPracticed": "Sentences Practiced",
+      "accuracy": "Accuracy",
+      "totalPoints": "Total Points"
+    },
+    "mastery": {
+      "title": "Sentence Mastery",
+      "overall": "{percent}% overall",
+      "mastered": "{mastered} / {total} mastered",
+      "due": "{count} due for review",
+      "collections": {
+        "top500": "Top 500",
+        "top1000": "Top 1000",
+        "top2000": "Top 2000",
+        "mined": "Mined",
+        "random": "Random"
+      }
+    },
+    "fluency": {
+      "estimatedLevel": "Estimated CEFR Level",
+      "vsLastWeek": "{count, number} vs last week",
+      "sameAsLast": "{count, number} this week (same as last)",
+      "progressTo": "Progress to {level}",
+      "topLevel": "Top level reached",
+      "wordsToNext": "{count, number} words to {level}",
+      "known": "Known",
+      "learning": "Learning"
+    },
+    "heatmap": {
+      "title": "Activity",
+      "total": {
+        "actions": "{count, number} actions in the last year",
+        "lookups": "{count, number} lookups in the last year"
+      },
+      "count": {
+        "actions": "{count, number} actions",
+        "lookups": "{count, number} lookups"
+      },
+      "types": {
+        "lookups": "Lookups",
+        "cloze": "Cloze",
+        "reading": "Reading",
+        "anki": "Anki"
+      },
+      "minutes": "{count} min",
+      "noActivity": "No activity",
+      "less": "Less",
+      "more": "More",
+      "activeDays": "Active days:",
+      "avgPerActiveDay": "Avg per active day:"
+    },
+    "anki": {
+      "title": "Anki Reviews",
+      "last90": "Last 90 days",
+      "reviews": "Reviews",
+      "reviewDays": "Review days",
+      "avgPerDay": "Avg / review day",
+      "connectTitle": "Connect your Anki to see your review history",
+      "connectBody": "Reviews sync automatically and count toward your streak.",
+      "connectButton": "Connect Anki"
+    },
+    "ankiStatus": {
+      "synced": "Synced",
+      "notSynced": "Not synced",
+      "noteId": "Anki Note ID: {id}",
+      "pushed": "Pushed to Anki"
+    },
+    "radar": {
+      "title": "Areas of Fluency",
+      "subtitle": "Where your vocabulary is strongest",
+      "pending": "{count, plural, one {# word pending classification} other {# words pending classification}}",
+      "emptyTitle": "No areas mapped yet",
+      "emptySorting": "Your known words are still being sorted into topic areas — check back shortly.",
+      "emptyHint": "Read and learn words to see which topics you’re strongest in.",
+      "knownWords": "{count, plural, one {# known word} other {# known words}}",
+      "mastery": "Mastery"
+    },
+    "vocabGrowth": {
+      "title": "Vocabulary Growth",
+      "knownWords": "Known Words",
+      "learning": "Learning",
+      "total": "Total",
+      "series": {
+        "known": "known",
+        "learning": "learning",
+        "total": "total"
+      }
+    }
+  },
+  "chat": {
+    "error": "Sorry, I couldn't respond. Check that an LLM provider is configured in Settings.",
+    "open": "Open chat",
+    "close": "Close chat",
+    "tutorTitle": "{language} Tutor",
+    "tutorSubtitle": "Ask anything about {language}",
+    "clearTitle": "Clear chat",
+    "clear": "Clear",
+    "loadingOlder": "Loading older messages...",
+    "emptyPrompt": "Ask a question about {language}",
+    "via": "via {provider}",
+    "placeholder": "Ask about {language}..."
+  },
+  "chrome": {
+    "theme": {
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
+    "nav": {
+      "expandSidebar": "Expand sidebar",
+      "collapseSidebar": "Collapse sidebar",
+      "signOut": "Sign out"
+    },
+    "tour": {
+      "practiceTitle": "Practice later",
+      "practiceBody": "Go to the Practice tab to review words later.",
+      "vocabTitle": "Your vocabulary",
+      "vocabBody": "Review the vocabulary you've interacted with in the Vocabulary tab."
+    },
+    "impersonation": {
+      "viewingAs": "Viewing as <strong>{user}</strong> · read-only",
+      "timeLeft": "{time} left",
+      "exiting": "Exiting…",
+      "exit": "Exit",
+      "exitFailed": "Could not confirm exit; returning to admin anyway."
+    },
+    "loading": {
+      "app": "Loading Readfox",
+      "session": "Loading session",
+      "subscription": "Loading subscription",
+      "setup": "Loading setup"
+    },
+    "setup": {
+      "connectError": "Could not connect to the server.",
+      "retry": "Retry"
+    },
+    "language": {
+      "changeFailed": "Could not change language",
+      "wordsKnown": "Words known: {count}",
+      "add": "Add a language",
+      "current": "Language: {language}",
+      "select": "Select language"
+    }
+  },
+  "legalPages": {
+    "notice": "The English version of this document is authoritative. This translation is provided for convenience.",
+    "privacy": {
+      "metaTitle": "Privacy – Readfox",
+      "title": "Privacy policy",
+      "lastUpdated": "Last updated: {date}",
+      "intro": "Readfox is a small, independently run service. This page says plainly what we store, who else touches your data, and what we can and cannot see.",
+      "store": {
+        "heading": "What we store",
+        "items": {
+          "account": "Your email address, optional name, and a salted hash of your password.",
+          "text": "The <strong>text</strong> extracted from books and articles you import (titles and chapters). We do not keep the original EPUB file.",
+          "learning": "Your vocabulary, reading progress, practice history, journal entries and settings.",
+          "aiKey": "If you add your own AI key, it is stored encrypted (AES-256-GCM). It is never sent back to your browser.",
+          "session": "A session cookie that keeps you signed in, and short-lived server logs (such as IP address and request errors) used to keep the service secure and working."
+        }
+      },
+      "others": {
+        "heading": "Who else is involved",
+        "items": {
+          "cloudflare": "<strong>Cloudflare</strong> – DNS, the Turnstile bot check on sign-up, and R2 storage for backups.",
+          "resend": "<strong>Resend</strong> – delivers the verification and password-reset emails.",
+          "aiProvider": "<strong>Your AI provider (OpenRouter or Anthropic)</strong> – when you use translation, explanations or chat, the text you select, with some surrounding context, is sent to the provider using <em>your</em> key. Their privacy terms apply to that data, and the usage is billed to you."
+        },
+        "noTrackers": "We do not run advertising or analytics trackers, and we do not sell your data."
+      },
+      "operator": {
+        "heading": "What the operator can and cannot see",
+        "dashboard": "The admin dashboard shows account-level numbers only (sign-up date, counts of lessons and words, storage used). It has no screen that displays your book text, and it has no “view as user” or per-user export feature.",
+        "access": "Be aware that the operator still has technical access to the server and its database, so we cannot promise that viewing is technically impossible. We do not look at your content. If you ask for support and send us an export, we use it only to fix your problem and then delete it. Please do not upload material you would not want a server to process."
+      },
+      "backups": {
+        "heading": "Backups",
+        "body": "The database is continuously replicated to Cloudflare R2, which encrypts data at rest. Daily snapshots are additionally encrypted with a key kept offline by the operator, and are kept for 30 days."
+      },
+      "controls": {
+        "heading": "Your controls",
+        "items": {
+          "export": "<strong>Export:</strong> Settings → Learning data → Export all learning data downloads everything you have stored.",
+          "delete": "<strong>Delete:</strong> Settings → Delete account removes your account and data from the live service. Copies in backups disappear as the daily snapshots expire (up to 30 days).",
+          "aiKey": "You can remove your AI key at any time in Settings."
+        }
+      },
+      "children": {
+        "heading": "Children",
+        "body": "Readfox is not directed at children under 13, and we do not knowingly collect their data."
+      },
+      "contact": {
+        "heading": "Changes and contact",
+        "body": "If this policy changes in a meaningful way we will update the date above. Questions or requests about your data: <mail>privacy@readfox.app</mail>."
+      }
+    },
+    "terms": {
+      "metaTitle": "Terms – Readfox",
+      "title": "Terms of use",
+      "lastUpdated": "Last updated: {date}",
+      "intro": "By creating an account or using Readfox you agree to these terms. Readfox is run by an individual as a hobby-scale service.",
+      "content": {
+        "heading": "Your content",
+        "body": "You keep ownership of what you import. Only import text you have the right to use for personal study. You are responsible for the content you upload, and we may remove content or suspend accounts that infringe others' rights or abuse the service."
+      },
+      "limits": {
+        "heading": "Limits",
+        "body": "Each account can store up to 100 MB of imported lesson text. Audio and podcast import are not offered. AI features work with a key you provide; the cost of using that key is yours."
+      },
+      "acceptableUse": {
+        "heading": "Acceptable use",
+        "body": "Do not attack, overload or probe the service, create accounts in bulk, share your account, or use it to break the law."
+      },
+      "warranty": {
+        "heading": "No warranty",
+        "body": "The service is provided “as is”, without guarantees of availability or fitness for a purpose. Translations come from AI models and can be wrong. We make backups but you should export your data from time to time. To the extent the law allows, we are not liable for lost data or indirect losses."
+      },
+      "termination": {
+        "heading": "Changes and termination",
+        "body": "We may change or end the service, and will try to give notice. You can delete your account at any time."
+      },
+      "openSource": {
+        "heading": "Open source",
+        "body": "The software is licensed under the GNU AGPL-3.0. See the About page for the source code.",
+        "contact": "Contact: <mail>privacy@readfox.app</mail>"
+      }
+    },
+    "about": {
+      "metaTitle": "About – Readfox",
+      "title": "About Readfox",
+      "intro": "Readfox lets you read real books and articles in the language you are learning, translate words and phrases as you go, and turn what you meet into spaced-repetition practice.",
+      "freeSoftware": {
+        "heading": "Free software",
+        "license": "Readfox is free software under the <license>GNU Affero General Public License v3.0</license>. It is based on <lector>Lector</lector> by heuwels and its contributors, with our modifications.",
+        "source": "The complete source code of the version running on this site is available at <source>{url}</source>."
+      },
+      "dataSources": {
+        "heading": "Data sources",
+        "body": "Sentence banks come from Tatoeba (CC BY 2.0 FR) and dictionaries from the sources listed in the repository README, each under its own licence."
+      }
+    }
+  },
+  "library": {
+    "common": {
+      "close": "Close",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "back": "Back",
+      "delete": "Delete",
+      "title": "Title",
+      "authorSource": "Author / Source",
+      "saveToLibrary": "Save to Library",
+      "tryAgain": "Try again",
+      "text": "Text",
+      "words": "{count, plural, one {# word} other {# words}}"
+    },
+    "errors": {
+      "createGroup": "Could not create group",
+      "renameGroup": "Could not rename group",
+      "deleteGroup": "Could not delete group",
+      "reorderCollections": "Could not reorder collections",
+      "importAudio": "Failed to import audio file.",
+      "importFile": "Failed to import file. Please ensure it is a valid file.",
+      "deleteCollection": "Could not delete collection",
+      "updateCollection": "Could not update collection",
+      "deleteLesson": "Could not delete lesson",
+      "updateLesson": "Could not update lesson",
+      "reorderLessons": "Could not reorder lessons",
+      "retryTranscription": "Could not retry transcription"
+    },
+    "page": {
+      "title": "Your Library",
+      "loading": "Loading library",
+      "newGroup": "New Group",
+      "groupNamePlaceholder": "Group name",
+      "addGroup": "Add",
+      "ungrouped": "Ungrouped",
+      "selectFile": "Please select an EPUB or Markdown file",
+      "audioUploaded": "\"{title}\" uploaded — transcription started",
+      "audioMinutes": " (~{minutes} min of audio; usually transcribes in a few minutes)"
+    },
+    "group": {
+      "expand": "Expand {name}",
+      "collapse": "Collapse {name}",
+      "items": "{count, plural, one {# item} other {# items}}",
+      "newCollection": "New collection",
+      "rename": "Rename",
+      "delete": "Delete",
+      "renamePrompt": "Rename group:",
+      "deleteConfirm": "Delete group \"{name}\"? Collections in this group will become ungrouped."
+    },
+    "onboarding": {
+      "title": "Continue your first learning loop",
+      "practiceReady": "Your three saved words are ready for a quick review.",
+      "resumeLesson": "Resume {title} where you left off.",
+      "fallbackLesson": "your starter lesson",
+      "resume": "Resume"
+    },
+    "empty": {
+      "title": "No books in your library",
+      "description": "Import a book (EPUB or Markdown) to start learning. Your vocabulary and progress will be tracked as you read.",
+      "importBook": "Import Book",
+      "addStarter": "Add starter content",
+      "adding": "Adding…"
+    },
+    "addTile": {
+      "placeholder": "Collection title",
+      "create": "Create"
+    },
+    "card": {
+      "coverAlt": "Cover of {title}",
+      "complete": "{percent}% complete",
+      "notStarted": "Not started",
+      "lessons": "{count, plural, one {# lesson} other {# lessons}}",
+      "dragToReorder": "Drag to reorder {title}",
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "daysAgo": "{count, plural, one {# day ago} other {# days ago}}",
+      "weeksAgo": "{count, plural, one {# week ago} other {# weeks ago}}",
+      "monthsAgo": "{count, plural, one {# month ago} other {# months ago}}"
+    },
+    "import": {
+      "label": "Import",
+      "importing": "Importing...",
+      "addTo": "Add to",
+      "ungrouped": "Library (ungrouped)",
+      "options": {
+        "file": "Import File",
+        "audio": "Import Audio",
+        "url": "Import from URL",
+        "youtube": "YouTube Transcript",
+        "paste": "Paste Text"
+      }
+    },
+    "paste": {
+      "title": "Paste Text",
+      "titlePlaceholder": "Article or text title",
+      "optional": "Optional",
+      "textPlaceholder": "Paste your {language} text here..."
+    },
+    "web": {
+      "title": "Import from Web",
+      "urlLabel": "Article URL",
+      "extract": "Extract",
+      "extracting": "Extracting...",
+      "help": "Paste a URL to a news article or blog post in {language}. The article content will be extracted and added to your library.",
+      "contentPreview": "Content Preview",
+      "fromSite": "from {site}",
+      "saveFailed": "Failed to save article.",
+      "extractFailed": "Failed to extract article",
+      "networkError": "Network error. Check your connection."
+    },
+    "youtube": {
+      "title": "Import YouTube Transcript",
+      "urlLabel": "YouTube video URL",
+      "find": "Find captions",
+      "finding": "Finding…",
+      "help": "Imports a video's available transcript as a lesson with clickable timestamps. The video is never downloaded or hosted — clicking a line opens YouTube at that moment.",
+      "chooseTrack": "Choose a caption track",
+      "auto": "Auto-generated",
+      "creator": "Creator captions",
+      "importing": "Importing “{language}” transcript…",
+      "note": "Auto-generated captions can contain recognition errors. You can edit the transcript text after importing.",
+      "importFailed": "Could not import the transcript."
+    },
+    "lessonForm": {
+      "add": "Add lesson",
+      "edit": "Edit lesson",
+      "create": "Create lesson",
+      "save": "Save changes",
+      "titlePlaceholder": "Lesson title",
+      "textPlaceholder": "Lesson text. Markdown is supported."
+    },
+    "collection": {
+      "back": "Library",
+      "loading": "Loading collection",
+      "editDetails": "Edit collection details",
+      "lessonsCount": "{count, plural, one {# lesson} other {# lessons}}",
+      "completed": "{count} completed",
+      "group": "Group:",
+      "none": "None",
+      "newGroupOption": "+ New group...",
+      "newGroupPrompt": "New group name:",
+      "continueReading": "Continue Reading",
+      "deleteConfirm": "Delete this collection and all its lessons?",
+      "deleteLessonConfirm": "Delete \"{title}\"?",
+      "addLesson": "Add lesson",
+      "form": {
+        "title": "Edit collection",
+        "titlePlaceholder": "Collection title",
+        "author": "Author",
+        "authorPlaceholder": "Author",
+        "save": "Save changes"
+      },
+      "row": {
+        "read": "Read",
+        "reread": "Re-read",
+        "continue": "Continue",
+        "transcribing": "Transcribing…",
+        "transcriptionFailed": "Transcription failed",
+        "retryTranscription": "Retry transcription",
+        "edit": "Edit lesson",
+        "delete": "Delete lesson",
+        "dragToReorder": "Drag to reorder {title}"
+      }
+    }
+  },
+  "practice": {
+    "saveFailed": "Could not save your answer — check your connection and try again.",
+    "statsFailed": "Your answer was saved, but updating your stats failed.",
+    "lookUp": "Look up {word}",
+    "title": {
+      "cloze": "Cloze Practice",
+      "dictation": "Dictation Practice"
+    },
+    "format": {
+      "cloze": "Cloze",
+      "clozeHint": "Fill in the blank",
+      "dictation": "Dictation",
+      "dictationHint": "Type what you hear"
+    },
+    "setup": {
+      "reviewDue": "Review Due ({count})",
+      "due": "{count} due",
+      "learnNew": "Learn New",
+      "mastered": "{mastered}/{total} mastered",
+      "sentences": "Sentences",
+      "mode": "Mode",
+      "modeType": "Type",
+      "modeMc": "MC",
+      "start": "Start",
+      "loading": "Loading..."
+    },
+    "collections": {
+      "top500": "Top 500",
+      "top1000": "500-1000",
+      "top2000": "1000-2000"
+    },
+    "round": {
+      "guidedLabel": "Guided first lesson",
+      "guidedTitle": "Your first learning loop",
+      "back": "← Back",
+      "threeWord": "3-word review",
+      "starterWords": "Words from your starter lesson",
+      "loading": "Loading sentences..."
+    },
+    "question": {
+      "choose": "Choose the correct word",
+      "fill": "Fill in the blank",
+      "showTranslation": "Show translation",
+      "translation": "Translation",
+      "keyChoose": "Choose",
+      "keyListen": "Listen",
+      "multipleChoice": "Multiple Choice",
+      "multipleChoiceTitle": "Switch to multiple choice for this question",
+      "hintNone": "Hint (?)",
+      "hintLetters": "Hint ({count, plural, one {# letter} other {# letters}})",
+      "hintTitle": "Reveal next letter",
+      "submit": "Submit",
+      "check": "Check",
+      "mastery": "Mastery:"
+    },
+    "complete": {
+      "title": "Round Complete!",
+      "correct": "{correct}/{total} correct",
+      "totalPoints": "{points} total points",
+      "changeSettings": "Change Settings",
+      "playAgain": "Play Again"
+    },
+    "onboarding": {
+      "starterLesson": "Starter lesson",
+      "complete": {
+        "title": "First learning loop complete",
+        "description": "You turned words from a real reading into practice. That is the loop Readfox will keep building on with you.",
+        "encountered": "Encountered",
+        "saved": "Saved",
+        "score": "Score",
+        "upNext": "Up next",
+        "tomorrow": "Tomorrow",
+        "comeBack": "Come back for another short reading and review.",
+        "saving": "Saving your progress…",
+        "saveError": "Your round is safe, but we could not mark onboarding complete.",
+        "trySavingAgain": "Try saving again",
+        "openLibrary": "Open Library",
+        "readNext": "Read next lesson"
+      },
+      "recovery": {
+        "title": "Your practice words aren't ready yet",
+        "missingWords": "Your mini-review needs three words saved from the starter lesson. Return to the lesson and save any missing words, then try again.",
+        "loadFailed": "We could not load your saved practice words. Return to the starter lesson and try the mini-review again.",
+        "backToLesson": "Back to starter lesson"
+      }
+    },
+    "wordTooltip": {
+      "tryAgain": "Please try again."
+    },
+    "blacklist": {
+      "hidden": "Sentence hidden",
+      "undo": "Undo",
+      "undoFailed": "Failed to undo blacklist",
+      "hideFailed": "Failed to hide sentence",
+      "title": "Skip & hide this sentence"
+    },
+    "empty": {
+      "reviewTitle": "Nothing to Review",
+      "newTitle": "No New Sentences",
+      "reviewBody": "No sentences are due for review right now. Try learning new ones or check back later.",
+      "newBody": "You've seen all the sentences in this collection. Try a different collection or review existing ones.",
+      "back": "Back",
+      "learnNewInstead": "Learn New Instead"
+    },
+    "feedback": {
+      "correct": "Correct!",
+      "incorrect": "Incorrect",
+      "listenAgain": "Listen Again",
+      "saveWordFailed": "Could not save the word to vocabulary",
+      "addToAnkiFailed": "Failed to add to Anki",
+      "lookUp": "Look up {word}",
+      "answerRevealed": "Answer revealed",
+      "perfect": "Perfect!",
+      "accuracy": "{percent}% correct ({correct}/{total} words)",
+      "pointsBonus": " · +{points} points",
+      "nothingTyped": "(nothing typed)",
+      "youTyped": "You typed",
+      "sentence": "Sentence",
+      "translation": "Translation",
+      "masteryLevel": "Mastery Level",
+      "mastery": {
+        "level0": "New",
+        "level25": "Learning",
+        "level50": "Familiar",
+        "level75": "Almost There",
+        "level100": "Mastered"
+      },
+      "nextSentence": "Next Sentence",
+      "nextSentenceHint": "Next sentence",
+      "pointsEarned": "+{points} points",
+      "yourAnswer": "Your answer:",
+      "correctAnswer": "Correct answer:",
+      "alreadyAdded": "Already added to Anki",
+      "addToAnki": "Add to Anki",
+      "adding": "Adding...",
+      "explain": "Explain",
+      "explaining": "Explaining...",
+      "explainFailed": "Failed to fetch explanation"
+    },
+    "dictation": {
+      "prompt": "Type the sentence you hear",
+      "replayAria": "Replay audio",
+      "speed": "Speed",
+      "listenAgain": "Listen Again ({count} left)",
+      "noReplays": "No replays left",
+      "placeholder": "Type what you hear…",
+      "surrenderTitle": "Reveal the sentence and move on (counts as a miss)",
+      "surrender": "Surrender",
+      "check": "Check",
+      "mastery": "Mastery:"
+    }
+  },
+  "vocab": {
+    "states": {
+      "new": "New",
+      "level1": "Level 1",
+      "level2": "Level 2",
+      "level3": "Level 3",
+      "level4": "Level 4",
+      "known": "Known",
+      "ignored": "Ignored"
+    },
+    "stateTitle": {
+      "new": "New - Not yet studied",
+      "level1": "Level 1 - Just started learning",
+      "level2": "Level 2 - Learning",
+      "level3": "Level 3 - Familiar",
+      "level4": "Level 4 - Almost known",
+      "known": "Known - Fully learned",
+      "ignored": "Ignored - Hidden from study"
+    },
+    "stats": {
+      "total": "Total Words",
+      "learning": "Learning",
+      "known": "Known",
+      "ignored": "Ignored"
+    },
+    "list": {
+      "phrase": "phrase",
+      "confirmBulkDelete": "Are you sure you want to delete {count} vocab entries?",
+      "searchPlaceholder": "Search words, translations, or sentences...",
+      "filter": {
+        "all": "All",
+        "learning": "Learning"
+      },
+      "allCollections": "All Collections",
+      "exporting": "Exporting...",
+      "exportToAnki": "Export to Anki ({count})",
+      "updating": "Updating...",
+      "markAsKnown": "Mark as Known ({count})",
+      "deleting": "Deleting...",
+      "delete": "Delete ({count})",
+      "syncing": "Syncing...",
+      "syncWithAnki": "Sync with Anki",
+      "ankiTip": {
+        "title": "Anki setup",
+        "body": "Click here if you need help setting up your Anki."
+      },
+      "results": "{filtered} of {total} entries",
+      "resultsSelected": "{filtered} of {total} entries ({selected} selected)",
+      "columns": {
+        "text": "Word/Phrase",
+        "translation": "Translation",
+        "state": "State",
+        "source": "Source",
+        "dateAdded": "Date Added",
+        "anki": "Anki"
+      },
+      "loading": "Loading vocabulary...",
+      "emptyNoEntries": "No vocabulary entries yet. Start reading to add words!",
+      "emptyNoMatches": "No entries match your filters.",
+      "exportDialog": {
+        "title": "Export to Anki",
+        "description": "{count, plural, one {# word} other {# words}} selected. Choose a card type.",
+        "basic": "Basic",
+        "basicDescription": "Front/back card. Sentence on front, translation on back.",
+        "cloze": "Cloze",
+        "clozeDescription": "Word is hidden in the sentence; recall it from context.",
+        "cancel": "Cancel",
+        "confirm": "Export {count, plural, one {# card} other {# cards}}"
+      }
+    },
+    "pagination": {
+      "label": "Vocabulary pagination",
+      "rowsPerPage": "Rows per page",
+      "range": "{from}–{to} of {total}",
+      "previous": "Previous page",
+      "next": "Next page",
+      "page": "Page {current} of {total}"
+    },
+    "detail": {
+      "confirmDelete": "Are you sure you want to delete this vocabulary entry?",
+      "phrase": "Phrase",
+      "word": "Word",
+      "close": "Close",
+      "translation": "Translation",
+      "contextSentence": "Context Sentence",
+      "learningState": "Learning State",
+      "added": "Added:",
+      "reviewCount": "Review Count:",
+      "syncedToAnki": "Synced to Anki",
+      "noteId": "(Note #{id})",
+      "deleting": "Deleting...",
+      "delete": "Delete",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "save": "Save",
+      "edit": "Edit"
+    },
+    "page": {
+      "title": "Vocabulary",
+      "loadFailed": "Failed to load vocabulary data",
+      "entryUpdated": "Entry updated successfully",
+      "updateFailed": "Failed to update entry",
+      "entryDeleted": "Entry deleted",
+      "deleteFailed": "Failed to delete entry",
+      "allSynced": "All selected entries have already been synced to Anki.",
+      "cardType": {
+        "basic": "basic",
+        "cloze": "cloze"
+      },
+      "queuedPartial": "Queued {queued, plural, one {# card} other {# cards}}, {failed} failed ({error})",
+      "queuedOk": "Queued {queued, plural, one {# {cardType} card} other {# {cardType} cards}} — they'll appear next time Anki syncs",
+      "queueFailed": "Failed to queue cards for Anki",
+      "notConnected": "Anki is not connected. Make sure Anki is running with AnkiConnect.",
+      "exported": "Exported {count, plural, one {# {cardType} card} other {# {cardType} cards}} to \"{deck}\"",
+      "exportPartial": "Exported {count} {cardType} cards, {failed} failed",
+      "markedKnown": "Marked {count} entries as known",
+      "markKnownFailed": "Failed to mark entries as known",
+      "synced": "Synced {cards, plural, one {# Anki card} other {# Anki cards}} — upgraded {upgraded}.",
+      "syncedImported": "Synced {cards, plural, one {# Anki card} other {# Anki cards}} — upgraded {upgraded}, imported {imported} from Anki.",
+      "syncFailed": "Failed to sync with Anki",
+      "openAnkiSetup": "Open Anki setup",
+      "addonPill": "Anki syncs via add-on",
+      "ankiTip": {
+        "title": "Anki setup",
+        "body": "Click here if you need help setting up your Anki."
+      },
+      "checking": "Checking Anki connection...",
+      "connected": "Anki Connected",
+      "disconnected": "Anki Disconnected"
+    }
+  },
+  "reader": {
+    "page": {
+      "lessonNotFound": "Lesson not found",
+      "loadFailed": "Failed to load lesson",
+      "retryFailed": "Could not retry transcription",
+      "phraseFailed": "Failed to translate phrase. Check AI provider in settings.",
+      "wordFailed": "Failed to translate word. Check AI provider in settings.",
+      "contextFailed": "Failed to get contextual translation.",
+      "retranslateFailed": "Re-translate failed",
+      "saveFailed": "Could not save the word — check your connection and try again.",
+      "saveFailedShort": "Could not save the word — check your connection.",
+      "knownFailed": "Could not mark the word as known — check your connection.",
+      "ignoreFailed": "Could not ignore the word — check your connection.",
+      "levelFailed": "Could not set the word level — check your connection.",
+      "onboardingWordAdded": "“{word}” added — {count} of 3 review words ready",
+      "miniReviewFailed": "Could not start the mini-review. Please try again.",
+      "copied": "Copied",
+      "loading": "Loading lesson...",
+      "goToLibrary": "Go to Library",
+      "backToLibrary": "Back to Library",
+      "transcribing": "Transcribing audio…",
+      "transcribingBody": "“{title}” is being transcribed in the background. This usually takes a few minutes; the lesson opens automatically when it’s ready.",
+      "transcriptionFailed": "Transcription failed",
+      "retry": "Retry",
+      "listenAlong": "Listen along"
+    },
+    "markdown": {
+      "saveFailed": "Failed to save",
+      "back": "Back",
+      "cancel": "Cancel",
+      "saving": "Saving…",
+      "saveChanges": "Save changes",
+      "pronunciation": "Pronunciation: {mode}",
+      "annotation": {
+        "off": "Off",
+        "learning": "Learning words",
+        "all": "All words"
+      },
+      "editText": "Edit text",
+      "editHint": "Markdown is supported. Vocab state is keyed by word, so edits don't reset your progress.",
+      "captionsAuto": "Auto-generated captions",
+      "captionsCreator": "Creator captions",
+      "openOnYouTube": "Open on YouTube",
+      "playFromHere": "Play from here",
+      "playFrom": "Play from {time}"
+    },
+    "drawer": {
+      "wordDefinition": "Word definition",
+      "definitionOf": "Definition of {word}",
+      "clickToLookUp": "Click a word to look it up.",
+      "state": {
+        "new": "New",
+        "level1": "Level 1",
+        "level2": "Level 2",
+        "level3": "Level 3",
+        "level4": "Level 4",
+        "known": "Known",
+        "ignored": "Ignored"
+      },
+      "hearPronunciation": "Hear pronunciation",
+      "sourceAiInContext": "AI · in context",
+      "sourceLearned": "learned",
+      "sourceOnDevice": "on-device",
+      "sourceAi": "AI",
+      "close": "Close",
+      "closeEsc": "Close (Esc)",
+      "lookingUp": "Looking up…",
+      "showDictionary": "Show dictionary ({count})",
+      "noDefinition": "No definition found.",
+      "inContextTitle": "Translate using AI with sentence context",
+      "inContext": "In context",
+      "askingAi": "Asking AI…",
+      "enrichTitle": "Add IPA, etymology, full senses & related forms",
+      "enrich": "Enrich",
+      "enriching": "Enriching…",
+      "idiomaticMeaning": "Idiomatic meaning",
+      "literally": "Literally",
+      "usage": "Usage",
+      "etymology": "Etymology",
+      "relatedForms": "Related forms",
+      "showFewer": "Show fewer",
+      "showAll": "Show all ({count})",
+      "hearSentence": "Hear sentence",
+      "onboardingAdded": "Added to your first review",
+      "onboardingChoose": "Choose level 1–4 to add this word",
+      "onboardingReady": "{count}/{target} ready",
+      "saveAtLevel": "Save at learning level {level}",
+      "levelTitle": "Level {level}",
+      "markKnownTitle": "Mark as known (K)",
+      "known": "✓ Known",
+      "ignoreTitle": "Ignore (X)",
+      "ignore": "✕ Ignore",
+      "retranslateTitle": "Force fresh AI lookup (ignores dictionary)",
+      "retranslate": "Re-translate with AI",
+      "ankiAdded": "✓ Added to Anki",
+      "ankiAdding": "Adding…",
+      "ankiError": "Anki error — retry",
+      "ankiAdd": "Add to Anki",
+      "clozeAdd": "Add to Anki as Cloze",
+      "clozePick": "Pick a word to blank:",
+      "clozeSent": "✓ Sent to Anki",
+      "clozeSending": "Sending…",
+      "clozeError": "Error — retry",
+      "clozeSend": "Send to Anki",
+      "cancel": "Cancel",
+      "lookUp": "Look up {word}",
+      "announce": {
+        "lookingUp": "Looking up {word}.",
+        "lookupFailed": "Lookup failed for {word}. {error}",
+        "definitionLoaded": "Definition loaded for {word}.",
+        "noDefinitionFound": "No definition found for {word}."
+      }
+    },
+    "onboardingTip": {
+      "dismiss": "Dismiss onboarding tip"
+    },
+    "youtube": {
+      "playerTitle": "YouTube video player"
+    },
+    "wordCell": {
+      "lookUp": "Look up {text}"
+    },
+    "coach": {
+      "ariaLabel": "Guided first lesson",
+      "progressLabel": "{count} of 3 review words ready",
+      "wordPlaceholder": "Word {n}",
+      "startPractice": "Start 3-word practice",
+      "ready": "{count} of 3 ready",
+      "lookup": {
+        "eyebrow": "Try the reader",
+        "title": "Choose any highlighted word",
+        "body": "Coloured words are still new to you. Tap or click one to see its meaning here in the lesson."
+      },
+      "save": {
+        "titleFirst": "Add this word to your review",
+        "titleNext": "Choose another useful word",
+        "bodyFirst": "Choose level 1-4 in the definition panel. You will see this word fill the review progress below.",
+        "bodyNext": "Close the definition, choose a different highlighted word, then set its level to add it."
+      },
+      "phrase": {
+        "title": "Now translate a whole phrase",
+        "body": "Close the definition, then drag across two or more words (or long-press on mobile). Release to translate the highlighted phrase."
+      },
+      "practice": {
+        "eyebrow": "Your mini-review is ready",
+        "title": "Practise the words you just read",
+        "body": "Three quick cards will close the loop while the lesson is still fresh."
+      }
+    },
+    "listen": {
+      "back": "Back",
+      "readAsText": "Read as text",
+      "mode": {
+        "continuous": "continuous",
+        "shadow": "shadow"
+      },
+      "sentenceProgress": "Sentence {current} of {total}",
+      "seek": "Seek",
+      "playbackSpeed": "Playback speed",
+      "previousSentence": "Previous sentence",
+      "backSeconds": "Back {seconds} seconds",
+      "forwardSeconds": "Forward {seconds} seconds",
+      "pause": "Pause",
+      "play": "Play",
+      "repeatSentence": "Repeat sentence",
+      "nextSentence": "Next sentence"
+    }
+  },
+  "subscribe": {
+    "checkoutFailed": "Checkout couldn't be started. Please try again in a moment.",
+    "title": {
+      "suspended": "Your account is suspended",
+      "lapsedFree": "You’re on Readfox Free now",
+      "lapsed": "Your subscription has ended",
+      "free": "Choose how you want to learn",
+      "paid": "Subscribe to Readfox Cloud"
+    },
+    "body": {
+      "suspended": "App access is paused. You can still export your learner data or sign out below.",
+      "lapsedFree": "Your texts, vocabulary, Anki links, and learning history are intact. Keep using the bounded Free plan, or renew for larger managed allowances and voices.",
+      "lapsed": "Everything you built is safe and exactly as you left it — renew to pick up where you were.",
+      "free": "Free is a complete, bounded reading loop. Upgrade when you want more managed AI, richer translations, and managed voices.",
+      "paid": "Readfox Cloud is a paid service. Prefer free? Readfox is open source and self-hostable."
+    },
+    "loadingPlans": "Loading subscription plans",
+    "unavailable": "Checkout isn't available right now — please try again in a little while. Your account and data are unaffected.",
+    "suspendedHelp": "If you believe this is a mistake, contact support. No learner data has been deleted.",
+    "promoReady": "Code <strong>{promo}</strong> is ready. We'll apply it when you continue, and the discounted total shows at checkout.",
+    "promoUnknown": "The code <strong>{promo}</strong> isn't valid or has expired. Every plan below is still available at its usual price.",
+    "activating": "Payment received — activating your account…",
+    "slow": "Payment received. Activation is taking longer than usual — this page keeps checking, or come back in a few minutes.",
+    "freeName": "Free",
+    "currentPlan": "Current plan",
+    "forever": "forever",
+    "freeTagline": "Read, look words up, save what you learn, and take your data with you.",
+    "freeFeatures": {
+      "read": "Read starter lessons and texts you import yourself",
+      "vocab": "Save vocabulary, practise it, and sync with Anki",
+      "limits": "Up to 10 collections, 200 lessons, and 1,000 journal words each month",
+      "lookups": "Unlimited on-device dictionary lookups",
+      "glosses": "1,000 managed dictionary-miss glosses each month",
+      "phrases": "10 simple phrase translations (up to 6 words) each day",
+      "context": "10 concise in-context translations each day",
+      "voices": "Free browser voices for reading and dictation",
+      "byok": "Bring your own AI key when you want more",
+      "export": "Export your learner data at any time"
+    },
+    "continueFree": "Continue with Free",
+    "checkoutYear": "Continue to checkout — {price}/year",
+    "subscribeYear": "Subscribe annually — {price}/year",
+    "checkoutMonth": "Continue to checkout — {price}/month",
+    "subscribeMonth": "Subscribe — {price}/month",
+    "orMonth": "or {price}/month",
+    "orYear": "or {price}/year — two months free",
+    "selected": "Selected",
+    "badges": {
+      "beta": "Beta"
+    },
+    "perMonth": "/month",
+    "annualNote": "{price}/year — two months free",
+    "tiers": {
+      "cloud": {
+        "tagline": "We host it for you — no Docker, no setup. For when you'd rather just read.",
+        "features": {
+          "managed": "Fully managed — nothing to install or maintain",
+          "allowance": "Larger managed translation allowance and rich AI entries",
+          "voices": "Managed high-quality voices, with browser voice fallback",
+          "room": "More room for texts, vocabulary, and journal writing",
+          "backups": "Automatic backups and updates",
+          "email": "Email support"
+        }
+      },
+      "plus": {
+        "tagline": "For heavy readers who want the whole thing handled.",
+        "features": {
+          "everything": "Everything in Cloud",
+          "largerAllowance": "A much larger managed AI and voice allowance",
+          "priority": "Priority support",
+          "earlyAccess": "Early access to new language packs"
+        }
+      }
+    },
+    "openingCheckoutLabel": "Opening checkout",
+    "openingCheckout": "Opening checkout…",
+    "exportData": "Export my data",
+    "signOut": "Sign out"
   }
 }

@@ -3,6 +3,7 @@
 import clsx from 'clsx';
 import { MessageCircle, X, SendHorizonal } from 'lucide-react';
 import { usePathname } from 'next/navigation';
+import { useLocale, useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { useActiveLanguage } from '@/utils/hooks';
 import { apiFetch, isBareRoute } from '@/lib/api-base';
@@ -18,7 +19,18 @@ interface ChatMessage {
   createdAt: string;
 }
 
+function languageDisplayName(code: string, englishName: string, locale: string): string {
+  if (locale === 'en') return englishName;
+  try {
+    return new Intl.DisplayNames([locale], { type: 'language' }).of(code) ?? englishName;
+  } catch {
+    return englishName;
+  }
+}
+
 export default function ChatWidget() {
+  const t = useTranslations('chat');
+  const locale = useLocale();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
@@ -31,6 +43,7 @@ export default function ChatWidget() {
   const initialLoadDone = useRef(false);
   const activeLang = useActiveLanguage();
   const pathname = usePathname();
+  const langName = languageDisplayName(activeLang.code, activeLang.name, locale);
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -139,8 +152,7 @@ export default function ChatWidget() {
         {
           id: 'error-' + Date.now(),
           role: 'assistant' as const,
-          content:
-            "Sorry, I couldn't respond. Check that an LLM provider is configured in Settings.",
+          content: t('error'),
           provider: null,
           createdAt: new Date().toISOString(),
         },
@@ -204,7 +216,7 @@ export default function ChatWidget() {
           'fixed right-4 bottom-20 z-50 flex h-12 w-12 rounded-full shadow-lg transition-all hover:shadow-xl sm:right-6 sm:bottom-6 print:hidden',
           pathname.includes('/read') && '2xl:right-[406px]',
         )}
-        aria-label={isOpen ? 'Close chat' : 'Open chat'}
+        aria-label={isOpen ? t('close') : t('open')}
         data-testid="chat-toggle"
       >
         {isOpen ? <X /> : <MessageCircle />}
@@ -222,17 +234,21 @@ export default function ChatWidget() {
           {/* Header */}
           <div className="flex items-center justify-between border-b border-border bg-muted px-4 py-3">
             <div>
-              <h3 className="text-sm font-semibold text-foreground">{activeLang.name} Tutor</h3>
-              <p className="text-xs text-muted-foreground">Ask anything about {activeLang.name}</p>
+              <h3 className="text-sm font-semibold text-foreground">
+                {t('tutorTitle', { language: langName })}
+              </h3>
+              <p className="text-xs text-muted-foreground">
+                {t('tutorSubtitle', { language: langName })}
+              </p>
             </div>
             <Button
               variant="ghost"
               onClick={clearChat}
               className="text-xs text-muted-foreground transition-colors hover:text-destructive"
-              title="Clear chat"
+              title={t('clearTitle')}
               data-testid="chat-clear"
             >
-              Clear
+              {t('clear')}
             </Button>
           </div>
 
@@ -245,14 +261,14 @@ export default function ChatWidget() {
           >
             {loadingHistory && (
               <div className="py-2 text-center text-xs text-muted-foreground">
-                Loading older messages...
+                {t('loadingOlder')}
               </div>
             )}
 
             {messages.length === 0 && !loading && (
               <div className="flex h-full flex-col items-center justify-center text-center">
                 <p className="mb-4 text-sm text-muted-foreground">
-                  Ask a question about {activeLang.name}
+                  {t('emptyPrompt', { language: langName })}
                 </p>
                 <div className="w-full space-y-2">
                   {EXAMPLE_PROMPTS[activeLang.code].map((prompt) => (
@@ -285,7 +301,7 @@ export default function ChatWidget() {
                   <div className="break-words whitespace-pre-wrap">{msg.content}</div>
                   {msg.role === 'assistant' && msg.provider && (
                     <div className="mt-1 text-[10px] opacity-50" data-testid="chat-provider-label">
-                      via {msg.provider}
+                      {t('via', { provider: msg.provider })}
                     </div>
                   )}
                 </div>
@@ -321,7 +337,7 @@ export default function ChatWidget() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder={`Ask about ${activeLang.native}...`}
+                placeholder={t('placeholder', { language: activeLang.native })}
                 rows={1}
                 className="flex-1 rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none"
                 disabled={loading}

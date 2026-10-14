@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { apiFetch } from '@/lib/api-base';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
@@ -26,6 +27,7 @@ interface ByokStatus {
 }
 
 export default function BYOKSettings() {
+  const t = useTranslations('settings.byok');
   const [status, setStatus] = useState<ByokStatus | null>(null);
   const [apiKey, setApiKey] = useState('');
   const [provider, setProvider] = useState<ByokProvider>('openrouter');
@@ -44,9 +46,9 @@ export default function BYOKSettings() {
   };
 
   useEffect(() => {
-    load().catch(() => toast.error('Could not load BYOK settings'));
+    load().catch(() => toast.error(t('loadFailed')));
     getEntitlements().then((entitlements) => setPlan(entitlements?.plan ?? null));
-  }, []);
+  }, [t]);
 
   const save = async () => {
     setSaving(true);
@@ -57,14 +59,14 @@ export default function BYOKSettings() {
         body: JSON.stringify({ provider, apiKey, model }),
       });
       const body = await res.json();
-      if (!res.ok) throw new Error(body.error || 'Could not enable BYOK');
+      if (!res.ok) throw new Error(body.error || t('enableFailed'));
       invalidateEntitlementsCache();
       setApiKey('');
       setEditing(false);
       await load();
-      toast.success(`Your ${status?.providers[provider].label ?? provider} key is active`);
+      toast.success(t('keyActive', { provider: status?.providers[provider].label ?? provider }));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Could not enable BYOK');
+      toast.error(error instanceof Error ? error.message : t('enableFailed'));
     } finally {
       setSaving(false);
     }
@@ -74,14 +76,14 @@ export default function BYOKSettings() {
     setSaving(true);
     try {
       const res = await apiFetch('/api/byok', { method: 'DELETE' });
-      if (!res.ok) throw new Error('Could not disable BYOK');
+      if (!res.ok) throw new Error(t('disableFailed'));
       invalidateEntitlementsCache();
       setApiKey('');
       setEditing(false);
       await load();
-      toast.success('Reverted to your Readfox managed AI allowance');
+      toast.success(t('reverted'));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Could not disable BYOK');
+      toast.error(error instanceof Error ? error.message : t('disableFailed'));
     } finally {
       setSaving(false);
     }
@@ -90,35 +92,31 @@ export default function BYOKSettings() {
   return (
     <section id="byok" className="panel scroll-mt-6 p-6">
       <div className="mb-2 flex items-center justify-between gap-4">
-        <h2 className="text-lg font-semibold text-foreground">Bring your own AI key</h2>
+        <h2 className="text-lg font-semibold text-foreground">{t('heading')}</h2>
         {status?.enabled && (
           <span className="rounded-full bg-[var(--primary-soft)] px-3 py-1 text-xs font-semibold text-primary">
-            Active
+            {t('active')}
           </span>
         )}
       </div>
       <p className="mb-4 text-sm text-muted-foreground">
-        {plan === 'free'
-          ? 'Free includes a small managed Gemini allowance. Add your own OpenRouter or Anthropic key to keep translating after that allowance and unlock richer AI actions without subscribing.'
-          : 'Use your own OpenRouter or Anthropic account for translations, explanations, journal corrections, and chat instead of the managed AI allowance.'}{' '}
-        Your key is encrypted at rest and never shown again. BYOK does not enable managed voices;
-        those remain a Cloud benefit.
+        {plan === 'free' ? t('introFree') : t('introPaid')} {t('introTail')}
       </p>
 
       {plan === 'free' && (
         <p className="mb-4 rounded-lg border border-border bg-[var(--primary-soft)] p-3 text-xs text-foreground">
-          Prefer Readfox to handle both AI and higher-quality audio?{' '}
-          <a href="/subscribe" className="font-semibold text-primary hover:underline">
-            Compare Cloud plans
-          </a>
-          . Browser voices stay free either way.
+          {t.rich('compareCloud', {
+            link: (chunks) => (
+              <a href="/subscribe" className="font-semibold text-primary hover:underline">
+                {chunks}
+              </a>
+            ),
+          })}
         </p>
       )}
 
       {status && !status.available ? (
-        <p className="text-sm text-muted-foreground">
-          BYOK is not configured on this deployment yet.
-        </p>
+        <p className="text-sm text-muted-foreground">{t('notConfigured')}</p>
       ) : status ? (
         <div className="space-y-4">
           <div>
@@ -126,7 +124,7 @@ export default function BYOKSettings() {
               className="mb-2 block text-sm font-medium text-foreground"
               htmlFor="byok-provider"
             >
-              Provider
+              {t('provider')}
             </label>
             <select
               id="byok-provider"
@@ -148,23 +146,24 @@ export default function BYOKSettings() {
             </select>
             {provider === 'openrouter' && (
               <p className="mt-2 text-xs text-muted-foreground">
-                Evaluated models are ordered by Afrikaans COMET score in Readfox&apos;s{' '}
-                <a
-                  href="https://lector.dev/blog/local-llm-translation-eval/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-primary hover:underline"
-                >
-                  reproducible translation eval
-                </a>
-                . Gaps below roughly 1.5 points are statistical ties; Flash Lite is the unevaluated
-                low-cost default.
+                {t.rich('evalNote', {
+                  link: (chunks) => (
+                    <a
+                      href="https://lector.dev/blog/local-llm-translation-eval/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary hover:underline"
+                    >
+                      {chunks}
+                    </a>
+                  ),
+                })}
               </p>
             )}
           </div>
           <div>
             <label className="mb-2 block text-sm font-medium text-foreground" htmlFor="byok-model">
-              Model
+              {t('model')}
             </label>
             <select
               id="byok-model"
@@ -184,20 +183,18 @@ export default function BYOKSettings() {
           {status.enabled && !editing ? (
             <div className="flex gap-2">
               <Button variant="outline" onClick={() => setEditing(true)}>
-                Replace key or model
+                {t('replaceKey')}
               </Button>
               <Button variant="destructive" onClick={disable} disabled={saving}>
-                Use managed allowance
+                {t('useManaged')}
               </Button>
             </div>
           ) : (
             <div className="space-y-2">
               <label className="block text-sm font-medium text-foreground" htmlFor="byok-key">
-                {status.providers[provider].label} API key{' '}
+                {t('apiKeyLabel', { provider: status.providers[provider].label })}{' '}
                 {status.enabled && provider === status.provider && (
-                  <span className="font-normal text-muted-foreground">
-                    (leave blank to keep it)
-                  </span>
+                  <span className="font-normal text-muted-foreground">{t('leaveBlank')}</span>
                 )}
               </label>
               <input
@@ -218,7 +215,7 @@ export default function BYOKSettings() {
                     (!apiKey.trim() && (!status.enabled || provider !== status.provider))
                   }
                 >
-                  {saving ? 'Saving…' : status.enabled ? 'Save changes' : 'Validate and enable'}
+                  {saving ? t('saving') : status.enabled ? t('saveChanges') : t('validateEnable')}
                 </Button>
                 {status.enabled && (
                   <Button
@@ -230,49 +227,41 @@ export default function BYOKSettings() {
                       setModel(status.model);
                     }}
                   >
-                    Cancel
+                    {t('cancel')}
                   </Button>
                 )}
               </div>
             </div>
           )}
           <p className="text-xs text-muted-foreground">
-            Readfox validates the key with {status.providers[provider].label} before saving it.
-            Provider errors never include your key.
+            {t('validates', { provider: status.providers[provider].label })}
           </p>
           <details className="rounded-md border border-border bg-muted/30 p-3 text-xs text-muted-foreground">
             <summary className="cursor-pointer font-medium text-foreground">
-              How your API key is protected
+              {t('protectedTitle')}
             </summary>
             <div className="mt-2 space-y-2">
+              <p>{t('protectedEncryption')}</p>
+              <p>{t('protectedStorage')}</p>
               <p>
-                Keys are encrypted before they reach the database using AES-256-GCM with a fresh
-                random nonce. Authentication data binds each ciphertext to your account and chosen
-                provider, so an encrypted row cannot be moved to another account.
-              </p>
-              <p>
-                The deployment encryption key is held separately in AWS Parameter Store. Your API
-                key is write-only: Readfox never sends it back to the browser, includes it in
-                exports, or logs upstream credential details.
-              </p>
-              <p>
-                Readfox is open source, so you can verify how credentials are encrypted, stored, and
-                selected at request time.{' '}
-                <a
-                  href="https://github.com/heuwels/lector"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-primary hover:underline"
-                >
-                  Inspect the implementation
-                </a>
-                .
+                {t.rich('protectedOpenSource', {
+                  link: (chunks) => (
+                    <a
+                      href="https://github.com/heuwels/lector"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary hover:underline"
+                    >
+                      {chunks}
+                    </a>
+                  ),
+                })}
               </p>
             </div>
           </details>
         </div>
       ) : (
-        <p className="text-sm text-muted-foreground">Loading…</p>
+        <p className="text-sm text-muted-foreground">{t('loading')}</p>
       )}
     </section>
   );

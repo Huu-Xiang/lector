@@ -1,7 +1,9 @@
 import type { ExtractedArticle } from './types';
 import { apiFetch } from '@/lib/api-base';
 
-export type ExtractResult = { ok: true; data: ExtractedArticle } | { ok: false; message: string };
+export type ExtractResult =
+  | { ok: true; data: ExtractedArticle }
+  | { ok: false; message: string | null; network?: boolean };
 
 export async function extractArticle(url: string): Promise<ExtractResult> {
   try {
@@ -14,12 +16,12 @@ export async function extractArticle(url: string): Promise<ExtractResult> {
     const data = await response.json();
 
     if (!response.ok) {
-      return { ok: false, message: data.error || 'Failed to extract article' };
+      return { ok: false, message: data.error || null };
     }
 
     return { ok: true, data };
   } catch (error) {
     console.error('Error extracting URL:', error);
-    return { ok: false, message: 'Network error. Check your connection.' };
+    return { ok: false, message: null, network: true };
   }
 }

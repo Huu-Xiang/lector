@@ -1,0 +1,140 @@
+{
+  "settings": {
+    "pageTitle": "Settings",
+    "practice": {
+      "title": "Practice",
+      "clozeHeading": "Cloze settings",
+      "translationLabel": "Translation",
+      "translationHint": "Hide the English translation by default while practicing. Toggle it anytime with <keys></keys>.",
+      "shown": "Shown",
+      "hidden": "Hidden"
+    },
+    "prose": {
+      "title": "Reading text",
+      "description": "How the reader draws a lesson. Set what you like under All languages, then correct one language if its script needs different treatment. These settings stay on this device.",
+      "allLanguages": "All languages",
+      "hasOwnSettings": "has its own settings",
+      "customisedNotice": "{language} has settings of its own. Everything you leave alone still follows All languages.",
+      "inheritedNotice": "{language} follows your All languages settings. Move a slider and save to correct one of them.",
+      "setFor": "· set for {language}",
+      "save": "Save",
+      "resetDefaults": "Reset to defaults",
+      "resetLanguage": "Reset {language}",
+      "statusUnsaved": "The sample above shows your changes. Save to apply them to the reader.",
+      "statusDefaults": "The defaults are {fontSize}px, weight {fontWeight}, kerning 0 and leading {lineHeight}.",
+      "statusResetLanguage": "A reset makes {language} follow All languages again.",
+      "controls": {
+        "fontSize": {
+          "label": "Font size",
+          "hint": "How big the body text of a lesson is."
+        },
+        "fontWeight": {
+          "label": "Font weight",
+          "hint": "How heavy each word looks."
+        },
+        "letterSpacing": {
+          "label": "Kerning",
+          "hint": "Space between the letters. A negative value tightens them."
+        },
+        "lineHeight": {
+          "label": "Leading",
+          "hint": "Space between the lines, as a multiple of the font size."
+        }
+      }
+    },
+    "theme": {
+      "title": "Appearance",
+      "label": "Theme",
+      "options": {
+        "light": "light",
+        "dark": "dark",
+        "system": "system"
+      }
+    },
+    "tts": {
+      "title": "Text-to-Speech",
+      "noAudioNote": "{language} has no synthesized voice. Pronunciation is disputed, so Readfox stays silent.",
+      "synthesizedVoice": "Synthesized voice",
+      "browserVoiceFree": "Browser voice · Free",
+      "managedAvailable": "Managed voice available",
+      "usingBrowser": "Using browser voice",
+      "espeakNote": "{language} is spoken by eSpeak NG, a synthesized voice hosted by Readfox — the only text-to-speech engine that exists for {language}. It sounds robotic but pronounces every word exactly, and it's included on every plan.",
+      "voiceEngine": "Voice Engine",
+      "engineHintFree": "Browser speech stays free and works across reading, practice, and dictation. Cloud adds a consistent managed voice.",
+      "engineHintPaid": "Managed voices offer more consistent pronunciation; your browser voice is always available.",
+      "managedVoice": "Managed voice",
+      "browserBuiltIn": "Browser Built-in",
+      "upsell": "Want Readfox's managed voice? <link>Upgrade to Cloud</link>. Adding your own AI key does not change audio because voice usage is hosted by Readfox.",
+      "testVoice": "Test Voice",
+      "speechSpeed": "Speech Speed",
+      "slow": "0.5x (Slow)",
+      "normal": "1.0x",
+      "fast": "1.5x (Fast)"
+    },
+    "timezone": {
+      "title": "Time Zone",
+      "description": "Daily stats, streaks and review days roll over at midnight in this time zone.",
+      "auto": "Auto — server time zone",
+      "useDevice": "Use this device's time zone ({zone})",
+      "updated": "Timezone updated to {zone}",
+      "failed": "Failed to change timezone"
+    },
+    "languages": {
+      "title": "Languages",
+      "description": "The language picker lists these languages. Remove a language to shorten the list. Your words, texts and cards in it stay on the server.",
+      "inUse": "In use",
+      "remove": "Remove {language}",
+      "added": "{language} added",
+      "removed": "{language} removed",
+      "saveFailed": "Could not save your languages",
+      "addPlaceholder": "Add a language…",
+      "add": "Add"
+    },
+    "knownWords": {
+      "title": "Import Known Words",
+      "description": "Import words you already know. Supports <strong>LingQ exports</strong> (with status levels and translations) or simple word lists.",
+      "lingqHelp": "LingQ: Vocabulary → Settings gear → Export LingQs → Upload the CSV here",
+      "uploadLabel": "Upload CSV File",
+      "uploadHint": "CSV with words in the first column, or a plain text file",
+      "pasteLabel": "Or Paste Words (one per line)",
+      "import": "Import",
+      "noWords": "No words to import.",
+      "imported": "Successfully imported {count, plural, one {# word} other {# words}} as known.",
+      "importFailed": "Failed to import known words",
+      "noData": "No data found in file.",
+      "noTermColumn": "Could not find 'term' column in LingQ export.",
+      "lingqImported": "Imported {count, plural, one {# word} other {# words}} from LingQ: {known} known, {learning} learning.",
+      "fileError": "Error importing file: {message}",
+      "unknownError": "Unknown error"
+    },
+    "export": {
+      "title": "Export Data",
+      "vocabCsv": "Export Vocab (CSV)",
+      "vocabJson": "Export Vocab (JSON)",
+      "knownWords": "Export Known Words",
+      "failed": "Export failed: {message}",
+      "unknownError": "Unknown error",
+      "csvDone": "Vocab exported as CSV.",
+      "jsonDone": "Vocab exported as JSON.",
+      "knownDone": "Exported {count, plural, one {# known word} other {# known words}}."
+    },
+    "data": {
+      "title": "Learning data",
+      "description": "Download your collections and lessons, reading position, vocabulary, sentence practice and review schedule, journal, and stats. API keys and provider endpoints are never included.",
+      "export": "Export all learning data",
+      "import": "Import learning data",
+      "invalidFormat": "Invalid backup file format",
+      "importFailedShort": "Import failed",
+      "imported": "Learning data imported",
+      "importedDetail": "{collections, plural, one {# collection} other {# collections}}, {lessons, plural, one {# lesson} other {# lessons}}, {vocab} vocab, {knownWords, plural, one {# known word} other {# known words}}, {clozeSentences, plural, one {# cloze sentence} other {# cloze sentences}}.",
+      "importFailed": "Import failed: {message}",
+      "unknownError": "Unknown error"
+    },
+    "about": {
+      "title": "About",
+      "build": "Build",
+      "commit": "Commit",
+      "built": "Built"
+    }
+  }
+}

@@ -10,9 +10,11 @@ import {
 import { foldWord } from '@/lib/languages';
 import { useRef, useState } from 'react';
 import { lingqStatusToState, parseCSVLine } from './utils';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 
 export default function KnownWordsImport() {
+  const t = useTranslations('settings.knownWords');
   const [importText, setImportText] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -35,16 +37,16 @@ export default function KnownWordsImport() {
       .filter((word) => word.length > 0);
 
     if (words.length === 0) {
-      toast.info('No words to import.');
+      toast.info(t('noWords'));
       return;
     }
 
     try {
       await importKnownWords(words);
-      toast.success(`Successfully imported ${words.length} words as known.`);
+      toast.success(t('imported', { count: words.length }));
       setImportText('');
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to import known words');
+      toast.error(error instanceof Error ? error.message : t('importFailed'));
     }
   };
 
@@ -105,7 +107,7 @@ export default function KnownWordsImport() {
         .filter((line) => line.length > 0);
 
       if (lines.length === 0) {
-        toast.info('No data found in file.');
+        toast.info(t('noData'));
         return;
       }
 
@@ -122,7 +124,7 @@ export default function KnownWordsImport() {
         const statusIdx = header.findIndex((h) => h === 'status');
 
         if (termIdx === -1) {
-          toast.error("Could not find 'term' column in LingQ export.");
+          toast.error(t('noTermColumn'));
           return;
         }
 
@@ -149,7 +151,11 @@ export default function KnownWordsImport() {
         const knownCount = imports.filter((i) => i.state === 'known').length;
         const learningCount = imports.length - knownCount;
         toast.success(
-          `Imported ${imports.length} words from LingQ: ${knownCount} known, ${learningCount} learning.`,
+          t('lingqImported', {
+            count: imports.length,
+            known: knownCount,
+            learning: learningCount,
+          }),
         );
       } else {
         // Simple format: one word per line or first CSV column
@@ -161,11 +167,11 @@ export default function KnownWordsImport() {
           .filter((w) => w.length > 0);
 
         await importKnownWords(words);
-        toast.success(`Successfully imported ${words.length} words as known.`);
+        toast.success(t('imported', { count: words.length }));
       }
     } catch (error) {
       toast.error(
-        `Error importing file: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        t('fileError', { message: error instanceof Error ? error.message : t('unknownError') }),
       );
     }
 
@@ -177,50 +183,39 @@ export default function KnownWordsImport() {
 
   return (
     <section className="panel p-6">
-      <h2 className="mb-4 text-lg font-semibold text-foreground">
-        Import Known Words
-      </h2>
+      <h2 className="mb-4 text-lg font-semibold text-foreground">{t('title')}</h2>
       <p className="mb-4 text-sm text-muted-foreground">
-        Import words you already know. Supports <strong>LingQ exports</strong> (with status levels
-        and translations) or simple word lists.
+        {t.rich('description', { strong: (chunks) => <strong>{chunks}</strong> })}
       </p>
-      <p className="mb-4 text-xs text-muted-foreground">
-        LingQ: Vocabulary → Settings gear → Export LingQs → Upload the CSV here
-      </p>
+      <p className="mb-4 text-xs text-muted-foreground">{t('lingqHelp')}</p>
 
       {/* CSV Upload */}
       <div className="mb-4">
-        <label className="mb-2 block text-sm font-medium text-foreground">
-          Upload CSV File
-        </label>
+        <label className="mb-2 block text-sm font-medium text-foreground">{t('uploadLabel')}</label>
         <input
           ref={fileInputRef}
           type="file"
           accept=".csv,.txt"
           onChange={handleFileUpload}
-          className="block w-full text-sm text-muted-foreground file:mr-4 file:rounded-md file:border-0 file:bg-[var(--primary-soft)] file:px-4 file:py-2 file:text-sm file:font-medium file:text-primary hover:file:bg-[var(--primary-soft)] dark:text-muted-foreground  "
+          className="block w-full text-sm text-muted-foreground file:mr-4 file:rounded-md file:border-0 file:bg-[var(--primary-soft)] file:px-4 file:py-2 file:text-sm file:font-medium file:text-primary hover:file:bg-[var(--primary-soft)] dark:text-muted-foreground"
         />
-        <p className="mt-1 text-xs text-muted-foreground">
-          CSV with words in the first column, or a plain text file
-        </p>
+        <p className="mt-1 text-xs text-muted-foreground">{t('uploadHint')}</p>
       </div>
 
       {/* Text Area Import */}
       <div className="mb-4">
-        <label className="mb-2 block text-sm font-medium text-foreground">
-          Or Paste Words (one per line)
-        </label>
+        <label className="mb-2 block text-sm font-medium text-foreground">{t('pasteLabel')}</label>
         <textarea
           value={importText}
           onChange={(e) => setImportText(e.target.value)}
           placeholder="die&#10;en&#10;is&#10;van&#10;..."
           rows={6}
-          className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none  "
+          className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none"
         />
       </div>
 
       <Button variant="secondary" onClick={handleTextImport} disabled={!importText.trim()}>
-        Import
+        {t('import')}
       </Button>
     </section>
   );

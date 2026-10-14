@@ -1,7 +1,9 @@
+import { useTranslations } from 'next-intl';
 import { type Theme } from '@/types/theme';
 import { useTheme } from '@/utils/hooks';
 
 export default function ThemeSettings() {
+  const t = useTranslations('settings.theme');
   const { theme, setTheme } = useTheme();
 
   const handleThemeChanged = (theme: Theme) => {
@@ -10,11 +12,9 @@ export default function ThemeSettings() {
 
   return (
     <section className="panel p-6">
-      <h2 className="mb-4 text-lg font-semibold text-foreground">Appearance</h2>
+      <h2 className="mb-4 text-lg font-semibold text-foreground">{t('title')}</h2>
       <div>
-        <label className="mb-2 block text-sm font-medium text-foreground">
-          Theme
-        </label>
+        <label className="mb-2 block text-sm font-medium text-foreground">{t('label')}</label>
         <div className="flex gap-2">
           {(['light', 'dark', 'system'] as Theme[]).map((themeOpt) => (
             <button
@@ -27,7 +27,7 @@ export default function ThemeSettings() {
                   : 'border-border bg-card text-foreground hover:bg-accent'
               }`}
             >
-              {themeOpt}
+              {t(`options.${themeOpt}`)}
             </button>
           ))}
         </div>

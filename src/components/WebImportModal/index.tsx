@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { X } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import PreviewStep from './components/PreviewStep';
@@ -10,6 +11,7 @@ import type { ModalState, WebImportModalProps } from './types';
 import { extractArticle } from './utils';
 
 export default function WebImportModal({ isOpen, onClose, onSave }: WebImportModalProps) {
+  const t = useTranslations('library');
   const inputRef = useRef<HTMLInputElement>(null);
   const [url, setUrl] = useState('');
   const [state, setState] = useState<ModalState>({ phase: 'input' });
@@ -36,14 +38,18 @@ export default function WebImportModal({ isOpen, onClose, onSave }: WebImportMod
     const result = await extractArticle(url.trim());
 
     if (!result.ok) {
-      setState({ phase: 'error', message: result.message });
+      setState({
+        phase: 'error',
+        message:
+          result.message ?? (result.network ? t('web.networkError') : t('web.extractFailed')),
+      });
       return;
     }
 
     setEditedTitle(result.data.title);
     setEditedAuthor(result.data.author || result.data.siteName || 'Unknown');
     setState({ phase: 'preview', data: result.data });
-  }, [url]);
+  }, [url, t]);
 
   const handleSave = useCallback(async () => {
     if (state.phase !== 'preview') return;
@@ -59,9 +65,9 @@ export default function WebImportModal({ isOpen, onClose, onSave }: WebImportMod
       onClose();
     } catch (error) {
       console.error('Error saving article:', error);
-      setState({ phase: 'error', message: 'Failed to save article.' });
+      setState({ phase: 'error', message: t('web.saveFailed') });
     }
-  }, [state, editedTitle, editedAuthor, onSave, onClose]);
+  }, [state, editedTitle, editedAuthor, onSave, onClose, t]);
 
   const handleKeyPress = useCallback(
     (event: React.KeyboardEvent) => {
@@ -80,8 +86,11 @@ export default function WebImportModal({ isOpen, onClose, onSave }: WebImportMod
       >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-border px-6 py-4">
-          <DialogTitle>Import from Web</DialogTitle>
-          <DialogClose className={buttonVariants({ variant: 'ghost', size: 'icon' })} aria-label="Close">
+          <DialogTitle>{t('web.title')}</DialogTitle>
+          <DialogClose
+            className={buttonVariants({ variant: 'ghost', size: 'icon' })}
+            aria-label={t('common.close')}
+          >
             <X size="20" />
           </DialogClose>
         </div>
@@ -121,19 +130,16 @@ export default function WebImportModal({ isOpen, onClose, onSave }: WebImportMod
               onClick={() => setState({ phase: 'input' })}
               disabled={state.phase === 'saving'}
             >
-              Back
+              {t('common.back')}
             </Button>
-            <Button
-              onClick={handleSave}
-              disabled={state.phase === 'saving' || !editedTitle.trim()}
-            >
+            <Button onClick={handleSave} disabled={state.phase === 'saving' || !editedTitle.trim()}>
               {state.phase === 'saving' ? (
                 <div className="flex items-center gap-2">
                   <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground/30 border-t-primary-foreground" />
-                  Saving...
+                  {t('common.saving')}
                 </div>
               ) : (
-                'Save to Library'
+                t('common.saveToLibrary')
               )}
             </Button>
           </div>

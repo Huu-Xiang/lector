@@ -1,0 +1,170 @@
+{
+  "reader": {
+    "page": {
+      "lessonNotFound": "找不到课文",
+      "loadFailed": "课文加载失败",
+      "retryFailed": "无法重新转写",
+      "phraseFailed": "短语翻译失败。请在设置中检查 AI 服务商。",
+      "wordFailed": "单词翻译失败。请在设置中检查 AI 服务商。",
+      "contextFailed": "无法获取语境翻译。",
+      "retranslateFailed": "重新翻译失败",
+      "saveFailed": "无法保存该单词，请检查网络连接后重试。",
+      "saveFailedShort": "无法保存该单词，请检查网络连接。",
+      "knownFailed": "无法将该单词标为已掌握，请检查网络连接。",
+      "ignoreFailed": "无法忽略该单词，请检查网络连接。",
+      "levelFailed": "无法设置单词等级，请检查网络连接。",
+      "onboardingWordAdded": "已添加“{word}”，复习单词已就绪 {count}/3",
+      "miniReviewFailed": "无法开始小复习，请重试。",
+      "copied": "已复制",
+      "loading": "正在加载课文...",
+      "goToLibrary": "前往书库",
+      "backToLibrary": "返回书库",
+      "transcribing": "正在转写音频…",
+      "transcribingBody": "“{title}”正在后台转写，通常需要几分钟，完成后课文会自动打开。",
+      "transcriptionFailed": "转写失败",
+      "retry": "重试",
+      "listenAlong": "跟听"
+    },
+    "markdown": {
+      "saveFailed": "保存失败",
+      "back": "返回",
+      "cancel": "取消",
+      "saving": "正在保存…",
+      "saveChanges": "保存修改",
+      "pronunciation": "读音：{mode}",
+      "annotation": {
+        "off": "关闭",
+        "learning": "学习中的词",
+        "all": "所有词"
+      },
+      "editText": "编辑文本",
+      "editHint": "支持 Markdown。词汇状态按单词记录，因此修改不会重置你的进度。",
+      "captionsAuto": "自动生成的字幕",
+      "captionsCreator": "作者提供的字幕",
+      "openOnYouTube": "在 YouTube 上打开",
+      "playFromHere": "从这里播放",
+      "playFrom": "从 {time} 开始播放"
+    },
+    "drawer": {
+      "wordDefinition": "单词释义",
+      "definitionOf": "{word} 的释义",
+      "clickToLookUp": "点击单词即可查询。",
+      "state": {
+        "new": "新词",
+        "level1": "1 级",
+        "level2": "2 级",
+        "level3": "3 级",
+        "level4": "4 级",
+        "known": "已掌握",
+        "ignored": "已忽略"
+      },
+      "hearPronunciation": "听发音",
+      "sourceAiInContext": "AI · 语境",
+      "sourceLearned": "已学习",
+      "sourceOnDevice": "本地词典",
+      "sourceAi": "AI",
+      "close": "关闭",
+      "closeEsc": "关闭 (Esc)",
+      "lookingUp": "正在查询…",
+      "showDictionary": "显示词典释义（{count}）",
+      "noDefinition": "未找到释义。",
+      "inContextTitle": "结合句子语境用 AI 翻译",
+      "inContext": "结合语境",
+      "askingAi": "正在询问 AI…",
+      "enrichTitle": "补充音标、词源、完整义项和相关词形",
+      "enrich": "丰富释义",
+      "enriching": "正在丰富释义…",
+      "idiomaticMeaning": "惯用含义",
+      "literally": "字面意思",
+      "usage": "用法",
+      "etymology": "词源",
+      "relatedForms": "相关词形",
+      "showFewer": "收起",
+      "showAll": "显示全部（{count}）",
+      "hearSentence": "听句子",
+      "onboardingAdded": "已加入你的第一次复习",
+      "onboardingChoose": "选择 1–4 级即可添加该单词",
+      "onboardingReady": "已就绪 {count}/{target}",
+      "saveAtLevel": "以学习等级 {level} 保存",
+      "levelTitle": "{level} 级",
+      "markKnownTitle": "标为已掌握 (K)",
+      "known": "✓ 已掌握",
+      "ignoreTitle": "忽略 (X)",
+      "ignore": "✕ 忽略",
+      "retranslateTitle": "强制重新用 AI 查询（忽略词典）",
+      "retranslate": "用 AI 重新翻译",
+      "ankiAdded": "✓ 已添加到 Anki",
+      "ankiAdding": "正在添加…",
+      "ankiError": "Anki 出错，点击重试",
+      "ankiAdd": "添加到 Anki",
+      "clozeAdd": "作为填空卡添加到 Anki",
+      "clozePick": "选择要挖空的单词：",
+      "clozeSent": "✓ 已发送到 Anki",
+      "clozeSending": "正在发送…",
+      "clozeError": "出错，点击重试",
+      "clozeSend": "发送到 Anki",
+      "cancel": "取消",
+      "lookUp": "查询 {word}",
+      "announce": {
+        "lookingUp": "正在查询 {word}。",
+        "lookupFailed": "查询 {word} 失败。{error}",
+        "definitionLoaded": "已加载 {word} 的释义。",
+        "noDefinitionFound": "未找到 {word} 的释义。"
+      }
+    },
+    "onboardingTip": {
+      "dismiss": "关闭新手提示"
+    },
+    "youtube": {
+      "playerTitle": "YouTube 视频播放器"
+    },
+    "wordCell": {
+      "lookUp": "查询 {text}"
+    },
+    "coach": {
+      "ariaLabel": "首课引导",
+      "progressLabel": "复习单词已就绪 {count}/3",
+      "wordPlaceholder": "单词 {n}",
+      "startPractice": "开始 3 词练习",
+      "ready": "已就绪 {count}/3",
+      "lookup": {
+        "eyebrow": "试试阅读器",
+        "title": "选择任意一个高亮单词",
+        "body": "带颜色的词对你来说还是生词。点按或点击其中一个，即可在课文中查看释义。"
+      },
+      "save": {
+        "titleFirst": "把这个词加入复习",
+        "titleNext": "再选一个有用的词",
+        "bodyFirst": "在释义面板中选择 1-4 级，下方的复习进度会显示这个词。",
+        "bodyNext": "关闭释义，选择另一个高亮单词，然后设置等级即可添加。"
+      },
+      "phrase": {
+        "title": "现在试试翻译整个短语",
+        "body": "关闭释义，然后拖选两个或更多单词（手机上请长按），松开即可翻译所选短语。"
+      },
+      "practice": {
+        "eyebrow": "你的小复习已准备好",
+        "title": "练习刚读到的单词",
+        "body": "三张快速卡片，趁课文记忆犹新，帮你巩固所学。"
+      }
+    },
+    "listen": {
+      "back": "返回",
+      "readAsText": "以文字阅读",
+      "mode": {
+        "continuous": "连续",
+        "shadow": "跟读"
+      },
+      "sentenceProgress": "第 {current} 句，共 {total} 句",
+      "seek": "跳转",
+      "playbackSpeed": "播放速度",
+      "previousSentence": "上一句",
+      "backSeconds": "后退 {seconds} 秒",
+      "forwardSeconds": "快进 {seconds} 秒",
+      "pause": "暂停",
+      "play": "播放",
+      "repeatSentence": "重复本句",
+      "nextSentence": "下一句"
+    }
+  }
+}

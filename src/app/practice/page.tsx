@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import { useFormatter, useTranslations } from 'next-intl';
 import { CheckCircle, Star } from 'lucide-react';
 import { DeckShuffle } from '@/components/Loaders';
 import TranslationDrawer, { TranslationDrawerSlot } from '@/components/TranslationDrawer';
@@ -53,12 +54,7 @@ import type {
   RoundType,
 } from './types';
 import { useClozeRound } from './use-cloze-round';
-import {
-  COLLECTION_LABELS,
-  PRACTICE_FORMAT_SETTING_KEY,
-  ROUND_SIZES,
-  VISIBLE_COLLECTIONS,
-} from './constants';
+import { PRACTICE_FORMAT_SETTING_KEY, ROUND_SIZES, VISIBLE_COLLECTIONS } from './constants';
 import BlacklistSentence from './components/BlacklistSentence';
 import { Button } from '@/components/ui/button';
 import { Kbd, KbdGroup } from '@/components/ui/kbd';
@@ -86,6 +82,8 @@ function isInteractiveKeyTarget(event: KeyboardEvent): boolean {
 
 export default function PracticePage() {
   const router = useRouter();
+  const t = useTranslations('practice');
+  const format = useFormatter();
 
   const {
     phase: state,
@@ -151,7 +149,9 @@ export default function PracticePage() {
   // without ?onboarding=1 keeps the existing setup and round behaviour.
   const [onboardingMode, setOnboardingMode] = useState(false);
   const [onboardingSnapshot, setOnboardingSnapshot] = useState<OnboardingSnapshot | null>(null);
-  const [onboardingRecovery, setOnboardingRecovery] = useState<string | null>(null);
+  const [onboardingRecovery, setOnboardingRecovery] = useState<
+    'missingWords' | 'loadFailed' | null
+  >(null);
   const [onboardingCompletionStatus, setOnboardingCompletionStatus] = useState<
     'idle' | 'saving' | 'complete' | 'error'
   >('idle');
@@ -291,11 +291,11 @@ export default function PracticePage() {
           dictEntry: null,
           isLoading: false,
           isContextLoading: false,
-          error: 'Please try again.',
+          error: t('wordTooltip.tryAgain'),
         });
       }
     },
-    [current],
+    [current, t],
   );
 
   // Ask the LLM to retranslate the active word using the full (un-blanked)
@@ -417,9 +417,7 @@ export default function PracticePage() {
         const sentences = await getOnboardingCloze(savedWords.map((word) => word.id));
 
         if (savedWords.length < 3 || sentences.length < 3) {
-          setOnboardingRecovery(
-            'Your mini-review needs three words saved from the starter lesson. Return to the lesson and save any missing words, then try again.',
-          );
+          setOnboardingRecovery('missingWords');
           setState('empty');
           return;
         }
@@ -438,9 +436,7 @@ export default function PracticePage() {
         presentRound(guidedQueue, { format: 'cloze', mode: 'mc' });
       } catch (error) {
         console.error('Failed to start onboarding practice:', error);
-        setOnboardingRecovery(
-          'We could not load your saved practice words. Return to the starter lesson and try the mini-review again.',
-        );
+        setOnboardingRecovery('loadFailed');
         setState('empty');
       }
     };
@@ -845,7 +841,7 @@ export default function PracticePage() {
         {state === 'setup' && (
           <div className="py-6">
             <PageHeader
-              title={practiceFormat === 'dictation' ? 'Dictation Practice' : 'Cloze Practice'}
+              title={practiceFormat === 'dictation' ? t('title.dictation') : t('title.cloze')}
             ></PageHeader>
 
             {/* Practice format: Cloze (fill the blank) vs Dictation (hear the
@@ -859,24 +855,26 @@ export default function PracticePage() {
                     cloze "Type" mode button would otherwise also match the
                     "Type what you hear" subtitle). */}
                 <Button
-                  aria-label="Cloze"
+                  aria-label={t('format.cloze')}
                   onClick={() => handleSetPracticeFormat('cloze')}
                   variant={practiceFormat === 'cloze' ? 'default' : 'secondary'}
                   className="flex h-14 flex-col justify-center gap-0"
                 >
-                  <div>Cloze</div>
-                  <div className="mt-0.5 text-[11px] font-normal opacity-75">Fill in the blank</div>
+                  <div>{t('format.cloze')}</div>
+                  <div className="mt-0.5 text-[11px] font-normal opacity-75">
+                    {t('format.clozeHint')}
+                  </div>
                 </Button>
                 {dictationAvailable && (
                   <Button
-                    aria-label="Dictation"
+                    aria-label={t('format.dictation')}
                     onClick={() => handleSetPracticeFormat('dictation')}
                     variant={practiceFormat === 'dictation' ? 'default' : 'secondary'}
                     className="flex h-14 flex-col justify-center gap-0"
                   >
-                    <div>Dictation</div>
+                    <div>{t('format.dictation')}</div>
                     <div className="mt-0.5 text-[11px] font-normal opacity-75">
-                      Type what you hear
+                      {t('format.dictationHint')}
                     </div>
                   </Button>
                 )}
@@ -897,7 +895,7 @@ export default function PracticePage() {
                 return (
                   <div className="mb-8 rounded-2xl border border-[var(--gold-lip)] bg-[var(--gold-soft)] p-5">
                     <h2 className="mb-3 text-base font-semibold text-[var(--gold-strong)]">
-                      Review Due ({totalDue})
+                      {t('setup.reviewDue', { count: totalDue })}
                     </h2>
                     <div className="space-y-2">
                       {VISIBLE_COLLECTIONS.map((coll) => {
@@ -915,10 +913,10 @@ export default function PracticePage() {
                             className="flex w-full items-center justify-between rounded-xl border border-border bg-card px-4 py-3 transition-all hover:border-[var(--gold-strong)] active:scale-[0.98]"
                           >
                             <span className="font-medium text-foreground">
-                              {COLLECTION_LABELS[coll]}
+                              {t(`collections.${coll}`)}
                             </span>
                             <span className="text-sm font-semibold text-[var(--gold-strong)]">
-                              {due} due
+                              {t('setup.due', { count: due })}
                             </span>
                           </button>
                         );
@@ -930,7 +928,9 @@ export default function PracticePage() {
 
             {/* Learn New section */}
             <div className="rounded-2xl border border-border bg-card p-5">
-              <h2 className="mb-4 text-base font-semibold text-foreground">Learn New</h2>
+              <h2 className="mb-4 text-base font-semibold text-foreground">
+                {t('setup.learnNew')}
+              </h2>
 
               {/* Collection */}
               <div className="mb-4">
@@ -944,10 +944,10 @@ export default function PracticePage() {
                         variant={selectedCollection === coll ? 'default' : 'secondary'}
                         className="flex h-14 flex-col justify-center gap-0"
                       >
-                        <div>{COLLECTION_LABELS[coll]}</div>
+                        <div>{t(`collections.${coll}`)}</div>
                         {count && count.total > 0 && (
                           <div className="mt-0.5 text-[11px] font-normal opacity-75">
-                            {count.mastered}/{count.total} mastered
+                            {t('setup.mastered', { mastered: count.mastered, total: count.total })}
                           </div>
                         )}
                       </Button>
@@ -960,7 +960,7 @@ export default function PracticePage() {
               <div className="mb-4 flex gap-4">
                 <div className="flex-1">
                   <label className="mb-2 block text-xs font-medium text-muted-foreground">
-                    Sentences
+                    {t('setup.sentences')}
                   </label>
                   <div className="flex gap-1.5">
                     {ROUND_SIZES.map((size) => (
@@ -983,20 +983,20 @@ export default function PracticePage() {
                 {practiceFormat === 'cloze' && (
                   <div className="">
                     <label className="mb-2 block text-xs font-medium text-muted-foreground">
-                      Mode
+                      {t('setup.mode')}
                     </label>
                     <div className="flex gap-1.5">
                       <Button
                         onClick={() => handleSetPracticeMode('type')}
                         variant={practiceMode === 'type' ? 'default' : 'secondary'}
                       >
-                        Type
+                        {t('setup.modeType')}
                       </Button>
                       <Button
                         onClick={() => handleSetPracticeMode('mc')}
                         variant={practiceMode === 'mc' ? 'default' : 'secondary'}
                       >
-                        MC
+                        {t('setup.modeMc')}
                       </Button>
                     </div>
                   </div>
@@ -1009,7 +1009,7 @@ export default function PracticePage() {
                 disabled={!seeded}
                 className="w-full"
               >
-                {seeded ? 'Start' : 'Loading...'}
+                {seeded ? t('setup.start') : t('setup.loading')}
               </Button>
             </div>
           </div>
@@ -1022,9 +1022,9 @@ export default function PracticePage() {
               {onboardingMode && (
                 <div className="mb-4">
                   <p className="text-xs font-bold tracking-wide text-[var(--gold-strong)] uppercase">
-                    Guided first lesson
+                    {t('round.guidedLabel')}
                   </p>
-                  <h1 className="text-2xl font-bold text-foreground">Your first learning loop</h1>
+                  <h1 className="text-2xl font-bold text-foreground">{t('round.guidedTitle')}</h1>
                 </div>
               )}
               <div className="mb-2 flex items-center justify-between">
@@ -1042,16 +1042,16 @@ export default function PracticePage() {
                   }}
                   className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
-                  &larr; Back
+                  {t('round.back')}
                 </button>
                 {onboardingMode ? (
                   <span className="text-sm font-medium text-[var(--gold-strong)]">
-                    3-word review
+                    {t('round.threeWord')}
                   </span>
                 ) : (
                   <span className="flex items-center gap-1.5 text-sm font-medium text-[var(--gold-strong)]">
                     <Star className="h-4 w-4" fill="currentColor" />
-                    {points.toLocaleString()}
+                    {format.number(points)}
                   </span>
                 )}
               </div>
@@ -1061,8 +1061,8 @@ export default function PracticePage() {
                 <div className="flex items-center justify-between text-sm text-muted-foreground">
                   <span>
                     {onboardingMode
-                      ? 'Words from your starter lesson'
-                      : COLLECTION_LABELS[selectedCollection]}
+                      ? t('round.starterWords')
+                      : t(`collections.${selectedCollection}`)}
                   </span>
                   <span className="font-medium">
                     {roundProgress}/{roundSize}
@@ -1085,7 +1085,7 @@ export default function PracticePage() {
             {state === 'loading' && (
               <div className="flex flex-col items-center justify-center py-12">
                 <DeckShuffle className="mb-4" />
-                <p className="text-muted-foreground">Loading sentences...</p>
+                <p className="text-muted-foreground">{t('round.loading')}</p>
               </div>
             )}
 
@@ -1139,7 +1139,7 @@ export default function PracticePage() {
                       <Kbd>Alt</Kbd>
                       <Kbd>T</Kbd>
                     </KbdGroup>
-                    Translation
+                    {t('question.translation')}
                   </span>
                 );
 
@@ -1150,8 +1150,8 @@ export default function PracticePage() {
                       <div className="mb-4 flex items-center justify-between">
                         <span className="text-sm font-medium text-muted-foreground">
                           {practiceMode === 'mc' || mcFallback
-                            ? 'Choose the correct word'
-                            : 'Fill in the blank'}
+                            ? t('question.choose')
+                            : t('question.fill')}
                         </span>
                         {!onboardingMode && (
                           <BlacklistSentence
@@ -1218,7 +1218,9 @@ export default function PracticePage() {
                                 type="button"
                                 data-testid="cloze-word"
                                 onClick={() => handleWordClick(word)}
-                                aria-label={`Look up ${splitTrailingPunctuation(word)[0]}`}
+                                aria-label={t('lookUp', {
+                                  word: splitTrailingPunctuation(word)[0],
+                                })}
                                 className="inline cursor-pointer rounded px-0.5 font-medium text-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                               >
                                 {word}
@@ -1239,7 +1241,7 @@ export default function PracticePage() {
                           onClick={() => setShowTranslation(true)}
                           className="mt-3 inline-flex items-center gap-2 text-sm text-muted-foreground italic transition-colors hover:text-foreground"
                         >
-                          Show translation
+                          {t('question.showTranslation')}
                           <KbdGroup>
                             <Kbd>Alt</Kbd>
                             <Kbd>T</Kbd>
@@ -1302,11 +1304,11 @@ export default function PracticePage() {
                             <span aria-hidden>–</span>
                             <Kbd>4</Kbd>
                           </KbdGroup>
-                          Choose
+                          {t('question.keyChoose')}
                         </span>
                         <span className="inline-flex items-center gap-1.5">
                           <Kbd>Space</Kbd>
-                          Listen
+                          {t('question.keyListen')}
                         </span>
                         {translationHint}
                       </div>
@@ -1323,21 +1325,19 @@ export default function PracticePage() {
                             generateMcOptionsForSentence(current.sentence, queue);
                             setMcFallback(true);
                           }}
-                          title="Switch to multiple choice for this question"
+                          title={t('question.multipleChoiceTitle')}
                         >
-                          Multiple Choice
+                          {t('question.multipleChoice')}
                         </Button>
                         <Button
                           type="button"
                           variant="secondary"
                           onClick={handleHint}
-                          title="Reveal next letter"
+                          title={t('question.hintTitle')}
                         >
-                          Hint (
                           {hintLetters > 0
-                            ? `${hintLetters} letter${hintLetters > 1 ? 's' : ''}`
-                            : '?'}
-                          )
+                            ? t('question.hintLetters', { count: hintLetters })
+                            : t('question.hintNone')}
                         </Button>
                         <Button
                           type="button"
@@ -1345,7 +1345,7 @@ export default function PracticePage() {
                           onClick={handleSubmit}
                           disabled={!userAnswer.trim()}
                         >
-                          {fuzzyStatus === 'match' ? 'Submit' : 'Check'}
+                          {fuzzyStatus === 'match' ? t('question.submit') : t('question.check')}
                         </Button>
                       </div>
                     )}
@@ -1355,7 +1355,7 @@ export default function PracticePage() {
                       <div className="mt-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
                         <span className="inline-flex items-center gap-1.5">
                           <Kbd>Enter</Kbd>
-                          {fuzzyStatus === 'match' ? 'Submit' : 'Check'}
+                          {fuzzyStatus === 'match' ? t('question.submit') : t('question.check')}
                         </span>
                         {translationHint}
                       </div>
@@ -1363,7 +1363,7 @@ export default function PracticePage() {
 
                     {/* Mastery indicator */}
                     <div className="mt-6 flex items-center justify-center gap-2 text-sm text-muted-foreground">
-                      <span>Mastery:</span>
+                      <span>{t('question.mastery')}</span>
                       <div className="flex h-2 w-24 overflow-hidden rounded-full bg-muted">
                         <div
                           className="bg-primary transition-all"
@@ -1404,12 +1404,12 @@ export default function PracticePage() {
                 <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-[color-mix(in_srgb,var(--primary)_14%,var(--card))] text-primary">
                   <CheckCircle className="h-8 w-8" />
                 </div>
-                <h2 className="mb-2 text-xl font-bold text-foreground">Round Complete!</h2>
+                <h2 className="mb-2 text-xl font-bold text-foreground">{t('complete.title')}</h2>
                 <p className="mb-1 text-muted-foreground">
-                  {roundCorrect}/{roundProgress} correct
+                  {t('complete.correct', { correct: roundCorrect, total: roundProgress })}
                 </p>
                 <p className="mb-6 text-sm text-muted-foreground">
-                  {points.toLocaleString()} total points
+                  {t('complete.totalPoints', { points: format.number(points) })}
                 </p>
                 <div className="flex justify-center gap-3">
                   <Button
@@ -1421,10 +1421,10 @@ export default function PracticePage() {
                       setCollectionCounts(counts);
                     }}
                   >
-                    Change Settings
+                    {t('complete.changeSettings')}
                   </Button>
                   <Button type="button" onClick={startRound}>
-                    Play Again
+                    {t('complete.playAgain')}
                   </Button>
                 </div>
               </div>
@@ -1436,31 +1436,36 @@ export default function PracticePage() {
                   <CheckCircle className="h-8 w-8" aria-hidden="true" />
                 </div>
                 <p className="text-xs font-bold tracking-wide text-[var(--gold-strong)] uppercase">
-                  {onboardingProgress?.recommendedLessonTitle || 'Starter lesson'}
+                  {onboardingProgress?.recommendedLessonTitle || t('onboarding.starterLesson')}
                 </p>
                 <h2 className="mt-1 text-2xl font-bold text-foreground">
-                  First learning loop complete
+                  {t('onboarding.complete.title')}
                 </h2>
                 <p className="mx-auto mt-2 max-w-md text-muted-foreground">
-                  You turned words from a real reading into practice. That is the loop Readfox will
-                  keep building on with you.
+                  {t('onboarding.complete.description')}
                 </p>
 
                 <dl className="mx-auto mt-6 grid max-w-md grid-cols-3 gap-3">
                   <div className="rounded-xl bg-muted p-3">
-                    <dt className="text-xs text-muted-foreground">Encountered</dt>
+                    <dt className="text-xs text-muted-foreground">
+                      {t('onboarding.complete.encountered')}
+                    </dt>
                     <dd className="mt-1 text-xl font-bold text-foreground">
                       {onboardingEncounteredCount}
                     </dd>
                   </div>
                   <div className="rounded-xl bg-muted p-3">
-                    <dt className="text-xs text-muted-foreground">Saved</dt>
+                    <dt className="text-xs text-muted-foreground">
+                      {t('onboarding.complete.saved')}
+                    </dt>
                     <dd className="mt-1 text-xl font-bold text-foreground">
                       {onboardingSavedCount}
                     </dd>
                   </div>
                   <div className="rounded-xl bg-muted p-3">
-                    <dt className="text-xs text-muted-foreground">Score</dt>
+                    <dt className="text-xs text-muted-foreground">
+                      {t('onboarding.complete.score')}
+                    </dt>
                     <dd className="mt-1 text-xl font-bold text-foreground">
                       {roundCorrect}/{roundProgress}
                     </dd>
@@ -1469,31 +1474,30 @@ export default function PracticePage() {
 
                 <div className="mx-auto mt-6 max-w-md rounded-xl border border-[var(--gold-lip)] bg-[var(--gold-soft)] p-4 text-left">
                   <p className="text-xs font-bold tracking-wide text-[var(--gold-strong)] uppercase">
-                    {onboardingProgress?.nextLessonId ? 'Up next' : 'Tomorrow'}
+                    {onboardingProgress?.nextLessonId
+                      ? t('onboarding.complete.upNext')
+                      : t('onboarding.complete.tomorrow')}
                   </p>
                   <p className="mt-1 font-semibold text-foreground">
-                    {onboardingProgress?.nextLessonTitle ||
-                      'Come back for another short reading and review.'}
+                    {onboardingProgress?.nextLessonTitle || t('onboarding.complete.comeBack')}
                   </p>
                 </div>
 
                 {onboardingCompletionStatus === 'saving' && (
                   <p className="mt-4 text-sm text-muted-foreground" role="status">
-                    Saving your progress…
+                    {t('onboarding.complete.saving')}
                   </p>
                 )}
                 {onboardingCompletionStatus === 'error' && (
                   <div className="mt-4" role="alert">
-                    <p className="text-sm text-destructive">
-                      Your round is safe, but we could not mark onboarding complete.
-                    </p>
+                    <p className="text-sm text-destructive">{t('onboarding.complete.saveError')}</p>
                     <Button
                       type="button"
                       variant="secondary"
                       className="mt-2"
                       onClick={finishOnboarding}
                     >
-                      Try saving again
+                      {t('onboarding.complete.trySavingAgain')}
                     </Button>
                   </div>
                 )}
@@ -1510,7 +1514,7 @@ export default function PracticePage() {
                     disabled={onboardingCompletionStatus !== 'complete'}
                     data-testid="onboarding-library"
                   >
-                    Open Library
+                    {t('onboarding.complete.openLibrary')}
                   </Button>
                   {onboardingProgress?.nextLessonId && (
                     <Button
@@ -1523,7 +1527,7 @@ export default function PracticePage() {
                       disabled={onboardingCompletionStatus !== 'complete'}
                       data-testid="onboarding-next-lesson"
                     >
-                      Read next lesson
+                      {t('onboarding.complete.readNext')}
                     </Button>
                   )}
                 </div>
@@ -1538,9 +1542,11 @@ export default function PracticePage() {
                 data-testid="onboarding-practice-recovery"
               >
                 <h2 id="onboarding-recovery-title" className="text-xl font-bold text-foreground">
-                  Your practice words aren&apos;t ready yet
+                  {t('onboarding.recovery.title')}
                 </h2>
-                <p className="mx-auto mt-2 max-w-md text-muted-foreground">{onboardingRecovery}</p>
+                <p className="mx-auto mt-2 max-w-md text-muted-foreground">
+                  {onboardingRecovery ? t(`onboarding.recovery.${onboardingRecovery}`) : null}
+                </p>
                 <Button
                   type="button"
                   className="mt-6"
@@ -1550,8 +1556,8 @@ export default function PracticePage() {
                   }}
                 >
                   {onboardingProgress?.recommendedLessonId
-                    ? 'Back to starter lesson'
-                    : 'Open Library'}
+                    ? t('onboarding.recovery.backToLesson')
+                    : t('onboarding.complete.openLibrary')}
                 </Button>
               </div>
             )}

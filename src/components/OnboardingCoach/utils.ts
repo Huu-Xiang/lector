@@ -1,45 +1,46 @@
 import { BookOpenText, Brain, Highlighter, type LucideIcon, MousePointer2 } from 'lucide-react';
 import { OnboardingCoachStage } from './types';
 
+type Translate = (key: string, values?: Record<string, string | number>) => string;
+
 export function getContent({
   stage,
   savedCount,
+  t,
 }: {
   stage: OnboardingCoachStage;
   savedCount: number;
+  t: Translate;
 }): { icon: LucideIcon; eyebrow: string; title: string; body: string } {
   switch (stage) {
     case 'lookup':
       return {
         icon: MousePointer2,
-        eyebrow: 'Try the reader',
-        title: 'Choose any highlighted word',
-        body: 'Coloured words are still new to you. Tap or click one to see its meaning here in the lesson.',
+        eyebrow: t('lookup.eyebrow'),
+        title: t('lookup.title'),
+        body: t('lookup.body'),
       };
     case 'save':
       return {
         icon: BookOpenText,
-        eyebrow: `${Math.min(savedCount, 3)} of 3 ready`,
-        title: savedCount === 0 ? 'Add this word to your review' : 'Choose another useful word',
-        body:
-          savedCount === 0
-            ? 'Choose level 1-4 in the definition panel. You will see this word fill the review progress below.'
-            : 'Close the definition, choose a different highlighted word, then set its level to add it.',
+        eyebrow: t('ready', { count: Math.min(savedCount, 3) }),
+        title: savedCount === 0 ? t('save.titleFirst') : t('save.titleNext'),
+        body: savedCount === 0 ? t('save.bodyFirst') : t('save.bodyNext'),
       };
     case 'phrase':
       return {
         icon: Highlighter,
-        eyebrow: `${Math.min(savedCount, 3)} of 3 ready`,
-        title: 'Now translate a whole phrase',
-        body: 'Close the definition, then drag across two or more words (or long-press on mobile). Release to translate the highlighted phrase.',
+        eyebrow: t('ready', { count: Math.min(savedCount, 3) }),
+        title: t('phrase.title'),
+        body: t('phrase.body'),
       };
     case 'practice':
     default:
       return {
         icon: Brain,
-        eyebrow: 'Your mini-review is ready',
-        title: 'Practise the words you just read',
-        body: 'Three quick cards will close the loop while the lesson is still fresh.',
+        eyebrow: t('practice.eyebrow'),
+        title: t('practice.title'),
+        body: t('practice.body'),
       };
   }
 }

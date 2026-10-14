@@ -16,6 +16,16 @@ import { splitTrailingPunctuation } from '@/lib/words';
  * word-state and daily-stat writes are best-effort: the review is saved, the
  * round can continue, but the learner is told their stats didn't update.
  */
+export interface PersistReviewMessages {
+  saveFailed: string;
+  statsFailed: string;
+}
+
+const DEFAULT_MESSAGES: PersistReviewMessages = {
+  saveFailed: 'Could not save your answer — check your connection and try again.',
+  statsFailed: 'Your answer was saved, but updating your stats failed.',
+};
+
 export async function persistReview(
   sentenceId: string,
   clozeWord: string,
@@ -23,10 +33,11 @@ export async function persistReview(
   earnedPoints: number,
   newMastery: ClozeMasteryLevel,
   nextReview: Date,
+  messages: PersistReviewMessages = DEFAULT_MESSAGES,
 ): Promise<boolean> {
   const saved = await updateClozeAfterReview(sentenceId, isCorrect, newMastery, nextReview);
   if (!saved) {
-    toast.error('Could not save your answer — check your connection and try again.');
+    toast.error(messages.saveFailed);
     return false;
   }
 
@@ -41,7 +52,7 @@ export async function persistReview(
     secondaryOk = (await incrementDailyStat('points', earnedPoints)) && secondaryOk;
   }
   if (!secondaryOk) {
-    toast.error('Your answer was saved, but updating your stats failed.');
+    toast.error(messages.statsFailed);
   }
 
   return true;

@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
@@ -40,8 +41,7 @@ const TIERS: Array<{
   name: string;
   monthlyPrice: string;
   annualPrice: string;
-  badge?: string;
-  tagline: string;
+  badge?: 'beta';
   features: string[];
   featured: boolean;
 }> = [
@@ -50,16 +50,8 @@ const TIERS: Array<{
     name: 'Cloud',
     monthlyPrice: '$5',
     annualPrice: '$50',
-    badge: 'Beta',
-    tagline: "We host it for you — no Docker, no setup. For when you'd rather just read.",
-    features: [
-      'Fully managed — nothing to install or maintain',
-      'Larger managed translation allowance and rich AI entries',
-      'Managed high-quality voices, with browser voice fallback',
-      'More room for texts, vocabulary, and journal writing',
-      'Automatic backups and updates',
-      'Email support',
-    ],
+    badge: 'beta',
+    features: ['managed', 'allowance', 'voices', 'room', 'backups', 'email'],
     featured: true,
   },
   {
@@ -67,33 +59,28 @@ const TIERS: Array<{
     name: 'Cloud Plus',
     monthlyPrice: '$12',
     annualPrice: '$120',
-    tagline: 'For heavy readers who want the whole thing handled.',
-    features: [
-      'Everything in Cloud',
-      'A much larger managed AI and voice allowance',
-      'Priority support',
-      'Early access to new language packs',
-    ],
+    features: ['everything', 'largerAllowance', 'priority', 'earlyAccess'],
     featured: false,
   },
 ];
 
 const FREE_FEATURES = [
-  'Read starter lessons and texts you import yourself',
-  'Save vocabulary, practise it, and sync with Anki',
-  'Up to 10 collections, 200 lessons, and 1,000 journal words each month',
-  'Unlimited on-device dictionary lookups',
-  '1,000 managed dictionary-miss glosses each month',
-  '10 simple phrase translations (up to 6 words) each day',
-  '10 concise in-context translations each day',
-  'Free browser voices for reading and dictation',
-  'Bring your own AI key when you want more',
-  'Export your learner data at any time',
+  'read',
+  'vocab',
+  'limits',
+  'lookups',
+  'glosses',
+  'phrases',
+  'context',
+  'voices',
+  'byok',
+  'export',
 ];
 
 type Phase = 'loading' | 'pick' | 'activating' | 'slow' | 'unavailable' | 'suspended';
 
 export default function SubscribePage() {
+  const t = useTranslations('subscribe');
   const [status, setStatus] = useState<BillingStatus | null>(null);
   const [phase, setPhase] = useState<Phase>('loading');
   const [opening, setOpening] = useState<string | null>(null);
@@ -194,7 +181,7 @@ export default function SubscribePage() {
     const started = await startCheckout(price.id, promo);
     if (started === null) {
       setOpening(null);
-      toast.error("Checkout couldn't be started. Please try again in a moment.");
+      toast.error(t('checkoutFailed'));
       return;
     }
     // A code the API could not map must stop here. Redirecting anyway would
@@ -234,44 +221,43 @@ export default function SubscribePage() {
       <div>
         <h2 className="text-lg font-semibold text-foreground">
           {status?.suspended
-            ? 'Your account is suspended'
+            ? t('title.suspended')
             : lapsed
               ? showFree
-                ? 'You’re on Readfox Free now'
-                : 'Your subscription has ended'
+                ? t('title.lapsedFree')
+                : t('title.lapsed')
               : showFree
-                ? 'Choose how you want to learn'
-                : 'Subscribe to Readfox Cloud'}
+                ? t('title.free')
+                : t('title.paid')}
         </h2>
         <p className="mt-1 text-sm text-muted-foreground">
           {status?.suspended
-            ? 'App access is paused. You can still export your learner data or sign out below.'
+            ? t('body.suspended')
             : lapsed
               ? showFree
-                ? 'Your texts, vocabulary, Anki links, and learning history are intact. Keep using the bounded Free plan, or renew for larger managed allowances and voices.'
-                : 'Everything you built is safe and exactly as you left it — renew to pick up where you were.'
+                ? t('body.lapsedFree')
+                : t('body.lapsed')
               : showFree
-                ? 'Free is a complete, bounded reading loop. Upgrade when you want more managed AI, richer translations, and managed voices.'
-                : 'Readfox Cloud is a paid service. Prefer free? Readfox is open source and self-hostable.'}
+                ? t('body.free')
+                : t('body.paid')}
         </p>
       </div>
 
       {phase === 'loading' && (
         <div className="flex justify-center py-8">
-          <Spinner size="lg" label="Loading subscription plans" className="text-primary" />
+          <Spinner size="lg" label={t('loadingPlans')} className="text-primary" />
         </div>
       )}
 
       {phase === 'unavailable' && (
         <p className="rounded-lg border border-border bg-[var(--primary-soft)] p-3 text-sm text-foreground">
-          Checkout isn&apos;t available right now — please try again in a little while. Your account
-          and data are unaffected.
+          {t('unavailable')}
         </p>
       )}
 
       {phase === 'suspended' && (
         <p className="rounded-lg border border-destructive/40 bg-destructive/10 p-3 text-sm text-foreground">
-          If you believe this is a mistake, contact support. No learner data has been deleted.
+          {t('suspendedHelp')}
         </p>
       )}
 
@@ -281,8 +267,10 @@ export default function SubscribePage() {
           data-testid="subscribe-promo"
           data-promo={promo}
         >
-          Code <span className="font-semibold">{promo}</span> is ready. We&apos;ll apply it when you
-          continue, and the discounted total shows at checkout.
+          {t.rich('promoReady', {
+            promo,
+            strong: (chunks) => <span className="font-semibold">{chunks}</span>,
+          })}
         </p>
       )}
 
@@ -291,8 +279,10 @@ export default function SubscribePage() {
           className="rounded-lg border border-border bg-muted p-3 text-sm text-foreground"
           data-testid="subscribe-promo-unknown"
         >
-          The code <span className="font-semibold">{rejectedPromo}</span> isn&apos;t valid or has
-          expired. Every plan below is still available at its usual price.
+          {t.rich('promoUnknown', {
+            promo: rejectedPromo,
+            strong: (chunks) => <span className="font-semibold">{chunks}</span>,
+          })}
         </p>
       )}
 
@@ -301,14 +291,7 @@ export default function SubscribePage() {
           className="rounded-lg border border-border bg-[var(--primary-soft)] p-3 text-sm text-foreground"
           data-testid="subscribe-activating"
         >
-          {phase === 'activating' ? (
-            <p>Payment received — activating your account…</p>
-          ) : (
-            <p>
-              Payment received. Activation is taking longer than usual — this page keeps checking,
-              or come back in a few minutes.
-            </p>
-          )}
+          {phase === 'activating' ? <p>{t('activating')}</p> : <p>{t('slow')}</p>}
         </div>
       )}
 
@@ -318,25 +301,23 @@ export default function SubscribePage() {
           data-testid="subscribe-tier-free"
         >
           <div className="flex items-center justify-between gap-2">
-            <span className="font-semibold text-foreground">Free</span>
+            <span className="font-semibold text-foreground">{t('freeName')}</span>
             <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
-              Current plan
+              {t('currentPlan')}
             </span>
           </div>
           <p className="mt-1">
             <span className="text-2xl font-bold text-foreground">$0</span>
-            <span className="text-sm text-muted-foreground"> forever</span>
+            <span className="text-sm text-muted-foreground"> {t('forever')}</span>
           </p>
-          <p className="mt-1 text-xs text-muted-foreground">
-            Read, look words up, save what you learn, and take your data with you.
-          </p>
+          <p className="mt-1 text-xs text-muted-foreground">{t('freeTagline')}</p>
           <ul className="mt-3 space-y-1 text-xs text-muted-foreground">
             {FREE_FEATURES.map((feature) => (
               <li key={feature} className="flex gap-2">
                 <span aria-hidden="true" className="text-primary">
                   ✓
                 </span>
-                {feature}
+                {t(`freeFeatures.${feature}`)}
               </li>
             ))}
           </ul>
@@ -347,7 +328,7 @@ export default function SubscribePage() {
             onClick={() => window.location.replace('/')}
             data-testid="subscribe-continue-free"
           >
-            Continue with Free
+            {t('continueFree')}
           </Button>
         </div>
       )}
@@ -372,15 +353,15 @@ export default function SubscribePage() {
           const primaryCopy =
             primary.cycle === 'year'
               ? requested
-                ? `Continue to checkout — ${tier.annualPrice}/year`
-                : `Subscribe annually — ${tier.annualPrice}/year`
+                ? t('checkoutYear', { price: tier.annualPrice })
+                : t('subscribeYear', { price: tier.annualPrice })
               : requested
-                ? `Continue to checkout — ${tier.monthlyPrice}/month`
-                : `Subscribe — ${tier.monthlyPrice}/month`;
+                ? t('checkoutMonth', { price: tier.monthlyPrice })
+                : t('subscribeMonth', { price: tier.monthlyPrice });
           const secondaryCopy =
             secondary?.cycle === 'month'
-              ? `or ${tier.monthlyPrice}/month`
-              : `or ${tier.annualPrice}/year — two months free`;
+              ? t('orMonth', { price: tier.monthlyPrice })
+              : t('orYear', { price: tier.annualPrice });
           return (
             <div
               key={tier.plan}
@@ -395,33 +376,35 @@ export default function SubscribePage() {
                 <span className="flex items-center gap-1.5">
                   {requested && (
                     <span className="rounded-full bg-primary px-2 py-0.5 text-xs font-medium text-primary-foreground">
-                      Selected
+                      {t('selected')}
                     </span>
                   )}
                   {tier.badge && (
                     <span className="rounded-full bg-[var(--primary-soft)] px-2 py-0.5 text-xs font-medium text-primary">
-                      {tier.badge}
+                      {t(`badges.${tier.badge}`)}
                     </span>
                   )}
                 </span>
               </div>
               <p className="mt-1">
                 <span className="text-2xl font-bold text-foreground">{tier.monthlyPrice}</span>
-                <span className="text-sm text-muted-foreground">/month</span>
+                <span className="text-sm text-muted-foreground">{t('perMonth')}</span>
               </p>
               {annual && (
                 <p className="mt-1 text-xs font-medium text-primary">
-                  {tier.annualPrice}/year — two months free
+                  {t('annualNote', { price: tier.annualPrice })}
                 </p>
               )}
-              <p className="mt-1 text-xs text-muted-foreground">{tier.tagline}</p>
+              <p className="mt-1 text-xs text-muted-foreground">
+                {t(`tiers.${tier.plan}.tagline`)}
+              </p>
               <ul className="mt-3 space-y-1 text-xs text-muted-foreground">
                 {tier.features.map((feature) => (
                   <li key={feature} className="flex gap-2">
                     <span aria-hidden="true" className="text-primary">
                       ✓
                     </span>
-                    {feature}
+                    {t(`tiers.${tier.plan}.features.${feature}`)}
                   </li>
                 ))}
               </ul>
@@ -436,10 +419,10 @@ export default function SubscribePage() {
                   <>
                     <Spinner
                       tone="current"
-                      label="Opening checkout"
+                      label={t('openingCheckoutLabel')}
                       data-testid="subscribe-price-opening"
                     />
-                    Opening checkout…
+                    {t('openingCheckout')}
                   </>
                 ) : (
                   primaryCopy
@@ -453,7 +436,7 @@ export default function SubscribePage() {
                   onClick={() => openCheckout(secondary)}
                   data-testid={`subscribe-price-${secondary.plan}-${secondary.cycle}`}
                 >
-                  {opening === secondary.id ? 'Opening checkout…' : secondaryCopy}
+                  {opening === secondary.id ? t('openingCheckout') : secondaryCopy}
                 </button>
               )}
             </div>
@@ -466,7 +449,7 @@ export default function SubscribePage() {
           className="text-primary hover:underline"
           data-testid="subscribe-export"
         >
-          Export my data
+          {t('exportData')}
         </a>
         <Button
           type="button"
@@ -475,7 +458,7 @@ export default function SubscribePage() {
           onClick={signOut}
           data-testid="subscribe-signout"
         >
-          Sign out
+          {t('signOut')}
         </Button>
       </div>
     </div>

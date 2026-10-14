@@ -1,0 +1,100 @@
+{
+  "legalPages": {
+    "notice": "The English version of this document is authoritative. This translation is provided for convenience.",
+    "privacy": {
+      "metaTitle": "Privacy – Readfox",
+      "title": "Privacy policy",
+      "lastUpdated": "Last updated: {date}",
+      "intro": "Readfox is a small, independently run service. This page says plainly what we store, who else touches your data, and what we can and cannot see.",
+      "store": {
+        "heading": "What we store",
+        "items": {
+          "account": "Your email address, optional name, and a salted hash of your password.",
+          "text": "The <strong>text</strong> extracted from books and articles you import (titles and chapters). We do not keep the original EPUB file.",
+          "learning": "Your vocabulary, reading progress, practice history, journal entries and settings.",
+          "aiKey": "If you add your own AI key, it is stored encrypted (AES-256-GCM). It is never sent back to your browser.",
+          "session": "A session cookie that keeps you signed in, and short-lived server logs (such as IP address and request errors) used to keep the service secure and working."
+        }
+      },
+      "others": {
+        "heading": "Who else is involved",
+        "items": {
+          "cloudflare": "<strong>Cloudflare</strong> – DNS, the Turnstile bot check on sign-up, and R2 storage for backups.",
+          "resend": "<strong>Resend</strong> – delivers the verification and password-reset emails.",
+          "aiProvider": "<strong>Your AI provider (OpenRouter or Anthropic)</strong> – when you use translation, explanations or chat, the text you select, with some surrounding context, is sent to the provider using <em>your</em> key. Their privacy terms apply to that data, and the usage is billed to you."
+        },
+        "noTrackers": "We do not run advertising or analytics trackers, and we do not sell your data."
+      },
+      "operator": {
+        "heading": "What the operator can and cannot see",
+        "dashboard": "The admin dashboard shows account-level numbers only (sign-up date, counts of lessons and words, storage used). It has no screen that displays your book text, and it has no “view as user” or per-user export feature.",
+        "access": "Be aware that the operator still has technical access to the server and its database, so we cannot promise that viewing is technically impossible. We do not look at your content. If you ask for support and send us an export, we use it only to fix your problem and then delete it. Please do not upload material you would not want a server to process."
+      },
+      "backups": {
+        "heading": "Backups",
+        "body": "The database is continuously replicated to Cloudflare R2, which encrypts data at rest. Daily snapshots are additionally encrypted with a key kept offline by the operator, and are kept for 30 days."
+      },
+      "controls": {
+        "heading": "Your controls",
+        "items": {
+          "export": "<strong>Export:</strong> Settings → Learning data → Export all learning data downloads everything you have stored.",
+          "delete": "<strong>Delete:</strong> Settings → Delete account removes your account and data from the live service. Copies in backups disappear as the daily snapshots expire (up to 30 days).",
+          "aiKey": "You can remove your AI key at any time in Settings."
+        }
+      },
+      "children": {
+        "heading": "Children",
+        "body": "Readfox is not directed at children under 13, and we do not knowingly collect their data."
+      },
+      "contact": {
+        "heading": "Changes and contact",
+        "body": "If this policy changes in a meaningful way we will update the date above. Questions or requests about your data: <mail>privacy@readfox.app</mail>."
+      }
+    },
+    "terms": {
+      "metaTitle": "Terms – Readfox",
+      "title": "Terms of use",
+      "lastUpdated": "Last updated: {date}",
+      "intro": "By creating an account or using Readfox you agree to these terms. Readfox is run by an individual as a hobby-scale service.",
+      "content": {
+        "heading": "Your content",
+        "body": "You keep ownership of what you import. Only import text you have the right to use for personal study. You are responsible for the content you upload, and we may remove content or suspend accounts that infringe others' rights or abuse the service."
+      },
+      "limits": {
+        "heading": "Limits",
+        "body": "Each account can store up to 100 MB of imported lesson text. Audio and podcast import are not offered. AI features work with a key you provide; the cost of using that key is yours."
+      },
+      "acceptableUse": {
+        "heading": "Acceptable use",
+        "body": "Do not attack, overload or probe the service, create accounts in bulk, share your account, or use it to break the law."
+      },
+      "warranty": {
+        "heading": "No warranty",
+        "body": "The service is provided “as is”, without guarantees of availability or fitness for a purpose. Translations come from AI models and can be wrong. We make backups but you should export your data from time to time. To the extent the law allows, we are not liable for lost data or indirect losses."
+      },
+      "termination": {
+        "heading": "Changes and termination",
+        "body": "We may change or end the service, and will try to give notice. You can delete your account at any time."
+      },
+      "openSource": {
+        "heading": "Open source",
+        "body": "The software is licensed under the GNU AGPL-3.0. See the About page for the source code.",
+        "contact": "Contact: <mail>privacy@readfox.app</mail>"
+      }
+    },
+    "about": {
+      "metaTitle": "About – Readfox",
+      "title": "About Readfox",
+      "intro": "Readfox lets you read real books and articles in the language you are learning, translate words and phrases as you go, and turn what you meet into spaced-repetition practice.",
+      "freeSoftware": {
+        "heading": "Free software",
+        "license": "Readfox is free software under the <license>GNU Affero General Public License v3.0</license>. It is based on <lector>Lector</lector> by heuwels and its contributors, with our modifications.",
+        "source": "The complete source code of the version running on this site is available at <source>{url}</source>."
+      },
+      "dataSources": {
+        "heading": "Data sources",
+        "body": "Sentence banks come from Tatoeba (CC BY 2.0 FR) and dictionaries from the sources listed in the repository README, each under its own licence."
+      }
+    }
+  }
+}

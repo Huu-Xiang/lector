@@ -1,5 +1,6 @@
 import { MoreVertical } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 
 export default function GroupMenu({
@@ -9,6 +10,7 @@ export default function GroupMenu({
   onRename: () => void;
   onDelete: () => void;
 }) {
+  const t = useTranslations('library.group');
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -43,7 +45,7 @@ export default function GroupMenu({
             className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-foreground hover:bg-accent"
             data-testid="group-rename-btn"
           >
-            Rename
+            {t('rename')}
           </button>
           <button
             onClick={() => {
@@ -53,7 +55,7 @@ export default function GroupMenu({
             className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-destructive hover:bg-accent"
             data-testid="group-delete-btn"
           >
-            Delete
+            {t('delete')}
           </button>
         </div>
       )}

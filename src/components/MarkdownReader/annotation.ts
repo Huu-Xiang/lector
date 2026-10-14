@@ -18,12 +18,6 @@ export type AnnotationMode = 'off' | 'learning' | 'all';
 
 export const ANNOTATION_MODES: readonly AnnotationMode[] = ['off', 'learning', 'all'];
 
-export const ANNOTATION_MODE_LABELS: Record<AnnotationMode, string> = {
-  off: 'Off',
-  learning: 'Learning words',
-  all: 'All words',
-};
-
 // A word the learner has finished with. 'ignored' counts: the learner marked it
 // as not worth studying, so printing a reading over it adds noise.
 const SETTLED_STATES = new Set<WordState>(['known', 'ignored']);

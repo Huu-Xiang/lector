@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { ArrowRight, ChevronDown, Folder, Plus, Sparkles } from 'lucide-react';
 import { ReadingSweep } from '@/components/Loaders';
 import AddCollectionTile from './components/AddCollectionTile';
@@ -51,6 +52,7 @@ import { getOnboardingSnapshot, type OnboardingSnapshot } from '@/lib/onboarding
 import { toast } from 'sonner';
 
 export default function Home() {
+  const t = useTranslations('library');
   const router = useRouter();
   const [collections, setCollections] = useState<Collection[]>([]);
   const [groups, setGroups] = useState<CollectionGroup[]>([]);
@@ -210,12 +212,12 @@ export default function Home() {
       // Transcription runs in the background; give a rough local-Whisper time
       // estimate (cost only matters on a hosted fallback, where it's cents).
       toast.success(
-        `"${imported.title}" uploaded — transcription started` +
-          (minutes ? ` (~${minutes} min of audio; usually transcribes in a few minutes)` : ''),
+        t('page.audioUploaded', { title: imported.title }) +
+          (minutes ? t('page.audioMinutes', { minutes }) : ''),
       );
     } catch (error) {
       console.error('Error importing audio:', error);
-      toast.error(error instanceof Error ? error.message : 'Failed to import audio file.');
+      toast.error(error instanceof Error ? error.message : t('errors.importAudio'));
     } finally {
       setIsImporting(false);
       setImportGroupId(null);
@@ -255,11 +257,11 @@ export default function Home() {
         const updated = await getAllCollections();
         setCollections(updated);
       } else {
-        alert('Please select an EPUB or Markdown file');
+        alert(t('page.selectFile'));
       }
     } catch (error) {
       console.error('Error importing file:', error);
-      alert('Failed to import file. Please ensure it is a valid file.');
+      alert(t('errors.importFile'));
     } finally {
       setIsImporting(false);
       setImportGroupId(null);
@@ -304,25 +306,24 @@ export default function Home() {
       const updated = await getAllGroups();
       setGroups(updated);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Could not create group');
+      toast.error(error instanceof Error ? error.message : t('errors.createGroup'));
     }
   }
 
   async function handleRenameGroup(id: string, currentName: string) {
-    const name = prompt('Rename group:', currentName);
+    const name = prompt(t('group.renamePrompt'), currentName);
     if (name === null || !name.trim() || name.trim() === currentName) return;
     try {
       await updateGroup(id, { name: name.trim() });
       const updated = await getAllGroups();
       setGroups(updated);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Could not rename group');
+      toast.error(error instanceof Error ? error.message : t('errors.renameGroup'));
     }
   }
 
   async function handleDeleteGroup(id: string, name: string) {
-    if (!confirm(`Delete group "${name}"? Collections in this group will become ungrouped.`))
-      return;
+    if (!confirm(t('group.deleteConfirm', { name }))) return;
     try {
       await deleteGroup(id);
       const [updatedGroups, updatedCollections] = await Promise.all([
@@ -332,7 +333,7 @@ export default function Home() {
       setGroups(updatedGroups);
       setCollections(updatedCollections);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Could not delete group');
+      toast.error(error instanceof Error ? error.message : t('errors.deleteGroup'));
     }
   }
 
@@ -362,7 +363,7 @@ export default function Home() {
     setCollections(previous.map((c) => (c.groupId === groupId ? newBucket[bucketIndex++] : c)));
     void reorderCollections(newBucket.map((c) => c.id)).catch((error) => {
       setCollections(previous);
-      toast.error(error instanceof Error ? error.message : 'Could not reorder collections');
+      toast.error(error instanceof Error ? error.message : t('errors.reorderCollections'));
     });
   }
 
@@ -400,7 +401,7 @@ export default function Home() {
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
-      <PageHeader title="Your Library">
+      <PageHeader title={t('page.title')}>
         <div className="flex items-center space-x-2">
           {isCreatingGroup ? (
             <form
@@ -414,13 +415,13 @@ export default function Home() {
                 type="text"
                 value={newGroupName}
                 onChange={(e) => setNewGroupName(e.target.value)}
-                placeholder="Group name"
+                placeholder={t('page.groupNamePlaceholder')}
                 autoFocus
                 data-testid="new-group-input"
                 className="rounded-lg border border-input bg-background px-3 py-1.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none"
               />
               <Button type="submit" data-testid="new-group-submit">
-                Add
+                {t('page.addGroup')}
               </Button>
               <Button
                 type="button"
@@ -430,13 +431,13 @@ export default function Home() {
                   setNewGroupName('');
                 }}
               >
-                Cancel
+                {t('common.cancel')}
               </Button>
             </form>
           ) : (
             <Button onClick={() => setIsCreatingGroup(true)} data-testid="new-group-btn">
               <Folder size="16" />
-              New Group
+              {t('page.newGroup')}
             </Button>
           )}
 
@@ -479,12 +480,16 @@ export default function Home() {
             </div>
             <div>
               <h2 id="resume-guide-heading" className="font-bold text-foreground">
-                Continue your first learning loop
+                {t('onboarding.title')}
               </h2>
               <p className="mt-1 text-sm text-muted-foreground">
                 {onboarding.progress.currentStep === 'practice'
-                  ? 'Your three saved words are ready for a quick review.'
-                  : `Resume ${onboarding.progress.recommendedLessonTitle || 'your starter lesson'} where you left off.`}
+                  ? t('onboarding.practiceReady')
+                  : t('onboarding.resumeLesson', {
+                      title:
+                        onboarding.progress.recommendedLessonTitle ||
+                        t('onboarding.fallbackLesson'),
+                    })}
               </p>
             </div>
           </div>
@@ -503,14 +508,14 @@ export default function Home() {
             }
             className="self-start sm:self-auto"
           >
-            Resume
+            {t('onboarding.resume')}
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Button>
         </section>
       )}
       {isLoading ? (
         <div className="flex h-64 items-center justify-center">
-          <ReadingSweep label="Loading library" />
+          <ReadingSweep label={t('page.loading')} />
         </div>
       ) : (
         <section>
@@ -556,7 +561,11 @@ export default function Home() {
                       <button
                         onClick={() => toggleGroup(group.id)}
                         aria-expanded={!isCollapsed}
-                        aria-label={isCollapsed ? `Expand ${group.name}` : `Collapse ${group.name}`}
+                        aria-label={
+                          isCollapsed
+                            ? t('group.expand', { name: group.name })
+                            : t('group.collapse', { name: group.name })
+                        }
                         data-testid={`group-toggle-${group.id}`}
                         className="-ml-1 flex items-center gap-2 rounded-lg px-1 py-0.5 text-left hover:bg-accent"
                       >
@@ -566,7 +575,7 @@ export default function Home() {
                         <h3 className="text-lg font-semibold text-foreground">{group.name}</h3>
                       </button>
                       <span className="text-sm text-muted-foreground">
-                        {items.length} {items.length === 1 ? 'item' : 'items'}
+                        {t('group.items', { count: items.length })}
                       </span>
                       <div className="flex-1" />
                       <ImportDropdown
@@ -619,7 +628,9 @@ export default function Home() {
                               className="group flex min-h-[14rem] flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border text-muted-foreground transition-all hover:bg-accent hover:text-foreground"
                             >
                               <Plus className="h-8 w-8" strokeWidth={1.5} />
-                              <span className="text-sm font-medium">New collection</span>
+                              <span className="text-sm font-medium">
+                                {t('group.newCollection')}
+                              </span>
                             </button>
                           )}
                         </div>
@@ -633,7 +644,9 @@ export default function Home() {
               {ungrouped.length > 0 && (
                 <div data-testid="ungrouped-section" className="panel p-5">
                   {hasGroups && (
-                    <h3 className="mb-4 text-lg font-semibold text-foreground">Ungrouped</h3>
+                    <h3 className="mb-4 text-lg font-semibold text-foreground">
+                      {t('page.ungrouped')}
+                    </h3>
                   )}
                   <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                     {ungrouped.map((collection) => (

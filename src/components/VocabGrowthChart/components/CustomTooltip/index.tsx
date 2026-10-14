@@ -1,6 +1,9 @@
+import { useFormatter, useTranslations } from 'next-intl';
 import type { CustomTooltipProps } from './types';
 
 export default function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
+  const t = useTranslations('stats.vocabGrowth');
+  const format = useFormatter();
   if (!active || !payload || payload.length === 0) return null;
 
   return (
@@ -8,8 +11,8 @@ export default function CustomTooltip({ active, payload, label }: CustomTooltipP
       <p className="mb-2 text-sm text-muted-foreground">{label}</p>
       {payload.map((entry, index) => (
         <p key={index} className="text-sm" style={{ color: entry.color }}>
-          <span className="capitalize">{entry.dataKey}: </span>
-          <span className="font-semibold">{entry.value.toLocaleString()}</span>
+          <span className="capitalize">{t(`series.${entry.dataKey}`)}: </span>
+          <span className="font-semibold">{format.number(entry.value)}</span>
         </p>
       ))}
     </div>

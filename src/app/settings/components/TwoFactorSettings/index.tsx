@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { QRCodeSVG } from 'qrcode.react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -28,16 +29,8 @@ function secretFromUri(totpURI: string): string {
   }
 }
 
-const ACTION_LABELS: Record<PasswordAction, { title: string; cta: string }> = {
-  enable: { title: 'Confirm your password to set up two-factor authentication', cta: 'Continue' },
-  disable: { title: 'Confirm your password to turn off two-factor authentication', cta: 'Turn off' },
-  regenerate: {
-    title: 'Confirm your password to replace your backup codes',
-    cta: 'Generate new codes',
-  },
-};
-
 export default function TwoFactorSettings() {
+  const t = useTranslations('settings.twoFactor');
   const mode = useLectorMode();
   const { data: session } = authClient.useSession();
 
@@ -70,7 +63,9 @@ export default function TwoFactorSettings() {
       const { data, error } = await authClient.twoFactor.enable({ password });
       if (error) {
         setSubmitting(false);
-        toast.error(error.status === 400 ? 'Wrong password.' : (error.message ?? 'Could not start setup.'));
+        toast.error(
+          error.status === 400 ? t('wrongPassword') : (error.message ?? t('startFailed')),
+        );
         return;
       }
       setTotpURI(data.totpURI);
@@ -83,25 +78,29 @@ export default function TwoFactorSettings() {
       const { error } = await authClient.twoFactor.disable({ password });
       if (error) {
         setSubmitting(false);
-        toast.error(error.status === 400 ? 'Wrong password.' : (error.message ?? 'Could not turn off 2FA.'));
+        toast.error(
+          error.status === 400 ? t('wrongPassword') : (error.message ?? t('disableFailed')),
+        );
         return;
       }
       resetForms();
       setTotpURI(null);
       setBackupCodes(null);
-      toast.success('Two-factor authentication is off.');
+      toast.success(t('toastOff'));
       return;
     }
 
     const { data, error } = await authClient.twoFactor.generateBackupCodes({ password });
     if (error) {
       setSubmitting(false);
-      toast.error(error.status === 400 ? 'Wrong password.' : (error.message ?? 'Could not generate codes.'));
+      toast.error(
+        error.status === 400 ? t('wrongPassword') : (error.message ?? t('generateFailed')),
+      );
       return;
     }
     setBackupCodes(data.backupCodes);
     resetForms();
-    toast.success('New backup codes generated — the old ones no longer work.');
+    toast.success(t('toastNewCodes'));
   }
 
   async function handleVerify(e: React.FormEvent) {
@@ -111,19 +110,19 @@ export default function TwoFactorSettings() {
     const { error } = await authClient.twoFactor.verifyTotp({ code: verifyCode.trim() });
     setSubmitting(false);
     if (error) {
-      toast.error('That code didn’t match — scan the QR code and try the current one.');
+      toast.error(t('codeMismatch'));
       return;
     }
     // Session refetches via the auth client, flipping the section to "on".
     setTotpURI(null);
     setVerifyCode('');
-    toast.success('Two-factor authentication is on.');
+    toast.success(t('toastOn'));
   }
 
   function copyBackupCodes() {
     if (!backupCodes) return;
     navigator.clipboard.writeText(backupCodes.join('\n'));
-    toast.success('Backup codes copied to clipboard');
+    toast.success(t('codesCopied'));
   }
 
   const enrolling = totpURI !== null;
@@ -131,24 +130,19 @@ export default function TwoFactorSettings() {
   return (
     <section className="panel p-6" data-testid="twofactor-section">
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-foreground">Two-Factor Authentication</h2>
+        <h2 className="text-lg font-semibold text-foreground">{t('heading')}</h2>
         {!enabled && !enrolling && pendingAction === null && (
           <Button onClick={() => setPendingAction('enable')} data-testid="twofactor-enable">
-            Enable 2FA
+            {t('enable')}
           </Button>
         )}
       </div>
 
-      <p className="mb-4 text-sm text-muted-foreground">
-        Protect your account with one-time codes from an authenticator app (Google Authenticator,
-        1Password, Authy, …) on top of your password.
-      </p>
+      <p className="mb-4 text-sm text-muted-foreground">{t('intro')}</p>
 
       {!enrolling && (
         <p className="mb-4 text-sm text-foreground" data-testid="twofactor-status">
-          {enabled
-            ? 'Two-factor authentication is on. Signing in asks for a code from your authenticator app.'
-            : 'Two-factor authentication is off.'}
+          {enabled ? t('statusOn') : t('statusOff')}
         </p>
       )}
 
@@ -158,7 +152,7 @@ export default function TwoFactorSettings() {
           onSubmit={handlePasswordSubmit}
           className="mb-4 space-y-3 rounded-md border border-border bg-muted p-4"
         >
-          <Label htmlFor="twofactor-password">{ACTION_LABELS[pendingAction].title}</Label>
+          <Label htmlFor="twofactor-password">{t(`actions.${pendingAction}.title`)}</Label>
           <Input
             id="twofactor-password"
             type="password"
@@ -176,10 +170,10 @@ export default function TwoFactorSettings() {
               variant={pendingAction === 'disable' ? 'destructive' : 'default'}
               data-testid="twofactor-password-submit"
             >
-              {submitting ? 'Working…' : ACTION_LABELS[pendingAction].cta}
+              {submitting ? t('working') : t(`actions.${pendingAction}.cta`)}
             </Button>
             <Button type="button" variant="outline" onClick={resetForms}>
-              Cancel
+              {t('cancel')}
             </Button>
           </div>
         </form>
@@ -188,9 +182,7 @@ export default function TwoFactorSettings() {
       {/* Enrolment: QR + manual secret + verify */}
       {enrolling && totpURI && (
         <div className="mb-4 space-y-4 rounded-md border border-border bg-muted p-4">
-          <p className="text-sm font-medium text-foreground">
-            1. Scan this QR code with your authenticator app
-          </p>
+          <p className="text-sm font-medium text-foreground">{t('step1')}</p>
           <div className="flex justify-center">
             {/* White plate so the code scans in dark mode too */}
             <div className="rounded-lg bg-white p-3" data-testid="twofactor-qr">
@@ -198,7 +190,7 @@ export default function TwoFactorSettings() {
             </div>
           </div>
           <p className="text-sm text-muted-foreground">
-            Can’t scan? Enter this key manually:{' '}
+            {t('cantScan')}{' '}
             <code
               className="rounded bg-background px-1.5 py-0.5 font-mono text-xs break-all select-all"
               data-testid="twofactor-secret"
@@ -208,9 +200,7 @@ export default function TwoFactorSettings() {
           </p>
 
           <form onSubmit={handleVerify} className="space-y-2">
-            <Label htmlFor="twofactor-verify-code">
-              2. Enter the 6-digit code the app shows now
-            </Label>
+            <Label htmlFor="twofactor-verify-code">{t('step2')}</Label>
             <Input
               id="twofactor-verify-code"
               type="text"
@@ -229,7 +219,7 @@ export default function TwoFactorSettings() {
                 disabled={submitting || verifyCode.trim().length < 6}
                 data-testid="twofactor-verify-submit"
               >
-                {submitting ? 'Verifying…' : 'Verify & activate'}
+                {submitting ? t('verifying') : t('verifyActivate')}
               </Button>
               <Button
                 type="button"
@@ -241,7 +231,7 @@ export default function TwoFactorSettings() {
                   setVerifyCode('');
                 }}
               >
-                Cancel
+                {t('cancel')}
               </Button>
             </div>
           </form>
@@ -251,10 +241,7 @@ export default function TwoFactorSettings() {
       {/* One-time backup codes display (enrolment and regeneration) */}
       {backupCodes && (
         <div className="mb-4 rounded-md border border-[var(--gold-lip)] bg-[var(--gold-soft)] p-4">
-          <p className="mb-2 text-sm font-medium text-[var(--gold-strong)]">
-            Save these backup codes somewhere safe — each one signs you in once if you lose your
-            authenticator, and they won’t be shown again.
-          </p>
+          <p className="mb-2 text-sm font-medium text-[var(--gold-strong)]">{t('saveCodes')}</p>
           <div
             className="mb-2 grid grid-cols-2 gap-x-6 gap-y-1 rounded border border-[var(--gold-lip)] bg-muted px-3 py-2 font-mono text-sm text-foreground sm:grid-cols-3"
             data-testid="twofactor-backup-codes"
@@ -266,13 +253,13 @@ export default function TwoFactorSettings() {
             ))}
           </div>
           <div className="flex gap-2">
-            <Button onClick={copyBackupCodes}>Copy</Button>
+            <Button onClick={copyBackupCodes}>{t('copy')}</Button>
             <Button
               variant="outline"
               onClick={() => setBackupCodes(null)}
               data-testid="twofactor-codes-saved"
             >
-              I’ve saved these codes
+              {t('savedCodes')}
             </Button>
           </div>
         </div>
@@ -286,14 +273,14 @@ export default function TwoFactorSettings() {
             onClick={() => setPendingAction('regenerate')}
             data-testid="twofactor-regenerate"
           >
-            New backup codes
+            {t('newCodes')}
           </Button>
           <Button
             variant="destructive"
             onClick={() => setPendingAction('disable')}
             data-testid="twofactor-disable"
           >
-            Turn off 2FA
+            {t('turnOff')}
           </Button>
         </div>
       )}

@@ -1,5 +1,5 @@
-import { FluencyStats, ReadingStats } from "@/lib/data-layer";
-import { ClozeCollection, DailyStats, WordState } from "@/types";
+import { FluencyStats, ReadingStats } from '@/lib/data-layer';
+import { ClozeCollection, DailyStats, WordState } from '@/types';
 
 export interface StatsData {
   totalKnown: number;

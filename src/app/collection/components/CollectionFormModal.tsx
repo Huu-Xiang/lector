@@ -2,6 +2,7 @@
 
 import { X } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogTitle } from '@/components/ui/dialog';
 
@@ -23,6 +24,7 @@ export default function CollectionFormModal({
   onClose,
   onSave,
 }: CollectionFormModalProps) {
+  const t = useTranslations('library');
   const titleRef = useRef<HTMLInputElement>(null);
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
@@ -60,11 +62,11 @@ export default function CollectionFormModal({
       <DialogContent initialFocus={titleRef} className="max-w-lg overflow-hidden">
         <form onSubmit={handleSubmit} className="flex flex-col">
           <div className="flex items-center justify-between border-b border-border px-6 py-4">
-            <DialogTitle>Edit collection</DialogTitle>
+            <DialogTitle>{t('collection.form.title')}</DialogTitle>
             <DialogClose
               type="button"
               className={buttonVariants({ variant: 'ghost', size: 'icon' })}
-              aria-label="Close"
+              aria-label={t('common.close')}
             >
               <X className="h-5 w-5" />
             </DialogClose>
@@ -76,7 +78,7 @@ export default function CollectionFormModal({
                 htmlFor="collection-title"
                 className="mb-2 block text-sm font-medium text-foreground"
               >
-                Title
+                {t('common.title')}
               </label>
               <input
                 ref={titleRef}
@@ -85,7 +87,7 @@ export default function CollectionFormModal({
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 disabled={isSaving}
-                placeholder="Collection title"
+                placeholder={t('collection.form.titlePlaceholder')}
                 className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none disabled:opacity-50"
               />
             </div>
@@ -95,7 +97,7 @@ export default function CollectionFormModal({
                 htmlFor="collection-author"
                 className="mb-2 block text-sm font-medium text-foreground"
               >
-                Author
+                {t('collection.form.author')}
               </label>
               <input
                 id="collection-author"
@@ -103,7 +105,7 @@ export default function CollectionFormModal({
                 value={author}
                 onChange={(e) => setAuthor(e.target.value)}
                 disabled={isSaving}
-                placeholder="Author"
+                placeholder={t('collection.form.authorPlaceholder')}
                 className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none disabled:opacity-50"
               />
             </div>
@@ -115,16 +117,16 @@ export default function CollectionFormModal({
               className={buttonVariants({ variant: 'ghost' })}
               disabled={isSaving}
             >
-              Cancel
+              {t('common.cancel')}
             </DialogClose>
             <Button type="submit" disabled={isSaving || !title.trim() || !author.trim()}>
               {isSaving ? (
                 <div className="flex items-center gap-2">
                   <div className="h-4 w-4 animate-spin rounded-full border-2 border-current/30 border-t-current" />
-                  Saving...
+                  {t('common.saving')}
                 </div>
               ) : (
-                'Save changes'
+                t('collection.form.save')
               )}
             </Button>
           </div>

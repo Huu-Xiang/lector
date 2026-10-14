@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import WordCell from '@/components/WordCell';
 import { splitWords } from '@/components/MarkdownReader/utils';
@@ -29,39 +30,13 @@ const PROSE_FIELDS = Object.keys(DEFAULT_PROSE_STYLE) as (keyof ProseStyle)[];
 
 const CONTROLS: {
   field: keyof ProseStyle;
-  label: string;
   step: number;
   format: (value: number) => string;
-  hint: string;
 }[] = [
-  {
-    field: 'fontSize',
-    label: 'Font size',
-    step: 1,
-    format: (value) => `${value}px`,
-    hint: 'How big the body text of a lesson is.',
-  },
-  {
-    field: 'fontWeight',
-    label: 'Font weight',
-    step: 100,
-    format: (value) => String(value),
-    hint: 'How heavy each word looks.',
-  },
-  {
-    field: 'letterSpacing',
-    label: 'Kerning',
-    step: 0.005,
-    format: (value) => `${value.toFixed(3)}em`,
-    hint: 'Space between the letters. A negative value tightens them.',
-  },
-  {
-    field: 'lineHeight',
-    label: 'Leading',
-    step: 0.05,
-    format: (value) => value.toFixed(2),
-    hint: 'Space between the lines, as a multiple of the font size.',
-  },
+  { field: 'fontSize', step: 1, format: (value) => `${value}px` },
+  { field: 'fontWeight', step: 100, format: (value) => String(value) },
+  { field: 'letterSpacing', step: 0.005, format: (value) => `${value.toFixed(3)}em` },
+  { field: 'lineHeight', step: 0.05, format: (value) => value.toFixed(2) },
 ];
 
 /**
@@ -78,6 +53,7 @@ const CONTROLS: {
  * the numbers into every language would not.
  */
 export default function ProseSettings() {
+  const t = useTranslations('settings.prose');
   const activeLang = useActiveLanguage();
   const enabledCodes = useEnabledLanguages();
   const settings = useProseStyleSettings();
@@ -162,11 +138,8 @@ export default function ProseSettings() {
 
   return (
     <section className="panel p-6" data-testid="prose-settings">
-      <h2 className="mb-1 text-lg font-semibold text-foreground">Reading text</h2>
-      <p className="mb-4 text-sm text-muted-foreground">
-        How the reader draws a lesson. Set what you like under All languages, then correct one
-        language if its script needs different treatment. These settings stay on this device.
-      </p>
+      <h2 className="mb-1 text-lg font-semibold text-foreground">{t('title')}</h2>
+      <p className="mb-4 text-sm text-muted-foreground">{t('description')}</p>
 
       <div className="mb-4 flex flex-wrap gap-2">
         <Button
@@ -175,7 +148,7 @@ export default function ProseSettings() {
           data-testid="prose-scope-global"
           onClick={() => setScope('global')}
         >
-          All languages
+          {t('allLanguages')}
         </Button>
         {languages.map((code) => (
           <Button
@@ -189,7 +162,7 @@ export default function ProseSettings() {
             {LANGUAGES[code].native}
             {hasLanguageOverride(settings, code) && (
               <span
-                aria-label="has its own settings"
+                aria-label={t('hasOwnSettings')}
                 className="ml-1 h-1.5 w-1.5 rounded-full bg-current opacity-70"
               />
             )}
@@ -200,28 +173,28 @@ export default function ProseSettings() {
       {scope !== 'global' && (
         <p className="mb-4 text-xs text-muted-foreground" data-testid="prose-inherits-notice">
           {customised
-            ? `${LANGUAGES[scope].native} has settings of its own. Everything you leave alone still follows All languages.`
-            : `${LANGUAGES[scope].native} follows your All languages settings. Move a slider and save to correct one of them.`}
+            ? t('customisedNotice', { language: LANGUAGES[scope].native })
+            : t('inheritedNotice', { language: LANGUAGES[scope].native })}
         </p>
       )}
 
       <ProsePreview pack={pack} style={shown} />
 
       <div>
-        {CONTROLS.map(({ field, label, step, format, hint }) => (
+        {CONTROLS.map(({ field, step, format }) => (
           <div key={field} className="mt-5">
             <label
               htmlFor={`prose-${field}`}
               className="mb-1 flex items-center justify-between text-sm font-medium text-foreground"
             >
               <span>
-                {label}
+                {t(`controls.${field}.label`)}
                 {/* A status, never a control. Muted and lower case, because the
                     same note in the accent colour read as a button and people
                     clicked it. */}
                 {scope !== 'global' && settings.byLanguage[scope]?.[field] !== undefined && (
                   <span className="ml-2 text-xs font-normal text-muted-foreground">
-                    · set for {LANGUAGES[scope].native}
+                    {t('setFor', { language: LANGUAGES[scope].native })}
                   </span>
                 )}
               </span>
@@ -243,14 +216,14 @@ export default function ProseSettings() {
               onChange={(event) => setField(field, Number(event.target.value))}
               className="w-full accent-blue-500"
             />
-            <p className="mt-1 text-xs text-muted-foreground">{hint}</p>
+            <p className="mt-1 text-xs text-muted-foreground">{t(`controls.${field}.hint`)}</p>
           </div>
         ))}
       </div>
 
       <div className="mt-6 flex flex-wrap items-center gap-3">
         <Button size="sm" data-testid="prose-save" disabled={!unsaved} onClick={save}>
-          Save
+          {t('save')}
         </Button>
         <Button
           variant="secondary"
@@ -262,14 +235,20 @@ export default function ProseSettings() {
           }
           onClick={reset}
         >
-          {scope === 'global' ? 'Reset to defaults' : `Reset ${LANGUAGES[scope].native}`}
+          {scope === 'global'
+            ? t('resetDefaults')
+            : t('resetLanguage', { language: LANGUAGES[scope].native })}
         </Button>
         <p className="text-xs text-muted-foreground" data-testid="prose-status">
           {unsaved
-            ? 'The sample above shows your changes. Save to apply them to the reader.'
+            ? t('statusUnsaved')
             : scope === 'global'
-              ? `The defaults are ${DEFAULT_PROSE_STYLE.fontSize}px, weight ${DEFAULT_PROSE_STYLE.fontWeight}, kerning 0 and leading ${DEFAULT_PROSE_STYLE.lineHeight}.`
-              : `A reset makes ${LANGUAGES[scope].native} follow All languages again.`}
+              ? t('statusDefaults', {
+                  fontSize: String(DEFAULT_PROSE_STYLE.fontSize),
+                  fontWeight: String(DEFAULT_PROSE_STYLE.fontWeight),
+                  lineHeight: String(DEFAULT_PROSE_STYLE.lineHeight),
+                })
+              : t('statusResetLanguage', { language: LANGUAGES[scope].native })}
         </p>
       </div>
     </section>

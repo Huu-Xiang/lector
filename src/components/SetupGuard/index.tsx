@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { getSetting } from '@/lib/data-layer';
 import { readLanguageCache, writeLanguageCache } from '@/lib/language-cache';
@@ -13,6 +14,7 @@ import { Spinner } from '@/components/ui/spinner';
  * that would cause mutations. This will result in a hydration error.
  */
 export default function SetupGuard({ children }: { children: React.ReactNode }) {
+  const t = useTranslations('chrome');
   const pathname = usePathname();
   const router = useRouter();
 
@@ -64,14 +66,14 @@ export default function SetupGuard({ children }: { children: React.ReactNode }) 
   if (error) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-background">
-        <p className="text-sm text-muted-foreground">Could not connect to the server.</p>
+        <p className="text-sm text-muted-foreground">{t('setup.connectError')}</p>
         <Button
           onClick={() => {
             setError(false);
             setChecked(false);
           }}
         >
-          Retry
+          {t('setup.retry')}
         </Button>
       </div>
     );
@@ -80,7 +82,7 @@ export default function SetupGuard({ children }: { children: React.ReactNode }) 
   if (!checked && pathname !== '/setup' && !isBareRoute(pathname)) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
-        <Spinner size="lg" label="Loading setup" className="text-primary" />
+        <Spinner size="lg" label={t('loading.setup')} className="text-primary" />
       </div>
     );
   }

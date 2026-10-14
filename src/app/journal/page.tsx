@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Loader2, Plus } from 'lucide-react';
+import { useLocale, useTranslations } from 'next-intl';
 import {
   type JournalEntry,
   getJournalEntries,
@@ -19,6 +20,8 @@ import { useActiveLanguage } from '@/utils/hooks';
 import { countTypedWords } from '@/lib/languages';
 
 export default function JournalPage() {
+  const t = useTranslations('journal');
+  const locale = useLocale();
   const activeLang = useActiveLanguage();
   const [bodyText, setBodyText] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -56,7 +59,7 @@ export default function JournalPage() {
         try {
           const res = await updateJournalDraft(editingId, text);
           if (!res.ok) return;
-          setSaveStatus('Draft saved');
+          setSaveStatus(t('draftSaved'));
           setTimeout(() => setSaveStatus(null), 2000);
         } catch {
           /* silent */
@@ -73,23 +76,23 @@ export default function JournalPage() {
       if (editingId) {
         const res = await updateJournalDraft(editingId, bodyText);
         if (!res.ok) {
-          if (res.status !== 429) setError('Failed to save');
+          if (res.status !== 429) setError(t('failedToSave'));
           return;
         }
       } else {
         const res = await createJournalEntry(bodyText);
         if (!res.ok) {
-          if (res.status !== 429) setError('Failed to save');
+          if (res.status !== 429) setError(t('failedToSave'));
           return;
         }
         const result = (await res.json()) as { id: string };
         setEditingId(result.id);
       }
       await refreshEntries();
-      setSaveStatus('Draft saved');
+      setSaveStatus(t('draftSaved'));
       setTimeout(() => setSaveStatus(null), 2000);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to save');
+      setError(err instanceof Error ? err.message : t('failedToSave'));
     } finally {
       setIsSaving(false);
     }
@@ -104,7 +107,7 @@ export default function JournalPage() {
       if (!id) {
         const res = await createJournalEntry(bodyText);
         if (!res.ok) {
-          if (res.status !== 429) setError('Correction failed');
+          if (res.status !== 429) setError(t('correctionFailed'));
           return;
         }
         const result = (await res.json()) as { id: string };
@@ -113,7 +116,7 @@ export default function JournalPage() {
       } else {
         const res = await updateJournalDraft(id, bodyText);
         if (!res.ok) {
-          if (res.status !== 429) setError('Correction failed');
+          if (res.status !== 429) setError(t('correctionFailed'));
           return;
         }
       }
@@ -123,14 +126,14 @@ export default function JournalPage() {
       setBodyText('');
       setEditingId(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Correction failed');
+      setError(err instanceof Error ? err.message : t('correctionFailed'));
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Delete this journal entry?')) return;
+    if (!confirm(t('deleteConfirm'))) return;
     try {
       await deleteJournalEntry(id);
       if (editingId === id) {
@@ -140,7 +143,7 @@ export default function JournalPage() {
       }
       setEntries((prev) => prev.filter((e) => e.id !== id));
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Could not delete journal entry');
+      setError(error instanceof Error ? error.message : t('deleteFailed'));
     }
   };
 
@@ -155,11 +158,11 @@ export default function JournalPage() {
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-8 pb-24 sm:px-6 sm:pb-8 lg:px-8">
-      <PageHeader title="Journal">
+      <PageHeader title={t('title')}>
         {!showEditor && (
           <Button onClick={handleNewEntry}>
             <Plus className="h-4 w-4" />
-            New Entry
+            {t('newEntry')}
           </Button>
         )}
       </PageHeader>
@@ -167,7 +170,7 @@ export default function JournalPage() {
         <section className="mb-10">
           <div className="mb-3 flex items-center justify-between">
             <h2 className="text-sm font-medium text-muted-foreground">
-              {formatDate(new Date().toISOString())}
+              {formatDate(new Date().toISOString(), locale)}
             </h2>
             <Button
               onClick={() => {
@@ -178,7 +181,7 @@ export default function JournalPage() {
               }}
               variant="destructive"
             >
-              Cancel
+              {t('cancel')}
             </Button>
           </div>
 
@@ -186,7 +189,7 @@ export default function JournalPage() {
             <textarea
               value={bodyText}
               onChange={(e) => handleBodyChange(e.target.value)}
-              placeholder={`Write today's journal entry in ${activeLang.native}...`}
+              placeholder={t('placeholder', { language: activeLang.native })}
               className="min-h-[160px] w-full resize-y rounded-lg border border-input bg-background p-4 text-sm leading-relaxed text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none"
               disabled={isSubmitting}
               autoFocus
@@ -194,9 +197,7 @@ export default function JournalPage() {
 
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                <span>
-                  {wordCount} word{wordCount > 1 ? 's' : ''}
-                </span>
+                <span>{t('words', { count: wordCount })}</span>
                 {saveStatus && <span className="text-primary">{saveStatus}</span>}
               </div>
 
@@ -206,11 +207,11 @@ export default function JournalPage() {
                   disabled={isSaving || isSubmitting || !bodyText.trim()}
                   variant="secondary"
                 >
-                  {isSaving ? 'Saving...' : 'Save Draft'}
+                  {isSaving ? t('saving') : t('saveDraft')}
                 </Button>
                 <Button onClick={handleSubmit} disabled={isSubmitting || !bodyText.trim()}>
                   {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
-                  {isSubmitting ? 'Correcting...' : 'Submit for Correction'}
+                  {isSubmitting ? t('correcting') : t('submitForCorrection')}
                 </Button>
               </div>
             </div>
@@ -226,7 +227,7 @@ export default function JournalPage() {
       {entries.length > 0 ? (
         <section>
           <h2 className="mb-3 text-sm font-medium text-muted-foreground">
-            {entries.length} entr{entries.length !== 1 ? 'ies' : 'y'}
+            {t('entries', { count: entries.length })}
           </h2>
           <div className="space-y-2">
             {entries.map((entry) => (
@@ -247,8 +248,8 @@ export default function JournalPage() {
         </section>
       ) : !showEditor ? (
         <div className="py-16 text-center">
-          <p className="mb-4 text-muted-foreground">No journal entries yet</p>
-          <Button onClick={handleNewEntry}>Write your first entry</Button>
+          <p className="mb-4 text-muted-foreground">{t('empty')}</p>
+          <Button onClick={handleNewEntry}>{t('writeFirst')}</Button>
         </div>
       ) : null}
       {selectedEntry && <EntryModal entry={selectedEntry} onClose={() => setSelectedEntry(null)} />}

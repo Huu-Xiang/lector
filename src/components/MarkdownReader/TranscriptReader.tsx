@@ -1,6 +1,7 @@
 'use client';
 
 import { memo } from 'react';
+import { useTranslations } from 'next-intl';
 import { Play } from 'lucide-react';
 import type { LanguageConfig, WordSegmentation } from '@/lib/languages';
 import { foldWord, lookupByVocabKeys } from '@/lib/languages';
@@ -73,6 +74,7 @@ function TranscriptReader({
   onClearPhrase,
   onSeek,
 }: TranscriptReaderProps) {
+  const t = useTranslations('reader.markdown');
   // Whether the reading sits out of flow above the word, or in the line box
   // where ruby layout widens the word to fit it. See `annotationOverhang`.
   const overhangs = pack.pronunciation.annotationOverhang;
@@ -118,8 +120,8 @@ function TranscriptReader({
               type="button"
               data-testid="transcript-timestamp"
               onClick={() => onSeek(segment.start, segmentIndex)}
-              title="Play from here"
-              aria-label={`Play from ${formatTimestamp(segment.start)}`}
+              title={t('playFromHere')}
+              aria-label={t('playFrom', { time: formatTimestamp(segment.start) })}
               className="mt-1 flex h-fit shrink-0 items-center gap-1 rounded-md px-2 py-1 font-mono text-xs text-muted-foreground tabular-nums transition-colors hover:bg-accent hover:text-foreground"
             >
               <Play className="h-3 w-3 opacity-0 transition-opacity group-hover:opacity-100" />

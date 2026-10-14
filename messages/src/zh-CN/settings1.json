@@ -1,0 +1,140 @@
+{
+  "settings": {
+    "pageTitle": "设置",
+    "practice": {
+      "title": "练习",
+      "clozeHeading": "完形填空设置",
+      "translationLabel": "翻译",
+      "translationHint": "练习时默认隐藏翻译。随时可按 <keys></keys> 切换。",
+      "shown": "显示",
+      "hidden": "隐藏"
+    },
+    "prose": {
+      "title": "阅读文字",
+      "description": "设置阅读器显示课文的方式。先在“所有语言”下设置喜欢的样式，再单独调整需要不同处理的语言。这些设置只保存在此设备上。",
+      "allLanguages": "所有语言",
+      "hasOwnSettings": "有单独的设置",
+      "customisedNotice": "{language}有单独的设置，其余未改动的项目仍沿用“所有语言”。",
+      "inheritedNotice": "{language}沿用“所有语言”的设置。拖动滑块并保存，即可单独调整。",
+      "setFor": "· 已为{language}设置",
+      "save": "保存",
+      "resetDefaults": "恢复默认",
+      "resetLanguage": "重置{language}",
+      "statusUnsaved": "上方示例已显示你的更改。保存后即可应用到阅读器。",
+      "statusDefaults": "默认值为 {fontSize}px、字重 {fontWeight}、字距 0、行距 {lineHeight}。",
+      "statusResetLanguage": "重置后，{language}将重新沿用“所有语言”的设置。",
+      "controls": {
+        "fontSize": {
+          "label": "字号",
+          "hint": "课文正文的大小。"
+        },
+        "fontWeight": {
+          "label": "字重",
+          "hint": "每个词的粗细。"
+        },
+        "letterSpacing": {
+          "label": "字距",
+          "hint": "字母之间的间距。负值会让字母更紧凑。"
+        },
+        "lineHeight": {
+          "label": "行距",
+          "hint": "行与行之间的间距，以字号的倍数表示。"
+        }
+      }
+    },
+    "theme": {
+      "title": "外观",
+      "label": "主题",
+      "options": {
+        "light": "浅色",
+        "dark": "深色",
+        "system": "跟随系统"
+      }
+    },
+    "tts": {
+      "title": "语音朗读",
+      "noAudioNote": "{language}没有合成语音。该语言的发音存在争议，因此 Readfox 保持静音。",
+      "synthesizedVoice": "合成语音",
+      "browserVoiceFree": "浏览器语音 · 免费",
+      "managedAvailable": "托管语音可用",
+      "usingBrowser": "正在使用浏览器语音",
+      "espeakNote": "{language}由 eSpeak NG 朗读。这是 Readfox 托管的合成语音，也是目前唯一支持{language}的语音合成引擎。听起来有些机械，但每个词的发音都很准确，而且所有套餐均包含。",
+      "voiceEngine": "语音引擎",
+      "engineHintFree": "浏览器语音始终免费，可用于阅读、练习和听写。云端版额外提供统一的托管语音。",
+      "engineHintPaid": "托管语音的发音更稳定；浏览器语音始终可用。",
+      "managedVoice": "托管语音",
+      "browserBuiltIn": "浏览器内置",
+      "upsell": "想使用 Readfox 的托管语音？<link>升级到云端版</link>。添加自己的 AI 密钥不会改变音频，因为语音由 Readfox 托管。",
+      "testVoice": "试听",
+      "speechSpeed": "语速",
+      "slow": "0.5x（慢）",
+      "normal": "1.0x",
+      "fast": "1.5x（快）"
+    },
+    "timezone": {
+      "title": "时区",
+      "description": "每日统计、连续天数和复习日在此时区的午夜更替。",
+      "auto": "自动 — 服务器时区",
+      "useDevice": "使用此设备的时区（{zone}）",
+      "updated": "时区已更新为 {zone}",
+      "failed": "更改时区失败"
+    },
+    "languages": {
+      "title": "语言",
+      "description": "语言选择器会列出这些语言。移除某种语言可缩短列表。你在该语言下的词汇、课文和卡片仍保留在服务器上。",
+      "inUse": "使用中",
+      "remove": "移除{language}",
+      "added": "已添加{language}",
+      "removed": "已移除{language}",
+      "saveFailed": "无法保存你的语言",
+      "addPlaceholder": "添加语言…",
+      "add": "添加"
+    },
+    "knownWords": {
+      "title": "导入已知词",
+      "description": "导入你已经认识的词。支持 <strong>LingQ 导出文件</strong>（含状态等级和翻译）或简单的词表。",
+      "lingqHelp": "LingQ：词汇 → 设置齿轮 → 导出 LingQs → 在此上传 CSV",
+      "uploadLabel": "上传 CSV 文件",
+      "uploadHint": "第一列为词语的 CSV，或纯文本文件",
+      "pasteLabel": "或粘贴词语（每行一个）",
+      "import": "导入",
+      "noWords": "没有可导入的词。",
+      "imported": "已成功将 {count} 个词导入为已知词。",
+      "importFailed": "导入已知词失败",
+      "noData": "文件中没有数据。",
+      "noTermColumn": "在 LingQ 导出文件中找不到“term”列。",
+      "lingqImported": "已从 LingQ 导入 {count} 个词：{known} 个已知，{learning} 个学习中。",
+      "fileError": "导入文件出错：{message}",
+      "unknownError": "未知错误"
+    },
+    "export": {
+      "title": "导出数据",
+      "vocabCsv": "导出词汇（CSV）",
+      "vocabJson": "导出词汇（JSON）",
+      "knownWords": "导出已知词",
+      "failed": "导出失败：{message}",
+      "unknownError": "未知错误",
+      "csvDone": "词汇已导出为 CSV。",
+      "jsonDone": "词汇已导出为 JSON。",
+      "knownDone": "已导出 {count} 个已知词。"
+    },
+    "data": {
+      "title": "学习数据",
+      "description": "下载你的书库和课文、阅读进度、词汇、造句练习和复习计划、日记以及统计。不会包含 API 密钥和服务商端点。",
+      "export": "导出全部学习数据",
+      "import": "导入学习数据",
+      "invalidFormat": "备份文件格式无效",
+      "importFailedShort": "导入失败",
+      "imported": "学习数据已导入",
+      "importedDetail": "{collections} 个合集，{lessons} 篇课文，{vocab} 个词汇，{knownWords} 个已知词，{clozeSentences} 个填空句。",
+      "importFailed": "导入失败：{message}",
+      "unknownError": "未知错误"
+    },
+    "about": {
+      "title": "关于",
+      "build": "构建",
+      "commit": "提交",
+      "built": "构建时间"
+    }
+  }
+}

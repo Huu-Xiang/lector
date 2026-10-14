@@ -1,14 +1,15 @@
 import { ChevronDown, ChevronUp } from 'lucide-react';
+import { useFormatter, useTranslations } from 'next-intl';
 import { ClozeCollection, FluencyStats, WordState } from '@/lib/data-layer';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 // Time-range options for the stats page. `days: null` means "all time".
-export const RANGE_OPTIONS: { label: string; days: number | null }[] = [
-  { label: '30d', days: 30 },
-  { label: '90d', days: 90 },
-  { label: '1y', days: 365 },
-  { label: 'All', days: null },
+export const RANGE_OPTIONS: { key: 'd30' | 'd90' | 'y1' | 'all'; days: number | null }[] = [
+  { key: 'd30', days: 30 },
+  { key: 'd90', days: 90 },
+  { key: 'y1', days: 365 },
+  { key: 'all', days: null },
 ];
 
 // Segmented time-range control. Built from the ui/Button primitive rather than
@@ -20,6 +21,7 @@ export function RangeSelector({
   value: number | null;
   onChange: (days: number | null) => void;
 }) {
+  const t = useTranslations('stats.range');
   return (
     <div
       data-testid="stats-range-selector"
@@ -29,14 +31,14 @@ export function RangeSelector({
         const active = value === opt.days;
         return (
           <Button
-            key={opt.label}
+            key={opt.key}
             size="xs"
             variant={active ? 'secondary' : 'ghost'}
             aria-pressed={active}
             className={cn(!active && 'text-muted-foreground')}
             onClick={() => onChange(opt.days)}
           >
-            {opt.label}
+            {t(opt.key)}
           </Button>
         );
       })}
@@ -58,6 +60,7 @@ export function StatCard({
   icon?: React.ReactNode;
   color?: 'blue' | 'green' | 'yellow' | 'purple' | 'orange' | 'pink';
 }) {
+  const format = useFormatter();
   const textColors = {
     blue: 'text-primary',
     green: 'text-primary',
@@ -73,7 +76,7 @@ export function StatCard({
         <div>
           <p className="text-sm font-medium text-muted-foreground">{label}</p>
           <p className={`mt-1 text-4xl font-bold ${textColors[color]}`}>
-            {typeof value === 'number' ? value.toLocaleString() : value}
+            {typeof value === 'number' ? format.number(value) : value}
           </p>
           {sublabel && <p className="mt-1 text-sm text-muted-foreground">{sublabel}</p>}
         </div>
@@ -85,41 +88,49 @@ export function StatCard({
 
 // Word state breakdown component
 export function WordStateBreakdown({ byState }: { byState: Record<WordState, number> }) {
+  const t = useTranslations('stats.states');
+  const tw = useTranslations('stats.wordStates');
+  const format = useFormatter();
   const states: { key: WordState; label: string; color: string; bgColor: string }[] = [
     {
       key: 'known',
-      label: 'Known',
+      label: t('known'),
       color: 'text-primary',
       bgColor: 'bg-primary',
     },
     {
       key: 'level4',
-      label: 'Level 4',
+      label: t('level4'),
       color: 'text-primary',
       bgColor: 'bg-[color-mix(in_srgb,var(--primary)_70%,#fff)]',
     },
     {
       key: 'level3',
-      label: 'Level 3',
+      label: t('level3'),
       color: 'text-[var(--gold-strong)]',
       bgColor: 'bg-[var(--gold)]',
     },
     {
       key: 'level2',
-      label: 'Level 2',
+      label: t('level2'),
       color: 'text-[var(--gold-strong)]',
       bgColor: 'bg-[color-mix(in_srgb,var(--gold)_80%,var(--clay))]',
     },
     {
       key: 'level1',
-      label: 'Level 1',
+      label: t('level1'),
       color: 'text-clay',
       bgColor: 'bg-clay',
     },
-    { key: 'new', label: 'New', color: 'text-[var(--w-new-fg)]', bgColor: 'bg-[var(--chart-5)]' },
+    {
+      key: 'new',
+      label: t('new'),
+      color: 'text-[var(--w-new-fg)]',
+      bgColor: 'bg-[var(--chart-5)]',
+    },
     {
       key: 'ignored',
-      label: 'Ignored',
+      label: t('ignored'),
       color: 'text-muted-foreground',
       bgColor: 'bg-muted-foreground',
     },
@@ -129,7 +140,7 @@ export function WordStateBreakdown({ byState }: { byState: Record<WordState, num
 
   return (
     <div className="panel p-6">
-      <h3 className="mb-4 text-lg font-semibold text-foreground">Words by State</h3>
+      <h3 className="mb-4 text-lg font-semibold text-foreground">{tw('title')}</h3>
       <div className="space-y-3">
         {states.map(({ key, label, color, bgColor }) => {
           const count = byState[key] || 0;
@@ -139,7 +150,7 @@ export function WordStateBreakdown({ byState }: { byState: Record<WordState, num
               <div className="mb-1 flex justify-between text-sm">
                 <span className={color}>{label}</span>
                 <span className="text-muted-foreground">
-                  {count.toLocaleString()} ({percentage.toFixed(1)}%)
+                  {format.number(count)} ({percentage.toFixed(1)}%)
                 </span>
               </div>
               <div className="h-2 overflow-hidden rounded-full bg-muted">
@@ -166,27 +177,27 @@ export function ClozeStats({
   correct: number;
   points: number;
 }) {
+  const t = useTranslations('stats.cloze');
+  const format = useFormatter();
   const accuracy = attempts > 0 ? (correct / attempts) * 100 : 0;
 
   return (
     <div className="panel p-6">
-      <h3 className="mb-4 text-lg font-semibold text-foreground">Cloze Practice</h3>
+      <h3 className="mb-4 text-lg font-semibold text-foreground">{t('title')}</h3>
       <div className="grid grid-cols-2 gap-4">
         <div className="rounded-lg bg-muted p-4 text-center">
-          <div className="text-3xl font-bold text-[var(--chart-3)]">
-            {attempts.toLocaleString()}
-          </div>
-          <div className="mt-1 text-sm text-muted-foreground">Sentences Practiced</div>
+          <div className="text-3xl font-bold text-[var(--chart-3)]">{format.number(attempts)}</div>
+          <div className="mt-1 text-sm text-muted-foreground">{t('sentencesPracticed')}</div>
         </div>
         <div className="rounded-lg bg-muted p-4 text-center">
           <div className="text-3xl font-bold text-primary">{accuracy.toFixed(1)}%</div>
-          <div className="mt-1 text-sm text-muted-foreground">Accuracy</div>
+          <div className="mt-1 text-sm text-muted-foreground">{t('accuracy')}</div>
         </div>
         <div className="col-span-2 rounded-lg bg-muted p-4 text-center">
           <div className="text-3xl font-bold text-[var(--gold-strong)]">
-            {points.toLocaleString()}
+            {format.number(points)}
           </div>
-          <div className="mt-1 text-sm text-muted-foreground">Total Points</div>
+          <div className="mt-1 text-sm text-muted-foreground">{t('totalPoints')}</div>
         </div>
       </div>
     </div>
@@ -199,12 +210,14 @@ export function SentenceMastery({
 }: {
   collectionCounts: Record<ClozeCollection, { total: number; due: number; mastered: number }>;
 }) {
+  const t = useTranslations('stats.mastery');
+  const format = useFormatter();
   const collectionLabels: Record<string, string> = {
-    top500: 'Top 500',
-    top1000: 'Top 1000',
-    top2000: 'Top 2000',
-    mined: 'Mined',
-    random: 'Random',
+    top500: t('collections.top500'),
+    top1000: t('collections.top1000'),
+    top2000: t('collections.top2000'),
+    mined: t('collections.mined'),
+    random: t('collections.random'),
   };
 
   const collections = Object.entries(collectionCounts).filter(([, counts]) => counts.total > 0);
@@ -216,9 +229,9 @@ export function SentenceMastery({
   return (
     <div className="panel p-6">
       <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-foreground">Sentence Mastery</h3>
+        <h3 className="text-lg font-semibold text-foreground">{t('title')}</h3>
         <span className="text-sm font-medium text-primary">
-          {overallPercentage.toFixed(1)}% overall
+          {t('overall', { percent: overallPercentage.toFixed(1) })}
         </span>
       </div>
 
@@ -226,7 +239,10 @@ export function SentenceMastery({
       <div className="mb-6">
         <div className="mb-1 flex justify-between text-sm">
           <span className="text-muted-foreground">
-            {overallMastered.toLocaleString()} / {overallTotal.toLocaleString()} mastered
+            {t('mastered', {
+              mastered: format.number(overallMastered),
+              total: format.number(overallTotal),
+            })}
           </span>
         </div>
         <div className="h-3 overflow-hidden rounded-full bg-muted">
@@ -259,7 +275,7 @@ export function SentenceMastery({
               </div>
               {counts.due > 0 && (
                 <p className="mt-0.5 text-xs text-[var(--gold-strong)]">
-                  {counts.due} due for review
+                  {t('due', { count: counts.due })}
                 </p>
               )}
             </div>
@@ -272,6 +288,8 @@ export function SentenceMastery({
 
 // Fluency badge component
 export function FluencyBadge({ fluency }: { fluency: FluencyStats }) {
+  const t = useTranslations('stats.fluency');
+  const format = useFormatter();
   const {
     estimatedLevel,
     nextLevel,
@@ -297,7 +315,7 @@ export function FluencyBadge({ fluency }: { fluency: FluencyStats }) {
             <h3 className="text-lg font-semibold text-foreground">
               {estimatedLevel.code} &mdash; {estimatedLevel.label}
             </h3>
-            <p className="text-sm text-muted-foreground">Estimated CEFR Level</p>
+            <p className="text-sm text-muted-foreground">{t('estimatedLevel')}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -313,12 +331,12 @@ export function FluencyBadge({ fluency }: { fluency: FluencyStats }) {
               ) : (
                 <ChevronDown className="h-4 w-4" />
               )}
-              {Math.abs(growthDelta)} vs last week
+              {t('vsLastWeek', { count: Math.abs(growthDelta) })}
             </span>
           )}
           {growthDelta === 0 && weeklyGrowth.thisWeek > 0 && (
             <span className="text-sm text-muted-foreground">
-              {weeklyGrowth.thisWeek} this week (same as last)
+              {t('sameAsLast', { count: weeklyGrowth.thisWeek })}
             </span>
           )}
         </div>
@@ -328,7 +346,7 @@ export function FluencyBadge({ fluency }: { fluency: FluencyStats }) {
       <div className="mb-4">
         <div className="mb-1 flex justify-between text-sm">
           <span className="text-muted-foreground">
-            {nextLevel ? `Progress to ${nextLevel.code}` : 'Top level reached'}
+            {nextLevel ? t('progressTo', { level: nextLevel.code }) : t('topLevel')}
           </span>
           <span className="text-muted-foreground">{progressToNextLevel}%</span>
         </div>
@@ -343,11 +361,16 @@ export function FluencyBadge({ fluency }: { fluency: FluencyStats }) {
         </div>
         {nextLevel && (
           <div className="mt-1 flex items-center justify-between text-xs text-muted-foreground">
-            <span>{estimatedLevel.min.toLocaleString()}</span>
+            <span>{format.number(estimatedLevel.min)}</span>
             <span data-testid="fluency-words-to-next" className="font-medium text-foreground">
-              {wordsToNextLevel?.toLocaleString()} words to {nextLevel.code}
+              {t('wordsToNext', {
+                count: wordsToNextLevel ?? 0,
+                level: nextLevel.code,
+              })}
             </span>
-            <span>{estimatedLevel.max?.toLocaleString()}</span>
+            <span>
+              {estimatedLevel.max != null ? format.number(estimatedLevel.max) : undefined}
+            </span>
           </div>
         )}
       </div>
@@ -356,18 +379,18 @@ export function FluencyBadge({ fluency }: { fluency: FluencyStats }) {
       <div className="grid grid-cols-2 gap-4">
         <div className="rounded-lg bg-muted p-3 text-center">
           <div data-testid="fluency-known-count" className="text-2xl font-bold text-primary">
-            {totalKnownWords.toLocaleString()}
+            {format.number(totalKnownWords)}
           </div>
-          <div className="text-sm text-muted-foreground">Known</div>
+          <div className="text-sm text-muted-foreground">{t('known')}</div>
         </div>
         <div className="rounded-lg bg-muted p-3 text-center">
           <div
             data-testid="fluency-learning-count"
             className="text-2xl font-bold text-[var(--gold-strong)]"
           >
-            {totalLearning.toLocaleString()}
+            {format.number(totalLearning)}
           </div>
-          <div className="text-sm text-muted-foreground">Learning</div>
+          <div className="text-sm text-muted-foreground">{t('learning')}</div>
         </div>
       </div>
     </div>

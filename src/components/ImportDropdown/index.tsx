@@ -2,6 +2,7 @@
 
 import { Check, ChevronDown, Plus } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { IMPORT_OPTIONS } from './constants';
 import type { ImportDropdownProps, ImportSource } from './types';
@@ -14,7 +15,7 @@ export default function ImportDropdown({
   onPasteImport,
   disabled = false,
   isImporting = false,
-  label = 'Import',
+  label,
   size = 'default',
   variant = 'default',
   testId,
@@ -23,6 +24,7 @@ export default function ImportDropdown({
   onDestinationChange,
   minimalOnMobile,
 }: ImportDropdownProps) {
+  const t = useTranslations('library.import');
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -76,7 +78,7 @@ export default function ImportDropdown({
   // The ungrouped library is a destination like any group, so it heads the list
   // and stays selectable after the user picks a group.
   const destinationList: Array<{ id: string | null; name: string }> = destinations?.length
-    ? [{ id: null, name: 'Library (ungrouped)' }, ...destinations]
+    ? [{ id: null, name: t('ungrouped') }, ...destinations]
     : [];
 
   return (
@@ -91,12 +93,14 @@ export default function ImportDropdown({
         {isImporting ? (
           <>
             <div className="h-4 w-4 animate-spin rounded-full border-2 border-current/30 border-t-current" />
-            <span className={minimalOnMobile ? 'hidden md:block' : ''}>Importing...</span>
+            <span className={minimalOnMobile ? 'hidden md:block' : ''}>{t('importing')}</span>
           </>
         ) : (
           <>
             <Plus className="h-5 w-5" />
-            <span className={minimalOnMobile ? 'hidden items-center sm:flex' : ''}>{label}</span>
+            <span className={minimalOnMobile ? 'hidden items-center sm:flex' : ''}>
+              {label ?? t('label')}
+            </span>
           </>
         )}
       </Button>
@@ -106,7 +110,7 @@ export default function ImportDropdown({
           {destinationList.length > 0 && (
             <div className="mb-1 border-b border-border pb-1">
               <p className="px-4 pt-1.5 pb-1 text-xs font-medium tracking-wide text-muted-foreground uppercase">
-                Add to
+                {t('addTo')}
               </p>
               <div className="max-h-44 overflow-y-auto">
                 {destinationList.map((destination) => {
@@ -131,14 +135,14 @@ export default function ImportDropdown({
               </div>
             </div>
           )}
-          {IMPORT_OPTIONS.map(({ source, label, icon: Icon }) => (
+          {IMPORT_OPTIONS.map(({ source, icon: Icon }) => (
             <button
               key={source}
               onClick={() => handleSelect(source)}
               className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-popover-foreground transition-colors hover:bg-accent"
             >
               <Icon size="20" />
-              {label}
+              {t(`options.${source}`)}
             </button>
           ))}
         </div>

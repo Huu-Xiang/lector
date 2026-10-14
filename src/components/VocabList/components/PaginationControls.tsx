@@ -1,6 +1,7 @@
 'use client';
 
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { getPageRange } from '@/lib/pagination';
 import { PAGE_SIZE_OPTIONS } from '../constants';
@@ -31,17 +32,18 @@ export default function PaginationControls({
   onPageChange,
   onPageSizeChange,
 }: PaginationControlsProps) {
+  const t = useTranslations('vocab.pagination');
   const { from, to } = getPageRange(currentPage, pageSize, totalItems);
 
   return (
     <nav
       className="flex flex-wrap items-center justify-between gap-4"
-      aria-label="Vocabulary pagination"
+      aria-label={t('label')}
       data-testid="vocab-pagination"
     >
       {/* Rows-per-page selector */}
       <div className="flex items-center gap-2 text-sm text-muted-foreground">
-        <label htmlFor="vocab-page-size">Rows per page</label>
+        <label htmlFor="vocab-page-size">{t('rowsPerPage')}</label>
         <select
           id="vocab-page-size"
           value={pageSize}
@@ -63,7 +65,7 @@ export default function PaginationControls({
           data-testid="vocab-pagination-range"
           aria-live="polite"
         >
-          {from}–{to} of {totalItems}
+          {t('range', { from, to, total: totalItems })}
         </span>
         <div className="flex items-center gap-1">
           <Button
@@ -71,7 +73,7 @@ export default function PaginationControls({
             size="icon-sm"
             onClick={() => onPageChange(currentPage - 1)}
             disabled={currentPage <= 1}
-            aria-label="Previous page"
+            aria-label={t('previous')}
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
@@ -80,14 +82,14 @@ export default function PaginationControls({
             data-testid="vocab-pagination-page"
             aria-live="polite"
           >
-            Page {currentPage} of {pageCount}
+            {t('page', { current: currentPage, total: pageCount })}
           </span>
           <Button
             variant="outline"
             size="icon-sm"
             onClick={() => onPageChange(currentPage + 1)}
             disabled={currentPage >= pageCount}
-            aria-label="Next page"
+            aria-label={t('next')}
           >
             <ChevronRight className="h-4 w-4" />
           </Button>

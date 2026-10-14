@@ -2,6 +2,7 @@
 
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { ArrowLeft, ChevronLeft, ChevronRight, Languages, SquarePen } from 'lucide-react';
 import { getLessonReadings, updateLessonProgress } from '@/lib/data-layer';
 import { createTrailingThrottle } from './throttle';
@@ -21,7 +22,7 @@ import { resolveProseStyle } from '@/lib/prose-style';
 import { MarkdownReaderProps } from './types';
 import { Button } from '@/components/ui/button';
 import ReaderArticle, { type ActiveReaderWord } from './ReaderArticle';
-import { ANNOTATION_MODES, ANNOTATION_MODE_LABELS, type AnnotationMode } from './annotation';
+import { ANNOTATION_MODES, type AnnotationMode } from './annotation';
 import { SETTINGS_KEYS } from '@/app/settings/constants';
 import TranscriptReader from './TranscriptReader';
 import YouTubePlayer, { type SeekTarget } from '@/components/YouTubePlayer';
@@ -39,6 +40,7 @@ export default function MarkdownReader({
   nextLesson,
   headerAction,
 }: MarkdownReaderProps) {
+  const t = useTranslations('reader.markdown');
   const router = useRouter();
   const activeLang = useActiveLanguage();
   // Tokenize by the LESSON's language, not the active UI language: content
@@ -135,11 +137,11 @@ export default function MarkdownReader({
       onEditingChange?.(false);
     } catch (err) {
       console.error('Failed to save lesson text:', err);
-      setSaveError(err instanceof Error ? err.message : 'Failed to save');
+      setSaveError(err instanceof Error ? err.message : t('saveFailed'));
     } finally {
       setIsSaving(false);
     }
-  }, [draftContent, onSaveText, onEditingChange]);
+  }, [draftContent, onSaveText, onEditingChange, t]);
 
   // Restore the annotation preference after mount, never during render: the
   // server has no localStorage, so reading it in the initial state would give
@@ -351,7 +353,7 @@ export default function MarkdownReader({
           className="flex items-center gap-2 rounded-lg px-3 py-2 text-muted-foreground transition-colors hover:bg-accent disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent print:hidden"
         >
           <ArrowLeft className="h-5 w-5" />
-          <span className="hidden sm:inline">Back</span>
+          <span className="hidden sm:inline">{t('back')}</span>
         </button>
 
         <h1 className="mx-2 flex-1 truncate text-center text-sm font-medium text-foreground sm:text-lg print:mx-0 print:text-left print:text-2xl print:font-bold">
@@ -367,10 +369,10 @@ export default function MarkdownReader({
               disabled={isSaving}
               data-testid="edit-text-cancel"
             >
-              Cancel
+              {t('cancel')}
             </Button>
             <Button size="sm" onClick={saveEdit} disabled={isSaving} data-testid="edit-text-save">
-              {isSaving ? 'Saving…' : 'Save changes'}
+              {isSaving ? t('saving') : t('saveChanges')}
             </Button>
           </div>
         ) : (
@@ -380,15 +382,15 @@ export default function MarkdownReader({
               <button
                 onClick={cycleAnnotationMode}
                 data-testid="annotation-mode-button"
-                title={`Pronunciation: ${ANNOTATION_MODE_LABELS[annotationMode]}`}
-                aria-label={`Pronunciation: ${ANNOTATION_MODE_LABELS[annotationMode]}`}
+                title={t('pronunciation', { mode: t(`annotation.${annotationMode}`) })}
+                aria-label={t('pronunciation', { mode: t(`annotation.${annotationMode}`) })}
                 className={`flex items-center gap-1.5 rounded-lg p-2 transition-colors hover:bg-accent ${
                   annotationMode === 'off' ? 'text-muted-foreground/50' : 'text-muted-foreground'
                 }`}
               >
                 <Languages className="h-5 w-5" />
                 <span className="hidden text-xs sm:inline">
-                  {ANNOTATION_MODE_LABELS[annotationMode]}
+                  {t(`annotation.${annotationMode}`)}
                 </span>
               </button>
             )}
@@ -397,8 +399,8 @@ export default function MarkdownReader({
               <button
                 onClick={startEdit}
                 data-testid="edit-text-button"
-                title="Edit text"
-                aria-label="Edit text"
+                title={t('editText')}
+                aria-label={t('editText')}
                 className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-accent"
               >
                 <SquarePen className="h-5 w-5" />
@@ -431,10 +433,7 @@ export default function MarkdownReader({
                 {saveError}
               </p>
             )}
-            <p className="mt-2 text-xs text-muted-foreground">
-              Markdown is supported. Vocab state is keyed by word, so edits don&apos;t reset your
-              progress.
-            </p>
+            <p className="mt-2 text-xs text-muted-foreground">{t('editHint')}</p>
           </div>
         ) : transcript ? (
           <>
@@ -446,10 +445,9 @@ export default function MarkdownReader({
                 rel="noreferrer"
                 className="mt-2 block text-xs text-muted-foreground hover:text-foreground hover:underline"
               >
-                {transcript.meta.captionKind === 'asr'
-                  ? 'Auto-generated captions'
-                  : 'Creator captions'}
-                {transcript.meta.channel ? ` · ${transcript.meta.channel}` : ''} · Open on YouTube
+                {transcript.meta.captionKind === 'asr' ? t('captionsAuto') : t('captionsCreator')}
+                {transcript.meta.channel ? ` · ${transcript.meta.channel}` : ''} ·{' '}
+                {t('openOnYouTube')}
               </a>
             </div>
             <TranscriptReader

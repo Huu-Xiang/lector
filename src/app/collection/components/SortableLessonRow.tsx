@@ -13,6 +13,7 @@ import {
 import { LessonSummary } from '@/types';
 import Link from 'next/link';
 import { useMemo } from 'react';
+import { useTranslations } from 'next-intl';
 
 export default function SortableLessonRow({
   lesson,
@@ -27,6 +28,8 @@ export default function SortableLessonRow({
   onDelete: (id: string, title: string) => void;
   onRetryTranscription?: (id: string) => void;
 }) {
+  const t = useTranslations('library.collection.row');
+  const tc = useTranslations('library.common');
   const {
     attributes,
     listeners,
@@ -49,15 +52,15 @@ export default function SortableLessonRow({
 
   const CTALabel = useMemo(() => {
     if (progress === 0) {
-      return 'Read';
+      return t('read');
     }
 
     if (isComplete) {
-      return 'Re-read';
+      return t('reread');
     }
 
-    return 'Continue';
-  }, [progress, isComplete]);
+    return t('continue');
+  }, [progress, isComplete, t]);
 
   return (
     <div
@@ -69,7 +72,7 @@ export default function SortableLessonRow({
         ref={setActivatorNodeRef}
         {...attributes}
         {...listeners}
-        aria-label={`Drag to reorder ${lesson.title}`}
+        aria-label={t('dragToReorder', { title: lesson.title })}
         data-testid={`drag-lesson-${lesson.id}`}
         className="flex-shrink-0 cursor-grab touch-none rounded-md p-1 text-muted-foreground hover:text-foreground active:cursor-grabbing"
       >
@@ -100,7 +103,7 @@ export default function SortableLessonRow({
                 data-testid={`transcribing-${lesson.id}`}
               >
                 <LoaderCircle className="h-3 w-3 animate-spin" />
-                Transcribing…
+                {t('transcribing')}
               </p>
             ) : transcriptionFailed ? (
               <p
@@ -109,11 +112,11 @@ export default function SortableLessonRow({
                 data-testid={`transcription-error-${lesson.id}`}
               >
                 <TriangleAlert className="h-3 w-3" />
-                Transcription failed
+                {t('transcriptionFailed')}
               </p>
             ) : (
               <p className="text-xs text-muted-foreground">
-                {lesson.wordCount.toLocaleString()} words
+                {tc('words', { count: lesson.wordCount })}
                 {progress > 0 && !isComplete && ` · ${progress}%`}
               </p>
             )}
@@ -138,7 +141,7 @@ export default function SortableLessonRow({
         <button
           onClick={() => onRetryTranscription(lesson.id)}
           className="flex-shrink-0 cursor-pointer rounded-lg p-2 text-muted-foreground hover:bg-accent hover:text-foreground"
-          title="Retry transcription"
+          title={t('retryTranscription')}
           data-testid={`retry-transcription-${lesson.id}`}
         >
           <RotateCcw className="h-4 w-4" />
@@ -149,7 +152,7 @@ export default function SortableLessonRow({
       <button
         onClick={() => onEdit(lesson.id)}
         className="flex-shrink-0 cursor-pointer rounded-lg p-2 text-muted-foreground transition-all hover:bg-accent hover:text-foreground"
-        title="Edit lesson"
+        title={t('edit')}
         data-testid={`edit-lesson-${lesson.id}`}
       >
         <SquarePen className="h-4 w-4" />
@@ -159,7 +162,7 @@ export default function SortableLessonRow({
       <button
         onClick={() => onDelete(lesson.id, lesson.title)}
         className="flex-shrink-0 cursor-pointer rounded-lg p-2 text-muted-foreground transition-all hover:bg-accent hover:text-destructive"
-        title="Delete lesson"
+        title={t('delete')}
       >
         <Trash2 className="h-4 w-4" />
       </button>

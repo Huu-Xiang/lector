@@ -1,3 +1,4 @@
+import { useTranslations } from 'next-intl';
 import { ChevronsLeft, ChevronsRight } from 'lucide-react';
 
 export default function SidebarCollapseButton({
@@ -7,7 +8,8 @@ export default function SidebarCollapseButton({
   collapsed: boolean;
   onToggle: () => void;
 }) {
-  const label = collapsed ? 'Expand sidebar' : 'Collapse sidebar';
+  const t = useTranslations('chrome.nav');
+  const label = collapsed ? t('expandSidebar') : t('collapseSidebar');
   const Icon = collapsed ? ChevronsRight : ChevronsLeft;
 
   return (

@@ -1,6 +1,7 @@
 'use client';
 
 import { Check } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { IOnboardingCoachProps } from './types';
 import { getContent } from './utils';
@@ -11,15 +12,17 @@ export default function OnboardingCoach({
   savedWords,
   onStartPractice,
 }: IOnboardingCoachProps) {
+  const t = useTranslations('reader.coach');
   const content = getContent({
     stage,
     savedCount,
+    t,
   });
   const Icon = content.icon;
 
   return (
     <aside
-      aria-label="Guided first lesson"
+      aria-label={t('ariaLabel')}
       aria-live="polite"
       data-testid={`onboarding-coach-${stage}`}
       className="fixed right-3 bottom-20 left-3 z-40 rounded-2xl border border-[var(--gold-lip)] bg-card/95 p-4 shadow-xl backdrop-blur-sm sm:right-auto sm:bottom-5 sm:left-[15rem] sm:w-[25rem]"
@@ -39,7 +42,7 @@ export default function OnboardingCoach({
               <div
                 className="grid grid-cols-3 gap-2"
                 role="progressbar"
-                aria-label={`${Math.min(savedCount, 3)} of 3 review words ready`}
+                aria-label={t('progressLabel', { count: Math.min(savedCount, 3) })}
                 aria-valuemin={0}
                 aria-valuemax={3}
                 aria-valuenow={Math.min(savedCount, 3)}
@@ -58,7 +61,9 @@ export default function OnboardingCoach({
                       {savedWord ? (
                         <Check className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                       ) : null}
-                      <span className="truncate">{savedWord || `Word ${index + 1}`}</span>
+                      <span className="truncate">
+                        {savedWord || t('wordPlaceholder', { n: index + 1 })}
+                      </span>
                     </div>
                   );
                 })}
@@ -73,7 +78,7 @@ export default function OnboardingCoach({
               className="mt-3"
               data-testid="start-onboarding-practice"
             >
-              Start 3-word practice
+              {t('startPractice')}
             </Button>
           )}
         </div>

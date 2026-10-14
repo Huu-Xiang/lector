@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Sparkles, UserRound, X } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import {
@@ -17,6 +18,7 @@ export default function YouTubeImportModal({
   onImported,
   groupId = null,
 }: YouTubeImportModalProps) {
+  const t = useTranslations('library');
   const inputRef = useRef<HTMLInputElement>(null);
   const [url, setUrl] = useState('');
   const [state, setState] = useState<YouTubeModalState>({ phase: 'input' });
@@ -62,11 +64,11 @@ export default function YouTubeImportModal({
       } catch (err) {
         setState({
           phase: 'error',
-          message: err instanceof Error ? err.message : 'Could not import the transcript.',
+          message: err instanceof Error ? err.message : t('youtube.importFailed'),
         });
       }
     },
-    [url, groupId, onImported, onClose],
+    [url, groupId, onImported, onClose, t],
   );
 
   const handleKeyPress = useCallback(
@@ -85,10 +87,10 @@ export default function YouTubeImportModal({
         className="flex max-h-[85vh] max-w-2xl flex-col overflow-hidden"
       >
         <div className="flex items-center justify-between border-b border-border px-6 py-4">
-          <DialogTitle>Import YouTube Transcript</DialogTitle>
+          <DialogTitle>{t('youtube.title')}</DialogTitle>
           <DialogClose
             className={buttonVariants({ variant: 'ghost', size: 'icon' })}
-            aria-label="Close"
+            aria-label={t('common.close')}
           >
             <X size="20" />
           </DialogClose>
@@ -102,7 +104,7 @@ export default function YouTubeImportModal({
                   htmlFor="yt-url-input"
                   className="mb-2 block text-sm font-medium text-foreground"
                 >
-                  YouTube video URL
+                  {t('youtube.urlLabel')}
                 </label>
                 <div className="flex gap-3">
                   <input
@@ -126,10 +128,10 @@ export default function YouTubeImportModal({
                     {state.phase === 'resolving' ? (
                       <div className="flex items-center gap-2">
                         <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground/30 border-t-primary-foreground" />
-                        Finding…
+                        {t('youtube.finding')}
                       </div>
                     ) : (
-                      'Find captions'
+                      t('youtube.find')
                     )}
                   </Button>
                 </div>
@@ -145,16 +147,12 @@ export default function YouTubeImportModal({
                     onClick={() => setState({ phase: 'input' })}
                     className="mt-2 text-sm font-medium text-destructive hover:underline"
                   >
-                    Try again
+                    {t('common.tryAgain')}
                   </button>
                 </div>
               )}
 
-              <p className="text-sm text-muted-foreground">
-                Imports a video&apos;s available transcript as a lesson with clickable timestamps.
-                The video is never downloaded or hosted — clicking a line opens YouTube at that
-                moment.
-              </p>
+              <p className="text-sm text-muted-foreground">{t('youtube.help')}</p>
             </div>
           )}
 
@@ -170,7 +168,9 @@ export default function YouTubeImportModal({
                 )}
               </div>
               <div>
-                <p className="mb-2 text-sm font-medium text-foreground">Choose a caption track</p>
+                <p className="mb-2 text-sm font-medium text-foreground">
+                  {t('youtube.chooseTrack')}
+                </p>
                 <ul className="space-y-2" data-testid="yt-track-list">
                   {state.data.tracks.map((track) => (
                     <li key={`${track.languageCode}-${track.kind}`}>
@@ -193,7 +193,7 @@ export default function YouTubeImportModal({
                               : 'bg-primary/10 text-primary'
                           }`}
                         >
-                          {track.kind === 'asr' ? 'Auto-generated' : 'Creator captions'}
+                          {track.kind === 'asr' ? t('youtube.auto') : t('youtube.creator')}
                         </span>
                       </button>
                     </li>
@@ -203,13 +203,10 @@ export default function YouTubeImportModal({
               {state.phase === 'importing' && (
                 <p className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Sparkles className="h-4 w-4 animate-pulse" />
-                  Importing “{state.track.languageName}” transcript…
+                  {t('youtube.importing', { language: state.track.languageName })}
                 </p>
               )}
-              <p className="text-xs text-muted-foreground">
-                Auto-generated captions can contain recognition errors. You can edit the transcript
-                text after importing.
-              </p>
+              <p className="text-xs text-muted-foreground">{t('youtube.note')}</p>
             </div>
           )}
         </div>
@@ -217,7 +214,7 @@ export default function YouTubeImportModal({
         {state.phase === 'select' && (
           <div className="flex items-center justify-end gap-3 border-t border-border bg-muted px-6 py-4">
             <Button variant="ghost" onClick={() => setState({ phase: 'input' })}>
-              Back
+              {t('common.back')}
             </Button>
           </div>
         )}

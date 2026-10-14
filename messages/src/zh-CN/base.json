@@ -1,0 +1,182 @@
+{
+  "common": {
+    "appName": "Readfox",
+    "tagline": "用阅读学会一门新语言"
+  },
+  "uiLanguage": {
+    "label": "界面语言",
+    "title": "界面语言",
+    "description": "按钮、菜单和页面使用的语言。翻译和解释使用下面的\"翻译语言\"。"
+  },
+  "legal": {
+    "nav": "法律信息",
+    "privacy": "隐私",
+    "terms": "条款",
+    "about": "关于",
+    "source": "源代码"
+  },
+  "nav": {
+    "library": "书库",
+    "practice": "练习",
+    "journal": "日记",
+    "vocab": "词汇",
+    "stats": "统计",
+    "settings": "设置"
+  },
+  "auth": {
+    "loadingAuth": "正在加载",
+    "login": {
+      "title": "登录",
+      "deleted": "你的账号和所有数据已被永久删除。",
+      "unverified": "<b>{email}</b> 尚未验证。请到收件箱点击验证链接。",
+      "resend": "重新发送验证邮件",
+      "email": "邮箱",
+      "password": "密码",
+      "forgot": "忘记密码?",
+      "submit": "登录",
+      "submitting": "登录中…",
+      "github": "使用 GitHub 继续",
+      "oidc": "使用 {provider} 继续",
+      "noAccount": "还没有账号?",
+      "create": "去注册",
+      "errInvalid": "邮箱或密码不正确。",
+      "errFailed": "登录失败。",
+      "errResend": "无法重新发送邮件。",
+      "resent": "验证邮件已发送,请查看收件箱。"
+    },
+    "register": {
+      "title": "创建账号",
+      "name": "姓名",
+      "email": "邮箱",
+      "password": "密码",
+      "passwordHint": "至少 8 个字符。",
+      "submit": "创建账号",
+      "submitting": "正在创建…",
+      "haveAccount": "已有账号?",
+      "signIn": "去登录",
+      "errFailed": "注册失败。",
+      "checkTitle": "请查看收件箱",
+      "checkBody": "我们已向 <b>{email}</b> 发送了验证链接。点击链接激活账号,然后登录。",
+      "goSignIn": "前往登录"
+    },
+    "reset": {
+      "expiredTitle": "链接已过期",
+      "expiredBody": "该重置链接无效或已过期,请在下方重新申请。",
+      "requestNew": "重新申请链接",
+      "checkTitle": "请查看收件箱",
+      "checkBody": "如果 <b>{email}</b> 对应的账号存在,重置链接已在发送途中。",
+      "backToSignIn": "返回登录",
+      "title": "重置密码",
+      "intro": "输入账号邮箱,我们会发送一封重置链接邮件。",
+      "email": "邮箱",
+      "send": "发送重置链接",
+      "sending": "发送中…",
+      "errRequest": "无法申请重置。",
+      "newTitle": "设置新密码",
+      "newPassword": "新密码",
+      "passwordHint": "至少 8 个字符。",
+      "setNew": "设置新密码",
+      "updating": "更新中…",
+      "errReset": "无法重置密码。",
+      "updated": "密码已更新,请使用新密码登录。"
+    },
+    "twoFactor": {
+      "title": "两步验证",
+      "introBackup": "输入一个备用码,每个备用码只能使用一次。",
+      "introTotp": "输入验证器应用中的 6 位验证码。",
+      "labelBackup": "备用码",
+      "labelTotp": "验证码",
+      "placeholderBackup": "例如 abcde-fghij",
+      "trust": "在此设备上信任 30 天",
+      "verify": "验证",
+      "verifying": "验证中…",
+      "useTotp": "改用验证器验证码",
+      "useBackup": "改用备用码",
+      "backToSignIn": "返回登录",
+      "errExpired": "本次登录已过期,请重新输入密码。",
+      "errLocked": "验证码错误次数过多,请稍后再重新登录。",
+      "errBackup": "这个备用码无效。",
+      "errTotp": "验证码无效,请输入当前的验证码。"
+    }
+  },
+  "setup": {
+    "badge": "你的第一次阅读",
+    "welcome": "欢迎来到 Readfox",
+    "intro": "简单告诉我们几点,我们为你挑选合适的第一课。所有问题都是可选的。",
+    "chooseLanguage": "1. 选择要学的语言",
+    "learn": "学习{name}",
+    "showMore": "显示另外 {count} 种语言",
+    "personalise": "2. 个性化设置",
+    "personaliseHint": "选最接近的即可,之后可以随时调整。",
+    "optional": "可选",
+    "level": "大致水平",
+    "levels": {
+      "new": "刚开始",
+      "beginner": "初级",
+      "intermediate": "中级",
+      "advanced": "高级",
+      "not_sure": "不确定"
+    },
+    "interests": "兴趣",
+    "interestOptions": {
+      "everyday-life": "日常生活",
+      "culture": "文化",
+      "current-events": "时事",
+      "literature": "文学",
+      "faith-and-theology": "信仰与神学",
+      "travel": "旅行"
+    },
+    "dailyTime": "每天阅读时间",
+    "minutes": "{minutes} 分钟",
+    "ready": "准备好读第一篇了吗?",
+    "readyHint": "引导在一篇真实的入门课文里进行,可以随时退出。",
+    "skip": "直接进入书库",
+    "preparing": "正在准备课文…",
+    "start": "开始引导课",
+    "errSave": "无法保存你的设置"
+  },
+  "landing": {
+    "metaTitle": "Readfox – 用你正在学的语言读真正的书",
+    "metaDescription": "导入一本书或粘贴任意文字,点一下单词就能看到翻译,再把读到的内容变成间隔重复练习。免费且开源。",
+    "signIn": "登录",
+    "getStarted": "免费开始",
+    "heroTitle": "用你正在学的语言读真正的书",
+    "heroBody": "Readfox 把阅读变成学习。点任意单词查看翻译,边读边积累词汇,再用间隔重复来巩固。支持 {count} 种语言,免费使用。",
+    "createAccount": "创建免费账号",
+    "heroAlt": "Readfox:趴在打开的书上的小狐狸",
+    "howTitle": "它是怎么工作的",
+    "features": {
+      "read": {
+        "title": "读你喜欢的内容",
+        "body": "导入 EPUB 或粘贴任意文字,你自己的书就是你的课文。"
+      },
+      "tap": {
+        "title": "点一下单词,马上看懂",
+        "body": "结合上下文的即时翻译和解释,由你选择的 AI 密钥提供支持。"
+      },
+      "vocab": {
+        "title": "词汇自动积累",
+        "body": "你查过的每个词都会连同出处句子一起保存。"
+      },
+      "srs": {
+        "title": "间隔重复练习",
+        "body": "在合适的时间复习单词,真正记住它们。"
+      },
+      "write": {
+        "title": "写作并获得反馈",
+        "body": "用目标语言写日记,并获得批改。"
+      }
+    },
+    "openTitle": "开源,你的阅读内容属于你自己",
+    "openBody": "Readfox 是基于 Lector 的自由软件(AGPL-3.0)。AI 功能使用你自己的 OpenRouter 或 Anthropic 密钥,费用由你掌控。我们不投放广告,也不使用统计追踪。请阅读<privacy>隐私政策</privacy>,或<source>查看源代码</source>。"
+  },
+  "settings": {
+    "nativeLanguage": {
+      "title": "翻译语言",
+      "description": "翻译、解释、助手回复和日记批改会使用这种语言。它可以和界面语言不同,比如界面用中文、解释用英文。内置词典的释义仍为英文。",
+      "saved": "已保存语言",
+      "errSave": "无法保存语言设置",
+      "useBrowser": "改用浏览器的语言"
+    }
+  }
+}

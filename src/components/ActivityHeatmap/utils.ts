@@ -52,6 +52,7 @@ function dayOfWeek(dateStr: string): number {
 export function buildHeatmapGrid(
   data: ActivityDay[],
   endDate: string,
+  monthNames: readonly string[] = MONTHS,
 ): { weeks: HeatmapCell[][]; monthLabels: MonthLabel[] } {
   // date -> the full day record, so each cell can show its breakdown.
   const activityMap = new Map(data.map((d) => [d.date, d]));
@@ -75,7 +76,7 @@ export function buildHeatmapGrid(
     // One label per month, anchored at the column that first shows it; span is
     // filled in after the loop.
     if (month !== lastMonth) {
-      monthLabels.push({ label: MONTHS[month], weekIndex, span: 0 });
+      monthLabels.push({ label: monthNames[month], weekIndex, span: 0 });
       lastMonth = month;
     }
 

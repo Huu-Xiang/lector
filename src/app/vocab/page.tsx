@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import VocabList from '@/components/VocabList';
 import {
   type VocabEntry,
@@ -37,6 +38,7 @@ import { finishPostOnboardingTour, usePostOnboardingTour } from '@/lib/post-onbo
 
 export default function VocabPage() {
   const router = useRouter();
+  const t = useTranslations('vocab.page');
   const activeLang = useActiveLanguage();
   const ankiTransport = useAnkiTransport();
   const postOnboardingTour = usePostOnboardingTour();
@@ -99,7 +101,7 @@ export default function VocabPage() {
       setStats({ total: vocabData.length, byState });
     } catch (error) {
       console.error('Failed to load data:', error);
-      toast.error('Failed to load vocabulary data', {
+      toast.error(t('loadFailed'), {
         duration: 2000,
       });
     } finally {
@@ -152,12 +154,12 @@ export default function VocabPage() {
       if (selectedEntry?.id === id) {
         setSelectedEntry((prev) => (prev ? { ...prev, ...updates } : null));
       }
-      toast.success('Entry updated successfully', {
+      toast.success(t('entryUpdated'), {
         duration: 5000,
       });
     } catch (error) {
       console.error('Failed to update entry:', error);
-      toast.error('Failed to update entry', {
+      toast.error(t('updateFailed'), {
         duration: 5000,
       });
       throw error;
@@ -169,12 +171,12 @@ export default function VocabPage() {
     try {
       await deleteVocabEntry(id);
       await loadData();
-      toast.success('Entry deleted', {
+      toast.success(t('entryDeleted'), {
         duration: 5000,
       });
     } catch (error) {
       console.error('Failed to delete entry:', error);
-      toast.error('Failed to delete entry', {
+      toast.error(t('deleteFailed'), {
         duration: 5000,
       });
       throw error;
@@ -198,7 +200,7 @@ export default function VocabPage() {
     async (ids: string[], cardType: 'basic' | 'cloze') => {
       const entriesToExport = entries.filter((e) => ids.includes(e.id) && !e.pushedToAnki);
       if (entriesToExport.length === 0) {
-        toast.error('All selected entries have already been synced to Anki.', {
+        toast.error(t('allSynced'), {
           duration: 5000,
         });
         return;
@@ -213,17 +215,21 @@ export default function VocabPage() {
           const result = await queueForAnki(entriesToExport.map((e) => ({ id: e.id, cardType })));
           if (result.failed.length > 0) {
             toast.error(
-              `Queued ${result.queued} card${result.queued === 1 ? '' : 's'}, ${result.failed.length} failed (${result.failed[0].error})`,
+              t('queuedPartial', {
+                queued: result.queued,
+                failed: result.failed.length,
+                error: result.failed[0].error,
+              }),
               { duration: 5000 },
             );
           } else {
             toast.success(
-              `Queued ${result.queued} ${cardType} card${result.queued === 1 ? '' : 's'} — they'll appear next time Anki syncs`,
+              t('queuedOk', { queued: result.queued, cardType: t(`cardType.${cardType}`) }),
               { duration: 5000 },
             );
           }
         } catch (error) {
-          toast.error(error instanceof Error ? error.message : 'Failed to queue cards for Anki', {
+          toast.error(error instanceof Error ? error.message : t('queueFailed'), {
             duration: 5000,
           });
         }
@@ -231,14 +237,14 @@ export default function VocabPage() {
       }
 
       if (!ankiConnected) {
-        toast.error('Anki is not connected. Make sure Anki is running with AnkiConnect.', {
+        toast.error(t('notConnected'), {
           duration: 5000,
         });
         return;
       }
 
       const targetDeck = cardType === 'cloze' ? ankiClozeDeck : ankiDeck;
-      const cardLabel = cardType === 'cloze' ? 'cloze' : 'basic';
+      const cardLabel = t(`cardType.${cardType}`);
       // Branched rather than assigned to one variable: the two now take the
       // pack in different positions, because only the cloze card renders a
       // source line. The pack routes unspaced CJK to token spans (#289 4.7).
@@ -270,37 +276,43 @@ export default function VocabPage() {
 
       if (errorCount === 0) {
         toast.success(
-          `Exported ${successCount} ${cardLabel} card${successCount === 1 ? '' : 's'} to "${targetDeck}"`,
+          t('exported', { count: successCount, cardType: cardLabel, deck: targetDeck }),
           {
             duration: 5000,
           },
         );
       } else {
-        toast.error(`Exported ${successCount} ${cardLabel} cards, ${errorCount} failed`, {
+        toast.error(
+          t('exportPartial', { count: successCount, cardType: cardLabel, failed: errorCount }),
+          {
+            duration: 5000,
+          },
+        );
+      }
+    },
+    [entries, ankiTransport, ankiConnected, ankiDeck, ankiClozeDeck, activeLang, t],
+  );
+
+  // Mark selected entries as known
+  const handleMarkAsKnown = useCallback(
+    async (ids: string[]) => {
+      try {
+        for (const id of ids) {
+          await updateVocabState(id, 'known');
+        }
+        await loadData();
+        toast.success(t('markedKnown', { count: ids.length }), {
+          duration: 5000,
+        });
+      } catch (error) {
+        console.error('Failed to mark as known:', error);
+        toast.error(t('markKnownFailed'), {
           duration: 5000,
         });
       }
     },
-    [entries, ankiTransport, ankiConnected, ankiDeck, ankiClozeDeck, activeLang],
+    [t],
   );
-
-  // Mark selected entries as known
-  const handleMarkAsKnown = useCallback(async (ids: string[]) => {
-    try {
-      for (const id of ids) {
-        await updateVocabState(id, 'known');
-      }
-      await loadData();
-      toast.success(`Marked ${ids.length} entries as known`, {
-        duration: 5000,
-      });
-    } catch (error) {
-      console.error('Failed to mark as known:', error);
-      toast.error('Failed to mark entries as known', {
-        duration: 5000,
-      });
-    }
-  }, []);
 
   // Pull Anki card states, upgrade matching vocab entries, and create new
   // entries for Anki words that have never been saved to lector.
@@ -350,18 +362,22 @@ export default function VocabPage() {
 
       // Always surface the upgrade count (even 0) so a no-op sync still reads
       // clearly; only mention imports when some words were actually created.
-      const parts = [`upgraded ${upgrades.length}`];
-      if (newWords.length) parts.push(`imported ${newWords.length} from Anki`);
       const cardCount = ankiStates.size;
       toast.success(
-        `Synced ${cardCount} Anki card${cardCount === 1 ? '' : 's'} — ${parts.join(', ')}.`,
+        newWords.length
+          ? t('syncedImported', {
+              cards: cardCount,
+              upgraded: upgrades.length,
+              imported: newWords.length,
+            })
+          : t('synced', { cards: cardCount, upgraded: upgrades.length }),
         { duration: 5000 },
       );
     } catch (error) {
       console.error('Failed to sync with Anki:', error);
-      toast.error('Failed to sync with Anki', { duration: 5000 });
+      toast.error(t('syncFailed'), { duration: 5000 });
     }
-  }, [entries, ankiConnected, router]);
+  }, [entries, ankiConnected, router, t]);
 
   const openAnkiSetup = useCallback(() => {
     finishPostOnboardingTour();
@@ -370,7 +386,7 @@ export default function VocabPage() {
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-      <PageHeader title="Vocabulary">
+      <PageHeader title={t('title')}>
         <div className="flex items-center gap-2">
           {ankiTransport === 'addon' ? (
             <div className="relative">
@@ -383,15 +399,15 @@ export default function VocabPage() {
                     : 'hover:ring-2 hover:ring-primary/30'
                 }`}
                 data-testid="anki-addon-pill"
-                title="Open Anki setup"
+                title={t('openAnkiSetup')}
               >
                 <span className="h-2 w-2 rounded-full bg-primary" />
-                Anki syncs via add-on
+                {t('addonPill')}
               </button>
               {showAnkiOnboardingTip && (
                 <OnboardingTip
-                  title="Anki setup"
-                  body="Click here if you need help setting up your Anki."
+                  title={t('ankiTip.title')}
+                  body={t('ankiTip.body')}
                   onDismiss={finishPostOnboardingTour}
                   testId="post-onboarding-anki-tip"
                   className="absolute top-[calc(100%+0.75rem)] right-0"
@@ -399,16 +415,16 @@ export default function VocabPage() {
               )}
             </div>
           ) : ankiConnected === null ? (
-            <span className="text-sm text-muted-foreground">Checking Anki connection...</span>
+            <span className="text-sm text-muted-foreground">{t('checking')}</span>
           ) : ankiConnected ? (
             <span className="inline-flex items-center gap-1.5 rounded-full bg-[color-mix(in_srgb,var(--primary)_14%,var(--card))] px-3 py-1 text-sm font-medium text-primary">
               <span className="h-2 w-2 rounded-full bg-primary" />
-              Anki Connected
+              {t('connected')}
             </span>
           ) : (
             <span className="inline-flex items-center gap-1.5 rounded-full bg-[color-mix(in_srgb,var(--destructive)_12%,var(--card))] px-3 py-1 text-sm font-medium text-destructive">
               <span className="h-2 w-2 rounded-full bg-destructive" />
-              Anki Disconnected
+              {t('disconnected')}
             </span>
           )}
         </div>

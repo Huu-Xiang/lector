@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Book, BookOpen, CheckCircle, Flame } from 'lucide-react';
 import Link from 'next/link';
+import { useFormatter, useTranslations } from 'next-intl';
 import {
   getAllDailyStats,
   getAppWideActivity,
@@ -35,6 +36,8 @@ import {
 import { StatsData } from './types';
 
 export default function StatsPage() {
+  const t = useTranslations('stats');
+  const format = useFormatter();
   const [stats, setStats] = useState<StatsData | null>(null);
   const [loading, setLoading] = useState(true);
   // Time window for the vocabulary-growth chart. Defaults to one year.
@@ -193,9 +196,9 @@ export default function StatsPage() {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="text-center">
-          <p className="mb-4 text-destructive">Failed to load statistics</p>
+          <p className="mb-4 text-destructive">{t('loadFailed')}</p>
           <Link href="/" className="text-primary hover:underline">
-            Return home
+            {t('returnHome')}
           </Link>
         </div>
       </div>
@@ -204,9 +207,9 @@ export default function StatsPage() {
 
   return (
     <main className="mx-auto max-w-7xl px-6 py-8">
-      <PageHeader title="Statistics">
+      <PageHeader title={t('title')}>
         <p className="text-sm text-muted-foreground">
-          {new Date().toLocaleDateString('en-US', {
+          {format.dateTime(new Date(), {
             weekday: 'long',
             year: 'numeric',
             month: 'long',
@@ -224,29 +227,29 @@ export default function StatsPage() {
         className="mb-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4"
       >
         <StatCard
-          label="Words Known"
+          label={t('cards.wordsKnown')}
           value={stats.totalKnown}
           color="green"
           icon={<CheckCircle size="24" />}
         />
         <StatCard
-          label="Learning (L1-L4)"
+          label={t('cards.learning')}
           value={stats.totalLearning}
-          sublabel="Words in progress"
+          sublabel={t('cards.learningSub')}
           color="yellow"
           icon={<Book size="24" />}
         />
         <StatCard
-          label="Words Read"
+          label={t('cards.wordsRead')}
           value={stats.reading.wordsRead}
-          sublabel="Estimated from reading position"
+          sublabel={t('cards.wordsReadSub')}
           color="blue"
           icon={<BookOpen size="24" />}
         />
         <StatCard
-          label="Current Streak"
-          value={`${stats.currentStreak} days`}
-          sublabel={`Longest: ${stats.longestStreak} days`}
+          label={t('cards.currentStreak')}
+          value={t('cards.days', { count: stats.currentStreak })}
+          sublabel={t('cards.longest', { count: stats.longestStreak })}
           color="orange"
           icon={<Flame size="24" />}
         />

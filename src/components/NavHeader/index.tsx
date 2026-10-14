@@ -23,14 +23,15 @@ import type { NavTourTip } from './components/NavLink';
 export default function NavHeader() {
   const pathname = usePathname();
   const tNav = useTranslations('nav');
+  const tTour = useTranslations('chrome.tour');
   const postOnboardingTour = usePostOnboardingTour();
   const { collapsed, setCollapsed } = useSidebarCollapsed();
 
   const tourTipFor = (href: string): NavTourTip | undefined => {
     if (postOnboardingTour?.stage === 'practice' && href === '/practice') {
       return {
-        title: 'Practice later',
-        body: 'Go to the Practice tab to review words later.',
+        title: tTour('practiceTitle'),
+        body: tTour('practiceBody'),
         testId: 'post-onboarding-practice-tip',
         onNavigate: () => advancePostOnboardingTour('vocab'),
         onDismiss: finishPostOnboardingTour,
@@ -38,8 +39,8 @@ export default function NavHeader() {
     }
     if (postOnboardingTour?.stage === 'vocab' && href === '/vocab') {
       return {
-        title: 'Your vocabulary',
-        body: "Review the vocabulary you've interacted with in the Vocabulary tab.",
+        title: tTour('vocabTitle'),
+        body: tTour('vocabBody'),
         testId: 'post-onboarding-vocab-tip',
         onNavigate: () => advancePostOnboardingTour('anki'),
         onDismiss: finishPostOnboardingTour,

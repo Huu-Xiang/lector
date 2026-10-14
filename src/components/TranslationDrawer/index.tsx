@@ -2,12 +2,13 @@
 
 import { useEffect, useRef, useCallback, useState, useMemo } from 'react';
 import { createPortal } from 'react-dom';
+import { useTranslations } from 'next-intl';
 import clsx from 'clsx';
 import type { WordState } from '@/types';
 import { sentenceContainsWord } from '@/lib/words';
 import { useActiveLanguage, useScreenSize } from '@/utils/hooks';
 import { TranslationDrawerProps } from './types';
-import { wordStateColors, wordStateLabels } from './constants';
+import { wordStateColors } from './constants';
 import { ChevronRight, RefreshCw, Sparkles, Volume2, X, Zap } from 'lucide-react';
 import TargetText from '@/components/TargetText';
 import NestedWordButton from './components/NestedWordButton';
@@ -48,6 +49,7 @@ export default function TranslationDrawer({
   onAddToAnki,
   onAddCloze,
 }: TranslationDrawerProps) {
+  const t = useTranslations('reader.drawer');
   const pack = useActiveLanguage();
   const drawerRef = useRef<HTMLDivElement>(null);
   const [relatedExpanded, setRelatedExpanded] = useState(false);
@@ -109,13 +111,16 @@ export default function TranslationDrawer({
   const senses = entry?.senses ?? [];
   const hasRichEntry = senses.length > 0;
   const fallbackTranslation = aiTranslation ?? null;
-  const announcement = lookupAnnouncement({
-    isOpen,
-    word,
-    isLoading: !!isLoading,
-    error,
-    hasResult: !!(hasRichEntry || fallbackTranslation || aiContextTranslation || aiPhraseDetails),
-  });
+  const announcement = lookupAnnouncement(
+    {
+      isOpen,
+      word,
+      isLoading: !!isLoading,
+      error,
+      hasResult: !!(hasRichEntry || fallbackTranslation || aiContextTranslation || aiPhraseDetails),
+    },
+    (key, values) => t(`announce.${key}`, values),
+  );
 
   const content = (
     <div
@@ -132,7 +137,7 @@ export default function TranslationDrawer({
       )}
       ref={drawerRef}
       role={docked ? 'complementary' : 'dialog'}
-      aria-label={idle ? 'Word definition' : `Definition of ${word}`}
+      aria-label={idle ? t('wordDefinition') : t('definitionOf', { word })}
     >
       <div
         className="sr-only"
@@ -146,7 +151,7 @@ export default function TranslationDrawer({
       {idle ? (
         <div className="flex flex-1 flex-col items-center justify-center px-6 text-center">
           <p data-testid="translation-drawer-empty" className="text-sm text-muted-foreground">
-            Click a word to look it up.
+            {t('clickToLookUp')}
           </p>
         </div>
       ) : (
@@ -158,7 +163,7 @@ export default function TranslationDrawer({
                 <div className="flex flex-wrap items-center gap-2">
                   <span
                     className={`h-2.5 w-2.5 flex-shrink-0 rounded-full ${stateColors.dot}`}
-                    title={wordStateLabels[currentState]}
+                    title={t(`state.${currentState}`)}
                   />
                   <h2 className="text-xl font-semibold break-words text-foreground">
                     <TargetText>{word}</TargetText>
@@ -167,8 +172,8 @@ export default function TranslationDrawer({
                     <button
                       onClick={handleSpeakWord}
                       className="rounded p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-                      title="Hear pronunciation"
-                      aria-label="Hear pronunciation"
+                      title={t('hearPronunciation')}
+                      aria-label={t('hearPronunciation')}
                     >
                       <Volume2 className="h-5 w-5" />
                     </button>
@@ -205,29 +210,29 @@ export default function TranslationDrawer({
                     className={`inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium ${stateColors.bg} ${stateColors.text}`}
                   >
                     <span className={`h-1.5 w-1.5 rounded-full ${stateColors.dot}`} />
-                    {wordStateLabels[currentState]}
+                    {t(`state.${currentState}`)}
                   </span>
                   {/* Source attribution — always tells the user where the
                   currently-displayed translation came from. */}
                   {aiContextTranslation ? (
                     <span className="inline-flex items-center gap-1 rounded-md bg-[var(--clay-soft)] px-2 py-0.5 text-xs font-medium text-[var(--clay)]">
                       <span className="h-1.5 w-1.5 rounded-full bg-[var(--clay)]" />
-                      AI · in context
+                      {t('sourceAiInContext')}
                     </span>
                   ) : entry?.source === 'cache' ? (
                     <span className="inline-flex items-center gap-1 rounded-md bg-[var(--gold-soft)] px-2 py-0.5 text-xs font-medium text-[var(--gold-strong)]">
                       <span className="h-1.5 w-1.5 rounded-full bg-[var(--gold-strong)]" />
-                      learned
+                      {t('sourceLearned')}
                     </span>
                   ) : isDictionaryResult ? (
                     <span className="inline-flex items-center gap-1 rounded-md bg-[var(--primary-soft)] px-2 py-0.5 text-xs font-medium text-[var(--primary-text)]">
                       <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-                      on-device
+                      {t('sourceOnDevice')}
                     </span>
                   ) : (fallbackTranslation || aiPhraseDetails) && !isLoading ? (
                     <span className="inline-flex items-center gap-1 rounded-md bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
                       <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground" />
-                      AI
+                      {t('sourceAi')}
                     </span>
                   ) : null}
                 </div>
@@ -238,8 +243,8 @@ export default function TranslationDrawer({
                   'flex-shrink-0 rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground',
                   docked && 'hidden',
                 )}
-                aria-label="Close"
-                title="Close (Esc)"
+                aria-label={t('close')}
+                title={t('closeEsc')}
               >
                 <X className="h-5 w-5" />
               </button>
@@ -253,7 +258,7 @@ export default function TranslationDrawer({
               {isLoading ? (
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <span className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-                  Looking up…
+                  {t('lookingUp')}
                 </div>
               ) : error ? (
                 <p className="text-sm text-destructive">{error}</p>
@@ -271,7 +276,7 @@ export default function TranslationDrawer({
                     <details className="group mt-3">
                       <summary className="flex cursor-pointer list-none items-center gap-1 text-xs font-medium text-muted-foreground hover:text-foreground">
                         <ChevronRight className="h-3 w-3 transition-transform group-open:rotate-90" />
-                        Show dictionary ({senses.length})
+                        {t('showDictionary', { count: senses.length })}
                       </summary>
                       <ol className="mt-2 space-y-2">
                         {senses.map((sense, i) => (
@@ -333,7 +338,7 @@ export default function TranslationDrawer({
                   </span>
                 </div>
               ) : (
-                <p className="text-sm text-muted-foreground italic">No definition found.</p>
+                <p className="text-sm text-muted-foreground italic">{t('noDefinition')}</p>
               )}
 
               {/* In-context AI button — always offered for single-word lookups so the
@@ -347,16 +352,16 @@ export default function TranslationDrawer({
                   <button
                     onClick={onRequestContextTranslation}
                     className="mt-3 inline-flex items-center gap-1.5 rounded-md bg-[var(--clay-soft)] px-2.5 py-1 text-xs font-medium text-[var(--clay)] transition-colors hover:bg-[color-mix(in_srgb,var(--clay)_18%,transparent)]"
-                    title="Translate using AI with sentence context"
+                    title={t('inContextTitle')}
                   >
                     <Zap className="h-3 w-3" />
-                    In context
+                    {t('inContext')}
                   </button>
                 )}
               {isContextLoading && (
                 <span className="mt-3 inline-flex items-center gap-1.5 text-xs text-[var(--clay)]">
                   <span className="h-3 w-3 animate-spin rounded-full border-2 border-[var(--clay)] border-t-transparent" />
-                  Asking AI…
+                  {t('askingAi')}
                 </span>
               )}
 
@@ -372,16 +377,16 @@ export default function TranslationDrawer({
                   <button
                     onClick={onEnrich}
                     className="mt-3 ml-2 inline-flex items-center gap-1.5 rounded-md bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-                    title="Add IPA, etymology, full senses & related forms"
+                    title={t('enrichTitle')}
                   >
                     <Sparkles className="h-3 w-3" />
-                    Enrich
+                    {t('enrich')}
                   </button>
                 )}
               {isEnriching && (
                 <span className="mt-3 ml-2 inline-flex items-center gap-1.5 text-xs text-muted-foreground">
                   <span className="h-3 w-3 animate-spin rounded-full border-2 border-muted-foreground border-t-transparent" />
-                  Enriching…
+                  {t('enriching')}
                 </span>
               )}
             </section>
@@ -396,7 +401,7 @@ export default function TranslationDrawer({
                   {aiPhraseDetails.idiomaticMeaning && (
                     <div>
                       <h3 className="mb-1 text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">
-                        Idiomatic meaning
+                        {t('idiomaticMeaning')}
                       </h3>
                       <p className="text-sm leading-relaxed text-foreground">
                         {aiPhraseDetails.idiomaticMeaning}
@@ -406,7 +411,7 @@ export default function TranslationDrawer({
                   {aiPhraseDetails.literalBreakdown && (
                     <div>
                       <h3 className="mb-1 text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">
-                        Literally
+                        {t('literally')}
                       </h3>
                       <p className="text-sm leading-relaxed text-foreground italic">
                         {aiPhraseDetails.literalBreakdown}
@@ -416,7 +421,7 @@ export default function TranslationDrawer({
                   {aiPhraseDetails.usageNotes && (
                     <div>
                       <h3 className="mb-1 text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">
-                        Usage
+                        {t('usage')}
                       </h3>
                       <p className="text-sm leading-relaxed text-foreground">
                         {aiPhraseDetails.usageNotes}
@@ -435,7 +440,7 @@ export default function TranslationDrawer({
             {entry?.etymology && (
               <section className="border-b border-border px-4 py-3">
                 <h3 className="mb-1 text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">
-                  Etymology
+                  {t('etymology')}
                 </h3>
                 <p className="text-sm leading-relaxed text-foreground">{entry.etymology}</p>
               </section>
@@ -455,7 +460,7 @@ export default function TranslationDrawer({
                 return (
                   <section className="border-b border-border px-4 py-3">
                     <h3 className="mb-2 text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">
-                      Related forms
+                      {t('relatedForms')}
                     </h3>
                     <ul className="space-y-1">
                       {shown.map((r, i) => (
@@ -480,7 +485,7 @@ export default function TranslationDrawer({
                         onClick={() => setRelatedExpanded((v) => !v)}
                         className="mt-2 text-xs font-medium text-primary transition-colors hover:text-[var(--primary-text)]"
                       >
-                        {relatedExpanded ? 'Show fewer' : `Show all (${total})`}
+                        {relatedExpanded ? t('showFewer') : t('showAll', { count: total })}
                         {!relatedExpanded && hiddenCount > 0 && (
                           <span className="ml-1 text-muted-foreground">+{hiddenCount}</span>
                         )}
@@ -504,8 +509,8 @@ export default function TranslationDrawer({
                     <button
                       onClick={handleSpeakSentence}
                       className="flex-shrink-0 rounded p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-                      title="Hear sentence"
-                      aria-label="Hear sentence"
+                      title={t('hearSentence')}
+                      aria-label={t('hearSentence')}
                     >
                       <Volume2 className="h-4 w-4" />
                     </button>
@@ -532,12 +537,17 @@ export default function TranslationDrawer({
                   <div className="flex items-center justify-between gap-3 text-xs">
                     <span className="font-semibold text-foreground">
                       {onboardingSaveProgress.currentWordSaved
-                        ? 'Added to your first review'
-                        : 'Choose level 1–4 to add this word'}
+                        ? t('onboardingAdded')
+                        : t('onboardingChoose')}
                     </span>
                     <span className="shrink-0 font-bold text-[var(--gold-strong)]">
-                      {Math.min(onboardingSaveProgress.savedCount, onboardingSaveProgress.target)}/
-                      {onboardingSaveProgress.target} ready
+                      {t('onboardingReady', {
+                        count: Math.min(
+                          onboardingSaveProgress.savedCount,
+                          onboardingSaveProgress.target,
+                        ),
+                        target: onboardingSaveProgress.target,
+                      })}
                     </span>
                   </div>
                   <div className="mt-2 grid grid-cols-3 gap-1.5" aria-hidden="true">
@@ -565,13 +575,13 @@ export default function TranslationDrawer({
                             key={level}
                             onClick={() => onSetLevel(level as 1 | 2 | 3 | 4)}
                             data-testid={`word-level-${level}`}
-                            aria-label={`Save at learning level ${level}`}
+                            aria-label={t('saveAtLevel', { level })}
                             className={`h-9 w-9 rounded-lg text-sm font-semibold transition-all ${
                               isActive
                                 ? `${colors.bg} ${colors.text} ring-2 ring-offset-1 ring-offset-popover ${colors.ring}`
                                 : 'bg-muted text-muted-foreground hover:bg-accent'
                             }`}
-                            title={`Level ${level}`}
+                            title={t('levelTitle', { level })}
                           >
                             {level}
                           </button>
@@ -588,9 +598,9 @@ export default function TranslationDrawer({
                           ? 'bg-primary text-primary-foreground ring-2 ring-primary ring-offset-1 ring-offset-popover'
                           : 'bg-muted text-foreground hover:bg-[var(--primary-soft)] hover:text-[var(--primary-text)]'
                       }`}
-                      title="Mark as known (K)"
+                      title={t('markKnownTitle')}
                     >
-                      ✓ Known
+                      {t('known')}
                     </button>
                   )}
                   {onIgnore && (
@@ -602,9 +612,9 @@ export default function TranslationDrawer({
                           ? 'bg-muted-foreground text-card ring-2 ring-muted-foreground ring-offset-1 ring-offset-popover'
                           : 'bg-muted text-foreground hover:bg-accent'
                       }`}
-                      title="Ignore (X)"
+                      title={t('ignoreTitle')}
                     >
-                      ✕ Ignore
+                      {t('ignore')}
                     </button>
                   )}
                 </div>
@@ -613,10 +623,10 @@ export default function TranslationDrawer({
                 <button
                   onClick={onRetranslate}
                   className="flex w-full items-center justify-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-                  title="Force fresh AI lookup (ignores dictionary)"
+                  title={t('retranslateTitle')}
                 >
                   <RefreshCw className="h-3.5 w-3.5" />
-                  Re-translate with AI
+                  {t('retranslate')}
                 </button>
               )}
               {/* Anki — single word: pure word card */}
@@ -643,12 +653,12 @@ export default function TranslationDrawer({
                   }`}
                 >
                   {ankiStatus === 'done'
-                    ? '✓ Added to Anki'
+                    ? t('ankiAdded')
                     : ankiStatus === 'loading'
-                      ? 'Adding…'
+                      ? t('ankiAdding')
                       : ankiStatus === 'error'
-                        ? 'Anki error — retry'
-                        : 'Add to Anki'}
+                        ? t('ankiError')
+                        : t('ankiAdd')}
                 </button>
               )}
               {/* Anki — phrase: cloze card with inline word picker */}
@@ -660,11 +670,11 @@ export default function TranslationDrawer({
                       onClick={() => setClozePickerOpen(true)}
                       className="flex w-full items-center justify-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
                     >
-                      Add to Anki as Cloze
+                      {t('clozeAdd')}
                     </button>
                   ) : (
                     <div className="space-y-2">
-                      <p className="text-xs text-muted-foreground">Pick a word to blank:</p>
+                      <p className="text-xs text-muted-foreground">{t('clozePick')}</p>
                       <div className="flex flex-wrap gap-1" data-testid="cloze-word-chips">
                         {word
                           .split(/\s+/)
@@ -736,12 +746,12 @@ export default function TranslationDrawer({
                           }`}
                         >
                           {clozeStatus === 'done'
-                            ? '✓ Sent to Anki'
+                            ? t('clozeSent')
                             : clozeStatus === 'loading'
-                              ? 'Sending…'
+                              ? t('clozeSending')
                               : clozeStatus === 'error'
-                                ? 'Error — retry'
-                                : 'Send to Anki'}
+                                ? t('clozeError')
+                                : t('clozeSend')}
                         </button>
                         {clozeStatus !== 'done' && (
                           <button
@@ -753,7 +763,7 @@ export default function TranslationDrawer({
                             }}
                             className="rounded-md border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
                           >
-                            Cancel
+                            {t('cancel')}
                           </button>
                         )}
                       </div>

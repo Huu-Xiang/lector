@@ -1,100 +1,75 @@
 import type { Metadata } from 'next';
+import { getLocale, getTranslations } from 'next-intl/server';
 import { LegalShell, H2 } from '@/components/LegalLinks/shell';
 
-export const metadata: Metadata = { title: 'Privacy – Readfox' };
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('legalPages');
+  return { title: t('privacy.metaTitle') };
+}
 
-export default function PrivacyPage() {
+const LAST_UPDATED = new Date(Date.UTC(2026, 9, 14));
+const STORE_ITEMS = ['account', 'text', 'learning', 'aiKey', 'session'] as const;
+const OTHERS_ITEMS = ['cloudflare', 'resend', 'aiProvider'] as const;
+const CONTROLS_ITEMS = ['export', 'delete', 'aiKey'] as const;
+
+export default async function PrivacyPage() {
+  const t = await getTranslations('legalPages');
+  const locale = await getLocale();
+  const isEnglish = locale.startsWith('en');
+  const date = new Intl.DateTimeFormat(isEnglish ? 'en-GB' : locale, {
+    dateStyle: 'long',
+    timeZone: 'UTC',
+  }).format(LAST_UPDATED);
+  const tags = {
+    strong: (chunks: React.ReactNode) => <strong>{chunks}</strong>,
+    em: (chunks: React.ReactNode) => <em>{chunks}</em>,
+    mail: (chunks: React.ReactNode) => (
+      <a className="underline" href="mailto:privacy@readfox.app">
+        {chunks}
+      </a>
+    ),
+  };
+
   return (
-    <LegalShell title="Privacy policy">
-      <p className="text-muted-foreground">Last updated: 14 October 2026</p>
-      <p>
-        Readfox is a small, independently run service. This page says plainly what we store, who
-        else touches your data, and what we can and cannot see.
-      </p>
+    <LegalShell title={t('privacy.title')}>
+      {!isEnglish && <p className="text-xs text-muted-foreground">{t('notice')}</p>}
+      <p className="text-muted-foreground">{t('privacy.lastUpdated', { date })}</p>
+      <p>{t('privacy.intro')}</p>
 
-      <H2>What we store</H2>
+      <H2>{t('privacy.store.heading')}</H2>
       <ul className="list-disc space-y-1 pl-5">
-        <li>Your email address, optional name, and a salted hash of your password.</li>
-        <li>
-          The <strong>text</strong> extracted from books and articles you import (titles and
-          chapters). We do not keep the original EPUB file.
-        </li>
-        <li>Your vocabulary, reading progress, practice history, journal entries and settings.</li>
-        <li>
-          If you add your own AI key, it is stored encrypted (AES-256-GCM). It is never sent back to
-          your browser.
-        </li>
-        <li>
-          A session cookie that keeps you signed in, and short-lived server logs (such as IP address
-          and request errors) used to keep the service secure and working.
-        </li>
+        {STORE_ITEMS.map((key) => (
+          <li key={key}>{t.rich(`privacy.store.items.${key}`, tags)}</li>
+        ))}
       </ul>
 
-      <H2>Who else is involved</H2>
+      <H2>{t('privacy.others.heading')}</H2>
       <ul className="list-disc space-y-1 pl-5">
-        <li>
-          <strong>Cloudflare</strong> – DNS, the Turnstile bot check on sign-up, and R2 storage for
-          backups.
-        </li>
-        <li>
-          <strong>Resend</strong> – delivers the verification and password-reset emails.
-        </li>
-        <li>
-          <strong>Your AI provider (OpenRouter or Anthropic)</strong> – when you use translation,
-          explanations or chat, the text you select, with some surrounding context, is sent to the
-          provider using <em>your</em> key. Their privacy terms apply to that data, and the usage is
-          billed to you.
-        </li>
+        {OTHERS_ITEMS.map((key) => (
+          <li key={key}>{t.rich(`privacy.others.items.${key}`, tags)}</li>
+        ))}
       </ul>
-      <p>We do not run advertising or analytics trackers, and we do not sell your data.</p>
+      <p>{t('privacy.others.noTrackers')}</p>
 
-      <H2>What the operator can and cannot see</H2>
-      <p>
-        The admin dashboard shows account-level numbers only (sign-up date, counts of lessons and
-        words, storage used). It has no screen that displays your book text, and it has no
-        &ldquo;view as user&rdquo; or per-user export feature.
-      </p>
-      <p>
-        Be aware that the operator still has technical access to the server and its database, so we
-        cannot promise that viewing is technically impossible. We do not look at your content. If
-        you ask for support and send us an export, we use it only to fix your problem and then
-        delete it. Please do not upload material you would not want a server to process.
-      </p>
+      <H2>{t('privacy.operator.heading')}</H2>
+      <p>{t('privacy.operator.dashboard')}</p>
+      <p>{t('privacy.operator.access')}</p>
 
-      <H2>Backups</H2>
-      <p>
-        The database is continuously replicated to Cloudflare R2, which encrypts data at rest. Daily
-        snapshots are additionally encrypted with a key kept offline by the operator, and are kept
-        for 30 days.
-      </p>
+      <H2>{t('privacy.backups.heading')}</H2>
+      <p>{t('privacy.backups.body')}</p>
 
-      <H2>Your controls</H2>
+      <H2>{t('privacy.controls.heading')}</H2>
       <ul className="list-disc space-y-1 pl-5">
-        <li>
-          <strong>Export:</strong> Settings → Learning data → Export all learning data downloads
-          everything you have stored.
-        </li>
-        <li>
-          <strong>Delete:</strong> Settings → Delete account removes your account and data from the
-          live service. Copies in backups disappear as the daily snapshots expire (up to 30 days).
-        </li>
-        <li>You can remove your AI key at any time in Settings.</li>
+        {CONTROLS_ITEMS.map((key) => (
+          <li key={key}>{t.rich(`privacy.controls.items.${key}`, tags)}</li>
+        ))}
       </ul>
 
-      <H2>Children</H2>
-      <p>
-        Readfox is not directed at children under 13, and we do not knowingly collect their data.
-      </p>
+      <H2>{t('privacy.children.heading')}</H2>
+      <p>{t('privacy.children.body')}</p>
 
-      <H2>Changes and contact</H2>
-      <p>
-        If this policy changes in a meaningful way we will update the date above. Questions or
-        requests about your data:{' '}
-        <a className="underline" href="mailto:privacy@readfox.app">
-          privacy@readfox.app
-        </a>
-        .
-      </p>
+      <H2>{t('privacy.contact.heading')}</H2>
+      <p>{t.rich('privacy.contact.body', tags)}</p>
     </LegalShell>
   );
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { useTranslations } from 'next-intl';
 
 /** A seek request. `nonce` changes on every click so seeking to the same
  *  timestamp twice still re-fires the effect. */
@@ -26,6 +27,7 @@ interface YouTubePlayerProps {
  * cross-origin iframe boundary.
  */
 export default function YouTubePlayer({ videoId, seekTarget }: YouTubePlayerProps) {
+  const t = useTranslations('reader.youtube');
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   useEffect(() => {
@@ -51,7 +53,7 @@ export default function YouTubePlayer({ videoId, seekTarget }: YouTubePlayerProp
         ref={iframeRef}
         className="h-full w-full"
         src={src}
-        title="YouTube video player"
+        title={t('playerTitle')}
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowFullScreen
       />

@@ -21,11 +21,13 @@ import PageHeader from '@/components/PageHeader';
 import BYOKSettings from './components/BYOKSettings';
 import CloudPlanSettings from './components/CloudPlanSettings';
 import { lectorMode } from '@/lib/api-base';
+import { useTranslations } from 'next-intl';
 
 export default function SettingsPage() {
+  const t = useTranslations('settings');
   return (
     <main className="mx-auto max-w-3xl px-4 py-8">
-      <PageHeader title="Settings" />
+      <PageHeader title={t('pageTitle')} />
       <div className="space-y-8">
         {lectorMode() === 'cloud' && <CloudPlanSettings />}
         <LanguagesSettings />

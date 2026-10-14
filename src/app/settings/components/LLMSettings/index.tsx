@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import { useEffect, useRef, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { deleteSetting, getSetting, setSetting } from '@/lib/data-layer';
 import { apiFetch } from '@/lib/api-base';
 import { Button } from '@/components/ui/button';
@@ -14,6 +15,7 @@ const PRESET_ENDPOINTS: Record<Exclude<OpenAIPreset, 'custom'>, string> = {
 };
 
 export default function LLMSettings() {
+  const t = useTranslations('settings.llm');
   const [llmProvider, setLlmProvider] = useState<LLMProvider>('openai');
 
   // OpenAI-compatible (Ollama / LM Studio / Apfel / vLLM / …) — one shared config
@@ -97,7 +99,7 @@ export default function LLMSettings() {
       setLlmStatus(res);
     } catch (e) {
       console.error(e);
-      toast.error('Failed to fetch LLM Status');
+      toast.error(t('fetchStatusFailed'));
     } finally {
       setIsFetchingLlmStatus(false);
     }
@@ -105,7 +107,7 @@ export default function LLMSettings() {
 
   const runSettingMutation = (mutation: Promise<unknown>) => {
     void mutation.catch((error) => {
-      toast.error(error instanceof Error ? error.message : 'Failed to save setting');
+      toast.error(error instanceof Error ? error.message : t('saveFailed'));
     });
   };
 
@@ -195,17 +197,17 @@ export default function LLMSettings() {
       });
       const data = await res.json();
       if (!res.ok) {
-        setOpenaiFetchError(data?.error || `Status ${res.status}`);
+        setOpenaiFetchError(data?.error || t('statusError', { status: res.status }));
         setOpenaiModels([]);
       } else {
         const list: string[] = Array.isArray(data?.models) ? data.models : [];
         setOpenaiModels(list);
         if (list.length === 0) {
-          setOpenaiFetchError('No models reported by this endpoint — type the model name instead.');
+          setOpenaiFetchError(t('noModels'));
         }
       }
     } catch (err) {
-      setOpenaiFetchError(err instanceof Error ? err.message : 'Failed to fetch models');
+      setOpenaiFetchError(err instanceof Error ? err.message : t('fetchModelsFailed'));
       setOpenaiModels([]);
     } finally {
       setOpenaiFetchingModels(false);
@@ -258,9 +260,7 @@ export default function LLMSettings() {
           : { provider: llmProvider, model: openaiModel, ok: data.ok, error: data.error },
       );
     } catch {
-      setLlmStatus((prev) =>
-        prev ? { ...prev, ok: false, error: 'Failed to reach server' } : null,
-      );
+      setLlmStatus((prev) => (prev ? { ...prev, ok: false, error: t('unreachable') } : null));
     } finally {
       setIsFetchingLlmStatus(false);
     }
@@ -277,9 +277,7 @@ export default function LLMSettings() {
           : { provider: llmProvider, model: openaiModel, ok: data.ok, error: data.error },
       );
     } catch {
-      setLlmStatus((prev) =>
-        prev ? { ...prev, ok: false, error: 'Failed to reach server' } : null,
-      );
+      setLlmStatus((prev) => (prev ? { ...prev, ok: false, error: t('unreachable') } : null));
     } finally {
       setIsFetchingLlmStatus(false);
     }
@@ -288,7 +286,7 @@ export default function LLMSettings() {
   return (
     <section className="panel p-6">
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-foreground">AI Provider</h2>
+        <h2 className="text-lg font-semibold text-foreground">{t('heading')}</h2>
         <div className="flex items-center gap-2">
           <span
             className={clsx(`inline-block h-2 w-2 rounded-full`, {
@@ -298,32 +296,26 @@ export default function LLMSettings() {
             })}
           />
           <span className="text-sm text-muted-foreground">
-            {llmStatus?.ok ? 'Connected' : llmStatus?.error || 'Not connected'}
+            {llmStatus?.ok ? t('connected') : llmStatus?.error || t('notConnected')}
             <Button variant="link" onClick={testLLMConnection} disabled={isFetchingLlmStatus}>
-              {isFetchingLlmStatus ? 'Checking...' : 'Refresh'}
+              {isFetchingLlmStatus ? t('checking') : t('refresh')}
             </Button>
           </span>
         </div>
       </div>
-      <p className="mb-4 text-sm text-muted-foreground">
-        Choose how translations are powered. Anthropic uses cloud AI for the highest quality.
-        Local &amp; self-hosted covers any OpenAI-compatible server — Ollama, LM Studio, Apfel, vLLM,
-        and friends — with one endpoint, an optional API key, and a model name.
-      </p>
+      <p className="mb-4 text-sm text-muted-foreground">{t('intro')}</p>
 
       {/* Provider selector */}
       <div className="mb-4">
-        <label className="mb-2 block text-sm font-medium text-foreground">
-          Provider
-        </label>
+        <label className="mb-2 block text-sm font-medium text-foreground">{t('provider')}</label>
         <select
           value={llmProvider}
           onChange={(e) => runSettingMutation(saveLLMProvider(e.target.value as LLMProvider))}
           data-testid="llm-provider"
-          className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none "
+          className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none"
         >
-          <option value="anthropic">Anthropic (cloud)</option>
-          <option value="openai">Local / self-hosted (OpenAI-compatible)</option>
+          <option value="anthropic">{t('providerAnthropic')}</option>
+          <option value="openai">{t('providerOpenai')}</option>
         </select>
       </div>
 
@@ -334,7 +326,7 @@ export default function LLMSettings() {
           {hasApiKey && hasOauthToken && (
             <div>
               <label className="mb-2 block text-sm font-medium text-foreground">
-                Authentication Method
+                {t('authMethod')}
               </label>
               <div className="flex gap-2">
                 <button
@@ -346,7 +338,7 @@ export default function LLMSettings() {
                       : 'border-border bg-card text-foreground hover:bg-accent'
                   }`}
                 >
-                  API Key
+                  {t('apiKey')}
                 </button>
                 <button
                   onClick={() => runSettingMutation(saveAnthropicAuthMode('oauth'))}
@@ -357,54 +349,52 @@ export default function LLMSettings() {
                       : 'border-border bg-card text-foreground hover:bg-accent'
                   }`}
                 >
-                  OAuth Token
+                  {t('oauthToken')}
                 </button>
               </div>
-              <p className="mt-1 text-xs text-muted-foreground">
-                Both credentials are configured. Choose which to use — connection will be tested
-                automatically.
-              </p>
+              <p className="mt-1 text-xs text-muted-foreground">{t('bothConfigured')}</p>
             </div>
           )}
 
           {/* API Key */}
           <div>
-            <label className="mb-2 block text-sm font-medium text-foreground">
-              API Key
-            </label>
+            <label className="mb-2 block text-sm font-medium text-foreground">{t('apiKey')}</label>
             <p className="mb-2 text-xs text-muted-foreground">
-              Get your API key from{' '}
-              <a
-                href="https://console.anthropic.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary hover:underline"
-              >
-                console.anthropic.com
-              </a>
+              {t.rich('getKeyFrom', {
+                link: (chunks) => (
+                  <a
+                    href="https://console.anthropic.com/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline"
+                  >
+                    {chunks}
+                  </a>
+                ),
+              })}
             </p>
             {hasApiKey && !editingApiKey ? (
               <div className="flex items-center gap-2">
                 <span
                   data-testid="anthropic-api-key-status"
-                  className="inline-flex items-center gap-1.5 rounded-md bg-[var(--primary-soft)] px-3 py-2 text-sm font-medium text-primary "
+                  className="inline-flex items-center gap-1.5 rounded-md bg-[var(--primary-soft)] px-3 py-2 text-sm font-medium text-primary"
                 >
                   <span className="inline-block h-2 w-2 rounded-full bg-primary" />
-                  Configured
+                  {t('configured')}
                 </span>
                 <button
                   onClick={() => setEditingApiKey(true)}
                   data-testid="anthropic-api-key-replace"
                   className="rounded-md border border-input bg-background px-3 py-2 text-sm font-medium text-foreground hover:bg-accent"
                 >
-                  Replace
+                  {t('replace')}
                 </button>
                 <button
                   onClick={() => runSettingMutation(clearAnthropicApiKey())}
                   data-testid="anthropic-api-key-clear"
                   className="rounded-md border border-destructive/40 bg-background px-3 py-2 text-sm font-medium text-destructive hover:bg-destructive/10"
                 >
-                  Clear
+                  {t('clear')}
                 </button>
               </div>
             ) : (
@@ -415,7 +405,7 @@ export default function LLMSettings() {
                   onChange={(e) => setNewApiKey(e.target.value)}
                   placeholder="sk-ant-api..."
                   data-testid="anthropic-api-key"
-                  className="flex-1 rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none  "
+                  className="flex-1 rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none"
                 />
                 <button
                   onClick={() => runSettingMutation(saveAnthropicApiKey(newApiKey))}
@@ -423,7 +413,7 @@ export default function LLMSettings() {
                   data-testid="anthropic-api-key-save"
                   className="rounded-md bg-primary px-4 py-2 text-sm font-bold text-primary-foreground hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  Save
+                  {t('save')}
                 </button>
                 {editingApiKey && (
                   <button
@@ -434,7 +424,7 @@ export default function LLMSettings() {
                     data-testid="anthropic-api-key-cancel"
                     className="rounded-md border border-input bg-background px-3 py-2 text-sm font-medium text-foreground hover:bg-accent"
                   >
-                    Cancel
+                    {t('cancel')}
                   </button>
                 )}
               </div>
@@ -443,37 +433,38 @@ export default function LLMSettings() {
 
           <div className="relative flex items-center py-2">
             <div className="flex-grow border-t border-border" />
-            <span className="mx-3 flex-shrink text-xs text-muted-foreground">or</span>
+            <span className="mx-3 flex-shrink text-xs text-muted-foreground">{t('or')}</span>
             <div className="flex-grow border-t border-border" />
           </div>
 
           {/* OAuth Token */}
           <div>
             <label className="mb-2 block text-sm font-medium text-foreground">
-              OAuth Token <span className="font-normal text-muted-foreground">(Pro/Team plan)</span>
+              {t('oauthToken')}{' '}
+              <span className="font-normal text-muted-foreground">{t('oauthPlan')}</span>
             </label>
             <p className="mb-2 text-xs text-muted-foreground">
-              Uses your Claude Pro or Team subscription credits. Run{' '}
-              <code className="rounded bg-muted px-1">claude setup-token</code>{' '}
-              to obtain a token. Note: slower initial startup than API keys.
+              {t.rich('oauthHelp', {
+                code: (chunks) => <code className="rounded bg-muted px-1">{chunks}</code>,
+              })}
             </p>
             {hasOauthToken && !editingOauthToken ? (
               <div className="flex items-center gap-2">
-                <span className="inline-flex items-center gap-1.5 rounded-md bg-[var(--primary-soft)] px-3 py-2 text-sm font-medium text-primary ">
+                <span className="inline-flex items-center gap-1.5 rounded-md bg-[var(--primary-soft)] px-3 py-2 text-sm font-medium text-primary">
                   <span className="inline-block h-2 w-2 rounded-full bg-primary" />
-                  Configured
+                  {t('configured')}
                 </span>
                 <button
                   onClick={() => setEditingOauthToken(true)}
                   className="rounded-md border border-input bg-background px-3 py-2 text-sm font-medium text-foreground hover:bg-accent"
                 >
-                  Replace
+                  {t('replace')}
                 </button>
                 <button
                   onClick={() => runSettingMutation(clearClaudeOauthToken())}
                   className="rounded-md border border-destructive/40 bg-background px-3 py-2 text-sm font-medium text-destructive hover:bg-destructive/10"
                 >
-                  Clear
+                  {t('clear')}
                 </button>
               </div>
             ) : (
@@ -483,14 +474,14 @@ export default function LLMSettings() {
                   value={newOauthToken}
                   onChange={(e) => setNewOauthToken(e.target.value)}
                   placeholder="sk-ant-oat01-..."
-                  className="flex-1 rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none  "
+                  className="flex-1 rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none"
                 />
                 <button
                   onClick={() => runSettingMutation(saveClaudeOauthToken(newOauthToken))}
                   disabled={!newOauthToken.trim()}
                   className="rounded-md bg-primary px-4 py-2 text-sm font-bold text-primary-foreground hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  Save
+                  {t('save')}
                 </button>
                 {editingOauthToken && (
                   <button
@@ -500,7 +491,7 @@ export default function LLMSettings() {
                     }}
                     className="rounded-md border border-input bg-background px-3 py-2 text-sm font-medium text-foreground hover:bg-accent"
                   >
-                    Cancel
+                    {t('cancel')}
                   </button>
                 )}
               </div>
@@ -513,27 +504,23 @@ export default function LLMSettings() {
       {llmProvider === 'openai' && (
         <div className="mb-4 space-y-4" data-testid="openai-settings">
           <div>
-            <label className="mb-2 block text-sm font-medium text-foreground">
-              Preset
-            </label>
+            <label className="mb-2 block text-sm font-medium text-foreground">{t('preset')}</label>
             <select
               value={openaiPreset}
               onChange={(e) => runSettingMutation(saveOpenaiPreset(e.target.value as OpenAIPreset))}
               data-testid="openai-preset"
-              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none "
+              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none"
             >
-              <option value="custom">Custom / other OpenAI-compatible server</option>
+              <option value="custom">{t('presetCustom')}</option>
               <option value="ollama">Ollama (localhost:11434)</option>
               <option value="lmstudio">LM Studio (localhost:1234)</option>
             </select>
-            <p className="mt-1 text-xs text-muted-foreground">
-              A shortcut that fills in the endpoint below. You can edit it afterwards.
-            </p>
+            <p className="mt-1 text-xs text-muted-foreground">{t('presetHelp')}</p>
           </div>
 
           <div>
             <label className="mb-2 block text-sm font-medium text-foreground">
-              Endpoint
+              {t('endpoint')}
             </label>
             <input
               type="text"
@@ -541,25 +528,26 @@ export default function LLMSettings() {
               onChange={(e) => runSettingMutation(saveOpenaiUrl(e.target.value))}
               placeholder="http://localhost:11434"
               data-testid="openai-endpoint"
-              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none  "
+              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none"
             />
             <p className="mt-1 text-xs text-muted-foreground">
-              Base URL of your server — the app appends <code className="rounded bg-muted px-1">/v1</code>.
-              It&apos;s called server-side, so localhost works even when lector is hosted elsewhere.
+              {t.rich('endpointHelp', {
+                code: (chunks) => <code className="rounded bg-muted px-1">{chunks}</code>,
+              })}
             </p>
           </div>
 
           <div>
             <label className="mb-2 block text-sm font-medium text-foreground">
-              API Key (optional)
+              {t('apiKeyOptional')}
             </label>
             {hasOpenaiApiKey && !editingOpenaiApiKey ? (
               <div className="flex items-center gap-2">
                 <span
-                  className="inline-flex items-center rounded-md bg-[var(--primary-soft)] px-2 py-1 text-xs font-medium text-primary "
+                  className="inline-flex items-center rounded-md bg-[var(--primary-soft)] px-2 py-1 text-xs font-medium text-primary"
                   data-testid="openai-api-key-status"
                 >
-                  Configured
+                  {t('configured')}
                 </span>
                 <button
                   type="button"
@@ -567,7 +555,7 @@ export default function LLMSettings() {
                   className="rounded-md border border-input bg-background px-3 py-1 text-xs font-medium text-foreground hover:bg-accent"
                   data-testid="openai-api-key-replace"
                 >
-                  Replace
+                  {t('replace')}
                 </button>
                 <button
                   type="button"
@@ -575,7 +563,7 @@ export default function LLMSettings() {
                   className="rounded-md border border-destructive/40 bg-background px-3 py-1 text-xs font-medium text-destructive hover:bg-destructive/10"
                   data-testid="openai-api-key-clear"
                 >
-                  Clear
+                  {t('clear')}
                 </button>
               </div>
             ) : (
@@ -584,9 +572,9 @@ export default function LLMSettings() {
                   type="password"
                   value={newOpenaiApiKey}
                   onChange={(e) => setNewOpenaiApiKey(e.target.value)}
-                  placeholder="leave empty for local servers without auth"
+                  placeholder={t('apiKeyPlaceholder')}
                   data-testid="openai-api-key"
-                  className="flex-1 rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none  "
+                  className="flex-1 rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none"
                 />
                 <button
                   type="button"
@@ -595,7 +583,7 @@ export default function LLMSettings() {
                   className="rounded-md bg-primary px-3 py-2 text-sm font-bold text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
                   data-testid="openai-api-key-save"
                 >
-                  Save
+                  {t('save')}
                 </button>
                 {editingOpenaiApiKey && (
                   <button
@@ -606,30 +594,25 @@ export default function LLMSettings() {
                     }}
                     className="rounded-md border border-input bg-background px-3 py-2 text-sm font-medium text-foreground hover:bg-accent"
                   >
-                    Cancel
+                    {t('cancel')}
                   </button>
                 )}
               </div>
             )}
-            <p className="mt-1 text-xs text-muted-foreground">
-              Sent as a Bearer token from the server (never exposed to the browser after save). Only
-              needed for reverse-proxied, cloud, or otherwise authenticated endpoints.
-            </p>
+            <p className="mt-1 text-xs text-muted-foreground">{t('apiKeyHelp')}</p>
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-foreground">
-              Model
-            </label>
+            <label className="mb-2 block text-sm font-medium text-foreground">{t('model')}</label>
             <div className="flex gap-2">
               <input
                 type="text"
                 list="openai-model-options"
                 value={openaiModel}
                 onChange={(e) => runSettingMutation(saveOpenaiModel(e.target.value))}
-                placeholder={openaiFetchingModels ? 'Fetching models…' : 'Type a model name, or fetch the list'}
+                placeholder={openaiFetchingModels ? t('fetchingModels') : t('modelPlaceholder')}
                 data-testid="openai-model"
-                className="flex-1 rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none "
+                className="flex-1 rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none"
               />
               <datalist id="openai-model-options">
                 {openaiModels.map((m) => (
@@ -643,21 +626,18 @@ export default function LLMSettings() {
                 data-testid="openai-fetch-models"
                 className="rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground hover:bg-accent disabled:opacity-50"
               >
-                {openaiFetchingModels ? 'Fetching...' : 'Fetch models'}
+                {openaiFetchingModels ? t('fetching') : t('fetchModels')}
               </button>
             </div>
             {openaiFetchError && (
-              <p
-                className="mt-1 text-xs text-destructive"
-                data-testid="openai-fetch-error"
-              >
+              <p className="mt-1 text-xs text-destructive" data-testid="openai-fetch-error">
                 {openaiFetchError}
               </p>
             )}
             <p className="mt-1 text-xs text-muted-foreground">
-              Pick from the fetched list (servers like LM Studio &amp; Ollama report it via{' '}
-              <code className="rounded bg-muted px-1">/v1/models</code>) or just type any model name
-              your server accepts.
+              {t.rich('modelHelp', {
+                code: (chunks) => <code className="rounded bg-muted px-1">{chunks}</code>,
+              })}
             </p>
           </div>
         </div>

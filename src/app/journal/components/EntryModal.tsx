@@ -1,4 +1,5 @@
 import { X } from 'lucide-react';
+import { useLocale, useTranslations } from 'next-intl';
 import { JournalEntry } from '@/lib/data-layer';
 import { Dialog, DialogClose, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { formatDateTime } from '../utils';
@@ -11,16 +12,16 @@ export default function EntryModal({
   entry: JournalEntry;
   onClose: () => void;
 }) {
+  const t = useTranslations('journal.modal');
+  const locale = useLocale();
   return (
     <Dialog open onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="max-h-[80vh] max-w-2xl overflow-y-auto rounded-xl p-6">
         <div className="mb-4 flex items-center justify-between">
-          <DialogTitle>
-            {formatDateTime(entry.createdAt)}
-          </DialogTitle>
+          <DialogTitle>{formatDateTime(entry.createdAt, locale)}</DialogTitle>
           <DialogClose
             className="text-muted-foreground hover:text-foreground"
-            aria-label="Close"
+            aria-label={t('close')}
           >
             <X className="h-5 w-5" />
           </DialogClose>

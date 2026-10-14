@@ -1,18 +1,11 @@
 'use client';
 
 import { AudioLines, Check, ChevronRight, Eye, X } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Kbd } from '@/components/ui/kbd';
 import { isTTSAvailable } from '@/lib/tts';
 import type { DictationResult, DictationWord } from '../../types';
-
-const masteryLabels: Record<number, string> = {
-  0: 'New',
-  25: 'Learning',
-  50: 'Familiar',
-  75: 'Almost There',
-  100: 'Mastered',
-};
 
 // One word of the diff. Correct words read green; a word the user got wrong is
 // struck through in red, and a word they missed entirely is underlined in red.
@@ -31,8 +24,9 @@ function DiffWord({ word }: { word: DictationWord }) {
 }
 
 function DiffLine({ words }: { words: DictationWord[] }) {
+  const t = useTranslations('practice.feedback');
   if (words.length === 0) {
-    return <span className="text-muted-foreground italic">(nothing typed)</span>;
+    return <span className="text-muted-foreground italic">{t('nothingTyped')}</span>;
   }
   return (
     <>
@@ -60,6 +54,7 @@ export default function DictationFeedback({
   onNext: () => void;
   onSpeak: () => void;
 }) {
+  const t = useTranslations('practice.feedback');
   const { diff, isPass, isPerfect, surrendered, points, newMastery, previousMastery } = result;
   const accuracyPct = Math.round(diff.accuracy * 100);
   const masteryChange = newMastery - previousMastery;
@@ -85,12 +80,12 @@ export default function DictationFeedback({
     tone
   ];
   const heading = surrendered
-    ? 'Answer revealed'
+    ? t('answerRevealed')
     : isPerfect
-      ? 'Perfect!'
+      ? t('perfect')
       : isPass
-        ? 'Correct!'
-        : 'Incorrect';
+        ? t('correct')
+        : t('incorrect');
 
   return (
     <div className={`rounded-xl border-2 p-6 transition-all ${cardClass}`}>
@@ -112,9 +107,13 @@ export default function DictationFeedback({
               className="text-sm font-medium text-muted-foreground"
               data-testid="dictation-accuracy"
             >
-              {accuracyPct}% correct ({diff.correctWords}/{diff.totalWords} words)
+              {t('accuracy', {
+                percent: accuracyPct,
+                correct: diff.correctWords,
+                total: diff.totalWords,
+              })}
               {isPass && points > 0 && (
-                <span className="text-[var(--gold-strong)]"> · +{points} points</span>
+                <span className="text-[var(--gold-strong)]">{t('pointsBonus', { points })}</span>
               )}
             </p>
           </div>
@@ -122,14 +121,14 @@ export default function DictationFeedback({
         {isTTSAvailable() && (
           <Button type="button" onClick={onSpeak} variant="ghost">
             <AudioLines className="h-4 w-4" />
-            Listen Again
+            {t('listenAgain')}
           </Button>
         )}
       </div>
 
       {/* What the user typed */}
       <div className="mb-3">
-        <p className="mb-1 text-sm font-medium text-muted-foreground">You typed</p>
+        <p className="mb-1 text-sm font-medium text-muted-foreground">{t('youTyped')}</p>
         <p className="text-lg leading-relaxed font-medium">
           <DiffLine words={diff.typed} />
         </p>
@@ -137,7 +136,7 @@ export default function DictationFeedback({
 
       {/* The actual sentence (now revealed) */}
       <div className="mb-4">
-        <p className="mb-1 text-sm font-medium text-muted-foreground">Sentence</p>
+        <p className="mb-1 text-sm font-medium text-muted-foreground">{t('sentence')}</p>
         <p className="text-lg leading-relaxed font-medium" data-testid="dictation-actual">
           <DiffLine words={diff.expected} />
         </p>
@@ -145,16 +144,16 @@ export default function DictationFeedback({
 
       {/* Translation */}
       <div className="mb-4 rounded-lg bg-muted p-3">
-        <p className="text-sm font-medium text-muted-foreground">Translation</p>
+        <p className="text-sm font-medium text-muted-foreground">{t('translation')}</p>
         <p className="text-foreground">{translation}</p>
       </div>
 
       {/* Mastery progress */}
       <div className="mb-4">
         <div className="mb-2 flex items-center justify-between text-sm">
-          <span className="font-medium text-muted-foreground">Mastery Level</span>
+          <span className="font-medium text-muted-foreground">{t('masteryLevel')}</span>
           <span className="flex items-center gap-2">
-            <span className={`font-semibold ${accentText}`}>{masteryLabels[newMastery]}</span>
+            <span className={`font-semibold ${accentText}`}>{t(`mastery.level${newMastery}`)}</span>
             {masteryChange !== 0 && (
               <span
                 className={`text-xs font-bold ${
@@ -178,7 +177,7 @@ export default function DictationFeedback({
       {/* Actions */}
       <div className="flex flex-wrap gap-3">
         <Button type="button" onClick={onNext} className="flex-1">
-          Next Sentence
+          {t('nextSentence')}
           <ChevronRight className="h-4 w-4" />
         </Button>
       </div>
@@ -187,7 +186,7 @@ export default function DictationFeedback({
       <div className="mt-4 flex items-center justify-center text-xs text-muted-foreground">
         <span className="inline-flex items-center gap-1.5">
           <Kbd>Enter</Kbd>
-          Next sentence
+          {t('nextSentenceHint')}
         </span>
       </div>
     </div>

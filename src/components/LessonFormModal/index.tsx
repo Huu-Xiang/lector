@@ -2,6 +2,7 @@
 
 import { X } from 'lucide-react';
 import { useEffect, useRef, useState, useCallback } from 'react';
+import { useTranslations } from 'next-intl';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { useActiveLanguage } from '@/utils/hooks';
@@ -15,6 +16,7 @@ export default function LessonFormModal({
   onClose,
   onSave,
 }: LessonFormModalProps) {
+  const t = useTranslations('library');
   const activeLang = useActiveLanguage();
   const titleRef = useRef<HTMLInputElement>(null);
   const [title, setTitle] = useState('');
@@ -44,8 +46,8 @@ export default function LessonFormModal({
     }
   }, [title, textContent, onSave, onClose]);
 
-  const heading = mode === 'create' ? 'Add lesson' : 'Edit lesson';
-  const submitLabel = mode === 'create' ? 'Create lesson' : 'Save changes';
+  const heading = mode === 'create' ? t('lessonForm.add') : t('lessonForm.edit');
+  const submitLabel = mode === 'create' ? t('lessonForm.create') : t('lessonForm.save');
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
@@ -58,7 +60,7 @@ export default function LessonFormModal({
           <DialogTitle>{heading}</DialogTitle>
           <DialogClose
             className="rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-            aria-label="Close"
+            aria-label={t('common.close')}
           >
             <X className="h-5 w-5" />
           </DialogClose>
@@ -71,7 +73,7 @@ export default function LessonFormModal({
               htmlFor="lesson-title"
               className="mb-2 block text-sm font-medium text-foreground"
             >
-              Title
+              {t('common.title')}
             </label>
             <input
               ref={titleRef}
@@ -80,7 +82,7 @@ export default function LessonFormModal({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               disabled={isSaving}
-              placeholder="Lesson title"
+              placeholder={t('lessonForm.titlePlaceholder')}
               className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none disabled:opacity-50"
             />
           </div>
@@ -88,11 +90,11 @@ export default function LessonFormModal({
           <div>
             <div className="mb-2 flex items-center justify-between">
               <label htmlFor="lesson-content" className="block text-sm font-medium text-foreground">
-                Text
+                {t('common.text')}
               </label>
               {wordCount > 0 && (
                 <span className="text-xs text-muted-foreground">
-                  {wordCount.toLocaleString()} words
+                  {t('common.words', { count: wordCount })}
                 </span>
               )}
             </div>
@@ -101,7 +103,7 @@ export default function LessonFormModal({
               value={textContent}
               onChange={(e) => setTextContent(e.target.value)}
               disabled={isSaving}
-              placeholder="Lesson text. Markdown is supported."
+              placeholder={t('lessonForm.textPlaceholder')}
               rows={12}
               className="w-full resize-none rounded-lg border border-input bg-background px-4 py-3 text-sm leading-relaxed text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none disabled:opacity-50"
             />
@@ -111,13 +113,13 @@ export default function LessonFormModal({
         {/* Footer */}
         <div className="flex items-center justify-end gap-3 border-t border-border bg-muted px-6 py-4">
           <DialogClose className={buttonVariants({ variant: 'ghost' })} disabled={isSaving}>
-            Cancel
+            {t('common.cancel')}
           </DialogClose>
           <Button onClick={handleSave} disabled={isSaving || !title.trim() || !textContent.trim()}>
             {isSaving ? (
               <div className="flex items-center gap-2">
                 <div className="h-4 w-4 animate-spin rounded-full border-2 border-current/30 border-t-current" />
-                Saving...
+                {t('common.saving')}
               </div>
             ) : (
               submitLabel

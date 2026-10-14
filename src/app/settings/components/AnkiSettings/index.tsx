@@ -5,6 +5,7 @@ import { apiBase } from '@/lib/api-base';
 import { getSetting, setSetting } from '@/lib/data-layer';
 import { useLectorMode } from '@/lib/use-env';
 import { useCallback, useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { SETTINGS_KEYS } from '../../constants';
 
 /**
@@ -20,38 +21,38 @@ import { SETTINGS_KEYS } from '../../constants';
 
 /** Setup instructions for the Lector Sync addon — shared by both modes. */
 function AnkiAddonBody() {
+  const t = useTranslations('settings.anki');
+  const code = (chunks: React.ReactNode) => (
+    <code className="rounded bg-muted px-1 py-0.5 text-xs">{chunks}</code>
+  );
   return (
     <>
-      <p className="text-sm text-muted-foreground">
-        The add-on syncs from inside Anki itself, so it works no matter where this Lector runs:
-        words you queue become cards the next time Anki opens, and your review results flow back
-        automatically.
-      </p>
+      <p className="text-sm text-muted-foreground">{t('addonIntro')}</p>
       <ol className="list-decimal space-y-2 pl-5 text-sm text-foreground">
         <li>
-          Create an API token in <span className="font-medium">API Tokens</span> below, scoped to{' '}
-          <code className="rounded bg-muted px-1 py-0.5 text-xs">anki</code>.
+          {t.rich('addonStep1', {
+            strong: (chunks) => <span className="font-medium">{chunks}</span>,
+            code,
+          })}
         </li>
         <li>
-          Install the add-on from{' '}
-          <a
-            className="text-primary underline underline-offset-2"
-            href="https://github.com/heuwels/lector/tree/master/anki-addon"
-            target="_blank"
-            rel="noreferrer"
-          >
-            anki-addon in the Lector repository
-          </a>{' '}
-          (Anki Desktop 2.1.50+).
+          {t.rich('addonStep2', {
+            link: (chunks) => (
+              <a
+                className="text-primary underline underline-offset-2"
+                href="https://github.com/heuwels/lector/tree/master/anki-addon"
+                target="_blank"
+                rel="noreferrer"
+              >
+                {chunks}
+              </a>
+            ),
+          })}
         </li>
-        <li>
-          In Anki, open Tools → Add-ons → Lector Sync → Config and set{' '}
-          <code className="rounded bg-muted px-1 py-0.5 text-xs">api_url</code> to the address below
-          and <code className="rounded bg-muted px-1 py-0.5 text-xs">api_token</code> to your token.
-        </li>
+        <li>{t.rich('addonStep3', { code })}</li>
       </ol>
       <div>
-        <label className="block text-sm font-medium text-foreground">API URL</label>
+        <label className="block text-sm font-medium text-foreground">{t('apiUrl')}</label>
         <input
           type="text"
           readOnly
@@ -61,15 +62,13 @@ function AnkiAddonBody() {
           className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none"
         />
       </div>
-      <p className="text-xs text-muted-foreground">
-        AnkiDroid and AnkiMobile can&apos;t run add-ons — sync on desktop and AnkiWeb carries the
-        results to your devices.
-      </p>
+      <p className="text-xs text-muted-foreground">{t('addonMobile')}</p>
     </>
   );
 }
 
 export default function AnkiSettings() {
+  const t = useTranslations('settings.anki');
   const mode = useLectorMode();
   const resolvedTransport = useAnkiTransport();
   // The saved choice loads async; a click wins immediately over it.
@@ -90,7 +89,7 @@ export default function AnkiSettings() {
     setTransportOverride(next);
     void setSetting('ankiTransport', next).catch((error) => {
       setTransportOverride(previous);
-      setAnkiError(error instanceof Error ? error.message : 'Failed to save Anki transport');
+      setAnkiError(error instanceof Error ? error.message : t('saveTransportFailed'));
     });
   };
 
@@ -115,14 +114,12 @@ export default function AnkiSettings() {
         setAnkiDecks(decks);
       }
     } catch {
-      setAnkiError(
-        'Failed to connect to Anki. Make sure Anki is running with AnkiConnect installed.',
-      );
+      setAnkiError(t('connectFailed'));
       setAnkiConnected(false);
     } finally {
       setAnkiLoading(false);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     // Probe only on the browser-direct transport: on 'addon' (and while the
@@ -141,7 +138,7 @@ export default function AnkiSettings() {
         className="panel scroll-mt-6 space-y-4 p-6"
         data-testid="anki-addon-panel"
       >
-        <h2 className="text-lg font-semibold text-foreground">Anki Integration</h2>
+        <h2 className="text-lg font-semibold text-foreground">{t('heading')}</h2>
         <AnkiAddonBody />
       </section>
     );
@@ -154,7 +151,7 @@ export default function AnkiSettings() {
       data-testid={transport === 'addon' ? 'anki-addon-panel' : undefined}
     >
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-foreground">Anki Integration</h2>
+        <h2 className="text-lg font-semibold text-foreground">{t('heading')}</h2>
         {transport === 'ankiconnect' && (
           <div className="flex items-center gap-2">
             <span
@@ -163,35 +160,32 @@ export default function AnkiSettings() {
               }`}
             />
             <span className="text-sm text-muted-foreground">
-              {ankiConnected ? 'Connected' : 'Not connected'}
+              {ankiConnected ? t('connected') : t('notConnected')}
             </span>
             <Button variant="link" onClick={checkAnkiConnection} disabled={ankiLoading}>
-              {ankiLoading ? 'Checking...' : 'Refresh'}
+              {ankiLoading ? t('checking') : t('refresh')}
             </Button>
           </div>
         )}
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-foreground">Connection</label>
-        <p className="mb-2 text-xs text-muted-foreground">
-          AnkiConnect reaches Anki on this computer from the browser. The add-on syncs from inside
-          Anki instead — use it when Lector is served over HTTPS or runs on another machine.
-        </p>
+        <label className="block text-sm font-medium text-foreground">{t('connection')}</label>
+        <p className="mb-2 text-xs text-muted-foreground">{t('connectionHelp')}</p>
         <div className="grid grid-cols-2 gap-2">
           <Button
             data-testid="anki-transport-ankiconnect"
             onClick={() => chooseTransport('ankiconnect')}
             variant={transport === 'ankiconnect' ? 'default' : 'secondary'}
           >
-            AnkiConnect (browser)
+            {t('transportAnkiConnect')}
           </Button>
           <Button
             data-testid="anki-transport-addon"
             onClick={() => chooseTransport('addon')}
             variant={transport === 'addon' ? 'default' : 'secondary'}
           >
-            Lector Sync add-on
+            {t('transportAddon')}
           </Button>
         </div>
       </div>
@@ -207,17 +201,17 @@ export default function AnkiSettings() {
           )}
 
           <div>
-            <label className="block text-sm font-medium text-foreground">AnkiConnect URL</label>
-            <p className="mb-2 text-xs text-muted-foreground">
-              Hint: Use Tailscale IP for remote Anki (e.g., http://100.x.x.x:8765)
-            </p>
+            <label className="block text-sm font-medium text-foreground">
+              {t('ankiConnectUrl')}
+            </label>
+            <p className="mb-2 text-xs text-muted-foreground">{t('urlHint')}</p>
             <input
               type="text"
               value={ankiConnectUrl}
               onChange={(e) => {
                 setAnkiConnectUrl(e.target.value);
                 void setSetting('ankiConnectUrl', e.target.value).catch((error) => {
-                  setAnkiError(error instanceof Error ? error.message : 'Failed to save Anki URL');
+                  setAnkiError(error instanceof Error ? error.message : t('saveUrlFailed'));
                 });
                 // Invalidate the anki.ts URL cache so the next request
                 // (e.g. the connection check below) uses the new value.
@@ -229,10 +223,8 @@ export default function AnkiSettings() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-foreground">Vocab Deck</label>
-            <p className="mb-1 text-xs text-muted-foreground">
-              Deck for basic cards from reader vocabulary
-            </p>
+            <label className="block text-sm font-medium text-foreground">{t('vocabDeck')}</label>
+            <p className="mb-1 text-xs text-muted-foreground">{t('vocabDeckHelp')}</p>
             {ankiConnected && ankiDecks.length > 0 ? (
               <select
                 value={ankiDeckName}
@@ -250,16 +242,14 @@ export default function AnkiSettings() {
                 type="text"
                 value={ankiDeckName}
                 onChange={(e) => localStorage.setItem(SETTINGS_KEYS.ANKI_DECK_NAME, e.target.value)}
-                placeholder="Deck name"
+                placeholder={t('deckName')}
                 className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none"
               />
             )}
           </div>
           <div>
-            <label className="block text-sm font-medium text-foreground">Cloze Practice Deck</label>
-            <p className="mb-2 text-xs text-muted-foreground">
-              Deck for cloze cards from practice mode
-            </p>
+            <label className="block text-sm font-medium text-foreground">{t('clozeDeck')}</label>
+            <p className="mb-2 text-xs text-muted-foreground">{t('clozeDeckHelp')}</p>
             {ankiConnected && ankiDecks.length > 0 ? (
               <select
                 value={ankiClozeDeckName}
@@ -284,16 +274,16 @@ export default function AnkiSettings() {
                   localStorage.setItem(SETTINGS_KEYS.ANKI_CLOZE_DECK_NAME, newVal);
                   setAnkiClozeDeckName(newVal);
                 }}
-                placeholder="Cloze deck name"
+                placeholder={t('clozeDeckName')}
                 className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none"
               />
             )}
           </div>
           <div>
-            <label className="block text-sm font-medium text-foreground">Default Card Type</label>
-            <p className="mb-2 text-xs text-muted-foreground">
-              Basic shows front/back, Cloze creates fill-in-the-blank cards
-            </p>
+            <label className="block text-sm font-medium text-foreground">
+              {t('defaultCardType')}
+            </label>
+            <p className="mb-2 text-xs text-muted-foreground">{t('cardTypeHelp')}</p>
             <div className="grid grid-cols-2 gap-2">
               <Button
                 onClick={(e) => {
@@ -302,7 +292,7 @@ export default function AnkiSettings() {
                 }}
                 variant={defaultCardType === 'basic' ? 'default' : 'secondary'}
               >
-                Basic
+                {t('basic')}
               </Button>
               <Button
                 onClick={(e) => {
@@ -311,7 +301,7 @@ export default function AnkiSettings() {
                 }}
                 variant={defaultCardType === 'cloze' ? 'default' : 'secondary'}
               >
-                Cloze
+                {t('cloze')}
               </Button>
             </div>
           </div>

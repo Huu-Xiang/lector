@@ -1,0 +1,223 @@
+{
+  "journal": {
+    "title": "Journal",
+    "newEntry": "New Entry",
+    "cancel": "Cancel",
+    "placeholder": "Write today's journal entry in {language}...",
+    "words": "{count, plural, one {# word} other {# words}}",
+    "draftSaved": "Draft saved",
+    "saving": "Saving...",
+    "saveDraft": "Save Draft",
+    "correcting": "Correcting...",
+    "submitForCorrection": "Submit for Correction",
+    "failedToSave": "Failed to save",
+    "correctionFailed": "Correction failed",
+    "deleteConfirm": "Delete this journal entry?",
+    "deleteFailed": "Could not delete journal entry",
+    "entries": "{count, plural, one {# entry} other {# entries}}",
+    "empty": "No journal entries yet",
+    "writeFirst": "Write your first entry",
+    "card": {
+      "corrections": "{count, plural, one {# correction} other {# corrections}}",
+      "perfect": "Perfect",
+      "draft": "Draft",
+      "deleteEntry": "Delete entry",
+      "words": "{count, plural, one {# word} other {# words}}"
+    },
+    "modal": {
+      "close": "Close"
+    },
+    "correction": {
+      "yourText": "Your text",
+      "clickHint": "Click highlighted words to see corrections",
+      "corrected": "Corrected",
+      "summary": "{count, plural, one {# correction} other {# corrections}}:",
+      "perfect": "Perfect! No corrections needed."
+    },
+    "types": {
+      "grammar": "Grammar",
+      "spelling": "Spelling",
+      "wordChoice": "Word choice",
+      "wordOrder": "Word order",
+      "missingWord": "Missing word",
+      "extraWord": "Extra word"
+    }
+  },
+  "stats": {
+    "title": "Statistics",
+    "loadFailed": "Failed to load statistics",
+    "returnHome": "Return home",
+    "cards": {
+      "wordsKnown": "Words Known",
+      "learning": "Learning (L1-L4)",
+      "learningSub": "Words in progress",
+      "wordsRead": "Words Read",
+      "wordsReadSub": "Estimated from reading position",
+      "currentStreak": "Current Streak",
+      "days": "{count, plural, one {# day} other {# days}}",
+      "longest": "Longest: {count, plural, one {# day} other {# days}}"
+    },
+    "range": {
+      "d30": "30d",
+      "d90": "90d",
+      "y1": "1y",
+      "all": "All"
+    },
+    "states": {
+      "known": "Known",
+      "level4": "Level 4",
+      "level3": "Level 3",
+      "level2": "Level 2",
+      "level1": "Level 1",
+      "new": "New",
+      "ignored": "Ignored"
+    },
+    "wordStates": {
+      "title": "Words by State"
+    },
+    "cloze": {
+      "title": "Cloze Practice",
+      "sentencesPracticed": "Sentences Practiced",
+      "accuracy": "Accuracy",
+      "totalPoints": "Total Points"
+    },
+    "mastery": {
+      "title": "Sentence Mastery",
+      "overall": "{percent}% overall",
+      "mastered": "{mastered} / {total} mastered",
+      "due": "{count} due for review",
+      "collections": {
+        "top500": "Top 500",
+        "top1000": "Top 1000",
+        "top2000": "Top 2000",
+        "mined": "Mined",
+        "random": "Random"
+      }
+    },
+    "fluency": {
+      "estimatedLevel": "Estimated CEFR Level",
+      "vsLastWeek": "{count, number} vs last week",
+      "sameAsLast": "{count, number} this week (same as last)",
+      "progressTo": "Progress to {level}",
+      "topLevel": "Top level reached",
+      "wordsToNext": "{count, number} words to {level}",
+      "known": "Known",
+      "learning": "Learning"
+    },
+    "heatmap": {
+      "title": "Activity",
+      "total": {
+        "actions": "{count, number} actions in the last year",
+        "lookups": "{count, number} lookups in the last year"
+      },
+      "count": {
+        "actions": "{count, number} actions",
+        "lookups": "{count, number} lookups"
+      },
+      "types": {
+        "lookups": "Lookups",
+        "cloze": "Cloze",
+        "reading": "Reading",
+        "anki": "Anki"
+      },
+      "minutes": "{count} min",
+      "noActivity": "No activity",
+      "less": "Less",
+      "more": "More",
+      "activeDays": "Active days:",
+      "avgPerActiveDay": "Avg per active day:"
+    },
+    "anki": {
+      "title": "Anki Reviews",
+      "last90": "Last 90 days",
+      "reviews": "Reviews",
+      "reviewDays": "Review days",
+      "avgPerDay": "Avg / review day",
+      "connectTitle": "Connect your Anki to see your review history",
+      "connectBody": "Reviews sync automatically and count toward your streak.",
+      "connectButton": "Connect Anki"
+    },
+    "ankiStatus": {
+      "synced": "Synced",
+      "notSynced": "Not synced",
+      "noteId": "Anki Note ID: {id}",
+      "pushed": "Pushed to Anki"
+    },
+    "radar": {
+      "title": "Areas of Fluency",
+      "subtitle": "Where your vocabulary is strongest",
+      "pending": "{count, plural, one {# word pending classification} other {# words pending classification}}",
+      "emptyTitle": "No areas mapped yet",
+      "emptySorting": "Your known words are still being sorted into topic areas — check back shortly.",
+      "emptyHint": "Read and learn words to see which topics you’re strongest in.",
+      "knownWords": "{count, plural, one {# known word} other {# known words}}",
+      "mastery": "Mastery"
+    },
+    "vocabGrowth": {
+      "title": "Vocabulary Growth",
+      "knownWords": "Known Words",
+      "learning": "Learning",
+      "total": "Total",
+      "series": {
+        "known": "known",
+        "learning": "learning",
+        "total": "total"
+      }
+    }
+  },
+  "chat": {
+    "error": "Sorry, I couldn't respond. Check that an LLM provider is configured in Settings.",
+    "open": "Open chat",
+    "close": "Close chat",
+    "tutorTitle": "{language} Tutor",
+    "tutorSubtitle": "Ask anything about {language}",
+    "clearTitle": "Clear chat",
+    "clear": "Clear",
+    "loadingOlder": "Loading older messages...",
+    "emptyPrompt": "Ask a question about {language}",
+    "via": "via {provider}",
+    "placeholder": "Ask about {language}..."
+  },
+  "chrome": {
+    "theme": {
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
+    "nav": {
+      "expandSidebar": "Expand sidebar",
+      "collapseSidebar": "Collapse sidebar",
+      "signOut": "Sign out"
+    },
+    "tour": {
+      "practiceTitle": "Practice later",
+      "practiceBody": "Go to the Practice tab to review words later.",
+      "vocabTitle": "Your vocabulary",
+      "vocabBody": "Review the vocabulary you've interacted with in the Vocabulary tab."
+    },
+    "impersonation": {
+      "viewingAs": "Viewing as <strong>{user}</strong> · read-only",
+      "timeLeft": "{time} left",
+      "exiting": "Exiting…",
+      "exit": "Exit",
+      "exitFailed": "Could not confirm exit; returning to admin anyway."
+    },
+    "loading": {
+      "app": "Loading Readfox",
+      "session": "Loading session",
+      "subscription": "Loading subscription",
+      "setup": "Loading setup"
+    },
+    "setup": {
+      "connectError": "Could not connect to the server.",
+      "retry": "Retry"
+    },
+    "language": {
+      "changeFailed": "Could not change language",
+      "wordsKnown": "Words known: {count}",
+      "add": "Add a language",
+      "current": "Language: {language}",
+      "select": "Select language"
+    }
+  }
+}

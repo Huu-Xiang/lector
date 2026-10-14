@@ -1,4 +1,5 @@
 import { X } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 import { IOnboardingTipProps } from './types';
 
@@ -9,6 +10,7 @@ export default function OnboardingTip({
   className,
   testId,
 }: IOnboardingTipProps) {
+  const t = useTranslations('reader.onboardingTip');
   return (
     <div
       role="status"
@@ -28,7 +30,7 @@ export default function OnboardingTip({
         <button
           type="button"
           onClick={onDismiss}
-          aria-label="Dismiss onboarding tip"
+          aria-label={t('dismiss')}
           className="-mt-1 -mr-1 rounded-md p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
         >
           <X className="h-4 w-4" aria-hidden="true" />

@@ -1,0 +1,223 @@
+{
+  "journal": {
+    "title": "日记",
+    "newEntry": "新日记",
+    "cancel": "取消",
+    "placeholder": "用{language}写今天的日记……",
+    "words": "{count} 个词",
+    "draftSaved": "草稿已保存",
+    "saving": "正在保存……",
+    "saveDraft": "保存草稿",
+    "correcting": "正在批改……",
+    "submitForCorrection": "提交批改",
+    "failedToSave": "保存失败",
+    "correctionFailed": "批改失败",
+    "deleteConfirm": "删除这篇日记？",
+    "deleteFailed": "无法删除日记",
+    "entries": "{count} 篇日记",
+    "empty": "还没有日记",
+    "writeFirst": "写下第一篇日记",
+    "card": {
+      "corrections": "{count} 处修改",
+      "perfect": "完美",
+      "draft": "草稿",
+      "deleteEntry": "删除日记",
+      "words": "{count} 个词"
+    },
+    "modal": {
+      "close": "关闭"
+    },
+    "correction": {
+      "yourText": "你的原文",
+      "clickHint": "点击高亮的词查看修改",
+      "corrected": "修改后",
+      "summary": "{count} 处修改：",
+      "perfect": "太棒了！无需修改。"
+    },
+    "types": {
+      "grammar": "语法",
+      "spelling": "拼写",
+      "wordChoice": "用词",
+      "wordOrder": "语序",
+      "missingWord": "缺词",
+      "extraWord": "多余的词"
+    }
+  },
+  "stats": {
+    "title": "统计",
+    "loadFailed": "无法加载统计数据",
+    "returnHome": "返回首页",
+    "cards": {
+      "wordsKnown": "已掌握的词",
+      "learning": "学习中 (L1-L4)",
+      "learningSub": "学习中的词",
+      "wordsRead": "已读词数",
+      "wordsReadSub": "根据阅读位置估算",
+      "currentStreak": "当前连续天数",
+      "days": "{count} 天",
+      "longest": "最长：{count} 天"
+    },
+    "range": {
+      "d30": "30天",
+      "d90": "90天",
+      "y1": "1年",
+      "all": "全部"
+    },
+    "states": {
+      "known": "已掌握",
+      "level4": "4 级",
+      "level3": "3 级",
+      "level2": "2 级",
+      "level1": "1 级",
+      "new": "新词",
+      "ignored": "已忽略"
+    },
+    "wordStates": {
+      "title": "按状态统计词汇"
+    },
+    "cloze": {
+      "title": "填空练习",
+      "sentencesPracticed": "已练习句子",
+      "accuracy": "正确率",
+      "totalPoints": "总积分"
+    },
+    "mastery": {
+      "title": "句子掌握度",
+      "overall": "总体 {percent}%",
+      "mastered": "已掌握 {mastered} / {total}",
+      "due": "{count} 个待复习",
+      "collections": {
+        "top500": "前 500",
+        "top1000": "前 1000",
+        "top2000": "前 2000",
+        "mined": "已收集",
+        "random": "随机"
+      }
+    },
+    "fluency": {
+      "estimatedLevel": "预估 CEFR 等级",
+      "vsLastWeek": "较上周 {count, number}",
+      "sameAsLast": "本周 {count, number}（与上周持平）",
+      "progressTo": "升至 {level} 的进度",
+      "topLevel": "已达到最高等级",
+      "wordsToNext": "距 {level} 还差 {count, number} 个词",
+      "known": "已掌握",
+      "learning": "学习中"
+    },
+    "heatmap": {
+      "title": "活跃度",
+      "total": {
+        "actions": "过去一年 {count, number} 次操作",
+        "lookups": "过去一年 {count, number} 次查词"
+      },
+      "count": {
+        "actions": "{count, number} 次操作",
+        "lookups": "{count, number} 次查词"
+      },
+      "types": {
+        "lookups": "查词",
+        "cloze": "填空",
+        "reading": "阅读",
+        "anki": "Anki"
+      },
+      "minutes": "{count} 分钟",
+      "noActivity": "无活动",
+      "less": "少",
+      "more": "多",
+      "activeDays": "活跃天数：",
+      "avgPerActiveDay": "每个活跃日平均："
+    },
+    "anki": {
+      "title": "Anki 复习",
+      "last90": "最近 90 天",
+      "reviews": "复习次数",
+      "reviewDays": "复习天数",
+      "avgPerDay": "日均复习",
+      "connectTitle": "连接 Anki 查看复习记录",
+      "connectBody": "复习记录会自动同步，并计入连续天数。",
+      "connectButton": "连接 Anki"
+    },
+    "ankiStatus": {
+      "synced": "已同步",
+      "notSynced": "未同步",
+      "noteId": "Anki 笔记 ID：{id}",
+      "pushed": "已推送到 Anki"
+    },
+    "radar": {
+      "title": "擅长领域",
+      "subtitle": "你的词汇最强的方面",
+      "pending": "{count} 个词等待分类",
+      "emptyTitle": "尚未生成领域图",
+      "emptySorting": "正在把你已掌握的词归入各个主题领域，请稍后再来看看。",
+      "emptyHint": "多阅读、多学词，就能看到你最擅长哪些主题。",
+      "knownWords": "已掌握 {count} 个词",
+      "mastery": "掌握度"
+    },
+    "vocabGrowth": {
+      "title": "词汇增长",
+      "knownWords": "已掌握的词",
+      "learning": "学习中",
+      "total": "总计",
+      "series": {
+        "known": "已掌握",
+        "learning": "学习中",
+        "total": "总计"
+      }
+    }
+  },
+  "chat": {
+    "error": "抱歉，我无法回复。请检查设置中是否已配置 LLM 服务商。",
+    "open": "打开聊天",
+    "close": "关闭聊天",
+    "tutorTitle": "{language}导师",
+    "tutorSubtitle": "有关{language}的问题，随便问",
+    "clearTitle": "清空聊天",
+    "clear": "清空",
+    "loadingOlder": "正在加载更早的消息……",
+    "emptyPrompt": "问一个关于{language}的问题",
+    "via": "来自 {provider}",
+    "placeholder": "询问{language}……"
+  },
+  "chrome": {
+    "theme": {
+      "light": "浅色",
+      "dark": "深色",
+      "system": "跟随系统"
+    },
+    "nav": {
+      "expandSidebar": "展开侧边栏",
+      "collapseSidebar": "收起侧边栏",
+      "signOut": "退出登录"
+    },
+    "tour": {
+      "practiceTitle": "稍后练习",
+      "practiceBody": "稍后可到“练习”标签页复习词汇。",
+      "vocabTitle": "你的词汇",
+      "vocabBody": "在“词汇”标签页查看你接触过的词汇。"
+    },
+    "impersonation": {
+      "viewingAs": "正在以 <strong>{user}</strong> 的身份查看 · 只读",
+      "timeLeft": "剩余 {time}",
+      "exiting": "正在退出…",
+      "exit": "退出",
+      "exitFailed": "无法确认退出，仍将返回管理页面。"
+    },
+    "loading": {
+      "app": "正在加载 Readfox",
+      "session": "正在加载会话",
+      "subscription": "正在加载订阅",
+      "setup": "正在加载设置"
+    },
+    "setup": {
+      "connectError": "无法连接到服务器。",
+      "retry": "重试"
+    },
+    "language": {
+      "changeFailed": "无法切换语言",
+      "wordsKnown": "已掌握词数：{count}",
+      "add": "添加语言",
+      "current": "语言：{language}",
+      "select": "选择语言"
+    }
+  }
+}

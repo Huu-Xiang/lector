@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { stopImpersonation, type ImpersonationStatus } from '@/lib/admin-client';
 
@@ -22,6 +23,7 @@ function remaining(expiresAt: string): string {
 }
 
 export default function ImpersonationBanner({ status }: { status: ImpersonationStatus }) {
+  const t = useTranslations('chrome.impersonation');
   const expiresAt = status.expiresAt;
   const [label, setLabel] = useState(() => (expiresAt ? remaining(expiresAt) : ''));
   const [exiting, setExiting] = useState(false);
@@ -48,7 +50,7 @@ export default function ImpersonationBanner({ status }: { status: ImpersonationS
     } catch {
       // Even if the stop call fails, leave the impersonated view — the operator
       // should never be stuck. The grant will also expire on its own.
-      toast.error('Could not confirm exit; returning to admin anyway.');
+      toast.error(t('exitFailed'));
     }
     window.location.assign('/admin');
   };
@@ -59,15 +61,18 @@ export default function ImpersonationBanner({ status }: { status: ImpersonationS
       className="sticky top-0 z-50 flex items-center justify-center gap-3 bg-amber-500 px-4 py-2 text-sm font-medium text-amber-950"
     >
       <span>
-        Viewing as <strong>{status.targetEmail ?? status.targetUserId}</strong> · read-only
-        {label ? ` · ${label} left` : ''}
+        {t.rich('viewingAs', {
+          user: status.targetEmail ?? status.targetUserId ?? '',
+          strong: (chunks) => <strong>{chunks}</strong>,
+        })}
+        {label ? ` · ${t('timeLeft', { time: label })}` : ''}
       </span>
       <button
         onClick={onExit}
         disabled={exiting}
         className="rounded-md bg-amber-950 px-3 py-1 text-xs font-semibold text-amber-50 hover:bg-amber-900 disabled:opacity-50"
       >
-        {exiting ? 'Exiting…' : 'Exit'}
+        {exiting ? t('exiting') : t('exit')}
       </button>
     </div>
   );

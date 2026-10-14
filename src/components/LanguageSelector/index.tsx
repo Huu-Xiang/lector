@@ -2,6 +2,7 @@
 
 import { Check, ChevronDown, Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,6 +24,7 @@ export default function LanguageSelector({
   compact?: boolean;
   collapsed?: boolean;
 }) {
+  const t = useTranslations('chrome.language');
   const activeLang = useActiveLanguage();
   const enabledCodes = useEnabledLanguages();
   const [knownWordsCount, setKnownWordsCount] = useState<number | null>(null);
@@ -62,13 +64,13 @@ export default function LanguageSelector({
       await seedStarterContent(code);
       window.location.reload();
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Could not change language');
+      toast.error(error instanceof Error ? error.message : t('changeFailed'));
     }
   }
 
   const knownBadge = knownWordsCount ? (
     <span
-      title={`Words known: ${knownWordsCount}`}
+      title={t('wordsKnown', { count: knownWordsCount })}
       className="rounded-full border border-[var(--gold-lip)] bg-[var(--gold-soft)] px-1 py-px text-[var(--gold-strong)] sm:px-2 sm:py-1"
     >
       {knownWordsCount > 1000 ? `${(knownWordsCount / 1000).toFixed(1)}K` : knownWordsCount}
@@ -112,7 +114,7 @@ export default function LanguageSelector({
           className="text-muted-foreground"
         >
           <Plus className="size-4" />
-          <span>Add a language</span>
+          <span>{t('add')}</span>
         </DropdownMenuItem>
         {addItems}
       </>
@@ -136,7 +138,7 @@ export default function LanguageSelector({
     <DropdownMenu open={open} onOpenChange={onOpenChange}>
       <DropdownMenuTrigger
         data-testid="language-selector"
-        aria-label={`Language: ${activeLang.native}`}
+        aria-label={t('current', { language: activeLang.native })}
         title={variant === 'collapsed' ? activeLang.native : undefined}
         className={triggerClass}
       >
@@ -148,7 +150,7 @@ export default function LanguageSelector({
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align={variant === 'compact' ? 'end' : 'start'}
-        aria-label="Select language"
+        aria-label={t('select')}
         className={`${variant === 'compact' ? 'w-44' : 'min-w-44'} max-h-80 overflow-y-auto`}
       >
         {menuItems}

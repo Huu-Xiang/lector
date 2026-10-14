@@ -15,7 +15,7 @@ export interface ImportDropdownProps {
   minimalOnMobile?: boolean;
   disabled?: boolean;
   isImporting?: boolean;
-  /** Trigger label. Defaults to "Import". */
+  /** Trigger label. Defaults to the translated "Import". */
   label?: string;
   /** Trigger size. Use "sm" for the in-group trigger in the library. */
   size?: 'default' | 'sm';

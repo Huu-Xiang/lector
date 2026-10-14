@@ -1,5 +1,5 @@
-export function formatDisplayDate(date: string): string {
-  return new Date(date).toLocaleDateString('en-US', {
+export function formatDisplayDate(date: string, locale = 'en'): string {
+  return new Date(date).toLocaleDateString(locale, {
     month: 'short',
     day: 'numeric',
   });

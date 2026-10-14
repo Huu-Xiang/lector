@@ -2,6 +2,7 @@
 
 import { Check, ChevronRight, Info, Loader2, Plus, X } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Kbd } from '@/components/ui/kbd';
 import { ClozeFeedbackProps } from './types';
@@ -25,6 +26,7 @@ export default function ClozeFeedback({
   isAddingToAnki = false,
   ankiAdded = false,
 }: ClozeFeedbackProps) {
+  const t = useTranslations('practice.feedback');
   const [explanation, setExplanation] = useState<string | null>(null);
   const [isExplaining, setIsExplaining] = useState(false);
   const [explainError, setExplainError] = useState(false);
@@ -49,18 +51,10 @@ export default function ClozeFeedback({
       const data = await res.json();
       setExplanation(data.explanation);
     } catch {
-      toast.error('Failed to fetch explanation');
+      toast.error(t('explainFailed'));
     } finally {
       setIsExplaining(false);
     }
-  };
-
-  const masteryLabels: Record<number, string> = {
-    0: 'New',
-    25: 'Learning',
-    50: 'Familiar',
-    75: 'Almost There',
-    100: 'Mastered',
   };
 
   const masteryChange = newMastery - previousMastery;
@@ -86,10 +80,12 @@ export default function ClozeFeedback({
         </div>
         <div>
           <h3 className={`text-xl font-bold ${isCorrect ? 'text-primary' : 'text-destructive'}`}>
-            {isCorrect ? 'Correct!' : 'Incorrect'}
+            {isCorrect ? t('correct') : t('incorrect')}
           </h3>
           {isCorrect && points > 0 && (
-            <p className="text-sm font-medium text-[var(--gold-strong)]">+{points} points</p>
+            <p className="text-sm font-medium text-[var(--gold-strong)]">
+              {t('pointsEarned', { points })}
+            </p>
           )}
         </div>
       </div>
@@ -98,7 +94,7 @@ export default function ClozeFeedback({
       <div className="mb-4 space-y-2">
         {!isCorrect && (
           <div className="flex items-center gap-2 text-sm">
-            <span className="font-medium text-muted-foreground">Your answer:</span>
+            <span className="font-medium text-muted-foreground">{t('yourAnswer')}</span>
             {/* Target-language text on the same line as an English label, so
                 the chip needs its own direction (#253). */}
             <TargetText
@@ -110,7 +106,7 @@ export default function ClozeFeedback({
           </div>
         )}
         <div className="flex items-center gap-2 text-sm">
-          <span className="font-medium text-muted-foreground">Correct answer:</span>
+          <span className="font-medium text-muted-foreground">{t('correctAnswer')}</span>
           <TargetText
             as="span"
             className={`rounded px-2 py-0.5 font-bold ${
@@ -126,17 +122,17 @@ export default function ClozeFeedback({
 
       {/* Translation */}
       <div className="mb-4 rounded-lg bg-muted p-3">
-        <p className="text-sm font-medium text-muted-foreground">Translation</p>
+        <p className="text-sm font-medium text-muted-foreground">{t('translation')}</p>
         <p className="text-foreground">{translation}</p>
       </div>
 
       {/* Mastery progress */}
       <div className="mb-4">
         <div className="mb-2 flex items-center justify-between text-sm">
-          <span className="font-medium text-muted-foreground">Mastery Level</span>
+          <span className="font-medium text-muted-foreground">{t('masteryLevel')}</span>
           <span className="flex items-center gap-2">
             <span className={`font-semibold ${isCorrect ? 'text-primary' : 'text-destructive'}`}>
-              {masteryLabels[newMastery]}
+              {t(`mastery.level${newMastery}`)}
             </span>
             {masteryChange !== 0 && (
               <span
@@ -177,17 +173,17 @@ export default function ClozeFeedback({
             onClick={onAddToAnki}
             disabled={isAddingToAnki || ankiAdded}
             variant="secondary"
-            title={ankiAdded ? 'Already added to Anki' : 'Add to Anki'}
+            title={ankiAdded ? t('alreadyAdded') : t('addToAnki')}
           >
             {isAddingToAnki ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
-                Adding...
+                {t('adding')}
               </>
             ) : (
               <>
                 <Plus className="h-4 w-4" />
-                Add to Anki
+                {t('addToAnki')}
               </>
             )}
           </Button>
@@ -201,17 +197,17 @@ export default function ClozeFeedback({
           {isExplaining ? (
             <>
               <Loader2 className="h-4 w-4 animate-spin" />
-              Explaining...
+              {t('explaining')}
             </>
           ) : (
             <>
               <Info className="h-4 w-4" />
-              Explain
+              {t('explain')}
             </>
           )}
         </Button>
         <Button type="button" onClick={onNext} className="flex-1">
-          Next Sentence
+          {t('nextSentence')}
           <ChevronRight className="h-4 w-4" />
         </Button>
       </div>
@@ -220,7 +216,7 @@ export default function ClozeFeedback({
       <div className="mt-4 flex items-center justify-center text-xs text-muted-foreground">
         <span className="inline-flex items-center gap-1.5">
           <Kbd>Enter</Kbd>
-          Next sentence
+          {t('nextSentenceHint')}
         </span>
       </div>
     </div>

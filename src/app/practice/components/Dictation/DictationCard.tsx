@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { AudioLines } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Kbd } from '@/components/ui/kbd';
 import { DEFAULT_RATE, isTTSAvailable, speak } from '@/lib/tts';
@@ -26,6 +27,7 @@ export default function DictationCard({
   onSurrender: (typed: string) => void;
   onSentenceBlacklisted: () => void;
 }) {
+  const t = useTranslations('practice.dictation');
   const [typed, setTyped] = useState('');
   const [speed, setSpeed] = useState<number>(DICTATION_SPEEDS[0]);
   const [replaysUsed, setReplaysUsed] = useState(0);
@@ -84,9 +86,7 @@ export default function DictationCard({
     <div>
       <div className="mb-6">
         <div className="mb-4 flex items-center justify-between">
-          <span className="text-sm font-medium text-muted-foreground">
-            Type the sentence you hear
-          </span>
+          <span className="text-sm font-medium text-muted-foreground">{t('prompt')}</span>
           <BlacklistSentence current={current} onSentenceBlacklisted={onSentenceBlacklisted} />
         </div>
 
@@ -96,7 +96,7 @@ export default function DictationCard({
             type="button"
             onClick={replay}
             disabled={!canReplay || !isTTSAvailable()}
-            aria-label="Replay audio"
+            aria-label={t('replayAria')}
             data-testid="dictation-replay-icon"
             className={`flex h-24 w-24 items-center justify-center rounded-full border-2 transition-all active:scale-95 disabled:cursor-not-allowed disabled:opacity-40 ${
               isPlaying
@@ -109,7 +109,7 @@ export default function DictationCard({
 
           {/* Speed control */}
           <div className="flex items-center gap-1.5">
-            <span className="mr-1 text-xs font-medium text-muted-foreground">Speed</span>
+            <span className="mr-1 text-xs font-medium text-muted-foreground">{t('speed')}</span>
             {DICTATION_SPEEDS.map((s) => (
               <Button
                 key={s}
@@ -130,7 +130,7 @@ export default function DictationCard({
             disabled={!canReplay || !isTTSAvailable()}
           >
             <AudioLines className="h-4 w-4" />
-            {canReplay ? `Listen Again (${replaysLeft} left)` : 'No replays left'}
+            {canReplay ? t('listenAgain', { count: replaysLeft }) : t('noReplays')}
           </Button>
         </div>
 
@@ -152,7 +152,7 @@ export default function DictationCard({
           autoCapitalize="off"
           autoCorrect="off"
           spellCheck={false}
-          placeholder="Type what you hear…"
+          placeholder={t('placeholder')}
           data-testid="dictation-input"
           className="w-full resize-none rounded-lg border-2 border-[var(--clay)] bg-[color-mix(in_srgb,var(--clay)_8%,var(--card))] px-3 py-2 text-lg leading-relaxed text-foreground transition-all outline-none focus:border-primary focus:ring-2 focus:ring-ring focus:ring-offset-1"
         />
@@ -164,12 +164,12 @@ export default function DictationCard({
           type="button"
           variant="secondary"
           onClick={() => onSurrender(typed)}
-          title="Reveal the sentence and move on (counts as a miss)"
+          title={t('surrenderTitle')}
         >
-          Surrender
+          {t('surrender')}
         </Button>
         <Button type="button" size="lg" onClick={handleSubmit} disabled={!typed.trim()}>
-          Check
+          {t('check')}
         </Button>
       </div>
 
@@ -177,13 +177,13 @@ export default function DictationCard({
       <div className="mt-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
         <span className="inline-flex items-center gap-1.5">
           <Kbd>Enter</Kbd>
-          Check
+          {t('check')}
         </span>
       </div>
 
       {/* Mastery indicator */}
       <div className="mt-6 flex items-center justify-center gap-2 text-sm text-muted-foreground">
-        <span>Mastery:</span>
+        <span>{t('mastery')}</span>
         <div className="flex h-2 w-24 overflow-hidden rounded-full bg-muted">
           <div
             className="bg-primary transition-all"

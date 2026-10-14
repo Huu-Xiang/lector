@@ -1,0 +1,167 @@
+{
+  "library": {
+    "common": {
+      "close": "Close",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "back": "Back",
+      "delete": "Delete",
+      "title": "Title",
+      "authorSource": "Author / Source",
+      "saveToLibrary": "Save to Library",
+      "tryAgain": "Try again",
+      "text": "Text",
+      "words": "{count, plural, one {# word} other {# words}}"
+    },
+    "errors": {
+      "createGroup": "Could not create group",
+      "renameGroup": "Could not rename group",
+      "deleteGroup": "Could not delete group",
+      "reorderCollections": "Could not reorder collections",
+      "importAudio": "Failed to import audio file.",
+      "importFile": "Failed to import file. Please ensure it is a valid file.",
+      "deleteCollection": "Could not delete collection",
+      "updateCollection": "Could not update collection",
+      "deleteLesson": "Could not delete lesson",
+      "updateLesson": "Could not update lesson",
+      "reorderLessons": "Could not reorder lessons",
+      "retryTranscription": "Could not retry transcription"
+    },
+    "page": {
+      "title": "Your Library",
+      "loading": "Loading library",
+      "newGroup": "New Group",
+      "groupNamePlaceholder": "Group name",
+      "addGroup": "Add",
+      "ungrouped": "Ungrouped",
+      "selectFile": "Please select an EPUB or Markdown file",
+      "audioUploaded": "\"{title}\" uploaded — transcription started",
+      "audioMinutes": " (~{minutes} min of audio; usually transcribes in a few minutes)"
+    },
+    "group": {
+      "expand": "Expand {name}",
+      "collapse": "Collapse {name}",
+      "items": "{count, plural, one {# item} other {# items}}",
+      "newCollection": "New collection",
+      "rename": "Rename",
+      "delete": "Delete",
+      "renamePrompt": "Rename group:",
+      "deleteConfirm": "Delete group \"{name}\"? Collections in this group will become ungrouped."
+    },
+    "onboarding": {
+      "title": "Continue your first learning loop",
+      "practiceReady": "Your three saved words are ready for a quick review.",
+      "resumeLesson": "Resume {title} where you left off.",
+      "fallbackLesson": "your starter lesson",
+      "resume": "Resume"
+    },
+    "empty": {
+      "title": "No books in your library",
+      "description": "Import a book (EPUB or Markdown) to start learning. Your vocabulary and progress will be tracked as you read.",
+      "importBook": "Import Book",
+      "addStarter": "Add starter content",
+      "adding": "Adding…"
+    },
+    "addTile": {
+      "placeholder": "Collection title",
+      "create": "Create"
+    },
+    "card": {
+      "coverAlt": "Cover of {title}",
+      "complete": "{percent}% complete",
+      "notStarted": "Not started",
+      "lessons": "{count, plural, one {# lesson} other {# lessons}}",
+      "dragToReorder": "Drag to reorder {title}",
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "daysAgo": "{count, plural, one {# day ago} other {# days ago}}",
+      "weeksAgo": "{count, plural, one {# week ago} other {# weeks ago}}",
+      "monthsAgo": "{count, plural, one {# month ago} other {# months ago}}"
+    },
+    "import": {
+      "label": "Import",
+      "importing": "Importing...",
+      "addTo": "Add to",
+      "ungrouped": "Library (ungrouped)",
+      "options": {
+        "file": "Import File",
+        "audio": "Import Audio",
+        "url": "Import from URL",
+        "youtube": "YouTube Transcript",
+        "paste": "Paste Text"
+      }
+    },
+    "paste": {
+      "title": "Paste Text",
+      "titlePlaceholder": "Article or text title",
+      "optional": "Optional",
+      "textPlaceholder": "Paste your {language} text here..."
+    },
+    "web": {
+      "title": "Import from Web",
+      "urlLabel": "Article URL",
+      "extract": "Extract",
+      "extracting": "Extracting...",
+      "help": "Paste a URL to a news article or blog post in {language}. The article content will be extracted and added to your library.",
+      "contentPreview": "Content Preview",
+      "fromSite": "from {site}",
+      "saveFailed": "Failed to save article.",
+      "extractFailed": "Failed to extract article",
+      "networkError": "Network error. Check your connection."
+    },
+    "youtube": {
+      "title": "Import YouTube Transcript",
+      "urlLabel": "YouTube video URL",
+      "find": "Find captions",
+      "finding": "Finding…",
+      "help": "Imports a video's available transcript as a lesson with clickable timestamps. The video is never downloaded or hosted — clicking a line opens YouTube at that moment.",
+      "chooseTrack": "Choose a caption track",
+      "auto": "Auto-generated",
+      "creator": "Creator captions",
+      "importing": "Importing “{language}” transcript…",
+      "note": "Auto-generated captions can contain recognition errors. You can edit the transcript text after importing.",
+      "importFailed": "Could not import the transcript."
+    },
+    "lessonForm": {
+      "add": "Add lesson",
+      "edit": "Edit lesson",
+      "create": "Create lesson",
+      "save": "Save changes",
+      "titlePlaceholder": "Lesson title",
+      "textPlaceholder": "Lesson text. Markdown is supported."
+    },
+    "collection": {
+      "back": "Library",
+      "loading": "Loading collection",
+      "editDetails": "Edit collection details",
+      "lessonsCount": "{count, plural, one {# lesson} other {# lessons}}",
+      "completed": "{count} completed",
+      "group": "Group:",
+      "none": "None",
+      "newGroupOption": "+ New group...",
+      "newGroupPrompt": "New group name:",
+      "continueReading": "Continue Reading",
+      "deleteConfirm": "Delete this collection and all its lessons?",
+      "deleteLessonConfirm": "Delete \"{title}\"?",
+      "addLesson": "Add lesson",
+      "form": {
+        "title": "Edit collection",
+        "titlePlaceholder": "Collection title",
+        "author": "Author",
+        "authorPlaceholder": "Author",
+        "save": "Save changes"
+      },
+      "row": {
+        "read": "Read",
+        "reread": "Re-read",
+        "continue": "Continue",
+        "transcribing": "Transcribing…",
+        "transcriptionFailed": "Transcription failed",
+        "retryTranscription": "Retry transcription",
+        "edit": "Edit lesson",
+        "delete": "Delete lesson",
+        "dragToReorder": "Drag to reorder {title}"
+      }
+    }
+  }
+}

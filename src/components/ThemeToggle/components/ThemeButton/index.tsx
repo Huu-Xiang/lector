@@ -1,13 +1,9 @@
 import clsx from 'clsx';
+import { useTranslations } from 'next-intl';
 import { IThemeButtonProps } from './types';
 
-export default function ThemeButton({
-  icon: Icon,
-  theme,
-  value,
-  label,
-  onClick,
-}: IThemeButtonProps) {
+export default function ThemeButton({ icon: Icon, theme, value, onClick }: IThemeButtonProps) {
+  const t = useTranslations('chrome.theme');
   const isActive = theme === value;
 
   const handleOptionClicked = () => {
@@ -19,7 +15,7 @@ export default function ThemeButton({
       key={value}
       type="button"
       onClick={handleOptionClicked}
-      title={label}
+      title={t(value)}
       className={clsx(
         'rounded-md p-1.5 transition-colors',
         isActive

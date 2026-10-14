@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import type { WordState } from '@/types';
 import { stateClasses } from '@/components/MarkdownReader/theme';
 
@@ -46,6 +47,7 @@ export default function WordCell({
   readingOverhangs = false,
   testId = 'reader-word',
 }: WordCellProps) {
+  const t = useTranslations('reader.wordCell');
   const colorClass = state ? stateClasses[state] : stateClasses.new;
   const isHighlighted = isPhraseHighlighted || isActive;
   // A word with no handler is decoration — the settings preview (#570) draws the
@@ -63,7 +65,7 @@ export default function WordCell({
       data-word-state={state ?? 'new'}
       role={interactive ? 'button' : undefined}
       tabIndex={interactive ? 0 : undefined}
-      aria-label={interactive ? `Look up ${text}` : undefined}
+      aria-label={interactive ? t('lookUp', { text }) : undefined}
       onClick={(event) => onActivate?.(text, event.currentTarget)}
       onKeyDown={(event) => {
         if (event.key !== 'Enter' && event.key !== ' ') return;

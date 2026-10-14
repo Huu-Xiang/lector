@@ -1,6 +1,7 @@
 'use client';
 
 import { type ReactNode, useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import {
   buildInfo,
   commitShort,
@@ -29,6 +30,7 @@ function Row({
 }
 
 export default function VersionInfo() {
+  const t = useTranslations('settings.about');
   const { version, commit, buildTime } = buildInfo;
   const href = commitUrl(commit);
   const built = formatBuildTime(buildTime);
@@ -42,16 +44,16 @@ export default function VersionInfo() {
 
   return (
     <section className="panel p-6">
-      <h2 className="mb-4 text-lg font-semibold text-foreground">About</h2>
+      <h2 className="mb-4 text-lg font-semibold text-foreground">{t('title')}</h2>
       <dl className="space-y-3 text-sm">
         {/*
           "Build", not "Version", because one row covers two cases. A release
           image reads as the tag exactly, e.g. "v3.10.0". A cloud deploy goes
           out by commit SHA, so it reads as "v3.10.0 +3".
         */}
-        <Row label="Build">{formatBuildVersion(version)}</Row>
+        <Row label={t('build')}>{formatBuildVersion(version)}</Row>
         {isKnown(commit) && (
-          <Row label="Commit">
+          <Row label={t('commit')}>
             {href ? (
               <a
                 href={href}
@@ -67,7 +69,7 @@ export default function VersionInfo() {
           </Row>
         )}
         {built && (
-          <Row label="Built" mono={false}>
+          <Row label={t('built')} mono={false}>
             {built}
             {age && <span className="text-muted-foreground"> ({age})</span>}
           </Row>

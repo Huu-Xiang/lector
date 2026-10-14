@@ -1,0 +1,285 @@
+{
+  "practice": {
+    "saveFailed": "Could not save your answer — check your connection and try again.",
+    "statsFailed": "Your answer was saved, but updating your stats failed.",
+    "lookUp": "Look up {word}",
+    "title": {
+      "cloze": "Cloze Practice",
+      "dictation": "Dictation Practice"
+    },
+    "format": {
+      "cloze": "Cloze",
+      "clozeHint": "Fill in the blank",
+      "dictation": "Dictation",
+      "dictationHint": "Type what you hear"
+    },
+    "setup": {
+      "reviewDue": "Review Due ({count})",
+      "due": "{count} due",
+      "learnNew": "Learn New",
+      "mastered": "{mastered}/{total} mastered",
+      "sentences": "Sentences",
+      "mode": "Mode",
+      "modeType": "Type",
+      "modeMc": "MC",
+      "start": "Start",
+      "loading": "Loading..."
+    },
+    "collections": {
+      "top500": "Top 500",
+      "top1000": "500-1000",
+      "top2000": "1000-2000"
+    },
+    "round": {
+      "guidedLabel": "Guided first lesson",
+      "guidedTitle": "Your first learning loop",
+      "back": "← Back",
+      "threeWord": "3-word review",
+      "starterWords": "Words from your starter lesson",
+      "loading": "Loading sentences..."
+    },
+    "question": {
+      "choose": "Choose the correct word",
+      "fill": "Fill in the blank",
+      "showTranslation": "Show translation",
+      "translation": "Translation",
+      "keyChoose": "Choose",
+      "keyListen": "Listen",
+      "multipleChoice": "Multiple Choice",
+      "multipleChoiceTitle": "Switch to multiple choice for this question",
+      "hintNone": "Hint (?)",
+      "hintLetters": "Hint ({count, plural, one {# letter} other {# letters}})",
+      "hintTitle": "Reveal next letter",
+      "submit": "Submit",
+      "check": "Check",
+      "mastery": "Mastery:"
+    },
+    "complete": {
+      "title": "Round Complete!",
+      "correct": "{correct}/{total} correct",
+      "totalPoints": "{points} total points",
+      "changeSettings": "Change Settings",
+      "playAgain": "Play Again"
+    },
+    "onboarding": {
+      "starterLesson": "Starter lesson",
+      "complete": {
+        "title": "First learning loop complete",
+        "description": "You turned words from a real reading into practice. That is the loop Readfox will keep building on with you.",
+        "encountered": "Encountered",
+        "saved": "Saved",
+        "score": "Score",
+        "upNext": "Up next",
+        "tomorrow": "Tomorrow",
+        "comeBack": "Come back for another short reading and review.",
+        "saving": "Saving your progress…",
+        "saveError": "Your round is safe, but we could not mark onboarding complete.",
+        "trySavingAgain": "Try saving again",
+        "openLibrary": "Open Library",
+        "readNext": "Read next lesson"
+      },
+      "recovery": {
+        "title": "Your practice words aren't ready yet",
+        "missingWords": "Your mini-review needs three words saved from the starter lesson. Return to the lesson and save any missing words, then try again.",
+        "loadFailed": "We could not load your saved practice words. Return to the starter lesson and try the mini-review again.",
+        "backToLesson": "Back to starter lesson"
+      }
+    },
+    "wordTooltip": {
+      "tryAgain": "Please try again."
+    },
+    "blacklist": {
+      "hidden": "Sentence hidden",
+      "undo": "Undo",
+      "undoFailed": "Failed to undo blacklist",
+      "hideFailed": "Failed to hide sentence",
+      "title": "Skip & hide this sentence"
+    },
+    "empty": {
+      "reviewTitle": "Nothing to Review",
+      "newTitle": "No New Sentences",
+      "reviewBody": "No sentences are due for review right now. Try learning new ones or check back later.",
+      "newBody": "You've seen all the sentences in this collection. Try a different collection or review existing ones.",
+      "back": "Back",
+      "learnNewInstead": "Learn New Instead"
+    },
+    "feedback": {
+      "correct": "Correct!",
+      "incorrect": "Incorrect",
+      "listenAgain": "Listen Again",
+      "saveWordFailed": "Could not save the word to vocabulary",
+      "addToAnkiFailed": "Failed to add to Anki",
+      "lookUp": "Look up {word}",
+      "answerRevealed": "Answer revealed",
+      "perfect": "Perfect!",
+      "accuracy": "{percent}% correct ({correct}/{total} words)",
+      "pointsBonus": " · +{points} points",
+      "nothingTyped": "(nothing typed)",
+      "youTyped": "You typed",
+      "sentence": "Sentence",
+      "translation": "Translation",
+      "masteryLevel": "Mastery Level",
+      "mastery": {
+        "level0": "New",
+        "level25": "Learning",
+        "level50": "Familiar",
+        "level75": "Almost There",
+        "level100": "Mastered"
+      },
+      "nextSentence": "Next Sentence",
+      "nextSentenceHint": "Next sentence",
+      "pointsEarned": "+{points} points",
+      "yourAnswer": "Your answer:",
+      "correctAnswer": "Correct answer:",
+      "alreadyAdded": "Already added to Anki",
+      "addToAnki": "Add to Anki",
+      "adding": "Adding...",
+      "explain": "Explain",
+      "explaining": "Explaining...",
+      "explainFailed": "Failed to fetch explanation"
+    },
+    "dictation": {
+      "prompt": "Type the sentence you hear",
+      "replayAria": "Replay audio",
+      "speed": "Speed",
+      "listenAgain": "Listen Again ({count} left)",
+      "noReplays": "No replays left",
+      "placeholder": "Type what you hear…",
+      "surrenderTitle": "Reveal the sentence and move on (counts as a miss)",
+      "surrender": "Surrender",
+      "check": "Check",
+      "mastery": "Mastery:"
+    }
+  },
+  "vocab": {
+    "states": {
+      "new": "New",
+      "level1": "Level 1",
+      "level2": "Level 2",
+      "level3": "Level 3",
+      "level4": "Level 4",
+      "known": "Known",
+      "ignored": "Ignored"
+    },
+    "stateTitle": {
+      "new": "New - Not yet studied",
+      "level1": "Level 1 - Just started learning",
+      "level2": "Level 2 - Learning",
+      "level3": "Level 3 - Familiar",
+      "level4": "Level 4 - Almost known",
+      "known": "Known - Fully learned",
+      "ignored": "Ignored - Hidden from study"
+    },
+    "stats": {
+      "total": "Total Words",
+      "learning": "Learning",
+      "known": "Known",
+      "ignored": "Ignored"
+    },
+    "list": {
+      "phrase": "phrase",
+      "confirmBulkDelete": "Are you sure you want to delete {count} vocab entries?",
+      "searchPlaceholder": "Search words, translations, or sentences...",
+      "filter": {
+        "all": "All",
+        "learning": "Learning"
+      },
+      "allCollections": "All Collections",
+      "exporting": "Exporting...",
+      "exportToAnki": "Export to Anki ({count})",
+      "updating": "Updating...",
+      "markAsKnown": "Mark as Known ({count})",
+      "deleting": "Deleting...",
+      "delete": "Delete ({count})",
+      "syncing": "Syncing...",
+      "syncWithAnki": "Sync with Anki",
+      "ankiTip": {
+        "title": "Anki setup",
+        "body": "Click here if you need help setting up your Anki."
+      },
+      "results": "{filtered} of {total} entries",
+      "resultsSelected": "{filtered} of {total} entries ({selected} selected)",
+      "columns": {
+        "text": "Word/Phrase",
+        "translation": "Translation",
+        "state": "State",
+        "source": "Source",
+        "dateAdded": "Date Added",
+        "anki": "Anki"
+      },
+      "loading": "Loading vocabulary...",
+      "emptyNoEntries": "No vocabulary entries yet. Start reading to add words!",
+      "emptyNoMatches": "No entries match your filters.",
+      "exportDialog": {
+        "title": "Export to Anki",
+        "description": "{count, plural, one {# word} other {# words}} selected. Choose a card type.",
+        "basic": "Basic",
+        "basicDescription": "Front/back card. Sentence on front, translation on back.",
+        "cloze": "Cloze",
+        "clozeDescription": "Word is hidden in the sentence; recall it from context.",
+        "cancel": "Cancel",
+        "confirm": "Export {count, plural, one {# card} other {# cards}}"
+      }
+    },
+    "pagination": {
+      "label": "Vocabulary pagination",
+      "rowsPerPage": "Rows per page",
+      "range": "{from}–{to} of {total}",
+      "previous": "Previous page",
+      "next": "Next page",
+      "page": "Page {current} of {total}"
+    },
+    "detail": {
+      "confirmDelete": "Are you sure you want to delete this vocabulary entry?",
+      "phrase": "Phrase",
+      "word": "Word",
+      "close": "Close",
+      "translation": "Translation",
+      "contextSentence": "Context Sentence",
+      "learningState": "Learning State",
+      "added": "Added:",
+      "reviewCount": "Review Count:",
+      "syncedToAnki": "Synced to Anki",
+      "noteId": "(Note #{id})",
+      "deleting": "Deleting...",
+      "delete": "Delete",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "save": "Save",
+      "edit": "Edit"
+    },
+    "page": {
+      "title": "Vocabulary",
+      "loadFailed": "Failed to load vocabulary data",
+      "entryUpdated": "Entry updated successfully",
+      "updateFailed": "Failed to update entry",
+      "entryDeleted": "Entry deleted",
+      "deleteFailed": "Failed to delete entry",
+      "allSynced": "All selected entries have already been synced to Anki.",
+      "cardType": {
+        "basic": "basic",
+        "cloze": "cloze"
+      },
+      "queuedPartial": "Queued {queued, plural, one {# card} other {# cards}}, {failed} failed ({error})",
+      "queuedOk": "Queued {queued, plural, one {# {cardType} card} other {# {cardType} cards}} — they'll appear next time Anki syncs",
+      "queueFailed": "Failed to queue cards for Anki",
+      "notConnected": "Anki is not connected. Make sure Anki is running with AnkiConnect.",
+      "exported": "Exported {count, plural, one {# {cardType} card} other {# {cardType} cards}} to \"{deck}\"",
+      "exportPartial": "Exported {count} {cardType} cards, {failed} failed",
+      "markedKnown": "Marked {count} entries as known",
+      "markKnownFailed": "Failed to mark entries as known",
+      "synced": "Synced {cards, plural, one {# Anki card} other {# Anki cards}} — upgraded {upgraded}.",
+      "syncedImported": "Synced {cards, plural, one {# Anki card} other {# Anki cards}} — upgraded {upgraded}, imported {imported} from Anki.",
+      "syncFailed": "Failed to sync with Anki",
+      "openAnkiSetup": "Open Anki setup",
+      "addonPill": "Anki syncs via add-on",
+      "ankiTip": {
+        "title": "Anki setup",
+        "body": "Click here if you need help setting up your Anki."
+      },
+      "checking": "Checking Anki connection...",
+      "connected": "Anki Connected",
+      "disconnected": "Anki Disconnected"
+    }
+  }
+}

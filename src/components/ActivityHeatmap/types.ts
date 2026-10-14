@@ -15,8 +15,8 @@ export interface ActivityDay {
 
 export interface ActivityHeatmapProps {
   data: ActivityDay[];
-  /** Noun for the counted unit, e.g. "actions" or "lookups". Defaults to "lookups". */
-  unit?: string;
+  /** Counted unit. Defaults to "lookups". */
+  unit?: 'actions' | 'lookups';
   /**
    * Today's calendar date (YYYY-MM-DD) in the user's configured time zone — the
    * last cell the grid renders. Must be derived the same way as the data's date

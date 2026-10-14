@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -26,6 +27,7 @@ export default function DeleteAccount() {
 }
 
 function DeleteAccountCard() {
+  const t = useTranslations('settings.deleteAccount');
   const [open, setOpen] = useState(false);
   const [phrase, setPhrase] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -41,24 +43,23 @@ function DeleteAccountCard() {
     });
     setSubmitting(false);
     if (error) {
-      toast.error(error.message ?? 'Could not start account deletion. Please try again.');
+      toast.error(error.message ?? t('startFailed'));
       return;
     }
     setSent(true);
   }
 
   return (
-    <section className="rounded-lg border border-destructive/40 bg-card p-6" data-testid="delete-account">
-      <h2 className="mb-2 text-lg font-semibold text-destructive">Delete account</h2>
+    <section
+      className="rounded-lg border border-destructive/40 bg-card p-6"
+      data-testid="delete-account"
+    >
+      <h2 className="mb-2 text-lg font-semibold text-destructive">{t('heading')}</h2>
       <p className="mb-3 text-sm text-muted-foreground">
-        Permanently delete your account and <strong>all</strong> of your data — books, vocabulary,
-        cloze progress, journal entries, chat history, and settings. This cannot be undone, and is
-        separate from exporting a backup above.
+        {t.rich('intro', { strong: (chunks) => <strong>{chunks}</strong> })}
       </p>
       <p className="mb-4 text-sm text-muted-foreground">
-        If you have a paid subscription, cancel it first: deleting your account here does{' '}
-        <strong>not</strong> cancel billing (payments are handled by Paddle, our merchant of record
-        — the manage-subscription link is in your Paddle receipt emails).
+        {t.rich('billingWarning', { strong: (chunks) => <strong>{chunks}</strong> })}
       </p>
 
       {sent ? (
@@ -66,8 +67,7 @@ function DeleteAccountCard() {
           className="rounded-lg border border-border bg-[var(--primary-soft)] p-3 text-sm text-foreground"
           data-testid="delete-account-sent"
         >
-          Check your email and open the link we just sent <strong>in this browser</strong> to
-          permanently delete your account. The link expires in 24 hours.
+          {t.rich('sent', { strong: (chunks) => <strong>{chunks}</strong> })}
         </div>
       ) : !open ? (
         <Button
@@ -75,13 +75,16 @@ function DeleteAccountCard() {
           onClick={() => setOpen(true)}
           data-testid="delete-account-start"
         >
-          Delete account…
+          {t('start')}
         </Button>
       ) : (
         <div className="space-y-3">
           <div className="space-y-2">
             <Label htmlFor="delete-confirm">
-              Type <span className="font-mono font-semibold">{CONFIRM_PHRASE}</span> to confirm
+              {t.rich('typeToConfirm', {
+                phrase: CONFIRM_PHRASE,
+                mono: (chunks) => <span className="font-mono font-semibold">{chunks}</span>,
+              })}
             </Label>
             <Input
               id="delete-confirm"
@@ -98,7 +101,7 @@ function DeleteAccountCard() {
               onClick={handleDelete}
               data-testid="delete-account-confirm"
             >
-              {submitting ? 'Sending…' : 'Delete my account'}
+              {submitting ? t('sending') : t('confirm')}
             </Button>
             <Button
               variant="secondary"
@@ -107,7 +110,7 @@ function DeleteAccountCard() {
                 setPhrase('');
               }}
             >
-              Cancel
+              {t('cancel')}
             </Button>
           </div>
         </div>

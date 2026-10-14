@@ -2,6 +2,7 @@
 
 import { Plus, X } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { setSetting } from '@/lib/data-layer';
@@ -17,6 +18,7 @@ import { useActiveLanguage, useEnabledLanguages } from '@/utils/hooks';
 import { notifyLanguageListChanged } from '@/utils/storage';
 
 export default function LanguagesSettings() {
+  const t = useTranslations('settings.languages');
   const activeLang = useActiveLanguage();
   const enabledCodes = useEnabledLanguages();
   const [pending, setPending] = useState(false);
@@ -32,7 +34,7 @@ export default function LanguagesSettings() {
       notifyLanguageListChanged();
       toast.success(message);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Could not save your languages');
+      toast.error(error instanceof Error ? error.message : t('saveFailed'));
     } finally {
       setPending(false);
     }
@@ -42,20 +44,20 @@ export default function LanguagesSettings() {
     if (!adding) return;
     const code = adding;
     setAdding('');
-    await save(withLanguageEnabled(listed, code), `${LANGUAGES[code].native} added`);
+    await save(withLanguageEnabled(listed, code), t('added', { language: LANGUAGES[code].native }));
   }
 
   async function remove(code: LanguageCode) {
-    await save(withLanguageDisabled(listed, code), `${LANGUAGES[code].native} removed`);
+    await save(
+      withLanguageDisabled(listed, code),
+      t('removed', { language: LANGUAGES[code].native }),
+    );
   }
 
   return (
     <section className="panel p-6" data-testid="languages-settings">
-      <h2 className="mb-1 text-lg font-semibold text-foreground">Languages</h2>
-      <p className="mb-4 text-sm text-muted-foreground">
-        The language picker lists these languages. Remove a language to shorten the list. Your
-        words, texts and cards in it stay on the server.
-      </p>
+      <h2 className="mb-1 text-lg font-semibold text-foreground">{t('title')}</h2>
+      <p className="mb-4 text-sm text-muted-foreground">{t('description')}</p>
 
       <ul className="mb-4 divide-y divide-border">
         {listed.map((code) => (
@@ -67,13 +69,13 @@ export default function LanguagesSettings() {
             <span className="text-lg">{LANGUAGES[code].flag}</span>
             <span className="flex-1 text-sm text-foreground">{LANGUAGES[code].native}</span>
             {code === activeLang.code ? (
-              <span className="text-xs text-muted-foreground">In use</span>
+              <span className="text-xs text-muted-foreground">{t('inUse')}</span>
             ) : (
               <Button
                 variant="ghost"
                 size="icon-sm"
                 disabled={pending}
-                aria-label={`Remove ${LANGUAGES[code].native}`}
+                aria-label={t('remove', { language: LANGUAGES[code].native })}
                 data-testid={`remove-language-${code}`}
                 onClick={() => remove(code)}
               >
@@ -92,7 +94,7 @@ export default function LanguagesSettings() {
             onChange={(event) => setAdding(event.target.value as LanguageCode | '')}
             className="flex-1 rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none"
           >
-            <option value="">Add a language…</option>
+            <option value="">{t('addPlaceholder')}</option>
             {addable.map((code) => (
               <option key={code} value={code}>
                 {LANGUAGES[code].native}
@@ -101,7 +103,7 @@ export default function LanguagesSettings() {
           </select>
           <Button disabled={pending || !adding} data-testid="add-language" onClick={add}>
             <Plus />
-            Add
+            {t('add')}
           </Button>
         </div>
       )}

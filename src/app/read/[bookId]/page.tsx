@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback, use, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { PageTurn } from '@/components/Loaders';
 import MarkdownReader from '@/components/MarkdownReader';
 import OnboardingCoach from '@/components/OnboardingCoach';
@@ -61,6 +62,7 @@ import {
 
 export default function ReadPage({ params }: { params: Promise<{ bookId: string }> }) {
   const { bookId: lessonId } = use(params);
+  const t = useTranslations('reader.page');
   const router = useRouter();
   const activeLang = useActiveLanguage();
   const ankiTransport = useAnkiTransport();
@@ -149,7 +151,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         ]);
 
         if (!loadedLesson) {
-          setError('Lesson not found');
+          setError(t('lessonNotFound'));
           return;
         }
 
@@ -164,14 +166,14 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         }
       } catch (err) {
         console.error('Error loading lesson:', err);
-        setError(err instanceof Error ? err.message : 'Failed to load lesson');
+        setError(err instanceof Error ? err.message : t('loadFailed'));
       } finally {
         setIsLoading(false);
       }
     }
 
     loadLesson();
-  }, [activeLang.code, lessonId]);
+  }, [activeLang.code, lessonId, t]);
 
   // Audio lesson (#185): fetch segments once transcription is done, and poll
   // the lesson while it's still transcribing so the reader unlocks by itself.
@@ -204,7 +206,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       const updated = await getLesson(lessonId);
       if (updated) setLesson(updated);
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Could not retry transcription');
+      toast.error(err instanceof Error ? err.message : t('retryFailed'));
     }
   }
 
@@ -405,7 +407,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
             setWordPanel((prev) => ({
               ...prev,
               isLoading: false,
-              error: 'Failed to translate phrase. Check AI provider in settings.',
+              error: t('phraseFailed'),
             }));
           }
         }
@@ -466,7 +468,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
               ...prev,
               isLoading: false,
               isStreamingGloss: false,
-              error: 'Failed to translate word. Check AI provider in settings.',
+              error: t('wordFailed'),
             }));
           }
         } else {
@@ -476,7 +478,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         }
       }
     },
-    [activeLang, trackOnboardingLookup],
+    [activeLang, trackOnboardingLookup, t],
   );
 
   const closeWordPanel = useCallback(() => {
@@ -535,10 +537,10 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       setWordPanel((prev) => ({
         ...prev,
         isContextLoading: false,
-        error: 'Failed to get contextual translation.',
+        error: t('contextFailed'),
       }));
     }
-  }, [wordPanel.word, wordPanel.sentence]);
+  }, [wordPanel.word, wordPanel.sentence, t]);
 
   // Enrich — upgrade the fast streamed gloss to the full dictionary entry
   // (senses / IPA / etymology / related forms). Off the critical path: the user
@@ -642,7 +644,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     // A failed save must not paint the word as saved (#232).
     if (!(await saveVocab(entry))) {
       rollbackReaderState();
-      toast.error('Could not save the word — check your connection and try again.');
+      toast.error(t('saveFailed'));
       return;
     }
     await incrementDailyStat('newWordsSaved');
@@ -661,6 +663,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     applyReaderWordState,
     persistAcceptedTranslation,
     trackOnboardingVocab,
+    t,
   ]);
 
   const markAsKnown = useCallback(async () => {
@@ -670,7 +673,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       existing = await resolveExistingEntry();
     } catch {
       rollbackReaderState();
-      toast.error('Could not mark the word as known — check your connection.');
+      toast.error(t('knownFailed'));
       return;
     }
     let trackedEntry: VocabEntry;
@@ -691,14 +694,14 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       };
       if (!(await saveVocab(entry))) {
         rollbackReaderState();
-        toast.error('Could not mark the word as known — check your connection.');
+        toast.error(t('knownFailed'));
         return;
       }
       trackedEntry = entry;
     } else {
       if (!(await updateVocabState(existing.id, 'known'))) {
         rollbackReaderState();
-        toast.error('Could not mark the word as known — check your connection.');
+        toast.error(t('knownFailed'));
         return;
       }
       trackedEntry = { ...existing, state: 'known' };
@@ -717,6 +720,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     resolveExistingEntry,
     persistAcceptedTranslation,
     trackOnboardingVocab,
+    t,
   ]);
 
   const ignoreWord = useCallback(async () => {
@@ -726,7 +730,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       existing = await resolveExistingEntry();
     } catch {
       rollbackReaderState();
-      toast.error('Could not ignore the word — check your connection.');
+      toast.error(t('ignoreFailed'));
       return;
     }
     let trackedEntry: VocabEntry;
@@ -747,14 +751,14 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       };
       if (!(await saveVocab(entry))) {
         rollbackReaderState();
-        toast.error('Could not ignore the word — check your connection.');
+        toast.error(t('ignoreFailed'));
         return;
       }
       trackedEntry = entry;
     } else {
       if (!(await updateVocabState(existing.id, 'ignored'))) {
         rollbackReaderState();
-        toast.error('Could not ignore the word — check your connection.');
+        toast.error(t('ignoreFailed'));
         return;
       }
       trackedEntry = { ...existing, state: 'ignored' };
@@ -770,6 +774,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     closeWordPanel,
     resolveExistingEntry,
     trackOnboardingVocab,
+    t,
   ]);
 
   const setWordLevel = useCallback(
@@ -783,7 +788,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         existing = await resolveExistingEntry();
       } catch {
         rollbackReaderState();
-        toast.error('Could not set the word level — check your connection.');
+        toast.error(t('levelFailed'));
         return;
       }
       let trackedEntry: VocabEntry;
@@ -804,7 +809,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         };
         if (!(await saveVocab(entry))) {
           rollbackReaderState();
-          toast.error('Could not set the word level — check your connection.');
+          toast.error(t('levelFailed'));
           return;
         }
         await incrementDailyStat('newWordsSaved');
@@ -813,7 +818,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       } else {
         if (!(await updateVocabState(existing.id, state))) {
           rollbackReaderState();
-          toast.error('Could not set the word level — check your connection.');
+          toast.error(t('levelFailed'));
           return;
         }
         setWordPanel((prev) => ({
@@ -833,7 +838,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         const savedAfter = savedOnboardingWords(nextOnboarding).length;
         if (savedAfter > savedBefore) {
           toast.success(
-            `“${wordPanel.word}” added — ${Math.min(savedAfter, 3)} of 3 review words ready`,
+            t('onboardingWordAdded', { word: wordPanel.word, count: Math.min(savedAfter, 3) }),
             { id: `onboarding-saved-${trackedEntry.id}`, duration: 3500 },
           );
           closeWordPanel();
@@ -851,6 +856,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       resolveExistingEntry,
       persistAcceptedTranslation,
       trackOnboardingVocab,
+      t,
     ],
   );
 
@@ -859,9 +865,9 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       await updateOnboardingProgress({ currentStep: 'practice' });
       router.push('/practice?onboarding=1');
     } catch {
-      toast.error('Could not start the mini-review. Please try again.');
+      toast.error(t('miniReviewFailed'));
     }
-  }, [router]);
+  }, [router, t]);
 
   const handleClose = useCallback(() => {
     if (lesson?.collectionId) {
@@ -901,7 +907,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     const rollbackReaderState = applyReaderWordState(wordPanel.word, entry.state);
     if (!(await saveVocab(entry))) {
       rollbackReaderState();
-      throw new Error('Could not save the word — check your connection.');
+      throw new Error(t('saveFailedShort'));
     }
     await incrementDailyStat('newWordsSaved');
     persistAcceptedTranslation();
@@ -916,6 +922,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     resolveExistingEntry,
     persistAcceptedTranslation,
     trackOnboardingVocab,
+    t,
   ]);
 
   const addWordToAnki = useCallback(async () => {
@@ -1079,9 +1086,9 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         }));
       }
     } catch {
-      setWordPanel((prev) => ({ ...prev, isLoading: false, error: 'Re-translate failed' }));
+      setWordPanel((prev) => ({ ...prev, isLoading: false, error: t('retranslateFailed') }));
     }
-  }, [wordPanel.word, wordPanel.sentence]);
+  }, [wordPanel.word, wordPanel.sentence, t]);
 
   const handleSaveText = useCallback(
     async (newContent: string) => {
@@ -1122,7 +1129,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         if (!wordPanel.word) return;
         e.preventDefault();
         void navigator.clipboard?.writeText(wordPanel.word).then(
-          () => toast.success('Copied', { duration: 1200 }),
+          () => toast.success(t('copied'), { duration: 1200 }),
           () => {},
         );
         return;
@@ -1164,6 +1171,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     ignoreWord,
     saveWordToVocab,
     setWordLevel,
+    t,
   ]);
 
   if (isLoading) {
@@ -1171,7 +1179,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       <div className="flex min-h-screen items-center justify-center bg-card">
         <div className="flex flex-col items-center gap-4">
           <PageTurn />
-          <p className="text-muted-foreground">Loading lesson...</p>
+          <p className="text-muted-foreground">{t('loading')}</p>
         </div>
       </div>
     );
@@ -1180,9 +1188,9 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
   if (error || !lesson) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-card p-8">
-        <div className="mb-4 text-xl text-destructive">{error || 'Lesson not found'}</div>
+        <div className="mb-4 text-xl text-destructive">{error || t('lessonNotFound')}</div>
         <Button variant="secondary" onClick={() => router.push('/')}>
-          Go to Library
+          {t('goToLibrary')}
         </Button>
       </div>
     );
@@ -1197,13 +1205,12 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         data-testid="transcription-pending"
       >
         <LoaderCircle className="h-8 w-8 animate-spin text-muted-foreground" />
-        <div className="text-xl text-foreground">Transcribing audio…</div>
+        <div className="text-xl text-foreground">{t('transcribing')}</div>
         <p className="max-w-sm text-center text-sm text-muted-foreground">
-          &ldquo;{lesson.title}&rdquo; is being transcribed in the background. This usually takes a
-          few minutes; the lesson opens automatically when it&rsquo;s ready.
+          {t('transcribingBody', { title: lesson.title })}
         </p>
         <Button variant="secondary" onClick={() => router.push('/')}>
-          Back to Library
+          {t('backToLibrary')}
         </Button>
       </div>
     );
@@ -1214,7 +1221,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         className="flex min-h-screen flex-col items-center justify-center gap-4 bg-card p-8"
         data-testid="transcription-error"
       >
-        <div className="text-xl text-destructive">Transcription failed</div>
+        <div className="text-xl text-destructive">{t('transcriptionFailed')}</div>
         {lesson.transcriptionError && (
           <p className="max-w-md text-center text-sm text-muted-foreground">
             {lesson.transcriptionError}
@@ -1222,10 +1229,10 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         )}
         <div className="flex gap-2">
           <Button onClick={handleRetryTranscription} data-testid="retry-transcription">
-            Retry
+            {t('retry')}
           </Button>
           <Button variant="secondary" onClick={() => router.push('/')}>
-            Back to Library
+            {t('backToLibrary')}
           </Button>
         </div>
       </div>
@@ -1301,8 +1308,8 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
               segments.length > 0 ? (
                 <button
                   onClick={() => setListenMode(true)}
-                  title="Listen along"
-                  aria-label="Listen along"
+                  title={t('listenAlong')}
+                  aria-label={t('listenAlong')}
                   data-testid="listen-along-toggle"
                   className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-accent"
                 >

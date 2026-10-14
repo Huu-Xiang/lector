@@ -1,18 +1,20 @@
-export const correctionTypeLabels: Record<string, { label: string; className: string }> = {
-  grammar: { label: 'Grammar', className: 'bg-[var(--clay-soft)] text-clay ' },
+export const correctionTypeLabels: Record<string, { labelKey: string; className: string }> = {
+  grammar: { labelKey: 'grammar', className: 'bg-[var(--clay-soft)] text-clay ' },
   spelling: {
-    label: 'Spelling',
-    className:
-      'bg-[color-mix(in_srgb,var(--destructive)_12%,var(--card))] text-destructive',
+    labelKey: 'spelling',
+    className: 'bg-[color-mix(in_srgb,var(--destructive)_12%,var(--card))] text-destructive',
   },
   word_choice: {
-    label: 'Word choice',
+    labelKey: 'wordChoice',
     className: 'bg-[var(--gold-soft)] text-[var(--gold-strong)]',
   },
   word_order: {
-    label: 'Word order',
+    labelKey: 'wordOrder',
     className: 'bg-[var(--primary-soft)] text-primary',
   },
-  missing_word: { label: 'Missing word', className: 'bg-[var(--gold-soft)] text-[var(--gold-strong)] ' },
-  extra_word: { label: 'Extra word', className: 'bg-muted text-muted-foreground' },
+  missing_word: {
+    labelKey: 'missingWord',
+    className: 'bg-[var(--gold-soft)] text-[var(--gold-strong)] ',
+  },
+  extra_word: { labelKey: 'extraWord', className: 'bg-muted text-muted-foreground' },
 };

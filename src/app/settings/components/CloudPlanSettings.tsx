@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useFormatter, useLocale, useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import {
@@ -19,33 +20,14 @@ import {
   type ClientEntitlements,
 } from '@/lib/data-layer';
 
-const PLAN_LABELS: Record<ClientEntitlements['plan'], string> = {
-  free: 'Free',
-  cloud: 'Cloud',
-  plus: 'Cloud Plus',
-  unlimited: 'Unlimited',
-};
+type Translator = ReturnType<typeof useTranslations>;
 
-function limitLabel(value: number | null | undefined, fallback: string): string {
-  if (value === null) return 'unlimited';
-  if (typeof value === 'number') return value.toLocaleString();
-  return fallback;
-}
-
-function cycleLabel(cycle: BillingPrice['cycle']): string {
-  return cycle === 'year' ? 'annual' : 'monthly';
-}
-
-function priceLabel(price: BillingPrice): string {
-  return `${PLAN_LABELS[price.plan]} — ${cycleLabel(price.cycle)}`;
-}
-
-function formatMoney(money: BillingMoney | null): string | null {
+function formatMoney(money: BillingMoney | null, locale: string): string | null {
   if (!money) return null;
   const amount = Number(money.amount);
   if (!Number.isFinite(amount)) return null;
   try {
-    const formatter = new Intl.NumberFormat(undefined, {
+    const formatter = new Intl.NumberFormat(locale, {
       style: 'currency',
       currency: money.currencyCode,
     });
@@ -56,18 +38,26 @@ function formatMoney(money: BillingMoney | null): string | null {
   }
 }
 
-function billingError(error: string): string {
-  if (error === 'subscription_past_due') {
-    return 'Update your payment method in Paddle before changing plans.';
-  }
-  if (error === 'subscription_ambiguous') {
-    return 'Paddle found more than one active subscription. Open billing management to resolve it.';
-  }
-  if (error === 'plan_already_current') return 'That is already your current plan.';
-  return 'Paddle could not complete that billing action. Please try again.';
+function billingError(error: string, t: Translator): string {
+  if (error === 'subscription_past_due') return t('errors.pastDue');
+  if (error === 'subscription_ambiguous') return t('errors.ambiguous');
+  if (error === 'plan_already_current') return t('errors.alreadyCurrent');
+  return t('errors.generic');
 }
 
 export default function CloudPlanSettings() {
+  const t = useTranslations('settings.plan');
+  const locale = useLocale();
+  const format = useFormatter();
+  const planLabel = (plan: ClientEntitlements['plan']) => t(`labels.${plan}`);
+  const cycleLabel = (cycle: BillingPrice['cycle']) => t(`cycle.${cycle}`);
+  const priceLabel = (price: BillingPrice) =>
+    t('priceLabel', { plan: planLabel(price.plan), cycle: cycleLabel(price.cycle) });
+  const limitLabel = (value: number | null | undefined, fallback: string) => {
+    if (value === null) return t('unlimited');
+    if (typeof value === 'number') return format.number(value);
+    return fallback;
+  };
   const [billing, setBilling] = useState<BillingStatus | null>(null);
   const [entitlements, setEntitlements] = useState<ClientEntitlements | null>(null);
   const [openingPortal, setOpeningPortal] = useState(false);
@@ -135,7 +125,7 @@ export default function CloudPlanSettings() {
         if (cancelled) return;
         if (nextEntitlements) setEntitlements(nextEntitlements);
         setPendingTarget(null);
-        toast.success('Your Paddle subscription has been updated');
+        toast.success(t('toast.updated'));
         return;
       }
       if (attempt < 30) timer = setTimeout(() => void poll(attempt + 1), 2_000);
@@ -154,7 +144,7 @@ export default function CloudPlanSettings() {
     const result = await createCustomerPortalSession();
     if (!result.ok) {
       setOpeningPortal(false);
-      toast.error(billingError(result.error));
+      toast.error(billingError(result.error, t));
       return;
     }
     window.location.assign(result.value.url);
@@ -166,7 +156,7 @@ export default function CloudPlanSettings() {
     const result = await previewPlanChange(effectiveSelectedPriceId);
     setPreviewing(false);
     if (!result.ok) {
-      toast.error(billingError(result.error));
+      toast.error(billingError(result.error, t));
       return;
     }
     setPreview(result.value);
@@ -178,12 +168,12 @@ export default function CloudPlanSettings() {
     const result = await applyPlanChange(activePreview.target.id);
     setApplying(false);
     if (!result.ok) {
-      toast.error(billingError(result.error));
+      toast.error(billingError(result.error, t));
       return;
     }
     setPreview(null);
     setPendingTarget(result.value.target);
-    toast.success('Paddle accepted the change. Updating your plan…');
+    toast.success(t('toast.accepted'));
   }
 
   const plan = entitlements?.plan;
@@ -194,23 +184,26 @@ export default function CloudPlanSettings() {
     <section id="plan" className="panel p-6" data-testid="cloud-plan-settings">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h2 className="text-lg font-semibold text-foreground">Readfox plan</h2>
+          <h2 className="text-lg font-semibold text-foreground">{t('heading')}</h2>
           <p className="mt-1 text-sm text-muted-foreground" data-testid="cloud-plan-current">
             {plan
               ? currentSubscription && currentSubscription.plan === plan
-                ? `${PLAN_LABELS[plan]} (${cycleLabel(currentSubscription.cycle)} billing) is active for this account.`
-                : `${PLAN_LABELS[plan]} is active for this account.`
-              : 'Loading your plan…'}
+                ? t('currentWithCycle', {
+                    plan: planLabel(plan),
+                    cycle: cycleLabel(currentSubscription.cycle),
+                  })
+                : t('current', { plan: planLabel(plan) })
+              : t('loading')}
           </p>
         </div>
         {plan && (
           <div className="flex flex-wrap justify-end gap-2">
             <span className="rounded-full bg-[var(--primary-soft)] px-3 py-1 text-xs font-semibold text-primary">
-              {PLAN_LABELS[plan]}
+              {planLabel(plan)}
             </span>
             {entitlements.byok && (
               <span className="rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">
-                Own AI key
+                {t('ownKey')}
               </span>
             )}
           </div>
@@ -221,49 +214,39 @@ export default function CloudPlanSettings() {
         <div className="mt-4 space-y-3 text-sm text-muted-foreground">
           {lapsed && (
             <p className="rounded-lg border border-border bg-[var(--primary-soft)] p-3 text-foreground">
-              Your paid subscription ended, so the account moved to Free. Your texts, saved
-              vocabulary, Anki links, history, and exports are all still here.
+              {t('lapsed')}
             </p>
           )}
-          <p>
-            Free keeps the whole learning loop: starter and imported texts, phrase-aware lookups,
-            saved vocabulary, practice, Anki sync, and portable data.
-          </p>
+          <p>{t('freeIntro')}</p>
           <p className="text-xs">
-            Library allowance: {limitLabel(entitlements.limits.maxCollections, '10')} collections,{' '}
-            {limitLabel(entitlements.limits.maxLessons, '200')} lessons, and{' '}
-            {limitLabel(entitlements.limits.journalWordsPerMonth, '1,000')} journal words each
-            month. Existing data is never deleted when a paid plan ends.
+            {t('libraryAllowance', {
+              collections: limitLabel(entitlements.limits.maxCollections, '10'),
+              lessons: limitLabel(entitlements.limits.maxLessons, '200'),
+              words: limitLabel(entitlements.limits.journalWordsPerMonth, '1,000'),
+            })}
           </p>
-          <p className="text-xs">
-            Generous fair-use safeguards apply to unusually large individual texts and bulk
-            saved-data growth. They do not remove existing learner data or block exports.
-          </p>
+          <p className="text-xs">{t('fairUse')}</p>
           {entitlements.byok ? (
-            <p className="text-xs">
-              Your own AI key is active, so translations and rich AI actions use your provider
-              instead of Readfox&apos;s managed allowance. Free library and journal limits still
-              apply, and audio stays on your browser voice.
-            </p>
+            <p className="text-xs">{t('byokActive')}</p>
           ) : (
             <p className="text-xs">
-              Managed allowance: {limitLabel(entitlements.limits.wordGlossesPerMonth, '1,000')}{' '}
-              dictionary-miss glosses each month,{' '}
-              {limitLabel(entitlements.limits.phraseTranslationsPerDay, '10')} simple phrases and{' '}
-              {limitLabel(entitlements.limits.contextTranslationsPerDay, '10')} in-context
-              translations each day. On-device dictionary lookups and browser voices remain free.
+              {t('managedAllowance', {
+                glosses: limitLabel(entitlements.limits.wordGlossesPerMonth, '1,000'),
+                phrases: limitLabel(entitlements.limits.phraseTranslationsPerDay, '10'),
+                context: limitLabel(entitlements.limits.contextTranslationsPerDay, '10'),
+              })}
             </p>
           )}
           <div className="flex flex-wrap items-center gap-3 pt-1">
             <Button type="button" onClick={() => (window.location.href = '/subscribe')}>
-              Compare paid plans
+              {t('comparePlans')}
             </Button>
             <a href="#byok" className="text-sm font-medium text-primary hover:underline">
-              Or bring your own AI key
+              {t('bringKey')}
             </a>
             {billing?.management?.customerPortal && (
               <Button type="button" variant="ghost" onClick={openPortal} disabled={openingPortal}>
-                {openingPortal ? 'Opening Paddle…' : 'Billing history'}
+                {openingPortal ? t('openingPaddle') : t('billingHistory')}
               </Button>
             )}
           </div>
@@ -272,40 +255,35 @@ export default function CloudPlanSettings() {
 
       {plan && plan !== 'free' && (
         <div className="mt-4 space-y-4 text-sm text-muted-foreground">
-          <p>
-            Your plan includes larger managed AI allowances and managed voices. Browser voices and
-            data export remain available as fallbacks.
-          </p>
+          <p>{t('paidIntro')}</p>
 
           {pendingTarget && (
             <p className="rounded-lg border border-border bg-[var(--primary-soft)] p-3 text-foreground">
-              Paddle accepted your change to {priceLabel(pendingTarget)}. This page will update as
-              soon as the signed webhook arrives.
+              {t('pendingAccepted', { price: priceLabel(pendingTarget) })}
             </p>
           )}
 
           <div className="flex flex-wrap items-center gap-3">
             {billing?.management?.customerPortal && (
               <Button type="button" onClick={openPortal} disabled={openingPortal}>
-                {openingPortal ? 'Opening Paddle…' : 'Manage billing'}
+                {openingPortal ? t('openingPaddle') : t('manageBilling')}
               </Button>
             )}
-            <span className="text-xs">
-              Paddle handles payment methods, invoices, and cancellation securely.
-            </span>
+            <span className="text-xs">{t('paddleHandles')}</span>
           </div>
 
           {currentSubscription?.canChange && changes.length > 0 && !pendingTarget && (
             <div className="space-y-3 rounded-lg border border-border p-4">
               <div>
-                <h3 className="font-medium text-foreground">Change plan</h3>
+                <h3 className="font-medium text-foreground">{t('changePlan')}</h3>
                 {/* One expression, not interleaved text and braces: JSX drops the
                     space between an expression and the text that follows it on the
                     next line, which rendered "monthlybilling". */}
                 <p className="mt-1 text-xs" data-testid="billing-change-intro">
-                  {`You are on ${PLAN_LABELS[currentSubscription.plan]} with ` +
-                    `${cycleLabel(currentSubscription.cycle)} billing. Select a different plan ` +
-                    `below. Review Paddle's tax and proration calculation before you confirm.`}
+                  {t('changeIntro', {
+                    plan: planLabel(currentSubscription.plan),
+                    cycle: cycleLabel(currentSubscription.cycle),
+                  })}
                 </p>
               </div>
               <div className="flex flex-col gap-2 sm:flex-row">
@@ -317,9 +295,9 @@ export default function CloudPlanSettings() {
                   }}
                   className="min-w-0 flex-1 rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground"
                   data-testid="billing-change-price"
-                  aria-label="Choose a new plan"
+                  aria-label={t('choosePlanAria')}
                 >
-                  <option value="">Choose a new plan…</option>
+                  <option value="">{t('choosePlanOption')}</option>
                   {changes.map((price) => (
                     <option key={price.id} value={price.id}>
                       {priceLabel(price)}
@@ -333,7 +311,7 @@ export default function CloudPlanSettings() {
                   disabled={!effectiveSelectedPriceId || previewing}
                   data-testid="billing-change-review"
                 >
-                  {previewing ? 'Calculating…' : 'Review change'}
+                  {previewing ? t('calculating') : t('reviewChange')}
                 </Button>
               </div>
 
@@ -343,25 +321,25 @@ export default function CloudPlanSettings() {
                   data-testid="billing-change-preview"
                 >
                   <p className="font-medium text-foreground">
-                    Change to {priceLabel(activePreview.target)}
+                    {t('changeTo', { price: priceLabel(activePreview.target) })}
                   </p>
                   <p className="text-xs">
                     {activePreview.prorationBillingMode === 'prorated_immediately'
-                      ? 'The plan changes immediately and Paddle applies the prorated charge or credit now.'
-                      : 'The plan changes immediately and Paddle applies the prorated adjustment to your next invoice.'}
+                      ? t('prorationImmediate')
+                      : t('prorationNextInvoice')}
                   </p>
                   <dl className="grid gap-1 text-xs sm:grid-cols-2">
-                    <dt>Due now</dt>
+                    <dt>{t('dueNow')}</dt>
                     <dd className="font-medium text-foreground sm:text-right">
-                      {formatMoney(activePreview.immediateCharge) ?? 'No immediate charge'}
+                      {formatMoney(activePreview.immediateCharge, locale) ?? t('noImmediateCharge')}
                     </dd>
-                    <dt>Next invoice</dt>
+                    <dt>{t('nextInvoice')}</dt>
                     <dd className="font-medium text-foreground sm:text-right">
-                      {formatMoney(activePreview.nextCharge) ?? 'Calculated at renewal'}
+                      {formatMoney(activePreview.nextCharge, locale) ?? t('calculatedAtRenewal')}
                     </dd>
-                    <dt>Regular renewal</dt>
+                    <dt>{t('regularRenewal')}</dt>
                     <dd className="font-medium text-foreground sm:text-right">
-                      {formatMoney(activePreview.recurringCharge) ?? 'Unavailable'}
+                      {formatMoney(activePreview.recurringCharge, locale) ?? t('unavailable')}
                     </dd>
                   </dl>
                   <div className="flex flex-wrap gap-2">
@@ -371,10 +349,10 @@ export default function CloudPlanSettings() {
                       disabled={applying}
                       data-testid="billing-change-confirm"
                     >
-                      {applying ? 'Applying…' : 'Confirm with Paddle'}
+                      {applying ? t('applying') : t('confirmPaddle')}
                     </Button>
                     <Button type="button" variant="ghost" onClick={() => setPreview(null)}>
-                      Cancel
+                      {t('cancel')}
                     </Button>
                   </div>
                 </div>
@@ -383,10 +361,7 @@ export default function CloudPlanSettings() {
           )}
 
           {currentSubscription && !currentSubscription.canChange && (
-            <p className="text-xs">
-              Plan changes are unavailable while Paddle is processing this subscription. Use billing
-              management to update your payment method or review its status.
-            </p>
+            <p className="text-xs">{t('changesUnavailable')}</p>
           )}
         </div>
       )}

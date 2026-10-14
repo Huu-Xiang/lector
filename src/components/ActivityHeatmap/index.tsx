@@ -1,9 +1,9 @@
 'use client';
 
 import { useMemo } from 'react';
+import { useFormatter, useLocale, useTranslations } from 'next-intl';
 import { useIsDark } from '@/utils/hooks';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { DAYS_OF_WEEK } from './constants';
 import { darkColorScheme, lightColorScheme } from './theme';
 import { type ActivityHeatmapProps, type ActivityParts, type HeatmapCell } from './types';
 import { buildHeatmapGrid, getColor, localEndDate } from './utils';
@@ -12,28 +12,35 @@ import { buildHeatmapGrid, getColor, localEndDate } from './utils';
 // gets a colour dot in the tooltip; `suffix` distinguishes reading (minutes).
 const ACTIVITY_TYPES: {
   key: keyof ActivityParts;
-  label: string;
+  label: 'lookups' | 'cloze' | 'reading' | 'anki';
   color: string;
-  suffix?: string;
+  minutes?: boolean;
 }[] = [
-  { key: 'dictionaryLookups', label: 'Lookups', color: '#2f8a76' },
-  { key: 'clozePracticed', label: 'Cloze', color: '#c0744f' },
-  { key: 'minutesRead', label: 'Reading', color: '#cf9a3d', suffix: ' min' },
-  { key: 'ankiReviews', label: 'Anki', color: '#8a9a5b' },
+  { key: 'dictionaryLookups', label: 'lookups', color: '#2f8a76' },
+  { key: 'clozePracticed', label: 'cloze', color: '#c0744f' },
+  { key: 'minutesRead', label: 'reading', color: '#cf9a3d', minutes: true },
+  { key: 'ankiReviews', label: 'anki', color: '#8a9a5b' },
 ];
 
-// "Sat, 14 Jun 2026" — parse the parts so there's no UTC day-shift.
-function formatFullDate(dateStr: string): string {
-  const [y, m, d] = dateStr.split('-').map(Number);
-  return new Date(y, m - 1, d).toLocaleDateString('en-US', {
+function DayCell({
+  day,
+  unit,
+  color,
+}: {
+  day: HeatmapCell;
+  unit: 'actions' | 'lookups';
+  color: string;
+}) {
+  const t = useTranslations('stats.heatmap');
+  const format = useFormatter();
+  // Parse the parts so there's no UTC day-shift.
+  const [y, m, d] = day.date.split('-').map(Number);
+  const fullDate = format.dateTime(new Date(y, m - 1, d), {
     weekday: 'short',
     month: 'short',
     day: 'numeric',
     year: 'numeric',
   });
-}
-
-function DayCell({ day, unit, color }: { day: HeatmapCell; unit: string; color: string }) {
   const rows = day.parts
     ? ACTIVITY_TYPES.map((t) => ({ ...t, value: day.parts![t.key] })).filter((r) => r.value > 0)
     : [];
@@ -53,7 +60,7 @@ function DayCell({ day, unit, color }: { day: HeatmapCell; unit: string; color: 
         sideOffset={6}
         className="min-w-[172px] flex-col items-stretch gap-1.5 px-3 py-2"
       >
-        <div className="font-medium">{formatFullDate(day.date)}</div>
+        <div className="font-medium">{fullDate}</div>
         {day.parts ? (
           rows.length > 0 ? (
             <div className="flex flex-col gap-1">
@@ -61,22 +68,21 @@ function DayCell({ day, unit, color }: { day: HeatmapCell; unit: string; color: 
                 <div key={r.key} className="flex items-center justify-between gap-4">
                   <span className="flex items-center gap-1.5">
                     <span className="size-2 rounded-full" style={{ backgroundColor: r.color }} />
-                    <span className="text-background/75">{r.label}</span>
+                    <span className="text-background/75">{t(`types.${r.label}`)}</span>
                   </span>
                   <span className="font-medium tabular-nums">
-                    {r.value.toLocaleString()}
-                    {r.suffix ?? ''}
+                    {r.minutes
+                      ? t('minutes', { count: format.number(r.value) })
+                      : format.number(r.value)}
                   </span>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="text-background/70">No activity</div>
+            <div className="text-background/70">{t('noActivity')}</div>
           )
         ) : (
-          <div className="text-background/75">
-            {day.count.toLocaleString()} {unit}
-          </div>
+          <div className="text-background/75">{t(`count.${unit}`, { count: day.count })}</div>
         )}
       </TooltipContent>
     </Tooltip>
@@ -89,8 +95,20 @@ export default function ActivityHeatmap({
   endDate,
   colorScheme: colorSchemeProp,
 }: ActivityHeatmapProps) {
+  const t = useTranslations('stats.heatmap');
+  const format = useFormatter();
+  const locale = useLocale();
   const isDark = useIsDark();
   const colorScheme = colorSchemeProp || (isDark ? darkColorScheme : lightColorScheme);
+  const dayNames = useMemo(() => {
+    const fmt = new Intl.DateTimeFormat(locale, { weekday: 'short', timeZone: 'UTC' });
+    // 2024-01-07 is a Sunday.
+    return Array.from({ length: 7 }, (_, i) => fmt.format(new Date(Date.UTC(2024, 0, 7 + i))));
+  }, [locale]);
+  const monthNames = useMemo(() => {
+    const fmt = new Intl.DateTimeFormat(locale, { month: 'short', timeZone: 'UTC' });
+    return Array.from({ length: 12 }, (_, i) => fmt.format(new Date(Date.UTC(2024, i, 15))));
+  }, [locale]);
   const { weeks, maxCount, monthLabels, totalActivity, activeDays } = useMemo(() => {
     // Color scaling and the headline totals are date-agnostic — just the data.
     const maxCount = Math.max(1, ...data.map((d) => d.count));
@@ -99,18 +117,18 @@ export default function ActivityHeatmap({
 
     // The grid ends on the caller's time-zone-aware "today" (matching the data's
     // date keys), falling back to this device's local date — never UTC (#192).
-    const { weeks, monthLabels } = buildHeatmapGrid(data, endDate ?? localEndDate());
+    const { weeks, monthLabels } = buildHeatmapGrid(data, endDate ?? localEndDate(), monthNames);
 
     return { weeks, maxCount, monthLabels, totalActivity, activeDays };
-  }, [data, endDate]);
+  }, [data, endDate, monthNames]);
 
   return (
     <TooltipProvider delay={120} closeDelay={0}>
       <div data-testid="activity-heatmap" className="panel p-6">
         <div className="mb-4 flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-foreground">Activity</h3>
+          <h3 className="text-lg font-semibold text-foreground">{t('title')}</h3>
           <div data-testid="activity-heatmap-total" className="text-sm text-muted-foreground">
-            {totalActivity.toLocaleString()} {unit} in the last year
+            {t(`total.${unit}`, { count: totalActivity })}
           </div>
         </div>
 
@@ -133,9 +151,9 @@ export default function ActivityHeatmap({
         <div className="flex">
           {/* Day of week labels */}
           <div className="mr-2 flex flex-col text-xs text-muted-foreground">
-            {DAYS_OF_WEEK.map((day, i) => (
+            {dayNames.map((day, i) => (
               <div
-                key={day}
+                key={i}
                 className="flex h-[12px] items-center"
                 style={{ visibility: i % 2 === 1 ? 'visible' : 'hidden' }}
               >
@@ -168,7 +186,7 @@ export default function ActivityHeatmap({
 
         {/* Legend */}
         <div className="mt-4 flex items-center justify-end gap-2 text-xs text-muted-foreground">
-          <span>Less</span>
+          <span>{t('less')}</span>
           <div className="flex gap-[2px]">
             <div
               className="h-[12px] w-[12px] rounded-sm"
@@ -191,19 +209,19 @@ export default function ActivityHeatmap({
               style={{ backgroundColor: colorScheme.level4 }}
             />
           </div>
-          <span>More</span>
+          <span>{t('more')}</span>
         </div>
 
         {/* Stats row */}
         <div className="mt-4 flex gap-6 border-t border-border pt-4">
           <div className="text-sm">
-            <span className="text-muted-foreground">Active days: </span>
+            <span className="text-muted-foreground">{t('activeDays')} </span>
             <span className="font-medium text-foreground">{activeDays}</span>
           </div>
           <div className="text-sm">
-            <span className="text-muted-foreground">Avg per active day: </span>
+            <span className="text-muted-foreground">{t('avgPerActiveDay')} </span>
             <span className="font-medium text-foreground">
-              {activeDays > 0 ? Math.round(totalActivity / activeDays).toLocaleString() : 0}
+              {activeDays > 0 ? format.number(Math.round(totalActivity / activeDays)) : 0}
             </span>
           </div>
         </div>

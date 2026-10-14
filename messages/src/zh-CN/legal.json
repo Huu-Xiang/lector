@@ -1,0 +1,100 @@
+{
+  "legalPages": {
+    "notice": "本文档以英文版本为准。提供此译文仅为方便阅读。",
+    "privacy": {
+      "metaTitle": "隐私 – Readfox",
+      "title": "隐私政策",
+      "lastUpdated": "最后更新：{date}",
+      "intro": "Readfox 是一个由个人独立运营的小型服务。本页如实说明我们存储哪些数据、还有谁会接触你的数据，以及我们能看到和看不到什么。",
+      "store": {
+        "heading": "我们存储什么",
+        "items": {
+          "account": "你的邮箱地址、可选的姓名，以及加盐哈希后的密码。",
+          "text": "从你导入的书籍和文章中提取的<strong>文本</strong>（标题和章节）。我们不保留原始的 EPUB 文件。",
+          "learning": "你的词汇、阅读进度、练习记录、日记和设置。",
+          "aiKey": "如果你添加了自己的 AI 密钥，它会被加密存储（AES-256-GCM），并且绝不会回传到你的浏览器。",
+          "session": "用于保持登录状态的会话 Cookie，以及保留时间很短的服务器日志（例如 IP 地址和请求错误），用于保障服务安全、正常运行。"
+        }
+      },
+      "others": {
+        "heading": "还有谁参与其中",
+        "items": {
+          "cloudflare": "<strong>Cloudflare</strong> – 提供 DNS、注册时的 Turnstile 机器人验证，以及用于备份的 R2 存储。",
+          "resend": "<strong>Resend</strong> – 发送验证邮件和重置密码邮件。",
+          "aiProvider": "<strong>你的 AI 服务商（OpenRouter 或 Anthropic）</strong> – 当你使用翻译、解释或聊天功能时，你选中的文本及部分上下文会通过<em>你自己的</em>密钥发送给该服务商。该数据适用其隐私条款，相关用量由你承担费用。"
+        },
+        "noTrackers": "我们不使用广告或分析类追踪器，也不出售你的数据。"
+      },
+      "operator": {
+        "heading": "运营者能看到和看不到什么",
+        "dashboard": "管理后台只显示账户层面的数字（注册日期、课文和单词数量、已用存储空间）。它没有任何会显示你书籍文本的页面，也没有“以用户身份查看”或按用户导出的功能。",
+        "access": "请注意，运营者仍然拥有服务器及其数据库的技术访问权限，因此我们不能承诺在技术上不可能查看。我们不会查看你的内容。如果你寻求支持并向我们发送导出文件，我们只会用它来解决你的问题，之后会将其删除。请不要上传你不希望服务器处理的材料。"
+      },
+      "backups": {
+        "heading": "备份",
+        "body": "数据库会持续复制到 Cloudflare R2，R2 会对静态数据加密。每日快照还会使用运营者离线保管的密钥另行加密，并保留 30 天。"
+      },
+      "controls": {
+        "heading": "你的控制权",
+        "items": {
+          "export": "<strong>导出：</strong>设置 → 学习数据 → 导出全部学习数据，会下载你存储的所有内容。",
+          "delete": "<strong>删除：</strong>设置 → 删除账户，会将你的账户和数据从线上服务中移除。备份中的副本会随每日快照过期而消失（最长 30 天）。",
+          "aiKey": "你可以随时在设置中移除你的 AI 密钥。"
+        }
+      },
+      "children": {
+        "heading": "儿童",
+        "body": "Readfox 不面向 13 岁以下的儿童，我们也不会有意收集他们的数据。"
+      },
+      "contact": {
+        "heading": "变更与联系",
+        "body": "如果本政策发生重大变更，我们会更新上方的日期。有关你的数据的问题或请求，请联系：<mail>privacy@readfox.app</mail>。"
+      }
+    },
+    "terms": {
+      "metaTitle": "条款 – Readfox",
+      "title": "使用条款",
+      "lastUpdated": "最后更新：{date}",
+      "intro": "创建账户或使用 Readfox，即表示你同意这些条款。Readfox 由个人以业余规模运营。",
+      "content": {
+        "heading": "你的内容",
+        "body": "你对自己导入的内容保留所有权。请仅导入你有权用于个人学习的文本。你需对自己上传的内容负责；对于侵犯他人权利或滥用本服务的内容或账户，我们可能会删除内容或暂停账户。"
+      },
+      "limits": {
+        "heading": "限制",
+        "body": "每个账户最多可存储 100 MB 的已导入课文文本。不提供音频和播客导入。AI 功能使用你自己提供的密钥；使用该密钥产生的费用由你承担。"
+      },
+      "acceptableUse": {
+        "heading": "可接受的使用方式",
+        "body": "请勿攻击、使本服务过载或对其进行探测，请勿批量创建账户、共享你的账户，或利用本服务从事违法行为。"
+      },
+      "warranty": {
+        "heading": "不作保证",
+        "body": "本服务按“现状”提供，不保证可用性，也不保证适用于任何特定用途。翻译由 AI 模型生成，可能有误。我们会进行备份，但你应定期导出自己的数据。在法律允许的范围内，对于数据丢失或间接损失，我们不承担责任。"
+      },
+      "termination": {
+        "heading": "变更与终止",
+        "body": "我们可能会更改或终止本服务，并会尽量提前通知。你可以随时删除自己的账户。"
+      },
+      "openSource": {
+        "heading": "开源",
+        "body": "本软件采用 GNU AGPL-3.0 许可。源代码请见“关于”页面。",
+        "contact": "联系方式：<mail>privacy@readfox.app</mail>"
+      }
+    },
+    "about": {
+      "metaTitle": "关于 – Readfox",
+      "title": "关于 Readfox",
+      "intro": "Readfox 让你用所学的语言阅读真实的书籍和文章，边读边翻译单词和短语，并把读到的内容转化为间隔重复练习。",
+      "freeSoftware": {
+        "heading": "自由软件",
+        "license": "Readfox 是自由软件，采用 <license>GNU Affero 通用公共许可证 v3.0</license>。它基于 heuwels 及其贡献者开发的 <lector>Lector</lector>，并包含我们的修改。",
+        "source": "本站所运行版本的完整源代码可在此获取：<source>{url}</source>。"
+      },
+      "dataSources": {
+        "heading": "数据来源",
+        "body": "句库来自 Tatoeba（CC BY 2.0 FR），词典来自仓库 README 中列出的来源，各自适用其自身的许可。"
+      }
+    }
+  }
+}

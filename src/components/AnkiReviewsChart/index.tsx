@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useFormatter, useLocale, useTranslations } from 'next-intl';
 import { Sparkles } from 'lucide-react';
 import {
   Area,
@@ -49,9 +50,12 @@ const PREVIEW_DATA: AnkiReviewPoint[] = Array.from({ length: 90 }, (_, i) => ({
 }));
 
 function ReviewsAreaChart({ data, height = 240 }: { data: AnkiReviewPoint[]; height?: number }) {
+  const t = useTranslations('stats.anki');
+  const format = useFormatter();
+  const locale = useLocale();
   const isDark = useIsDark();
   const theme = isDark ? darkChartTheme : lightChartTheme;
-  const formatted = data.map((d) => ({ ...d, displayDate: formatDisplayDate(d.date) }));
+  const formatted = data.map((d) => ({ ...d, displayDate: formatDisplayDate(d.date, locale) }));
 
   return (
     <ResponsiveContainer width="100%" height={height}>
@@ -88,7 +92,7 @@ function ReviewsAreaChart({ data, height = 240 }: { data: AnkiReviewPoint[]; hei
             fontSize: 12,
           }}
           formatter={(value: number | undefined) =>
-            [(value ?? 0).toLocaleString(), 'Reviews'] as [string, string]
+            [format.number(value ?? 0), t('reviews')] as [string, string]
           }
         />
         <Area
@@ -106,9 +110,10 @@ function ReviewsAreaChart({ data, height = 240 }: { data: AnkiReviewPoint[]; hei
 }
 
 function Stat({ value, label, className }: { value: number; label: string; className: string }) {
+  const format = useFormatter();
   return (
     <div className="text-center">
-      <div className={`text-2xl font-bold ${className}`}>{value.toLocaleString()}</div>
+      <div className={`text-2xl font-bold ${className}`}>{format.number(value)}</div>
       <div className="mt-1 text-sm text-muted-foreground">{label}</div>
     </div>
   );
@@ -131,35 +136,35 @@ export default function AnkiReviewsChart({
   data: AnkiReviewPoint[];
   hasData: boolean;
 }) {
+  const t = useTranslations('stats.anki');
   const total = data.reduce((sum, d) => sum + d.reviews, 0);
   const reviewDays = data.filter((d) => d.reviews > 0).length;
   const perDay = reviewDays > 0 ? Math.round(total / reviewDays) : 0;
 
   return (
-    <div
-      data-testid="anki-reviews-card"
-      className="panel p-6"
-    >
+    <div data-testid="anki-reviews-card" className="panel p-6">
       <div className="mb-4 flex items-center justify-between gap-4">
-        <h3 className="text-lg font-semibold text-foreground">Anki Reviews</h3>
-        {hasData && (
-          <span className="text-sm text-muted-foreground">Last 90 days</span>
-        )}
+        <h3 className="text-lg font-semibold text-foreground">{t('title')}</h3>
+        {hasData && <span className="text-sm text-muted-foreground">{t('last90')}</span>}
       </div>
 
       {hasData ? (
         <div data-testid="anki-reviews-chart">
           <ReviewsAreaChart data={data} />
           <div className="mt-4 grid grid-cols-3 gap-4 border-t border-border pt-4">
-            <Stat value={total} label="Reviews" className="text-primary" />
-            <Stat value={reviewDays} label="Review days" className="text-[var(--gold-strong)]" />
-            <Stat value={perDay} label="Avg / review day" className="text-clay" />
+            <Stat value={total} label={t('reviews')} className="text-primary" />
+            <Stat
+              value={reviewDays}
+              label={t('reviewDays')}
+              className="text-[var(--gold-strong)]"
+            />
+            <Stat value={perDay} label={t('avgPerDay')} className="text-clay" />
           </div>
         </div>
       ) : (
         <div data-testid="anki-reviews-preview" className="relative">
           {/* Blurred preview of the real chart — shows what connecting unlocks. */}
-          <div aria-hidden className="pointer-events-none select-none blur-[3px] opacity-50">
+          <div aria-hidden className="pointer-events-none opacity-50 blur-[3px] select-none">
             <ReviewsAreaChart data={PREVIEW_DATA} />
           </div>
           {/* Connect-your-Anki overlay */}
@@ -168,14 +173,10 @@ export default function AnkiReviewsChart({
               <div className="mb-2 flex justify-center text-primary">
                 <Sparkles className="h-6 w-6" />
               </div>
-              <p className="text-sm font-medium text-foreground">
-                Connect your Anki to see your review history
-              </p>
-              <p className="mt-1 text-xs text-muted-foreground">
-                Reviews sync automatically and count toward your streak.
-              </p>
+              <p className="text-sm font-medium text-foreground">{t('connectTitle')}</p>
+              <p className="mt-1 text-xs text-muted-foreground">{t('connectBody')}</p>
               <Link href="/settings" className={`${buttonVariants({ size: 'sm' })} mt-3`}>
-                Connect Anki
+                {t('connectButton')}
               </Link>
             </div>
           </div>

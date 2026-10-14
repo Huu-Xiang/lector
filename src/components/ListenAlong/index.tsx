@@ -15,6 +15,7 @@
 // onWordClick contract MarkdownReader uses, so vocab actions work identically.
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import {
   ArrowLeft,
   BookOpenText,
@@ -63,6 +64,7 @@ export default function ListenAlong({
   onWordClick,
   onExit,
 }: ListenAlongProps) {
+  const t = useTranslations('reader.listen');
   const activeLang = useActiveLanguage();
   // Tokenize by the LESSON's language, same rule as MarkdownReader.
   const pack =
@@ -220,15 +222,15 @@ export default function ListenAlong({
           className="flex items-center gap-2 rounded-lg px-3 py-2 text-muted-foreground transition-colors hover:bg-accent"
         >
           <ArrowLeft className="h-5 w-5" />
-          <span className="hidden sm:inline">Back</span>
+          <span className="hidden sm:inline">{t('back')}</span>
         </button>
         <h1 className="mx-2 flex-1 truncate text-center text-sm font-medium text-foreground sm:text-lg">
           {lesson.title}
         </h1>
         <button
           onClick={onExit}
-          title="Read as text"
-          aria-label="Read as text"
+          title={t('readAsText')}
+          aria-label={t('readAsText')}
           className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-accent"
         >
           <BookOpenText className="h-5 w-5" />
@@ -307,13 +309,16 @@ export default function ListenAlong({
                       : 'text-muted-foreground hover:text-foreground'
                   }`}
                 >
-                  {m}
+                  {t(`mode.${m}`)}
                 </button>
               ))}
             </div>
             <div className="text-xs text-muted-foreground" data-testid="listen-progress">
               {mode === 'shadow'
-                ? `Sentence ${Math.min(shadowIdx + 1, segments.length)} of ${segments.length}`
+                ? t('sentenceProgress', {
+                    current: Math.min(shadowIdx + 1, segments.length),
+                    total: segments.length,
+                  })
                 : `${formatClock(currentMs)} / ${formatClock(durationMs)}`}
             </div>
           </div>
@@ -326,7 +331,7 @@ export default function ListenAlong({
               max={Math.max(durationMs, 1)}
               value={Math.min(currentMs, durationMs)}
               onChange={(event) => handleSeek(Number(event.target.value))}
-              aria-label="Seek"
+              aria-label={t('seek')}
               data-testid="listen-scrubber"
               className="w-full accent-[var(--clay)]"
             />
@@ -336,7 +341,7 @@ export default function ListenAlong({
           <div className="flex items-center justify-center gap-1 sm:gap-2">
             <button
               onClick={() => setRate(nextPlaybackRate(rate))}
-              title="Playback speed"
+              title={t('playbackSpeed')}
               data-testid="listen-speed"
               className="flex h-11 min-w-11 items-center justify-center rounded-lg px-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
             >
@@ -344,8 +349,8 @@ export default function ListenAlong({
             </button>
             <button
               onClick={() => stepSentence(-1)}
-              title="Previous sentence"
-              aria-label="Previous sentence"
+              title={t('previousSentence')}
+              aria-label={t('previousSentence')}
               data-testid="listen-prev-sentence"
               className={transportButton}
             >
@@ -354,8 +359,8 @@ export default function ListenAlong({
             {mode === 'continuous' && (
               <button
                 onClick={() => skipSeconds(-SKIP_SECONDS)}
-                title={`Back ${SKIP_SECONDS} seconds`}
-                aria-label={`Back ${SKIP_SECONDS} seconds`}
+                title={t('backSeconds', { seconds: SKIP_SECONDS })}
+                aria-label={t('backSeconds', { seconds: SKIP_SECONDS })}
                 className={transportButton}
               >
                 <Rewind className="h-5 w-5" />
@@ -363,8 +368,8 @@ export default function ListenAlong({
             )}
             <button
               onClick={handlePlayPause}
-              title={isPlaying ? 'Pause' : 'Play'}
-              aria-label={isPlaying ? 'Pause' : 'Play'}
+              title={isPlaying ? t('pause') : t('play')}
+              aria-label={isPlaying ? t('pause') : t('play')}
               data-testid="listen-play-pause"
               className="flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground transition-colors hover:bg-primary/90"
             >
@@ -373,8 +378,8 @@ export default function ListenAlong({
             {mode === 'continuous' ? (
               <button
                 onClick={() => skipSeconds(SKIP_SECONDS)}
-                title={`Forward ${SKIP_SECONDS} seconds`}
-                aria-label={`Forward ${SKIP_SECONDS} seconds`}
+                title={t('forwardSeconds', { seconds: SKIP_SECONDS })}
+                aria-label={t('forwardSeconds', { seconds: SKIP_SECONDS })}
                 className={transportButton}
               >
                 <FastForward className="h-5 w-5" />
@@ -382,8 +387,8 @@ export default function ListenAlong({
             ) : (
               <button
                 onClick={() => playSegment(shadowIdx)}
-                title="Repeat sentence"
-                aria-label="Repeat sentence"
+                title={t('repeatSentence')}
+                aria-label={t('repeatSentence')}
                 data-testid="listen-repeat"
                 className={transportButton}
               >
@@ -392,8 +397,8 @@ export default function ListenAlong({
             )}
             <button
               onClick={() => stepSentence(1)}
-              title="Next sentence"
-              aria-label="Next sentence"
+              title={t('nextSentence')}
+              aria-label={t('nextSentence')}
               data-testid="listen-next-sentence"
               className={transportButton}
             >

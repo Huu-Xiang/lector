@@ -4,9 +4,12 @@ import { lectorMode } from '@/lib/api-base';
 import { getEntitlements } from '@/lib/data-layer';
 import { useActiveLanguage } from '@/utils/hooks';
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
 import { SETTINGS_KEYS } from '../../constants';
 
 export default function TTSSettings() {
+  const t = useTranslations('settings.tts');
+  const locale = useLocale();
   const [ttsSpeed, setTTSSpeed] = useState(1);
   const activeLang = useActiveLanguage();
   const [currentTTSMode, setCurrentTTSMode] = useState<TTSMode>('browser');
@@ -16,6 +19,11 @@ export default function TTSSettings() {
   // Languages without a Google voice (eo) always speak through the server's
   // self-hosted eSpeak NG engine — no engine choice, no plan gating, no
   // browser fallback (#307 §3.2c). The picker below absents itself.
+  const languageName =
+    locale === 'en'
+      ? activeLang.name
+      : (new Intl.DisplayNames([locale], { type: 'language' }).of(activeLang.code) ??
+        activeLang.name);
   const noAudio = activeLang.pronunciation.audio === 'none';
   const espeakOnly =
     activeLang.pronunciation.audio !== 'none' && !activeLang.pronunciation.audio.includes('google');
@@ -74,10 +82,9 @@ export default function TTSSettings() {
   if (noAudio) {
     return (
       <section className="panel space-y-4 p-6" data-testid="tts-settings">
-        <h2 className="text-lg font-semibold text-foreground">Text-to-Speech</h2>
+        <h2 className="text-lg font-semibold text-foreground">{t('title')}</h2>
         <p className="text-xs text-muted-foreground" data-testid="no-audio-note">
-          {activeLang.name} has no synthesized voice. Pronunciation is disputed, so Readfox stays
-          silent.
+          {t('noAudioNote', { language: languageName })}
         </p>
       </section>
     );
@@ -86,11 +93,11 @@ export default function TTSSettings() {
   return (
     <section className="panel space-y-4 p-6" data-testid="tts-settings">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-foreground">Text-to-Speech</h2>
+        <h2 className="text-lg font-semibold text-foreground">{t('title')}</h2>
         {espeakOnly ? (
           <div className="flex items-center gap-2">
             <span className="inline-block h-2 w-2 rounded-full bg-primary" />
-            <span className="text-sm text-muted-foreground">Synthesized voice</span>
+            <span className="text-sm text-muted-foreground">{t('synthesizedVoice')}</span>
           </div>
         ) : (
           googleTTSAvailable !== null && (
@@ -102,10 +109,10 @@ export default function TTSSettings() {
               />
               <span className="text-sm text-muted-foreground">
                 {managedTTSIncluded === false
-                  ? 'Browser voice · Free'
+                  ? t('browserVoiceFree')
                   : googleTTSAvailable
-                    ? 'Managed voice available'
-                    : 'Using browser voice'}
+                    ? t('managedAvailable')
+                    : t('usingBrowser')}
               </span>
             </div>
           )
@@ -114,17 +121,13 @@ export default function TTSSettings() {
 
       {espeakOnly ? (
         <p className="text-xs text-muted-foreground" data-testid="espeak-voice-note">
-          {activeLang.name} is spoken by eSpeak NG, a synthesized voice hosted by Readfox — the only
-          text-to-speech engine that exists for {activeLang.name}. It sounds robotic but pronounces
-          every word exactly, and it&apos;s included on every plan.
+          {t('espeakNote', { language: languageName })}
         </p>
       ) : (
         <div>
-          <label className="block text-sm font-medium text-foreground">Voice Engine</label>
+          <label className="block text-sm font-medium text-foreground">{t('voiceEngine')}</label>
           <p className="mb-2 text-xs text-muted-foreground">
-            {managedTTSIncluded === false
-              ? 'Browser speech stays free and works across reading, practice, and dictation. Cloud adds a consistent managed voice.'
-              : 'Managed voices offer more consistent pronunciation; your browser voice is always available.'}
+            {managedTTSIncluded === false ? t('engineHintFree') : t('engineHintPaid')}
           </p>
           <div className="flex gap-2">
             <Button
@@ -132,35 +135,36 @@ export default function TTSSettings() {
               onClick={() => handleTTSModeChanged('google')}
               variant={currentTTSMode === 'google' ? 'default' : 'secondary'}
             >
-              Managed voice
+              {t('managedVoice')}
             </Button>
             <Button
               onClick={() => handleTTSModeChanged('browser')}
               variant={currentTTSMode === 'browser' ? 'default' : 'secondary'}
             >
-              Browser Built-in
+              {t('browserBuiltIn')}
             </Button>
           </div>
           {managedTTSIncluded === false && (
             <p className="mt-3 rounded-lg border border-border bg-[var(--primary-soft)] p-3 text-xs text-foreground">
-              Want Readfox&apos;s managed voice?{' '}
-              <a href="/subscribe" className="font-semibold text-primary hover:underline">
-                Upgrade to Cloud
-              </a>
-              . Adding your own AI key does not change audio because voice usage is hosted by
-              Readfox.
+              {t.rich('upsell', {
+                link: (chunks) => (
+                  <a href="/subscribe" className="font-semibold text-primary hover:underline">
+                    {chunks}
+                  </a>
+                ),
+              })}
             </p>
           )}
         </div>
       )}
 
       <div>
-        <Button onClick={testSpeaking}>Test Voice</Button>
+        <Button onClick={testSpeaking}>{t('testVoice')}</Button>
       </div>
 
       <div>
         <label className="mb-2 flex items-center justify-between text-sm font-medium text-foreground">
-          <span>Speech Speed</span>
+          <span>{t('speechSpeed')}</span>
           <span className="font-mono text-muted-foreground">{ttsSpeed.toFixed(1)}x</span>
         </label>
         <input
@@ -173,9 +177,9 @@ export default function TTSSettings() {
           className="w-full accent-blue-500"
         />
         <div className="mt-1 flex justify-between text-xs text-muted-foreground">
-          <span>0.5x (Slow)</span>
-          <span>1.0x</span>
-          <span>1.5x (Fast)</span>
+          <span>{t('slow')}</span>
+          <span>{t('normal')}</span>
+          <span>{t('fast')}</span>
         </div>
       </div>
     </section>

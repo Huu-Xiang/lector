@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState, use } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { ArrowLeft, Pencil, Plus } from 'lucide-react';
 import LessonFormModal from '@/components/LessonFormModal';
@@ -44,6 +45,7 @@ import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 
 export default function CollectionPage({ params }: { params: Promise<{ id: string }> }) {
+  const t = useTranslations('library');
   const { id } = use(params);
   const router = useRouter();
   const [collection, setCollection] = useState<Collection | null>(null);
@@ -95,12 +97,12 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
   }, [id, router]);
 
   async function handleDelete() {
-    if (!confirm('Delete this collection and all its lessons?')) return;
+    if (!confirm(t('collection.deleteConfirm'))) return;
     try {
       await deleteCollection(id);
       router.push('/');
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Could not delete collection');
+      toast.error(error instanceof Error ? error.message : t('errors.deleteCollection'));
     }
   }
 
@@ -110,18 +112,18 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
       const updated = await getCollection(id);
       if (updated) setCollection(updated);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Could not update collection');
+      toast.error(error instanceof Error ? error.message : t('errors.updateCollection'));
       throw error;
     }
   }
 
   async function handleDeleteLesson(lessonId: string, title: string) {
-    if (!confirm(`Delete "${title}"?`)) return;
+    if (!confirm(t('collection.deleteLessonConfirm', { title }))) return;
     try {
       await deleteLesson(lessonId);
       setLessons((prev) => prev.filter((l) => l.id !== lessonId));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Could not delete lesson');
+      toast.error(error instanceof Error ? error.message : t('errors.deleteLesson'));
     }
   }
 
@@ -152,7 +154,7 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
       await retryTranscription(lessonId);
       await refreshLessons();
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Could not retry transcription');
+      toast.error(error instanceof Error ? error.message : t('errors.retryTranscription'));
     }
   }
 
@@ -174,7 +176,7 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
       await updateLesson(editingLessonId, data);
       await refreshLessons();
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Could not update lesson');
+      toast.error(error instanceof Error ? error.message : t('errors.updateLesson'));
       throw error;
     }
   }
@@ -193,14 +195,14 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
       next.map((l) => l.id),
     ).catch((error) => {
       setLessons(previous);
-      toast.error(error instanceof Error ? error.message : 'Could not reorder lessons');
+      toast.error(error instanceof Error ? error.message : t('errors.reorderLessons'));
     });
   }
 
   async function handleGroupChange(value: string) {
     try {
       if (value === '__new__') {
-        const name = prompt('New group name:');
+        const name = prompt(t('collection.newGroupPrompt'));
         if (!name?.trim()) return;
         const newId = await createGroup(name.trim());
         await updateCollection(id, { groupId: newId });
@@ -214,7 +216,7 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
         if (updatedCol) setCollection(updatedCol);
       }
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Could not update collection');
+      toast.error(error instanceof Error ? error.message : t('errors.updateCollection'));
     }
   }
 
@@ -227,7 +229,7 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
     return (
       <main className="mx-auto max-w-4xl px-4 py-8 sm:px-6">
         <div className="flex h-64 items-center justify-center">
-          <ReadingSweep label="Loading collection" />
+          <ReadingSweep label={t('collection.loading')} />
         </div>
       </main>
     );
@@ -246,7 +248,7 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
         className="mb-6 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
       >
         <ArrowLeft className="h-4 w-4" />
-        Library
+        {t('collection.back')}
       </Link>
 
       {/* Collection header */}
@@ -257,22 +259,21 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
             variant="ghost"
             size="icon-sm"
             onClick={() => setIsEditOpen(true)}
-            aria-label="Edit collection details"
+            aria-label={t('collection.editDetails')}
             data-testid="edit-collection"
           >
             <Pencil className="h-4 w-4" />
           </Button>
         </div>
         <p className="mt-1 text-muted-foreground">
-          {collection.author} &middot; {lessons.length}{' '}
-          {lessons.length === 1 ? 'lesson' : 'lessons'}
-          {completedCount > 0 && ` \u00b7 ${completedCount} completed`}
+          {collection.author} &middot; {t('collection.lessonsCount', { count: lessons.length })}
+          {completedCount > 0 && ` \u00b7 ${t('collection.completed', { count: completedCount })}`}
         </p>
 
         {/* Group selector */}
         <div className="mt-3 flex items-center gap-2">
           <label htmlFor="group-select" className="text-sm text-muted-foreground">
-            Group:
+            {t('collection.group')}
           </label>
           <select
             id="group-select"
@@ -281,13 +282,13 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
             className="rounded-lg border border-input bg-background px-3 py-1.5 text-sm text-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none"
             data-testid="group-select"
           >
-            <option value="">None</option>
+            <option value="">{t('collection.none')}</option>
             {groups.map((g) => (
               <option key={g.id} value={g.id}>
                 {g.name}
               </option>
             ))}
-            <option value="__new__">+ New group...</option>
+            <option value="__new__">{t('collection.newGroupOption')}</option>
           </select>
         </div>
 
@@ -297,14 +298,14 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
               href={`/read/${continueLesson.id}`}
               className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90"
             >
-              Continue Reading
+              {t('collection.continueReading')}
             </Link>
           )}
           <button
             onClick={handleDelete}
             className="rounded-lg px-4 py-2.5 text-sm text-destructive hover:bg-accent"
           >
-            Delete
+            {t('common.delete')}
           </button>
         </div>
       </div>
@@ -337,7 +338,7 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
           className="group flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-border bg-transparent px-5 py-4 text-sm font-medium text-muted-foreground transition-all hover:bg-accent hover:text-foreground"
         >
           <Plus className="h-4 w-4" />
-          Add lesson
+          {t('collection.addLesson')}
         </button>
       </div>
 

@@ -1,0 +1,285 @@
+{
+  "practice": {
+    "saveFailed": "无法保存你的答案，请检查网络后重试。",
+    "statsFailed": "答案已保存，但统计更新失败。",
+    "lookUp": "查询 {word}",
+    "title": {
+      "cloze": "完形填空练习",
+      "dictation": "听写练习"
+    },
+    "format": {
+      "cloze": "完形填空",
+      "clozeHint": "填空",
+      "dictation": "听写",
+      "dictationHint": "输入你听到的内容"
+    },
+    "setup": {
+      "reviewDue": "待复习（{count}）",
+      "due": "{count} 待复习",
+      "learnNew": "学习新内容",
+      "mastered": "已掌握 {mastered}/{total}",
+      "sentences": "句子数",
+      "mode": "模式",
+      "modeType": "输入",
+      "modeMc": "选择题",
+      "start": "开始",
+      "loading": "加载中..."
+    },
+    "collections": {
+      "top500": "前 500",
+      "top1000": "500-1000",
+      "top2000": "1000-2000"
+    },
+    "round": {
+      "guidedLabel": "新手引导课",
+      "guidedTitle": "你的第一个学习循环",
+      "back": "← 返回",
+      "threeWord": "3 词复习",
+      "starterWords": "入门课文中的词",
+      "loading": "正在加载句子..."
+    },
+    "question": {
+      "choose": "选择正确的词",
+      "fill": "填空",
+      "showTranslation": "显示翻译",
+      "translation": "翻译",
+      "keyChoose": "选择",
+      "keyListen": "朗读",
+      "multipleChoice": "选择题",
+      "multipleChoiceTitle": "本题改为选择题",
+      "hintNone": "提示（?）",
+      "hintLetters": "提示（{count} 个字母）",
+      "hintTitle": "显示下一个字母",
+      "submit": "提交",
+      "check": "检查",
+      "mastery": "掌握度："
+    },
+    "complete": {
+      "title": "本轮完成！",
+      "correct": "答对 {correct}/{total}",
+      "totalPoints": "累计 {points} 分",
+      "changeSettings": "更改设置",
+      "playAgain": "再来一轮"
+    },
+    "onboarding": {
+      "starterLesson": "入门课文",
+      "complete": {
+        "title": "第一个学习循环完成",
+        "description": "你把真实阅读中的词变成了练习。Readfox 会陪你不断重复这个循环。",
+        "encountered": "遇到",
+        "saved": "已保存",
+        "score": "得分",
+        "upNext": "接下来",
+        "tomorrow": "明天",
+        "comeBack": "明天再来读一篇短文并复习。",
+        "saving": "正在保存进度…",
+        "saveError": "本轮成绩已保存，但无法将引导标记为完成。",
+        "trySavingAgain": "重新保存",
+        "openLibrary": "打开书库",
+        "readNext": "阅读下一课"
+      },
+      "recovery": {
+        "title": "你的练习词还没准备好",
+        "missingWords": "小复习需要从入门课文中保存三个词。请回到课文保存缺少的词，然后再试一次。",
+        "loadFailed": "无法加载你保存的练习词。请回到入门课文，再试一次小复习。",
+        "backToLesson": "返回入门课文"
+      }
+    },
+    "wordTooltip": {
+      "tryAgain": "请重试。"
+    },
+    "blacklist": {
+      "hidden": "句子已隐藏",
+      "undo": "撤销",
+      "undoFailed": "撤销失败",
+      "hideFailed": "隐藏句子失败",
+      "title": "跳过并隐藏这个句子"
+    },
+    "empty": {
+      "reviewTitle": "没有需要复习的内容",
+      "newTitle": "没有新句子",
+      "reviewBody": "现在没有到期需要复习的句子。可以学习新句子，或稍后再来。",
+      "newBody": "这个合集里的句子你都见过了。换一个合集，或复习已学的句子。",
+      "back": "返回",
+      "learnNewInstead": "改为学习新内容"
+    },
+    "feedback": {
+      "correct": "正确！",
+      "incorrect": "不正确",
+      "listenAgain": "再听一遍",
+      "saveWordFailed": "无法将该词保存到词汇表",
+      "addToAnkiFailed": "添加到 Anki 失败",
+      "lookUp": "查询 {word}",
+      "answerRevealed": "已显示答案",
+      "perfect": "完美！",
+      "accuracy": "正确率 {percent}%（{correct}/{total} 个词）",
+      "pointsBonus": " · +{points} 分",
+      "nothingTyped": "（未输入）",
+      "youTyped": "你的输入",
+      "sentence": "句子",
+      "translation": "翻译",
+      "masteryLevel": "掌握程度",
+      "mastery": {
+        "level0": "新词",
+        "level25": "学习中",
+        "level50": "熟悉",
+        "level75": "快掌握了",
+        "level100": "已掌握"
+      },
+      "nextSentence": "下一句",
+      "nextSentenceHint": "下一句",
+      "pointsEarned": "+{points} 分",
+      "yourAnswer": "你的答案：",
+      "correctAnswer": "正确答案：",
+      "alreadyAdded": "已添加到 Anki",
+      "addToAnki": "添加到 Anki",
+      "adding": "添加中...",
+      "explain": "讲解",
+      "explaining": "讲解中...",
+      "explainFailed": "获取讲解失败"
+    },
+    "dictation": {
+      "prompt": "输入你听到的句子",
+      "replayAria": "重播音频",
+      "speed": "语速",
+      "listenAgain": "再听一遍（剩余 {count} 次）",
+      "noReplays": "没有可重播的次数了",
+      "placeholder": "输入你听到的内容…",
+      "surrenderTitle": "显示句子并继续（算作答错）",
+      "surrender": "放弃",
+      "check": "检查",
+      "mastery": "掌握度："
+    }
+  },
+  "vocab": {
+    "states": {
+      "new": "新词",
+      "level1": "1 级",
+      "level2": "2 级",
+      "level3": "3 级",
+      "level4": "4 级",
+      "known": "已掌握",
+      "ignored": "已忽略"
+    },
+    "stateTitle": {
+      "new": "新词 - 尚未学习",
+      "level1": "1 级 - 刚开始学",
+      "level2": "2 级 - 学习中",
+      "level3": "3 级 - 熟悉",
+      "level4": "4 级 - 快掌握了",
+      "known": "已掌握 - 完全学会",
+      "ignored": "已忽略 - 不参与学习"
+    },
+    "stats": {
+      "total": "词汇总数",
+      "learning": "学习中",
+      "known": "已掌握",
+      "ignored": "已忽略"
+    },
+    "list": {
+      "phrase": "短语",
+      "confirmBulkDelete": "确定要删除 {count} 个词汇条目吗？",
+      "searchPlaceholder": "搜索词、翻译或句子...",
+      "filter": {
+        "all": "全部",
+        "learning": "学习中"
+      },
+      "allCollections": "全部合集",
+      "exporting": "导出中...",
+      "exportToAnki": "导出到 Anki（{count}）",
+      "updating": "更新中...",
+      "markAsKnown": "标为已掌握（{count}）",
+      "deleting": "删除中...",
+      "delete": "删除（{count}）",
+      "syncing": "同步中...",
+      "syncWithAnki": "与 Anki 同步",
+      "ankiTip": {
+        "title": "Anki 设置",
+        "body": "需要帮助设置 Anki 时，点这里。"
+      },
+      "results": "共 {total} 条，显示 {filtered} 条",
+      "resultsSelected": "共 {total} 条，显示 {filtered} 条（已选 {selected} 条）",
+      "columns": {
+        "text": "词/短语",
+        "translation": "翻译",
+        "state": "状态",
+        "source": "来源",
+        "dateAdded": "添加日期",
+        "anki": "Anki"
+      },
+      "loading": "正在加载词汇...",
+      "emptyNoEntries": "还没有词汇条目。开始阅读来添加词吧！",
+      "emptyNoMatches": "没有符合筛选条件的条目。",
+      "exportDialog": {
+        "title": "导出到 Anki",
+        "description": "已选 {count} 个词。请选择卡片类型。",
+        "basic": "基础",
+        "basicDescription": "正反面卡片。正面是句子，背面是翻译。",
+        "cloze": "完形填空",
+        "clozeDescription": "句中隐藏该词，根据上下文回忆。",
+        "cancel": "取消",
+        "confirm": "导出 {count} 张卡片"
+      }
+    },
+    "pagination": {
+      "label": "词汇分页",
+      "rowsPerPage": "每页行数",
+      "range": "第 {from}–{to} 条，共 {total} 条",
+      "previous": "上一页",
+      "next": "下一页",
+      "page": "第 {current} 页，共 {total} 页"
+    },
+    "detail": {
+      "confirmDelete": "确定要删除这个词汇条目吗？",
+      "phrase": "短语",
+      "word": "单词",
+      "close": "关闭",
+      "translation": "翻译",
+      "contextSentence": "例句",
+      "learningState": "学习状态",
+      "added": "添加于：",
+      "reviewCount": "复习次数：",
+      "syncedToAnki": "已同步到 Anki",
+      "noteId": "（笔记 #{id}）",
+      "deleting": "删除中...",
+      "delete": "删除",
+      "cancel": "取消",
+      "saving": "保存中...",
+      "save": "保存",
+      "edit": "编辑"
+    },
+    "page": {
+      "title": "词汇",
+      "loadFailed": "加载词汇数据失败",
+      "entryUpdated": "条目已更新",
+      "updateFailed": "更新条目失败",
+      "entryDeleted": "条目已删除",
+      "deleteFailed": "删除条目失败",
+      "allSynced": "所选条目都已同步到 Anki。",
+      "cardType": {
+        "basic": "基础",
+        "cloze": "完形填空"
+      },
+      "queuedPartial": "已加入队列 {queued} 张卡片，{failed} 张失败（{error}）",
+      "queuedOk": "已将 {queued} 张{cardType}卡片加入队列，下次 Anki 同步时会出现",
+      "queueFailed": "无法将卡片加入 Anki 队列",
+      "notConnected": "Anki 未连接。请确认 Anki 正在运行并已启用 AnkiConnect。",
+      "exported": "已将 {count} 张{cardType}卡片导出到“{deck}”",
+      "exportPartial": "已导出 {count} 张{cardType}卡片，{failed} 张失败",
+      "markedKnown": "已将 {count} 个条目标为已掌握",
+      "markKnownFailed": "标为已掌握失败",
+      "synced": "已同步 {cards} 张 Anki 卡片，升级 {upgraded} 个。",
+      "syncedImported": "已同步 {cards} 张 Anki 卡片，升级 {upgraded} 个，从 Anki 导入 {imported} 个。",
+      "syncFailed": "与 Anki 同步失败",
+      "openAnkiSetup": "打开 Anki 设置",
+      "addonPill": "Anki 通过插件同步",
+      "ankiTip": {
+        "title": "Anki 设置",
+        "body": "需要帮助设置 Anki 时，点这里。"
+      },
+      "checking": "正在检查 Anki 连接...",
+      "connected": "Anki 已连接",
+      "disconnected": "Anki 未连接"
+    }
+  }
+}
