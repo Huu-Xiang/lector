@@ -1,0 +1,36 @@
+services:
+  lector:
+    image: ghcr.io/huu-xiang/lector:${LECTOR_VERSION}
+    restart: unless-stopped
+    mem_limit: 768m
+    env_file: .env
+    environment:
+      - NODE_ENV=production
+      - CLASSIFY_WORKER=0
+    volumes:
+      - ./data:/app/data
+      - lector-dict:/app/dict
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    mem_limit: 128m
+    ports: ["80:80", "443:443"]
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on: [lector]
+  litestream:
+    image: litestream/litestream:0.3.13
+    restart: unless-stopped
+    mem_limit: 128m
+    command: replicate
+    env_file: .env.backup
+    volumes:
+      - ./data:/data
+      - ./litestream.yml:/etc/litestream.yml:ro
+    depends_on: [lector]
+volumes:
+  lector-dict:
+  caddy-data:
+  caddy-config:

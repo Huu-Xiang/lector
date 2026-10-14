@@ -1,0 +1,25 @@
+readfox.app {
+    encode zstd gzip
+
+    # Visitors without a session cookie see the public landing page at "/".
+    @anonHome {
+        path /
+        not header_regexp Cookie better-auth\.session_token
+    }
+    redir @anonHome /landing 302
+    handle /api/import/* {
+        request_body {
+            max_size 60MB
+        }
+        reverse_proxy lector:3457
+    }
+    handle /api/* {
+        reverse_proxy lector:3457
+    }
+    handle /health {
+        reverse_proxy lector:3457
+    }
+    handle {
+        reverse_proxy lector:3000
+    }
+}
