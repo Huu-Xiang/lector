@@ -21,7 +21,8 @@
         "items": {
           "cloudflare": "<strong>Cloudflare</strong> – 提供 DNS、注册时的 Turnstile 机器人验证，以及用于备份的 R2 存储。",
           "resend": "<strong>Resend</strong> – 发送验证邮件和重置密码邮件。",
-          "aiProvider": "<strong>你的 AI 服务商（OpenRouter 或 Anthropic）</strong> – 当你使用翻译、解释或聊天功能时，你选中的文本及部分上下文会通过<em>你自己的</em>密钥发送给该服务商。该数据适用其隐私条款，相关用量由你承担费用。"
+          "aiProvider": "<strong>你的 AI 服务商（OpenRouter 或 Anthropic）</strong> – 如果你添加了自己的密钥并使用翻译、解释或聊天功能，你选中的文本及部分上下文会通过<em>你自己的</em>密钥发送给该服务商。该数据适用其隐私条款，相关用量由你承担费用。",
+          "aiBuiltIn": "<strong>阿里云（Model Studio）</strong> – 如果你使用 Readfox 内置的 AI 额度而不是自己的密钥，你选中的文本及部分上下文会通过我们的工作空间发送给阿里云的通义千问（Qwen）模型，用来生成翻译或解释。该数据适用阿里云的条款。内置额度每月有限。"
         },
         "noTrackers": "我们不使用广告或分析类追踪器，也不出售你的数据。"
       },
@@ -62,7 +63,7 @@
       },
       "limits": {
         "heading": "限制",
-        "body": "每个账户最多可存储 100 MB 的已导入课文文本。不提供音频和播客导入。AI 功能使用你自己提供的密钥；使用该密钥产生的费用由你承担。"
+        "body": "每个账户最多可存储 100 MB 的已导入课文文本。不提供音频和播客导入。AI 功能要么使用你自己提供的密钥（费用由你承担），要么使用 Readfox 内置的每月有限额度。"
       },
       "acceptableUse": {
         "heading": "可接受的使用方式",

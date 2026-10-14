@@ -152,7 +152,7 @@
       },
       "tap": {
         "title": "Tap a word, understand it",
-        "body": "Instant translations and explanations in context, powered by the AI key you choose."
+        "body": "Instant translations and explanations in context, from a built-in monthly allowance or from your own AI key."
       },
       "vocab": {
         "title": "Your vocabulary builds itself",
@@ -168,7 +168,7 @@
       }
     },
     "openTitle": "Open source, and your reading stays yours",
-    "openBody": "Readfox is free software (AGPL-3.0) based on Lector. AI features use your own OpenRouter or Anthropic key, so you control the cost. We do not run advertising or analytics trackers. Read the <privacy>privacy policy</privacy> or <source>browse the source code</source>."
+    "openBody": "Readfox is free software (AGPL-3.0) based on Lector. AI features include a limited monthly allowance, or you can add your own OpenRouter or Anthropic key and control the cost yourself. We do not run advertising or analytics trackers. Read the <privacy>privacy policy</privacy> or <source>browse the source code</source>."
   },
   "settings": {
     "nativeLanguage": {

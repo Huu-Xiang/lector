@@ -152,7 +152,7 @@
       },
       "tap": {
         "title": "点一下单词,马上看懂",
-        "body": "结合上下文的即时翻译和解释,由你选择的 AI 密钥提供支持。"
+        "body": "结合上下文的即时翻译和解释,由内置的每月额度或你自己的 AI 密钥提供。"
       },
       "vocab": {
         "title": "词汇自动积累",
@@ -168,7 +168,7 @@
       }
     },
     "openTitle": "开源,你的阅读内容属于你自己",
-    "openBody": "Readfox 是基于 Lector 的自由软件(AGPL-3.0)。AI 功能使用你自己的 OpenRouter 或 Anthropic 密钥,费用由你掌控。我们不投放广告,也不使用统计追踪。请阅读<privacy>隐私政策</privacy>,或<source>查看源代码</source>。"
+    "openBody": "Readfox 是基于 Lector 的自由软件(AGPL-3.0)。AI 功能包含每月有限的内置额度,你也可以添加自己的 OpenRouter 或 Anthropic 密钥,自己掌控费用。我们不投放广告,也不使用统计追踪。请阅读<privacy>隐私政策</privacy>,或<source>查看源代码</source>。"
   },
   "settings": {
     "nativeLanguage": {

@@ -152,7 +152,7 @@
       },
       "tap": {
         "title": "Tap a word, understand it",
-        "body": "Instant translations and explanations in context, powered by the AI key you choose."
+        "body": "Instant translations and explanations in context, from a built-in monthly allowance or from your own AI key."
       },
       "vocab": {
         "title": "Your vocabulary builds itself",
@@ -168,7 +168,7 @@
       }
     },
     "openTitle": "Open source, and your reading stays yours",
-    "openBody": "Readfox is free software (AGPL-3.0) based on Lector. AI features use your own OpenRouter or Anthropic key, so you control the cost. We do not run advertising or analytics trackers. Read the <privacy>privacy policy</privacy> or <source>browse the source code</source>."
+    "openBody": "Readfox is free software (AGPL-3.0) based on Lector. AI features include a limited monthly allowance, or you can add your own OpenRouter or Anthropic key and control the cost yourself. We do not run advertising or analytics trackers. Read the <privacy>privacy policy</privacy> or <source>browse the source code</source>."
   },
   "settings": {
     "nativeLanguage": {
@@ -823,7 +823,8 @@
         "items": {
           "cloudflare": "<strong>Cloudflare</strong> – DNS, the Turnstile bot check on sign-up, and R2 storage for backups.",
           "resend": "<strong>Resend</strong> – delivers the verification and password-reset emails.",
-          "aiProvider": "<strong>Your AI provider (OpenRouter or Anthropic)</strong> – when you use translation, explanations or chat, the text you select, with some surrounding context, is sent to the provider using <em>your</em> key. Their privacy terms apply to that data, and the usage is billed to you."
+          "aiProvider": "<strong>Your AI provider (OpenRouter or Anthropic)</strong> – if you add your own key and use translation, explanations or chat, the text you select, with some surrounding context, is sent to the provider using <em>your</em> key. Their privacy terms apply to that data, and the usage is billed to you.",
+          "aiBuiltIn": "<strong>Alibaba Cloud (Model Studio)</strong> – if you use Readfox's built-in AI allowance instead of your own key, the text you select, with some surrounding context, is sent to Alibaba Cloud's Qwen models through our workspace to produce the translation or explanation. Alibaba Cloud's terms apply to that data. The allowance is limited each month."
         },
         "noTrackers": "We do not run advertising or analytics trackers, and we do not sell your data."
       },
@@ -864,7 +865,7 @@
       },
       "limits": {
         "heading": "Limits",
-        "body": "Each account can store up to 100 MB of imported lesson text. Audio and podcast import are not offered. AI features work with a key you provide; the cost of using that key is yours."
+        "body": "Each account can store up to 100 MB of imported lesson text. Audio and podcast import are not offered. AI features use either a key you provide, whose cost is yours, or the limited monthly allowance that Readfox includes."
       },
       "acceptableUse": {
         "heading": "Acceptable use",

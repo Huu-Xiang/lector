@@ -9,7 +9,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const LAST_UPDATED = new Date(Date.UTC(2026, 9, 14));
 const STORE_ITEMS = ['account', 'text', 'learning', 'aiKey', 'session'] as const;
-const OTHERS_ITEMS = ['cloudflare', 'resend', 'aiProvider'] as const;
+const OTHERS_ITEMS = ['cloudflare', 'resend', 'aiBuiltIn', 'aiProvider'] as const;
 const CONTROLS_ITEMS = ['export', 'delete', 'aiKey'] as const;
 
 export default async function PrivacyPage() {
