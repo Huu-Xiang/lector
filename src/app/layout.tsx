@@ -27,6 +27,7 @@ const literata = Literata({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://readfox.app'),
   title: 'Readfox',
   description: 'Read real books in the language you are learning, with instant translations and spaced-repetition practice',
 };

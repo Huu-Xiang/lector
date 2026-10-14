@@ -106,6 +106,7 @@ test.describe.serial('TOTP two-factor lifecycle', () => {
     await page.goto(lastVerifyLink(EMAIL));
     await page.waitForURL('http://localhost:3456/**');
     await page.goto('/setup');
+    await page.getByTestId('setup-language-show-all').click();
     await page.getByTestId('setup-language-af').click();
     await page.getByTestId('skip-guided-onboarding').click();
     await page.waitForURL((url) => url.pathname === '/');

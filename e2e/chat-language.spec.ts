@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from '@playwright/test';
 import { apiUrl } from './api';
 
 // The widget must thread the active language (af in e2e, set by global-setup)
@@ -8,42 +8,54 @@ import { apiUrl } from './api';
 //   - GET on open must carry ?language= (the route filters messages on it)
 //   - POST send must carry `language` in the body
 //   - Clear must carry ?language= on the DELETE
-test.describe("Chat Widget — per-language wiring", () => {
+test.describe('Chat Widget — per-language wiring', () => {
   test.beforeEach(async ({ page }) => {
-    await page.request.delete(apiUrl("/api/chat?language=af"));
+    await page.request.delete(apiUrl('/api/chat?language=af'));
   });
 
   test.afterEach(async ({ page }) => {
-    await page.request.delete(apiUrl("/api/chat?language=af"));
+    await page.request.delete(apiUrl('/api/chat?language=af'));
   });
 
-  test("GET on open carries the active language", async ({ page }) => {
-    await page.goto("/");
-    await page.waitForLoadState("networkidle");
+  test('GET on open carries the active language', async ({ page }) => {
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
 
     const getReq = page.waitForRequest(
-      (req) => req.url().includes("/api/chat") && req.method() === "GET"
+      (req) => req.url().includes('/api/chat') && req.method() === 'GET',
     );
-    await page.getByTestId("chat-toggle").click();
+    await page.getByTestId('chat-toggle').click();
 
     const url = new URL((await getReq).url());
-    expect(url.searchParams.get("language")).toBe("af");
+    expect(url.searchParams.get('language')).toBe('af');
   });
 
-  test("POST send carries the language in the body", async ({ page }) => {
-    await page.goto("/");
-    await page.waitForLoadState("networkidle");
+  test('POST send carries the language in the body', async ({ page }) => {
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
 
     // Mock POST so no real LLM is required.
-    await page.route("**/api/chat", async (route, request) => {
-      if (request.method() === "POST") {
-        const body = JSON.parse(request.postData() || "{}");
+    await page.route('**/api/chat', async (route, request) => {
+      if (request.method() === 'POST') {
+        const body = JSON.parse(request.postData() || '{}');
         await route.fulfill({
           status: 200,
-          contentType: "application/json",
+          contentType: 'application/json',
           body: JSON.stringify({
-            userMessage: { id: "u1", role: "user", content: body.message, provider: null, createdAt: new Date().toISOString() },
-            assistantMessage: { id: "a1", role: "assistant", content: "ok", provider: "claude", createdAt: new Date().toISOString() },
+            userMessage: {
+              id: 'u1',
+              role: 'user',
+              content: body.message,
+              provider: null,
+              createdAt: new Date().toISOString(),
+            },
+            assistantMessage: {
+              id: 'a1',
+              role: 'assistant',
+              content: 'ok',
+              provider: 'claude',
+              createdAt: new Date().toISOString(),
+            },
           }),
         });
       } else {
@@ -51,32 +63,32 @@ test.describe("Chat Widget — per-language wiring", () => {
       }
     });
 
-    await page.getByTestId("chat-toggle").click();
+    await page.getByTestId('chat-toggle').click();
 
     const postReq = page.waitForRequest(
-      (req) => req.url().includes("/api/chat") && req.method() === "POST"
+      (req) => req.url().includes('/api/chat') && req.method() === 'POST',
     );
-    await page.getByTestId("chat-input").fill("hoe gaan dit?");
-    await page.getByTestId("chat-send").click();
+    await page.getByTestId('chat-input').fill('hoe gaan dit?');
+    await page.getByTestId('chat-send').click();
 
-    const body = JSON.parse((await postReq).postData() || "{}");
-    expect(body.message).toBe("hoe gaan dit?");
-    expect(body.language).toBe("af");
+    const body = JSON.parse((await postReq).postData() || '{}');
+    expect(body.message).toBe('hoe gaan dit?');
+    expect(body.language).toBe('af');
   });
 
-  test("clear carries the active language on the DELETE", async ({ page }) => {
-    await page.goto("/");
-    await page.waitForLoadState("networkidle");
+  test('clear carries the active language on the DELETE', async ({ page }) => {
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
 
-    await page.getByTestId("chat-toggle").click();
-    await expect(page.getByTestId("chat-panel")).toBeVisible();
+    await page.getByTestId('chat-toggle').click();
+    await expect(page.getByTestId('chat-panel')).toBeVisible();
 
     const delReq = page.waitForRequest(
-      (req) => req.url().includes("/api/chat") && req.method() === "DELETE"
+      (req) => req.url().includes('/api/chat') && req.method() === 'DELETE',
     );
-    await page.getByTestId("chat-clear").click();
+    await page.getByTestId('chat-clear').click();
 
     const url = new URL((await delReq).url());
-    expect(url.searchParams.get("language")).toBe("af");
+    expect(url.searchParams.get('language')).toBe('af');
   });
 });

@@ -22,11 +22,7 @@ interface AnkiCardStub {
   word: string;
 }
 
-async function seedVocabEntry(
-  page: Page,
-  text: string,
-  state: string,
-): Promise<string> {
+async function seedVocabEntry(page: Page, text: string, state: string): Promise<string> {
   const id = `e2e-sync-${text}-${Date.now().toString(36)}`;
   const res = await page.request.post(apiUrl('/api/vocab'), {
     data: {
@@ -88,19 +84,39 @@ async function mockAnkiConnect(page: Page, cardStubs: AnkiCardStub[]) {
 
     switch (body.action) {
       case 'version':
-        await route.fulfill({ status: 200, headers, body: JSON.stringify({ result: 6, error: null }) });
+        await route.fulfill({
+          status: 200,
+          headers,
+          body: JSON.stringify({ result: 6, error: null }),
+        });
         break;
       case 'deckNames':
-        await route.fulfill({ status: 200, headers, body: JSON.stringify({ result: ['Afrikaans', 'Afrikaans::Cloze'], error: null }) });
+        await route.fulfill({
+          status: 200,
+          headers,
+          body: JSON.stringify({ result: ['Afrikaans', 'Afrikaans::Cloze'], error: null }),
+        });
         break;
       case 'findCards':
-        await route.fulfill({ status: 200, headers, body: JSON.stringify({ result: cardIds, error: null }) });
+        await route.fulfill({
+          status: 200,
+          headers,
+          body: JSON.stringify({ result: cardIds, error: null }),
+        });
         break;
       case 'cardsInfo':
-        await route.fulfill({ status: 200, headers, body: JSON.stringify({ result: makeCardsInfoResult(cardStubs), error: null }) });
+        await route.fulfill({
+          status: 200,
+          headers,
+          body: JSON.stringify({ result: makeCardsInfoResult(cardStubs), error: null }),
+        });
         break;
       default:
-        await route.fulfill({ status: 200, headers, body: JSON.stringify({ result: null, error: null }) });
+        await route.fulfill({
+          status: 200,
+          headers,
+          body: JSON.stringify({ result: null, error: null }),
+        });
     }
   });
 }

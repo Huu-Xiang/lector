@@ -75,18 +75,24 @@ test.describe('Turkish language pack', () => {
   test('the live lookup API folds dotted/dotless i and unstacks suffixes', async ({ page }) => {
     // A capital İ folds to a plain i, with no combining dot left to miss on…
     const dotted = await (
-      await page.request.get(apiUrl(`/api/dictionary/lookup?word=${encodeURIComponent('İyi')}&language=tr`))
+      await page.request.get(
+        apiUrl(`/api/dictionary/lookup?word=${encodeURIComponent('İyi')}&language=tr`),
+      )
     ).json();
     expect(dotted.entry?.word).toBe('iyi');
 
     // …and a capital I folds to ı, which keeps the two letters apart: ılık
     // ("lukewarm") and ilik ("marrow") must stay separate entries.
     const dotless = await (
-      await page.request.get(apiUrl(`/api/dictionary/lookup?word=${encodeURIComponent('ILIK')}&language=tr`))
+      await page.request.get(
+        apiUrl(`/api/dictionary/lookup?word=${encodeURIComponent('ILIK')}&language=tr`),
+      )
     ).json();
     expect(dotless.entry?.word).toBe('ılık');
     const marrow = await (
-      await page.request.get(apiUrl(`/api/dictionary/lookup?word=${encodeURIComponent('İLİK')}&language=tr`))
+      await page.request.get(
+        apiUrl(`/api/dictionary/lookup?word=${encodeURIComponent('İLİK')}&language=tr`),
+      )
     ).json();
     expect(marrow.entry?.word).toBe('ilik');
 

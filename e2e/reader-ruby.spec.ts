@@ -132,9 +132,7 @@ test.describe('Reader ruby annotations (#289 4.4)', () => {
 
     // The reading is an annotation, so it must not be selectable — that is what
     // keeps it out of a copied selection.
-    const selectable = await first
-      .locator('rt')
-      .evaluate((el) => getComputedStyle(el).userSelect);
+    const selectable = await first.locator('rt').evaluate((el) => getComputedStyle(el).userSelect);
     expect(selectable).toBe('none');
 
     await page.screenshot({ path: 'tmp/reader-ruby.png' });
@@ -217,9 +215,7 @@ test.describe('Reader ruby annotations (#289 4.4)', () => {
 
     await expect(async () => {
       const vocab = await (await page.request.get(apiUrl('/api/vocab?language=zh'))).json();
-      const saved = (vocab.items ?? vocab).find(
-        (entry: { text: string }) => entry.text === '喜欢',
-      );
+      const saved = (vocab.items ?? vocab).find((entry: { text: string }) => entry.text === '喜欢');
       expect(saved).toBeTruthy();
       expect(saved.sentence).toBe(TEXT);
     }).toPass({ timeout: 10000 });

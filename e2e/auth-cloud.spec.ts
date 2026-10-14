@@ -158,6 +158,7 @@ test.describe.serial('cloud auth lifecycle', () => {
     // (#281) means the suite's seeded browser-scoped key no longer stands in
     // for it — complete onboarding once so SetupGuard lets /settings render.
     await page.goto('/setup');
+    await page.getByTestId('setup-language-show-all').click();
     await page.getByTestId('setup-language-af').click();
     await page.getByTestId('skip-guided-onboarding').click();
     await page.waitForURL((url) => url.pathname === '/');

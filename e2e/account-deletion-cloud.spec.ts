@@ -83,6 +83,7 @@ test.describe.serial('cloud account deletion', () => {
     // /settings is behind SetupGuard — complete onboarding once so it renders:
     // pick a language, then skip the guided first-loop walkthrough (#360).
     await page.goto('/setup');
+    await page.getByTestId('setup-language-show-all').click();
     await page.getByTestId('setup-language-af').click();
     await page.getByTestId('skip-guided-onboarding').click();
     await page.waitForURL((url) => url.pathname === '/');

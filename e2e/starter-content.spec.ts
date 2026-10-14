@@ -140,6 +140,7 @@ test.describe('starter content absent (#315 edge)', () => {
     await page.goto('/');
     await expect(page).toHaveURL(/\/setup/, { timeout: 15000 });
     await mockSetupSkipPersistence(page);
+    await page.getByTestId('setup-language-show-all').click();
     await page.getByTestId('setup-language-af').click();
     await page.getByTestId('skip-guided-onboarding').click();
     await expect(page).toHaveURL('/', { timeout: 15000 });

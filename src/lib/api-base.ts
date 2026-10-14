@@ -95,6 +95,7 @@ export const AUTH_ROUTES = [
   '/privacy',
   '/terms',
   '/about',
+  '/landing',
 ] as const;
 
 export function isAuthRoute(pathname: string): boolean {

@@ -17,9 +17,7 @@ async function getToFeedbackScreen(page: Page) {
   const input = page.locator('input[placeholder="..."]');
   await input.fill('wronganswer');
   await page.getByRole('button', { name: 'Check' }).click();
-  await expect(
-    page.getByRole('heading', { name: 'Incorrect' })
-  ).toBeVisible({ timeout: 5000 });
+  await expect(page.getByRole('heading', { name: 'Incorrect' })).toBeVisible({ timeout: 5000 });
 }
 
 test.describe('Explain Feature', () => {
@@ -27,14 +25,10 @@ test.describe('Explain Feature', () => {
     await startPracticeRound(page);
     await getToFeedbackScreen(page);
 
-    await expect(
-      page.getByRole('button', { name: 'Explain' })
-    ).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Explain' })).toBeVisible();
   });
 
-  test('should call /api/explain and display the explanation', async ({
-    page,
-  }) => {
+  test('should call /api/explain and display the explanation', async ({ page }) => {
     // Mock the explain API to avoid needing real Anthropic credentials
     await page.route('**/api/explain', async (route) => {
       await route.fulfill({
@@ -56,7 +50,7 @@ test.describe('Explain Feature', () => {
     // Should show loading state
     // Then show the explanation text
     await expect(
-      page.getByText('This is a test explanation of the Afrikaans sentence')
+      page.getByText('This is a test explanation of the Afrikaans sentence'),
     ).toBeVisible({ timeout: 10000 });
 
     // Button is disabled once the explanation has been fetched
@@ -79,8 +73,6 @@ test.describe('Explain Feature', () => {
     await explainBtn.click();
 
     // Should surface an error toast
-    await expect(
-      page.getByText('Failed to fetch explanation')
-    ).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText('Failed to fetch explanation')).toBeVisible({ timeout: 5000 });
   });
 });

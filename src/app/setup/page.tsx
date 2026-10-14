@@ -25,6 +25,10 @@ const languageCards: { code: LanguageCode; flag: string; native: string; name: s
     name: lang.name,
   }));
 
+// Shown up front; every other language sits behind "Show all languages" so the
+// preferences below stay on screen without scrolling past 30+ cards.
+const POPULAR_LANGUAGES: LanguageCode[] = ['es', 'fr', 'de', 'it', 'pt', 'ja', 'ko', 'zh', 'ru'];
+
 const levelOptions: Array<{ value: ApproximateLevel; label: string }> = [
   { value: 'new', label: 'Just starting' },
   { value: 'beginner', label: 'Beginner' },
@@ -50,6 +54,7 @@ export default function SetupPage() {
   const [interests, setInterests] = useState<LearnerInterest[]>([]);
   const [dailyMinutes, setDailyMinutes] = useState(10);
   const [error, setError] = useState<string | null>(null);
+  const [showAllLanguages, setShowAllLanguages] = useState(false);
 
   // A completed/skipped guide never reappears. An explicit visit while a guide
   // is in progress resumes its real starter lesson instead of beginning again.
@@ -128,6 +133,14 @@ export default function SetupPage() {
     }
   }
 
+  const expanded =
+    showAllLanguages ||
+    (selectedLanguage !== null && !POPULAR_LANGUAGES.includes(selectedLanguage));
+  const visibleLanguageCards = expanded
+    ? languageCards
+    : languageCards.filter((lang) => POPULAR_LANGUAGES.includes(lang.code));
+  const hiddenLanguageCount = languageCards.length - visibleLanguageCards.length;
+
   return (
     <main className="min-h-screen bg-background px-4 py-10 sm:py-16">
       <div className="mx-auto w-full max-w-3xl">
@@ -149,7 +162,7 @@ export default function SetupPage() {
             1. Choose a language
           </h2>
           <div className="grid gap-3 sm:grid-cols-3">
-            {languageCards.map((lang) => (
+            {visibleLanguageCards.map((lang) => (
               <button
                 key={lang.code}
                 type="button"
@@ -174,6 +187,18 @@ export default function SetupPage() {
               </button>
             ))}
           </div>
+          {hiddenLanguageCount > 0 && (
+            <div className="mt-3 text-center">
+              <button
+                type="button"
+                data-testid="setup-language-show-all"
+                onClick={() => setShowAllLanguages(true)}
+                className="text-sm font-medium text-primary hover:underline"
+              >
+                Show {hiddenLanguageCount} more languages
+              </button>
+            </div>
+          )}
         </section>
 
         <section

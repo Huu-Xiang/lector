@@ -15,7 +15,10 @@ const LESSON_TEXT = 'Die vrugte is baie lekker. Die pond is swaar.';
 const TEST_WORDS = ['vrug', 'vrugte', 'pond'];
 
 /** GET /api/vocab has no text filter — fetch all and match client-side. */
-async function vocabByText(page: Page, text: string): Promise<Array<{ id: string; text: string; state: string }>> {
+async function vocabByText(
+  page: Page,
+  text: string,
+): Promise<Array<{ id: string; text: string; state: string }>> {
   const res = await page.request.get(apiUrl('/api/vocab'));
   if (!res.ok()) return [];
   const all = (await res.json()) as Array<{ id: string; text: string; state: string }>;
@@ -78,7 +81,11 @@ test.describe('Nested dictionary definitions (reader)', () => {
     // from /translate/gloss as plain text rather than the structured endpoint.
     await page.route('**/api/translate/gloss', async (route) => {
       const body = JSON.parse(route.request().postData() || '{}');
-      await route.fulfill({ status: 200, contentType: 'text/plain', body: `[translated: ${body.word}]` });
+      await route.fulfill({
+        status: 200,
+        contentType: 'text/plain',
+        body: `[translated: ${body.word}]`,
+      });
     });
 
     // Remove leftovers from aborted runs
@@ -98,7 +105,9 @@ test.describe('Nested dictionary definitions (reader)', () => {
     await cleanupVocab(page, TEST_WORDS);
   });
 
-  test('clicking the word inside "plural of vrug" opens vrug and can mark it known', async ({ page }) => {
+  test('clicking the word inside "plural of vrug" opens vrug and can mark it known', async ({
+    page,
+  }) => {
     await readerWord(page, 'vrugte').click();
 
     const drawer = page.getByTestId('translation-drawer');
@@ -116,7 +125,9 @@ test.describe('Nested dictionary definitions (reader)', () => {
     await nested.click();
 
     // Drawer re-targets to the underlying word, served by the dict
-    await expect(drawer.getByRole('heading', { name: 'vrug', exact: true })).toBeVisible({ timeout: 5000 });
+    await expect(drawer.getByRole('heading', { name: 'vrug', exact: true })).toBeVisible({
+      timeout: 5000,
+    });
     await expect(drawer.getByText('A fruit.')).toBeVisible({ timeout: 5000 });
     await expect(drawer.getByText('on-device')).toBeVisible();
 
@@ -142,7 +153,8 @@ test.describe('Nested dictionary definitions (reader)', () => {
   test('nested word falls back to AI translate when the dict misses it', async ({ page }) => {
     // Force a dict miss for the UNDERLYING word only — "vrugte" still resolves.
     await page.route(
-      (url) => url.pathname.endsWith('/api/dictionary/lookup') && url.searchParams.get('word') === 'vrug',
+      (url) =>
+        url.pathname.endsWith('/api/dictionary/lookup') && url.searchParams.get('word') === 'vrug',
       async (route) => {
         await route.fulfill({
           status: 200,
@@ -159,7 +171,9 @@ test.describe('Nested dictionary definitions (reader)', () => {
     await expect(nested).toHaveText('vrug', { timeout: 5000 });
     await nested.click();
 
-    await expect(drawer.getByRole('heading', { name: 'vrug', exact: true })).toBeVisible({ timeout: 5000 });
+    await expect(drawer.getByRole('heading', { name: 'vrug', exact: true })).toBeVisible({
+      timeout: 5000,
+    });
     await expect(drawer.getByText('[translated: vrug]')).toBeVisible({ timeout: 5000 });
 
     // AI source pill, not the on-device one

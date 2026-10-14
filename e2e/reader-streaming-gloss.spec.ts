@@ -146,10 +146,7 @@ test.describe('Reader — streamed gloss + enrich', () => {
  * validation), so it's safe in CI.
  */
 test.describe('translate routes are wired', () => {
-  for (const path of [
-    apiUrl('/api/translate/gloss'),
-    apiUrl('/api/translate/enrich'),
-  ]) {
+  for (const path of [apiUrl('/api/translate/gloss'), apiUrl('/api/translate/enrich')]) {
     test(`${path} reaches Hono (not 404)`, async ({ request }) => {
       const res = await request.post(path, { data: { language: 'af' } });
       expect(res.status(), `${path} should reach Hono, not be an unwired route`).toBe(400);

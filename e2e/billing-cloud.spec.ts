@@ -407,6 +407,7 @@ test.describe.serial('billing gate lifecycle', () => {
     // /subscribe. Now that the stub reports an active plan, SetupGuard claims
     // it for /setup, so clear that before navigating (a goto mid-redirect aborts).
     await page.waitForURL((url) => url.pathname === '/setup');
+    await page.getByTestId('setup-language-show-all').click();
     await page.getByTestId('setup-language-af').click();
     await page.getByTestId('skip-guided-onboarding').click();
     await page.waitForURL((url) => url.pathname === '/');

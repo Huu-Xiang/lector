@@ -46,15 +46,35 @@ async function mockAnkiConnect(page: Page): Promise<AnkiCall[]> {
     }
     const { action } = body;
     if (action === 'version') {
-      await route.fulfill({ status: 200, headers, body: JSON.stringify({ result: 6, error: null }) });
+      await route.fulfill({
+        status: 200,
+        headers,
+        body: JSON.stringify({ result: 6, error: null }),
+      });
     } else if (action === 'deckNames') {
-      await route.fulfill({ status: 200, headers, body: JSON.stringify({ result: ['Afrikaans', 'Afrikaans::Cloze'], error: null }) });
+      await route.fulfill({
+        status: 200,
+        headers,
+        body: JSON.stringify({ result: ['Afrikaans', 'Afrikaans::Cloze'], error: null }),
+      });
     } else if (action === 'createDeck') {
-      await route.fulfill({ status: 200, headers, body: JSON.stringify({ result: 1, error: null }) });
+      await route.fulfill({
+        status: 200,
+        headers,
+        body: JSON.stringify({ result: 1, error: null }),
+      });
     } else if (action === 'addNote') {
-      await route.fulfill({ status: 200, headers, body: JSON.stringify({ result: 1234567890, error: null }) });
+      await route.fulfill({
+        status: 200,
+        headers,
+        body: JSON.stringify({ result: 1234567890, error: null }),
+      });
     } else {
-      await route.fulfill({ status: 200, headers, body: JSON.stringify({ result: null, error: null }) });
+      await route.fulfill({
+        status: 200,
+        headers,
+        body: JSON.stringify({ result: null, error: null }),
+      });
     }
   };
 
@@ -317,11 +337,23 @@ test.describe('Reader → Anki pipeline', () => {
       const body = JSON.parse(route.request().postData() || '{}') as AnkiCall;
       const headers = { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' };
       if (body.action === 'addNote') {
-        await route.fulfill({ status: 200, headers, body: JSON.stringify({ result: null, error: 'collection is not available' }) });
+        await route.fulfill({
+          status: 200,
+          headers,
+          body: JSON.stringify({ result: null, error: 'collection is not available' }),
+        });
       } else if (body.action === 'createDeck') {
-        await route.fulfill({ status: 200, headers, body: JSON.stringify({ result: 1, error: null }) });
+        await route.fulfill({
+          status: 200,
+          headers,
+          body: JSON.stringify({ result: 1, error: null }),
+        });
       } else {
-        await route.fulfill({ status: 200, headers, body: JSON.stringify({ result: 6, error: null }) });
+        await route.fulfill({
+          status: 200,
+          headers,
+          body: JSON.stringify({ result: 6, error: null }),
+        });
       }
     });
 

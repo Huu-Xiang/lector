@@ -63,6 +63,8 @@ test.describe.serial('Free cloud learning loop', () => {
     await expect(page).toHaveURL(/\/setup/, { timeout: 15_000 });
     expect(page.url()).not.toContain('/subscribe');
 
+    await page.getByTestId('setup-language-show-all').click();
+
     await page.getByTestId('setup-language-af').click();
     await page.getByTestId('skip-guided-onboarding').click();
     await page.waitForURL((url) => url.pathname === '/');

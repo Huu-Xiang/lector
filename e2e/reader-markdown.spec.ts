@@ -50,7 +50,11 @@ test.describe('Reader markdown rendering', () => {
     // Word dict-misses stream a plain-text gloss from /translate/gloss.
     await page.route('**/api/translate/gloss', async (route) => {
       const body = JSON.parse(route.request().postData() || '{}');
-      await route.fulfill({ status: 200, contentType: 'text/plain', body: `[translated: ${body.word}]` });
+      await route.fulfill({
+        status: 200,
+        contentType: 'text/plain',
+        body: `[translated: ${body.word}]`,
+      });
     });
 
     const res = await page.request.get(apiUrl('/api/collections'));
@@ -94,14 +98,18 @@ test.describe('Reader markdown rendering', () => {
     await expect(italicWord).toBeVisible();
   });
 
-  test('headings are styled but not word-wrapped (click-to-translate stays in the body)', async ({ page }) => {
+  test('headings are styled but not word-wrapped (click-to-translate stays in the body)', async ({
+    page,
+  }) => {
     // Headings render as plain styled text — no clickable word chips — so the
     // reader's word spans live only in the body (p/li), as other specs assume.
     expect(await page.locator('article h2 span.cursor-pointer').count()).toBe(0);
     await expect(page.locator('article p span.cursor-pointer').first()).toBeVisible();
   });
 
-  test('line breaks: single newline -> <br>, blank line -> separate paragraphs', async ({ page }) => {
+  test('line breaks: single newline -> <br>, blank line -> separate paragraphs', async ({
+    page,
+  }) => {
     expect(await page.locator('article br').count()).toBeGreaterThan(0);
     expect(await page.locator('article p').count()).toBe(2);
   });

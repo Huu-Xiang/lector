@@ -25,9 +25,7 @@ async function openRepeatedWordLesson(page: Page): Promise<string> {
     },
   });
 
-  const lessonsRes = await page.request.get(
-    apiUrl(`/api/collections/${collectionId}/lessons`)
-  );
+  const lessonsRes = await page.request.get(apiUrl(`/api/collections/${collectionId}/lessons`));
   const lessons = await lessonsRes.json();
 
   await page.goto(`/read/${lessons[0].id}`);
@@ -58,7 +56,11 @@ test.describe('Reader word/phrase copy + active highlight', () => {
     });
     await page.route('**/api/translate/gloss', async (route) => {
       const body = JSON.parse(route.request().postData() || '{}');
-      await route.fulfill({ status: 200, contentType: 'text/plain', body: `[translated: ${body.word}]` });
+      await route.fulfill({
+        status: 200,
+        contentType: 'text/plain',
+        body: `[translated: ${body.word}]`,
+      });
     });
 
     const res = await page.request.get(apiUrl('/api/collections'));

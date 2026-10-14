@@ -1,67 +1,63 @@
-import { test, expect, Page } from "@playwright/test";
+import { test, expect, Page } from '@playwright/test';
 import { apiUrl } from './api';
 
 // Wait for the practice page to finish seeding and show the setup screen
 async function waitForSetup(page: Page) {
-  await page.goto("/practice");
+  await page.goto('/practice');
   // Wait for "Start" button to appear (means seeding is done)
-  await expect(page.getByRole("button", { name: "Start" })).toBeVisible({
+  await expect(page.getByRole('button', { name: 'Start' })).toBeVisible({
     timeout: 30000,
   });
 }
 
-test.describe.serial("Practice - Setup Screen", () => {
-  test("should show the setup screen with collection counts", async ({
-    page,
-  }) => {
+test.describe.serial('Practice - Setup Screen', () => {
+  test('should show the setup screen with collection counts', async ({ page }) => {
     await waitForSetup(page);
 
     // Title
-    await expect(page.getByText("Cloze Practice")).toBeVisible();
+    await expect(page.getByText('Cloze Practice')).toBeVisible();
 
     // Learn New section with collection buttons should be visible
-    await expect(page.getByText("Learn New")).toBeVisible();
-    await expect(page.getByRole("button", { name: /Top 500/ }).first()).toBeVisible();
-    await expect(
-      page.getByRole("button", { name: /500-1000/ }).first()
-    ).toBeVisible();
+    await expect(page.getByText('Learn New')).toBeVisible();
+    await expect(page.getByRole('button', { name: /Top 500/ }).first()).toBeVisible();
+    await expect(page.getByRole('button', { name: /500-1000/ }).first()).toBeVisible();
 
     // Round size buttons (within the "Sentences" label section)
-    await expect(page.getByRole("button", { name: "10", exact: true })).toBeVisible();
-    await expect(page.getByRole("button", { name: "20", exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: '10', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: '20', exact: true })).toBeVisible();
 
     // Mode buttons
-    await expect(page.getByRole("button", { name: "Type" })).toBeVisible();
-    await expect(page.getByRole("button", { name: "MC" })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Type' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'MC' })).toBeVisible();
 
     // Start button
-    await expect(page.getByRole("button", { name: "Start" })).toBeEnabled();
+    await expect(page.getByRole('button', { name: 'Start' })).toBeEnabled();
   });
 
-  test("should switch collections", async ({ page }) => {
+  test('should switch collections', async ({ page }) => {
     await waitForSetup(page);
 
     // Click 500-1000 collection
-    const btn = page.getByRole("button", { name: /500-1000/ });
+    const btn = page.getByRole('button', { name: /500-1000/ });
     await btn.click();
 
     // Should have selected state (blue background)
     await expect(btn).toHaveClass(/bg-primary/);
   });
 
-  test("should switch round size", async ({ page }) => {
+  test('should switch round size', async ({ page }) => {
     await waitForSetup(page);
 
-    const btn10 = page.getByRole("button", { name: "10", exact: true });
+    const btn10 = page.getByRole('button', { name: '10', exact: true });
     await btn10.click();
     await expect(btn10).toHaveClass(/bg-primary/);
   });
 
-  test("should switch between Type and MC modes", async ({ page }) => {
+  test('should switch between Type and MC modes', async ({ page }) => {
     await waitForSetup(page);
 
-    const typeBtn = page.getByRole("button", { name: "Type" });
-    const mcBtn = page.getByRole("button", { name: "MC" });
+    const typeBtn = page.getByRole('button', { name: 'Type' });
+    const mcBtn = page.getByRole('button', { name: 'MC' });
 
     // Select MC mode
     await mcBtn.click();
@@ -73,26 +69,26 @@ test.describe.serial("Practice - Setup Screen", () => {
   });
 });
 
-test.describe.serial("Practice - Type Mode Full Journey", () => {
-  test("should start a round and show a cloze sentence", async ({ page }) => {
+test.describe.serial('Practice - Type Mode Full Journey', () => {
+  test('should start a round and show a cloze sentence', async ({ page }) => {
     await waitForSetup(page);
 
     // Select smallest round size for faster testing
-    await page.getByRole("button", { name: "10", exact: true }).click();
+    await page.getByRole('button', { name: '10', exact: true }).click();
 
     // Ensure Type mode is selected
-    await page.getByRole("button", { name: "Type" }).click();
+    await page.getByRole('button', { name: 'Type' }).click();
 
     // Start the round
-    await page.getByRole("button", { name: "Start" }).click();
+    await page.getByRole('button', { name: 'Start' }).click();
 
     // Should transition to practicing state
-    await expect(page.getByText("Fill in the blank")).toBeVisible({
+    await expect(page.getByText('Fill in the blank')).toBeVisible({
       timeout: 10000,
     });
 
     // Should show progress counter
-    await expect(page.getByText("/10")).toBeVisible();
+    await expect(page.getByText('/10')).toBeVisible();
 
     // Should show an input field with placeholder
     const input = page.locator('input[placeholder="..."]');
@@ -101,69 +97,69 @@ test.describe.serial("Practice - Type Mode Full Journey", () => {
     // Should show translation (italic text). Scope to text-base so we hit the
     // page's English translation, not the smaller italic text the drawer
     // renders for its sentence section (which is always in the DOM).
-    const translation = page.locator("p.italic.text-base");
+    const translation = page.locator('p.italic.text-base');
     await expect(translation).toBeVisible();
 
     // Should show mastery indicator
-    await expect(page.getByText("Mastery:")).toBeVisible();
+    await expect(page.getByText('Mastery:')).toBeVisible();
 
     // Should show hint and check buttons
-    await expect(page.getByRole("button", { name: /Hint/ })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Check" })).toBeVisible();
+    await expect(page.getByRole('button', { name: /Hint/ })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Check' })).toBeVisible();
   });
 
-  test("should look up sentence words with Enter and Space", async ({ page }) => {
+  test('should look up sentence words with Enter and Space', async ({ page }) => {
     let releaseLookup!: () => void;
     const lookupGate = new Promise<void>((resolve) => {
       releaseLookup = resolve;
     });
-    await page.route("**/api/dictionary/lookup**", async (route) => {
-      const word = new URL(route.request().url()).searchParams.get("word") || "word";
+    await page.route('**/api/dictionary/lookup**', async (route) => {
+      const word = new URL(route.request().url()).searchParams.get('word') || 'word';
       await lookupGate;
       await route.fulfill({
         status: 200,
-        contentType: "application/json",
+        contentType: 'application/json',
         body: JSON.stringify({
-          entry: { word, senses: [{ partOfSpeech: "noun", gloss: "test definition" }] },
+          entry: { word, senses: [{ partOfSpeech: 'noun', gloss: 'test definition' }] },
         }),
       });
     });
 
     await waitForSetup(page);
-    await page.getByRole("button", { name: "10", exact: true }).click();
-    await page.getByRole("button", { name: "Type" }).click();
-    await page.getByRole("button", { name: "Start" }).click();
-    await expect(page.getByText("Fill in the blank")).toBeVisible({ timeout: 10000 });
+    await page.getByRole('button', { name: '10', exact: true }).click();
+    await page.getByRole('button', { name: 'Type' }).click();
+    await page.getByRole('button', { name: 'Start' }).click();
+    await expect(page.getByText('Fill in the blank')).toBeVisible({ timeout: 10000 });
 
-    const lookupWord = page.getByTestId("cloze-word").first();
-    await expect(lookupWord).toHaveRole("button");
+    const lookupWord = page.getByTestId('cloze-word').first();
+    await expect(lookupWord).toHaveRole('button');
     await lookupWord.focus();
-    await page.keyboard.press("Enter");
+    await page.keyboard.press('Enter');
 
-    const drawer = page.getByTestId("translation-drawer");
-    const announcement = page.getByTestId("lookup-announcement");
+    const drawer = page.getByTestId('translation-drawer');
+    const announcement = page.getByTestId('lookup-announcement');
     await expect(drawer).toHaveClass(/translate-x-0/);
-    await expect(announcement).toContainText("Looking up");
+    await expect(announcement).toContainText('Looking up');
 
     releaseLookup();
-    await expect(announcement).toContainText("Definition loaded");
+    await expect(announcement).toContainText('Definition loaded');
 
-    await drawer.getByRole("button", { name: "Close" }).click();
+    await drawer.getByRole('button', { name: 'Close' }).click();
     await expect(drawer).toHaveClass(/translate-x-full/);
     await lookupWord.focus();
-    await page.keyboard.press("Space");
+    await page.keyboard.press('Space');
     await expect(drawer).toHaveClass(/translate-x-0/);
-    await expect(page.getByText("Fill in the blank")).toBeVisible();
+    await expect(page.getByText('Fill in the blank')).toBeVisible();
   });
 
-  test("should type a correct answer and show feedback", async ({ page }) => {
+  test('should type a correct answer and show feedback', async ({ page }) => {
     await waitForSetup(page);
 
-    await page.getByRole("button", { name: "10", exact: true }).click();
-    await page.getByRole("button", { name: "Type" }).click();
-    await page.getByRole("button", { name: "Start" }).click();
+    await page.getByRole('button', { name: '10', exact: true }).click();
+    await page.getByRole('button', { name: 'Type' }).click();
+    await page.getByRole('button', { name: 'Start' }).click();
 
-    await expect(page.getByText("Fill in the blank")).toBeVisible({
+    await expect(page.getByText('Fill in the blank')).toBeVisible({
       timeout: 10000,
     });
 
@@ -171,9 +167,9 @@ test.describe.serial("Practice - Type Mode Full Journey", () => {
     await input.focus();
 
     // Use hints to reveal the full word, then submit
-    const hintBtn = page.getByRole("button", { name: /Hint/ });
+    const hintBtn = page.getByRole('button', { name: /Hint/ });
     for (let i = 0; i < 30; i++) {
-      const submitBtn = page.getByRole("button", { name: "Submit" });
+      const submitBtn = page.getByRole('button', { name: 'Submit' });
       if (await submitBtn.isVisible().catch(() => false)) {
         break;
       }
@@ -184,71 +180,81 @@ test.describe.serial("Practice - Type Mode Full Journey", () => {
     }
 
     // Submit the correct answer
-    const submitBtn = page.getByRole("button", { name: "Submit" });
+    const submitBtn = page.getByRole('button', { name: 'Submit' });
     await expect(submitBtn).toBeVisible({ timeout: 5000 });
     await submitBtn.click();
 
     // Should show feedback
-    await expect(page.getByRole("heading", { name: "Correct!" })).toBeVisible({ timeout: 5000 });
+    await expect(page.getByRole('heading', { name: 'Correct!' })).toBeVisible({ timeout: 5000 });
 
     // Should show the Next button
-    await expect(page.getByRole("button", { name: "Next Sentence" })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Next Sentence' })).toBeVisible();
   });
 
-  test("should handle incorrect answer and show feedback", async ({
-    page,
-  }) => {
+  test('should handle incorrect answer and show feedback', async ({ page }) => {
     await waitForSetup(page);
 
-    await page.getByRole("button", { name: "10", exact: true }).click();
-    await page.getByRole("button", { name: "Type" }).click();
-    await page.getByRole("button", { name: "Start" }).click();
+    await page.getByRole('button', { name: '10', exact: true }).click();
+    await page.getByRole('button', { name: 'Type' }).click();
+    await page.getByRole('button', { name: 'Start' }).click();
 
-    await expect(page.getByText("Fill in the blank")).toBeVisible({
+    await expect(page.getByText('Fill in the blank')).toBeVisible({
       timeout: 10000,
     });
 
     // Type a wrong answer
     const input = page.locator('input[placeholder="..."]');
-    await input.fill("zzzzz");
+    await input.fill('zzzzz');
 
     // Click Check to submit the wrong answer
-    await page.getByRole("button", { name: "Check" }).click();
+    await page.getByRole('button', { name: 'Check' }).click();
 
     // Should show feedback with "Incorrect" heading and the correct answer
-    await expect(page.getByRole("heading", { name: "Incorrect" })).toBeVisible({
+    await expect(page.getByRole('heading', { name: 'Incorrect' })).toBeVisible({
       timeout: 5000,
     });
-    await expect(page.getByText("Correct answer:")).toBeVisible();
-    await expect(page.getByText("zzzzz")).toBeVisible(); // user's wrong answer shown
+    await expect(page.getByText('Correct answer:')).toBeVisible();
+    await expect(page.getByText('zzzzz')).toBeVisible(); // user's wrong answer shown
 
     // Click Next Sentence to continue
-    await page.getByRole("button", { name: "Next Sentence" }).click();
+    await page.getByRole('button', { name: 'Next Sentence' }).click();
 
     // Should advance to next sentence
     await page.waitForTimeout(500);
   });
 
-  test("should complete a full round and show summary", async ({ page }) => {
+  test('should complete a full round and show summary', async ({ page }) => {
     await waitForSetup(page);
 
     // Use smallest round size
-    await page.getByRole("button", { name: "10", exact: true }).click();
-    await page.getByRole("button", { name: "Type" }).click();
-    await page.getByRole("button", { name: "Start" }).click();
+    await page.getByRole('button', { name: '10', exact: true }).click();
+    await page.getByRole('button', { name: 'Type' }).click();
+    await page.getByRole('button', { name: 'Start' }).click();
 
-    await expect(page.getByText("Fill in the blank")).toBeVisible({
+    await expect(page.getByText('Fill in the blank')).toBeVisible({
       timeout: 10000,
     });
 
     // Complete all 10 sentences by using hints to get correct answers
     for (let round = 0; round < 40; round++) {
       // Check terminal states
-      if (await page.getByText("Round Complete!").isVisible().catch(() => false)) break;
-      if (await page.getByText("Nothing to Review").isVisible().catch(() => false)) break;
+      if (
+        await page
+          .getByText('Round Complete!')
+          .isVisible()
+          .catch(() => false)
+      )
+        break;
+      if (
+        await page
+          .getByText('Nothing to Review')
+          .isVisible()
+          .catch(() => false)
+      )
+        break;
 
       // Handle feedback state - click Next Sentence
-      const nextBtn = page.getByRole("button", { name: "Next Sentence" });
+      const nextBtn = page.getByRole('button', { name: 'Next Sentence' });
       if (await nextBtn.isVisible().catch(() => false)) {
         await nextBtn.click();
         await page.waitForTimeout(300);
@@ -256,7 +262,7 @@ test.describe.serial("Practice - Type Mode Full Journey", () => {
       }
 
       // Handle "showing answer" state
-      const continueBtn = page.getByRole("button", { name: "Continue" });
+      const continueBtn = page.getByRole('button', { name: 'Continue' });
       if (await continueBtn.isVisible().catch(() => false)) {
         await continueBtn.click();
         await page.waitForTimeout(300);
@@ -266,9 +272,9 @@ test.describe.serial("Practice - Type Mode Full Journey", () => {
       // Practicing state - use hints to reveal full word then submit
       const input = page.locator('input[placeholder="..."]');
       if (await input.isVisible().catch(() => false)) {
-        const hintBtn = page.getByRole("button", { name: /Hint/ });
+        const hintBtn = page.getByRole('button', { name: /Hint/ });
         for (let h = 0; h < 25; h++) {
-          const submitBtn = page.getByRole("button", { name: "Submit" });
+          const submitBtn = page.getByRole('button', { name: 'Submit' });
           if (await submitBtn.isVisible().catch(() => false)) {
             await submitBtn.click();
             break;
@@ -286,7 +292,7 @@ test.describe.serial("Practice - Type Mode Full Journey", () => {
     }
 
     // Should eventually show Round Complete!
-    await expect(page.getByText("Round Complete!")).toBeVisible({
+    await expect(page.getByText('Round Complete!')).toBeVisible({
       timeout: 15000,
     });
 
@@ -294,67 +300,63 @@ test.describe.serial("Practice - Type Mode Full Journey", () => {
     await expect(page.getByText(/\d+\/10 correct/)).toBeVisible();
 
     // Should show action buttons
-    await expect(
-      page.getByRole("button", { name: "Change Settings" })
-    ).toBeVisible();
-    await expect(
-      page.getByRole("button", { name: "Play Again" })
-    ).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Change Settings' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Play Again' })).toBeVisible();
   });
 
-  test("should return to setup via Change Settings", async ({ page }) => {
+  test('should return to setup via Change Settings', async ({ page }) => {
     await waitForSetup(page);
 
-    await page.getByRole("button", { name: "10", exact: true }).click();
-    await page.getByRole("button", { name: "Type" }).click();
-    await page.getByRole("button", { name: "Start" }).click();
+    await page.getByRole('button', { name: '10', exact: true }).click();
+    await page.getByRole('button', { name: 'Type' }).click();
+    await page.getByRole('button', { name: 'Start' }).click();
 
-    await expect(page.getByText("Fill in the blank")).toBeVisible({
+    await expect(page.getByText('Fill in the blank')).toBeVisible({
       timeout: 10000,
     });
 
     // Click Back to return to setup
-    await page.getByText("← Back").click();
+    await page.getByText('← Back').click();
 
     // Should be back at setup
-    await expect(page.getByText("Cloze Practice")).toBeVisible();
-    await expect(page.getByRole("button", { name: "Start" })).toBeVisible();
+    await expect(page.getByText('Cloze Practice')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Start' })).toBeVisible();
   });
 });
 
-test.describe.serial("Practice - Multiple Choice Mode", () => {
-  test("should show MC options when MC mode is selected", async ({ page }) => {
+test.describe.serial('Practice - Multiple Choice Mode', () => {
+  test('should show MC options when MC mode is selected', async ({ page }) => {
     await waitForSetup(page);
 
-    await page.getByRole("button", { name: "10", exact: true }).click();
-    await page.getByRole("button", { name: "MC" }).click();
-    await page.getByRole("button", { name: "Start" }).click();
+    await page.getByRole('button', { name: '10', exact: true }).click();
+    await page.getByRole('button', { name: 'MC' }).click();
+    await page.getByRole('button', { name: 'Start' }).click();
 
     // Should show MC instruction
-    await expect(page.getByText("Choose the correct word")).toBeVisible({
+    await expect(page.getByText('Choose the correct word')).toBeVisible({
       timeout: 10000,
     });
 
     // Should show 4 option buttons with numbers
-    await expect(page.getByRole("button", { name: /^1\s/ })).toBeVisible();
-    await expect(page.getByRole("button", { name: /^2\s/ })).toBeVisible();
+    await expect(page.getByRole('button', { name: /^1\s/ })).toBeVisible();
+    await expect(page.getByRole('button', { name: /^2\s/ })).toBeVisible();
     // Note: buttons contain number + word text
   });
 
-  test("should handle MC selection and advance", async ({ page }) => {
+  test('should handle MC selection and advance', async ({ page }) => {
     await waitForSetup(page);
 
-    await page.getByRole("button", { name: "10", exact: true }).click();
-    await page.getByRole("button", { name: "MC" }).click();
-    await page.getByRole("button", { name: "Start" }).click();
+    await page.getByRole('button', { name: '10', exact: true }).click();
+    await page.getByRole('button', { name: 'MC' }).click();
+    await page.getByRole('button', { name: 'Start' }).click();
 
-    await expect(page.getByText("Choose the correct word")).toBeVisible({
+    await expect(page.getByText('Choose the correct word')).toBeVisible({
       timeout: 10000,
     });
 
     // Click the first MC option (buttons in the 2-col grid with number spans)
-    const mcGrid = page.locator(".grid.grid-cols-1");
-    const mcButtons = mcGrid.locator("button");
+    const mcGrid = page.locator('.grid.grid-cols-1');
+    const mcButtons = mcGrid.locator('button');
     await expect(mcButtons.first()).toBeVisible();
     await mcButtons.first().click();
 
@@ -363,90 +365,88 @@ test.describe.serial("Practice - Multiple Choice Mode", () => {
     await page.waitForTimeout(500);
 
     // The correct answer button should have green styling
-    const greenBtn = mcGrid.locator("button.border-primary");
+    const greenBtn = mcGrid.locator('button.border-primary');
     await expect(greenBtn).toBeVisible({ timeout: 2000 });
 
     // Wait for auto-advance
     await page.waitForTimeout(2000);
   });
 
-  test("should not capture number keys when Cmd/Ctrl is held", async ({ page }) => {
+  test('should not capture number keys when Cmd/Ctrl is held', async ({ page }) => {
     await waitForSetup(page);
 
-    await page.getByRole("button", { name: "10", exact: true }).click();
-    await page.getByRole("button", { name: "MC" }).click();
-    await page.getByRole("button", { name: "Start" }).click();
+    await page.getByRole('button', { name: '10', exact: true }).click();
+    await page.getByRole('button', { name: 'MC' }).click();
+    await page.getByRole('button', { name: 'Start' }).click();
 
-    await expect(page.getByText("Choose the correct word")).toBeVisible({
+    await expect(page.getByText('Choose the correct word')).toBeVisible({
       timeout: 10000,
     });
 
     // All 4 MC options should be visible and unselected
-    const mcGrid = page.locator(".grid.grid-cols-1");
-    const mcButtons = mcGrid.locator("button");
+    const mcGrid = page.locator('.grid.grid-cols-1');
+    const mcButtons = mcGrid.locator('button');
     await expect(mcButtons.first()).toBeVisible();
 
     // Press Cmd+1 (Meta+1) — should NOT trigger MC selection
-    await page.keyboard.down("Meta");
-    await page.keyboard.press("1");
-    await page.keyboard.up("Meta");
+    await page.keyboard.down('Meta');
+    await page.keyboard.press('1');
+    await page.keyboard.up('Meta');
     await page.waitForTimeout(500);
 
     // No button should have been selected (no green/red border)
-    const selectedBtn = mcGrid.locator("button.border-primary, button.border-destructive");
+    const selectedBtn = mcGrid.locator('button.border-primary, button.border-destructive');
     await expect(selectedBtn).toHaveCount(0);
 
     // The instruction text should still be visible (not advanced)
-    await expect(page.getByText("Choose the correct word")).toBeVisible();
+    await expect(page.getByText('Choose the correct word')).toBeVisible();
   });
 });
 
-test.describe.serial("Practice - Review Flow", () => {
-  test("should show empty state when no reviews are due", async ({ page }) => {
+test.describe.serial('Practice - Review Flow', () => {
+  test('should show empty state when no reviews are due', async ({ page }) => {
     // First do a fresh round so we have some reviewed sentences
     await waitForSetup(page);
 
     // Check if Review Due section exists
-    const reviewSection = page.getByText("Review Due");
+    const reviewSection = page.getByText('Review Due');
     const hasReviews = await reviewSection.isVisible().catch(() => false);
 
     if (!hasReviews) {
       // No reviews due - this is expected on a fresh DB
       // Verify the Learn New section is showing
-      await expect(page.getByText("Learn New")).toBeVisible();
+      await expect(page.getByText('Learn New')).toBeVisible();
     }
   });
 
-  test("should handle review round after completing a new round", async ({
-    page,
-  }) => {
+  test('should handle review round after completing a new round', async ({ page }) => {
     await waitForSetup(page);
 
     // First complete a small round of new sentences
-    await page.getByRole("button", { name: "10", exact: true }).click();
-    await page.getByRole("button", { name: "Type" }).click();
-    await page.getByRole("button", { name: "Start" }).click();
+    await page.getByRole('button', { name: '10', exact: true }).click();
+    await page.getByRole('button', { name: 'Type' }).click();
+    await page.getByRole('button', { name: 'Start' }).click();
 
-    await expect(page.getByText("Fill in the blank")).toBeVisible({
+    await expect(page.getByText('Fill in the blank')).toBeVisible({
       timeout: 10000,
     });
 
     // Complete the round quickly using show-answer for each
     for (let i = 0; i < 15; i++) {
-      const complete = page.getByText("Round Complete!");
+      const complete = page.getByText('Round Complete!');
       if (await complete.isVisible().catch(() => false)) break;
 
-      const empty = page.getByText("Nothing to Review");
+      const empty = page.getByText('Nothing to Review');
       if (await empty.isVisible().catch(() => false)) break;
 
-      const nextBtn = page.getByRole("button", { name: "Next Sentence" });
+      const nextBtn = page.getByRole('button', { name: 'Next Sentence' });
       if (await nextBtn.isVisible().catch(() => false)) {
         await nextBtn.click();
         await page.waitForTimeout(300);
         continue;
       }
 
-      const continueBtn = page.getByRole("button", { name: "Continue" });
+      const continueBtn = page.getByRole('button', { name: 'Continue' });
       if (await continueBtn.isVisible().catch(() => false)) {
         await continueBtn.click();
         await page.waitForTimeout(300);
@@ -456,8 +456,8 @@ test.describe.serial("Practice - Review Flow", () => {
       // Show answer for each (wrong answers get nextReview = now, so they become due immediately)
       const input = page.locator('input[placeholder="..."]');
       if (await input.isVisible().catch(() => false)) {
-        await input.fill("zzzzz");
-        await page.getByRole("button", { name: "Check" }).click();
+        await input.fill('zzzzz');
+        await page.getByRole('button', { name: 'Check' }).click();
         await page.waitForTimeout(300);
       }
 
@@ -465,57 +465,55 @@ test.describe.serial("Practice - Review Flow", () => {
     }
 
     // After round, go back to setup
-    const changeBtn = page.getByRole("button", { name: "Change Settings" });
+    const changeBtn = page.getByRole('button', { name: 'Change Settings' });
     if (await changeBtn.isVisible().catch(() => false)) {
       await changeBtn.click();
     } else {
-      const backBtn = page.getByText("Back");
+      const backBtn = page.getByText('Back');
       if (await backBtn.isVisible().catch(() => false)) {
         await backBtn.click();
       }
     }
 
     // Wait for setup to load with fresh counts
-    await expect(page.getByRole("button", { name: "Start" })).toBeVisible({
+    await expect(page.getByRole('button', { name: 'Start' })).toBeVisible({
       timeout: 10000,
     });
 
     // Since we answered everything wrong (mastery 0, nextReview = now),
     // there should now be a "Review Due" section
     await page.waitForTimeout(1000);
-    const reviewDue = page.getByText("Review Due");
+    const reviewDue = page.getByText('Review Due');
     if (await reviewDue.isVisible().catch(() => false)) {
       // Click the review button for the collection
-      const reviewBtn = page.getByRole("button", { name: /due$/ }).first();
+      const reviewBtn = page.getByRole('button', { name: /due$/ }).first();
       await reviewBtn.click();
 
       // Should start a review round
-      await expect(page.getByText("Fill in the blank")).toBeVisible({
+      await expect(page.getByText('Fill in the blank')).toBeVisible({
         timeout: 10000,
       });
     }
   });
 });
 
-test.describe("Practice - Hint System", () => {
-  test("should reveal letters incrementally with hint button", async ({
-    page,
-  }) => {
+test.describe('Practice - Hint System', () => {
+  test('should reveal letters incrementally with hint button', async ({ page }) => {
     await waitForSetup(page);
 
-    await page.getByRole("button", { name: "10", exact: true }).click();
-    await page.getByRole("button", { name: "Type" }).click();
-    await page.getByRole("button", { name: "Start" }).click();
+    await page.getByRole('button', { name: '10', exact: true }).click();
+    await page.getByRole('button', { name: 'Type' }).click();
+    await page.getByRole('button', { name: 'Start' }).click();
 
-    await expect(page.getByText("Fill in the blank")).toBeVisible({
+    await expect(page.getByText('Fill in the blank')).toBeVisible({
       timeout: 10000,
     });
 
     const input = page.locator('input[placeholder="..."]');
-    const hintBtn = page.getByRole("button", { name: /Hint/ });
+    const hintBtn = page.getByRole('button', { name: /Hint/ });
 
     // Input should be empty
-    await expect(input).toHaveValue("");
+    await expect(input).toHaveValue('');
 
     // Click hint once
     await hintBtn.click();
@@ -526,7 +524,7 @@ test.describe("Practice - Hint System", () => {
     expect(value1.length).toBe(1);
 
     // Hint button should now show "1 letter"
-    await expect(page.getByRole("button", { name: /1 letter/ })).toBeVisible();
+    await expect(page.getByRole('button', { name: /1 letter/ })).toBeVisible();
 
     // Click hint again
     await hintBtn.click();
@@ -537,21 +535,19 @@ test.describe("Practice - Hint System", () => {
     expect(value2.length).toBe(2);
 
     // Should show "2 letters"
-    await expect(
-      page.getByRole("button", { name: /2 letters/ })
-    ).toBeVisible();
+    await expect(page.getByRole('button', { name: /2 letters/ })).toBeVisible();
   });
 });
 
-test.describe("Practice - Blacklist", () => {
-  test("should blacklist a sentence and show toast", async ({ page }) => {
+test.describe('Practice - Blacklist', () => {
+  test('should blacklist a sentence and show toast', async ({ page }) => {
     await waitForSetup(page);
 
-    await page.getByRole("button", { name: "10", exact: true }).click();
-    await page.getByRole("button", { name: "Type" }).click();
-    await page.getByRole("button", { name: "Start" }).click();
+    await page.getByRole('button', { name: '10', exact: true }).click();
+    await page.getByRole('button', { name: 'Type' }).click();
+    await page.getByRole('button', { name: 'Start' }).click();
 
-    await expect(page.getByText("Fill in the blank")).toBeVisible({
+    await expect(page.getByText('Fill in the blank')).toBeVisible({
       timeout: 10000,
     });
 
@@ -560,115 +556,101 @@ test.describe("Practice - Blacklist", () => {
     await blacklistBtn.click();
 
     // Should show toast notification
-    await expect(page.getByText("Sentence hidden")).toBeVisible({
+    await expect(page.getByText('Sentence hidden')).toBeVisible({
       timeout: 3000,
     });
 
     // Toast should disappear
-    await expect(page.getByText("Sentence hidden")).not.toBeVisible({
+    await expect(page.getByText('Sentence hidden')).not.toBeVisible({
       timeout: 5000,
     });
   });
 });
 
-test.describe("Practice - Incorrect Type Answer Feedback", () => {
-  test("should show feedback screen with correct answer when typing wrong answer and pressing Enter", async ({
+test.describe('Practice - Incorrect Type Answer Feedback', () => {
+  test('should show feedback screen with correct answer when typing wrong answer and pressing Enter', async ({
     page,
   }) => {
     await waitForSetup(page);
 
-    await page.getByRole("button", { name: "10", exact: true }).click();
-    await page.getByRole("button", { name: "Type" }).click();
-    await page.getByRole("button", { name: "Start" }).click();
+    await page.getByRole('button', { name: '10', exact: true }).click();
+    await page.getByRole('button', { name: 'Type' }).click();
+    await page.getByRole('button', { name: 'Start' }).click();
 
-    await expect(page.getByText("Fill in the blank")).toBeVisible({
+    await expect(page.getByText('Fill in the blank')).toBeVisible({
       timeout: 10000,
     });
 
     // Type a wrong answer and press Enter (not click Check)
     const input = page.locator('input[placeholder="..."]');
-    await input.fill("wronganswer");
-    await input.press("Enter");
+    await input.fill('wronganswer');
+    await input.press('Enter');
 
     // Should show the full feedback screen (not just skip to next)
-    await expect(
-      page.getByRole("heading", { name: "Incorrect" })
-    ).toBeVisible({ timeout: 5000 });
+    await expect(page.getByRole('heading', { name: 'Incorrect' })).toBeVisible({ timeout: 5000 });
 
     // Should show the user's wrong answer with strikethrough
-    await expect(page.getByText("Your answer:")).toBeVisible();
-    await expect(page.getByText("wronganswer")).toBeVisible();
+    await expect(page.getByText('Your answer:')).toBeVisible();
+    await expect(page.getByText('wronganswer')).toBeVisible();
 
     // Should show the correct answer
-    await expect(page.getByText("Correct answer:")).toBeVisible();
+    await expect(page.getByText('Correct answer:')).toBeVisible();
 
     // Should show mastery level reset
-    await expect(page.getByText("Mastery Level")).toBeVisible();
+    await expect(page.getByText('Mastery Level')).toBeVisible();
 
     // Should show Explain and Next Sentence buttons
-    await expect(
-      page.getByRole("button", { name: "Explain" })
-    ).toBeVisible();
-    await expect(
-      page.getByRole("button", { name: "Next Sentence" })
-    ).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Explain' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Next Sentence' })).toBeVisible();
   });
 
-  test("should show feedback screen when clicking Check with wrong answer", async ({
-    page,
-  }) => {
+  test('should show feedback screen when clicking Check with wrong answer', async ({ page }) => {
     await waitForSetup(page);
 
-    await page.getByRole("button", { name: "10", exact: true }).click();
-    await page.getByRole("button", { name: "Type" }).click();
-    await page.getByRole("button", { name: "Start" }).click();
+    await page.getByRole('button', { name: '10', exact: true }).click();
+    await page.getByRole('button', { name: 'Type' }).click();
+    await page.getByRole('button', { name: 'Start' }).click();
 
-    await expect(page.getByText("Fill in the blank")).toBeVisible({
+    await expect(page.getByText('Fill in the blank')).toBeVisible({
       timeout: 10000,
     });
 
     // Type a wrong answer and click Check button
     const input = page.locator('input[placeholder="..."]');
-    await input.fill("badguess");
-    await page.getByRole("button", { name: "Check" }).click();
+    await input.fill('badguess');
+    await page.getByRole('button', { name: 'Check' }).click();
 
     // Should show feedback, not skip
-    await expect(
-      page.getByRole("heading", { name: "Incorrect" })
-    ).toBeVisible({ timeout: 5000 });
-    await expect(page.getByText("Correct answer:")).toBeVisible();
-    await expect(page.getByText("badguess")).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Incorrect' })).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText('Correct answer:')).toBeVisible();
+    await expect(page.getByText('badguess')).toBeVisible();
   });
 
-  test("should add incorrect answer to retry queue and re-test it", async ({
-    page,
-  }) => {
+  test('should add incorrect answer to retry queue and re-test it', async ({ page }) => {
     await waitForSetup(page);
 
-    await page.getByRole("button", { name: "10", exact: true }).click();
-    await page.getByRole("button", { name: "Type" }).click();
-    await page.getByRole("button", { name: "Start" }).click();
+    await page.getByRole('button', { name: '10', exact: true }).click();
+    await page.getByRole('button', { name: 'Type' }).click();
+    await page.getByRole('button', { name: 'Start' }).click();
 
-    await expect(page.getByText("Fill in the blank")).toBeVisible({
+    await expect(page.getByText('Fill in the blank')).toBeVisible({
       timeout: 10000,
     });
 
     // Get wrong deliberately
     const input = page.locator('input[placeholder="..."]');
-    await input.fill("zzzzz");
-    await input.press("Enter");
+    await input.fill('zzzzz');
+    await input.press('Enter');
 
     // Verify feedback shown
-    await expect(
-      page.getByRole("heading", { name: "Incorrect" })
-    ).toBeVisible({ timeout: 5000 });
+    await expect(page.getByRole('heading', { name: 'Incorrect' })).toBeVisible({ timeout: 5000 });
 
     // Complete the rest of the round using hints
     for (let i = 0; i < 50; i++) {
-      const complete = page.getByText("Round Complete!");
+      const complete = page.getByText('Round Complete!');
       if (await complete.isVisible().catch(() => false)) break;
 
-      const nextBtn = page.getByRole("button", { name: "Next Sentence" });
+      const nextBtn = page.getByRole('button', { name: 'Next Sentence' });
       if (await nextBtn.isVisible().catch(() => false)) {
         await nextBtn.click();
         await page.waitForTimeout(300);
@@ -677,9 +659,9 @@ test.describe("Practice - Incorrect Type Answer Feedback", () => {
 
       const inputEl = page.locator('input[placeholder="..."]');
       if (await inputEl.isVisible().catch(() => false)) {
-        const hintBtn = page.getByRole("button", { name: /Hint/ });
+        const hintBtn = page.getByRole('button', { name: /Hint/ });
         for (let h = 0; h < 25; h++) {
-          const submitBtn = page.getByRole("button", { name: "Submit" });
+          const submitBtn = page.getByRole('button', { name: 'Submit' });
           if (await submitBtn.isVisible().catch(() => false)) {
             await submitBtn.click();
             break;
@@ -700,51 +682,53 @@ test.describe("Practice - Incorrect Type Answer Feedback", () => {
     // appeared again in the retry queue. The progress counter should stay
     // capped at the round size (10) — retried sentences must not count again
     // (issue #57).
-    await expect(page.getByText("Round Complete!")).toBeVisible({
+    await expect(page.getByText('Round Complete!')).toBeVisible({
       timeout: 15000,
     });
   });
 
-  test("retried sentences do not push the progress counter past round size (issue #57)", async ({
+  test('retried sentences do not push the progress counter past round size (issue #57)', async ({
     page,
   }) => {
     await waitForSetup(page);
 
     const ROUND_SIZE = 10;
-    await page.getByRole("button", { name: String(ROUND_SIZE), exact: true }).click();
-    await page.getByRole("button", { name: "Type" }).click();
-    await page.getByRole("button", { name: "Start" }).click();
+    await page.getByRole('button', { name: String(ROUND_SIZE), exact: true }).click();
+    await page.getByRole('button', { name: 'Type' }).click();
+    await page.getByRole('button', { name: 'Start' }).click();
 
-    await expect(page.getByText("Fill in the blank")).toBeVisible({
+    await expect(page.getByText('Fill in the blank')).toBeVisible({
       timeout: 10000,
     });
 
     // Get the first sentence wrong so it lands in the retry queue.
     const input = page.locator('input[placeholder="..."]');
-    await input.fill("zzzzz");
-    await input.press("Enter");
-    await expect(
-      page.getByRole("heading", { name: "Incorrect" })
-    ).toBeVisible({ timeout: 5000 });
+    await input.fill('zzzzz');
+    await input.press('Enter');
+    await expect(page.getByRole('heading', { name: 'Incorrect' })).toBeVisible({ timeout: 5000 });
 
     // Drive the round to completion using hints. Track the highest counter
     // value seen — it must never exceed ROUND_SIZE.
     let maxProgress = 0;
-    const counter = page.locator("span", { hasText: new RegExp(`^\\d+/${ROUND_SIZE}$`) });
+    const counter = page.locator('span', { hasText: new RegExp(`^\\d+/${ROUND_SIZE}$`) });
 
     for (let i = 0; i < 60; i++) {
       const text = await counter.textContent().catch(() => null);
       if (text) {
-        const num = parseInt(text.split("/")[0], 10);
+        const num = parseInt(text.split('/')[0], 10);
         if (!Number.isNaN(num) && num > maxProgress) maxProgress = num;
-        expect(num, `progress counter exceeded ${ROUND_SIZE}`).toBeLessThanOrEqual(
-          ROUND_SIZE
-        );
+        expect(num, `progress counter exceeded ${ROUND_SIZE}`).toBeLessThanOrEqual(ROUND_SIZE);
       }
 
-      if (await page.getByText("Round Complete!").isVisible().catch(() => false)) break;
+      if (
+        await page
+          .getByText('Round Complete!')
+          .isVisible()
+          .catch(() => false)
+      )
+        break;
 
-      const nextBtn = page.getByRole("button", { name: "Next Sentence" });
+      const nextBtn = page.getByRole('button', { name: 'Next Sentence' });
       if (await nextBtn.isVisible().catch(() => false)) {
         await nextBtn.click();
         await page.waitForTimeout(150);
@@ -753,9 +737,9 @@ test.describe("Practice - Incorrect Type Answer Feedback", () => {
 
       const inputEl = page.locator('input[placeholder="..."]');
       if (await inputEl.isVisible().catch(() => false)) {
-        const hintBtn = page.getByRole("button", { name: /Hint/ });
+        const hintBtn = page.getByRole('button', { name: /Hint/ });
         for (let h = 0; h < 25; h++) {
-          const submitBtn = page.getByRole("button", { name: "Submit" });
+          const submitBtn = page.getByRole('button', { name: 'Submit' });
           if (await submitBtn.isVisible().catch(() => false)) {
             await submitBtn.click();
             break;
@@ -772,34 +756,35 @@ test.describe("Practice - Incorrect Type Answer Feedback", () => {
       await page.waitForTimeout(150);
     }
 
-    await expect(page.getByText("Round Complete!")).toBeVisible({ timeout: 15000 });
+    await expect(page.getByText('Round Complete!')).toBeVisible({ timeout: 15000 });
     expect(maxProgress).toBeLessThanOrEqual(ROUND_SIZE);
 
     // Completion summary uses "{roundCorrect}/{roundProgress} correct" — must
     // be capped at ROUND_SIZE since only first-pass attempts count.
     const summary = await page.getByText(/\d+\/\d+ correct/).textContent();
     expect(summary).toBeTruthy();
-    const [, denom] = summary!.match(/(\d+)\/(\d+) correct/)!.slice(1).map(Number);
+    const [, denom] = summary!
+      .match(/(\d+)\/(\d+) correct/)!
+      .slice(1)
+      .map(Number);
     expect(denom).toBeLessThanOrEqual(ROUND_SIZE);
   });
 });
 
-test.describe("Practice - Fuzzy Input Coloring", () => {
-  test("should show sage border only for exact prefix matches", async ({
-    page,
-  }) => {
+test.describe('Practice - Fuzzy Input Coloring', () => {
+  test('should show sage border only for exact prefix matches', async ({ page }) => {
     await waitForSetup(page);
 
-    await page.getByRole("button", { name: "10", exact: true }).click();
-    await page.getByRole("button", { name: "Type" }).click();
-    await page.getByRole("button", { name: "Start" }).click();
+    await page.getByRole('button', { name: '10', exact: true }).click();
+    await page.getByRole('button', { name: 'Type' }).click();
+    await page.getByRole('button', { name: 'Start' }).click();
 
-    await expect(page.getByText("Fill in the blank")).toBeVisible({
+    await expect(page.getByText('Fill in the blank')).toBeVisible({
       timeout: 10000,
     });
 
     const input = page.locator('input[placeholder="..."]');
-    const hintBtn = page.getByRole("button", { name: /Hint/ });
+    const hintBtn = page.getByRole('button', { name: /Hint/ });
 
     // Get the first letter of the correct word via hint
     await hintBtn.click();
@@ -811,28 +796,26 @@ test.describe("Practice - Fuzzy Input Coloring", () => {
     await expect(input).toHaveClass(/border-primary/);
 
     // Now type a wrong character after the correct prefix
-    await input.fill(firstLetter + "zzz");
+    await input.fill(firstLetter + 'zzz');
     await page.waitForTimeout(100);
 
     // Should show red border (wrong)
     await expect(input).toHaveClass(/border-destructive/);
   });
 
-  test("should show red for divergent input even with shared prefix", async ({
-    page,
-  }) => {
+  test('should show red for divergent input even with shared prefix', async ({ page }) => {
     await waitForSetup(page);
 
-    await page.getByRole("button", { name: "10", exact: true }).click();
-    await page.getByRole("button", { name: "Type" }).click();
-    await page.getByRole("button", { name: "Start" }).click();
+    await page.getByRole('button', { name: '10', exact: true }).click();
+    await page.getByRole('button', { name: 'Type' }).click();
+    await page.getByRole('button', { name: 'Start' }).click();
 
-    await expect(page.getByText("Fill in the blank")).toBeVisible({
+    await expect(page.getByText('Fill in the blank')).toBeVisible({
       timeout: 10000,
     });
 
     const input = page.locator('input[placeholder="..."]');
-    const hintBtn = page.getByRole("button", { name: /Hint/ });
+    const hintBtn = page.getByRole('button', { name: /Hint/ });
 
     // Get first two letters via hints
     await hintBtn.click();
@@ -847,7 +830,7 @@ test.describe("Practice - Fuzzy Input Coloring", () => {
 
     // Replace last character with wrong one to simulate divergence
     // e.g. correct is "he" from "heel", type "h~" instead
-    const wrongInput = twoLetters[0] + "~";
+    const wrongInput = twoLetters[0] + '~';
     await input.fill(wrongInput);
     await page.waitForTimeout(100);
 
@@ -855,14 +838,14 @@ test.describe("Practice - Fuzzy Input Coloring", () => {
     await expect(input).toHaveClass(/border-destructive/);
   });
 
-  test("should show clay border when input is empty", async ({ page }) => {
+  test('should show clay border when input is empty', async ({ page }) => {
     await waitForSetup(page);
 
-    await page.getByRole("button", { name: "10", exact: true }).click();
-    await page.getByRole("button", { name: "Type" }).click();
-    await page.getByRole("button", { name: "Start" }).click();
+    await page.getByRole('button', { name: '10', exact: true }).click();
+    await page.getByRole('button', { name: 'Type' }).click();
+    await page.getByRole('button', { name: 'Start' }).click();
 
-    await expect(page.getByText("Fill in the blank")).toBeVisible({
+    await expect(page.getByText('Fill in the blank')).toBeVisible({
       timeout: 10000,
     });
 
@@ -872,25 +855,23 @@ test.describe("Practice - Fuzzy Input Coloring", () => {
     await expect(input).toHaveClass(/var\(--clay\)/);
   });
 
-  test("should show sage border and Submit button when answer is correct", async ({
-    page,
-  }) => {
+  test('should show sage border and Submit button when answer is correct', async ({ page }) => {
     await waitForSetup(page);
 
-    await page.getByRole("button", { name: "10", exact: true }).click();
-    await page.getByRole("button", { name: "Type" }).click();
-    await page.getByRole("button", { name: "Start" }).click();
+    await page.getByRole('button', { name: '10', exact: true }).click();
+    await page.getByRole('button', { name: 'Type' }).click();
+    await page.getByRole('button', { name: 'Start' }).click();
 
-    await expect(page.getByText("Fill in the blank")).toBeVisible({
+    await expect(page.getByText('Fill in the blank')).toBeVisible({
       timeout: 10000,
     });
 
     const input = page.locator('input[placeholder="..."]');
-    const hintBtn = page.getByRole("button", { name: /Hint/ });
+    const hintBtn = page.getByRole('button', { name: /Hint/ });
 
     // Use hints to reveal full word
     for (let i = 0; i < 30; i++) {
-      const submitBtn = page.getByRole("button", { name: "Submit" });
+      const submitBtn = page.getByRole('button', { name: 'Submit' });
       if (await submitBtn.isVisible().catch(() => false)) break;
       if (await hintBtn.isVisible().catch(() => false)) {
         await hintBtn.click();
@@ -902,31 +883,27 @@ test.describe("Practice - Fuzzy Input Coloring", () => {
     await expect(input).toHaveClass(/border-primary/);
 
     // Button should say "Submit" not "Check"
-    await expect(
-      page.getByRole("button", { name: "Submit" })
-    ).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Submit' })).toBeVisible();
   });
 });
 
-test.describe("Practice - Learn New should not show reviews", () => {
-  const TEST_COLLECTION = "top500";
+test.describe('Practice - Learn New should not show reviews', () => {
+  const TEST_COLLECTION = 'top500';
 
-  test("Learn New only shows new sentences, not review-due ones", async ({
-    page,
-  }) => {
+  test('Learn New only shows new sentences, not review-due ones', async ({ page }) => {
     // Seed: 2 review-due sentences (reviewCount > 0, nextReview in the past)
     // and 2 genuinely new sentences (reviewCount = 0)
-    const pastDate = "2020-01-01T00:00:00.000Z";
-    const futureDate = "2099-01-01T00:00:00.000Z";
+    const pastDate = '2020-01-01T00:00:00.000Z';
+    const futureDate = '2099-01-01T00:00:00.000Z';
 
     const testSentences = [
       {
-        id: "test-review-1",
-        sentence: "REVIEW_SENTENCE_ONE hier is.",
-        clozeWord: "REVIEW_SENTENCE_ONE",
+        id: 'test-review-1',
+        sentence: 'REVIEW_SENTENCE_ONE hier is.',
+        clozeWord: 'REVIEW_SENTENCE_ONE',
         clozeIndex: 0,
-        translation: "Review sentence one is here.",
-        source: "tatoeba",
+        translation: 'Review sentence one is here.',
+        source: 'tatoeba',
         collection: TEST_COLLECTION,
         masteryLevel: 25,
         nextReview: pastDate,
@@ -935,12 +912,12 @@ test.describe("Practice - Learn New should not show reviews", () => {
         timesIncorrect: 1,
       },
       {
-        id: "test-review-2",
-        sentence: "REVIEW_SENTENCE_TWO daar is.",
-        clozeWord: "REVIEW_SENTENCE_TWO",
+        id: 'test-review-2',
+        sentence: 'REVIEW_SENTENCE_TWO daar is.',
+        clozeWord: 'REVIEW_SENTENCE_TWO',
         clozeIndex: 0,
-        translation: "Review sentence two is there.",
-        source: "tatoeba",
+        translation: 'Review sentence two is there.',
+        source: 'tatoeba',
         collection: TEST_COLLECTION,
         masteryLevel: 50,
         nextReview: pastDate,
@@ -949,12 +926,12 @@ test.describe("Practice - Learn New should not show reviews", () => {
         timesIncorrect: 1,
       },
       {
-        id: "test-new-1",
-        sentence: "NEW_SENTENCE_ONE hier is.",
-        clozeWord: "NEW_SENTENCE_ONE",
+        id: 'test-new-1',
+        sentence: 'NEW_SENTENCE_ONE hier is.',
+        clozeWord: 'NEW_SENTENCE_ONE',
         clozeIndex: 0,
-        translation: "New sentence one is here.",
-        source: "tatoeba",
+        translation: 'New sentence one is here.',
+        source: 'tatoeba',
         collection: TEST_COLLECTION,
         masteryLevel: 0,
         nextReview: futureDate,
@@ -963,12 +940,12 @@ test.describe("Practice - Learn New should not show reviews", () => {
         timesIncorrect: 0,
       },
       {
-        id: "test-new-2",
-        sentence: "NEW_SENTENCE_TWO daar is.",
-        clozeWord: "NEW_SENTENCE_TWO",
+        id: 'test-new-2',
+        sentence: 'NEW_SENTENCE_TWO daar is.',
+        clozeWord: 'NEW_SENTENCE_TWO',
         clozeIndex: 0,
-        translation: "New sentence two is there.",
-        source: "tatoeba",
+        translation: 'New sentence two is there.',
+        source: 'tatoeba',
         collection: TEST_COLLECTION,
         masteryLevel: 0,
         nextReview: futureDate,
@@ -979,27 +956,25 @@ test.describe("Practice - Learn New should not show reviews", () => {
     ];
 
     // Seed via API
-    const seedRes = await page.request.post(apiUrl("/api/cloze"), {
+    const seedRes = await page.request.post(apiUrl('/api/cloze'), {
       data: testSentences,
     });
     expect(seedRes.ok()).toBeTruthy();
 
     // Verify seeding worked
-    const checkRes = await page.request.get(apiUrl("/api/cloze/test-new-1"));
+    const checkRes = await page.request.get(apiUrl('/api/cloze/test-new-1'));
     const checkData = await checkRes.json();
-    expect(checkData.id).toBe("test-new-1");
+    expect(checkData.id).toBe('test-new-1');
     expect(checkData.reviewCount).toBe(0);
 
     // Hit the "new" API endpoint and verify only reviewCount=0 sentences returned
     const newRes = await page.request.get(
-      apiUrl(`/api/cloze/due?mode=new&collection=${TEST_COLLECTION}&limit=50`)
+      apiUrl(`/api/cloze/due?mode=new&collection=${TEST_COLLECTION}&limit=50`),
     );
     const newSentences = await newRes.json();
 
     // No review sentences should leak into "new" results
-    const reviewLeaked = newSentences.filter(
-      (s: { reviewCount: number }) => s.reviewCount > 0
-    );
+    const reviewLeaked = newSentences.filter((s: { reviewCount: number }) => s.reviewCount > 0);
     expect(reviewLeaked).toHaveLength(0);
 
     // All returned sentences should have reviewCount = 0
@@ -1009,7 +984,7 @@ test.describe("Practice - Learn New should not show reviews", () => {
 
     // Hit the "review" API endpoint and verify it returns review-due ones
     const reviewRes = await page.request.get(
-      apiUrl(`/api/cloze/due?mode=review&collection=${TEST_COLLECTION}&limit=50`)
+      apiUrl(`/api/cloze/due?mode=review&collection=${TEST_COLLECTION}&limit=50`),
     );
     const reviewSentences = await reviewRes.json();
 
@@ -1019,12 +994,12 @@ test.describe("Practice - Learn New should not show reviews", () => {
     }
 
     // Verify the seeded review entries are individually accessible and correct
-    const checkReview1 = await page.request.get(apiUrl("/api/cloze/test-review-1"));
+    const checkReview1 = await page.request.get(apiUrl('/api/cloze/test-review-1'));
     const r1 = await checkReview1.json();
     expect(r1.reviewCount).toBeGreaterThan(0);
     expect(r1.collection).toBe(TEST_COLLECTION);
 
-    const checkReview2 = await page.request.get(apiUrl("/api/cloze/test-review-2"));
+    const checkReview2 = await page.request.get(apiUrl('/api/cloze/test-review-2'));
     const r2 = await checkReview2.json();
     expect(r2.reviewCount).toBeGreaterThan(0);
 
@@ -1035,31 +1010,29 @@ test.describe("Practice - Learn New should not show reviews", () => {
   });
 });
 
-test.describe.serial("Practice - Cloze trailing punctuation", () => {
-  const TEST_COLLECTION = "top2000";
+test.describe.serial('Practice - Cloze trailing punctuation', () => {
+  const TEST_COLLECTION = 'top2000';
 
-  test("end-of-sentence punctuation stays visible next to the blank", async ({
-    page,
-  }) => {
+  test('end-of-sentence punctuation stays visible next to the blank', async ({ page }) => {
     // The round draws due sentences in random order, so make sure the seeded
     // ones are the only due reviews in this collection.
     const dueRes = await page.request.get(
-      apiUrl(`/api/cloze/due?mode=review&collection=${TEST_COLLECTION}&limit=50`)
+      apiUrl(`/api/cloze/due?mode=review&collection=${TEST_COLLECTION}&limit=50`),
     );
     for (const s of await dueRes.json()) {
       await page.request.delete(apiUrl(`/api/cloze/${s.id}`));
     }
 
     // Cloze words carry their trailing punctuation, matching the real bank
-    const pastDate = "2020-01-01T00:00:00.000Z";
+    const pastDate = '2020-01-01T00:00:00.000Z';
     const testSentences = [
       {
-        id: "test-punct-1",
-        sentence: "Die kat sit op die PUNKTMAT.",
-        clozeWord: "PUNKTMAT.",
+        id: 'test-punct-1',
+        sentence: 'Die kat sit op die PUNKTMAT.',
+        clozeWord: 'PUNKTMAT.',
         clozeIndex: 5,
-        translation: "The cat sits on the mat.",
-        source: "tatoeba",
+        translation: 'The cat sits on the mat.',
+        source: 'tatoeba',
         collection: TEST_COLLECTION,
         masteryLevel: 25,
         nextReview: pastDate,
@@ -1068,12 +1041,12 @@ test.describe.serial("Practice - Cloze trailing punctuation", () => {
         timesIncorrect: 1,
       },
       {
-        id: "test-punct-2",
-        sentence: "Het jy my PUNKTKOS?",
-        clozeWord: "PUNKTKOS?",
+        id: 'test-punct-2',
+        sentence: 'Het jy my PUNKTKOS?',
+        clozeWord: 'PUNKTKOS?',
         clozeIndex: 3,
-        translation: "Do you have my food?",
-        source: "tatoeba",
+        translation: 'Do you have my food?',
+        source: 'tatoeba',
         collection: TEST_COLLECTION,
         masteryLevel: 25,
         nextReview: pastDate,
@@ -1083,7 +1056,7 @@ test.describe.serial("Practice - Cloze trailing punctuation", () => {
       },
     ];
 
-    const seedRes = await page.request.post(apiUrl("/api/cloze"), {
+    const seedRes = await page.request.post(apiUrl('/api/cloze'), {
       data: testSentences,
     });
     expect(seedRes.ok()).toBeTruthy();
@@ -1092,23 +1065,21 @@ test.describe.serial("Practice - Cloze trailing punctuation", () => {
       await waitForSetup(page);
 
       // Start a review round for the seeded collection from Review Due
-      await page
-        .getByRole("button", { name: /1000-2000\s+\d+ due/ })
-        .click();
+      await page.getByRole('button', { name: /1000-2000\s+\d+ due/ }).click();
 
-      await expect(page.getByText("Fill in the blank")).toBeVisible({
+      await expect(page.getByText('Fill in the blank')).toBeVisible({
         timeout: 10000,
       });
 
       // The practicing-state sentence (leading-loose) must keep the cloze
       // word's trailing punctuation visible after the input
-      const sentence = page.locator("p.leading-loose");
+      const sentence = page.locator('p.leading-loose');
       await expect(sentence).toBeVisible();
       expect((await sentence.innerText()).trim()).toMatch(/[.?]$/);
 
       // Same when the blank is shown instead of the input (MC fallback)
-      await page.getByRole("button", { name: "Multiple Choice" }).click();
-      await expect(sentence).toContainText("_____");
+      await page.getByRole('button', { name: 'Multiple Choice' }).click();
+      await expect(sentence).toContainText('_____');
       expect((await sentence.innerText()).trim()).toMatch(/[.?]$/);
     } finally {
       for (const s of testSentences) {

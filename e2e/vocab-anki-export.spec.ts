@@ -76,7 +76,11 @@ async function mockAnkiConnect(page: Page): Promise<AnkiCall[]> {
       return;
     }
     if (action === 'version') {
-      await route.fulfill({ status: 200, headers, body: JSON.stringify({ result: 6, error: null }) });
+      await route.fulfill({
+        status: 200,
+        headers,
+        body: JSON.stringify({ result: 6, error: null }),
+      });
     } else if (action === 'deckNames') {
       await route.fulfill({
         status: 200,
@@ -84,7 +88,11 @@ async function mockAnkiConnect(page: Page): Promise<AnkiCall[]> {
         body: JSON.stringify({ result: ['Afrikaans', 'Afrikaans::Cloze', 'Default'], error: null }),
       });
     } else if (action === 'createDeck') {
-      await route.fulfill({ status: 200, headers, body: JSON.stringify({ result: 1, error: null }) });
+      await route.fulfill({
+        status: 200,
+        headers,
+        body: JSON.stringify({ result: 1, error: null }),
+      });
     } else if (action === 'addNote') {
       // Return a real-looking timestamp-ish noteId.
       await route.fulfill({
@@ -93,7 +101,11 @@ async function mockAnkiConnect(page: Page): Promise<AnkiCall[]> {
         body: JSON.stringify({ result: Date.now(), error: null }),
       });
     } else {
-      await route.fulfill({ status: 200, headers, body: JSON.stringify({ result: null, error: null }) });
+      await route.fulfill({
+        status: 200,
+        headers,
+        body: JSON.stringify({ result: null, error: null }),
+      });
     }
   }
 
@@ -126,7 +138,7 @@ test.describe('Vocab → Anki bulk export', () => {
       page,
       word,
       `Dit is 'n e2e toets sin met ${word}.`,
-      'This is an e2e test sentence.'
+      'This is an e2e test sentence.',
     );
   });
 
@@ -163,7 +175,9 @@ test.describe('Vocab → Anki bulk export', () => {
     await modal.getByTestId('anki-card-type-basic').click();
     await modal.getByTestId('anki-export-confirm').click();
 
-    await expect(page.getByText(/Exported 1 basic card to "Afrikaans"/)).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText(/Exported 1 basic card to "Afrikaans"/)).toBeVisible({
+      timeout: 5000,
+    });
 
     const addNote = ankiCalls.find((c) => c.action === 'addNote');
     expect(addNote).toBeDefined();
@@ -182,7 +196,9 @@ test.describe('Vocab → Anki bulk export', () => {
     await modal.getByTestId('anki-card-type-cloze').click();
     await modal.getByTestId('anki-export-confirm').click();
 
-    await expect(page.getByText(/Exported 1 cloze card to "Afrikaans::Cloze"/)).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText(/Exported 1 cloze card to "Afrikaans::Cloze"/)).toBeVisible({
+      timeout: 5000,
+    });
 
     const addNote = ankiCalls.find((c) => c.action === 'addNote');
     expect(addNote).toBeDefined();

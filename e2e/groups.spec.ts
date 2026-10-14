@@ -1,59 +1,59 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from '@playwright/test';
 import { apiUrl } from './api';
-import path from "path";
+import path from 'path';
 
-test.describe("Collection Groups", () => {
+test.describe('Collection Groups', () => {
   test.beforeEach(async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 800 });
 
     // Clean up test groups
-    const groupsRes = await page.request.get(apiUrl("/api/groups"));
+    const groupsRes = await page.request.get(apiUrl('/api/groups'));
     const groups = await groupsRes.json();
     for (const g of groups) {
-      if (g.name.startsWith("Test") || g.name.startsWith("Toets")) {
+      if (g.name.startsWith('Test') || g.name.startsWith('Toets')) {
         await page.request.delete(apiUrl(`/api/groups/${g.id}`));
       }
     }
 
     // Clean up test collections
-    const colRes = await page.request.get(apiUrl("/api/collections"));
+    const colRes = await page.request.get(apiUrl('/api/collections'));
     const collections = await colRes.json();
     for (const c of collections) {
-      if (c.title.startsWith("Toets") || c.title.startsWith("Test")) {
+      if (c.title.startsWith('Toets') || c.title.startsWith('Test')) {
         await page.request.delete(apiUrl(`/api/collections/${c.id}`));
       }
     }
   });
 
-  test("should create a group via the UI", async ({ page }) => {
-    await page.goto("/");
-    await page.waitForLoadState("networkidle");
+  test('should create a group via the UI', async ({ page }) => {
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
 
-    await page.getByTestId("new-group-btn").click();
-    await page.getByTestId("new-group-input").fill("Test Group");
-    await page.getByTestId("new-group-submit").click();
+    await page.getByTestId('new-group-btn').click();
+    await page.getByTestId('new-group-input').fill('Test Group');
+    await page.getByTestId('new-group-submit').click();
 
     // Group heading should appear
-    await expect(page.locator("h3", { hasText: "Test Group" })).toBeVisible({ timeout: 5000 });
-    await expect(page.getByText("0 items")).toBeVisible();
+    await expect(page.locator('h3', { hasText: 'Test Group' })).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText('0 items')).toBeVisible();
   });
 
-  test("should assign a collection to a group via detail page", async ({ page }) => {
+  test('should assign a collection to a group via detail page', async ({ page }) => {
     // Create a group via API
-    const groupRes = await page.request.post(apiUrl("/api/groups"), {
-      data: { name: "Test Assign Group" },
+    const groupRes = await page.request.post(apiUrl('/api/groups'), {
+      data: { name: 'Test Assign Group' },
     });
     const { id: groupId } = await groupRes.json();
 
     // Import a test collection
-    const epubPath = path.join(__dirname, "fixtures/test-book.epub");
-    const fs = await import("fs");
+    const epubPath = path.join(__dirname, 'fixtures/test-book.epub');
+    const fs = await import('fs');
     const buffer = fs.readFileSync(epubPath);
-    const importRes = await page.request.post(apiUrl("/api/import/epub"), {
+    const importRes = await page.request.post(apiUrl('/api/import/epub'), {
       multipart: {
         file: {
-          name: "test-book.epub",
-          mimeType: "application/epub+zip",
+          name: 'test-book.epub',
+          mimeType: 'application/epub+zip',
           buffer,
         },
       },
@@ -62,35 +62,37 @@ test.describe("Collection Groups", () => {
 
     // Navigate to collection detail
     await page.goto(`/collection/${collectionId}`);
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState('networkidle');
 
     // Select the group and wait for the API call to complete
     const [updateResponse] = await Promise.all([
-      page.waitForResponse((r) => r.url().includes("/api/collections/") && r.request().method() === "PUT"),
-      page.getByTestId("group-select").selectOption(groupId),
+      page.waitForResponse(
+        (r) => r.url().includes('/api/collections/') && r.request().method() === 'PUT',
+      ),
+      page.getByTestId('group-select').selectOption(groupId),
     ]);
     expect(updateResponse.ok()).toBeTruthy();
 
     // Navigate back to library
-    await page.goto("/");
-    await page.waitForLoadState("networkidle");
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
 
     // Collection should be under the group heading
     const groupSection = page.getByTestId(`group-${groupId}`);
     await expect(groupSection).toBeVisible();
-    await expect(groupSection.locator("h3", { hasText: "Test Assign Group" })).toBeVisible();
-    await expect(groupSection.getByText("Toets Boek").first()).toBeVisible();
+    await expect(groupSection.locator('h3', { hasText: 'Test Assign Group' })).toBeVisible();
+    await expect(groupSection.getByText('Toets Boek').first()).toBeVisible();
   });
 
-  test("should ungroup a collection", async ({ page }) => {
+  test('should ungroup a collection', async ({ page }) => {
     // Create group + collection assigned to it
-    const groupRes = await page.request.post(apiUrl("/api/groups"), {
-      data: { name: "Test Ungroup" },
+    const groupRes = await page.request.post(apiUrl('/api/groups'), {
+      data: { name: 'Test Ungroup' },
     });
     const { id: groupId } = await groupRes.json();
 
-    const colRes = await page.request.post(apiUrl("/api/collections"), {
-      data: { title: "Test Ungrouped Book", author: "Test" },
+    const colRes = await page.request.post(apiUrl('/api/collections'), {
+      data: { title: 'Test Ungrouped Book', author: 'Test' },
     });
     const { id: collectionId } = await colRes.json();
     await page.request.put(apiUrl(`/api/collections/${collectionId}`), {
@@ -99,268 +101,272 @@ test.describe("Collection Groups", () => {
 
     // Go to detail page and set group to None
     await page.goto(`/collection/${collectionId}`);
-    await page.waitForLoadState("networkidle");
-    await page.getByTestId("group-select").selectOption("");
+    await page.waitForLoadState('networkidle');
+    await page.getByTestId('group-select').selectOption('');
 
     // Verify on home page
-    await page.goto("/");
-    await page.waitForLoadState("networkidle");
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
 
     // The group section should show 0 items
     const groupSection = page.getByTestId(`group-${groupId}`);
-    await expect(groupSection.getByText("0 items")).toBeVisible();
+    await expect(groupSection.getByText('0 items')).toBeVisible();
   });
 
-  test("should rename a group", async ({ page }) => {
-    const groupRes = await page.request.post(apiUrl("/api/groups"), {
-      data: { name: "Test Rename Me" },
+  test('should rename a group', async ({ page }) => {
+    const groupRes = await page.request.post(apiUrl('/api/groups'), {
+      data: { name: 'Test Rename Me' },
     });
     await groupRes.json();
 
-    await page.goto("/");
-    await page.waitForLoadState("networkidle");
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
 
-    await expect(page.locator("h3", { hasText: "Test Rename Me" })).toBeVisible();
+    await expect(page.locator('h3', { hasText: 'Test Rename Me' })).toBeVisible();
 
     // Set up dialog handler before triggering it
-    page.once("dialog", async (dialog) => {
-      await dialog.accept("Test Renamed");
+    page.once('dialog', async (dialog) => {
+      await dialog.accept('Test Renamed');
     });
-    await page.getByTestId("group-menu-btn").first().click();
+    await page.getByTestId('group-menu-btn').first().click();
 
     const [renameResponse] = await Promise.all([
-      page.waitForResponse((r) => r.url().includes("/api/groups/") && r.request().method() === "PUT"),
-      page.getByTestId("group-rename-btn").click(),
+      page.waitForResponse(
+        (r) => r.url().includes('/api/groups/') && r.request().method() === 'PUT',
+      ),
+      page.getByTestId('group-rename-btn').click(),
     ]);
     expect(renameResponse.ok()).toBeTruthy();
 
-    await expect(page.locator("h3", { hasText: "Test Renamed" })).toBeVisible({ timeout: 5000 });
+    await expect(page.locator('h3', { hasText: 'Test Renamed' })).toBeVisible({ timeout: 5000 });
   });
 
-  test("should delete a group and ungroup its collections", async ({ page }) => {
+  test('should delete a group and ungroup its collections', async ({ page }) => {
     // Create group + collection
-    const groupRes = await page.request.post(apiUrl("/api/groups"), {
-      data: { name: "Test Delete Group" },
+    const groupRes = await page.request.post(apiUrl('/api/groups'), {
+      data: { name: 'Test Delete Group' },
     });
     const { id: groupId } = await groupRes.json();
 
-    const colRes = await page.request.post(apiUrl("/api/collections"), {
-      data: { title: "Test Survives Delete", author: "Test" },
+    const colRes = await page.request.post(apiUrl('/api/collections'), {
+      data: { title: 'Test Survives Delete', author: 'Test' },
     });
     const { id: collectionId } = await colRes.json();
     await page.request.put(apiUrl(`/api/collections/${collectionId}`), {
       data: { groupId },
     });
 
-    await page.goto("/");
-    await page.waitForLoadState("networkidle");
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
 
     // Set up dialog handler before triggering it
-    page.once("dialog", async (dialog) => {
+    page.once('dialog', async (dialog) => {
       await dialog.accept();
     });
-    await page.getByTestId("group-menu-btn").first().click();
+    await page.getByTestId('group-menu-btn').first().click();
 
     const [deleteResponse] = await Promise.all([
-      page.waitForResponse((r) => r.url().includes("/api/groups/") && r.request().method() === "DELETE"),
-      page.getByTestId("group-delete-btn").click(),
+      page.waitForResponse(
+        (r) => r.url().includes('/api/groups/') && r.request().method() === 'DELETE',
+      ),
+      page.getByTestId('group-delete-btn').click(),
     ]);
     expect(deleteResponse.ok()).toBeTruthy();
 
     // Group heading should be gone
-    await expect(page.locator("h3", { hasText: "Test Delete Group" })).not.toBeVisible({ timeout: 5000 });
+    await expect(page.locator('h3', { hasText: 'Test Delete Group' })).not.toBeVisible({
+      timeout: 5000,
+    });
 
     // Collection should still be visible on the page (ungrouped, not orphaned)
-    await expect(page.getByText("Test Survives Delete").first()).toBeVisible();
+    await expect(page.getByText('Test Survives Delete').first()).toBeVisible();
   });
 
-  test("should create a new group from collection detail page", async ({ page }) => {
+  test('should create a new group from collection detail page', async ({ page }) => {
     // Create a collection
-    const colRes = await page.request.post(apiUrl("/api/collections"), {
-      data: { title: "Test Detail Group Book", author: "Test" },
+    const colRes = await page.request.post(apiUrl('/api/collections'), {
+      data: { title: 'Test Detail Group Book', author: 'Test' },
     });
     const { id: collectionId } = await colRes.json();
 
     await page.goto(`/collection/${collectionId}`);
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState('networkidle');
 
     // Set up dialog handler before selecting the option
-    page.once("dialog", async (dialog) => {
-      await dialog.accept("Test From Detail");
+    page.once('dialog', async (dialog) => {
+      await dialog.accept('Test From Detail');
     });
-    await page.getByTestId("group-select").selectOption("__new__");
+    await page.getByTestId('group-select').selectOption('__new__');
 
     // Wait for the select to update with the new group value
-    await expect(page.getByTestId("group-select")).not.toHaveValue("");
-    await expect(page.getByTestId("group-select")).not.toHaveValue("__new__");
+    await expect(page.getByTestId('group-select')).not.toHaveValue('');
+    await expect(page.getByTestId('group-select')).not.toHaveValue('__new__');
 
     // Verify on home page
-    await page.goto("/");
-    await page.waitForLoadState("networkidle");
-    await expect(page.locator("h3", { hasText: "Test From Detail" })).toBeVisible();
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
+    await expect(page.locator('h3', { hasText: 'Test From Detail' })).toBeVisible();
   });
 
-  test("should import pasted text straight into a group", async ({ page }) => {
-    const groupRes = await page.request.post(apiUrl("/api/groups"), {
-      data: { name: "Test Import Group" },
+  test('should import pasted text straight into a group', async ({ page }) => {
+    const groupRes = await page.request.post(apiUrl('/api/groups'), {
+      data: { name: 'Test Import Group' },
     });
     const { id: groupId } = await groupRes.json();
 
-    await page.goto("/");
-    await page.waitForLoadState("networkidle");
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
 
     const groupSection = page.getByTestId(`group-${groupId}`);
     await expect(groupSection).toBeVisible();
 
     await page.getByTestId(`group-import-${groupId}`).click();
-    await page.getByText("Paste Text").click();
+    await page.getByText('Paste Text').click();
 
-    await page.locator("#paste-title").fill("Toets Groep Artikel");
-    await page.locator("#paste-author").fill("Toets Skrywer");
-    await page
-      .locator("#paste-content")
-      .fill("Dit is 'n artikel wat direk in 'n groep beland.");
-    await page.getByRole("button", { name: "Save to Library" }).click();
+    await page.locator('#paste-title').fill('Toets Groep Artikel');
+    await page.locator('#paste-author').fill('Toets Skrywer');
+    await page.locator('#paste-content').fill("Dit is 'n artikel wat direk in 'n groep beland.");
+    await page.getByRole('button', { name: 'Save to Library' }).click();
 
     // The new collection lands inside the group, not in Ungrouped
-    await expect(
-      groupSection.locator("h3", { hasText: "Toets Groep Artikel" })
-    ).toBeVisible({ timeout: 10000 });
-    await expect(groupSection.getByText("1 item")).toBeVisible();
+    await expect(groupSection.locator('h3', { hasText: 'Toets Groep Artikel' })).toBeVisible({
+      timeout: 10000,
+    });
+    await expect(groupSection.getByText('1 item')).toBeVisible();
   });
 
-  test("should import an EPUB straight into a group", async ({ page }) => {
-    const groupRes = await page.request.post(apiUrl("/api/groups"), {
-      data: { name: "Test Epub Group" },
+  test('should import an EPUB straight into a group', async ({ page }) => {
+    const groupRes = await page.request.post(apiUrl('/api/groups'), {
+      data: { name: 'Test Epub Group' },
     });
     const { id: groupId } = await groupRes.json();
 
-    await page.goto("/");
-    await page.waitForLoadState("networkidle");
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
 
     // Selecting "Import File" from the group's dropdown targets that group
     await page.getByTestId(`group-import-${groupId}`).click();
     const [chooser] = await Promise.all([
-      page.waitForEvent("filechooser"),
-      page.getByText("Import File").click(),
+      page.waitForEvent('filechooser'),
+      page.getByText('Import File').click(),
     ]);
-    await chooser.setFiles(path.join(__dirname, "fixtures/test-book.epub"));
+    await chooser.setFiles(path.join(__dirname, 'fixtures/test-book.epub'));
 
     const groupSection = page.getByTestId(`group-${groupId}`);
-    await expect(
-      groupSection.locator("h3", { hasText: "Toets Boek" })
-    ).toBeVisible({ timeout: 15000 });
+    await expect(groupSection.locator('h3', { hasText: 'Toets Boek' })).toBeVisible({
+      timeout: 15000,
+    });
   });
 
-  test("should pick a group from the page-level import menu", async ({ page }) => {
-    const groupRes = await page.request.post(apiUrl("/api/groups"), {
-      data: { name: "Test Destination Group" },
+  test('should pick a group from the page-level import menu', async ({ page }) => {
+    const groupRes = await page.request.post(apiUrl('/api/groups'), {
+      data: { name: 'Test Destination Group' },
     });
     const { id: groupId } = await groupRes.json();
 
-    await page.goto("/");
-    await page.waitForLoadState("networkidle");
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
 
-    await page.getByTestId("library-import").click();
+    await page.getByTestId('library-import').click();
 
     // The menu lists the ungrouped library plus every visible group
-    await expect(page.getByTestId("import-destination-ungrouped")).toHaveAttribute(
-      "aria-pressed",
-      "true"
+    await expect(page.getByTestId('import-destination-ungrouped')).toHaveAttribute(
+      'aria-pressed',
+      'true',
     );
     await page.getByTestId(`import-destination-${groupId}`).click();
     await expect(page.getByTestId(`import-destination-${groupId}`)).toHaveAttribute(
-      "aria-pressed",
-      "true"
+      'aria-pressed',
+      'true',
     );
-    await expect(page.getByTestId("import-destination-ungrouped")).toHaveAttribute(
-      "aria-pressed",
-      "false"
+    await expect(page.getByTestId('import-destination-ungrouped')).toHaveAttribute(
+      'aria-pressed',
+      'false',
     );
 
     // Choosing a destination keeps the menu open so a source can follow
-    await page.getByText("Paste Text").click();
-    await page.locator("#paste-title").fill("Toets Bestemming Artikel");
-    await page.locator("#paste-author").fill("Toets Skrywer");
-    await page.locator("#paste-content").fill("Hierdie een kies sy eie groep.");
-    await page.getByRole("button", { name: "Save to Library" }).click();
+    await page.getByText('Paste Text').click();
+    await page.locator('#paste-title').fill('Toets Bestemming Artikel');
+    await page.locator('#paste-author').fill('Toets Skrywer');
+    await page.locator('#paste-content').fill('Hierdie een kies sy eie groep.');
+    await page.getByRole('button', { name: 'Save to Library' }).click();
 
     const groupSection = page.getByTestId(`group-${groupId}`);
-    await expect(
-      groupSection.locator("h3", { hasText: "Toets Bestemming Artikel" })
-    ).toBeVisible({ timeout: 10000 });
+    await expect(groupSection.locator('h3', { hasText: 'Toets Bestemming Artikel' })).toBeVisible({
+      timeout: 10000,
+    });
 
     // The choice sticks, so several imports can go to the same group
-    await page.getByTestId("library-import").click();
+    await page.getByTestId('library-import').click();
     await expect(page.getByTestId(`import-destination-${groupId}`)).toHaveAttribute(
-      "aria-pressed",
-      "true"
+      'aria-pressed',
+      'true',
     );
   });
 
-  test("the page-level import stays ungrouped", async ({ page }) => {
-    const groupRes = await page.request.post(apiUrl("/api/groups"), {
-      data: { name: "Test Untouched Group" },
+  test('the page-level import stays ungrouped', async ({ page }) => {
+    const groupRes = await page.request.post(apiUrl('/api/groups'), {
+      data: { name: 'Test Untouched Group' },
     });
     const { id: groupId } = await groupRes.json();
 
-    await page.goto("/");
-    await page.waitForLoadState("networkidle");
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
 
     // The page header's Import button, not the group's
-    await page.getByTestId("library-import").click();
-    await page.getByText("Paste Text").click();
+    await page.getByTestId('library-import').click();
+    await page.getByText('Paste Text').click();
 
-    await page.locator("#paste-title").fill("Toets Ongegroepeerde Artikel");
-    await page.locator("#paste-author").fill("Toets Skrywer");
-    await page.locator("#paste-content").fill("Hierdie een bly ongegroepeer.");
-    await page.getByRole("button", { name: "Save to Library" }).click();
+    await page.locator('#paste-title').fill('Toets Ongegroepeerde Artikel');
+    await page.locator('#paste-author').fill('Toets Skrywer');
+    await page.locator('#paste-content').fill('Hierdie een bly ongegroepeer.');
+    await page.getByRole('button', { name: 'Save to Library' }).click();
 
-    const ungrouped = page.getByTestId("ungrouped-section");
-    await expect(
-      ungrouped.locator("h3", { hasText: "Toets Ongegroepeerde Artikel" })
-    ).toBeVisible({ timeout: 10000 });
-    await expect(page.getByTestId(`group-${groupId}`).getByText("0 items")).toBeVisible();
+    const ungrouped = page.getByTestId('ungrouped-section');
+    await expect(ungrouped.locator('h3', { hasText: 'Toets Ongegroepeerde Artikel' })).toBeVisible({
+      timeout: 10000,
+    });
+    await expect(page.getByTestId(`group-${groupId}`).getByText('0 items')).toBeVisible();
   });
 
-  test("groups API CRUD works correctly", async ({ page }) => {
+  test('groups API CRUD works correctly', async ({ page }) => {
     // POST
-    const createRes = await page.request.post(apiUrl("/api/groups"), {
-      data: { name: "Test API Group" },
+    const createRes = await page.request.post(apiUrl('/api/groups'), {
+      data: { name: 'Test API Group' },
     });
     expect(createRes.ok()).toBeTruthy();
     const { id } = await createRes.json();
     expect(id).toBeTruthy();
 
     // GET
-    const listRes = await page.request.get(apiUrl("/api/groups"));
+    const listRes = await page.request.get(apiUrl('/api/groups'));
     const groups = await listRes.json();
     const created = groups.find((g: { id: string }) => g.id === id);
     expect(created).toBeTruthy();
-    expect(created.name).toBe("Test API Group");
+    expect(created.name).toBe('Test API Group');
 
     // PUT
     const updateRes = await page.request.put(apiUrl(`/api/groups/${id}`), {
-      data: { name: "Test API Group Renamed" },
+      data: { name: 'Test API Group Renamed' },
     });
     expect(updateRes.ok()).toBeTruthy();
 
-    const listRes2 = await page.request.get(apiUrl("/api/groups"));
+    const listRes2 = await page.request.get(apiUrl('/api/groups'));
     const groups2 = await listRes2.json();
-    expect(groups2.find((g: { id: string }) => g.id === id).name).toBe("Test API Group Renamed");
+    expect(groups2.find((g: { id: string }) => g.id === id).name).toBe('Test API Group Renamed');
 
     // DELETE
     const deleteRes = await page.request.delete(apiUrl(`/api/groups/${id}`));
     expect(deleteRes.ok()).toBeTruthy();
 
-    const listRes3 = await page.request.get(apiUrl("/api/groups"));
+    const listRes3 = await page.request.get(apiUrl('/api/groups'));
     const groups3 = await listRes3.json();
     expect(groups3.find((g: { id: string }) => g.id === id)).toBeUndefined();
   });
 
-  test("should reject empty group name", async ({ page }) => {
-    const res = await page.request.post(apiUrl("/api/groups"), {
-      data: { name: "" },
+  test('should reject empty group name', async ({ page }) => {
+    const res = await page.request.post(apiUrl('/api/groups'), {
+      data: { name: '' },
     });
     expect(res.status()).toBe(400);
   });

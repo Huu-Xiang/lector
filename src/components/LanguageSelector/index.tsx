@@ -149,7 +149,7 @@ export default function LanguageSelector({
       <DropdownMenuContent
         align={variant === 'compact' ? 'end' : 'start'}
         aria-label="Select language"
-        className={variant === 'compact' ? 'w-44' : 'min-w-44'}
+        className={`${variant === 'compact' ? 'w-44' : 'min-w-44'} max-h-80 overflow-y-auto`}
       >
         {menuItems}
         {addSection}

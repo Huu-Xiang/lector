@@ -13,14 +13,11 @@ async function importHyphenatedLesson(page: Page) {
   await page.request.post(apiUrl(`/api/collections/${collectionId}/lessons`), {
     data: {
       title: 'Hoofstuk 1',
-      textContent:
-        'Die Perdekraal-fees is baie gewild. Ons gaan na die Klein-Karoo toe.',
+      textContent: 'Die Perdekraal-fees is baie gewild. Ons gaan na die Klein-Karoo toe.',
     },
   });
 
-  const lessonsRes = await page.request.get(
-    apiUrl(`/api/collections/${collectionId}/lessons`)
-  );
+  const lessonsRes = await page.request.get(apiUrl(`/api/collections/${collectionId}/lessons`));
   const lessons = await lessonsRes.json();
 
   await page.goto(`/read/${lessons[0].id}`);
@@ -61,7 +58,11 @@ test.describe('Reader word handling', () => {
     // Word dict-misses now stream a plain-text gloss from /translate/gloss.
     await page.route('**/api/translate/gloss', async (route) => {
       const body = JSON.parse(route.request().postData() || '{}');
-      await route.fulfill({ status: 200, contentType: 'text/plain', body: `[translated: ${body.word}]` });
+      await route.fulfill({
+        status: 200,
+        contentType: 'text/plain',
+        body: `[translated: ${body.word}]`,
+      });
     });
 
     // Clean up any leftover test collections
@@ -89,9 +90,7 @@ test.describe('Reader word handling', () => {
     }
   });
 
-  test('clicking a hyphenated word should translate the full token', async ({
-    page,
-  }) => {
+  test('clicking a hyphenated word should translate the full token', async ({ page }) => {
     // "Perdekraal-fees" should be a single clickable span
     const hyphenatedWord = page.locator('article span.cursor-pointer', {
       hasText: 'Perdekraal-fees',
@@ -117,7 +116,9 @@ test.describe('Reader word handling', () => {
     await expect(drawer.getByRole('heading', { name: 'Perdekraal-fees' })).toBeVisible();
   });
 
-  test('updates one word optimistically without refetching the known-words map', async ({ page }) => {
+  test('updates one word optimistically without refetching the known-words map', async ({
+    page,
+  }) => {
     let releaseWrite!: () => void;
     let writeStarted!: () => void;
     const writeGate = new Promise<void>((resolve) => {
@@ -196,7 +197,7 @@ test.describe('Reader word handling', () => {
 
     await page.evaluate(() => {
       window.dispatchEvent(
-        new KeyboardEvent('keydown', { key: '1', metaKey: true, bubbles: true })
+        new KeyboardEvent('keydown', { key: '1', metaKey: true, bubbles: true }),
       );
     });
     await page.waitForTimeout(300);

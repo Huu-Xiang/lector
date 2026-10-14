@@ -154,6 +154,7 @@ test.describe('two users, isolated libraries (#220)', () => {
     const annaPage = await anna.newPage();
     await annaPage.goto('/');
     await expect(annaPage).toHaveURL(/\/setup/, { timeout: 15_000 });
+    await annaPage.getByTestId('setup-language-show-all').click();
     await annaPage.getByTestId('setup-language-af').click();
     await annaPage.getByTestId('skip-guided-onboarding').click();
     await expect(annaPage).toHaveURL('/', { timeout: 15_000 });
@@ -170,6 +171,7 @@ test.describe('two users, isolated libraries (#220)', () => {
     const berndPage = await bernd.newPage();
     await berndPage.goto('/');
     await expect(berndPage).toHaveURL(/\/setup/, { timeout: 15_000 });
+    await berndPage.getByTestId('setup-language-show-all').click();
     await berndPage.getByTestId('setup-language-af').click();
     await berndPage.getByTestId('skip-guided-onboarding').click();
     await expect(berndPage).toHaveURL('/', { timeout: 15_000 });
@@ -229,6 +231,7 @@ test.describe('two users, isolated libraries (#220)', () => {
     const page = await carla.newPage();
     await page.goto('/');
     await expect(page).toHaveURL(/\/setup/, { timeout: 15_000 });
+    await page.getByTestId('setup-language-show-all').click();
     await page.getByTestId('setup-language-af').click();
     await page.getByTestId('skip-guided-onboarding').click();
     await expect(page).toHaveURL('/', { timeout: 15_000 });
