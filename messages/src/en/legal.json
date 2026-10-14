@@ -13,7 +13,8 @@
           "text": "The <strong>text</strong> extracted from books and articles you import (titles and chapters). We do not keep the original EPUB file.",
           "learning": "Your vocabulary, reading progress, practice history, journal entries and settings.",
           "aiKey": "If you add your own AI key, it is stored encrypted (AES-256-GCM). It is never sent back to your browser.",
-          "session": "A session cookie that keeps you signed in, and short-lived server logs (such as IP address and request errors) used to keep the service secure and working."
+          "session": "A session cookie that keeps you signed in, and short-lived server logs (such as IP address and request errors) used to keep the service secure and working.",
+          "sharedWords": "A shared cache of single-word translations (the language pair, the word and its translation), reused for every account. It holds no account information and none of your sentences."
         }
       },
       "others": {

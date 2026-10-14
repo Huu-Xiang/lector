@@ -12,7 +12,8 @@ import { getSpelreelsContext } from '../lib/spelreels';
 import { resolveLanguage } from '../lib/active-language';
 import { getCurrentUserId } from '../lib/user';
 import { getLanguageConfig } from '../lib/languages';
-import { getNativeLanguageName } from '../lib/native-language';
+import { getNativeLanguageCode, getNativeLanguageName } from '../lib/native-language';
+import { sharedGlossCache, type GlossCache } from '../lib/gloss-cache';
 import {
   buildGlossPrompt,
   buildPhrasePrompt,
@@ -46,6 +47,8 @@ interface TranslateRouteDeps {
   providerForUser: (userId: string, access: ProviderAccessOptions) => LLMProvider;
   engine: EntitlementsEngine;
   rateLimiter: TranslationBurstLimiter;
+  /** Shared word-gloss cache; `null` turns it off. */
+  glossCache?: GlossCache | null;
 }
 
 interface CommonInput {
@@ -232,6 +235,7 @@ export function makeTranslateRoutes({
   providerForUser,
   engine,
   rateLimiter,
+  glossCache = sharedGlossCache,
 }: TranslateRouteDeps): Hono {
   const app = new Hono();
   app.use(
@@ -265,6 +269,11 @@ export function makeTranslateRoutes({
     );
     recordStudySessionPing(userId, lang);
 
+    // A shared hit costs nothing, so it is served before any quota is reserved.
+    const nativeCode = getNativeLanguageCode(userId);
+    const cachedGloss = glossCache?.get(lang, nativeCode, parsed.value.word) ?? null;
+    if (cachedGloss) return c.text(cachedGloss);
+
     const reservation = reserve(c, engine, userId, metricForGloss(resolved));
     if (reservation instanceof Response) return reservation;
 
@@ -289,6 +298,8 @@ export function makeTranslateRoutes({
           await stream.write(delta);
         }
         if (!output.trim()) engine.refund(reservation);
+        // Only server-funded answers are shared; a user's own model never writes here.
+        else if (!reservation.byok) glossCache?.put(lang, nativeCode, parsed.value.word, output);
       } catch (error) {
         if (!output.trim()) engine.refund(reservation);
         console.error('Gloss stream error:', error);

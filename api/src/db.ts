@@ -220,6 +220,20 @@ function getDb(): Database {
       PRIMARY KEY (userId, word, language)
     );
 
+    -- Shared AI word-gloss cache. Holds only language pair, word and gloss:
+    -- no user id and no sentence, so every account can reuse a result without
+    -- exposing what anyone read. Only managed (server-funded) answers are stored.
+    CREATE TABLE IF NOT EXISTS shared_gloss_cache (
+      language TEXT NOT NULL,
+      nativeLanguage TEXT NOT NULL,
+      word TEXT NOT NULL,
+      promptVersion INTEGER NOT NULL,
+      gloss TEXT NOT NULL,
+      hits INTEGER NOT NULL DEFAULT 0,
+      createdAt TEXT NOT NULL,
+      PRIMARY KEY (language, nativeLanguage, word, promptVersion)
+    );
+
     CREATE TABLE IF NOT EXISTS cached_senses (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       userId TEXT NOT NULL DEFAULT 'local',

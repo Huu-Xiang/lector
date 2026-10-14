@@ -11,6 +11,7 @@ import {
 import type { CompletionOptions, LLMProvider, ProviderAccessOptions } from '../lib/llm';
 import { InMemoryTranslationBurstLimiter } from '../lib/rate-limit';
 import { getSpelreelsContext } from '../lib/spelreels';
+import type { GlossCache } from '../lib/gloss-cache';
 import { makeTranslateRoutes } from './translate';
 
 const FREE: PlanLimits = {
@@ -127,6 +128,7 @@ function makeApp(options: {
   provider?: FakeProvider;
   limiter?: InMemoryTranslationBurstLimiter;
   providerForUser?: (userId: string, access: ProviderAccessOptions) => LLMProvider;
+  glossCache?: GlossCache | null;
 }) {
   const provider = options.provider ?? new FakeProvider();
   const providerUserIds: string[] = [];
@@ -141,6 +143,7 @@ function makeApp(options: {
     rateLimiter:
       options.limiter ??
       new InMemoryTranslationBurstLimiter({ glossPerWindow: 10_000, detailPerWindow: 10_000 }),
+    glossCache: options.glossCache ?? null,
   });
   return { app, provider, providerUserIds, providerAccess };
 }
@@ -507,5 +510,52 @@ describe('refunds and burst protection', () => {
     expect(provider.calls).toHaveLength(1);
     expect(engine.getUsage('local', 'phraseTranslationsPerDay')).toBe(1);
     expect(engine.getUsage('local', 'contextTranslationsPerDay')).toBe(0);
+  });
+});
+
+class MemoryGlossCache implements GlossCache {
+  rows = new Map<string, string>();
+  get(language: string, native: string, word: string) {
+    return this.rows.get(`${language}|${native}|${word.toLowerCase()}`) ?? null;
+  }
+  put(language: string, native: string, word: string, gloss: string) {
+    this.rows.set(`${language}|${native}|${word.toLowerCase()}`, gloss);
+  }
+}
+
+describe('shared gloss cache', () => {
+  const now = () => new Date('2026-07-15T12:00:00Z');
+
+  test('a repeat lookup is served from the cache without the provider or any quota', async () => {
+    const cache = new MemoryGlossCache();
+    const engine = makeEngine({ now, limits: { cloud: { wordGlossesPerMonth: 1 } } });
+    const { app, provider } = makeApp({ engine, glossCache: cache });
+    const first = await post(app, '/gloss', { word: 'Huis', sentence: 'Dit is my huis.' });
+    expect(await first.text()).toBe('meaning');
+    expect(provider.calls).toHaveLength(1);
+
+    const second = await post(app, '/gloss', { word: 'huis', sentence: 'Ander sin.' });
+    expect(second.status).toBe(200);
+    expect(await second.text()).toBe('meaning');
+    expect(provider.calls).toHaveLength(1);
+  });
+
+  test('a user own-key answer is never written to the shared cache', async () => {
+    const cache = new MemoryGlossCache();
+    const engine = makeEngine({ now, byok: true });
+    const { app } = makeApp({ engine, glossCache: cache });
+    await (await post(app, '/gloss', { word: 'huis', sentence: 'x' })).text();
+    expect(cache.rows.size).toBe(0);
+  });
+
+  test('an empty answer is not cached', async () => {
+    const cache = new MemoryGlossCache();
+    const provider = new FakeProvider();
+    provider.streamImpl = async function* () {
+      yield '   ';
+    };
+    const { app } = makeApp({ engine: makeEngine({ now }), provider, glossCache: cache });
+    await (await post(app, '/gloss', { word: 'huis', sentence: 'x' })).text();
+    expect(cache.rows.size).toBe(0);
   });
 });
