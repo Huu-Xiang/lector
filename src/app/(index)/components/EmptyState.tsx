@@ -1,13 +1,16 @@
-import { BookOpen, CloudUpload, Sparkles } from 'lucide-react';
+import { BookMarked, BookOpen, CloudUpload, Sparkles } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 
 export default function EmptyState({
   onImport,
+  onBrowseBooks,
   onAddStarter,
   isAddingStarter = false,
 }: {
   onImport: () => void;
+  /** Opens the free public-domain book list. */
+  onBrowseBooks?: () => void;
   /** Present only when the active language has an unseeded starter pack (#315). */
   onAddStarter?: () => void;
   isAddingStarter?: boolean;
@@ -25,6 +28,17 @@ export default function EmptyState({
           <CloudUpload className="h-5 w-5" />
           {t('importBook')}
         </Button>
+        {onBrowseBooks && (
+          <Button
+            onClick={onBrowseBooks}
+            size="lg"
+            variant="outline"
+            data-testid="empty-browse-books"
+          >
+            <BookMarked className="h-5 w-5" />
+            {t('browseBooks')}
+          </Button>
+        )}
         {onAddStarter && (
           <Button
             onClick={onAddStarter}

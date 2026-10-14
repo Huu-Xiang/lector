@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { ArrowRight, ChevronDown, Folder, Plus, Sparkles } from 'lucide-react';
+import { ArrowRight, BookMarked, ChevronDown, Folder, Plus, Sparkles } from 'lucide-react';
 import { ReadingSweep } from '@/components/Loaders';
 import AddCollectionTile from './components/AddCollectionTile';
 import EmptyState from './components/EmptyState';
@@ -14,6 +14,7 @@ import ImportDropdown from '@/components/ImportDropdown';
 import WebImportModal from '@/components/WebImportModal';
 import YouTubeImportModal from '@/components/YouTubeImportModal';
 import PasteImportModal from '@/components/PasteImportModal';
+import FreeBooksModal from '@/components/FreeBooksModal';
 import {
   DndContext,
   closestCenter,
@@ -73,6 +74,7 @@ export default function Home() {
   const [libraryDestinationId, setLibraryDestinationId] = useState<string | null>(null);
   const [newCollectionTitle, setNewCollectionTitle] = useState('');
   const [starterAvailable, setStarterAvailable] = useState(false);
+  const [isFreeBooksOpen, setIsFreeBooksOpen] = useState(false);
   const [isAddingStarter, setIsAddingStarter] = useState(false);
   const [onboarding, setOnboarding] = useState<OnboardingSnapshot | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -441,6 +443,15 @@ export default function Home() {
             </Button>
           )}
 
+          <Button
+            variant="outline"
+            onClick={() => setIsFreeBooksOpen(true)}
+            data-testid="free-books-btn"
+          >
+            <BookMarked size="16" />
+            {t('freeBooks.button')}
+          </Button>
+
           <ImportDropdown
             {...libraryImportHandlers}
             disabled={isImporting}
@@ -539,6 +550,11 @@ export default function Home() {
               setImportGroupId(null);
               router.push(`/read/${lessonId}`);
             }}
+          />
+          <FreeBooksModal
+            isOpen={isFreeBooksOpen}
+            onClose={() => setIsFreeBooksOpen(false)}
+            onAdded={() => void loadData()}
           />
           <PasteImportModal
             isOpen={isPasteImportOpen}
@@ -658,6 +674,7 @@ export default function Home() {
             </div>
           ) : (
             <EmptyState
+              onBrowseBooks={() => setIsFreeBooksOpen(true)}
               onImport={libraryImportHandlers.onFileImport}
               onAddStarter={starterAvailable ? handleAddStarter : undefined}
               isAddingStarter={isAddingStarter}

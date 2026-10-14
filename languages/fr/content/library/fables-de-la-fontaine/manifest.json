@@ -1,0 +1,49 @@
+{
+  "title": "Fables de La Fontaine (extraits)",
+  "author": "Jean de La Fontaine",
+  "level": "B2",
+  "wordCount": 13997,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/56327",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. La cigale et la fourmi."
+    },
+    {
+      "file": "02.md",
+      "title": "2. Fables"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Fables"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Fables"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Fables"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Fables"
+    },
+    {
+      "file": "07.md",
+      "title": "7. XVIII. La chatte métamorphosée en femme."
+    },
+    {
+      "file": "08.md",
+      "title": "8. Fables"
+    },
+    {
+      "file": "09.md",
+      "title": "9. VII. L'ivrogne et sa femme."
+    }
+  ]
+}

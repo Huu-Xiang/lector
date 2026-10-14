@@ -1,0 +1,23 @@
+{
+  "library": {
+    "freeBooks": {
+      "button": "Free books",
+      "title": "Free books",
+      "close": "Close",
+      "intro": "Public-domain books in {language}, from easiest to hardest. Adding one copies it into your library. Levels are approximate.",
+      "loading": "Loading…",
+      "errLoad": "Could not load the free books.",
+      "none": "No free books for {language} yet.",
+      "levelHint": "Approximate level",
+      "size": "{words} words, {lessons} lessons",
+      "add": "Add",
+      "adding": "Adding…",
+      "addedLabel": "Added",
+      "added": "Added {title} to your library",
+      "errAdd": "Could not add the book"
+    },
+    "empty": {
+      "browseBooks": "Browse free books"
+    }
+  }
+}

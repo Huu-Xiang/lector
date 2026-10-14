@@ -1,0 +1,23 @@
+{
+  "library": {
+    "freeBooks": {
+      "button": "免费书籍",
+      "title": "免费书籍",
+      "close": "关闭",
+      "intro": "{language}的公版书,按难度从易到难排列。添加后会复制到你的书库。难度等级仅供参考。",
+      "loading": "加载中…",
+      "errLoad": "无法加载免费书籍。",
+      "none": "暂时还没有{language}的免费书籍。",
+      "levelHint": "大致难度",
+      "size": "{words} 词,{lessons} 课",
+      "add": "添加",
+      "adding": "添加中…",
+      "addedLabel": "已添加",
+      "added": "已把《{title}》添加到书库",
+      "errAdd": "无法添加这本书"
+    },
+    "empty": {
+      "browseBooks": "浏览免费书籍"
+    }
+  }
+}

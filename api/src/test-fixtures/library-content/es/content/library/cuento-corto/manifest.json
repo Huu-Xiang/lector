@@ -1,0 +1,11 @@
+{
+  "title": "Cuento corto",
+  "author": "Autor de prueba",
+  "level": "A2",
+  "wordCount": 12,
+  "source": { "name": "Test source", "url": "https://example.test/book", "license": "Public domain" },
+  "lessons": [
+    { "file": "01.md", "title": "1. Uno" },
+    { "file": "02.md", "title": "2. Dos" }
+  ]
+}

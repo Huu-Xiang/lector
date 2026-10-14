@@ -1,0 +1,8 @@
+{
+  "title": "Cuento difícil",
+  "author": "Autor de prueba",
+  "level": "C1",
+  "wordCount": 6,
+  "source": { "name": "Test source", "url": "https://example.test/hard", "license": "Public domain" },
+  "lessons": [{ "file": "01.md", "title": "1. Único" }]
+}

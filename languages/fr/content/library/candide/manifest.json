@@ -1,0 +1,105 @@
+{
+  "title": "Candide, ou l'optimisme",
+  "author": "Voltaire",
+  "level": "B2",
+  "wordCount": 34141,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/4650",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Candide"
+    },
+    {
+      "file": "02.md",
+      "title": "2. CHAPITRE III. Comment Candide se sauva d’entre les Bulgares, et ce qu’il devint."
+    },
+    {
+      "file": "03.md",
+      "title": "3. Candide"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Candide"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Candide"
+    },
+    {
+      "file": "06.md",
+      "title": "6. CHAPITRE XI. Histoire de la vieille."
+    },
+    {
+      "file": "07.md",
+      "title": "7. Candide"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Candide"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Candide"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Candide"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Candide"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Candide"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Candide"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Candide"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Candide"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Candide"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Candide"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Candide"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Candide"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Candide"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Candide"
+    },
+    {
+      "file": "22.md",
+      "title": "22. Candide"
+    },
+    {
+      "file": "23.md",
+      "title": "23. Candide"
+    }
+  ]
+}

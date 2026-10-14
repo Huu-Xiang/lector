@@ -18,6 +18,7 @@ import cloze from './cloze';
 import stats from './stats';
 import settings from './settings';
 import starter from './starter';
+import library from './library';
 import translate from './translate';
 import explain from './explain';
 import data from './data';
@@ -80,6 +81,7 @@ export const routeMounts: readonly RouteMount[] = [
   { prefix: '/api/stats', app: stats },
   { prefix: '/api/settings', app: settings },
   { prefix: '/api/starter', app: starter },
+  { prefix: '/api/library', app: library },
   { prefix: '/api/translate', app: translate },
   { prefix: '/api/explain', app: explain },
   { prefix: '/api/data', app: data },

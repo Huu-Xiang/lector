@@ -1,0 +1,149 @@
+{
+  "title": "Lettres de mon moulin",
+  "author": "Alphonse Daudet",
+  "level": "B1",
+  "wordCount": 49532,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/36780",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Installation"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Lettres de mon moulin"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Lettres de mon moulin"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Lettres de mon moulin"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Lettres de mon moulin"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Lettres de mon moulin"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Lettres de mon moulin"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Lettres de mon moulin"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Lettres de mon moulin"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Lettres de mon moulin"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Lettres de mon moulin"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Lettres de mon moulin"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Lettres de mon moulin"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Lettres de mon moulin"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Lettres de mon moulin"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Lettres de mon moulin"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Lettres de mon moulin"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Lettres de mon moulin"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Lettres de mon moulin"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Lettres de mon moulin"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Lettres de mon moulin"
+    },
+    {
+      "file": "22.md",
+      "title": "22. Lettres de mon moulin"
+    },
+    {
+      "file": "23.md",
+      "title": "23. Lettres de mon moulin"
+    },
+    {
+      "file": "24.md",
+      "title": "24. Lettres de mon moulin"
+    },
+    {
+      "file": "25.md",
+      "title": "25. Lettres de mon moulin"
+    },
+    {
+      "file": "26.md",
+      "title": "26. Lettres de mon moulin"
+    },
+    {
+      "file": "27.md",
+      "title": "27. Lettres de mon moulin"
+    },
+    {
+      "file": "28.md",
+      "title": "28. Lettres de mon moulin"
+    },
+    {
+      "file": "29.md",
+      "title": "29. Lettres de mon moulin"
+    },
+    {
+      "file": "30.md",
+      "title": "30. Lettres de mon moulin"
+    },
+    {
+      "file": "31.md",
+      "title": "31. Lettres de mon moulin"
+    },
+    {
+      "file": "32.md",
+      "title": "32. Lettres de mon moulin"
+    },
+    {
+      "file": "33.md",
+      "title": "33. Lettres de mon moulin"
+    },
+    {
+      "file": "34.md",
+      "title": "34. Lettres de mon moulin"
+    }
+  ]
+}

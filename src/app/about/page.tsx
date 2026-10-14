@@ -44,6 +44,7 @@ export default async function AboutPage() {
 
       <H2>{t('about.dataSources.heading')}</H2>
       <p>{t('about.dataSources.body')}</p>
+      <p>{t('about.dataSources.books')}</p>
     </LegalShell>
   );
 }

@@ -1,0 +1,21 @@
+{
+  "title": "Riquet à la Houppe",
+  "author": "Charles Perrault",
+  "level": "A2",
+  "wordCount": 2290,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/17098",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Riquet à la Houppe"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Riquet à la Houppe"
+    }
+  ]
+}

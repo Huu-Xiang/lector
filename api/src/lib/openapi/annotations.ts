@@ -2801,6 +2801,14 @@ const internalOps: Record<string, OperationDoc> = {
     summary: 'Check the starter content of a language',
     tag: 'Onboarding',
   },
+  'GET /api/library/catalog': {
+    summary: 'List the free public-domain books of a language',
+    tag: 'Onboarding',
+  },
+  'POST /api/library/add': {
+    summary: 'Add a free book to the library',
+    tag: 'Onboarding',
+  },
   'POST /api/starter/seed': {
     summary: 'Seed the starter content of a language',
     tag: 'Onboarding',

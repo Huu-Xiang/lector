@@ -1453,3 +1453,32 @@ export async function clearChatMessages(): Promise<void> {
   const res = await apiFetch(`/api/chat${langParam()}`, { method: 'DELETE' });
   await requireOk(res, 'Could not clear chat history');
 }
+
+export interface LibraryBook {
+  slug: string;
+  title: string;
+  author: string;
+  level: string;
+  wordCount: number;
+  lessonCount: number;
+  sourceName: string;
+  sourceUrl: string;
+  license: string;
+  added: boolean;
+}
+
+export async function getLibraryCatalog(language: string): Promise<LibraryBook[]> {
+  const res = await apiFetch(`/api/library/catalog?language=${encodeURIComponent(language)}`);
+  await requireOk(res, 'Could not load the free books');
+  return ((await res.json()) as { books: LibraryBook[] }).books;
+}
+
+export async function addLibraryBook(language: string, slug: string): Promise<void> {
+  const res = await apiFetch('/api/library/add', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ language, slug }),
+  });
+  await requireOk(res, 'Could not add the book');
+  invalidateCollections();
+}

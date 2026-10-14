@@ -1,0 +1,121 @@
+{
+  "title": "Boule de Suif et autres contes",
+  "author": "Guy de Maupassant",
+  "level": "B2",
+  "wordCount": 38494,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/10746",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Boule de Suif"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Boule de Suif"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Boule de Suif"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Boule de Suif"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Boule de Suif"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Boule de Suif"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Boule de Suif"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Boule de Suif"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Boule de Suif"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Boule de Suif"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Boule de Suif"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Boule de Suif"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Boule de Suif"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Boule de Suif"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Boule de Suif"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Boule de Suif"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Boule de Suif"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Boule de Suif"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Boule de Suif"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Boule de Suif"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Boule de Suif"
+    },
+    {
+      "file": "22.md",
+      "title": "22. La buche"
+    },
+    {
+      "file": "23.md",
+      "title": "23. Boule de Suif"
+    },
+    {
+      "file": "24.md",
+      "title": "24. Boule de Suif"
+    },
+    {
+      "file": "25.md",
+      "title": "25. Boule de Suif"
+    },
+    {
+      "file": "26.md",
+      "title": "26. Boule de Suif"
+    },
+    {
+      "file": "27.md",
+      "title": "27. Boule de Suif"
+    }
+  ]
+}
