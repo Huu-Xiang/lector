@@ -1,0 +1,53 @@
+{
+  "title": "Aesop's Fables (selection)",
+  "author": "Aesop, translated by V. S. Vernon Jones",
+  "level": "A2",
+  "wordCount": 13946,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/11339",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. The fox and the grapes"
+    },
+    {
+      "file": "02.md",
+      "title": "2. The wolf and the lamb"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Aesop's Fables"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Aesop's Fables"
+    },
+    {
+      "file": "05.md",
+      "title": "5. The flea and the man"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Aesop's Fables"
+    },
+    {
+      "file": "07.md",
+      "title": "7. The owl and the birds"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Jupiter and the tortoise"
+    },
+    {
+      "file": "09.md",
+      "title": "9. The traveller and his dog"
+    },
+    {
+      "file": "10.md",
+      "title": "10. The bear and the fox"
+    }
+  ]
+}

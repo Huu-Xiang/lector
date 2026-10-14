@@ -1,0 +1,125 @@
+{
+  "title": "The Wonderful Wizard of Oz",
+  "author": "L. Frank Baum",
+  "level": "B1",
+  "wordCount": 39616,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/55",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. The Wizard of Oz"
+    },
+    {
+      "file": "02.md",
+      "title": "2. The Wizard of Oz"
+    },
+    {
+      "file": "03.md",
+      "title": "3. The Wizard of Oz"
+    },
+    {
+      "file": "04.md",
+      "title": "4. The Wizard of Oz"
+    },
+    {
+      "file": "05.md",
+      "title": "5. The Wizard of Oz"
+    },
+    {
+      "file": "06.md",
+      "title": "6. The Wizard of Oz"
+    },
+    {
+      "file": "07.md",
+      "title": "7. The Wizard of Oz"
+    },
+    {
+      "file": "08.md",
+      "title": "8. The Wizard of Oz"
+    },
+    {
+      "file": "09.md",
+      "title": "9. The Wizard of Oz"
+    },
+    {
+      "file": "10.md",
+      "title": "10. The Wizard of Oz"
+    },
+    {
+      "file": "11.md",
+      "title": "11. The Wizard of Oz"
+    },
+    {
+      "file": "12.md",
+      "title": "12. The Wizard of Oz"
+    },
+    {
+      "file": "13.md",
+      "title": "13. The Wizard of Oz"
+    },
+    {
+      "file": "14.md",
+      "title": "14. The Wizard of Oz"
+    },
+    {
+      "file": "15.md",
+      "title": "15. The Wizard of Oz"
+    },
+    {
+      "file": "16.md",
+      "title": "16. The Wizard of Oz"
+    },
+    {
+      "file": "17.md",
+      "title": "17. The Wizard of Oz"
+    },
+    {
+      "file": "18.md",
+      "title": "18. The Wizard of Oz"
+    },
+    {
+      "file": "19.md",
+      "title": "19. The Wizard of Oz"
+    },
+    {
+      "file": "20.md",
+      "title": "20. The Wizard of Oz"
+    },
+    {
+      "file": "21.md",
+      "title": "21. The Wizard of Oz"
+    },
+    {
+      "file": "22.md",
+      "title": "22. The Wizard of Oz"
+    },
+    {
+      "file": "23.md",
+      "title": "23. The Wizard of Oz"
+    },
+    {
+      "file": "24.md",
+      "title": "24. The Wizard of Oz"
+    },
+    {
+      "file": "25.md",
+      "title": "25. The Wizard of Oz"
+    },
+    {
+      "file": "26.md",
+      "title": "26. The Wizard of Oz"
+    },
+    {
+      "file": "27.md",
+      "title": "27. The Wizard of Oz"
+    },
+    {
+      "file": "28.md",
+      "title": "28. The Wizard of Oz"
+    }
+  ]
+}

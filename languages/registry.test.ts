@@ -68,13 +68,13 @@ describe('registry pronunciation conformance', () => {
   // (elision) and af (plural, #430) declare it; fr/nl still split. Every
   // variant the fold maps must also join, or a curly-apostrophe word would
   // tokenize as two words and then key as one.
-  it('Afrikaans, Italian and Ukrainian join and fold the apostrophe; French and Dutch do not', () => {
+  it('Afrikaans, English, Italian and Ukrainian join and fold the apostrophe; French and Dutch do not', () => {
     const withJoiners = getAllLanguages().filter((lang) => lang.script.extraJoiners);
-    expect(withJoiners.map((lang) => lang.code)).toEqual(['af', 'it', 'uk']);
+    expect(withJoiners.map((lang) => lang.code)).toEqual(['af', 'en', 'it', 'uk']);
     const withFold = getAllLanguages().filter((lang) => lang.script.foldApostrophes);
-    expect(withFold.map((lang) => lang.code)).toEqual(['af', 'it', 'uk']);
+    expect(withFold.map((lang) => lang.code)).toEqual(['af', 'en', 'it', 'uk']);
 
-    for (const code of ['af', 'it', 'uk'] as const) {
+    for (const code of ['af', 'en', 'it', 'uk'] as const) {
       const joiners = LANGUAGES[code].script.extraJoiners;
       expect(joiners).toContain("'");
       for (const variant of ['‘', '’', 'ʼ', 'ʹ', '`', '´']) {

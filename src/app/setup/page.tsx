@@ -28,7 +28,18 @@ const languageCards: { code: LanguageCode; flag: string; native: string; name: s
 
 // Shown up front; every other language sits behind "Show all languages" so the
 // preferences below stay on screen without scrolling past 30+ cards.
-const POPULAR_LANGUAGES: LanguageCode[] = ['es', 'fr', 'de', 'it', 'pt', 'ja', 'ko', 'zh', 'ru'];
+const POPULAR_LANGUAGES: LanguageCode[] = [
+  'en',
+  'es',
+  'fr',
+  'de',
+  'it',
+  'pt',
+  'ja',
+  'ko',
+  'zh',
+  'ru',
+];
 
 const levelOptions: ApproximateLevel[] = [
   'new',

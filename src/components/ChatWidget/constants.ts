@@ -37,6 +37,11 @@ export const EXAMPLE_PROMPTS: Record<LanguageCode, string[]> = {
     'What is consonant gradation, as in katu → kadun?',
     'How does vowel harmony decide which suffix I use?',
   ],
+  en: [
+    'What is the difference between "make" and "do"?',
+    'When do I use "a" vs "the"?',
+    'How do the present perfect and the simple past differ?',
+  ],
   eo: [
     'How does the accusative -n ending work?',
     'Explain the correlative table (kiu, tiu, ĉiu, neniu…)',

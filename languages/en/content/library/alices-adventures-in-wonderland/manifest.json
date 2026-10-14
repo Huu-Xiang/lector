@@ -1,0 +1,89 @@
+{
+  "title": "Alice's Adventures in Wonderland",
+  "author": "Lewis Carroll",
+  "level": "B1",
+  "wordCount": 27342,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/11",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Alice in Wonderland"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Alice in Wonderland"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Alice in Wonderland"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Alice in Wonderland"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Alice in Wonderland"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Alice in Wonderland"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Alice in Wonderland"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Alice in Wonderland"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Alice in Wonderland"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Alice in Wonderland"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Alice in Wonderland"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Alice in Wonderland"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Alice in Wonderland"
+    },
+    {
+      "file": "14.md",
+      "title": "14. CHAPTER IX. The Mock Turtle’s Story"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Alice in Wonderland"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Alice in Wonderland"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Alice in Wonderland"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Alice in Wonderland"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Alice in Wonderland"
+    }
+  ]
+}

@@ -2,7 +2,7 @@
 """Turn Project Gutenberg plain-text files into library book packs.
 
 Usage:
-  python3 -I scripts/build-library-books.py --raw <dir with pg<ID>.txt> --out languages/fr/content/library
+  python3 -I scripts/build-library-books.py --lang fr --raw <dir with pg<ID>.txt> --out languages/fr/content/library
 
 Each book becomes <out>/<slug>/manifest.json plus NN.md lesson files of about
 LESSON_WORDS words, cut at paragraph boundaries. The raw files are never committed.
@@ -17,24 +17,38 @@ from pathlib import Path
 LESSON_WORDS = 1400
 
 BOOKS = [
-    dict(slug="riquet-a-la-houppe", id=17098, title="Riquet à la Houppe", author="Charles Perrault",
+    dict(lang="fr", slug="riquet-a-la-houppe", id=17098, title="Riquet à la Houppe", author="Charles Perrault",
          level="A2", start=r"Il était une fois", short="Riquet à la Houppe",
          cut=r"^Paris\.--Imprimerie"),
-    dict(slug="lettres-de-mon-moulin", id=36780, title="Lettres de mon moulin", author="Alphonse Daudet",
+    dict(lang="fr", slug="lettres-de-mon-moulin", id=36780, title="Lettres de mon moulin", author="Alphonse Daudet",
          level="B1", start=r"^INSTALLATION\s*$", short="Lettres de mon moulin",
          cut=r"^\s*FIN\s*$"),
-    dict(slug="le-tour-du-monde-en-80-jours", id=800, title="Le Tour du monde en quatre-vingts jours",
+    dict(lang="fr", slug="le-tour-du-monde-en-80-jours", id=800, title="Le Tour du monde en quatre-vingts jours",
          author="Jules Verne", level="B1", start=r"En l'année 1872", short="Le Tour du monde"),
-    dict(slug="boule-de-suif", id=10746, title="Boule de Suif et autres contes", author="Guy de Maupassant",
+    dict(lang="fr", slug="boule-de-suif", id=10746, title="Boule de Suif et autres contes", author="Guy de Maupassant",
          level="B2", start=r"Pendant plusieurs jours de suite", short="Boule de Suif",
          cut=r"^\s*(Table|TABLE)\s*$"),
-    dict(slug="candide", id=4650, title="Candide, ou l'optimisme", author="Voltaire",
+    dict(lang="fr", slug="candide", id=4650, title="Candide, ou l'optimisme", author="Voltaire",
          level="B2", start=r"Il y avait en Vestphalie", short="Candide"),
-    dict(slug="fables-de-la-fontaine", id=56327, title="Fables de La Fontaine (extraits)",
+    dict(lang="fr", slug="fables-de-la-fontaine", id=56327, title="Fables de La Fontaine (extraits)",
          author="Jean de La Fontaine", level="B2", start=r"LA CIGALE ET LA FOURMI", short="Fables",
          verse=True, max_words=14000),
-    dict(slug="trois-contes", id=12065, title="Trois contes", author="Gustave Flaubert",
+    dict(lang="fr", slug="trois-contes", id=12065, title="Trois contes", author="Gustave Flaubert",
          level="C1", start=r"Pendant un demi-siècle", short="Trois contes"),
+    dict(lang="en", slug="the-tale-of-peter-rabbit", id=14838, title="The Tale of Peter Rabbit",
+         author="Beatrix Potter", level="A2", start=r"Once upon a time", short="Peter Rabbit"),
+    dict(lang="en", slug="aesops-fables", id=11339, title="Aesop's Fables (selection)",
+         author="Aesop, translated by V. S. Vernon Jones", level="A2",
+         start=r"THE FOX AND THE GRAPES\s*\n\s*\n(?!\s*THE GOOSE)", short="Aesop's Fables", max_words=14000),
+    dict(lang="en", slug="the-wonderful-wizard-of-oz", id=55, title="The Wonderful Wizard of Oz",
+         author="L. Frank Baum", level="B1", start=r"Dorothy lived in the midst", short="The Wizard of Oz"),
+    dict(lang="en", slug="alices-adventures-in-wonderland", id=11, title="Alice's Adventures in Wonderland",
+         author="Lewis Carroll", level="B1", start=r"Alice was beginning to get very tired", short="Alice in Wonderland"),
+    dict(lang="en", slug="adventures-of-sherlock-holmes", id=1661, title="The Adventures of Sherlock Holmes",
+         author="Arthur Conan Doyle", level="B2", start=r"To Sherlock Holmes she is always", short="Sherlock Holmes"),
+    dict(lang="en", slug="pride-and-prejudice", id=1342, title="Pride and Prejudice",
+         author="Jane Austen", level="C1", start=r"It is a truth universally acknowledged", short="Pride and Prejudice",
+         cut=r"^\s*\[Illustration:\s*$"),
 ]
 
 ROMAN = re.compile(r"^[IVXLC]+\.?$")
@@ -89,7 +103,7 @@ def is_heading(par: str) -> bool:
         return False
     plain = par.strip(" _*.")
     return bool(ROMAN.match(plain)) or (len(plain) > 2 and plain == plain.upper() and re.search(r"[A-ZÀ-Ý]", plain)) \
-        or bool(re.match(r"^(CHAPITRE|Chapitre)\b", plain))
+        or bool(re.match(r"^(CHAPITRE|Chapitre|CHAPTER|Chapter)\b", plain))
 
 
 def paragraphs(text: str, verse: bool) -> list[str]:
@@ -137,6 +151,10 @@ def build(book: dict, raw_dir: Path, out_dir: Path) -> None:
         lessons[-1].append(par)
         count += w
         total += w
+    while lessons and lessons[-1] and is_heading(lessons[-1][-1]):
+        lessons[-1].pop()
+    if not lessons[-1] and len(lessons) > 1:
+        lessons.pop()
     if len(lessons) > 1 and words("\n".join(lessons[-1])) < LESSON_WORDS // 4:
         lessons[-2].extend(lessons.pop())
     book_dir = out_dir / book["slug"]
@@ -173,9 +191,11 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--raw", required=True, type=Path)
     ap.add_argument("--out", required=True, type=Path)
+    ap.add_argument("--lang", required=True, choices=sorted({b["lang"] for b in BOOKS}))
     args = ap.parse_args()
     for book in BOOKS:
-        build(book, args.raw, args.out)
+        if book["lang"] == args.lang:
+            build(book, args.raw, args.out)
 
 
 if __name__ == "__main__":

@@ -46,7 +46,7 @@ function legacyWords(text: string): string[] {
 const CORPUS: Record<
   Exclude<
     LanguageCode,
-    'ar' | 'bn' | 'el' | 'ru' | 'grc' | 'hi' | 'tr' | 'uk' | 'ko' | 'zh' | 'ja'
+    'ar' | 'bn' | 'el' | 'en' | 'ru' | 'grc' | 'hi' | 'tr' | 'uk' | 'ko' | 'zh' | 'ja'
   >,
   string[]
 > = {
@@ -1927,5 +1927,37 @@ describe('snapToWordBoundaries with a word list', () => {
     const tapAt = text.indexOf('读');
     expect(snapToWordBoundaries(text, tapAt, tapAt + 1, zh, seg)).toEqual({ start: 1, end: 5 });
     expect(snapToWordBoundaries(text, tapAt, tapAt + 1, zh)).toEqual({ start: 3, end: 5 });
+  });
+});
+
+const en = LANGUAGES.en;
+
+describe('English', () => {
+  it('keeps contractions and possessives as one word', () => {
+    expect(
+      tokenizeWords("I don't like it, it's Mary's well-known car.", en).map((t) => t.text),
+    ).toEqual(['I', "don't", 'like', 'it', "it's", "Mary's", 'well-known', 'car']);
+    expect(tokenizeWords('Don’t go', en).map((t) => t.text)).toEqual(['Don’t', 'go']);
+  });
+
+  it('leaves quote marks and a trailing apostrophe outside the word', () => {
+    expect(tokenizeWords("The dogs' bones; 'Quoted' text.", en).map((t) => t.text)).toEqual([
+      'The',
+      'dogs',
+      'bones',
+      'Quoted',
+      'text',
+    ]);
+    expect(tokenizeWords('She said: “Hello!” — then left.', en).map((t) => t.text)).toEqual([
+      'She',
+      'said',
+      'Hello',
+      'then',
+      'left',
+    ]);
+  });
+
+  it('folds case', () => {
+    expect(foldWord('HELLO', en)).toBe('hello');
   });
 });
