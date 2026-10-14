@@ -101,11 +101,23 @@ describe('native language in prompts', () => {
     const zh = buildGlossPrompt('French', 'chat', 'Le chat dort.', 'Simplified Chinese');
     expect(zh).toContain('French to Simplified Chinese translator');
     expect(zh).not.toContain('English');
-    expect(buildWordEntryPrompt('French', 'chat', '', 'Simplified Chinese')).not.toContain(
-      'English',
+    expect(buildWordEntryPrompt('French', 'chat', '', 'Simplified Chinese')).toContain(
+      'French to Simplified Chinese translator',
     );
-    expect(buildPhrasePrompt('French', '', 'le chat', 'Le chat dort.', 'Japanese')).not.toContain(
-      'English',
+    expect(buildPhrasePrompt('French', '', 'le chat', 'Le chat dort.', 'Japanese')).toContain(
+      'French to Japanese translator',
+    );
+  });
+
+  test('asks for explanations in the learner language only when it is not English', () => {
+    expect(buildPhrasePrompt('French', '', 'le chat', 'Le chat dort.')).not.toContain(
+      'not in English',
+    );
+    expect(
+      buildPhrasePrompt('French', '', 'le chat', 'Le chat dort.', 'Simplified Chinese'),
+    ).toContain('in Simplified Chinese, not in English');
+    expect(buildWordEntryPrompt('French', 'chat', '', 'Japanese')).toContain(
+      'in Japanese, not in English',
     );
   });
 });

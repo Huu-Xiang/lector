@@ -8,6 +8,12 @@
  * past small local models' context windows for negligible gain.
  */
 
+function writeIn(nativeName: string): string {
+  return nativeName === 'English'
+    ? ''
+    : `\n\nWrite every translation, gloss and explanation in ${nativeName}, not in English. Keep the JSON keys and the partOfSpeech and register values exactly as specified.`;
+}
+
 /**
  * Fast-path word gloss. Deliberately tiny: plain-text output (streamable, no
  * JSON to wait on), no spelreels, no IPA/etymology/related-forms. This is what
@@ -101,7 +107,7 @@ Rules:
 - Omit ipa / etymology / relatedForms entirely if you're not confident — don't guess.
 - Use the same partOfSpeech vocabulary as Wiktionary so cached entries align with the curated dict.
 
-Backwards-compat fields the server adds (do NOT include these yourself — server stitches them from senses): translation, partOfSpeech.`;
+Backwards-compat fields the server adds (do NOT include these yourself — server stitches them from senses): translation, partOfSpeech.${writeIn(nativeName)}`;
 }
 
 /**
@@ -141,5 +147,5 @@ Required fields: translation. All other fields are optional — only include the
 - Include usageNotes when the phrase carries register / tone / cultural baggage the learner couldn't infer from the dictionary.
 - Include register if you're confident; omit if neutral or unclear.
 
-Be specific and concrete in idiomaticMeaning and usageNotes — avoid vague phrases like 'commonly used' or 'has a special meaning'.`;
+Be specific and concrete in idiomaticMeaning and usageNotes — avoid vague phrases like 'commonly used' or 'has a special meaning'.${writeIn(nativeName)}`;
 }

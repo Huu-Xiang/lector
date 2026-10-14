@@ -23,6 +23,33 @@ let cachedProviderKey: string | null = null;
 
 export const MANAGED_TRANSLATION_MODEL = 'google/gemini-2.5-flash-lite';
 
+/** `OPENAI_COMPAT_EXTRA_BODY`: a JSON object merged into every managed request. */
+function parseExtraBody(raw: string | undefined): Record<string, unknown> | undefined {
+  if (!raw?.trim()) return undefined;
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+      return parsed as Record<string, unknown>;
+    }
+  } catch {
+    // fall through to the warning
+  }
+  console.warn('[llm] OPENAI_COMPAT_EXTRA_BODY must be a JSON object; ignored.');
+  return undefined;
+}
+
+/** Cheap-task models for a non-OpenRouter managed endpoint; only the ones that are set. */
+function envTaskModels(): Partial<Record<LLMTask, string>> {
+  const entries: Array<[LLMTask, string | undefined]> = [
+    ['word-gloss', process.env.OPENAI_COMPAT_WORD_GLOSS_MODEL],
+    ['phrase-simple', process.env.OPENAI_COMPAT_SIMPLE_PHRASE_MODEL],
+    ['context-simple', process.env.OPENAI_COMPAT_SIMPLE_CONTEXT_MODEL],
+  ];
+  return Object.fromEntries(entries.filter(([, model]) => model)) as Partial<
+    Record<LLMTask, string>
+  >;
+}
+
 function requestProfile(baseUrl: string | undefined): 'openrouter' | undefined {
   return baseUrl?.replace(/\/$/, '') === OPENROUTER_URL ? 'openrouter' : undefined;
 }
@@ -171,13 +198,18 @@ export function getProvider(
             'context-simple':
               process.env.OPENAI_COMPAT_SIMPLE_CONTEXT_MODEL || MANAGED_TRANSLATION_MODEL,
           }
-        : {};
+        : deploymentManaged
+          ? envTaskModels()
+          : {};
+    const extraBody = deploymentManaged
+      ? parseExtraBody(process.env.OPENAI_COMPAT_EXTRA_BODY)
+      : undefined;
     const taskModelKey = Object.entries(taskModels)
       .sort(([a], [b]) => a.localeCompare(b))
       .map(([task, taskModel]) => `${task}=${taskModel}`)
       .join(',');
 
-    cacheKey = `openai:${deploymentOnly ? 'deployment' : 'settings'}:${url || 'default'}:${model || 'default'}:${apiKey ? 'keyed' : 'open'}:${taskModelKey || 'no-task-models'}`;
+    cacheKey = `openai:${deploymentOnly ? 'deployment' : 'settings'}:${url || 'default'}:${model || 'default'}:${apiKey ? 'keyed' : 'open'}:${taskModelKey || 'no-task-models'}:${extraBody ? JSON.stringify(extraBody) : 'no-extra'}`;
     if (cachedProvider && cachedProviderKey === cacheKey) return cachedProvider;
     cachedProvider = new OpenAICompatibleProvider({
       baseUrl: url,
@@ -185,6 +217,7 @@ export function getProvider(
       apiKey,
       profile,
       taskModels,
+      extraBody,
     });
   }
 

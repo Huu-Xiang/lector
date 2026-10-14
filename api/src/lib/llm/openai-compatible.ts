@@ -17,6 +17,8 @@ export interface OpenAICompatibleOptions {
   taskModels?: Partial<Record<LLMTask, string>>;
   /** Text-free structured-attempt sink. Defaults to console.info. */
   usageLogger?: (event: LLMUsageEvent) => void;
+  /** Extra JSON fields for every request, such as `{"enable_thinking": false}`. Server-owned. */
+  extraBody?: Record<string, unknown>;
 }
 
 interface ProviderUsage {
@@ -42,6 +44,7 @@ export class OpenAICompatibleProvider implements LLMProvider {
   private profile: OpenAICompatibleProfile;
   private taskModels: Partial<Record<LLMTask, string>>;
   private usageLogger: (event: LLMUsageEvent) => void;
+  private extraBody: Record<string, unknown>;
 
   constructor(options?: OpenAICompatibleOptions) {
     this.baseUrl = (options?.baseUrl || process.env.OPENAI_COMPAT_URL || DEFAULT_URL).replace(
@@ -53,6 +56,7 @@ export class OpenAICompatibleProvider implements LLMProvider {
     this.timeoutMs = options?.timeoutMs ?? DEFAULT_TIMEOUT_MS;
     this.profile = options?.profile ?? 'generic';
     this.taskModels = { ...(options?.taskModels ?? {}) };
+    this.extraBody = { ...(options?.extraBody ?? {}) };
     this.usageLogger =
       options?.usageLogger ?? ((event) => console.info('[llm-attempt]', JSON.stringify(event)));
   }
@@ -138,7 +142,11 @@ export class OpenAICompatibleProvider implements LLMProvider {
     const startedAt = Date.now();
     const maxTokens = options.maxTokens;
     const selectedModel = this.modelForTask(options.task);
-    const body: Record<string, unknown> = { model: selectedModel, messages: options.messages };
+    const body: Record<string, unknown> = {
+      ...this.extraBody,
+      model: selectedModel,
+      messages: options.messages,
+    };
     if (this.usesMaxCompletionTokens(selectedModel)) body.max_completion_tokens = maxTokens;
     else body.max_tokens = maxTokens;
     // No response_format value works across every compatible backend: LM Studio
@@ -216,6 +224,7 @@ export class OpenAICompatibleProvider implements LLMProvider {
     const startedAt = Date.now();
     const selectedModel = this.modelForTask(options.task);
     const body: Record<string, unknown> = {
+      ...this.extraBody,
       model: selectedModel,
       messages: options.messages,
       stream: true,

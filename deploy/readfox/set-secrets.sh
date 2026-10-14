@@ -24,6 +24,8 @@ need() { # file key prompt hidden(1/0)
 echo "== Resend (email) =="
 need .env RESEND_API_KEY "RESEND_API_KEY (starts with re_)" 1
 has .env EMAIL_FROM || set_kv .env EMAIL_FROM "Readfox <noreply@readfox.app>"
+echo "== AI model provider (Alibaba Bailian) =="
+need .env OPENAI_COMPAT_API_KEY "Model API key (sk-...)" 1
 echo "== Turnstile =="
 need .env TURNSTILE_SITE_KEY "Turnstile Site Key" 0
 need .env TURNSTILE_SECRET_KEY "Turnstile Secret Key" 1

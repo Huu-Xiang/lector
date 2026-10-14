@@ -607,3 +607,30 @@ describe('OpenAICompatibleProvider', () => {
     });
   });
 });
+
+describe('extraBody', () => {
+  test('is merged into every request but never overrides model or messages', async () => {
+    const bodies: Array<Record<string, unknown>> = [];
+    const realFetch = globalThis.fetch;
+    globalThis.fetch = (async (_url: unknown, init?: RequestInit) => {
+      bodies.push(JSON.parse(String(init?.body)));
+      return new Response(JSON.stringify({ choices: [{ message: { content: 'ok' } }] }), {
+        status: 200,
+      });
+    }) as typeof fetch;
+    try {
+      const provider = new OpenAICompatibleProvider({
+        baseUrl: 'http://x.test',
+        model: 'real-model',
+        extraBody: { enable_thinking: false, model: 'hijack', messages: [] },
+        usageLogger: () => {},
+      });
+      await provider.complete({ messages: [{ role: 'user', content: 'hi' }], maxTokens: 10 });
+      expect(bodies[0].enable_thinking).toBe(false);
+      expect(bodies[0].model).toBe('real-model');
+      expect(bodies[0].messages).toEqual([{ role: 'user', content: 'hi' }]);
+    } finally {
+      globalThis.fetch = realFetch;
+    }
+  });
+});
