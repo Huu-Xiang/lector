@@ -533,27 +533,6 @@ describe('GET /api/admin/users languages', () => {
   });
 });
 
-describe('GET /api/admin/users/:id/export', () => {
-  test('exports the target user’s data; 404 for an unknown id', async () => {
-    db.prepare(
-      "INSERT INTO vocab (id, text, type, sentence, translation, state, stateUpdatedAt, language, createdAt, userId) VALUES ('v1','woord','word','s','t','level1','x','af','x',?)",
-    ).run(ALICE);
-
-    const res = await buildApp().request(`/api/admin/users/${ALICE}/export`, asUser(ADMIN));
-    expect(res.status).toBe(200);
-    expect(res.headers.get('cache-control')).toBe('private, no-store');
-    expect(res.headers.get('content-disposition')).toMatch(
-      /^attachment; filename="lector-learning-data-\d{4}-\d{2}-\d{2}\.json"$/,
-    );
-    const body = (await res.json()) as { format: string; version: number; vocab: unknown[] };
-    expect(body).toMatchObject({ format: 'lector-learning-data', version: 1 });
-    expect(body.vocab.length).toBe(1);
-
-    const missing = await buildApp().request('/api/admin/users/nobody/export', asUser(ADMIN));
-    expect(missing.status).toBe(404);
-  });
-});
-
 describe('suspend / restore', () => {
   test('suspends and restores a user, recording the reason', async () => {
     const suspend = await buildApp().request(`/api/admin/users/${ALICE}/suspend`, {
@@ -934,93 +913,6 @@ describe('audit log', () => {
     expect(entries[1].detail).toBe('spam');
     expect(entries[0].actorEmail).toBe(EMAILS[ADMIN]);
     expect(entries[0].targetEmail).toBe(EMAILS[ALICE]);
-  });
-});
-
-describe('impersonation start/stop (#320)', () => {
-  test('starts a read-only grant for a user and audit-logs it', async () => {
-    const res = await buildApp().request(`/api/admin/users/${ALICE}/impersonate`, {
-      method: 'POST',
-      ...asUser(ADMIN),
-    });
-    expect(res.status).toBe(200);
-    const body = (await res.json()) as { targetUserId: string; expiresAt: string };
-    expect(body.targetUserId).toBe(ALICE);
-    expect(new Date(body.expiresAt).getTime()).toBeGreaterThan(Date.now());
-
-    const grant = db
-      .prepare('SELECT * FROM admin_impersonation WHERE actorUserId = ?')
-      .get(ADMIN) as { targetUserId: string } | undefined;
-    expect(grant?.targetUserId).toBe(ALICE);
-
-    const audit = db
-      .prepare('SELECT action, actorEmail, targetEmail FROM admin_audit_log ORDER BY id DESC')
-      .get() as { action: string; actorEmail: string; targetEmail: string };
-    expect(audit.action).toBe('impersonate_start');
-    expect(audit.actorEmail).toBe(EMAILS[ADMIN]);
-    expect(audit.targetEmail).toBe(EMAILS[ALICE]);
-  });
-
-  test('refuses to impersonate yourself, an admin, or a missing user', async () => {
-    expect(
-      (
-        await buildApp().request(`/api/admin/users/${ADMIN}/impersonate`, {
-          method: 'POST',
-          ...asUser(ADMIN),
-        })
-      ).status,
-    ).toBe(400);
-    // Add a second admin and confirm operators can't impersonate each other.
-    const other: AdminGateOptions = {
-      enabled: true,
-      emails: new Set(['boss@lector.dev', EMAILS[ALICE]]),
-      resolveEmail: (id) => EMAILS[id] ?? null,
-    };
-    expect(
-      (
-        await buildApp(other).request(`/api/admin/users/${ALICE}/impersonate`, {
-          method: 'POST',
-          ...asUser(ADMIN),
-        })
-      ).status,
-    ).toBe(400);
-    expect(
-      (
-        await buildApp().request('/api/admin/users/ghost/impersonate', {
-          method: 'POST',
-          ...asUser(ADMIN),
-        })
-      ).status,
-    ).toBe(404);
-  });
-
-  test('stop clears the grant and audit-logs a duration', async () => {
-    await buildApp().request(`/api/admin/users/${ALICE}/impersonate`, {
-      method: 'POST',
-      ...asUser(ADMIN),
-    });
-    const res = await buildApp().request('/api/admin/impersonation/stop', {
-      method: 'POST',
-      ...asUser(ADMIN),
-    });
-    expect(res.status).toBe(200);
-    expect((await res.json()).active).toBe(false);
-    expect(
-      db.prepare('SELECT * FROM admin_impersonation WHERE actorUserId = ?').get(ADMIN),
-    ).toBeNull();
-
-    const audit = db
-      .prepare("SELECT action FROM admin_audit_log WHERE action = 'impersonate_stop'")
-      .get() as { action: string } | undefined;
-    expect(audit?.action).toBe('impersonate_stop');
-  });
-
-  test('a non-admin cannot reach the impersonate endpoint', async () => {
-    const res = await buildApp().request(`/api/admin/users/${BOB}/impersonate`, {
-      method: 'POST',
-      ...asUser(ALICE),
-    });
-    expect(res.status).toBe(403);
   });
 });
 

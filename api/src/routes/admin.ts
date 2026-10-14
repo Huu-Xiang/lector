@@ -32,9 +32,8 @@ import {
   findPaddleCustomerId,
   getUserEmail,
 } from '../lib/billing';
-import { buildUserExport } from '../lib/user-export';
 import { recordAdminAction, recentAuditLog, type AdminAction } from '../lib/admin-audit';
-import { startImpersonation, stopImpersonation, IMPERSONATION_TTL_MS } from '../lib/impersonation';
+import { stopImpersonation } from '../lib/impersonation';
 import { getAuthEngine } from '../lib/accounts';
 import {
   isValidLanguageCode,
@@ -638,22 +637,6 @@ export function makeAdminRoutes(
     return c.json(row);
   });
 
-  // GET /api/admin/users/:id/export — operator-triggered data takeout for a
-  // user (support action). Same builder as self-service GET /api/data.
-  app.get('/users/:id/export', (c) => {
-    const id = c.req.param('id');
-    const email = targetEmail(id);
-    if (email === null) return c.json({ error: 'User not found' }, 404);
-    audit(c, 'export', id, email);
-    const takeout = buildUserExport(id);
-    c.header('Cache-Control', 'private, no-store');
-    c.header(
-      'Content-Disposition',
-      `attachment; filename="lector-learning-data-${takeout.exportedAt.slice(0, 10)}.json"`,
-    );
-    return c.json(takeout);
-  });
-
   // POST /api/admin/users/:id/suspend { reason? } — lock an abuser. Guarded
   // against self-suspension (an admin can't lock themselves out).
   app.post('/users/:id/suspend', async (c) => {
@@ -868,28 +851,6 @@ export function makeAdminRoutes(
     const revoked = db.prepare('DELETE FROM session WHERE userId = ?').run(id).changes;
     audit(c, 'revoke_sessions', id, email, `${revoked} session(s)`);
     return c.json({ id, revoked });
-  });
-
-  // POST /api/admin/users/:id/impersonate — begin a read-only "view as" session
-  // for this account (#320). Mints a short-lived grant; the identity-swap
-  // middleware (lib/impersonation.ts) then serves the target's data on ordinary
-  // routes while this operator browses. Admin/auth/impersonation control planes
-  // keep the operator's own identity, so the dashboard and Exit stay reachable.
-  app.post('/users/:id/impersonate', (c) => {
-    const id = c.req.param('id');
-    const email = targetEmail(id);
-    if (email === null) return c.json({ error: 'User not found' }, 404);
-
-    const caller = c.get('userId');
-    if (id === caller) return c.json({ error: 'You cannot impersonate yourself' }, 400);
-    // Never impersonate another operator — no reading a peer's account.
-    if (isAdmin(id, gate)) {
-      return c.json({ error: 'Cannot impersonate an admin account' }, 400);
-    }
-
-    const grant = startImpersonation(caller, { userId: id, email }, now);
-    audit(c, 'impersonate_start', id, email, `read-only, ttl ${IMPERSONATION_TTL_MS / 60000}m`);
-    return c.json({ targetUserId: id, targetEmail: email, expiresAt: grant.expiresAt });
   });
 
   // POST /api/admin/impersonation/stop — end the operator's active "view as"

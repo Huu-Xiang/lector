@@ -1,0 +1,44 @@
+name: Build image
+
+# Self-hosted fork: build one linux/amd64 image and push it to this
+# repository owner's ghcr. Deploy by pulling the sha-<commit> tag on the server.
+on:
+  push:
+    branches: [selfhosted]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: docker/setup-buildx-action@v4
+      - uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/metadata-action@v6
+        id: meta
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=raw,value=sha-${{ github.sha }}
+            type=raw,value=selfhosted
+      - uses: docker/build-push-action@v7
+        with:
+          context: .
+          push: true
+          platforms: linux/amd64
+          provenance: false
+          tags: ${{ steps.meta.outputs.tags }}
+          build-args: |
+            GIT_COMMIT=${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

@@ -203,6 +203,28 @@ describe('plan resolution', () => {
     expect(engine.checkLimit('ent-anyone', 'phraseSelectionWords', 500).allowed).toBe(true);
   });
 
+  test('self-managed cloud (no billing) resolves to the cloud plan and honors BYOK', () => {
+    const prevMode = process.env.LECTOR_MODE;
+    const prevSelf = process.env.LECTOR_SELF_MANAGED;
+    process.env.LECTOR_MODE = 'cloud';
+    process.env.LECTOR_SELF_MANAGED = '1';
+    try {
+      const plain = makeEntitlements(makeDeps({ enforced: false }));
+      expect(plain.resolveEntitlements('ent-self').plan).toBe('cloud');
+      expect(plain.resolveEntitlements('ent-self').byok).toBe(false);
+      const byok = makeEntitlements(makeDeps({ enforced: false, isByok: () => true }));
+      expect(byok.resolveEntitlements('ent-self').byok).toBe(true);
+      // Without the opt-in flag the old unlimited behaviour is untouched.
+      delete process.env.LECTOR_SELF_MANAGED;
+      expect(plain.resolveEntitlements('ent-self').plan).toBe('unlimited');
+    } finally {
+      if (prevMode === undefined) delete process.env.LECTOR_MODE;
+      else process.env.LECTOR_MODE = prevMode;
+      if (prevSelf === undefined) delete process.env.LECTOR_SELF_MANAGED;
+      else process.env.LECTOR_SELF_MANAGED = prevSelf;
+    }
+  });
+
   test('exempt emails resolve to unlimited', () => {
     const engine = makeEntitlements(
       makeDeps({

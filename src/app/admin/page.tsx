@@ -13,14 +13,12 @@ import {
   restoreUser,
   compUser,
   uncompUser,
-  exportUser,
   resetMfa,
   sendPasswordReset,
   resendVerification,
   forceVerify,
   revokeSessions,
   resyncPaddle,
-  startImpersonation,
   type AdminSummary,
   type AdminUserRow,
   type AdminAuditEntry,
@@ -159,18 +157,6 @@ export default function AdminPage() {
     [load],
   );
 
-  const onExport = useCallback(async (row: AdminUserRow) => {
-    setBusyId(row.id);
-    try {
-      await exportUser(row.id, row.email);
-      toast.success(`Exported ${row.email}`);
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Export failed');
-    } finally {
-      setBusyId(null);
-    }
-  }, []);
-
   const onToggleComp = useCallback(
     async (row: AdminUserRow) => {
       if (row.compedPlan) {
@@ -214,25 +200,6 @@ export default function AdminPage() {
   // home. The full reload is deliberate: the client's tenant-keyed caches
   // (data-layer, language-cache) assume account switches are hard navigations,
   // so a soft push would leave the operator's cached data over the target's.
-  const onImpersonate = useCallback(async (row: AdminUserRow) => {
-    setMenuId(null);
-    if (
-      !window.confirm(
-        `View Lector as ${row.email}? This is a read-only support session (30 min); every start and stop is audit-logged.`,
-      )
-    ) {
-      return;
-    }
-    setBusyId(row.id);
-    try {
-      await startImpersonation(row.id);
-      window.location.assign('/');
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Impersonate failed');
-      setBusyId(null);
-    }
-  }, []);
-
   // Auth/support actions that just POST and reload. `confirm` gates the
   // destructive ones behind a browser confirm; the menu closes either way.
   const runAction = useCallback(
@@ -550,13 +517,6 @@ export default function AdminPage() {
                   <td className="px-4 py-3 whitespace-nowrap">
                     <div className="flex gap-2">
                       <button
-                        onClick={() => onExport(u)}
-                        disabled={busy}
-                        className="rounded-md border border-border px-2 py-1 text-xs font-medium text-foreground hover:bg-accent disabled:opacity-50"
-                      >
-                        Export
-                      </button>
-                      <button
                         onClick={() => onToggleComp(u)}
                         disabled={busy}
                         className={`rounded-md border px-2 py-1 text-xs font-medium disabled:opacity-50 ${
@@ -596,9 +556,6 @@ export default function AdminPage() {
                         </button>
                         {menuId === u.id && (
                           <div className="absolute right-0 z-10 mt-1 w-52 overflow-hidden rounded-lg border border-border bg-card shadow-lg">
-                            <MenuItem onClick={() => onImpersonate(u)}>
-                              View as user (read-only)
-                            </MenuItem>
                             {summary?.billingResyncAvailable && (
                               <MenuItem
                                 onClick={() =>

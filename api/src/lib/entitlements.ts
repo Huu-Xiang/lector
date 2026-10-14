@@ -642,7 +642,13 @@ export function makeEntitlements(deps: EntitlementsDeps): EntitlementsEngine {
   }
 
   function resolvePlan(userId: string): ResolvedPlan {
-    if (!deps.enforced) return 'unlimited';
+    if (!deps.enforced) {
+      // Self-managed fork: no Paddle, but cloud accounts still get the 'cloud'
+      // tier so LECTOR_PLAN_LIMITS applies and BYOK keys are honored.
+      return process.env.LECTOR_MODE === 'cloud' && process.env.LECTOR_SELF_MANAGED === '1'
+        ? 'cloud'
+        : 'unlimited';
+    }
     const email = deps.resolveEmail(userId);
     if (email && deps.exemptEmails.has(email.toLowerCase())) return 'unlimited';
 

@@ -2829,7 +2829,6 @@ const internalOps: Record<string, OperationDoc> = {
   'GET /api/admin/summary': { summary: 'Read the service-wide aggregates', tag: 'Service' },
   'GET /api/admin/users': { summary: 'List every account', tag: 'Service' },
   'GET /api/admin/users/{id}': { summary: 'Read one account', tag: 'Service' },
-  'GET /api/admin/users/{id}/export': { summary: 'Export the data of one account', tag: 'Service' },
   'POST /api/admin/users/{id}/suspend': { summary: 'Suspend an account', tag: 'Service' },
   'POST /api/admin/users/{id}/restore': { summary: 'Lift a suspension', tag: 'Service' },
   'POST /api/admin/users/{id}/comp': {
@@ -2862,10 +2861,6 @@ const internalOps: Record<string, OperationDoc> = {
   },
   'POST /api/admin/users/{id}/revoke-sessions': {
     summary: 'Sign an account out everywhere',
-    tag: 'Service',
-  },
-  'POST /api/admin/users/{id}/impersonate': {
-    summary: 'Start a read-only view of an account',
     tag: 'Service',
   },
   'POST /api/admin/impersonation/stop': { summary: 'End the read-only view', tag: 'Service' },
