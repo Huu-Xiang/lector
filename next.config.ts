@@ -1,6 +1,9 @@
-import type { NextConfig } from "next";
-import { withSentryConfig } from "@sentry/nextjs";
-import { execSync } from "node:child_process";
+import type { NextConfig } from 'next';
+import { withSentryConfig } from '@sentry/nextjs';
+import { execSync } from 'node:child_process';
+import createNextIntlPlugin from 'next-intl/plugin';
+
+const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 
 // ── Build / version metadata (shown in Settings → About) ─────────────────────
 // In Docker/CI the build context has no `.git` (excluded via .dockerignore), so
@@ -12,20 +15,19 @@ import { execSync } from "node:child_process";
 // everywhere and is never passed as a build arg.
 function git(command: string): string {
   try {
-    return execSync(command, { stdio: ["ignore", "pipe", "ignore"] })
+    return execSync(command, { stdio: ['ignore', 'pipe', 'ignore'] })
       .toString()
       .trim();
   } catch {
-    return "";
+    return '';
   }
 }
 
 const appVersion =
   process.env.APP_VERSION?.trim() ||
   git("git describe --tags --match 'v*' --always --dirty") ||
-  "unknown";
-const gitCommit =
-  process.env.GIT_COMMIT?.trim() || git("git rev-parse HEAD") || "unknown";
+  'unknown';
+const gitCommit = process.env.GIT_COMMIT?.trim() || git('git rev-parse HEAD') || 'unknown';
 const buildTime = process.env.BUILD_TIME?.trim() || new Date().toISOString();
 
 const nextConfig: NextConfig = {
@@ -44,7 +46,7 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withSentryConfig(nextConfig, {
+export default withSentryConfig(withNextIntl(nextConfig), {
   // Source-map upload gives un-minified production front-end stack traces (the
   // "full stack traces" this instrumentation is for). It runs during
   // `next build` only, and only when a Sentry auth token is present — a clean

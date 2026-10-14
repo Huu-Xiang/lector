@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,6 +21,7 @@ export default function RegisterPage() {
 }
 
 function RegisterForm() {
+  const t = useTranslations('auth.register');
   const router = useRouter();
   const params = useSearchParams();
   const { data: session, isPending } = authClient.useSession();
@@ -59,7 +61,7 @@ function RegisterForm() {
     if (error) {
       setCaptchaToken('');
       setCaptchaRound((r) => r + 1);
-      toast.error(error.message ?? 'Sign-up failed.');
+      toast.error(error.message ?? t('errFailed'));
       return;
     }
     setSentTo(email);
@@ -68,14 +70,15 @@ function RegisterForm() {
   if (sentTo) {
     return (
       <div className="space-y-4" data-testid="register-check-email">
-        <h2 className="text-lg font-semibold text-foreground">Check your inbox</h2>
+        <h2 className="text-lg font-semibold text-foreground">{t('checkTitle')}</h2>
         <p className="text-sm text-muted-foreground">
-          We sent a verification link to{' '}
-          <span className="font-medium text-foreground">{sentTo}</span>. Click it to activate your
-          account, then sign in.
+          {t.rich('checkBody', {
+            email: sentTo,
+            b: (chunks) => <span className="font-medium text-foreground">{chunks}</span>,
+          })}
         </p>
         <Button className="w-full" onClick={() => router.push(authHref('/login', returnPath))}>
-          Go to sign in
+          {t('goSignIn')}
         </Button>
       </div>
     );
@@ -83,10 +86,10 @@ function RegisterForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <h2 className="text-lg font-semibold text-foreground">Create your account</h2>
+      <h2 className="text-lg font-semibold text-foreground">{t('title')}</h2>
 
       <div className="space-y-2">
-        <Label htmlFor="name">Name</Label>
+        <Label htmlFor="name">{t('name')}</Label>
         <Input
           id="name"
           autoComplete="name"
@@ -97,7 +100,7 @@ function RegisterForm() {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="email">{t('email')}</Label>
         <Input
           id="email"
           type="email"
@@ -110,7 +113,7 @@ function RegisterForm() {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="password">Password</Label>
+        <Label htmlFor="password">{t('password')}</Label>
         <Input
           id="password"
           type="password"
@@ -121,7 +124,7 @@ function RegisterForm() {
           onChange={(e) => setPassword(e.target.value)}
           data-testid="register-password"
         />
-        <p className="text-xs text-muted-foreground">At least 8 characters.</p>
+        <p className="text-xs text-muted-foreground">{t('passwordHint')}</p>
       </div>
 
       <TurnstileWidget key={captchaRound} onToken={setCaptchaToken} />
@@ -132,16 +135,16 @@ function RegisterForm() {
         disabled={submitting || (!!turnstileSiteKey() && !captchaToken)}
         data-testid="register-submit"
       >
-        {submitting ? 'Creating account…' : 'Create account'}
+        {submitting ? t('submitting') : t('submit')}
       </Button>
 
       <p className="text-center text-sm text-muted-foreground">
-        Already have an account?{' '}
+        {t('haveAccount')}{' '}
         <Link
           href={authHref('/login', returnPath)}
           className="font-medium text-primary hover:underline"
         >
-          Sign in
+          {t('signIn')}
         </Link>
       </p>
     </form>

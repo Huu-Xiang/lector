@@ -3,6 +3,7 @@
 import { Suspense, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -27,6 +28,7 @@ export default function ResetPasswordPage() {
 }
 
 function ResetPasswordInner() {
+  const t = useTranslations('auth.reset');
   const params = useSearchParams();
   const token = params.get('token');
   const linkError = params.get('error');
@@ -35,15 +37,13 @@ function ResetPasswordInner() {
   if (linkError) {
     return (
       <div className="space-y-4" data-testid="reset-link-invalid">
-        <h2 className="text-lg font-semibold text-foreground">Link expired</h2>
-        <p className="text-sm text-muted-foreground">
-          That reset link is invalid or has expired. Request a new one below.
-        </p>
+        <h2 className="text-lg font-semibold text-foreground">{t('expiredTitle')}</h2>
+        <p className="text-sm text-muted-foreground">{t('expiredBody')}</p>
         <Button
           className="w-full"
           onClick={() => window.location.assign(authHref('/reset-password', returnPath))}
         >
-          Request a new link
+          {t('requestNew')}
         </Button>
       </div>
     );
@@ -57,6 +57,7 @@ function ResetPasswordInner() {
 }
 
 function RequestResetForm({ returnPath }: { returnPath: string | null }) {
+  const t = useTranslations('auth.reset');
   const [email, setEmail] = useState('');
   const [captchaToken, setCaptchaToken] = useState('');
   const [captchaRound, setCaptchaRound] = useState(0);
@@ -80,7 +81,7 @@ function RequestResetForm({ returnPath }: { returnPath: string | null }) {
     if (error) {
       setCaptchaToken('');
       setCaptchaRound((r) => r + 1);
-      toast.error(error.message ?? 'Could not request a reset.');
+      toast.error(error.message ?? t('errRequest'));
       return;
     }
     setSent(true);
@@ -89,13 +90,15 @@ function RequestResetForm({ returnPath }: { returnPath: string | null }) {
   if (sent) {
     return (
       <div className="space-y-4" data-testid="reset-check-email">
-        <h2 className="text-lg font-semibold text-foreground">Check your inbox</h2>
+        <h2 className="text-lg font-semibold text-foreground">{t('checkTitle')}</h2>
         <p className="text-sm text-muted-foreground">
-          If an account exists for <span className="font-medium text-foreground">{email}</span>, a
-          reset link is on its way.
+          {t.rich('checkBody', {
+            email,
+            b: (chunks) => <span className="font-medium text-foreground">{chunks}</span>,
+          })}
         </p>
         <Link href={authHref('/login', returnPath)} className="block">
-          <Button className="w-full">Back to sign in</Button>
+          <Button className="w-full">{t('backToSignIn')}</Button>
         </Link>
       </div>
     );
@@ -103,13 +106,11 @@ function RequestResetForm({ returnPath }: { returnPath: string | null }) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <h2 className="text-lg font-semibold text-foreground">Reset your password</h2>
-      <p className="text-sm text-muted-foreground">
-        Enter your account email and we&apos;ll send you a reset link.
-      </p>
+      <h2 className="text-lg font-semibold text-foreground">{t('title')}</h2>
+      <p className="text-sm text-muted-foreground">{t('intro')}</p>
 
       <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="email">{t('email')}</Label>
         <Input
           id="email"
           type="email"
@@ -129,7 +130,7 @@ function RequestResetForm({ returnPath }: { returnPath: string | null }) {
         disabled={submitting || (!!turnstileSiteKey() && !captchaToken)}
         data-testid="reset-submit"
       >
-        {submitting ? 'Sending…' : 'Send reset link'}
+        {submitting ? t('sending') : t('send')}
       </Button>
 
       <p className="text-center text-sm text-muted-foreground">
@@ -137,7 +138,7 @@ function RequestResetForm({ returnPath }: { returnPath: string | null }) {
           href={authHref('/login', returnPath)}
           className="font-medium text-primary hover:underline"
         >
-          Back to sign in
+          {t('backToSignIn')}
         </Link>
       </p>
     </form>
@@ -145,6 +146,7 @@ function RequestResetForm({ returnPath }: { returnPath: string | null }) {
 }
 
 function NewPasswordForm({ token, returnPath }: { token: string; returnPath: string | null }) {
+  const t = useTranslations('auth.reset');
   const router = useRouter();
   const [password, setPassword] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -158,19 +160,19 @@ function NewPasswordForm({ token, returnPath }: { token: string; returnPath: str
 
     setSubmitting(false);
     if (error) {
-      toast.error(error.message ?? 'Could not reset the password.');
+      toast.error(error.message ?? t('errReset'));
       return;
     }
-    toast.success('Password updated — sign in with the new one.');
+    toast.success(t('updated'));
     router.replace(authHref('/login', returnPath));
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <h2 className="text-lg font-semibold text-foreground">Choose a new password</h2>
+      <h2 className="text-lg font-semibold text-foreground">{t('newTitle')}</h2>
 
       <div className="space-y-2">
-        <Label htmlFor="new-password">New password</Label>
+        <Label htmlFor="new-password">{t('newPassword')}</Label>
         <Input
           id="new-password"
           type="password"
@@ -181,11 +183,11 @@ function NewPasswordForm({ token, returnPath }: { token: string; returnPath: str
           onChange={(e) => setPassword(e.target.value)}
           data-testid="reset-new-password"
         />
-        <p className="text-xs text-muted-foreground">At least 8 characters.</p>
+        <p className="text-xs text-muted-foreground">{t('passwordHint')}</p>
       </div>
 
       <Button type="submit" className="w-full" disabled={submitting} data-testid="reset-confirm">
-        {submitting ? 'Updating…' : 'Set new password'}
+        {submitting ? t('updating') : t('setNew')}
       </Button>
     </form>
   );

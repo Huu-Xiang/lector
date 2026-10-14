@@ -3,6 +3,7 @@
 import { Suspense, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -27,6 +28,7 @@ export default function TwoFactorPage() {
 }
 
 function TwoFactorForm() {
+  const t = useTranslations('auth.twoFactor');
   const router = useRouter();
   const params = useSearchParams();
   const returnPath = sanitizeAuthReturnPath(params.get('next'));
@@ -53,7 +55,7 @@ function TwoFactorForm() {
 
     setSubmitting(false);
     if (error.code === 'INVALID_TWO_FACTOR_COOKIE') {
-      toast.error('This sign-in attempt has expired — enter your password again.');
+      toast.error(t('errExpired'));
       router.replace(authHref('/login', returnPath));
       return;
     }
@@ -61,12 +63,10 @@ function TwoFactorForm() {
       error.code === 'TOO_MANY_ATTEMPTS_REQUEST_NEW_CODE' ||
       error.code === 'ACCOUNT_TEMPORARILY_LOCKED'
     ) {
-      toast.error('Too many failed codes — wait a bit, then sign in again.');
+      toast.error(t('errLocked'));
       return;
     }
-    toast.error(
-      useBackup ? 'That backup code didn’t work.' : 'That code didn’t work — try the current one.',
-    );
+    toast.error(useBackup ? t('errBackup') : t('errTotp'));
   }
 
   function toggleMode() {
@@ -76,15 +76,13 @@ function TwoFactorForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <h2 className="text-lg font-semibold text-foreground">Two-factor authentication</h2>
+      <h2 className="text-lg font-semibold text-foreground">{t('title')}</h2>
       <p className="text-sm text-muted-foreground">
-        {useBackup
-          ? 'Enter one of your backup codes. Each code works once.'
-          : 'Enter the 6-digit code from your authenticator app.'}
+        {useBackup ? t('introBackup') : t('introTotp')}
       </p>
 
       <div className="space-y-2">
-        <Label htmlFor="totp-code">{useBackup ? 'Backup code' : 'Verification code'}</Label>
+        <Label htmlFor="totp-code">{useBackup ? t('labelBackup') : t('labelTotp')}</Label>
         <Input
           id="totp-code"
           type="text"
@@ -94,7 +92,7 @@ function TwoFactorForm() {
           inputMode={useBackup ? 'text' : 'numeric'}
           pattern={useBackup ? undefined : '[0-9]{6}'}
           maxLength={useBackup ? 32 : 6}
-          placeholder={useBackup ? 'e.g. abcde-fghij' : '123456'}
+          placeholder={useBackup ? t('placeholderBackup') : '123456'}
           value={code}
           onChange={(e) => setCode(e.target.value)}
           data-testid="twofactor-code"
@@ -109,7 +107,7 @@ function TwoFactorForm() {
           onChange={(e) => setTrustDevice(e.target.checked)}
           data-testid="twofactor-trust-device"
         />
-        Trust this device for 30 days
+        {t('trust')}
       </label>
 
       <Button
@@ -118,7 +116,7 @@ function TwoFactorForm() {
         disabled={submitting || code.trim().length === 0}
         data-testid="twofactor-submit"
       >
-        {submitting ? 'Verifying…' : 'Verify'}
+        {submitting ? t('verifying') : t('verify')}
       </Button>
 
       <button
@@ -127,7 +125,7 @@ function TwoFactorForm() {
         className="w-full text-center text-sm font-medium text-primary hover:underline"
         data-testid="twofactor-toggle-backup"
       >
-        {useBackup ? 'Use an authenticator code instead' : 'Use a backup code instead'}
+        {useBackup ? t('useTotp') : t('useBackup')}
       </button>
 
       <p className="text-center text-sm text-muted-foreground">
@@ -135,7 +133,7 @@ function TwoFactorForm() {
           href={authHref('/login', returnPath)}
           className="font-medium text-primary hover:underline"
         >
-          Back to sign in
+          {t('backToSignIn')}
         </Link>
       </p>
     </form>

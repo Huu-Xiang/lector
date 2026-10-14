@@ -1,0 +1,182 @@
+{
+  "common": {
+    "appName": "Readfox",
+    "tagline": "Read your way to a new language"
+  },
+  "uiLanguage": {
+    "label": "Interface language",
+    "title": "Interface language",
+    "description": "The language of buttons, menus and pages. Translations and explanations use My language below."
+  },
+  "legal": {
+    "nav": "Legal",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "about": "About",
+    "source": "Source code"
+  },
+  "nav": {
+    "library": "Library",
+    "practice": "Practice",
+    "journal": "Journal",
+    "vocab": "Vocab",
+    "stats": "Statistics",
+    "settings": "Settings"
+  },
+  "auth": {
+    "loadingAuth": "Loading authentication",
+    "login": {
+      "title": "Sign in",
+      "deleted": "Your account and all of its data have been permanently deleted.",
+      "unverified": "<b>{email}</b> hasn't been verified yet. Check your inbox for the link.",
+      "resend": "Resend verification email",
+      "email": "Email",
+      "password": "Password",
+      "forgot": "Forgot password?",
+      "submit": "Sign in",
+      "submitting": "Signing in…",
+      "github": "Continue with GitHub",
+      "oidc": "Continue with {provider}",
+      "noAccount": "No account yet?",
+      "create": "Create one",
+      "errInvalid": "Invalid email or password.",
+      "errFailed": "Sign-in failed.",
+      "errResend": "Could not resend the email.",
+      "resent": "Verification email sent — check your inbox."
+    },
+    "register": {
+      "title": "Create your account",
+      "name": "Name",
+      "email": "Email",
+      "password": "Password",
+      "passwordHint": "At least 8 characters.",
+      "submit": "Create account",
+      "submitting": "Creating account…",
+      "haveAccount": "Already have an account?",
+      "signIn": "Sign in",
+      "errFailed": "Sign-up failed.",
+      "checkTitle": "Check your inbox",
+      "checkBody": "We sent a verification link to <b>{email}</b>. Click it to activate your account, then sign in.",
+      "goSignIn": "Go to sign in"
+    },
+    "reset": {
+      "expiredTitle": "Link expired",
+      "expiredBody": "That reset link is invalid or has expired. Request a new one below.",
+      "requestNew": "Request a new link",
+      "checkTitle": "Check your inbox",
+      "checkBody": "If an account exists for <b>{email}</b>, a reset link is on its way.",
+      "backToSignIn": "Back to sign in",
+      "title": "Reset your password",
+      "intro": "Enter your account email and we'll send you a reset link.",
+      "email": "Email",
+      "send": "Send reset link",
+      "sending": "Sending…",
+      "errRequest": "Could not request a reset.",
+      "newTitle": "Choose a new password",
+      "newPassword": "New password",
+      "passwordHint": "At least 8 characters.",
+      "setNew": "Set new password",
+      "updating": "Updating…",
+      "errReset": "Could not reset the password.",
+      "updated": "Password updated — sign in with the new one."
+    },
+    "twoFactor": {
+      "title": "Two-factor authentication",
+      "introBackup": "Enter one of your backup codes. Each code works once.",
+      "introTotp": "Enter the 6-digit code from your authenticator app.",
+      "labelBackup": "Backup code",
+      "labelTotp": "Verification code",
+      "placeholderBackup": "e.g. abcde-fghij",
+      "trust": "Trust this device for 30 days",
+      "verify": "Verify",
+      "verifying": "Verifying…",
+      "useTotp": "Use an authenticator code instead",
+      "useBackup": "Use a backup code instead",
+      "backToSignIn": "Back to sign in",
+      "errExpired": "This sign-in attempt has expired — enter your password again.",
+      "errLocked": "Too many failed codes — wait a bit, then sign in again.",
+      "errBackup": "That backup code didn't work.",
+      "errTotp": "That code didn't work — try the current one."
+    }
+  },
+  "setup": {
+    "badge": "Your first reading session",
+    "welcome": "Welcome to Readfox",
+    "intro": "Tell us just enough to choose a useful first lesson. Every answer is optional.",
+    "chooseLanguage": "1. Choose a language",
+    "learn": "Learn {name}",
+    "showMore": "Show {count} more languages",
+    "personalise": "2. Personalise the session",
+    "personaliseHint": "Pick what feels closest. You can change direction later.",
+    "optional": "Optional",
+    "level": "Approximate level",
+    "levels": {
+      "new": "Just starting",
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced",
+      "not_sure": "Not sure"
+    },
+    "interests": "Interests",
+    "interestOptions": {
+      "everyday-life": "Everyday life",
+      "culture": "Culture",
+      "current-events": "Current events",
+      "literature": "Literature",
+      "faith-and-theology": "Faith & theology",
+      "travel": "Travel"
+    },
+    "dailyTime": "Daily reading time",
+    "minutes": "{minutes} min",
+    "ready": "Ready for your first text?",
+    "readyHint": "The guide stays inside a real starter lesson and can be left at any time.",
+    "skip": "Skip to library",
+    "preparing": "Preparing lesson…",
+    "start": "Start guided lesson",
+    "errSave": "Could not save your setup"
+  },
+  "landing": {
+    "metaTitle": "Readfox – read real books in the language you are learning",
+    "metaDescription": "Import a book or paste any text, tap a word for an instant translation, and turn what you read into spaced-repetition practice. Free and open source.",
+    "signIn": "Sign in",
+    "getStarted": "Get started free",
+    "heroTitle": "Read real books in the language you are learning",
+    "heroBody": "Readfox turns reading into learning. Tap any word for a translation, collect vocabulary as you go, and practise it with spaced repetition. {count} languages, free to use.",
+    "createAccount": "Create a free account",
+    "heroAlt": "Readfox: a fox resting on an open book",
+    "howTitle": "How it works",
+    "features": {
+      "read": {
+        "title": "Read what you love",
+        "body": "Import an EPUB or paste any text. Your own books become your lessons."
+      },
+      "tap": {
+        "title": "Tap a word, understand it",
+        "body": "Instant translations and explanations in context, powered by the AI key you choose."
+      },
+      "vocab": {
+        "title": "Your vocabulary builds itself",
+        "body": "Every word you look up is saved with the sentence you found it in."
+      },
+      "srs": {
+        "title": "Spaced-repetition practice",
+        "body": "Review words at the right moment so they actually stick."
+      },
+      "write": {
+        "title": "Write and get feedback",
+        "body": "Keep a journal in your target language and have it corrected."
+      }
+    },
+    "openTitle": "Open source, and your reading stays yours",
+    "openBody": "Readfox is free software (AGPL-3.0) based on Lector. AI features use your own OpenRouter or Anthropic key, so you control the cost. We do not run advertising or analytics trackers. Read the <privacy>privacy policy</privacy> or <source>browse the source code</source>."
+  },
+  "settings": {
+    "nativeLanguage": {
+      "title": "My language",
+      "description": "Translations, explanations, tutor replies and journal feedback are written in this language. Built-in dictionary entries stay in English.",
+      "saved": "Language saved",
+      "errSave": "Could not save your language",
+      "useBrowser": "Use my browser language instead"
+    }
+  }
+}

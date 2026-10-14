@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { useLectorMode } from '@/lib/use-env';
 import Image from 'next/image';
 import { Spinner } from '@/components/ui/spinner';
@@ -20,6 +21,8 @@ import LegalLinks from '@/components/LegalLinks';
  */
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  const t = useTranslations('common');
+  const tAuth = useTranslations('auth');
   const mode = useLectorMode();
 
   useEffect(() => {
@@ -37,15 +40,15 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           priority
           className="mx-auto mb-3 rounded-xl"
         />
-        <h1 className="text-3xl font-bold tracking-tight text-foreground">Readfox</h1>
-        <p className="mt-2 text-sm text-muted-foreground">Read your way to a new language</p>
+        <h1 className="text-3xl font-bold tracking-tight text-foreground">{t('appName')}</h1>
+        <p className="mt-2 text-sm text-muted-foreground">{t('tagline')}</p>
       </div>
       <div className="w-full max-w-sm rounded-2xl border border-border bg-card p-6 shadow-sm">
         {mode === 'cloud' ? (
           children
         ) : (
           <div className="flex justify-center py-8" data-testid="auth-mode-pending">
-            <Spinner size="lg" label="Loading authentication" className="text-primary" />
+            <Spinner size="lg" label={tAuth('loadingAuth')} className="text-primary" />
           </div>
         )}
       </div>

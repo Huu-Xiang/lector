@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { Nunito, Literata } from 'next/font/google';
 import Script from 'next/script';
+import { NextIntlClientProvider } from 'next-intl';
+import { getLocale, getMessages } from 'next-intl/server';
 import { Toaster } from 'sonner';
 import AuthGuard from '@/components/AuthGuard';
 import BillingGuard from '@/components/BillingGuard';
@@ -8,6 +10,7 @@ import ChatWidget from '@/components/ChatWidget';
 import SetupGuard from '@/components/SetupGuard';
 import './globals.css';
 import NavHeader from '@/components/NavHeader';
+import { isRtl } from '@/i18n/locales';
 
 // Nunito is the UI/chrome font; Literata stays the reading body (issue #147 §2.1).
 // Script subsets beyond Latin are #289 Phase 1.1: Literata ships Cyrillic and
@@ -29,16 +32,19 @@ const literata = Literata({
 export const metadata: Metadata = {
   metadataBase: new URL('https://readfox.app'),
   title: 'Readfox',
-  description: 'Read real books in the language you are learning, with instant translations and spaced-repetition practice',
+  description:
+    'Read real books in the language you are learning, with instant translations and spaced-repetition practice',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+  const messages = await getMessages();
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={locale} dir={isRtl(locale) ? 'rtl' : 'ltr'} suppressHydrationWarning>
       <head>
         {/* Runtime browser config: docker-entrypoint.sh writes /__env.js from
             the container's env (API_URL, LECTOR_MODE); the client reads it as
@@ -58,27 +64,29 @@ export default function RootLayout({
       <body
         className={`${nunito.variable} ${literata.variable} flex min-h-screen flex-col bg-background font-sans text-foreground antialiased sm:flex-row`}
       >
-        <NavHeader />
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <NavHeader />
 
-        <div className="flex-1">
-          {/* AuthGuard outside SetupGuard: in cloud mode the session must
+          <div className="flex-1">
+            {/* AuthGuard outside SetupGuard: in cloud mode the session must
               resolve before SetupGuard's settings probe (which would 401
               unauthenticated). Selfhost passes straight through (#218).
               BillingGuard between them (#224): session first, then the
               subscription check, and only then anything that fires gated
               API calls. */}
-          <AuthGuard>
-            <BillingGuard>
-              <SetupGuard>{children}</SetupGuard>
-            </BillingGuard>
-          </AuthGuard>
-        </div>
-        <ChatWidget />
-        {/* Spacer for mobile bottom nav — invisible on sm+ */}
-        <div className="h-16 sm:hidden print:hidden" aria-hidden="true" />
-        {/* Move Sonner's focus hotkey off its Alt+T default — Alt+T toggles the
+            <AuthGuard>
+              <BillingGuard>
+                <SetupGuard>{children}</SetupGuard>
+              </BillingGuard>
+            </AuthGuard>
+          </div>
+          <ChatWidget />
+          {/* Spacer for mobile bottom nav — invisible on sm+ */}
+          <div className="h-16 sm:hidden print:hidden" aria-hidden="true" />
+          {/* Move Sonner's focus hotkey off its Alt+T default — Alt+T toggles the
             translation on the Practice page. */}
-        <Toaster theme="system" duration={5000} hotkey={['altKey', 'KeyN']} />
+          <Toaster theme="system" duration={5000} hotkey={['altKey', 'KeyN']} />
+        </NextIntlClientProvider>
       </body>
     </html>
   );

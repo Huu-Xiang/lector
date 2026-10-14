@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -21,6 +22,7 @@ export default function LoginPage() {
 }
 
 function LoginForm() {
+  const t = useTranslations('auth.login');
   const router = useRouter();
   const params = useSearchParams();
   const { data: session, isPending } = authClient.useSession();
@@ -78,9 +80,7 @@ function LoginForm() {
       setUnverifiedEmail(email);
       return;
     }
-    toast.error(
-      error.status === 401 ? 'Invalid email or password.' : (error.message ?? 'Sign-in failed.'),
-    );
+    toast.error(error.status === 401 ? t('errInvalid') : (error.message ?? t('errFailed')));
   }
 
   async function resendVerification() {
@@ -89,8 +89,8 @@ function LoginForm() {
       email: unverifiedEmail,
       callbackURL: `${window.location.origin}${destination}`,
     });
-    if (error) toast.error(error.message ?? 'Could not resend the email.');
-    else toast.success('Verification email sent — check your inbox.');
+    if (error) toast.error(error.message ?? t('errResend'));
+    else toast.success(t('resent'));
   }
 
   async function handleGithub() {
@@ -110,14 +110,14 @@ function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <h2 className="text-lg font-semibold text-foreground">Sign in</h2>
+      <h2 className="text-lg font-semibold text-foreground">{t('title')}</h2>
 
       {params.get('deleted') === '1' && (
         <div
           className="rounded-lg border border-border bg-[var(--primary-soft)] p-3 text-sm text-foreground"
           data-testid="login-deleted-notice"
         >
-          Your account and all of its data have been permanently deleted.
+          {t('deleted')}
         </div>
       )}
 
@@ -127,21 +127,23 @@ function LoginForm() {
           data-testid="login-unverified-notice"
         >
           <p>
-            <span className="font-medium">{unverifiedEmail}</span> hasn&apos;t been verified yet.
-            Check your inbox for the link.
+            {t.rich('unverified', {
+              email: unverifiedEmail,
+              b: (chunks) => <span className="font-medium">{chunks}</span>,
+            })}
           </p>
           <button
             type="button"
             onClick={resendVerification}
             className="mt-1 font-medium text-primary hover:underline"
           >
-            Resend verification email
+            {t('resend')}
           </button>
         </div>
       )}
 
       <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="email">{t('email')}</Label>
         <Input
           id="email"
           type="email"
@@ -155,12 +157,12 @@ function LoginForm() {
 
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <Label htmlFor="password">Password</Label>
+          <Label htmlFor="password">{t('password')}</Label>
           <Link
             href={authHref('/reset-password', returnPath)}
             className="text-xs text-primary hover:underline"
           >
-            Forgot password?
+            {t('forgot')}
           </Link>
         </div>
         <Input
@@ -182,7 +184,7 @@ function LoginForm() {
         disabled={submitting || (!!turnstileSiteKey() && !captchaToken)}
         data-testid="login-submit"
       >
-        {submitting ? 'Signing in…' : 'Sign in'}
+        {submitting ? t('submitting') : t('submit')}
       </Button>
 
       {githubEnabled && (
@@ -193,7 +195,7 @@ function LoginForm() {
           onClick={handleGithub}
           data-testid="login-github"
         >
-          Continue with GitHub
+          {t('github')}
         </Button>
       )}
 
@@ -205,17 +207,17 @@ function LoginForm() {
           onClick={handleOidc}
           data-testid="login-oidc"
         >
-          Continue with {oidcName}
+          {t('oidc', { provider: oidcName })}
         </Button>
       )}
 
       <p className="text-center text-sm text-muted-foreground">
-        No account yet?{' '}
+        {t('noAccount')}{' '}
         <Link
           href={authHref('/register', returnPath)}
           className="font-medium text-primary hover:underline"
         >
-          Create one
+          {t('create')}
         </Link>
       </p>
     </form>

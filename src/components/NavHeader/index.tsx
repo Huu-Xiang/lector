@@ -2,6 +2,7 @@
 
 import clsx from 'clsx';
 import { usePathname } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import ThemeToggle from '@/components/ThemeToggle';
 import LanguageSelector from '@/components/LanguageSelector';
 import { isBareRoute } from '@/lib/auth-client';
@@ -21,6 +22,7 @@ import type { NavTourTip } from './components/NavLink';
 
 export default function NavHeader() {
   const pathname = usePathname();
+  const tNav = useTranslations('nav');
   const postOnboardingTour = usePostOnboardingTour();
   const { collapsed, setCollapsed } = useSidebarCollapsed();
 
@@ -82,7 +84,7 @@ export default function NavHeader() {
             return (
               <NavLink
                 key={link.href}
-                link={link}
+                link={{ href: link.href, label: tNav(link.labelKey) }}
                 isMobile={false}
                 collapsed={collapsed}
                 tourTip={tourTipFor(link.href)}
@@ -113,7 +115,14 @@ export default function NavHeader() {
       <nav className="fixed right-0 bottom-0 left-0 z-50 border-t border-border bg-card sm:hidden print:hidden">
         <div className="flex items-stretch">
           {navLinks.map((link) => {
-            return <NavLink key={link.href} link={link} isMobile tourTip={tourTipFor(link.href)} />;
+            return (
+              <NavLink
+                key={link.href}
+                link={{ href: link.href, label: tNav(link.labelKey) }}
+                isMobile
+                tourTip={tourTipFor(link.href)}
+              />
+            );
           })}
           <AdminNavLink isMobile />
         </div>

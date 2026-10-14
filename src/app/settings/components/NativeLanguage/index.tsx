@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { getSetting, setSetting } from '@/lib/data-layer';
 import {
@@ -11,6 +12,7 @@ import {
 } from '@/lib/languages';
 
 export default function NativeLanguage() {
+  const t = useTranslations('settings.nativeLanguage');
   const [value, setValue] = useState<string>(DEFAULT_NATIVE_LANGUAGE);
   const [saved, setSaved] = useState(true);
   const [pending, setPending] = useState(false);
@@ -38,9 +40,9 @@ export default function NativeLanguage() {
     try {
       await setSetting('nativeLanguage', next);
       setSaved(true);
-      toast.success('Language saved');
+      toast.success(t('saved'));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Could not save your language');
+      toast.error(error instanceof Error ? error.message : t('errSave'));
     } finally {
       setPending(false);
     }
@@ -48,7 +50,7 @@ export default function NativeLanguage() {
 
   return (
     <section className="panel p-6" data-testid="native-language-settings">
-      <h2 className="mb-1 text-lg font-semibold text-foreground">My language</h2>
+      <h2 className="mb-1 text-lg font-semibold text-foreground">{t('title')}</h2>
       <p className="mb-4 text-sm text-muted-foreground">
         Translations, explanations, tutor replies and journal feedback are written in this language.
         Built-in dictionary entries stay in English.
@@ -57,7 +59,7 @@ export default function NativeLanguage() {
         value={value}
         disabled={pending}
         onChange={(e) => save(e.target.value)}
-        aria-label="My language"
+        aria-label={t('title')}
         data-testid="native-language-select"
         className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none"
       >
@@ -75,7 +77,7 @@ export default function NativeLanguage() {
           disabled={pending}
           className="mt-3 text-sm font-medium text-primary hover:underline"
         >
-          Use my browser language instead
+          {t('useBrowser')}
         </button>
       )}
     </section>

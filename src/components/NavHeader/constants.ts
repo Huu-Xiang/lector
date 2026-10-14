@@ -1,13 +1,13 @@
 import { Clipboard, Pencil, List, Library, ChartBar, Settings } from 'lucide-react';
 
 export const navLinks = [
-  { href: '/', label: 'Library' },
-  { href: '/practice', label: 'Practice' },
-  { href: '/journal', label: 'Journal' },
-  { href: '/vocab', label: 'Vocab' },
-  { href: '/stats', label: 'Statistics' },
-  { href: '/settings', label: 'Settings' },
-];
+  { href: '/', labelKey: 'library' },
+  { href: '/practice', labelKey: 'practice' },
+  { href: '/journal', labelKey: 'journal' },
+  { href: '/vocab', labelKey: 'vocab' },
+  { href: '/stats', labelKey: 'stats' },
+  { href: '/settings', labelKey: 'settings' },
+] as const;
 
 export const iconMap: Record<string, React.FC<{ size?: number | string }>> = {
   '/': Library,
