@@ -1080,7 +1080,7 @@
       "dataSources": {
         "heading": "Data sources",
         "body": "Sentence banks come from Tatoeba (CC BY 2.0 FR) and dictionaries from the sources listed in the repository README, each under its own licence.",
-        "books": "The free books in the library are public-domain texts from Project Gutenberg (gutenberg.org). Each book links back to its source page."
+        "books": "The free books in the library are public-domain texts from Project Gutenberg (gutenberg.org), plus a few beginner texts written for Readfox and released under CC0. Each book links back to its source page."
       }
     }
   },

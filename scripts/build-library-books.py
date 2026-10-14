@@ -35,6 +35,14 @@ BOOKS = [
          verse=True, max_words=14000),
     dict(lang="fr", slug="trois-contes", id=12065, title="Trois contes", author="Gustave Flaubert",
          level="C1", start=r"Pendant un demi-siècle", short="Trois contes"),
+    dict(lang="fr", slug="du-cote-de-chez-swann", id=2650, title="Du côté de chez Swann (Combray, début)",
+         author="Marcel Proust", level="C2", start=r"Longtemps, je me suis couché", short="Combray",
+         stop=r"^II\.\s*$"),
+    dict(lang="en", slug="kittens-and-cats", id=61852, title="Kittens and Cats: A First Reader",
+         author="Eulalie Osgood Grover", level="A1", start=r"^THE QUEEN\s*$", short="Kittens and Cats",
+         cut=r"^A WORD TO THE TEACHER", capitalise_headings=True),
+    dict(lang="en", slug="heart-of-darkness", id=219, title="Heart of Darkness",
+         author="Joseph Conrad", level="C2", start=r"^I\s*\n\s*\nThe Nellie", short="Heart of Darkness"),
     dict(lang="en", slug="the-tale-of-peter-rabbit", id=14838, title="The Tale of Peter Rabbit",
          author="Beatrix Potter", level="A2", start=r"Once upon a time", short="Peter Rabbit"),
     dict(lang="en", slug="aesops-fables", id=11339, title="Aesop's Fables (selection)",
@@ -58,7 +66,7 @@ def words(text: str) -> int:
     return len(re.findall(r"\w+", text))
 
 
-def body_of(raw: str, start: str, cut: str | None = None) -> str:
+def body_of(raw: str, start: str, cut: str | None = None, stop: str | None = None) -> str:
     raw = raw.replace("\r", "")
     a = raw.find("*** START OF")
     a = raw.find("\n", a) + 1 if a != -1 else 0
@@ -71,6 +79,10 @@ def body_of(raw: str, start: str, cut: str | None = None) -> str:
     tail = re.search(r"^End of (the )?Project Gutenberg", text, flags=re.M | re.I)
     if tail:
         text = text[:tail.start()]
+    if stop:
+        first = re.search(stop, text, flags=re.M)
+        if first:
+            text = text[:first.start()]
     if cut:
         hits = list(re.finditer(cut, text, flags=re.M | re.I))
         if hits:
@@ -125,8 +137,17 @@ def _sentence(text: str) -> str:
     return text[:1].upper() + text[1:].lower()
 
 
-def titlecase_heading(text: str) -> str:
+def _capitalise_words(text: str) -> str:
+    def word(w: str) -> str:
+        i = next((k for k, ch in enumerate(w) if ch.isalpha()), None)
+        return w if i is None else w[:i] + w[i].upper() + w[i + 1:].lower()
+    return " ".join(word(w) for w in text.split(" "))
+
+
+def titlecase_heading(text: str, capitalise: bool = False) -> str:
     t = text.strip(" _*")
+    if capitalise and t.isupper():
+        return _capitalise_words(t)
     m = re.match(r"^([IVXLC]+)\.\s+(.*)$", t)
     if m:
         return f"{m.group(1)}. {_sentence(m.group(2)) if m.group(2).isupper() else m.group(2)}"
@@ -135,7 +156,7 @@ def titlecase_heading(text: str) -> str:
 
 def build(book: dict, raw_dir: Path, out_dir: Path) -> None:
     raw = (raw_dir / f"pg{book['id']}.txt").read_text(encoding="utf8", errors="replace")
-    text = unicodedata.normalize("NFC", body_of(raw, book["start"], book.get("cut")))
+    text = unicodedata.normalize("NFC", body_of(raw, book["start"], book.get("cut"), book.get("stop")))
     pars = paragraphs(text, book.get("verse", False))
     budget = book.get("max_words")
     lessons: list[list[str]] = [[]]
@@ -162,12 +183,13 @@ def build(book: dict, raw_dir: Path, out_dir: Path) -> None:
         shutil.rmtree(book_dir)
     book_dir.mkdir(parents=True)
     entries = []
+    cap = book.get("capitalise_headings", False)
     for n, chunk in enumerate(lessons, start=1):
-        head = next((titlecase_heading(p) for p in chunk[:1] if is_heading(p)), None)
+        head = next((titlecase_heading(p, cap) for p in chunk[:1] if is_heading(p)), None)
         title = f"{n}. {head}" if head else f"{n}. {book['short']}"
         body = []
         for p in chunk:
-            body.append(f"## {titlecase_heading(p)}" if is_heading(p) else p)
+            body.append(f"## {titlecase_heading(p, cap)}" if is_heading(p) else p)
         name = f"{n:02d}.md"
         (book_dir / name).write_text(f"# {title}\n\n" + "\n\n".join(body) + "\n", encoding="utf8")
         entries.append({"file": name, "title": title})

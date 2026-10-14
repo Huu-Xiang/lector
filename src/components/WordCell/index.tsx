@@ -8,7 +8,7 @@ export interface WordCellProps {
   text: string;
   /** Word state from the known-words map; undefined renders as 'new'. */
   state?: WordState;
-  /** The currently looked-up word (drawer open) — ring highlight. */
+  /** The currently looked-up word (drawer open) — highlight and underline. */
   isActive?: boolean;
   /** Part of the highlighted phrase selection. */
   isPhraseHighlighted?: boolean;
@@ -31,7 +31,7 @@ export interface WordCellProps {
 /**
  * One tappable word with the reader's known/level coloring — extracted from
  * MarkdownReader's ReaderBlock (#185) so listen-along renders segments with
- * the exact same word-state chips instead of flat text. Any surface that
+ * the exact same word-state marks instead of flat text. Any surface that
  * shows target-language words with vocab coloring should render these.
  *
  * `data-leaf` marks the span as already-rendered for MarkdownReader's
@@ -74,19 +74,19 @@ export default function WordCell({
       }}
       data-phrase-highlighted={isPhraseHighlighted || undefined}
       data-active-word={isActive || undefined}
-      // An OVERHANGING annotation needs `relative` to anchor it, and it drops
-      // the border and tightens the padding: with a reading above every word
-      // the full chip turned the page into a grid of buttons instead of prose.
-      // A wide annotation keeps ruby layout and the original padding, because it
-      // needs that room to avoid the neighbouring word.
-      className={`rounded-[7px] ${interactive ? 'cursor-pointer hover:ring-2 hover:ring-ring/50' : ''} ${
-        reading && readingOverhangs ? 'relative border-transparent px-[3px]' : 'px-[7px]'
-      } ${colorClass} ${isActive ? 'ring-2 ring-[var(--clay)]' : ''}`}
-      // The weight is a reader setting (#570). The fallback is the 700 this used
-      // to hardcode, so a surface outside the reader — listen-along, practice —
-      // publishes no custom property and draws exactly as it did before.
+      className={`-mx-[2px] rounded-[4px] px-[2px] ${
+        interactive
+          ? 'cursor-pointer hover:bg-[color-mix(in_srgb,var(--clay)_12%,transparent)]'
+          : ''
+      } ${reading && readingOverhangs ? 'relative' : ''} ${
+        isHighlighted
+          ? 'underline decoration-[var(--clay)] decoration-2 underline-offset-[5px]'
+          : colorClass
+      }`}
+      // The weight is a reader setting. Surfaces outside the reader publish no
+      // custom property and use the fallback, which matches DEFAULT_PROSE_STYLE.
       style={{
-        fontWeight: 'var(--reader-font-weight, 700)',
+        fontWeight: 'var(--reader-font-weight, 500)',
         ...(isHighlighted
           ? { backgroundColor: 'color-mix(in srgb, var(--clay) 22%, transparent)' }
           : {}),

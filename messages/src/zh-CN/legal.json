@@ -96,7 +96,7 @@
       "dataSources": {
         "heading": "数据来源",
         "body": "句库来自 Tatoeba（CC BY 2.0 FR），词典来自仓库 README 中列出的来源，各自适用其自身的许可。",
-        "books": "书库里的免费书籍是来自古腾堡计划（gutenberg.org）的公版文本，每本书都附有指向来源页面的链接。"
+        "books": "书库里的免费书籍是来自古腾堡计划（gutenberg.org）的公版文本，外加几本为 Readfox 原创并以 CC0 发布的入门读物。每本书都附有指向来源页面的链接。"
       }
     }
   }

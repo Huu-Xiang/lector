@@ -291,6 +291,19 @@ export default function MarkdownReader({
     }
   }, [wordPanelOpen]);
 
+  // Opening the drawer narrows the page, so bring the looked-up word back into view.
+  const wasPanelOpen = useRef(false);
+  useEffect(() => {
+    if (wordPanelOpen && !wasPanelOpen.current) {
+      requestAnimationFrame(() => {
+        document
+          .querySelector('[data-active-word], [data-phrase-highlighted]')
+          ?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      });
+    }
+    wasPanelOpen.current = wordPanelOpen;
+  }, [wordPanelOpen]);
+
   // Look up a selected phrase, whichever gesture selected it.
   //
   // A phrase means two or more words. Counted with the tokenizer, not by

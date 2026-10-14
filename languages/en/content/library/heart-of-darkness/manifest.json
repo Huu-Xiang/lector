@@ -1,0 +1,109 @@
+{
+  "title": "Heart of Darkness",
+  "author": "Joseph Conrad",
+  "level": "C2",
+  "wordCount": 39063,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/219",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. I"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Heart of Darkness"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Heart of Darkness"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Heart of Darkness"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Heart of Darkness"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Heart of Darkness"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Heart of Darkness"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Heart of Darkness"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Heart of Darkness"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Heart of Darkness"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Heart of Darkness"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Heart of Darkness"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Heart of Darkness"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Heart of Darkness"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Heart of Darkness"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Heart of Darkness"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Heart of Darkness"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Heart of Darkness"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Heart of Darkness"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Heart of Darkness"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Heart of Darkness"
+    },
+    {
+      "file": "22.md",
+      "title": "22. Heart of Darkness"
+    },
+    {
+      "file": "23.md",
+      "title": "23. Heart of Darkness"
+    },
+    {
+      "file": "24.md",
+      "title": "24. Heart of Darkness"
+    }
+  ]
+}

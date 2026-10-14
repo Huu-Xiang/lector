@@ -1,0 +1,61 @@
+{
+  "title": "Du côté de chez Swann (Combray, début)",
+  "author": "Marcel Proust",
+  "level": "C2",
+  "wordCount": 19605,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/2650",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Combray"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Combray"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Combray"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Combray"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Combray"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Combray"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Combray"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Combray"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Combray"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Combray"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Combray"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Combray"
+    }
+  ]
+}

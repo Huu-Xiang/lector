@@ -52,13 +52,11 @@ export const EMPTY_PROSE_STYLE_SETTINGS: ProseStyleSettings = { global: {}, byLa
  * step was 18px, and one value now covers both widths, because a size the
  * reader chose must not change under it at a breakpoint.
  *
- * 700 looks heavy for body text, and it is deliberate: every word in the reader
- * is a tappable chip, and the weight is what separated a word from the
- * punctuation between the words. It is now the first thing worth turning down.
+ * 500 keeps words readable as running prose.
  */
 export const DEFAULT_PROSE_STYLE: ProseStyle = {
   fontSize: 20,
-  fontWeight: 700,
+  fontWeight: 500,
   letterSpacing: 0,
   lineHeight: 1.9,
 };

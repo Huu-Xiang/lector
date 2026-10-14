@@ -123,7 +123,7 @@ describe('proseStyleVars', () => {
     );
     expect(vars['--reader-font-size']).toBe('22px');
     expect(vars['--reader-letter-spacing']).toBe('0.02em');
-    expect(vars['--reader-font-weight']).toBe('700');
+    expect(vars['--reader-font-weight']).toBe('500');
   });
 });
 

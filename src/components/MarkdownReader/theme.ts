@@ -1,16 +1,18 @@
-import { WordState } from "@/types";
+import { WordState } from '@/types';
 
-// One token-class map for both light and dark — the --w-* word-state tokens flip
-// under `.dark` (issue #147 §4.3), so a single map covers both modes. A single
-// warm ochre ramp (level1 deepest -> level4 faintest) plus a calm slate for
-// `new`. `known` renders as plain text (no chip); `ignored` is dimmed. Chip
-// shape and weight are applied at the render site in MarkdownReader.
+// Words are plain text. A word still being learned carries an underline that
+// fades from level1 (least known) to level4; `new`, `known` and `ignored` carry
+// none. Selection is drawn by WordCell, not here. The --w-* tokens flip under
+// `.dark`, so one map serves both modes.
+const learning = (level: 'l1' | 'l2' | 'l3' | 'l4', mix: number) =>
+  `underline decoration-[1.5px] underline-offset-[5px] decoration-[color-mix(in_srgb,var(--w-${level}-fg)_${mix}%,transparent)]`;
+
 export const stateClasses: Record<WordState, string> = {
-    new: 'bg-[var(--w-new-bg)] text-[var(--w-new-fg)] border border-[var(--w-new-bd)]',
-    level1: 'bg-[var(--w-l1-bg)] text-[var(--w-l1-fg)] border border-[var(--w-l1-bd)]',
-    level2: 'bg-[var(--w-l2-bg)] text-[var(--w-l2-fg)] border border-[var(--w-l2-bd)]',
-    level3: 'bg-[var(--w-l3-bg)] text-[var(--w-l3-fg)] border border-[var(--w-l3-bd)]',
-    level4: 'bg-[var(--w-l4-bg)] text-[var(--w-l4-fg)] border border-[var(--w-l4-bd)]',
-    known: '',
-    ignored: 'opacity-60 text-muted-foreground',
+  new: '',
+  level1: learning('l1', 90),
+  level2: learning('l2', 65),
+  level3: learning('l3', 45),
+  level4: learning('l4', 28),
+  known: '',
+  ignored: 'opacity-60 text-muted-foreground',
 };

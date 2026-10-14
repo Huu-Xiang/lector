@@ -1,0 +1,37 @@
+{
+  "title": "Léa et sa famille",
+  "author": "Readfox (texte original)",
+  "level": "A1",
+  "wordCount": 668,
+  "source": {
+    "name": "Readfox",
+    "url": "https://github.com/Huu-Xiang/lector",
+    "license": "CC0 1.0 — texte original écrit pour Readfox"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Je m'appelle Léa"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Ma famille"
+    },
+    {
+      "file": "03.md",
+      "title": "3. La maison"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Au marché"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Une journée à l'école"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Le week-end"
+    }
+  ]
+}

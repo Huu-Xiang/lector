@@ -109,7 +109,7 @@ test.describe('Reader prose style', () => {
       lineHeight: '1.9',
       // 1.9 + 0.8 — the in-flow annotation extra.
       annotatedLineHeight: '2.7',
-      wordWeight: '700',
+      wordWeight: '500',
     });
   });
 

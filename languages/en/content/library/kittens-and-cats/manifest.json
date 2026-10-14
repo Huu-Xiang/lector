@@ -1,0 +1,25 @@
+{
+  "title": "Kittens and Cats: A First Reader",
+  "author": "Eulalie Osgood Grover",
+  "level": "A1",
+  "wordCount": 3755,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/61852",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. The Queen"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Kittens and Cats"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Kittens and Cats"
+    }
+  ]
+}

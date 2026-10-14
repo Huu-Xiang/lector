@@ -660,6 +660,7 @@ html {
     border: 0 !important;
     border-radius: 0 !important;
     background: transparent !important;
+    text-decoration: none !important;
   }
 
   /* Ruby pronunciation annotations (#289 4.4) are kept. They are content, not
