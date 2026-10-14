@@ -1,5 +1,28 @@
 # Agent Instructions
 
+This repository is **Readfox**, a public, self-managed fork of `heuwels/lector` (AGPL-3.0). Work happens on the `selfhosted` branch; `origin` is `Huu-Xiang/lector`, `upstream` is `heuwels/lector`. The product name, logo, legal pages and deployment are Readfox's. Internal identifiers (`LECTOR_*` env vars, `useLectorMode`, `lector-*` localStorage keys, the Anki add-on) keep the upstream name on purpose so upstream merges stay small.
+
+## Commands
+
+- Frontend: `npm run dev` (UI on :3456), `npm run dev:api` (Hono on :3457, reads `.env.local`), `npm run build`, `npm run lint`, `npx tsc --noEmit`.
+- Unit tests: `npm test` (vitest, frontend only). API tests: `cd api && bun run test` — never bare `bun test`; the script isolates `DATA_DIR=.test-data` and `src/test-guard.ts` aborts otherwise. One file: `cd api && DATA_DIR=.test-data bun test src/lib/entitlements.test.ts`. One vitest file: `npx vitest run path/to/file.test.ts`.
+- E2E: `npm run test:e2e` (one spec: `npx playwright test e2e/<name>.spec.ts`).
+- Always run `npm run build` before pushing frontend changes: the Docker build type-checks every file and fails on errors that `tsc --noEmit` can miss.
+
+## Readfox fork: differences from upstream
+
+- **Self-managed plans.** Without Paddle (`LECTOR_BILLING` unset), upstream resolves every account to `unlimited` and ignores BYOK keys. `resolvePlan()` in `api/src/lib/entitlements.ts` returns `cloud` instead when `LECTOR_MODE=cloud` and `LECTOR_SELF_MANAGED=1`, so `LECTOR_PLAN_LIMITS` (100 MB lesson text, audio 0) applies and a user's own key is used. Free-tier limits can only be lowered by env; raising them needs a code change in `DEFAULT_PLAN_LIMITS`.
+- **Billing.** Only Paddle is implemented (`api/src/lib/paddle-billing.ts`, `routes/billing.ts`). Stripe would need a new integration that writes `billing_subscriptions` rows.
+- **No operator access to user content.** The admin export and "view as user" endpoints and buttons were removed on purpose. Do not re-add them. Users export their own data from Settings → Learning data (`GET /api/data`, `lib/user-export.ts`).
+- **No third-party trackers.** Upstream's Plausible component was deleted. Lifecycle emails (`lib/lifecycle-email.ts`) stay off unless `LIFECYCLE_EMAILS=1`, because their Resend templates live in upstream's account.
+- **Public pages.** `/privacy`, `/terms`, `/about` and `/landing` render without a session or app chrome: they are listed in `AUTH_ROUTES` in `src/lib/api-base.ts`. The privacy text states what the service does; change it in the same commit as any change to data handling (new AI provider, new third party, new logging).
+- **Landing redirect lives in Caddy, not in Next.** `deploy/readfox/Caddyfile` redirects `/` to `/landing` when no `better-auth.session_token` cookie is present. `sitemap.ts` and `robots.ts` list the public pages.
+- **Setup language list.** `src/app/setup/page.tsx` shows `POPULAR_LANGUAGES` first and hides the rest behind `setup-language-show-all`; e2e specs click that button before picking other languages.
+- **CI.** Upstream's `docker.yml`/`release.yml` (AWS deploy) were removed. `.github/workflows/build-image.yml` builds `ghcr.io/huu-xiang/lector:sha-<commit>` for amd64 on every push to `selfhosted`. The paragraphs below about `release.yml` describe upstream only.
+- **Deployment.** Production is one VPS running `deploy/readfox/docker-compose.yml` (lector, caddy, litestream) in `/srv/lector`. Deploy by setting `LECTOR_VERSION=sha-<commit>` in the server's `.env` and running `docker compose pull lector && docker compose up -d lector`. Secrets live only in the server's `.env` / `.env.backup`; never commit them. Backups (Litestream to R2 plus daily age-encrypted snapshots) are described in `deploy/readfox/README.md`; the age private key is kept offline by the owner.
+- **Server firewall.** `/etc/nftables.conf` (table `gameguard`) drops everything except the ports it lists; new services need rules there as well as in `ufw`. Reloading the file with `flush ruleset` wipes Docker's rules, so add rules at runtime with `nft add rule` and mirror them in the file.
+- `readfox-todo.md` (one level above this repo, in `/Users/shawnhu/Dev/Lector/`) tracks open work.
+
 **Testing policy: CI runs the full e2e suite on every PR — rely on it for PR verification, and locally run the specs your change touches (plus `npm test` for unit tests).**
 
 ## Testing Requirements
