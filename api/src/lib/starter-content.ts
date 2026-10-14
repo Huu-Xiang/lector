@@ -89,5 +89,5 @@ export function loadStarterContent(language: LanguageCode): StarterContent | nul
     return { sourceFile, title: lesson.title, markdown: fs.readFileSync(filePath, 'utf8') };
   });
 
-  return { title: manifest.title, author: manifest.author || 'Lector', lessons };
+  return { title: manifest.title, author: manifest.author || 'Readfox', lessons };
 }

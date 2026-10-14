@@ -1442,7 +1442,7 @@ export default function PracticePage() {
                   First learning loop complete
                 </h2>
                 <p className="mx-auto mt-2 max-w-md text-muted-foreground">
-                  You turned words from a real reading into practice. That is the loop Lector will
+                  You turned words from a real reading into practice. That is the loop Readfox will
                   keep building on with you.
                 </p>
 

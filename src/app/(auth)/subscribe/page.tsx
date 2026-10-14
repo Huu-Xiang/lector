@@ -237,11 +237,11 @@ export default function SubscribePage() {
             ? 'Your account is suspended'
             : lapsed
               ? showFree
-                ? 'You’re on Lector Free now'
+                ? 'You’re on Readfox Free now'
                 : 'Your subscription has ended'
               : showFree
                 ? 'Choose how you want to learn'
-                : 'Subscribe to Lector Cloud'}
+                : 'Subscribe to Readfox Cloud'}
         </h2>
         <p className="mt-1 text-sm text-muted-foreground">
           {status?.suspended
@@ -252,7 +252,7 @@ export default function SubscribePage() {
                 : 'Everything you built is safe and exactly as you left it — renew to pick up where you were.'
               : showFree
                 ? 'Free is a complete, bounded reading loop. Upgrade when you want more managed AI, richer translations, and managed voices.'
-                : 'Lector Cloud is a paid service. Prefer free? Lector is open source and self-hostable.'}
+                : 'Readfox Cloud is a paid service. Prefer free? Readfox is open source and self-hostable.'}
         </p>
       </div>
 

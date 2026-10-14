@@ -77,7 +77,7 @@ export function resendPayload(from: string, message: EmailMessage): Record<strin
 
 function senderFor(message: EmailMessage): string {
   if (process.env.EMAIL_FROM) return process.env.EMAIL_FROM;
-  return message.template ? 'Support <support@lector.dev>' : 'Lector <no-reply@lector.dev>';
+  return message.template ? 'Support <support@readfox.app>' : 'Readfox <no-reply@readfox.app>';
 }
 
 function resendTransport(apiKey: string): EmailTransport {

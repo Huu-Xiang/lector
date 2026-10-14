@@ -21,7 +21,7 @@ test.describe('Language Setup & Switching', () => {
     // not just on a hard load. Regression test for the guard getting stuck
     // on its own spinner forever after a client-side redirect.
     await expect(page).toHaveURL(/\/setup/, { timeout: 15000 });
-    const heading = page.getByRole('heading', { name: 'Welcome to Lector' });
+    const heading = page.getByRole('heading', { name: 'Welcome to Readfox' });
     await expect(heading).toBeVisible({ timeout: 15000 });
     await expect(page.getByTestId('setup-language-af')).toBeVisible();
     await expect(page.getByTestId('setup-language-de')).toBeVisible();

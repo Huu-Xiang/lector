@@ -137,7 +137,7 @@ export default function SetupPage() {
             Your first reading session
           </div>
           <h1 className="mb-3 text-3xl font-bold tracking-tight text-foreground">
-            Welcome to Lector
+            Welcome to Readfox
           </h1>
           <p className="mx-auto max-w-xl text-base text-muted-foreground sm:text-lg">
             Tell us just enough to choose a useful first lesson. Every answer is optional.

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { authClient } from '@/lib/auth-client';
 import { useLectorMode } from '@/lib/use-env';
 import SignOutButton from './components/SignOutButton';
+import LegalLinks from '@/components/LegalLinks';
 
 export default function AccountMenu({ compact = false }: { compact?: boolean }) {
   const mode = useLectorMode();
@@ -37,15 +38,18 @@ function CloudAccountMenu({ compact }: { compact: boolean }) {
   }
 
   return (
-    <div className="flex items-center justify-between gap-2 border-t border-border px-4 py-3">
-      <span
-        className="min-w-0 truncate text-xs text-muted-foreground"
-        title={session.user.email}
-        data-testid="account-email"
-      >
-        {session.user.email}
-      </span>
-      <SignOutButton onClick={handleSignOut} disabled={isSigningOut} />
+    <div className="border-t border-border">
+      <div className="flex items-center justify-between gap-2 px-4 py-3">
+        <span
+          className="min-w-0 truncate text-xs text-muted-foreground"
+          title={session.user.email}
+          data-testid="account-email"
+        >
+          {session.user.email}
+        </span>
+        <SignOutButton onClick={handleSignOut} disabled={isSigningOut} />
+      </div>
+      <LegalLinks className="px-4 pb-3" />
     </div>
   );
 }

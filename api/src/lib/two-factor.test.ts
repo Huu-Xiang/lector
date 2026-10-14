@@ -143,7 +143,7 @@ describe('TOTP enrolment (verify-to-arm)', () => {
 
     // The URI is what the QR encodes: our issuer, the account, a base32 secret.
     expect(totpURI).toStartWith('otpauth://totp/');
-    expect(totpURI).toContain('issuer=Lector');
+    expect(totpURI).toContain('issuer=Readfox');
     expect(new URL(totpURI).searchParams.get('secret')).toBeTruthy();
     expect(backupCodes.length).toBeGreaterThan(0);
 

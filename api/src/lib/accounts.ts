@@ -70,7 +70,7 @@ export function createAuthEngine(opts: AuthEngineOptions) {
     // false): `twoFactorEnabled` only flips after the first valid code, so a
     // user who closes the QR dialog early is never locked out. Email OTP is
     // deliberately not configured — TOTP + backup codes only.
-    twoFactor({ issuer: 'Lector' }),
+    twoFactor({ issuer: 'Readfox' }),
   ];
   if (opts.turnstileSecretKey) {
     plugins.push(captcha({ provider: 'cloudflare-turnstile', secretKey: opts.turnstileSecretKey }));
@@ -104,7 +104,7 @@ export function createAuthEngine(opts: AuthEngineOptions) {
         try {
           await sendEmail({
             to: user.email,
-            subject: 'Reset your Lector password',
+            subject: 'Reset your Readfox password',
             text:
               `Someone (hopefully you) asked to reset the password for ${user.email}.\n\n` +
               `Reset it here: ${url}\n\n` +
@@ -123,9 +123,9 @@ export function createAuthEngine(opts: AuthEngineOptions) {
         try {
           await sendEmail({
             to: user.email,
-            subject: 'Verify your Lector email address',
+            subject: 'Verify your Readfox email address',
             text:
-              `Welcome to Lector. Confirm your email address to activate your account:\n\n` +
+              `Welcome to Readfox. Confirm your email address to activate your account:\n\n` +
               `${url}\n\n` +
               `If you didn't sign up, ignore this email.`,
           });
@@ -170,9 +170,9 @@ export function createAuthEngine(opts: AuthEngineOptions) {
           try {
             await sendEmail({
               to: user.email,
-              subject: 'Confirm your Lector account deletion',
+              subject: 'Confirm your Readfox account deletion',
               text:
-                `You asked to permanently delete your Lector account (${user.email}) and all of its data.\n\n` +
+                `You asked to permanently delete your Readfox account (${user.email}) and all of its data.\n\n` +
                 `This cannot be undone. Confirm the deletion here:\n${url}\n\n` +
                 `If this wasn't you, do NOT click the link — change your password instead, as someone may have access to your session. This link expires in 24 hours.`,
             });

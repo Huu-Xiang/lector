@@ -75,7 +75,7 @@ export function defaultLifecycleDeps(): LifecycleDeps {
     send: sendEmail,
     cloud: config.authRequired,
     hasResendKey: Boolean(process.env.RESEND_API_KEY),
-    appUrl: process.env.BETTER_AUTH_URL || process.env.APP_URL || 'https://app.lector.dev',
+    appUrl: process.env.BETTER_AUTH_URL || process.env.APP_URL || 'https://readfox.app',
   };
 }
 
@@ -369,7 +369,9 @@ export async function sweepLifecycleEmails(
 }
 
 function lifecycleWorkerEnabled(): boolean {
-  return config.authRequired;
+  // Fork: these mails use Resend templates that live in the upstream account,
+  // so they stay off unless explicitly enabled with your own templates.
+  return config.authRequired && process.env.LIFECYCLE_EMAILS === '1';
 }
 
 let loopTimer: ReturnType<typeof setInterval> | null = null;

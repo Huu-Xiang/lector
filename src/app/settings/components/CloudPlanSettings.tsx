@@ -194,7 +194,7 @@ export default function CloudPlanSettings() {
     <section id="plan" className="panel p-6" data-testid="cloud-plan-settings">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h2 className="text-lg font-semibold text-foreground">Lector plan</h2>
+          <h2 className="text-lg font-semibold text-foreground">Readfox plan</h2>
           <p className="mt-1 text-sm text-muted-foreground" data-testid="cloud-plan-current">
             {plan
               ? currentSubscription && currentSubscription.plan === plan
@@ -242,7 +242,7 @@ export default function CloudPlanSettings() {
           {entitlements.byok ? (
             <p className="text-xs">
               Your own AI key is active, so translations and rich AI actions use your provider
-              instead of Lector&apos;s managed allowance. Free library and journal limits still
+              instead of Readfox&apos;s managed allowance. Free library and journal limits still
               apply, and audio stays on your browser voice.
             </p>
           ) : (

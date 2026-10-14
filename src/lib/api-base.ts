@@ -87,7 +87,15 @@ export function checkoutUrl(): string {
 /** Routes that must render without a session (and without app chrome). #218
  * /two-factor is mid-sign-in: the password step set a challenge cookie but
  * the session only exists once the code verifies. */
-export const AUTH_ROUTES = ['/login', '/register', '/reset-password', '/two-factor'] as const;
+export const AUTH_ROUTES = [
+  '/login',
+  '/register',
+  '/reset-password',
+  '/two-factor',
+  '/privacy',
+  '/terms',
+  '/about',
+] as const;
 
 export function isAuthRoute(pathname: string): boolean {
   return AUTH_ROUTES.some((r) => pathname === r || pathname.startsWith(`${r}/`));

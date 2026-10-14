@@ -79,7 +79,7 @@ export default function BYOKSettings() {
       setApiKey('');
       setEditing(false);
       await load();
-      toast.success('Reverted to your Lector managed AI allowance');
+      toast.success('Reverted to your Readfox managed AI allowance');
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Could not disable BYOK');
     } finally {
@@ -107,7 +107,7 @@ export default function BYOKSettings() {
 
       {plan === 'free' && (
         <p className="mb-4 rounded-lg border border-border bg-[var(--primary-soft)] p-3 text-xs text-foreground">
-          Prefer Lector to handle both AI and higher-quality audio?{' '}
+          Prefer Readfox to handle both AI and higher-quality audio?{' '}
           <a href="/subscribe" className="font-semibold text-primary hover:underline">
             Compare Cloud plans
           </a>
@@ -148,7 +148,7 @@ export default function BYOKSettings() {
             </select>
             {provider === 'openrouter' && (
               <p className="mt-2 text-xs text-muted-foreground">
-                Evaluated models are ordered by Afrikaans COMET score in Lector&apos;s{' '}
+                Evaluated models are ordered by Afrikaans COMET score in Readfox&apos;s{' '}
                 <a
                   href="https://lector.dev/blog/local-llm-translation-eval/"
                   target="_blank"
@@ -237,7 +237,7 @@ export default function BYOKSettings() {
             </div>
           )}
           <p className="text-xs text-muted-foreground">
-            Lector validates the key with {status.providers[provider].label} before saving it.
+            Readfox validates the key with {status.providers[provider].label} before saving it.
             Provider errors never include your key.
           </p>
           <details className="rounded-md border border-border bg-muted/30 p-3 text-xs text-muted-foreground">
@@ -252,11 +252,11 @@ export default function BYOKSettings() {
               </p>
               <p>
                 The deployment encryption key is held separately in AWS Parameter Store. Your API
-                key is write-only: Lector never sends it back to the browser, includes it in
+                key is write-only: Readfox never sends it back to the browser, includes it in
                 exports, or logs upstream credential details.
               </p>
               <p>
-                Lector is open source, so you can verify how credentials are encrypted, stored, and
+                Readfox is open source, so you can verify how credentials are encrypted, stored, and
                 selected at request time.{' '}
                 <a
                   href="https://github.com/heuwels/lector"

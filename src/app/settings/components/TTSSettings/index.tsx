@@ -76,7 +76,7 @@ export default function TTSSettings() {
       <section className="panel space-y-4 p-6" data-testid="tts-settings">
         <h2 className="text-lg font-semibold text-foreground">Text-to-Speech</h2>
         <p className="text-xs text-muted-foreground" data-testid="no-audio-note">
-          {activeLang.name} has no synthesized voice. Pronunciation is disputed, so Lector stays
+          {activeLang.name} has no synthesized voice. Pronunciation is disputed, so Readfox stays
           silent.
         </p>
       </section>
@@ -114,7 +114,7 @@ export default function TTSSettings() {
 
       {espeakOnly ? (
         <p className="text-xs text-muted-foreground" data-testid="espeak-voice-note">
-          {activeLang.name} is spoken by eSpeak NG, a synthesized voice hosted by Lector — the only
+          {activeLang.name} is spoken by eSpeak NG, a synthesized voice hosted by Readfox — the only
           text-to-speech engine that exists for {activeLang.name}. It sounds robotic but pronounces
           every word exactly, and it&apos;s included on every plan.
         </p>
@@ -143,12 +143,12 @@ export default function TTSSettings() {
           </div>
           {managedTTSIncluded === false && (
             <p className="mt-3 rounded-lg border border-border bg-[var(--primary-soft)] p-3 text-xs text-foreground">
-              Want Lector&apos;s managed voice?{' '}
+              Want Readfox&apos;s managed voice?{' '}
               <a href="/subscribe" className="font-semibold text-primary hover:underline">
                 Upgrade to Cloud
               </a>
               . Adding your own AI key does not change audio because voice usage is hosted by
-              Lector.
+              Readfox.
             </p>
           )}
         </div>
