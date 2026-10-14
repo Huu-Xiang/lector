@@ -3,6 +3,7 @@ import { db, ChatMessageRow } from '../db';
 import { getProvider } from '../lib/llm';
 import { getCurrentUserId } from '../lib/user';
 import { resolveLanguage } from '../lib/active-language';
+import { getNativeLanguageName } from '../lib/native-language';
 import { getLanguageConfig } from '../lib/languages';
 import { entitlements, planLimitResponse, type UsageReservation } from '../lib/entitlements';
 import { randomUUID } from 'crypto';
@@ -10,8 +11,8 @@ import { randomUUID } from 'crypto';
 const app = new Hono();
 
 // TODO: add per-language system prompt configuration in Settings
-function getSystemPrompt(langName: string): string {
-  return `You are a friendly ${langName} language tutor helping an English speaker learn ${langName}. Answer questions about grammar, vocabulary, usage, idioms, and differences between similar words or phrases. Keep answers concise and educational. Use examples where helpful. Reply in English unless the student writes in ${langName}, in which case reply in ${langName} with an English explanation.`;
+function getSystemPrompt(langName: string, nativeName: string): string {
+  return `You are a friendly ${langName} language tutor helping a ${nativeName} speaker learn ${langName}. Answer questions about grammar, vocabulary, usage, idioms, and differences between similar words or phrases. Keep answers concise and educational. Use examples where helpful. Reply in ${nativeName} unless the student writes in ${langName}, in which case reply in ${langName} with a ${nativeName} explanation.`;
 }
 
 const MAX_CONTEXT_MESSAGES = 20;
@@ -82,7 +83,7 @@ app.post('/', async (c) => {
 
     const lang = resolveLanguage(language, userId);
     const langName = getLanguageConfig(lang).name;
-    const SYSTEM_PROMPT = getSystemPrompt(langName);
+    const SYSTEM_PROMPT = getSystemPrompt(langName, getNativeLanguageName(userId));
 
     const now = new Date().toISOString();
     const userMsg: ChatMessageRow = {

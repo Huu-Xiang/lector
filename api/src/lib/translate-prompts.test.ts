@@ -94,3 +94,18 @@ describe('buildPhrasePrompt (keeps spelreels for af)', () => {
     expect(prompt).not.toContain(SPELREELS_MARKER);
   });
 });
+
+describe('native language in prompts', () => {
+  test('defaults to English and follows the learner language when given', () => {
+    expect(buildGlossPrompt('French', 'chat', 'Le chat dort.')).toContain('to English translator');
+    const zh = buildGlossPrompt('French', 'chat', 'Le chat dort.', 'Simplified Chinese');
+    expect(zh).toContain('French to Simplified Chinese translator');
+    expect(zh).not.toContain('English');
+    expect(buildWordEntryPrompt('French', 'chat', '', 'Simplified Chinese')).not.toContain(
+      'English',
+    );
+    expect(buildPhrasePrompt('French', '', 'le chat', 'Le chat dort.', 'Japanese')).not.toContain(
+      'English',
+    );
+  });
+});

@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowRight, Check, Sparkles } from 'lucide-react';
-import { seedStarterContent } from '@/lib/data-layer';
-import { LANGUAGES, type LanguageCode } from '@/lib/languages';
+import { getSetting, seedStarterContent, setSetting } from '@/lib/data-layer';
+import { LANGUAGES, nativeLanguageFromLocale, type LanguageCode } from '@/lib/languages';
 import {
   getOnboardingSnapshot,
   skipOnboarding,
@@ -98,6 +98,14 @@ export default function SetupPage() {
     setError(null);
 
     try {
+      // First setup: take the browser language as the learner's own language.
+      // Best effort; the Settings card lets them change it.
+      try {
+        if (!(await getSetting<string>('nativeLanguage'))) {
+          await setSetting('nativeLanguage', nativeLanguageFromLocale(navigator.language));
+        }
+      } catch {}
+
       // Seeding is safe before the target-language write: the route accepts an
       // explicit language and is idempotent. /onboarding/start or /skip then
       // atomically persists the profile, progress and target language.

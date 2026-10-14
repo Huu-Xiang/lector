@@ -12,6 +12,7 @@ import { getSpelreelsContext } from '../lib/spelreels';
 import { resolveLanguage } from '../lib/active-language';
 import { getCurrentUserId } from '../lib/user';
 import { getLanguageConfig } from '../lib/languages';
+import { getNativeLanguageName } from '../lib/native-language';
 import {
   buildGlossPrompt,
   buildPhrasePrompt,
@@ -209,6 +210,7 @@ async function buildWordEntryResponse(
   langName: string,
   word: string,
   sentence: string,
+  nativeName: string,
 ) {
   const entry = await completeJson<{
     word?: string;
@@ -217,7 +219,9 @@ async function buildWordEntryResponse(
     etymology?: string;
     relatedForms?: Array<{ form: string; relation: string }>;
   }>(provider, {
-    messages: [{ role: 'user', content: buildWordEntryPrompt(langName, word, sentence) }],
+    messages: [
+      { role: 'user', content: buildWordEntryPrompt(langName, word, sentence, nativeName) },
+    ],
     maxTokens: 1500,
     task,
   });
@@ -253,7 +257,12 @@ export function makeTranslateRoutes({
 
     const lang = resolveLanguage(parsed.value.language, userId);
     const langName = getLanguageConfig(lang).name;
-    const prompt = buildGlossPrompt(langName, parsed.value.word, parsed.value.sentence);
+    const prompt = buildGlossPrompt(
+      langName,
+      parsed.value.word,
+      parsed.value.sentence,
+      getNativeLanguageName(userId),
+    );
     recordStudySessionPing(userId, lang);
 
     const reservation = reserve(c, engine, userId, metricForGloss(resolved));
@@ -308,6 +317,7 @@ export function makeTranslateRoutes({
         langName,
         parsed.value.word,
         parsed.value.sentence,
+        getNativeLanguageName(userId),
       );
       return c.json(entry);
     } catch (error) {
@@ -340,6 +350,7 @@ export function makeTranslateRoutes({
     const lang = resolveLanguage(language, userId);
     const langConfig = getLanguageConfig(lang);
     const langName = langConfig.name;
+    const nativeName = getNativeLanguageName(userId);
     recordStudySessionPing(userId, lang);
 
     const metric: MeteredMetric = managedFree
@@ -358,7 +369,7 @@ export function makeTranslateRoutes({
             messages: [
               {
                 role: 'user',
-                content: buildSimplePhrasePrompt(langName, word, sentence),
+                content: buildSimplePhrasePrompt(langName, word, sentence, nativeName),
               },
             ],
             maxTokens: 48,
@@ -374,7 +385,7 @@ export function makeTranslateRoutes({
             messages: [
               {
                 role: 'user',
-                content: buildSimpleContextPrompt(langName, word, sentence),
+                content: buildSimpleContextPrompt(langName, word, sentence, nativeName),
               },
             ],
             maxTokens: 48,
@@ -393,7 +404,7 @@ export function makeTranslateRoutes({
           messages: [
             {
               role: 'user',
-              content: buildPhrasePrompt(langName, spelreelsSection, word, sentence),
+              content: buildPhrasePrompt(langName, spelreelsSection, word, sentence, nativeName),
             },
           ],
           maxTokens: 1500,
@@ -408,6 +419,7 @@ export function makeTranslateRoutes({
         langName,
         word,
         sentence,
+        nativeName,
       );
       return c.json(entry);
     } catch (error) {

@@ -14,11 +14,16 @@
  * the reader sees the instant they click — the rich dictionary entry is a
  * separate opt-in "enrich" call.
  */
-export function buildGlossPrompt(langName: string, word: string, sentence: string): string {
-  return `You are a ${langName} to English translator. A learner clicked the word "${word}" while reading.
+export function buildGlossPrompt(
+  langName: string,
+  word: string,
+  sentence: string,
+  nativeName = 'English',
+): string {
+  return `You are a ${langName} to ${nativeName} translator. A learner clicked the word "${word}" while reading.
 Sentence context: "${sentence || word}"
 
-Reply with ONLY the concise English meaning — the natural translation(s), most common sense first, separated by "; ". No explanation, no quotes, no markdown, no extra words. If the word is an inflected form you may prefix a short tag like "(plural)" or "(past tense)". Keep it under ~12 words.`;
+Reply with ONLY the concise ${nativeName} meaning — the natural translation(s), most common sense first, separated by "; ". No explanation, no quotes, no markdown, no extra words. If the word is an inflected form you may prefix a short tag like "(plural)" or "(past tense)". Keep it under ~12 words.`;
 }
 
 /**
@@ -29,23 +34,29 @@ export function buildSimplePhrasePrompt(
   langName: string,
   phrase: string,
   sentence: string,
+  nativeName = 'English',
 ): string {
-  return `Translate the selected ${langName} phrase into natural English as it is used in the sentence.
+  return `Translate the selected ${langName} phrase into natural ${nativeName} as it is used in the sentence.
 
 Selected phrase: "${phrase}"
 Sentence context: "${sentence || phrase}"
 
-Return ONLY the concise English translation. Do not explain it. Do not use quotes, labels, JSON, or Markdown.`;
+Return ONLY the concise ${nativeName} translation. Do not explain it. Do not use quotes, labels, JSON, or Markdown.`;
 }
 
 /** Bounded Free explicit word-in-context path; one sense, plain text only. */
-export function buildSimpleContextPrompt(langName: string, word: string, sentence: string): string {
-  return `Translate the selected ${langName} word into the concise English sense that fits this sentence.
+export function buildSimpleContextPrompt(
+  langName: string,
+  word: string,
+  sentence: string,
+  nativeName = 'English',
+): string {
+  return `Translate the selected ${langName} word into the concise ${nativeName} sense that fits this sentence.
 
 Selected word: "${word}"
 Sentence context: "${sentence || word}"
 
-Return ONLY the context-appropriate English translation. Do not list other senses. Do not explain it. Do not use quotes, labels, JSON, or Markdown.`;
+Return ONLY the context-appropriate ${nativeName} translation. Do not list other senses. Do not explain it. Do not use quotes, labels, JSON, or Markdown.`;
 }
 
 /**
@@ -54,8 +65,13 @@ Return ONLY the context-appropriate English translation. Do not list other sense
  * (in-context / re-translate). No spelreels — the full orthography ruleset adds
  * thousands of tokens of latency for negligible gain on a single-word lookup.
  */
-export function buildWordEntryPrompt(langName: string, word: string, sentence: string): string {
-  return `You are a ${langName} to English translator with deep knowledge of ${langName} orthography, morphology, and etymology.
+export function buildWordEntryPrompt(
+  langName: string,
+  word: string,
+  sentence: string,
+  nativeName = 'English',
+): string {
+  return `You are a ${langName} to ${nativeName} translator with deep knowledge of ${langName} orthography, morphology, and etymology.
 
 A learner clicked the following ${langName} word while reading. Produce a dictionary-quality entry — not a single gloss. The output is used both to display the meaning AND to persist into an on-device dictionary, so be thorough and faithful.
 
@@ -66,7 +82,7 @@ Respond with ONLY a JSON object in this exact shape (no markdown, no code blocks
 {
   "word": "${word}",
   "senses": [
-    { "partOfSpeech": "noun | verb | adjective | adverb | pronoun | preposition | conjunction | interjection | determiner | numeral | particle", "gloss": "concise English meaning, no period" }
+    { "partOfSpeech": "noun | verb | adjective | adverb | pronoun | preposition | conjunction | interjection | determiner | numeral | particle", "gloss": "concise ${nativeName} meaning, no period" }
     /* ...one entry per distinct sense; order most-common first */
   ],
   "ipa": "/.../ or [...] — phonetic transcription if you're confident",
@@ -81,7 +97,7 @@ Rules:
 - CRITICAL — valid JSON only: never put a double-quote character (") inside any string value. To quote a word, gloss, or cognate (common in etymology), use single quotes ('like this') or parentheses. A raw double quote inside a value breaks the JSON and the entry is discarded.
 - Include separate sense entries for genuinely distinct meanings (e.g. trek = pull / move / journey). Don't split shades of the same meaning.
 - Use the sentence to bias sense ORDER, but include all common senses a learner might reasonably encounter.
-- Each gloss is a short English phrase (1-4 words is typical, up to a clause for verbs with idiomatic completions).
+- Each gloss is a short ${nativeName} phrase (1-4 words is typical, up to a clause for verbs with idiomatic completions).
 - Omit ipa / etymology / relatedForms entirely if you're not confident — don't guess.
 - Use the same partOfSpeech vocabulary as Wiktionary so cached entries align with the curated dict.
 
@@ -99,8 +115,9 @@ export function buildPhrasePrompt(
   spelreelsSection: string,
   word: string,
   sentence: string,
+  nativeName = 'English',
 ): string {
-  return `You are a ${langName} to English translator with deep knowledge of ${langName} orthography, idiom, and register.
+  return `You are a ${langName} to ${nativeName} translator with deep knowledge of ${langName} orthography, idiom, and register.
 
 ${spelreelsSection}A learner has selected a ${langName} phrase from a text they're reading. Help them understand it the way a native speaker would — not just what the words say, but what the phrase actually means, why it's phrased this way, and when it would be used.
 
@@ -109,7 +126,7 @@ Sentence context: "${sentence || word}"
 
 Respond with ONLY a JSON object in this exact format (no markdown, no code blocks):
 {
-  "translation": "the most natural English translation a fluent speaker would use",
+  "translation": "the most natural ${nativeName} translation a fluent speaker would use",
   "literalBreakdown": "word-by-word literal gloss (e.g. 'hand-shoe' for handskoen)",
   "idiomaticMeaning": "if the phrase is an idiom, fixed expression, or compound: what it actually means and why — e.g. 'This is an idiom which literally means X. It is used when ...'",
   "usageNotes": "register, tone, formality, or contextual notes a learner should know (e.g. 'informal', 'used by older speakers', 'often sarcastic', 'common in Bible-influenced Afrikaans')",

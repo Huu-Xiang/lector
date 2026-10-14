@@ -16,7 +16,7 @@
  * `Authorization: Bearer` header to openaiUrl), so a poisoned URL exfiltrates
  * the key on the next LLM call.
  */
-import { isValidLanguageCode, LANGUAGES } from './languages';
+import { isNativeLanguageCode, isValidLanguageCode, LANGUAGES } from './languages';
 
 export const SENSITIVE_KEYS = new Set([
   'anthropicApiKey',
@@ -38,6 +38,7 @@ const SETTING_VALUE_BYTE_LIMITS: Record<string, number> = {
   // A list of registry codes with no repeats, so the whole registry is the most
   // it can hold.
   enabledLanguages: Buffer.byteLength(JSON.stringify(Object.keys(LANGUAGES)), 'utf8'),
+  nativeLanguage: 16,
 };
 
 export function settingValueByteLimit(key: string): number {
@@ -50,6 +51,7 @@ export const KNOWN_SETTING_KEYS = new Set([
   // Core
   'targetLanguage',
   'enabledLanguages',
+  'nativeLanguage',
   'timezone',
   // LLM provider config (Settings → AI, setup)
   'llmProvider',
@@ -98,6 +100,9 @@ export function validateSettingWrite(key: string, value: unknown): string | null
   }
   if (key === 'targetLanguage' && (typeof value !== 'string' || !isValidLanguageCode(value))) {
     return 'targetLanguage must be a supported language';
+  }
+  if (key === 'nativeLanguage' && !isNativeLanguageCode(value)) {
+    return 'nativeLanguage must be a supported language';
   }
   if (key === 'enabledLanguages') {
     if (!Array.isArray(value)) return 'enabledLanguages must be an array of language codes';
