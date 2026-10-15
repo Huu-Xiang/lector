@@ -17,14 +17,16 @@ for lang in $DICT_LANGS; do
   upper=$(echo "$lang" | tr '[:lower:]' '[:upper:]')
   ver_var="DICT_VERSION_$upper"
   sha_var="DICT_SHA256_$upper"
+  base_var="DICT_BASE_$upper"
   ver="${!ver_var}"
   sha="${!sha_var}"
+  base="${!base_var:-https://github.com/heuwels/lector/releases/download}"
   dest="data/dictionary-${lang}.db"
   if [ -f "$dest" ] && echo "${sha}  ${dest}" | sha256sum -c -; then
     continue
   fi
   curl -fL --retry 3 \
-    "https://github.com/heuwels/lector/releases/download/${ver}/dictionary-${lang}.db" \
+    "${base}/${ver}/dictionary-${lang}.db" \
     -o "$dest"
   echo "${sha}  ${dest}" | sha256sum -c -
 done

@@ -341,7 +341,7 @@ export function makeTranslateRoutes({
     if (nativeCode === 'en' || nativeCode === lang) return c.json({ senses: null });
 
     const entry = lookupEntry(userId, parsed.value.word, lang);
-    if (!entry || entry.source === 'cache' || entry.senses.length === 0) {
+    if (!entry || entry.source === 'cache' || entry.senseLanguage || entry.senses.length === 0) {
       return c.json({ senses: null });
     }
     const source = entry.senses.slice(0, MAX_ENTRY_SENSES).map((sense) => ({

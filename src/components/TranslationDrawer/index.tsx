@@ -13,6 +13,7 @@ import { ChevronRight, RefreshCw, Sparkles, Volume2, X, Zap } from 'lucide-react
 import TargetText from '@/components/TargetText';
 import NestedWordButton from './components/NestedWordButton';
 import Gloss from './components/Gloss';
+import { EntryBadges, EntryExtras, SenseGroups } from './components/EntryDetails';
 import { lookupAnnouncement } from './lookup-announcement';
 
 export { type ExpandedDictionaryEntry } from './types';
@@ -301,25 +302,10 @@ export default function TranslationDrawer({
                   )}
                 </div>
               ) : hasRichEntry ? (
-                <ol className="space-y-3">
-                  {senses.map((sense, i) => (
-                    <li key={i} className="flex gap-3">
-                      <span className="mt-0.5 flex-shrink-0 text-xs font-medium text-muted-foreground tabular-nums">
-                        {i + 1}.
-                      </span>
-                      <div className="min-w-0 flex-1">
-                        {sense.partOfSpeech && (
-                          <span className="mr-2 inline-block rounded bg-muted px-1.5 py-0.5 align-middle text-[10px] font-semibold tracking-wide text-muted-foreground uppercase">
-                            {sense.partOfSpeech}
-                          </span>
-                        )}
-                        <span className="leading-relaxed text-foreground">
-                          <Gloss text={sense.gloss} onLookupWord={onLookupWord} />
-                        </span>
-                      </div>
-                    </li>
-                  ))}
-                </ol>
+                <div className="space-y-3">
+                  {entry && <EntryBadges entry={entry} />}
+                  <SenseGroups senses={senses} onLookupWord={onLookupWord} />
+                </div>
               ) : fallbackTranslation ? (
                 <div>
                   {aiPartOfSpeech && (
@@ -390,6 +376,10 @@ export default function TranslationDrawer({
                 </span>
               )}
             </section>
+
+            {entry && !aiContextTranslation && (
+              <EntryExtras entry={entry} word={word} onLookupWord={onLookupWord} />
+            )}
 
             {/* Rich phrase details (idiom, literal breakdown, usage notes, register) */}
             {aiPhraseDetails &&

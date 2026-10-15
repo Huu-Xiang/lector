@@ -90,11 +90,12 @@ RUN set -e; \
         U=$(echo "$L" | tr a-z A-Z); \
         eval "VER=\${DICT_VERSION_${U}:-}"; \
         eval "DSHA=\${DICT_SHA256_${U}:-}"; \
+        eval "BASE=\${DICT_BASE_${U}:-https://github.com/heuwels/lector/releases/download}"; \
         if [ -z "${VER}" ]; then \
           echo "ERROR: no DICT_VERSION_${U} pin in dict.env for requested language '${L}'" >&2; \
           exit 1; \
         fi; \
-        URL="https://github.com/heuwels/lector/releases/download/${VER}/dictionary-${L}.db"; \
+        URL="${BASE}/${VER}/dictionary-${L}.db"; \
         echo "Fetching ${L} dictionary from: ${URL}"; \
         curl -fL --retry 3 "${URL}" -o "/dict/dictionary-${L}.db"; \
         if [ -n "${DSHA}" ]; then \

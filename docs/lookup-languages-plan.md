@@ -1,6 +1,6 @@
 # Word lookup in any language pair
 
-Status: step 1 is built. Steps 2 to 5 are planned.
+Status: steps 1 to 3 are built for English. Steps 4 and 5 are planned.
 
 ## How a lookup works today
 
@@ -20,8 +20,9 @@ Any learning language to any own language. First scope: English, French and Chin
 | French | Chinese | `dict-fr` + localize | Step 1 done. |
 | Chinese | English | `dict-zh` | Works. |
 | Chinese | French | `dict-zh` + localize | Step 1 done. |
-| English | Chinese or French | `dict-en` + localize | Needs step 2. Until then the AI gloss is used. |
-| English | English | `dict-en` | Needs step 2. |
+| English | Chinese | `dict-en` | Works (Chinese meanings built in). |
+| English | French | `dict-en` + localize | Works. |
+| English | English | `dict-en` | Works. |
 
 ## Step 1 (done): translate dictionary meanings into the learner's language
 
@@ -31,21 +32,19 @@ Any learning language to any own language. First scope: English, French and Chin
 - The reader shows the English meanings at once and swaps in the translation when it arrives.
 - Cost: about 150 tokens per new word. This is a small fraction of a cent.
 
-## Step 2: English dictionary
+## Step 2 (done): English dictionary
 
-- Add an `en` profile to `scripts/build-dictionary.ts`. Source: the English entries of the English Wiktionary. The meanings are English definitions, like a learner's dictionary.
-- Publish `dictionary-en.db` as a release in our own repository. Set `DICT_RELEASE_BASE` and add the pin to `dict.env`.
-- The dump is large. The build needs about 8 GB of memory and some hours. It runs on the owner's Mac, not on the server.
-- Add `en` to `DICT_LANGS` and to the language pack, and test coverage against a 5,000-word list.
+- `scripts/build-dictionary-en.py` builds `dictionary-en.db` from ECDICT 1.0.28 (MIT) and Tatoeba (CC BY 2.0 FR). It keeps about 58,000 common single words, chosen by frequency rank, exam tag, Collins stars or the Oxford 3000 list.
+- The file is a release asset of this fork (`dict-en-2026-10-15`). `dict.env` pins it with `DICT_BASE_EN`, a per-language release base. The server downloads it when an account has English enabled.
+- English meanings come from ECDICT's definitions. Chinese meanings come from its translations and are stored in `senses_i18n`. A learner whose own language is Chinese gets the Chinese meanings. Other learners get the English definitions, and `/api/translate/localize` translates them.
+- Word forms (`went`, `children`) resolve to the base word through the `inflections` table.
 
-## Step 3: richer entries (like Oxford)
+## Step 3 (done): richer entries
 
-Today an entry has meanings, part of speech, IPA, etymology and related forms. It has no example sentences.
-
-- Extend the dictionary schema with `examples` per sense. The Wiktionary dump already has them. This needs a schema version and a rebuild of each dictionary.
-- Show in the drawer: headword, IPA with the speaker button, senses grouped by part of speech, one or two examples per sense, forms, then etymology folded.
-- Examples stay in the learning language. A translation of the example is optional and goes through the same shared cache.
-- The Enrich button keeps working for words the dictionary does not have.
+- New tables `entry_meta` (Collins stars, Oxford flag, exam tags, frequency), `senses_i18n` and `examples`. Other dictionaries do not have them, and the lookup skips them.
+- The lookup returns `examples`, `tags`, `collins`, `oxford`, `senseLanguage` and `englishSenses`.
+- The drawer shows badges, senses grouped by part of speech with numbers, English definitions beside Chinese ones, and example sentences with the looked-up word in bold.
+- To rebuild: run the script with the ECDICT `stardict.db` and the three Tatoeba files, publish the new file as a release, and update the pin in `dict.env`.
 
 ## Step 4: polish
 
@@ -63,4 +62,3 @@ Today an entry has meanings, part of speech, IPA, etymology and related forms. I
 ## Open questions
 
 - Should a cache miss in step 1 cost the learner one word lookup? Today it does.
-- Is a dictionary build on the owner's Mac acceptable for step 2?

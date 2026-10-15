@@ -65,6 +65,20 @@ describe('dictAssetUrl', () => {
     );
   });
 
+  test('a pin can name its own release base, and the env mirror still wins', () => {
+    delete process.env.DICT_RELEASE_BASE;
+    const pin = {
+      version: 'dict-en-1',
+      sha256: 'aa',
+      base: 'https://github.com/Huu-Xiang/lector/releases/download/',
+    };
+    expect(dictAssetUrl('en', pin)).toBe(
+      'https://github.com/Huu-Xiang/lector/releases/download/dict-en-1/dictionary-en.db',
+    );
+    process.env.DICT_RELEASE_BASE = 'https://mirror.example.com/d';
+    expect(dictAssetUrl('en', pin)).toBe('https://mirror.example.com/d/dict-en-1/dictionary-en.db');
+  });
+
   test('honours a mirror base and trims its trailing slash', () => {
     process.env.DICT_RELEASE_BASE = 'https://mirror.example.com/dicts/';
     expect(dictAssetUrl('af', { version: 'v1', sha256: 'aa' })).toBe(

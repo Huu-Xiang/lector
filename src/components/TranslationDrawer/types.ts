@@ -15,6 +15,14 @@ export interface ExpandedDictionaryEntry {
   lemmaInfo?: { stem: string; label: string };
   /** `dict` = built-in kaikki dict, `cache` = user-learned AI translation. */
   source?: 'dict' | 'cache';
+  /** Set when `senses` are already in the learner's own language. */
+  senseLanguage?: string;
+  /** The English definitions, kept beside translated `senses`. */
+  englishSenses?: Array<{ partOfSpeech: string; gloss: string }>;
+  examples?: Array<{ text: string; translation?: string }>;
+  tags?: string[];
+  collins?: number;
+  oxford?: boolean;
 }
 
 export interface TranslationDrawerProps {

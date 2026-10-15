@@ -15,6 +15,7 @@ import { esperantoIpa } from '../../../languages/eo/ipa';
 import { stemCandidates } from '../../../languages/morphology';
 import { analyseJapanese } from './ja-morphology';
 import { acceptedDictionaryContentBytes } from './storage-limits';
+import { getNativeLanguageCode } from './native-language';
 
 // x-system fold (#307 §3.4): learners without an Esperanto keyboard type
 // cx/gx/hx/jx/sx/ux for the supersignoj (ĉ ĝ ĥ ĵ ŝ ŭ). Folded at the lookup
@@ -89,6 +90,17 @@ export interface ExpandedDictionaryEntry {
   lemmaInfo?: { stem: string; label: string };
   /** `dict` = built-in kaikki dict; `cache` = user-learned AI translation. */
   source?: 'dict' | 'cache';
+  /** Set when `senses` are already written in the learner's own language (for example `zh-CN`). */
+  senseLanguage?: string;
+  /** The English definitions, kept beside translated `senses`. */
+  englishSenses?: Array<{ partOfSpeech: string; gloss: string }>;
+  examples?: Array<{ text: string; translation?: string }>;
+  /** Exam tags such as `zk`, `gk`, `cet4`, `ielts`. */
+  tags?: string[];
+  /** Collins star rating, 1 to 5. */
+  collins?: number;
+  /** In the Oxford 3000 core word list. */
+  oxford?: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -368,6 +380,10 @@ type Stmts = {
   selectRelated: Statement;
   selectInflectionLemma: Statement;
   selectReadings: Statement;
+  /** Present only in dictionaries that ship the extra tables (English). */
+  selectMeta: Statement | null;
+  selectI18n: Statement | null;
+  selectExamples: Statement | null;
 };
 
 const _stmtsByLang = new Map<string, Stmts>();
@@ -395,8 +411,22 @@ function getStmts(language: string): Stmts | null {
   if (cached) return cached;
   const db = getDb(language);
   if (!db) return null;
+  const optional = (sql: string): Statement | null => {
+    try {
+      return db.prepare(sql);
+    } catch {
+      return null;
+    }
+  };
   try {
     const stmts: Stmts = {
+      selectMeta: optional('SELECT collins, oxford, tags FROM entry_meta WHERE word = ?'),
+      selectI18n: optional(
+        'SELECT pos, gloss FROM senses_i18n WHERE word = ? AND lang = ? ORDER BY sort_order',
+      ),
+      selectExamples: optional(
+        'SELECT sentence, translation, translation_lang FROM examples WHERE word = ? ORDER BY sort_order',
+      ),
       selectEntry: db.prepare('SELECT word, rank, ipa, etymology FROM entries WHERE word = ?'),
       selectSenses: db.prepare('SELECT pos, gloss FROM senses WHERE word = ? ORDER BY sort_order'),
       selectRelated: db.prepare('SELECT related_word, relation FROM related_forms WHERE word = ?'),
@@ -899,6 +929,7 @@ export function lookupWord(
   language: string,
 ): ExpandedDictionaryEntry | undefined {
   const entry = resolveWord(userId, word, language);
+  if (entry && entry.source === 'dict') enrichEntry(entry, userId, language);
 
   // Esperanto pronunciation is a pure function of the spelling (the pack's
   // `gloss: 'ipa'` capability, #307 §3.2b), so every hit carries the rule IPA
@@ -910,6 +941,54 @@ export function lookupWord(
     if (ipa) entry.ipa = ipa;
   }
   return entry;
+}
+
+/** The bundled dictionaries translate into this language set. */
+function senseLanguageFor(native: string): string | null {
+  return native.toLowerCase().startsWith('zh') ? 'zh-CN' : null;
+}
+
+/**
+ * Add what only some dictionaries hold: exam tags, example sentences and meanings
+ * already written in the learner's language. A dictionary without those tables
+ * is left as it was.
+ */
+function enrichEntry(entry: ExpandedDictionaryEntry, userId: string, language: string): void {
+  const stmts = getStmts(language);
+  if (!stmts) return;
+  const headword = entry.lemmaInfo?.stem ?? entry.word;
+
+  const meta = stmts.selectMeta?.get(headword) as
+    | { collins: number; oxford: number; tags: string }
+    | undefined;
+  if (meta) {
+    if (meta.collins) entry.collins = meta.collins;
+    if (meta.oxford) entry.oxford = true;
+    const tags = (meta.tags || '').split(/\s+/).filter(Boolean);
+    if (tags.length) entry.tags = tags;
+  }
+
+  const nativeSenses = senseLanguageFor(getNativeLanguageCode(userId));
+  if (nativeSenses && stmts.selectI18n) {
+    const rows = stmts.selectI18n.all(headword, nativeSenses) as SenseRow[];
+    if (rows.length > 0) {
+      entry.englishSenses = entry.senses.slice(0, 6);
+      entry.senses = rows.map((r) => ({ partOfSpeech: r.pos || '', gloss: r.gloss }));
+      entry.senseLanguage = nativeSenses;
+    }
+  }
+
+  const examples = stmts.selectExamples?.all(headword) as
+    | Array<{ sentence: string; translation: string | null; translation_lang: string | null }>
+    | undefined;
+  if (examples && examples.length > 0) {
+    entry.examples = examples.map((e) => ({
+      text: e.sentence,
+      ...(e.translation && e.translation_lang === nativeSenses
+        ? { translation: e.translation }
+        : {}),
+    }));
+  }
 }
 
 /**

@@ -110,6 +110,21 @@
         "lookupFailed": "查询 {word} 失败。{error}",
         "definitionLoaded": "已加载 {word} 的释义。",
         "noDefinitionFound": "未找到 {word} 的释义。"
+      },
+      "examples": "例句",
+      "englishDefinitions": "英文释义",
+      "oxford3000": "牛津 3000",
+      "collinsTitle": "柯林斯 {stars} 星（满分 5 星）",
+      "frequencyRank": "词频第 {rank}",
+      "tags": {
+        "zk": "中考",
+        "gk": "高考",
+        "ky": "考研",
+        "cet4": "四级",
+        "cet6": "六级",
+        "toefl": "托福",
+        "ielts": "雅思",
+        "gre": "GRE"
       }
     },
     "onboardingTip": {

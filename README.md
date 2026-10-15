@@ -247,6 +247,7 @@ Open [http://localhost:3456](http://localhost:3456).
 
 - **Sentence banks.** [Tatoeba](https://tatoeba.org), [CC BY 2.0 FR](https://creativecommons.org/licenses/by/2.0/fr/).
 - **Dictionaries and frequency lists.** Wiktionary extracts through [kaikki.org](https://kaikki.org), Wikipedia dumps, and OpenSubtitles, plus pack-specific sources listed on [lector.dev](https://lector.dev/reference-data/).
+- **English dictionary (Readfox fork).** [ECDICT](https://github.com/skywind3000/ECDICT) (MIT) and example sentences from [Tatoeba](https://tatoeba.org) (CC BY 2.0 FR). `scripts/build-dictionary-en.py` builds it.
 
 ## License
 

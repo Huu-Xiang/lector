@@ -1098,7 +1098,8 @@
       "dataSources": {
         "heading": "数据来源",
         "body": "句库来自 Tatoeba（CC BY 2.0 FR），词典来自仓库 README 中列出的来源，各自适用其自身的许可。",
-        "books": "书库里的免费书籍是来自古腾堡计划（gutenberg.org）的公版文本。每本书都附有指向来源页面的链接。"
+        "books": "书库里的免费书籍是来自古腾堡计划（gutenberg.org）的公版文本。每本书都附有指向来源页面的链接。",
+        "dictionaries": "词典释义来自英文维基词典（通过 kaikki.org，CC BY-SA 许可）。英语词典由 skywind3000 的 ECDICT（MIT 许可，github.com/skywind3000/ECDICT）整理而成，例句来自 Tatoeba（CC BY 2.0 FR）。"
       }
     }
   },
@@ -1496,6 +1497,21 @@
         "lookupFailed": "查询 {word} 失败。{error}",
         "definitionLoaded": "已加载 {word} 的释义。",
         "noDefinitionFound": "未找到 {word} 的释义。"
+      },
+      "examples": "例句",
+      "englishDefinitions": "英文释义",
+      "oxford3000": "牛津 3000",
+      "collinsTitle": "柯林斯 {stars} 星（满分 5 星）",
+      "frequencyRank": "词频第 {rank}",
+      "tags": {
+        "zk": "中考",
+        "gk": "高考",
+        "ky": "考研",
+        "cet4": "四级",
+        "cet6": "六级",
+        "toefl": "托福",
+        "ielts": "雅思",
+        "gre": "GRE"
       }
     },
     "onboardingTip": {

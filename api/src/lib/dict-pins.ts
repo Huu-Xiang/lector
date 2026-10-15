@@ -19,6 +19,8 @@ export interface DictPin {
   version: string;
   /** SHA-256 of that asset, lower case hex. */
   sha256: string;
+  /** Release download base for this language; the default repository is used when absent. */
+  base?: string;
 }
 
 export interface DictPins {
@@ -73,7 +75,8 @@ export function parseDictEnv(text: string): DictPins {
     const version = values[`DICT_VERSION_${upper}`];
     const sha256 = values[`DICT_SHA256_${upper}`];
     if (!version || !sha256) continue;
-    pins[code] = { version, sha256: sha256.toLowerCase() };
+    const base = values[`DICT_BASE_${upper}`];
+    pins[code] = { version, sha256: sha256.toLowerCase(), ...(base ? { base } : {}) };
   }
 
   return { published: published.filter((code) => pins[code]), pins };
@@ -106,7 +109,10 @@ export function reloadDictPins(): DictPins {
 
 /** Release asset URL for one pinned language. */
 export function dictAssetUrl(language: string, pin: DictPin): string {
-  const base = (process.env.DICT_RELEASE_BASE || 'https://github.com/heuwels/lector/releases/download')
-    .replace(/\/+$/, '');
+  const base = (
+    process.env.DICT_RELEASE_BASE ||
+    pin.base ||
+    'https://github.com/heuwels/lector/releases/download'
+  ).replace(/\/+$/, '');
   return `${base}/${pin.version}/dictionary-${language}.db`;
 }

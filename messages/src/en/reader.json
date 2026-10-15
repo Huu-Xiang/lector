@@ -110,6 +110,21 @@
         "lookupFailed": "Lookup failed for {word}. {error}",
         "definitionLoaded": "Definition loaded for {word}.",
         "noDefinitionFound": "No definition found for {word}."
+      },
+      "examples": "Examples",
+      "englishDefinitions": "English definitions",
+      "oxford3000": "Oxford 3000",
+      "collinsTitle": "Collins: {stars} of 5 stars",
+      "frequencyRank": "Frequency #{rank}",
+      "tags": {
+        "zk": "Zhongkao",
+        "gk": "Gaokao",
+        "ky": "Kaoyan",
+        "cet4": "CET-4",
+        "cet6": "CET-6",
+        "toefl": "TOEFL",
+        "ielts": "IELTS",
+        "gre": "GRE"
       }
     },
     "onboardingTip": {

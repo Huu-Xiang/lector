@@ -1098,7 +1098,8 @@
       "dataSources": {
         "heading": "Data sources",
         "body": "Sentence banks come from Tatoeba (CC BY 2.0 FR) and dictionaries from the sources listed in the repository README, each under its own licence.",
-        "books": "The free books in the library are public-domain texts from Project Gutenberg (gutenberg.org). Each book links back to its source page."
+        "books": "The free books in the library are public-domain texts from Project Gutenberg (gutenberg.org). Each book links back to its source page.",
+        "dictionaries": "Dictionary meanings come from the English Wiktionary through kaikki.org (CC BY-SA). The English dictionary is built from ECDICT by skywind3000 (MIT licence, github.com/skywind3000/ECDICT), and its example sentences come from Tatoeba (CC BY 2.0 FR)."
       }
     }
   },
@@ -1496,6 +1497,21 @@
         "lookupFailed": "Lookup failed for {word}. {error}",
         "definitionLoaded": "Definition loaded for {word}.",
         "noDefinitionFound": "No definition found for {word}."
+      },
+      "examples": "Examples",
+      "englishDefinitions": "English definitions",
+      "oxford3000": "Oxford 3000",
+      "collinsTitle": "Collins: {stars} of 5 stars",
+      "frequencyRank": "Frequency #{rank}",
+      "tags": {
+        "zk": "Zhongkao",
+        "gk": "Gaokao",
+        "ky": "Kaoyan",
+        "cet4": "CET-4",
+        "cet6": "CET-6",
+        "toefl": "TOEFL",
+        "ielts": "IELTS",
+        "gre": "GRE"
       }
     },
     "onboardingTip": {
