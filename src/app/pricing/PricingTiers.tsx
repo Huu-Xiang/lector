@@ -122,7 +122,7 @@ export default function PricingTiers() {
                 </li>
               ))}
             </ul>
-            {!isCurrent && (
+            {!isCurrent && !(tier === 'free' && signedIn) && (
               <Link
                 href={href}
                 className={`mt-auto rounded-lg px-3 py-2 text-center text-sm font-semibold ${

@@ -273,14 +273,14 @@ export default function CloudPlanSettings() {
             </p>
           )}
 
-          <div className="flex flex-wrap items-center gap-3">
-            {billing?.management?.customerPortal && (
+          {billing?.management?.customerPortal && (
+            <div className="flex flex-wrap items-center gap-3">
               <Button type="button" onClick={openPortal} disabled={openingPortal}>
                 {openingPortal ? t('openingPaddle') : t('manageBilling')}
               </Button>
-            )}
-            <span className="text-xs">{t('paddleHandles')}</span>
-          </div>
+              <span className="text-xs">{t('paddleHandles')}</span>
+            </div>
+          )}
 
           {currentSubscription?.canChange && changes.length > 0 && !pendingTarget && (
             <div className="space-y-3 rounded-lg border border-border p-4">
