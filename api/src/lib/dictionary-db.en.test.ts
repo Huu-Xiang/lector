@@ -5,6 +5,7 @@ import fs from 'fs';
 import path from 'path';
 import { db as userDb } from '../db';
 import { invalidateDictionaryCache, lookupWord } from './dictionary-db';
+import { makeDictionaryRoutes } from '../routes/dictionary';
 
 // English dictionary: ECDICT meanings, exam tags and Tatoeba examples. The real
 // dictionary-en.db is a release asset, so the test builds a small one with the
@@ -133,5 +134,27 @@ describe('English dictionary lookup', () => {
     expect(entry.lemmaInfo).toEqual({ stem: 'go', label: 'past tense form of' });
     expect(entry.senses[0].gloss).toBe('去，走');
     expect(entry.examples).toHaveLength(2);
+  });
+});
+
+describe('lookup route localization hint', () => {
+  const app = makeDictionaryRoutes(() => 'local');
+  const lookup = async (word: string) =>
+    (
+      (await (await app.request(`/lookup?word=${word}&language=en`)).json()) as {
+        entry: { needsLocalization?: boolean } | null;
+      }
+    ).entry;
+
+  test('asks the client to translate English meanings for a French reader', async () => {
+    setNative('fr');
+    expect((await lookup('quay'))!.needsLocalization).toBe(true);
+  });
+
+  test('does not ask when the meanings are already in the reader language or English', async () => {
+    setNative('zh-CN');
+    expect((await lookup('go'))!.needsLocalization).toBeUndefined();
+    setNative('en');
+    expect((await lookup('quay'))!.needsLocalization).toBeUndefined();
   });
 });

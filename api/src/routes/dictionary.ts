@@ -3,6 +3,7 @@ import { bodyLimit } from 'hono/body-limit';
 import { getCurrentUserId } from '../lib/user';
 import { db } from '../db';
 import { resolveLanguage } from '../lib/active-language';
+import { getNativeLanguageCode } from '../lib/native-language';
 import { getTodayDate } from '../lib/dates';
 import { recordStudySessionPing } from '../lib/study-session';
 import {
@@ -54,7 +55,19 @@ export function makeDictionaryRoutes(
       const entry = lookupWord(userId, word.trim(), lang);
       if (entry) recordDictionaryLookup(userId, lang);
 
-      return c.json({ entry: entry ?? null });
+      // Meanings are English unless the dictionary already holds the reader's language.
+      // The hint tells the client to wait for /api/translate/localize before it shows them.
+      const native = getNativeLanguageCode(userId);
+      const needsLocalization =
+        !!entry &&
+        entry.source === 'dict' &&
+        !entry.senseLanguage &&
+        entry.senses.length > 0 &&
+        native !== 'en' &&
+        native !== lang;
+      return c.json({
+        entry: entry ? { ...entry, ...(needsLocalization ? { needsLocalization } : {}) } : null,
+      });
     } catch (error) {
       console.error('Dictionary lookup error:', error);
       return c.json({ error: error instanceof Error ? error.message : 'Lookup failed' }, 500);

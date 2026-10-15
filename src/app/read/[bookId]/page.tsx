@@ -429,6 +429,16 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         }
         if (requestId !== translationRequestId.current) return;
 
+        // Keep the "looking up" state until the meanings are in the reader's language,
+        // so English never flashes first. If translating fails, the English stays.
+        if (dictEntry?.needsLocalization) {
+          const localized = await localizeEntrySenses(word);
+          if (requestId !== translationRequestId.current) return;
+          dictEntry = localized
+            ? { ...dictEntry, senses: localized, needsLocalization: false }
+            : { ...dictEntry, needsLocalization: false };
+        }
+
         if (dictEntry && dictEntry.senses.length > 0) {
           const translation = dictEntry.senses.map((s) => s.gloss).join('; ');
           setWordPanel((prev) => ({
@@ -439,18 +449,6 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
             isLoading: false,
             isDictionaryResult: true,
           }));
-          void localizeEntrySenses(word).then((senses) => {
-            if (!senses || requestId !== translationRequestId.current) return;
-            setWordPanel((prev) =>
-              prev.dictEntry
-                ? {
-                    ...prev,
-                    translation: senses.map((sense) => sense.gloss).join('; '),
-                    dictEntry: { ...prev.dictEntry, senses },
-                  }
-                : prev,
-            );
-          });
         } else if (!hasTranslation) {
           // No dict hit AND no saved vocab translation — stream a fast AI gloss.
           // The rich entry (senses/IPA/etymology) is opt-in via the Enrich button,

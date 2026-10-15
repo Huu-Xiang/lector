@@ -16,6 +16,8 @@ export interface ExpandedDictionaryEntry {
   /** `dict` = built-in kaikki dict, `cache` = user-learned AI translation. */
   source?: 'dict' | 'cache';
   /** Set when `senses` are already in the learner's own language. */
+  /** The meanings are English and `/api/translate/localize` can turn them into the reader's language. */
+  needsLocalization?: boolean;
   senseLanguage?: string;
   /** The English definitions, kept beside translated `senses`. */
   englishSenses?: Array<{ partOfSpeech: string; gloss: string }>;

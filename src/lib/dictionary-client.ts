@@ -22,6 +22,8 @@ export interface ExpandedDictionaryEntry {
   /** `dict` = built-in kaikki dict, `cache` = user-learned AI translation. */
   source?: 'dict' | 'cache';
   /** Set when `senses` are already in the learner's own language. */
+  /** The meanings are English and `/api/translate/localize` can turn them into the reader's language. */
+  needsLocalization?: boolean;
   senseLanguage?: string;
   /** The English definitions, kept beside translated `senses`. */
   englishSenses?: Array<{ partOfSpeech: string; gloss: string }>;
@@ -62,11 +64,19 @@ export async function lookupWordRemote(word: string): Promise<ExpandedDictionary
  * The entry's senses in the learner's own language, or null when the learner
  * reads English, the word has no dictionary entry, or the request fails.
  */
+function apiFetchWithTimeout(url: string, ms: number, init: RequestInit): Promise<Response> {
+  return Promise.race([
+    apiFetch(url, init),
+    new Promise<Response>((_, reject) => setTimeout(() => reject(new Error('timeout')), ms)),
+  ]);
+}
+
 export async function localizeEntrySenses(
   word: string,
 ): Promise<Array<{ partOfSpeech: string; gloss: string }> | null> {
+  const LOCALIZE_TIMEOUT_MS = 8000;
   try {
-    const res = await apiFetch('/api/translate/localize', {
+    const res = await apiFetchWithTimeout('/api/translate/localize', LOCALIZE_TIMEOUT_MS, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ word, language: getActiveLanguage() }),
