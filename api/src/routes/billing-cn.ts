@@ -8,7 +8,8 @@ import { grantPlan, planRank, type GrantPlan } from '../lib/plan-grants';
 import {
   makeXiaodouClient,
   newOutTradeNo,
-  verifyXiaodouWebhook,
+  verifyEpayNotice,
+  yuanToFen,
   xiaodouConfigFromEnv,
   XiaodouError,
   type CnChannel,
@@ -102,16 +103,6 @@ export function settleCnOrder(outTradeNo: string, paidFen: number, now = new Dat
   })();
 }
 
-/** A full refund ends the period the order bought. */
-function revokeCnOrder(outTradeNo: string, now = new Date()): void {
-  db.transaction(() => {
-    db.prepare("UPDATE cn_orders SET status = 'REFUNDED' WHERE outTradeNo = ?").run(outTradeNo);
-    db.prepare(
-      "UPDATE plan_grants SET endsAt = ? WHERE ref = ? AND source = 'xiaodou' AND endsAt > ?",
-    ).run(now.toISOString(), outTradeNo, now.toISOString());
-  })();
-}
-
 export function makeCnBillingRoutes(
   cfg: XiaodouConfig | null,
   client: XiaodouClient | null,
@@ -169,7 +160,7 @@ export function makeCnBillingRoutes(
         subject: `Readfox ${PLAN_LABEL[plan]} · ${months} 个月`,
         payerClientIp: ip,
       });
-      if (!order.payUrl) throw new XiaodouError(502, 'NO_PAY_URL');
+      if (!order.payUrl) throw new XiaodouError('no pay url');
       return c.json({ outTradeNo, payUrl: order.payUrl, qrCode: order.qrCode });
     } catch (error) {
       console.error('[cn-billing] create payment failed:', (error as Error).message);
@@ -196,50 +187,30 @@ export function makeCnBillingRoutes(
     return c.json({ status: fresh.status, plan: fresh.plan, months: fresh.months });
   });
 
+  // The gateway sends a GET notice (some plugins POST a form); both carry the
+  // same signed fields. The literal "success" acknowledges it.
+  const handleNotice = (params: Record<string, string>) => {
+    if (!cfg || !verifyEpayNotice(params, cfg)) {
+      console.error('[cn-billing] payment notice signature rejected');
+      return false;
+    }
+    if (params.trade_status === 'TRADE_SUCCESS' && params.out_trade_no) {
+      settleCnOrder(params.out_trade_no, yuanToFen(params.money ?? ''));
+    }
+    return true;
+  };
+
+  app.get('/webhook', (c) => {
+    if (!cfg) return c.text('', 404);
+    return handleNotice(c.req.query()) ? c.text('success') : c.text('', 400);
+  });
+
   app.post('/webhook', async (c) => {
     if (!cfg) return c.text('', 404);
-    const raw = new Uint8Array(await c.req.arrayBuffer());
-    if (!verifyXiaodouWebhook((name) => c.req.header(name), raw, cfg.platformKeys)) {
-      console.error('[cn-billing] webhook signature rejected');
-      return c.text('', 400);
-    }
-    let event: {
-      eventId?: string;
-      eventType?: string;
-      outTradeNo?: string;
-      eventAmountFen?: number;
-      grossAmountFen?: number;
-    };
-    try {
-      event = JSON.parse(new TextDecoder().decode(raw));
-    } catch {
-      return c.text('', 400);
-    }
-    if (!event.eventId || !event.outTradeNo) return c.text('', 400);
-    try {
-      db.transaction(() => {
-        const inserted = db
-          .prepare('INSERT OR IGNORE INTO cn_webhook_events (eventId, receivedAt) VALUES (?, ?)')
-          .run(event.eventId!, new Date().toISOString());
-        if (inserted.changes === 0) return;
-        if (event.eventType === 'PAYMENT_SUCCEEDED') {
-          settleCnOrder(event.outTradeNo!, event.eventAmountFen ?? 0);
-        } else if (
-          event.eventType === 'REFUND_SUCCEEDED' &&
-          event.eventAmountFen === event.grossAmountFen
-        ) {
-          revokeCnOrder(event.outTradeNo!);
-        } else if (event.eventType === 'PAYMENT_CLOSED' || event.eventType === 'PAYMENT_FAILED') {
-          db.prepare(
-            "UPDATE cn_orders SET status = ? WHERE outTradeNo = ? AND status != 'SUCCEEDED'",
-          ).run(event.eventType === 'PAYMENT_CLOSED' ? 'CLOSED' : 'FAILED', event.outTradeNo!);
-        }
-      })();
-    } catch (error) {
-      console.error('[cn-billing] webhook handling failed:', (error as Error).message);
-      return c.text('', 500);
-    }
-    return c.text('success');
+    const form = await c.req.parseBody().catch(() => ({}));
+    const params: Record<string, string> = { ...c.req.query() };
+    for (const [k, v] of Object.entries(form)) if (typeof v === 'string') params[k] = v;
+    return handleNotice(params) ? c.text('success') : c.text('', 400);
   });
 
   return app;

@@ -324,11 +324,6 @@ function getDb(): Database {
     );
     CREATE INDEX IF NOT EXISTS idx_cn_orders_user ON cn_orders(userId, createdAt);
 
-    CREATE TABLE IF NOT EXISTS cn_webhook_events (
-      eventId TEXT PRIMARY KEY,
-      receivedAt TEXT NOT NULL
-    );
-
     -- Admin support flags (#221): manual per-account state the operator sets
     -- from the admin dashboard. Distinct from the Paddle billing mirror (that
     -- reflects Paddle; these are our own operator actions):

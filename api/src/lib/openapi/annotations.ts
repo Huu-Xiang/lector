@@ -2859,9 +2859,15 @@ const internalOps: Record<string, OperationDoc> = {
   },
   'POST /api/billing/cn/checkout': { summary: 'Start an RMB payment', tag: 'Service' },
   'GET /api/billing/cn/orders/{outTradeNo}': { summary: 'Read an RMB order', tag: 'Service' },
+  'GET /api/billing/cn/webhook': {
+    summary: 'Receive a Xiaodou payment notice',
+    description: 'The MD5 signature with the merchant key is the credential.',
+    tag: 'Service',
+    auth: 'none',
+  },
   'POST /api/billing/cn/webhook': {
-    summary: 'Receive a Xiaodou payment event',
-    description: 'The RSA signature over the raw body is the credential.',
+    summary: 'Receive a Xiaodou payment notice (form post)',
+    description: 'The MD5 signature with the merchant key is the credential.',
     tag: 'Service',
     auth: 'none',
   },

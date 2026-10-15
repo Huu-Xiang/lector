@@ -1,24 +1,20 @@
 import '../test-guard';
 import { beforeEach, describe, expect, test } from 'bun:test';
-import { createSign, generateKeyPairSync } from 'crypto';
 import { db } from '../db';
 import type { EntitlementsEngine } from '../lib/entitlements';
 import { activeGrant } from '../lib/plan-grants';
 import {
   DEFAULT_CN_PRICES,
-  webhookSigningString,
+  epaySign,
   type XiaodouClient,
   type XiaodouConfig,
 } from '../lib/xiaodou';
 import { makeCnBillingRoutes } from './billing-cn';
 
-const { publicKey, privateKey } = generateKeyPairSync('rsa', { modulusLength: 2048 });
 const CFG: XiaodouConfig = {
-  baseUrl: 'https://xd.invalid',
-  appId: 'xdop_test0000000000',
-  keyId: 'mkid_0000000000000000',
-  privateKeyPem: '',
-  platformKeys: { kid_test: publicKey.export({ type: 'spki', format: 'pem' }).toString() },
+  gateway: 'https://pay.invalid',
+  pid: '1001',
+  key: 'secretkey',
   publicOrigin: 'https://readfox.test',
   prices: DEFAULT_CN_PRICES,
 };
@@ -38,7 +34,7 @@ function fakeClient(overrides: Partial<XiaodouClient> = {}) {
         qrCode: null,
       };
     },
-    queryPayment: async () => ({ status: 'PAYING', amountFen: 0 }),
+    queryPayment: async () => ({ status: 'PENDING', amountFen: 0 }),
     ...overrides,
   };
   return { client, created };
@@ -52,31 +48,20 @@ function post(app: ReturnType<typeof makeCnBillingRoutes>, path: string, body: u
   });
 }
 
-let eventSeq = 0;
-function signedEvent(payload: Record<string, unknown>) {
-  const eventId = `evt_${++eventSeq}_${Date.now()}`;
-  const raw = JSON.stringify({ eventId, ...payload });
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-    'X-XD-Webhook-Key-Id': 'kid_test',
-    'X-XD-Webhook-Event-Id': eventId,
-    'X-XD-Webhook-Event-Type': String(payload.eventType),
-    'X-XD-Webhook-Timestamp': '1792000000',
-    'X-XD-Webhook-Nonce': 'nonce-123456789012',
+function notice(outTradeNo: string, money: string, extra: Record<string, string> = {}) {
+  const params: Record<string, string> = {
+    pid: '1001',
+    trade_no: `T${outTradeNo}`,
+    out_trade_no: outTradeNo,
+    type: 'alipay',
+    name: 'Readfox',
+    money,
+    trade_status: 'TRADE_SUCCESS',
+    ...extra,
   };
-  headers['X-XD-Webhook-Signature'] = createSign('RSA-SHA256')
-    .update(
-      webhookSigningString({
-        eventId,
-        eventType: String(payload.eventType),
-        timestamp: '1792000000',
-        nonce: 'nonce-123456789012',
-        keyId: 'kid_test',
-        rawBody: raw,
-      }),
-    )
-    .sign(privateKey, 'base64');
-  return { raw, headers };
+  params.sign = epaySign(params, 'secretkey');
+  params.sign_type = 'MD5';
+  return `/webhook?${new URLSearchParams(params)}`;
 }
 
 async function checkout(app: ReturnType<typeof makeCnBillingRoutes>, plan = 'cloud', months = 1) {
@@ -127,66 +112,39 @@ describe('RMB checkout', () => {
   });
 });
 
-describe('Xiaodou webhook', () => {
-  test('a signed PAYMENT_SUCCEEDED grants the period once', async () => {
+describe('payment notice', () => {
+  test('a signed TRADE_SUCCESS grants the period once', async () => {
     const app = makeCnBillingRoutes(CFG, fakeClient().client, engineOn('free'), () => false);
     const { body } = await checkout(app, 'cloud', 1);
-    const event = signedEvent({
-      eventType: 'PAYMENT_SUCCEEDED',
-      outTradeNo: body.outTradeNo,
-      eventAmountFen: 1500,
-      grossAmountFen: 1500,
-    });
-    const first = await app.request('/webhook', {
-      method: 'POST',
-      headers: event.headers,
-      body: event.raw,
-    });
+    const first = await app.request(notice(body.outTradeNo, '15.00'));
     expect(first.status).toBe(200);
     expect(await first.text()).toBe('success');
-    const again = await app.request('/webhook', {
-      method: 'POST',
-      headers: event.headers,
-      body: event.raw,
-    });
-    expect(await again.text()).toBe('success');
+    expect(await (await app.request(notice(body.outTradeNo, '15.00'))).text()).toBe('success');
     expect(activeGrant('local')?.plan).toBe('cloud');
     expect(
       db.prepare("SELECT COUNT(*) AS n FROM plan_grants WHERE userId = 'local'").get(),
     ).toEqual({ n: 1 });
   });
 
+  test('a form POST works the same way', async () => {
+    const app = makeCnBillingRoutes(CFG, fakeClient().client, engineOn('free'), () => false);
+    const { body } = await checkout(app, 'plus', 1);
+    const query = notice(body.outTradeNo, '29.00').split('?')[1];
+    const res = await app.request('/webhook', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: query,
+    });
+    expect(await res.text()).toBe('success');
+    expect(activeGrant('local')?.plan).toBe('plus');
+  });
+
   test('rejects a bad signature and does not grant on a wrong amount', async () => {
     const app = makeCnBillingRoutes(CFG, fakeClient().client, engineOn('free'), () => false);
     const { body } = await checkout(app, 'max', 1);
-    const wrong = signedEvent({
-      eventType: 'PAYMENT_SUCCEEDED',
-      outTradeNo: body.outTradeNo,
-      eventAmountFen: 1,
-      grossAmountFen: 1,
-    });
-    const forged = await app.request('/webhook', {
-      method: 'POST',
-      headers: { ...wrong.headers, 'X-XD-Webhook-Signature': 'AAAA' },
-      body: wrong.raw,
-    });
-    expect(forged.status).toBe(400);
-    await app.request('/webhook', { method: 'POST', headers: wrong.headers, body: wrong.raw });
-    expect(activeGrant('local')).toBeNull();
-  });
-
-  test('a full refund ends the period', async () => {
-    const app = makeCnBillingRoutes(CFG, fakeClient().client, engineOn('free'), () => false);
-    const { body } = await checkout(app, 'cloud', 12);
-    for (const eventType of ['PAYMENT_SUCCEEDED', 'REFUND_SUCCEEDED']) {
-      const event = signedEvent({
-        eventType,
-        outTradeNo: body.outTradeNo,
-        eventAmountFen: 14400,
-        grossAmountFen: 14400,
-      });
-      await app.request('/webhook', { method: 'POST', headers: event.headers, body: event.raw });
-    }
+    const forged = notice(body.outTradeNo, '49.00').replace(/sign=[0-9a-f]+/, 'sign=deadbeef');
+    expect((await app.request(forged)).status).toBe(400);
+    await app.request(notice(body.outTradeNo, '0.01'));
     expect(activeGrant('local')).toBeNull();
   });
 });
