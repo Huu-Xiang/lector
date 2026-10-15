@@ -264,7 +264,7 @@ const DEFAULT_PLAN_LIMITS: Record<PlanId, PlanLimits> = {
     contextTranslationsPerDay: 10,
   },
   cloud: {
-    phraseSelectionWords: 9,
+    phraseSelectionWords: 30,
     journalWordsPerMonth: 5_000,
     maxCollections: 50,
     maxLessons: 1_000,

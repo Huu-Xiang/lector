@@ -996,7 +996,8 @@
       "settings": "Use your own key in Settings",
       "note": "Dictionary lookups are free and not counted. This includes translating dictionary meanings into your language.",
       "percentUsed": "{percent}% used",
-      "close": "Close"
+      "close": "Close",
+      "info": "About this allowance"
     }
   },
   "legalPages": {

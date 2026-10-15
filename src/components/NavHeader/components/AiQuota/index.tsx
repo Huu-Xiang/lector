@@ -3,7 +3,8 @@
 import { useCallback, useEffect, useState, useSyncExternalStore } from 'react';
 import { useTranslations } from 'next-intl';
 import clsx from 'clsx';
-import { X } from 'lucide-react';
+import { Info, X } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { getEntitlements, invalidateEntitlementsCache } from '@/lib/data-layer';
 import type { ClientEntitlements } from '@/lib/data-layer';
 import { AI_USAGE_EVENT } from '@/constants/storage';
@@ -184,7 +185,24 @@ export default function AiQuota({ compact = false }: { compact?: boolean }) {
           className="mb-2 space-y-2 rounded-lg border border-border bg-card px-3 py-2"
         >
           <div className="flex items-center justify-between gap-2">
-            <div className="text-xs font-medium text-muted-foreground">{t('title')}</div>
+            <div className="flex items-center gap-1 text-xs font-medium text-muted-foreground">
+              {t('title')}
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger
+                    aria-label={t('info')}
+                    data-testid="ai-quota-info"
+                    className="rounded-full p-0.5 text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    <Info className="size-3.5" />
+                  </TooltipTrigger>
+                  <TooltipContent side="top" className="block max-w-56 space-y-1">
+                    <p>{t('note')}</p>
+                    <p>{t('resets')}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
             <button
               type="button"
               onClick={toggle}
@@ -203,8 +221,6 @@ export default function AiQuota({ compact = false }: { compact?: boolean }) {
               {meters.map((meter) => (
                 <Meter key={meter.key} label={meter.label} used={meter.used} limit={meter.limit} />
               ))}
-              <p className="text-xs text-muted-foreground">{t('note')}</p>
-              <p className="text-xs text-muted-foreground">{t('resets')}</p>
             </>
           )}
         </div>
