@@ -17,6 +17,9 @@ from pathlib import Path
 LESSON_WORDS = 1400
 
 BOOKS = [
+    dict(lang="fr", slug="le-premier-livre", id=48011, title="Le Premier Livre (histoire de Remi)",
+         author="Albert A. Méras et B. Méras", level="A1", start="", short="Remi",
+         extractor="premier_livre", capitalise_headings=True, lesson_words=450),
     dict(lang="fr", slug="riquet-a-la-houppe", id=17098, title="Riquet à la Houppe", author="Charles Perrault",
          level="A2", start=r"Il était une fois", short="Riquet à la Houppe",
          cut=r"^Paris\.--Imprimerie"),
@@ -90,6 +93,50 @@ def body_of(raw: str, start: str, cut: str | None = None, stop: str | None = Non
     return text
 
 
+SKIP_SECTIONS = re.compile(
+    r"^(ÉTUDE DE MOTS|CONVERSATION|GRAMMAIRE|THÈME|EXERCICES|COMPOSITION|QUESTIONNAIRE|REVUE|"
+    r"VOCABULAIRE|PRONONCIATION)\b"
+)
+
+
+def extract_premier_livre(raw: str) -> str:
+    """Keep only the story chapters of 'Le Premier Livre' (a 1915 beginner course).
+
+    Each lesson holds word lists, questions, grammar tables and English
+    exercises around one short French chapter. The chapter sits under a
+    numbered, all-caps heading such as 'II. MÈRE BARBERIN'.
+    """
+    raw = raw.replace("\r", "")
+    a = raw.find("PREMIÈRE LEÇON\n")
+    b = raw.find("*** END OF")
+    text = raw[a:b]
+    out: list[str] = []
+    section: list[str] | None = None
+    for line in text.splitlines():
+        m = re.match(r"^([IVX]+)\. (.+?)\s*$", line)
+        if m and m.group(2).upper() == m.group(2):
+            title = m.group(2)
+            if section is not None:
+                out.extend(section)
+            section = None
+            if not SKIP_SECTIONS.match(title):
+                section = [title.strip(), ""]
+            continue
+        if re.match(r"^[A-ZÉÈÂ' -]*LEÇON\b", line) and line.upper() == line:
+            if section is not None:
+                out.extend(section)
+            section = None
+            continue
+        if section is not None:
+            section.append(line)
+    if section is not None:
+        out.extend(section)
+    body = "\n".join(out)
+    body = re.sub(r"\\|·", "", body)
+    body = body.replace("[_u]", "").replace("[oe]", "œ").replace("[OE]", "Œ")
+    return body
+
+
 def clean_paragraph(par: str, verse: bool) -> str | None:
     par = par.strip("\n")
     if not par.strip():
@@ -138,10 +185,11 @@ def _sentence(text: str) -> str:
 
 
 def _capitalise_words(text: str) -> str:
-    def word(w: str) -> str:
+    def word(match: re.Match) -> str:
+        w = match.group(0)
         i = next((k for k, ch in enumerate(w) if ch.isalpha()), None)
         return w if i is None else w[:i] + w[i].upper() + w[i + 1:].lower()
-    return " ".join(word(w) for w in text.split(" "))
+    return re.sub(r"[^\s\-]+", word, text)
 
 
 def titlecase_heading(text: str, capitalise: bool = False) -> str:
@@ -156,7 +204,11 @@ def titlecase_heading(text: str, capitalise: bool = False) -> str:
 
 def build(book: dict, raw_dir: Path, out_dir: Path) -> None:
     raw = (raw_dir / f"pg{book['id']}.txt").read_text(encoding="utf8", errors="replace")
-    text = unicodedata.normalize("NFC", body_of(raw, book["start"], book.get("cut"), book.get("stop")))
+    if book.get("extractor") == "premier_livre":
+        text = unicodedata.normalize("NFC", extract_premier_livre(raw))
+    else:
+        text = unicodedata.normalize("NFC", body_of(raw, book["start"], book.get("cut"), book.get("stop")))
+    lesson_words = book.get("lesson_words", LESSON_WORDS)
     pars = paragraphs(text, book.get("verse", False))
     budget = book.get("max_words")
     lessons: list[list[str]] = [[]]
@@ -166,7 +218,7 @@ def build(book: dict, raw_dir: Path, out_dir: Path) -> None:
         w = words(par)
         if budget and total + w > budget and count > 0:
             break
-        if count >= LESSON_WORDS:
+        if count >= lesson_words:
             lessons.append([])
             count = 0
         lessons[-1].append(par)
@@ -176,7 +228,7 @@ def build(book: dict, raw_dir: Path, out_dir: Path) -> None:
         lessons[-1].pop()
     if not lessons[-1] and len(lessons) > 1:
         lessons.pop()
-    if len(lessons) > 1 and words("\n".join(lessons[-1])) < LESSON_WORDS // 4:
+    if len(lessons) > 1 and words("\n".join(lessons[-1])) < lesson_words // 4:
         lessons[-2].extend(lessons.pop())
     book_dir = out_dir / book["slug"]
     if book_dir.exists():

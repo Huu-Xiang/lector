@@ -96,7 +96,7 @@ export default function NavHeader() {
           <AdminNavLink isMobile={false} collapsed={collapsed} />
         </nav>
 
-        {!collapsed && <AiQuota />}
+        <AiQuota compact={collapsed} />
 
         <div className={clsx(collapsed ? 'flex justify-center py-1' : '')}>
           <AccountMenu compact={collapsed} />

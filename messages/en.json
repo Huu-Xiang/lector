@@ -986,14 +986,16 @@
     },
     "quota": {
       "title": "AI this month",
-      "lookups": "Word lookups",
+      "lookups": "AI word translations",
       "requests": "Detailed AI answers",
       "left": "{left} left",
       "used": "{used} of {limit} used",
       "byok": "Using your own AI key",
-      "resets": "Resets on the 1st of each month",
+      "resets": "The count resets on the 1st of each month.",
       "exhausted": "Used up for this month",
-      "settings": "Use your own key in Settings"
+      "settings": "Use your own key in Settings",
+      "note": "Looking up a word in the built-in dictionary is free and is not counted.",
+      "percentUsed": "{percent}% used"
     }
   },
   "legalPages": {
@@ -1093,7 +1095,7 @@
       "dataSources": {
         "heading": "Data sources",
         "body": "Sentence banks come from Tatoeba (CC BY 2.0 FR) and dictionaries from the sources listed in the repository README, each under its own licence.",
-        "books": "The free books in the library are public-domain texts from Project Gutenberg (gutenberg.org), plus a few beginner texts written for Readfox and released under CC0. Each book links back to its source page."
+        "books": "The free books in the library are public-domain texts from Project Gutenberg (gutenberg.org). Each book links back to its source page."
       }
     }
   },

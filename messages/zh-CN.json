@@ -986,14 +986,16 @@
     },
     "quota": {
       "title": "本月 AI 额度",
-      "lookups": "单词查询",
+      "lookups": "AI 单词翻译",
       "requests": "AI 详细解答",
       "left": "剩 {left}",
       "used": "已用 {used} / {limit}",
       "byok": "正在使用你自己的 AI 密钥",
-      "resets": "每月 1 日重置",
+      "resets": "每月 1 日重置。",
       "exhausted": "本月额度已用完",
-      "settings": "可在设置中填写你自己的密钥"
+      "settings": "可在设置中填写你自己的密钥",
+      "note": "查内置词典不限次数，也不计入额度。",
+      "percentUsed": "已用 {percent}%"
     }
   },
   "legalPages": {
@@ -1093,7 +1095,7 @@
       "dataSources": {
         "heading": "数据来源",
         "body": "句库来自 Tatoeba（CC BY 2.0 FR），词典来自仓库 README 中列出的来源，各自适用其自身的许可。",
-        "books": "书库里的免费书籍是来自古腾堡计划（gutenberg.org）的公版文本，外加几本为 Readfox 原创并以 CC0 发布的入门读物。每本书都附有指向来源页面的链接。"
+        "books": "书库里的免费书籍是来自古腾堡计划（gutenberg.org）的公版文本。每本书都附有指向来源页面的链接。"
       }
     }
   },

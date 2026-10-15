@@ -223,14 +223,16 @@
     },
     "quota": {
       "title": "AI this month",
-      "lookups": "Word lookups",
+      "lookups": "AI word translations",
       "requests": "Detailed AI answers",
       "left": "{left} left",
       "used": "{used} of {limit} used",
       "byok": "Using your own AI key",
-      "resets": "Resets on the 1st of each month",
+      "resets": "The count resets on the 1st of each month.",
       "exhausted": "Used up for this month",
-      "settings": "Use your own key in Settings"
+      "settings": "Use your own key in Settings",
+      "note": "Looking up a word in the built-in dictionary is free and is not counted.",
+      "percentUsed": "{percent}% used"
     }
   }
 }

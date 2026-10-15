@@ -1,0 +1,109 @@
+{
+  "title": "Le Premier Livre (histoire de Remi)",
+  "author": "Albert A. Méras et B. Méras",
+  "level": "A1",
+  "wordCount": 11303,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/48011",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Remi"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Au Café"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Remi"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Remi"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Remi"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Remi"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Remi"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Remi"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Remi"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Remi"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Remi"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Remi"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Remi"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Remi"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Remi"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Remi"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Remi"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Remi"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Remi"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Remi"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Remi"
+    },
+    {
+      "file": "22.md",
+      "title": "22. Remi"
+    },
+    {
+      "file": "23.md",
+      "title": "23. Remi"
+    },
+    {
+      "file": "24.md",
+      "title": "24. Remi"
+    }
+  ]
+}
