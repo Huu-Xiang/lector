@@ -31,10 +31,7 @@ export default function PricingTiers() {
         price={t('freePrice')}
         features={[
           t('features.glosses', { count: free.glosses }),
-          t('features.freeTranslations', {
-            phrases: free.phrasesPerDay,
-            context: free.contextPerDay,
-          }),
+          t('features.detailed', { count: free.detailed }),
           t('features.freeLibrary'),
           t('features.byok'),
         ]}

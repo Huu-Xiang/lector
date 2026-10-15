@@ -115,7 +115,7 @@ test.describe.serial('Free cloud learning loop', () => {
     await expect(plan.getByRole('link', { name: /bring your own AI key/i })).toBeVisible();
 
     const byok = page.locator('#byok');
-    await expect(byok.getByText(/Free includes a small managed Gemini allowance/i)).toBeVisible();
+    await expect(byok.getByText(/Free includes a small monthly AI allowance/i)).toBeVisible();
     await expect(byok.getByLabel('OpenRouter API key')).toBeVisible();
 
     const tts = page.getByTestId('tts-settings');
@@ -133,7 +133,7 @@ test.describe.serial('Free cloud learning loop', () => {
     const free = page.getByTestId('subscribe-tier-free');
     await expect(free).toBeVisible();
     await expect(free.getByText(/1,000 AI word lookups each month/i)).toBeVisible();
-    await expect(free.getByText(/short phrase translations/i)).toBeVisible();
+    await expect(free.getByText(/50 detailed AI answers each month/i)).toBeVisible();
     await expect(free.getByText(/Add your own AI key/i)).toBeVisible();
     await expect(free.getByText(/Export your learner data/i)).toBeVisible();
 

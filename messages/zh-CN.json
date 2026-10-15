@@ -387,7 +387,7 @@
       "reverted": "已恢复使用 Readfox 托管的 AI 额度",
       "heading": "使用自己的 AI 密钥",
       "active": "已启用",
-      "introFree": "免费版包含少量托管的 Gemini 额度。添加你自己的 OpenRouter 或 Anthropic 密钥，即可在额度用完后继续翻译，并在不订阅的情况下解锁更丰富的 AI 功能。",
+      "introFree": "免费版包含少量每月 AI 额度。添加你自己的 OpenRouter 或 Anthropic 密钥，即可在额度用完后继续翻译，并在不订阅的情况下解锁更丰富的 AI 功能。",
       "introPaid": "使用你自己的 OpenRouter 或 Anthropic 账户来进行翻译、讲解、日记批改和对话，而不使用托管的 AI 额度。",
       "introTail": "你的密钥会加密存储，之后不会再显示。自备密钥不会启用托管语音，托管语音仍是 Cloud 套餐的专属权益。",
       "compareCloud": "希望由 Readfox 同时提供 AI 和更高品质的音频？<link>比较 Cloud 套餐</link>。无论如何，浏览器语音都是免费的。",
@@ -594,7 +594,6 @@
     "getStarted": "免费开始",
     "features": {
       "glosses": "每月 {count, number} 次 AI 查词（词典里没有的词）",
-      "freeTranslations": "每天 {phrases} 次简短的划词翻译和 {context} 次上下文翻译",
       "freeLibrary": "最多 10 个合集、200 篇课文",
       "byok": "想用更多时，可以添加自己的 AI 密钥",
       "detailed": "每月 {count, number} 次详细的 AI 回答（划词翻译和单词详解）",
@@ -1108,7 +1107,7 @@
         "heading": "付费套餐、续订和退款",
         "body": "我们的订单流程由在线经销商 Paddle.com 执行。Paddle.com 是我们所有订单的记录商家（Merchant of Record），负责处理所有客户服务咨询和退货。",
         "renewal": "付费套餐会按月或按年自动续订，直到你取消。你可以随时在“设置 → 套餐”中取消，套餐会一直有效到你已付费的周期结束。如果我们调整价格，新价格从你的下一次续订开始生效，我们会提前通知你。",
-        "refunds": "如果你不满意，可以在付款后 14 天内申请退款，我们会全额退款。请写信到 <mail>privacy@readfox.app</mail>，或通过收据中的链接联系 Paddle。"
+        "refunds": "退款由 Paddle 按照它的<refund>退款政策</refund>处理。如果你所在地的法律给你撤销购买的权利（例如欧盟和英国为 14 天，中国大陆为 7 天），这个权利只适用于你的首次付款，并且在你开始使用付费功能后可能失效。除此以外，续订费用和已部分使用的周期不予退款。你可以随时取消，以停止下一次扣费。如果有滥用迹象，例如反复购买后申请退款，我们会拒绝退款。有问题请联系：<mail>privacy@readfox.app</mail>。"
       },
       "acceptableUse": {
         "heading": "可接受的使用方式",

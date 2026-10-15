@@ -8,7 +8,6 @@
     "getStarted": "Start free",
     "features": {
       "glosses": "{count, number} AI word lookups each month (words the dictionary doesn't have)",
-      "freeTranslations": "{phrases} short phrase translations and {context} in-context translations each day",
       "freeLibrary": "Up to 10 collections and 200 lessons",
       "byok": "Add your own AI key when you want more",
       "detailed": "{count, number} detailed AI answers each month (phrase translations and word explanations)",

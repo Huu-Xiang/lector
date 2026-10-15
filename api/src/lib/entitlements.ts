@@ -393,6 +393,14 @@ const DEFAULT_PLAN_LIMITS: Record<PlanId, PlanLimits> = {
   },
 };
 
+/**
+ * Readfox: Free gets a small monthly pool of detailed AI answers, served by
+ * OPENAI_COMPAT_FREE_MODEL (see getProvider). Upstream keeps Free at zero.
+ */
+export function selfManagedFreeAi(): boolean {
+  return process.env.LECTOR_SELF_MANAGED === '1' && Boolean(process.env.OPENAI_COMPAT_FREE_MODEL);
+}
+
 function isFreeFairUseCeiling(metric: string): metric is LimitMetric {
   return metric.startsWith('max');
 }
@@ -520,7 +528,7 @@ export function parsePlanLimitOverrides(
       }
       if (
         plan === 'free' &&
-        (key === 'ttsCharsPerMonth' || key === 'llmRequestsPerMonth') &&
+        (key === 'ttsCharsPerMonth' || (key === 'llmRequestsPerMonth' && !selfManagedFreeAi())) &&
         value !== 0
       ) {
         console.warn(
@@ -754,7 +762,7 @@ export function makeEntitlements(deps: EntitlementsDeps): EntitlementsEngine {
           ) as unknown as PlanLimits)
         : configured;
     if (plan === 'free') {
-      base.llmRequestsPerMonth = 0;
+      if (!selfManagedFreeAi()) base.llmRequestsPerMonth = 0;
       base.ttsCharsPerMonth = 0;
     }
     return { plan, byok, limits: byok ? byokLimits(plan, base) : base };

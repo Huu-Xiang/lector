@@ -191,7 +191,7 @@ export default function SubscribePage() {
   const free = TIER_ALLOWANCES.free;
   const freeFeatures = [
     tp('features.glosses', { count: free.glosses }),
-    tp('features.freeTranslations', { phrases: free.phrasesPerDay, context: free.contextPerDay }),
+    tp('features.detailed', { count: free.detailed }),
     tp('features.freeLibrary'),
     tp('features.byok'),
     t('freeFeatures.export'),

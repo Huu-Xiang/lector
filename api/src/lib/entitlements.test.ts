@@ -154,6 +154,31 @@ describe('parsePlanLimitOverrides', () => {
     expect(merged.free.llmRequestsPerMonth).toBe(0);
   });
 
+  test('a self-managed Free model unlocks a monthly pool of detailed AI answers', () => {
+    const previous = [process.env.LECTOR_SELF_MANAGED, process.env.OPENAI_COMPAT_FREE_MODEL];
+    try {
+      process.env.LECTOR_SELF_MANAGED = '1';
+      process.env.OPENAI_COMPAT_FREE_MODEL = 'small-model';
+      const merged = parsePlanLimitOverrides(
+        '{"free":{"ttsCharsPerMonth":1000,"llmRequestsPerMonth":50}}',
+        LIMITS,
+      );
+      expect(merged.free.llmRequestsPerMonth).toBe(50);
+      expect(merged.free.ttsCharsPerMonth).toBe(0);
+      const engine = makeEntitlements(makeDeps({ planLimits: merged }));
+      expect(engine.resolveEntitlements('ent-free-ai').limits.llmRequestsPerMonth).toBe(50);
+
+      delete process.env.OPENAI_COMPAT_FREE_MODEL;
+      expect(engine.resolveEntitlements('ent-free-ai').limits.llmRequestsPerMonth).toBe(0);
+    } finally {
+      const [selfManaged, freeModel] = previous;
+      if (selfManaged === undefined) delete process.env.LECTOR_SELF_MANAGED;
+      else process.env.LECTOR_SELF_MANAGED = selfManaged;
+      if (freeModel === undefined) delete process.env.OPENAI_COMPAT_FREE_MODEL;
+      else process.env.OPENAI_COMPAT_FREE_MODEL = freeModel;
+    }
+  });
+
   test('Free overrides cannot turn any bounded allowance into null', () => {
     const merged = parsePlanLimitOverrides(
       '{"free":{"maxVocabEntries":null,"wordGlossesPerMonth":null}}',

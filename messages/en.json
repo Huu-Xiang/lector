@@ -387,7 +387,7 @@
       "reverted": "Reverted to your Readfox managed AI allowance",
       "heading": "Bring your own AI key",
       "active": "Active",
-      "introFree": "Free includes a small managed Gemini allowance. Add your own OpenRouter or Anthropic key to keep translating after that allowance and unlock richer AI actions without subscribing.",
+      "introFree": "Free includes a small monthly AI allowance. Add your own OpenRouter or Anthropic key to keep translating after that allowance and unlock richer AI actions without subscribing.",
       "introPaid": "Use your own OpenRouter or Anthropic account for translations, explanations, journal corrections, and chat instead of the managed AI allowance.",
       "introTail": "Your key is encrypted at rest and never shown again. BYOK does not enable managed voices; those remain a Cloud benefit.",
       "compareCloud": "Prefer Readfox to handle both AI and higher-quality audio? <link>Compare Cloud plans</link>. Browser voices stay free either way.",
@@ -594,7 +594,6 @@
     "getStarted": "Start free",
     "features": {
       "glosses": "{count, number} AI word lookups each month (words the dictionary doesn't have)",
-      "freeTranslations": "{phrases} short phrase translations and {context} in-context translations each day",
       "freeLibrary": "Up to 10 collections and 200 lessons",
       "byok": "Add your own AI key when you want more",
       "detailed": "{count, number} detailed AI answers each month (phrase translations and word explanations)",
@@ -1108,7 +1107,7 @@
         "heading": "Paid plans, renewal and refunds",
         "body": "Our order process is conducted by our online reseller Paddle.com. Paddle.com is the Merchant of Record for all our orders. Paddle provides all customer service inquiries and handles returns.",
         "renewal": "Paid plans renew automatically each month or year until you cancel. You can cancel at any time in Settings → Plan, and the plan stays active until the end of the period you paid for. If we change a price, the new price applies from your next renewal, and we tell you before it does.",
-        "refunds": "If you are not happy, ask for a refund within 14 days of a payment and we will refund it in full. Write to <mail>privacy@readfox.app</mail> or contact Paddle through the link in your receipt."
+        "refunds": "Paddle handles refunds under its <refund>Refund Policy</refund>. If the law where you live gives you a right to cancel (for example 14 days in the EU and the UK, or 7 days in mainland China), that right covers your first payment only, and it can end once you start to use the paid features. Apart from that, we do not refund renewals or periods that you have partly used. You can cancel at any time to stop the next charge. We refuse refunds when there are signs of abuse, for example repeated purchases followed by refunds. Questions: <mail>privacy@readfox.app</mail>."
       },
       "acceptableUse": {
         "heading": "Acceptable use",

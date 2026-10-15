@@ -244,6 +244,45 @@ describe('translation input boundaries', () => {
   });
 });
 
+describe('self-managed Free on a small model', () => {
+  test('gets rich answers metered monthly, without idiom origins or etymology', async () => {
+    const previous = [process.env.LECTOR_SELF_MANAGED, process.env.OPENAI_COMPAT_FREE_MODEL];
+    try {
+      process.env.LECTOR_SELF_MANAGED = '1';
+      process.env.OPENAI_COMPAT_FREE_MODEL = 'small-model';
+      const engine = makeEngine({
+        now: () => new Date('2026-07-15T12:00:00Z'),
+        limits: { free: { llmRequestsPerMonth: 2 } },
+      });
+      const { app, provider } = makeApp({ engine });
+
+      const phrase = await post(app, '/', { word: 'goeie dag', type: 'phrase', language: 'af' });
+      expect(await phrase.json()).toMatchObject({ translation: 'rich phrase' });
+      const word = await post(app, '/', { word: 'trek', type: 'word', language: 'af' });
+      const entry = (await word.json()) as Record<string, unknown>;
+      expect(entry.translation).toBe('rich sense');
+      expect(entry.etymology).toBeUndefined();
+      await planLimit(
+        await post(app, '/', { word: 'nog een', type: 'phrase' }),
+        'llmRequestsPerMonth',
+      );
+
+      expect(provider.calls.map((call) => call.task)).toEqual(['phrase-rich', 'context-rich']);
+      expect(provider.calls[0].messages[0].content).toContain(
+        'Do not explain where an expression comes from',
+      );
+      expect(engine.getUsage('local', 'llmRequestsPerMonth')).toBe(2);
+      expect(engine.getUsage('local', 'phraseTranslationsPerDay')).toBe(0);
+    } finally {
+      const [selfManaged, freeModel] = previous;
+      if (selfManaged === undefined) delete process.env.LECTOR_SELF_MANAGED;
+      else process.env.LECTOR_SELF_MANAGED = selfManaged;
+      if (freeModel === undefined) delete process.env.OPENAI_COMPAT_FREE_MODEL;
+      else process.env.OPENAI_COMPAT_FREE_MODEL = freeModel;
+    }
+  });
+});
+
 describe('managed Free translations', () => {
   test('meters a residual gloss separately and uses the bounded gloss task', async () => {
     const engine = makeEngine({ now: () => new Date('2026-07-15T12:00:00Z') });

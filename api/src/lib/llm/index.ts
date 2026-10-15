@@ -4,6 +4,7 @@ import { OpenAICompatibleProvider } from './openai-compatible';
 import { db } from '../../db';
 import { LOCAL_USER_ID } from '../user';
 import { getByokCredential, OPENROUTER_URL } from '../byok';
+import { entitlements, selfManagedFreeAi } from '../entitlements';
 
 export type {
   BatchRequest,
@@ -81,6 +82,33 @@ function hostedFreeUsesDeploymentConfig(): boolean {
   return process.env.LECTOR_MODE === 'cloud' && process.env.LECTOR_FREE_TIER === 'true';
 }
 
+function isFreePlan(userId: string): boolean {
+  return entitlements.resolveEntitlements(userId).plan === 'free';
+}
+
+let cachedFreeProvider: { key: string; provider: LLMProvider } | null = null;
+
+/** Every task of a Free account runs on OPENAI_COMPAT_FREE_MODEL. */
+function freeProvider(): LLMProvider {
+  const baseUrl = process.env.OPENAI_COMPAT_URL;
+  const model = process.env.OPENAI_COMPAT_FREE_MODEL!;
+  const key = `${baseUrl}|${model}|${process.env.OPENAI_COMPAT_EXTRA_BODY ?? ''}`;
+  if (cachedFreeProvider?.key !== key) {
+    cachedFreeProvider = {
+      key,
+      provider: new OpenAICompatibleProvider({
+        baseUrl,
+        model,
+        apiKey: process.env.OPENAI_COMPAT_API_KEY,
+        profile: requestProfile(baseUrl),
+        taskModels: {},
+        extraBody: parseExtraBody(process.env.OPENAI_COMPAT_EXTRA_BODY),
+      }),
+    };
+  }
+  return cachedFreeProvider.provider;
+}
+
 export interface ProviderAccessOptions {
   /** Entitlement decision made for this exact operation/reservation. */
   byok: boolean;
@@ -124,6 +152,7 @@ export function getProvider(
       profile: requestProfile(OPENROUTER_URL),
     });
   }
+  if (!implicitLocal && selfManagedFreeAi() && isFreePlan(userId)) return freeProvider();
   const deploymentOnly = hostedFreeUsesDeploymentConfig();
   const providerSetting = (key: string) => (deploymentOnly ? null : getSetting(key));
   const raw = providerSetting('llmProvider') || process.env.LLM_PROVIDER || 'anthropic';

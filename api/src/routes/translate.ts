@@ -40,6 +40,7 @@ import {
   type MeteredMetric,
   type ResolvedEntitlements,
   type UsageReservation,
+  selfManagedFreeAi,
 } from '../lib/entitlements';
 import {
   translationBurstLimiter,
@@ -430,7 +431,8 @@ export function makeTranslateRoutes({
     const { word, sentence, language, type } = parsed.value;
     const userId = getCurrentUserId(c);
     const resolved = engine.resolveEntitlements(userId);
-    const managedFree = isManagedFree(resolved);
+    const freeOnSmallModel = isManagedFree(resolved) && selfManagedFreeAi();
+    const managedFree = isManagedFree(resolved) && !freeOnSmallModel;
 
     if (type === 'phrase') {
       const phraseWords = word.split(/\s+/u).length;
@@ -504,7 +506,7 @@ export function makeTranslateRoutes({
                 word,
                 sentence,
                 nativeName,
-                !reservation.byok && managedPhraseUsesCheapModel(),
+                !reservation.byok && (managedPhraseUsesCheapModel() || freeOnSmallModel),
               ),
             },
           ],
@@ -522,6 +524,8 @@ export function makeTranslateRoutes({
         sentence,
         nativeName,
       );
+      // The small model invents etymologies; leave the field out.
+      if (freeOnSmallModel && !reservation.byok) delete entry.etymology;
       return c.json(entry);
     } catch (error) {
       engine.refund(reservation);

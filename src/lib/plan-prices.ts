@@ -22,7 +22,7 @@ export const PAID_TIERS: readonly PaidTier[] = ['cloud', 'plus', 'max'];
  * in api/src/lib/entitlements.ts; change both together.
  */
 export const TIER_ALLOWANCES = {
-  free: { glosses: 1000, phrasesPerDay: 10, contextPerDay: 10, phraseWords: 30 },
+  free: { glosses: 1000, detailed: 50, phraseWords: 30 },
   cloud: { glosses: 5000, detailed: 300, phraseWords: 30 },
   plus: { glosses: 10000, detailed: 800, phraseWords: 30 },
   max: { glosses: 30000, detailed: 2000 },

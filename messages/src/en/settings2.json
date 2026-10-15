@@ -71,7 +71,7 @@
       "reverted": "Reverted to your Readfox managed AI allowance",
       "heading": "Bring your own AI key",
       "active": "Active",
-      "introFree": "Free includes a small managed Gemini allowance. Add your own OpenRouter or Anthropic key to keep translating after that allowance and unlock richer AI actions without subscribing.",
+      "introFree": "Free includes a small monthly AI allowance. Add your own OpenRouter or Anthropic key to keep translating after that allowance and unlock richer AI actions without subscribing.",
       "introPaid": "Use your own OpenRouter or Anthropic account for translations, explanations, journal corrections, and chat instead of the managed AI allowance.",
       "introTail": "Your key is encrypted at rest and never shown again. BYOK does not enable managed voices; those remain a Cloud benefit.",
       "compareCloud": "Prefer Readfox to handle both AI and higher-quality audio? <link>Compare Cloud plans</link>. Browser voices stay free either way.",

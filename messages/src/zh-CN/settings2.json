@@ -71,7 +71,7 @@
       "reverted": "已恢复使用 Readfox 托管的 AI 额度",
       "heading": "使用自己的 AI 密钥",
       "active": "已启用",
-      "introFree": "免费版包含少量托管的 Gemini 额度。添加你自己的 OpenRouter 或 Anthropic 密钥，即可在额度用完后继续翻译，并在不订阅的情况下解锁更丰富的 AI 功能。",
+      "introFree": "免费版包含少量每月 AI 额度。添加你自己的 OpenRouter 或 Anthropic 密钥，即可在额度用完后继续翻译，并在不订阅的情况下解锁更丰富的 AI 功能。",
       "introPaid": "使用你自己的 OpenRouter 或 Anthropic 账户来进行翻译、讲解、日记批改和对话，而不使用托管的 AI 额度。",
       "introTail": "你的密钥会加密存储，之后不会再显示。自备密钥不会启用托管语音，托管语音仍是 Cloud 套餐的专属权益。",
       "compareCloud": "希望由 Readfox 同时提供 AI 和更高品质的音频？<link>比较 Cloud 套餐</link>。无论如何，浏览器语音都是免费的。",

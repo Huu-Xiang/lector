@@ -18,6 +18,11 @@ export default async function TermsPage() {
     timeZone: 'UTC',
   }).format(LAST_UPDATED);
   const tags = {
+    refund: (chunks: React.ReactNode) => (
+      <a className="underline" href="https://www.paddle.com/legal/refund-policy">
+        {chunks}
+      </a>
+    ),
     mail: (chunks: React.ReactNode) => (
       <a className="underline" href="mailto:privacy@readfox.app">
         {chunks}
