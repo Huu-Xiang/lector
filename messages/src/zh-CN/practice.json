@@ -31,7 +31,7 @@
       "top2000": "1000-2000"
     },
     "round": {
-      "guidedLabel": "新手引导课",
+      "guidedLabel": "首课引导",
       "guidedTitle": "你的第一个学习循环",
       "back": "← 返回",
       "threeWord": "3 词复习",
@@ -44,7 +44,7 @@
       "showTranslation": "显示翻译",
       "translation": "翻译",
       "keyChoose": "选择",
-      "keyListen": "朗读",
+      "keyListen": "聆听",
       "multipleChoice": "选择题",
       "multipleChoiceTitle": "本题改为选择题",
       "hintNone": "提示（?）",

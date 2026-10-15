@@ -76,7 +76,7 @@
       "title": "按状态统计词汇"
     },
     "cloze": {
-      "title": "填空练习",
+      "title": "完形填空练习",
       "sentencesPracticed": "已练习句子",
       "accuracy": "正确率",
       "totalPoints": "总积分"
@@ -223,8 +223,8 @@
     },
     "quota": {
       "title": "本月 AI 额度",
-      "lookups": "AI 单词翻译",
-      "requests": "AI 详细解答",
+      "lookups": "AI 查词",
+      "requests": "详细的 AI 回答",
       "left": "剩 {left}",
       "used": "已用 {used} / {limit}",
       "byok": "正在使用你自己的 AI 密钥",
