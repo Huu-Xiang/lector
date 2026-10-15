@@ -70,7 +70,7 @@
       "reverted": "已恢复使用 Readfox 托管的 AI 额度",
       "heading": "使用自己的 AI 密钥",
       "active": "已启用",
-      "introFree": "免费版包含少量每月 AI 额度。添加你自己的 OpenRouter 或 Anthropic 密钥，即可在额度用完后继续翻译，并在不订阅的情况下解锁更丰富的 AI 功能。",
+      "introFree": "免费版包含少量每月 AI 额度。Plus 及以上套餐还可以使用你自己的 OpenRouter 或 Anthropic 密钥。",
       "introPaid": "使用你自己的 OpenRouter 或 Anthropic 账户来进行翻译、讲解、日记批改和对话，而不使用托管的 AI 额度。",
       "introTail": "你的密钥会加密存储，之后不会再显示。",
       "compareCloud": "想让 Readfox 直接提供 AI？<link>比较套餐</link>。",
@@ -91,7 +91,8 @@
       "protectedEncryption": "密钥在写入数据库之前会使用 AES-256-GCM 和全新的随机 nonce 加密。认证数据会把每份密文与你的账户和所选服务商绑定，因此加密后的记录无法转移到其他账户。",
       "protectedStorage": "用来加密 API 密钥的密钥与数据库分开保存在我们的服务器上。你的 API 密钥只写不读：Readfox 不会把它发回浏览器、放进导出文件，也不会在日志中记录它的详细信息。",
       "protectedOpenSource": "Readfox 是开源的，你可以自行核实凭据如何被加密、存储，以及在请求时如何被选用。<link>查看实现代码</link>。",
-      "loading": "正在加载…"
+      "loading": "正在加载…",
+      "paidOnly": "Plus 及以上套餐可以使用自己的 AI 密钥。<link>查看套餐</link>。"
     },
     "llm": {
       "fetchStatusFailed": "无法获取 LLM 状态",

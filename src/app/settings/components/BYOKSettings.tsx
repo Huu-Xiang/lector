@@ -24,6 +24,7 @@ interface ByokStatus {
   provider: ByokProvider;
   model: string;
   providers: Record<ByokProvider, ProviderConfig>;
+  requiresPaidPlan?: boolean;
 }
 
 export default function BYOKSettings() {
@@ -103,7 +104,7 @@ export default function BYOKSettings() {
         {plan === 'free' ? t('introFree') : t('introPaid')} {t('introTail')}
       </p>
 
-      {plan === 'free' && (
+      {plan === 'free' && !status?.requiresPaidPlan && (
         <p className="mb-4 rounded-lg border border-border bg-[var(--primary-soft)] p-3 text-xs text-foreground">
           {t.rich('compareCloud', {
             link: (chunks) => (
@@ -115,7 +116,17 @@ export default function BYOKSettings() {
         </p>
       )}
 
-      {status && !status.available ? (
+      {status?.requiresPaidPlan ? (
+        <p className="text-sm text-muted-foreground" data-testid="byok-paid-only">
+          {t.rich('paidOnly', {
+            link: (chunks) => (
+              <a href="/subscribe" className="font-semibold text-primary hover:underline">
+                {chunks}
+              </a>
+            ),
+          })}
+        </p>
+      ) : status && !status.available ? (
         <p className="text-sm text-muted-foreground">{t('notConfigured')}</p>
       ) : status ? (
         <div className="space-y-4">

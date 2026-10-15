@@ -179,6 +179,26 @@ describe('parsePlanLimitOverrides', () => {
     }
   });
 
+  test('self-managed: a stored AI key counts only on a paid plan', () => {
+    const previous = process.env.LECTOR_SELF_MANAGED;
+    try {
+      process.env.LECTOR_SELF_MANAGED = '1';
+      seedSubscription('ent-byok-paid', 'active', CLOUD_PRICE);
+      const engine = makeEntitlements(makeDeps({ isByok: () => true }));
+      expect(engine.resolveEntitlements('ent-byok-free')).toMatchObject({
+        plan: 'free',
+        byok: false,
+      });
+      expect(engine.resolveEntitlements('ent-byok-paid')).toMatchObject({
+        plan: 'cloud',
+        byok: true,
+      });
+    } finally {
+      if (previous === undefined) delete process.env.LECTOR_SELF_MANAGED;
+      else process.env.LECTOR_SELF_MANAGED = previous;
+    }
+  });
+
   test('Free overrides cannot turn any bounded allowance into null', () => {
     const merged = parsePlanLimitOverrides(
       '{"free":{"maxVocabEntries":null,"wordGlossesPerMonth":null}}',

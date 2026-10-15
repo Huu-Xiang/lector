@@ -13,9 +13,14 @@ import {
   validateAnthropicKey,
   validateOpenRouterKey,
 } from '../lib/byok';
+import { byokNeedsPaidPlan, entitlements } from '../lib/entitlements';
 
 const app = new Hono();
 const MAX_BYOK_BODY_BYTES = 16 * 1024;
+
+function paidPlanRequired(userId: string): boolean {
+  return byokNeedsPaidPlan() && entitlements.resolveEntitlements(userId).plan === 'free';
+}
 
 function isProvider(value: unknown): value is ByokProvider {
   return typeof value === 'string' && BYOK_PROVIDERS.includes(value as ByokProvider);
@@ -36,6 +41,7 @@ app.get('/', (c) => {
     provider: credential?.provider ?? DEFAULT_BYOK_PROVIDER,
     model: credential?.model ?? BYOK_CATALOG[DEFAULT_BYOK_PROVIDER].defaultModel,
     providers: BYOK_CATALOG,
+    requiresPaidPlan: paidPlanRequired(userId),
   });
 });
 
@@ -49,6 +55,9 @@ app.put(
     const userId = getCurrentUserId(c);
     if (!isByokAvailable()) {
       return c.json({ error: 'BYOK is not available on this deployment' }, 503);
+    }
+    if (paidPlanRequired(userId)) {
+      return c.json({ error: 'paid_plan_required' }, 403);
     }
 
     const body = (await c.req.json().catch(() => ({}))) as {

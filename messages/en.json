@@ -386,7 +386,7 @@
       "reverted": "Reverted to your Readfox managed AI allowance",
       "heading": "Bring your own AI key",
       "active": "Active",
-      "introFree": "Free includes a small monthly AI allowance. Add your own OpenRouter or Anthropic key to keep translating after that allowance and unlock richer AI actions without subscribing.",
+      "introFree": "Free includes a small monthly AI allowance. Plus and above can also use your own OpenRouter or Anthropic key.",
       "introPaid": "Use your own OpenRouter or Anthropic account for translations, explanations, journal corrections, and chat instead of the managed AI allowance.",
       "introTail": "Your key is stored encrypted and is never shown again.",
       "compareCloud": "Want Readfox to provide the AI for you? <link>Compare plans</link>.",
@@ -407,7 +407,8 @@
       "protectedEncryption": "Keys are encrypted before they reach the database using AES-256-GCM with a fresh random nonce. Authentication data binds each ciphertext to your account and chosen provider, so an encrypted row cannot be moved to another account.",
       "protectedStorage": "The key that encrypts stored API keys is kept apart from the database on our server. Your API key is write-only: Readfox never sends it back to the browser, puts it in an export, or logs its details.",
       "protectedOpenSource": "Readfox is open source, so you can verify how credentials are encrypted, stored, and selected at request time. <link>Inspect the implementation</link>.",
-      "loading": "Loading…"
+      "loading": "Loading…",
+      "paidOnly": "Using your own AI key is part of Plus and above. <link>See plans</link>."
     },
     "llm": {
       "fetchStatusFailed": "Failed to fetch LLM Status",

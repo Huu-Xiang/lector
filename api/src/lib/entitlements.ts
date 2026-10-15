@@ -397,6 +397,11 @@ const DEFAULT_PLAN_LIMITS: Record<PlanId, PlanLimits> = {
  * Readfox: Free gets a small monthly pool of detailed AI answers, served by
  * OPENAI_COMPAT_FREE_MODEL (see getProvider). Upstream keeps Free at zero.
  */
+/** Readfox: your own AI key is a paid-plan feature; Free ignores a stored key. */
+export function byokNeedsPaidPlan(): boolean {
+  return process.env.LECTOR_SELF_MANAGED === '1';
+}
+
 export function selfManagedFreeAi(): boolean {
   return process.env.LECTOR_SELF_MANAGED === '1' && Boolean(process.env.OPENAI_COMPAT_FREE_MODEL);
 }
@@ -737,7 +742,7 @@ export function makeEntitlements(deps: EntitlementsDeps): EntitlementsEngine {
   function resolveEntitlements(userId: string): ResolvedEntitlements {
     const plan = resolvePlan(userId);
     if (plan === 'unlimited') return { plan, byok: false, limits: UNLIMITED };
-    const byok = deps.isByok(userId);
+    const byok = deps.isByok(userId) && !(plan === 'free' && byokNeedsPaidPlan());
     const configured = deps.planLimits[plan];
     // Product invariant, not merely a launch default: hosted Free is always
     // finite, rich managed AI is BYOK-only, and speech is browser-only. Defend
