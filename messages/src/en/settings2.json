@@ -282,7 +282,7 @@
       "suspended": "App access is paused. You can still export your learner data or sign out below.",
       "lapsedFree": "Your texts, vocabulary, Anki links, and learning history are intact. Keep using Free, or renew for larger AI allowances.",
       "lapsed": "Everything you built is safe and exactly as you left it — renew to pick up where you were.",
-      "free": "Free is a complete reading loop with simple AI translations. Upgrade when you want detailed AI explanations and larger allowances.",
+      "free": "Free is a complete reading loop with 50 detailed AI answers each month. Upgrade when you want larger allowances.",
       "paid": "Readfox is a paid service. Prefer free? Readfox is open source and self-hostable."
     },
     "loadingPlans": "Loading subscription plans",

@@ -607,7 +607,7 @@
     "metaTitle": "Pricing – Readfox",
     "title": "Pricing",
     "intro": "Start free. Upgrade when you want detailed AI explanations and larger allowances. Cancel at any time.",
-    "notes": "Prices include tax where it applies. Payments are handled by Paddle, our reseller. Buyers in mainland China pay in RMB and can use Alipay. Annual plans save about 20%."
+    "notes": "Sales tax or VAT is added at checkout where it applies. Payments are handled by Paddle, our reseller. Buyers in mainland China pay in RMB and can use Alipay. Annual plans save about 20%."
   },
   "checkoutPage": {
     "opening": "Opening secure checkout",
@@ -1623,7 +1623,7 @@
       "suspended": "App access is paused. You can still export your learner data or sign out below.",
       "lapsedFree": "Your texts, vocabulary, Anki links, and learning history are intact. Keep using Free, or renew for larger AI allowances.",
       "lapsed": "Everything you built is safe and exactly as you left it — renew to pick up where you were.",
-      "free": "Free is a complete reading loop with simple AI translations. Upgrade when you want detailed AI explanations and larger allowances.",
+      "free": "Free is a complete reading loop with 50 detailed AI answers each month. Upgrade when you want larger allowances.",
       "paid": "Readfox is a paid service. Prefer free? Readfox is open source and self-hostable."
     },
     "loadingPlans": "Loading subscription plans",
