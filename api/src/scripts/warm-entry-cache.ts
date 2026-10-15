@@ -21,7 +21,7 @@ interface Item {
 }
 
 const ENGLISH_WORDS =
-  /\b(the|of|and|to|used|with|for|before|is|an?|from|letter|person|plural|singular|indicative|present|past|form|alternative|variant|spelling)\b/i;
+  /\b(the|of|and|to|used|with|for|before|is|from|letter|person|plural|singular|indicative|present|past|form|alternative|variant|spelling)\b/i;
 
 export function problemWith(gloss: unknown): string | null {
   if (typeof gloss !== 'string' || !gloss.trim()) return 'empty gloss';
@@ -104,6 +104,9 @@ async function translate(inFile: string, outFile: string, task: LLMTask, concurr
         }
       }
       if (!done) failed.push({ word: item.word, reason: feedback ?? 'unknown' });
+      const finished = ok.length + failed.length;
+      if (finished % 250 === 0)
+        console.log(`progress ${finished}/${items.length} (failed ${failed.length})`);
     }
   }
 

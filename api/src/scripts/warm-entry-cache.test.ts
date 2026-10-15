@@ -20,6 +20,11 @@ describe('warm-entry-cache answer checks', () => {
     expect(problemWith('x'.repeat(81))).toBe('gloss too long');
   });
 
+  test('lets a single Latin letter stand inside a Chinese gloss', () => {
+    expect(problemWith('法语字母a')).toBeNull();
+    expect(problemWith('音符 A')).toBeNull();
+  });
+
   test('rejects one gloss repeated for different senses', () => {
     expect(checkAnswer(item, ['圈', '圈', '圈', '圈'])).toContain('repeated');
   });
