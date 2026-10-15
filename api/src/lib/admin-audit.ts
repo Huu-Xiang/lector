@@ -20,7 +20,8 @@ export type AdminAction =
   | 'paddle_resync'
   | 'export'
   | 'impersonate_start'
-  | 'impersonate_stop';
+  | 'impersonate_stop'
+  | 'reveal_email';
 
 export interface AuditEntry {
   actorUserId: string;

@@ -120,6 +120,20 @@ export async function getAdminUsers(): Promise<AdminUserRow[]> {
   return (await res.json()).users as AdminUserRow[];
 }
 
+/** The account id for an exact email address, or null. A partial address finds nothing. */
+export async function findUserByEmail(email: string): Promise<string | null> {
+  const res = await apiFetch(`/api/admin/users/find?email=${encodeURIComponent(email)}`);
+  if (!res.ok) throw new Error(`admin find failed (${res.status})`);
+  return ((await res.json()) as { id: string | null }).id;
+}
+
+/** The full email address of one account. The server writes an audit entry. */
+export async function revealEmail(id: string): Promise<string> {
+  const res = await apiFetch(`/api/admin/users/${id}/reveal-email`, { method: 'POST' });
+  if (!res.ok) throw new Error(`reveal failed (${res.status})`);
+  return ((await res.json()) as { email: string }).email;
+}
+
 export async function suspendUser(id: string, reason: string): Promise<void> {
   const res = await apiFetch(`/api/admin/users/${id}/suspend`, {
     method: 'POST',

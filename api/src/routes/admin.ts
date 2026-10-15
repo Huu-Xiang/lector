@@ -33,6 +33,7 @@ import {
   getUserEmail,
 } from '../lib/billing';
 import { recordAdminAction, recentAuditLog, type AdminAction } from '../lib/admin-audit';
+import { maskEmail } from '../lib/mask-email';
 import { stopImpersonation } from '../lib/impersonation';
 import { getAuthEngine } from '../lib/accounts';
 import {
@@ -627,14 +628,40 @@ export function makeAdminRoutes(
     });
   });
 
-  // GET /api/admin/users — every account, richest → sortable client-side.
-  app.get('/users', (c) => c.json({ users: buildUserRows() }));
+  // The dashboard never lists a real address or a name. An operator who needs the
+  // address asks for it per account, and that request is written to the audit log.
+  function publicRow(row: ReturnType<typeof buildUserRows>[number]) {
+    return { ...row, email: maskEmail(row.email), name: null };
+  }
+
+  // GET /api/admin/users — every account, with the email masked and no name.
+  app.get('/users', (c) => c.json({ users: buildUserRows().map(publicRow) }));
+
+  // GET /api/admin/users/find?email=<full address> — the account id for an exact
+  // address. A partial address matches nothing, so the list cannot be mined.
+  app.get('/users/find', (c) => {
+    const email = (c.req.query('email') ?? '').trim().toLowerCase();
+    if (!email) return c.json({ id: null });
+    const row = db.prepare('SELECT id FROM user WHERE lower(email) = ?').get(email) as
+      | { id: string }
+      | undefined;
+    return c.json({ id: row?.id ?? null });
+  });
 
   // GET /api/admin/users/:id — one account (same shape as a list row).
   app.get('/users/:id', (c) => {
     const row = buildUserRows().find((r) => r.id === c.req.param('id'));
     if (!row) return c.json({ error: 'User not found' }, 404);
-    return c.json(row);
+    return c.json(publicRow(row));
+  });
+
+  // POST /api/admin/users/:id/reveal-email — the full address, once, and logged.
+  app.post('/users/:id/reveal-email', (c) => {
+    const id = c.req.param('id');
+    const email = targetEmail(id);
+    if (email === null) return c.json({ error: 'User not found' }, 404);
+    audit(c, 'reveal_email', id, email);
+    return c.json({ email });
   });
 
   // POST /api/admin/users/:id/suspend { reason? } — lock an abuser. Guarded
@@ -866,7 +893,14 @@ export function makeAdminRoutes(
   });
 
   // GET /api/admin/audit — the operator action trail, newest first.
-  app.get('/audit', (c) => c.json({ entries: recentAuditLog(100) }));
+  app.get('/audit', (c) =>
+    c.json({
+      entries: recentAuditLog(100).map((entry) => ({
+        ...entry,
+        targetEmail: entry.targetEmail ? maskEmail(entry.targetEmail) : null,
+      })),
+    }),
+  );
 
   return app;
 }

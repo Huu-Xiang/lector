@@ -23,6 +23,9 @@ const ADMIN_EMAIL = 'operator@e2e.test';
 const USER_EMAIL = `member+${Date.now()}@e2e.test`;
 const PASSWORD = 'admin-spec-password-123';
 
+// The admin API masks addresses the same way: two letters, ***, then the domain.
+const masked = (email: string) => `${email.slice(0, 2)}***${email.slice(email.lastIndexOf('@'))}`;
+
 async function applyAdminEnv(page: Page) {
   await page.route('**/__env.js', (route) =>
     route.fulfill({
@@ -122,14 +125,19 @@ test.describe.serial('admin dashboard (#221)', () => {
     await page.waitForURL('**/admin');
 
     const table = page.locator('table');
-    await expect(table.getByText(ADMIN_EMAIL)).toBeVisible();
-    await expect(table.getByText(USER_EMAIL)).toBeVisible();
+    await expect(table.getByText(masked(ADMIN_EMAIL))).toBeVisible();
+    await expect(table.getByText(USER_EMAIL)).toHaveCount(0);
 
     // Search filters the table down to the matching account (scope to the
     // table — the operator's own email also shows in the sidebar account menu).
-    await page.getByPlaceholder(/search email/i).fill(USER_EMAIL);
+    await page.getByPlaceholder(/search plan/i).fill(USER_EMAIL);
+    const memberRow = table.locator('tbody tr').filter({ hasText: masked(USER_EMAIL) });
+    await expect(memberRow).toHaveCount(1);
+    await expect(table.getByText(masked(ADMIN_EMAIL))).toHaveCount(0);
+
+    // Show reveals the full address; the server logs the reveal.
+    await memberRow.getByRole('button', { name: 'Show' }).click();
     await expect(table.getByText(USER_EMAIL)).toBeVisible();
-    await expect(table.getByText(ADMIN_EMAIL)).toHaveCount(0);
 
     const summary = await page.request.get(`${ADMIN_API}/api/admin/summary`);
     expect(summary.status()).toBe(200);
@@ -142,7 +150,7 @@ test.describe.serial('admin dashboard (#221)', () => {
     const operator = await signIn(browser, ADMIN_EMAIL);
     const users = (await (await operator.request.get(`${ADMIN_API}/api/admin/users`)).json())
       .users as Array<{ id: string; email: string }>;
-    const member = users.find((u) => u.email === USER_EMAIL)!;
+    const member = users.find((u) => u.email === masked(USER_EMAIL))!;
 
     const res = await operator.request.post(
       `${ADMIN_API}/api/admin/users/${member.id}/password-reset`,
@@ -165,7 +173,9 @@ test.describe.serial('admin dashboard (#221)', () => {
     // And the action is on the audit trail, attributed to the operator.
     const audit = (await (await operator.request.get(`${ADMIN_API}/api/admin/audit`)).json())
       .entries as Array<{ action: string; actorEmail: string; targetEmail: string }>;
-    const entry = audit.find((e) => e.action === 'password_reset' && e.targetEmail === USER_EMAIL);
+    const entry = audit.find(
+      (e) => e.action === 'password_reset' && e.targetEmail === masked(USER_EMAIL),
+    );
     expect(entry?.actorEmail).toBe(ADMIN_EMAIL);
   });
 
@@ -188,12 +198,14 @@ test.describe.serial('admin dashboard (#221)', () => {
     });
 
     await operator.goto('/admin');
-    const row = operator.locator('tbody tr').filter({ hasText: USER_EMAIL });
+    const row = operator.locator('tbody tr').filter({ hasText: masked(USER_EMAIL) });
     await row.getByRole('button', { name: 'More actions' }).click();
     await row.getByRole('button', { name: 'Resync from Paddle' }).click();
 
     await expect.poll(() => resyncedUserId).not.toBeNull();
-    await expect(operator.getByText(`Billing resynced from Paddle — ${USER_EMAIL}`)).toBeVisible();
+    await expect(
+      operator.getByText(`Billing resynced from Paddle — ${masked(USER_EMAIL)}`),
+    ).toBeVisible();
   });
 
   test('suspending an account locks it out; takeout stays open; restore reopens', async ({
@@ -202,7 +214,7 @@ test.describe.serial('admin dashboard (#221)', () => {
     const operator = await signIn(browser, ADMIN_EMAIL);
     const list = await operator.request.get(`${ADMIN_API}/api/admin/users`);
     const users = (await list.json()).users as Array<{ id: string; email: string }>;
-    const member = users.find((u) => u.email === USER_EMAIL)!;
+    const member = users.find((u) => u.email === masked(USER_EMAIL))!;
     expect(member).toBeTruthy();
 
     const suspend = await operator.request.post(

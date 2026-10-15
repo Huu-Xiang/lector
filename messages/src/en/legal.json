@@ -13,8 +13,9 @@
           "text": "The <strong>text</strong> extracted from books and articles you import (titles and chapters). We do not keep the original EPUB file.",
           "learning": "Your vocabulary, reading progress, practice history, journal entries and settings.",
           "aiKey": "If you add your own AI key, it is stored encrypted (AES-256-GCM). It is never sent back to your browser.",
+          "usage": "Monthly counters of how many AI lookups and requests you used, so we can apply the monthly allowance.",
           "session": "A session cookie that keeps you signed in, and short-lived server logs (such as IP address and request errors) used to keep the service secure and working.",
-          "sharedWords": "A shared cache of single-word translations (the language pair, the word and its translation), reused for every account. It holds no account information and none of your sentences."
+          "sharedWords": "A shared cache of single-word translations and dictionary meanings translated into a learner's language (the language pair, the word and its translation), reused for every account. It holds no account information and none of your sentences."
         }
       },
       "others": {
@@ -29,7 +30,7 @@
       },
       "operator": {
         "heading": "What the operator can and cannot see",
-        "dashboard": "The admin dashboard shows account-level numbers only (sign-up date, counts of lessons and words, storage used). It has no screen that displays your book text, and it has no “view as user” or per-user export feature.",
+        "dashboard": "The admin dashboard shows account-level numbers (sign-up date, last activity, counts of lessons and words, storage used) and a masked email address such as xi***@gmail.com. It does not show your name. It has no screen that displays your book text, and it has no “view as user” or per-user export feature. The operator can reveal a full email address to give you support, handle a deletion request or stop abuse. Each reveal is written to an audit log.",
         "access": "Be aware that the operator still has technical access to the server and its database, so we cannot promise that viewing is technically impossible. We do not look at your content. If you ask for support and send us an export, we use it only to fix your problem and then delete it. Please do not upload material you would not want a server to process."
       },
       "backups": {

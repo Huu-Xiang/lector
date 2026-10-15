@@ -2870,7 +2870,15 @@ const internalOps: Record<string, OperationDoc> = {
   'GET /api/admin/access': { summary: 'Check whether the caller is an operator', tag: 'Service' },
   'GET /api/admin/summary': { summary: 'Read the service-wide aggregates', tag: 'Service' },
   'GET /api/admin/users': { summary: 'List every account', tag: 'Service' },
+  'GET /api/admin/users/find': {
+    summary: 'Find an account by its full email address',
+    tag: 'Service',
+  },
   'GET /api/admin/users/{id}': { summary: 'Read one account', tag: 'Service' },
+  'POST /api/admin/users/{id}/reveal-email': {
+    summary: 'Show the full email address of an account',
+    tag: 'Service',
+  },
   'POST /api/admin/users/{id}/suspend': { summary: 'Suspend an account', tag: 'Service' },
   'POST /api/admin/users/{id}/restore': { summary: 'Lift a suspension', tag: 'Service' },
   'POST /api/admin/users/{id}/comp': {

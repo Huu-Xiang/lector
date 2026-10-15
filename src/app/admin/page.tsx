@@ -9,6 +9,8 @@ import {
   getAdminSummary,
   getAdminUsers,
   getAuditLog,
+  findUserByEmail,
+  revealEmail,
   suspendUser,
   restoreUser,
   compUser,
@@ -94,6 +96,8 @@ export default function AdminPage() {
   const [users, setUsers] = useState<AdminUserRow[]>([]);
   const [audit, setAudit] = useState<AdminAuditEntry[]>([]);
   const [query, setQuery] = useState('');
+  const [foundId, setFoundId] = useState<string | null>(null);
+  const [revealed, setRevealed] = useState<Record<string, string>>({});
   const [busyId, setBusyId] = useState<string | null>(null);
   const [menuId, setMenuId] = useState<string | null>(null);
 
@@ -225,12 +229,54 @@ export default function AdminPage() {
     [load],
   );
 
+  useEffect(() => {
+    const q = query.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(q)) {
+      setFoundId(null);
+      return;
+    }
+    let cancelled = false;
+    const timer = setTimeout(() => {
+      findUserByEmail(q)
+        .then((id) => {
+          if (!cancelled) setFoundId(id);
+        })
+        .catch(() => {
+          if (!cancelled) setFoundId(null);
+        });
+    }, 300);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [query]);
+
+  const toggleEmail = useCallback(
+    async (id: string) => {
+      if (revealed[id]) {
+        setRevealed((prev) => {
+          const next = { ...prev };
+          delete next[id];
+          return next;
+        });
+        return;
+      }
+      try {
+        const email = await revealEmail(id);
+        setRevealed((prev) => ({ ...prev, [id]: email }));
+        await load();
+      } catch (err) {
+        toast.error(err instanceof Error ? err.message : 'Could not show the email');
+      }
+    },
+    [revealed, load],
+  );
+
   const filtered = users.filter((u) => {
     const q = query.trim().toLowerCase();
     if (!q) return true;
     return (
-      u.email.toLowerCase().includes(q) ||
-      (u.name ?? '').toLowerCase().includes(q) ||
+      u.id === foundId ||
       (u.plan ?? '').includes(q) ||
       u.status.includes(q) ||
       (u.compedPlan ?? '').includes(q) ||
@@ -408,7 +454,7 @@ export default function AdminPage() {
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search email, name, plan, language…"
+          placeholder="Search plan, language, or a full email address…"
           className="w-72 max-w-full rounded-lg border border-input bg-background px-3 py-2 text-sm outline-none focus:border-ring focus:ring-1 focus:ring-ring"
         />
         <span className="text-xs text-muted-foreground">
@@ -437,9 +483,20 @@ export default function AdminPage() {
               return (
                 <tr key={u.id} className="border-b border-border last:border-0">
                   <td className="px-4 py-3">
-                    <div className="font-medium text-foreground">{u.email}</div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium text-foreground">
+                        {revealed[u.id] ?? u.email}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => void toggleEmail(u.id)}
+                        className="text-xs text-muted-foreground underline hover:text-foreground"
+                      >
+                        {revealed[u.id] ? 'Hide' : 'Show'}
+                      </button>
+                    </div>
                     <div className="text-xs text-muted-foreground">
-                      {u.emailVerified ? u.name || u.id : 'unverified'}
+                      {u.emailVerified ? u.id.slice(0, 8) : 'unverified'}
                     </div>
                     {u.suspended && u.suspendedReason && (
                       <div className="text-xs text-destructive">{u.suspendedReason}</div>

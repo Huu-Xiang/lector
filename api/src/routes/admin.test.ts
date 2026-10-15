@@ -912,7 +912,65 @@ describe('audit log', () => {
     expect(entries[1].action).toBe('suspend');
     expect(entries[1].detail).toBe('spam');
     expect(entries[0].actorEmail).toBe(EMAILS[ADMIN]);
-    expect(entries[0].targetEmail).toBe(EMAILS[ALICE]);
+    expect(entries[0].targetEmail).toBe('al***@' + EMAILS[ALICE].split('@')[1]);
+  });
+});
+
+describe('email privacy', () => {
+  test('the user list masks emails and omits names', async () => {
+    const res = await buildApp().request('/api/admin/users', asUser(ADMIN));
+    const { users } = (await res.json()) as {
+      users: Array<{ id: string; email: string; name: unknown }>;
+    };
+    const alice = users.find((u) => u.id === ALICE)!;
+    expect(alice.email).not.toBe(EMAILS[ALICE]);
+    expect(alice.email).toContain('***@');
+    expect(alice.name).toBeNull();
+    expect(JSON.stringify(users)).not.toContain(EMAILS[ALICE]);
+
+    const one = await buildApp().request(`/api/admin/users/${ALICE}`, asUser(ADMIN));
+    expect(JSON.stringify(await one.json())).not.toContain(EMAILS[ALICE]);
+  });
+
+  test('find needs the whole address', async () => {
+    const find = async (email: string) =>
+      (await (
+        await buildApp().request(
+          `/api/admin/users/find?email=${encodeURIComponent(email)}`,
+          asUser(ADMIN),
+        )
+      ).json()) as { id: string | null };
+    expect((await find(EMAILS[ALICE].toUpperCase())).id).toBe(ALICE);
+    expect((await find(EMAILS[ALICE].slice(0, 4))).id).toBeNull();
+    expect((await find('')).id).toBeNull();
+  });
+
+  test('revealing an address returns it and writes an audit entry', async () => {
+    const res = await buildApp().request(`/api/admin/users/${ALICE}/reveal-email`, {
+      method: 'POST',
+      ...asUser(ADMIN),
+    });
+    expect(await res.json()).toEqual({ email: EMAILS[ALICE] });
+
+    const audit = (await (await buildApp().request('/api/admin/audit', asUser(ADMIN))).json()) as {
+      entries: Array<{ action: string; targetUserId: string; targetEmail: string }>;
+    };
+    expect(audit.entries[0].action).toBe('reveal_email');
+    expect(audit.entries[0].targetUserId).toBe(ALICE);
+    expect(audit.entries[0].targetEmail).not.toBe(EMAILS[ALICE]);
+  });
+
+  test('revealing an unknown account is a 404 and non-admins are refused', async () => {
+    const missing = await buildApp().request('/api/admin/users/nobody/reveal-email', {
+      method: 'POST',
+      ...asUser(ADMIN),
+    });
+    expect(missing.status).toBe(404);
+    const denied = await buildApp().request(`/api/admin/users/${ALICE}/reveal-email`, {
+      method: 'POST',
+      ...asUser(ALICE),
+    });
+    expect(denied.status).toBe(403);
   });
 });
 
