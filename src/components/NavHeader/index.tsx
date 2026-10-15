@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import ThemeToggle from '@/components/ThemeToggle';
 import LanguageSelector from '@/components/LanguageSelector';
+import AiQuota from './components/AiQuota';
 import { isBareRoute } from '@/lib/auth-client';
 import { useSidebarCollapsed } from '@/utils/hooks';
 import {
@@ -94,6 +95,8 @@ export default function NavHeader() {
           })}
           <AdminNavLink isMobile={false} collapsed={collapsed} />
         </nav>
+
+        {!collapsed && <AiQuota />}
 
         <div className={clsx(collapsed ? 'flex justify-center py-1' : '')}>
           <AccountMenu compact={collapsed} />

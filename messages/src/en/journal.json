@@ -217,7 +217,20 @@
       "wordsKnown": "Words known: {count}",
       "add": "Add a language",
       "current": "Language: {language}",
-      "select": "Select language"
+      "select": "Select language",
+      "search": "Search languages",
+      "noMatch": "No language found"
+    },
+    "quota": {
+      "title": "AI this month",
+      "lookups": "Word lookups",
+      "requests": "Detailed AI answers",
+      "left": "{left} left",
+      "used": "{used} of {limit} used",
+      "byok": "Using your own AI key",
+      "resets": "Resets on the 1st of each month",
+      "exhausted": "Used up for this month",
+      "settings": "Use your own key in Settings"
     }
   }
 }

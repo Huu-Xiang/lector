@@ -37,6 +37,7 @@ import { useAnkiTransport } from '@/lib/anki-transport';
 import { translateWord, translatePhrase, streamWordGloss, enrichWord } from '@/lib/claude';
 import {
   lookupWordRemote,
+  localizeEntrySenses,
   cacheAcceptedTranslation,
   type ExpandedDictionaryEntry,
 } from '@/lib/dictionary-client';
@@ -436,6 +437,18 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
             isLoading: false,
             isDictionaryResult: true,
           }));
+          void localizeEntrySenses(word).then((senses) => {
+            if (!senses || requestId !== translationRequestId.current) return;
+            setWordPanel((prev) =>
+              prev.dictEntry
+                ? {
+                    ...prev,
+                    translation: senses.map((sense) => sense.gloss).join('; '),
+                    dictEntry: { ...prev.dictEntry, senses },
+                  }
+                : prev,
+            );
+          });
         } else if (!hasTranslation) {
           // No dict hit AND no saved vocab translation — stream a fast AI gloss.
           // The rich entry (senses/IPA/etymology) is opt-in via the Enrich button,

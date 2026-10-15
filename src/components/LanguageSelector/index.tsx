@@ -1,6 +1,6 @@
 'use client';
 
-import { Check, ChevronDown, Plus } from 'lucide-react';
+import { Check, ChevronDown, Plus, Search } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import {
@@ -13,9 +13,13 @@ import {
 import { getFluencyStats, seedStarterContent, setSetting } from '@/lib/data-layer';
 import { availableLanguages, LANGUAGES, normalizeEnabledLanguages } from '@/lib/languages';
 import { LanguageCode } from '@/types/language';
-import { useActiveLanguage, useEnabledLanguages } from '@/utils/hooks';
+import { useActiveLanguage, useEnabledLanguages, useLanguageResolved } from '@/utils/hooks';
 import { setLanguageInStorage } from '@/utils/storage';
 import { toast } from 'sonner';
+
+function foldForSearch(text: string): string {
+  return text.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().trim();
+}
 
 export default function LanguageSelector({
   compact = false,
@@ -26,10 +30,12 @@ export default function LanguageSelector({
 }) {
   const t = useTranslations('chrome.language');
   const activeLang = useActiveLanguage();
+  const resolved = useLanguageResolved();
   const enabledCodes = useEnabledLanguages();
   const [knownWordsCount, setKnownWordsCount] = useState<number | null>(null);
   const [open, setOpen] = useState(false);
   const [addOpen, setAddOpen] = useState(false);
+  const [query, setQuery] = useState('');
 
   useEffect(() => {
     let cancelled = false;
@@ -97,6 +103,22 @@ export default function LanguageSelector({
     );
   }
 
+  const needle = foldForSearch(query);
+  const searching = needle.length > 0;
+  const matches = searching
+    ? [...listed, ...addable].filter((code) => {
+        const lang = LANGUAGES[code];
+        return [lang.native, lang.name, code].some((label) =>
+          foldForSearch(label).includes(needle),
+        );
+      })
+    : [];
+  const searchItems = matches.map((code) =>
+    listed.includes(code)
+      ? languageRow(code, 'language-option', true)
+      : languageRow(code, 'language-add-option', false),
+  );
+
   const menuItems = listed.map((code) => languageRow(code, 'language-option', true));
   const addItems = addOpen
     ? addable.map((code) => languageRow(code, 'language-add-option', false))
@@ -122,8 +144,29 @@ export default function LanguageSelector({
 
   function onOpenChange(nextOpen: boolean) {
     setOpen(nextOpen);
-    if (!nextOpen) setAddOpen(false);
+    if (!nextOpen) {
+      setAddOpen(false);
+      setQuery('');
+    }
   }
+
+  const searchBox = (
+    <div className="sticky top-0 z-10 -mx-1 -mt-1 flex items-center gap-2 border-b border-border bg-popover px-3 py-2">
+      <Search className="size-4 shrink-0 text-muted-foreground" />
+      <input
+        autoFocus
+        value={query}
+        onChange={(event) => setQuery(event.target.value)}
+        onKeyDown={(event) => {
+          if (!['Escape', 'ArrowDown', 'ArrowUp'].includes(event.key)) event.stopPropagation();
+        }}
+        placeholder={t('search')}
+        aria-label={t('search')}
+        data-testid="language-search"
+        className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+      />
+    </div>
+  );
 
   const variant = collapsed ? 'collapsed' : compact ? 'compact' : 'full';
   const triggerClass = {
@@ -153,11 +196,39 @@ export default function LanguageSelector({
         aria-label={t('select')}
         className={`${variant === 'compact' ? 'w-44' : 'min-w-44'} max-h-80 overflow-y-auto`}
       >
-        {menuItems}
-        {addSection}
+        {searchBox}
+        {searching ? (
+          searchItems.length > 0 ? (
+            searchItems
+          ) : (
+            <div className="px-3 py-2 text-sm text-muted-foreground">{t('noMatch')}</div>
+          )
+        ) : (
+          <>
+            {menuItems}
+            {addSection}
+          </>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );
+
+  if (!resolved) {
+    const placeholder = (
+      <div
+        aria-hidden
+        data-testid="language-selector-loading"
+        className={`${triggerClass} animate-pulse`}
+      >
+        <span className="size-5 rounded-full bg-muted" />
+        {variant === 'full' && <span className="h-4 flex-1 rounded bg-muted" />}
+      </div>
+    );
+    if (variant === 'collapsed')
+      return <div className="flex justify-center px-1">{placeholder}</div>;
+    if (variant === 'full') return <div className="mx-3">{placeholder}</div>;
+    return placeholder;
+  }
 
   if (variant === 'collapsed') {
     return <div className="flex justify-center px-1">{menu}</div>;

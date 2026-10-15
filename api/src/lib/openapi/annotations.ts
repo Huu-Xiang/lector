@@ -1638,6 +1638,40 @@ const languageHelpOps: Record<string, OperationDoc> = {
       },
     },
   },
+  'POST /api/translate/localize': {
+    summary: 'Translate a dictionary entry into your own language',
+    description:
+      'Takes the on-device dictionary senses of a word and returns them in the language set as your own. Returns senses null when your language is English or the word has no dictionary entry.',
+    tag: 'Language help',
+    requestBody: {
+      required: true,
+      schema: {
+        type: 'object',
+        properties: {
+          word: { type: 'string', description: 'One token.' },
+          language: { type: 'string' },
+        },
+        required: ['word'],
+      },
+    },
+    responses: {
+      '200': {
+        description: 'The translated senses, or null.',
+        schema: {
+          type: 'object',
+          properties: {
+            senses: {
+              type: ['array', 'null'],
+              items: {
+                type: 'object',
+                properties: { partOfSpeech: { type: 'string' }, gloss: { type: 'string' } },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
   'POST /api/translate/enrich': {
     summary: 'Enrich a word entry',
     description:

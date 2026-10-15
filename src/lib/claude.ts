@@ -1,5 +1,10 @@
 import { getActiveLanguage } from './data-layer';
 import { apiFetch } from './api-base';
+import { AI_USAGE_EVENT } from '@/constants/storage';
+
+function noteAiUsage(): void {
+  if (typeof window !== 'undefined') window.dispatchEvent(new Event(AI_USAGE_EVENT));
+}
 
 // Types
 export interface WordTranslation {
@@ -41,6 +46,7 @@ export async function translateWord(word: string, sentence: string): Promise<Wor
     throw new Error(error.error || 'Translation failed');
   }
 
+  noteAiUsage();
   return response.json();
 }
 
@@ -87,6 +93,7 @@ export async function streamWordGloss(
   text += decoder.decode();
   const trimmed = text.trim();
   if (!trimmed) throw new Error('Translation failed');
+  noteAiUsage();
   onDelta(trimmed);
   return trimmed;
 }
@@ -118,6 +125,7 @@ export async function enrichWord(word: string, sentence: string): Promise<WordTr
     throw new Error(error.error || 'Enrich failed');
   }
 
+  noteAiUsage();
   return response.json();
 }
 
@@ -142,5 +150,6 @@ export async function translatePhrase(
     throw new Error(error.error || 'Translation failed');
   }
 
+  noteAiUsage();
   return response.json();
 }

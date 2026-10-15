@@ -234,6 +234,19 @@ function getDb(): Database {
       PRIMARY KEY (language, nativeLanguage, word, promptVersion)
     );
 
+    -- Dictionary senses translated into a learner's own language, shared like
+    -- shared_gloss_cache: no user id, no sentence, managed answers only.
+    CREATE TABLE IF NOT EXISTS shared_entry_cache (
+      language TEXT NOT NULL,
+      nativeLanguage TEXT NOT NULL,
+      word TEXT NOT NULL,
+      promptVersion INTEGER NOT NULL,
+      glosses TEXT NOT NULL,
+      hits INTEGER NOT NULL DEFAULT 0,
+      createdAt TEXT NOT NULL,
+      PRIMARY KEY (language, nativeLanguage, word, promptVersion)
+    );
+
     CREATE TABLE IF NOT EXISTS cached_senses (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       userId TEXT NOT NULL DEFAULT 'local',

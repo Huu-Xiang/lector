@@ -12,6 +12,8 @@ import type { CompletionOptions, LLMProvider, ProviderAccessOptions } from '../l
 import { InMemoryTranslationBurstLimiter } from '../lib/rate-limit';
 import { getSpelreelsContext } from '../lib/spelreels';
 import type { GlossCache } from '../lib/gloss-cache';
+import type { EntryCache } from '../lib/entry-cache';
+import type { ExpandedDictionaryEntry } from '../lib/dictionary-db';
 import { makeTranslateRoutes } from './translate';
 
 const FREE: PlanLimits = {
@@ -129,6 +131,8 @@ function makeApp(options: {
   limiter?: InMemoryTranslationBurstLimiter;
   providerForUser?: (userId: string, access: ProviderAccessOptions) => LLMProvider;
   glossCache?: GlossCache | null;
+  entryCache?: EntryCache | null;
+  lookupEntry?: (userId: string, word: string, language: string) => ExpandedDictionaryEntry | null;
 }) {
   const provider = options.provider ?? new FakeProvider();
   const providerUserIds: string[] = [];
@@ -144,6 +148,8 @@ function makeApp(options: {
       options.limiter ??
       new InMemoryTranslationBurstLimiter({ glossPerWindow: 10_000, detailPerWindow: 10_000 }),
     glossCache: options.glossCache ?? null,
+    entryCache: options.entryCache ?? null,
+    lookupEntry: options.lookupEntry ?? (() => null),
   });
   return { app, provider, providerUserIds, providerAccess };
 }
@@ -556,6 +562,120 @@ describe('shared gloss cache', () => {
     };
     const { app } = makeApp({ engine: makeEngine({ now }), provider, glossCache: cache });
     await (await post(app, '/gloss', { word: 'huis', sentence: 'x' })).text();
+    expect(cache.rows.size).toBe(0);
+  });
+});
+
+class MemoryEntryCache implements EntryCache {
+  rows = new Map<string, string[]>();
+  get(language: string, native: string, word: string) {
+    return this.rows.get(`${language}|${native}|${word.toLowerCase()}`) ?? null;
+  }
+  put(language: string, native: string, word: string, glosses: string[]) {
+    this.rows.set(`${language}|${native}|${word.toLowerCase()}`, glosses);
+  }
+}
+
+describe('dictionary entry localization', () => {
+  const now = () => new Date('2026-07-15T12:00:00Z');
+  const entry: ExpandedDictionaryEntry = {
+    word: 'fois',
+    source: 'dict',
+    senses: [
+      { partOfSpeech: 'noun', gloss: 'time (an instance)' },
+      { partOfSpeech: 'noun', gloss: 'plural of foi' },
+    ],
+  };
+  const lookupEntry = () => entry;
+
+  function setNative(code: string | null) {
+    db.prepare("DELETE FROM settings WHERE userId = 'local' AND key = 'nativeLanguage'").run();
+    if (code) {
+      db.prepare(
+        "INSERT INTO settings (userId, key, value) VALUES ('local', 'nativeLanguage', ?)",
+      ).run(JSON.stringify(code));
+    }
+  }
+
+  function chineseProvider() {
+    const provider = new FakeProvider();
+    provider.completeImpl = async () => JSON.stringify({ glosses: ['次', 'foi 的复数'] });
+    return provider;
+  }
+
+  afterEach(() => setNative(null));
+
+  test('translates the senses once, then serves repeats from the shared cache', async () => {
+    setNative('zh-CN');
+    const cache = new MemoryEntryCache();
+    const provider = chineseProvider();
+    const engine = makeEngine({ now });
+    const { app } = makeApp({ engine, provider, entryCache: cache, lookupEntry });
+
+    const first = await (await post(app, '/localize', { word: 'fois', language: 'fr' })).json();
+    expect(first.senses).toEqual([
+      { partOfSpeech: 'noun', gloss: '次' },
+      { partOfSpeech: 'noun', gloss: 'foi 的复数' },
+    ]);
+    expect(engine.getUsage('local', 'wordGlossesPerMonth')).toBe(1);
+
+    const second = await (await post(app, '/localize', { word: 'fois', language: 'fr' })).json();
+    expect(second.senses).toEqual(first.senses);
+    expect(provider.calls).toHaveLength(1);
+    expect(engine.getUsage('local', 'wordGlossesPerMonth')).toBe(1);
+  });
+
+  test('returns null for an English reader and never calls the model', async () => {
+    setNative('en');
+    const provider = chineseProvider();
+    const { app } = makeApp({ engine: makeEngine({ now }), provider, lookupEntry });
+    expect(await (await post(app, '/localize', { word: 'fois', language: 'fr' })).json()).toEqual({
+      senses: null,
+    });
+    expect(provider.calls).toHaveLength(0);
+  });
+
+  test('returns null when the dictionary has no entry or only a learned one', async () => {
+    setNative('zh-CN');
+    const provider = chineseProvider();
+    const miss = makeApp({ engine: makeEngine({ now }), provider });
+    expect(
+      (await (await post(miss.app, '/localize', { word: 'zzz', language: 'fr' })).json()).senses,
+    ).toBeNull();
+    const learned = makeApp({
+      engine: makeEngine({ now }),
+      provider,
+      lookupEntry: () => ({ ...entry, source: 'cache' }),
+    });
+    expect(
+      (await (await post(learned.app, '/localize', { word: 'fois', language: 'fr' })).json())
+        .senses,
+    ).toBeNull();
+    expect(provider.calls).toHaveLength(0);
+  });
+
+  test('a wrong-length answer is refunded and not cached', async () => {
+    setNative('zh-CN');
+    const cache = new MemoryEntryCache();
+    const provider = new FakeProvider();
+    provider.completeImpl = async () => JSON.stringify({ glosses: ['only one'] });
+    const engine = makeEngine({ now });
+    const { app } = makeApp({ engine, provider, entryCache: cache, lookupEntry });
+    expect((await post(app, '/localize', { word: 'fois', language: 'fr' })).status).toBe(502);
+    expect(cache.rows.size).toBe(0);
+    expect(engine.getUsage('local', 'wordGlossesPerMonth')).toBe(0);
+  });
+
+  test('a user own-key answer is not written to the shared cache', async () => {
+    setNative('zh-CN');
+    const cache = new MemoryEntryCache();
+    const { app } = makeApp({
+      engine: makeEngine({ now, byok: true }),
+      provider: chineseProvider(),
+      entryCache: cache,
+      lookupEntry,
+    });
+    expect((await post(app, '/localize', { word: 'fois', language: 'fr' })).status).toBe(200);
     expect(cache.rows.size).toBe(0);
   });
 });

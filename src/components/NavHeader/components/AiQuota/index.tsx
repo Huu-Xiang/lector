@@ -1,0 +1,117 @@
+'use client';
+
+import { useCallback, useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
+import clsx from 'clsx';
+import { getEntitlements, invalidateEntitlementsCache } from '@/lib/data-layer';
+import type { ClientEntitlements } from '@/lib/data-layer';
+import { AI_USAGE_EVENT } from '@/constants/storage';
+
+const REFRESH_MS = 60_000;
+const EVENT_DEBOUNCE_MS = 1_500;
+
+function Meter({ label, used, limit }: { label: string; used: number; limit: number }) {
+  const t = useTranslations('chrome.quota');
+  const ratio = limit > 0 ? Math.min(used / limit, 1) : 1;
+  const left = Math.max(limit - used, 0);
+  return (
+    <div>
+      <div className="flex items-baseline justify-between gap-2 text-xs">
+        <span className="text-foreground">{label}</span>
+        <span
+          className={clsx(
+            'tabular-nums',
+            left === 0 ? 'text-destructive' : 'text-muted-foreground',
+          )}
+        >
+          {left === 0 ? t('exhausted') : t('left', { left: left.toLocaleString() })}
+        </span>
+      </div>
+      <div
+        role="progressbar"
+        aria-label={label}
+        aria-valuemin={0}
+        aria-valuemax={limit}
+        aria-valuenow={Math.min(used, limit)}
+        aria-valuetext={t('used', { used: used.toLocaleString(), limit: limit.toLocaleString() })}
+        className="mt-1 h-1.5 overflow-hidden rounded-full bg-muted"
+      >
+        <div
+          className={clsx(
+            'h-full rounded-full transition-[width]',
+            ratio >= 1 ? 'bg-destructive' : ratio >= 0.8 ? 'bg-[var(--gold)]' : 'bg-primary',
+          )}
+          style={{ width: `${ratio * 100}%` }}
+        />
+      </div>
+    </div>
+  );
+}
+
+export default function AiQuota() {
+  const t = useTranslations('chrome.quota');
+  const [entitlements, setEntitlements] = useState<ClientEntitlements | null>(null);
+
+  const load = useCallback(() => {
+    invalidateEntitlementsCache();
+    getEntitlements()
+      .then(setEntitlements)
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    load();
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const onUsage = () => {
+      clearTimeout(timer);
+      timer = setTimeout(load, EVENT_DEBOUNCE_MS);
+    };
+    const interval = setInterval(load, REFRESH_MS);
+    window.addEventListener('focus', load);
+    window.addEventListener(AI_USAGE_EVENT, onUsage);
+    return () => {
+      clearTimeout(timer);
+      clearInterval(interval);
+      window.removeEventListener('focus', load);
+      window.removeEventListener(AI_USAGE_EVENT, onUsage);
+    };
+  }, [load]);
+
+  if (!entitlements || entitlements.plan === 'unlimited') return null;
+
+  if (entitlements.byok) {
+    return (
+      <div
+        data-testid="ai-quota"
+        className="mx-3 mb-2 rounded-lg border border-border px-3 py-2 text-xs text-muted-foreground"
+      >
+        {t('byok')}
+      </div>
+    );
+  }
+
+  const meters = [
+    { key: 'wordGlossesPerMonth', label: t('lookups') },
+    { key: 'llmRequestsPerMonth', label: t('requests') },
+  ].flatMap(({ key, label }) => {
+    const limit = entitlements.limits[key];
+    return typeof limit === 'number'
+      ? [{ key, label, limit, used: entitlements.usage[key] ?? 0 }]
+      : [];
+  });
+  if (meters.length === 0) return null;
+
+  return (
+    <section
+      data-testid="ai-quota"
+      aria-label={t('title')}
+      title={t('resets')}
+      className="mx-3 mb-2 space-y-2 rounded-lg border border-border px-3 py-2"
+    >
+      <div className="text-xs font-medium text-muted-foreground">{t('title')}</div>
+      {meters.map((meter) => (
+        <Meter key={meter.key} label={meter.label} used={meter.used} limit={meter.limit} />
+      ))}
+    </section>
+  );
+}

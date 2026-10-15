@@ -6,3 +6,6 @@ export const PROSE_STYLE_CHANGE_EVENT = 'lector-prose-style-change';
 
 /** Same-tab notification that the desktop sidebar collapsed state changed. */
 export const SIDEBAR_COLLAPSE_EVENT = 'lector-sidebar-collapse-change';
+
+/** Fired after a request that spends AI allowance, so the quota meter can refresh. */
+export const AI_USAGE_EVENT = 'lector-ai-usage';

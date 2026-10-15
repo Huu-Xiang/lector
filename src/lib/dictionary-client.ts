@@ -9,6 +9,7 @@
 import { getActiveLanguage, getActivePack } from './data-layer';
 import { foldWord } from './languages';
 import { apiFetch } from './api-base';
+import { AI_USAGE_EVENT } from '@/constants/storage';
 
 export interface ExpandedDictionaryEntry {
   word: string;
@@ -49,6 +50,32 @@ export async function lookupWordRemote(word: string): Promise<ExpandedDictionary
   return entry;
 }
 
+/**
+ * The entry's senses in the learner's own language, or null when the learner
+ * reads English, the word has no dictionary entry, or the request fails.
+ */
+export async function localizeEntrySenses(
+  word: string,
+): Promise<Array<{ partOfSpeech: string; gloss: string }> | null> {
+  try {
+    const res = await apiFetch('/api/translate/localize', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ word, language: getActiveLanguage() }),
+    });
+    if (!res.ok) return null;
+    const data = (await res.json()) as {
+      senses: Array<{ partOfSpeech: string; gloss: string }> | null;
+    };
+    if (data.senses && typeof window !== 'undefined') {
+      window.dispatchEvent(new Event(AI_USAGE_EVENT));
+    }
+    return data.senses;
+  } catch {
+    return null;
+  }
+}
+
 /** Drop a single cached entry (call after editing the dict to force a re-fetch).
  *  Keys are `${language}:${word}`, so invalidate the word across every language. */
 export function invalidateLookupCache(word?: string): void {
@@ -81,7 +108,9 @@ export interface CacheAcceptedTranslationInput {
  * The session lookup cache is invalidated for the word so the next click
  * re-fetches and picks up the freshly-cached entry (now with `source: 'cache'`).
  */
-export async function cacheAcceptedTranslation(input: CacheAcceptedTranslationInput): Promise<void> {
+export async function cacheAcceptedTranslation(
+  input: CacheAcceptedTranslationInput,
+): Promise<void> {
   if (!input.word || !input.senses?.length) return;
   invalidateLookupCache(input.word);
   try {

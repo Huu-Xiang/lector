@@ -217,7 +217,20 @@
       "wordsKnown": "已掌握词数：{count}",
       "add": "添加语言",
       "current": "语言：{language}",
-      "select": "选择语言"
+      "select": "选择语言",
+      "search": "搜索语言",
+      "noMatch": "没有找到这种语言"
+    },
+    "quota": {
+      "title": "本月 AI 额度",
+      "lookups": "单词查询",
+      "requests": "AI 详细解答",
+      "left": "剩 {left}",
+      "used": "已用 {used} / {limit}",
+      "byok": "正在使用你自己的 AI 密钥",
+      "resets": "每月 1 日重置",
+      "exhausted": "本月额度已用完",
+      "settings": "可在设置中填写你自己的密钥"
     }
   }
 }

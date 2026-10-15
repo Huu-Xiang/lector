@@ -34,6 +34,11 @@ export function getLanguageSnapshot(): LanguageConfig {
   return LANGUAGES[DEFAULT_LANGUAGE];
 }
 
+/** True once the account's language is cached. Before that the snapshot is the registry default, not the user's choice. */
+export function isLanguageResolved(): boolean {
+  return readLanguageCache() !== null;
+}
+
 export function getStoredTheme(): Theme {
   if (typeof window === 'undefined') return 'system';
   return (localStorage.getItem(SETTINGS_KEYS.THEME) as Theme) || 'system';

@@ -33,6 +33,24 @@ Reply with ONLY the concise ${nativeName} meaning — the natural translation(s)
 }
 
 /**
+ * Translate the English glosses of a dictionary entry into the learner's language.
+ * The reply is one short string per input gloss, in the same order.
+ */
+export function buildLocalizePrompt(
+  langName: string,
+  nativeName: string,
+  word: string,
+  glosses: string[],
+): string {
+  return `You edit a bilingual dictionary. The ${langName} word "${word}" has ${glosses.length} English sense(s), given as a JSON array:
+${JSON.stringify(glosses)}
+
+Translate each sense into ${nativeName}. Keep the same order and exactly ${glosses.length} items. Write short dictionary-style glosses that give the meaning, not a word-for-word copy. Translate notes such as "plural of foi" too. Keep proper nouns.
+
+Reply with ONLY this JSON, with no other text: {"glosses": [${glosses.map(() => '"..."').join(', ')}]}`;
+}
+
+/**
  * Bounded Free phrase path. It intentionally asks for one plain-text answer
  * and never receives the Afrikaans spelling rules or rich teaching schema.
  */

@@ -6,6 +6,7 @@ import { useEffect, useState, useSyncExternalStore } from 'react';
 import { useWindowSize } from 'usehooks-ts';
 import {
   getLanguageSnapshot,
+  isLanguageResolved,
   getStoredTheme,
   readSidebarCollapsed,
   subscribeToSidebarCollapsed,
@@ -40,6 +41,10 @@ export function useActiveLanguage(): LanguageConfig {
     getLanguageSnapshot,
     () => LANGUAGES[DEFAULT_LANGUAGE],
   );
+}
+
+export function useLanguageResolved(): boolean {
+  return useSyncExternalStore(subscribeToStorage, isLanguageResolved, () => false);
 }
 
 /**

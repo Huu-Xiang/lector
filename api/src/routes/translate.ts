@@ -15,7 +15,16 @@ import { getLanguageConfig } from '../lib/languages';
 import { getNativeLanguageCode, getNativeLanguageName } from '../lib/native-language';
 import { sharedGlossCache, type GlossCache } from '../lib/gloss-cache';
 import {
+  isCacheableGlosses,
+  MAX_ENTRY_GLOSS_CHARS,
+  MAX_ENTRY_SENSES,
+  sharedEntryCache,
+  type EntryCache,
+} from '../lib/entry-cache';
+import { lookupWord, type ExpandedDictionaryEntry } from '../lib/dictionary-db';
+import {
   buildGlossPrompt,
+  buildLocalizePrompt,
   buildPhrasePrompt,
   buildSimpleContextPrompt,
   buildSimplePhrasePrompt,
@@ -49,6 +58,14 @@ interface TranslateRouteDeps {
   rateLimiter: TranslationBurstLimiter;
   /** Shared word-gloss cache; `null` turns it off. */
   glossCache?: GlossCache | null;
+  /** Shared cache of dictionary senses translated into the learner's language; `null` turns it off. */
+  entryCache?: EntryCache | null;
+  /** Looks up the on-device dictionary entry; replaced in tests. */
+  lookupEntry?: (
+    userId: string,
+    word: string,
+    language: string,
+  ) => ExpandedDictionaryEntry | null | undefined;
 }
 
 interface CommonInput {
@@ -236,6 +253,8 @@ export function makeTranslateRoutes({
   engine,
   rateLimiter,
   glossCache = sharedGlossCache,
+  entryCache = sharedEntryCache,
+  lookupEntry = lookupWord,
 }: TranslateRouteDeps): Hono {
   const app = new Hono();
   app.use(
@@ -305,6 +324,71 @@ export function makeTranslateRoutes({
         console.error('Gloss stream error:', error);
       }
     });
+  });
+
+  // Dictionary senses are English. For a learner whose own language is another one,
+  // translate the on-device entry's glosses once and share the result. The server
+  // reads the entry itself, so a caller cannot send text of its own to the model.
+  app.post('/localize', async (c) => {
+    const parsedBody = await readObject(c);
+    if (!parsedBody.ok) return c.json({ error: parsedBody.error }, 400);
+    const parsed = parseSingleWord(parsedBody.value);
+    if (!parsed.ok) return c.json({ error: parsed.error }, 400);
+
+    const userId = getCurrentUserId(c);
+    const lang = resolveLanguage(parsed.value.language, userId);
+    const nativeCode = getNativeLanguageCode(userId);
+    if (nativeCode === 'en' || nativeCode === lang) return c.json({ senses: null });
+
+    const entry = lookupEntry(userId, parsed.value.word, lang);
+    if (!entry || entry.source === 'cache' || entry.senses.length === 0) {
+      return c.json({ senses: null });
+    }
+    const source = entry.senses.slice(0, MAX_ENTRY_SENSES).map((sense) => ({
+      partOfSpeech: sense.partOfSpeech,
+      gloss: sense.gloss.slice(0, MAX_ENTRY_GLOSS_CHARS),
+    }));
+    const withGlosses = (glosses: string[]) =>
+      c.json({ senses: source.map((sense, i) => ({ ...sense, gloss: glosses[i] })) });
+
+    const cached = entryCache?.get(lang, nativeCode, entry.word) ?? null;
+    if (cached && cached.length === source.length) return withGlosses(cached);
+
+    const resolved = engine.resolveEntitlements(userId);
+    const burst = consumeFreeBurst(c, rateLimiter, resolved, userId, 'gloss');
+    if (burst) return burst;
+    const reservation = reserve(c, engine, userId, metricForGloss(resolved));
+    if (reservation instanceof Response) return reservation;
+
+    try {
+      const result = await completeJson<{ glosses?: unknown }>(
+        providerForUser(userId, { byok: reservation.byok }),
+        {
+          messages: [
+            {
+              role: 'user',
+              content: buildLocalizePrompt(
+                getLanguageConfig(lang).name,
+                getNativeLanguageName(userId),
+                entry.word,
+                source.map((sense) => sense.gloss),
+              ),
+            },
+          ],
+          maxTokens: 700,
+          task: 'word-gloss',
+        },
+      );
+      if (!isCacheableGlosses(result.glosses, source.length)) {
+        throw new Error('Localization returned an unexpected shape');
+      }
+      if (!reservation.byok) entryCache?.put(lang, nativeCode, entry.word, result.glosses);
+      return withGlosses(result.glosses);
+    } catch (error) {
+      engine.refund(reservation);
+      console.error('Localize error:', error);
+      return c.json({ error: 'Translation failed' }, 502);
+    }
   });
 
   // Paid or user-funded opt-in dictionary enrichment. Managed Free has a zero
