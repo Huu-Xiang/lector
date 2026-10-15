@@ -297,6 +297,38 @@ function getDb(): Database {
     CREATE INDEX IF NOT EXISTS idx_billing_subscriptions_userId ON billing_subscriptions(userId);
     CREATE INDEX IF NOT EXISTS idx_billing_subscriptions_customer ON billing_subscriptions(paddleCustomerId);
 
+    -- Readfox: a paid tier held for a fixed period (one-time RMB payments,
+    -- redeem codes). ref is the source's id, so a replayed event grants once.
+    CREATE TABLE IF NOT EXISTS plan_grants (
+      id TEXT PRIMARY KEY,
+      userId TEXT NOT NULL,
+      plan TEXT NOT NULL,
+      startsAt TEXT NOT NULL,
+      endsAt TEXT NOT NULL,
+      source TEXT NOT NULL,
+      ref TEXT NOT NULL UNIQUE,
+      createdAt TEXT NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS idx_plan_grants_user ON plan_grants(userId, endsAt);
+
+    CREATE TABLE IF NOT EXISTS cn_orders (
+      outTradeNo TEXT PRIMARY KEY,
+      userId TEXT NOT NULL,
+      plan TEXT NOT NULL,
+      months INTEGER NOT NULL,
+      amountFen INTEGER NOT NULL,
+      channel TEXT NOT NULL,
+      status TEXT NOT NULL,
+      createdAt TEXT NOT NULL,
+      paidAt TEXT
+    );
+    CREATE INDEX IF NOT EXISTS idx_cn_orders_user ON cn_orders(userId, createdAt);
+
+    CREATE TABLE IF NOT EXISTS cn_webhook_events (
+      eventId TEXT PRIMARY KEY,
+      receivedAt TEXT NOT NULL
+    );
+
     -- Admin support flags (#221): manual per-account state the operator sets
     -- from the admin dashboard. Distinct from the Paddle billing mirror (that
     -- reflects Paddle; these are our own operator actions):

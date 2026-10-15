@@ -33,6 +33,7 @@ import { db } from '../db';
 import { billingConfig, getUserEmail, isEntitledStatus } from './billing';
 import { getCompedPlan } from './account-flags';
 import { hasByokCredential } from './byok';
+import { activeGrant } from './plan-grants';
 
 export type PaidPlanId = 'cloud' | 'plus' | 'max';
 export type PlanId = 'free' | PaidPlanId;
@@ -635,6 +636,8 @@ export interface EntitlementsDeps {
    * gate bypassing it. Seam over lib/account-flags.getCompedPlan.
    */
   compedPlan: (userId: string) => PaidPlanId | null;
+  /** Tier from an active fixed-period grant (Readfox one-time payments, codes). */
+  grantedPlan?: (userId: string) => PaidPlanId | null;
   now: () => Date;
 }
 
@@ -732,6 +735,9 @@ export function makeEntitlements(deps: EntitlementsDeps): EntitlementsEngine {
       const plan = (row.priceId && priceToPlan.get(row.priceId)) || 'cloud';
       if (best === null || PLAN_RANK[plan] > PLAN_RANK[best]) best = plan;
     }
+
+    const granted = deps.grantedPlan?.(userId) ?? null;
+    if (granted && (best === null || PLAN_RANK[granted] > PLAN_RANK[best])) best = granted;
 
     // Free is derived, never mirrored as a Paddle product. With the rollout
     // flag off, retain the old Cloud fallback because billing middleware locks
@@ -1112,6 +1118,7 @@ let active: EntitlementsEngine = makeEntitlements({
   resolveEmail: getUserEmail,
   isByok: hasByokCredential,
   compedPlan: getCompedPlan,
+  grantedPlan: (userId) => activeGrant(userId)?.plan ?? null,
   now: () => new Date(),
 });
 

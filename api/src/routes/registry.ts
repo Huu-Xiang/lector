@@ -28,6 +28,7 @@ import tokens from './tokens';
 import chat from './chat';
 import llmOpenai from './llm-openai';
 import billing from './billing';
+import billingCn from './billing-cn';
 import admin from './admin';
 import impersonation from './impersonation';
 import byok from './byok';
@@ -90,6 +91,7 @@ export const routeMounts: readonly RouteMount[] = [
   { prefix: '/api/tokens', app: tokens },
   { prefix: '/api/chat', app: chat },
   { prefix: '/api/llm/openai', app: llmOpenai },
+  { prefix: '/api/billing/cn', app: billingCn },
   { prefix: '/api/billing', app: billing },
   { prefix: '/api/admin', app: admin },
   { prefix: '/api/impersonation', app: impersonation },

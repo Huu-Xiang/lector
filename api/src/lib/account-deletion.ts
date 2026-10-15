@@ -46,6 +46,8 @@ import { deleteAudioFile } from './audio-files';
 export const ERASURE_TABLES = [
   ...TENANT_TABLES,
   'billing_subscriptions',
+  'plan_grants',
+  'cn_orders',
   'admin_account_flags',
   'twoFactor',
   'email_sends',

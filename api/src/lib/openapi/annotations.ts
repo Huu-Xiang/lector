@@ -2852,6 +2852,19 @@ const internalOps: Record<string, OperationDoc> = {
     summary: 'Read the plan limits and the usage',
     tag: 'Service',
   },
+  'GET /api/billing/cn/options': {
+    summary: 'Read the RMB plan prices',
+    description: 'One-time Alipay / WeChat Pay periods through Xiaodou.',
+    tag: 'Service',
+  },
+  'POST /api/billing/cn/checkout': { summary: 'Start an RMB payment', tag: 'Service' },
+  'GET /api/billing/cn/orders/{outTradeNo}': { summary: 'Read an RMB order', tag: 'Service' },
+  'POST /api/billing/cn/webhook': {
+    summary: 'Receive a Xiaodou payment event',
+    description: 'The RSA signature over the raw body is the credential.',
+    tag: 'Service',
+    auth: 'none',
+  },
   'GET /api/billing/prices': {
     summary: 'Read the plan prices',
     description: 'Public. The amounts Paddle charges, for display only.',

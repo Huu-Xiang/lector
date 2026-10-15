@@ -18,6 +18,7 @@ import {
 } from '../lib/billing';
 import { isBillingExempt, isSuspended } from '../lib/account-flags';
 import { entitlements, type EntitlementsEngine } from '../lib/entitlements';
+import { activeGrant } from '../lib/plan-grants';
 import {
   makePaddleBillingOperations,
   PaddleBillingError,
@@ -105,6 +106,7 @@ export function makeBillingRoutes(
     return c.json({
       plan: resolved.plan,
       byok: resolved.byok,
+      grant: activeGrant(userId),
       limits: resolved.limits,
       usage: {
         journalWordsPerMonth: engine.getUsage(userId, 'journalWordsPerMonth', periods),

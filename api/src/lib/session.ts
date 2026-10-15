@@ -56,6 +56,8 @@ export function makeSessionMiddleware(authRequired: boolean, engine: () => AuthE
     if (c.req.path === '/api/billing/webhook') return next();
     // Public price list for the pricing page; it holds no account data.
     if (c.req.path === '/api/billing/prices') return next();
+    // Xiaodou payment events: verified by RSA signature in routes/billing-cn.ts.
+    if (c.req.path === '/api/billing/cn/webhook') return next();
     if (c.req.path === '/api/email/unsubscribe') return next();
 
     // Per-user PAT (#218): defer to the PAT middleware mounted right after
