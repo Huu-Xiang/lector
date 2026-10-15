@@ -4,6 +4,7 @@ import { streamText } from 'hono/streaming';
 import {
   completeJson,
   getProvider,
+  managedPhraseUsesCheapModel,
   type LLMProvider,
   type LLMTask,
   type ProviderAccessOptions,
@@ -495,7 +496,14 @@ export function makeTranslateRoutes({
           messages: [
             {
               role: 'user',
-              content: buildPhrasePrompt(langName, spelreelsSection, word, sentence, nativeName),
+              content: buildPhrasePrompt(
+                langName,
+                spelreelsSection,
+                word,
+                sentence,
+                nativeName,
+                !reservation.byok && managedPhraseUsesCheapModel(),
+              ),
             },
           ],
           maxTokens: 1500,

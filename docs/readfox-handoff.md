@@ -37,7 +37,7 @@ A public, multi-user language-reading app at https://readfox.app. It is a self-m
 1. On-device dictionary (`/api/dictionary/lookup`). Free. Meanings are English.
 2. If the own language is not English, `/api/translate/localize` translates those meanings once and stores them in `shared_entry_cache`. It does not use the monthly allowance. A burst limit applies.
 3. If the dictionary has no entry, `/api/translate/gloss` streams a short AI meaning. It uses the monthly "word translation" allowance unless `shared_gloss_cache` has the answer.
-4. "Enrich" and phrase translation use the "detailed AI answers" allowance.
+4. "Enrich" and phrase translation use the "detailed AI answers" allowance. When `OPENAI_COMPAT_PHRASE_RICH_MODEL` is set, phrase translation runs on that cheaper model, and its prompt asks for no idiom origins (small models invent them).
 
 The plan for any language pair, English dictionary and example sentences is in `docs/lookup-languages-plan.md`.
 

@@ -201,6 +201,29 @@ describe('translation input boundaries', () => {
     expect(engine.getUsage('local', 'contextTranslationsPerDay')).toBe(0);
   });
 
+  test('a cheaper managed phrase model gets a prompt without idiom origins', async () => {
+    const previous = process.env.OPENAI_COMPAT_PHRASE_RICH_MODEL;
+    try {
+      const engine = makeEngine({
+        now: () => new Date('2026-07-15T12:00:00Z'),
+        compedPlan: 'cloud',
+      });
+      const { app, provider } = makeApp({ engine });
+
+      delete process.env.OPENAI_COMPAT_PHRASE_RICH_MODEL;
+      await post(app, '/', { word: 'goeie dag', type: 'phrase' });
+      process.env.OPENAI_COMPAT_PHRASE_RICH_MODEL = 'cheap-model';
+      await post(app, '/', { word: 'goeie dag', type: 'phrase' });
+
+      const [full, cheap] = provider.calls.map((call) => call.messages[0].content);
+      expect(full).not.toContain('Do not explain where an expression comes from');
+      expect(cheap).toContain('Do not explain where an expression comes from');
+    } finally {
+      if (previous === undefined) delete process.env.OPENAI_COMPAT_PHRASE_RICH_MODEL;
+      else process.env.OPENAI_COMPAT_PHRASE_RICH_MODEL = previous;
+    }
+  });
+
   test('rejects an oversized raw body before parsing, quota, or provider work', async () => {
     const engine = makeEngine({ now: () => new Date('2026-07-15T12:00:00Z') });
     const { app, provider } = makeApp({ engine });

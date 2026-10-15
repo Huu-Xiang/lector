@@ -134,12 +134,17 @@ Backwards-compat fields the server adds (do NOT include these yourself — serve
  * benefit from the orthography/register rules, and phrases are looked up far
  * less often than single words, so the extra tokens are an acceptable cost here.
  */
+// Small models tend to invent the history of an idiom.
+const NO_ORIGINS =
+  '\n\nDo not explain where an expression comes from or its history. In idiomaticMeaning, say only what it means and when it is used.';
+
 export function buildPhrasePrompt(
   langName: string,
   spelreelsSection: string,
   word: string,
   sentence: string,
   nativeName = 'English',
+  omitOrigins = false,
 ): string {
   return `You are a ${langName} to ${nativeName} translator with deep knowledge of ${langName} orthography, idiom, and register.
 
@@ -165,5 +170,5 @@ Required fields: translation. All other fields are optional — only include the
 - Include usageNotes when the phrase carries register / tone / cultural baggage the learner couldn't infer from the dictionary.
 - Include register if you're confident; omit if neutral or unclear.
 
-Be specific and concrete in idiomaticMeaning and usageNotes — avoid vague phrases like 'commonly used' or 'has a special meaning'.${writeIn(nativeName)}`;
+Be specific and concrete in idiomaticMeaning and usageNotes — avoid vague phrases like 'commonly used' or 'has a special meaning'.${omitOrigins ? NO_ORIGINS : ''}${writeIn(nativeName)}`;
 }

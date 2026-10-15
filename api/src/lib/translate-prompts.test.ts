@@ -93,6 +93,14 @@ describe('buildPhrasePrompt (keeps spelreels for af)', () => {
     const prompt = buildPhrasePrompt('German', '', 'der Apfel', SENTENCE);
     expect(prompt).not.toContain(SPELREELS_MARKER);
   });
+
+  test('asks a cheaper model not to explain idiom origins', () => {
+    const marker = 'Do not explain where an expression comes from';
+    expect(buildPhrasePrompt('German', '', 'der Apfel', SENTENCE)).not.toContain(marker);
+    expect(buildPhrasePrompt('German', '', 'der Apfel', SENTENCE, 'English', true)).toContain(
+      marker,
+    );
+  });
 });
 
 describe('native language in prompts', () => {
