@@ -73,7 +73,9 @@ function addMonths(start: Date, months: number): Date {
 export function grantPlan(args: {
   userId: string;
   plan: GrantPlan;
-  months: number;
+  /** Length of the period: months, or days when `days` is given. */
+  months?: number;
+  days?: number;
   source: string;
   ref: string;
   now?: Date;
@@ -95,7 +97,10 @@ export function grantPlan(args: {
     id: randomUUID(),
     plan: args.plan,
     startsAt: start.toISOString(),
-    endsAt: addMonths(start, args.months).toISOString(),
+    endsAt: (args.days
+      ? new Date(start.getTime() + args.days * 86_400_000)
+      : addMonths(start, args.months ?? 1)
+    ).toISOString(),
     source: args.source,
     ref: args.ref,
   };

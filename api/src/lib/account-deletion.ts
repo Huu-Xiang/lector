@@ -48,6 +48,7 @@ export const ERASURE_TABLES = [
   'billing_subscriptions',
   'plan_grants',
   'cn_orders',
+  'redeem_uses',
   'admin_account_flags',
   'twoFactor',
   'email_sends',

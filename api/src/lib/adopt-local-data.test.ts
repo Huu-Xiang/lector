@@ -249,7 +249,8 @@ describe('TENANT_TABLES ratchet', () => {
   //     account userId; a migrating self-hoster's 'local' user has none, and
   //     suspension must not travel with adopted data.
   //   - email_sends: cloud lifecycle mail log (#558). Self-host never writes it.
-  //   - plan_grants / cn_orders: Readfox paid periods and RMB orders, cloud-only.
+  //   - plan_grants / cn_orders / redeem_uses: Readfox paid periods, RMB orders
+  //     and code redemptions, cloud-only.
   // Subtracted here so the assertion stays meaningful even on a DB that has
   // them (a fresh getDb() schema omits Better Auth's, but not billing's).
   const NON_TENANT_USERID_TABLES = new Set([
@@ -261,6 +262,7 @@ describe('TENANT_TABLES ratchet', () => {
     'email_sends',
     'plan_grants',
     'cn_orders',
+    'redeem_uses',
   ]);
 
   test('every table with a userId column is covered by adoption', () => {

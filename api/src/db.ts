@@ -324,6 +324,36 @@ function getDb(): Database {
     );
     CREATE INDEX IF NOT EXISTS idx_cn_orders_user ON cn_orders(userId, createdAt);
 
+    -- Readfox redeem codes: a campaign sets the tier, days and limits; its
+    -- codes are either one shared word or a batch of single-use codes.
+    CREATE TABLE IF NOT EXISTS redeem_campaigns (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      plan TEXT NOT NULL,
+      days INTEGER NOT NULL,
+      perUserLimit INTEGER NOT NULL DEFAULT 1,
+      totalLimit INTEGER,
+      expiresAt TEXT,
+      active INTEGER NOT NULL DEFAULT 1,
+      createdAt TEXT NOT NULL
+    );
+    CREATE TABLE IF NOT EXISTS redeem_codes (
+      code TEXT PRIMARY KEY,
+      campaignId TEXT NOT NULL,
+      maxUses INTEGER,
+      uses INTEGER NOT NULL DEFAULT 0,
+      createdAt TEXT NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS idx_redeem_codes_campaign ON redeem_codes(campaignId);
+    CREATE TABLE IF NOT EXISTS redeem_uses (
+      id TEXT PRIMARY KEY,
+      code TEXT NOT NULL,
+      campaignId TEXT NOT NULL,
+      userId TEXT NOT NULL,
+      at TEXT NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS idx_redeem_uses_user ON redeem_uses(userId, campaignId);
+
     -- Admin support flags (#221): manual per-account state the operator sets
     -- from the admin dashboard. Distinct from the Paddle billing mirror (that
     -- reflects Paddle; these are our own operator actions):

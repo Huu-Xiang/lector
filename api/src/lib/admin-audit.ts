@@ -21,7 +21,8 @@ export type AdminAction =
   | 'export'
   | 'impersonate_start'
   | 'impersonate_stop'
-  | 'reveal_email';
+  | 'reveal_email'
+  | 'redeem_campaign';
 
 export interface AuditEntry {
   actorUserId: string;

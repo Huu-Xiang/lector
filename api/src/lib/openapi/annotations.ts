@@ -2852,6 +2852,17 @@ const internalOps: Record<string, OperationDoc> = {
     summary: 'Read the plan limits and the usage',
     tag: 'Service',
   },
+  'POST /api/redeem': { summary: 'Redeem a code for a paid plan', tag: 'Service' },
+  'GET /api/admin/redeem/campaigns': { summary: 'List redeem-code campaigns', tag: 'Service' },
+  'POST /api/admin/redeem/campaigns': { summary: 'Create a redeem-code campaign', tag: 'Service' },
+  'GET /api/admin/redeem/campaigns/{id}/codes': {
+    summary: "List a campaign's codes",
+    tag: 'Service',
+  },
+  'POST /api/admin/redeem/campaigns/{id}/active': {
+    summary: 'Turn a campaign on or off',
+    tag: 'Service',
+  },
   'GET /api/billing/cn/options': {
     summary: 'Read the RMB plan prices',
     description: 'One-time Alipay / WeChat Pay periods through Xiaodou.',

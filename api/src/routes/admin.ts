@@ -33,6 +33,13 @@ import {
   getUserEmail,
 } from '../lib/billing';
 import { recordAdminAction, recentAuditLog, type AdminAction } from '../lib/admin-audit';
+import {
+  campaignCodes,
+  createCampaign,
+  listCampaigns,
+  normalizeCode,
+  setCampaignActive,
+} from '../lib/redeem';
 import { maskEmail } from '../lib/mask-email';
 import { stopImpersonation } from '../lib/impersonation';
 import { getAuthEngine } from '../lib/accounts';
@@ -901,6 +908,89 @@ export function makeAdminRoutes(
       })),
     }),
   );
+
+  // Redeem-code campaigns (Readfox). A campaign is either one shared code
+  // word or a batch of single-use codes; see lib/redeem.ts for the rules.
+  app.get('/redeem/campaigns', (c) => c.json({ campaigns: listCampaigns() }));
+
+  app.post('/redeem/campaigns', async (c) => {
+    const body = (await c.req.json().catch(() => ({}))) as Record<string, unknown>;
+    const name = typeof body.name === 'string' ? body.name.trim() : '';
+    const plan = body.plan;
+    const days = Number(body.days);
+    const perUserLimit = Number(body.perUserLimit ?? 1);
+    const totalLimit =
+      body.totalLimit === null || body.totalLimit === undefined || body.totalLimit === ''
+        ? null
+        : Number(body.totalLimit);
+    const expiresAt =
+      typeof body.expiresAt === 'string' && body.expiresAt ? new Date(body.expiresAt) : null;
+    const mode = body.mode;
+    if (!name || name.length > 100) return c.json({ error: 'name is required' }, 400);
+    if (plan !== 'cloud' && plan !== 'plus' && plan !== 'max') {
+      return c.json({ error: "plan must be 'cloud', 'plus' or 'max'" }, 400);
+    }
+    if (!Number.isInteger(days) || days < 1 || days > 3660) {
+      return c.json({ error: 'days must be 1–3660' }, 400);
+    }
+    if (!Number.isInteger(perUserLimit) || perUserLimit < 1) {
+      return c.json({ error: 'perUserLimit must be at least 1' }, 400);
+    }
+    if (totalLimit !== null && (!Number.isInteger(totalLimit) || totalLimit < 1)) {
+      return c.json({ error: 'totalLimit must be empty or at least 1' }, 400);
+    }
+    if (expiresAt && Number.isNaN(expiresAt.getTime())) {
+      return c.json({ error: 'expiresAt is not a date' }, 400);
+    }
+    let codes: Parameters<typeof createCampaign>[0]['codes'];
+    if (mode === 'shared') {
+      const code = typeof body.code === 'string' ? normalizeCode(body.code) : '';
+      if (!/^[A-Z0-9]{4,32}$/.test(code)) {
+        return c.json({ error: 'code must be 4–32 letters or digits' }, 400);
+      }
+      if (db.prepare('SELECT 1 FROM redeem_codes WHERE code = ?').get(code)) {
+        return c.json({ error: 'that code already exists' }, 409);
+      }
+      codes = { mode: 'shared', code };
+    } else if (mode === 'batch') {
+      const count = Number(body.count);
+      if (!Number.isInteger(count) || count < 1 || count > 1000) {
+        return c.json({ error: 'count must be 1–1000' }, 400);
+      }
+      const prefix = typeof body.prefix === 'string' ? normalizeCode(body.prefix) : '';
+      if (prefix && !/^[A-Z0-9]{1,8}$/.test(prefix)) {
+        return c.json({ error: 'prefix must be up to 8 letters or digits' }, 400);
+      }
+      codes = { mode: 'batch', count, prefix };
+    } else {
+      return c.json({ error: "mode must be 'shared' or 'batch'" }, 400);
+    }
+    const created = createCampaign({
+      name,
+      plan,
+      days,
+      perUserLimit,
+      totalLimit,
+      expiresAt: expiresAt ? expiresAt.toISOString() : null,
+      codes,
+    });
+    audit(c, 'redeem_campaign', created.campaign.id, null, `${name}: ${plan} ${days}d`);
+    return c.json(created, 201);
+  });
+
+  app.get('/redeem/campaigns/:id/codes', (c) =>
+    c.json({ codes: campaignCodes(c.req.param('id')) }),
+  );
+
+  app.post('/redeem/campaigns/:id/active', async (c) => {
+    const body = (await c.req.json().catch(() => ({}))) as { active?: unknown };
+    if (typeof body.active !== 'boolean')
+      return c.json({ error: 'active must be true/false' }, 400);
+    if (!setCampaignActive(c.req.param('id'), body.active)) {
+      return c.json({ error: 'Campaign not found' }, 404);
+    }
+    return c.json({ id: c.req.param('id'), active: body.active });
+  });
 
   return app;
 }
