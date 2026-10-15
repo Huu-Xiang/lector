@@ -552,6 +552,14 @@ html {
   background-color: color-mix(in srgb, var(--clay) 22%, transparent);
 }
 
+/* Native text selection inside the reader matches the phrase highlight, so a
+   mouse drag never shows the browser's blue selection next to WordCell's own
+   highlight. */
+.reader-text ::selection {
+  background-color: color-mix(in srgb, var(--clay) 22%, transparent);
+  color: inherit;
+}
+
 @media (hover: none) and (pointer: coarse) {
   /* The long-press belongs to the phrase gesture, not to the iOS callout. This
      covers every word chip, so the settings preview and listen-along drop the

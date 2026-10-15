@@ -84,7 +84,7 @@ function TranscriptReader({
       // lesson's language, not the interface language.
       lang={pack.script.bcp47}
       dir={pack.script.direction}
-      className={`mx-auto max-w-[46em] px-4 py-6 text-foreground sm:px-8 sm:py-8 ${readerWrapClass(pack)}`}
+      className={`reader-text mx-auto max-w-[46em] px-4 py-6 text-foreground sm:px-8 sm:py-8 ${readerWrapClass(pack)}`}
       // Same typography seam as the markdown article (#570): publish the custom
       // properties here and every cue below inherits them.
       style={{

@@ -23,7 +23,9 @@ import type { ActiveReaderWord, ReaderArticleProps } from './types';
 export type { ActiveReaderWord } from './types';
 
 export interface ReaderBlockProps {
-  as: 'p' | 'li';
+  as: 'p' | 'li' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+  /** Tailwind classes for the rendered tag; p/li keep their own fixed look. */
+  className?: string;
   children: ReactNode;
   blockId: number;
   contentVersion: string;
@@ -65,6 +67,7 @@ function findSentence(element: HTMLElement, pack: LanguageConfig): string {
 export function readerBlockPropsEqual(previous: ReaderBlockProps, next: ReaderBlockProps): boolean {
   if (
     previous.as !== next.as ||
+    previous.className !== next.className ||
     previous.blockId !== next.blockId ||
     previous.contentVersion !== next.contentVersion ||
     previous.pack.code !== next.pack.code ||
@@ -108,6 +111,7 @@ export function readerBlockPropsEqual(previous: ReaderBlockProps, next: ReaderBl
 
 const ReaderBlock = memo(function ReaderBlock({
   as: Tag,
+  className,
   children,
   blockId,
   pack,
@@ -192,12 +196,10 @@ const ReaderBlock = memo(function ReaderBlock({
   const lineHeight = annotated
     ? 'var(--reader-line-height-annotated)'
     : 'var(--reader-line-height)';
-  return Tag === 'p' ? (
-    <p className="my-5" style={{ lineHeight }}>
+  return (
+    <Tag className={className} style={{ lineHeight }}>
       {content}
-    </p>
-  ) : (
-    <li style={{ lineHeight }}>{content}</li>
+    </Tag>
   );
 }, readerBlockPropsEqual);
 
@@ -240,7 +242,7 @@ function ReaderArticle({
       // text with Chinese forms.
       lang={pack.script.bcp47}
       dir={pack.script.direction}
-      className={`mx-auto max-w-[38em] px-4 py-8 text-foreground sm:px-8 sm:py-16 print:px-0 print:py-0 ${wrapClass}`}
+      className={`reader-text mx-auto max-w-[38em] px-4 py-8 text-foreground sm:px-8 sm:py-16 print:px-0 print:py-0 ${wrapClass}`}
       // The typography reaches the words by inheritance (#570). The blocks below
       // and WordCell read the custom properties, so no component has to pass the
       // resolved style into the memoized block props.
@@ -254,17 +256,73 @@ function ReaderArticle({
       <ReactMarkdown
         remarkPlugins={[remarkBreaks]}
         components={{
-          h1: ({ children }) => (
-            <h1 className="mt-8 mb-4 font-sans text-3xl font-extrabold first:mt-0">{children}</h1>
+          h1: ({ node, children }) => (
+            <ReaderBlock
+              as="h1"
+              className="mt-8 mb-4 font-sans text-3xl font-extrabold first:mt-0"
+              blockId={node?.position?.start?.offset ?? 0}
+              {...blockProps}
+            >
+              {children}
+            </ReaderBlock>
           ),
-          h2: ({ children }) => (
-            <h2 className="mt-8 mb-3 font-sans text-2xl font-bold first:mt-0">{children}</h2>
+          h2: ({ node, children }) => (
+            <ReaderBlock
+              as="h2"
+              className="mt-8 mb-3 font-sans text-2xl font-bold first:mt-0"
+              blockId={node?.position?.start?.offset ?? 0}
+              {...blockProps}
+            >
+              {children}
+            </ReaderBlock>
           ),
-          h3: ({ children }) => (
-            <h3 className="mt-6 mb-2 font-sans text-xl font-bold first:mt-0">{children}</h3>
+          h3: ({ node, children }) => (
+            <ReaderBlock
+              as="h3"
+              className="mt-6 mb-2 font-sans text-xl font-bold first:mt-0"
+              blockId={node?.position?.start?.offset ?? 0}
+              {...blockProps}
+            >
+              {children}
+            </ReaderBlock>
+          ),
+          h4: ({ node, children }) => (
+            <ReaderBlock
+              as="h4"
+              className="mt-5 mb-2 font-sans text-lg font-bold first:mt-0"
+              blockId={node?.position?.start?.offset ?? 0}
+              {...blockProps}
+            >
+              {children}
+            </ReaderBlock>
+          ),
+          h5: ({ node, children }) => (
+            <ReaderBlock
+              as="h5"
+              className="mt-5 mb-2 font-sans text-base font-bold first:mt-0"
+              blockId={node?.position?.start?.offset ?? 0}
+              {...blockProps}
+            >
+              {children}
+            </ReaderBlock>
+          ),
+          h6: ({ node, children }) => (
+            <ReaderBlock
+              as="h6"
+              className="mt-5 mb-2 font-sans text-sm font-bold uppercase first:mt-0"
+              blockId={node?.position?.start?.offset ?? 0}
+              {...blockProps}
+            >
+              {children}
+            </ReaderBlock>
           ),
           p: ({ node, children }) => (
-            <ReaderBlock as="p" blockId={node?.position?.start?.offset ?? 0} {...blockProps}>
+            <ReaderBlock
+              as="p"
+              className="my-5"
+              blockId={node?.position?.start?.offset ?? 0}
+              {...blockProps}
+            >
               {children}
             </ReaderBlock>
           ),

@@ -11,22 +11,29 @@ import {
   foldWord,
   getLanguageConfig,
   isValidLanguageCode,
+  lookupByVocabKeys,
   makeWordSegmentation,
   splitSentences,
   tokenize,
 } from '@/lib/languages';
-import { parseSegmentWords, readableRangeText, readableText } from './utils';
+import { parseSegmentWords, readableRangeText, readableText, splitWords } from './utils';
 import { usePhraseTouchSelection } from './usePhraseTouchSelection';
 import { useActiveLanguage, useProseStyleSettings } from '@/utils/hooks';
 import { resolveProseStyle } from '@/lib/prose-style';
 import { MarkdownReaderProps } from './types';
 import { Button } from '@/components/ui/button';
+import WordCell from '@/components/WordCell';
 import ReaderArticle, { type ActiveReaderWord } from './ReaderArticle';
 import { ANNOTATION_MODES, type AnnotationMode } from './annotation';
 import { SETTINGS_KEYS } from '@/app/settings/constants';
 import TranscriptReader from './TranscriptReader';
 import YouTubePlayer, { type SeekTarget } from '@/components/YouTubePlayer';
 import type { TranscriptSegment, YouTubeSourceMeta } from '@/types';
+
+// Lesson block ids are markdown source offsets (>= 0) or transcript segment
+// indices (>= 0); -1 marks the title, which sits outside both and can never
+// collide with either when matching `activeWord`.
+const TITLE_BLOCK_ID = -1;
 
 export default function MarkdownReader({
   lesson,
@@ -59,6 +66,12 @@ export default function MarkdownReader({
   const segmentation = useMemo(
     () => makeWordSegmentation(parseSegmentWords(lesson.segmentWords)),
     [lesson.segmentWords],
+  );
+  // The title's words, tokenized the same way the body is, so each one can
+  // reuse WordCell for lookup instead of rendering as plain text.
+  const titleParts = useMemo(
+    () => splitWords(lesson.title, pack, segmentation),
+    [lesson.title, pack, segmentation],
   );
   // Whether this language has pronunciations worth printing above the words
   // (#289 4.4). Opt-in per pack: a pack whose dictionary has sparse readings
@@ -369,8 +382,37 @@ export default function MarkdownReader({
           <span className="hidden sm:inline">{t('back')}</span>
         </button>
 
-        <h1 className="mx-2 flex-1 truncate text-center text-sm font-medium text-foreground sm:text-lg print:mx-0 print:text-left print:text-2xl print:font-bold">
-          {lesson.title}
+        <h1 className="reader-text mx-2 flex-1 truncate text-center text-sm font-medium text-foreground sm:text-lg print:mx-0 print:text-left print:text-2xl print:font-bold">
+          {(() => {
+            let wordIndex = -1;
+            return titleParts.map((part, index) => {
+              if (!part.isWord) {
+                return (
+                  <span key={index} data-leaf="">
+                    {part.text}
+                  </span>
+                );
+              }
+              wordIndex += 1;
+              const thisIndex = wordIndex;
+              const state = lookupByVocabKeys(knownWordsMap, part.text, pack);
+              return (
+                <WordCell
+                  key={index}
+                  text={part.text}
+                  state={state}
+                  isActive={
+                    activeWord?.blockId === TITLE_BLOCK_ID && activeWord.wordIndex === thisIndex
+                  }
+                  onActivate={(text) => {
+                    clearPhraseHighlight();
+                    setActiveWord({ blockId: TITLE_BLOCK_ID, wordIndex: thisIndex });
+                    onWordClick(text, lesson.title.trim());
+                  }}
+                />
+              );
+            });
+          })()}
         </h1>
 
         {isEditing ? (
