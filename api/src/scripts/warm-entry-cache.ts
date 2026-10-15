@@ -2,14 +2,17 @@
  * Fill the shared entry cache ahead of time with Chinese meanings for common
  * dictionary words.
  *
- *   bun run src/scripts/warm-entry-cache.ts translate <in.json> <out.json> [--task word-gloss|context-rich] [--concurrency 4]
- *   bun run src/scripts/warm-entry-cache.ts import <out.json>... [--language fr] [--native zh-CN]
+ *   bun run src/scripts/warm-entry-cache.ts translate <in.json> <out.jsonl> [--task word-gloss|context-rich] [--concurrency 4]
+ *   bun run src/scripts/warm-entry-cache.ts import <out.jsonl>... [--language fr] [--native zh-CN]
  *
  * `translate` asks the deployment's managed model, one word per request, and
- * writes only answers that pass the checks. Words that fail go to <out>.failed.json.
+ * appends only answers that pass the checks to <out.jsonl> as they arrive. Put the
+ * file on the data volume: a deploy recreates the container and clears /tmp.
+ * Running it again skips finished words. Words that fail go to <out>.failed.jsonl.
  * Input items: { word, senses: ["pos: English gloss", ...], freedict?, cfdict_candidates? }.
  */
 import fs from 'fs';
+import path from 'path';
 import { completeJson, getProvider, type LLMTask } from '../lib/llm';
 import { sharedEntryCache } from '../lib/entry-cache';
 
@@ -70,21 +73,37 @@ function userPrompt(item: Item, feedback: string | null): string {
   }`;
 }
 
+function readRows(file: string): Array<{ word: string; glosses: string[] }> {
+  if (!fs.existsSync(file)) return [];
+  const text = fs.readFileSync(file, 'utf8').trim();
+  if (!text) return [];
+  if (text.startsWith('[')) return JSON.parse(text);
+  return text.split('\n').map((line) => JSON.parse(line));
+}
+
+/**
+ * Appends each passing answer to `outFile` (one JSON object per line) as soon as it
+ * arrives, and skips words already in the file, so an interrupted run resumes.
+ */
 async function translate(inFile: string, outFile: string, task: LLMTask, concurrency: number) {
   const items = JSON.parse(fs.readFileSync(inFile, 'utf8')) as Item[];
+  fs.mkdirSync(path.dirname(path.resolve(outFile)), { recursive: true });
+  const failedFile = outFile.replace(/\.jsonl?$/, '') + '.failed.jsonl';
+  const done = new Set(readRows(outFile).map((row) => row.word));
+  const todo = items.filter((item) => !done.has(item.word));
   const provider = getProvider('local', { byok: false });
-  const ok: Array<{ word: string; glosses: string[] }> = [];
-  const failed: Array<{ word: string; reason: string }> = [];
   let next = 0;
+  let passed = 0;
+  let failed = 0;
 
   async function worker() {
     for (;;) {
       const index = next++;
-      if (index >= items.length) return;
-      const item = items[index];
+      if (index >= todo.length) return;
+      const item = todo[index];
       let feedback: string | null = null;
-      let done = false;
-      for (let attempt = 0; attempt < 3 && !done; attempt++) {
+      let ok = false;
+      for (let attempt = 0; attempt < 3 && !ok; attempt++) {
         try {
           const result = await completeJson<{ glosses?: unknown }>(provider, {
             messages: [{ role: 'user', content: userPrompt(item, feedback) }],
@@ -93,41 +112,35 @@ async function translate(inFile: string, outFile: string, task: LLMTask, concurr
           });
           feedback = checkAnswer(item, result.glosses);
           if (!feedback) {
-            ok.push({
-              word: item.word,
-              glosses: (result.glosses as string[]).map((g) => g.trim()),
-            });
-            done = true;
+            const glosses = (result.glosses as string[]).map((g) => g.trim());
+            fs.appendFileSync(outFile, JSON.stringify({ word: item.word, glosses }) + '\n');
+            ok = true;
           }
         } catch (error) {
           feedback = error instanceof Error ? error.message.slice(0, 80) : 'request failed';
         }
       }
-      if (!done) failed.push({ word: item.word, reason: feedback ?? 'unknown' });
-      const finished = ok.length + failed.length;
-      if (finished % 250 === 0)
-        console.log(`progress ${finished}/${items.length} (failed ${failed.length})`);
+      if (ok) passed++;
+      else {
+        failed++;
+        fs.appendFileSync(failedFile, JSON.stringify({ word: item.word, reason: feedback }) + '\n');
+      }
+      if ((passed + failed) % 250 === 0) {
+        console.log(`progress ${passed + failed}/${todo.length} (failed ${failed})`);
+      }
     }
   }
 
   await Promise.all(Array.from({ length: concurrency }, worker));
-  const order = new Map(items.map((item, i) => [item.word, i]));
-  ok.sort((a, b) => order.get(a.word)! - order.get(b.word)!);
-  fs.writeFileSync(outFile, JSON.stringify(ok));
-  fs.writeFileSync(
-    outFile.replace(/\.json$/, '') + '.failed.json',
-    JSON.stringify(failed, null, 1),
+  console.log(
+    `translated ${passed} of ${todo.length} new words (${done.size} already done); failed ${failed}`,
   );
-  console.log(`translated ${ok.length} of ${items.length}; failed ${failed.length}`);
 }
 
 function importFiles(files: string[], language: string, native: string) {
   let count = 0;
   for (const file of files) {
-    for (const row of JSON.parse(fs.readFileSync(file, 'utf8')) as Array<{
-      word: string;
-      glosses: string[];
-    }>) {
+    for (const row of readRows(file)) {
       sharedEntryCache.put(language, native, row.word, row.glosses);
       count++;
     }
