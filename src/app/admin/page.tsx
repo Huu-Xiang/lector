@@ -26,6 +26,7 @@ import {
   type AdminAuditEntry,
 } from '@/lib/admin-client';
 import { planName } from '@/lib/plan-names';
+import RedeemCampaigns from './RedeemCampaigns';
 
 function formatBytes(n: number): string {
   if (n < 1024) return `${n} B`;
@@ -683,6 +684,8 @@ export default function AdminPage() {
           </tbody>
         </table>
       </div>
+
+      <RedeemCampaigns />
 
       <section className="mt-8">
         <h2 className="mb-3 text-sm font-semibold tracking-wide text-muted-foreground uppercase">

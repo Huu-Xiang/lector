@@ -258,3 +258,60 @@ export async function exportUser(id: string, email: string): Promise<void> {
   a.remove();
   URL.revokeObjectURL(url);
 }
+
+export interface RedeemCampaignRow {
+  id: string;
+  name: string;
+  plan: 'cloud' | 'plus' | 'max';
+  days: number;
+  perUserLimit: number;
+  totalLimit: number | null;
+  expiresAt: string | null;
+  active: number;
+  createdAt: string;
+  codes: number;
+  uses: number;
+}
+
+export async function getRedeemCampaigns(): Promise<RedeemCampaignRow[]> {
+  const res = await apiFetch('/api/admin/redeem/campaigns');
+  if (!res.ok) throw new Error(`campaigns failed (${res.status})`);
+  return ((await res.json()) as { campaigns: RedeemCampaignRow[] }).campaigns;
+}
+
+export async function createRedeemCampaign(input: {
+  name: string;
+  plan: 'cloud' | 'plus' | 'max';
+  days: number;
+  perUserLimit: number;
+  totalLimit: number | null;
+  expiresAt: string | null;
+  mode: 'shared' | 'batch';
+  code?: string;
+  count?: number;
+  prefix?: string;
+}): Promise<string[]> {
+  const res = await apiFetch('/api/admin/redeem/campaigns', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(input),
+  });
+  const body = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(body.error || `create failed (${res.status})`);
+  return (body as { codes: string[] }).codes;
+}
+
+export async function getRedeemCodes(id: string): Promise<Array<{ code: string; uses: number }>> {
+  const res = await apiFetch(`/api/admin/redeem/campaigns/${id}/codes`);
+  if (!res.ok) throw new Error(`codes failed (${res.status})`);
+  return ((await res.json()) as { codes: Array<{ code: string; uses: number }> }).codes;
+}
+
+export async function setRedeemCampaignActive(id: string, active: boolean): Promise<void> {
+  const res = await apiFetch(`/api/admin/redeem/campaigns/${id}/active`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ active }),
+  });
+  if (!res.ok) throw new Error(`update failed (${res.status})`);
+}

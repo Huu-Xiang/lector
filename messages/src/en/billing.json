@@ -14,8 +14,11 @@
       "phraseWords": "Select up to {count} words for one translation",
       "phraseUnlimited": "Select any length of text for one translation",
       "moreRoom": "Up to 50 collections and 1,000 lessons",
-      "unlimitedLibrary": "Unlimited collections and lessons"
-    }
+      "unlimitedLibrary": "Unlimited collections and lessons",
+      "byokPaid": "Use your own AI key if you want more"
+    },
+    "current": "Current plan",
+    "choose": "Choose {plan}"
   },
   "pricing": {
     "metaTitle": "Pricing – Readfox",

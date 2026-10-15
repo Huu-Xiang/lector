@@ -2,14 +2,24 @@ import Image from 'next/image';
 import Link from 'next/link';
 import LegalLinks from '@/components/LegalLinks';
 
-export function LegalShell({ title, children }: { title: string; children: React.ReactNode }) {
+export function LegalShell({
+  title,
+  children,
+  wide = false,
+}: {
+  title: string;
+  children: React.ReactNode;
+  wide?: boolean;
+}) {
   return (
     <div className="flex min-h-screen w-full flex-col items-center bg-background px-4 py-10">
       <Link href="/" className="mb-8 flex items-center gap-2" title="Readfox">
         <Image src="/logo.png" alt="Readfox" width={36} height={36} className="rounded" />
         <span className="text-xl font-extrabold tracking-tight text-foreground">Readfox</span>
       </Link>
-      <article className="w-full max-w-2xl space-y-5 text-sm leading-relaxed text-foreground">
+      <article
+        className={`w-full ${wide ? 'max-w-6xl' : 'max-w-2xl'} space-y-5 text-sm leading-relaxed text-foreground`}
+      >
         <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
         {children}
       </article>

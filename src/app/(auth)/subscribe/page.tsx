@@ -273,7 +273,6 @@ export default function SubscribePage() {
     tp('features.glosses', { count: free.glosses }),
     tp('features.detailed', { count: free.detailed }),
     tp('features.freeLibrary'),
-    tp('features.byok'),
     t('freeFeatures.export'),
   ];
 
@@ -481,6 +480,7 @@ export default function SubscribePage() {
                 ? tp('features.phraseWords', { count: allowance.phraseWords })
                 : tp('features.phraseUnlimited'),
               plan === 'cloud' ? tp('features.moreRoom') : tp('features.unlimitedLibrary'),
+              tp('features.byokPaid'),
             ];
             // Annual is the default action when both cycles exist.
             const primary = annual ?? monthly;

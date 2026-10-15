@@ -14,8 +14,11 @@
       "phraseWords": "一次最多选 {count} 个词翻译",
       "phraseUnlimited": "一次翻译的文字长度不限",
       "moreRoom": "最多 50 个合集、1,000 篇课文",
-      "unlimitedLibrary": "合集和课文数量不限"
-    }
+      "unlimitedLibrary": "合集和课文数量不限",
+      "byokPaid": "想用更多时，可以添加自己的 AI 密钥"
+    },
+    "current": "当前套餐",
+    "choose": "选择 {plan}"
   },
   "pricing": {
     "metaTitle": "价格 – Readfox",

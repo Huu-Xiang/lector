@@ -169,7 +169,7 @@
       }
     },
     "openTitle": "Open source, and your reading stays yours",
-    "openBody": "Readfox is open-source software (AGPL-3.0), built on the open-source reader Lector. AI features include a limited monthly allowance. We do not run advertising or analytics trackers. Read the <privacy>privacy policy</privacy> or <source>browse the source code</source>.",
+    "openBody": "Readfox is open-source software (AGPL-3.0), built on the open-source reader Lector. AI features include a limited monthly allowance. We do not run advertising or analytics trackers. Read the <privacy>privacy policy</privacy>.",
     "pricing": "Pricing"
   },
   "settings": {

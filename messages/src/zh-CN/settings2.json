@@ -30,7 +30,7 @@
       "loading": "正在加载你的套餐…",
       "ownKey": "自己的 AI 密钥",
       "lapsed": "你的付费订阅已结束，账户已转为免费版。你的课文、已保存的词汇、Anki 链接、历史记录和导出内容都还在。",
-      "freeIntro": "免费版保留完整的学习流程：入门课文和导入的课文、短语识别查词、已保存的词汇、练习、Anki 同步以及可携带的数据。",
+      "freeIntro": "免费版保留完整的学习流程：入门课文和导入的课文、短语识别查词、已保存的词汇、练习，以及可携带的数据。",
       "libraryAllowance": "书库额度：{collections} 个合集、{lessons} 篇课文，以及每月 {words} 个日记词数。付费套餐结束后，现有数据不会被删除。",
       "fairUse": "对于特别大的单篇文本和批量增长的已保存数据，我们设有宽松的合理使用保护措施。这些措施不会删除现有的学习数据，也不会阻止导出。",
       "byokActive": "你自己的 AI 密钥已启用，因此翻译和高级 AI 功能会使用你的服务商，而不是 Readfox 的托管额度。免费版的书库和日记限制仍然适用，朗读仍使用浏览器自带的语音。",
@@ -269,6 +269,24 @@
       "sending": "正在发送…",
       "confirm": "删除我的账户",
       "cancel": "取消"
+    },
+    "redeem": {
+      "open": "有兑换码？点此兑换",
+      "placeholder": "兑换码",
+      "submit": "兑换",
+      "redeeming": "正在兑换…",
+      "success": "兑换成功：{plan}，有效期至 {date}。",
+      "errors": {
+        "invalid_code": "兑换码无效。",
+        "expired": "兑换码已过期。",
+        "used_up": "兑换码已被用完。",
+        "already_redeemed": "你已经参加过这个活动了。",
+        "higher_plan_active": "你当前的套餐比这个兑换码的套餐高。",
+        "subscription_active": "你有自动续订的订阅，现在不能使用兑换码。",
+        "email_not_verified": "请先验证你的邮箱。",
+        "too_many_attempts": "输错次数太多，请一小时后再试。",
+        "generic": "兑换失败，请稍后再试。"
+      }
     }
   },
   "subscribe": {

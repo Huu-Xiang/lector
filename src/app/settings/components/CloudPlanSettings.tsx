@@ -19,6 +19,7 @@ import {
   invalidateEntitlementsCache,
   type ClientEntitlements,
 } from '@/lib/data-layer';
+import RedeemCode from './RedeemCode';
 
 type Translator = ReturnType<typeof useTranslations>;
 
@@ -372,6 +373,17 @@ export default function CloudPlanSettings() {
           {currentSubscription && !currentSubscription.canChange && (
             <p className="text-xs">{t('changesUnavailable')}</p>
           )}
+        </div>
+      )}
+
+      {entitlements && (
+        <div className="mt-4 flex justify-end" data-testid="plan-redeem">
+          <RedeemCode
+            onRedeemed={() => {
+              invalidateEntitlementsCache();
+              void getEntitlements().then((next) => next && setEntitlements(next));
+            }}
+          />
         </div>
       )}
     </section>

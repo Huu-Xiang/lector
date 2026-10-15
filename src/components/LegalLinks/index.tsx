@@ -31,14 +31,6 @@ export default function LegalLinks({
       <Link href="/about" className="hover:text-foreground hover:underline">
         {t('about')}
       </Link>
-      <a
-        href={SOURCE_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="hover:text-foreground hover:underline"
-      >
-        {t('source')}
-      </a>
     </>
   );
 

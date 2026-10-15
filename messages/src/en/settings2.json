@@ -30,7 +30,7 @@
       "loading": "Loading your plan…",
       "ownKey": "Own AI key",
       "lapsed": "Your paid subscription ended, so the account moved to Free. Your texts, saved vocabulary, Anki links, history, and exports are all still here.",
-      "freeIntro": "Free keeps the whole learning loop: starter and imported texts, phrase-aware lookups, saved vocabulary, practice, Anki sync, and portable data.",
+      "freeIntro": "Free keeps the whole reading loop: starter and imported texts, phrase-aware lookups, saved vocabulary, practice, and portable data.",
       "libraryAllowance": "Library allowance: {collections} collections, {lessons} lessons, and {words} journal words each month. Existing data is never deleted when a paid plan ends.",
       "fairUse": "Generous fair-use safeguards apply to unusually large individual texts and bulk saved-data growth. They do not remove existing learner data or block exports.",
       "byokActive": "Your own AI key is active, so translations and rich AI actions use your provider instead of Readfox's managed allowance. Free library and journal limits still apply, and audio stays on your browser voice.",
@@ -269,6 +269,24 @@
       "sending": "Sending…",
       "confirm": "Delete my account",
       "cancel": "Cancel"
+    },
+    "redeem": {
+      "open": "Have a code? Redeem it",
+      "placeholder": "Redeem code",
+      "submit": "Redeem",
+      "redeeming": "Redeeming…",
+      "success": "Code redeemed: {plan} until {date}.",
+      "errors": {
+        "invalid_code": "That code is not valid.",
+        "expired": "That code has expired.",
+        "used_up": "That code has been used up.",
+        "already_redeemed": "You have already used this offer.",
+        "higher_plan_active": "Your current plan is higher than this code's plan.",
+        "subscription_active": "You have a subscription that renews automatically, so codes cannot be used now.",
+        "email_not_verified": "Verify your email address first.",
+        "too_many_attempts": "Too many wrong codes. Try again in an hour.",
+        "generic": "The code could not be redeemed. Try again later."
+      }
     }
   },
   "subscribe": {

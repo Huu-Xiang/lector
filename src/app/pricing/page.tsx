@@ -11,7 +11,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function PricingPage() {
   const t = await getTranslations('pricing');
   return (
-    <LegalShell title={t('title')}>
+    <LegalShell title={t('title')} wide>
       <p className="text-muted-foreground">{t('intro')}</p>
       <PricingTiers />
       <p className="text-xs text-muted-foreground">{t('notes')}</p>

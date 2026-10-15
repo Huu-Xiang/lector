@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 import { BookOpen, Languages, Repeat, PenLine, Layers } from 'lucide-react';
-import LegalLinks, { SOURCE_URL } from '@/components/LegalLinks';
+import LegalLinks from '@/components/LegalLinks';
 import { LANGUAGES } from '@/lib/languages';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -110,16 +110,6 @@ export default async function LandingPage() {
                   <Link href="/privacy" className="underline">
                     {chunks}
                   </Link>
-                ),
-                source: (chunks) => (
-                  <a
-                    href={SOURCE_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="underline"
-                  >
-                    {chunks}
-                  </a>
                 ),
               })}
             </p>
