@@ -352,7 +352,9 @@ export function makeTranslateRoutes({
     const withGlosses = (glosses: string[]) =>
       c.json({ senses: source.map((sense, i) => ({ ...sense, gloss: glosses[i] })) });
 
-    const cached = entryCache?.get(lang, nativeCode, entry.word) ?? null;
+    // Inflected forms share the base word's senses, so they share its cache row.
+    const headword = entry.lemmaInfo?.stem ?? entry.word;
+    const cached = entryCache?.get(lang, nativeCode, headword) ?? null;
     if (cached && cached.length === source.length) return withGlosses(cached);
 
     // Not metered: a shared answer serves every later reader, so the total cost is
@@ -380,7 +382,7 @@ export function makeTranslateRoutes({
       if (!isCacheableGlosses(result.glosses, source.length)) {
         throw new Error('Localization returned an unexpected shape');
       }
-      if (!byok) entryCache?.put(lang, nativeCode, entry.word, result.glosses);
+      if (!byok) entryCache?.put(lang, nativeCode, headword, result.glosses);
       return withGlosses(result.glosses);
     } catch (error) {
       console.error('Localize error:', error);

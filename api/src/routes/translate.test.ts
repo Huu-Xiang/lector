@@ -647,6 +647,26 @@ describe('dictionary entry localization', () => {
     expect(provider.calls).toHaveLength(1);
   });
 
+  test('an inflected form reads and writes the base word cache row', async () => {
+    setNative('zh-CN');
+    const cache = new MemoryEntryCache();
+    const inflected = () => ({
+      ...entry,
+      word: 'chantait',
+      lemmaInfo: { stem: 'chanter', label: 'imperfect of' },
+    });
+    const { app, provider } = makeApp({
+      engine: makeEngine({ now }),
+      provider: chineseProvider(),
+      entryCache: cache,
+      lookupEntry: inflected,
+    });
+    await post(app, '/localize', { word: 'chantait', language: 'fr' });
+    expect([...cache.rows.keys()]).toEqual(['fr|zh-CN|chanter']);
+    await post(app, '/localize', { word: 'chantait', language: 'fr' });
+    expect(provider.calls).toHaveLength(1);
+  });
+
   test('does not use the monthly allowance, but a burst of new words is limited', async () => {
     setNative('zh-CN');
     const engine = makeEngine({ now, limits: { cloud: { wordGlossesPerMonth: 0 } } });
