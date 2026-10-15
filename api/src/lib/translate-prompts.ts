@@ -45,7 +45,7 @@ export function buildLocalizePrompt(
   return `You edit a bilingual dictionary. The ${langName} word "${word}" has ${glosses.length} English sense(s), given as a JSON array:
 ${JSON.stringify(glosses)}
 
-Translate each sense into ${nativeName}. Keep the same order and exactly ${glosses.length} items. Write short dictionary-style glosses that give the meaning, not a word-for-word copy. Translate notes such as "plural of foi" too. Keep proper nouns.
+Translate each sense into ${nativeName}. Keep the same order and exactly ${glosses.length} items. Write short dictionary-style equivalents (one to four words or a short phrase per meaning), the way a bilingual dictionary does. When an English sense is a long definition, give the ${nativeName} word or words a bilingual dictionary would give, not a ${nativeName} definition. Translate notes such as "plural of foi" too. Keep proper nouns.
 
 Reply with ONLY this JSON, with no other text: {"glosses": [${glosses.map(() => '"..."').join(', ')}]}`;
 }

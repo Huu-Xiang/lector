@@ -2,7 +2,7 @@
  * Fill the shared entry cache ahead of time with Chinese meanings for common
  * dictionary words.
  *
- *   bun run src/scripts/warm-entry-cache.ts translate <in.json> <out.jsonl> [--task word-gloss|context-rich] [--concurrency 4]
+ *   bun run src/scripts/warm-entry-cache.ts translate <in.json> <out.jsonl> [--pair fr-zh|en-fr] [--task word-gloss|context-rich] [--concurrency 4]
  *   bun run src/scripts/warm-entry-cache.ts import <out.jsonl>... [--language fr] [--native zh-CN]
  *
  * `translate` asks the deployment's managed model, one word per request, and
@@ -21,7 +21,12 @@ interface Item {
   senses: string[];
   freedict?: Array<{ pos: string; zh: string[] }>;
   cfdict_candidates?: string[];
+  /** Chinese meanings of the same word (ECDICT), used as a hint for en-fr. */
+  zh?: string[];
 }
+
+/** `fr-zh`: French words, Chinese meanings. `en-fr`: English words, French equivalents. */
+export type Pair = 'fr-zh' | 'en-fr';
 
 const ENGLISH_WORDS =
   /\b(the|of|and|to|used|with|for|before|is|from|letter|person|plural|singular|indicative|present|past|form|alternative|variant|spelling)\b/i;
@@ -35,12 +40,27 @@ export function problemWith(gloss: unknown): string | null {
   return null;
 }
 
-export function checkAnswer(item: Item, glosses: unknown): string | null {
+export function frenchProblemWith(gloss: unknown, englishSense: string): string | null {
+  if (typeof gloss !== 'string' || !gloss.trim()) return 'empty gloss';
+  if (gloss.length > 100) return 'gloss too long';
+  if (/[\u3040-\u30ff\u3100-\u312f\u4e00-\u9fff]/.test(gloss))
+    return 'Chinese or Japanese in gloss';
+  if (!/[a-zA-ZÀ-ÿ]/.test(gloss)) return 'no letters in gloss';
+  const plain = englishSense
+    .replace(/^[^:]*:\s*/, '')
+    .trim()
+    .toLowerCase();
+  if (plain.length > 25 && gloss.trim().toLowerCase() === plain) return 'English text copied';
+  return null;
+}
+
+export function checkAnswer(item: Item, glosses: unknown, pair: Pair = 'fr-zh'): string | null {
   if (!Array.isArray(glosses) || glosses.length !== item.senses.length) {
     return `expected ${item.senses.length} glosses`;
   }
-  for (const gloss of glosses) {
-    const problem = problemWith(gloss);
+  for (const [i, gloss] of glosses.entries()) {
+    const problem =
+      pair === 'en-fr' ? frenchProblemWith(gloss, item.senses[i]) : problemWith(gloss);
     if (problem) return `${problem}: ${String(gloss).slice(0, 40)}`;
   }
   const distinctSenses = new Set(item.senses.map((s) => s.replace(/^[^:]*:\s*/, ''))).size;
@@ -50,7 +70,7 @@ export function checkAnswer(item: Item, glosses: unknown): string | null {
   return null;
 }
 
-const RULES = `You translate dictionary meanings for a French dictionary used by Chinese learners of French.
+const RULES_FR_ZH = `You translate dictionary meanings for a French dictionary used by Chinese learners of French.
 For every English sense, write the Simplified Chinese gloss. Reply with ONLY JSON: {"glosses": ["<Chinese for sense 1>", ...]} with exactly one gloss per sense, in order.
 
 Rules:
@@ -61,14 +81,28 @@ Rules:
 5. "freedict" is a human translation of the French word (high trust): use it when it fits the sense. "cfdict_candidates" are noisy hints: use one only if it really matches that sense. Never invent a meaning that is not in the English sense. Name every meaning the English gloss lists.
 6. Prefer common, natural modern Mandarin. For a rare technical or historical sense, give a short plain Chinese explanation, not a sound-alike transliteration.`;
 
-function userPrompt(item: Item, feedback: string | null): string {
-  const payload = {
-    word: item.word,
-    senses: item.senses,
-    freedict: item.freedict ?? [],
-    cfdict_candidates: item.cfdict_candidates ?? [],
-  };
-  return `${RULES}\n\nInput:\n${JSON.stringify(payload, null, 1)}${
+const RULES_EN_FR = `You translate dictionary meanings for an English dictionary used by French learners of English.
+For every English sense, write the French equivalent. Reply with ONLY JSON: {"glosses": ["<French for sense 1>", ...]} with exactly one gloss per sense, in order.
+
+Rules:
+1. Give short French equivalents, the way a bilingual dictionary does: one to four French words or a short phrase per meaning, at most 60 characters. Separate near-synonyms with ", " and clearly different meanings with " ; ". Never write a French definition or an explanation, even when the English sense is a long definition: give the French word(s) a bilingual dictionary would give (for example "the wife or widow of a king" becomes "reine, épouse du roi").
+2. Different senses get different glosses that match their own English text. Do not repeat one gloss for all senses.
+3. Do not repeat the part-of-speech label. No Chinese, no English sentences, no examples. Put a verb in the infinitive, a noun with its usual article only when the gender is unclear.
+4. An inflected form ("plural of child", "past tense of go") is written as "pluriel de child", "passé de go" style: the English base word plus a short French grammar note.
+5. "chinese_meanings" are human translations of the same English word into Chinese. Use them only to understand which meaning is meant. Never output Chinese.
+6. Prefer common, natural modern French. Proper nouns: the usual French name.`;
+
+function userPrompt(item: Item, feedback: string | null, pair: Pair): string {
+  const payload =
+    pair === 'en-fr'
+      ? { word: item.word, senses: item.senses, chinese_meanings: item.zh ?? [] }
+      : {
+          word: item.word,
+          senses: item.senses,
+          freedict: item.freedict ?? [],
+          cfdict_candidates: item.cfdict_candidates ?? [],
+        };
+  return `${pair === 'en-fr' ? RULES_EN_FR : RULES_FR_ZH}\n\nInput:\n${JSON.stringify(payload, null, 1)}${
     feedback ? `\n\nYour previous answer was rejected (${feedback}). Fix it.` : ''
   }`;
 }
@@ -85,7 +119,13 @@ function readRows(file: string): Array<{ word: string; glosses: string[] }> {
  * Appends each passing answer to `outFile` (one JSON object per line) as soon as it
  * arrives, and skips words already in the file, so an interrupted run resumes.
  */
-async function translate(inFile: string, outFile: string, task: LLMTask, concurrency: number) {
+async function translate(
+  inFile: string,
+  outFile: string,
+  task: LLMTask,
+  concurrency: number,
+  pair: Pair,
+) {
   const items = JSON.parse(fs.readFileSync(inFile, 'utf8')) as Item[];
   fs.mkdirSync(path.dirname(path.resolve(outFile)), { recursive: true });
   const failedFile = outFile.replace(/\.jsonl?$/, '') + '.failed.jsonl';
@@ -106,11 +146,11 @@ async function translate(inFile: string, outFile: string, task: LLMTask, concurr
       for (let attempt = 0; attempt < 3 && !ok; attempt++) {
         try {
           const result = await completeJson<{ glosses?: unknown }>(provider, {
-            messages: [{ role: 'user', content: userPrompt(item, feedback) }],
+            messages: [{ role: 'user', content: userPrompt(item, feedback, pair) }],
             maxTokens: 900,
             task,
           });
-          feedback = checkAnswer(item, result.glosses);
+          feedback = checkAnswer(item, result.glosses, pair);
           if (!feedback) {
             const glosses = (result.glosses as string[]).map((g) => g.trim());
             fs.appendFileSync(outFile, JSON.stringify({ word: item.word, glosses }) + '\n');
@@ -161,6 +201,7 @@ if (import.meta.main) {
       files[1],
       flag('task', 'word-gloss') as LLMTask,
       Number(flag('concurrency', '4')),
+      flag('pair', 'fr-zh') as Pair,
     );
   } else if (command === 'import' && files.length >= 1) {
     importFiles(files, flag('language', 'fr'), flag('native', 'zh-CN'));

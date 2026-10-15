@@ -1,6 +1,6 @@
 import '../test-guard';
 import { describe, expect, test } from 'bun:test';
-import { checkAnswer, problemWith } from './warm-entry-cache';
+import { checkAnswer, frenchProblemWith, problemWith } from './warm-entry-cache';
 
 const item = {
   word: 'tour',
@@ -35,5 +35,14 @@ describe('warm-entry-cache answer checks', () => {
       senses: ['verb: inflection of aller', 'verb: inflection of vader'],
     };
     expect(checkAnswer(forms, ['aller 的变位形式', 'vader 的变位形式'])).toBeNull();
+  });
+
+  test('English to French answers must be French text, not Chinese or a copy', () => {
+    const queen = { word: 'queen', senses: ['noun: the wife or widow of a king'] };
+    expect(checkAnswer(queen, ['reine, épouse du roi'], 'en-fr')).toBeNull();
+    expect(checkAnswer(queen, ['王后'], 'en-fr')).toContain('Chinese');
+    expect(checkAnswer(queen, ['the wife or widow of a king'], 'en-fr')).toContain('copied');
+    expect(frenchProblemWith('', 'noun: x')).toBe('empty gloss');
+    expect(frenchProblemWith('x'.repeat(101), 'noun: x')).toBe('gloss too long');
   });
 });
