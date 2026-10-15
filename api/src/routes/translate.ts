@@ -354,38 +354,34 @@ export function makeTranslateRoutes({
     const cached = entryCache?.get(lang, nativeCode, entry.word) ?? null;
     if (cached && cached.length === source.length) return withGlosses(cached);
 
-    const resolved = engine.resolveEntitlements(userId);
-    const burst = consumeFreeBurst(c, rateLimiter, resolved, userId, 'gloss');
-    if (burst) return burst;
-    const reservation = reserve(c, engine, userId, metricForGloss(resolved));
-    if (reservation instanceof Response) return reservation;
+    // Not metered: a shared answer serves every later reader, so the total cost is
+    // bounded by the dictionary size. Only a burst limit stops one account from
+    // draining it.
+    const byok = engine.resolveEntitlements(userId).byok;
+    if (!byok && !rateLimiter.tryConsume(userId, 'localize')) return burstResponse(c);
 
     try {
-      const result = await completeJson<{ glosses?: unknown }>(
-        providerForUser(userId, { byok: reservation.byok }),
-        {
-          messages: [
-            {
-              role: 'user',
-              content: buildLocalizePrompt(
-                getLanguageConfig(lang).name,
-                getNativeLanguageName(userId),
-                entry.word,
-                source.map((sense) => sense.gloss),
-              ),
-            },
-          ],
-          maxTokens: 700,
-          task: 'word-gloss',
-        },
-      );
+      const result = await completeJson<{ glosses?: unknown }>(providerForUser(userId, { byok }), {
+        messages: [
+          {
+            role: 'user',
+            content: buildLocalizePrompt(
+              getLanguageConfig(lang).name,
+              getNativeLanguageName(userId),
+              entry.word,
+              source.map((sense) => sense.gloss),
+            ),
+          },
+        ],
+        maxTokens: 700,
+        task: 'word-gloss',
+      });
       if (!isCacheableGlosses(result.glosses, source.length)) {
         throw new Error('Localization returned an unexpected shape');
       }
-      if (!reservation.byok) entryCache?.put(lang, nativeCode, entry.word, result.glosses);
+      if (!byok) entryCache?.put(lang, nativeCode, entry.word, result.glosses);
       return withGlosses(result.glosses);
     } catch (error) {
-      engine.refund(reservation);
       console.error('Localize error:', error);
       return c.json({ error: 'Translation failed' }, 502);
     }

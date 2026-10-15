@@ -39,7 +39,7 @@ function CloudAccountMenu({ compact }: { compact: boolean }) {
 
   return (
     <div className="border-t border-border">
-      <div className="flex items-center justify-between gap-2 px-4 py-3">
+      <div className="flex items-center justify-between gap-2 px-4 pt-3 pb-2">
         <span
           className="min-w-0 truncate text-xs text-muted-foreground"
           title={session.user.email}
@@ -49,7 +49,7 @@ function CloudAccountMenu({ compact }: { compact: boolean }) {
         </span>
         <SignOutButton onClick={handleSignOut} disabled={isSigningOut} />
       </div>
-      <LegalLinks className="px-4 pb-3" />
+      <LegalLinks layout="start" className="px-4 pb-3" />
     </div>
   );
 }

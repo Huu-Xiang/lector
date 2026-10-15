@@ -5,7 +5,7 @@
  * translation entitlements remain the authoritative API-spend ceiling.
  */
 
-export type TranslationBurstKind = 'gloss' | 'detail';
+export type TranslationBurstKind = 'gloss' | 'detail' | 'localize';
 
 export interface TranslationBurstLimiter {
   tryConsume(userId: string, kind: TranslationBurstKind): boolean;
@@ -22,6 +22,7 @@ export interface TranslationBurstLimiterOptions {
   maxKeys?: number;
   glossPerWindow?: number;
   detailPerWindow?: number;
+  localizePerWindow?: number;
 }
 
 export interface ExtractionBurstLimiter {
@@ -114,6 +115,7 @@ export class InMemoryTranslationBurstLimiter implements TranslationBurstLimiter 
     this.limits = {
       gloss: options.glossPerWindow ?? 30,
       detail: options.detailPerWindow ?? 10,
+      localize: options.localizePerWindow ?? 30,
     };
   }
 

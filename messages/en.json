@@ -994,8 +994,9 @@
       "resets": "The count resets on the 1st of each month.",
       "exhausted": "Used up for this month",
       "settings": "Use your own key in Settings",
-      "note": "Looking up a word in the built-in dictionary is free and is not counted.",
-      "percentUsed": "{percent}% used"
+      "note": "Dictionary lookups are free and not counted. This includes translating dictionary meanings into your language.",
+      "percentUsed": "{percent}% used",
+      "close": "Close"
     }
   },
   "legalPages": {

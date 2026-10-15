@@ -617,12 +617,28 @@ describe('dictionary entry localization', () => {
       { partOfSpeech: 'noun', gloss: '次' },
       { partOfSpeech: 'noun', gloss: 'foi 的复数' },
     ]);
-    expect(engine.getUsage('local', 'wordGlossesPerMonth')).toBe(1);
+    expect(engine.getUsage('local', 'wordGlossesPerMonth')).toBe(0);
 
     const second = await (await post(app, '/localize', { word: 'fois', language: 'fr' })).json();
     expect(second.senses).toEqual(first.senses);
     expect(provider.calls).toHaveLength(1);
-    expect(engine.getUsage('local', 'wordGlossesPerMonth')).toBe(1);
+  });
+
+  test('does not use the monthly allowance, but a burst of new words is limited', async () => {
+    setNative('zh-CN');
+    const engine = makeEngine({ now, limits: { cloud: { wordGlossesPerMonth: 0 } } });
+    const limiter = new InMemoryTranslationBurstLimiter({ localizePerWindow: 2 });
+    const { app, provider } = makeApp({
+      engine,
+      provider: chineseProvider(),
+      limiter,
+      lookupEntry,
+    });
+    expect((await post(app, '/localize', { word: 'fois', language: 'fr' })).status).toBe(200);
+    expect((await post(app, '/localize', { word: 'fois', language: 'fr' })).status).toBe(200);
+    expect((await post(app, '/localize', { word: 'fois', language: 'fr' })).status).toBe(429);
+    expect(provider.calls).toHaveLength(2);
+    expect(engine.getUsage('local', 'wordGlossesPerMonth')).toBe(0);
   });
 
   test('returns null for an English reader and never calls the model', async () => {
@@ -654,7 +670,7 @@ describe('dictionary entry localization', () => {
     expect(provider.calls).toHaveLength(0);
   });
 
-  test('a wrong-length answer is refunded and not cached', async () => {
+  test('a wrong-length answer is not cached', async () => {
     setNative('zh-CN');
     const cache = new MemoryEntryCache();
     const provider = new FakeProvider();

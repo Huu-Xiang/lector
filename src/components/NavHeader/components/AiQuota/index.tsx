@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState, useSyncExternalStore } from 'react';
 import { useTranslations } from 'next-intl';
 import clsx from 'clsx';
+import { X } from 'lucide-react';
 import { getEntitlements, invalidateEntitlementsCache } from '@/lib/data-layer';
 import type { ClientEntitlements } from '@/lib/data-layer';
 import { AI_USAGE_EVENT } from '@/constants/storage';
@@ -182,7 +183,19 @@ export default function AiQuota({ compact = false }: { compact?: boolean }) {
           id="ai-quota-details"
           className="mb-2 space-y-2 rounded-lg border border-border bg-card px-3 py-2"
         >
-          <div className="text-xs font-medium text-muted-foreground">{t('title')}</div>
+          <div className="flex items-center justify-between gap-2">
+            <div className="text-xs font-medium text-muted-foreground">{t('title')}</div>
+            <button
+              type="button"
+              onClick={toggle}
+              aria-label={t('close')}
+              title={t('close')}
+              data-testid="ai-quota-close"
+              className="-mr-1 rounded p-0.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+            >
+              <X className="size-3.5" />
+            </button>
+          </div>
           {entitlements.byok ? (
             <p className="text-xs text-muted-foreground">{t('byok')}</p>
           ) : (

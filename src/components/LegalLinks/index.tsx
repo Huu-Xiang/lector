@@ -4,13 +4,21 @@ import UiLanguageSelect from '@/i18n/UiLanguageSelect';
 
 export const SOURCE_URL = 'https://github.com/Huu-Xiang/lector';
 
-export default function LegalLinks({ className = '' }: { className?: string }) {
+/**
+ * `center` is the page footer. `start` is the sidebar: links in one left-aligned
+ * row, with the language select on its own row at full width.
+ */
+export default function LegalLinks({
+  className = '',
+  layout = 'center',
+}: {
+  className?: string;
+  layout?: 'center' | 'start';
+}) {
   const t = useTranslations('legal');
-  return (
-    <nav
-      aria-label={t('nav')}
-      className={`flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs text-muted-foreground ${className}`}
-    >
+  const sidebar = layout === 'start';
+  const links = (
+    <>
       <Link href="/privacy" className="hover:text-foreground hover:underline">
         {t('privacy')}
       </Link>
@@ -28,6 +36,29 @@ export default function LegalLinks({ className = '' }: { className?: string }) {
       >
         {t('source')}
       </a>
+    </>
+  );
+
+  if (sidebar) {
+    return (
+      <div className={`space-y-2 ${className}`}>
+        <nav
+          aria-label={t('nav')}
+          className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground"
+        >
+          {links}
+        </nav>
+        <UiLanguageSelect className="w-full" />
+      </div>
+    );
+  }
+
+  return (
+    <nav
+      aria-label={t('nav')}
+      className={`flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs text-muted-foreground ${className}`}
+    >
+      {links}
       <UiLanguageSelect />
     </nav>
   );

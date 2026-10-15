@@ -994,8 +994,9 @@
       "resets": "每月 1 日重置。",
       "exhausted": "本月额度已用完",
       "settings": "可在设置中填写你自己的密钥",
-      "note": "查内置词典不限次数，也不计入额度。",
-      "percentUsed": "已用 {percent}%"
+      "note": "查词典不限次数，也不计入额度，词典释义翻成你的语言也一样。",
+      "percentUsed": "已用 {percent}%",
+      "close": "收起"
     }
   },
   "legalPages": {
