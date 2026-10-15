@@ -167,7 +167,9 @@
       "defaultCardType": "Default Card Type",
       "cardTypeHelp": "Basic shows front/back, Cloze creates fill-in-the-blank cards",
       "basic": "Basic",
-      "cloze": "Cloze"
+      "cloze": "Cloze",
+      "comingSoon": "In development",
+      "comingSoonBody": "Anki sync is coming. Words you save will become Anki cards, and your reviews will sync back. Until then, review your saved words on the Practice page."
     },
     "twoFactor": {
       "actions": {

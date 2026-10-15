@@ -167,7 +167,9 @@
       "defaultCardType": "默认卡片类型",
       "cardTypeHelp": "基础卡片显示正面/背面，完形填空会生成填空卡片",
       "basic": "基础",
-      "cloze": "完形填空"
+      "cloze": "完形填空",
+      "comingSoon": "开发中",
+      "comingSoonBody": "Anki 同步正在开发。完成后，你保存的单词会变成 Anki 卡片，复习结果也会同步回来。在此之前，请在“练习”页复习你保存的单词。"
     },
     "twoFactor": {
       "actions": {

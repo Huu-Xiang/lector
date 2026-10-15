@@ -109,14 +109,17 @@ test.describe.serial('Anki in cloud mode (#241)', () => {
     expect(res.ok()).toBeTruthy();
   });
 
-  test('settings shows the addon panel and never probes localhost:8765', async ({ page }) => {
+  test('settings shows an in-development card and never probes localhost:8765', async ({
+    page,
+  }) => {
     await useCloudEnv(page);
     const probes = trackAnkiProbes(page);
     await signIn(page);
 
     await page.goto('/settings');
-    await expect(page.getByTestId('anki-addon-panel')).toBeVisible();
-    await expect(page.getByTestId('anki-addon-api-url')).toHaveValue(CLOUD_API);
+    await expect(page.getByTestId('anki-coming-soon')).toBeVisible();
+    await expect(page.getByTestId('anki-coming-soon')).toContainText('In development');
+    await expect(page.getByTestId('anki-addon-api-url')).toHaveCount(0);
     // The browser-direct panel (AnkiConnect URL + connection dot) must be gone…
     await expect(page.getByText('AnkiConnect URL')).not.toBeVisible();
     // …and, the actual canary regression: no doomed fetch to loopback.

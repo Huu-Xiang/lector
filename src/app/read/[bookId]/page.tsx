@@ -34,6 +34,7 @@ import { phraseSelectionLimitPayload, showPlanLimitToast } from '@/lib/plan-limi
 import { addWordCard, addClozeCard, buildSourceLinkHtml } from '@/lib/anki';
 import { queueForAnki } from '@/lib/anki-queue';
 import { useAnkiTransport } from '@/lib/anki-transport';
+import { useLectorMode } from '@/lib/use-env';
 import { translateWord, translatePhrase, streamWordGloss, enrichWord } from '@/lib/claude';
 import {
   lookupWordRemote,
@@ -67,6 +68,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
   const router = useRouter();
   const activeLang = useActiveLanguage();
   const ankiTransport = useAnkiTransport();
+  const ankiHidden = useLectorMode() === 'cloud';
 
   const [lesson, setLesson] = useState<Lesson | null>(null);
   // The LESSON's pack, not the active one — same precedent as MarkdownReader.
@@ -1377,8 +1379,8 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
           onEnrich={canEnrich ? enrichTranslation : undefined}
           onRetranslate={retranslateWithAi}
           onLookupWord={handleNestedLookup}
-          onAddToAnki={!wordPanel.word.includes(' ') ? addWordToAnki : undefined}
-          onAddCloze={wordPanel.word.includes(' ') ? addClozeToAnki : undefined}
+          onAddToAnki={!ankiHidden && !wordPanel.word.includes(' ') ? addWordToAnki : undefined}
+          onAddCloze={!ankiHidden && wordPanel.word.includes(' ') ? addClozeToAnki : undefined}
         />
       </TranslationDrawerSlot>
       {onboardingActive && (

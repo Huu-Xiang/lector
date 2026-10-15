@@ -130,16 +130,21 @@ export default function AnkiSettings() {
     checkAnkiConnection();
   }, [transport, checkAnkiConnection]);
 
-  // Cloud: the add-on is the only transport that can work — no picker.
+  // Hosted Readfox: the add-on is not published yet, so the card only announces it.
   if (mode === 'cloud') {
     return (
       <section
         id="anki-integration"
-        className="panel scroll-mt-6 space-y-4 p-6"
-        data-testid="anki-addon-panel"
+        className="panel scroll-mt-6 space-y-3 p-6"
+        data-testid="anki-coming-soon"
       >
-        <h2 className="text-lg font-semibold text-foreground">{t('heading')}</h2>
-        <AnkiAddonBody />
+        <div className="flex items-center gap-2">
+          <h2 className="text-lg font-semibold text-foreground">{t('heading')}</h2>
+          <span className="rounded-full bg-[var(--gold-soft)] px-2 py-0.5 text-xs font-medium text-[var(--gold-strong)]">
+            {t('comingSoon')}
+          </span>
+        </div>
+        <p className="text-sm text-muted-foreground">{t('comingSoonBody')}</p>
       </section>
     );
   }
