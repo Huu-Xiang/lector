@@ -134,7 +134,7 @@ test.describe.serial('Free cloud learning loop', () => {
     await expect(free).toBeVisible();
     await expect(free.getByText(/1,000 AI word lookups each month/i)).toBeVisible();
     await expect(free.getByText(/50 detailed AI answers each month/i)).toBeVisible();
-    await expect(free.getByText(/Add your own AI key/i)).toBeVisible();
+    await expect(free.getByText(/Up to 10 collections/i)).toBeVisible();
     await expect(free.getByText(/Export your learner data/i)).toBeVisible();
 
     await page.getByTestId('subscribe-continue-free').click();
