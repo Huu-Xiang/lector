@@ -16,13 +16,14 @@ export interface PlanLimitPayload {
   upgrade: PlanUpgradeTarget;
 }
 
-export type PlanUpgradeTarget = 'cloud' | 'plus' | 'byok' | null;
+export type PlanUpgradeTarget = 'cloud' | 'plus' | 'max' | 'byok' | null;
 
 export function recommendedUpgrade(plan: string, byok = false): PlanUpgradeTarget {
   if (byok) return null;
   if (plan === 'free') return 'cloud';
   if (plan === 'cloud') return 'plus';
-  if (plan === 'plus') return 'byok';
+  if (plan === 'plus') return 'max';
+  if (plan === 'max') return 'byok';
   return null;
 }
 
@@ -51,7 +52,7 @@ export function planLimitAction(
   upgrade: PlanUpgradeTarget,
   metric?: string,
 ): { label: string; href: string } | null {
-  if (upgrade === 'cloud') return { label: 'Upgrade to Cloud', href: '/subscribe' };
+  if (upgrade === 'cloud') return { label: 'Upgrade to Plus', href: '/subscribe' };
   if (upgrade === 'byok' && (!metric || BYOK_AI_METRICS.has(metric))) {
     return { label: 'Add API key', href: '/settings#byok' };
   }
@@ -79,10 +80,11 @@ function formatBytes(bytes: number): string {
 export function planLimitUpgradeLine(metric: string, upgrade: PlanUpgradeTarget): string {
   if (upgrade === 'cloud') {
     return BYOK_AI_METRICS.has(metric)
-      ? 'Cloud lifts this limit, or you can add your own AI key in Settings.'
-      : 'Cloud lifts this limit.';
+      ? 'Plus lifts this limit, or you can add your own AI key in Settings.'
+      : 'Plus lifts this limit.';
   }
-  if (upgrade === 'plus') return 'Plus lifts this limit.';
+  if (upgrade === 'plus') return 'Pro lifts this limit.';
+  if (upgrade === 'max') return 'Max lifts this limit.';
   if (upgrade === 'byok' && BYOK_AI_METRICS.has(metric)) {
     return 'Adding your own API key lifts this limit.';
   }

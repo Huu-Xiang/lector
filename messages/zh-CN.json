@@ -10,6 +10,7 @@
   },
   "legal": {
     "nav": "法律信息",
+    "pricing": "价格",
     "privacy": "隐私",
     "terms": "条款",
     "about": "关于",
@@ -168,7 +169,8 @@
       }
     },
     "openTitle": "开源,你的阅读内容属于你自己",
-    "openBody": "Readfox 是基于 Lector 的自由软件(AGPL-3.0)。AI 功能包含每月有限的内置额度,你也可以添加自己的 OpenRouter 或 Anthropic 密钥,自己掌控费用。我们不投放广告,也不使用统计追踪。请阅读<privacy>隐私政策</privacy>,或<source>查看源代码</source>。"
+    "openBody": "Readfox 是基于 Lector 的自由软件(AGPL-3.0)。AI 功能包含每月有限的内置额度,你也可以添加自己的 OpenRouter 或 Anthropic 密钥,自己掌控费用。我们不投放广告,也不使用统计追踪。请阅读<privacy>隐私政策</privacy>,或<source>查看源代码</source>。",
+    "pricing": "价格"
   },
   "settings": {
     "nativeLanguage": {
@@ -317,8 +319,9 @@
     "plan": {
       "labels": {
         "free": "免费版",
-        "cloud": "Cloud",
-        "plus": "Cloud Plus",
+        "cloud": "Plus",
+        "plus": "Pro",
+        "max": "Max",
         "unlimited": "无限版"
       },
       "cycle": {
@@ -581,6 +584,36 @@
       "confirm": "删除我的账户",
       "cancel": "取消"
     }
+  },
+  "plans": {
+    "freePrice": "¥0",
+    "perMonth": "{price}/月",
+    "perYear": "或 {price}/年",
+    "chinaPrice": "中国大陆：{price}/月（支持支付宝）",
+    "priceAtCheckout": "价格在付款页显示",
+    "getStarted": "免费开始",
+    "features": {
+      "glosses": "每月 {count, number} 次 AI 查词（词典里没有的词）",
+      "freeTranslations": "每天 {phrases} 次简短的划词翻译和 {context} 次上下文翻译",
+      "freeLibrary": "最多 10 个合集、200 篇课文",
+      "byok": "想用更多时，可以添加自己的 AI 密钥",
+      "detailed": "每月 {count, number} 次详细的 AI 回答（划词翻译和单词详解）",
+      "phraseWords": "一次最多选 {count} 个词翻译",
+      "phraseUnlimited": "一次翻译的文字长度不限",
+      "moreRoom": "最多 50 个合集、1,000 篇课文",
+      "unlimitedLibrary": "合集和课文数量不限"
+    }
+  },
+  "pricing": {
+    "metaTitle": "价格 – Readfox",
+    "title": "价格",
+    "intro": "先免费用。想要详细的 AI 解释和更多额度时再升级。随时可以取消。",
+    "notes": "价格已含适用的税费。付款由我们的经销商 Paddle 处理。中国大陆的买家用人民币付款，可以使用支付宝。年付约省 20%。"
+  },
+  "checkoutPage": {
+    "opening": "正在打开安全付款页面",
+    "failed": "付款页面打不开。请返回后重试。",
+    "back": "返回套餐页"
   },
   "library": {
     "freeBooks": {
@@ -1027,7 +1060,8 @@
           "cloudflare": "<strong>Cloudflare</strong> – 提供 DNS、注册时的 Turnstile 机器人验证，以及用于备份的 R2 存储。",
           "resend": "<strong>Resend</strong> – 发送验证邮件和重置密码邮件。",
           "aiProvider": "<strong>你的 AI 服务商（OpenRouter 或 Anthropic）</strong> – 如果你添加了自己的密钥并使用翻译、解释或聊天功能，你选中的文本及部分上下文会通过<em>你自己的</em>密钥发送给该服务商。该数据适用其隐私条款，相关用量由你承担费用。",
-          "aiBuiltIn": "<strong>阿里云（Model Studio）</strong> – 如果你使用 Readfox 内置的 AI 额度而不是自己的密钥，你选中的文本及部分上下文会通过我们的工作空间发送给阿里云的通义千问（Qwen）模型，用来生成翻译或解释。该数据适用阿里云的条款。内置额度每月有限。"
+          "aiBuiltIn": "<strong>阿里云（Model Studio）</strong> – 如果你使用 Readfox 内置的 AI 额度而不是自己的密钥，你选中的文本及部分上下文会通过我们的工作空间发送给阿里云的通义千问（Qwen）模型，用来生成翻译或解释。该数据适用阿里云的条款。内置额度每月有限。",
+          "paddle": "<strong>Paddle</strong> – 我们付费套餐的经销商（记录商家）。如果你订阅，Paddle 会按它自己的隐私政策收集你的付款信息和账单地址。我们只收到你的邮箱、套餐及其状态，不会收到你的卡号或账号。"
         },
         "noTrackers": "我们不使用广告或分析类追踪器，也不出售你的数据。"
       },
@@ -1068,7 +1102,13 @@
       },
       "limits": {
         "heading": "限制",
-        "body": "每个账户最多可存储 100 MB 的已导入课文文本。不提供音频和播客导入。AI 功能要么使用你自己提供的密钥（费用由你承担），要么使用 Readfox 内置的每月有限额度。"
+        "body": "每个账户能使用的额度取决于它的套餐，具体见价格页。免费账户最多可存储 5 MB 的已导入课文文本，付费套餐最多 100 MB。不提供音频和播客导入。AI 功能要么使用你自己提供的密钥（费用由你承担），要么使用你套餐包含的每月额度。"
+      },
+      "payments": {
+        "heading": "付费套餐、续订和退款",
+        "body": "我们的订单流程由在线经销商 Paddle.com 执行。Paddle.com 是我们所有订单的记录商家（Merchant of Record），负责处理所有客户服务咨询和退货。",
+        "renewal": "付费套餐会按月或按年自动续订，直到你取消。你可以随时在“设置 → 套餐”中取消，套餐会一直有效到你已付费的周期结束。如果我们调整价格，新价格从你的下一次续订开始生效，我们会提前通知你。",
+        "refunds": "如果你不满意，可以在付款后 14 天内申请退款，我们会全额退款。请写信到 <mail>privacy@readfox.app</mail>，或通过收据中的链接联系 Paddle。"
       },
       "acceptableUse": {
         "heading": "可接受的使用方式",
@@ -1578,14 +1618,14 @@
       "lapsedFree": "你现在使用的是 Readfox 免费版",
       "lapsed": "你的订阅已结束",
       "free": "选择你的学习方式",
-      "paid": "订阅 Readfox Cloud"
+      "paid": "订阅 Readfox"
     },
     "body": {
       "suspended": "应用访问已暂停。你仍然可以在下方导出学习数据或退出登录。",
-      "lapsedFree": "你的课文、词汇、Anki 链接和学习历史都完好无损。你可以继续使用有额度限制的免费版，也可以续订以获得更大的托管额度和语音。",
+      "lapsedFree": "你的文本、词汇、Anki 关联和学习记录都还在。你可以继续用免费版，也可以续订，获得更多 AI 额度。",
       "lapsed": "你创建的一切都安然无恙，和你离开时一模一样。续订即可从上次的进度继续。",
-      "free": "免费版是一个完整、有额度限制的阅读闭环。想要更多托管 AI、更丰富的翻译和托管语音时，可以随时升级。",
-      "paid": "Readfox Cloud 是付费服务。想用免费的？Readfox 是开源的，可以自行托管。"
+      "free": "免费版可以完整地阅读和学习，并提供简短的 AI 翻译。想要详细的 AI 解释和更多额度时，再升级。",
+      "paid": "Readfox 是付费服务。想免费使用？Readfox 是开源软件，可以自己部署。"
     },
     "loadingPlans": "正在加载订阅套餐",
     "unavailable": "暂时无法结账，请稍后再试。你的账户和数据不受影响。",
@@ -1599,15 +1639,6 @@
     "forever": "永久免费",
     "freeTagline": "阅读、查词、保存所学，并随时带走你的数据。",
     "freeFeatures": {
-      "read": "阅读入门课文和你自己导入的文本",
-      "vocab": "保存词汇、练习词汇，并与 Anki 同步",
-      "limits": "最多 10 个合集、200 篇课文，每月 1,000 个日记词数",
-      "lookups": "不限次数的设备本地词典查词",
-      "glosses": "每月 1,000 次托管的词典未收录词释义",
-      "phrases": "每天 10 次简单短语翻译（最多 6 个词）",
-      "context": "每天 10 次简明的语境翻译",
-      "voices": "免费的浏览器语音，可用于朗读和听写",
-      "byok": "需要更多时，可使用你自己的 AI 密钥",
       "export": "随时导出你的学习数据"
     },
     "continueFree": "继续使用免费版",
@@ -1616,38 +1647,17 @@
     "checkoutMonth": "继续结账 — {price}/月",
     "subscribeMonth": "订阅 — {price}/月",
     "orMonth": "或 {price}/月",
-    "orYear": "或 {price}/年，相当于免费赠送两个月",
+    "orYear": "或 {price}/年，约省 20%",
     "selected": "已选择",
-    "badges": {
-      "beta": "测试版"
-    },
     "perMonth": "/月",
-    "annualNote": "{price}/年，相当于免费赠送两个月",
-    "tiers": {
-      "cloud": {
-        "tagline": "我们替你托管，无需 Docker，无需配置。适合只想安心阅读的你。",
-        "features": {
-          "managed": "完全托管，无需安装或维护",
-          "allowance": "更大的托管翻译额度和丰富的 AI 词条",
-          "voices": "托管的高品质语音，并可回退到浏览器语音",
-          "room": "为课文、词汇和日记写作提供更多空间",
-          "backups": "自动备份与更新",
-          "email": "邮件支持"
-        }
-      },
-      "plus": {
-        "tagline": "适合重度读者，一切都替你处理好。",
-        "features": {
-          "everything": "包含 Cloud 的全部功能",
-          "largerAllowance": "大得多的托管 AI 和语音额度",
-          "priority": "优先支持",
-          "earlyAccess": "抢先体验新的语言包"
-        }
-      }
-    },
+    "annualNote": "{price}/年，约省 20%",
     "openingCheckoutLabel": "正在打开结账页面",
     "openingCheckout": "正在打开结账页面…",
     "exportData": "导出我的数据",
-    "signOut": "退出登录"
+    "signOut": "退出登录",
+    "subscribeYearNoPrice": "按年订阅",
+    "orYearNoPrice": "或按年付费，约省 20%",
+    "subscribeMonthNoPrice": "按月订阅",
+    "orMonthNoPrice": "或按月付费"
   }
 }

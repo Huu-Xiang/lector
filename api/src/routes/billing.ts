@@ -23,6 +23,9 @@ import {
   PaddleBillingError,
   type PaddleBillingOperations,
   type ProrationBillingMode,
+  makePaddlePriceReader,
+  type PriceDisplay,
+  type PriceDisplayReader,
 } from '../lib/paddle-billing';
 
 const MAX_PADDLE_WEBHOOK_BODY_BYTES = 1024 * 1024;
@@ -49,9 +52,14 @@ function portalAccount(rows: readonly BillingSubscriptionRecord[]): {
   };
 }
 
+const PRICE_CACHE_MS = 10 * 60_000;
+const PRICE_RETRY_MS = 60_000;
+
+const PLAN_ORDER: Record<BillingPrice['plan'], number> = { cloud: 1, plus: 2, max: 3 };
+
 function prorationMode(current: BillingPrice, target: BillingPrice): ProrationBillingMode {
   if (current.cycle !== target.cycle) return 'prorated_immediately';
-  if (current.plan === 'plus' && target.plan === 'cloud') {
+  if (PLAN_ORDER[target.plan] < PLAN_ORDER[current.plan]) {
     return 'prorated_next_billing_period';
   }
   return 'prorated_immediately';
@@ -70,8 +78,11 @@ export function makeBillingRoutes(
   engine: EntitlementsEngine = entitlements,
   checkSuspended: (userId: string) => boolean = isSuspended,
   billingOperations: PaddleBillingOperations = makePaddleBillingOperations(cfg),
+  readPrices: PriceDisplayReader = makePaddlePriceReader(cfg),
+  now: () => number = Date.now,
 ) {
   const app = new Hono();
+  let priceCache: { at: number; prices: PriceDisplay[] } | null = null;
 
   // Shared by every authenticated billing action that takes a JSON body:
   // checkout, and the two plan-change routes. Declared before the routes that
@@ -104,6 +115,30 @@ export function makeBillingRoutes(
         contextTranslationsPerDay: engine.getUsage(userId, 'contextTranslationsPerDay', periods),
       },
       periods,
+    });
+  });
+
+  // GET /api/billing/prices — public: the pricing page renders without a
+  // session. Display only; checkout always charges Paddle's own price.
+  app.get('/prices', async (c) => {
+    if (!priceCache || now() - priceCache.at > PRICE_CACHE_MS) {
+      try {
+        priceCache = { at: now(), prices: await readPrices(cfg.prices.map((p) => p.id)) };
+      } catch (error) {
+        console.warn('[billing] price lookup failed:', (error as Error).message);
+        priceCache = { at: now() - PRICE_CACHE_MS + PRICE_RETRY_MS, prices: [] };
+      }
+    }
+    const byId = new Map(priceCache.prices.map((p) => [p.id, p]));
+    return c.json({
+      prices: cfg.prices.map((price) => {
+        const display = byId.get(price.id);
+        return {
+          ...price,
+          unitPrice: display?.unitPrice ?? null,
+          overrides: display?.overrides ?? [],
+        };
+      }),
     });
   });
 

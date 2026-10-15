@@ -23,7 +23,11 @@ import {
 import { makeBillingRoutes } from '../routes/billing';
 import { makeSessionMiddleware } from './session';
 import type { AuthEngine } from './accounts';
-import type { PaddleBillingOperations } from './paddle-billing';
+import {
+  parsePriceDisplays,
+  type PaddleBillingOperations,
+  type PriceDisplayReader,
+} from './paddle-billing';
 
 const SECRET = 'pdl_ntfset_test_secret';
 const NOW = 1_700_000_000;
@@ -278,6 +282,36 @@ describe('billing env parsing', () => {
       /OPENAI_COMPAT_SIMPLE_CONTEXT_MODEL/,
     );
     expect(() => assert({})).not.toThrow();
+  });
+
+  test('self-managed Free accepts any provider but needs an explicit model per Free task', () => {
+    const base = {
+      enabled: true,
+      production: true,
+      hasTurnstileSecret: true,
+      hasTurnstileSiteKey: true,
+      hasCheckoutPrice: true,
+      hasGoogleTtsApiKey: false,
+      byokAvailable: true,
+      llmProvider: 'openai',
+      openAiCompatUrl: 'https://dashscope.example/compatible-mode',
+      hasOpenAiCompatApiKey: true,
+      wordGlossModel: 'qwen3.7-flash',
+      simplePhraseModel: 'qwen3.7-flash',
+      simpleContextModel: 'qwen3.7-flash',
+      selfManaged: true,
+    };
+    const assert = (overrides: Partial<typeof base>) =>
+      assertBillingBootable('paddle', true, true, true, { ...base, ...overrides });
+
+    expect(() => assert({})).not.toThrow();
+    expect(() => assert({ simpleContextModel: '' })).toThrow(/OPENAI_COMPAT_SIMPLE_CONTEXT_MODEL/);
+    expect(() => assert({ hasOpenAiCompatApiKey: false })).toThrow(/OPENAI_COMPAT_API_KEY/);
+    expect(() => assert({ byokAvailable: false })).toThrow(/BYOK_ENCRYPTION_KEY/);
+    expect(() => assert({ selfManaged: false })).toThrow(/GOOGLE_CLOUD_API_KEY/);
+    expect(() => assertBillingBootable('paddle', true, false, true, { ...base })).toThrow(
+      /PADDLE_WEBHOOK_SECRET/,
+    );
   });
 
   test('billing defaults off in this test env', () => {
@@ -649,6 +683,126 @@ describe('billing routes', () => {
     );
     return app;
   }
+
+  const tieredCfg: typeof billingConfig = {
+    ...managedCfg,
+    prices: [
+      ...managedCfg.prices,
+      { id: 'pri_max_month', plan: 'max', cycle: 'month' },
+      { id: 'pri_max_year', plan: 'max', cycle: 'year' },
+    ],
+  };
+
+  function pricesApp(readPrices: PriceDisplayReader, now: () => number) {
+    const app = new Hono();
+    app.route(
+      '/api/billing',
+      makeBillingRoutes(
+        tieredCfg,
+        () => null,
+        undefined,
+        undefined,
+        undefined,
+        operations(),
+        readPrices,
+        now,
+      ),
+    );
+    return app;
+  }
+
+  test('GET /prices shows Paddle amounts and country overrides, cached', async () => {
+    let calls = 0;
+    let clock = 0;
+    const app = pricesApp(
+      async (ids) => {
+        calls += 1;
+        expect(ids).toContain('pri_max_month');
+        return [
+          {
+            id: 'pri_cloud_month',
+            unitPrice: { amount: '300', currencyCode: 'USD' },
+            overrides: [
+              { countryCodes: ['CN'], unitPrice: { amount: '1500', currencyCode: 'CNY' } },
+            ],
+          },
+        ];
+      },
+      () => clock,
+    );
+
+    const body = (await (await app.request('/api/billing/prices')).json()) as {
+      prices: Array<{ id: string; plan: string; unitPrice: unknown; overrides: unknown[] }>;
+    };
+    expect(body.prices).toHaveLength(6);
+    const cloud = body.prices.find((p) => p.id === 'pri_cloud_month')!;
+    expect(cloud.unitPrice).toEqual({ amount: '300', currencyCode: 'USD' });
+    expect(cloud.overrides).toHaveLength(1);
+    expect(body.prices.find((p) => p.id === 'pri_max_year')!.unitPrice).toBeNull();
+
+    await app.request('/api/billing/prices');
+    expect(calls).toBe(1);
+    clock += 11 * 60_000;
+    await app.request('/api/billing/prices');
+    expect(calls).toBe(2);
+  });
+
+  test('GET /prices still lists the plans when Paddle is unreachable', async () => {
+    const app = pricesApp(
+      async () => {
+        throw new Error('down');
+      },
+      () => 0,
+    );
+    const response = await app.request('/api/billing/prices');
+    expect(response.status).toBe(200);
+    const body = (await response.json()) as { prices: Array<{ unitPrice: unknown }> };
+    expect(body.prices).toHaveLength(6);
+    expect(body.prices.every((p) => p.unitPrice === null)).toBe(true);
+  });
+
+  test('a downgrade from Max defers proration; an upgrade to Max is immediate', async () => {
+    applyPaddleEvent(
+      subscriptionEvent({
+        id: 'sub_max',
+        status: 'active',
+        lectorUserId: 'local',
+        priceId: 'pri_max_month',
+      }),
+    );
+    let mode = '';
+    const app = buildApp(
+      tieredCfg,
+      'local@example.com',
+      undefined,
+      operations({
+        previewSubscriptionChange: async (args) => {
+          mode = args.prorationBillingMode;
+          return { immediateCharge: null, nextCharge: null, recurringCharge: null };
+        },
+      }),
+    );
+    const preview = (priceId: string) =>
+      app.request('/api/billing/change/preview', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ priceId }),
+      });
+    expect((await preview('pri_plus_month')).status).toBe(200);
+    expect(mode).toBe('prorated_next_billing_period');
+
+    applyPaddleEvent(
+      subscriptionEvent({
+        id: 'sub_max',
+        status: 'active',
+        lectorUserId: 'local',
+        priceId: 'pri_cloud_month',
+        occurredAt: '2026-07-09T00:00:00Z',
+      }),
+    );
+    expect((await preview('pri_max_month')).status).toBe(200);
+    expect(mode).toBe('prorated_immediately');
+  });
 
   function postWebhook(app: Hono, body: string, header?: string) {
     return app.request('/api/billing/webhook', {
@@ -1207,11 +1361,40 @@ describe('session middleware carve-out', () => {
     );
     app.post('/api/billing/webhook', (c) => c.json({ ok: true }));
     app.get('/api/billing/status', (c) => c.json({ ok: true }));
+    app.get('/api/billing/prices', (c) => c.json({ ok: true }));
     app.get('/api/collections', (c) => c.json({ ok: true }));
 
-    // No cookies, no Authorization: only the webhook may pass.
+    // No cookies, no Authorization: only the webhook and the price list may pass.
     expect((await app.request('/api/billing/webhook', { method: 'POST' })).status).toBe(200);
+    expect((await app.request('/api/billing/prices')).status).toBe(200);
     expect((await app.request('/api/billing/status')).status).toBe(401);
     expect((await app.request('/api/collections')).status).toBe(401);
+  });
+});
+
+describe('parsePriceDisplays', () => {
+  test('reads unit prices and country overrides, skipping malformed rows', () => {
+    const parsed = parsePriceDisplays({
+      data: [
+        {
+          id: 'pri_a',
+          unit_price: { amount: '500', currency_code: 'USD' },
+          unit_price_overrides: [
+            { country_codes: ['CN'], unit_price: { amount: '2900', currency_code: 'CNY' } },
+            { country_codes: ['DE'], unit_price: { amount: 5 } },
+          ],
+        },
+        { id: 'pri_b' },
+        { unit_price: { amount: '1', currency_code: 'USD' } },
+      ],
+    });
+    expect(parsed).toEqual([
+      {
+        id: 'pri_a',
+        unitPrice: { amount: '500', currencyCode: 'USD' },
+        overrides: [{ countryCodes: ['CN'], unitPrice: { amount: '2900', currencyCode: 'CNY' } }],
+      },
+    ]);
+    expect(parsePriceDisplays(null)).toEqual([]);
   });
 });

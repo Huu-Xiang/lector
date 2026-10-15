@@ -74,7 +74,7 @@ function makeStorageEngine(
     freeTierEnabled: true,
     exemptEmails: new Set(),
     prices: [],
-    planLimits: { free: plan, cloud: plan, plus: plan },
+    planLimits: { free: plan, cloud: plan, plus: plan, max: plan },
     resolveEmail: () => null,
     isByok: () => options.byok ?? false,
     compedPlan: () => null,

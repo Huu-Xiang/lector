@@ -154,7 +154,7 @@ describe('journal route', () => {
       freeTierEnabled: true,
       exemptEmails: new Set(),
       prices: [],
-      planLimits: { free: limits, cloud: limits, plus: limits },
+      planLimits: { free: limits, cloud: limits, plus: limits, max: limits },
       resolveEmail: () => null,
       isByok: () => false,
       compedPlan: () => 'cloud',

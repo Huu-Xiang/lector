@@ -1,0 +1,32 @@
+{
+  "plans": {
+    "freePrice": "¥0",
+    "perMonth": "{price}/月",
+    "perYear": "或 {price}/年",
+    "chinaPrice": "中国大陆：{price}/月（支持支付宝）",
+    "priceAtCheckout": "价格在付款页显示",
+    "getStarted": "免费开始",
+    "features": {
+      "glosses": "每月 {count, number} 次 AI 查词（词典里没有的词）",
+      "freeTranslations": "每天 {phrases} 次简短的划词翻译和 {context} 次上下文翻译",
+      "freeLibrary": "最多 10 个合集、200 篇课文",
+      "byok": "想用更多时，可以添加自己的 AI 密钥",
+      "detailed": "每月 {count, number} 次详细的 AI 回答（划词翻译和单词详解）",
+      "phraseWords": "一次最多选 {count} 个词翻译",
+      "phraseUnlimited": "一次翻译的文字长度不限",
+      "moreRoom": "最多 50 个合集、1,000 篇课文",
+      "unlimitedLibrary": "合集和课文数量不限"
+    }
+  },
+  "pricing": {
+    "metaTitle": "价格 – Readfox",
+    "title": "价格",
+    "intro": "先免费用。想要详细的 AI 解释和更多额度时再升级。随时可以取消。",
+    "notes": "价格已含适用的税费。付款由我们的经销商 Paddle 处理。中国大陆的买家用人民币付款，可以使用支付宝。年付约省 20%。"
+  },
+  "checkoutPage": {
+    "opening": "正在打开安全付款页面",
+    "failed": "付款页面打不开。请返回后重试。",
+    "back": "返回套餐页"
+  }
+}

@@ -34,7 +34,7 @@ import { billingConfig, getUserEmail, isEntitledStatus } from './billing';
 import { getCompedPlan } from './account-flags';
 import { hasByokCredential } from './byok';
 
-export type PaidPlanId = 'cloud' | 'plus';
+export type PaidPlanId = 'cloud' | 'plus' | 'max';
 export type PlanId = 'free' | PaidPlanId;
 export type ResolvedPlan = PlanId | 'unlimited';
 
@@ -203,7 +203,7 @@ export interface AtomicLimitCheck {
  */
 const DEFAULT_PLAN_LIMITS: Record<PlanId, PlanLimits> = {
   free: {
-    phraseSelectionWords: 6,
+    phraseSelectionWords: 30,
     journalWordsPerMonth: 1_000,
     maxCollections: 10,
     maxLessons: 200,
@@ -300,14 +300,14 @@ const DEFAULT_PLAN_LIMITS: Record<PlanId, PlanLimits> = {
     // transcription a month. Generous for a learner, bounded for the operator.
     maxAudioStorageBytes: 2 * 1024 * 1024 * 1024,
     audioTranscriptionMinutesPerMonth: 300,
-    llmRequestsPerMonth: 5_000,
+    llmRequestsPerMonth: 300,
     ttsCharsPerMonth: 300_000,
-    wordGlossesPerMonth: 10_000,
+    wordGlossesPerMonth: 5_000,
     phraseTranslationsPerDay: null,
     contextTranslationsPerDay: null,
   },
   plus: {
-    phraseSelectionWords: null,
+    phraseSelectionWords: 30,
     journalWordsPerMonth: null,
     maxCollections: null,
     maxLessons: null,
@@ -344,9 +344,50 @@ const DEFAULT_PLAN_LIMITS: Record<PlanId, PlanLimits> = {
     // rates) — still several podcasts a week, and the largest single COGS
     // line Plus carries, so deliberately not higher.
     audioTranscriptionMinutesPerMonth: 900,
-    llmRequestsPerMonth: 20_000,
+    llmRequestsPerMonth: 800,
     ttsCharsPerMonth: 1_500_000,
-    wordGlossesPerMonth: 50_000,
+    wordGlossesPerMonth: 10_000,
+    phraseTranslationsPerDay: null,
+    contextTranslationsPerDay: null,
+  },
+  max: {
+    phraseSelectionWords: null,
+    journalWordsPerMonth: null,
+    maxCollections: null,
+    maxLessons: null,
+    maxCollectionGroups: null,
+    maxVocabEntries: null,
+    maxKnownWords: null,
+    maxClozeSentences: null,
+    maxAcceptedDictionaryEntries: null,
+    maxAcceptedDictionaryBytesTotal: null,
+    maxDailyStatsRows: null,
+    maxLearnerEvents: null,
+    maxLearnerEventBytes: null,
+    maxJournalEntries: null,
+    maxApiTokens: null,
+    maxApiTokenNameBytes: null,
+    maxAnkiPendingRows: null,
+    maxAnkiPendingEntryBytes: null,
+    maxAnkiPendingTextBytesTotal: null,
+    maxLessonTextBytes: null,
+    maxLessonTextBytesTotal: null,
+    maxVocabEntryBytes: null,
+    maxVocabTextBytesTotal: null,
+    maxKnownWordBytes: null,
+    maxKnownWordsTextBytesTotal: null,
+    maxClozeEntryBytes: null,
+    maxClozeTextBytesTotal: null,
+    maxGroupNameBytes: null,
+    maxCollectionMetadataBytes: null,
+    maxJournalEntryBytes: null,
+    maxJournalTextBytesTotal: null,
+    maxWriteBatchBytes: null,
+    maxAudioStorageBytes: 10 * 1024 * 1024 * 1024,
+    audioTranscriptionMinutesPerMonth: 900,
+    llmRequestsPerMonth: 2_000,
+    ttsCharsPerMonth: 1_500_000,
+    wordGlossesPerMonth: 30_000,
     phraseTranslationsPerDay: null,
     contextTranslationsPerDay: null,
   },
@@ -439,6 +480,7 @@ export function parsePlanLimitOverrides(
     free: { ...defaults.free },
     cloud: { ...defaults.cloud },
     plus: { ...defaults.plus },
+    max: { ...defaults.max },
   };
   const trimmed = (raw ?? '').trim();
   if (!trimmed) return merged;
@@ -456,7 +498,7 @@ export function parsePlanLimitOverrides(
   }
 
   for (const [plan, overrides] of Object.entries(parsed)) {
-    if (plan !== 'free' && plan !== 'cloud' && plan !== 'plus') {
+    if (plan !== 'free' && plan !== 'cloud' && plan !== 'plus' && plan !== 'max') {
       console.warn(`[entitlements] LECTOR_PLAN_LIMITS: unknown plan "${plan}" ignored.`);
       continue;
     }
@@ -543,7 +585,7 @@ export type LimitVerdict =
       requested: number;
       plan: ResolvedPlan;
       /** What lifts this limit — feeds the client's upsell prompt. */
-      upgrade: 'cloud' | 'plus' | 'byok' | null;
+      upgrade: 'cloud' | 'plus' | 'max' | 'byok' | null;
     };
 
 /**
@@ -623,7 +665,7 @@ export interface EntitlementsEngine {
  * review): ranking entitled rows by status/recency alone let a newer Cloud sub
  * shadow an older Plus one and wrongly apply Cloud limits.
  */
-const PLAN_RANK: Record<PaidPlanId, number> = { plus: 2, cloud: 1 };
+const PLAN_RANK: Record<PaidPlanId, number> = { max: 3, plus: 2, cloud: 1 };
 
 export function makeEntitlements(deps: EntitlementsDeps): EntitlementsEngine {
   const priceToPlan = new Map(deps.prices.map((p) => [p.id, p.plan]));
@@ -986,15 +1028,16 @@ export function makeEntitlements(deps: EntitlementsDeps): EntitlementsEngine {
   function upgradeFor(
     resolved: ResolvedEntitlements,
     metric: LimitMetric,
-  ): 'cloud' | 'plus' | 'byok' | null {
+  ): 'cloud' | 'plus' | 'max' | 'byok' | null {
     // A BYOK ceiling is an abuse guard, not managed capacity that buying a
     // plan would lift. Product/storage and managed TTS limits still upsell.
     if (resolved.byok && AI_METRICS.has(metric)) return null;
     if (resolved.plan === 'free') return 'cloud';
     if (resolved.plan === 'cloud') return 'plus';
-    // Plus BYOK can lift only model-backed limits. It does not pay for TTS or
+    if (resolved.plan === 'plus') return 'max';
+    // Max BYOK can lift only model-backed limits. It does not pay for TTS or
     // lift journal/library product limits.
-    if (resolved.plan === 'plus' && AI_METRICS.has(metric)) return 'byok';
+    if (resolved.plan === 'max' && AI_METRICS.has(metric)) return 'byok';
     return null;
   }
 

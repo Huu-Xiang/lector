@@ -10,6 +10,7 @@
   },
   "legal": {
     "nav": "Legal",
+    "pricing": "Pricing",
     "privacy": "Privacy",
     "terms": "Terms",
     "about": "About",
@@ -168,7 +169,8 @@
       }
     },
     "openTitle": "Open source, and your reading stays yours",
-    "openBody": "Readfox is free software (AGPL-3.0) based on Lector. AI features include a limited monthly allowance, or you can add your own OpenRouter or Anthropic key and control the cost yourself. We do not run advertising or analytics trackers. Read the <privacy>privacy policy</privacy> or <source>browse the source code</source>."
+    "openBody": "Readfox is free software (AGPL-3.0) based on Lector. AI features include a limited monthly allowance, or you can add your own OpenRouter or Anthropic key and control the cost yourself. We do not run advertising or analytics trackers. Read the <privacy>privacy policy</privacy> or <source>browse the source code</source>.",
+    "pricing": "Pricing"
   },
   "settings": {
     "nativeLanguage": {
@@ -317,8 +319,9 @@
     "plan": {
       "labels": {
         "free": "Free",
-        "cloud": "Cloud",
-        "plus": "Cloud Plus",
+        "cloud": "Plus",
+        "plus": "Pro",
+        "max": "Max",
         "unlimited": "Unlimited"
       },
       "cycle": {
@@ -581,6 +584,36 @@
       "confirm": "Delete my account",
       "cancel": "Cancel"
     }
+  },
+  "plans": {
+    "freePrice": "$0",
+    "perMonth": "{price}/month",
+    "perYear": "or {price}/year",
+    "chinaPrice": "Mainland China: {price}/month (Alipay)",
+    "priceAtCheckout": "Price shown at checkout",
+    "getStarted": "Start free",
+    "features": {
+      "glosses": "{count, number} AI word lookups each month (words the dictionary doesn't have)",
+      "freeTranslations": "{phrases} short phrase translations and {context} in-context translations each day",
+      "freeLibrary": "Up to 10 collections and 200 lessons",
+      "byok": "Add your own AI key when you want more",
+      "detailed": "{count, number} detailed AI answers each month (phrase translations and word explanations)",
+      "phraseWords": "Select up to {count} words for one translation",
+      "phraseUnlimited": "Select any length of text for one translation",
+      "moreRoom": "Up to 50 collections and 1,000 lessons",
+      "unlimitedLibrary": "Unlimited collections and lessons"
+    }
+  },
+  "pricing": {
+    "metaTitle": "Pricing – Readfox",
+    "title": "Pricing",
+    "intro": "Start free. Upgrade when you want detailed AI explanations and larger allowances. Cancel at any time.",
+    "notes": "Prices include tax where it applies. Payments are handled by Paddle, our reseller. Buyers in mainland China pay in RMB and can use Alipay. Annual plans save about 20%."
+  },
+  "checkoutPage": {
+    "opening": "Opening secure checkout",
+    "failed": "Checkout couldn't be opened. Go back and try again.",
+    "back": "Back to plans"
   },
   "library": {
     "freeBooks": {
@@ -1027,7 +1060,8 @@
           "cloudflare": "<strong>Cloudflare</strong> – DNS, the Turnstile bot check on sign-up, and R2 storage for backups.",
           "resend": "<strong>Resend</strong> – delivers the verification and password-reset emails.",
           "aiProvider": "<strong>Your AI provider (OpenRouter or Anthropic)</strong> – if you add your own key and use translation, explanations or chat, the text you select, with some surrounding context, is sent to the provider using <em>your</em> key. Their privacy terms apply to that data, and the usage is billed to you.",
-          "aiBuiltIn": "<strong>Alibaba Cloud (Model Studio)</strong> – if you use Readfox's built-in AI allowance instead of your own key, the text you select, with some surrounding context, is sent to Alibaba Cloud's Qwen models through our workspace to produce the translation or explanation. Alibaba Cloud's terms apply to that data. The allowance is limited each month."
+          "aiBuiltIn": "<strong>Alibaba Cloud (Model Studio)</strong> – if you use Readfox's built-in AI allowance instead of your own key, the text you select, with some surrounding context, is sent to Alibaba Cloud's Qwen models through our workspace to produce the translation or explanation. Alibaba Cloud's terms apply to that data. The allowance is limited each month.",
+          "paddle": "<strong>Paddle</strong> – our reseller (Merchant of Record) for paid plans. If you subscribe, Paddle collects your payment details and billing address under its own privacy policy. We receive your email address, your plan and its status, never your card or account numbers."
         },
         "noTrackers": "We do not run advertising or analytics trackers, and we do not sell your data."
       },
@@ -1068,7 +1102,13 @@
       },
       "limits": {
         "heading": "Limits",
-        "body": "Each account can store up to 100 MB of imported lesson text. Audio and podcast import are not offered. AI features use either a key you provide, whose cost is yours, or the limited monthly allowance that Readfox includes."
+        "body": "What each account can use depends on its plan; the Pricing page lists the allowances. Free accounts can store up to 5 MB of imported lesson text, paid plans up to 100 MB. Audio and podcast import are not offered. AI features use either a key you provide, whose cost is yours, or the monthly allowance of your plan."
+      },
+      "payments": {
+        "heading": "Paid plans, renewal and refunds",
+        "body": "Our order process is conducted by our online reseller Paddle.com. Paddle.com is the Merchant of Record for all our orders. Paddle provides all customer service inquiries and handles returns.",
+        "renewal": "Paid plans renew automatically each month or year until you cancel. You can cancel at any time in Settings → Plan, and the plan stays active until the end of the period you paid for. If we change a price, the new price applies from your next renewal, and we tell you before it does.",
+        "refunds": "If you are not happy, ask for a refund within 14 days of a payment and we will refund it in full. Write to <mail>privacy@readfox.app</mail> or contact Paddle through the link in your receipt."
       },
       "acceptableUse": {
         "heading": "Acceptable use",
@@ -1578,14 +1618,14 @@
       "lapsedFree": "You’re on Readfox Free now",
       "lapsed": "Your subscription has ended",
       "free": "Choose how you want to learn",
-      "paid": "Subscribe to Readfox Cloud"
+      "paid": "Subscribe to Readfox"
     },
     "body": {
       "suspended": "App access is paused. You can still export your learner data or sign out below.",
-      "lapsedFree": "Your texts, vocabulary, Anki links, and learning history are intact. Keep using the bounded Free plan, or renew for larger managed allowances and voices.",
+      "lapsedFree": "Your texts, vocabulary, Anki links, and learning history are intact. Keep using Free, or renew for larger AI allowances.",
       "lapsed": "Everything you built is safe and exactly as you left it — renew to pick up where you were.",
-      "free": "Free is a complete, bounded reading loop. Upgrade when you want more managed AI, richer translations, and managed voices.",
-      "paid": "Readfox Cloud is a paid service. Prefer free? Readfox is open source and self-hostable."
+      "free": "Free is a complete reading loop with simple AI translations. Upgrade when you want detailed AI explanations and larger allowances.",
+      "paid": "Readfox is a paid service. Prefer free? Readfox is open source and self-hostable."
     },
     "loadingPlans": "Loading subscription plans",
     "unavailable": "Checkout isn't available right now — please try again in a little while. Your account and data are unaffected.",
@@ -1599,15 +1639,6 @@
     "forever": "forever",
     "freeTagline": "Read, look words up, save what you learn, and take your data with you.",
     "freeFeatures": {
-      "read": "Read starter lessons and texts you import yourself",
-      "vocab": "Save vocabulary, practise it, and sync with Anki",
-      "limits": "Up to 10 collections, 200 lessons, and 1,000 journal words each month",
-      "lookups": "Unlimited on-device dictionary lookups",
-      "glosses": "1,000 managed dictionary-miss glosses each month",
-      "phrases": "10 simple phrase translations (up to 6 words) each day",
-      "context": "10 concise in-context translations each day",
-      "voices": "Free browser voices for reading and dictation",
-      "byok": "Bring your own AI key when you want more",
       "export": "Export your learner data at any time"
     },
     "continueFree": "Continue with Free",
@@ -1616,38 +1647,17 @@
     "checkoutMonth": "Continue to checkout — {price}/month",
     "subscribeMonth": "Subscribe — {price}/month",
     "orMonth": "or {price}/month",
-    "orYear": "or {price}/year — two months free",
+    "orYear": "or {price}/year — save about 20%",
     "selected": "Selected",
-    "badges": {
-      "beta": "Beta"
-    },
     "perMonth": "/month",
-    "annualNote": "{price}/year — two months free",
-    "tiers": {
-      "cloud": {
-        "tagline": "We host it for you — no Docker, no setup. For when you'd rather just read.",
-        "features": {
-          "managed": "Fully managed — nothing to install or maintain",
-          "allowance": "Larger managed translation allowance and rich AI entries",
-          "voices": "Managed high-quality voices, with browser voice fallback",
-          "room": "More room for texts, vocabulary, and journal writing",
-          "backups": "Automatic backups and updates",
-          "email": "Email support"
-        }
-      },
-      "plus": {
-        "tagline": "For heavy readers who want the whole thing handled.",
-        "features": {
-          "everything": "Everything in Cloud",
-          "largerAllowance": "A much larger managed AI and voice allowance",
-          "priority": "Priority support",
-          "earlyAccess": "Early access to new language packs"
-        }
-      }
-    },
+    "annualNote": "{price}/year — save about 20%",
     "openingCheckoutLabel": "Opening checkout",
     "openingCheckout": "Opening checkout…",
     "exportData": "Export my data",
-    "signOut": "Sign out"
+    "signOut": "Sign out",
+    "subscribeYearNoPrice": "Subscribe annually",
+    "orYearNoPrice": "or pay yearly — save about 20%",
+    "subscribeMonthNoPrice": "Subscribe monthly",
+    "orMonthNoPrice": "or pay monthly"
   }
 }

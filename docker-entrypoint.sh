@@ -81,7 +81,7 @@ case "$FREE_TIER" in
         echo "FATAL: LECTOR_FREE_TIER=true in production requires at least one PADDLE_PRICE_* so the advertised Cloud upsell can start checkout." >&2
         exit 1
       fi
-      if [ -z "${GOOGLE_CLOUD_API_KEY:-}" ]; then
+      if [ -z "${GOOGLE_CLOUD_API_KEY:-}" ] && [ "${LECTOR_SELF_MANAGED:-}" != "1" ]; then
         echo "FATAL: LECTOR_FREE_TIER=true in production requires GOOGLE_CLOUD_API_KEY so the advertised paid managed-voice upsell is available." >&2
         exit 1
       fi
@@ -93,32 +93,42 @@ case "$FREE_TIER" in
         echo "FATAL: LECTOR_FREE_TIER=true with CLASSIFY_WORKER=1 requires dedicated CLASSIFY_LLM_URL and CLASSIFY_LLM_MODEL values so Free vocabulary cannot fall back to the unmetered managed translation provider." >&2
         exit 1
       fi
-      OPENROUTER_URL="${OPENAI_COMPAT_URL:-}"
-      OPENROUTER_URL="${OPENROUTER_URL%/}"
-      if [ "${LLM_PROVIDER:-}" != "openai" ]; then
-        echo "FATAL: LECTOR_FREE_TIER=true in production requires LLM_PROVIDER=openai." >&2
-        exit 1
-      fi
-      if [ "$OPENROUTER_URL" != "https://openrouter.ai/api" ]; then
-        echo "FATAL: LECTOR_FREE_TIER=true in production requires OPENAI_COMPAT_URL=https://openrouter.ai/api." >&2
-        exit 1
-      fi
-      if [ -z "${OPENAI_COMPAT_API_KEY:-}" ]; then
-        echo "FATAL: LECTOR_FREE_TIER=true in production requires OPENAI_COMPAT_API_KEY for managed translations." >&2
-        exit 1
-      fi
-      MANAGED_TRANSLATION_MODEL="google/gemini-2.5-flash-lite"
-      if [ "${OPENAI_COMPAT_WORD_GLOSS_MODEL:-}" != "$MANAGED_TRANSLATION_MODEL" ]; then
-        echo "FATAL: LECTOR_FREE_TIER=true in production requires OPENAI_COMPAT_WORD_GLOSS_MODEL=$MANAGED_TRANSLATION_MODEL." >&2
-        exit 1
-      fi
-      if [ "${OPENAI_COMPAT_SIMPLE_PHRASE_MODEL:-}" != "$MANAGED_TRANSLATION_MODEL" ]; then
-        echo "FATAL: LECTOR_FREE_TIER=true in production requires OPENAI_COMPAT_SIMPLE_PHRASE_MODEL=$MANAGED_TRANSLATION_MODEL." >&2
-        exit 1
-      fi
-      if [ "${OPENAI_COMPAT_SIMPLE_CONTEXT_MODEL:-}" != "$MANAGED_TRANSLATION_MODEL" ]; then
-        echo "FATAL: LECTOR_FREE_TIER=true in production requires OPENAI_COMPAT_SIMPLE_CONTEXT_MODEL=$MANAGED_TRANSLATION_MODEL." >&2
-        exit 1
+      if [ "${LECTOR_SELF_MANAGED:-}" = "1" ]; then
+        # Self-managed: any provider, but every Free task needs its own model.
+        for name in OPENAI_COMPAT_API_KEY OPENAI_COMPAT_WORD_GLOSS_MODEL OPENAI_COMPAT_SIMPLE_PHRASE_MODEL OPENAI_COMPAT_SIMPLE_CONTEXT_MODEL; do
+          if [ -z "$(printenv "$name")" ]; then
+            echo "FATAL: LECTOR_FREE_TIER=true on a self-managed deployment requires $name." >&2
+            exit 1
+          fi
+        done
+      else
+        OPENROUTER_URL="${OPENAI_COMPAT_URL:-}"
+        OPENROUTER_URL="${OPENROUTER_URL%/}"
+        if [ "${LLM_PROVIDER:-}" != "openai" ]; then
+          echo "FATAL: LECTOR_FREE_TIER=true in production requires LLM_PROVIDER=openai." >&2
+          exit 1
+        fi
+        if [ "$OPENROUTER_URL" != "https://openrouter.ai/api" ]; then
+          echo "FATAL: LECTOR_FREE_TIER=true in production requires OPENAI_COMPAT_URL=https://openrouter.ai/api." >&2
+          exit 1
+        fi
+        if [ -z "${OPENAI_COMPAT_API_KEY:-}" ]; then
+          echo "FATAL: LECTOR_FREE_TIER=true in production requires OPENAI_COMPAT_API_KEY for managed translations." >&2
+          exit 1
+        fi
+        MANAGED_TRANSLATION_MODEL="google/gemini-2.5-flash-lite"
+        if [ "${OPENAI_COMPAT_WORD_GLOSS_MODEL:-}" != "$MANAGED_TRANSLATION_MODEL" ]; then
+          echo "FATAL: LECTOR_FREE_TIER=true in production requires OPENAI_COMPAT_WORD_GLOSS_MODEL=$MANAGED_TRANSLATION_MODEL." >&2
+          exit 1
+        fi
+        if [ "${OPENAI_COMPAT_SIMPLE_PHRASE_MODEL:-}" != "$MANAGED_TRANSLATION_MODEL" ]; then
+          echo "FATAL: LECTOR_FREE_TIER=true in production requires OPENAI_COMPAT_SIMPLE_PHRASE_MODEL=$MANAGED_TRANSLATION_MODEL." >&2
+          exit 1
+        fi
+        if [ "${OPENAI_COMPAT_SIMPLE_CONTEXT_MODEL:-}" != "$MANAGED_TRANSLATION_MODEL" ]; then
+          echo "FATAL: LECTOR_FREE_TIER=true in production requires OPENAI_COMPAT_SIMPLE_CONTEXT_MODEL=$MANAGED_TRANSLATION_MODEL." >&2
+          exit 1
+        fi
       fi
     fi
     ;;
@@ -138,7 +148,7 @@ DATA_DIR=/app/data DICT_DIR=${DICT_DIR:-/app/dict} PORT=3457 bun run src/index.t
 # of the script context (SECURITY-06). Empty API_URL → the client falls back to
 # http://localhost:3457 (only correct when browsing from this host).
 cd /app
-node -e 'require("fs").writeFileSync("public/__env.js", "window.__ENV__ = " + JSON.stringify({ API_URL: process.env.API_URL || "", SENTRY_DSN: process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN || "", SENTRY_ENVIRONMENT: process.env.SENTRY_ENVIRONMENT || "", LECTOR_MODE: process.env.LECTOR_MODE || "selfhost", CHECKOUT_URL: process.env.CHECKOUT_URL || "", TURNSTILE_SITE_KEY: process.env.TURNSTILE_SITE_KEY || "", GITHUB_LOGIN: process.env.GITHUB_CLIENT_ID ? "1" : "", OIDC_LOGIN: process.env.OIDC_CLIENT_ID ? "1" : "", OIDC_PROVIDER_NAME: process.env.OIDC_PROVIDER_NAME || "" }) + ";\n")'
+node -e 'require("fs").writeFileSync("public/__env.js", "window.__ENV__ = " + JSON.stringify({ API_URL: process.env.API_URL || "", SENTRY_DSN: process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN || "", SENTRY_ENVIRONMENT: process.env.SENTRY_ENVIRONMENT || "", LECTOR_MODE: process.env.LECTOR_MODE || "selfhost", CHECKOUT_URL: process.env.CHECKOUT_URL || "", PADDLE_CLIENT_TOKEN: process.env.PADDLE_CLIENT_TOKEN || "", PADDLE_ENV: process.env.PADDLE_ENV || "", TURNSTILE_SITE_KEY: process.env.TURNSTILE_SITE_KEY || "", GITHUB_LOGIN: process.env.GITHUB_CLIENT_ID ? "1" : "", OIDC_LOGIN: process.env.OIDC_CLIENT_ID ? "1" : "", OIDC_PROVIDER_NAME: process.env.OIDC_PROVIDER_NAME || "" }) + ";\n")'
 
 # Start Next.js in foreground
 node server.js

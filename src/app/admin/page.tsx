@@ -25,6 +25,7 @@ import {
   type AdminUserRow,
   type AdminAuditEntry,
 } from '@/lib/admin-client';
+import { planName } from '@/lib/plan-names';
 
 function formatBytes(n: number): string {
   if (n < 1024) return `${n} B`;
@@ -54,13 +55,13 @@ function planBadge(row: AdminUserRow): { label: string; className: string } {
   if (row.suspended) return { label: 'suspended', className: 'bg-destructive/15 text-destructive' };
   if (row.entitled)
     return {
-      label: row.plan === 'plus' ? 'Plus' : 'Cloud',
+      label: planName(row.plan ?? 'cloud'),
       className: 'bg-primary/15 text-primary',
     };
   // Comped without a paid subscription: that tier on the house.
   if (row.compedPlan)
     return {
-      label: `comped · ${row.compedPlan === 'plus' ? 'Plus' : 'Cloud'}`,
+      label: `comped · ${planName(row.compedPlan)}`,
       className: 'bg-primary/15 text-primary',
     };
   if (row.plan === 'free') {
@@ -176,20 +177,23 @@ export default function AdminPage() {
         }
         return;
       }
-      // Not comped → pick a tier. cloud (base) or plus (premium allowances).
-      const answer = window
-        .prompt(`Comp ${row.email} a membership — type "cloud" or "plus":`, 'plus')
+      // Not comped → pick a tier by its Readfox name.
+      const typed = window
+        .prompt(`Comp ${row.email} a membership — type "plus", "pro" or "max":`, 'pro')
         ?.trim()
         .toLowerCase();
-      if (!answer) return;
-      if (answer !== 'cloud' && answer !== 'plus') {
-        toast.error('Enter "cloud" or "plus".');
+      if (!typed) return;
+      const answer = ({ plus: 'cloud', pro: 'plus', max: 'max' } as const)[
+        typed as 'plus' | 'pro' | 'max'
+      ];
+      if (!answer) {
+        toast.error('Enter "plus", "pro" or "max".');
         return;
       }
       setBusyId(row.id);
       try {
         await compUser(row.id, answer, 'tester');
-        toast.success(`Comped ${row.email} → ${answer === 'plus' ? 'Plus' : 'Cloud'}`);
+        toast.success(`Comped ${row.email} → ${planName(answer)}`);
         await load();
       } catch (err) {
         toast.error(err instanceof Error ? err.message : 'Comp change failed');

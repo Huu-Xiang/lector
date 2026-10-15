@@ -24,7 +24,8 @@
           "cloudflare": "<strong>Cloudflare</strong> – DNS, the Turnstile bot check on sign-up, and R2 storage for backups.",
           "resend": "<strong>Resend</strong> – delivers the verification and password-reset emails.",
           "aiProvider": "<strong>Your AI provider (OpenRouter or Anthropic)</strong> – if you add your own key and use translation, explanations or chat, the text you select, with some surrounding context, is sent to the provider using <em>your</em> key. Their privacy terms apply to that data, and the usage is billed to you.",
-          "aiBuiltIn": "<strong>Alibaba Cloud (Model Studio)</strong> – if you use Readfox's built-in AI allowance instead of your own key, the text you select, with some surrounding context, is sent to Alibaba Cloud's Qwen models through our workspace to produce the translation or explanation. Alibaba Cloud's terms apply to that data. The allowance is limited each month."
+          "aiBuiltIn": "<strong>Alibaba Cloud (Model Studio)</strong> – if you use Readfox's built-in AI allowance instead of your own key, the text you select, with some surrounding context, is sent to Alibaba Cloud's Qwen models through our workspace to produce the translation or explanation. Alibaba Cloud's terms apply to that data. The allowance is limited each month.",
+          "paddle": "<strong>Paddle</strong> – our reseller (Merchant of Record) for paid plans. If you subscribe, Paddle collects your payment details and billing address under its own privacy policy. We receive your email address, your plan and its status, never your card or account numbers."
         },
         "noTrackers": "We do not run advertising or analytics trackers, and we do not sell your data."
       },
@@ -65,7 +66,13 @@
       },
       "limits": {
         "heading": "Limits",
-        "body": "Each account can store up to 100 MB of imported lesson text. Audio and podcast import are not offered. AI features use either a key you provide, whose cost is yours, or the limited monthly allowance that Readfox includes."
+        "body": "What each account can use depends on its plan; the Pricing page lists the allowances. Free accounts can store up to 5 MB of imported lesson text, paid plans up to 100 MB. Audio and podcast import are not offered. AI features use either a key you provide, whose cost is yours, or the monthly allowance of your plan."
+      },
+      "payments": {
+        "heading": "Paid plans, renewal and refunds",
+        "body": "Our order process is conducted by our online reseller Paddle.com. Paddle.com is the Merchant of Record for all our orders. Paddle provides all customer service inquiries and handles returns.",
+        "renewal": "Paid plans renew automatically each month or year until you cancel. You can cancel at any time in Settings → Plan, and the plan stays active until the end of the period you paid for. If we change a price, the new price applies from your next renewal, and we tell you before it does.",
+        "refunds": "If you are not happy, ask for a refund within 14 days of a payment and we will refund it in full. Write to <mail>privacy@readfox.app</mail> or contact Paddle through the link in your receipt."
       },
       "acceptableUse": {
         "heading": "Acceptable use",

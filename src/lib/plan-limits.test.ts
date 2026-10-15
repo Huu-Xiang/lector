@@ -7,10 +7,11 @@ import {
 } from './plan-limits';
 
 describe('plan-limit upgrade routing', () => {
-  it('routes Free to Cloud and lets Plus use BYOK', () => {
+  it('routes each tier one step up and lets Max use BYOK', () => {
     expect(recommendedUpgrade('free')).toBe('cloud');
     expect(recommendedUpgrade('cloud')).toBe('plus');
-    expect(recommendedUpgrade('plus')).toBe('byok');
+    expect(recommendedUpgrade('plus')).toBe('max');
+    expect(recommendedUpgrade('max')).toBe('byok');
     expect(recommendedUpgrade('unlimited')).toBeNull();
   });
 
@@ -21,7 +22,7 @@ describe('plan-limit upgrade routing', () => {
 
   it('only exposes safe navigation targets', () => {
     expect(planLimitAction('cloud')).toEqual({
-      label: 'Upgrade to Cloud',
+      label: 'Upgrade to Plus',
       href: '/subscribe',
     });
     expect(planLimitAction('byok')).toEqual({
@@ -29,13 +30,15 @@ describe('plan-limit upgrade routing', () => {
       href: '/settings#byok',
     });
     expect(planLimitAction('plus')).toBeNull();
+    expect(planLimitAction('max')).toBeNull();
     expect(planLimitAction(null)).toBeNull();
   });
 
   it('offers BYOK only for AI-backed limits', () => {
     expect(planLimitUpgradeLine('wordGlossesPerMonth', 'cloud')).toContain('own AI key');
-    expect(planLimitUpgradeLine('ttsCharsPerMonth', 'cloud')).toBe('Cloud lifts this limit.');
-    expect(planLimitUpgradeLine('maxCollections', 'cloud')).toBe('Cloud lifts this limit.');
+    expect(planLimitUpgradeLine('ttsCharsPerMonth', 'cloud')).toBe('Plus lifts this limit.');
+    expect(planLimitUpgradeLine('maxCollections', 'cloud')).toBe('Plus lifts this limit.');
+    expect(planLimitUpgradeLine('maxCollections', 'max')).toBe('Max lifts this limit.');
     expect(planLimitUpgradeLine('ttsCharsPerMonth', 'byok')).toBe('');
     expect(planLimitAction('byok', 'ttsCharsPerMonth')).toBeNull();
   });

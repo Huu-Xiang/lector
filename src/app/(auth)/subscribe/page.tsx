@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
@@ -14,11 +14,22 @@ import {
   type BillingPrice,
   type BillingStatus,
 } from '@/lib/billing';
+import { planName } from '@/lib/plan-names';
+import {
+  PAID_TIERS,
+  TIER_ALLOWANCES,
+  chinaPrice,
+  fetchPlanPrices,
+  findPrice,
+  formatMoney,
+  type PaidTier,
+  type PlanPrice,
+} from '@/lib/plan-prices';
 
 /**
  * The Free upgrade / paid-only recovery screen (#224): pick a plan → the API creates a Paddle
- * transaction → redirect to lector.dev/checkout, where the overlay opens on
- * Paddle's approved domain (app.lector.dev is not approved) → Paddle bounces
+ * transaction → redirect to /checkout, where the overlay opens on
+ * Paddle's approved domain → Paddle bounces
  * back here with ?checkout=success → poll /api/billing/status until the webhook
  * marks the subscription active → into the app. Also the #216 lapse contract's
  * other half: a Free or locked account can always export its data or sign out here.
@@ -28,59 +39,13 @@ import {
  * as a normal route) — checkout needs to know who it's activating.
  */
 
-/**
- * Plan copy mirrored from lector-site's /pricing tiers (its `tiers` array) —
- * static on purpose: what the tier costs must render even when Paddle is
- * unreachable, and the two surfaces should read identically. If the site
- * copy changes, change this with it. The Paddle `pri_…` ids stay env-config
- * (PADDLE_PRICE_*, api/src/lib/billing.ts) — a tier renders its buy buttons
- * only for the cycles that have one configured.
- */
-const TIERS: Array<{
-  plan: BillingPrice['plan'];
-  name: string;
-  monthlyPrice: string;
-  annualPrice: string;
-  badge?: 'beta';
-  features: string[];
-  featured: boolean;
-}> = [
-  {
-    plan: 'cloud',
-    name: 'Cloud',
-    monthlyPrice: '$5',
-    annualPrice: '$50',
-    badge: 'beta',
-    features: ['managed', 'allowance', 'voices', 'room', 'backups', 'email'],
-    featured: true,
-  },
-  {
-    plan: 'plus',
-    name: 'Cloud Plus',
-    monthlyPrice: '$12',
-    annualPrice: '$120',
-    features: ['everything', 'largerAllowance', 'priority', 'earlyAccess'],
-    featured: false,
-  },
-];
-
-const FREE_FEATURES = [
-  'read',
-  'vocab',
-  'limits',
-  'lookups',
-  'glosses',
-  'phrases',
-  'context',
-  'voices',
-  'byok',
-  'export',
-];
-
 type Phase = 'loading' | 'pick' | 'activating' | 'slow' | 'unavailable' | 'suspended';
 
 export default function SubscribePage() {
   const t = useTranslations('subscribe');
+  const tp = useTranslations('plans');
+  const locale = useLocale();
+  const [prices, setPrices] = useState<PlanPrice[] | null>(null);
   const [status, setStatus] = useState<BillingStatus | null>(null);
   const [phase, setPhase] = useState<Phase>('loading');
   const [opening, setOpening] = useState<string | null>(null);
@@ -114,6 +79,10 @@ export default function SubscribePage() {
   }, []);
 
   useEffect(() => () => clearTimeout(pollTimer.current ?? undefined), []);
+
+  useEffect(() => {
+    fetchPlanPrices().then(setPrices);
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -150,7 +119,7 @@ export default function SubscribePage() {
         return;
       }
 
-      // Returning from the lector.dev overlay (Paddle's successUrl bounces
+      // Returning from the /checkout overlay (Paddle's successUrl bounces
       // here): the webhook may not have landed yet, so show activation and
       // poll rather than the tiles the user just used.
       if (new URLSearchParams(window.location.search).get('checkout') === 'success') {
@@ -195,7 +164,7 @@ export default function SubscribePage() {
       setPromo(null);
       return;
     }
-    // Hard navigate to the approved-domain checkout page; Paddle opens the
+    // Hard navigate to the /checkout page; Paddle opens the
     // overlay for this transaction there and bounces back to ?checkout=success.
     // Pass the current theme so the overlay matches the app; the tenant rides
     // the transaction (custom_data), never the URL.
@@ -212,9 +181,21 @@ export default function SubscribePage() {
 
   const lapsed = status !== null && status.status !== 'none';
   const showFree = status?.freeTierEnabled === true && !status.suspended;
-  const paidTiers = requestedPlan
-    ? [...TIERS].sort((a, b) => Number(b.plan === requestedPlan) - Number(a.plan === requestedPlan))
-    : TIERS;
+  const paidTiers: PaidTier[] = requestedPlan
+    ? [...PAID_TIERS].sort((a, b) => Number(b === requestedPlan) - Number(a === requestedPlan))
+    : [...PAID_TIERS];
+  const shownPrice = (plan: PaidTier, cycle: 'month' | 'year') => {
+    const money = findPrice(prices, plan, cycle)?.unitPrice;
+    return money ? formatMoney(money, locale) : null;
+  };
+  const free = TIER_ALLOWANCES.free;
+  const freeFeatures = [
+    tp('features.glosses', { count: free.glosses }),
+    tp('features.freeTranslations', { phrases: free.phrasesPerDay, context: free.contextPerDay }),
+    tp('features.freeLibrary'),
+    tp('features.byok'),
+    t('freeFeatures.export'),
+  ];
 
   return (
     <div className="space-y-4" data-testid="subscribe-panel">
@@ -312,12 +293,12 @@ export default function SubscribePage() {
           </p>
           <p className="mt-1 text-xs text-muted-foreground">{t('freeTagline')}</p>
           <ul className="mt-3 space-y-1 text-xs text-muted-foreground">
-            {FREE_FEATURES.map((feature) => (
+            {freeFeatures.map((feature) => (
               <li key={feature} className="flex gap-2">
                 <span aria-hidden="true" className="text-primary">
                   ✓
                 </span>
-                {t(`freeFeatures.${feature}`)}
+                {feature}
               </li>
             ))}
           </ul>
@@ -335,76 +316,90 @@ export default function SubscribePage() {
 
       {phase === 'pick' &&
         status !== null &&
-        paidTiers.map((tier) => {
+        paidTiers.map((plan) => {
           const monthly = status.checkout.prices.find(
-            (p) => p.plan === tier.plan && p.cycle === 'month',
+            (p) => p.plan === plan && p.cycle === 'month',
           );
-          const annual = status.checkout.prices.find(
-            (p) => p.plan === tier.plan && p.cycle === 'year',
-          );
+          const annual = status.checkout.prices.find((p) => p.plan === plan && p.cycle === 'year');
           if (!monthly && !annual) return null;
-          const requested = tier.plan === requestedPlan;
-          // Annual is the recommended/default action when both cycles exist:
-          // pay for ten months and get twelve. An explicit marketing plan
-          // intent still selects/sorts the requested tier; it does not make
-          // monthly billing the hidden default inside that tier.
+          const requested = plan === requestedPlan;
+          const monthlyPrice = shownPrice(plan, 'month');
+          const annualPrice = shownPrice(plan, 'year');
+          const cn = chinaPrice(findPrice(prices, plan, 'month'));
+          const allowance = TIER_ALLOWANCES[plan];
+          const features = [
+            tp('features.glosses', { count: allowance.glosses }),
+            tp('features.detailed', { count: allowance.detailed }),
+            'phraseWords' in allowance
+              ? tp('features.phraseWords', { count: allowance.phraseWords })
+              : tp('features.phraseUnlimited'),
+            plan === 'cloud' ? tp('features.moreRoom') : tp('features.unlimitedLibrary'),
+          ];
+          // Annual is the default action when both cycles exist.
           const primary = annual ?? monthly!;
           const secondary = primary.cycle === 'year' ? monthly : annual;
-          const primaryCopy =
-            primary.cycle === 'year'
-              ? requested
-                ? t('checkoutYear', { price: tier.annualPrice })
-                : t('subscribeYear', { price: tier.annualPrice })
-              : requested
-                ? t('checkoutMonth', { price: tier.monthlyPrice })
-                : t('subscribeMonth', { price: tier.monthlyPrice });
-          const secondaryCopy =
-            secondary?.cycle === 'month'
-              ? t('orMonth', { price: tier.monthlyPrice })
-              : t('orYear', { price: tier.annualPrice });
+          const cycleCopy = (cycle: 'month' | 'year', price: string | null, lead: boolean) =>
+            cycle === 'year'
+              ? price
+                ? lead
+                  ? requested
+                    ? t('checkoutYear', { price })
+                    : t('subscribeYear', { price })
+                  : t('orYear', { price })
+                : lead
+                  ? t('subscribeYearNoPrice')
+                  : t('orYearNoPrice')
+              : price
+                ? lead
+                  ? requested
+                    ? t('checkoutMonth', { price })
+                    : t('subscribeMonth', { price })
+                  : t('orMonth', { price })
+                : lead
+                  ? t('subscribeMonthNoPrice')
+                  : t('orMonthNoPrice');
+          const priceFor = (cycle: 'month' | 'year') =>
+            cycle === 'year' ? annualPrice : monthlyPrice;
           return (
             <div
-              key={tier.plan}
+              key={plan}
               className={`rounded-xl border p-4 ${
-                tier.featured || requested ? 'border-primary' : 'border-border'
+                plan === 'plus' || requested ? 'border-primary' : 'border-border'
               }`}
-              data-testid={`subscribe-tier-${tier.plan}`}
+              data-testid={`subscribe-tier-${plan}`}
               data-requested={requested || undefined}
             >
               <div className="flex items-center justify-between gap-2">
-                <span className="font-semibold text-foreground">{tier.name}</span>
-                <span className="flex items-center gap-1.5">
-                  {requested && (
-                    <span className="rounded-full bg-primary px-2 py-0.5 text-xs font-medium text-primary-foreground">
-                      {t('selected')}
-                    </span>
-                  )}
-                  {tier.badge && (
-                    <span className="rounded-full bg-[var(--primary-soft)] px-2 py-0.5 text-xs font-medium text-primary">
-                      {t(`badges.${tier.badge}`)}
-                    </span>
-                  )}
-                </span>
+                <span className="font-semibold text-foreground">{planName(plan)}</span>
+                {requested && (
+                  <span className="rounded-full bg-primary px-2 py-0.5 text-xs font-medium text-primary-foreground">
+                    {t('selected')}
+                  </span>
+                )}
               </div>
-              <p className="mt-1">
-                <span className="text-2xl font-bold text-foreground">{tier.monthlyPrice}</span>
-                <span className="text-sm text-muted-foreground">{t('perMonth')}</span>
-              </p>
-              {annual && (
-                <p className="mt-1 text-xs font-medium text-primary">
-                  {t('annualNote', { price: tier.annualPrice })}
+              {monthlyPrice && (
+                <p className="mt-1">
+                  <span className="text-2xl font-bold text-foreground">{monthlyPrice}</span>
+                  <span className="text-sm text-muted-foreground">{t('perMonth')}</span>
                 </p>
               )}
-              <p className="mt-1 text-xs text-muted-foreground">
-                {t(`tiers.${tier.plan}.tagline`)}
-              </p>
+              {annual && annualPrice && (
+                <p className="mt-1 text-xs font-medium text-primary">
+                  {t('annualNote', { price: annualPrice })}
+                </p>
+              )}
+              {cn && (
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {tp('chinaPrice', { price: formatMoney(cn, locale) })}
+                </p>
+              )}
               <ul className="mt-3 space-y-1 text-xs text-muted-foreground">
-                {tier.features.map((feature) => (
+                {features.map((feature) => (
                   <li key={feature} className="flex gap-2">
                     <span aria-hidden="true" className="text-primary">
                       ✓
                     </span>
-                    {t(`tiers.${tier.plan}.features.${feature}`)}
+                    {feature}
                   </li>
                 ))}
               </ul>
@@ -425,7 +420,7 @@ export default function SubscribePage() {
                     {t('openingCheckout')}
                   </>
                 ) : (
-                  primaryCopy
+                  cycleCopy(primary.cycle, priceFor(primary.cycle), true)
                 )}
               </Button>
               {secondary && (
@@ -436,7 +431,9 @@ export default function SubscribePage() {
                   onClick={() => openCheckout(secondary)}
                   data-testid={`subscribe-price-${secondary.plan}-${secondary.cycle}`}
                 >
-                  {opening === secondary.id ? t('openingCheckout') : secondaryCopy}
+                  {opening === secondary.id
+                    ? t('openingCheckout')
+                    : cycleCopy(secondary.cycle, priceFor(secondary.cycle), false)}
                 </button>
               )}
             </div>

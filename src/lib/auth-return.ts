@@ -10,7 +10,7 @@
  * /subscribe, so widening the parameter allowlist adds no redirect surface.
  */
 
-export type PaidPlan = 'cloud' | 'plus';
+export type PaidPlan = 'cloud' | 'plus' | 'max';
 
 const SUBSCRIBE_PATH = '/subscribe';
 const SAFE_ORIGIN = 'https://app.lector.invalid';
@@ -25,7 +25,7 @@ const ALLOWED_PARAMS = new Set(['plan', 'promo']);
 const PROMO_PATTERN = /^[A-Z0-9]{1,32}$/;
 
 function isPaidPlan(value: string | null): value is PaidPlan {
-  return value === 'cloud' || value === 'plus';
+  return value === 'cloud' || value === 'plus' || value === 'max';
 }
 
 /** A code word normalised for a URL, or null when it could never be one. */

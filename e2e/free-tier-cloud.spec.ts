@@ -132,9 +132,9 @@ test.describe.serial('Free cloud learning loop', () => {
 
     const free = page.getByTestId('subscribe-tier-free');
     await expect(free).toBeVisible();
-    await expect(free.getByText(/starter lessons and texts you import/i)).toBeVisible();
-    await expect(free.getByText(/sync with Anki/i)).toBeVisible();
-    await expect(free.getByText(/Bring your own AI key/i)).toBeVisible();
+    await expect(free.getByText(/1,000 AI word lookups each month/i)).toBeVisible();
+    await expect(free.getByText(/short phrase translations/i)).toBeVisible();
+    await expect(free.getByText(/Add your own AI key/i)).toBeVisible();
     await expect(free.getByText(/Export your learner data/i)).toBeVisible();
 
     await page.getByTestId('subscribe-continue-free').click();

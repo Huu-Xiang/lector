@@ -102,7 +102,7 @@ function makeEngine(options: {
   now: () => Date;
   byok?: boolean | (() => boolean);
   compedPlan?: PaidPlanId | null;
-  limits?: Partial<Record<'free' | 'cloud' | 'plus', Partial<PlanLimits>>>;
+  limits?: Partial<Record<'free' | 'cloud' | 'plus' | 'max', Partial<PlanLimits>>>;
 }): EntitlementsEngine {
   const merge = (base: PlanLimits, override?: Partial<PlanLimits>): PlanLimits => ({
     ...base,
@@ -117,6 +117,7 @@ function makeEngine(options: {
       free: merge(FREE, options.limits?.free),
       cloud: merge(CLOUD, options.limits?.cloud),
       plus: merge(PLUS, options.limits?.plus),
+      max: merge(PLUS, options.limits?.max),
     },
     resolveEmail: () => null,
     isByok: () => (typeof options.byok === 'function' ? options.byok() : (options.byok ?? false)),
@@ -286,8 +287,8 @@ describe('managed Free translations', () => {
     expect(await contextRes.json()).toEqual({ translation: 'fitting sense' });
 
     expect(provider.calls.map((call) => [call.task, call.maxTokens])).toEqual([
-      ['phrase-simple', 48],
-      ['context-simple', 48],
+      ['phrase-simple', 96],
+      ['context-simple', 96],
     ]);
     expect(provider.calls[0].messages[0].content).not.toContain(getSpelreelsContext());
     expect(provider.calls[0].messages[0].content).not.toContain('literalBreakdown');

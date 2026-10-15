@@ -10,6 +10,7 @@
   },
   "legal": {
     "nav": "Legal",
+    "pricing": "Pricing",
     "privacy": "Privacy",
     "terms": "Terms",
     "about": "About",
@@ -168,7 +169,8 @@
       }
     },
     "openTitle": "Open source, and your reading stays yours",
-    "openBody": "Readfox is free software (AGPL-3.0) based on Lector. AI features include a limited monthly allowance, or you can add your own OpenRouter or Anthropic key and control the cost yourself. We do not run advertising or analytics trackers. Read the <privacy>privacy policy</privacy> or <source>browse the source code</source>."
+    "openBody": "Readfox is free software (AGPL-3.0) based on Lector. AI features include a limited monthly allowance, or you can add your own OpenRouter or Anthropic key and control the cost yourself. We do not run advertising or analytics trackers. Read the <privacy>privacy policy</privacy> or <source>browse the source code</source>.",
+    "pricing": "Pricing"
   },
   "settings": {
     "nativeLanguage": {

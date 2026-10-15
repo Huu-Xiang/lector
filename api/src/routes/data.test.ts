@@ -69,7 +69,7 @@ function installLimitedEngine(compedPlan: 'cloud' | 'plus' | null = null) {
       freeTierEnabled: true,
       exemptEmails: new Set(),
       prices: [],
-      planLimits: { free: LIMITED, cloud: LIMITED, plus: LIMITED },
+      planLimits: { free: LIMITED, cloud: LIMITED, plus: LIMITED, max: LIMITED },
       resolveEmail: () => null,
       isByok: () => false,
       compedPlan: () => compedPlan,

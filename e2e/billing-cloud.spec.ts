@@ -235,13 +235,41 @@ test.describe.serial('billing gate lifecycle', () => {
       route.fulfill({ contentType: 'text/html', body: '<!doctype html><title>checkout</title>' }),
     );
 
+    await page.route(`${CLOUD_API}/api/billing/prices`, (route) =>
+      route.fulfill({
+        contentType: 'application/json',
+        body: JSON.stringify({
+          prices: [
+            {
+              id: 'pri_e2e_plus_annual',
+              plan: 'plus',
+              cycle: 'year',
+              unitPrice: { amount: '4800', currencyCode: 'USD' },
+              overrides: [],
+            },
+            {
+              id: 'pri_e2e_plus_monthly',
+              plan: 'plus',
+              cycle: 'month',
+              unitPrice: { amount: '500', currencyCode: 'USD' },
+              overrides: [
+                { countryCodes: ['CN'], unitPrice: { amount: '2900', currencyCode: 'CNY' } },
+              ],
+            },
+          ],
+        }),
+      }),
+    );
+
     await signIn(page);
     await page.waitForURL('**/subscribe');
     await page.goto('/subscribe?plan=plus');
     const requestedTier = page.getByTestId('subscribe-tier-plus');
     await expect(requestedTier).toHaveAttribute('data-requested', 'true');
     await expect(requestedTier.getByText('Selected')).toBeVisible();
-    await expect(requestedTier.getByTestId('subscribe-price-plus-year')).toContainText('$120/year');
+    await expect(requestedTier.getByText('Pro', { exact: true })).toBeVisible();
+    await expect(requestedTier.getByText(/Mainland China: CN¥29/)).toBeVisible();
+    await expect(requestedTier.getByTestId('subscribe-price-plus-year')).toContainText('$48/year');
     await requestedTier.getByTestId('subscribe-price-plus-year').click();
     await page.waitForURL(/lector\.test\/checkout\?_ptxn=txn_e2e_redirect/);
     expect(requestedPriceId).toBe('pri_e2e_plus_annual');
@@ -416,13 +444,13 @@ test.describe.serial('billing gate lifecycle', () => {
 
     const panel = page.getByTestId('cloud-plan-settings');
     await expect(panel.getByTestId('cloud-plan-current')).toHaveText(
-      'Cloud Plus (monthly billing) is active for this account.',
+      'Pro (monthly billing) is active for this account.',
     );
 
     // Exact text, because interleaving {expr} and JSX text silently ate the
     // space here once already ("monthlybilling").
     await expect(panel.getByTestId('billing-change-intro')).toHaveText(
-      'You are on Cloud Plus with monthly billing. Select a different plan below. Review ' +
+      'You are on Pro with monthly billing. Select a different plan below. Review ' +
         "Paddle's tax and proration calculation before you confirm.",
     );
 
@@ -432,9 +460,9 @@ test.describe.serial('billing gate lifecycle', () => {
     await expect(select.locator('option:checked')).toHaveText('Choose a new plan…');
     await expect(select.locator('option')).toContainText([
       'Choose a new plan…',
-      'Cloud Plus — annual',
-      'Cloud — annual',
-      'Cloud — monthly',
+      'Pro — annual',
+      'Plus — annual',
+      'Plus — monthly',
     ]);
     await expect(panel.getByTestId('billing-change-review')).toBeDisabled();
 

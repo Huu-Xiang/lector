@@ -54,6 +54,8 @@ export function makeSessionMiddleware(authRequired: boolean, engine: () => AuthE
     // PAT — the HMAC signature over the raw body is its credential, verified
     // in routes/billing.ts before anything is touched.
     if (c.req.path === '/api/billing/webhook') return next();
+    // Public price list for the pricing page; it holds no account data.
+    if (c.req.path === '/api/billing/prices') return next();
     if (c.req.path === '/api/email/unsubscribe') return next();
 
     // Per-user PAT (#218): defer to the PAT middleware mounted right after

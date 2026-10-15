@@ -3,8 +3,9 @@
     "plan": {
       "labels": {
         "free": "Free",
-        "cloud": "Cloud",
-        "plus": "Cloud Plus",
+        "cloud": "Plus",
+        "plus": "Pro",
+        "max": "Max",
         "unlimited": "Unlimited"
       },
       "cycle": {
@@ -275,14 +276,14 @@
       "lapsedFree": "You’re on Readfox Free now",
       "lapsed": "Your subscription has ended",
       "free": "Choose how you want to learn",
-      "paid": "Subscribe to Readfox Cloud"
+      "paid": "Subscribe to Readfox"
     },
     "body": {
       "suspended": "App access is paused. You can still export your learner data or sign out below.",
-      "lapsedFree": "Your texts, vocabulary, Anki links, and learning history are intact. Keep using the bounded Free plan, or renew for larger managed allowances and voices.",
+      "lapsedFree": "Your texts, vocabulary, Anki links, and learning history are intact. Keep using Free, or renew for larger AI allowances.",
       "lapsed": "Everything you built is safe and exactly as you left it — renew to pick up where you were.",
-      "free": "Free is a complete, bounded reading loop. Upgrade when you want more managed AI, richer translations, and managed voices.",
-      "paid": "Readfox Cloud is a paid service. Prefer free? Readfox is open source and self-hostable."
+      "free": "Free is a complete reading loop with simple AI translations. Upgrade when you want detailed AI explanations and larger allowances.",
+      "paid": "Readfox is a paid service. Prefer free? Readfox is open source and self-hostable."
     },
     "loadingPlans": "Loading subscription plans",
     "unavailable": "Checkout isn't available right now — please try again in a little while. Your account and data are unaffected.",
@@ -296,15 +297,6 @@
     "forever": "forever",
     "freeTagline": "Read, look words up, save what you learn, and take your data with you.",
     "freeFeatures": {
-      "read": "Read starter lessons and texts you import yourself",
-      "vocab": "Save vocabulary, practise it, and sync with Anki",
-      "limits": "Up to 10 collections, 200 lessons, and 1,000 journal words each month",
-      "lookups": "Unlimited on-device dictionary lookups",
-      "glosses": "1,000 managed dictionary-miss glosses each month",
-      "phrases": "10 simple phrase translations (up to 6 words) each day",
-      "context": "10 concise in-context translations each day",
-      "voices": "Free browser voices for reading and dictation",
-      "byok": "Bring your own AI key when you want more",
       "export": "Export your learner data at any time"
     },
     "continueFree": "Continue with Free",
@@ -313,38 +305,17 @@
     "checkoutMonth": "Continue to checkout — {price}/month",
     "subscribeMonth": "Subscribe — {price}/month",
     "orMonth": "or {price}/month",
-    "orYear": "or {price}/year — two months free",
+    "orYear": "or {price}/year — save about 20%",
     "selected": "Selected",
-    "badges": {
-      "beta": "Beta"
-    },
     "perMonth": "/month",
-    "annualNote": "{price}/year — two months free",
-    "tiers": {
-      "cloud": {
-        "tagline": "We host it for you — no Docker, no setup. For when you'd rather just read.",
-        "features": {
-          "managed": "Fully managed — nothing to install or maintain",
-          "allowance": "Larger managed translation allowance and rich AI entries",
-          "voices": "Managed high-quality voices, with browser voice fallback",
-          "room": "More room for texts, vocabulary, and journal writing",
-          "backups": "Automatic backups and updates",
-          "email": "Email support"
-        }
-      },
-      "plus": {
-        "tagline": "For heavy readers who want the whole thing handled.",
-        "features": {
-          "everything": "Everything in Cloud",
-          "largerAllowance": "A much larger managed AI and voice allowance",
-          "priority": "Priority support",
-          "earlyAccess": "Early access to new language packs"
-        }
-      }
-    },
+    "annualNote": "{price}/year — save about 20%",
     "openingCheckoutLabel": "Opening checkout",
     "openingCheckout": "Opening checkout…",
     "exportData": "Export my data",
-    "signOut": "Sign out"
+    "signOut": "Sign out",
+    "subscribeYearNoPrice": "Subscribe annually",
+    "orYearNoPrice": "or pay yearly — save about 20%",
+    "subscribeMonthNoPrice": "Subscribe monthly",
+    "orMonthNoPrice": "or pay monthly"
   }
 }

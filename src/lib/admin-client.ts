@@ -37,10 +37,10 @@ export interface AdminUserRow {
   name: string | null;
   emailVerified: boolean;
   createdAt: string | null;
-  plan: 'free' | 'cloud' | 'plus' | null;
+  plan: 'free' | 'cloud' | 'plus' | 'max' | null;
   status: string;
   entitled: boolean;
-  compedPlan: 'cloud' | 'plus' | null;
+  compedPlan: 'cloud' | 'plus' | 'max' | null;
   currentPeriodEnd: string | null;
   suspended: boolean;
   suspendedReason: string | null;
@@ -153,7 +153,11 @@ export async function restoreUser(id: string): Promise<void> {
 
 /** Grant a complimentary membership at a tier — the account bypasses the
  *  subscription gate and (once #222 lands) gets that plan's limits/models. */
-export async function compUser(id: string, plan: 'cloud' | 'plus', reason: string): Promise<void> {
+export async function compUser(
+  id: string,
+  plan: 'cloud' | 'plus' | 'max',
+  reason: string,
+): Promise<void> {
   const res = await apiFetch(`/api/admin/users/${id}/comp`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

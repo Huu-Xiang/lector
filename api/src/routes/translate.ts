@@ -466,7 +466,7 @@ export function makeTranslateRoutes({
                 content: buildSimplePhrasePrompt(langName, word, sentence, nativeName),
               },
             ],
-            maxTokens: 48,
+            maxTokens: 96,
             task: 'phrase-simple',
           }),
         );
@@ -482,7 +482,7 @@ export function makeTranslateRoutes({
                 content: buildSimpleContextPrompt(langName, word, sentence, nativeName),
               },
             ],
-            maxTokens: 48,
+            maxTokens: 96,
             task: 'context-simple',
           }),
         );

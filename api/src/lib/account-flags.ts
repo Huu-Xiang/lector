@@ -16,7 +16,7 @@
 import { db } from '../db';
 
 /** The tiers an account can be comped to (mirrors billing plan ids). */
-export type CompPlan = 'cloud' | 'plus';
+export type CompPlan = 'cloud' | 'plus' | 'max';
 
 export interface AccountFlagsRow {
   userId: string;
@@ -39,7 +39,7 @@ export function getCompedPlan(userId: string): CompPlan | null {
     .prepare('SELECT compedPlan FROM admin_account_flags WHERE userId = ?')
     .get(userId) as { compedPlan: string | null } | undefined;
   const plan = row?.compedPlan;
-  return plan === 'cloud' || plan === 'plus' ? plan : null;
+  return plan === 'cloud' || plan === 'plus' || plan === 'max' ? plan : null;
 }
 
 /** True when the account has a comped membership (any tier) — the billing-gate bypass. */
@@ -60,9 +60,11 @@ function setFlag(
   const existing = db
     .prepare('SELECT suspended, compedPlan FROM admin_account_flags WHERE userId = ?')
     .get(userId) as { suspended: number; compedPlan: string | null } | undefined;
-  const suspended = patch.suspended ?? (existing?.suspended === 1);
+  const suspended = patch.suspended ?? existing?.suspended === 1;
   const compedPlan =
-    patch.compedPlan !== undefined ? patch.compedPlan : ((existing?.compedPlan as CompPlan | null) ?? null);
+    patch.compedPlan !== undefined
+      ? patch.compedPlan
+      : ((existing?.compedPlan as CompPlan | null) ?? null);
   db.prepare(
     `INSERT INTO admin_account_flags (userId, suspended, compedPlan, reason, updatedAt)
      VALUES (?, ?, ?, ?, ?)
@@ -94,11 +96,12 @@ export function suspendedMap(): Map<string, string | null> {
 /** userId → comped tier, for accounts with a complimentary membership. */
 export function compedPlanMap(): Map<string, CompPlan> {
   const rows = db
-    .prepare("SELECT userId, compedPlan FROM admin_account_flags WHERE compedPlan IS NOT NULL")
+    .prepare('SELECT userId, compedPlan FROM admin_account_flags WHERE compedPlan IS NOT NULL')
     .all() as { userId: string; compedPlan: string }[];
   const map = new Map<string, CompPlan>();
   for (const r of rows) {
-    if (r.compedPlan === 'cloud' || r.compedPlan === 'plus') map.set(r.userId, r.compedPlan);
+    if (r.compedPlan === 'cloud' || r.compedPlan === 'plus' || r.compedPlan === 'max')
+      map.set(r.userId, r.compedPlan);
   }
   return map;
 }

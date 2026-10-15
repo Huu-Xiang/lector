@@ -2852,6 +2852,12 @@ const internalOps: Record<string, OperationDoc> = {
     summary: 'Read the plan limits and the usage',
     tag: 'Service',
   },
+  'GET /api/billing/prices': {
+    summary: 'Read the plan prices',
+    description: 'Public. The amounts Paddle charges, for display only.',
+    tag: 'Service',
+    auth: 'none',
+  },
   'GET /api/billing/status': {
     summary: 'Read the subscription state and the prices',
     tag: 'Service',

@@ -11,7 +11,7 @@ import { apiFetch } from './api-base';
 export interface BillingPrice {
   /** Paddle price id (pri_…). */
   id: string;
-  plan: 'cloud' | 'plus';
+  plan: 'cloud' | 'plus' | 'max';
   cycle: 'month' | 'year';
 }
 

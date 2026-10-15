@@ -38,6 +38,10 @@ declare global {
        *  https://lector.dev/checkout. app.lector.dev is not a Paddle-approved
        *  checkout domain, so the overlay can't open in-app. */
       CHECKOUT_URL?: string;
+      /** Paddle client-side token for the /checkout page. */
+      PADDLE_CLIENT_TOKEN?: string;
+      /** 'sandbox' for Paddle's test environment. */
+      PADDLE_ENV?: string;
       /** Cloudflare Turnstile site key — presence turns the widget on (#218). */
       TURNSTILE_SITE_KEY?: string;
       /** '1' when the API has GitHub OAuth configured — shows the button (#218). */
@@ -96,6 +100,8 @@ export const AUTH_ROUTES = [
   '/terms',
   '/about',
   '/landing',
+  '/pricing',
+  '/checkout',
 ] as const;
 
 export function isAuthRoute(pathname: string): boolean {

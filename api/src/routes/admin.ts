@@ -106,7 +106,7 @@ const realAuthActions: AdminAuthActions = {
 // does not depend on the entitlements engine (#222), which may or may not be
 // merged. An entitled subscription whose price we can't map is still a paying
 // account; label it 'cloud' (the base plan).
-function priceToPlan(priceId: string | null): 'cloud' | 'plus' | null {
+function priceToPlan(priceId: string | null): 'cloud' | 'plus' | 'max' | null {
   if (!priceId) return null;
   return billingConfig.prices.find((p) => p.id === priceId)?.plan ?? null;
 }
@@ -700,7 +700,7 @@ export function makeAdminRoutes(
     return c.json({ id, suspended: false });
   });
 
-  // POST /api/admin/users/:id/comp { plan: 'cloud'|'plus', reason? } — grant a
+  // POST /api/admin/users/:id/comp { plan: 'cloud'|'plus'|'max', reason? } — grant a
   // complimentary membership at a tier: the account bypasses the Paddle
   // subscription gate (#224) like a BILLING_EXEMPT_EMAILS address, but set here
   // for a specific tester without an env change/redeploy, and tagged with the
@@ -716,13 +716,13 @@ export function makeAdminRoutes(
     let reason: string | null = null;
     try {
       const body = (await c.req.json()) as { plan?: unknown; reason?: unknown };
-      if (body.plan !== 'cloud' && body.plan !== 'plus') {
-        return c.json({ error: "plan must be 'cloud' or 'plus'" }, 400);
+      if (body.plan !== 'cloud' && body.plan !== 'plus' && body.plan !== 'max') {
+        return c.json({ error: "plan must be 'cloud', 'plus' or 'max'" }, 400);
       }
       plan = body.plan;
       if (typeof body.reason === 'string' && body.reason.trim()) reason = body.reason.trim();
     } catch {
-      return c.json({ error: "plan must be 'cloud' or 'plus'" }, 400);
+      return c.json({ error: "plan must be 'cloud', 'plus' or 'max'" }, 400);
     }
     setCompedPlan(id, plan, reason);
     audit(c, 'comp', id, email, reason ? `${plan}: ${reason}` : plan);

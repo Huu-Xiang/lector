@@ -57,6 +57,7 @@ try {
       wordGlossModel: process.env.OPENAI_COMPAT_WORD_GLOSS_MODEL,
       simplePhraseModel: process.env.OPENAI_COMPAT_SIMPLE_PHRASE_MODEL,
       simpleContextModel: process.env.OPENAI_COMPAT_SIMPLE_CONTEXT_MODEL,
+      selfManaged: process.env.LECTOR_SELF_MANAGED === '1',
     },
   );
 } catch (err) {

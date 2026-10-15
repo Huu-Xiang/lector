@@ -113,6 +113,7 @@ export function assertBillingBootable(
     wordGlossModel?: string;
     simplePhraseModel?: string;
     simpleContextModel?: string;
+    selfManaged?: boolean;
   } = {
     enabled: false,
     production: false,
@@ -142,7 +143,7 @@ export function assertBillingBootable(
         'LECTOR_FREE_TIER=true in production requires at least one configured PADDLE_PRICE_* so the advertised Cloud upsell can start checkout.',
       );
     }
-    if (!free.hasGoogleTtsApiKey) {
+    if (!free.hasGoogleTtsApiKey && !free.selfManaged) {
       throw new Error(
         'LECTOR_FREE_TIER=true in production requires GOOGLE_CLOUD_API_KEY so the advertised paid managed-voice upsell is available.',
       );
@@ -159,6 +160,10 @@ export function assertBillingBootable(
     }
     if (free.llmProvider !== 'openai') {
       throw new Error('LECTOR_FREE_TIER=true in production requires LLM_PROVIDER=openai.');
+    }
+    if (free.selfManaged) {
+      assertSelfManagedFreeModels(free);
+      return assertPaddleBootable(billing, authRequired, hasWebhookSecret, hasApiKey);
     }
     if (free.openAiCompatUrl?.replace(/\/$/, '') !== expectedUrl) {
       throw new Error(
@@ -182,6 +187,40 @@ export function assertBillingBootable(
     }
   }
 
+  assertPaddleBootable(billing, authRequired, hasWebhookSecret, hasApiKey);
+}
+
+// A self-managed deployment picks its own provider, but Free must never fall
+// back to the default (rich) model, so every Free task needs an explicit model.
+function assertSelfManagedFreeModels(free: {
+  hasOpenAiCompatApiKey?: boolean;
+  wordGlossModel?: string;
+  simplePhraseModel?: string;
+  simpleContextModel?: string;
+}): void {
+  if (!free.hasOpenAiCompatApiKey) {
+    throw new Error(
+      'LECTOR_FREE_TIER=true in production requires OPENAI_COMPAT_API_KEY for managed translations.',
+    );
+  }
+  const taskModels = [
+    ['OPENAI_COMPAT_WORD_GLOSS_MODEL', free.wordGlossModel],
+    ['OPENAI_COMPAT_SIMPLE_PHRASE_MODEL', free.simplePhraseModel],
+    ['OPENAI_COMPAT_SIMPLE_CONTEXT_MODEL', free.simpleContextModel],
+  ] as const;
+  for (const [name, model] of taskModels) {
+    if (!model) {
+      throw new Error(`LECTOR_FREE_TIER=true on a self-managed deployment requires ${name}.`);
+    }
+  }
+}
+
+function assertPaddleBootable(
+  billing: BillingMode,
+  authRequired: boolean,
+  hasWebhookSecret: boolean,
+  hasApiKey: boolean,
+): void {
   if (billing !== 'paddle') return;
   if (!authRequired) {
     throw new Error(
@@ -211,7 +250,7 @@ export function assertBillingBootable(
 export interface BillingPrice {
   /** Paddle price id (pri_…). */
   id: string;
-  plan: 'cloud' | 'plus';
+  plan: 'cloud' | 'plus' | 'max';
   cycle: 'month' | 'year';
 }
 
@@ -239,6 +278,8 @@ function pricesFromEnv(env: NodeJS.ProcessEnv): BillingPrice[] {
   add('PADDLE_PRICE_ANNUAL', env.PADDLE_PRICE_ANNUAL, 'cloud', 'year');
   add('PADDLE_PRICE_PLUS_MONTHLY', env.PADDLE_PRICE_PLUS_MONTHLY, 'plus', 'month');
   add('PADDLE_PRICE_PLUS_ANNUAL', env.PADDLE_PRICE_PLUS_ANNUAL, 'plus', 'year');
+  add('PADDLE_PRICE_MAX_MONTHLY', env.PADDLE_PRICE_MAX_MONTHLY, 'max', 'month');
+  add('PADDLE_PRICE_MAX_ANNUAL', env.PADDLE_PRICE_MAX_ANNUAL, 'max', 'year');
   return prices;
 }
 

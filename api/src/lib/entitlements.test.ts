@@ -20,6 +20,7 @@ import {
 
 const CLOUD_PRICE = 'pri_ent_cloud';
 const PLUS_PRICE = 'pri_ent_plus';
+const MAX_PRICE = 'pri_ent_max';
 
 const LIMITS: Record<PlanId, PlanLimits> = {
   free: {
@@ -61,6 +62,19 @@ const LIMITS: Record<PlanId, PlanLimits> = {
     contextTranslationsPerDay: null,
     audioTranscriptionMinutesPerMonth: null,
   },
+  max: {
+    ...NO_STORAGE_LIMITS,
+    phraseSelectionWords: null,
+    journalWordsPerMonth: null,
+    maxCollections: null,
+    maxLessons: null,
+    llmRequestsPerMonth: 10,
+    ttsCharsPerMonth: 100,
+    wordGlossesPerMonth: 8,
+    phraseTranslationsPerDay: null,
+    contextTranslationsPerDay: null,
+    audioTranscriptionMinutesPerMonth: null,
+  },
 };
 
 function makeDeps(overrides: Partial<EntitlementsDeps> = {}): EntitlementsDeps {
@@ -71,6 +85,7 @@ function makeDeps(overrides: Partial<EntitlementsDeps> = {}): EntitlementsDeps {
     prices: [
       { id: CLOUD_PRICE, plan: 'cloud' },
       { id: PLUS_PRICE, plan: 'plus' },
+      { id: MAX_PRICE, plan: 'max' },
     ],
     planLimits: LIMITS,
     resolveEmail: () => null,
@@ -488,29 +503,51 @@ describe('checkLimit boundaries', () => {
     if (!verdict.allowed) expect(verdict.used).toBe(2);
   });
 
-  test('plus over its metered ceiling upsells to byok', () => {
+  test('plus over its metered ceiling upsells to max', () => {
     seedSubscription('ent-l', 'active', PLUS_PRICE);
     const engine = makeEntitlements(makeDeps());
     engine.recordUsage('ent-l', 'llmRequestsPerMonth', 10);
     const verdict = engine.checkLimit('ent-l', 'llmRequestsPerMonth', 1);
     expect(verdict.allowed).toBe(false);
+    if (!verdict.allowed) expect(verdict.upgrade).toBe('max');
+  });
+
+  test('max over its metered ceiling upsells to byok', () => {
+    seedSubscription('ent-max', 'active', MAX_PRICE);
+    const engine = makeEntitlements(makeDeps());
+    expect(engine.resolveEntitlements('ent-max').plan).toBe('max');
+    engine.recordUsage('ent-max', 'llmRequestsPerMonth', 10);
+    const verdict = engine.checkLimit('ent-max', 'llmRequestsPerMonth', 1);
+    expect(verdict.allowed).toBe(false);
     if (!verdict.allowed) expect(verdict.upgrade).toBe('byok');
   });
 
-  test('Plus never recommends BYOK for managed TTS or non-AI product limits', () => {
-    seedSubscription('ent-plus-non-ai', 'active', PLUS_PRICE);
+  test('Max never recommends BYOK for managed TTS or non-AI product limits', () => {
+    seedSubscription('ent-max-non-ai', 'active', MAX_PRICE);
     const planLimits = {
       ...LIMITS,
-      plus: { ...LIMITS.plus, journalWordsPerMonth: 5 },
+      max: { ...LIMITS.max, journalWordsPerMonth: 5 },
     };
     const engine = makeEntitlements(makeDeps({ planLimits }));
-    engine.recordUsage('ent-plus-non-ai', 'ttsCharsPerMonth', 100);
-    engine.recordUsage('ent-plus-non-ai', 'journalWordsPerMonth', 5);
+    engine.recordUsage('ent-max-non-ai', 'ttsCharsPerMonth', 100);
+    engine.recordUsage('ent-max-non-ai', 'journalWordsPerMonth', 5);
     for (const metric of ['ttsCharsPerMonth', 'journalWordsPerMonth'] as const) {
-      const verdict = engine.checkLimit('ent-plus-non-ai', metric);
+      const verdict = engine.checkLimit('ent-max-non-ai', metric);
       expect(verdict.allowed).toBe(false);
       if (!verdict.allowed) expect(verdict.upgrade).toBeNull();
     }
+  });
+
+  test('the most generous entitled tier wins: max over plus', () => {
+    seedSubscription(
+      'ent-mix-max',
+      'active',
+      PLUS_PRICE,
+      '2026-06-01T00:00:00Z',
+      'sub_ent-mm_plus',
+    );
+    seedSubscription('ent-mix-max', 'active', MAX_PRICE, '2026-05-01T00:00:00Z', 'sub_ent-mm_max');
+    expect(makeEntitlements(makeDeps()).resolveEntitlements('ent-mix-max').plan).toBe('max');
   });
 
   test('recordUsage ignores non-positive amounts', () => {

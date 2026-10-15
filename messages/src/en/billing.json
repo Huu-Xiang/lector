@@ -1,0 +1,32 @@
+{
+  "plans": {
+    "freePrice": "$0",
+    "perMonth": "{price}/month",
+    "perYear": "or {price}/year",
+    "chinaPrice": "Mainland China: {price}/month (Alipay)",
+    "priceAtCheckout": "Price shown at checkout",
+    "getStarted": "Start free",
+    "features": {
+      "glosses": "{count, number} AI word lookups each month (words the dictionary doesn't have)",
+      "freeTranslations": "{phrases} short phrase translations and {context} in-context translations each day",
+      "freeLibrary": "Up to 10 collections and 200 lessons",
+      "byok": "Add your own AI key when you want more",
+      "detailed": "{count, number} detailed AI answers each month (phrase translations and word explanations)",
+      "phraseWords": "Select up to {count} words for one translation",
+      "phraseUnlimited": "Select any length of text for one translation",
+      "moreRoom": "Up to 50 collections and 1,000 lessons",
+      "unlimitedLibrary": "Unlimited collections and lessons"
+    }
+  },
+  "pricing": {
+    "metaTitle": "Pricing – Readfox",
+    "title": "Pricing",
+    "intro": "Start free. Upgrade when you want detailed AI explanations and larger allowances. Cancel at any time.",
+    "notes": "Prices include tax where it applies. Payments are handled by Paddle, our reseller. Buyers in mainland China pay in RMB and can use Alipay. Annual plans save about 20%."
+  },
+  "checkoutPage": {
+    "opening": "Opening secure checkout",
+    "failed": "Checkout couldn't be opened. Go back and try again.",
+    "back": "Back to plans"
+  }
+}

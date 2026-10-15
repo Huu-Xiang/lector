@@ -468,3 +468,68 @@ export function makePaddleBillingOperations(cfg: {
     },
   };
 }
+
+/** A configured price as Paddle will charge it, for display only. */
+export interface PriceDisplay {
+  id: string;
+  /** Amounts are in the currency's lowest denomination, e.g. cents. */
+  unitPrice: BillingMoney;
+  overrides: Array<{ countryCodes: string[]; unitPrice: BillingMoney }>;
+}
+
+export type PriceDisplayReader = (ids: readonly string[]) => Promise<PriceDisplay[]>;
+
+function readMoney(value: unknown): BillingMoney | null {
+  if (!value || typeof value !== 'object') return null;
+  const { amount, currency_code: currencyCode } = value as Record<string, unknown>;
+  return typeof amount === 'string' && typeof currencyCode === 'string'
+    ? { amount, currencyCode }
+    : null;
+}
+
+export function parsePriceDisplays(body: unknown): PriceDisplay[] {
+  const data = (body as { data?: unknown })?.data;
+  if (!Array.isArray(data)) return [];
+  const out: PriceDisplay[] = [];
+  for (const row of data) {
+    const id = (row as { id?: unknown })?.id;
+    const unitPrice = readMoney((row as { unit_price?: unknown }).unit_price);
+    if (typeof id !== 'string' || !unitPrice) continue;
+    const rawOverrides = (row as { unit_price_overrides?: unknown }).unit_price_overrides;
+    const overrides: PriceDisplay['overrides'] = [];
+    for (const o of Array.isArray(rawOverrides) ? rawOverrides : []) {
+      const money = readMoney((o as { unit_price?: unknown })?.unit_price);
+      const codes = (o as { country_codes?: unknown })?.country_codes;
+      if (money && Array.isArray(codes)) {
+        overrides.push({
+          countryCodes: codes.filter((c): c is string => typeof c === 'string'),
+          unitPrice: money,
+        });
+      }
+    }
+    out.push({ id, unitPrice, overrides });
+  }
+  return out;
+}
+
+export function makePaddlePriceReader(cfg: {
+  apiKey: string | undefined;
+  environment: PaddleEnvironment;
+}): PriceDisplayReader {
+  const baseUrl = paddleApiBase(cfg.environment);
+  return async (ids) => {
+    if (ids.length === 0 || !cfg.apiKey) return [];
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), PADDLE_REQUEST_TIMEOUT_MS);
+    try {
+      const response = await fetch(
+        `${baseUrl}/prices?id=${ids.map(encodeURIComponent).join(',')}&per_page=50`,
+        { headers: { Authorization: `Bearer ${cfg.apiKey}` }, signal: controller.signal },
+      );
+      if (!response.ok) throw new Error(`Paddle GET /prices returned ${response.status}`);
+      return parsePriceDisplays(await response.json());
+    } finally {
+      clearTimeout(timeout);
+    }
+  };
+}

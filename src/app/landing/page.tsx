@@ -37,6 +37,9 @@ export default async function LandingPage() {
           <span className="text-lg font-extrabold tracking-tight text-foreground">Readfox</span>
         </Link>
         <nav className="flex items-center gap-3 text-sm">
+          <Link href="/pricing" className="font-medium text-foreground hover:underline">
+            {t('pricing')}
+          </Link>
           <Link href="/login" className="font-medium text-foreground hover:underline">
             {t('signIn')}
           </Link>

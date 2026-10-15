@@ -42,7 +42,7 @@ function strictEngine(overrides: Partial<EntitlementsDeps> = {}) {
     prices: [],
     // Every plan resolves to 'cloud' (no subscription rows in selfhost test
     // mode) — point both plans at the strict limits.
-    planLimits: { free: STRICT, cloud: STRICT, plus: STRICT },
+    planLimits: { free: STRICT, cloud: STRICT, plus: STRICT, max: STRICT },
     resolveEmail: () => null,
     isByok: () => false,
     compedPlan: () => null,

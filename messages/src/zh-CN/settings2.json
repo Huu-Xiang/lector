@@ -3,8 +3,9 @@
     "plan": {
       "labels": {
         "free": "免费版",
-        "cloud": "Cloud",
-        "plus": "Cloud Plus",
+        "cloud": "Plus",
+        "plus": "Pro",
+        "max": "Max",
         "unlimited": "无限版"
       },
       "cycle": {
@@ -275,14 +276,14 @@
       "lapsedFree": "你现在使用的是 Readfox 免费版",
       "lapsed": "你的订阅已结束",
       "free": "选择你的学习方式",
-      "paid": "订阅 Readfox Cloud"
+      "paid": "订阅 Readfox"
     },
     "body": {
       "suspended": "应用访问已暂停。你仍然可以在下方导出学习数据或退出登录。",
-      "lapsedFree": "你的课文、词汇、Anki 链接和学习历史都完好无损。你可以继续使用有额度限制的免费版，也可以续订以获得更大的托管额度和语音。",
+      "lapsedFree": "你的文本、词汇、Anki 关联和学习记录都还在。你可以继续用免费版，也可以续订，获得更多 AI 额度。",
       "lapsed": "你创建的一切都安然无恙，和你离开时一模一样。续订即可从上次的进度继续。",
-      "free": "免费版是一个完整、有额度限制的阅读闭环。想要更多托管 AI、更丰富的翻译和托管语音时，可以随时升级。",
-      "paid": "Readfox Cloud 是付费服务。想用免费的？Readfox 是开源的，可以自行托管。"
+      "free": "免费版可以完整地阅读和学习，并提供简短的 AI 翻译。想要详细的 AI 解释和更多额度时，再升级。",
+      "paid": "Readfox 是付费服务。想免费使用？Readfox 是开源软件，可以自己部署。"
     },
     "loadingPlans": "正在加载订阅套餐",
     "unavailable": "暂时无法结账，请稍后再试。你的账户和数据不受影响。",
@@ -296,15 +297,6 @@
     "forever": "永久免费",
     "freeTagline": "阅读、查词、保存所学，并随时带走你的数据。",
     "freeFeatures": {
-      "read": "阅读入门课文和你自己导入的文本",
-      "vocab": "保存词汇、练习词汇，并与 Anki 同步",
-      "limits": "最多 10 个合集、200 篇课文，每月 1,000 个日记词数",
-      "lookups": "不限次数的设备本地词典查词",
-      "glosses": "每月 1,000 次托管的词典未收录词释义",
-      "phrases": "每天 10 次简单短语翻译（最多 6 个词）",
-      "context": "每天 10 次简明的语境翻译",
-      "voices": "免费的浏览器语音，可用于朗读和听写",
-      "byok": "需要更多时，可使用你自己的 AI 密钥",
       "export": "随时导出你的学习数据"
     },
     "continueFree": "继续使用免费版",
@@ -313,38 +305,17 @@
     "checkoutMonth": "继续结账 — {price}/月",
     "subscribeMonth": "订阅 — {price}/月",
     "orMonth": "或 {price}/月",
-    "orYear": "或 {price}/年，相当于免费赠送两个月",
+    "orYear": "或 {price}/年，约省 20%",
     "selected": "已选择",
-    "badges": {
-      "beta": "测试版"
-    },
     "perMonth": "/月",
-    "annualNote": "{price}/年，相当于免费赠送两个月",
-    "tiers": {
-      "cloud": {
-        "tagline": "我们替你托管，无需 Docker，无需配置。适合只想安心阅读的你。",
-        "features": {
-          "managed": "完全托管，无需安装或维护",
-          "allowance": "更大的托管翻译额度和丰富的 AI 词条",
-          "voices": "托管的高品质语音，并可回退到浏览器语音",
-          "room": "为课文、词汇和日记写作提供更多空间",
-          "backups": "自动备份与更新",
-          "email": "邮件支持"
-        }
-      },
-      "plus": {
-        "tagline": "适合重度读者，一切都替你处理好。",
-        "features": {
-          "everything": "包含 Cloud 的全部功能",
-          "largerAllowance": "大得多的托管 AI 和语音额度",
-          "priority": "优先支持",
-          "earlyAccess": "抢先体验新的语言包"
-        }
-      }
-    },
+    "annualNote": "{price}/年，约省 20%",
     "openingCheckoutLabel": "正在打开结账页面",
     "openingCheckout": "正在打开结账页面…",
     "exportData": "导出我的数据",
-    "signOut": "退出登录"
+    "signOut": "退出登录",
+    "subscribeYearNoPrice": "按年订阅",
+    "orYearNoPrice": "或按年付费，约省 20%",
+    "subscribeMonthNoPrice": "按月订阅",
+    "orMonthNoPrice": "或按月付费"
   }
 }

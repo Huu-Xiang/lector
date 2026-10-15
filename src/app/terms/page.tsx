@@ -7,7 +7,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t('terms.metaTitle') };
 }
 
-const LAST_UPDATED = new Date(Date.UTC(2026, 9, 14));
+const LAST_UPDATED = new Date(Date.UTC(2026, 9, 15));
 
 export default async function TermsPage() {
   const t = await getTranslations('legalPages');
@@ -36,6 +36,11 @@ export default async function TermsPage() {
 
       <H2>{t('terms.limits.heading')}</H2>
       <p>{t('terms.limits.body')}</p>
+
+      <H2>{t('terms.payments.heading')}</H2>
+      <p>{t('terms.payments.body')}</p>
+      <p>{t('terms.payments.renewal')}</p>
+      <p>{t.rich('terms.payments.refunds', tags)}</p>
 
       <H2>{t('terms.acceptableUse.heading')}</H2>
       <p>{t('terms.acceptableUse.body')}</p>

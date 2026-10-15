@@ -720,7 +720,7 @@ export async function getKnownWordsMap(): Promise<Map<string, WordState>> {
 // ============================================================================
 
 export interface ClientEntitlements {
-  plan: 'free' | 'cloud' | 'plus' | 'unlimited';
+  plan: 'free' | 'cloud' | 'plus' | 'max' | 'unlimited';
   byok: boolean;
   limits: Record<string, number | null>;
   usage: Record<string, number>;

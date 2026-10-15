@@ -19,6 +19,9 @@ export default function LegalLinks({
   const sidebar = layout === 'start';
   const links = (
     <>
+      <Link href="/pricing" className="hover:text-foreground hover:underline">
+        {t('pricing')}
+      </Link>
       <Link href="/privacy" className="hover:text-foreground hover:underline">
         {t('privacy')}
       </Link>

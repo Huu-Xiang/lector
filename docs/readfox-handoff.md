@@ -28,7 +28,7 @@ A public, multi-user language-reading app at https://readfox.app. It is a self-m
 - **Self-managed plan.** `LECTOR_SELF_MANAGED=1` makes every account resolve to plan `cloud`, so the limits from `LECTOR_PLAN_LIMITS` apply and a user's own key works. Raising a limit above the code default needs a code change.
 - **No operator access to user content.** The admin export and "view as user" features were removed on purpose. Do not add them back. The admin list shows masked emails and no names. Showing a full email writes an audit entry. Keep the privacy text in step with any change here.
 - **No third-party trackers.** Lifecycle emails are off unless `LIFECYCLE_EMAILS=1`.
-- **Billing.** Only Paddle exists in code. Do not build billing before the owner confirms that charging users is allowed for them.
+- **Billing.** Paddle only. Tiers Free / Plus / Pro / Max map to plan ids `free` / `cloud` / `plus` / `max`. Turning `LECTOR_BILLING=paddle` on without `LECTOR_FREE_TIER=true` locks every account that has no subscription and is not exempt.
 - **Books come from public catalogs.** Do not write book text by hand. Each level A1 to C2 should have a book in each language.
 - **Three language settings stay separate:** interface locale (cookie), own language `nativeLanguage`, learning language `targetLanguage`.
 
@@ -66,4 +66,4 @@ Push to `selfhosted`. GitHub Actions builds `ghcr.io/huu-xiang/lector:sha-<commi
 
 ## Open work
 
-The owner keeps the dated task list outside the repo. The main open items are the English dictionary and example sentences, credits for dictionary sources, mobile quota display, a whole-book glossary for the free library, global AI rate limiting, and billing (blocked on the owner).
+The owner keeps the dated task list outside the repo. The main open items are the English dictionary and example sentences, credits for dictionary sources, mobile quota display, a whole-book glossary for the free library, global AI rate limiting, and the AI points system (standard and advanced modes), redeem codes and top-up packs.
