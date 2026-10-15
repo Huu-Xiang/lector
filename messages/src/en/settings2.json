@@ -34,13 +34,12 @@
       "libraryAllowance": "Library allowance: {collections} collections, {lessons} lessons, and {words} journal words each month. Existing data is never deleted when a paid plan ends.",
       "fairUse": "Generous fair-use safeguards apply to unusually large individual texts and bulk saved-data growth. They do not remove existing learner data or block exports.",
       "byokActive": "Your own AI key is active, so translations and rich AI actions use your provider instead of Readfox's managed allowance. Free library and journal limits still apply, and audio stays on your browser voice.",
-      "managedAllowance": "Managed allowance: {glosses} dictionary-miss glosses each month, {phrases} simple phrases and {context} in-context translations each day. On-device dictionary lookups and browser voices remain free.",
+      "managedAllowance": "Monthly AI allowance: {glosses} lookups of words the dictionary does not have, and {detailed} detailed AI answers. Dictionary lookups and browser voices are free.",
       "comparePlans": "Compare paid plans",
-      "bringKey": "Or bring your own AI key",
       "openingPaddle": "Opening Paddle…",
       "billingHistory": "Billing history",
       "manageBilling": "Manage billing",
-      "paidIntro": "Your plan includes larger managed AI allowances and managed voices. Browser voices and data export remain available as fallbacks.",
+      "paidIntro": "Your plan includes larger AI allowances. You can export your data at any time.",
       "pendingAccepted": "Paddle accepted your change to {price}. This page will update as soon as the signed webhook arrives.",
       "paddleHandles": "Paddle handles payment methods, invoices, and cancellation securely.",
       "changePlan": "Change plan",
@@ -316,6 +315,7 @@
     "subscribeYearNoPrice": "Subscribe annually",
     "orYearNoPrice": "or pay yearly — save about 20%",
     "subscribeMonthNoPrice": "Subscribe monthly",
-    "orMonthNoPrice": "or pay monthly"
+    "orMonthNoPrice": "or pay monthly",
+    "back": "Back to the app"
   }
 }

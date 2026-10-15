@@ -232,8 +232,7 @@ export default function CloudPlanSettings() {
             <p className="text-xs">
               {t('managedAllowance', {
                 glosses: limitLabel(entitlements.limits.wordGlossesPerMonth, '1,000'),
-                phrases: limitLabel(entitlements.limits.phraseTranslationsPerDay, '10'),
-                context: limitLabel(entitlements.limits.contextTranslationsPerDay, '10'),
+                detailed: limitLabel(entitlements.limits.llmRequestsPerMonth, '50'),
               })}
             </p>
           )}
@@ -241,9 +240,6 @@ export default function CloudPlanSettings() {
             <Button type="button" onClick={() => (window.location.href = '/subscribe')}>
               {t('comparePlans')}
             </Button>
-            <a href="#byok" className="text-sm font-medium text-primary hover:underline">
-              {t('bringKey')}
-            </a>
             {billing?.management?.customerPortal && (
               <Button type="button" variant="ghost" onClick={openPortal} disabled={openingPortal}>
                 {openingPortal ? t('openingPaddle') : t('billingHistory')}

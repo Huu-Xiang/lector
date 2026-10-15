@@ -169,7 +169,7 @@
       }
     },
     "openTitle": "Open source, and your reading stays yours",
-    "openBody": "Readfox is free software (AGPL-3.0) based on Lector. AI features include a limited monthly allowance, or you can add your own OpenRouter or Anthropic key and control the cost yourself. We do not run advertising or analytics trackers. Read the <privacy>privacy policy</privacy> or <source>browse the source code</source>.",
+    "openBody": "Readfox is open-source software (AGPL-3.0), built on the open-source reader Lector. AI features include a limited monthly allowance. We do not run advertising or analytics trackers. Read the <privacy>privacy policy</privacy> or <source>browse the source code</source>.",
     "pricing": "Pricing"
   },
   "settings": {
@@ -312,9 +312,9 @@
     },
     "about": {
       "title": "About",
-      "build": "Build",
       "commit": "Commit",
-      "built": "Built"
+      "built": "Built",
+      "version": "Version"
     },
     "plan": {
       "labels": {
@@ -350,13 +350,12 @@
       "libraryAllowance": "Library allowance: {collections} collections, {lessons} lessons, and {words} journal words each month. Existing data is never deleted when a paid plan ends.",
       "fairUse": "Generous fair-use safeguards apply to unusually large individual texts and bulk saved-data growth. They do not remove existing learner data or block exports.",
       "byokActive": "Your own AI key is active, so translations and rich AI actions use your provider instead of Readfox's managed allowance. Free library and journal limits still apply, and audio stays on your browser voice.",
-      "managedAllowance": "Managed allowance: {glosses} dictionary-miss glosses each month, {phrases} simple phrases and {context} in-context translations each day. On-device dictionary lookups and browser voices remain free.",
+      "managedAllowance": "Monthly AI allowance: {glosses} lookups of words the dictionary does not have, and {detailed} detailed AI answers. Dictionary lookups and browser voices are free.",
       "comparePlans": "Compare paid plans",
-      "bringKey": "Or bring your own AI key",
       "openingPaddle": "Opening Paddle…",
       "billingHistory": "Billing history",
       "manageBilling": "Manage billing",
-      "paidIntro": "Your plan includes larger managed AI allowances and managed voices. Browser voices and data export remain available as fallbacks.",
+      "paidIntro": "Your plan includes larger AI allowances. You can export your data at any time.",
       "pendingAccepted": "Paddle accepted your change to {price}. This page will update as soon as the signed webhook arrives.",
       "paddleHandles": "Paddle handles payment methods, invoices, and cancellation securely.",
       "changePlan": "Change plan",
@@ -1132,8 +1131,8 @@
       "title": "About Readfox",
       "intro": "Readfox lets you read real books and articles in the language you are learning, translate words and phrases as you go, and turn what you meet into spaced-repetition practice.",
       "freeSoftware": {
-        "heading": "Free software",
-        "license": "Readfox is free software under the <license>GNU Affero General Public License v3.0</license>. It is based on <lector>Lector</lector> by heuwels and its contributors, with our modifications.",
+        "heading": "Open source",
+        "license": "Readfox is open-source software under the <license>GNU Affero General Public License v3.0</license>. It is built on <lector>Lector</lector>, an open-source reader by heuwels and its contributors, with our changes.",
         "source": "The complete source code of the version running on this site is available at <source>{url}</source>."
       },
       "dataSources": {
@@ -1657,6 +1656,7 @@
     "subscribeYearNoPrice": "Subscribe annually",
     "orYearNoPrice": "or pay yearly — save about 20%",
     "subscribeMonthNoPrice": "Subscribe monthly",
-    "orMonthNoPrice": "or pay monthly"
+    "orMonthNoPrice": "or pay monthly",
+    "back": "Back to the app"
   }
 }

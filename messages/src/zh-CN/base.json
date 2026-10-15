@@ -169,7 +169,7 @@
       }
     },
     "openTitle": "开源,你的阅读内容属于你自己",
-    "openBody": "Readfox 是基于 Lector 的自由软件(AGPL-3.0)。AI 功能包含每月有限的内置额度,你也可以添加自己的 OpenRouter 或 Anthropic 密钥,自己掌控费用。我们不投放广告,也不使用统计追踪。请阅读<privacy>隐私政策</privacy>,或<source>查看源代码</source>。",
+    "openBody": "Readfox 是开源软件（AGPL-3.0），基于开源阅读器 Lector 开发。AI 功能包含每月有限的额度。我们不使用广告或分析类追踪器。请阅读<privacy>隐私政策</privacy>，或<source>浏览源代码</source>。",
     "pricing": "价格"
   },
   "settings": {

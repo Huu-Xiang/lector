@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { toast } from 'sonner';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import { apiUrl, checkoutUrl } from '@/lib/api-base';
@@ -199,6 +200,15 @@ export default function SubscribePage() {
 
   return (
     <div className="space-y-4" data-testid="subscribe-panel">
+      {showFree && (
+        <Link
+          href="/"
+          className="text-sm text-primary hover:underline"
+          data-testid="subscribe-back"
+        >
+          ← {t('back')}
+        </Link>
+      )}
       <div>
         <h2 className="text-lg font-semibold text-foreground">
           {status?.suspended
@@ -276,188 +286,195 @@ export default function SubscribePage() {
         </div>
       )}
 
-      {showFree && phase !== 'loading' && phase !== 'activating' && phase !== 'slow' && (
-        <div
-          className="rounded-xl border border-border bg-card p-4"
-          data-testid="subscribe-tier-free"
-        >
-          <div className="flex items-center justify-between gap-2">
-            <span className="font-semibold text-foreground">{t('freeName')}</span>
-            <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
-              {t('currentPlan')}
-            </span>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {showFree && phase !== 'loading' && phase !== 'activating' && phase !== 'slow' && (
+          <div
+            className="rounded-xl border border-border bg-card p-4"
+            data-testid="subscribe-tier-free"
+          >
+            <div className="flex items-center justify-between gap-2">
+              <span className="font-semibold text-foreground">{t('freeName')}</span>
+              <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
+                {t('currentPlan')}
+              </span>
+            </div>
+            <p className="mt-1">
+              <span className="text-2xl font-bold text-foreground">$0</span>
+              <span className="text-sm text-muted-foreground"> {t('forever')}</span>
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">{t('freeTagline')}</p>
+            <ul className="mt-3 space-y-1 text-xs text-muted-foreground">
+              {freeFeatures.map((feature) => (
+                <li key={feature} className="flex gap-2">
+                  <span aria-hidden="true" className="text-primary">
+                    ✓
+                  </span>
+                  {feature}
+                </li>
+              ))}
+            </ul>
+            <Button
+              type="button"
+              variant="outline"
+              className="mt-4 w-full cursor-pointer"
+              onClick={() => window.location.replace('/')}
+              data-testid="subscribe-continue-free"
+            >
+              {t('continueFree')}
+            </Button>
           </div>
-          <p className="mt-1">
-            <span className="text-2xl font-bold text-foreground">$0</span>
-            <span className="text-sm text-muted-foreground"> {t('forever')}</span>
-          </p>
-          <p className="mt-1 text-xs text-muted-foreground">{t('freeTagline')}</p>
-          <ul className="mt-3 space-y-1 text-xs text-muted-foreground">
-            {freeFeatures.map((feature) => (
-              <li key={feature} className="flex gap-2">
-                <span aria-hidden="true" className="text-primary">
-                  ✓
-                </span>
-                {feature}
-              </li>
-            ))}
-          </ul>
+        )}
+
+        {phase === 'pick' &&
+          status !== null &&
+          paidTiers.map((plan) => {
+            const monthly = status.checkout.prices.find(
+              (p) => p.plan === plan && p.cycle === 'month',
+            );
+            const annual = status.checkout.prices.find(
+              (p) => p.plan === plan && p.cycle === 'year',
+            );
+            if (!monthly && !annual) return null;
+            const requested = plan === requestedPlan;
+            const monthlyPrice = shownPrice(plan, 'month');
+            const annualPrice = shownPrice(plan, 'year');
+            const cn = chinaPrice(findPrice(prices, plan, 'month'));
+            const allowance = TIER_ALLOWANCES[plan];
+            const features = [
+              tp('features.glosses', { count: allowance.glosses }),
+              tp('features.detailed', { count: allowance.detailed }),
+              'phraseWords' in allowance
+                ? tp('features.phraseWords', { count: allowance.phraseWords })
+                : tp('features.phraseUnlimited'),
+              plan === 'cloud' ? tp('features.moreRoom') : tp('features.unlimitedLibrary'),
+            ];
+            // Annual is the default action when both cycles exist.
+            const primary = annual ?? monthly!;
+            const secondary = primary.cycle === 'year' ? monthly : annual;
+            const cycleCopy = (cycle: 'month' | 'year', price: string | null, lead: boolean) =>
+              cycle === 'year'
+                ? price
+                  ? lead
+                    ? requested
+                      ? t('checkoutYear', { price })
+                      : t('subscribeYear', { price })
+                    : t('orYear', { price })
+                  : lead
+                    ? t('subscribeYearNoPrice')
+                    : t('orYearNoPrice')
+                : price
+                  ? lead
+                    ? requested
+                      ? t('checkoutMonth', { price })
+                      : t('subscribeMonth', { price })
+                    : t('orMonth', { price })
+                  : lead
+                    ? t('subscribeMonthNoPrice')
+                    : t('orMonthNoPrice');
+            const priceFor = (cycle: 'month' | 'year') =>
+              cycle === 'year' ? annualPrice : monthlyPrice;
+            return (
+              <div
+                key={plan}
+                className={`flex flex-col rounded-xl border p-4 ${
+                  plan === 'plus' || requested ? 'border-primary' : 'border-border'
+                }`}
+                data-testid={`subscribe-tier-${plan}`}
+                data-requested={requested || undefined}
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-semibold text-foreground">{planName(plan)}</span>
+                  {requested && (
+                    <span className="rounded-full bg-primary px-2 py-0.5 text-xs font-medium text-primary-foreground">
+                      {t('selected')}
+                    </span>
+                  )}
+                </div>
+                {monthlyPrice && (
+                  <p className="mt-1">
+                    <span className="text-2xl font-bold text-foreground">{monthlyPrice}</span>
+                    <span className="text-sm text-muted-foreground">{t('perMonth')}</span>
+                  </p>
+                )}
+                {annual && annualPrice && (
+                  <p className="mt-1 text-xs font-medium text-primary">
+                    {t('annualNote', { price: annualPrice })}
+                  </p>
+                )}
+                {cn && (
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {tp('chinaPrice', { price: formatMoney(cn, locale) })}
+                  </p>
+                )}
+                <ul className="mt-3 space-y-1 text-xs text-muted-foreground">
+                  {features.map((feature) => (
+                    <li key={feature} className="flex gap-2">
+                      <span aria-hidden="true" className="text-primary">
+                        ✓
+                      </span>
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+                <Button
+                  type="button"
+                  className="mt-4 w-full cursor-pointer"
+                  disabled={opening !== null}
+                  onClick={() => openCheckout(primary)}
+                  data-testid={`subscribe-price-${primary.plan}-${primary.cycle}`}
+                >
+                  {opening === primary.id ? (
+                    <>
+                      <Spinner
+                        tone="current"
+                        label={t('openingCheckoutLabel')}
+                        data-testid="subscribe-price-opening"
+                      />
+                      {t('openingCheckout')}
+                    </>
+                  ) : (
+                    cycleCopy(primary.cycle, priceFor(primary.cycle), true)
+                  )}
+                </Button>
+                {secondary && (
+                  <button
+                    type="button"
+                    className="mt-2 w-full cursor-pointer text-center text-xs font-medium text-primary hover:underline disabled:cursor-default disabled:opacity-70"
+                    disabled={opening !== null}
+                    onClick={() => openCheckout(secondary)}
+                    data-testid={`subscribe-price-${secondary.plan}-${secondary.cycle}`}
+                  >
+                    {opening === secondary.id
+                      ? t('openingCheckout')
+                      : cycleCopy(secondary.cycle, priceFor(secondary.cycle), false)}
+                  </button>
+                )}
+              </div>
+            );
+          })}
+      </div>
+
+      {/* A locked account still needs a way out: its data, and sign-out. */}
+      {!showFree && (
+        <div className="flex items-center justify-between border-t border-border pt-4 text-sm">
+          <a
+            href={apiUrl('/api/data')}
+            className="text-primary hover:underline"
+            data-testid="subscribe-export"
+          >
+            {t('exportData')}
+          </a>
           <Button
             type="button"
-            variant="outline"
-            className="mt-4 w-full cursor-pointer"
-            onClick={() => window.location.replace('/')}
-            data-testid="subscribe-continue-free"
+            variant="ghost"
+            size="sm"
+            onClick={signOut}
+            data-testid="subscribe-signout"
           >
-            {t('continueFree')}
+            {t('signOut')}
           </Button>
         </div>
       )}
-
-      {phase === 'pick' &&
-        status !== null &&
-        paidTiers.map((plan) => {
-          const monthly = status.checkout.prices.find(
-            (p) => p.plan === plan && p.cycle === 'month',
-          );
-          const annual = status.checkout.prices.find((p) => p.plan === plan && p.cycle === 'year');
-          if (!monthly && !annual) return null;
-          const requested = plan === requestedPlan;
-          const monthlyPrice = shownPrice(plan, 'month');
-          const annualPrice = shownPrice(plan, 'year');
-          const cn = chinaPrice(findPrice(prices, plan, 'month'));
-          const allowance = TIER_ALLOWANCES[plan];
-          const features = [
-            tp('features.glosses', { count: allowance.glosses }),
-            tp('features.detailed', { count: allowance.detailed }),
-            'phraseWords' in allowance
-              ? tp('features.phraseWords', { count: allowance.phraseWords })
-              : tp('features.phraseUnlimited'),
-            plan === 'cloud' ? tp('features.moreRoom') : tp('features.unlimitedLibrary'),
-          ];
-          // Annual is the default action when both cycles exist.
-          const primary = annual ?? monthly!;
-          const secondary = primary.cycle === 'year' ? monthly : annual;
-          const cycleCopy = (cycle: 'month' | 'year', price: string | null, lead: boolean) =>
-            cycle === 'year'
-              ? price
-                ? lead
-                  ? requested
-                    ? t('checkoutYear', { price })
-                    : t('subscribeYear', { price })
-                  : t('orYear', { price })
-                : lead
-                  ? t('subscribeYearNoPrice')
-                  : t('orYearNoPrice')
-              : price
-                ? lead
-                  ? requested
-                    ? t('checkoutMonth', { price })
-                    : t('subscribeMonth', { price })
-                  : t('orMonth', { price })
-                : lead
-                  ? t('subscribeMonthNoPrice')
-                  : t('orMonthNoPrice');
-          const priceFor = (cycle: 'month' | 'year') =>
-            cycle === 'year' ? annualPrice : monthlyPrice;
-          return (
-            <div
-              key={plan}
-              className={`rounded-xl border p-4 ${
-                plan === 'plus' || requested ? 'border-primary' : 'border-border'
-              }`}
-              data-testid={`subscribe-tier-${plan}`}
-              data-requested={requested || undefined}
-            >
-              <div className="flex items-center justify-between gap-2">
-                <span className="font-semibold text-foreground">{planName(plan)}</span>
-                {requested && (
-                  <span className="rounded-full bg-primary px-2 py-0.5 text-xs font-medium text-primary-foreground">
-                    {t('selected')}
-                  </span>
-                )}
-              </div>
-              {monthlyPrice && (
-                <p className="mt-1">
-                  <span className="text-2xl font-bold text-foreground">{monthlyPrice}</span>
-                  <span className="text-sm text-muted-foreground">{t('perMonth')}</span>
-                </p>
-              )}
-              {annual && annualPrice && (
-                <p className="mt-1 text-xs font-medium text-primary">
-                  {t('annualNote', { price: annualPrice })}
-                </p>
-              )}
-              {cn && (
-                <p className="mt-1 text-xs text-muted-foreground">
-                  {tp('chinaPrice', { price: formatMoney(cn, locale) })}
-                </p>
-              )}
-              <ul className="mt-3 space-y-1 text-xs text-muted-foreground">
-                {features.map((feature) => (
-                  <li key={feature} className="flex gap-2">
-                    <span aria-hidden="true" className="text-primary">
-                      ✓
-                    </span>
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-              <Button
-                type="button"
-                className="mt-4 w-full cursor-pointer"
-                disabled={opening !== null}
-                onClick={() => openCheckout(primary)}
-                data-testid={`subscribe-price-${primary.plan}-${primary.cycle}`}
-              >
-                {opening === primary.id ? (
-                  <>
-                    <Spinner
-                      tone="current"
-                      label={t('openingCheckoutLabel')}
-                      data-testid="subscribe-price-opening"
-                    />
-                    {t('openingCheckout')}
-                  </>
-                ) : (
-                  cycleCopy(primary.cycle, priceFor(primary.cycle), true)
-                )}
-              </Button>
-              {secondary && (
-                <button
-                  type="button"
-                  className="mt-2 w-full cursor-pointer text-center text-xs font-medium text-primary hover:underline disabled:cursor-default disabled:opacity-70"
-                  disabled={opening !== null}
-                  onClick={() => openCheckout(secondary)}
-                  data-testid={`subscribe-price-${secondary.plan}-${secondary.cycle}`}
-                >
-                  {opening === secondary.id
-                    ? t('openingCheckout')
-                    : cycleCopy(secondary.cycle, priceFor(secondary.cycle), false)}
-                </button>
-              )}
-            </div>
-          );
-        })}
-
-      <div className="flex items-center justify-between border-t border-border pt-4 text-sm">
-        <a
-          href={apiUrl('/api/data')}
-          className="text-primary hover:underline"
-          data-testid="subscribe-export"
-        >
-          {t('exportData')}
-        </a>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={signOut}
-          data-testid="subscribe-signout"
-        >
-          {t('signOut')}
-        </Button>
-      </div>
     </div>
   );
 }

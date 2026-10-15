@@ -46,12 +46,8 @@ export default function VersionInfo() {
     <section className="panel p-6">
       <h2 className="mb-4 text-lg font-semibold text-foreground">{t('title')}</h2>
       <dl className="space-y-3 text-sm">
-        {/*
-          "Build", not "Version", because one row covers two cases. A release
-          image reads as the tag exactly, e.g. "v3.10.0". A cloud deploy goes
-          out by commit SHA, so it reads as "v3.10.0 +3".
-        */}
-        <Row label={t('build')}>{formatBuildVersion(version)}</Row>
+        {/* Readfox images carry no release tag, so the commit stands in for it. */}
+        {isKnown(version) && <Row label={t('version')}>{formatBuildVersion(version)}</Row>}
         {isKnown(commit) && (
           <Row label={t('commit')}>
             {href ? (

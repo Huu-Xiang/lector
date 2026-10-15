@@ -97,8 +97,8 @@
       "title": "关于 Readfox",
       "intro": "Readfox 让你用所学的语言阅读真实的书籍和文章，边读边翻译单词和短语，并把读到的内容转化为间隔重复练习。",
       "freeSoftware": {
-        "heading": "自由软件",
-        "license": "Readfox 是自由软件，采用 <license>GNU Affero 通用公共许可证 v3.0</license>。它基于 heuwels 及其贡献者开发的 <lector>Lector</lector>，并包含我们的修改。",
+        "heading": "开源软件",
+        "license": "Readfox 是开源软件，采用 <license>GNU Affero 通用公共许可证 v3.0</license>。它基于 heuwels 及其贡献者开发的开源阅读器 <lector>Lector</lector>，并加入了我们的修改。",
         "source": "本站所运行版本的完整源代码可在此获取：<source>{url}</source>。"
       },
       "dataSources": {

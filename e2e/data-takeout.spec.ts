@@ -51,7 +51,7 @@ test.describe('learning-data takeout', () => {
     const downloadPromise = page.waitForEvent('download');
     await page.getByTestId('export-learning-data').click();
     const download = await downloadPromise;
-    expect(download.suggestedFilename()).toMatch(/^lector-learning-data-\d{4}-\d{2}-\d{2}\.json$/);
+    expect(download.suggestedFilename()).toMatch(/^readfox-learning-data-\d{4}-\d{2}-\d{2}\.json$/);
 
     const downloadPath = await download.path();
     expect(downloadPath).toBeTruthy();

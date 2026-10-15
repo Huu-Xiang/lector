@@ -97,8 +97,8 @@
       "title": "About Readfox",
       "intro": "Readfox lets you read real books and articles in the language you are learning, translate words and phrases as you go, and turn what you meet into spaced-repetition practice.",
       "freeSoftware": {
-        "heading": "Free software",
-        "license": "Readfox is free software under the <license>GNU Affero General Public License v3.0</license>. It is based on <lector>Lector</lector> by heuwels and its contributors, with our modifications.",
+        "heading": "Open source",
+        "license": "Readfox is open-source software under the <license>GNU Affero General Public License v3.0</license>. It is built on <lector>Lector</lector>, an open-source reader by heuwels and its contributors, with our changes.",
         "source": "The complete source code of the version running on this site is available at <source>{url}</source>."
       },
       "dataSources": {

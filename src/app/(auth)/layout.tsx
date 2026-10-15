@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useLectorMode } from '@/lib/use-env';
 import Image from 'next/image';
@@ -24,6 +24,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
   const t = useTranslations('common');
   const tAuth = useTranslations('auth');
   const mode = useLectorMode();
+  const wide = usePathname() === '/subscribe';
 
   useEffect(() => {
     if (mode === 'selfhost') router.replace('/');
@@ -43,7 +44,9 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         <h1 className="text-3xl font-bold tracking-tight text-foreground">{t('appName')}</h1>
         <p className="mt-2 text-sm text-muted-foreground">{t('tagline')}</p>
       </div>
-      <div className="w-full max-w-sm rounded-2xl border border-border bg-card p-6 shadow-sm">
+      <div
+        className={`w-full ${wide ? 'max-w-6xl' : 'max-w-sm'} rounded-2xl border border-border bg-card p-6 shadow-sm`}
+      >
         {mode === 'cloud' ? (
           children
         ) : (

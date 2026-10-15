@@ -132,9 +132,9 @@
     },
     "about": {
       "title": "关于",
-      "build": "构建",
       "commit": "提交",
-      "built": "构建时间"
+      "built": "构建时间",
+      "version": "版本"
     }
   }
 }

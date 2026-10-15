@@ -400,7 +400,7 @@ app.get('/', (c) => {
   c.header('Cache-Control', 'private, no-store');
   c.header(
     'Content-Disposition',
-    `attachment; filename="lector-learning-data-${takeout.exportedAt.slice(0, 10)}.json"`,
+    `attachment; filename="readfox-learning-data-${takeout.exportedAt.slice(0, 10)}.json"`,
   );
   return c.json(takeout);
 });

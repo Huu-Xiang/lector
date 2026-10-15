@@ -442,7 +442,7 @@ describe('learning-data takeout', () => {
     expect(exportResponse.status).toBe(200);
     expect(exportResponse.headers.get('cache-control')).toBe('private, no-store');
     expect(exportResponse.headers.get('content-disposition')).toMatch(
-      /^attachment; filename="lector-learning-data-\d{4}-\d{2}-\d{2}\.json"$/,
+      /^attachment; filename="readfox-learning-data-\d{4}-\d{2}-\d{2}\.json"$/,
     );
     const before = (await exportResponse.json()) as Record<string, unknown>;
     expect(before).toMatchObject({

@@ -34,13 +34,12 @@
       "libraryAllowance": "书库额度：{collections} 个合集、{lessons} 篇课文，以及每月 {words} 个日记词数。付费套餐结束后，现有数据不会被删除。",
       "fairUse": "对于特别大的单篇文本和批量增长的已保存数据，我们设有宽松的合理使用保护措施。这些措施不会删除现有的学习数据，也不会阻止导出。",
       "byokActive": "你的自备 AI 密钥已启用，因此翻译和高级 AI 功能会使用你的服务商，而不是 Readfox 的托管额度。免费版的书库和日记限制仍然适用，朗读仍使用浏览器自带的语音。",
-      "managedAllowance": "托管额度：每月 {glosses} 次词典未收录词的释义，每天 {phrases} 次简单短语翻译和 {context} 次语境翻译。设备本地的词典查词和浏览器语音仍然免费。",
+      "managedAllowance": "每月 AI 额度：{glosses} 次 AI 查词（词典里没有的词），{detailed} 次详细的 AI 回答。词典查词和浏览器语音免费。",
       "comparePlans": "比较付费套餐",
-      "bringKey": "或使用自己的 AI 密钥",
       "openingPaddle": "正在打开 Paddle…",
       "billingHistory": "账单记录",
       "manageBilling": "管理账单",
-      "paidIntro": "你的套餐包含更大的托管 AI 额度和托管语音。浏览器语音和数据导出仍可作为备选。",
+      "paidIntro": "你的套餐包含更多的 AI 额度。你可以随时导出自己的数据。",
       "pendingAccepted": "Paddle 已接受你更改为 {price} 的请求。收到已签名的 webhook 后，此页面会立即更新。",
       "paddleHandles": "Paddle 会安全地处理付款方式、发票和取消订阅。",
       "changePlan": "更改套餐",
@@ -316,6 +315,7 @@
     "subscribeYearNoPrice": "按年订阅",
     "orYearNoPrice": "或按年付费，约省 20%",
     "subscribeMonthNoPrice": "按月订阅",
-    "orMonthNoPrice": "或按月付费"
+    "orMonthNoPrice": "或按月付费",
+    "back": "返回应用"
   }
 }

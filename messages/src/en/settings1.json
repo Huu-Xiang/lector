@@ -132,9 +132,9 @@
     },
     "about": {
       "title": "About",
-      "build": "Build",
       "commit": "Commit",
-      "built": "Built"
+      "built": "Built",
+      "version": "Version"
     }
   }
 }

@@ -252,7 +252,7 @@ export async function exportUser(id: string, email: string): Promise<void> {
   const a = document.createElement('a');
   a.href = url;
   const stamp = new Date().toISOString().slice(0, 10);
-  a.download = `lector-export-${email.replace(/[^a-z0-9]+/gi, '-')}-${stamp}.json`;
+  a.download = `readfox-export-${email.replace(/[^a-z0-9]+/gi, '-')}-${stamp}.json`;
   document.body.appendChild(a);
   a.click();
   a.remove();
