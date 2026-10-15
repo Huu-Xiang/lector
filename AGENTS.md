@@ -23,6 +23,7 @@ This repository is **Readfox**, a public, self-managed fork of `heuwels/lector` 
 - **Server firewall.** `/etc/nftables.conf` (table `gameguard`) drops everything except the ports it lists; new services need rules there as well as in `ufw`. Reloading the file with `flush ruleset` wipes Docker's rules, so add rules at runtime with `nft add rule` and mirror them in the file.
 - **UI text is translated.** Never hard-code user-visible text: use `next-intl` (`useTranslations` / `getTranslations`) and add the key to `messages/src/en/<area>.json` and `messages/src/zh-CN/<area>.json` (same keys, same placeholders). Then run `node scripts/merge-messages.mjs` and commit the generated `messages/en.json` and `messages/zh-CN.json`. Conventions and the locale rules are in `docs/i18n-conventions.md` and `docs/i18n-plan.md`. `src/i18n/messages.test.ts` fails when catalogs drift. Three language settings are separate: `targetLanguage` (learning), `nativeLanguage` (translations and AI replies), and the interface locale (cookie `NEXT_LOCALE`). `/admin` stays English.
 - `readfox-todo.md` (one level above this repo, in `/Users/shawnhu/Dev/Lector/`) tracks open work.
+- `docs/readfox-handoff.md` is a map of the Readfox-specific code, decisions and checks. Read it first when you start work here.
 
 **Testing policy: CI runs the full e2e suite on every PR — rely on it for PR verification, and locally run the specs your change touches (plus `npm test` for unit tests).**
 
