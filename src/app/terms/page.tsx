@@ -45,6 +45,7 @@ export default async function TermsPage() {
       <H2>{t('terms.payments.heading')}</H2>
       <p>{t('terms.payments.body')}</p>
       <p>{t('terms.payments.renewal')}</p>
+      <p>{t.rich('terms.payments.rmb', tags)}</p>
       <p>{t.rich('terms.payments.refunds', tags)}</p>
 
       <H2>{t('terms.acceptableUse.heading')}</H2>

@@ -73,7 +73,9 @@ export function xiaodouConfigFromEnv(env: NodeJS.ProcessEnv = process.env): Xiao
   const appId = env.XD_APP_ID?.trim();
   const keyId = env.XD_KEY_ID?.trim();
   const keyB64 = env.XD_PRIVATE_KEY_B64?.trim();
-  const publicOrigin = (env.BETTER_AUTH_URL ?? '').trim().replace(/\/+$/, '');
+  const publicOrigin = (env.XD_PUBLIC_ORIGIN ?? env.BETTER_AUTH_URL ?? '')
+    .trim()
+    .replace(/\/+$/, '');
   if (!baseUrl || !appId || !keyId || !keyB64 || !publicOrigin.startsWith('https://')) return null;
   return {
     baseUrl,

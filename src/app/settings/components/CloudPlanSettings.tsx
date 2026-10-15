@@ -252,6 +252,19 @@ export default function CloudPlanSettings() {
       {plan && plan !== 'free' && (
         <div className="mt-4 space-y-4 text-sm text-muted-foreground">
           <p>{t('paidIntro')}</p>
+          {entitlements?.grant && (
+            <div className="flex flex-wrap items-center gap-3" data-testid="plan-grant">
+              <p className="text-foreground">
+                {t('grantUntil', {
+                  plan: planLabel(entitlements.grant.plan),
+                  date: new Date(entitlements.grant.endsAt).toLocaleDateString(),
+                })}
+              </p>
+              <Button type="button" size="sm" onClick={() => (window.location.href = '/subscribe')}>
+                {t('renew')}
+              </Button>
+            </div>
+          )}
 
           {pendingTarget && (
             <p className="rounded-lg border border-border bg-[var(--primary-soft)] p-3 text-foreground">

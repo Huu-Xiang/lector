@@ -60,7 +60,9 @@
       "applying": "Applying…",
       "confirmPaddle": "Confirm with Paddle",
       "cancel": "Cancel",
-      "changesUnavailable": "Plan changes are unavailable while Paddle is processing this subscription. Use billing management to update your payment method or review its status."
+      "changesUnavailable": "Plan changes are unavailable while Paddle is processing this subscription. Use billing management to update your payment method or review its status.",
+      "grantUntil": "{plan} is paid until {date}. After that the account returns to Free; nothing is charged automatically.",
+      "renew": "Renew"
     },
     "byok": {
       "loadFailed": "Could not load BYOK settings",
@@ -317,6 +319,18 @@
     "orYearNoPrice": "or pay yearly — save about 20%",
     "subscribeMonthNoPrice": "Subscribe monthly",
     "orMonthNoPrice": "or pay monthly",
-    "back": "Back to the app"
+    "back": "Back to the app",
+    "methodCn": "Alipay / WeChat Pay (RMB, one-time)",
+    "methodCard": "Card / PayPal / Apple Pay (renews automatically)",
+    "channelAlipay": "Alipay",
+    "channelWechat": "WeChat Pay",
+    "cnNote": "One-time payment that does not renew. Buy again before it ends and the time adds on.",
+    "cnYearNote": "12 months for {price}, about 20% off",
+    "cnHigherPlan": "Your current plan is higher than this one, so you cannot buy a lower plan now.",
+    "cnSubscriptionActive": "You already have a subscription that renews automatically. Cancel it in Settings → Plan first.",
+    "cnNotPaid": "That payment was not completed.",
+    "grantActive": "Current plan: {plan}, valid until {date}.",
+    "cnBuyMonth": "1 month · {price}",
+    "cnBuyYear": "12 months · {price}"
   }
 }

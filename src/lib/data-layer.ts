@@ -722,6 +722,8 @@ export async function getKnownWordsMap(): Promise<Map<string, WordState>> {
 export interface ClientEntitlements {
   plan: 'free' | 'cloud' | 'plus' | 'max' | 'unlimited';
   byok: boolean;
+  /** A fixed-period paid tier (RMB payment or code), when one is active. */
+  grant?: { plan: 'cloud' | 'plus' | 'max'; endsAt: string } | null;
   limits: Record<string, number | null>;
   usage: Record<string, number>;
   periods: { day: string; month: string };

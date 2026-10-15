@@ -17,6 +17,19 @@ import {
 } from '@/lib/billing';
 import { planName } from '@/lib/plan-names';
 import {
+  fetchCnOptions,
+  fetchCnOrderStatus,
+  forgetCnOrder,
+  formatFen,
+  rememberCnOrder,
+  startCnCheckout,
+  takeRememberedCnOrder,
+  type CnChannel,
+  type CnMonths,
+  type CnPrice,
+} from '@/lib/cn-billing';
+import { getEntitlements, type ClientEntitlements } from '@/lib/data-layer';
+import {
   PAID_TIERS,
   TIER_ALLOWANCES,
   chinaPrice,
@@ -56,6 +69,11 @@ export default function SubscribePage() {
   // promise about the price.
   const [promo, setPromo] = useState<string | null>(null);
   const [rejectedPromo, setRejectedPromo] = useState<string | null>(null);
+  const [cnPrices, setCnPrices] = useState<CnPrice[] | null>(null);
+  const [paddleReady, setPaddleReady] = useState(false);
+  const [method, setMethod] = useState<'cn' | 'card'>('card');
+  const [channel, setChannel] = useState<CnChannel>('alipay');
+  const [entitlements, setEntitlements] = useState<ClientEntitlements | null>(null);
   const pollTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // One-shot activation poll: the webhook usually lands within seconds of
@@ -79,6 +97,32 @@ export default function SubscribePage() {
     tick(0);
   }, []);
 
+  // The RMB cashier sends the buyer back to this page; the order number was
+  // kept before leaving. The server also asks the platform when polled.
+  const pollCnOrder = useCallback(
+    (outTradeNo: string) => {
+      function tick(attempt: number) {
+        pollTimer.current = setTimeout(async () => {
+          const state = await fetchCnOrderStatus(outTradeNo);
+          if (state === 'SUCCEEDED') {
+            forgetCnOrder();
+            window.location.replace('/');
+            return;
+          }
+          if (state === 'CLOSED' || state === 'FAILED' || state === null || attempt >= 45) {
+            forgetCnOrder();
+            if (state !== 'PAYING' && state !== 'CREATED') toast.error(t('cnNotPaid'));
+            setPhase('pick');
+            return;
+          }
+          tick(attempt + 1);
+        }, 2000);
+      }
+      tick(0);
+    },
+    [t],
+  );
+
   useEffect(() => () => clearTimeout(pollTimer.current ?? undefined), []);
 
   useEffect(() => {
@@ -90,59 +134,94 @@ export default function SubscribePage() {
     const requested = paidPlanFromSearch(window.location.search);
     const requestedPromo = promoFromSearch(window.location.search);
 
-    fetchBillingStatus().then((s) => {
-      if (cancelled) return;
+    Promise.all([fetchBillingStatus(), fetchCnOptions(), getEntitlements()]).then(
+      ([s, cn, ent]) => {
+        if (cancelled) return;
+        setCnPrices(cn);
+        setEntitlements(ent);
 
-      setRequestedPlan(requested);
-      setPromo(requestedPromo);
+        setRequestedPlan(requested);
+        setPromo(requestedPromo);
 
-      // Billing off, already paid/exempt, or status unreachable → this page
-      // has no business rendering; the rest of the app knows better than us.
-      // Free access alone is not a reason to redirect: /subscribe doubles as
-      // its opt-in upgrade surface.
-      if (s === null || !s.enforced) {
-        window.location.replace('/');
-        return;
-      }
+        // Billing off, already paid/exempt, or status unreachable → this page
+        // has no business rendering; the rest of the app knows better than us.
+        // Free access alone is not a reason to redirect: /subscribe doubles as
+        // its opt-in upgrade surface.
+        if (s === null || !s.enforced) {
+          window.location.replace('/');
+          return;
+        }
 
-      setStatus(s);
+        setStatus(s);
 
-      // Suspension is an abuse/security lock, not a billing state. It wins
-      // over Free and paid activation so the page cannot offer a misleading
-      // "Continue" loop while the API is correctly denying app access.
-      if (s.suspended) {
-        setPhase('suspended');
-        return;
-      }
+        // Suspension is an abuse/security lock, not a billing state. It wins
+        // over Free and paid activation so the page cannot offer a misleading
+        // "Continue" loop while the API is correctly denying app access.
+        if (s.suspended) {
+          setPhase('suspended');
+          return;
+        }
 
-      if (s.subscriptionActive || s.exempt) {
-        window.location.replace('/');
-        return;
-      }
+        if (s.subscriptionActive || s.exempt) {
+          window.location.replace('/');
+          return;
+        }
 
-      // Returning from the /checkout overlay (Paddle's successUrl bounces
-      // here): the webhook may not have landed yet, so show activation and
-      // poll rather than the tiles the user just used.
-      if (new URLSearchParams(window.location.search).get('checkout') === 'success') {
-        setPhase('activating');
-        pollUntilActive();
-        return;
-      }
+        const pendingCn = takeRememberedCnOrder();
+        if (pendingCn && cn) {
+          setPhase('activating');
+          pollCnOrder(pendingCn);
+          return;
+        }
 
-      // Nothing to sell, or nowhere approved to check out → graceful fallback
-      // (dev and the e2e billing server run without prices / CHECKOUT_URL).
-      if (s.checkout.prices.length === 0 || checkoutUrl() === '') {
-        setPhase('unavailable');
-        return;
-      }
+        // Returning from the /checkout overlay (Paddle's successUrl bounces
+        // here): the webhook may not have landed yet, so show activation and
+        // poll rather than the tiles the user just used.
+        if (new URLSearchParams(window.location.search).get('checkout') === 'success') {
+          setPhase('activating');
+          pollUntilActive();
+          return;
+        }
 
-      setPhase('pick');
-    });
+        // Nothing to sell, or nowhere approved to check out → graceful fallback
+        // (dev and the e2e billing server run without prices / CHECKOUT_URL).
+        const paddle = s.checkout.prices.length > 0 && checkoutUrl() !== '';
+        if (!paddle && !cn) {
+          setPhase('unavailable');
+          return;
+        }
+        setPaddleReady(paddle);
+        setMethod(
+          cn && (!paddle || document.documentElement.lang.startsWith('zh')) ? 'cn' : 'card',
+        );
+
+        setPhase('pick');
+      },
+    );
 
     return () => {
       cancelled = true;
     };
-  }, [pollUntilActive]);
+  }, [pollUntilActive, pollCnOrder]);
+
+  async function openCnCheckout(plan: PaidTier, months: CnMonths) {
+    if (opening !== null) return;
+    setOpening(`cn-${plan}-${months}`);
+    const started = await startCnCheckout(plan, months, channel);
+    if ('error' in started) {
+      setOpening(null);
+      toast.error(
+        started.error === 'higher_plan_active'
+          ? t('cnHigherPlan')
+          : started.error === 'subscription_active'
+            ? t('cnSubscriptionActive')
+            : t('checkoutFailed'),
+      );
+      return;
+    }
+    rememberCnOrder(started.outTradeNo);
+    window.location.assign(started.payUrl);
+  }
 
   async function openCheckout(price: BillingPrice) {
     if (opening !== null) return;
@@ -286,6 +365,56 @@ export default function SubscribePage() {
         </div>
       )}
 
+      {entitlements?.grant && phase === 'pick' && (
+        <p
+          className="rounded-lg border border-primary/40 bg-[var(--primary-soft)] p-3 text-sm text-foreground"
+          data-testid="subscribe-grant"
+        >
+          {t('grantActive', {
+            plan: planName(entitlements.grant.plan),
+            date: new Date(entitlements.grant.endsAt).toLocaleDateString(locale),
+          })}
+        </p>
+      )}
+
+      {phase === 'pick' && cnPrices && (
+        <div className="space-y-2" data-testid="subscribe-methods">
+          {paddleReady && (
+            <div className="flex flex-wrap gap-2">
+              {(['cn', 'card'] as const).map((m) => (
+                <Button
+                  key={m}
+                  type="button"
+                  size="sm"
+                  variant={method === m ? 'default' : 'outline'}
+                  onClick={() => setMethod(m)}
+                  data-testid={`subscribe-method-${m}`}
+                >
+                  {m === 'cn' ? t('methodCn') : t('methodCard')}
+                </Button>
+              ))}
+            </div>
+          )}
+          {method === 'cn' && (
+            <div className="flex flex-wrap items-center gap-2 text-sm">
+              {(['alipay', 'wechat'] as const).map((c) => (
+                <Button
+                  key={c}
+                  type="button"
+                  size="sm"
+                  variant={channel === c ? 'default' : 'outline'}
+                  onClick={() => setChannel(c)}
+                  data-testid={`subscribe-channel-${c}`}
+                >
+                  {c === 'alipay' ? t('channelAlipay') : t('channelWechat')}
+                </Button>
+              ))}
+              <span className="text-xs text-muted-foreground">{t('cnNote')}</span>
+            </div>
+          )}
+        </div>
+      )}
+
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {showFree && phase !== 'loading' && phase !== 'activating' && phase !== 'slow' && (
           <div
@@ -294,9 +423,11 @@ export default function SubscribePage() {
           >
             <div className="flex items-center justify-between gap-2">
               <span className="font-semibold text-foreground">{t('freeName')}</span>
-              <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
-                {t('currentPlan')}
-              </span>
+              {(!entitlements || entitlements.plan === 'free') && (
+                <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
+                  {t('currentPlan')}
+                </span>
+              )}
             </div>
             <p className="mt-1">
               <span className="text-2xl font-bold text-foreground">$0</span>
@@ -334,7 +465,10 @@ export default function SubscribePage() {
             const annual = status.checkout.prices.find(
               (p) => p.plan === plan && p.cycle === 'year',
             );
-            if (!monthly && !annual) return null;
+            const cnMonth = cnPrices?.find((p) => p.plan === plan && p.months === 1);
+            const cnYear = cnPrices?.find((p) => p.plan === plan && p.months === 12);
+            if (method === 'card' && !monthly && !annual) return null;
+            if (method === 'cn' && (!cnMonth || !cnYear)) return null;
             const requested = plan === requestedPlan;
             const monthlyPrice = shownPrice(plan, 'month');
             const annualPrice = shownPrice(plan, 'year');
@@ -349,8 +483,8 @@ export default function SubscribePage() {
               plan === 'cloud' ? tp('features.moreRoom') : tp('features.unlimitedLibrary'),
             ];
             // Annual is the default action when both cycles exist.
-            const primary = annual ?? monthly!;
-            const secondary = primary.cycle === 'year' ? monthly : annual;
+            const primary = annual ?? monthly;
+            const secondary = primary?.cycle === 'year' ? monthly : annual;
             const cycleCopy = (cycle: 'month' | 'year', price: string | null, lead: boolean) =>
               cycle === 'year'
                 ? price
@@ -390,18 +524,31 @@ export default function SubscribePage() {
                     </span>
                   )}
                 </div>
-                {monthlyPrice && (
+                {method === 'cn' && cnMonth && cnYear && (
+                  <>
+                    <p className="mt-1">
+                      <span className="text-2xl font-bold text-foreground">
+                        {formatFen(cnMonth.amountFen, locale)}
+                      </span>
+                      <span className="text-sm text-muted-foreground">{t('perMonth')}</span>
+                    </p>
+                    <p className="mt-1 text-xs font-medium text-primary">
+                      {t('cnYearNote', { price: formatFen(cnYear.amountFen, locale) })}
+                    </p>
+                  </>
+                )}
+                {method === 'card' && monthlyPrice && (
                   <p className="mt-1">
                     <span className="text-2xl font-bold text-foreground">{monthlyPrice}</span>
                     <span className="text-sm text-muted-foreground">{t('perMonth')}</span>
                   </p>
                 )}
-                {annual && annualPrice && (
+                {method === 'card' && annual && annualPrice && (
                   <p className="mt-1 text-xs font-medium text-primary">
                     {t('annualNote', { price: annualPrice })}
                   </p>
                 )}
-                {cn && (
+                {method === 'card' && cn && (
                   <p className="mt-1 text-xs text-muted-foreground">
                     {tp('chinaPrice', { price: formatMoney(cn, locale) })}
                   </p>
@@ -416,38 +563,67 @@ export default function SubscribePage() {
                     </li>
                   ))}
                 </ul>
-                <Button
-                  type="button"
-                  className="mt-4 w-full cursor-pointer"
-                  disabled={opening !== null}
-                  onClick={() => openCheckout(primary)}
-                  data-testid={`subscribe-price-${primary.plan}-${primary.cycle}`}
-                >
-                  {opening === primary.id ? (
-                    <>
-                      <Spinner
-                        tone="current"
-                        label={t('openingCheckoutLabel')}
-                        data-testid="subscribe-price-opening"
-                      />
-                      {t('openingCheckout')}
-                    </>
-                  ) : (
-                    cycleCopy(primary.cycle, priceFor(primary.cycle), true)
-                  )}
-                </Button>
-                {secondary && (
-                  <button
-                    type="button"
-                    className="mt-2 w-full cursor-pointer text-center text-xs font-medium text-primary hover:underline disabled:cursor-default disabled:opacity-70"
-                    disabled={opening !== null}
-                    onClick={() => openCheckout(secondary)}
-                    data-testid={`subscribe-price-${secondary.plan}-${secondary.cycle}`}
-                  >
-                    {opening === secondary.id
-                      ? t('openingCheckout')
-                      : cycleCopy(secondary.cycle, priceFor(secondary.cycle), false)}
-                  </button>
+                {method === 'cn' && cnMonth && cnYear ? (
+                  <>
+                    <Button
+                      type="button"
+                      className="mt-auto w-full cursor-pointer"
+                      disabled={opening !== null}
+                      onClick={() => openCnCheckout(plan, 12)}
+                      data-testid={`subscribe-cn-${plan}-12`}
+                    >
+                      {opening === `cn-${plan}-12`
+                        ? t('openingCheckout')
+                        : t('cnBuyYear', { price: formatFen(cnYear.amountFen, locale) })}
+                    </Button>
+                    <button
+                      type="button"
+                      className="mt-2 w-full cursor-pointer text-center text-xs font-medium text-primary hover:underline disabled:cursor-default disabled:opacity-70"
+                      disabled={opening !== null}
+                      onClick={() => openCnCheckout(plan, 1)}
+                      data-testid={`subscribe-cn-${plan}-1`}
+                    >
+                      {opening === `cn-${plan}-1`
+                        ? t('openingCheckout')
+                        : t('cnBuyMonth', { price: formatFen(cnMonth.amountFen, locale) })}
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      type="button"
+                      className="mt-4 w-full cursor-pointer"
+                      disabled={opening !== null}
+                      onClick={() => openCheckout(primary!)}
+                      data-testid={`subscribe-price-${primary!.plan}-${primary!.cycle}`}
+                    >
+                      {opening === primary!.id ? (
+                        <>
+                          <Spinner
+                            tone="current"
+                            label={t('openingCheckoutLabel')}
+                            data-testid="subscribe-price-opening"
+                          />
+                          {t('openingCheckout')}
+                        </>
+                      ) : (
+                        cycleCopy(primary!.cycle, priceFor(primary!.cycle), true)
+                      )}
+                    </Button>
+                    {secondary && (
+                      <button
+                        type="button"
+                        className="mt-2 w-full cursor-pointer text-center text-xs font-medium text-primary hover:underline disabled:cursor-default disabled:opacity-70"
+                        disabled={opening !== null}
+                        onClick={() => openCheckout(secondary)}
+                        data-testid={`subscribe-price-${secondary.plan}-${secondary.cycle}`}
+                      >
+                        {opening === secondary.id
+                          ? t('openingCheckout')
+                          : cycleCopy(secondary.cycle, priceFor(secondary.cycle), false)}
+                      </button>
+                    )}
+                  </>
                 )}
               </div>
             );
