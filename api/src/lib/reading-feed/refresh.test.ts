@@ -19,7 +19,10 @@ describe('refreshReadingFeed', () => {
   // A fetch stub covering every shape the registered sources request: the
   // Global Voices WordPress REST array, and the MediaWiki random+extracts
   // pair the wiki sources use.
-  function makeFakeFetch(wpPosts: unknown[], mediawikiExtract: Record<string, unknown>): typeof fetch {
+  function makeFakeFetch(
+    wpPosts: unknown[],
+    mediawikiExtract: Record<string, unknown>,
+  ): typeof fetch {
     return (async (url: string | URL) => {
       const path = url.toString();
       if (path.includes('wp-json')) return new Response(JSON.stringify(wpPosts));
@@ -33,9 +36,24 @@ describe('refreshReadingFeed', () => {
   test('stores articles within the word-count window, skips too-short and too-long ones', async () => {
     const source = READING_FEED_SOURCES[0];
     const posts = [
-      { link: 'https://x/1', date: '2026-01-01', title: { rendered: 'Too short' }, content: { rendered: wordsText(10) } },
-      { link: 'https://x/2', date: '2026-01-01', title: { rendered: 'Just right' }, content: { rendered: wordsText(300) } },
-      { link: 'https://x/3', date: '2026-01-01', title: { rendered: 'Too long' }, content: { rendered: wordsText(5000) } },
+      {
+        link: 'https://x/1',
+        date: '2026-01-01',
+        title: { rendered: 'Too short' },
+        content: { rendered: wordsText(10) },
+      },
+      {
+        link: 'https://x/2',
+        date: '2026-01-01',
+        title: { rendered: 'Just right' },
+        content: { rendered: wordsText(300) },
+      },
+      {
+        link: 'https://x/3',
+        date: '2026-01-01',
+        title: { rendered: 'Too long' },
+        content: { rendered: wordsText(5000) },
+      },
     ];
     const fakeFetch = makeFakeFetch(posts, {
       title: 'Unused',
@@ -60,7 +78,12 @@ describe('refreshReadingFeed', () => {
       if (path.includes('wp-json')) {
         return new Response(
           JSON.stringify([
-            { link: 'https://x/same-url', date: '2026-01-01', title: { rendered: title }, content: { rendered: wordsText(300) } },
+            {
+              link: 'https://x/same-url',
+              date: '2026-01-01',
+              title: { rendered: title },
+              content: { rendered: wordsText(300) },
+            },
           ]),
         );
       }
@@ -81,7 +104,9 @@ describe('refreshReadingFeed', () => {
   });
 
   test('prunes down to the newest 30 rows per language and interest', () => {
-    const source = READING_FEED_SOURCES.find((s) => s.language === 'en' && s.interest === 'travel')!;
+    const source = READING_FEED_SOURCES.find(
+      (s) => s.language === 'en' && s.interest === 'travel',
+    )!;
     const now = Date.now();
     for (let i = 0; i < 40; i += 1) {
       db.prepare(

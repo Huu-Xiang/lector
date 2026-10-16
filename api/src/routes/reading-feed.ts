@@ -26,11 +26,7 @@ function attributionBlock(article: {
   license: string;
   licenseUrl: string;
 }): string {
-  const lines = [
-    '---',
-    `Title: ${article.title}`,
-    `Source: ${article.source}`,
-  ];
+  const lines = ['---', `Title: ${article.title}`, `Source: ${article.source}`];
   if (article.author) lines.push(`Author: ${article.author}`);
   lines.push(`URL: ${article.url}`);
   lines.push(`License: ${article.license} (${article.licenseUrl})`);

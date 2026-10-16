@@ -70,7 +70,10 @@ export function pruneReadingFeed(language: FeedLanguage, interest: ReadingIntere
   ).run(language, interest, language, interest, MAX_ROWS_PER_BUCKET);
 }
 
-export function listReadingFeed(language: FeedLanguage, interest: ReadingInterest): ReadingFeedRow[] {
+export function listReadingFeed(
+  language: FeedLanguage,
+  interest: ReadingInterest,
+): ReadingFeedRow[] {
   return db
     .prepare(
       `SELECT id, language, interest, source, title, url, author, license, licenseUrl,
@@ -83,5 +86,7 @@ export function listReadingFeed(language: FeedLanguage, interest: ReadingInteres
 }
 
 export function getReadingFeedArticle(id: string): ReadingFeedRow | undefined {
-  return db.prepare('SELECT * FROM reading_feed WHERE id = ?').get(id) as ReadingFeedRow | undefined;
+  return db.prepare('SELECT * FROM reading_feed WHERE id = ?').get(id) as
+    | ReadingFeedRow
+    | undefined;
 }

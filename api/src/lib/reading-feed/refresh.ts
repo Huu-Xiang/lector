@@ -14,7 +14,10 @@ export function readingFeedEnabled(): boolean {
   return true;
 }
 
-async function refreshOneSource(source: ReadingFeedSource, fetchImpl: typeof fetch): Promise<number> {
+async function refreshOneSource(
+  source: ReadingFeedSource,
+  fetchImpl: typeof fetch,
+): Promise<number> {
   let saved = 0;
   try {
     const articles = await source.fetch(fetchImpl);

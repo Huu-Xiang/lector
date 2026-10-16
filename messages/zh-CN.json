@@ -1201,7 +1201,8 @@
         "heading": "数据来源",
         "body": "句库来自 Tatoeba（CC BY 2.0 FR），词典来自仓库 README 中列出的来源，各自适用其自身的许可。",
         "books": "书库里的免费书籍是来自古腾堡计划（gutenberg.org）的公版文本。每本书都附有指向来源页面的链接。",
-        "dictionaries": "词典释义来自英文维基词典（通过 kaikki.org，CC BY-SA 许可）。英语词典由 skywind3000 的 ECDICT（MIT 许可，github.com/skywind3000/ECDICT）整理而成，例句来自 Tatoeba（CC BY 2.0 FR）。"
+        "dictionaries": "词典释义来自英文维基词典（通过 kaikki.org，CC BY-SA 许可）。英语词典由 skywind3000 的 ECDICT（MIT 许可，github.com/skywind3000/ECDICT）整理而成，例句来自 Tatoeba（CC BY 2.0 FR）。",
+        "readingFeed": "“免费书籍”对话框里时事、旅行、科普三个标签的文章,来自 Global Voices（CC BY 3.0,globalvoices.org）、Wikivoyage（CC BY-SA 3.0,wikivoyage.org）、简明英语维基百科和 Vikidia（CC BY-SA 4.0）。每篇文章都附有指向许可和原始来源的链接;添加到书库时会自动附上这些出处信息。"
       }
     }
   },

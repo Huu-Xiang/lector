@@ -82,6 +82,7 @@ async function startSpanishGuide(page: Page): Promise<string> {
   await expect(page).toHaveURL(/\/setup/, { timeout: 15_000 });
   await page.getByTestId('setup-language-es').click();
   await page.getByTestId('setup-level-A2').click();
+  await page.getByTestId('setup-interest-news').click();
   await page.getByTestId('start-guided-onboarding').click();
   await expect(page).toHaveURL(/\/read\/[^/?]+\?onboarding=1$/, { timeout: 30_000 });
   await expect(page.getByTestId('onboarding-coach-lookup')).toBeVisible({ timeout: 15_000 });

@@ -18,7 +18,9 @@ describe('estimateCefrLevel', () => {
   });
 
   test('short, simple French sentences map to an easier band than long, complex ones', () => {
-    const simple = 'Le chat est sur le tapis. Il fait beau. Le chien court dans le parc. '.repeat(3);
+    const simple = 'Le chat est sur le tapis. Il fait beau. Le chien court dans le parc. '.repeat(
+      3,
+    );
     const complex =
       "Nonobstant les considerations susmentionnees, le comite, apres avoir longuement delibere sur les ramifications des amendements legislatifs proposes, a finalement conclu qu'une enquete approfondie supplementaire etait necessaire. ".repeat(
         3,

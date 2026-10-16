@@ -19,6 +19,7 @@ A public, multi-user language-reading app at https://readfox.app. It is a self-m
 | Plans and limits | `api/src/lib/entitlements.ts` |
 | Shared caches | `api/src/lib/gloss-cache.ts`, `api/src/lib/entry-cache.ts` |
 | Free books | `languages/<code>/content/library/` (book folders plus `translations.json`: title and blurb in all 16 native languages), `scripts/build-library-books.py`, `api/src/routes/library.ts`. At least 3 books per CEFR level for French and English (test-enforced). |
+| Reading feed | Fresh, license-cleared articles for the learner's interests (`readingInterests` setting, set in setup). `api/src/lib/reading-feed/` (sources, level heuristic, background refresher, `reading_feed` table), `api/src/routes/reading-feed.ts`, tabs in `FreeBooksModal`. Sources: Global Voices (news), Wikivoyage (travel), Simple Wikipedia + Vikidia (science), each CC-licensed; `en`/`fr` only today. |
 | Reading level | Setup asks for a CEFR level and saves it per target language (`readingLevels` setting). The free-books dialog groups by level and opens on it. Exam equivalents: `src/lib/reading-level.ts`; mainland Chinese exams show only for the zh-CN interface or a mainland time zone. |
 | Admin | `api/src/routes/admin.ts`, `src/app/admin/page.tsx` |
 | Public pages | `src/app/{landing,privacy,terms,about}`, text in `messages/src/*/legal.json` |
@@ -45,6 +46,7 @@ The plan for any language pair, English dictionary and example sentences is in `
 ## Data sources and licences
 
 - Books: Project Gutenberg, public domain in the United States. Each manifest links to its source page.
+- Reading feed articles: Global Voices (CC BY 3.0), Wikivoyage (CC BY-SA 3.0), Simple Wikipedia and Vikidia (CC BY-SA 4.0). VOA Learning English and Wikinews were tried and dropped — VOA stopped publishing after the March 2025 USAGM funding cuts, and Wikinews went read-only on 2026-05-04.
 - Dictionaries: English Wiktionary through kaikki.org (CC BY-SA). Sentences: Tatoeba (CC BY 2.0 FR). Credit new sources on the About page when you add them.
 - Oxford, Collins, Cambridge and similar dictionaries are copyrighted. Do not ship them.
 
