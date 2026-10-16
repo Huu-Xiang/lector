@@ -37,17 +37,31 @@ async function fetchRandomPages(
   return data.query?.random ?? [];
 }
 
+// The TextExtracts MediaWiki extension unreliably drops extracts for all but
+// a few pages in a single multi-pageids request (observed empirically, not
+// documented). One request per candidate page is slower but actually works.
+async function fetchExtractOne(
+  fetchImpl: typeof fetch,
+  host: string,
+  pageId: number,
+): Promise<ExtractPage | null> {
+  const url = `https://${host}/w/api.php?action=query&prop=extracts|info&explaintext=1&inprop=url&pageids=${pageId}&format=json`;
+  const data = (await fetchJson(fetchImpl, url)) as {
+    query?: { pages?: Record<string, ExtractPage> };
+  };
+  const page = Object.values(data.query?.pages ?? {})[0];
+  return page ?? null;
+}
+
 async function fetchExtracts(
   fetchImpl: typeof fetch,
   host: string,
   pageIds: number[],
 ): Promise<ExtractPage[]> {
-  if (pageIds.length === 0) return [];
-  const url = `https://${host}/w/api.php?action=query&prop=extracts|info&explaintext=1&inprop=url&pageids=${pageIds.join('|')}&format=json`;
-  const data = (await fetchJson(fetchImpl, url)) as {
-    query?: { pages?: Record<string, ExtractPage> };
-  };
-  return Object.values(data.query?.pages ?? {});
+  const pages = await Promise.all(
+    pageIds.map((id) => fetchExtractOne(fetchImpl, host, id).catch(() => null)),
+  );
+  return pages.filter((page): page is ExtractPage => page !== null);
 }
 
 function makeMediaWikiSource(wiki: MediaWikiWikiConfig): ReadingFeedSource {
@@ -88,7 +102,7 @@ export const WIKIVOYAGE_EN = makeMediaWikiSource({
   host: 'en.wikivoyage.org',
   license: 'CC BY-SA 3.0',
   licenseUrl: 'https://creativecommons.org/licenses/by-sa/3.0/',
-  sampleSize: 20,
+  sampleSize: 15,
 });
 
 export const WIKIVOYAGE_FR = makeMediaWikiSource({
@@ -98,7 +112,7 @@ export const WIKIVOYAGE_FR = makeMediaWikiSource({
   host: 'fr.wikivoyage.org',
   license: 'CC BY-SA 3.0',
   licenseUrl: 'https://creativecommons.org/licenses/by-sa/3.0/',
-  sampleSize: 20,
+  sampleSize: 15,
 });
 
 export const SIMPLE_WIKIPEDIA_EN = makeMediaWikiSource({
@@ -108,7 +122,7 @@ export const SIMPLE_WIKIPEDIA_EN = makeMediaWikiSource({
   host: 'simple.wikipedia.org',
   license: 'CC BY-SA 4.0',
   licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0/',
-  sampleSize: 20,
+  sampleSize: 15,
 });
 
 export const VIKIDIA_FR = makeMediaWikiSource({
@@ -118,5 +132,5 @@ export const VIKIDIA_FR = makeMediaWikiSource({
   host: 'fr.vikidia.org',
   license: 'CC BY-SA 4.0',
   licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0/',
-  sampleSize: 20,
+  sampleSize: 15,
 });
