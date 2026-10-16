@@ -97,7 +97,7 @@ test.describe.serial('cloud auth lifecycle', () => {
     expect(verifyUrl).toContain(`${CLOUD_API}/api/auth/verify-email`);
     await page.goto(verifyUrl);
     await page.waitForURL('http://localhost:3456/**');
-    await expect(page.getByTestId('account-name')).toHaveAttribute('title', EMAIL);
+    await expect(page.getByTestId('account-name')).toHaveAttribute('data-email', EMAIL);
   });
 
   // Each test runs in a fresh browser context (no cookies carry over), so
@@ -109,7 +109,7 @@ test.describe.serial('cloud auth lifecycle', () => {
     await page.getByTestId('login-password').fill(PASSWORD);
     await page.getByTestId('login-submit').click();
     await page.waitForURL((url) => url.pathname === '/');
-    await expect(page.getByTestId('account-name')).toHaveAttribute('title', EMAIL);
+    await expect(page.getByTestId('account-name')).toHaveAttribute('data-email', EMAIL);
 
     // Scope to the desktop sidebar — the mobile top-bar copy is display-hidden.
     await page.locator('aside').getByTestId('account-sign-out').click();
@@ -142,7 +142,7 @@ test.describe.serial('cloud auth lifecycle', () => {
     await page.getByTestId('login-password').fill(NEW_PASSWORD);
     await page.getByTestId('login-submit').click();
     await page.waitForURL((url) => url.pathname === '/');
-    await expect(page.getByTestId('account-name')).toHaveAttribute('title', EMAIL);
+    await expect(page.getByTestId('account-name')).toHaveAttribute('data-email', EMAIL);
   });
 
   test('personal API token: mint in Settings → Bearer authenticates cookie-free → revoke kills it', async ({

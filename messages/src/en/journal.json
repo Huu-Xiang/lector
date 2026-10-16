@@ -187,7 +187,9 @@
     "nav": {
       "expandSidebar": "Expand sidebar",
       "collapseSidebar": "Collapse sidebar",
-      "signOut": "Sign out"
+      "signOut": "Sign out",
+      "showEmail": "Show email",
+      "hideEmail": "Hide email"
     },
     "tour": {
       "practiceTitle": "Practice later",

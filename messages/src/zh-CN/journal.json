@@ -187,7 +187,9 @@
     "nav": {
       "expandSidebar": "展开侧边栏",
       "collapseSidebar": "收起侧边栏",
-      "signOut": "退出登录"
+      "signOut": "退出登录",
+      "showEmail": "显示邮箱",
+      "hideEmail": "隐藏邮箱"
     },
     "tour": {
       "practiceTitle": "稍后练习",

@@ -69,7 +69,7 @@ test.describe.serial('Free cloud learning loop', () => {
     await page.getByTestId('setup-language-af').click();
     await page.getByTestId('skip-guided-onboarding').click();
     await page.waitForURL((url) => url.pathname === '/');
-    await expect(page.getByTestId('account-name')).toHaveAttribute('title', EMAIL);
+    await expect(page.getByTestId('account-name')).toHaveAttribute('data-email', EMAIL);
   });
 
   test('Free has app access, bounded AI, browser audio, and portable data', async ({ page }) => {

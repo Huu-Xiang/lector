@@ -161,7 +161,7 @@ test.describe.serial('billing gate lifecycle', () => {
     await useBillingEnv(page);
     await signIn(page);
     await page.waitForURL((url) => url.pathname === '/');
-    await expect(page.getByTestId('account-name')).toHaveAttribute('title', EMAIL);
+    await expect(page.getByTestId('account-name')).toHaveAttribute('data-email', EMAIL);
     expect((await page.request.get(`${CLOUD_API}/api/collections`)).status()).toBe(200);
   });
 
@@ -440,7 +440,7 @@ test.describe.serial('billing gate lifecycle', () => {
     await page.getByTestId('setup-language-af').click();
     await page.getByTestId('skip-guided-onboarding').click();
     await page.waitForURL((url) => url.pathname === '/');
-    await expect(page.getByTestId('account-name')).toHaveAttribute('title', EMAIL);
+    await expect(page.getByTestId('account-name')).toHaveAttribute('data-email', EMAIL);
     await page.goto('/settings');
 
     const panel = page.getByTestId('cloud-plan-settings');
