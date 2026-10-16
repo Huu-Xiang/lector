@@ -1,0 +1,97 @@
+{
+  "title": "A Christmas Carol",
+  "author": "Charles Dickens",
+  "level": "C1",
+  "wordCount": 29146,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/46",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Stave i: marley's ghost"
+    },
+    {
+      "file": "02.md",
+      "title": "2. A Christmas Carol"
+    },
+    {
+      "file": "03.md",
+      "title": "3. A Christmas Carol"
+    },
+    {
+      "file": "04.md",
+      "title": "4. A Christmas Carol"
+    },
+    {
+      "file": "05.md",
+      "title": "5. A Christmas Carol"
+    },
+    {
+      "file": "06.md",
+      "title": "6. A Christmas Carol"
+    },
+    {
+      "file": "07.md",
+      "title": "7. A Christmas Carol"
+    },
+    {
+      "file": "08.md",
+      "title": "8. A Christmas Carol"
+    },
+    {
+      "file": "09.md",
+      "title": "9. A Christmas Carol"
+    },
+    {
+      "file": "10.md",
+      "title": "10. A Christmas Carol"
+    },
+    {
+      "file": "11.md",
+      "title": "11. A Christmas Carol"
+    },
+    {
+      "file": "12.md",
+      "title": "12. A Christmas Carol"
+    },
+    {
+      "file": "13.md",
+      "title": "13. A Christmas Carol"
+    },
+    {
+      "file": "14.md",
+      "title": "14. A Christmas Carol"
+    },
+    {
+      "file": "15.md",
+      "title": "15. A Christmas Carol"
+    },
+    {
+      "file": "16.md",
+      "title": "16. A Christmas Carol"
+    },
+    {
+      "file": "17.md",
+      "title": "17. A Christmas Carol"
+    },
+    {
+      "file": "18.md",
+      "title": "18. A Christmas Carol"
+    },
+    {
+      "file": "19.md",
+      "title": "19. A Christmas Carol"
+    },
+    {
+      "file": "20.md",
+      "title": "20. A Christmas Carol"
+    },
+    {
+      "file": "21.md",
+      "title": "21. A Christmas Carol"
+    }
+  ]
+}

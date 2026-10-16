@@ -1,0 +1,109 @@
+{
+  "title": "Notre-Dame de Paris (début)",
+  "author": "Victor Hugo",
+  "level": "C2",
+  "wordCount": 34992,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/19657",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Livre premier"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Notre-Dame de Paris"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Notre-Dame de Paris"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Notre-Dame de Paris"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Notre-Dame de Paris"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Notre-Dame de Paris"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Notre-Dame de Paris"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Notre-Dame de Paris"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Notre-Dame de Paris"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Notre-Dame de Paris"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Notre-Dame de Paris"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Notre-Dame de Paris"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Notre-Dame de Paris"
+    },
+    {
+      "file": "14.md",
+      "title": "14. III. «besos para golpes»"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Notre-Dame de Paris"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Notre-Dame de Paris"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Notre-Dame de Paris"
+    },
+    {
+      "file": "18.md",
+      "title": "18. VI. La cruche cassée"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Notre-Dame de Paris"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Notre-Dame de Paris"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Notre-Dame de Paris"
+    },
+    {
+      "file": "22.md",
+      "title": "22. Notre-Dame de Paris"
+    },
+    {
+      "file": "23.md",
+      "title": "23. Notre-Dame de Paris"
+    },
+    {
+      "file": "24.md",
+      "title": "24. Notre-Dame de Paris"
+    }
+  ]
+}

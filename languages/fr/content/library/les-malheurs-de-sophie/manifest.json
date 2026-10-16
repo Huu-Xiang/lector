@@ -1,0 +1,113 @@
+{
+  "title": "Les Malheurs de Sophie",
+  "author": "Comtesse de Ségur",
+  "level": "A2",
+  "wordCount": 35995,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/15058",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. La poupée de cire"
+    },
+    {
+      "file": "02.md",
+      "title": "2. L'enterrement"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Les Malheurs de Sophie"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Les Malheurs de Sophie"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Les Malheurs de Sophie"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Les Malheurs de Sophie"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Les Malheurs de Sophie"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Les Malheurs de Sophie"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Les Malheurs de Sophie"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Les Malheurs de Sophie"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Les Malheurs de Sophie"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Les Malheurs de Sophie"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Les Malheurs de Sophie"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Les Malheurs de Sophie"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Les Malheurs de Sophie"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Les Malheurs de Sophie"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Les Malheurs de Sophie"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Les Malheurs de Sophie"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Les Malheurs de Sophie"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Les Malheurs de Sophie"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Les Malheurs de Sophie"
+    },
+    {
+      "file": "22.md",
+      "title": "22. Les Malheurs de Sophie"
+    },
+    {
+      "file": "23.md",
+      "title": "23. Les Malheurs de Sophie"
+    },
+    {
+      "file": "24.md",
+      "title": "24. Les Malheurs de Sophie"
+    },
+    {
+      "file": "25.md",
+      "title": "25. Les Malheurs de Sophie"
+    }
+  ]
+}

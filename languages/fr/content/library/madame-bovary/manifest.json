@@ -1,0 +1,109 @@
+{
+  "title": "Madame Bovary (début)",
+  "author": "Gustave Flaubert",
+  "level": "C1",
+  "wordCount": 34827,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/14155",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Première partie"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Madame Bovary"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Madame Bovary"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Madame Bovary"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Madame Bovary"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Madame Bovary"
+    },
+    {
+      "file": "07.md",
+      "title": "7. IV"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Madame Bovary"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Madame Bovary"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Madame Bovary"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Madame Bovary"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Madame Bovary"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Madame Bovary"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Madame Bovary"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Madame Bovary"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Madame Bovary"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Madame Bovary"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Madame Bovary"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Madame Bovary"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Madame Bovary"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Madame Bovary"
+    },
+    {
+      "file": "22.md",
+      "title": "22. Madame Bovary"
+    },
+    {
+      "file": "23.md",
+      "title": "23. Madame Bovary"
+    },
+    {
+      "file": "24.md",
+      "title": "24. Madame Bovary"
+    }
+  ]
+}

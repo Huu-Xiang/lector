@@ -1,0 +1,45 @@
+{
+  "title": "Contes et légendes (première partie)",
+  "author": "H. A. Guerber",
+  "level": "A1",
+  "wordCount": 11422,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/18873",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Les trois ours"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Contes et légendes"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Contes et légendes"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Contes et légendes"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Contes et légendes"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Contes et légendes"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Contes et légendes"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Contes et légendes"
+    }
+  ]
+}

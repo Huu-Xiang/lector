@@ -1,0 +1,101 @@
+{
+  "title": "The Call of the Wild",
+  "author": "Jack London",
+  "level": "B2",
+  "wordCount": 32310,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/215",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Chapter I. Into the Primitive"
+    },
+    {
+      "file": "02.md",
+      "title": "2. The Call of the Wild"
+    },
+    {
+      "file": "03.md",
+      "title": "3. The Call of the Wild"
+    },
+    {
+      "file": "04.md",
+      "title": "4. The Call of the Wild"
+    },
+    {
+      "file": "05.md",
+      "title": "5. The Call of the Wild"
+    },
+    {
+      "file": "06.md",
+      "title": "6. The Call of the Wild"
+    },
+    {
+      "file": "07.md",
+      "title": "7. The Call of the Wild"
+    },
+    {
+      "file": "08.md",
+      "title": "8. The Call of the Wild"
+    },
+    {
+      "file": "09.md",
+      "title": "9. The Call of the Wild"
+    },
+    {
+      "file": "10.md",
+      "title": "10. The Call of the Wild"
+    },
+    {
+      "file": "11.md",
+      "title": "11. The Call of the Wild"
+    },
+    {
+      "file": "12.md",
+      "title": "12. The Call of the Wild"
+    },
+    {
+      "file": "13.md",
+      "title": "13. The Call of the Wild"
+    },
+    {
+      "file": "14.md",
+      "title": "14. The Call of the Wild"
+    },
+    {
+      "file": "15.md",
+      "title": "15. The Call of the Wild"
+    },
+    {
+      "file": "16.md",
+      "title": "16. The Call of the Wild"
+    },
+    {
+      "file": "17.md",
+      "title": "17. The Call of the Wild"
+    },
+    {
+      "file": "18.md",
+      "title": "18. The Call of the Wild"
+    },
+    {
+      "file": "19.md",
+      "title": "19. The Call of the Wild"
+    },
+    {
+      "file": "20.md",
+      "title": "20. The Call of the Wild"
+    },
+    {
+      "file": "21.md",
+      "title": "21. The Call of the Wild"
+    },
+    {
+      "file": "22.md",
+      "title": "22. The Call of the Wild"
+    }
+  ]
+}

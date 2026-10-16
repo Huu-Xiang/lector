@@ -1,0 +1,113 @@
+{
+  "title": "Jane Eyre (Chapters 1–10)",
+  "author": "Charlotte Brontë",
+  "level": "C1",
+  "wordCount": 36293,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/1260",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Chapter I"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Jane Eyre"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Jane Eyre"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Jane Eyre"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Jane Eyre"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Jane Eyre"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Jane Eyre"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Jane Eyre"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Jane Eyre"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Jane Eyre"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Jane Eyre"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Jane Eyre"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Lowood institution."
+    },
+    {
+      "file": "14.md",
+      "title": "14. Jane Eyre"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Jane Eyre"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Jane Eyre"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Jane Eyre"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Jane Eyre"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Jane Eyre"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Jane Eyre"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Jane Eyre"
+    },
+    {
+      "file": "22.md",
+      "title": "22. Jane Eyre"
+    },
+    {
+      "file": "23.md",
+      "title": "23. Jane Eyre"
+    },
+    {
+      "file": "24.md",
+      "title": "24. Jane Eyre"
+    },
+    {
+      "file": "25.md",
+      "title": "25. Jane Eyre"
+    }
+  ]
+}

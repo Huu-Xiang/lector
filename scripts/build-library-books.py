@@ -20,14 +20,34 @@ BOOKS = [
     dict(lang="fr", slug="le-premier-livre", id=48011, title="Le Premier Livre (histoire de Remi)",
          author="Albert A. Méras et B. Méras", level="A1", start="", short="Remi",
          extractor="premier_livre", capitalise_headings=True, lesson_words=450),
+    dict(lang="fr", slug="entre-nous", id=44157, title="Entre Nous : lectures françaises (première partie)",
+         author="Lucie Vos, Jan Ligthart et H. Scheepstra", level="A1", start=r"^II\. Papa se fâche\.",
+         short="Entre Nous", stop=r"^\s*LUCIE VOS,\s*$", lesson_words=600,
+         subs=[(r"^[ \t]*(\[Musique\]|_\d+e couplet\._|_Refrain\._)[ \t]*$", ""),
+               (r"[ \t]*(\}([ \t]*_bis_\.)?|\(_bis_\))", ""),
+               (r"^([IVXL]+)\. (.+?)\.?[ \t]*$", lambda m: m[2].upper()),
+               (r"^[ \t]*([A-ZÀ-Ý][A-ZÀ-Ý' ,!-]+)\.[ \t]*$", r"\1")]),
+    dict(lang="fr", slug="contes-et-legendes", id=18873, title="Contes et légendes (première partie)",
+         author="H. A. Guerber", level="A1", start=r"^LES TROIS OURS\.\[1\]", short="Contes et légendes",
+         stop=r"^LE POISSON D'OR\.\[13\]",
+         subs=[(r"(?s)^\[Note \d+:.*?\][ \t]*$", ""), (r"^([A-ZÀ-Ý' ,-]+)\.\[\d+\][ \t]*$", r"\1")]),
     dict(lang="fr", slug="riquet-a-la-houppe", id=17098, title="Riquet à la Houppe", author="Charles Perrault",
          level="A2", start=r"Il était une fois", short="Riquet à la Houppe",
          cut=r"^Paris\.--Imprimerie"),
+    dict(lang="fr", slug="les-malheurs-de-sophie", id=15058, title="Les Malheurs de Sophie",
+         author="Comtesse de Ségur", level="A2", start=r"^I--La poupée de cire\.\s*\n\s*\nMa bonne",
+         short="Les Malheurs de Sophie",
+         subs=[(r"^([IVX]+)--(.+?)\.?[ \t]*$", lambda m: m[2].upper())]),
+    dict(lang="fr", slug="abc-petits-contes", id=30117, title="ABC : petits contes", author="Jules Lemaître",
+         level="A2", start=r"^ANE\s*$", short="ABC", cut=r"^40840\.--TOURS"),
     dict(lang="fr", slug="lettres-de-mon-moulin", id=36780, title="Lettres de mon moulin", author="Alphonse Daudet",
          level="B1", start=r"^INSTALLATION\s*$", short="Lettres de mon moulin",
          cut=r"^\s*FIN\s*$"),
     dict(lang="fr", slug="le-tour-du-monde-en-80-jours", id=800, title="Le Tour du monde en quatre-vingts jours",
          author="Jules Verne", level="B1", start=r"En l'année 1872", short="Le Tour du monde"),
+    dict(lang="fr", slug="les-memoires-d-un-ane", id=12783, title="Les Mémoires d'un âne",
+         author="Comtesse de Ségur", level="B1", start=r"^I\s*\n\s*\nLE MARCHE", short="Mémoires d'un âne",
+         subs=[(r"^[IVXL]+[ \t]*$", "")]),
     dict(lang="fr", slug="boule-de-suif", id=10746, title="Boule de Suif et autres contes", author="Guy de Maupassant",
          level="B2", start=r"Pendant plusieurs jours de suite", short="Boule de Suif",
          cut=r"^\s*(Table|TABLE)\s*$"),
@@ -38,9 +58,19 @@ BOOKS = [
          verse=True, max_words=14000),
     dict(lang="fr", slug="trois-contes", id=12065, title="Trois contes", author="Gustave Flaubert",
          level="C1", start=r"Pendant un demi-siècle", short="Trois contes"),
+    dict(lang="fr", slug="madame-bovary", id=14155, title="Madame Bovary (début)", author="Gustave Flaubert",
+         level="C1", start=r"^PREMIÈRE PARTIE\s*$", short="Madame Bovary", max_words=35000),
+    dict(lang="fr", slug="germinal", id=5711, title="Germinal (début)", author="Émile Zola",
+         level="C1", start=r"^Première Partie\s*$", short="Germinal", max_words=35000,
+         subs=[(r"^(Première|Deuxième|Troisième) Partie[ \t]*$", lambda m: m[0].upper())]),
     dict(lang="fr", slug="du-cote-de-chez-swann", id=2650, title="Du côté de chez Swann (Combray, début)",
          author="Marcel Proust", level="C2", start=r"Longtemps, je me suis couché", short="Combray",
          stop=r"^II\.\s*$"),
+    dict(lang="fr", slug="le-pere-goriot", id=55860, title="Le Père Goriot (début)", author="Honoré de Balzac",
+         level="C2", start=r"^Madame Vauquer, née de Conflans", short="Le Père Goriot", max_words=35000,
+         subs=[(r"(?s)\[Illustration:.*?\]", "")]),
+    dict(lang="fr", slug="notre-dame-de-paris", id=19657, title="Notre-Dame de Paris (début)", author="Victor Hugo",
+         level="C2", start=r"^LIVRE PREMIER\s*$", short="Notre-Dame de Paris", max_words=35000),
     dict(lang="en", slug="kittens-and-cats", id=61852, title="Kittens and Cats: A First Reader",
          author="Eulalie Osgood Grover", level="A1", start=r"^THE QUEEN\s*$", short="Kittens and Cats",
          cut=r"^A WORD TO THE TEACHER", capitalise_headings=True),
@@ -60,6 +90,41 @@ BOOKS = [
     dict(lang="en", slug="pride-and-prejudice", id=1342, title="Pride and Prejudice",
          author="Jane Austen", level="C1", start=r"It is a truth universally acknowledged", short="Pride and Prejudice",
          cut=r"^\s*\[Illustration:\s*$"),
+    dict(lang="en", slug="the-summers-primer", id=68453, title="The Summers Readers: Primer",
+         author="Maud Summers", level="A1", start=r"^\s*Sing\.\s*$", short="Primer",
+         cut=r"^REFERENCES TO THE MANUAL", capitalise_headings=True),
+    dict(lang="en", slug="the-summers-first-reader", id=67302, title="The Summers Readers: First Reader",
+         author="Maud Summers", level="A1", start=r"^\[Illustration\] THE LITTLE RED APPLE", short="First Reader",
+         cut=r"^ALPHABET\.\s*$", capitalise_headings=True,
+         subs=[(r"=([^=\n]+)=", r"\1"), (r"^[IVX]+[ \t]*$", "")]),
+    dict(lang="en", slug="the-little-red-hen", id=18735, title="The Little Red Hen",
+         author="Florence White Williams", level="A2", start=r"^A Little Red Hen lived in a barnyard",
+         short="The Little Red Hen", cut=r"^\s*\*\s+\*\s+\*"),
+    dict(lang="en", slug="the-happy-prince", id=30120, title="The Happy Prince and Other Tales",
+         author="Oscar Wilde", level="B1", start=r"^THE HAPPY PRINCE\s*\n\s*\nHigh above the city",
+         short="The Happy Prince", cut=r"^PRINTED BY\s*$", capitalise_headings=True),
+    dict(lang="en", slug="black-beauty", id=271, title="Black Beauty",
+         author="Anna Sewell", level="B1", start=r"^Part I\s*$", short="Black Beauty",
+         subs=[(r"^(\d\d) (.+?)[ \t]*$", lambda m: f"Chapter {int(m[1])}. {m[2]}")]),
+    dict(lang="en", slug="treasure-island", id=120, title="Treasure Island",
+         author="Robert Louis Stevenson", level="B2", start=r"^PART ONE--The Old Buccaneer", short="Treasure Island",
+         subs=[(r"^([IVXL]+)[ \t]*\n(\S.*(?:\n\S.*)*)", lambda m: f"Chapter {m[1]}. " + " ".join(m[2].split()))]),
+    dict(lang="en", slug="the-call-of-the-wild", id=215, title="The Call of the Wild",
+         author="Jack London", level="B2", start=r"^Chapter I\. Into the Primitive", short="The Call of the Wild"),
+    dict(lang="en", slug="a-christmas-carol", id=46, title="A Christmas Carol",
+         author="Charles Dickens", level="C1", start=r"^STAVE I:", short="A Christmas Carol"),
+    dict(lang="en", slug="the-picture-of-dorian-gray", id=174, title="The Picture of Dorian Gray",
+         author="Oscar Wilde", level="C1", start=r"^CHAPTER I\.\s*$", short="Dorian Gray",
+         subs=[(r"^CHAPTER ([IVXL]+)\.[ \t]*$", r"Chapter \1.")]),
+    dict(lang="en", slug="jane-eyre", id=1260, title="Jane Eyre (Chapters 1–10)",
+         author="Charlotte Brontë", level="C1", start=r"^CHAPTER I\s*$", short="Jane Eyre",
+         stop=r"^CHAPTER XI\s*$", subs=[(r"^CHAPTER ([IVXL]+)[ \t]*$", r"Chapter \1")]),
+    dict(lang="en", slug="great-expectations", id=1400, title="Great Expectations (Chapters 1–11)",
+         author="Charles Dickens", level="C2", start=r"^Chapter I\.\s*$", short="Great Expectations",
+         stop=r"^Chapter XII\.\s*$"),
+    dict(lang="en", slug="wuthering-heights", id=768, title="Wuthering Heights (Chapters 1–10)",
+         author="Emily Brontë", level="C2", start=r"^CHAPTER I\s*$", short="Wuthering Heights",
+         stop=r"^CHAPTER XI\s*$", subs=[(r"^CHAPTER ([IVXL]+)[ \t]*$", r"Chapter \1")]),
 ]
 
 ROMAN = re.compile(r"^[IVXLC]+\.?$")
@@ -192,14 +257,23 @@ def _capitalise_words(text: str) -> str:
     return re.sub(r"[^\s\-]+", word, text)
 
 
+ROMAN_WORD = re.compile(r"\b(?=[ivxlc]{2,}\b)(c{0,3})(xc|xl|l?x{0,3})(ix|iv|v?i{0,3})\b", re.I)
+
+
+def _keep_roman(cased: str) -> str:
+    """Chapter numbers such as II or XIV stay upper case after sentence casing."""
+    return ROMAN_WORD.sub(lambda m: m.group(0).upper(), cased)
+
+
 def titlecase_heading(text: str, capitalise: bool = False) -> str:
     t = text.strip(" _*")
     if capitalise and t.isupper():
-        return _capitalise_words(t)
+        return _keep_roman(_capitalise_words(t))
     m = re.match(r"^([IVXLC]+)\.\s+(.*)$", t)
     if m:
-        return f"{m.group(1)}. {_sentence(m.group(2)) if m.group(2).isupper() else m.group(2)}"
-    return _sentence(t) if t.isupper() else t
+        rest = _keep_roman(_sentence(m.group(2))) if m.group(2).isupper() else m.group(2)
+        return f"{m.group(1)}. {rest}"
+    return _keep_roman(_sentence(t)) if t.isupper() else t
 
 
 def build(book: dict, raw_dir: Path, out_dir: Path) -> None:
@@ -208,6 +282,8 @@ def build(book: dict, raw_dir: Path, out_dir: Path) -> None:
         text = unicodedata.normalize("NFC", extract_premier_livre(raw))
     else:
         text = unicodedata.normalize("NFC", body_of(raw, book["start"], book.get("cut"), book.get("stop")))
+    for pattern, repl in book.get("subs", ()):
+        text = re.sub(pattern, repl, text, flags=re.M)
     lesson_words = book.get("lesson_words", LESSON_WORDS)
     pars = paragraphs(text, book.get("verse", False))
     budget = book.get("max_words")

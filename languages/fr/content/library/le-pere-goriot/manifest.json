@@ -1,0 +1,97 @@
+{
+  "title": "Le Père Goriot (début)",
+  "author": "Honoré de Balzac",
+  "level": "C2",
+  "wordCount": 33943,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/55860",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Le Père Goriot"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Le Père Goriot"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Le Père Goriot"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Le Père Goriot"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Le Père Goriot"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Le Père Goriot"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Le Père Goriot"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Le Père Goriot"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Le Père Goriot"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Le Père Goriot"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Le Père Goriot"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Le Père Goriot"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Le Père Goriot"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Le Père Goriot"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Le Père Goriot"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Le Père Goriot"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Le Père Goriot"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Le Père Goriot"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Le Père Goriot"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Le Père Goriot"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Le Père Goriot"
+    }
+  ]
+}

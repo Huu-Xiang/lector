@@ -1,0 +1,17 @@
+{
+  "title": "The Little Red Hen",
+  "author": "Florence White Williams",
+  "level": "A2",
+  "wordCount": 1315,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/18735",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. The Little Red Hen"
+    }
+  ]
+}

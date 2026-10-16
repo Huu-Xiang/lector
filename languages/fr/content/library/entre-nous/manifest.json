@@ -1,0 +1,85 @@
+{
+  "title": "Entre Nous : lectures françaises (première partie)",
+  "author": "Lucie Vos, Jan Ligthart et H. Scheepstra",
+  "level": "A1",
+  "wordCount": 10654,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/44157",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Papa se fâche"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Entre Nous"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Entre Nous"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Entre Nous"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Entre Nous"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Entre Nous"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Entre Nous"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Entre Nous"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Entre Nous"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Entre Nous"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Entre Nous"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Entre Nous"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Entre Nous"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Entre Nous"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Entre Nous"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Entre Nous"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Entre Nous"
+    },
+    {
+      "file": "18.md",
+      "title": "18. La sortie de l'ecole"
+    }
+  ]
+}

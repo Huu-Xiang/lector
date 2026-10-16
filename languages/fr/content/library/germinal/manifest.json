@@ -1,0 +1,109 @@
+{
+  "title": "Germinal (début)",
+  "author": "Émile Zola",
+  "level": "C1",
+  "wordCount": 34952,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/5711",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Première partie"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Germinal"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Germinal"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Germinal"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Germinal"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Germinal"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Germinal"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Germinal"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Germinal"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Germinal"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Germinal"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Germinal"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Germinal"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Germinal"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Germinal"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Germinal"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Germinal"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Germinal"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Germinal"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Germinal"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Germinal"
+    },
+    {
+      "file": "22.md",
+      "title": "22. Germinal"
+    },
+    {
+      "file": "23.md",
+      "title": "23. Germinal"
+    },
+    {
+      "file": "24.md",
+      "title": "24. Germinal"
+    }
+  ]
+}

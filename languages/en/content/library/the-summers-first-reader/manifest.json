@@ -1,0 +1,41 @@
+{
+  "title": "The Summers Readers: First Reader",
+  "author": "Maud Summers",
+  "level": "A1",
+  "wordCount": 9555,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/67302",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. First Reader"
+    },
+    {
+      "file": "02.md",
+      "title": "2. First Reader"
+    },
+    {
+      "file": "03.md",
+      "title": "3. An Old Rhyme."
+    },
+    {
+      "file": "04.md",
+      "title": "4. First Reader"
+    },
+    {
+      "file": "05.md",
+      "title": "5. First Reader"
+    },
+    {
+      "file": "06.md",
+      "title": "6. First Reader"
+    },
+    {
+      "file": "07.md",
+      "title": "7. First Reader"
+    }
+  ]
+}

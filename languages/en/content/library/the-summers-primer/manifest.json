@@ -1,0 +1,33 @@
+{
+  "title": "The Summers Readers: Primer",
+  "author": "Maud Summers",
+  "level": "A1",
+  "wordCount": 6127,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/68453",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Primer"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Primer"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Primer"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Primer"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Primer"
+    }
+  ]
+}

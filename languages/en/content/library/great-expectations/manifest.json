@@ -1,0 +1,109 @@
+{
+  "title": "Great Expectations (Chapters 1–11)",
+  "author": "Charles Dickens",
+  "level": "C2",
+  "wordCount": 35532,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/1400",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Chapter I."
+    },
+    {
+      "file": "02.md",
+      "title": "2. Great Expectations"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Great Expectations"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Great Expectations"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Great Expectations"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Great Expectations"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Great Expectations"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Great Expectations"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Great Expectations"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Great Expectations"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Great Expectations"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Chapter VII."
+    },
+    {
+      "file": "13.md",
+      "title": "13. Great Expectations"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Great Expectations"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Great Expectations"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Great Expectations"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Great Expectations"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Chapter IX."
+    },
+    {
+      "file": "19.md",
+      "title": "19. Great Expectations"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Great Expectations"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Great Expectations"
+    },
+    {
+      "file": "22.md",
+      "title": "22. Great Expectations"
+    },
+    {
+      "file": "23.md",
+      "title": "23. Great Expectations"
+    },
+    {
+      "file": "24.md",
+      "title": "24. Great Expectations"
+    }
+  ]
+}
