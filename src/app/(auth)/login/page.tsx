@@ -88,7 +88,10 @@ function LoginForm() {
     const { error } = await authClient.sendVerificationEmail({
       email: unverifiedEmail,
       callbackURL: `${window.location.origin}${destination}`,
+      fetchOptions: { headers: captchaHeaders() },
     });
+    setCaptchaToken('');
+    setCaptchaRound((r) => r + 1);
     if (error) toast.error(error.message ?? t('errResend'));
     else toast.success(t('resent'));
   }
@@ -135,7 +138,8 @@ function LoginForm() {
           <button
             type="button"
             onClick={resendVerification}
-            className="mt-1 font-medium text-primary hover:underline"
+            disabled={!!turnstileSiteKey() && !captchaToken}
+            className="mt-1 font-medium text-primary hover:underline disabled:opacity-50"
           >
             {t('resend')}
           </button>

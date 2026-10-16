@@ -14,9 +14,35 @@ import type { Database } from 'bun:sqlite';
 import { config } from './config';
 import { sendEmail } from './email';
 import { passwordProblem, passwordProblemMessage } from './password-rules';
+import { aliasDomains, canonicalEmail, isDisposableEmail } from './signup-email';
 import { sendWelcomeEmail } from './lifecycle-email';
 import { purgeTenantData } from './account-deletion';
 import { getDatabaseInstance } from '../db';
+
+/** One account per mailbox: refuse throwaway domains and +tag / Gmail-dot variants of a taken address. */
+function checkSignupEmail(raw: unknown, database: Database): void {
+  if (typeof raw !== 'string') return;
+  const email = raw.trim().toLowerCase();
+  if (isDisposableEmail(email)) {
+    throw new APIError('BAD_REQUEST', {
+      code: 'EMAIL_DISPOSABLE',
+      message: 'Temporary email addresses cannot be used.',
+    });
+  }
+  const canonical = canonicalEmail(email);
+  const lookup = database.prepare('SELECT email FROM user WHERE email LIKE ?');
+  for (const domain of aliasDomains(email)) {
+    for (const row of lookup.all(`%@${domain}`) as { email: string }[]) {
+      const existing = row.email.toLowerCase();
+      if (existing !== email && canonicalEmail(existing) === canonical) {
+        throw new APIError('BAD_REQUEST', {
+          code: 'EMAIL_ALIAS_TAKEN',
+          message: 'An account already uses this email address in another form.',
+        });
+      }
+    }
+  }
+}
 
 export interface OidcOptions {
   /** Issuer origin (or a full discovery URL) — see oidcDiscoveryUrl(). */
@@ -82,7 +108,18 @@ export function createAuthEngine(opts: AuthEngineOptions) {
     twoFactor({ issuer: 'Readfox' }),
   ];
   if (opts.turnstileSecretKey) {
-    plugins.push(captcha({ provider: 'cloudflare-turnstile', secretKey: opts.turnstileSecretKey }));
+    plugins.push(
+      captcha({
+        provider: 'cloudflare-turnstile',
+        secretKey: opts.turnstileSecretKey,
+        endpoints: [
+          '/sign-up/email',
+          '/sign-in/email',
+          '/request-password-reset',
+          '/send-verification-email',
+        ],
+      }),
+    );
   }
   if (opts.oidc) {
     plugins.push(
@@ -108,6 +145,9 @@ export function createAuthEngine(opts: AuthEngineOptions) {
     trustedOrigins: opts.trustedOrigins,
     hooks: {
       before: createAuthMiddleware(async (ctx) => {
+        if (ctx.path === '/sign-up/email') {
+          checkSignupEmail((ctx.body as Record<string, unknown> | undefined)?.email, opts.database);
+        }
         const field = PASSWORD_FIELDS[ctx.path];
         if (!field) return;
         const problem = passwordProblem((ctx.body as Record<string, unknown> | undefined)?.[field]);

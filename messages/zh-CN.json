@@ -62,7 +62,9 @@
       "confirmPassword": "确认密码",
       "errMismatch": "两次输入的密码不一致。",
       "errWeak": "密码太弱：至少 8 个字符，并包含字母和数字。",
-      "matches": "两次密码一致"
+      "matches": "两次密码一致",
+      "errEmailDisposable": "不能使用临时邮箱，请使用你常用的邮箱。",
+      "errEmailAlias": "这个邮箱的另一种写法已经注册过账号，请用那个地址登录。"
     },
     "reset": {
       "expiredTitle": "链接已过期",

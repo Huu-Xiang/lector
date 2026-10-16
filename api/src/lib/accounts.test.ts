@@ -72,6 +72,29 @@ async function signUp(email: string, password: string): Promise<void> {
   expect(res.status).toBe(200);
 }
 
+describe('one account per mailbox', () => {
+  const post = (email: string) =>
+    app.request(`${BASE}/api/auth/sign-up/email`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password: 'mailbox123', name: 'Box' }),
+    });
+
+  test('refuses throwaway domains and variants of a taken Gmail address', async () => {
+    const disposable = await post('x@mailinator.com');
+    expect(disposable.status).toBe(400);
+    expect(((await disposable.json()) as { code?: string }).code).toBe('EMAIL_DISPOSABLE');
+
+    await signUp('box.owner@gmail.com', 'mailbox123');
+    for (const variant of ['boxowner+2@gmail.com', 'b.o.x.owner@googlemail.com']) {
+      const res = await post(variant);
+      expect(res.status).toBe(400);
+      expect(((await res.json()) as { code?: string }).code).toBe('EMAIL_ALIAS_TAKEN');
+    }
+    expect((await post('other.owner@gmail.com')).status).toBe(200);
+  });
+});
+
 describe('password rule', () => {
   const post = (email: string, password: string) =>
     app.request(`${BASE}/api/auth/sign-up/email`, {

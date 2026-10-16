@@ -72,7 +72,13 @@ function RegisterForm() {
     if (error) {
       setCaptchaToken('');
       setCaptchaRound((r) => r + 1);
-      toast.error(error.message ?? t('errFailed'));
+      toast.error(
+        error.code === 'EMAIL_DISPOSABLE'
+          ? t('errEmailDisposable')
+          : error.code === 'EMAIL_ALIAS_TAKEN'
+            ? t('errEmailAlias')
+            : (error.message ?? t('errFailed')),
+      );
       return;
     }
     setSentTo(email);

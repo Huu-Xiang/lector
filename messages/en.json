@@ -62,7 +62,9 @@
       "confirmPassword": "Confirm password",
       "errMismatch": "The two passwords do not match.",
       "errWeak": "Choose a stronger password: at least 8 characters, with a letter and a digit.",
-      "matches": "Passwords match"
+      "matches": "Passwords match",
+      "errEmailDisposable": "Temporary email addresses can't be used. Please use your usual email.",
+      "errEmailAlias": "An account already uses this email address in another form. Sign in with that address instead."
     },
     "reset": {
       "expiredTitle": "Link expired",
