@@ -71,6 +71,23 @@ describe('library route', () => {
     expect(second.books.find((b) => b.slug === 'cuento-dificil')?.added).toBe(false);
   });
 
+  test('carries the translated titles and blurbs; a book without them gets empty maps', async () => {
+    const res = await app.request('/catalog?language=es');
+    const { books } = (await res.json()) as {
+      books: Array<{
+        slug: string;
+        titles: Record<string, string>;
+        blurbs: Record<string, string>;
+      }>;
+    };
+    const short = books.find((b) => b.slug === 'cuento-corto')!;
+    expect(short.titles['zh-CN']).toBe('短故事');
+    expect(short.blurbs.en).toBe('A very short story.');
+    const hard = books.find((b) => b.slug === 'cuento-dificil')!;
+    expect(hard.titles).toEqual({});
+    expect(hard.blurbs).toEqual({});
+  });
+
   test('a language with no books returns an empty list; an unknown language is rejected', async () => {
     expect(
       ((await (await app.request('/catalog?language=af')).json()) as { books: unknown[] }).books,

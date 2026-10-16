@@ -1466,6 +1466,9 @@ export interface LibraryBook {
   sourceName: string;
   sourceUrl: string;
   license: string;
+  /** Keyed by native-language code. */
+  titles: Record<string, string>;
+  blurbs: Record<string, string>;
   added: boolean;
 }
 

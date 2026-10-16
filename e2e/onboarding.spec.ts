@@ -81,9 +81,7 @@ async function startSpanishGuide(page: Page): Promise<string> {
   await page.goto('/');
   await expect(page).toHaveURL(/\/setup/, { timeout: 15_000 });
   await page.getByTestId('setup-language-es').click();
-  await page.getByRole('button', { name: 'Beginner', exact: true }).click();
-  await page.getByRole('button', { name: 'Culture', exact: true }).click();
-  await page.getByRole('button', { name: '20 min', exact: true }).click();
+  await page.getByTestId('setup-level-A2').click();
   await page.getByTestId('start-guided-onboarding').click();
   await expect(page).toHaveURL(/\/read\/[^/?]+\?onboarding=1$/, { timeout: 30_000 });
   await expect(page.getByTestId('onboarding-coach-lookup')).toBeVisible({ timeout: 15_000 });
@@ -249,9 +247,7 @@ test.describe('guided onboarding — selfhost', () => {
     await page.goto('/');
     await expect(page).toHaveURL(/\/setup/, { timeout: 15_000 });
     await page.getByTestId('setup-language-es').click();
-    await page.getByRole('button', { name: 'Intermediate', exact: true }).click();
-    await page.getByRole('button', { name: 'Literature', exact: true }).click();
-    await page.getByRole('button', { name: '30 min', exact: true }).click();
+    await page.getByTestId('setup-level-B1').click();
     await page.getByTestId('skip-guided-onboarding').click();
     await expect(page).toHaveURL('/', { timeout: 15_000 });
 
@@ -261,9 +257,11 @@ test.describe('guided onboarding — selfhost', () => {
     expect(current.profile).toMatchObject({
       language: 'es',
       approximateLevel: 'intermediate',
-      interests: ['literature'],
-      dailyMinutes: 30,
+      interests: [],
+      dailyMinutes: 10,
     });
+    const levels = await page.request.get(apiUrl('/api/settings/readingLevels'));
+    expect(await levels.json()).toEqual({ es: 'B1' });
     expect(current.events.map((event) => event.eventType)).toEqual(
       expect.arrayContaining(['onboarding.profile_saved', 'onboarding.skipped']),
     );
@@ -501,8 +499,8 @@ test.describe('guided onboarding — cloud accounts', () => {
     });
     expect(current.profile).toMatchObject({
       approximateLevel: 'beginner',
-      interests: ['culture'],
-      dailyMinutes: 20,
+      interests: [],
+      dailyMinutes: 10,
     });
     expect(
       current.events.filter((event) => event.eventType === 'practice.answer_submitted'),

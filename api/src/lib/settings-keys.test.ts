@@ -8,3 +8,14 @@ describe('nativeLanguage setting', () => {
     expect(validateSettingWrite('nativeLanguage', 5)).not.toBeNull();
   });
 });
+
+describe('readingLevels setting', () => {
+  test('maps language codes to CEFR levels', () => {
+    expect(validateSettingWrite('readingLevels', { en: 'B1', fr: 'A2' })).toBeNull();
+    expect(validateSettingWrite('readingLevels', {})).toBeNull();
+    expect(validateSettingWrite('readingLevels', { en: 'B3' })).not.toBeNull();
+    expect(validateSettingWrite('readingLevels', { xx: 'B1' })).not.toBeNull();
+    expect(validateSettingWrite('readingLevels', ['B1'])).not.toBeNull();
+    expect(validateSettingWrite('readingLevels', 'B1')).not.toBeNull();
+  });
+});

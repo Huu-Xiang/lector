@@ -8,7 +8,6 @@
       "loading": "Loading…",
       "errLoad": "Could not load the free books.",
       "none": "No free books for {language} yet.",
-      "levelHint": "Approximate level",
       "size": "{words} words, {lessons} lessons",
       "add": "Add",
       "adding": "Adding…",
@@ -19,5 +18,32 @@
     "empty": {
       "browseBooks": "Browse free books"
     }
+  },
+  "readingLevel": {
+    "names": {
+      "A1": "Beginner",
+      "A2": "Elementary",
+      "B1": "Intermediate",
+      "B2": "Upper intermediate",
+      "C1": "Advanced",
+      "C2": "Proficient"
+    },
+    "exam": {
+      "ielts": "IELTS {score}",
+      "toefl": "TOEFL iBT {score}",
+      "delf": "DELF {score}",
+      "dalf": "DALF {score}",
+      "juniorHigh": "Junior high school",
+      "zhongkao": "Zhongkao",
+      "gaokao": "Gaokao",
+      "cet4": "CET-4",
+      "cet6": "CET-6",
+      "tem8": "TEM-8"
+    },
+    "approx": "Exam equivalents are for reference only.",
+    "notSure": "Not sure",
+    "all": "All levels",
+    "yours": "Your level",
+    "original": "Original title: {title}"
   }
 }

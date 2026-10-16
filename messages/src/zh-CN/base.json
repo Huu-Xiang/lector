@@ -107,34 +107,17 @@
     "chooseLanguage": "1. 选择要学的语言",
     "learn": "学习{name}",
     "showMore": "显示另外 {count} 种语言",
-    "personalise": "2. 个性化设置",
-    "personaliseHint": "选最接近的即可,之后可以随时调整。",
+    "personalise": "2. 你的水平",
+    "personaliseHint": "用来优先推荐难度合适的免费书。",
     "optional": "可选",
-    "level": "大致水平",
-    "levels": {
-      "new": "刚开始",
-      "beginner": "初级",
-      "intermediate": "中级",
-      "advanced": "高级",
-      "not_sure": "不确定"
-    },
-    "interests": "兴趣",
-    "interestOptions": {
-      "everyday-life": "日常生活",
-      "culture": "文化",
-      "current-events": "时事",
-      "literature": "文学",
-      "faith-and-theology": "信仰与神学",
-      "travel": "旅行"
-    },
-    "dailyTime": "每天阅读时间",
-    "minutes": "{minutes} 分钟",
+    "level": "阅读水平",
     "ready": "准备好读第一篇了吗?",
     "readyHint": "引导在一篇真实的入门课文里进行,可以随时退出。",
     "skip": "直接进入书库",
     "preparing": "正在准备课文…",
     "start": "开始引导课",
-    "errSave": "无法保存你的设置"
+    "errSave": "无法保存你的设置",
+    "levelHint": "之后可以在“免费书籍”里修改。"
   },
   "landing": {
     "metaTitle": "Readfox – 用你正在学的语言读真正的书",

@@ -23,6 +23,9 @@ export interface LibraryBookSummary {
   sourceName: string;
   sourceUrl: string;
   license: string;
+  /** Title and one-line blurb keyed by native-language code; may be empty. */
+  titles: Record<string, string>;
+  blurbs: Record<string, string>;
 }
 
 export interface LibraryBook extends LibraryBookSummary {
@@ -55,11 +58,27 @@ function str(value: unknown, field: string, slug: string): string {
   return value;
 }
 
+type Translations = Record<
+  string,
+  { title?: Record<string, string>; blurb?: Record<string, string> }
+>;
+
+/** `translations.json` sits beside the book folders so a rebuild of a book keeps it. */
+function readTranslations(language: LanguageCode): Translations {
+  const file = path.join(libraryDir(language), 'translations.json');
+  if (!fs.existsSync(file)) return {};
+  return JSON.parse(fs.readFileSync(file, 'utf8')) as Translations;
+}
+
 function readManifest(dir: string, slug: string): Manifest {
   return JSON.parse(fs.readFileSync(path.join(dir, 'manifest.json'), 'utf8')) as Manifest;
 }
 
-function summarise(slug: string, manifest: Manifest): LibraryBookSummary {
+function summarise(
+  slug: string,
+  manifest: Manifest,
+  translations: Translations,
+): LibraryBookSummary {
   if (!Array.isArray(manifest.lessons) || manifest.lessons.length === 0) {
     throw new Error(`Library book '${slug}' has no lessons`);
   }
@@ -73,6 +92,8 @@ function summarise(slug: string, manifest: Manifest): LibraryBookSummary {
     sourceName: str(manifest.source?.name, 'source name', slug),
     sourceUrl: str(manifest.source?.url, 'source url', slug),
     license: str(manifest.source?.license, 'license', slug),
+    titles: translations[slug]?.title ?? {},
+    blurbs: translations[slug]?.blurb ?? {},
   };
 }
 
@@ -82,11 +103,14 @@ const LEVEL_ORDER = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
 export function listLibraryBooks(language: LanguageCode): LibraryBookSummary[] {
   const dir = libraryDir(language);
   if (!fs.existsSync(dir)) return [];
+  const translations = readTranslations(language);
   return fs
     .readdirSync(dir, { withFileTypes: true })
     .filter((entry) => entry.isDirectory() && isLibrarySlug(entry.name))
     .filter((entry) => fs.existsSync(path.join(dir, entry.name, 'manifest.json')))
-    .map((entry) => summarise(entry.name, readManifest(path.join(dir, entry.name), entry.name)))
+    .map((entry) =>
+      summarise(entry.name, readManifest(path.join(dir, entry.name), entry.name), translations),
+    )
     .sort(
       (a, b) =>
         LEVEL_ORDER.indexOf(a.level) - LEVEL_ORDER.indexOf(b.level) ||
@@ -99,7 +123,7 @@ export function loadLibraryBook(language: LanguageCode, slug: string): LibraryBo
   const bookDir = path.join(libraryDir(language), slug);
   if (!fs.existsSync(path.join(bookDir, 'manifest.json'))) return null;
   const manifest = readManifest(bookDir, slug);
-  const summary = summarise(slug, manifest);
+  const summary = summarise(slug, manifest, readTranslations(language));
   const seen = new Set<string>();
   const lessons = manifest.lessons!.map((lesson) => {
     const file = str(lesson.file, 'lesson file', slug);

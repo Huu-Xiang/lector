@@ -107,34 +107,17 @@
     "chooseLanguage": "1. Choose a language",
     "learn": "Learn {name}",
     "showMore": "Show {count} more languages",
-    "personalise": "2. Personalise the session",
-    "personaliseHint": "Pick what feels closest. You can change direction later.",
+    "personalise": "2. Your level",
+    "personaliseHint": "We use it to show free books at the right difficulty first.",
     "optional": "Optional",
-    "level": "Approximate level",
-    "levels": {
-      "new": "Just starting",
-      "beginner": "Beginner",
-      "intermediate": "Intermediate",
-      "advanced": "Advanced",
-      "not_sure": "Not sure"
-    },
-    "interests": "Interests",
-    "interestOptions": {
-      "everyday-life": "Everyday life",
-      "culture": "Culture",
-      "current-events": "Current events",
-      "literature": "Literature",
-      "faith-and-theology": "Faith & theology",
-      "travel": "Travel"
-    },
-    "dailyTime": "Daily reading time",
-    "minutes": "{minutes} min",
+    "level": "Reading level",
     "ready": "Ready for your first text?",
     "readyHint": "The guide stays inside a real starter lesson and can be left at any time.",
     "skip": "Skip to library",
     "preparing": "Preparing lesson…",
     "start": "Start guided lesson",
-    "errSave": "Could not save your setup"
+    "errSave": "Could not save your setup",
+    "levelHint": "You can change it later in Free books."
   },
   "landing": {
     "metaTitle": "Readfox – read real books in the language you are learning",
@@ -646,7 +629,6 @@
       "loading": "Loading…",
       "errLoad": "Could not load the free books.",
       "none": "No free books for {language} yet.",
-      "levelHint": "Approximate level",
       "size": "{words} words, {lessons} lessons",
       "add": "Add",
       "adding": "Adding…",
@@ -818,6 +800,33 @@
         "dragToReorder": "Drag to reorder {title}"
       }
     }
+  },
+  "readingLevel": {
+    "names": {
+      "A1": "Beginner",
+      "A2": "Elementary",
+      "B1": "Intermediate",
+      "B2": "Upper intermediate",
+      "C1": "Advanced",
+      "C2": "Proficient"
+    },
+    "exam": {
+      "ielts": "IELTS {score}",
+      "toefl": "TOEFL iBT {score}",
+      "delf": "DELF {score}",
+      "dalf": "DALF {score}",
+      "juniorHigh": "Junior high school",
+      "zhongkao": "Zhongkao",
+      "gaokao": "Gaokao",
+      "cet4": "CET-4",
+      "cet6": "CET-6",
+      "tem8": "TEM-8"
+    },
+    "approx": "Exam equivalents are for reference only.",
+    "notSure": "Not sure",
+    "all": "All levels",
+    "yours": "Your level",
+    "original": "Original title: {title}"
   },
   "journal": {
     "title": "Journal",

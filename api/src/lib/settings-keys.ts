@@ -39,6 +39,7 @@ const SETTING_VALUE_BYTE_LIMITS: Record<string, number> = {
   // it can hold.
   enabledLanguages: Buffer.byteLength(JSON.stringify(Object.keys(LANGUAGES)), 'utf8'),
   nativeLanguage: 16,
+  readingLevels: 1024,
 };
 
 export function settingValueByteLimit(key: string): number {
@@ -53,6 +54,8 @@ export const KNOWN_SETTING_KEYS = new Set([
   'enabledLanguages',
   'nativeLanguage',
   'timezone',
+  // CEFR level per target language, e.g. { "en": "B1" }: picks the free books shown first.
+  'readingLevels',
   // LLM provider config (Settings → AI, setup)
   'llmProvider',
   'openaiPreset',
@@ -84,6 +87,7 @@ export const KNOWN_SETTING_KEYS = new Set([
  * "unset the endpoint" (the settings UI writes '' to clear a field).
  */
 const ANKI_TRANSPORTS = new Set(['ankiconnect', 'addon']);
+const CEFR_LEVELS = new Set(['A1', 'A2', 'B1', 'B2', 'C1', 'C2']);
 
 export function validateSettingWrite(key: string, value: unknown): string | null {
   if (!KNOWN_SETTING_KEYS.has(key)) return `Unknown setting key: ${key}`;
@@ -103,6 +107,16 @@ export function validateSettingWrite(key: string, value: unknown): string | null
   }
   if (key === 'nativeLanguage' && !isNativeLanguageCode(value)) {
     return 'nativeLanguage must be a supported language';
+  }
+  if (key === 'readingLevels') {
+    if (typeof value !== 'object' || value === null || Array.isArray(value)) {
+      return 'readingLevels must map language codes to CEFR levels';
+    }
+    for (const [code, level] of Object.entries(value)) {
+      if (!isValidLanguageCode(code) || !CEFR_LEVELS.has(level as string)) {
+        return 'readingLevels must map language codes to CEFR levels';
+      }
+    }
   }
   if (key === 'enabledLanguages') {
     if (!Array.isArray(value)) return 'enabledLanguages must be an array of language codes';

@@ -3,16 +3,18 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
-import { ArrowRight, Check, Sparkles } from 'lucide-react';
+import { ArrowRight, Sparkles } from 'lucide-react';
 import { getSetting, seedStarterContent, setSetting } from '@/lib/data-layer';
 import { LANGUAGES, nativeLanguageFromLocale, type LanguageCode } from '@/lib/languages';
+import { getOnboardingSnapshot, skipOnboarding, startOnboarding } from '@/lib/onboarding';
 import {
-  getOnboardingSnapshot,
-  skipOnboarding,
-  startOnboarding,
-  type ApproximateLevel,
-  type LearnerInterest,
-} from '@/lib/onboarding';
+  CEFR_LEVELS,
+  approximateLevelFor,
+  examRefs,
+  setReadingLevel,
+  showMainlandExams,
+  type CefrLevel,
+} from '@/lib/reading-level';
 import { setLanguageInStorage } from '@/utils/storage';
 import { Button } from '@/components/ui/button';
 
@@ -41,32 +43,15 @@ const POPULAR_LANGUAGES: LanguageCode[] = [
   'ru',
 ];
 
-const levelOptions: ApproximateLevel[] = [
-  'new',
-  'beginner',
-  'intermediate',
-  'advanced',
-  'not_sure',
-];
-
-const interestOptions: LearnerInterest[] = [
-  'everyday-life',
-  'culture',
-  'current-events',
-  'literature',
-  'faith-and-theology',
-  'travel',
-];
-
 export default function SetupPage() {
   const t = useTranslations('setup');
   const locale = useLocale();
   const router = useRouter();
   const [selectedLanguage, setSelectedLanguage] = useState<LanguageCode | null>(null);
   const [pending, setPending] = useState<LanguageCode | null>(null);
-  const [level, setLevel] = useState<ApproximateLevel>('not_sure');
-  const [interests, setInterests] = useState<LearnerInterest[]>([]);
-  const [dailyMinutes, setDailyMinutes] = useState(10);
+  const [level, setLevel] = useState<CefrLevel | null>(null);
+  const tl = useTranslations('readingLevel');
+  const mainland = showMainlandExams(locale);
   const [error, setError] = useState<string | null>(null);
   const [showAllLanguages, setShowAllLanguages] = useState(false);
   const displayNames = new Intl.DisplayNames([locale], { type: 'language' });
@@ -85,11 +70,6 @@ export default function SetupPage() {
     void getOnboardingSnapshot()
       .then((snapshot) => {
         if (cancelled || !snapshot.progress) return;
-        if (snapshot.profile) {
-          setLevel(snapshot.profile.approximateLevel);
-          setInterests(snapshot.profile.interests);
-          setDailyMinutes(snapshot.profile.dailyMinutes);
-        }
         if (snapshot.progress.status === 'in_progress' && snapshot.progress.recommendedLessonId) {
           router.replace(`/read/${snapshot.progress.recommendedLessonId}?onboarding=1`);
         } else if (snapshot.progress.status !== 'in_progress') {
@@ -104,14 +84,6 @@ export default function SetupPage() {
       cancelled = true;
     };
   }, [router]);
-
-  function toggleInterest(interest: LearnerInterest) {
-    setInterests((current) =>
-      current.includes(interest)
-        ? current.filter((value) => value !== interest)
-        : [...current, interest],
-    );
-  }
 
   async function handleContinue(guided: boolean) {
     if (!selectedLanguage || pending) return;
@@ -131,12 +103,13 @@ export default function SetupPage() {
       // Seeding is safe before the target-language write: the route accepts an
       // explicit language and is idempotent. /onboarding/start or /skip then
       // atomically persists the profile, progress and target language.
+      if (level) await setReadingLevel(code, level).catch(() => {});
       const starter = await seedStarterContent(code);
       const profile = {
         language: code,
-        approximateLevel: level,
-        interests,
-        dailyMinutes,
+        approximateLevel: approximateLevelFor(level),
+        interests: [],
+        dailyMinutes: 10,
       };
 
       if (guided && starter.recommendedLessonId) {
@@ -247,77 +220,53 @@ export default function SetupPage() {
             </span>
           </div>
 
-          <fieldset className="mb-5">
+          <fieldset>
             <legend className="mb-2 text-xs font-semibold text-muted-foreground">
               {t('level')}
             </legend>
-            <div className="flex flex-wrap gap-2">
-              {levelOptions.map((option) => (
-                <button
-                  key={option}
-                  type="button"
-                  aria-pressed={level === option}
-                  onClick={() => setLevel(option)}
-                  className={`rounded-xl border px-3 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
-                    level === option
-                      ? 'border-primary bg-[var(--primary-soft)] text-[var(--primary-text)]'
-                      : 'border-border bg-background text-foreground hover:bg-accent'
-                  }`}
-                >
-                  {t(`levels.${option}`)}
-                </button>
-              ))}
-            </div>
-          </fieldset>
-
-          <fieldset className="mb-5">
-            <legend className="mb-2 text-xs font-semibold text-muted-foreground">
-              {t('interests')}
-            </legend>
-            <div className="flex flex-wrap gap-2">
-              {interestOptions.map((option) => {
-                const selected = interests.includes(option);
+            <div className="grid gap-2 sm:grid-cols-3">
+              {CEFR_LEVELS.map((option) => {
+                const exams = selectedLanguage
+                  ? examRefs(selectedLanguage, option, mainland)
+                      .map((ref) => tl(`exam.${ref.exam}`, { score: ref.score ?? '' }))
+                      .join(' · ')
+                  : '';
                 return (
                   <button
                     key={option}
                     type="button"
-                    aria-pressed={selected}
-                    onClick={() => toggleInterest(option)}
-                    className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
-                      selected
+                    aria-pressed={level === option}
+                    onClick={() => setLevel(option)}
+                    data-testid={`setup-level-${option}`}
+                    className={`rounded-xl border px-3 py-2 text-left text-sm transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
+                      level === option
                         ? 'border-primary bg-[var(--primary-soft)] text-[var(--primary-text)]'
                         : 'border-border bg-background text-foreground hover:bg-accent'
                     }`}
                   >
-                    {selected && <Check className="h-3.5 w-3.5" aria-hidden="true" />}
-                    {t(`interestOptions.${option}`)}
+                    <span className="font-semibold">{option}</span>
+                    <span className="ml-1.5 font-medium">{tl(`names.${option}`)}</span>
+                    {exams && (
+                      <span className="mt-0.5 block text-xs text-muted-foreground">{exams}</span>
+                    )}
                   </button>
                 );
               })}
+              <button
+                type="button"
+                aria-pressed={level === null}
+                onClick={() => setLevel(null)}
+                data-testid="setup-level-unsure"
+                className={`rounded-xl border px-3 py-2 text-left text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
+                  level === null
+                    ? 'border-primary bg-[var(--primary-soft)] text-[var(--primary-text)]'
+                    : 'border-border bg-background text-foreground hover:bg-accent'
+                }`}
+              >
+                {tl('notSure')}
+              </button>
             </div>
-          </fieldset>
-
-          <fieldset>
-            <legend className="mb-2 text-xs font-semibold text-muted-foreground">
-              {t('dailyTime')}
-            </legend>
-            <div className="flex flex-wrap gap-2">
-              {[5, 10, 20, 30].map((minutes) => (
-                <button
-                  key={minutes}
-                  type="button"
-                  aria-pressed={dailyMinutes === minutes}
-                  onClick={() => setDailyMinutes(minutes)}
-                  className={`rounded-xl border px-4 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
-                    dailyMinutes === minutes
-                      ? 'border-primary bg-[var(--primary-soft)] text-[var(--primary-text)]'
-                      : 'border-border bg-background text-foreground hover:bg-accent'
-                  }`}
-                >
-                  {t('minutes', { minutes })}
-                </button>
-              ))}
-            </div>
+            <p className="mt-2 text-xs text-muted-foreground">{t('levelHint')}</p>
           </fieldset>
         </section>
 

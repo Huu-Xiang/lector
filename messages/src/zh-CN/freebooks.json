@@ -8,7 +8,6 @@
       "loading": "加载中…",
       "errLoad": "无法加载免费书籍。",
       "none": "暂时还没有{language}的免费书籍。",
-      "levelHint": "大致难度",
       "size": "{words} 词,{lessons} 课",
       "add": "添加",
       "adding": "添加中…",
@@ -19,5 +18,32 @@
     "empty": {
       "browseBooks": "浏览免费书籍"
     }
+  },
+  "readingLevel": {
+    "names": {
+      "A1": "入门",
+      "A2": "初级",
+      "B1": "中级",
+      "B2": "中高级",
+      "C1": "高级",
+      "C2": "精通"
+    },
+    "exam": {
+      "ielts": "雅思 {score}",
+      "toefl": "托福 {score}",
+      "delf": "DELF {score}",
+      "dalf": "DALF {score}",
+      "juniorHigh": "初中",
+      "zhongkao": "中考",
+      "gaokao": "高考",
+      "cet4": "四级",
+      "cet6": "六级",
+      "tem8": "专八"
+    },
+    "approx": "考试对照仅供参考。",
+    "notSure": "不确定",
+    "all": "全部等级",
+    "yours": "你的水平",
+    "original": "原名：{title}"
   }
 }
