@@ -39,8 +39,13 @@ export default function FreeBooksModal({
   const [yourLevel, setYourLevel] = useState<CefrLevel | null>(null);
   const [filter, setFilter] = useState<CefrLevel | 'all'>('all');
   const mainland = showMainlandExams(locale);
+  let languageName = activeLang.native;
+  try {
+    languageName =
+      new Intl.DisplayNames([locale], { type: 'language' }).of(activeLang.code) ?? languageName;
+  } catch {}
+  const titleFor = (book: LibraryBook) => book.titles[native] || book.title;
 
-  /* eslint-disable react-hooks/set-state-in-effect -- load the catalog each time the dialog opens */
   useEffect(() => {
     if (!isOpen) return;
     let cancelled = false;
@@ -63,7 +68,6 @@ export default function FreeBooksModal({
       cancelled = true;
     };
   }, [isOpen, activeLang.code]);
-  /* eslint-enable react-hooks/set-state-in-effect */
 
   async function add(book: LibraryBook) {
     setAdding(book.slug);
@@ -72,7 +76,7 @@ export default function FreeBooksModal({
       setBooks(
         (list) => list?.map((b) => (b.slug === book.slug ? { ...b, added: true } : b)) ?? null,
       );
-      toast.success(t('added', { title: book.title }));
+      toast.success(t('added', { title: titleFor(book) }));
       onAdded();
     } catch (error) {
       toast.error(error instanceof Error ? error.message : t('errAdd'));
@@ -111,7 +115,7 @@ export default function FreeBooksModal({
         </div>
         <div className="overflow-y-auto px-6 py-4" data-testid="free-books-list">
           <p className="mb-4 text-sm text-muted-foreground">
-            {t('intro', { language: activeLang.native })}
+            {t('intro', { language: languageName })}
           </p>
           {failed && <p className="text-sm text-destructive">{t('errLoad')}</p>}
           {!failed && books === null && (
@@ -119,7 +123,7 @@ export default function FreeBooksModal({
           )}
           {books?.length === 0 && (
             <p className="text-sm text-muted-foreground" data-testid="free-books-empty">
-              {t('none', { language: activeLang.native })}
+              {t('none', { language: languageName })}
             </p>
           )}
           {levels.length > 0 && (
@@ -161,7 +165,7 @@ export default function FreeBooksModal({
                   {books
                     ?.filter((book) => book.level === level)
                     .map((book) => {
-                      const shownTitle = book.titles[native] || book.title;
+                      const shownTitle = titleFor(book);
                       const blurb = book.blurbs[native];
                       return (
                         <li
