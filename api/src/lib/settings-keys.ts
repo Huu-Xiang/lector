@@ -40,6 +40,8 @@ const SETTING_VALUE_BYTE_LIMITS: Record<string, number> = {
   enabledLanguages: Buffer.byteLength(JSON.stringify(Object.keys(LANGUAGES)), 'utf8'),
   nativeLanguage: 16,
   readingLevels: 1024,
+  // Up to 4 interest ids, e.g. ["news","travel","science","literature"].
+  readingInterests: 64,
 };
 
 export function settingValueByteLimit(key: string): number {
@@ -56,6 +58,8 @@ export const KNOWN_SETTING_KEYS = new Set([
   'timezone',
   // CEFR level per target language, e.g. { "en": "B1" }: picks the free books shown first.
   'readingLevels',
+  // Opt-in topics for the reading feed (setup), e.g. ["news","travel"].
+  'readingInterests',
   // LLM provider config (Settings → AI, setup)
   'llmProvider',
   'openaiPreset',
@@ -88,6 +92,7 @@ export const KNOWN_SETTING_KEYS = new Set([
  */
 const ANKI_TRANSPORTS = new Set(['ankiconnect', 'addon']);
 const CEFR_LEVELS = new Set(['A1', 'A2', 'B1', 'B2', 'C1', 'C2']);
+const READING_INTERESTS = new Set(['news', 'travel', 'science', 'literature']);
 
 export function validateSettingWrite(key: string, value: unknown): string | null {
   if (!KNOWN_SETTING_KEYS.has(key)) return `Unknown setting key: ${key}`;
@@ -116,6 +121,15 @@ export function validateSettingWrite(key: string, value: unknown): string | null
       if (!isValidLanguageCode(code) || !CEFR_LEVELS.has(level as string)) {
         return 'readingLevels must map language codes to CEFR levels';
       }
+    }
+  }
+  if (key === 'readingInterests') {
+    if (!Array.isArray(value)) return 'readingInterests must be an array of interest ids';
+    if (value.some((id) => typeof id !== 'string' || !READING_INTERESTS.has(id))) {
+      return 'readingInterests must list known interest ids only';
+    }
+    if (new Set(value).size !== value.length) {
+      return 'readingInterests must not repeat an interest';
     }
   }
   if (key === 'enabledLanguages') {

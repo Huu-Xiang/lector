@@ -19,3 +19,15 @@ describe('readingLevels setting', () => {
     expect(validateSettingWrite('readingLevels', 'B1')).not.toBeNull();
   });
 });
+
+describe('readingInterests setting', () => {
+  test('accepts a list of known interest ids, with no repeats', () => {
+    expect(validateSettingWrite('readingInterests', [])).toBeNull();
+    expect(validateSettingWrite('readingInterests', ['news', 'travel'])).toBeNull();
+    expect(validateSettingWrite('readingInterests', ['news', 'travel', 'science', 'literature'])).toBeNull();
+    expect(validateSettingWrite('readingInterests', ['news', 'news'])).not.toBeNull();
+    expect(validateSettingWrite('readingInterests', ['sports'])).not.toBeNull();
+    expect(validateSettingWrite('readingInterests', 'news')).not.toBeNull();
+    expect(validateSettingWrite('readingInterests', [1])).not.toBeNull();
+  });
+});

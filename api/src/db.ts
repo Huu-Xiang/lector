@@ -556,6 +556,29 @@ function getDb(): Database {
       text TEXT NOT NULL,
       PRIMARY KEY (userId, lessonId, idx)
     );
+
+    -- Reading feed (#reading-feed): fresh, license-cleared articles fetched
+    -- periodically from third-party sources, not user content. One row per
+    -- article; the background refresher prunes old rows, keeping ~30 newest
+    -- per language+interest.
+    CREATE TABLE IF NOT EXISTS reading_feed (
+      id TEXT PRIMARY KEY,
+      language TEXT NOT NULL,
+      interest TEXT NOT NULL,
+      source TEXT NOT NULL,
+      title TEXT NOT NULL,
+      url TEXT NOT NULL UNIQUE,
+      author TEXT,
+      license TEXT NOT NULL,
+      licenseUrl TEXT NOT NULL,
+      publishedAt TEXT NOT NULL,
+      text TEXT NOT NULL,
+      wordCount INTEGER NOT NULL,
+      level TEXT NOT NULL,
+      fetchedAt TEXT NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS idx_reading_feed_language_interest
+      ON reading_feed(language, interest, publishedAt);
   `);
 
   // Migrations for existing databases
