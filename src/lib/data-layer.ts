@@ -1513,6 +1513,24 @@ export async function getReadingFeed(
   return ((await res.json()) as { articles: ReadingFeedArticle[] }).articles;
 }
 
+export interface ArticleDescription {
+  title: string;
+  summary: string;
+}
+
+export async function describeReadingFeedArticles(
+  ids: string[],
+  native: string,
+): Promise<Record<string, ArticleDescription>> {
+  const res = await apiFetch('/api/reading-feed/describe', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ids, native }),
+  });
+  await requireOk(res, 'Could not describe the articles');
+  return ((await res.json()) as { descriptions: Record<string, ArticleDescription> }).descriptions;
+}
+
 export async function addReadingFeedArticle(id: string): Promise<string> {
   const res = await apiFetch('/api/reading-feed/add', {
     method: 'POST',

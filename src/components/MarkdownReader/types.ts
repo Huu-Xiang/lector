@@ -19,6 +19,8 @@ export interface MarkdownReaderProps {
    *  (Esc, the X, clicking away) the reader clears its word/phrase highlight. */
   wordPanelOpen?: boolean;
   onClose: () => void;
+  /** Click on empty space: drop the word/phrase selection and close the drawer. */
+  onClearSelection?: () => void;
   onSaveText?: (textContent: string) => Promise<void>;
   onEditingChange?: (isEditing: boolean) => void;
   knownWordsMap: Map<string, WordState>;

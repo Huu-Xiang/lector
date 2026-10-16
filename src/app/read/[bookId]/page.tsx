@@ -794,16 +794,18 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     async (level: 1 | 2 | 3 | 4) => {
       if (!wordPanel.translation) return;
 
-      const state = `level${level}` as 'level1' | 'level2' | 'level3' | 'level4';
-      const rollbackReaderState = applyReaderWordState(wordPanel.word, state);
+      const pickedState = `level${level}` as 'level1' | 'level2' | 'level3' | 'level4';
       let existing: VocabEntry | undefined;
       try {
         existing = await resolveExistingEntry();
       } catch {
-        rollbackReaderState();
         toast.error(t('levelFailed'));
         return;
       }
+      // Choosing the level that is already set clears it.
+      const clearing = existing?.state === pickedState;
+      const state: WordState = clearing ? 'new' : pickedState;
+      const rollbackReaderState = applyReaderWordState(wordPanel.word, state);
       let trackedEntry: VocabEntry;
 
       if (!existing) {
@@ -1316,6 +1318,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
             onWordClick={handleWordClick}
             wordPanelOpen={wordPanel.isOpen}
             onClose={handleClose}
+            onClearSelection={closeWordPanel}
             onSaveText={handleSaveText}
             onEditingChange={handleEditingChange}
             knownWordsMap={readerWordStates}

@@ -1,5 +1,6 @@
 'use client';
 
+import { useLibraryBookTitle } from '@/lib/library-titles';
 import { useEffect, useMemo, useState, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
@@ -49,6 +50,10 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
   const { id } = use(params);
   const router = useRouter();
   const [collection, setCollection] = useState<Collection | null>(null);
+  const shownTitle = useLibraryBookTitle({
+    id: collection?.id ?? '',
+    title: collection?.title ?? '',
+  });
   const [lessons, setLessons] = useState<LessonSummary[]>([]);
   const [groups, setGroups] = useState<CollectionGroup[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -254,7 +259,7 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
       {/* Collection header */}
       <div className="mb-8">
         <div className="flex items-center gap-2">
-          <h1 className="text-3xl font-bold text-foreground">{collection.title}</h1>
+          <h1 className="text-3xl font-bold text-foreground">{shownTitle}</h1>
           <Button
             variant="ghost"
             size="icon-sm"

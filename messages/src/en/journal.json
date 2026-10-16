@@ -235,7 +235,9 @@
       "note": "Dictionary lookups are free and not counted. This includes translating dictionary meanings into your language.",
       "percentUsed": "{percent}% used",
       "close": "Close",
-      "info": "About this allowance"
+      "info": "About this allowance",
+      "tip": "Tap this circle to see how much AI you have left this month.",
+      "tipDismiss": "Got it"
     }
   }
 }

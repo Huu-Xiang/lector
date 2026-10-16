@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import ThemeToggle from '@/components/ThemeToggle';
 import LanguageSelector from '@/components/LanguageSelector';
+import NewLanguagePrompt from '@/components/NewLanguagePrompt';
 import AiQuota from './components/AiQuota';
 import { isBareRoute } from '@/lib/auth-client';
 import { useSidebarCollapsed } from '@/utils/hooks';
@@ -57,6 +58,7 @@ export default function NavHeader() {
 
   return (
     <>
+      <NewLanguagePrompt />
       {/* Mobile top bar — language selector, visible only on mobile */}
       <div className="flex h-[var(--mobile-topbar-h)] items-center justify-between border-b border-border bg-card/80 px-3 py-2 backdrop-blur-sm sm:hidden print:hidden">
         <AppName />

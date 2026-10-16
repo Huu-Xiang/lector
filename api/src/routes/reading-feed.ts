@@ -5,6 +5,8 @@ import { buildSegmentWords, countWords } from '../lib/html-to-markdown';
 import { entitlements, planLimitResponse, type AtomicLimitCheck } from '../lib/entitlements';
 import { collectionMetadataBytes, lessonTextBytes } from '../lib/storage-limits';
 import { getReadingFeedArticle, listReadingFeed } from '../lib/reading-feed/store';
+import { describeArticles } from '../lib/reading-feed/describe';
+import { isNativeLanguageCode } from '../lib/languages';
 import type { FeedLanguage, ReadingInterest } from '../lib/reading-feed/types';
 
 const FEED_LANGUAGES = new Set<FeedLanguage>(['en', 'fr']);
@@ -56,6 +58,33 @@ app.get('/', (c) => {
     level: row.level,
   }));
   return c.json({ articles: rows });
+});
+
+const MAX_DESCRIBE_IDS = 12;
+
+// POST /api/reading-feed/describe { ids, native }
+app.post('/describe', async (c) => {
+  let body: { ids?: unknown; native?: unknown };
+  try {
+    body = await c.req.json();
+  } catch {
+    return c.json({ error: 'Invalid JSON' }, 400);
+  }
+  if (!isNativeLanguageCode(body.native)) return c.json({ error: 'Invalid native language' }, 400);
+  if (
+    !Array.isArray(body.ids) ||
+    body.ids.length === 0 ||
+    body.ids.length > MAX_DESCRIBE_IDS ||
+    body.ids.some((id) => typeof id !== 'string')
+  ) {
+    return c.json({ error: 'Invalid ids' }, 400);
+  }
+  const native = body.native;
+  const articles = (body.ids as string[])
+    .map((id) => getReadingFeedArticle(id))
+    .filter((row): row is NonNullable<typeof row> => Boolean(row) && row!.language !== native);
+  const described = await describeArticles(articles, native);
+  return c.json({ descriptions: Object.fromEntries(described) });
 });
 
 // POST /api/reading-feed/add { id }

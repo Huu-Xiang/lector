@@ -4,6 +4,7 @@ import { BookOpen, Clock } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import type { Collection } from '@/lib/data-layer';
+import { useLibraryBookTitle } from '@/lib/library-titles';
 
 interface CollectionCardProps {
   collection: Collection;
@@ -11,6 +12,7 @@ interface CollectionCardProps {
 
 export default function CollectionCard({ collection }: CollectionCardProps) {
   const t = useTranslations('library.card');
+  const title = useLibraryBookTitle(collection);
   const progressPercent = Math.round(collection.avgProgress || 0);
 
   return (
@@ -23,14 +25,14 @@ export default function CollectionCard({ collection }: CollectionCardProps) {
         {collection.coverUrl ? (
           <img
             src={collection.coverUrl}
-            alt={t('coverAlt', { title: collection.title })}
+            alt={t('coverAlt', { title })}
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
         ) : (
           <div className="flex h-full w-full flex-col items-center justify-center p-4 text-center">
             <BookOpen className="mb-2 h-12 w-12 text-muted-foreground" strokeWidth={1.5} />
             <span className="text-sm font-medium text-muted-foreground">
-              {collection.title.substring(0, 30)}
+              {title.substring(0, 30)}
             </span>
           </div>
         )}
@@ -55,7 +57,7 @@ export default function CollectionCard({ collection }: CollectionCardProps) {
 
       {/* Collection Info */}
       <div className="flex flex-1 flex-col p-4">
-        <h3 className="line-clamp-2 text-base font-semibold text-foreground">{collection.title}</h3>
+        <h3 className="line-clamp-2 text-base font-semibold text-foreground">{title}</h3>
         {collection.author && (
           <p className="mt-1 truncate text-sm text-muted-foreground">{collection.author}</p>
         )}

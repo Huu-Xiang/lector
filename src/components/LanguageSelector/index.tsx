@@ -13,6 +13,7 @@ import {
 import { getFluencyStats, seedStarterContent, setSetting } from '@/lib/data-layer';
 import { availableLanguages, LANGUAGES, normalizeEnabledLanguages } from '@/lib/languages';
 import { LanguageCode } from '@/types/language';
+import { flagNewLanguage } from '@/components/NewLanguagePrompt';
 import { languageDisplayName } from '@/lib/language-names';
 import { isLanguageReady, parseReadyLanguages } from '@/lib/ready-languages';
 import { useReadyLanguagesSetting } from '@/lib/use-env';
@@ -73,6 +74,8 @@ export default function LanguageSelector({
       // First-ever switch to a language seeds its starter content before the
       // reload lands wherever the user was; never throws (#315).
       await seedStarterContent(code);
+      // Only deployments that curate their languages ask; others keep the plain switch.
+      if (ready !== null && !listed.includes(code)) flagNewLanguage(code);
       window.location.reload();
     } catch (error) {
       toast.error(error instanceof Error ? error.message : t('changeFailed'));

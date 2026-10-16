@@ -40,6 +40,7 @@ export default function MarkdownReader({
   onWordClick,
   wordPanelOpen = false,
   onClose,
+  onClearSelection,
   onSaveText,
   onEditingChange,
   knownWordsMap,
@@ -292,6 +293,23 @@ export default function MarkdownReader({
     setHighlightedPhrase([]);
   }, []);
 
+  // A drag ends with a click on the common ancestor; it must not undo the phrase it just made.
+  const lastPhraseAt = useRef(0);
+  const handleBlankClick = useCallback(
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      if (!onClearSelection || isEditing) return;
+      if (Date.now() - lastPhraseAt.current < 500) return;
+      const selection = window.getSelection();
+      if (selection && !selection.isCollapsed) return;
+      const target = event.target as HTMLElement;
+      if (target.closest('[data-leaf], a, button, input, textarea, video, iframe')) return;
+      clearPhraseHighlight();
+      setActiveWord(null);
+      onClearSelection();
+    },
+    [onClearSelection, isEditing, clearPhraseHighlight],
+  );
+
   // Drop the word/phrase highlight when the drawer closes (Esc, the X, or a
   // click away), so a dismissed lookup doesn't leave the reader marked up.
   // Only acts on close — opening/re-targeting keeps whatever was just set.
@@ -329,6 +347,7 @@ export default function MarkdownReader({
       // Clear browser selection but apply our own visual highlight. The
       // single-word active highlight gives way to the phrase highlight.
       window.getSelection()?.removeAllRanges();
+      lastPhraseAt.current = Date.now();
       setActiveWord(null);
       setHighlightedPhrase(words);
 
@@ -470,6 +489,7 @@ export default function MarkdownReader({
         ref={containerRef}
         onScroll={handleScroll}
         onMouseUp={handleMouseUp}
+        onClick={handleBlankClick}
         className="flex-1 overflow-auto print:block print:h-auto print:overflow-visible"
       >
         {isEditing ? (

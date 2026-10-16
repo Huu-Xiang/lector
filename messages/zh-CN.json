@@ -901,6 +901,24 @@
     "more": "更多免费书籍",
     "dismiss": "不再显示"
   },
+  "bookLink": {
+    "view": "在{site}查看",
+    "site": {
+      "douban": "豆瓣",
+      "goodreads": "Goodreads",
+      "babelio": "Babelio",
+      "booklog": "Booklog",
+      "aladin": "Aladin"
+    }
+  },
+  "newLanguage": {
+    "title": "开始学{language}",
+    "intro": "告诉我们你的{language}水平和喜欢读什么，我们推荐第一份阅读。你已经熟悉用法了，这一步很快。",
+    "submit": "看看推荐",
+    "later": "以后再说",
+    "close": "关闭",
+    "pickIntro": "选一份开始读吧。"
+  },
   "journal": {
     "title": "日记",
     "newEntry": "新日记",
@@ -1137,7 +1155,9 @@
       "note": "查词典不限次数，也不计入额度，词典释义翻成你的语言也一样。",
       "percentUsed": "已用 {percent}%",
       "close": "收起",
-      "info": "关于额度"
+      "info": "关于额度",
+      "tip": "点这个圆圈，可以看到本月还剩多少 AI 额度。",
+      "tipDismiss": "知道了"
     }
   },
   "legalPages": {

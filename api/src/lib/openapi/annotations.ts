@@ -2847,6 +2847,10 @@ const internalOps: Record<string, OperationDoc> = {
     summary: 'List fresh articles for a language and interest',
     tag: 'Onboarding',
   },
+  'POST /api/reading-feed/describe': {
+    summary: 'Describe feed articles in the reader native language',
+    tag: 'Onboarding',
+  },
   'POST /api/reading-feed/add': {
     summary: 'Add a reading-feed article to the library',
     tag: 'Onboarding',

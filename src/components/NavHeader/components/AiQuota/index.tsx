@@ -24,6 +24,34 @@ function readOpen(): boolean {
 }
 
 const OPEN_EVENT = 'readfox-ai-quota-open';
+const TIP_KEY = 'readfox-ai-quota-tip-seen';
+const TIP_EVENT = 'readfox-ai-quota-tip';
+
+function readTipSeen(): boolean {
+  try {
+    return window.localStorage.getItem(TIP_KEY) === '1';
+  } catch {
+    return true;
+  }
+}
+
+function markTipSeen(): void {
+  try {
+    window.localStorage.setItem(TIP_KEY, '1');
+  } catch {
+    /* the tip then returns on the next visit */
+  }
+  window.dispatchEvent(new Event(TIP_EVENT));
+}
+
+function subscribeTip(callback: () => void): () => void {
+  window.addEventListener('storage', callback);
+  window.addEventListener(TIP_EVENT, callback);
+  return () => {
+    window.removeEventListener('storage', callback);
+    window.removeEventListener(TIP_EVENT, callback);
+  };
+}
 
 function writeOpen(open: boolean): void {
   try {
@@ -114,6 +142,7 @@ export default function AiQuota({ compact = false }: { compact?: boolean }) {
   const t = useTranslations('chrome.quota');
   const [entitlements, setEntitlements] = useState<ClientEntitlements | null>(null);
   const open = useSyncExternalStore(subscribeOpen, readOpen, () => false);
+  const tipSeen = useSyncExternalStore(subscribeTip, readTipSeen, () => true);
 
   const load = useCallback(() => {
     invalidateEntitlementsCache();
@@ -165,6 +194,7 @@ export default function AiQuota({ compact = false }: { compact?: boolean }) {
     : `${t('title')} · ${t('percentUsed', { percent })}`;
 
   function toggle() {
+    markTipSeen();
     writeOpen(!open);
   }
 
@@ -178,7 +208,25 @@ export default function AiQuota({ compact = false }: { compact?: boolean }) {
   }
 
   return (
-    <section data-testid="ai-quota" className="mx-3 mb-2">
+    <section data-testid="ai-quota" className="relative mx-3 mb-2">
+      {!tipSeen && !open && (
+        <div
+          role="status"
+          data-testid="ai-quota-tip"
+          className="absolute bottom-full left-0 mb-2 w-52 rounded-lg border border-primary/40 bg-[var(--primary-soft)] p-3 text-xs text-foreground shadow-md"
+        >
+          <p className="pr-4">{t('tip')}</p>
+          <button
+            type="button"
+            onClick={markTipSeen}
+            aria-label={t('tipDismiss')}
+            data-testid="ai-quota-tip-dismiss"
+            className="absolute top-1.5 right-1.5 rounded p-0.5 text-muted-foreground hover:text-foreground"
+          >
+            <X className="size-3" />
+          </button>
+        </div>
+      )}
       {open && (
         <div
           id="ai-quota-details"

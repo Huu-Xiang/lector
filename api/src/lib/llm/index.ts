@@ -109,6 +109,11 @@ function freeProvider(): LLMProvider {
   return cachedFreeProvider.provider;
 }
 
+/** For shared content, such as article descriptions, that is not charged to one reader. */
+export function getSharedContentProvider(): LLMProvider {
+  return selfManagedFreeAi() ? freeProvider() : getProvider();
+}
+
 export interface ProviderAccessOptions {
   /** Entitlement decision made for this exact operation/reservation. */
   byok: boolean;

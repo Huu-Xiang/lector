@@ -1,10 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useFormatter, useLocale, useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
+import BookReviewLink from '@/components/BookReviewLink';
+import LevelTags from '@/components/LevelTags';
+import { useArticleDescriptions } from '@/lib/article-descriptions';
 import {
   addLibraryBook,
   addReadingFeedArticle,
@@ -31,6 +34,9 @@ interface Pick {
   source: string | null;
   interest: FeedInterest | null;
   harder: boolean;
+  articleId: string | null;
+  bookTitle: string | null;
+  bookAuthor: string | null;
   add: () => Promise<string>;
 }
 
@@ -51,6 +57,9 @@ function bookPick(
     source: book.author,
     interest: null,
     harder: levelGap(book.level, level) >= 2,
+    articleId: null,
+    bookTitle: book.title,
+    bookAuthor: book.author,
     add: () => addLibraryBook(language, book.slug),
   };
 }
@@ -70,6 +79,9 @@ function articlePick(
     source: article.source,
     interest,
     harder: levelGap(article.level, level) >= 2,
+    articleId: article.id,
+    bookTitle: null,
+    bookAuthor: null,
     add: () => addReadingFeedArticle(article.id),
   };
 }
@@ -96,6 +108,8 @@ export default function RecommendedForYou({
   const [books, setBooks] = useState<Pick[] | null>(null);
   const [articles, setArticles] = useState<Pick[] | null>(null);
   const [starting, setStarting] = useState<string | null>(null);
+  const [native, setNative] = useState<string>(() => nativeLanguageFromLocale(locale));
+  const startingRef = useRef(false);
   const interestKey = interests.join(',');
 
   useEffect(() => {
@@ -108,6 +122,7 @@ export default function RecommendedForYou({
       const native = await getSetting<string>('nativeLanguage')
         .catch(() => undefined)
         .then((code) => code || nativeLanguageFromLocale(locale));
+      if (!cancelled) setNative(native);
 
       const catalog = await getLibraryCatalog(language).catch(() => [] as LibraryBook[]);
       const fresh = catalog.filter((book) => !book.added);
@@ -135,53 +150,72 @@ export default function RecommendedForYou({
     };
   }, [language, level, interestKey, locale]);
 
+  const described = useArticleDescriptions(
+    (articles ?? []).flatMap((pick) => (pick.articleId ? [pick.articleId] : [])),
+    native,
+    language,
+  );
+
   async function start(pick: Pick) {
-    if (starting) return;
+    if (startingRef.current) return;
+    startingRef.current = true;
     setStarting(pick.key);
     try {
       const collectionId = await pick.add();
       await onStart(collectionId);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : t('errStart'));
+      startingRef.current = false;
       setStarting(null);
     }
   }
 
   function card(pick: Pick) {
+    const description = pick.articleId ? described[pick.articleId] : undefined;
+    const title = description?.title ?? pick.title;
+    const original = description ? pick.title : pick.original;
+    const blurb = description?.summary ?? pick.blurb;
     return (
       <li
         key={pick.key}
-        className="flex flex-col gap-3 rounded-xl border border-border bg-card p-4 sm:flex-row sm:items-start sm:justify-between"
+        onClick={() => void start(pick)}
+        className="flex cursor-pointer flex-col gap-3 rounded-xl border border-border bg-card p-4 transition-colors hover:border-primary sm:flex-row sm:items-start sm:justify-between"
         data-testid={`recommend-${pick.key}`}
       >
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
-            <h4 className="font-semibold text-foreground">{pick.title}</h4>
-            <span className="rounded-full bg-[var(--primary-soft)] px-2 py-0.5 text-xs font-medium text-[var(--primary-text)]">
-              {pick.level}
-            </span>
+            <h4 className="font-semibold text-foreground">{title}</h4>
+            <LevelTags language={language} level={pick.level} native={native} />
             {pick.interest && (
               <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
                 {t(`interest.${pick.interest}`)}
               </span>
             )}
           </div>
-          {pick.original && (
-            <p className="text-xs text-muted-foreground">
-              {t('original', { title: pick.original })}
-            </p>
+          {original && (
+            <p className="text-xs text-muted-foreground">{t('original', { title: original })}</p>
           )}
-          {pick.blurb && <p className="mt-1 text-sm text-foreground">{pick.blurb}</p>}
+          {blurb && <p className="mt-1 text-sm text-foreground">{blurb}</p>}
           <p className="mt-1 text-xs text-muted-foreground">
             {t('words', { words: format.number(pick.words) })}
             {pick.source ? ` · ${pick.source}` : ''}
             {pick.harder ? ` · ${t('harder')}` : ''}
+            {pick.bookTitle && pick.bookAuthor && (
+              <>
+                {' · '}
+                <BookReviewLink
+                  native={native}
+                  title={pick.bookTitle}
+                  author={pick.bookAuthor}
+                  nativeTitle={title}
+                />
+              </>
+            )}
           </p>
         </div>
         <Button
           size="sm"
           disabled={starting !== null}
-          onClick={() => void start(pick)}
           className="shrink-0 self-start"
           data-testid={`recommend-start-${pick.key}`}
         >

@@ -579,6 +579,17 @@ function getDb(): Database {
     );
     CREATE INDEX IF NOT EXISTS idx_reading_feed_language_interest
       ON reading_feed(language, interest, publishedAt);
+
+    -- One short description of a feed article per native language, written once
+    -- by the shared model and reused by every reader.
+    CREATE TABLE IF NOT EXISTS reading_feed_summary (
+      articleId TEXT NOT NULL,
+      native TEXT NOT NULL,
+      title TEXT NOT NULL,
+      summary TEXT NOT NULL,
+      createdAt TEXT NOT NULL,
+      PRIMARY KEY (articleId, native)
+    );
   `);
 
   // Migrations for existing databases

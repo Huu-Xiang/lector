@@ -121,3 +121,26 @@ describe('reading-feed route', () => {
     expect((db.prepare('SELECT COUNT(*) AS n FROM collections').get() as { n: number }).n).toBe(0);
   });
 });
+
+describe('POST /describe', () => {
+  const post = (body: unknown) =>
+    app.request('/describe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+
+  test('validates the native language and the id list', async () => {
+    expect((await post({ ids: ['x'], native: 'xx' })).status).toBe(400);
+    expect((await post({ ids: [], native: 'zh-CN' })).status).toBe(400);
+    expect((await post({ ids: Array(13).fill('x'), native: 'zh-CN' })).status).toBe(400);
+  });
+
+  test('returns nothing for unknown ids and for an article already in the reader language', async () => {
+    reset();
+    const { id } = seedArticle();
+    const res = await post({ ids: ['missing', id], native: 'en' });
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ descriptions: {} });
+  });
+});

@@ -901,6 +901,24 @@
     "more": "More free books",
     "dismiss": "Hide this section"
   },
+  "bookLink": {
+    "view": "View on {site}",
+    "site": {
+      "douban": "Douban",
+      "goodreads": "Goodreads",
+      "babelio": "Babelio",
+      "booklog": "Booklog",
+      "aladin": "Aladin"
+    }
+  },
+  "newLanguage": {
+    "title": "Start {language}",
+    "intro": "Tell us your {language} level and what you like to read. We will suggest a first read. You already know your way around, so this takes a minute.",
+    "submit": "Show suggestions",
+    "later": "Not now",
+    "close": "Close",
+    "pickIntro": "Pick one to start reading."
+  },
   "journal": {
     "title": "Journal",
     "newEntry": "New Entry",
@@ -1137,7 +1155,9 @@
       "note": "Dictionary lookups are free and not counted. This includes translating dictionary meanings into your language.",
       "percentUsed": "{percent}% used",
       "close": "Close",
-      "info": "About this allowance"
+      "info": "About this allowance",
+      "tip": "Tap this circle to see how much AI you have left this month.",
+      "tipDismiss": "Got it"
     }
   },
   "legalPages": {

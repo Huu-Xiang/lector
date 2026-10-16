@@ -15,14 +15,16 @@ import {
   type LibraryBook,
   type ReadingFeedArticle,
 } from '@/lib/data-layer';
+import BookReviewLink from '@/components/BookReviewLink';
+import LevelTags from '@/components/LevelTags';
+import { useArticleDescriptions } from '@/lib/article-descriptions';
 import { languageDisplayName } from '@/lib/language-names';
 import { nativeLanguageFromLocale } from '@/lib/languages';
 import {
   CEFR_LEVELS,
-  examRefs,
+  examLabels,
   getReadingLevel,
   setReadingLevel,
-  showMainlandExams,
   type CefrLevel,
 } from '@/lib/reading-level';
 import { useActiveLanguage } from '@/utils/hooks';
@@ -60,8 +62,12 @@ export default function FreeBooksModal({
   const [tab, setTab] = useState<TabId>('books');
   const [feed, setFeed] = useState<ReadingFeedArticle[] | null>(null);
   const [feedFailed, setFeedFailed] = useState(false);
-  const mainland = showMainlandExams(locale);
   const languageName = languageDisplayName(activeLang.code, locale, activeLang.name);
+  const described = useArticleDescriptions(
+    (feed ?? []).map((article) => article.id),
+    native,
+    activeLang.code,
+  );
   const titleFor = (book: LibraryBook) => book.titles[native] || book.title;
 
   const feedAvailable = FEED_LANGUAGES.has(activeLang.code);
@@ -166,9 +172,9 @@ export default function FreeBooksModal({
   const shownLevels = current === 'all' ? levels : levels.filter((level) => level === current);
 
   const examLine = (level: CefrLevel) =>
-    examRefs(activeLang.code, level, mainland)
-      .map((ref) => tl(`exam.${ref.exam}`, { score: ref.score ?? '' }))
-      .join(' · ');
+    examLabels(activeLang.code, level, native, (exam, score) => tl(`exam.${exam}`, { score })).join(
+      ' · ',
+    );
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
@@ -281,6 +287,13 @@ export default function FreeBooksModal({
                                   lessons: format.number(book.lessonCount),
                                 })}
                                 {' · '}
+                                <BookReviewLink
+                                  native={native}
+                                  title={book.title}
+                                  author={book.author}
+                                  nativeTitle={shownTitle}
+                                />
+                                {' · '}
                                 <a
                                   href={book.sourceUrl}
                                   target="_blank"
@@ -335,12 +348,22 @@ export default function FreeBooksModal({
                   data-testid={`reading-feed-article-${article.id}`}
                 >
                   <div className="min-w-0">
-                    <div className="flex items-center gap-2">
-                      <h4 className="font-semibold text-foreground">{article.title}</h4>
-                      <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
-                        {article.level}
-                      </span>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <h4 className="font-semibold text-foreground">
+                        {described[article.id]?.title ?? article.title}
+                      </h4>
+                      <LevelTags language={activeLang.code} level={article.level} native={native} />
                     </div>
+                    {described[article.id] && (
+                      <>
+                        <p className="text-xs text-muted-foreground">
+                          {tl('original', { title: article.title })}
+                        </p>
+                        <p className="mt-1 text-sm text-foreground">
+                          {described[article.id].summary}
+                        </p>
+                      </>
+                    )}
                     <p className="mt-1 text-xs text-muted-foreground">
                       {t('feedSize', { words: format.number(article.wordCount) })}
                       {' · '}

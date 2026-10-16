@@ -68,6 +68,9 @@ export function pruneReadingFeed(language: FeedLanguage, interest: ReadingIntere
          LIMIT ?
        )`,
   ).run(language, interest, language, interest, MAX_ROWS_PER_BUCKET);
+  db.prepare(
+    'DELETE FROM reading_feed_summary WHERE articleId NOT IN (SELECT id FROM reading_feed)',
+  ).run();
 }
 
 export function listReadingFeed(

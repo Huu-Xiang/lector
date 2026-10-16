@@ -116,6 +116,33 @@ test.describe('Reader word handling', () => {
     await expect(drawer.getByRole('heading', { name: 'Perdekraal-fees' })).toBeVisible();
   });
 
+  test('clicking empty space closes the drawer and clears the selected word', async ({ page }) => {
+    const word = page.getByRole('button', { name: 'Look up Perdekraal-fees' });
+    await word.click();
+    const drawer = page.getByTestId('translation-drawer');
+    await expect(drawer).toHaveClass(/translate-x-0/, { timeout: 5000 });
+    await expect(page.locator('[data-active-word]')).toHaveCount(1);
+
+    await page.locator('article').click({ position: { x: 4, y: 4 } });
+
+    await expect(drawer).toHaveClass(/translate-x-full/);
+    await expect(page.locator('[data-active-word]')).toHaveCount(0);
+  });
+
+  test('choosing the level that is already set clears it', async ({ page }) => {
+    const word = page.getByRole('button', { name: 'Look up Perdekraal-fees' });
+    await word.click();
+    const drawer = page.getByTestId('translation-drawer');
+    await expect(drawer.getByText('[translated:')).toBeVisible();
+
+    await drawer.getByTestId('word-level-4').click();
+    await expect(drawer.getByTestId('word-level-4')).toHaveClass(/ring-2/);
+
+    await drawer.getByTestId('word-level-4').click();
+    await expect(drawer.getByTestId('word-level-4')).not.toHaveClass(/ring-2/);
+    await expect(word).toHaveAttribute('data-word-state', 'new');
+  });
+
   test('updates one word optimistically without refetching the known-words map', async ({
     page,
   }) => {

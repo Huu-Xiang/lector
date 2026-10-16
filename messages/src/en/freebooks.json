@@ -84,5 +84,23 @@
     "homeHintLevel": "Matched to your level, {level}.",
     "more": "More free books",
     "dismiss": "Hide this section"
+  },
+  "bookLink": {
+    "view": "View on {site}",
+    "site": {
+      "douban": "Douban",
+      "goodreads": "Goodreads",
+      "babelio": "Babelio",
+      "booklog": "Booklog",
+      "aladin": "Aladin"
+    }
+  },
+  "newLanguage": {
+    "title": "Start {language}",
+    "intro": "Tell us your {language} level and what you like to read. We will suggest a first read. You already know your way around, so this takes a minute.",
+    "submit": "Show suggestions",
+    "later": "Not now",
+    "close": "Close",
+    "pickIntro": "Pick one to start reading."
   }
 }
