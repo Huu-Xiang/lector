@@ -13,7 +13,24 @@
       "adding": "添加中…",
       "addedLabel": "已添加",
       "added": "已把《{title}》添加到书库",
-      "errAdd": "无法添加这本书"
+      "errAdd": "无法添加这本书",
+      "tab": {
+        "books": "书",
+        "news": "时事",
+        "travel": "旅行",
+        "science": "科普"
+      },
+      "feedIntro": "{language}最新的{interest}文章。添加后会连同出处一起复制到你的书库。",
+      "feedLoading": "加载中…",
+      "feedErrLoad": "无法加载这些文章。",
+      "feedNone": "暂时还没有文章,过段时间再来看看。",
+      "feedSize": "{words} 词",
+      "feedAdd": "添加",
+      "feedAdding": "添加中…",
+      "feedAddedLabel": "已添加",
+      "feedAdded": "已把《{title}》添加到书库",
+      "feedErrAdd": "无法添加这篇文章",
+      "feedSource": "来源：{source} · {license}"
     },
     "empty": {
       "browseBooks": "浏览免费书籍"

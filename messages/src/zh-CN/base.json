@@ -119,7 +119,15 @@
     "errSave": "无法保存你的设置",
     "levelHint": "之后可以在“免费书籍”里修改。",
     "nativeTitle": "1. 你的母语",
-    "nativeHint": "单词翻译和讲解都用这种语言。界面目前有简体中文和英文。"
+    "nativeHint": "单词翻译和讲解都用这种语言。界面目前有简体中文和英文。",
+    "interests": "你的兴趣",
+    "interestsHint": "可选——选中的主题会在“免费书籍”里显示最新文章。",
+    "interest": {
+      "news": "时事新闻",
+      "travel": "旅行",
+      "science": "科普百科",
+      "literature": "文学名著"
+    }
   },
   "landing": {
     "metaTitle": "Readfox：读原版书，学地道外语",

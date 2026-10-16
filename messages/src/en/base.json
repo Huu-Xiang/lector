@@ -119,7 +119,15 @@
     "errSave": "Could not save your setup",
     "levelHint": "You can change it later in Free books.",
     "nativeTitle": "1. Your language",
-    "nativeHint": "Translations and explanations use this language. The interface is available in English and Simplified Chinese."
+    "nativeHint": "Translations and explanations use this language. The interface is available in English and Simplified Chinese.",
+    "interests": "Your interests",
+    "interestsHint": "Optional — we'll add fresh articles on these topics to Free books.",
+    "interest": {
+      "news": "News",
+      "travel": "Travel",
+      "science": "Science",
+      "literature": "Literature"
+    }
   },
   "landing": {
     "metaTitle": "Readfox – read real books in the language you are learning",

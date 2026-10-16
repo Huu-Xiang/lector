@@ -37,6 +37,9 @@ const languageCards: { code: LanguageCode; flag: string; native: string; name: s
 
 // Shown up front; every other language sits behind "Show all languages" so the
 // preferences below stay on screen without scrolling past 30+ cards.
+// Mirrors api/src/lib/settings-keys.ts's READING_INTERESTS allow-list.
+const READING_INTERESTS = ['news', 'travel', 'science', 'literature'] as const;
+
 const POPULAR_LANGUAGES: LanguageCode[] = [
   'en',
   'es',
@@ -57,12 +60,16 @@ export default function SetupPage() {
   const [selectedLanguage, setSelectedLanguage] = useState<LanguageCode | null>(null);
   const [pending, setPending] = useState<LanguageCode | null>(null);
   const [level, setLevel] = useState<CefrLevel | null>(null);
+  const [interests, setInterests] = useState<string[]>([]);
   const [native, setNative] = useState<string>('en');
   const tl = useTranslations('readingLevel');
   const mainland = showMainlandExams(locale);
   const [error, setError] = useState<string | null>(null);
   const [showAllLanguages, setShowAllLanguages] = useState(false);
   const displayNames = new Intl.DisplayNames([locale], { type: 'language' });
+  function toggleInterest(id: string) {
+    setInterests((prev) => (prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]));
+  }
   const languageName = (code: string, fallback: string) => {
     try {
       return displayNames.of(code) ?? fallback;
@@ -123,6 +130,9 @@ export default function SetupPage() {
       // explicit language and is idempotent. /onboarding/start or /skip then
       // atomically persists the profile, progress and target language.
       if (level) await setReadingLevel(code, level).catch(() => {});
+      if (interests.length > 0) {
+        await setSetting('readingInterests', interests).catch(() => {});
+      }
       const starter = await seedStarterContent(code);
       const profile = {
         language: code,
@@ -306,6 +316,31 @@ export default function SetupPage() {
               </button>
             </div>
             <p className="mt-2 text-xs text-muted-foreground">{t('levelHint')}</p>
+          </fieldset>
+
+          <fieldset className="mt-5">
+            <legend className="mb-2 text-xs font-semibold text-muted-foreground">
+              {t('interests')}
+            </legend>
+            <div className="grid gap-2 sm:grid-cols-4">
+              {READING_INTERESTS.map((id) => (
+                <button
+                  key={id}
+                  type="button"
+                  aria-pressed={interests.includes(id)}
+                  onClick={() => toggleInterest(id)}
+                  data-testid={`setup-interest-${id}`}
+                  className={`rounded-xl border px-3 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
+                    interests.includes(id)
+                      ? 'border-primary bg-[var(--primary-soft)] text-[var(--primary-text)]'
+                      : 'border-border bg-background text-foreground hover:bg-accent'
+                  }`}
+                >
+                  {t(`interest.${id}`)}
+                </button>
+              ))}
+            </div>
+            <p className="mt-2 text-xs text-muted-foreground">{t('interestsHint')}</p>
           </fieldset>
         </section>
 

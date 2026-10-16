@@ -1487,3 +1487,37 @@ export async function addLibraryBook(language: string, slug: string): Promise<vo
   await requireOk(res, 'Could not add the book');
   invalidateCollections();
 }
+
+export interface ReadingFeedArticle {
+  id: string;
+  title: string;
+  url: string;
+  source: string;
+  author: string | null;
+  license: string;
+  licenseUrl: string;
+  publishedAt: string;
+  wordCount: number;
+  level: string;
+}
+
+export async function getReadingFeed(
+  language: string,
+  interest: string,
+): Promise<ReadingFeedArticle[]> {
+  const res = await apiFetch(
+    `/api/reading-feed?language=${encodeURIComponent(language)}&interest=${encodeURIComponent(interest)}`,
+  );
+  await requireOk(res, 'Could not load the reading feed');
+  return ((await res.json()) as { articles: ReadingFeedArticle[] }).articles;
+}
+
+export async function addReadingFeedArticle(id: string): Promise<void> {
+  const res = await apiFetch('/api/reading-feed/add', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id }),
+  });
+  await requireOk(res, 'Could not add the article');
+  invalidateCollections();
+}

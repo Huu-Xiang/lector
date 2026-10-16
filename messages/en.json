@@ -119,7 +119,15 @@
     "errSave": "Could not save your setup",
     "levelHint": "You can change it later in Free books.",
     "nativeTitle": "1. Your language",
-    "nativeHint": "Translations and explanations use this language. The interface is available in English and Simplified Chinese."
+    "nativeHint": "Translations and explanations use this language. The interface is available in English and Simplified Chinese.",
+    "interests": "Your interests",
+    "interestsHint": "Optional — we'll add fresh articles on these topics to Free books.",
+    "interest": {
+      "news": "News",
+      "travel": "Travel",
+      "science": "Science",
+      "literature": "Literature"
+    }
   },
   "landing": {
     "metaTitle": "Readfox – read real books in the language you are learning",
@@ -636,7 +644,24 @@
       "adding": "Adding…",
       "addedLabel": "Added",
       "added": "Added {title} to your library",
-      "errAdd": "Could not add the book"
+      "errAdd": "Could not add the book",
+      "tab": {
+        "books": "Books",
+        "news": "News",
+        "travel": "Travel",
+        "science": "Science"
+      },
+      "feedIntro": "Fresh {interest} articles in {language}. Adding one copies it into your library with an attribution.",
+      "feedLoading": "Loading…",
+      "feedErrLoad": "Could not load these articles.",
+      "feedNone": "No articles yet — check back soon.",
+      "feedSize": "{words} words",
+      "feedAdd": "Add",
+      "feedAdding": "Adding…",
+      "feedAddedLabel": "Added",
+      "feedAdded": "Added {title} to your library",
+      "feedErrAdd": "Could not add the article",
+      "feedSource": "Source: {source} · {license}"
     },
     "empty": {
       "browseBooks": "Browse free books",

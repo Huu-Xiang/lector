@@ -13,7 +13,24 @@
       "adding": "Adding…",
       "addedLabel": "Added",
       "added": "Added {title} to your library",
-      "errAdd": "Could not add the book"
+      "errAdd": "Could not add the book",
+      "tab": {
+        "books": "Books",
+        "news": "News",
+        "travel": "Travel",
+        "science": "Science"
+      },
+      "feedIntro": "Fresh {interest} articles in {language}. Adding one copies it into your library with an attribution.",
+      "feedLoading": "Loading…",
+      "feedErrLoad": "Could not load these articles.",
+      "feedNone": "No articles yet — check back soon.",
+      "feedSize": "{words} words",
+      "feedAdd": "Add",
+      "feedAdding": "Adding…",
+      "feedAddedLabel": "Added",
+      "feedAdded": "Added {title} to your library",
+      "feedErrAdd": "Could not add the article",
+      "feedSource": "Source: {source} · {license}"
     },
     "empty": {
       "browseBooks": "Browse free books"

@@ -119,7 +119,15 @@
     "errSave": "无法保存你的设置",
     "levelHint": "之后可以在“免费书籍”里修改。",
     "nativeTitle": "1. 你的母语",
-    "nativeHint": "单词翻译和讲解都用这种语言。界面目前有简体中文和英文。"
+    "nativeHint": "单词翻译和讲解都用这种语言。界面目前有简体中文和英文。",
+    "interests": "你的兴趣",
+    "interestsHint": "可选——选中的主题会在“免费书籍”里显示最新文章。",
+    "interest": {
+      "news": "时事新闻",
+      "travel": "旅行",
+      "science": "科普百科",
+      "literature": "文学名著"
+    }
   },
   "landing": {
     "metaTitle": "Readfox：读原版书，学地道外语",
@@ -636,7 +644,24 @@
       "adding": "添加中…",
       "addedLabel": "已添加",
       "added": "已把《{title}》添加到书库",
-      "errAdd": "无法添加这本书"
+      "errAdd": "无法添加这本书",
+      "tab": {
+        "books": "书",
+        "news": "时事",
+        "travel": "旅行",
+        "science": "科普"
+      },
+      "feedIntro": "{language}最新的{interest}文章。添加后会连同出处一起复制到你的书库。",
+      "feedLoading": "加载中…",
+      "feedErrLoad": "无法加载这些文章。",
+      "feedNone": "暂时还没有文章,过段时间再来看看。",
+      "feedSize": "{words} 词",
+      "feedAdd": "添加",
+      "feedAdding": "添加中…",
+      "feedAddedLabel": "已添加",
+      "feedAdded": "已把《{title}》添加到书库",
+      "feedErrAdd": "无法添加这篇文章",
+      "feedSource": "来源：{source} · {license}"
     },
     "empty": {
       "browseBooks": "浏览免费书籍",

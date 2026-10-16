@@ -6,7 +6,15 @@ import { useFormatter, useLocale, useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { buttonVariants, Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogTitle } from '@/components/ui/dialog';
-import { addLibraryBook, getLibraryCatalog, getSetting, type LibraryBook } from '@/lib/data-layer';
+import {
+  addLibraryBook,
+  addReadingFeedArticle,
+  getLibraryCatalog,
+  getReadingFeed,
+  getSetting,
+  type LibraryBook,
+  type ReadingFeedArticle,
+} from '@/lib/data-layer';
 import { nativeLanguageFromLocale } from '@/lib/languages';
 import {
   CEFR_LEVELS,
@@ -17,6 +25,15 @@ import {
   type CefrLevel,
 } from '@/lib/reading-level';
 import { useActiveLanguage } from '@/utils/hooks';
+
+// Only 'en' and 'fr' have a working reading-feed source today (see
+// api/src/lib/reading-feed/sources/index.ts); every other target language
+// shows only the Books tab.
+const FEED_INTERESTS = ['news', 'travel', 'science'] as const;
+type FeedInterest = (typeof FEED_INTERESTS)[number];
+const FEED_LANGUAGES = new Set(['en', 'fr']);
+
+type TabId = 'books' | FeedInterest;
 
 export default function FreeBooksModal({
   isOpen,
@@ -38,6 +55,10 @@ export default function FreeBooksModal({
   const [native, setNative] = useState<string>(locale);
   const [yourLevel, setYourLevel] = useState<CefrLevel | null>(null);
   const [filter, setFilter] = useState<CefrLevel | 'all'>('all');
+  const [readingInterests, setReadingInterests] = useState<string[]>([]);
+  const [tab, setTab] = useState<TabId>('books');
+  const [feed, setFeed] = useState<ReadingFeedArticle[] | null>(null);
+  const [feedFailed, setFeedFailed] = useState(false);
   const mainland = showMainlandExams(locale);
   let languageName = activeLang.native;
   try {
@@ -45,6 +66,16 @@ export default function FreeBooksModal({
       new Intl.DisplayNames([locale], { type: 'language' }).of(activeLang.code) ?? languageName;
   } catch {}
   const titleFor = (book: LibraryBook) => book.titles[native] || book.title;
+
+  const feedAvailable = FEED_LANGUAGES.has(activeLang.code);
+  const availableFeedInterests = feedAvailable ? FEED_INTERESTS : [];
+  const chosenFeedInterests = readingInterests.filter((id): id is FeedInterest =>
+    (availableFeedInterests as readonly string[]).includes(id),
+  );
+  const otherFeedInterests = availableFeedInterests.filter(
+    (id) => !chosenFeedInterests.includes(id),
+  );
+  const tabOrder: TabId[] = [...chosenFeedInterests, 'books', ...otherFeedInterests];
 
   useEffect(() => {
     if (!isOpen) return;
@@ -64,10 +95,38 @@ export default function FreeBooksModal({
       setYourLevel(level);
       setFilter(level ?? 'all');
     });
+    getSetting<string[]>('readingInterests')
+      .catch(() => undefined)
+      .then((list) => {
+        if (cancelled) return;
+        const interests = Array.isArray(list) ? list : [];
+        setReadingInterests(interests);
+        const firstAvailable = interests.find((id) =>
+          (FEED_INTERESTS as readonly string[]).includes(id),
+        );
+        setTab(
+          FEED_LANGUAGES.has(activeLang.code) && firstAvailable
+            ? (firstAvailable as TabId)
+            : 'books',
+        );
+      });
     return () => {
       cancelled = true;
     };
   }, [isOpen, activeLang.code]);
+
+  useEffect(() => {
+    if (!isOpen || tab === 'books') return;
+    let cancelled = false;
+    setFeed(null);
+    setFeedFailed(false);
+    getReadingFeed(activeLang.code, tab)
+      .then((list) => !cancelled && setFeed(list))
+      .catch(() => !cancelled && setFeedFailed(true));
+    return () => {
+      cancelled = true;
+    };
+  }, [isOpen, tab, activeLang.code]);
 
   async function add(book: LibraryBook) {
     setAdding(book.slug);
@@ -80,6 +139,19 @@ export default function FreeBooksModal({
       onAdded();
     } catch (error) {
       toast.error(error instanceof Error ? error.message : t('errAdd'));
+    } finally {
+      setAdding(null);
+    }
+  }
+
+  async function addArticle(article: ReadingFeedArticle) {
+    setAdding(article.id);
+    try {
+      await addReadingFeedArticle(article.id);
+      toast.success(t('feedAdded', { title: article.title }));
+      onAdded();
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : t('feedErrAdd'));
     } finally {
       setAdding(null);
     }
@@ -113,113 +185,193 @@ export default function FreeBooksModal({
             <X className="h-5 w-5" />
           </DialogClose>
         </div>
-        <div className="overflow-y-auto px-6 py-4" data-testid="free-books-list">
-          <p className="mb-4 text-sm text-muted-foreground">
-            {t('intro', { language: languageName })}
-          </p>
-          {failed && <p className="text-sm text-destructive">{t('errLoad')}</p>}
-          {!failed && books === null && (
-            <p className="text-sm text-muted-foreground">{t('loading')}</p>
-          )}
-          {books?.length === 0 && (
-            <p className="text-sm text-muted-foreground" data-testid="free-books-empty">
-              {t('none', { language: languageName })}
+        {tabOrder.length > 1 && (
+          <div
+            className="flex gap-1 border-b border-border px-6 pt-3"
+            data-testid="free-books-tabs"
+          >
+            {tabOrder.map((id) => (
+              <button
+                key={id}
+                type="button"
+                aria-pressed={tab === id}
+                onClick={() => setTab(id)}
+                data-testid={`free-books-tab-${id}`}
+                className={`rounded-t-lg px-3 py-2 text-sm font-medium transition-colors ${
+                  tab === id
+                    ? 'border-b-2 border-primary text-foreground'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                {t(`tab.${id}`)}
+              </button>
+            ))}
+          </div>
+        )}
+        {tab === 'books' ? (
+          <div className="overflow-y-auto px-6 py-4" data-testid="free-books-list">
+            <p className="mb-4 text-sm text-muted-foreground">
+              {t('intro', { language: languageName })}
             </p>
-          )}
-          {levels.length > 0 && (
-            <div className="mb-4 flex flex-wrap gap-2" data-testid="free-books-levels">
-              {(['all', ...levels] as const).map((level) => (
-                <button
-                  key={level}
-                  type="button"
-                  aria-pressed={current === level}
-                  onClick={() => pickLevel(level)}
-                  data-testid={`free-books-level-${level}`}
-                  className={`rounded-xl border px-3 py-1.5 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
-                    current === level
-                      ? 'border-primary bg-[var(--primary-soft)] text-[var(--primary-text)]'
-                      : 'border-border bg-background text-foreground hover:bg-accent'
-                  }`}
-                >
-                  {level === 'all' ? tl('all') : `${level} · ${tl(`names.${level}`)}`}
-                  {level === yourLevel && (
-                    <span className="ml-1 text-xs text-muted-foreground">({tl('yours')})</span>
+            {failed && <p className="text-sm text-destructive">{t('errLoad')}</p>}
+            {!failed && books === null && (
+              <p className="text-sm text-muted-foreground">{t('loading')}</p>
+            )}
+            {books?.length === 0 && (
+              <p className="text-sm text-muted-foreground" data-testid="free-books-empty">
+                {t('none', { language: languageName })}
+              </p>
+            )}
+            {levels.length > 0 && (
+              <div className="mb-4 flex flex-wrap gap-2" data-testid="free-books-levels">
+                {(['all', ...levels] as const).map((level) => (
+                  <button
+                    key={level}
+                    type="button"
+                    aria-pressed={current === level}
+                    onClick={() => pickLevel(level)}
+                    data-testid={`free-books-level-${level}`}
+                    className={`rounded-xl border px-3 py-1.5 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
+                      current === level
+                        ? 'border-primary bg-[var(--primary-soft)] text-[var(--primary-text)]'
+                        : 'border-border bg-background text-foreground hover:bg-accent'
+                    }`}
+                  >
+                    {level === 'all' ? tl('all') : `${level} · ${tl(`names.${level}`)}`}
+                    {level === yourLevel && (
+                      <span className="ml-1 text-xs text-muted-foreground">({tl('yours')})</span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            )}
+            {shownLevels.map((level) => {
+              const exams = examLine(level);
+              return (
+                <section key={level} className="mb-5" data-testid={`free-books-group-${level}`}>
+                  <h3 className="text-sm font-bold text-foreground">
+                    {level} · {tl(`names.${level}`)}
+                  </h3>
+                  {exams && (
+                    <p className="mb-2 text-xs text-muted-foreground" title={tl('approx')}>
+                      {exams}
+                    </p>
                   )}
-                </button>
-              ))}
-            </div>
-          )}
-          {shownLevels.map((level) => {
-            const exams = examLine(level);
-            return (
-              <section key={level} className="mb-5" data-testid={`free-books-group-${level}`}>
-                <h3 className="text-sm font-bold text-foreground">
-                  {level} · {tl(`names.${level}`)}
-                </h3>
-                {exams && (
-                  <p className="mb-2 text-xs text-muted-foreground" title={tl('approx')}>
-                    {exams}
-                  </p>
-                )}
-                <ul className="space-y-3">
-                  {books
-                    ?.filter((book) => book.level === level)
-                    .map((book) => {
-                      const shownTitle = titleFor(book);
-                      const blurb = book.blurbs[native];
-                      return (
-                        <li
-                          key={book.slug}
-                          className="flex items-start justify-between gap-4 rounded-xl border border-border bg-card p-4"
-                          data-testid={`free-book-${book.slug}`}
-                        >
-                          <div className="min-w-0">
-                            <h4 className="font-semibold text-foreground">{shownTitle}</h4>
-                            {shownTitle !== book.title && (
-                              <p className="text-xs text-muted-foreground">
-                                {tl('original', { title: book.title })}
-                              </p>
-                            )}
-                            <p className="text-sm text-muted-foreground">{book.author}</p>
-                            {blurb && <p className="mt-1 text-sm text-foreground">{blurb}</p>}
-                            <p className="mt-1 text-xs text-muted-foreground">
-                              {t('size', {
-                                words: format.number(book.wordCount),
-                                lessons: format.number(book.lessonCount),
-                              })}
-                              {' · '}
-                              <a
-                                href={book.sourceUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="underline"
-                              >
-                                {book.sourceName}
-                              </a>
-                            </p>
-                          </div>
-                          <Button
-                            size="sm"
-                            variant={book.added ? 'outline' : 'default'}
-                            disabled={book.added || adding !== null}
-                            onClick={() => add(book)}
-                            data-testid={`free-book-add-${book.slug}`}
+                  <ul className="space-y-3">
+                    {books
+                      ?.filter((book) => book.level === level)
+                      .map((book) => {
+                        const shownTitle = titleFor(book);
+                        const blurb = book.blurbs[native];
+                        return (
+                          <li
+                            key={book.slug}
+                            className="flex items-start justify-between gap-4 rounded-xl border border-border bg-card p-4"
+                            data-testid={`free-book-${book.slug}`}
                           >
-                            {book.added
-                              ? t('addedLabel')
-                              : adding === book.slug
-                                ? t('adding')
-                                : t('add')}
-                          </Button>
-                        </li>
-                      );
-                    })}
-                </ul>
-              </section>
-            );
-          })}
-          {levels.length > 0 && <p className="text-xs text-muted-foreground">{tl('approx')}</p>}
-        </div>
+                            <div className="min-w-0">
+                              <h4 className="font-semibold text-foreground">{shownTitle}</h4>
+                              {shownTitle !== book.title && (
+                                <p className="text-xs text-muted-foreground">
+                                  {tl('original', { title: book.title })}
+                                </p>
+                              )}
+                              <p className="text-sm text-muted-foreground">{book.author}</p>
+                              {blurb && <p className="mt-1 text-sm text-foreground">{blurb}</p>}
+                              <p className="mt-1 text-xs text-muted-foreground">
+                                {t('size', {
+                                  words: format.number(book.wordCount),
+                                  lessons: format.number(book.lessonCount),
+                                })}
+                                {' · '}
+                                <a
+                                  href={book.sourceUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="underline"
+                                >
+                                  {book.sourceName}
+                                </a>
+                              </p>
+                            </div>
+                            <Button
+                              size="sm"
+                              variant={book.added ? 'outline' : 'default'}
+                              disabled={book.added || adding !== null}
+                              onClick={() => add(book)}
+                              data-testid={`free-book-add-${book.slug}`}
+                            >
+                              {book.added
+                                ? t('addedLabel')
+                                : adding === book.slug
+                                  ? t('adding')
+                                  : t('add')}
+                            </Button>
+                          </li>
+                        );
+                      })}
+                  </ul>
+                </section>
+              );
+            })}
+            {levels.length > 0 && <p className="text-xs text-muted-foreground">{tl('approx')}</p>}
+          </div>
+        ) : (
+          <div className="overflow-y-auto px-6 py-4" data-testid="reading-feed-list">
+            <p className="mb-4 text-sm text-muted-foreground">
+              {t('feedIntro', { interest: t(`tab.${tab}`), language: languageName })}
+            </p>
+            {feedFailed && <p className="text-sm text-destructive">{t('feedErrLoad')}</p>}
+            {!feedFailed && feed === null && (
+              <p className="text-sm text-muted-foreground">{t('feedLoading')}</p>
+            )}
+            {feed?.length === 0 && (
+              <p className="text-sm text-muted-foreground" data-testid="reading-feed-empty">
+                {t('feedNone')}
+              </p>
+            )}
+            <ul className="space-y-3">
+              {feed?.map((article) => (
+                <li
+                  key={article.id}
+                  className="flex items-start justify-between gap-4 rounded-xl border border-border bg-card p-4"
+                  data-testid={`reading-feed-article-${article.id}`}
+                >
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <h4 className="font-semibold text-foreground">{article.title}</h4>
+                      <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
+                        {article.level}
+                      </span>
+                    </div>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      {t('feedSize', { words: format.number(article.wordCount) })}
+                      {' · '}
+                      {new Date(article.publishedAt).toLocaleDateString(locale)}
+                      {' · '}
+                      <a
+                        href={article.licenseUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline"
+                      >
+                        {t('feedSource', { source: article.source, license: article.license })}
+                      </a>
+                    </p>
+                  </div>
+                  <Button
+                    size="sm"
+                    disabled={adding !== null}
+                    onClick={() => addArticle(article)}
+                    data-testid={`reading-feed-add-${article.id}`}
+                  >
+                    {adding === article.id ? t('feedAdding') : t('feedAdd')}
+                  </Button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   );
