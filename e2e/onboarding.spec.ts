@@ -250,6 +250,9 @@ test.describe('guided onboarding — selfhost', () => {
     await page.goto('/');
     await expect(page).toHaveURL(/\/setup/, { timeout: 15_000 });
     await expect(page.getByTestId('language-selector')).toHaveCount(0);
+    // English is the default native language here, so English is not offered as a target.
+    await expect(page.getByTestId('setup-language-en')).toHaveCount(0);
+    await page.getByTestId('setup-native-language').selectOption('de');
     await page.getByTestId('setup-language-en').click();
     await page.getByTestId('setup-level-B1').click();
     await page.getByTestId('start-guided-onboarding').click();
@@ -258,6 +261,23 @@ test.describe('guided onboarding — selfhost', () => {
     await page.getByTestId('recommend-start-book-alices-adventures-in-wonderland').click();
     await expect(page).toHaveURL(/\/read\/[^/?]+\?onboarding=1$/, { timeout: 30_000 });
     await expect(page.getByTestId('onboarding-coach-lookup')).toBeVisible({ timeout: 15_000 });
+    await context.close();
+  });
+
+  test('setup never offers the native language as a target, and drops a clashing pick', async ({
+    browser,
+  }) => {
+    const context = await browser.newContext({ storageState: { cookies: [], origins: [] } });
+    const page = await context.newPage();
+
+    await page.goto('/');
+    await expect(page).toHaveURL(/\/setup/, { timeout: 15_000 });
+    await page.getByTestId('setup-native-language').selectOption('de');
+    await page.getByTestId('setup-language-en').click();
+    await expect(page.getByTestId('setup-language-en')).toHaveAttribute('aria-pressed', 'true');
+    await page.getByTestId('setup-native-language').selectOption('en');
+    await expect(page.getByTestId('setup-language-en')).toHaveCount(0);
+    await expect(page.getByTestId('skip-guided-onboarding')).toBeDisabled();
     await context.close();
   });
 

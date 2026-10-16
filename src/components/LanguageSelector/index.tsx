@@ -11,7 +11,13 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { getFluencyStats, seedStarterContent, setSetting } from '@/lib/data-layer';
-import { availableLanguages, LANGUAGES, normalizeEnabledLanguages } from '@/lib/languages';
+import {
+  availableLanguages,
+  LANGUAGES,
+  normalizeEnabledLanguages,
+  withoutNative,
+} from '@/lib/languages';
+import { useNativeLanguage } from '@/lib/library-titles';
 import { LanguageCode } from '@/types/language';
 import { flagNewLanguage } from '@/components/NewLanguagePrompt';
 import { languageDisplayName } from '@/lib/language-names';
@@ -38,6 +44,7 @@ export default function LanguageSelector({
   const activeLang = useActiveLanguage();
   const resolved = useLanguageResolved();
   const enabledCodes = useEnabledLanguages();
+  const native = useNativeLanguage();
   const [knownWordsCount, setKnownWordsCount] = useState<number | null>(null);
   const [open, setOpen] = useState(false);
   const [addOpen, setAddOpen] = useState(false);
@@ -93,7 +100,7 @@ export default function LanguageSelector({
 
   // The active language is always listed, whatever the stored list says.
   const listed = normalizeEnabledLanguages([...enabledCodes, activeLang.code]);
-  const addable = availableLanguages(listed);
+  const addable = withoutNative(availableLanguages(listed), native);
 
   function languageRow(code: LanguageCode, testIdPrefix: string, markActive: boolean) {
     const isActive = markActive && code === activeLang.code;

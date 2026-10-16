@@ -2,8 +2,10 @@ import { describe, expect, it } from 'vitest';
 import {
   DEFAULT_NATIVE_LANGUAGE,
   isNativeLanguageCode,
+  learnCodeOfNative,
   nativeLanguageFromLocale,
   nativeLanguageName,
+  withoutNative,
 } from './native';
 
 describe('native languages', () => {
@@ -27,5 +29,20 @@ describe('native languages', () => {
     expect(isNativeLanguageCode('ja')).toBe(true);
     expect(isNativeLanguageCode('xx')).toBe(false);
     expect(isNativeLanguageCode(42)).toBe(false);
+  });
+});
+
+describe('learnCodeOfNative / withoutNative', () => {
+  it('maps a native code to its learning-language code', () => {
+    expect(learnCodeOfNative('en')).toBe('en');
+    expect(learnCodeOfNative('zh-CN')).toBe('zh');
+    expect(learnCodeOfNative('zh-TW')).toBe('zh');
+    expect(learnCodeOfNative(undefined)).toBe('en');
+  });
+
+  it('removes the reader own language from a list', () => {
+    expect(withoutNative(['en', 'fr', 'zh'], 'en')).toEqual(['fr', 'zh']);
+    expect(withoutNative(['en', 'fr', 'zh'], 'zh-TW')).toEqual(['en', 'fr']);
+    expect(withoutNative(['en', 'fr'], 'fr')).toEqual(['en']);
   });
 });

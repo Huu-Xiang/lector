@@ -2,10 +2,17 @@
 
 import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
+import { toast } from 'sonner';
 import { Select } from '@/components/ui/select';
+import { loadNative, saveNativeLanguage } from '@/lib/library-titles';
+import { NATIVE_LANGUAGES, nativeLanguageFromLocale } from '@/lib/languages';
 import { LOCALE_COOKIE, UI_LOCALES } from './locales';
 
 const ONE_YEAR_SECONDS = 60 * 60 * 24 * 365;
+
+function writeLocaleCookie(code: string) {
+  document.cookie = `${LOCALE_COOKIE}=${code}; path=/; max-age=${ONE_YEAR_SECONDS}; samesite=lax`;
+}
 
 export default function UiLanguageSelect({ className = '' }: { className?: string }) {
   const router = useRouter();
@@ -13,8 +20,31 @@ export default function UiLanguageSelect({ className = '' }: { className?: strin
   const t = useTranslations('uiLanguage');
 
   function change(code: string) {
-    document.cookie = `${LOCALE_COOKIE}=${code}; path=/; max-age=${ONE_YEAR_SECONDS}; samesite=lax`;
+    writeLocaleCookie(code);
     router.refresh();
+    void offerNativeSwitch(code);
+  }
+
+  // The interface language and the translation language are separate settings.
+  // After a switch, offer to move the translation language too; signed-out visitors get nothing.
+  async function offerNativeSwitch(code: string) {
+    const wanted = nativeLanguageFromLocale(code);
+    const saved = await loadNative();
+    if (!saved || saved === wanted) return;
+    const name = NATIVE_LANGUAGES.find((l) => l.code === wanted)?.native ?? wanted;
+    toast(t('alsoNative', { language: name }), {
+      duration: 15000,
+      action: {
+        label: t('alsoNativeYes'),
+        onClick: () => {
+          saveNativeLanguage(wanted).then(
+            () => toast.success(t('alsoNativeDone')),
+            () => toast.error(t('alsoNativeFailed')),
+          );
+        },
+      },
+      cancel: { label: t('alsoNativeNo'), onClick: () => {} },
+    });
   }
 
   return (

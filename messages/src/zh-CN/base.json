@@ -6,7 +6,12 @@
   "uiLanguage": {
     "label": "界面语言",
     "title": "界面语言",
-    "description": "按钮、菜单和页面使用的语言。翻译和解释使用下面的\"翻译语言\"。"
+    "description": "按钮、菜单和页面使用的语言。翻译和解释使用下面的\"翻译语言\"。",
+    "alsoNative": "翻译和书名也改成{language}吗？",
+    "alsoNativeYes": "改",
+    "alsoNativeNo": "不用",
+    "alsoNativeDone": "翻译语言已更改",
+    "alsoNativeFailed": "翻译语言更改失败"
   },
   "legal": {
     "nav": "法律信息",
@@ -197,7 +202,8 @@
       "description": "翻译、解释、助手回复和日记批改会使用这种语言。它可以和界面语言不同,比如界面用中文、解释用英文。内置词典的释义仍为英文。",
       "saved": "已保存语言",
       "errSave": "无法保存语言设置",
-      "useBrowser": "改用浏览器的语言"
+      "useBrowser": "改用浏览器的语言",
+      "sameAsLearning": "你正在学{language}，和翻译语言相同。请换一个翻译语言，解释才有用。"
     }
   }
 }

@@ -12,20 +12,27 @@ import {
   normalizeEnabledLanguages,
   withLanguageDisabled,
   withLanguageEnabled,
+  withoutNative,
 } from '@/lib/languages';
+import { useNativeLanguage } from '@/lib/library-titles';
+import { isLanguageReady, parseReadyLanguages } from '@/lib/ready-languages';
+import { useReadyLanguagesSetting } from '@/lib/use-env';
 import type { LanguageCode } from '@/types/language';
 import { useActiveLanguage, useEnabledLanguages } from '@/utils/hooks';
 import { notifyLanguageListChanged } from '@/utils/storage';
 
 export default function LanguagesSettings() {
   const t = useTranslations('settings.languages');
+  const tChrome = useTranslations('chrome.language');
+  const ready = parseReadyLanguages(useReadyLanguagesSetting());
+  const native = useNativeLanguage();
   const activeLang = useActiveLanguage();
   const enabledCodes = useEnabledLanguages();
   const [pending, setPending] = useState(false);
   const [adding, setAdding] = useState<LanguageCode | ''>('');
 
   const listed = normalizeEnabledLanguages([...enabledCodes, activeLang.code]);
-  const addable = availableLanguages(listed);
+  const addable = withoutNative(availableLanguages(listed), native);
 
   async function save(next: LanguageCode[], message: string) {
     setPending(true);
@@ -96,8 +103,9 @@ export default function LanguagesSettings() {
           >
             <option value="">{t('addPlaceholder')}</option>
             {addable.map((code) => (
-              <option key={code} value={code}>
+              <option key={code} value={code} disabled={!isLanguageReady(code, ready)}>
                 {LANGUAGES[code].native}
+                {isLanguageReady(code, ready) ? '' : ` (${tChrome('inDevelopment')})`}
               </option>
             ))}
           </select>

@@ -10,6 +10,7 @@ import {
   LANGUAGES,
   NATIVE_LANGUAGES,
   isNativeLanguageCode,
+  learnCodeOfNative,
   nativeLanguageFromLocale,
   type LanguageCode,
 } from '@/lib/languages';
@@ -34,6 +35,8 @@ import RecommendedForYou from '@/components/RecommendedForYou';
 
 // Registry-derived (#307): every language in LANGUAGES gets a setup card —
 // no hand-kept mirror to forget when a pack lands.
+const ownLanguage = (native: string) => learnCodeOfNative(native) as LanguageCode;
+
 const languageCards: { code: LanguageCode; flag: string; native: string; name: string }[] =
   Object.values(LANGUAGES).map((lang) => ({
     code: lang.code,
@@ -90,7 +93,9 @@ export default function SetupPage() {
       .catch(() => undefined)
       .then((code) => {
         if (cancelled) return;
-        setNative(isNativeLanguageCode(code) ? code : nativeLanguageFromLocale(locale));
+        const next = isNativeLanguageCode(code) ? code : nativeLanguageFromLocale(locale);
+        setNative(next);
+        setSelectedLanguage((current) => (current === ownLanguage(next) ? null : current));
       });
     void getOnboardingSnapshot()
       .then((snapshot) => {
@@ -112,6 +117,7 @@ export default function SetupPage() {
 
   function chooseNative(code: string) {
     setNative(code);
+    setSelectedLanguage((current) => (current === ownLanguage(code) ? null : current));
     const ui = matchLocale(code);
     if (ui && ui !== locale) {
       document.cookie = `${LOCALE_COOKIE}=${ui}; path=/; max-age=31536000; samesite=lax`;
@@ -208,18 +214,20 @@ export default function SetupPage() {
     }
   }
 
+  const ownCode = ownLanguage(native);
+  const offeredCards = languageCards.filter((lang) => lang.code !== ownCode);
   const readyCards = ready
     ? [...ready]
-        .map((code) => languageCards.find((lang) => lang.code === code))
+        .map((code) => offeredCards.find((lang) => lang.code === code))
         .filter((lang): lang is (typeof languageCards)[number] => lang !== undefined)
-    : languageCards.filter((lang) => POPULAR_LANGUAGES.includes(lang.code));
+    : offeredCards.filter((lang) => POPULAR_LANGUAGES.includes(lang.code));
   const readyCodes = new Set(readyCards.map((lang) => lang.code));
-  const restCards = languageCards.filter((lang) => !readyCodes.has(lang.code));
+  const restCards = offeredCards.filter((lang) => !readyCodes.has(lang.code));
   const expanded =
     showAllLanguages ||
     (ready === null && selectedLanguage !== null && !readyCodes.has(selectedLanguage));
   const visibleLanguageCards = expanded ? [...readyCards, ...restCards] : readyCards;
-  const hiddenLanguageCount = languageCards.length - visibleLanguageCards.length;
+  const hiddenLanguageCount = offeredCards.length - visibleLanguageCards.length;
 
   return (
     <main className="min-h-screen bg-background px-4 py-10 sm:py-16">

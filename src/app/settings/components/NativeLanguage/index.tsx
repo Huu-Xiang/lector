@@ -1,19 +1,24 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
+import { languageDisplayName } from '@/lib/language-names';
 import { toast } from 'sonner';
-import { getSetting, setSetting } from '@/lib/data-layer';
-import { forgetNative } from '@/lib/library-titles';
+import { getSetting } from '@/lib/data-layer';
+import { saveNativeLanguage } from '@/lib/library-titles';
+import { useActiveLanguage } from '@/utils/hooks';
 import {
   DEFAULT_NATIVE_LANGUAGE,
   isNativeLanguageCode,
+  learnCodeOfNative,
   NATIVE_LANGUAGES,
   nativeLanguageFromLocale,
 } from '@/lib/languages';
 
 export default function NativeLanguage() {
   const t = useTranslations('settings.nativeLanguage');
+  const activeLang = useActiveLanguage();
+  const locale = useLocale();
   const [value, setValue] = useState<string>(DEFAULT_NATIVE_LANGUAGE);
   const [saved, setSaved] = useState(true);
   const [pending, setPending] = useState(false);
@@ -39,10 +44,16 @@ export default function NativeLanguage() {
     setValue(next);
     setPending(true);
     try {
-      await setSetting('nativeLanguage', next);
-      forgetNative();
+      await saveNativeLanguage(next);
       setSaved(true);
       toast.success(t('saved'));
+      if (learnCodeOfNative(next) === activeLang.code) {
+        toast.warning(
+          t('sameAsLearning', {
+            language: languageDisplayName(activeLang.code, locale, activeLang.name),
+          }),
+        );
+      }
     } catch (error) {
       toast.error(error instanceof Error ? error.message : t('errSave'));
     } finally {

@@ -45,3 +45,18 @@ export function nativeLanguageFromLocale(locale: string | null | undefined): str
   const base = lower.split('-')[0];
   return NATIVE_LANGUAGES.find((l) => l.code === base)?.code ?? DEFAULT_NATIVE_LANGUAGE;
 }
+
+/** The learning-language code that matches a native-language code (`zh-CN` and `zh-TW` are both `zh`). */
+export function learnCodeOfNative(native: string | null | undefined): string {
+  const code = (native ?? DEFAULT_NATIVE_LANGUAGE).toLowerCase();
+  return code.startsWith('zh') ? 'zh' : code.split('-')[0];
+}
+
+/** Learning languages without the reader's own language: nobody learns what they already speak. */
+export function withoutNative<T extends string>(
+  codes: readonly T[],
+  native: string | null | undefined,
+): T[] {
+  const own = learnCodeOfNative(native);
+  return codes.filter((code) => code !== own);
+}

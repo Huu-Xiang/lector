@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useLocale } from 'next-intl';
 import { useArticleDescriptions } from './article-descriptions';
 import { loadCatalog as fetchCatalog } from './catalog-cache';
-import { getSetting } from './data-layer';
+import { getSetting, setSetting } from './data-layer';
 import { nativeLanguageFromLocale } from './languages';
 
 const BOOK_ID = /^library-([a-z]{2,3})-(.+)$/;
@@ -38,13 +38,51 @@ function loadCatalog(language: string): Promise<Map<string, BookTitles>> {
 }
 
 export function loadNative(): Promise<string | undefined> {
-  nativePromise ??= getSetting<string>('nativeLanguage').catch(() => undefined);
+  if (!nativePromise) {
+    const request = getSetting<string>('nativeLanguage').catch(() => undefined);
+    nativePromise = request;
+    // A failed or empty read is not remembered, so a later sign-in is not stuck with it.
+    void request.then((saved) => {
+      if (!saved && nativePromise === request) nativePromise = null;
+    });
+  }
   return nativePromise;
 }
 
 /** Call after the native language changes so the next read sees the new one. */
 export function forgetNative(): void {
   nativePromise = null;
+}
+
+const NATIVE_CHANGED = 'readfox-native-language-changed';
+
+/** Saves the native language and tells mounted components, so titles update without a reload. */
+export async function saveNativeLanguage(code: string): Promise<void> {
+  await setSetting('nativeLanguage', code);
+  forgetNative();
+  window.dispatchEvent(new CustomEvent(NATIVE_CHANGED, { detail: code }));
+}
+
+/** The reader's native language; follows `saveNativeLanguage` live. */
+export function useNativeLanguage(): string {
+  const locale = useLocale();
+  const [native, setNative] = useState(() => nativeLanguageFromLocale(locale));
+  useEffect(() => {
+    let cancelled = false;
+    loadNative().then((saved) => {
+      if (!cancelled) setNative(saved || nativeLanguageFromLocale(locale));
+    });
+    const onChange = (event: Event) => {
+      const code = (event as CustomEvent<string>).detail;
+      if (code) setNative(code);
+    };
+    window.addEventListener(NATIVE_CHANGED, onChange);
+    return () => {
+      cancelled = true;
+      window.removeEventListener(NATIVE_CHANGED, onChange);
+    };
+  }, [locale]);
+  return native;
 }
 
 /** Only an untouched title is swapped, so a title the reader renamed stays as typed. */
@@ -61,40 +99,34 @@ export function translatedBookTitle(
 export function useLibraryTitleResolver(
   collections: ReadonlyArray<{ id: string; title: string }>,
 ): (collection: { id: string; title: string }) => string {
-  const locale = useLocale();
-  const [state, setState] = useState<{
-    native: string;
-    catalogs: Map<string, Map<string, BookTitles>>;
-  } | null>(null);
+  const native = useNativeLanguage();
+  const [catalogMaps, setCatalogMaps] = useState<Map<string, Map<string, BookTitles>> | null>(null);
   const languages = [...new Set(collections.flatMap((c) => BOOK_ID.exec(c.id)?.[1] ?? []))].sort();
   const languageKey = languages.join(',');
 
   useEffect(() => {
     if (!languageKey) return;
     let cancelled = false;
-    Promise.all([Promise.all(languageKey.split(',').map(loadCatalog)), loadNative()]).then(
-      ([maps, saved]) => {
-        if (cancelled) return;
-        const catalogs = new Map(languageKey.split(',').map((code, i) => [code, maps[i]]));
-        setState({ native: saved || nativeLanguageFromLocale(locale), catalogs });
-      },
-    );
+    Promise.all(languageKey.split(',').map(loadCatalog)).then((maps) => {
+      if (cancelled) return;
+      setCatalogMaps(new Map(languageKey.split(',').map((code, i) => [code, maps[i]])));
+    });
     return () => {
       cancelled = true;
     };
-  }, [languageKey, locale]);
+  }, [languageKey]);
 
   return useCallback(
     (collection: { id: string; title: string }) => {
       const match = BOOK_ID.exec(collection.id);
-      if (!match || !state) return collection.title;
+      if (!match || !catalogMaps) return collection.title;
       return translatedBookTitle(
         collection.title,
-        state.catalogs.get(match[1])?.get(match[2]),
-        state.native,
+        catalogMaps.get(match[1])?.get(match[2]),
+        native,
       );
     },
-    [state],
+    [catalogMaps, native],
   );
 }
 
@@ -113,24 +145,22 @@ export function useCollectionDisplay(collection: {
   title: string;
   language?: string;
 }): CollectionDisplay {
-  const locale = useLocale();
   const book = BOOK_ID.exec(collection.id);
   const articleId = FEED_COLLECTION.exec(collection.id)?.[1] ?? null;
-  const [native, setNative] = useState(() => nativeLanguageFromLocale(locale));
+  const native = useNativeLanguage();
   const [entry, setEntry] = useState<BookTitles | undefined>();
 
   useEffect(() => {
     let cancelled = false;
     const m = BOOK_ID.exec(collection.id);
-    Promise.all([m ? loadCatalog(m[1]) : null, loadNative()]).then(([catalog, saved]) => {
+    (m ? loadCatalog(m[1]) : Promise.resolve(null)).then((catalog) => {
       if (cancelled) return;
-      setNative(saved || nativeLanguageFromLocale(locale));
       setEntry(m && catalog ? catalog.get(m[2]) : undefined);
     });
     return () => {
       cancelled = true;
     };
-  }, [collection.id, locale]);
+  }, [collection.id]);
 
   const described = useArticleDescriptions(
     articleId ? [articleId] : [],
