@@ -920,6 +920,9 @@
     "close": "关闭",
     "pickIntro": "选一份开始读吧。"
   },
+  "descriptions": {
+    "toggle": "显示简介"
+  },
   "journal": {
     "title": "日记",
     "newEntry": "新日记",

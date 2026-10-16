@@ -2,7 +2,7 @@ import '../test-guard';
 import { afterEach, beforeEach, describe, expect, test } from 'bun:test';
 import { db } from '../db';
 import app from './reading-feed';
-import { upsertReadingFeedArticle } from '../lib/reading-feed/store';
+import { pruneReadingFeed, upsertReadingFeedArticle } from '../lib/reading-feed/store';
 import {
   makeEntitlements,
   parsePlanLimitOverrides,
@@ -142,5 +142,35 @@ describe('POST /describe', () => {
     const res = await post({ ids: ['missing', id], native: 'en' });
     expect(res.status).toBe(200);
     expect(await res.json()).toEqual({ descriptions: {} });
+  });
+});
+
+describe('describe for an article that left the feed', () => {
+  test('serves the stored description and prune keeps it while a collection holds the article', async () => {
+    reset();
+    db.prepare('DELETE FROM reading_feed_summary').run();
+    const { id } = seedArticle();
+    db.prepare(
+      "INSERT INTO reading_feed_summary (articleId, native, title, summary, createdAt) VALUES (?, 'zh-CN', '标题', '简介', '2026-01-01')",
+    ).run(id);
+    db.prepare(
+      `INSERT INTO collections (id, title, author, language, createdAt, lastReadAt, userId)
+       VALUES (?, 'Test Article', 'x', 'en', '2026-01-01', '2026-01-01', 'local')`,
+    ).run(`reading-feed-${id}`);
+    db.prepare('DELETE FROM reading_feed').run();
+    pruneReadingFeed('en', 'news');
+
+    const res = await app.request('/describe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ids: [id], native: 'zh-CN' }),
+    });
+    expect(await res.json()).toEqual({
+      descriptions: { [id]: { title: '标题', summary: '简介' } },
+    });
+
+    db.prepare('DELETE FROM collections').run();
+    pruneReadingFeed('en', 'news');
+    expect(db.prepare('SELECT COUNT(*) AS n FROM reading_feed_summary').get()).toEqual({ n: 0 });
   });
 });

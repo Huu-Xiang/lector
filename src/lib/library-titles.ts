@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { useLocale } from 'next-intl';
+import { useArticleDescriptions } from './article-descriptions';
 import { loadCatalog as fetchCatalog } from './catalog-cache';
 import { getSetting } from './data-layer';
 import { nativeLanguageFromLocale } from './languages';
@@ -11,6 +12,7 @@ const BOOK_ID = /^library-([a-z]{2,3})-(.+)$/;
 interface BookTitles {
   original: string;
   titles: Record<string, string>;
+  blurbs: Record<string, string>;
 }
 
 const catalogs = new Map<string, Promise<Map<string, BookTitles>>>();
@@ -20,7 +22,12 @@ function loadCatalog(language: string): Promise<Map<string, BookTitles>> {
   let promise = catalogs.get(language);
   if (!promise) {
     promise = fetchCatalog(language)
-      .then((books) => new Map(books.map((b) => [b.slug, { original: b.title, titles: b.titles }])))
+      .then(
+        (books) =>
+          new Map(
+            books.map((b) => [b.slug, { original: b.title, titles: b.titles, blurbs: b.blurbs }]),
+          ),
+      )
       .catch(() => {
         catalogs.delete(language);
         return new Map<string, BookTitles>();
@@ -48,29 +55,6 @@ export function translatedBookTitle(
 ): string {
   if (!book || book.original !== title) return title;
   return book.titles[native] || title;
-}
-
-/** Title of a collection; a free-library book shows its native-language title. */
-export function useLibraryBookTitle(collection: { id: string; title: string }): string {
-  const locale = useLocale();
-  const [shown, setShown] = useState(collection.title);
-  const match = BOOK_ID.exec(collection.id);
-
-  useEffect(() => {
-    let cancelled = false;
-    const m = BOOK_ID.exec(collection.id);
-    if (!m) return;
-    Promise.all([loadCatalog(m[1]), loadNative()]).then(([catalog, saved]) => {
-      if (cancelled) return;
-      const native = saved || nativeLanguageFromLocale(locale);
-      setShown(translatedBookTitle(collection.title, catalog.get(m[2]), native));
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [collection.id, collection.title, locale]);
-
-  return match ? shown : collection.title;
 }
 
 /** A title resolver for a list of collections, such as the vocab page filter. */
@@ -112,4 +96,59 @@ export function useLibraryTitleResolver(
     },
     [state],
   );
+}
+
+const FEED_COLLECTION = /^reading-feed-(reading-feed-[0-9a-f]+)$/;
+
+export interface CollectionDisplay {
+  title: string;
+  /** The original title when `title` is a translation. */
+  original: string | null;
+  description: string | null;
+}
+
+/** What a library card shows: native-language title and description for free books and feed articles. */
+export function useCollectionDisplay(collection: {
+  id: string;
+  title: string;
+  language?: string;
+}): CollectionDisplay {
+  const locale = useLocale();
+  const book = BOOK_ID.exec(collection.id);
+  const articleId = FEED_COLLECTION.exec(collection.id)?.[1] ?? null;
+  const [native, setNative] = useState(() => nativeLanguageFromLocale(locale));
+  const [entry, setEntry] = useState<BookTitles | undefined>();
+
+  useEffect(() => {
+    let cancelled = false;
+    const m = BOOK_ID.exec(collection.id);
+    Promise.all([m ? loadCatalog(m[1]) : null, loadNative()]).then(([catalog, saved]) => {
+      if (cancelled) return;
+      setNative(saved || nativeLanguageFromLocale(locale));
+      setEntry(m && catalog ? catalog.get(m[2]) : undefined);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [collection.id, locale]);
+
+  const described = useArticleDescriptions(
+    articleId ? [articleId] : [],
+    native,
+    collection.language ?? 'en',
+  );
+
+  if (book && entry) {
+    const title = translatedBookTitle(collection.title, entry, native);
+    return {
+      title,
+      original: title !== collection.title ? collection.title : null,
+      description: entry.original === collection.title ? (entry.blurbs[native] ?? null) : null,
+    };
+  }
+  const article = articleId ? described[articleId] : undefined;
+  if (article) {
+    return { title: article.title, original: collection.title, description: article.summary };
+  }
+  return { title: collection.title, original: null, description: null };
 }

@@ -4,7 +4,8 @@ import { BookOpen, Clock } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import type { Collection } from '@/lib/data-layer';
-import { useLibraryBookTitle } from '@/lib/library-titles';
+import { useCollectionDisplay } from '@/lib/library-titles';
+import { useShowDescriptions } from '@/lib/show-descriptions';
 
 interface CollectionCardProps {
   collection: Collection;
@@ -12,7 +13,8 @@ interface CollectionCardProps {
 
 export default function CollectionCard({ collection }: CollectionCardProps) {
   const t = useTranslations('library.card');
-  const title = useLibraryBookTitle(collection);
+  const { title, original, description } = useCollectionDisplay(collection);
+  const [showDescriptions] = useShowDescriptions();
   const progressPercent = Math.round(collection.avgProgress || 0);
 
   return (
@@ -58,8 +60,17 @@ export default function CollectionCard({ collection }: CollectionCardProps) {
       {/* Collection Info */}
       <div className="flex flex-1 flex-col p-4">
         <h3 className="line-clamp-2 text-base font-semibold text-foreground">{title}</h3>
+        {original && <p className="line-clamp-1 text-xs text-muted-foreground">{original}</p>}
         {collection.author && (
           <p className="mt-1 truncate text-sm text-muted-foreground">{collection.author}</p>
+        )}
+        {showDescriptions && description && (
+          <p
+            className="mt-2 line-clamp-3 text-xs text-muted-foreground"
+            data-testid="collection-description"
+          >
+            {description}
+          </p>
         )}
         <div className="mt-auto flex items-center justify-between pt-3">
           <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">

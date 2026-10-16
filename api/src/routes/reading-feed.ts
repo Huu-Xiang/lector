@@ -5,7 +5,7 @@ import { buildSegmentWords, countWords } from '../lib/html-to-markdown';
 import { entitlements, planLimitResponse, type AtomicLimitCheck } from '../lib/entitlements';
 import { collectionMetadataBytes, lessonTextBytes } from '../lib/storage-limits';
 import { getReadingFeedArticle, listReadingFeed } from '../lib/reading-feed/store';
-import { describeArticles } from '../lib/reading-feed/describe';
+import { cachedDescriptions, describeArticles } from '../lib/reading-feed/describe';
 import { isNativeLanguageCode } from '../lib/languages';
 import type { FeedLanguage, ReadingInterest } from '../lib/reading-feed/types';
 
@@ -80,11 +80,17 @@ app.post('/describe', async (c) => {
     return c.json({ error: 'Invalid ids' }, 400);
   }
   const native = body.native;
-  const articles = (body.ids as string[])
+  const ids = body.ids as string[];
+  const articles = ids
     .map((id) => getReadingFeedArticle(id))
     .filter((row): row is NonNullable<typeof row> => Boolean(row) && row!.language !== native);
+  // An article that has left the feed keeps its description while a reader's library holds it.
+  const kept = cachedDescriptions(
+    ids.filter((id) => !getReadingFeedArticle(id)),
+    native,
+  );
   const described = await describeArticles(articles, native);
-  return c.json({ descriptions: Object.fromEntries(described) });
+  return c.json({ descriptions: Object.fromEntries([...kept, ...described]) });
 });
 
 // POST /api/reading-feed/add { id }

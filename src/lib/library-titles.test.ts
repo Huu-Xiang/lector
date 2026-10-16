@@ -4,7 +4,11 @@ vi.mock('./data-layer', () => ({ getLibraryCatalog: vi.fn(), getSetting: vi.fn()
 
 import { translatedBookTitle } from './library-titles';
 
-const book = { original: 'Black Beauty', titles: { 'zh-CN': '黑骏马', fr: 'Black Beauty' } };
+const book = {
+  original: 'Black Beauty',
+  titles: { 'zh-CN': '黑骏马', fr: 'Black Beauty' },
+  blurbs: {},
+};
 
 describe('translatedBookTitle', () => {
   it('uses the native title for an untouched library book', () => {

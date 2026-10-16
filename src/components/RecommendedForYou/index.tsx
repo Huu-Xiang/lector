@@ -8,6 +8,7 @@ import { Spinner } from '@/components/ui/spinner';
 import BookReviewLink from '@/components/BookReviewLink';
 import LevelTags from '@/components/LevelTags';
 import { cachedCatalog, loadCatalog } from '@/lib/catalog-cache';
+import { useShowDescriptions } from '@/lib/show-descriptions';
 import { useArticleDescriptions } from '@/lib/article-descriptions';
 import {
   addLibraryBook,
@@ -110,6 +111,7 @@ export default function RecommendedForYou({
   const [starting, setStarting] = useState<string | null>(null);
   const [native, setNative] = useState<string>(() => nativeLanguageFromLocale(locale));
   const startingRef = useRef(false);
+  const [showDescriptions] = useShowDescriptions();
   const interestKey = interests.join(',');
 
   useEffect(() => {
@@ -197,7 +199,7 @@ export default function RecommendedForYou({
           {original && (
             <p className="text-xs text-muted-foreground">{t('original', { title: original })}</p>
           )}
-          {blurb && <p className="mt-1 text-sm text-foreground">{blurb}</p>}
+          {showDescriptions && blurb && <p className="mt-1 text-sm text-foreground">{blurb}</p>}
           <p className="mt-1 text-xs text-muted-foreground">
             {t('words', { words: format.number(pick.words) })}
             {pick.source ? ` · ${pick.source}` : ''}

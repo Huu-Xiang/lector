@@ -103,5 +103,8 @@
     "later": "Not now",
     "close": "Close",
     "pickIntro": "Pick one to start reading."
+  },
+  "descriptions": {
+    "toggle": "Show descriptions"
   }
 }

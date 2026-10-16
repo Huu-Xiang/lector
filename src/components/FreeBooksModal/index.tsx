@@ -16,6 +16,8 @@ import {
 } from '@/lib/data-layer';
 import { cachedCatalog, loadCatalog } from '@/lib/catalog-cache';
 import BookReviewLink from '@/components/BookReviewLink';
+import DescriptionToggle from '@/components/DescriptionToggle';
+import { useShowDescriptions } from '@/lib/show-descriptions';
 import LevelTags from '@/components/LevelTags';
 import { useArticleDescriptions } from '@/lib/article-descriptions';
 import { languageDisplayName } from '@/lib/language-names';
@@ -63,6 +65,7 @@ export default function FreeBooksModal({
   const [feed, setFeed] = useState<ReadingFeedArticle[] | null>(null);
   const [feedFailed, setFeedFailed] = useState(false);
   const languageName = languageDisplayName(activeLang.code, locale, activeLang.name);
+  const [showDescriptions] = useShowDescriptions();
   const described = useArticleDescriptions(
     (feed ?? []).map((article) => article.id),
     native,
@@ -213,9 +216,12 @@ export default function FreeBooksModal({
         )}
         {tab === 'books' ? (
           <div className="overflow-y-auto px-6 py-4" data-testid="free-books-list">
-            <p className="mb-4 text-sm text-muted-foreground">
-              {t('intro', { language: languageName })}
-            </p>
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+              <p className="text-sm text-muted-foreground">
+                {t('intro', { language: languageName })}
+              </p>
+              <DescriptionToggle />
+            </div>
             {failed && <p className="text-sm text-destructive">{t('errLoad')}</p>}
             {!failed && books === null && (
               <p className="text-sm text-muted-foreground">{t('loading')}</p>
@@ -280,7 +286,9 @@ export default function FreeBooksModal({
                                 </p>
                               )}
                               <p className="text-sm text-muted-foreground">{book.author}</p>
-                              {blurb && <p className="mt-1 text-sm text-foreground">{blurb}</p>}
+                              {showDescriptions && blurb && (
+                                <p className="mt-1 text-sm text-foreground">{blurb}</p>
+                              )}
                               <p className="mt-1 text-xs text-muted-foreground">
                                 {t('size', {
                                   words: format.number(book.wordCount),
@@ -328,9 +336,12 @@ export default function FreeBooksModal({
           </div>
         ) : (
           <div className="overflow-y-auto px-6 py-4" data-testid="reading-feed-list">
-            <p className="mb-4 text-sm text-muted-foreground">
-              {t('feedIntro', { interest: t(`tab.${tab}`), language: languageName })}
-            </p>
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+              <p className="text-sm text-muted-foreground">
+                {t('feedIntro', { interest: t(`tab.${tab}`), language: languageName })}
+              </p>
+              <DescriptionToggle />
+            </div>
             {feedFailed && <p className="text-sm text-destructive">{t('feedErrLoad')}</p>}
             {!feedFailed && feed === null && (
               <p className="text-sm text-muted-foreground">{t('feedLoading')}</p>
@@ -359,9 +370,11 @@ export default function FreeBooksModal({
                         <p className="text-xs text-muted-foreground">
                           {tl('original', { title: article.title })}
                         </p>
-                        <p className="mt-1 text-sm text-foreground">
-                          {described[article.id].summary}
-                        </p>
+                        {showDescriptions && (
+                          <p className="mt-1 text-sm text-foreground">
+                            {described[article.id].summary}
+                          </p>
+                        )}
                       </>
                     )}
                     <p className="mt-1 text-xs text-muted-foreground">

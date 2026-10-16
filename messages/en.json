@@ -920,6 +920,9 @@
     "close": "Close",
     "pickIntro": "Pick one to start reading."
   },
+  "descriptions": {
+    "toggle": "Show descriptions"
+  },
   "journal": {
     "title": "Journal",
     "newEntry": "New Entry",

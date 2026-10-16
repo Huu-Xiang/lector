@@ -8,6 +8,7 @@ import { ReadingSweep } from '@/components/Loaders';
 import AddCollectionTile from './components/AddCollectionTile';
 import EmptyState from './components/EmptyState';
 import HomeRecommendations from './components/HomeRecommendations';
+import DescriptionToggle from '@/components/DescriptionToggle';
 import GroupMenu from './components/GroupMenu';
 import SortableCollectionCard from './components/SortableCollectionCard';
 import CollectionCard from '@/components/CollectionCard';
@@ -576,6 +577,9 @@ export default function Home() {
 
           {collections.length > 0 || hasGroups ? (
             <div className="space-y-10">
+              <div className="-mb-6 flex justify-end">
+                <DescriptionToggle />
+              </div>
               {/* Grouped sections */}
               {visibleGroups.map((group) => {
                 const items = groupedCollections.get(group.id) || [];

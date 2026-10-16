@@ -1,6 +1,6 @@
 'use client';
 
-import { useLibraryBookTitle } from '@/lib/library-titles';
+import { useCollectionDisplay } from '@/lib/library-titles';
 import { useEffect, useMemo, useState, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
@@ -50,10 +50,11 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
   const { id } = use(params);
   const router = useRouter();
   const [collection, setCollection] = useState<Collection | null>(null);
-  const shownTitle = useLibraryBookTitle({
+  const shownTitle = useCollectionDisplay({
     id: collection?.id ?? '',
     title: collection?.title ?? '',
-  });
+    language: collection?.language,
+  }).title;
   const [lessons, setLessons] = useState<LessonSummary[]>([]);
   const [groups, setGroups] = useState<CollectionGroup[]>([]);
   const [isLoading, setIsLoading] = useState(true);
