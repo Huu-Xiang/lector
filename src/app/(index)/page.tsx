@@ -568,12 +568,11 @@ export default function Home() {
             onSave={handlePasteImportSave}
           />
 
-          {collections.length < 3 && (
-            <HomeRecommendations
-              language={activeLanguage}
-              onMore={() => setIsFreeBooksOpen(true)}
-            />
-          )}
+          <HomeRecommendations
+            language={activeLanguage}
+            defaultOpen={collections.length < 3}
+            onMore={() => setIsFreeBooksOpen(true)}
+          />
 
           {collections.length > 0 || hasGroups ? (
             <div className="space-y-10">

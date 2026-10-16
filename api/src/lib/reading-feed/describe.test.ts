@@ -5,6 +5,8 @@ import type { CompletionOptions, LLMProvider } from '../llm';
 import {
   buildDescribePrompt,
   describeArticles,
+  knownNatives,
+  warmDescriptions,
   parseDescription,
   setDescribeProviderForTests,
 } from './describe';
@@ -97,5 +99,26 @@ describe('describeArticles', () => {
     const prompt = buildDescribePrompt(article, 'Simplified Chinese');
     expect(prompt).toContain('Title: Test Article');
     expect(prompt).toContain('English');
+  });
+});
+
+describe('warmDescriptions', () => {
+  test('writes descriptions for every native language readers chose, once', async () => {
+    db.prepare('DELETE FROM settings').run();
+    db.prepare(
+      "INSERT INTO settings (userId, key, value) VALUES ('u1', 'nativeLanguage', '\"ja\"')",
+    ).run();
+    db.prepare(
+      "INSERT INTO settings (userId, key, value) VALUES ('u2', 'nativeLanguage', '\"zz\"')",
+    ).run();
+    const article = seed();
+    expect(knownNatives().sort()).toEqual(['ja', 'zh-CN']);
+
+    expect(await warmDescriptions()).toBe(2);
+    expect(fake.calls).toHaveLength(2);
+    expect(await warmDescriptions()).toBe(0);
+    expect(fake.calls).toHaveLength(2);
+    db.prepare('DELETE FROM settings').run();
+    expect(article.id).toBeTruthy();
   });
 });

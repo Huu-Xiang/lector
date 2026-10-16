@@ -130,6 +130,8 @@ export interface VocabEntry {
   stateUpdatedAt: Date;
   reviewCount: number;
   bookId?: string; // legacy — maps to lessonId
+  /** The collection that lesson belongs to; null for a standalone lesson. */
+  collectionId?: string | null;
   chapter?: number;
   language?: string;
   createdAt: Date;

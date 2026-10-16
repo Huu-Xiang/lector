@@ -14,6 +14,7 @@ import { useActiveLanguage } from '@/utils/hooks';
 import { Button, buttonVariants } from '../ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from '../ui/dialog';
 import OnboardingTip from '@/components/OnboardingTip';
+import { useLibraryTitleResolver } from '@/lib/library-titles';
 
 export default function VocabList({
   entries,
@@ -74,11 +75,12 @@ export default function VocabList({
   };
 
   // Create a map of collectionId to title for display
+  const titleOf = useLibraryTitleResolver(collections);
   const bookTitleMap = useMemo(() => {
     const map = new Map<string, string>();
-    collections.forEach((c) => map.set(c.id, c.title));
+    collections.forEach((c) => map.set(c.id, titleOf(c)));
     return map;
-  }, [collections]);
+  }, [collections, titleOf]);
 
   // Locale-aware sort for the active language (#289): bare localeCompare uses
   // the browser UI locale, which mis-collates ä/é/å and non-Latin scripts.
@@ -101,7 +103,7 @@ export default function VocabList({
 
     // Apply book filter
     if (bookFilter !== 'all') {
-      result = result.filter((e) => e.bookId === bookFilter);
+      result = result.filter((e) => (e.collectionId ?? e.bookId) === bookFilter);
     }
 
     // Apply search filter
@@ -130,8 +132,10 @@ export default function VocabList({
           comparison = stateOrder[a.state] - stateOrder[b.state];
           break;
         case 'bookId':
-          const titleA = a.bookId ? bookTitleMap.get(a.bookId) || '' : '';
-          const titleB = b.bookId ? bookTitleMap.get(b.bookId) || '' : '';
+          const sourceA = a.collectionId ?? a.bookId;
+          const sourceB = b.collectionId ?? b.bookId;
+          const titleA = sourceA ? bookTitleMap.get(sourceA) || '' : '';
+          const titleB = sourceB ? bookTitleMap.get(sourceB) || '' : '';
           comparison = collator.compare(titleA, titleB);
           break;
       }
@@ -326,7 +330,7 @@ export default function VocabList({
           <option value="all">{t('allCollections')}</option>
           {collections.map((c) => (
             <option key={c.id} value={c.id}>
-              {c.title}
+              {titleOf(c)}
             </option>
           ))}
         </select>
@@ -500,7 +504,11 @@ export default function VocabList({
                 <VocabRow
                   key={entry.id}
                   entry={entry}
-                  bookTitle={entry.bookId ? bookTitleMap.get(entry.bookId) : undefined}
+                  bookTitle={
+                    (entry.collectionId ?? entry.bookId)
+                      ? bookTitleMap.get((entry.collectionId ?? entry.bookId)!)
+                      : undefined
+                  }
                   isSelected={selectedIds.has(entry.id)}
                   onSelect={handleSelect}
                   onClick={onEntryClick}

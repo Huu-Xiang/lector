@@ -46,32 +46,35 @@ app.get('/', (c) => {
   const unpushed = c.req.query('unpushed');
   const text = c.req.query('text');
 
-  let query = 'SELECT * FROM vocab WHERE userId = ? AND language = ?';
+  let query = `SELECT v.*, (SELECT l.collectionId FROM lessons l WHERE l.id = v.bookId AND l.userId = v.userId) AS collectionId
+    FROM vocab v WHERE v.userId = ? AND v.language = ?`;
   const params: SQLQueryBindings[] = [userId, lang];
 
   if (state) {
-    query += ' AND state = ?';
+    query += ' AND v.state = ?';
     params.push(state);
   }
   if (bookId) {
-    query += ' AND bookId = ?';
+    query += ' AND v.bookId = ?';
     params.push(bookId);
   }
   if (unpushed === 'true') {
-    query += ' AND pushedToAnki = 0';
+    query += ' AND v.pushedToAnki = 0';
   }
   // Exact match, deliberately not LOWER(): callers pass the already-folded
   // word (foldWord, #289 — same semantics as the old client-side
   // `.find(v.text === text)`), and the exact comparison rides
   // idx_vocab_user_lang_text (#239/#240).
   if (text) {
-    query += ' AND text = ?';
+    query += ' AND v.text = ?';
     params.push(text);
   }
 
-  query += ' ORDER BY createdAt DESC';
+  query += ' ORDER BY v.createdAt DESC';
 
-  const vocab = db.prepare(query).all(...params) as VocabRow[];
+  const vocab = db.prepare(query).all(...params) as Array<
+    VocabRow & { collectionId: string | null }
+  >;
 
   return c.json(
     vocab.map((v) => ({
@@ -84,6 +87,7 @@ app.get('/', (c) => {
       stateUpdatedAt: v.stateUpdatedAt,
       reviewCount: v.reviewCount,
       bookId: v.bookId,
+      collectionId: v.collectionId,
       chapter: v.chapter,
       createdAt: v.createdAt,
       pushedToAnki: v.pushedToAnki === 1,

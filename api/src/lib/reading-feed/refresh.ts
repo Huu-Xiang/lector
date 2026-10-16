@@ -1,5 +1,6 @@
 import { Sentry } from '../sentry';
 import { countWords } from '../html-to-markdown';
+import { warmDescriptions } from './describe';
 import { estimateCefrLevel } from './level-heuristic';
 import { READING_FEED_SOURCES } from './sources';
 import { pruneReadingFeed, upsertReadingFeedArticle } from './store';
@@ -79,6 +80,8 @@ export function startReadingFeedRefresher(): boolean {
     try {
       const saved = await refreshReadingFeed();
       console.log(`[reading-feed] refreshed ${saved} article(s)`);
+      const described = await warmDescriptions();
+      console.log(`[reading-feed] wrote ${described} description(s)`);
     } catch (err) {
       console.error('[reading-feed] refresh tick failed:', err);
       Sentry.captureException(err);

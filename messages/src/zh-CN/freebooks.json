@@ -83,7 +83,8 @@
     "homeHint": "从这些免费的书和文章开始读。",
     "homeHintLevel": "根据你的水平（{level}）挑选。",
     "more": "更多免费书籍",
-    "dismiss": "不再显示"
+    "collapse": "收起",
+    "expand": "展开"
   },
   "bookLink": {
     "view": "在{site}查看",

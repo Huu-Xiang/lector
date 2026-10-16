@@ -58,6 +58,35 @@ describe('GET /api/vocab?text= (#240)', () => {
     expect(all.length).toBe(1);
   });
 
+  test('GET returns the collection of the lesson a word came from', async () => {
+    db.prepare(
+      `INSERT INTO collections (id, title, author, language, createdAt, lastReadAt, userId)
+       VALUES ('collection-2', 'A book', 'Unknown', 'af', ?, ?, 'local')`,
+    ).run(TS, TS);
+    db.prepare(
+      `INSERT INTO lessons
+        (id, collectionId, title, textContent, language, createdAt, lastReadAt, userId)
+       VALUES ('lesson-2', 'collection-2', 'Chapter', '', 'af', ?, ?, 'local')`,
+    ).run(TS, TS);
+    db.prepare(
+      `INSERT INTO lessons
+        (id, collectionId, title, textContent, language, createdAt, lastReadAt, userId)
+       VALUES ('lesson-solo', NULL, 'Alone', '', 'af', ?, ?, 'local')`,
+    ).run(TS, TS);
+    seed('in-book', 'boek', 'af');
+    seed('alone', 'alleen', 'af');
+    db.prepare("UPDATE vocab SET bookId = 'lesson-2' WHERE id = 'in-book'").run();
+    db.prepare("UPDATE vocab SET bookId = 'lesson-solo' WHERE id = 'alone'").run();
+
+    const rows = (await (await app.request('/?language=af')).json()) as {
+      id: string;
+      bookId: string;
+      collectionId: string | null;
+    }[];
+    expect(rows.find((r) => r.id === 'in-book')?.collectionId).toBe('collection-2');
+    expect(rows.find((r) => r.id === 'alone')?.collectionId).toBeNull();
+  });
+
   test('POST accepts the reader lesson reference and rejects a collection id', async () => {
     db.prepare(
       `INSERT INTO collections (id, title, author, language, createdAt, lastReadAt, userId)

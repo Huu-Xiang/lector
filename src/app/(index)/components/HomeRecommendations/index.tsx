@@ -3,27 +3,31 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { Sparkles, X } from 'lucide-react';
+import { ChevronDown, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import RecommendedForYou from '@/components/RecommendedForYou';
 import { getLessonsForCollection, getSetting } from '@/lib/data-layer';
 import { getReadingLevel, type CefrLevel } from '@/lib/reading-level';
 
-const DISMISSED_KEY = 'readfox-home-recommend-dismissed';
+const COLLAPSED_KEY = 'readfox-home-recommend-collapsed';
 
-function readDismissed(language: string): boolean {
+function readCollapsed(language: string): boolean | null {
   try {
-    return localStorage.getItem(`${DISMISSED_KEY}-${language}`) === '1';
+    const value = localStorage.getItem(`${COLLAPSED_KEY}-${language}`);
+    return value === null ? null : value === '1';
   } catch {
-    return false;
+    return null;
   }
 }
 
+/** Always shown; the reader can fold it. It starts open for a small library. */
 export default function HomeRecommendations({
   language,
+  defaultOpen,
   onMore,
 }: {
   language: string;
+  defaultOpen: boolean;
   onMore: () => void;
 }) {
   const t = useTranslations('recommend');
@@ -31,12 +35,12 @@ export default function HomeRecommendations({
   const [profile, setProfile] = useState<{ level: CefrLevel | null; interests: string[] } | null>(
     null,
   );
-  const [dismissed, setDismissed] = useState(false);
+  const [chosen, setChosen] = useState<boolean | null>(null);
 
   useEffect(() => {
     let cancelled = false;
     /* eslint-disable-next-line react-hooks/set-state-in-effect -- localStorage is client-only */
-    setDismissed(readDismissed(language));
+    setChosen(readCollapsed(language) === null ? null : !readCollapsed(language));
     Promise.all([
       getReadingLevel(language),
       getSetting<string[]>('readingInterests').catch(() => undefined),
@@ -48,12 +52,15 @@ export default function HomeRecommendations({
     };
   }, [language]);
 
-  function dismiss() {
-    setDismissed(true);
+  const expanded = chosen ?? defaultOpen;
+
+  function toggle() {
+    const next = !expanded;
+    setChosen(next);
     try {
-      localStorage.setItem(`${DISMISSED_KEY}-${language}`, '1');
+      localStorage.setItem(`${COLLAPSED_KEY}-${language}`, next ? '0' : '1');
     } catch {
-      // the section simply returns on the next visit
+      // the choice then lasts until reload
     }
   }
 
@@ -62,11 +69,11 @@ export default function HomeRecommendations({
     router.push(lessons[0] ? `/read/${lessons[0].id}` : '/');
   }
 
-  if (dismissed || profile === null) return null;
+  if (profile === null) return null;
 
   return (
     <section className="panel mb-8 p-5" data-testid="home-recommend">
-      <div className="mb-4 flex items-start justify-between gap-3">
+      <div className={`flex items-start justify-between gap-3 ${expanded ? 'mb-4' : ''}`}>
         <div>
           <h2 className="flex items-center gap-2 text-lg font-semibold text-foreground">
             <Sparkles className="h-4 w-4 text-primary" aria-hidden="true" />
@@ -77,26 +84,34 @@ export default function HomeRecommendations({
           </p>
         </div>
         <div className="flex shrink-0 items-center gap-1">
-          <Button variant="outline" size="sm" onClick={onMore} data-testid="home-recommend-more">
-            {t('more')}
-          </Button>
+          {expanded && (
+            <Button variant="outline" size="sm" onClick={onMore} data-testid="home-recommend-more">
+              {t('more')}
+            </Button>
+          )}
           <Button
             variant="ghost"
             size="icon"
-            onClick={dismiss}
-            aria-label={t('dismiss')}
-            data-testid="home-recommend-dismiss"
+            onClick={toggle}
+            aria-expanded={expanded}
+            aria-label={expanded ? t('collapse') : t('expand')}
+            title={expanded ? t('collapse') : t('expand')}
+            data-testid="home-recommend-toggle"
           >
-            <X className="h-4 w-4" />
+            <ChevronDown
+              className={`h-4 w-4 transition-transform ${expanded ? '' : '-rotate-90'}`}
+            />
           </Button>
         </div>
       </div>
-      <RecommendedForYou
-        language={language}
-        level={profile.level}
-        interests={profile.interests}
-        onStart={open}
-      />
+      {expanded && (
+        <RecommendedForYou
+          language={language}
+          level={profile.level}
+          interests={profile.interests}
+          onStart={open}
+        />
+      )}
     </section>
   );
 }

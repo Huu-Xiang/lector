@@ -1,6 +1,6 @@
 import { db } from '../../db';
 import { getSharedContentProvider, type LLMProvider } from '../llm';
-import { nativeLanguageName } from '../languages';
+import { isNativeLanguageCode, nativeLanguageName } from '../languages';
 import type { ReadingFeedRow } from './types';
 
 export interface ArticleDescription {
@@ -112,4 +112,37 @@ export async function describeArticles(
     });
   }
   return result;
+}
+
+/** Native languages readers have chosen, plus Chinese, the most common one. */
+export function knownNatives(): string[] {
+  const rows = db
+    .prepare("SELECT DISTINCT value FROM settings WHERE key = 'nativeLanguage'")
+    .all() as Array<{ value: string }>;
+  const natives = new Set<string>(['zh-CN']);
+  for (const { value } of rows) {
+    try {
+      const code: unknown = JSON.parse(value);
+      if (isNativeLanguageCode(code)) natives.add(code);
+    } catch {
+      // not a language code
+    }
+  }
+  return [...natives];
+}
+
+/** Writes the missing descriptions ahead of time so a reader's first view is instant. */
+export async function warmDescriptions(): Promise<number> {
+  const articles = db.prepare('SELECT * FROM reading_feed').all() as ReadingFeedRow[];
+  let made = 0;
+  for (const native of knownNatives()) {
+    const wanted = articles.filter((a) => a.language !== native);
+    const before = cachedDescriptions(
+      wanted.map((a) => a.id),
+      native,
+    ).size;
+    const after = (await describeArticles(wanted, native)).size;
+    made += Math.max(0, after - before);
+  }
+  return made;
 }

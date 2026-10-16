@@ -83,7 +83,8 @@
     "homeHint": "Free books and articles to start with.",
     "homeHintLevel": "Matched to your level, {level}.",
     "more": "More free books",
-    "dismiss": "Hide this section"
+    "collapse": "Fold this section",
+    "expand": "Show this section"
   },
   "bookLink": {
     "view": "View on {site}",

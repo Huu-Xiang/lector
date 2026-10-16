@@ -7,17 +7,17 @@ import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import BookReviewLink from '@/components/BookReviewLink';
 import LevelTags from '@/components/LevelTags';
+import { cachedCatalog, loadCatalog } from '@/lib/catalog-cache';
 import { useArticleDescriptions } from '@/lib/article-descriptions';
 import {
   addLibraryBook,
   addReadingFeedArticle,
-  getLibraryCatalog,
   getReadingFeed,
-  getSetting,
   type LibraryBook,
   type ReadingFeedArticle,
 } from '@/lib/data-layer';
 import { nativeLanguageFromLocale } from '@/lib/languages';
+import { loadNative } from '@/lib/library-titles';
 import { levelGap, pickNearLevel } from '@/lib/recommend';
 import type { CefrLevel } from '@/lib/reading-level';
 
@@ -119,17 +119,19 @@ export default function RecommendedForYou({
     setArticles(null);
 
     (async () => {
-      const native = await getSetting<string>('nativeLanguage')
-        .catch(() => undefined)
-        .then((code) => code || nativeLanguageFromLocale(locale));
+      const native = (await loadNative()) || nativeLanguageFromLocale(locale);
       if (!cancelled) setNative(native);
 
-      const catalog = await getLibraryCatalog(language).catch(() => [] as LibraryBook[]);
-      const fresh = catalog.filter((book) => !book.added);
-      const picked = pickNearLevel(fresh, level, 3).map((book) =>
-        bookPick(book, native, level, language),
-      );
-      if (!cancelled) setBooks(picked);
+      const pickBooks = (catalog: LibraryBook[]) =>
+        pickNearLevel(
+          catalog.filter((book) => !book.added),
+          level,
+          3,
+        ).map((book) => bookPick(book, native, level, language));
+      const stored = cachedCatalog(language);
+      if (stored && !cancelled) setBooks(pickBooks(stored));
+      const catalog = await loadCatalog(language).catch(() => [] as LibraryBook[]);
+      if (!cancelled) setBooks(pickBooks(catalog));
 
       const wanted = FEED_INTERESTS.filter((id) => interestKey.split(',').includes(id));
       const lists = await Promise.all(

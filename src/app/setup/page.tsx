@@ -24,6 +24,7 @@ import {
   type CefrLevel,
 } from '@/lib/reading-level';
 import { languageDisplayName } from '@/lib/language-names';
+import { forgetNative } from '@/lib/library-titles';
 import { isLanguageReady, parseReadyLanguages } from '@/lib/ready-languages';
 import { useReadyLanguagesSetting } from '@/lib/use-env';
 import { setLanguageInStorage } from '@/utils/storage';
@@ -127,6 +128,7 @@ export default function SetupPage() {
     try {
       try {
         await setSetting('nativeLanguage', native);
+        forgetNative();
       } catch {}
 
       // Seeding is safe before the target-language write: the route accepts an

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { getSetting, setSetting } from '@/lib/data-layer';
+import { forgetNative } from '@/lib/library-titles';
 import {
   DEFAULT_NATIVE_LANGUAGE,
   isNativeLanguageCode,
@@ -39,6 +40,7 @@ export default function NativeLanguage() {
     setPending(true);
     try {
       await setSetting('nativeLanguage', next);
+      forgetNative();
       setSaved(true);
       toast.success(t('saved'));
     } catch (error) {

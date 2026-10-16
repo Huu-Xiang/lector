@@ -9,12 +9,12 @@ import { Dialog, DialogClose, DialogContent, DialogTitle } from '@/components/ui
 import {
   addLibraryBook,
   addReadingFeedArticle,
-  getLibraryCatalog,
   getReadingFeed,
   getSetting,
   type LibraryBook,
   type ReadingFeedArticle,
 } from '@/lib/data-layer';
+import { cachedCatalog, loadCatalog } from '@/lib/catalog-cache';
 import BookReviewLink from '@/components/BookReviewLink';
 import LevelTags from '@/components/LevelTags';
 import { useArticleDescriptions } from '@/lib/article-descriptions';
@@ -83,9 +83,9 @@ export default function FreeBooksModal({
   useEffect(() => {
     if (!isOpen) return;
     let cancelled = false;
-    setBooks(null);
+    setBooks(cachedCatalog(activeLang.code));
     setFailed(false);
-    getLibraryCatalog(activeLang.code)
+    loadCatalog(activeLang.code)
       .then((list) => !cancelled && setBooks(list))
       .catch(() => !cancelled && setFailed(true));
     getSetting<string>('nativeLanguage')
