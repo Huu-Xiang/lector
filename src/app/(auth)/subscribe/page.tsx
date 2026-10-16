@@ -62,6 +62,7 @@ type Phase =
   | 'unavailable'
   | 'suspended'
   | 'cnChecking'
+  | 'cnWaiting'
   | 'cnUnpaid'
   | 'cnPaid';
 
@@ -111,11 +112,13 @@ export default function SubscribePage() {
 
   // The cashier's return link and the browser's back button both land here,
   // paid or not. Only the platform's order state decides what to show.
+  // `waiting`: the cashier is open in another tab, so keep asking for longer.
   const checkCnOrder = useCallback(
-    (order: PendingCnOrder) => {
+    (order: PendingCnOrder, waiting = false) => {
       clearTimeout(pollTimer.current ?? undefined);
       setCnOrder(order);
-      setPhase('cnChecking');
+      setPhase(waiting ? 'cnWaiting' : 'cnChecking');
+      const limit = waiting ? 200 : 4;
       function tick(attempt: number) {
         pollTimer.current = setTimeout(
           async () => {
@@ -135,13 +138,13 @@ export default function SubscribePage() {
               return;
             }
             // The payment notice can trail the cashier's return by a few seconds.
-            if (attempt >= 4) {
+            if (attempt >= limit) {
               setPhase('cnUnpaid');
               return;
             }
             tick(attempt + 1);
           },
-          attempt === 0 ? 0 : 2000,
+          attempt === 0 ? 0 : waiting ? 3000 : 2000,
         );
       }
       tick(0);
@@ -160,6 +163,16 @@ export default function SubscribePage() {
   }, []);
 
   useEffect(() => () => clearTimeout(pollTimer.current ?? undefined), []);
+
+  // Coming back from the cashier tab: ask at once instead of at the next tick.
+  useEffect(() => {
+    if (phase !== 'cnWaiting' || !cnOrder) return;
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') checkCnOrder(cnOrder, true);
+    };
+    document.addEventListener('visibilitychange', onVisible);
+    return () => document.removeEventListener('visibilitychange', onVisible);
+  }, [phase, cnOrder, checkCnOrder]);
 
   useEffect(() => {
     fetchPlanPrices().then(setPrices);
@@ -242,8 +255,12 @@ export default function SubscribePage() {
   async function openCnCheckout(plan: PaidTier, months: CnMonths) {
     if (opening !== null) return;
     setOpening(`cn-${plan}-${months}`);
+    // Opened inside the click so a popup blocker allows it; filled once the order exists.
+    const tab = window.open('', '_blank');
+    if (tab) tab.opener = null;
     const started = await startCnCheckout(plan, months, channel);
     if ('error' in started) {
+      tab?.close();
       setOpening(null);
       toast.error(
         started.error === 'higher_plan_active'
@@ -254,8 +271,15 @@ export default function SubscribePage() {
       );
       return;
     }
-    rememberCnOrder({ outTradeNo: started.outTradeNo, payUrl: started.payUrl });
-    window.location.assign(started.payUrl);
+    const order = { outTradeNo: started.outTradeNo, payUrl: started.payUrl };
+    rememberCnOrder(order);
+    if (!tab) {
+      window.location.assign(started.payUrl);
+      return;
+    }
+    tab.location.href = started.payUrl;
+    setOpening(null);
+    checkCnOrder(order, true);
   }
 
   async function openCheckout(price: BillingPrice) {
@@ -299,6 +323,7 @@ export default function SubscribePage() {
     phase === 'activating' ||
     phase === 'slow' ||
     phase === 'cnChecking' ||
+    phase === 'cnWaiting' ||
     phase === 'cnUnpaid' ||
     phase === 'cnPaid';
   const showFree = status?.freeTierEnabled === true && !status.suspended;
@@ -414,6 +439,44 @@ export default function SubscribePage() {
         >
           <Spinner className="text-primary" label={t('cnChecking')} />
           <p>{t('cnChecking')}</p>
+        </div>
+      )}
+
+      {phase === 'cnWaiting' && cnOrder && (
+        <div
+          className="space-y-3 rounded-lg border border-border bg-card p-4 text-sm text-foreground"
+          data-testid="subscribe-cn-waiting"
+        >
+          <div className="flex items-center gap-3">
+            <Spinner className="text-primary" label={t('cnWaitingTitle')} />
+            <h2 className="text-lg font-semibold">{t('cnWaitingTitle')}</h2>
+          </div>
+          <p className="text-muted-foreground">{t('cnWaitingBody')}</p>
+          <div className="flex flex-wrap gap-2">
+            {cnOrder.payUrl && (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => window.open(cnOrder.payUrl, '_blank', 'noopener')}
+                data-testid="subscribe-cn-reopen"
+              >
+                {t('cnReopen')}
+              </Button>
+            )}
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => {
+                clearTimeout(pollTimer.current ?? undefined);
+                forgetCnOrder();
+                setCnOrder(null);
+                setPhase('pick');
+              }}
+              data-testid="subscribe-cn-cancel-waiting"
+            >
+              {t('cnCancel')}
+            </Button>
+          </div>
         </div>
       )}
 

@@ -5,7 +5,14 @@ import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import { getSetting, seedStarterContent, setSetting } from '@/lib/data-layer';
-import { LANGUAGES, nativeLanguageFromLocale, type LanguageCode } from '@/lib/languages';
+import {
+  LANGUAGES,
+  NATIVE_LANGUAGES,
+  isNativeLanguageCode,
+  nativeLanguageFromLocale,
+  type LanguageCode,
+} from '@/lib/languages';
+import { LOCALE_COOKIE, matchLocale } from '@/i18n/locales';
 import { getOnboardingSnapshot, skipOnboarding, startOnboarding } from '@/lib/onboarding';
 import {
   CEFR_LEVELS,
@@ -50,6 +57,7 @@ export default function SetupPage() {
   const [selectedLanguage, setSelectedLanguage] = useState<LanguageCode | null>(null);
   const [pending, setPending] = useState<LanguageCode | null>(null);
   const [level, setLevel] = useState<CefrLevel | null>(null);
+  const [native, setNative] = useState<string>('en');
   const tl = useTranslations('readingLevel');
   const mainland = showMainlandExams(locale);
   const [error, setError] = useState<string | null>(null);
@@ -67,6 +75,12 @@ export default function SetupPage() {
   // is in progress resumes its real starter lesson instead of beginning again.
   useEffect(() => {
     let cancelled = false;
+    getSetting<string>('nativeLanguage')
+      .catch(() => undefined)
+      .then((code) => {
+        if (cancelled) return;
+        setNative(isNativeLanguageCode(code) ? code : nativeLanguageFromLocale(navigator.language));
+      });
     void getOnboardingSnapshot()
       .then((snapshot) => {
         if (cancelled || !snapshot.progress) return;
@@ -85,6 +99,15 @@ export default function SetupPage() {
     };
   }, [router]);
 
+  function chooseNative(code: string) {
+    setNative(code);
+    const ui = matchLocale(code);
+    if (ui && ui !== locale) {
+      document.cookie = `${LOCALE_COOKIE}=${ui}; path=/; max-age=31536000; samesite=lax`;
+      router.refresh();
+    }
+  }
+
   async function handleContinue(guided: boolean) {
     if (!selectedLanguage || pending) return;
     const code = selectedLanguage;
@@ -92,12 +115,8 @@ export default function SetupPage() {
     setError(null);
 
     try {
-      // First setup: take the browser language as the learner's own language.
-      // Best effort; the Settings card lets them change it.
       try {
-        if (!(await getSetting<string>('nativeLanguage'))) {
-          await setSetting('nativeLanguage', nativeLanguageFromLocale(navigator.language));
-        }
+        await setSetting('nativeLanguage', native);
       } catch {}
 
       // Seeding is safe before the target-language write: the route accepts an
@@ -157,6 +176,26 @@ export default function SetupPage() {
             {t('intro')}
           </p>
         </div>
+
+        <section aria-labelledby="native-heading" className="mb-8">
+          <h2 id="native-heading" className="mb-1 text-sm font-bold text-foreground">
+            {t('nativeTitle')}
+          </h2>
+          <p className="mb-3 text-sm text-muted-foreground">{t('nativeHint')}</p>
+          <select
+            value={native}
+            onChange={(e) => chooseNative(e.target.value)}
+            aria-labelledby="native-heading"
+            data-testid="setup-native-language"
+            className="w-full rounded-xl border border-input bg-card px-3 py-2.5 text-base text-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none sm:w-80"
+          >
+            {NATIVE_LANGUAGES.map((lang) => (
+              <option key={lang.code} value={lang.code}>
+                {lang.native}
+              </option>
+            ))}
+          </select>
+        </section>
 
         <section aria-labelledby="language-heading" className="mb-8">
           <h2 id="language-heading" className="mb-3 text-sm font-bold text-foreground">

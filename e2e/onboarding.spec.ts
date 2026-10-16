@@ -248,6 +248,7 @@ test.describe('guided onboarding — selfhost', () => {
     await expect(page).toHaveURL(/\/setup/, { timeout: 15_000 });
     await page.getByTestId('setup-language-es').click();
     await page.getByTestId('setup-level-B1').click();
+    await page.getByTestId('setup-native-language').selectOption('ja');
     await page.getByTestId('skip-guided-onboarding').click();
     await expect(page).toHaveURL('/', { timeout: 15_000 });
 
@@ -262,6 +263,8 @@ test.describe('guided onboarding — selfhost', () => {
     });
     const levels = await page.request.get(apiUrl('/api/settings/readingLevels'));
     expect(await levels.json()).toEqual({ es: 'B1' });
+    const nativeLanguage = await page.request.get(apiUrl('/api/settings/nativeLanguage'));
+    expect(await nativeLanguage.json()).toBe('ja');
     expect(current.events.map((event) => event.eventType)).toEqual(
       expect.arrayContaining(['onboarding.profile_saved', 'onboarding.skipped']),
     );

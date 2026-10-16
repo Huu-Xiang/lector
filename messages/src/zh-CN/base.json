@@ -104,10 +104,10 @@
     "badge": "你的第一次阅读",
     "welcome": "欢迎来到 Readfox",
     "intro": "简单告诉我们几点,我们为你挑选合适的第一课。所有问题都是可选的。",
-    "chooseLanguage": "1. 选择要学的语言",
+    "chooseLanguage": "2. 选择要学的语言",
     "learn": "学习{name}",
     "showMore": "显示另外 {count} 种语言",
-    "personalise": "2. 你的水平",
+    "personalise": "3. 你的水平",
     "personaliseHint": "用来优先推荐难度合适的免费书。",
     "optional": "可选",
     "level": "阅读水平",
@@ -117,42 +117,44 @@
     "preparing": "正在准备课文…",
     "start": "开始引导课",
     "errSave": "无法保存你的设置",
-    "levelHint": "之后可以在“免费书籍”里修改。"
+    "levelHint": "之后可以在“免费书籍”里修改。",
+    "nativeTitle": "1. 你的母语",
+    "nativeHint": "单词翻译和讲解都用这种语言。界面目前有简体中文和英文。"
   },
   "landing": {
-    "metaTitle": "Readfox – 用你正在学的语言读真正的书",
-    "metaDescription": "导入一本书或粘贴任意文字,点一下单词就能看到翻译,再把读到的内容变成间隔重复练习。免费且开源。",
+    "metaTitle": "Readfox：读原版书，学地道外语",
+    "metaDescription": "导入电子书或粘贴一篇文章，生词点一下就有释义。查过的词自动收进生词本，按记忆曲线提醒你复习。免费、开源。",
     "signIn": "登录",
-    "getStarted": "免费开始",
-    "heroTitle": "用你正在学的语言读真正的书",
-    "heroBody": "Readfox 把阅读变成学习。点任意单词查看翻译,边读边积累词汇,再用间隔重复来巩固。支持 {count} 种语言,免费使用。",
-    "createAccount": "创建免费账号",
-    "heroAlt": "Readfox:趴在打开的书上的小狐狸",
-    "howTitle": "它是怎么工作的",
+    "getStarted": "免费注册",
+    "heroTitle": "读原版书，学地道外语",
+    "heroBody": "遇到生词点一下，就能看到贴合上下文的释义。查过的词自动收进生词本，到点提醒你复习。支持 {count} 种语言，免费就能用。",
+    "createAccount": "免费注册",
+    "heroAlt": "Readfox 标志：一只趴在书上的小狐狸",
+    "howTitle": "怎么用",
     "features": {
       "read": {
-        "title": "读你喜欢的内容",
-        "body": "导入 EPUB 或粘贴任意文字,你自己的书就是你的课文。"
+        "title": "想读什么，就读什么",
+        "body": "导入 EPUB 电子书，或者直接粘贴文章。你爱看的内容，就是你的课本。"
       },
       "tap": {
-        "title": "点一下单词,马上看懂",
-        "body": "结合上下文的即时翻译和解释,由内置的每月额度或你自己的 AI 密钥提供。"
+        "title": "生词一点就懂",
+        "body": "结合上下文给出翻译和讲解。每月有免费额度，付费版还能接入你自己的 AI 密钥。"
       },
       "vocab": {
-        "title": "词汇自动积累",
-        "body": "你查过的每个词都会连同出处句子一起保存。"
+        "title": "生词本自动生成",
+        "body": "查过的每个词都连同原句一起保存，复习时有语境可依。"
       },
       "srs": {
-        "title": "间隔重复练习",
-        "body": "在合适的时间复习单词,真正记住它们。"
+        "title": "按记忆曲线复习",
+        "body": "在你快要忘记的时候提醒复习，记得更牢。"
       },
       "write": {
-        "title": "写作并获得反馈",
-        "body": "用目标语言写日记,并获得批改。"
+        "title": "用外语写日记，AI 帮你改",
+        "body": "用正在学的语言写几句，AI 会帮你批改，指出哪里不地道。"
       }
     },
-    "openTitle": "开源,你的阅读内容属于你自己",
-    "openBody": "Readfox 是开源软件（AGPL-3.0），基于开源阅读器 Lector 开发。AI 功能包含每月有限的额度。我们不使用广告或分析类追踪器。请阅读<privacy>隐私政策</privacy>。",
+    "openTitle": "开源透明，数据归你",
+    "openBody": "Readfox 是开源软件（AGPL-3.0），基于开源阅读器 Lector 开发。AI 功能每月有一定额度。网站不放广告，也不装任何追踪统计工具。详见<privacy>隐私政策</privacy>。",
     "pricing": "价格"
   },
   "settings": {

@@ -104,10 +104,10 @@
     "badge": "Your first reading session",
     "welcome": "Welcome to Readfox",
     "intro": "Tell us just enough to choose a useful first lesson. Every answer is optional.",
-    "chooseLanguage": "1. Choose a language",
+    "chooseLanguage": "2. Choose a language to learn",
     "learn": "Learn {name}",
     "showMore": "Show {count} more languages",
-    "personalise": "2. Your level",
+    "personalise": "3. Your level",
     "personaliseHint": "We use it to show free books at the right difficulty first.",
     "optional": "Optional",
     "level": "Reading level",
@@ -117,7 +117,9 @@
     "preparing": "Preparing lesson…",
     "start": "Start guided lesson",
     "errSave": "Could not save your setup",
-    "levelHint": "You can change it later in Free books."
+    "levelHint": "You can change it later in Free books.",
+    "nativeTitle": "1. Your language",
+    "nativeHint": "Translations and explanations use this language. The interface is available in English and Simplified Chinese."
   },
   "landing": {
     "metaTitle": "Readfox – read real books in the language you are learning",
@@ -136,7 +138,7 @@
       },
       "tap": {
         "title": "Tap a word, understand it",
-        "body": "Instant translations and explanations in context, from a built-in monthly allowance or from your own AI key."
+        "body": "Instant translations and explanations in context, from a built-in monthly allowance. Paid plans can also use your own AI key."
       },
       "vocab": {
         "title": "Your vocabulary builds itself",
