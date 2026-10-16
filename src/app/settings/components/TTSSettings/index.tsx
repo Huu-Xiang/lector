@@ -1,3 +1,4 @@
+import { languageDisplayName } from '@/lib/language-names';
 import { Button } from '@/components/ui/button';
 import { getTTSMode, isGoogleTTSConfigured, setTTSMode, speak, TTSMode } from '@/lib/tts';
 import { lectorMode } from '@/lib/api-base';
@@ -19,11 +20,7 @@ export default function TTSSettings() {
   // Languages without a Google voice (eo) always speak through the server's
   // self-hosted eSpeak NG engine — no engine choice, no plan gating, no
   // browser fallback (#307 §3.2c). The picker below absents itself.
-  const languageName =
-    locale === 'en'
-      ? activeLang.name
-      : (new Intl.DisplayNames([locale], { type: 'language' }).of(activeLang.code) ??
-        activeLang.name);
+  const languageName = languageDisplayName(activeLang.code, locale, activeLang.name);
   const noAudio = activeLang.pronunciation.audio === 'none';
   const espeakOnly =
     activeLang.pronunciation.audio !== 'none' && !activeLang.pronunciation.audio.includes('google');

@@ -101,6 +101,7 @@ test.describe.serial('billing gate lifecycle', () => {
     await page.getByTestId('register-name').fill('Payer');
     await page.getByTestId('register-email').fill(EMAIL);
     await page.getByTestId('register-password').fill(PASSWORD);
+    await page.getByTestId('register-confirm-password').fill(PASSWORD);
     await page.getByTestId('register-submit').click();
     await expect(page.getByTestId('register-check-email')).toBeVisible();
 
@@ -160,7 +161,7 @@ test.describe.serial('billing gate lifecycle', () => {
     await useBillingEnv(page);
     await signIn(page);
     await page.waitForURL((url) => url.pathname === '/');
-    await expect(page.getByTestId('account-email')).toHaveText(EMAIL);
+    await expect(page.getByTestId('account-name')).toHaveAttribute('title', EMAIL);
     expect((await page.request.get(`${CLOUD_API}/api/collections`)).status()).toBe(200);
   });
 
@@ -439,7 +440,7 @@ test.describe.serial('billing gate lifecycle', () => {
     await page.getByTestId('setup-language-af').click();
     await page.getByTestId('skip-guided-onboarding').click();
     await page.waitForURL((url) => url.pathname === '/');
-    await expect(page.getByTestId('account-email')).toHaveText(EMAIL);
+    await expect(page.getByTestId('account-name')).toHaveAttribute('title', EMAIL);
     await page.goto('/settings');
 
     const panel = page.getByTestId('cloud-plan-settings');

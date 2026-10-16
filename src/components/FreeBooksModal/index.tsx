@@ -15,6 +15,7 @@ import {
   type LibraryBook,
   type ReadingFeedArticle,
 } from '@/lib/data-layer';
+import { languageDisplayName } from '@/lib/language-names';
 import { nativeLanguageFromLocale } from '@/lib/languages';
 import {
   CEFR_LEVELS,
@@ -60,11 +61,7 @@ export default function FreeBooksModal({
   const [feed, setFeed] = useState<ReadingFeedArticle[] | null>(null);
   const [feedFailed, setFeedFailed] = useState(false);
   const mainland = showMainlandExams(locale);
-  let languageName = activeLang.native;
-  try {
-    languageName =
-      new Intl.DisplayNames([locale], { type: 'language' }).of(activeLang.code) ?? languageName;
-  } catch {}
+  const languageName = languageDisplayName(activeLang.code, locale, activeLang.name);
   const titleFor = (book: LibraryBook) => book.titles[native] || book.title;
 
   const feedAvailable = FEED_LANGUAGES.has(activeLang.code);

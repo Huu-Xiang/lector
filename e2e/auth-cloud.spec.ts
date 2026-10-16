@@ -80,6 +80,7 @@ test.describe.serial('cloud auth lifecycle', () => {
     await page.getByTestId('register-name').fill('Reader');
     await page.getByTestId('register-email').fill(EMAIL);
     await page.getByTestId('register-password').fill(PASSWORD);
+    await page.getByTestId('register-confirm-password').fill(PASSWORD);
     await page.getByTestId('register-submit').click();
     await expect(page.getByTestId('register-check-email')).toBeVisible();
 
@@ -96,7 +97,7 @@ test.describe.serial('cloud auth lifecycle', () => {
     expect(verifyUrl).toContain(`${CLOUD_API}/api/auth/verify-email`);
     await page.goto(verifyUrl);
     await page.waitForURL('http://localhost:3456/**');
-    await expect(page.getByTestId('account-email')).toHaveText(EMAIL);
+    await expect(page.getByTestId('account-name')).toHaveAttribute('title', EMAIL);
   });
 
   // Each test runs in a fresh browser context (no cookies carry over), so
@@ -108,7 +109,7 @@ test.describe.serial('cloud auth lifecycle', () => {
     await page.getByTestId('login-password').fill(PASSWORD);
     await page.getByTestId('login-submit').click();
     await page.waitForURL((url) => url.pathname === '/');
-    await expect(page.getByTestId('account-email')).toHaveText(EMAIL);
+    await expect(page.getByTestId('account-name')).toHaveAttribute('title', EMAIL);
 
     // Scope to the desktop sidebar — the mobile top-bar copy is display-hidden.
     await page.locator('aside').getByTestId('account-sign-out').click();
@@ -127,6 +128,7 @@ test.describe.serial('cloud auth lifecycle', () => {
     await page.goto(resetUrl);
     await page.waitForURL('**/reset-password?token=**');
     await page.getByTestId('reset-new-password').fill(NEW_PASSWORD);
+    await page.getByTestId('reset-confirm-password').fill(NEW_PASSWORD);
     await page.getByTestId('reset-confirm').click();
     await page.waitForURL('**/login');
 
@@ -140,7 +142,7 @@ test.describe.serial('cloud auth lifecycle', () => {
     await page.getByTestId('login-password').fill(NEW_PASSWORD);
     await page.getByTestId('login-submit').click();
     await page.waitForURL((url) => url.pathname === '/');
-    await expect(page.getByTestId('account-email')).toHaveText(EMAIL);
+    await expect(page.getByTestId('account-name')).toHaveAttribute('title', EMAIL);
   });
 
   test('personal API token: mint in Settings → Bearer authenticates cookie-free → revoke kills it', async ({

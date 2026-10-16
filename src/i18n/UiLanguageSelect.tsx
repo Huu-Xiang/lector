@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
+import { Select } from '@/components/ui/select';
 import { LOCALE_COOKIE, UI_LOCALES } from './locales';
 
 const ONE_YEAR_SECONDS = 60 * 60 * 24 * 365;
@@ -17,18 +18,18 @@ export default function UiLanguageSelect({ className = '' }: { className?: strin
   }
 
   return (
-    <select
+    <Select
       value={locale}
       onChange={(e) => change(e.target.value)}
       aria-label={t('label')}
       data-testid="ui-language-select"
-      className={`rounded-md border border-input bg-background px-2 py-1 text-xs text-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none ${className}`}
+      className={`h-8 py-0 text-xs md:text-xs ${className}`}
     >
       {UI_LOCALES.map((l) => (
         <option key={l.code} value={l.code}>
           {l.native}
         </option>
       ))}
-    </select>
+    </Select>
   );
 }

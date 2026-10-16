@@ -98,6 +98,7 @@ test.describe.serial('TOTP two-factor lifecycle', () => {
     await page.getByTestId('register-name').fill('Careful Reader');
     await page.getByTestId('register-email').fill(EMAIL);
     await page.getByTestId('register-password').fill(PASSWORD);
+    await page.getByTestId('register-confirm-password').fill(PASSWORD);
     await page.getByTestId('register-submit').click();
     await expect(page.getByTestId('register-check-email')).toBeVisible();
 
@@ -157,7 +158,7 @@ test.describe.serial('TOTP two-factor lifecycle', () => {
     await page.getByTestId('twofactor-code').fill(totp(totpSecret));
     await page.getByTestId('twofactor-submit').click();
     await page.waitForURL((url) => url.pathname === '/');
-    await expect(page.getByTestId('account-email')).toHaveText(EMAIL);
+    await expect(page.getByTestId('account-name')).toHaveAttribute('title', EMAIL);
   });
 
   test('a wrong code is refused and stays on the challenge', async ({ page }) => {
@@ -179,7 +180,7 @@ test.describe.serial('TOTP two-factor lifecycle', () => {
     await page.getByTestId('twofactor-code').fill(backupCode);
     await page.getByTestId('twofactor-submit').click();
     await page.waitForURL((url) => url.pathname === '/');
-    await expect(page.getByTestId('account-email')).toHaveText(EMAIL);
+    await expect(page.getByTestId('account-name')).toHaveAttribute('title', EMAIL);
   });
 
   test('disable restores plain password sign-in', async ({ page }) => {
@@ -201,6 +202,6 @@ test.describe.serial('TOTP two-factor lifecycle', () => {
     await page.waitForURL('**/login');
     await signIn(page);
     await page.waitForURL((url) => url.pathname === '/');
-    await expect(page.getByTestId('account-email')).toHaveText(EMAIL);
+    await expect(page.getByTestId('account-name')).toHaveAttribute('title', EMAIL);
   });
 });

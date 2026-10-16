@@ -56,6 +56,7 @@ test.describe.serial('Free cloud learning loop', () => {
     await page.getByTestId('register-name').fill('Free Reader');
     await page.getByTestId('register-email').fill(EMAIL);
     await page.getByTestId('register-password').fill(PASSWORD);
+    await page.getByTestId('register-confirm-password').fill(PASSWORD);
     await page.getByTestId('register-submit').click();
     await expect(page.getByTestId('register-check-email')).toBeVisible();
 
@@ -68,7 +69,7 @@ test.describe.serial('Free cloud learning loop', () => {
     await page.getByTestId('setup-language-af').click();
     await page.getByTestId('skip-guided-onboarding').click();
     await page.waitForURL((url) => url.pathname === '/');
-    await expect(page.getByTestId('account-email')).toHaveText(EMAIL);
+    await expect(page.getByTestId('account-name')).toHaveAttribute('title', EMAIL);
   });
 
   test('Free has app access, bounded AI, browser audio, and portable data', async ({ page }) => {

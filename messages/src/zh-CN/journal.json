@@ -219,7 +219,8 @@
       "current": "语言：{language}",
       "select": "选择语言",
       "search": "搜索语言",
-      "noMatch": "没有找到这种语言"
+      "noMatch": "没有找到这种语言",
+      "inDevelopment": "开发中"
     },
     "quota": {
       "title": "本月 AI 额度",

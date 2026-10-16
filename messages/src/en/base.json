@@ -50,7 +50,7 @@
       "name": "Name",
       "email": "Email",
       "password": "Password",
-      "passwordHint": "At least 8 characters.",
+      "passwordHint": "Use 8 or more characters with a letter and a digit.",
       "submit": "Create account",
       "submitting": "Creating account…",
       "haveAccount": "Already have an account?",
@@ -58,7 +58,11 @@
       "errFailed": "Sign-up failed.",
       "checkTitle": "Check your inbox",
       "checkBody": "We sent a verification link to <b>{email}</b>. Click it to activate your account, then sign in.",
-      "goSignIn": "Go to sign in"
+      "goSignIn": "Go to sign in",
+      "confirmPassword": "Confirm password",
+      "errMismatch": "The two passwords do not match.",
+      "errWeak": "Choose a stronger password: at least 8 characters, with a letter and a digit.",
+      "matches": "Passwords match"
     },
     "reset": {
       "expiredTitle": "Link expired",
@@ -75,11 +79,14 @@
       "errRequest": "Could not request a reset.",
       "newTitle": "Choose a new password",
       "newPassword": "New password",
-      "passwordHint": "At least 8 characters.",
+      "passwordHint": "Use 8 or more characters with a letter and a digit.",
       "setNew": "Set new password",
       "updating": "Updating…",
       "errReset": "Could not reset the password.",
-      "updated": "Password updated — sign in with the new one."
+      "updated": "Password updated — sign in with the new one.",
+      "confirmPassword": "Confirm new password",
+      "errMismatch": "The two passwords do not match.",
+      "errWeak": "Choose a stronger password: at least 8 characters, with a letter and a digit."
     },
     "twoFactor": {
       "title": "Two-factor authentication",
@@ -98,6 +105,16 @@
       "errLocked": "Too many failed codes — wait a bit, then sign in again.",
       "errBackup": "That backup code didn't work.",
       "errTotp": "That code didn't work — try the current one."
+    },
+    "passwordMeter": {
+      "weak": "Weak",
+      "fair": "Fair",
+      "strong": "Strong",
+      "rules": {
+        "length": "At least 8 characters",
+        "letter": "Contains a letter",
+        "digit": "Contains a digit"
+      }
     }
   },
   "setup": {
@@ -127,7 +144,14 @@
       "travel": "Travel",
       "science": "Science",
       "literature": "Literature"
-    }
+    },
+    "inDevelopment": "In development",
+    "showMoreSoon": "Show {count} languages in development",
+    "recommendBadge": "Picked for you",
+    "recommendTitle": "Pick your first read",
+    "recommendIntro": "Based on your level ({level}) and interests. Choose one and we will walk you through your first reading.",
+    "recommendBack": "Change my answers",
+    "recommendSkip": "Browse the library instead"
   },
   "landing": {
     "metaTitle": "Readfox – read real books in the language you are learning",

@@ -50,6 +50,8 @@ declare global {
       OIDC_LOGIN?: string;
       /** Label for the OIDC sign-in button (e.g. "Authentik"); default "SSO". */
       OIDC_PROVIDER_NAME?: string;
+      /** Comma-separated language codes that setup offers; unset offers every language. */
+      SETUP_READY_LANGUAGES?: string;
     };
   }
 }
@@ -111,14 +113,17 @@ export function isAuthRoute(pathname: string): boolean {
 /** Where a cloud account without an active subscription lands (#224). */
 export const BILLING_ROUTE = '/subscribe';
 
+/** First-run setup: needs a session but shows no app chrome. */
+export const SETUP_ROUTE = '/setup';
+
 /**
- * Chrome-free routes: the pre-session auth pages plus /subscribe. NavHeader,
+ * Chrome-free routes: the pre-session auth pages, /subscribe and /setup. NavHeader,
  * SetupGuard, and ChatWidget key off this (a locked account must see nothing
  * app-shaped); AuthGuard deliberately keeps isAuthRoute — /subscribe still
  * requires a session.
  */
 export function isBareRoute(pathname: string): boolean {
-  return isAuthRoute(pathname) || pathname === BILLING_ROUTE;
+  return isAuthRoute(pathname) || pathname === BILLING_ROUTE || pathname === SETUP_ROUTE;
 }
 
 let bouncedToLogin = false;

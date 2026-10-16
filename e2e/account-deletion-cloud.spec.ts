@@ -61,13 +61,14 @@ test.describe.serial('cloud account deletion', () => {
     await page.getByTestId('register-name').fill('Deleter');
     await page.getByTestId('register-email').fill(EMAIL);
     await page.getByTestId('register-password').fill(PASSWORD);
+    await page.getByTestId('register-confirm-password').fill(PASSWORD);
     await page.getByTestId('register-submit').click();
     await expect(page.getByTestId('register-check-email')).toBeVisible();
 
     const verifyUrl = lastLink(EMAIL, /verify/i);
     await page.goto(verifyUrl);
     await page.waitForURL('http://localhost:3456/**');
-    await expect(page.getByTestId('account-email')).toHaveText(EMAIL);
+    await expect(page.getByTestId('account-name')).toHaveAttribute('title', EMAIL);
   });
 
   test('Settings → delete → emailed link erases the account and bounces to /login', async ({

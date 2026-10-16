@@ -41,3 +41,12 @@ export function useOidcProviderName(): string {
     () => 'SSO',
   );
 }
+
+/** Raw `SETUP_READY_LANGUAGES`; empty means every language is offered. */
+export function useReadyLanguagesSetting(): string {
+  return useSyncExternalStore(
+    subscribe,
+    () => window.__ENV__?.SETUP_READY_LANGUAGES || '',
+    () => '',
+  );
+}

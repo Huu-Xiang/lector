@@ -21,7 +21,7 @@ import { setEmailTransport, type EmailMessage } from './email';
 
 const BASE = 'http://localhost:9999';
 const EMAIL = 'careful@example.com';
-const PASSWORD = 'correct-horse-battery';
+const PASSWORD = 'correct-horse-battery1';
 
 const emails: EmailMessage[] = [];
 let engine: AuthEngine;
@@ -102,7 +102,10 @@ beforeAll(async () => {
   await runAuthMigrations(engine);
 
   app = new Hono();
-  app.use('/api/*', makeSessionMiddleware(true, () => engine));
+  app.use(
+    '/api/*',
+    makeSessionMiddleware(true, () => engine),
+  );
   app.on(['POST', 'GET'], '/api/auth/*', (c) => engine.handler(c.req.raw));
   app.get('/api/whoami', (c) => c.json({ userId: resolveUserId(true, c) }));
   app.onError((err, c) => {
@@ -151,7 +154,9 @@ describe('TOTP enrolment (verify-to-arm)', () => {
     // session reports 2FA off — abandoning enrolment can't lock anyone out.
     expect((await sessionUser(cookie))?.twoFactorEnabled).toBeFalsy();
     const plain = await signIn();
-    expect(((await plain.json()) as { twoFactorRedirect?: boolean }).twoFactorRedirect).toBeUndefined();
+    expect(
+      ((await plain.json()) as { twoFactorRedirect?: boolean }).twoFactorRedirect,
+    ).toBeUndefined();
   });
 
   test('a wrong code does not arm it either', async () => {
@@ -163,7 +168,11 @@ describe('TOTP enrolment (verify-to-arm)', () => {
 
   test('verifying the current code arms 2FA and rotates the session', async () => {
     const cookie = cookiesFrom(await signIn());
-    const res = await post('/api/auth/two-factor/verify-totp', { code: totpFromUri(totpURI) }, cookie);
+    const res = await post(
+      '/api/auth/two-factor/verify-totp',
+      { code: totpFromUri(totpURI) },
+      cookie,
+    );
     expect(res.status).toBe(200);
 
     // Session-fixation hygiene: the pre-verification session is revoked and
@@ -242,7 +251,11 @@ describe('TOTP enrolment (verify-to-arm)', () => {
     expect(trusted).toContain('trust_device');
 
     // Same device (trust cookie rides along) → straight to a session.
-    const res = await post('/api/auth/sign-in/email', { email: EMAIL, password: PASSWORD }, trusted);
+    const res = await post(
+      '/api/auth/sign-in/email',
+      { email: EMAIL, password: PASSWORD },
+      trusted,
+    );
     const body = (await res.json()) as { twoFactorRedirect?: boolean };
     expect(body.twoFactorRedirect).toBeUndefined();
     expect(cookiesFrom(res)).toContain('session_token');
@@ -254,7 +267,11 @@ describe('TOTP enrolment (verify-to-arm)', () => {
       await post('/api/auth/two-factor/verify-totp', { code: totpFromUri(totpURI) }, challenge),
     );
 
-    const wrong = await post('/api/auth/two-factor/disable', { password: 'not-the-password' }, session);
+    const wrong = await post(
+      '/api/auth/two-factor/disable',
+      { password: 'not-the-password' },
+      session,
+    );
     expect(wrong.status).toBeGreaterThanOrEqual(400);
 
     const res = await post('/api/auth/two-factor/disable', { password: PASSWORD }, session);

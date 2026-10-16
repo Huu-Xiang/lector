@@ -219,7 +219,8 @@
       "current": "Language: {language}",
       "select": "Select language",
       "search": "Search languages",
-      "noMatch": "No language found"
+      "noMatch": "No language found",
+      "inDevelopment": "In development"
     },
     "quota": {
       "title": "AI this month",

@@ -43,9 +43,9 @@ function CloudAccountMenu({ compact }: { compact: boolean }) {
         <span
           className="min-w-0 truncate text-xs text-muted-foreground"
           title={session.user.email}
-          data-testid="account-email"
+          data-testid="account-name"
         >
-          {session.user.email}
+          {session.user.name?.trim() || session.user.email}
         </span>
         <SignOutButton onClick={handleSignOut} disabled={isSigningOut} />
       </div>

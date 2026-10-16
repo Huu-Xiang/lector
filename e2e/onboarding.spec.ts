@@ -241,6 +241,26 @@ test.describe('guided onboarding — selfhost', () => {
     await context.close();
   });
 
+  test('a language without starter lessons recommends a book at the chosen level', async ({
+    browser,
+  }) => {
+    const context = await browser.newContext({ storageState: { cookies: [], origins: [] } });
+    const page = await context.newPage();
+
+    await page.goto('/');
+    await expect(page).toHaveURL(/\/setup/, { timeout: 15_000 });
+    await expect(page.getByTestId('language-selector')).toHaveCount(0);
+    await page.getByTestId('setup-language-en').click();
+    await page.getByTestId('setup-level-B1').click();
+    await page.getByTestId('start-guided-onboarding').click();
+
+    await expect(page.getByTestId('setup-recommend')).toBeVisible({ timeout: 15_000 });
+    await page.getByTestId('recommend-start-book-alices-adventures-in-wonderland').click();
+    await expect(page).toHaveURL(/\/read\/[^/?]+\?onboarding=1$/, { timeout: 30_000 });
+    await expect(page.getByTestId('onboarding-coach-lookup')).toBeVisible({ timeout: 15_000 });
+    await context.close();
+  });
+
   test('skip persists preferences and never reopens setup', async ({ browser }) => {
     const context = await browser.newContext({ storageState: { cookies: [], origins: [] } });
     const page = await context.newPage();

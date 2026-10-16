@@ -1478,7 +1478,7 @@ export async function getLibraryCatalog(language: string): Promise<LibraryBook[]
   return ((await res.json()) as { books: LibraryBook[] }).books;
 }
 
-export async function addLibraryBook(language: string, slug: string): Promise<void> {
+export async function addLibraryBook(language: string, slug: string): Promise<string> {
   const res = await apiFetch('/api/library/add', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -1486,6 +1486,7 @@ export async function addLibraryBook(language: string, slug: string): Promise<vo
   });
   await requireOk(res, 'Could not add the book');
   invalidateCollections();
+  return ((await res.json()) as { collectionId: string }).collectionId;
 }
 
 export interface ReadingFeedArticle {
@@ -1512,7 +1513,7 @@ export async function getReadingFeed(
   return ((await res.json()) as { articles: ReadingFeedArticle[] }).articles;
 }
 
-export async function addReadingFeedArticle(id: string): Promise<void> {
+export async function addReadingFeedArticle(id: string): Promise<string> {
   const res = await apiFetch('/api/reading-feed/add', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -1520,4 +1521,5 @@ export async function addReadingFeedArticle(id: string): Promise<void> {
   });
   await requireOk(res, 'Could not add the article');
   invalidateCollections();
+  return ((await res.json()) as { collectionId: string }).collectionId;
 }

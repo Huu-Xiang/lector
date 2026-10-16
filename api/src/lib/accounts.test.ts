@@ -49,7 +49,9 @@ function extractUrl(email: EmailMessage): string {
 }
 
 function settingsCount(userId: string): number {
-  return (db.prepare('SELECT COUNT(*) AS c FROM settings WHERE userId = ?').get(userId) as { c: number }).c;
+  return (
+    db.prepare('SELECT COUNT(*) AS c FROM settings WHERE userId = ?').get(userId) as { c: number }
+  ).c;
 }
 
 /** Collapse Set-Cookie headers into a Cookie header for follow-up requests. */
@@ -69,6 +71,22 @@ async function signUp(email: string, password: string): Promise<void> {
   });
   expect(res.status).toBe(200);
 }
+
+describe('password rule', () => {
+  const post = (email: string, password: string) =>
+    app.request(`${BASE}/api/auth/sign-up/email`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password, name: 'Rule' }),
+    });
+
+  test('sign-up refuses a password without a digit, a letter, or 8 characters', async () => {
+    for (const weak of ['abcdefgh', '12345678', 'abc1']) {
+      const res = await post('weak@example.com', weak);
+      expect(res.status).toBe(400);
+    }
+  });
+});
 
 async function verifyLatestEmail(): Promise<void> {
   const url = extractUrl(lastEmailMatching(/verify/i));
@@ -104,7 +122,10 @@ beforeAll(async () => {
   // The whoami probe reads through resolveUserId, so it answers for BOTH
   // credentials: a session cookie and a Bearer PAT must feed the same seam.
   app = new Hono();
-  app.use('/api/*', makeSessionMiddleware(true, () => engine));
+  app.use(
+    '/api/*',
+    makeSessionMiddleware(true, () => engine),
+  );
   app.use('/api/*', makePatMiddleware(true));
   app.on(['POST', 'GET'], '/api/auth/*', (c) => engine.handler(c.req.raw));
   app.get('/api/whoami', (c) => c.json({ userId: resolveUserId(true, c) }));
@@ -154,7 +175,7 @@ describe('cloud mode rejects unauthenticated access', () => {
 
 describe('signup → verify → sign in → session resolves the tenant', () => {
   const EMAIL = 'reader@example.com';
-  const PASSWORD = 'correct-horse-battery';
+  const PASSWORD = 'correct-horse-battery1';
 
   test('signup creates an unverified user and sends a verification email', async () => {
     await signUp(EMAIL, PASSWORD);
@@ -199,7 +220,10 @@ describe('signup → verify → sign in → session resolves the tenant', () => 
   test('two accounts resolve two distinct tenants', async () => {
     await signUp('second@example.com', PASSWORD);
     await verifyLatestEmail();
-    const [a, b] = await Promise.all([signIn(EMAIL, PASSWORD), signIn('second@example.com', PASSWORD)]);
+    const [a, b] = await Promise.all([
+      signIn(EMAIL, PASSWORD),
+      signIn('second@example.com', PASSWORD),
+    ]);
     const who = async (res: Response) => {
       const r = await app.request(`${BASE}/api/whoami`, { headers: { Cookie: cookiesFrom(res) } });
       return ((await r.json()) as { userId: string }).userId;
@@ -219,9 +243,11 @@ describe('signup → verify → sign in → session resolves the tenant', () => 
 
 describe('per-user PATs (#218): a token is a first-class cloud credential', () => {
   const EMAIL = 'automator@example.com';
-  const PASSWORD = 'scripts-need-love-too';
+  const PASSWORD = 'scripts-need-love-too1';
 
-  async function tenantOf(headers: Record<string, string>): Promise<{ status: number; userId?: string }> {
+  async function tenantOf(
+    headers: Record<string, string>,
+  ): Promise<{ status: number; userId?: string }> {
     const res = await app.request(`${BASE}/api/stats`, { headers });
     if (!res.ok) return { status: res.status };
     return { status: res.status, userId: ((await res.json()) as { userId: string }).userId };
@@ -285,7 +311,8 @@ describe('password reset', () => {
     expect(req.status).toBe(200);
 
     const url = extractUrl(lastEmailMatching(/reset/i));
-    const token = url.match(/reset-password\/([^?#]+)/)?.[1] ?? new URL(url).searchParams.get('token');
+    const token =
+      url.match(/reset-password\/([^?#]+)/)?.[1] ?? new URL(url).searchParams.get('token');
     expect(token).toBeTruthy();
 
     const reset = await app.request(`${BASE}/api/auth/reset-password`, {
@@ -339,8 +366,16 @@ describe('account deletion (#227): emailed-link right-to-erasure', () => {
     const userId = await tenantIdFor(cookie);
     expect(userId).not.toBe(LOCAL_USER_ID);
 
-    db.prepare('INSERT INTO settings (userId, key, value) VALUES (?, ?, ?)').run(userId, 'theme', '"dark"');
-    db.prepare('INSERT INTO settings (userId, key, value) VALUES (?, ?, ?)').run(bystanderId, 'theme', '"light"');
+    db.prepare('INSERT INTO settings (userId, key, value) VALUES (?, ?, ?)').run(
+      userId,
+      'theme',
+      '"dark"',
+    );
+    db.prepare('INSERT INTO settings (userId, key, value) VALUES (?, ?, ?)').run(
+      bystanderId,
+      'theme',
+      '"light"',
+    );
 
     // sendDeleteAccountVerification is configured (lib/accounts.ts), so the POST
     // emails a confirmation link and does NOT delete inline.
@@ -350,7 +385,9 @@ describe('account deletion (#227): emailed-link right-to-erasure', () => {
       body: JSON.stringify({ callbackURL: `${BASE}/login?deleted=1` }),
     });
     expect(start.status).toBe(200);
-    expect(((await start.json()) as { message: string }).message).toMatch(/verification email sent/i);
+    expect(((await start.json()) as { message: string }).message).toMatch(
+      /verification email sent/i,
+    );
     // Nothing is erased until the link is followed.
     expect(settingsCount(userId)).toBe(1);
 

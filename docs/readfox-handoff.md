@@ -20,6 +20,7 @@ A public, multi-user language-reading app at https://readfox.app. It is a self-m
 | Shared caches | `api/src/lib/gloss-cache.ts`, `api/src/lib/entry-cache.ts` |
 | Free books | `languages/<code>/content/library/` (book folders plus `translations.json`: title and blurb in all 16 native languages), `scripts/build-library-books.py`, `api/src/routes/library.ts`. At least 3 books per CEFR level for French and English (test-enforced). |
 | Reading feed | Fresh, license-cleared articles for the learner's interests (`readingInterests` setting, set in setup). `api/src/lib/reading-feed/` (sources, level heuristic, background refresher, `reading_feed` table), `api/src/routes/reading-feed.ts`, tabs in `FreeBooksModal`. Sources: Global Voices (news), Wikivoyage (travel), Simple Wikipedia + Vikidia (science), each CC-licensed; `en`/`fr` only today. |
+| Setup and recommendations | `src/app/setup/page.tsx` (stages `form` and `recommend`), `src/components/RecommendedForYou`, `src/app/(index)/components/HomeRecommendations`, `src/lib/recommend.ts`. `SETUP_READY_LANGUAGES` gates the languages (production: `en,fr`). |
 | Reading level | Setup asks for a CEFR level and saves it per target language (`readingLevels` setting). The free-books dialog groups by level and opens on it. Exam equivalents: `src/lib/reading-level.ts`; mainland Chinese exams show only for the zh-CN interface or a mainland time zone. |
 | Admin | `api/src/routes/admin.ts`, `src/app/admin/page.tsx` |
 | Public pages | `src/app/{landing,privacy,terms,about}`, text in `messages/src/*/legal.json` |

@@ -62,5 +62,27 @@
     "all": "全部等级",
     "yours": "你的水平",
     "original": "原名：{title}"
+  },
+  "recommend": {
+    "booksTitle": "适合你水平的书",
+    "articlesTitle": "你可能喜欢的新文章",
+    "interest": {
+      "news": "时事",
+      "travel": "旅行",
+      "science": "科普"
+    },
+    "original": "原名：{title}",
+    "words": "{words} 词",
+    "harder": "比你的水平略难",
+    "start": "开始阅读",
+    "starting": "正在打开…",
+    "loading": "正在为你挑选…",
+    "errStart": "这篇打不开，换一篇试试。",
+    "empty": "暂时没有可推荐的内容，去看看免费书籍吧。",
+    "homeTitle": "为你推荐",
+    "homeHint": "从这些免费的书和文章开始读。",
+    "homeHintLevel": "根据你的水平（{level}）挑选。",
+    "more": "更多免费书籍",
+    "dismiss": "不再显示"
   }
 }

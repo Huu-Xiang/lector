@@ -7,11 +7,13 @@
  * touches it. Session → userId: lib/session.ts; route-side reads: lib/user.ts.
  */
 import { betterAuth, type BetterAuthPlugin } from 'better-auth';
+import { APIError, createAuthMiddleware } from 'better-auth/api';
 import { captcha, genericOAuth, twoFactor } from 'better-auth/plugins';
 import { getMigrations } from 'better-auth/db/migration';
 import type { Database } from 'bun:sqlite';
 import { config } from './config';
 import { sendEmail } from './email';
+import { passwordProblem, passwordProblemMessage } from './password-rules';
 import { sendWelcomeEmail } from './lifecycle-email';
 import { purgeTenantData } from './account-deletion';
 import { getDatabaseInstance } from '../db';
@@ -57,6 +59,13 @@ export interface AuthEngineOptions {
  * without a trailing slash) or a full discovery URL pasted straight from
  * IdP docs; both resolve to the discovery document.
  */
+/** Endpoints that set a new password, and the body field that carries it. */
+const PASSWORD_FIELDS: Record<string, string> = {
+  '/sign-up/email': 'password',
+  '/reset-password': 'newPassword',
+  '/change-password': 'newPassword',
+};
+
 export function oidcDiscoveryUrl(issuer: string): string {
   if (issuer.includes('/.well-known/')) return issuer;
   return `${issuer.replace(/\/+$/, '')}/.well-known/openid-configuration`;
@@ -97,6 +106,15 @@ export function createAuthEngine(opts: AuthEngineOptions) {
     basePath: '/api/auth',
     secret: opts.secret,
     trustedOrigins: opts.trustedOrigins,
+    hooks: {
+      before: createAuthMiddleware(async (ctx) => {
+        const field = PASSWORD_FIELDS[ctx.path];
+        if (!field) return;
+        const problem = passwordProblem((ctx.body as Record<string, unknown> | undefined)?.[field]);
+        if (problem)
+          throw new APIError('BAD_REQUEST', { message: passwordProblemMessage(problem) });
+      }),
+    },
     emailAndPassword: {
       enabled: true,
       requireEmailVerification: true,
@@ -177,7 +195,10 @@ export function createAuthEngine(opts: AuthEngineOptions) {
                 `If this wasn't you, do NOT click the link — change your password instead, as someone may have access to your session. This link expires in 24 hours.`,
             });
           } catch (err) {
-            console.error(`[accounts] failed to send delete-account verification to ${user.email}:`, err);
+            console.error(
+              `[accounts] failed to send delete-account verification to ${user.email}:`,
+              err,
+            );
           }
         },
         beforeDelete: async (user) => {

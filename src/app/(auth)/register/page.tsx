@@ -9,8 +9,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import TurnstileWidget, { turnstileSiteKey } from '@/components/TurnstileWidget';
+import PasswordMeter from '@/components/PasswordMeter';
 import { authClient } from '@/lib/auth-client';
 import { authHref, sanitizeAuthReturnPath } from '@/lib/auth-return';
+import { meetsRules } from '@/lib/password-strength';
 
 export default function RegisterPage() {
   return (
@@ -31,6 +33,7 @@ function RegisterForm() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirm, setConfirm] = useState('');
   const [captchaToken, setCaptchaToken] = useState('');
   const [captchaRound, setCaptchaRound] = useState(0);
   const [submitting, setSubmitting] = useState(false);
@@ -43,6 +46,14 @@ function RegisterForm() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (submitting) return;
+    if (!meetsRules(password)) {
+      toast.error(t('errWeak'));
+      return;
+    }
+    if (password !== confirm) {
+      toast.error(t('errMismatch'));
+      return;
+    }
     setSubmitting(true);
 
     const { error } = await authClient.signUp.email({
@@ -124,7 +135,29 @@ function RegisterForm() {
           onChange={(e) => setPassword(e.target.value)}
           data-testid="register-password"
         />
-        <p className="text-xs text-muted-foreground">{t('passwordHint')}</p>
+        <PasswordMeter password={password} />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="confirm-password">{t('confirmPassword')}</Label>
+        <Input
+          id="confirm-password"
+          type="password"
+          required
+          autoComplete="new-password"
+          value={confirm}
+          onChange={(e) => setConfirm(e.target.value)}
+          aria-invalid={confirm.length > 0 && confirm !== password}
+          data-testid="register-confirm-password"
+        />
+        {confirm.length > 0 && (
+          <p
+            className={`text-xs ${confirm === password ? 'text-primary' : 'text-destructive'}`}
+            data-testid="register-confirm-hint"
+          >
+            {confirm === password ? t('matches') : t('errMismatch')}
+          </p>
+        )}
       </div>
 
       <TurnstileWidget key={captchaRound} onToken={setCaptchaToken} />
@@ -132,7 +165,12 @@ function RegisterForm() {
       <Button
         type="submit"
         className="w-full"
-        disabled={submitting || (!!turnstileSiteKey() && !captchaToken)}
+        disabled={
+          submitting ||
+          !meetsRules(password) ||
+          password !== confirm ||
+          (!!turnstileSiteKey() && !captchaToken)
+        }
         data-testid="register-submit"
       >
         {submitting ? t('submitting') : t('submit')}

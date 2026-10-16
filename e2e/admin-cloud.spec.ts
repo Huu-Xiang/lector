@@ -72,6 +72,7 @@ async function registerAndVerify(browser: Browser, name: string, email: string):
   await page.getByTestId('register-name').fill(name);
   await page.getByTestId('register-email').fill(email);
   await page.getByTestId('register-password').fill(PASSWORD);
+  await page.getByTestId('register-confirm-password').fill(PASSWORD);
   await page.getByTestId('register-submit').click();
   await expect(page.getByTestId('register-check-email')).toBeVisible();
   // The verify link auto-signs-in (Better Auth), establishing the session

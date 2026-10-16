@@ -9,6 +9,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import TurnstileWidget, { turnstileSiteKey } from '@/components/TurnstileWidget';
+import PasswordMeter from '@/components/PasswordMeter';
+import { meetsRules } from '@/lib/password-strength';
 import { authClient } from '@/lib/auth-client';
 import { authHref, sanitizeAuthReturnPath } from '@/lib/auth-return';
 
@@ -149,11 +151,20 @@ function NewPasswordForm({ token, returnPath }: { token: string; returnPath: str
   const t = useTranslations('auth.reset');
   const router = useRouter();
   const [password, setPassword] = useState('');
+  const [confirm, setConfirm] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (submitting) return;
+    if (!meetsRules(password)) {
+      toast.error(t('errWeak'));
+      return;
+    }
+    if (password !== confirm) {
+      toast.error(t('errMismatch'));
+      return;
+    }
     setSubmitting(true);
 
     const { error } = await authClient.resetPassword({ newPassword: password, token });
@@ -183,10 +194,32 @@ function NewPasswordForm({ token, returnPath }: { token: string; returnPath: str
           onChange={(e) => setPassword(e.target.value)}
           data-testid="reset-new-password"
         />
-        <p className="text-xs text-muted-foreground">{t('passwordHint')}</p>
+        <PasswordMeter password={password} />
       </div>
 
-      <Button type="submit" className="w-full" disabled={submitting} data-testid="reset-confirm">
+      <div className="space-y-2">
+        <Label htmlFor="confirm-new-password">{t('confirmPassword')}</Label>
+        <Input
+          id="confirm-new-password"
+          type="password"
+          required
+          autoComplete="new-password"
+          value={confirm}
+          onChange={(e) => setConfirm(e.target.value)}
+          aria-invalid={confirm.length > 0 && confirm !== password}
+          data-testid="reset-confirm-password"
+        />
+        {confirm.length > 0 && confirm !== password && (
+          <p className="text-xs text-destructive">{t('errMismatch')}</p>
+        )}
+      </div>
+
+      <Button
+        type="submit"
+        className="w-full"
+        disabled={submitting || !meetsRules(password) || password !== confirm}
+        data-testid="reset-confirm"
+      >
         {submitting ? t('updating') : t('setNew')}
       </Button>
     </form>

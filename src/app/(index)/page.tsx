@@ -7,6 +7,7 @@ import { ArrowRight, BookMarked, ChevronDown, Folder, Plus, Sparkles } from 'luc
 import { ReadingSweep } from '@/components/Loaders';
 import AddCollectionTile from './components/AddCollectionTile';
 import EmptyState from './components/EmptyState';
+import HomeRecommendations from './components/HomeRecommendations';
 import GroupMenu from './components/GroupMenu';
 import SortableCollectionCard from './components/SortableCollectionCard';
 import CollectionCard from '@/components/CollectionCard';
@@ -51,10 +52,12 @@ import { Button } from '@/components/ui/button';
 import PageHeader from '@/components/PageHeader';
 import { getOnboardingSnapshot, type OnboardingSnapshot } from '@/lib/onboarding';
 import { toast } from 'sonner';
+import { useActiveLanguage } from '@/utils/hooks';
 
 export default function Home() {
   const t = useTranslations('library');
   const router = useRouter();
+  const activeLanguage = useActiveLanguage().code;
   const [collections, setCollections] = useState<Collection[]>([]);
   const [groups, setGroups] = useState<CollectionGroup[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -564,6 +567,13 @@ export default function Home() {
             }}
             onSave={handlePasteImportSave}
           />
+
+          {collections.length < 3 && (
+            <HomeRecommendations
+              language={activeLanguage}
+              onMore={() => setIsFreeBooksOpen(true)}
+            />
+          )}
 
           {collections.length > 0 || hasGroups ? (
             <div className="space-y-10">

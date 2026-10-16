@@ -62,5 +62,27 @@
     "all": "All levels",
     "yours": "Your level",
     "original": "Original title: {title}"
+  },
+  "recommend": {
+    "booksTitle": "Books at your level",
+    "articlesTitle": "Fresh articles you may like",
+    "interest": {
+      "news": "News",
+      "travel": "Travel",
+      "science": "Science"
+    },
+    "original": "Original title: {title}",
+    "words": "{words} words",
+    "harder": "a little harder than your level",
+    "start": "Start reading",
+    "starting": "Opening…",
+    "loading": "Finding something for you…",
+    "errStart": "Could not open this one. Try another.",
+    "empty": "Nothing to suggest yet. Browse the free books instead.",
+    "homeTitle": "Picked for you",
+    "homeHint": "Free books and articles to start with.",
+    "homeHintLevel": "Matched to your level, {level}.",
+    "more": "More free books",
+    "dismiss": "Hide this section"
   }
 }

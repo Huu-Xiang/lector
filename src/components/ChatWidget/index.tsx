@@ -7,6 +7,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { useActiveLanguage } from '@/utils/hooks';
 import { apiFetch, isBareRoute } from '@/lib/api-base';
+import { languageDisplayName } from '@/lib/language-names';
 import { isComposing } from '@/lib/keyboard';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { EXAMPLE_PROMPTS } from './constants';
@@ -17,15 +18,6 @@ interface ChatMessage {
   content: string;
   provider: string | null;
   createdAt: string;
-}
-
-function languageDisplayName(code: string, englishName: string, locale: string): string {
-  if (locale === 'en') return englishName;
-  try {
-    return new Intl.DisplayNames([locale], { type: 'language' }).of(code) ?? englishName;
-  } catch {
-    return englishName;
-  }
 }
 
 export default function ChatWidget() {
@@ -43,7 +35,7 @@ export default function ChatWidget() {
   const initialLoadDone = useRef(false);
   const activeLang = useActiveLanguage();
   const pathname = usePathname();
-  const langName = languageDisplayName(activeLang.code, activeLang.name, locale);
+  const langName = languageDisplayName(activeLang.code, locale, activeLang.name);
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });

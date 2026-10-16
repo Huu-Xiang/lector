@@ -50,7 +50,7 @@
       "name": "姓名",
       "email": "邮箱",
       "password": "密码",
-      "passwordHint": "至少 8 个字符。",
+      "passwordHint": "至少 8 个字符，需包含字母和数字。",
       "submit": "创建账号",
       "submitting": "正在创建…",
       "haveAccount": "已有账号?",
@@ -58,7 +58,11 @@
       "errFailed": "注册失败。",
       "checkTitle": "请查看收件箱",
       "checkBody": "我们已向 <b>{email}</b> 发送了验证链接。点击链接激活账号,然后登录。",
-      "goSignIn": "前往登录"
+      "goSignIn": "前往登录",
+      "confirmPassword": "确认密码",
+      "errMismatch": "两次输入的密码不一致。",
+      "errWeak": "密码太弱：至少 8 个字符，并包含字母和数字。",
+      "matches": "两次密码一致"
     },
     "reset": {
       "expiredTitle": "链接已过期",
@@ -75,11 +79,14 @@
       "errRequest": "无法申请重置。",
       "newTitle": "设置新密码",
       "newPassword": "新密码",
-      "passwordHint": "至少 8 个字符。",
+      "passwordHint": "至少 8 个字符，需包含字母和数字。",
       "setNew": "设置新密码",
       "updating": "更新中…",
       "errReset": "无法重置密码。",
-      "updated": "密码已更新,请使用新密码登录。"
+      "updated": "密码已更新,请使用新密码登录。",
+      "confirmPassword": "确认新密码",
+      "errMismatch": "两次输入的密码不一致。",
+      "errWeak": "密码太弱：至少 8 个字符，并包含字母和数字。"
     },
     "twoFactor": {
       "title": "两步验证",
@@ -98,6 +105,16 @@
       "errLocked": "验证码错误次数过多,请稍后再重新登录。",
       "errBackup": "这个备用码无效。",
       "errTotp": "验证码无效,请输入当前的验证码。"
+    },
+    "passwordMeter": {
+      "weak": "弱",
+      "fair": "中",
+      "strong": "强",
+      "rules": {
+        "length": "至少 8 个字符",
+        "letter": "包含字母",
+        "digit": "包含数字"
+      }
     }
   },
   "setup": {
@@ -127,7 +144,14 @@
       "travel": "旅行",
       "science": "科普百科",
       "literature": "文学名著"
-    }
+    },
+    "inDevelopment": "开发中",
+    "showMoreSoon": "查看另外 {count} 种开发中的语言",
+    "recommendBadge": "为你挑选",
+    "recommendTitle": "选一份开始读吧",
+    "recommendIntro": "根据你的水平（{level}）和兴趣挑选。选一份，我们带你完成第一次阅读。",
+    "recommendBack": "修改我的选择",
+    "recommendSkip": "先去书库逛逛"
   },
   "landing": {
     "metaTitle": "Readfox：读原版书，学地道外语",
@@ -855,6 +879,28 @@
     "yours": "你的水平",
     "original": "原名：{title}"
   },
+  "recommend": {
+    "booksTitle": "适合你水平的书",
+    "articlesTitle": "你可能喜欢的新文章",
+    "interest": {
+      "news": "时事",
+      "travel": "旅行",
+      "science": "科普"
+    },
+    "original": "原名：{title}",
+    "words": "{words} 词",
+    "harder": "比你的水平略难",
+    "start": "开始阅读",
+    "starting": "正在打开…",
+    "loading": "正在为你挑选…",
+    "errStart": "这篇打不开，换一篇试试。",
+    "empty": "暂时没有可推荐的内容，去看看免费书籍吧。",
+    "homeTitle": "为你推荐",
+    "homeHint": "从这些免费的书和文章开始读。",
+    "homeHintLevel": "根据你的水平（{level}）挑选。",
+    "more": "更多免费书籍",
+    "dismiss": "不再显示"
+  },
   "journal": {
     "title": "日记",
     "newEntry": "新日记",
@@ -1075,7 +1121,8 @@
       "current": "语言：{language}",
       "select": "选择语言",
       "search": "搜索语言",
-      "noMatch": "没有找到这种语言"
+      "noMatch": "没有找到这种语言",
+      "inDevelopment": "开发中"
     },
     "quota": {
       "title": "本月 AI 额度",

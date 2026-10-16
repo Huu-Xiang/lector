@@ -84,6 +84,7 @@ test.describe.serial('plan limits (#222)', () => {
     await page.getByTestId('register-name').fill('Limited');
     await page.getByTestId('register-email').fill(EMAIL);
     await page.getByTestId('register-password').fill(PASSWORD);
+    await page.getByTestId('register-confirm-password').fill(PASSWORD);
     await page.getByTestId('register-submit').click();
     await expect(page.getByTestId('register-check-email')).toBeVisible();
     await page.goto(await lastVerifyLink(EMAIL));

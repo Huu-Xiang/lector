@@ -2,7 +2,7 @@
 
 import { Check, ChevronDown, Plus, Search } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,6 +13,9 @@ import {
 import { getFluencyStats, seedStarterContent, setSetting } from '@/lib/data-layer';
 import { availableLanguages, LANGUAGES, normalizeEnabledLanguages } from '@/lib/languages';
 import { LanguageCode } from '@/types/language';
+import { languageDisplayName } from '@/lib/language-names';
+import { isLanguageReady, parseReadyLanguages } from '@/lib/ready-languages';
+import { useReadyLanguagesSetting } from '@/lib/use-env';
 import { useActiveLanguage, useEnabledLanguages, useLanguageResolved } from '@/utils/hooks';
 import { setLanguageInStorage } from '@/utils/storage';
 import { toast } from 'sonner';
@@ -29,6 +32,8 @@ export default function LanguageSelector({
   collapsed?: boolean;
 }) {
   const t = useTranslations('chrome.language');
+  const locale = useLocale();
+  const ready = parseReadyLanguages(useReadyLanguagesSetting());
   const activeLang = useActiveLanguage();
   const resolved = useLanguageResolved();
   const enabledCodes = useEnabledLanguages();
@@ -89,15 +94,26 @@ export default function LanguageSelector({
 
   function languageRow(code: LanguageCode, testIdPrefix: string, markActive: boolean) {
     const isActive = markActive && code === activeLang.code;
+    const inDevelopment = !markActive && !isLanguageReady(code, ready);
+    const localized = languageDisplayName(code, locale, LANGUAGES[code].name);
     return (
       <DropdownMenuItem
         key={code}
         onClick={() => handleSwitch(code)}
+        disabled={inDevelopment}
         data-testid={`${testIdPrefix}-${code}`}
         className={isActive ? 'font-medium' : undefined}
       >
         <span className="text-lg">{LANGUAGES[code].flag}</span>
         <span>{LANGUAGES[code].native}</span>
+        {localized !== LANGUAGES[code].native && (
+          <span className="text-xs text-muted-foreground">{localized}</span>
+        )}
+        {inDevelopment && (
+          <span className="ml-auto rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
+            {t('inDevelopment')}
+          </span>
+        )}
         {isActive && <Check className="ml-auto size-4" />}
       </DropdownMenuItem>
     );
@@ -108,8 +124,8 @@ export default function LanguageSelector({
   const matches = searching
     ? [...listed, ...addable].filter((code) => {
         const lang = LANGUAGES[code];
-        return [lang.native, lang.name, code].some((label) =>
-          foldForSearch(label).includes(needle),
+        return [lang.native, lang.name, languageDisplayName(code, locale, lang.name), code].some(
+          (label) => foldForSearch(label).includes(needle),
         );
       })
     : [];

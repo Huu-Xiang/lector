@@ -105,9 +105,11 @@ describe('route helpers', () => {
     expect(isAuthRoute('/')).toBe(false);
   });
 
-  it('isBareRoute: auth pages plus /subscribe (#224), nothing else', () => {
+  it('isBareRoute: auth pages plus /subscribe (#224) and /setup, nothing else', () => {
     expect(isBareRoute('/login')).toBe(true);
     expect(isBareRoute('/subscribe')).toBe(true);
+    expect(isBareRoute('/setup')).toBe(true);
+    expect(isAuthRoute('/setup')).toBe(false);
     expect(isBareRoute('/')).toBe(false);
     expect(isBareRoute('/vocab')).toBe(false);
     // /subscribe is a single page, not a namespace.
