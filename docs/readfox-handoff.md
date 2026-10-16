@@ -18,7 +18,8 @@ A public, multi-user language-reading app at https://readfox.app. It is a self-m
 | AI provider | `api/src/lib/llm/` |
 | Plans and limits | `api/src/lib/entitlements.ts` |
 | Shared caches | `api/src/lib/gloss-cache.ts`, `api/src/lib/entry-cache.ts` |
-| Free books | `languages/<code>/content/library/`, `scripts/build-library-books.py`, `api/src/routes/library.ts` |
+| Free books | `languages/<code>/content/library/` (book folders plus `translations.json`: title and blurb in all 16 native languages), `scripts/build-library-books.py`, `api/src/routes/library.ts`. At least 3 books per CEFR level for French and English (test-enforced). |
+| Reading level | Setup asks for a CEFR level and saves it per target language (`readingLevels` setting). The free-books dialog groups by level and opens on it. Exam equivalents: `src/lib/reading-level.ts`; mainland Chinese exams show only for the zh-CN interface or a mainland time zone. |
 | Admin | `api/src/routes/admin.ts`, `src/app/admin/page.tsx` |
 | Public pages | `src/app/{landing,privacy,terms,about}`, text in `messages/src/*/legal.json` |
 | Deploy files | `deploy/readfox/` |
