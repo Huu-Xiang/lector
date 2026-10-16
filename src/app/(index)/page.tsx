@@ -577,7 +577,7 @@ export default function Home() {
 
           {collections.length > 0 || hasGroups ? (
             <div className="space-y-10">
-              <div className="-mb-6 flex justify-end">
+              <div className="mb-3 flex justify-end">
                 <DescriptionToggle />
               </div>
               {/* Grouped sections */}
