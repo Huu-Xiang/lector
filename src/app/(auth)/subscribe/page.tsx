@@ -27,6 +27,7 @@ import {
   type CnChannel,
   type CnMonths,
   type CnPrice,
+  type PendingCnOrder,
 } from '@/lib/cn-billing';
 import { getEntitlements, type ClientEntitlements } from '@/lib/data-layer';
 import {
@@ -53,7 +54,16 @@ import {
  * as a normal route) — checkout needs to know who it's activating.
  */
 
-type Phase = 'loading' | 'pick' | 'activating' | 'slow' | 'unavailable' | 'suspended';
+type Phase =
+  | 'loading'
+  | 'pick'
+  | 'activating'
+  | 'slow'
+  | 'unavailable'
+  | 'suspended'
+  | 'cnChecking'
+  | 'cnUnpaid'
+  | 'cnPaid';
 
 export default function SubscribePage() {
   const t = useTranslations('subscribe');
@@ -74,6 +84,8 @@ export default function SubscribePage() {
   const [method, setMethod] = useState<'cn' | 'card'>('card');
   const [channel, setChannel] = useState<CnChannel>('alipay');
   const [entitlements, setEntitlements] = useState<ClientEntitlements | null>(null);
+  const [cnOrder, setCnOrder] = useState<PendingCnOrder | null>(null);
+  const [paidPlan, setPaidPlan] = useState<PaidTier | null>(null);
   const pollTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // One-shot activation poll: the webhook usually lands within seconds of
@@ -97,31 +109,55 @@ export default function SubscribePage() {
     tick(0);
   }, []);
 
-  // The RMB cashier sends the buyer back to this page; the order number was
-  // kept before leaving. The server also asks the platform when polled.
-  const pollCnOrder = useCallback(
-    (outTradeNo: string) => {
+  // The cashier's return link and the browser's back button both land here,
+  // paid or not. Only the platform's order state decides what to show.
+  const checkCnOrder = useCallback(
+    (order: PendingCnOrder) => {
+      clearTimeout(pollTimer.current ?? undefined);
+      setCnOrder(order);
+      setPhase('cnChecking');
       function tick(attempt: number) {
-        pollTimer.current = setTimeout(async () => {
-          const state = await fetchCnOrderStatus(outTradeNo);
-          if (state === 'SUCCEEDED') {
-            forgetCnOrder();
-            window.location.replace('/');
-            return;
-          }
-          if (state === 'CLOSED' || state === 'FAILED' || state === null || attempt >= 45) {
-            forgetCnOrder();
-            if (state !== 'PAYING' && state !== 'CREATED') toast.error(t('cnNotPaid'));
-            setPhase('pick');
-            return;
-          }
-          tick(attempt + 1);
-        }, 2000);
+        pollTimer.current = setTimeout(
+          async () => {
+            const state = await fetchCnOrderStatus(order.outTradeNo);
+            if (state?.status === 'SUCCEEDED') {
+              forgetCnOrder();
+              setPaidPlan(state.plan);
+              setEntitlements(await getEntitlements());
+              setPhase('cnPaid');
+              return;
+            }
+            if (!state || state.status === 'CLOSED' || state.status === 'FAILED') {
+              forgetCnOrder();
+              setCnOrder(null);
+              toast.error(t('cnNotPaid'));
+              setPhase('pick');
+              return;
+            }
+            // The payment notice can trail the cashier's return by a few seconds.
+            if (attempt >= 4) {
+              setPhase('cnUnpaid');
+              return;
+            }
+            tick(attempt + 1);
+          },
+          attempt === 0 ? 0 : 2000,
+        );
       }
       tick(0);
     },
     [t],
   );
+
+  // Back from the cashier can restore this page from the browser cache with a
+  // stale "opening" button; a reload checks the pending order again.
+  useEffect(() => {
+    const onShow = (event: PageTransitionEvent) => {
+      if (event.persisted) window.location.reload();
+    };
+    window.addEventListener('pageshow', onShow);
+    return () => window.removeEventListener('pageshow', onShow);
+  }, []);
 
   useEffect(() => () => clearTimeout(pollTimer.current ?? undefined), []);
 
@@ -167,13 +203,6 @@ export default function SubscribePage() {
           return;
         }
 
-        const pendingCn = takeRememberedCnOrder();
-        if (pendingCn && cn) {
-          setPhase('activating');
-          pollCnOrder(pendingCn);
-          return;
-        }
-
         // Returning from the /checkout overlay (Paddle's successUrl bounces
         // here): the webhook may not have landed yet, so show activation and
         // poll rather than the tiles the user just used.
@@ -195,6 +224,12 @@ export default function SubscribePage() {
           cn && (!paddle || document.documentElement.lang.startsWith('zh')) ? 'cn' : 'card',
         );
 
+        const pendingCn = takeRememberedCnOrder();
+        if (pendingCn && cn) {
+          checkCnOrder(pendingCn);
+          return;
+        }
+
         setPhase('pick');
       },
     );
@@ -202,7 +237,7 @@ export default function SubscribePage() {
     return () => {
       cancelled = true;
     };
-  }, [pollUntilActive, pollCnOrder]);
+  }, [pollUntilActive, checkCnOrder]);
 
   async function openCnCheckout(plan: PaidTier, months: CnMonths) {
     if (opening !== null) return;
@@ -219,7 +254,7 @@ export default function SubscribePage() {
       );
       return;
     }
-    rememberCnOrder(started.outTradeNo);
+    rememberCnOrder({ outTradeNo: started.outTradeNo, payUrl: started.payUrl });
     window.location.assign(started.payUrl);
   }
 
@@ -260,6 +295,12 @@ export default function SubscribePage() {
   }
 
   const lapsed = status !== null && status.status !== 'none';
+  const busy =
+    phase === 'activating' ||
+    phase === 'slow' ||
+    phase === 'cnChecking' ||
+    phase === 'cnUnpaid' ||
+    phase === 'cnPaid';
   const showFree = status?.freeTierEnabled === true && !status.suspended;
   const paidTiers: PaidTier[] = requestedPlan
     ? [...PAID_TIERS].sort((a, b) => Number(b === requestedPlan) - Number(a === requestedPlan))
@@ -287,30 +328,32 @@ export default function SubscribePage() {
           ← {t('back')}
         </Link>
       )}
-      <div>
-        <h2 className="text-lg font-semibold text-foreground">
-          {status?.suspended
-            ? t('title.suspended')
-            : lapsed
-              ? showFree
-                ? t('title.lapsedFree')
-                : t('title.lapsed')
-              : showFree
-                ? t('title.free')
-                : t('title.paid')}
-        </h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          {status?.suspended
-            ? t('body.suspended')
-            : lapsed
-              ? showFree
-                ? t('body.lapsedFree')
-                : t('body.lapsed')
-              : showFree
-                ? t('body.free')
-                : t('body.paid')}
-        </p>
-      </div>
+      {!busy && (
+        <div>
+          <h2 className="text-lg font-semibold text-foreground">
+            {status?.suspended
+              ? t('title.suspended')
+              : lapsed
+                ? showFree
+                  ? t('title.lapsedFree')
+                  : t('title.lapsed')
+                : showFree
+                  ? t('title.free')
+                  : t('title.paid')}
+          </h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {status?.suspended
+              ? t('body.suspended')
+              : lapsed
+                ? showFree
+                  ? t('body.lapsedFree')
+                  : t('body.lapsed')
+                : showFree
+                  ? t('body.free')
+                  : t('body.paid')}
+          </p>
+        </div>
+      )}
 
       {phase === 'loading' && (
         <div className="flex justify-center py-8">
@@ -361,6 +404,87 @@ export default function SubscribePage() {
           data-testid="subscribe-activating"
         >
           {phase === 'activating' ? <p>{t('activating')}</p> : <p>{t('slow')}</p>}
+        </div>
+      )}
+
+      {phase === 'cnChecking' && (
+        <div
+          className="flex items-center gap-3 rounded-lg border border-border bg-card p-4 text-sm text-foreground"
+          data-testid="subscribe-cn-checking"
+        >
+          <Spinner className="text-primary" label={t('cnChecking')} />
+          <p>{t('cnChecking')}</p>
+        </div>
+      )}
+
+      {phase === 'cnUnpaid' && cnOrder && (
+        <div
+          className="space-y-3 rounded-lg border border-border bg-card p-4 text-sm text-foreground"
+          data-testid="subscribe-cn-unpaid"
+        >
+          <h2 className="text-lg font-semibold">{t('cnUnpaidTitle')}</h2>
+          <p className="text-muted-foreground">{t('cnUnpaidBody')}</p>
+          <div className="flex flex-wrap gap-2">
+            {cnOrder.payUrl && (
+              <Button
+                type="button"
+                onClick={() => window.location.assign(cnOrder.payUrl!)}
+                data-testid="subscribe-cn-resume"
+              >
+                {t('cnResume')}
+              </Button>
+            )}
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => checkCnOrder(cnOrder)}
+              data-testid="subscribe-cn-recheck"
+            >
+              {t('cnRecheck')}
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => {
+                forgetCnOrder();
+                setCnOrder(null);
+                setPhase('pick');
+              }}
+              data-testid="subscribe-cn-cancel"
+            >
+              {t('cnCancel')}
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {phase === 'cnPaid' && paidPlan && (
+        <div
+          className="space-y-3 rounded-lg border border-primary/40 bg-[var(--primary-soft)] p-4 text-sm text-foreground"
+          data-testid="subscribe-cn-paid"
+        >
+          <h2 className="text-lg font-semibold">
+            {t('cnPaidTitle', { plan: planName(paidPlan) })}
+          </h2>
+          {entitlements?.grant && (
+            <p>
+              {t('cnPaidUntil', {
+                plan: planName(entitlements.grant.plan),
+                date: new Date(entitlements.grant.endsAt).toLocaleDateString(locale),
+              })}
+            </p>
+          )}
+          <ul className="space-y-1 text-muted-foreground">
+            <li>✓ {tp('features.glosses', { count: TIER_ALLOWANCES[paidPlan].glosses })}</li>
+            <li>✓ {tp('features.detailed', { count: TIER_ALLOWANCES[paidPlan].detailed })}</li>
+          </ul>
+          <Button
+            type="button"
+            onClick={() => window.location.replace('/')}
+            data-testid="subscribe-cn-start"
+          >
+            {t('cnPaidStart')}
+          </Button>
         </div>
       )}
 
@@ -415,7 +539,7 @@ export default function SubscribePage() {
       )}
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {showFree && phase !== 'loading' && phase !== 'activating' && phase !== 'slow' && (
+        {showFree && phase !== 'loading' && !busy && (
           <div
             className="rounded-xl border border-border bg-card p-4"
             data-testid="subscribe-tier-free"

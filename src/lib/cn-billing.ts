@@ -42,30 +42,51 @@ export async function startCnCheckout(
   }
 }
 
-export async function fetchCnOrderStatus(outTradeNo: string): Promise<string | null> {
+export interface CnOrderState {
+  status: string;
+  plan: PaidTier;
+  months: CnMonths;
+}
+
+export async function fetchCnOrderStatus(outTradeNo: string): Promise<CnOrderState | null> {
   try {
     const res = await apiFetch(`/api/billing/cn/orders/${encodeURIComponent(outTradeNo)}`);
     if (!res.ok) return null;
-    return ((await res.json()) as { status: string }).status;
+    return (await res.json()) as CnOrderState;
   } catch {
     return null;
   }
 }
 
-export function rememberCnOrder(outTradeNo: string): void {
+export interface PendingCnOrder {
+  outTradeNo: string;
+  /** Absent for an order remembered before the cashier link was kept. */
+  payUrl?: string;
+}
+
+export function rememberCnOrder(order: PendingCnOrder): void {
   try {
-    localStorage.setItem(PENDING_KEY, outTradeNo);
+    localStorage.setItem(PENDING_KEY, JSON.stringify(order));
   } catch {
     // Private mode: the buyer returns to a normal page and the plan still activates.
   }
 }
 
-export function takeRememberedCnOrder(): string | null {
+export function takeRememberedCnOrder(): PendingCnOrder | null {
+  let raw: string | null;
   try {
-    return localStorage.getItem(PENDING_KEY);
+    raw = localStorage.getItem(PENDING_KEY);
   } catch {
     return null;
   }
+  if (!raw) return null;
+  try {
+    const parsed = JSON.parse(raw) as PendingCnOrder;
+    if (typeof parsed?.outTradeNo === 'string') return parsed;
+  } catch {
+    // An older build stored the bare order number.
+  }
+  return { outTradeNo: raw };
 }
 
 export function forgetCnOrder(): void {
