@@ -2843,6 +2843,14 @@ const internalOps: Record<string, OperationDoc> = {
     summary: 'Add a free book to the library',
     tag: 'Onboarding',
   },
+  'GET /api/reading-feed': {
+    summary: 'List fresh articles for a language and interest',
+    tag: 'Onboarding',
+  },
+  'POST /api/reading-feed/add': {
+    summary: 'Add a reading-feed article to the library',
+    tag: 'Onboarding',
+  },
   'POST /api/starter/seed': {
     summary: 'Seed the starter content of a language',
     tag: 'Onboarding',

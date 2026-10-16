@@ -15,6 +15,7 @@ import { startClassifyWorker } from './lib/classify-worker';
 import { startTranscribeWorker } from './lib/transcribe-worker';
 import { startDictWorker } from './lib/dict-worker';
 import { startLifecycleEmailWorker } from './lib/lifecycle-email';
+import { startReadingFeedRefresher } from './lib/reading-feed/refresh';
 import { isByokAvailable } from './lib/byok';
 import { defaultRequestBodyLimit } from './lib/request-body-limit';
 // Aliased: this file's Bun.serve export below is also named `config`.
@@ -198,6 +199,11 @@ startDictWorker();
 // Cloud lifecycle mail (#558). No-op in selfhost. Sweeps day-1 and day-3
 // templates. Welcome, Anki, and gloss-cap send from their own hooks.
 startLifecycleEmailWorker();
+
+// Reading feed (interests beyond the free library). Off under tests and
+// when READING_FEED=0; otherwise fetches each source once after a startup
+// delay, then every 9 hours.
+startReadingFeedRefresher();
 
 const config = {
   port,
