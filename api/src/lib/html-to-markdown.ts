@@ -7,42 +7,85 @@ import {
 import { analyseJapanese } from './ja-morphology';
 
 /**
+ * Drop opening tags that no closing tag follows. A lazy `<x>...</x>` regex
+ * rescans to the end for each such opener, which is quadratic on crafted input.
+ */
+function dropUnclosed(html: string, tags: readonly string[]): string {
+  let out = html;
+  for (const tag of tags) {
+    const last = out.toLowerCase().lastIndexOf(`</${tag}>`);
+    const opener = new RegExp(`<${tag}(?=[\\s>/])[^<>]*>?`, 'gi');
+    if (last === -1) {
+      out = out.replace(opener, '');
+      continue;
+    }
+    out = out.slice(0, last) + out.slice(last).replace(opener, '');
+  }
+  return out;
+}
+
+const PAIRED_TAGS = [
+  'script',
+  'style',
+  'h1',
+  'h2',
+  'h3',
+  'h4',
+  'h5',
+  'h6',
+  'p',
+  'strong',
+  'b',
+  'em',
+  'i',
+  'a',
+  'blockquote',
+  'ul',
+  'ol',
+  'li',
+  'pre',
+  'code',
+  'figure',
+  'figcaption',
+] as const;
+
+/**
  * Simple HTML to Markdown converter for Readability output.
  * Handles common HTML elements that Readability produces.
  */
 export function htmlToMarkdown(html: string): string {
-  let markdown = html;
+  let markdown = dropUnclosed(html, PAIRED_TAGS);
 
-  markdown = markdown.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '');
-  markdown = markdown.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '');
+  markdown = markdown.replace(/<script[^<>]*>[\s\S]*?<\/script>/gi, '');
+  markdown = markdown.replace(/<style[^<>]*>[\s\S]*?<\/style>/gi, '');
 
-  markdown = markdown.replace(/<h1[^>]*>([\s\S]*?)<\/h1>/gi, '\n# $1\n');
-  markdown = markdown.replace(/<h2[^>]*>([\s\S]*?)<\/h2>/gi, '\n## $1\n');
-  markdown = markdown.replace(/<h3[^>]*>([\s\S]*?)<\/h3>/gi, '\n### $1\n');
-  markdown = markdown.replace(/<h4[^>]*>([\s\S]*?)<\/h4>/gi, '\n#### $1\n');
-  markdown = markdown.replace(/<h5[^>]*>([\s\S]*?)<\/h5>/gi, '\n##### $1\n');
-  markdown = markdown.replace(/<h6[^>]*>([\s\S]*?)<\/h6>/gi, '\n###### $1\n');
+  markdown = markdown.replace(/<h1[^<>]*>([\s\S]*?)<\/h1>/gi, '\n# $1\n');
+  markdown = markdown.replace(/<h2[^<>]*>([\s\S]*?)<\/h2>/gi, '\n## $1\n');
+  markdown = markdown.replace(/<h3[^<>]*>([\s\S]*?)<\/h3>/gi, '\n### $1\n');
+  markdown = markdown.replace(/<h4[^<>]*>([\s\S]*?)<\/h4>/gi, '\n#### $1\n');
+  markdown = markdown.replace(/<h5[^<>]*>([\s\S]*?)<\/h5>/gi, '\n##### $1\n');
+  markdown = markdown.replace(/<h6[^<>]*>([\s\S]*?)<\/h6>/gi, '\n###### $1\n');
 
-  markdown = markdown.replace(/<p[^>]*>([\s\S]*?)<\/p>/gi, '\n$1\n');
+  markdown = markdown.replace(/<p[^<>]*>([\s\S]*?)<\/p>/gi, '\n$1\n');
   markdown = markdown.replace(/<br\s*\/?>/gi, '\n');
-  markdown = markdown.replace(/<(strong|b)[^>]*>([\s\S]*?)<\/\1>/gi, '**$2**');
-  markdown = markdown.replace(/<(em|i)[^>]*>([\s\S]*?)<\/\1>/gi, '*$2*');
-  markdown = markdown.replace(/<a[^>]*href="([^"]*)"[^>]*>([\s\S]*?)<\/a>/gi, '[$2]($1)');
+  markdown = markdown.replace(/<(strong|b)[^<>]*>([\s\S]*?)<\/\1>/gi, '**$2**');
+  markdown = markdown.replace(/<(em|i)[^<>]*>([\s\S]*?)<\/\1>/gi, '*$2*');
+  markdown = markdown.replace(/<a[^<>]*href="([^"]*)"[^<>]*>([\s\S]*?)<\/a>/gi, '[$2]($1)');
 
-  markdown = markdown.replace(/<blockquote[^>]*>([\s\S]*?)<\/blockquote>/gi, (_, content) => {
+  markdown = markdown.replace(/<blockquote[^<>]*>([\s\S]*?)<\/blockquote>/gi, (_, content) => {
     const lines = content.trim().split('\n');
     return '\n' + lines.map((line: string) => `> ${line.trim()}`).join('\n') + '\n';
   });
 
-  markdown = markdown.replace(/<ul[^>]*>([\s\S]*?)<\/ul>/gi, (_, content) => {
-    return '\n' + content.replace(/<li[^>]*>([\s\S]*?)<\/li>/gi, '- $1\n') + '\n';
+  markdown = markdown.replace(/<ul[^<>]*>([\s\S]*?)<\/ul>/gi, (_, content) => {
+    return '\n' + content.replace(/<li[^<>]*>([\s\S]*?)<\/li>/gi, '- $1\n') + '\n';
   });
 
-  markdown = markdown.replace(/<ol[^>]*>([\s\S]*?)<\/ol>/gi, (_, content) => {
+  markdown = markdown.replace(/<ol[^<>]*>([\s\S]*?)<\/ol>/gi, (_, content) => {
     let counter = 0;
     return (
       '\n' +
-      content.replace(/<li[^>]*>([\s\S]*?)<\/li>/gi, () => {
+      content.replace(/<li[^<>]*>([\s\S]*?)<\/li>/gi, () => {
         counter++;
         return `${counter}. ` + '$1\n';
       }) +
@@ -51,19 +94,25 @@ export function htmlToMarkdown(html: string): string {
   });
 
   markdown = markdown.replace(
-    /<pre[^>]*><code[^>]*>([\s\S]*?)<\/code><\/pre>/gi,
+    /<pre[^<>]*><code[^<>]*>([\s\S]*?)<\/code><\/pre>/gi,
     '\n```\n$1\n```\n',
   );
-  markdown = markdown.replace(/<pre[^>]*>([\s\S]*?)<\/pre>/gi, '\n```\n$1\n```\n');
-  markdown = markdown.replace(/<code[^>]*>([\s\S]*?)<\/code>/gi, '`$1`');
+  markdown = markdown.replace(/<pre[^<>]*>([\s\S]*?)<\/pre>/gi, '\n```\n$1\n```\n');
+  markdown = markdown.replace(/<code[^<>]*>([\s\S]*?)<\/code>/gi, '`$1`');
   markdown = markdown.replace(/<hr\s*\/?>/gi, '\n---\n');
 
-  markdown = markdown.replace(/<figure[^>]*>([\s\S]*?)<\/figure>/gi, '\n$1\n');
-  markdown = markdown.replace(/<figcaption[^>]*>([\s\S]*?)<\/figcaption>/gi, '*$1*\n');
+  markdown = markdown.replace(/<figure[^<>]*>([\s\S]*?)<\/figure>/gi, '\n$1\n');
+  markdown = markdown.replace(/<figcaption[^<>]*>([\s\S]*?)<\/figcaption>/gi, '*$1*\n');
 
-  markdown = markdown.replace(/<img[^>]*src="([^"]*)"[^>]*alt="([^"]*)"[^>]*\/?>/gi, '![$2]($1)');
-  markdown = markdown.replace(/<img[^>]*alt="([^"]*)"[^>]*src="([^"]*)"[^>]*\/?>/gi, '![$1]($2)');
-  markdown = markdown.replace(/<img[^>]*src="([^"]*)"[^>]*\/?>/gi, '![]($1)');
+  markdown = markdown.replace(
+    /<img[^<>]*src="([^"]*)"[^<>]*alt="([^"]*)"[^<>]*\/?>/gi,
+    '![$2]($1)',
+  );
+  markdown = markdown.replace(
+    /<img[^<>]*alt="([^"]*)"[^<>]*src="([^"]*)"[^<>]*\/?>/gi,
+    '![$1]($2)',
+  );
+  markdown = markdown.replace(/<img[^<>]*src="([^"]*)"[^<>]*\/?>/gi, '![]($1)');
 
   markdown = markdown.replace(/<[^>]+>/g, '');
   markdown = decodeHtmlEntities(markdown);

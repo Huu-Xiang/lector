@@ -5,6 +5,7 @@ import { resolveLanguage } from '../lib/active-language';
 import { countTypedWords, getLanguageConfig } from '../lib/languages';
 import { getCurrentUserId } from '../lib/user';
 import { correctJournalText } from '../lib/journal-correct';
+import { providerAnswered } from '../lib/llm';
 import {
   entitlements,
   planLimitResponse,
@@ -19,6 +20,8 @@ import {
   journalContentBytes,
 } from '../lib/storage-limits';
 import { validateDateKey, validateOptionalLanguage } from '../lib/persisted-input';
+
+const MAX_CORRECT_CHARS = 8000;
 
 const app = new Hono();
 
@@ -203,6 +206,9 @@ app.post('/:id/correct', async (c) => {
 
   if (!entry) return c.json({ error: 'Entry not found' }, 404);
   if (!entry.body.trim()) return c.json({ error: 'Entry body is empty' }, 400);
+  if (entry.body.length > MAX_CORRECT_CHARS) {
+    return c.json({ error: 'Entry is too long to correct' }, 413);
+  }
 
   // Reserve the managed-LLM request before the provider call, refund on failure
   // (#222 review) — a check-then-record leaves a concurrent-request window.
@@ -251,7 +257,7 @@ app.post('/:id/correct', async (c) => {
 
     return c.json({ correctedBody, corrections: data.corrections });
   } catch (error) {
-    if (reservation) entitlements.refund(reservation);
+    if (reservation && !providerAnswered(error)) entitlements.refund(reservation);
     console.error('Journal correction error:', error);
     return c.json({ error: error instanceof Error ? error.message : 'Correction failed' }, 500);
   }

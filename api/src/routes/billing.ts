@@ -19,6 +19,7 @@ import {
 import { isBillingExempt, isSuspended } from '../lib/account-flags';
 import { entitlements, type EntitlementsEngine } from '../lib/entitlements';
 import { activeGrant } from '../lib/plan-grants';
+import { paddleCheckoutAllowed } from '../lib/admin';
 import {
   makePaddleBillingOperations,
   PaddleBillingError,
@@ -81,6 +82,7 @@ export function makeBillingRoutes(
   billingOperations: PaddleBillingOperations = makePaddleBillingOperations(cfg),
   readPrices: PriceDisplayReader = makePaddlePriceReader(cfg),
   now: () => number = Date.now,
+  checkoutAllowed: (userId: string) => boolean = paddleCheckoutAllowed,
 ) {
   const app = new Hono();
   let priceCache: { at: number; prices: PriceDisplay[] } | null = null;
@@ -188,7 +190,7 @@ export function makeBillingRoutes(
       suspended,
       exempt,
       status: status ?? 'none',
-      checkout: { prices: cfg.prices },
+      checkout: { prices: checkoutAllowed(userId) ? cfg.prices : [] },
       management: {
         customerPortal: rows.length > 0,
         subscription:
@@ -222,6 +224,9 @@ export function makeBillingRoutes(
     }
 
     const userId = getCurrentUserId(c);
+    if (!checkoutAllowed(userId)) {
+      return c.json({ error: 'checkout_unavailable' }, 403);
+    }
 
     let body: { priceId?: unknown; promo?: unknown };
     try {

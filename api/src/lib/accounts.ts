@@ -118,6 +118,10 @@ export function createAuthEngine(opts: AuthEngineOptions) {
     emailAndPassword: {
       enabled: true,
       requireEmailVerification: true,
+      revokeSessionsOnPasswordReset: true,
+      onPasswordReset: async ({ user }) => {
+        getDatabaseInstance().prepare('DELETE FROM api_tokens WHERE userId = ?').run(user.id);
+      },
       sendResetPassword: async ({ user, url }) => {
         try {
           await sendEmail({

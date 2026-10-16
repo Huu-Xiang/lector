@@ -16,7 +16,7 @@ export type {
   LLMUsageEvent,
 } from './types';
 export { parseLooseJson } from './parse-json';
-export { completeJson } from './complete-json';
+export { completeJson, providerAnswered } from './complete-json';
 export { LLMInvalidJsonError } from './errors';
 
 let cachedProvider: LLMProvider | null = null;

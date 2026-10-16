@@ -3,6 +3,7 @@ import { bodyLimit } from 'hono/body-limit';
 import { streamText } from 'hono/streaming';
 import {
   completeJson,
+  providerAnswered,
   getProvider,
   managedPhraseUsesCheapModel,
   type LLMProvider,
@@ -170,7 +171,7 @@ function consumeFreeBurst(
   userId: string,
   kind: TranslationBurstKind,
 ): Response | null {
-  if (!isManagedFree(resolved)) return null;
+  if (resolved.byok || resolved.plan === 'unlimited') return null;
   return limiter.tryConsume(userId, kind) ? null : burstResponse(c);
 }
 
@@ -250,6 +251,12 @@ async function buildWordEntryResponse(
   return stitchWordEntry(entry, word);
 }
 
+/** The prompt carries the user's sentence, so a gloss that links or names a contact is not shared. */
+function isShareableGloss(gloss: string): boolean {
+  const text = gloss.trim();
+  return text.length <= 60 && !/https?:|www\.|@|[a-z0-9-]\.[a-z]{2,}/i.test(text);
+}
+
 export function makeTranslateRoutes({
   providerForUser,
   engine,
@@ -320,7 +327,8 @@ export function makeTranslateRoutes({
         }
         if (!output.trim()) engine.refund(reservation);
         // Only server-funded answers are shared; a user's own model never writes here.
-        else if (!reservation.byok) glossCache?.put(lang, nativeCode, parsed.value.word, output);
+        else if (!reservation.byok && isShareableGloss(output))
+          glossCache?.put(lang, nativeCode, parsed.value.word, output);
       } catch (error) {
         if (!output.trim()) engine.refund(reservation);
         console.error('Gloss stream error:', error);
@@ -416,7 +424,7 @@ export function makeTranslateRoutes({
       );
       return c.json(entry);
     } catch (error) {
-      engine.refund(reservation);
+      if (!providerAnswered(error)) engine.refund(reservation);
       console.error('Enrich error:', error);
       return c.json({ error: error instanceof Error ? error.message : 'Enrich failed' }, 500);
     }
@@ -528,7 +536,7 @@ export function makeTranslateRoutes({
       if (freeOnSmallModel && !reservation.byok) delete entry.etymology;
       return c.json(entry);
     } catch (error) {
-      engine.refund(reservation);
+      if (!providerAnswered(error)) engine.refund(reservation);
       console.error('Translation error:', error);
       return c.json({ error: error instanceof Error ? error.message : 'Translation failed' }, 500);
     }

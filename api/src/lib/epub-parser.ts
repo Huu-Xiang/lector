@@ -35,6 +35,10 @@ export function parseEpub(buffer: Buffer, pack?: LanguageConfig): ParsedEpub {
   }
   let declaredBytes = 0;
   for (const entry of entries) {
+    // adm-zip only bounds inflation by a non-zero declared size.
+    if (!entry.isDirectory && entry.header.size === 0 && entry.header.compressedSize > 0) {
+      throw new Error('EPUB has an entry without a declared size');
+    }
     declaredBytes += entry.header.size;
     if (declaredBytes > MAX_UNCOMPRESSED_BYTES) {
       throw new Error('EPUB content exceeds the size limit');
@@ -61,27 +65,20 @@ export function parseEpub(buffer: Buffer, pack?: LanguageConfig): ParsedEpub {
   );
 
   const manifest = new Map<string, string>();
-  const manifestRegex =
-    /<item\s+[^>]*id="([^"]+)"[^>]*href="([^"]+)"[^>]*(?:media-type="([^"]+)")?[^>]*\/?>/g;
-  let match;
-  while ((match = manifestRegex.exec(opfXml)) !== null) {
-    manifest.set(match[1], match[2]);
+  for (const tag of opfXml.match(/<item\s[^<>]*>/g) ?? []) {
+    const id = tag.match(/\sid="([^"]+)"/)?.[1];
+    const href = tag.match(/\shref="([^"]+)"/)?.[1];
+    if (id && href && !manifest.has(id)) manifest.set(id, href);
   }
 
-  const manifestRegex2 = /<item\s+[^>]*href="([^"]+)"[^>]*id="([^"]+)"[^>]*\/?>/g;
-  while ((match = manifestRegex2.exec(opfXml)) !== null) {
-    if (!manifest.has(match[2])) {
-      manifest.set(match[2], match[1]);
-    }
-  }
-
-  const spineItemRefs: string[] = [];
-  const spineRegex = /<itemref\s+[^>]*idref="([^"]+)"[^>]*\/?>/g;
-  while ((match = spineRegex.exec(opfXml)) !== null) {
-    spineItemRefs.push(match[1]);
+  const spineItemRefs = new Set<string>();
+  for (const tag of opfXml.match(/<itemref\s[^<>]*>/g) ?? []) {
+    const idref = tag.match(/\sidref="([^"]+)"/)?.[1];
+    if (idref) spineItemRefs.add(idref);
   }
 
   const chapters: EpubChapter[] = [];
+  let markdownBytes = 0;
   const tocTitles = parseToc(zip, opfXml, manifest, opfDir);
 
   for (const itemRef of spineItemRefs) {
@@ -94,8 +91,7 @@ export function parseEpub(buffer: Buffer, pack?: LanguageConfig): ParsedEpub {
 
     const xhtml = entry.getData().toString('utf-8');
 
-    const bodyMatch = xhtml.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
-    const bodyHtml = bodyMatch ? bodyMatch[1] : xhtml;
+    const bodyHtml = bodyOf(xhtml);
 
     const markdown = htmlToMarkdown(bodyHtml).trim();
     if (!markdown || markdown.length < 10) continue;
@@ -107,13 +103,26 @@ export function parseEpub(buffer: Buffer, pack?: LanguageConfig): ParsedEpub {
     );
 
     chapters.push({ title: chapterTitle, markdown, wordCount: countWords(markdown, pack) });
+    markdownBytes += markdown.length;
+    if (markdownBytes > MAX_UNCOMPRESSED_BYTES) {
+      throw new Error('EPUB content exceeds the size limit');
+    }
   }
 
   return { title, author, chapters };
 }
 
+function bodyOf(xhtml: string): string {
+  const lower = xhtml.toLowerCase();
+  const open = lower.indexOf('<body');
+  const close = lower.lastIndexOf('</body>');
+  if (open === -1 || close === -1) return xhtml;
+  const start = xhtml.indexOf('>', open);
+  return start === -1 || start > close ? xhtml : xhtml.slice(start + 1, close);
+}
+
 function extractTag(xml: string, tagName: string): string | null {
-  const regex = new RegExp(`<${tagName}[^>]*>([^<]+)</${tagName}>`, 'i');
+  const regex = new RegExp(`<${tagName}[^<>]*>([^<]+)</${tagName}>`, 'i');
   const match = xml.match(regex);
   return match ? match[1].trim() : null;
 }
@@ -127,39 +136,39 @@ function parseToc(
   const titles = new Map<string, string>();
 
   const ncxMatch =
-    opfXml.match(/<item[^>]*id="ncx"[^>]*href="([^"]+)"[^>]*\/?>/i) ||
-    opfXml.match(/<item[^>]*href="([^"]+)"[^>]*id="ncx"[^>]*\/?>/i) ||
+    opfXml.match(/<item[^<>]*id="ncx"[^<>]*href="([^"]+)"[^<>]*\/?>/i) ||
+    opfXml.match(/<item[^<>]*href="([^"]+)"[^<>]*id="ncx"[^<>]*\/?>/i) ||
     opfXml.match(
-      /<item[^>]*media-type="application\/x-dtbncx\+xml"[^>]*href="([^"]+)"[^>]*\/?>/i,
+      /<item[^<>]*media-type="application\/x-dtbncx\+xml"[^<>]*href="([^"]+)"[^<>]*\/?>/i,
     ) ||
-    opfXml.match(/<item[^>]*href="([^"]+)"[^>]*media-type="application\/x-dtbncx\+xml"[^>]*\/?>/i);
+    opfXml.match(
+      /<item[^<>]*href="([^"]+)"[^<>]*media-type="application\/x-dtbncx\+xml"[^<>]*\/?>/i,
+    );
 
   if (ncxMatch) {
     const ncxPath = opfDir !== '.' ? `${opfDir}/${ncxMatch[1]}` : ncxMatch[1];
     const ncxEntry = zip.getEntry(ncxPath) || zip.getEntry(ncxMatch[1]);
     if (ncxEntry) {
       const ncxXml = ncxEntry.getData().toString('utf-8');
-      const navPointRegex =
-        /<navPoint[^>]*>[\s\S]*?<text>([^<]+)<\/text>[\s\S]*?<content\s+src="([^"]+)"[\s\S]*?<\/navPoint>/g;
-      let match;
-      while ((match = navPointRegex.exec(ncxXml)) !== null) {
-        const src = match[2].split('#')[0];
-        titles.set(src, match[1].trim());
+      for (const navPoint of ncxXml.split(/<navPoint\b/).slice(1)) {
+        const text = navPoint.match(/<text>([^<]+)<\/text>/)?.[1];
+        const src = navPoint.match(/<content\s+src="([^"]+)"/)?.[1];
+        if (text && src) titles.set(src.split('#')[0], text.trim());
       }
     }
   }
 
   if (titles.size === 0) {
     const navMatch =
-      opfXml.match(/<item[^>]*properties="nav"[^>]*href="([^"]+)"[^>]*\/?>/i) ||
-      opfXml.match(/<item[^>]*href="([^"]+)"[^>]*properties="nav"[^>]*\/?>/i);
+      opfXml.match(/<item[^<>]*properties="nav"[^<>]*href="([^"]+)"[^<>]*\/?>/i) ||
+      opfXml.match(/<item[^<>]*href="([^"]+)"[^<>]*properties="nav"[^<>]*\/?>/i);
 
     if (navMatch) {
       const navPath = opfDir !== '.' ? `${opfDir}/${navMatch[1]}` : navMatch[1];
       const navEntry = zip.getEntry(navPath) || zip.getEntry(navMatch[1]);
       if (navEntry) {
         const navHtml = navEntry.getData().toString('utf-8');
-        const linkRegex = /<a\s+[^>]*href="([^"]+)"[^>]*>([^<]+)<\/a>/g;
+        const linkRegex = /<a\s+[^<>]*href="([^"]+)"[^<>]*>([^<]+)<\/a>/g;
         let match;
         while ((match = linkRegex.exec(navHtml)) !== null) {
           const src = match[1].split('#')[0];

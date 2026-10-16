@@ -88,3 +88,21 @@ describe('safeFetch redirect validation', () => {
     }
   });
 });
+
+describe('isBlockedAddress: IPv4 inside IPv6', () => {
+  test('blocks hex-form mapped, NAT64 and 6to4 addresses', () => {
+    for (const ip of [
+      '::ffff:7f00:1',
+      '::ffff:a9fe:a9fe',
+      '::ffff:ac11:1',
+      '64:ff9b::7f00:1',
+      '2002:7f00:1::',
+    ]) {
+      expect(isBlockedAddress(ip)).toBe(true);
+    }
+  });
+
+  test('allows a hex-form mapped public address', () => {
+    expect(isBlockedAddress('::ffff:808:808')).toBe(false);
+  });
+});

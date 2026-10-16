@@ -883,6 +883,7 @@ export function makeAdminRoutes(
     const email = targetEmail(id);
     if (email === null) return c.json({ error: 'User not found' }, 404);
     const revoked = db.prepare('DELETE FROM session WHERE userId = ?').run(id).changes;
+    db.prepare('DELETE FROM api_tokens WHERE userId = ?').run(id);
     audit(c, 'revoke_sessions', id, email, `${revoked} session(s)`);
     return c.json({ id, revoked });
   });

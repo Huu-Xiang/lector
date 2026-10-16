@@ -1,6 +1,7 @@
 import { Hono, type Context } from 'hono';
 import { isIP } from 'net';
 import { db } from '../db';
+import { InMemoryExtractionBurstLimiter } from '../lib/rate-limit';
 import { getCurrentUserId } from '../lib/user';
 import { getUserEmail, isEntitledStatus, resolveBillingStatus } from '../lib/billing';
 import { entitlements, type EntitlementsEngine } from '../lib/entitlements';
@@ -111,6 +112,12 @@ export function makeCnBillingRoutes(
     isEntitledStatus(resolveBillingStatus(userId, getUserEmail(userId))),
 ) {
   const app = new Hono();
+  // Each order also opens one at the gateway; unpaid floods can trip its risk checks.
+  const orderLimiter = new InMemoryExtractionBurstLimiter({
+    windowMs: 10 * 60_000,
+    userPerWindow: 5,
+  });
+  const pollLimiter = new InMemoryExtractionBurstLimiter({ userPerWindow: 40 });
 
   app.get('/options', (c) => {
     if (!cfg) return c.json({ enabled: false, prices: [] });
@@ -123,6 +130,7 @@ export function makeCnBillingRoutes(
   app.post('/checkout', async (c) => {
     if (!cfg || !client) return c.json({ error: 'cn_checkout_unavailable' }, 404);
     const userId = getCurrentUserId(c);
+    if (!orderLimiter.tryConsume(userId, null)) return c.json({ error: 'rate_limited' }, 429);
     const body = (await c.req.json().catch(() => ({}))) as {
       plan?: unknown;
       months?: unknown;
@@ -173,6 +181,7 @@ export function makeCnBillingRoutes(
   // webhook is recovered here by asking the platform for the order state.
   app.get('/orders/:outTradeNo', async (c) => {
     const userId = getCurrentUserId(c);
+    if (!pollLimiter.tryConsume(userId, null)) return c.json({ error: 'rate_limited' }, 429);
     const order = findOrder(c.req.param('outTradeNo'));
     if (!order || order.userId !== userId) return c.json({ error: 'not_found' }, 404);
     if (order.status !== 'SUCCEEDED' && client) {

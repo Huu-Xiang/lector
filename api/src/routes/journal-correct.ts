@@ -1,7 +1,10 @@
 import { Hono } from 'hono';
 import { correctJournalText } from '../lib/journal-correct';
 import { getCurrentUserId } from '../lib/user';
+import { providerAnswered } from '../lib/llm';
 import { entitlements, planLimitResponse, type UsageReservation } from '../lib/entitlements';
+
+const MAX_JOURNAL_CHARS = 8000;
 
 const app = new Hono();
 
@@ -16,8 +19,11 @@ app.post('/', async (c) => {
   try {
     const { body, language } = await c.req.json();
 
-    if (!body?.trim()) {
+    if (typeof body !== 'string' || !body.trim()) {
       return c.json({ error: 'body is required' }, 400);
+    }
+    if (body.length > MAX_JOURNAL_CHARS) {
+      return c.json({ error: 'body is too long' }, 413);
     }
 
     const llmVerdict = entitlements.reserve(userId, 'llmRequestsPerMonth');
@@ -30,7 +36,7 @@ app.post('/', async (c) => {
     reservation = null; // the provider call happened — the usage is earned
     return c.json(result);
   } catch (error) {
-    if (reservation) entitlements.refund(reservation);
+    if (reservation && !providerAnswered(error)) entitlements.refund(reservation);
     console.error('Journal correction error:', error);
     return c.json({ error: 'Correction failed' }, 500);
   }

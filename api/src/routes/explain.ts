@@ -7,6 +7,8 @@ import { getNativeLanguageName } from '../lib/native-language';
 import { buildExplainPrompt } from '../lib/translate-prompts';
 import { entitlements, planLimitResponse, type UsageReservation } from '../lib/entitlements';
 
+const MAX_EXPLAIN_CHARS = 2000;
+
 const app = new Hono();
 
 // POST /api/explain
@@ -18,6 +20,13 @@ app.post('/', async (c) => {
 
     if (!sentence || !translation) {
       return c.json({ error: 'sentence and translation are required' }, 400);
+    }
+    if (
+      [sentence, translation, clozeWord].some(
+        (v) => v !== undefined && (typeof v !== 'string' || v.length > MAX_EXPLAIN_CHARS),
+      )
+    ) {
+      return c.json({ error: 'Input is too long' }, 413);
     }
 
     // Reserve BEFORE the provider call, refund on failure (#222 review): a

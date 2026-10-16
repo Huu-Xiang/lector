@@ -17,7 +17,7 @@ function getSystemPrompt(langName: string, nativeName: string): string {
 
 const MAX_CONTEXT_MESSAGES = 20;
 const TTL_DAYS = 7;
-export const MAX_CHAT_MESSAGE_BYTES = 32 * 1024;
+export const MAX_CHAT_MESSAGE_BYTES = 8 * 1024;
 
 function utf8Bytes(value: string): number {
   return Buffer.byteLength(value, 'utf8');

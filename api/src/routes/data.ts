@@ -37,7 +37,7 @@ import {
 const app = new Hono();
 
 export const MAX_RESTORE_BODY_BYTES = FREE_RESTORE_ENVELOPE_BYTES;
-export const MAX_NON_FREE_RESTORE_BODY_BYTES = 256 * 1024 * 1024;
+export const MAX_NON_FREE_RESTORE_BODY_BYTES = 100 * 1024 * 1024;
 export const MAX_CONCURRENT_RESTORES = 1;
 
 type RestoreAdmission =

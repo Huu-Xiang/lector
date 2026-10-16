@@ -336,12 +336,18 @@ describe('plan resolution', () => {
     expect(engine.resolveEntitlements('ent-mix2').plan).toBe('plus');
   });
 
-  test('unknown or missing priceId defaults a paying account to the base plan', () => {
+  test('unknown or missing priceId grants no paid plan', () => {
     seedSubscription('ent-d', 'active', 'pri_removed_from_env');
     seedSubscription('ent-e', 'active', null);
     const engine = makeEntitlements(makeDeps());
-    expect(engine.resolveEntitlements('ent-d').plan).toBe('cloud');
-    expect(engine.resolveEntitlements('ent-e').plan).toBe('cloud');
+    expect(engine.resolveEntitlements('ent-d').plan).toBe('free');
+    expect(engine.resolveEntitlements('ent-e').plan).toBe('free');
+  });
+
+  test('Paddle rows grant nothing when paddleCounts refuses the account', () => {
+    seedSubscription('ent-sandbox', 'active', MAX_PRICE);
+    const engine = makeEntitlements(makeDeps({ paddleCounts: () => false }));
+    expect(engine.resolveEntitlements('ent-sandbox').plan).toBe('free');
   });
 
   test('no subscription derives Free only when the rollout flag is enabled', () => {

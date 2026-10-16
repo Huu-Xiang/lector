@@ -19,8 +19,8 @@
  * area, which is correct: there are no per-user accounts to administer.
  */
 import { createMiddleware } from 'hono/factory';
-import { config } from './config';
-import { getUserEmail } from './billing';
+import { config, isProductionEnvironment } from './config';
+import { billingConfig, getUserEmail } from './billing';
 import { isSuspended } from './account-flags';
 
 /** Comma-separated LECTOR_ADMIN_EMAILS → lowercased set (mirrors parseExemptEmails). */
@@ -61,6 +61,16 @@ export function isAdmin(userId: string, opts: AdminGateOptions): boolean {
   const resolveEmail = opts.resolveEmail ?? getUserEmail;
   const email = resolveEmail(userId);
   return email !== null && opts.emails.has(email.toLowerCase());
+}
+
+/**
+ * Paddle sandbox payments use public test cards, so in production they unlock
+ * checkout and paid plans only for admins.
+ */
+export function paddleCheckoutAllowed(userId: string): boolean {
+  if (billingConfig.environment !== 'sandbox') return true;
+  if (!isProductionEnvironment(process.env.NODE_ENV)) return true;
+  return isAdmin(userId, adminConfig);
 }
 
 /**
@@ -152,4 +162,6 @@ export function makeAccountStatusMiddleware(opts: AccountStatusOptions) {
 }
 
 /** The prod middleware, enabled in cloud proper. */
-export const accountStatusMiddleware = makeAccountStatusMiddleware({ enabled: config.authRequired });
+export const accountStatusMiddleware = makeAccountStatusMiddleware({
+  enabled: config.authRequired,
+});

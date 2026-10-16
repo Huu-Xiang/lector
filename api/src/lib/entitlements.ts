@@ -34,6 +34,7 @@ import { billingConfig, getUserEmail, isEntitledStatus } from './billing';
 import { getCompedPlan } from './account-flags';
 import { hasByokCredential } from './byok';
 import { activeGrant } from './plan-grants';
+import { paddleCheckoutAllowed } from './admin';
 
 export type PaidPlanId = 'cloud' | 'plus' | 'max';
 export type PlanId = 'free' | PaidPlanId;
@@ -638,6 +639,8 @@ export interface EntitlementsDeps {
   compedPlan: (userId: string) => PaidPlanId | null;
   /** Tier from an active fixed-period grant (Readfox one-time payments, codes). */
   grantedPlan?: (userId: string) => PaidPlanId | null;
+  /** False when this account's Paddle rows must not grant a plan (sandbox test cards). */
+  paddleCounts?: (userId: string) => boolean;
   now: () => Date;
 }
 
@@ -717,22 +720,25 @@ export function makeEntitlements(deps: EntitlementsDeps): EntitlementsEngine {
 
     // Same match rule as the billing gate: by tenant id (in-app checkout
     // stamps custom_data.lectorUserId) or by Paddle customer email.
-    const rows = db
-      .prepare(
-        `SELECT s.status, s.priceId FROM billing_subscriptions s
+    const rows =
+      (deps.paddleCounts?.(userId) ?? true)
+        ? (db
+            .prepare(
+              `SELECT s.status, s.priceId FROM billing_subscriptions s
          LEFT JOIN billing_customers c ON c.paddleCustomerId = s.paddleCustomerId
          WHERE s.userId = ? OR (? IS NOT NULL AND c.email = lower(?))`,
-      )
-      .all(userId, email, email) as Array<{ status: string; priceId: string | null }>;
+            )
+            .all(userId, email, email) as Array<{ status: string; priceId: string | null }>)
+        : [];
 
     // Resolve to the MOST ENTITLED tier across all entitled subscriptions —
-    // not the newest row. An entitled sub whose price we can't map (removed
-    // from env, or a pre-#292 row without priceId) is still a paying customer,
-    // so it counts as the base plan.
+    // not the newest row. A price this deployment does not sell grants nothing:
+    // Paddle.js can open a checkout for any price in the account.
     let best: PaidPlanId | null = null;
     for (const row of rows) {
       if (!isEntitledStatus(row.status)) continue;
-      const plan = (row.priceId && priceToPlan.get(row.priceId)) || 'cloud';
+      const plan = row.priceId ? priceToPlan.get(row.priceId) : undefined;
+      if (!plan) continue;
       if (best === null || PLAN_RANK[plan] > PLAN_RANK[best]) best = plan;
     }
 
@@ -1119,6 +1125,7 @@ let active: EntitlementsEngine = makeEntitlements({
   isByok: hasByokCredential,
   compedPlan: getCompedPlan,
   grantedPlan: (userId) => activeGrant(userId)?.plan ?? null,
+  paddleCounts: paddleCheckoutAllowed,
   now: () => new Date(),
 });
 

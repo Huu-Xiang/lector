@@ -1,4 +1,5 @@
-import { Hono } from 'hono';
+import { Hono, type Context, type Next } from 'hono';
+import { config } from '../lib/config';
 import { getCurrentUserId } from '../lib/user';
 import { db, VocabRow, AnkiCardType, WordState } from '../db';
 import { getActiveLanguageCode, packForLanguage, resolveLanguage } from '../lib/active-language';
@@ -76,6 +77,16 @@ function triggerSync() {
 }
 
 const app = new Hono();
+
+// The server-side AnkiConnect paths reach a URL on the API host or one the
+// user sets; with many accounts that is SSRF, so cloud uses the add-on only.
+const serverAnkiConnect = async (c: Context, next: Next) => {
+  if (config.authRequired) return c.json({ error: 'Not found' }, 404);
+  await next();
+};
+app.get('/', serverAnkiConnect);
+app.post('/', serverAnkiConnect);
+app.post('/sync-reviews', serverAnkiConnect);
 
 // GET /api/anki — connection check + deck list
 app.get('/', async (c) => {

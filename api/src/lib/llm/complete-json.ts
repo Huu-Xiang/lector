@@ -64,6 +64,13 @@ function addRetryInstruction(options: CompletionOptions): CompletionOptions['mes
   return messages;
 }
 
+const billedErrors = new WeakSet<object>();
+
+/** True when the provider produced output (so tokens were billed) before this error. */
+export function providerAnswered(error: unknown): boolean {
+  return typeof error === 'object' && error !== null && billedErrors.has(error);
+}
+
 async function attempt<T>(
   provider: LLMProvider,
   options: CompletionOptions,
@@ -120,8 +127,11 @@ export async function completeJson<T>(
   } catch (error) {
     if (error instanceof LLMTruncatedError) {
       const budget = retryTokens > options.maxTokens ? ` with a ${retryTokens}-token limit` : '';
-      throw new Error(`LLM response was truncated after retrying${budget}`);
+      const truncated = new Error(`LLM response was truncated after retrying${budget}`);
+      billedErrors.add(truncated);
+      throw truncated;
     }
+    if (typeof error === 'object' && error !== null) billedErrors.add(error);
     throw error;
   }
 }

@@ -43,7 +43,16 @@ function ipv6IsBlocked(ip: string): boolean {
   if (embedded && (lower.startsWith('::ffff:') || lower.startsWith('::'))) {
     return ipv4IsBlocked(embedded[1]);
   }
-  if (lower === '::1' || lower === '::') return true; // loopback / unspecified
+  // The URL parser writes ::ffff:127.0.0.1 as ::ffff:7f00:1.
+  const mapped = lower.match(/^::(?:ffff:(?:0:)?)?([0-9a-f]{1,4}):([0-9a-f]{1,4})$/);
+  if (mapped) {
+    const hi = parseInt(mapped[1], 16);
+    const lo = parseInt(mapped[2], 16);
+    return ipv4IsBlocked(`${hi >> 8}.${hi & 255}.${lo >> 8}.${lo & 255}`);
+  }
+  if (lower.startsWith('::')) return true; // loopback, unspecified, other IPv4-compatible
+  // NAT64 (64:ff9b::/96, 64:ff9b:1::/48) and 6to4 (2002::/16) embed IPv4.
+  if (/^64:ff9b:/.test(lower) || /^2002:/.test(lower)) return true;
   // fe80::/10 link-local (fe8/fe9/fea/feb prefixes)
   if (/^fe[89ab]/.test(lower)) return true;
   // fc00::/7 unique-local
