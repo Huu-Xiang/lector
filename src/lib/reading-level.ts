@@ -58,21 +58,26 @@ const EXAMS: Record<string, Record<CefrLevel, ExamRef[]>> = {
   },
 };
 
-const MAINLAND_ZONES = new Set(['Asia/Shanghai', 'Asia/Chongqing', 'Asia/Harbin', 'Asia/Urumqi']);
-
-/** Mainland exams only for a Chinese interface or a mainland time zone. */
-export function showMainlandExams(locale: string): boolean {
-  if (locale === 'zh-CN') return true;
-  try {
-    return MAINLAND_ZONES.has(Intl.DateTimeFormat().resolvedOptions().timeZone);
-  } catch {
-    return false;
-  }
+/** Mainland Chinese exams show for learners whose native language is Chinese. */
+export function showMainlandExams(native: string): boolean {
+  return native.toLowerCase().startsWith('zh');
 }
 
 export function examRefs(language: string, level: string, mainland: boolean): ExamRef[] {
   const refs = EXAMS[language]?.[level as CefrLevel] ?? [];
   return mainland ? refs : refs.filter((ref) => !MAINLAND_EXAMS.has(ref.exam));
+}
+
+/** Exam tags as display text, e.g. ["IELTS 4.0–5.0", "TOEFL iBT 42–71", "Gaokao"]. */
+export function examLabels(
+  language: string,
+  level: string,
+  native: string,
+  label: (exam: ExamId, score: string) => string,
+): string[] {
+  return examRefs(language, level, showMainlandExams(native)).map((ref) =>
+    label(ref.exam, ref.score ?? ''),
+  );
 }
 
 export function isCefrLevel(value: unknown): value is CefrLevel {

@@ -172,3 +172,18 @@ Required fields: translation. All other fields are optional — only include the
 
 Be specific and concrete in idiomaticMeaning and usageNotes — avoid vague phrases like 'commonly used' or 'has a special meaning'.${omitOrigins ? NO_ORIGINS : ''}${writeIn(nativeName)}`;
 }
+
+export function buildExplainPrompt(input: {
+  langName: string;
+  nativeName: string;
+  sentence: string;
+  translation: string;
+  clozeWord: string;
+}): string {
+  const { langName, nativeName, sentence, translation, clozeWord } = input;
+  return `Break down this ${langName} sentence for a language learner. Explain each word, its role in the sentence, and any grammar points. Keep it concise but educational. Write the whole explanation in ${nativeName}; quote ${langName} words as they are. Do not use markdown tables. Focus especially on the word "${clozeWord}" since that's the word being studied.
+
+Sentence: "${sentence}"
+Translation: "${translation}"
+Study word: "${clozeWord}"`;
+}

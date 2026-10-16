@@ -3,6 +3,8 @@ import { getProvider } from '../lib/llm';
 import { resolveLanguage } from '../lib/active-language';
 import { getCurrentUserId } from '../lib/user';
 import { getLanguageConfig } from '../lib/languages';
+import { getNativeLanguageName } from '../lib/native-language';
+import { buildExplainPrompt } from '../lib/translate-prompts';
 import { entitlements, planLimitResponse, type UsageReservation } from '../lib/entitlements';
 
 const app = new Hono();
@@ -26,17 +28,14 @@ app.post('/', async (c) => {
 
     const lang = resolveLanguage(language, userId);
     const langName = getLanguageConfig(lang).name;
+    const nativeName = getNativeLanguageName(userId);
 
     const provider = getProvider(userId, { byok: reservation.byok });
     const text = await provider.complete({
       messages: [
         {
           role: 'user',
-          content: `Break down this ${langName} sentence for a language learner. Explain each word, its role in the sentence, and any grammar points. Keep it concise but educational. Focus especially on the word "${clozeWord}" since that's the word being studied.
-
-Sentence: "${sentence}"
-Translation: "${translation}"
-Study word: "${clozeWord}"`,
+          content: buildExplainPrompt({ langName, nativeName, sentence, translation, clozeWord }),
         },
       ],
       maxTokens: 1024,

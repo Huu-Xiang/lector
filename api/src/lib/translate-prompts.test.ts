@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'bun:test';
 import {
+  buildExplainPrompt,
   buildGlossPrompt,
   buildPhrasePrompt,
   buildSimpleContextPrompt,
@@ -127,5 +128,21 @@ describe('native language in prompts', () => {
     expect(buildWordEntryPrompt('French', 'chat', '', 'Japanese')).toContain(
       'in Japanese, not in English',
     );
+  });
+});
+
+describe('buildExplainPrompt', () => {
+  test('asks for the explanation in the learner native language, without tables', () => {
+    const prompt = buildExplainPrompt({
+      langName: 'French',
+      nativeName: 'Simplified Chinese',
+      sentence: 'Remi est un enfant.',
+      translation: '雷米是个孩子。',
+      clozeWord: 'Remi',
+    });
+    expect(prompt).toContain('Break down this French sentence');
+    expect(prompt).toContain('Write the whole explanation in Simplified Chinese');
+    expect(prompt).toContain('Do not use markdown tables');
+    expect(prompt).toContain('Study word: "Remi"');
   });
 });
