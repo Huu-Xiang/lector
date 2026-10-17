@@ -20,7 +20,7 @@ ARG APP_VERSION=
 ARG GIT_COMMIT=
 ENV APP_VERSION=$APP_VERSION
 ENV GIT_COMMIT=$GIT_COMMIT
-RUN npm run build
+RUN --mount=type=cache,target=/app/.next/cache npm run build
 
 # ── Dictionary fetch stage ──────────────────────────────────────────────────
 # On-device dictionaries are read-only application data. Pins live once in

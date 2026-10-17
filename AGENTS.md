@@ -7,6 +7,7 @@ This repository is **Readfox**, a public, self-managed fork of `heuwels/lector` 
 - Frontend: `npm run dev` (UI on :3456), `npm run dev:api` (Hono on :3457, reads `.env.local`), `npm run build`, `npm run lint`, `npx tsc --noEmit`.
 - Unit tests: `npm test` (vitest, frontend only). API tests: `cd api && bun run test` — never bare `bun test`; the script isolates `DATA_DIR=.test-data` and `src/test-guard.ts` aborts otherwise. One file: `cd api && DATA_DIR=.test-data bun test src/lib/entitlements.test.ts`. One vitest file: `npx vitest run path/to/file.test.ts`.
 - E2E: `npm run test:e2e` (one spec: `npx playwright test e2e/<name>.spec.ts`).
+- `npm run check` runs type check, unit tests and lint on changed files in parallel (`--build` adds `npm run build`). `scripts/ship.sh` pushes HEAD to `selfhosted`, waits for the image build, deploys it and checks the site; it needs `READFOX_HOST` and runs only after the owner approves a deploy.
 - Always run `npm run build` before pushing frontend changes: the Docker build type-checks every file and fails on errors that `tsc --noEmit` can miss.
 
 ## Readfox fork: differences from upstream
