@@ -14,6 +14,7 @@ import {
   suspendUser,
   restoreUser,
   compUser,
+  endGrants,
   uncompUser,
   resetMfa,
   sendPasswordReset,
@@ -57,6 +58,11 @@ function planBadge(row: AdminUserRow): { label: string; className: string } {
   if (row.entitled)
     return {
       label: planName(row.plan ?? 'cloud'),
+      className: 'bg-primary/15 text-primary',
+    };
+  if (row.grant)
+    return {
+      label: `${planName(row.grant.plan)} · until ${row.grant.endsAt.slice(0, 10)}`,
       className: 'bg-primary/15 text-primary',
     };
   // Comped without a paid subscription: that tier on the house.
@@ -639,6 +645,21 @@ export default function AdminPage() {
                             >
                               Reset MFA
                             </MenuItem>
+                            {u.grant && (
+                              <MenuItem
+                                destructive
+                                onClick={() =>
+                                  runAction(
+                                    u,
+                                    endGrants,
+                                    'Paid plan ended',
+                                    `End the ${u.grant ? planName(u.grant.plan) : ''} plan of ${u.email} now? Do this after refunding the order in the Xiaodou portal.`,
+                                  )
+                                }
+                              >
+                                End paid plan (refund)
+                              </MenuItem>
+                            )}
                             <MenuItem
                               onClick={() => runAction(u, sendPasswordReset, 'Password reset sent')}
                             >

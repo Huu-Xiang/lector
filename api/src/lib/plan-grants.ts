@@ -122,3 +122,38 @@ export function grantPlan(args: {
   );
   return grant;
 }
+
+/** The tier each account holds through a grant right now, with the date it ends. */
+export function activeGrantMap(
+  now: Date = new Date(),
+): Map<string, { plan: GrantPlan; endsAt: string }> {
+  const at = now.toISOString();
+  const rows = db
+    .prepare(`SELECT userId, plan, endsAt FROM plan_grants WHERE startsAt <= ? AND endsAt > ?`)
+    .all(at, at) as Array<{ userId: string; plan: string; endsAt: string }>;
+  const best = new Map<string, { plan: GrantPlan; endsAt: string }>();
+  for (const row of rows) {
+    if (!isGrantPlan(row.plan)) continue;
+    const held = best.get(row.userId);
+    if (!held || RANK[row.plan] > RANK[held.plan]) {
+      best.set(row.userId, { plan: row.plan, endsAt: row.endsAt });
+    } else if (row.plan === held.plan && row.endsAt > held.endsAt) {
+      held.endsAt = row.endsAt;
+    }
+  }
+  return best;
+}
+
+/**
+ * End every grant that is running or still to start, after a refund. The rows
+ * stay, so a replayed order cannot grant again (`ref` is unique). Returns how many ended.
+ */
+export function endGrants(userId: string, now: Date = new Date()): number {
+  const at = now.toISOString();
+  db.prepare(
+    `UPDATE plan_grants SET startsAt = ? WHERE userId = ? AND startsAt > ? AND endsAt > ?`,
+  ).run(at, userId, at, at);
+  return db
+    .prepare(`UPDATE plan_grants SET endsAt = ? WHERE userId = ? AND endsAt > ?`)
+    .run(at, userId, at).changes;
+}

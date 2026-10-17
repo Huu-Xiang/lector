@@ -12,6 +12,7 @@ export type AdminAction =
   | 'restore'
   | 'comp'
   | 'uncomp'
+  | 'end_grants'
   | 'reset_mfa'
   | 'password_reset'
   | 'resend_verification'

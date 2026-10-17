@@ -12,6 +12,7 @@
  * Deferred (own issues): impersonate (#320), hard-delete/GDPR (#321),
  * $-cost dashboard (#226).
  */
+import { activeGrantMap, endGrants } from '../lib/plan-grants';
 import { Hono, type Context } from 'hono';
 import { db } from '../db';
 import {
@@ -504,6 +505,7 @@ export function makeAdminRoutes(
     const contextTranslations = usageForPeriod('contextTranslationsPerDay', periods.day);
     const suspended = suspendedMap();
     const comped = compedPlanMap();
+    const grants = activeGrantMap();
 
     return users.map((u) => {
       const sub = resolveSub(u, subsByUser, subsByCustomer, customerIdsByEmail);
@@ -527,6 +529,7 @@ export function makeAdminRoutes(
         status: sub?.status ?? 'none',
         entitled,
         compedPlan,
+        grant: grants.get(u.id) ?? null,
         currentPeriodEnd: sub?.currentPeriodEnd ?? null,
         suspended: suspended.has(u.id),
         suspendedReason: suspended.get(u.id) ?? null,
@@ -734,6 +737,18 @@ export function makeAdminRoutes(
     setCompedPlan(id, plan, reason);
     audit(c, 'comp', id, email, reason ? `${plan}: ${reason}` : plan);
     return c.json({ id, compedPlan: plan, reason });
+  });
+
+  // POST /api/admin/users/:id/end-grants — end the paid plan an RMB order or a redeem
+  // code gave this account. Xiaodou sends no refund notice, so the owner calls this
+  // after refunding in the Xiaodou portal.
+  app.post('/users/:id/end-grants', (c) => {
+    const id = c.req.param('id');
+    const email = targetEmail(id);
+    if (email === null) return c.json({ error: 'User not found' }, 404);
+    const ended = endGrants(id);
+    audit(c, 'end_grants', id, email, `${ended} grant(s)`);
+    return c.json({ id, ended });
   });
 
   // POST /api/admin/users/:id/uncomp — revoke the complimentary membership.

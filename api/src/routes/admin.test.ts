@@ -1,4 +1,5 @@
 import '../test-guard';
+import { grantPlan } from '../lib/plan-grants';
 import { describe, test, expect, beforeEach, afterAll } from 'bun:test';
 import { Hono } from 'hono';
 import { db } from '../db';
@@ -617,6 +618,25 @@ describe('comp / uncomp (complimentary membership for testers)', () => {
     });
     expect(uncomp.status).toBe(200);
     expect((await fetchRow(ALICE)).compedPlan).toBeNull();
+  });
+
+  test('ending grants drops the plan shown on the row; an unknown user → 404', async () => {
+    grantPlan({ userId: ALICE, plan: 'plus', months: 1, source: 'test', ref: 'admin-end-1' });
+    expect((await fetchRow(ALICE)).grant?.plan).toBe('plus');
+
+    const res = await buildApp().request(`/api/admin/users/${ALICE}/end-grants`, {
+      method: 'POST',
+      ...asUser(ADMIN),
+    });
+    expect(res.status).toBe(200);
+    expect((await res.json()).ended).toBe(1);
+    expect((await fetchRow(ALICE)).grant).toBeNull();
+
+    const missing = await buildApp().request('/api/admin/users/nobody/end-grants', {
+      method: 'POST',
+      ...asUser(ADMIN),
+    });
+    expect(missing.status).toBe(404);
   });
 
   test('rejects a bad or missing plan', async () => {

@@ -1,7 +1,7 @@
 import '../test-guard';
 import { beforeEach, describe, expect, test } from 'bun:test';
 import { db } from '../db';
-import { activeGrant, grantPlan } from './plan-grants';
+import { activeGrant, activeGrantMap, endGrants, grantPlan } from './plan-grants';
 
 const NOW = new Date('2026-10-15T00:00:00Z');
 
@@ -36,5 +36,19 @@ describe('plan grants', () => {
     expect(activeGrant('pg-c', NOW)?.plan).toBe('max');
     expect(activeGrant('pg-c', new Date('2026-12-01T00:00:00Z'))?.plan).toBe('cloud');
     expect(activeGrant('pg-c', new Date('2028-01-01T00:00:00Z'))).toBeNull();
+  });
+
+  test('ending grants removes the plan now, keeps the rows, and blocks a replay', () => {
+    grantPlan({ userId: 'pg-e', plan: 'plus', months: 1, source: 't', ref: 'pg-e1', now: NOW });
+    grantPlan({ userId: 'pg-e', plan: 'plus', months: 1, source: 't', ref: 'pg-e2', now: NOW });
+    expect(activeGrantMap(NOW).get('pg-e')?.plan).toBe('plus');
+
+    expect(endGrants('pg-e', NOW)).toBe(2);
+
+    expect(activeGrant('pg-e', NOW)).toBeNull();
+    expect(activeGrantMap(NOW).has('pg-e')).toBe(false);
+    expect(endGrants('pg-e', NOW)).toBe(0);
+    grantPlan({ userId: 'pg-e', plan: 'plus', months: 1, source: 't', ref: 'pg-e1', now: NOW });
+    expect(activeGrant('pg-e', NOW)).toBeNull();
   });
 });

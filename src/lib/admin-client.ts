@@ -41,6 +41,7 @@ export interface AdminUserRow {
   status: string;
   entitled: boolean;
   compedPlan: 'cloud' | 'plus' | 'max' | null;
+  grant: { plan: 'cloud' | 'plus' | 'max'; endsAt: string } | null;
   currentPeriodEnd: string | null;
   suspended: boolean;
   suspendedReason: string | null;
@@ -170,6 +171,11 @@ export async function compUser(
 export async function uncompUser(id: string): Promise<void> {
   const res = await apiFetch(`/api/admin/users/${id}/uncomp`, { method: 'POST' });
   if (!res.ok) throw new Error(`uncomp failed (${res.status})`);
+}
+
+export async function endGrants(id: string): Promise<void> {
+  const res = await apiFetch(`/api/admin/users/${id}/end-grants`, { method: 'POST' });
+  if (!res.ok) throw new Error(`end plan failed (${res.status})`);
 }
 
 async function action(id: string, verb: string, label: string): Promise<void> {
