@@ -9,6 +9,7 @@ import { Dialog, DialogClose, DialogContent, DialogTitle } from '@/components/ui
 import RecommendedForYou from '@/components/RecommendedForYou';
 import { getLessonsForCollection, getSetting, setSetting } from '@/lib/data-layer';
 import { languageDisplayName } from '@/lib/language-names';
+import { displayLanguage } from '@/lib/display-language';
 import { LANGUAGES, nativeLanguageFromLocale, type LanguageCode } from '@/lib/languages';
 import { CEFR_LEVELS, examLabels, setReadingLevel, type CefrLevel } from '@/lib/reading-level';
 import { useActiveLanguage } from '@/utils/hooks';
@@ -65,14 +66,14 @@ export default function NewLanguagePrompt() {
       getSetting<string[]>('readingInterests').catch(() => undefined),
     ]).then(([savedNative, savedInterests]) => {
       if (cancelled) return;
-      if (savedNative) setNative(savedNative);
+      setNative(displayLanguage(savedNative || nativeLanguageFromLocale(locale), locale));
       setInterests(savedInterests ?? []);
       setOpen(true);
     });
     return () => {
       cancelled = true;
     };
-  }, [active.code]);
+  }, [active.code, locale]);
 
   const languageName = languageDisplayName(
     active.code,

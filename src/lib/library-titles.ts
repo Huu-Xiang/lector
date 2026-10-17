@@ -5,6 +5,7 @@ import { useLocale } from 'next-intl';
 import { useArticleDescriptions } from './article-descriptions';
 import { loadCatalog as fetchCatalog } from './catalog-cache';
 import { getSetting, setSetting } from './data-layer';
+import { displayLanguage } from './display-language';
 import { nativeLanguageFromLocale } from './languages';
 
 const BOOK_ID = /^library-([a-z]{2,3})-(.+)$/;
@@ -99,7 +100,7 @@ export function translatedBookTitle(
 export function useLibraryTitleResolver(
   collections: ReadonlyArray<{ id: string; title: string }>,
 ): (collection: { id: string; title: string }) => string {
-  const native = useNativeLanguage();
+  const native = useDisplayLanguage();
   const [catalogMaps, setCatalogMaps] = useState<Map<string, Map<string, BookTitles>> | null>(null);
   const languages = [...new Set(collections.flatMap((c) => BOOK_ID.exec(c.id)?.[1] ?? []))].sort();
   const languageKey = languages.join(',');
@@ -130,6 +131,13 @@ export function useLibraryTitleResolver(
   );
 }
 
+/** The language shown for titles and descriptions: see `displayLanguage`. */
+export function useDisplayLanguage(): string {
+  const native = useNativeLanguage();
+  const locale = useLocale();
+  return displayLanguage(native, locale);
+}
+
 const FEED_COLLECTION = /^reading-feed-(reading-feed-[0-9a-f]+)$/;
 
 export interface CollectionDisplay {
@@ -147,7 +155,7 @@ export function useCollectionDisplay(collection: {
 }): CollectionDisplay {
   const book = BOOK_ID.exec(collection.id);
   const articleId = FEED_COLLECTION.exec(collection.id)?.[1] ?? null;
-  const native = useNativeLanguage();
+  const native = useDisplayLanguage();
   const [entry, setEntry] = useState<BookTitles | undefined>();
 
   useEffect(() => {

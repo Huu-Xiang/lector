@@ -162,6 +162,11 @@
         "delete": "Delete lesson",
         "dragToReorder": "Drag to reorder {title}"
       }
+    },
+    "view": {
+      "label": "Library layout",
+      "grid": "Grid view",
+      "list": "List view"
     }
   }
 }

@@ -18,6 +18,7 @@ import {
   type ReadingFeedArticle,
 } from '@/lib/data-layer';
 import { nativeLanguageFromLocale } from '@/lib/languages';
+import { displayLanguage } from '@/lib/display-language';
 import { loadNative } from '@/lib/library-titles';
 import { levelGap, pickNearLevel } from '@/lib/recommend';
 import type { CefrLevel } from '@/lib/reading-level';
@@ -121,7 +122,10 @@ export default function RecommendedForYou({
     setArticles(null);
 
     (async () => {
-      const native = (await loadNative()) || nativeLanguageFromLocale(locale);
+      const native = displayLanguage(
+        (await loadNative()) || nativeLanguageFromLocale(locale),
+        locale,
+      );
       if (!cancelled) setNative(native);
 
       const pickBooks = (catalog: LibraryBook[]) =>

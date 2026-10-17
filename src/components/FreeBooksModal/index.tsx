@@ -21,6 +21,7 @@ import { useShowDescriptions } from '@/lib/show-descriptions';
 import LevelTags from '@/components/LevelTags';
 import { useArticleDescriptions } from '@/lib/article-descriptions';
 import { languageDisplayName } from '@/lib/language-names';
+import { displayLanguage } from '@/lib/display-language';
 import { nativeLanguageFromLocale } from '@/lib/languages';
 import {
   CEFR_LEVELS,
@@ -94,7 +95,9 @@ export default function FreeBooksModal({
     getSetting<string>('nativeLanguage')
       .catch(() => undefined)
       .then((code) => {
-        if (!cancelled) setNative(code || nativeLanguageFromLocale(navigator.language));
+        if (!cancelled) {
+          setNative(displayLanguage(code || nativeLanguageFromLocale(navigator.language), locale));
+        }
       });
     getReadingLevel(activeLang.code).then((level) => {
       if (cancelled) return;
@@ -119,7 +122,7 @@ export default function FreeBooksModal({
     return () => {
       cancelled = true;
     };
-  }, [isOpen, activeLang.code]);
+  }, [isOpen, activeLang.code, locale]);
 
   useEffect(() => {
     if (!isOpen || tab === 'books') return;

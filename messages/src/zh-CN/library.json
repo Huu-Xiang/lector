@@ -162,6 +162,11 @@
         "delete": "删除课文",
         "dragToReorder": "拖动以调整 {title} 的顺序"
       }
+    },
+    "view": {
+      "label": "书库排列方式",
+      "grid": "网格视图",
+      "list": "列表视图"
     }
   }
 }

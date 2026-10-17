@@ -9,6 +9,8 @@ import AddCollectionTile from './components/AddCollectionTile';
 import EmptyState from './components/EmptyState';
 import HomeRecommendations from './components/HomeRecommendations';
 import DescriptionToggle from '@/components/DescriptionToggle';
+import LibraryViewToggle from '@/components/LibraryViewToggle';
+import { useLibraryView } from '@/lib/library-view';
 import GroupMenu from './components/GroupMenu';
 import SortableCollectionCard from './components/SortableCollectionCard';
 import CollectionCard from '@/components/CollectionCard';
@@ -59,6 +61,11 @@ export default function Home() {
   const t = useTranslations('library');
   const router = useRouter();
   const activeLanguage = useActiveLanguage().code;
+  const [libraryView] = useLibraryView();
+  const listClass =
+    libraryView === 'list'
+      ? 'flex flex-col gap-3'
+      : 'grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4';
   const [collections, setCollections] = useState<Collection[]>([]);
   const [groups, setGroups] = useState<CollectionGroup[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -577,8 +584,9 @@ export default function Home() {
 
           {collections.length > 0 || hasGroups ? (
             <div className="space-y-10">
-              <div className="mb-3 flex justify-end">
+              <div className="mb-3 flex items-center justify-end gap-4">
                 <DescriptionToggle />
+                <LibraryViewToggle />
               </div>
               {/* Grouped sections */}
               {visibleGroups.map((group) => {
@@ -627,7 +635,7 @@ export default function Home() {
                         collisionDetection={closestCenter}
                         onDragEnd={(e) => handleCollectionDragEnd(group.id, e)}
                       >
-                        <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                        <div className={listClass}>
                           <SortableContext
                             items={items.map((c) => c.id)}
                             strategy={rectSortingStrategy}
@@ -654,7 +662,7 @@ export default function Home() {
                                 setNewCollectionTitle('');
                               }}
                               data-testid={`add-collection-${group.id}`}
-                              className="group flex min-h-[14rem] flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border text-muted-foreground transition-all hover:bg-accent hover:text-foreground"
+                              className={`group flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border text-muted-foreground transition-all hover:bg-accent hover:text-foreground ${libraryView === 'list' ? 'min-h-16' : 'min-h-[14rem]'}`}
                             >
                               <Plus className="h-8 w-8" strokeWidth={1.5} />
                               <span className="text-sm font-medium">
@@ -677,7 +685,7 @@ export default function Home() {
                       {t('page.ungrouped')}
                     </h3>
                   )}
-                  <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                  <div className={listClass}>
                     {ungrouped.map((collection) => (
                       <CollectionCard key={collection.id} collection={collection} />
                     ))}

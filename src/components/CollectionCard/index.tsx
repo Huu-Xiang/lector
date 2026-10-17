@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import type { Collection } from '@/lib/data-layer';
 import { useCollectionDisplay } from '@/lib/library-titles';
+import { useLibraryView } from '@/lib/library-view';
 import { useShowDescriptions } from '@/lib/show-descriptions';
 
 interface CollectionCardProps {
@@ -15,7 +16,65 @@ export default function CollectionCard({ collection }: CollectionCardProps) {
   const t = useTranslations('library.card');
   const { title, original, description } = useCollectionDisplay(collection);
   const [showDescriptions] = useShowDescriptions();
+  const [view] = useLibraryView();
   const progressPercent = Math.round(collection.avgProgress || 0);
+
+  if (view === 'list') {
+    return (
+      <Link
+        href={`/collection/${collection.id}`}
+        data-testid="collection-row"
+        className="group flex items-stretch gap-4 overflow-hidden rounded-xl border border-border bg-card p-3 transition-all hover:shadow-lg"
+      >
+        <div className="relative aspect-[3/4] w-14 shrink-0 self-start overflow-hidden rounded-md bg-muted sm:w-16">
+          {collection.coverUrl ? (
+            <img
+              src={collection.coverUrl}
+              alt={t('coverAlt', { title })}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center">
+              <BookOpen className="h-6 w-6 text-muted-foreground" strokeWidth={1.5} />
+            </div>
+          )}
+        </div>
+        <div className="flex min-w-0 flex-1 flex-col">
+          <h3 className="line-clamp-2 text-base font-semibold text-foreground">{title}</h3>
+          {original && <p className="line-clamp-1 text-xs text-muted-foreground">{original}</p>}
+          {collection.author && (
+            <p className="truncate text-sm text-muted-foreground">{collection.author}</p>
+          )}
+          {showDescriptions && description && (
+            <p
+              className="mt-1 line-clamp-2 text-xs text-muted-foreground"
+              data-testid="collection-description"
+            >
+              {description}
+            </p>
+          )}
+          <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+            <span className="inline-flex items-center gap-1">
+              <Clock className="h-3.5 w-3.5" />
+              {collection.lastReadAt ? formatLastRead(collection.lastReadAt, t) : t('notStarted')}
+            </span>
+            {collection.lessonCount > 1 && (
+              <span>{t('lessons', { count: collection.lessonCount })}</span>
+            )}
+            {progressPercent > 0 && <span>{t('complete', { percent: progressPercent })}</span>}
+          </div>
+          {progressPercent > 0 && (
+            <div className="mt-1.5 h-1 w-full max-w-xs overflow-hidden rounded-full bg-muted">
+              <div
+                className="h-full rounded-full bg-primary"
+                style={{ width: `${progressPercent}%` }}
+              />
+            </div>
+          )}
+        </div>
+      </Link>
+    );
+  }
 
   return (
     <Link
