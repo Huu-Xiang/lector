@@ -3,6 +3,7 @@ import { getSetting, setSetting } from '@/lib/data-layer';
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
+import { Select } from '@/components/ui/select';
 
 export default function Timezone() {
   const t = useTranslations('settings.timezone');
@@ -47,18 +48,14 @@ export default function Timezone() {
     <section className="panel p-6">
       <h2 className="mb-1 text-lg font-semibold text-foreground">{t('title')}</h2>
       <p className="mb-4 text-sm text-muted-foreground">{t('description')}</p>
-      <select
-        value={timezone}
-        onChange={(e) => saveTimezone(e.target.value)}
-        className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none"
-      >
+      <Select value={timezone} onChange={(e) => saveTimezone(e.target.value)} className="w-full">
         <option value="">{t('auto')}</option>
         {timezones.map((tz) => (
           <option key={tz} value={tz}>
             {tz}
           </option>
         ))}
-      </select>
+      </Select>
       {browserTimeZone && timezone !== browserTimeZone && (
         <Button variant="link" onClick={() => saveTimezone(browserTimeZone)} className="mt-3">
           {t('useDevice', { zone: browserTimeZone })}

@@ -31,8 +31,16 @@ export default function SettingsPage() {
       <div className="space-y-8">
         {lectorMode() === 'cloud' && <CloudPlanSettings />}
         <LanguagesSettings />
-        <InterfaceLanguage />
-        <NativeLanguage />
+        <section className="panel space-y-6 p-6" data-testid="language-preferences">
+          <div>
+            <h2 className="mb-1 text-lg font-semibold text-foreground">
+              {t('languagePrefs.title')}
+            </h2>
+            <p className="text-sm text-muted-foreground">{t('languagePrefs.hint')}</p>
+          </div>
+          <InterfaceLanguage />
+          <NativeLanguage />
+        </section>
         <ProseSettings />
         <PracticeSettings />
         {lectorMode() === 'cloud' ? <BYOKSettings /> : <LLMSettings />}

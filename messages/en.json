@@ -205,6 +205,10 @@
       "useBrowser": "Use my browser language instead",
       "sameAsLearning": "You are learning {language}, the same language. Pick another translation language to get useful explanations."
     },
+    "languagePrefs": {
+      "title": "Interface and translation languages",
+      "hint": "These are two separate choices. For example, you can use a Chinese interface and read explanations in English while you learn French."
+    },
     "pageTitle": "Settings",
     "practice": {
       "title": "Practice",

@@ -20,6 +20,7 @@ import {
   type ClientEntitlements,
 } from '@/lib/data-layer';
 import RedeemCode from './RedeemCode';
+import { Select } from '@/components/ui/select';
 
 type Translator = ReturnType<typeof useTranslations>;
 
@@ -297,13 +298,13 @@ export default function CloudPlanSettings() {
                 </p>
               </div>
               <div className="flex flex-col gap-2 sm:flex-row">
-                <select
+                <Select
+                  wrapperClassName="min-w-0 flex-1"
                   value={effectiveSelectedPriceId}
                   onChange={(event) => {
                     setSelectedPriceId(event.target.value);
                     setPreview(null);
                   }}
-                  className="min-w-0 flex-1 rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground"
                   data-testid="billing-change-price"
                   aria-label={t('choosePlanAria')}
                 >
@@ -313,7 +314,7 @@ export default function CloudPlanSettings() {
                       {priceLabel(price)}
                     </option>
                   ))}
-                </select>
+                </Select>
                 <Button
                   type="button"
                   variant="outline"

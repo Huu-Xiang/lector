@@ -43,7 +43,7 @@ export default function LegalLinks({
         >
           {links}
         </nav>
-        <UiLanguageSelect className="w-full" />
+        <UiLanguageSelect className="w-full" showLabel />
       </div>
     );
   }

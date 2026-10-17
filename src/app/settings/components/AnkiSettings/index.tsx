@@ -7,6 +7,7 @@ import { useLectorMode } from '@/lib/use-env';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { SETTINGS_KEYS } from '../../constants';
+import { Select } from '@/components/ui/select';
 
 /**
  * Two transports (#241), chosen by the user — not inferred from deployment:
@@ -231,17 +232,17 @@ export default function AnkiSettings() {
             <label className="block text-sm font-medium text-foreground">{t('vocabDeck')}</label>
             <p className="mb-1 text-xs text-muted-foreground">{t('vocabDeckHelp')}</p>
             {ankiConnected && ankiDecks.length > 0 ? (
-              <select
+              <Select
                 value={ankiDeckName}
                 onChange={(e) => localStorage.setItem(SETTINGS_KEYS.ANKI_DECK_NAME, e.target.value)}
-                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none"
+                className="w-full"
               >
                 {ankiDecks.map((deck) => (
                   <option key={deck} value={deck}>
                     {deck}
                   </option>
                 ))}
-              </select>
+              </Select>
             ) : (
               <input
                 type="text"
@@ -256,19 +257,19 @@ export default function AnkiSettings() {
             <label className="block text-sm font-medium text-foreground">{t('clozeDeck')}</label>
             <p className="mb-2 text-xs text-muted-foreground">{t('clozeDeckHelp')}</p>
             {ankiConnected && ankiDecks.length > 0 ? (
-              <select
+              <Select
                 value={ankiClozeDeckName}
                 onChange={(e) =>
                   localStorage.setItem(SETTINGS_KEYS.ANKI_CLOZE_DECK_NAME, e.target.value)
                 }
-                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none"
+                className="w-full"
               >
                 {ankiDecks.map((deck) => (
                   <option key={deck} value={deck}>
                     {deck}
                   </option>
                 ))}
-              </select>
+              </Select>
             ) : (
               <input
                 type="text"

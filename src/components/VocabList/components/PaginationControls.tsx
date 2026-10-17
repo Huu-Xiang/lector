@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { getPageRange } from '@/lib/pagination';
 import { PAGE_SIZE_OPTIONS } from '../constants';
+import { Select } from '@/components/ui/select';
 
 interface PaginationControlsProps {
   /** 1-indexed current page. */
@@ -44,18 +45,18 @@ export default function PaginationControls({
       {/* Rows-per-page selector */}
       <div className="flex items-center gap-2 text-sm text-muted-foreground">
         <label htmlFor="vocab-page-size">{t('rowsPerPage')}</label>
-        <select
+        <Select
+          wrapperClassName="inline-block"
           id="vocab-page-size"
           value={pageSize}
           onChange={(e) => onPageSizeChange(Number(e.target.value))}
-          className="rounded-lg border border-input bg-background px-2 py-1.5 text-sm text-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none"
         >
           {PAGE_SIZE_OPTIONS.map((size) => (
             <option key={size} value={size}>
               {size}
             </option>
           ))}
-        </select>
+        </Select>
       </div>
 
       {/* Range + page navigation */}

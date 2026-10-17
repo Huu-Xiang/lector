@@ -14,6 +14,7 @@ import {
   NATIVE_LANGUAGES,
   nativeLanguageFromLocale,
 } from '@/lib/languages';
+import { Select } from '@/components/ui/select';
 
 export default function NativeLanguage() {
   const t = useTranslations('settings.nativeLanguage');
@@ -62,19 +63,16 @@ export default function NativeLanguage() {
   }
 
   return (
-    <section className="panel p-6" data-testid="native-language-settings">
-      <h2 className="mb-1 text-lg font-semibold text-foreground">{t('title')}</h2>
-      <p className="mb-4 text-sm text-muted-foreground">
-        Translations, explanations, tutor replies and journal feedback are written in this language.
-        Built-in dictionary entries stay in English.
-      </p>
-      <select
+    <div data-testid="native-language-settings">
+      <h3 className="mb-1 text-sm font-semibold text-foreground">{t('title')}</h3>
+      <p className="mb-3 text-sm text-muted-foreground">{t('description')}</p>
+      <Select
         value={value}
         disabled={pending}
         onChange={(e) => save(e.target.value)}
         aria-label={t('title')}
         data-testid="native-language-select"
-        className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none"
+        className="w-full"
       >
         {NATIVE_LANGUAGES.map((lang) => (
           <option key={lang.code} value={lang.code}>
@@ -82,7 +80,7 @@ export default function NativeLanguage() {
             {lang.native !== lang.name ? ` (${lang.name})` : ''}
           </option>
         ))}
-      </select>
+      </Select>
       {!saved && detected !== value && (
         <button
           type="button"
@@ -93,6 +91,6 @@ export default function NativeLanguage() {
           {t('useBrowser')}
         </button>
       )}
-    </section>
+    </div>
   );
 }

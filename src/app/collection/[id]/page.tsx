@@ -44,6 +44,7 @@ import SortableLessonRow from '../components/SortableLessonRow';
 import CollectionFormModal, { type CollectionFormData } from '../components/CollectionFormModal';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import { Select } from '@/components/ui/select';
 
 export default function CollectionPage({ params }: { params: Promise<{ id: string }> }) {
   const t = useTranslations('library');
@@ -281,11 +282,11 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
           <label htmlFor="group-select" className="text-sm text-muted-foreground">
             {t('collection.group')}
           </label>
-          <select
+          <Select
+            wrapperClassName="inline-block"
             id="group-select"
             value={collection.groupId || ''}
             onChange={(e) => handleGroupChange(e.target.value)}
-            className="rounded-lg border border-input bg-background px-3 py-1.5 text-sm text-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none"
             data-testid="group-select"
           >
             <option value="">{t('collection.none')}</option>
@@ -295,7 +296,7 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
               </option>
             ))}
             <option value="__new__">{t('collection.newGroupOption')}</option>
-          </select>
+          </Select>
         </div>
 
         <div className="mt-4 flex items-center gap-3">

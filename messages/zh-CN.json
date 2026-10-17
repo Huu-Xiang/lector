@@ -205,6 +205,10 @@
       "useBrowser": "改用浏览器的语言",
       "sameAsLearning": "你正在学{language}，和翻译语言相同。请换一个翻译语言，解释才有用。"
     },
+    "languagePrefs": {
+      "title": "界面语言和翻译语言",
+      "hint": "这是两个独立的选择。比如学法语时，可以用中文界面，同时让解释用英文。"
+    },
     "pageTitle": "设置",
     "practice": {
       "title": "练习",

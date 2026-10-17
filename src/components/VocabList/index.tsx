@@ -15,6 +15,7 @@ import { Button, buttonVariants } from '../ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from '../ui/dialog';
 import OnboardingTip from '@/components/OnboardingTip';
 import { useLibraryTitleResolver } from '@/lib/library-titles';
+import { Select } from '@/components/ui/select';
 
 export default function VocabList({
   entries,
@@ -307,10 +308,10 @@ export default function VocabList({
         </div>
 
         {/* State Filter */}
-        <select
+        <Select
+          wrapperClassName="inline-block"
           value={stateFilter}
           onChange={(e) => setStateFilter(e.target.value as WordState | 'all' | 'learning')}
-          className="rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none"
         >
           {stateFilters.map((filter) => (
             <option key={filter.value} value={filter.value}>
@@ -319,13 +320,13 @@ export default function VocabList({
                 : tState(filter.value)}
             </option>
           ))}
-        </select>
+        </Select>
 
         {/* Book Filter */}
-        <select
+        <Select
+          wrapperClassName="inline-block"
           value={bookFilter}
           onChange={(e) => setBookFilter(e.target.value)}
-          className="rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none"
         >
           <option value="all">{t('allCollections')}</option>
           {collections.map((c) => (
@@ -333,7 +334,7 @@ export default function VocabList({
               {titleOf(c)}
             </option>
           ))}
-        </select>
+        </Select>
       </div>
 
       {/* Bulk Actions */}

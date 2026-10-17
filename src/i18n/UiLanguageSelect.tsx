@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
+import { Globe } from 'lucide-react';
 import { toast } from 'sonner';
 import { Select } from '@/components/ui/select';
 import { loadNative, saveNativeLanguage } from '@/lib/library-titles';
@@ -14,7 +15,14 @@ function writeLocaleCookie(code: string) {
   document.cookie = `${LOCALE_COOKIE}=${code}; path=/; max-age=${ONE_YEAR_SECONDS}; samesite=lax`;
 }
 
-export default function UiLanguageSelect({ className = '' }: { className?: string }) {
+export default function UiLanguageSelect({
+  className = '',
+  showLabel = false,
+}: {
+  className?: string;
+  /** Show a visible "Interface language" caption above the select. */
+  showLabel?: boolean;
+}) {
   const router = useRouter();
   const locale = useLocale();
   const t = useTranslations('uiLanguage');
@@ -48,18 +56,28 @@ export default function UiLanguageSelect({ className = '' }: { className?: strin
   }
 
   return (
-    <Select
-      value={locale}
-      onChange={(e) => change(e.target.value)}
-      aria-label={t('label')}
-      data-testid="ui-language-select"
-      className={`h-8 py-0 text-xs md:text-xs ${className}`}
-    >
-      {UI_LOCALES.map((l) => (
-        <option key={l.code} value={l.code}>
-          {l.native}
-        </option>
-      ))}
-    </Select>
+    <div>
+      {showLabel && <p className="mb-1 text-xs text-muted-foreground">{t('label')}</p>}
+      <div className="relative">
+        <Globe
+          aria-hidden="true"
+          className="pointer-events-none absolute top-1/2 left-2.5 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground"
+        />
+        <Select
+          value={locale}
+          onChange={(e) => change(e.target.value)}
+          aria-label={t('label')}
+          title={t('label')}
+          data-testid="ui-language-select"
+          className={`h-8 py-0 pl-8 text-xs md:text-xs ${className}`}
+        >
+          {UI_LOCALES.map((l) => (
+            <option key={l.code} value={l.code}>
+              {l.native}
+            </option>
+          ))}
+        </Select>
+      </div>
+    </div>
   );
 }

@@ -957,7 +957,7 @@ export default function PracticePage() {
               </div>
 
               {/* Round size + Mode in a row */}
-              <div className="mb-4 flex gap-4">
+              <div className="mb-4 flex flex-wrap gap-x-4 gap-y-3">
                 <div className="flex-1">
                   <label className="mb-2 block text-xs font-medium text-muted-foreground">
                     {t('setup.sentences')}

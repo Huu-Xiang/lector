@@ -408,7 +408,7 @@ export default function Home() {
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
       <PageHeader title={t('page.title')}>
-        <div className="flex items-center space-x-2">
+        <div className="flex flex-wrap items-center gap-2">
           {isCreatingGroup ? (
             <form
               onSubmit={(e) => {

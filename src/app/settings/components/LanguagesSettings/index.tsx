@@ -20,6 +20,7 @@ import { useReadyLanguagesSetting } from '@/lib/use-env';
 import type { LanguageCode } from '@/types/language';
 import { useActiveLanguage, useEnabledLanguages } from '@/utils/hooks';
 import { notifyLanguageListChanged } from '@/utils/storage';
+import { Select } from '@/components/ui/select';
 
 export default function LanguagesSettings() {
   const t = useTranslations('settings.languages');
@@ -95,11 +96,11 @@ export default function LanguagesSettings() {
 
       {addable.length > 0 && (
         <div className="flex gap-2">
-          <select
+          <Select
+            wrapperClassName="flex-1"
             value={adding}
             data-testid="add-language-select"
             onChange={(event) => setAdding(event.target.value as LanguageCode | '')}
-            className="flex-1 rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none"
           >
             <option value="">{t('addPlaceholder')}</option>
             {addable.map((code) => (
@@ -108,7 +109,7 @@ export default function LanguagesSettings() {
                 {isLanguageReady(code, ready) ? '' : ` (${tChrome('inDevelopment')})`}
               </option>
             ))}
-          </select>
+          </Select>
           <Button disabled={pending || !adding} data-testid="add-language" onClick={add}>
             <Plus />
             {t('add')}

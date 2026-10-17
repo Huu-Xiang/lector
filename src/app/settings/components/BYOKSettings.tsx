@@ -10,6 +10,7 @@ import {
   invalidateEntitlementsCache,
   type ClientEntitlements,
 } from '@/lib/data-layer';
+import { Select } from '@/components/ui/select';
 
 type ByokProvider = 'openrouter' | 'anthropic';
 interface ProviderConfig {
@@ -137,7 +138,7 @@ export default function BYOKSettings() {
             >
               {t('provider')}
             </label>
-            <select
+            <Select
               id="byok-provider"
               value={provider}
               onChange={(event) => {
@@ -147,14 +148,14 @@ export default function BYOKSettings() {
                 setApiKey('');
               }}
               disabled={status.enabled && !editing}
-              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground disabled:opacity-60"
+              className="w-full disabled:opacity-60"
             >
               {Object.entries(status.providers).map(([id, config]) => (
                 <option key={id} value={id}>
                   {config.label}
                 </option>
               ))}
-            </select>
+            </Select>
             {provider === 'openrouter' && (
               <p className="mt-2 text-xs text-muted-foreground">
                 {t.rich('evalNote', {
@@ -176,19 +177,19 @@ export default function BYOKSettings() {
             <label className="mb-2 block text-sm font-medium text-foreground" htmlFor="byok-model">
               {t('model')}
             </label>
-            <select
+            <Select
               id="byok-model"
               value={model}
               onChange={(event) => setModel(event.target.value)}
               disabled={status.enabled && !editing}
-              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground disabled:opacity-60"
+              className="w-full disabled:opacity-60"
             >
               {status.providers[provider].models.map((item) => (
                 <option key={item.id} value={item.id}>
                   {item.label}
                 </option>
               ))}
-            </select>
+            </Select>
           </div>
 
           {status.enabled && !editing ? (

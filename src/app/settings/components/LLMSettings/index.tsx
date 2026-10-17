@@ -6,6 +6,7 @@ import { apiFetch } from '@/lib/api-base';
 import { Button } from '@/components/ui/button';
 import { LLMProvider, LLMStatus, OpenAIPreset } from './types';
 import { toast } from 'sonner';
+import { Select } from '@/components/ui/select';
 
 // Presets are pure UI convenience — they autofill the endpoint and nothing else.
 // The backend only ever sees one OpenAI-compatible provider (endpoint + key + model).
@@ -308,15 +309,15 @@ export default function LLMSettings() {
       {/* Provider selector */}
       <div className="mb-4">
         <label className="mb-2 block text-sm font-medium text-foreground">{t('provider')}</label>
-        <select
+        <Select
           value={llmProvider}
           onChange={(e) => runSettingMutation(saveLLMProvider(e.target.value as LLMProvider))}
           data-testid="llm-provider"
-          className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none"
+          className="w-full"
         >
           <option value="anthropic">{t('providerAnthropic')}</option>
           <option value="openai">{t('providerOpenai')}</option>
-        </select>
+        </Select>
       </div>
 
       {/* Anthropic settings */}
@@ -505,16 +506,16 @@ export default function LLMSettings() {
         <div className="mb-4 space-y-4" data-testid="openai-settings">
           <div>
             <label className="mb-2 block text-sm font-medium text-foreground">{t('preset')}</label>
-            <select
+            <Select
               value={openaiPreset}
               onChange={(e) => runSettingMutation(saveOpenaiPreset(e.target.value as OpenAIPreset))}
               data-testid="openai-preset"
-              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none"
+              className="w-full"
             >
               <option value="custom">{t('presetCustom')}</option>
               <option value="ollama">Ollama (localhost:11434)</option>
               <option value="lmstudio">LM Studio (localhost:1234)</option>
-            </select>
+            </Select>
             <p className="mt-1 text-xs text-muted-foreground">{t('presetHelp')}</p>
           </div>
 

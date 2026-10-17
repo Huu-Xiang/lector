@@ -4,6 +4,7 @@ import { useFormatter, useTranslations } from 'next-intl';
 import { VocabEntry, WordState } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogTitle } from '@/components/ui/dialog';
+import { Select } from '@/components/ui/select';
 
 export default function VocabDetailModal({
   entry,
@@ -123,17 +124,17 @@ export default function VocabDetailModal({
               {t('learningState')}
             </label>
             {isEditing ? (
-              <select
+              <Select
                 value={state}
                 onChange={(e) => setState(e.target.value as WordState)}
-                className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none"
+                className="w-full"
               >
                 {stateOptions.map((opt) => (
                   <option key={opt.value} value={opt.value}>
                     {opt.label}
                   </option>
                 ))}
-              </select>
+              </Select>
             ) : (
               <div className="flex items-center gap-2">
                 <span
