@@ -34,6 +34,8 @@ export interface PaddleBillingOperations {
   }): Promise<string>;
   previewSubscriptionChange(args: SubscriptionChangeArgs): Promise<SubscriptionChangePreview>;
   applySubscriptionChange(args: SubscriptionChangeArgs): Promise<void>;
+  /** Ends a subscription now, so a refunded customer is not billed again. */
+  cancelSubscriptionNow(subscriptionId: string): Promise<void>;
 }
 
 export interface PaddleBillingSnapshot {
@@ -355,6 +357,20 @@ export function makePaddleBillingOperations(cfg: {
     return events;
   }
 
+  async function cancelSubscriptionNow(subscriptionId: string): Promise<void> {
+    try {
+      await request(`/subscriptions/${encodeURIComponent(subscriptionId)}/cancel`, {
+        method: 'POST',
+        body: JSON.stringify({ effective_from: 'immediately' }),
+      });
+    } catch (error) {
+      // A 4xx other than 429 means Paddle will not cancel it again, such as an already canceled subscription.
+      const message = error instanceof Error ? error.message : '';
+      if (/returned 4\d\d/.test(message) && !message.includes('returned 429')) return;
+      throw error;
+    }
+  }
+
   function listPath(
     resource: '/customers' | '/subscriptions',
     filters: Record<string, string>,
@@ -459,6 +475,7 @@ export function makePaddleBillingOperations(cfg: {
       };
     },
 
+    cancelSubscriptionNow,
     async applySubscriptionChange(args) {
       const items = await desiredItems(args);
       await request(`/subscriptions/${encodeURIComponent(args.subscriptionId)}`, {

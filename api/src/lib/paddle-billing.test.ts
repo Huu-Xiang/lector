@@ -281,6 +281,31 @@ describe('Paddle account-management operations', () => {
     });
   });
 
+  test('cancels a subscription now, and treats a 4xx as already canceled', async () => {
+    const calls: Array<{ url: string; init?: RequestInit }> = [];
+    globalThis.fetch = mock(async (input: RequestInfo | URL, init?: RequestInit) => {
+      calls.push({ url: String(input), init });
+      return json({ data: { id: 'sub_test', status: 'canceled' } });
+    }) as unknown as typeof fetch;
+    const operations = makePaddleBillingOperations({
+      apiKey: 'pdl_key',
+      environment: 'production',
+    });
+
+    await operations.cancelSubscriptionNow('sub_test');
+    expect(calls[0].url).toBe('https://api.paddle.com/subscriptions/sub_test/cancel');
+    expect(calls[0].init?.method).toBe('POST');
+    expect(JSON.parse(String(calls[0].init?.body))).toEqual({ effective_from: 'immediately' });
+
+    globalThis.fetch = mock(async () => json({ error: {} }, 400)) as unknown as typeof fetch;
+    await expect(operations.cancelSubscriptionNow('sub_test')).resolves.toBeUndefined();
+
+    globalThis.fetch = mock(async () => json({ error: {} }, 503)) as unknown as typeof fetch;
+    await expect(operations.cancelSubscriptionNow('sub_test')).rejects.toMatchObject({
+      code: 'paddle_unavailable',
+    });
+  });
+
   test('refuses a stale repeat or a subscription without one managed base price', async () => {
     const operations = makePaddleBillingOperations({
       apiKey: 'pdl_key',

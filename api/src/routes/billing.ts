@@ -3,6 +3,7 @@ import { bodyLimit } from 'hono/body-limit';
 import { getCurrentUserId } from '../lib/user';
 import {
   applyPaddleEvent,
+  refundedSubscriptionId,
   billingConfig,
   findBillingSubscriptions,
   findPaddleCustomerId,
@@ -421,9 +422,21 @@ export function makeBillingRoutes(
         return c.json({ error: 'Malformed JSON body' }, 400);
       }
 
-      const applied = applyPaddleEvent(event as Parameters<typeof applyPaddleEvent>[0]);
+      const paddleEvent = event as Parameters<typeof applyPaddleEvent>[0];
+      const applied = applyPaddleEvent(paddleEvent);
       const type = (event as { event_type?: string }).event_type ?? 'unknown';
       console.log(`[billing] webhook ${type}: ${applied}`);
+      // A full refund ends the plan here at once; ending it at Paddle too stops the next charge.
+      // A failure answers 502, so Paddle sends the notice again.
+      const refunded = applied === 'refund' ? refundedSubscriptionId(paddleEvent) : null;
+      if (refunded) {
+        try {
+          await billingOperations.cancelSubscriptionNow(refunded);
+        } catch (error) {
+          console.error('[billing] could not cancel the refunded subscription', refunded, error);
+          return c.json({ error: 'Could not cancel the refunded subscription' }, 502);
+        }
+      }
       return c.json({ ok: true, applied });
     },
   );

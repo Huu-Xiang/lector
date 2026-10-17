@@ -659,6 +659,9 @@ describe('billing routes', () => {
       applySubscriptionChange: async () => {
         throw new Error('unexpected change call');
       },
+      cancelSubscriptionNow: async () => {
+        throw new Error('unexpected cancel call');
+      },
       ...overrides,
     };
   }
@@ -952,6 +955,88 @@ describe('billing routes', () => {
     expect(response.status).toBe(413);
     expect(await response.json()).toEqual({ error: 'Webhook payload is too large' });
     expect(db.prepare('SELECT COUNT(*) AS n FROM billing_subscriptions').get()).toEqual({ n: 0 });
+  });
+
+  function adjustmentEvent(overrides: {
+    action?: string;
+    type?: string;
+    status?: string;
+    subscriptionId?: string | null;
+    occurredAt?: string;
+  }) {
+    return {
+      event_type: 'adjustment.updated',
+      occurred_at: overrides.occurredAt ?? '2026-07-09T00:00:00Z',
+      data: {
+        id: 'adj_1',
+        action: overrides.action ?? 'refund',
+        type: overrides.type ?? 'full',
+        status: overrides.status ?? 'approved',
+        subscription_id:
+          overrides.subscriptionId === undefined ? 'sub_1' : overrides.subscriptionId,
+      },
+    };
+  }
+
+  test('a full approved refund ends the plan and cancels the Paddle subscription', async () => {
+    applyPaddleEvent(subscriptionEvent({ id: 'sub_1', lectorUserId: 'local', status: 'active' }));
+    const canceled: string[] = [];
+    const app = buildApp(
+      enforcedCfg,
+      'local@example.com',
+      undefined,
+      operations({
+        cancelSubscriptionNow: async (id) => {
+          canceled.push(id);
+        },
+      }),
+    );
+    const evt = JSON.stringify(adjustmentEvent({}));
+    const realNow = Math.floor(Date.now() / 1000);
+
+    const response = await postWebhook(app, evt, sign(evt, realNow));
+
+    expect(response.status).toBe(200);
+    expect(await response.json()).toEqual({ ok: true, applied: 'refund' });
+    expect(canceled).toEqual(['sub_1']);
+    expect(resolveBillingStatus('local', null)).toBe('canceled');
+  });
+
+  test('a partial or pending refund keeps the plan', async () => {
+    applyPaddleEvent(subscriptionEvent({ id: 'sub_1', lectorUserId: 'local', status: 'active' }));
+    const app = buildApp(enforcedCfg);
+    const realNow = Math.floor(Date.now() / 1000);
+    for (const overrides of [
+      { type: 'partial' },
+      { status: 'pending_approval' },
+      { action: 'credit' },
+    ]) {
+      const evt = JSON.stringify(adjustmentEvent(overrides));
+      const response = await postWebhook(app, evt, sign(evt, realNow));
+      expect(await response.json()).toEqual({ ok: true, applied: 'ignored' });
+    }
+    expect(resolveBillingStatus('local', null)).toBe('active');
+  });
+
+  test('a refund that cannot be canceled at Paddle answers 502 so Paddle retries', async () => {
+    applyPaddleEvent(subscriptionEvent({ id: 'sub_1', lectorUserId: 'local', status: 'active' }));
+    const app = buildApp(
+      enforcedCfg,
+      'local@example.com',
+      undefined,
+      operations({
+        cancelSubscriptionNow: async () => {
+          throw new Error('Paddle is down');
+        },
+      }),
+    );
+    const evt = JSON.stringify(adjustmentEvent({ action: 'chargeback', type: 'partial' }));
+    const realNow = Math.floor(Date.now() / 1000);
+
+    const response = await postWebhook(app, evt, sign(evt, realNow));
+
+    expect(response.status).toBe(502);
+    expect(resolveBillingStatus('local', null)).toBe('canceled');
   });
 
   test('webhook 404s when billing is off', async () => {

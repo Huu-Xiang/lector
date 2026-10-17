@@ -590,10 +590,26 @@ export interface PaddleEvent {
     custom_data?: { lectorUserId?: unknown } | null;
     current_billing_period?: { ends_at?: string } | null;
     items?: Array<{ price?: { id?: string } | null }> | null;
+    // adjustment.* (refunds and chargebacks)
+    action?: string;
+    type?: string;
+    subscription_id?: string | null;
   };
 }
 
-export type AppliedEvent = 'customer' | 'subscription' | 'ignored' | 'stale';
+export type AppliedEvent = 'customer' | 'subscription' | 'refund' | 'ignored' | 'stale';
+
+/**
+ * The subscription a fully refunded or charged-back payment belongs to, else null.
+ * A partial refund keeps the plan.
+ */
+export function refundedSubscriptionId(evt: PaddleEvent): string | null {
+  const data = evt.data;
+  if (!evt.event_type?.startsWith('adjustment.') || !data) return null;
+  if (data.status !== 'approved' || !data.subscription_id) return null;
+  const full = data.action === 'refund' && data.type === 'full';
+  return full || data.action === 'chargeback' ? data.subscription_id : null;
+}
 
 /**
  * Mirror one verified webhook event. Paddle retries deliveries and does not
@@ -659,7 +675,18 @@ export function applyPaddleEvent(evt: PaddleEvent): AppliedEvent {
     return changed > 0 ? 'subscription' : 'stale';
   }
 
-  // transaction.*, adjustment.*, … carry nothing the mirror needs — the
+  if (type.startsWith('adjustment.')) {
+    const subscriptionId = refundedSubscriptionId(evt);
+    if (!subscriptionId || !occurredAt) return 'ignored';
+    db.prepare(
+      `UPDATE billing_subscriptions
+       SET status = 'canceled', occurredAt = MAX(occurredAt, ?), updatedAt = ?
+       WHERE paddleSubscriptionId = ?`,
+    ).run(occurredAt, now, subscriptionId);
+    return 'refund';
+  }
+
+  // transaction.*, other adjustment.*, … carry nothing the mirror needs — the
   // subscription events already hold status + period. 200 them so Paddle
   // doesn't retry.
   return 'ignored';
