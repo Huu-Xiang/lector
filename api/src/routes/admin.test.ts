@@ -621,6 +621,7 @@ describe('comp / uncomp (complimentary membership for testers)', () => {
   });
 
   test('ending grants drops the plan shown on the row; an unknown user → 404', async () => {
+    db.prepare("DELETE FROM plan_grants WHERE ref LIKE 'admin-end-%'").run();
     grantPlan({ userId: ALICE, plan: 'plus', months: 1, source: 'test', ref: 'admin-end-1' });
     expect((await fetchRow(ALICE)).grant?.plan).toBe('plus');
 
@@ -637,6 +638,38 @@ describe('comp / uncomp (complimentary membership for testers)', () => {
       ...asUser(ADMIN),
     });
     expect(missing.status).toBe(404);
+  });
+
+  test('refund requests: listed, approved once, and an unknown id → 404', async () => {
+    db.prepare(
+      `INSERT OR REPLACE INTO cn_orders (outTradeNo, userId, plan, months, amountFen, channel, status, createdAt, paidAt)
+       VALUES ('rf-o1', ?, 'plus', 1, 2900, 'alipay', 'SUCCEEDED', ?, ?)`,
+    ).run(ALICE, new Date().toISOString(), new Date().toISOString());
+    db.prepare("DELETE FROM plan_grants WHERE ref = 'rf-o1'").run();
+    grantPlan({ userId: ALICE, plan: 'plus', months: 1, source: 'xiaodou', ref: 'rf-o1' });
+    db.prepare('DELETE FROM cn_refund_requests WHERE outTradeNo = ?').run('rf-o1');
+    db.prepare(
+      `INSERT INTO cn_refund_requests (id, outTradeNo, userId, status, usedPercent, createdAt)
+       VALUES ('rf-r1', 'rf-o1', ?, 'PENDING', 3, ?)`,
+    ).run(ALICE, new Date().toISOString());
+
+    const list = await buildApp().request('/api/admin/refund-requests', asUser(ADMIN));
+    expect(list.status).toBe(200);
+    const body = (await list.json()) as { requests: Array<{ id: string; status: string }> };
+    expect(body.requests.find((r) => r.id === 'rf-r1')?.status).toBe('PENDING');
+
+    const approve = await buildApp().request('/api/admin/refund-requests/rf-r1/approve', {
+      method: 'POST',
+      ...asUser(ADMIN),
+    });
+    expect(approve.status).toBe(200);
+    expect((await fetchRow(ALICE)).grant).toBeNull();
+
+    const again = await buildApp().request('/api/admin/refund-requests/rf-r1/approve', {
+      method: 'POST',
+      ...asUser(ADMIN),
+    });
+    expect(again.status).toBe(404);
   });
 
   test('rejects a bad or missing plan', async () => {

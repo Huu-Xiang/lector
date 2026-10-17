@@ -52,6 +52,8 @@ declare global {
       OIDC_PROVIDER_NAME?: string;
       /** Comma-separated language codes that setup offers; unset offers every language. */
       SETUP_READY_LANGUAGES?: string;
+      /** '1' while card payments are in development: card checkout is hidden and a notice shows. */
+      CARD_PAYMENTS_PENDING?: string;
     };
   }
 }
@@ -100,6 +102,7 @@ export const AUTH_ROUTES = [
   '/two-factor',
   '/privacy',
   '/terms',
+  '/refunds',
   '/about',
   '/landing',
   '/pricing',

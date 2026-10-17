@@ -30,6 +30,7 @@ import {
   type PendingCnOrder,
 } from '@/lib/cn-billing';
 import { getEntitlements, type ClientEntitlements } from '@/lib/data-layer';
+import { useCardPaymentsPending } from '@/lib/use-env';
 import {
   PAID_TIERS,
   TIER_ALLOWANCES,
@@ -69,6 +70,7 @@ type Phase =
 export default function SubscribePage() {
   const t = useTranslations('subscribe');
   const tp = useTranslations('plans');
+  const cardPending = useCardPaymentsPending();
   const locale = useLocale();
   const [prices, setPrices] = useState<PlanPrice[] | null>(null);
   const [status, setStatus] = useState<BillingStatus | null>(null);
@@ -227,7 +229,8 @@ export default function SubscribePage() {
 
         // Nothing to sell, or nowhere approved to check out → graceful fallback
         // (dev and the e2e billing server run without prices / CHECKOUT_URL).
-        const paddle = s.checkout.prices.length > 0 && checkoutUrl() !== '';
+        const cardPending = window.__ENV__?.CARD_PAYMENTS_PENDING === '1';
+        const paddle = !cardPending && s.checkout.prices.length > 0 && checkoutUrl() !== '';
         if (!paddle && !cn) {
           setPhase('unavailable');
           return;
@@ -565,6 +568,11 @@ export default function SubscribePage() {
 
       {phase === 'pick' && cnPrices && (
         <div className="space-y-2" data-testid="subscribe-methods">
+          {cardPending && (
+            <p className="text-sm text-muted-foreground" data-testid="subscribe-card-pending">
+              {t('cardPending')}
+            </p>
+          )}
           {paddleReady && (
             <div className="flex flex-wrap gap-2">
               {(['cn', 'card'] as const).map((m) => (

@@ -25,7 +25,7 @@
           "resend": "<strong>Resend</strong> – delivers the verification and password-reset emails.",
           "aiProvider": "<strong>Your AI provider (OpenRouter or Anthropic)</strong> – if you add your own key and use translation, explanations or chat, the text you select, with some surrounding context, is sent to the provider using <em>your</em> key. Their privacy terms apply to that data, and the usage is billed to you.",
           "aiBuiltIn": "<strong>Alibaba Cloud (Model Studio)</strong> – if you use Readfox's built-in AI allowance instead of your own key, the text you select, with some surrounding context, is sent to Alibaba Cloud's Qwen models through our workspace to produce the translation or explanation. Alibaba Cloud's terms apply to that data. The allowance is limited each month.",
-          "paddle": "<strong>Paddle</strong> – our reseller (Merchant of Record) for paid plans. If you subscribe, Paddle collects your payment details and billing address under its own privacy policy. We receive your email address, your plan and its status, never your card or account numbers.",
+          "paddle": "<strong>Paddle</strong> – our reseller (Merchant of Record) for card and PayPal payments, which are in development. Once they open, if you subscribe, Paddle collects your payment details and billing address under its own privacy policy. We receive your email address, your plan and its status, never your card or account numbers.",
           "xiaodou": "<strong>Xiaodou Pay (Yuzhi AI, Shenzhen)</strong> – processes one-time RMB payments through Alipay and WeChat Pay. It receives the order amount, an order number and the public IP address of your device. Your Alipay or WeChat account details stay with Alipay or WeChat; we never receive them."
         },
         "noTrackers": "We do not run advertising or analytics trackers, and we do not sell your data."
@@ -71,10 +71,10 @@
       },
       "payments": {
         "heading": "Paid plans, renewal and refunds",
-        "body": "Our order process is conducted by our online reseller Paddle.com. Paddle.com is the Merchant of Record for all our orders. Paddle provides all customer service inquiries and handles returns.",
-        "renewal": "Paid plans renew automatically each month or year until you cancel. You can cancel at any time in Settings → Plan, and the plan stays active until the end of the period you paid for. If we change a price, the new price applies from your next renewal, and we tell you before it does.",
-        "refunds": "Paddle handles refunds under its <refund>Refund Policy</refund>. If the law where you live gives you a right to cancel (for example 14 days in the EU and the UK, or 7 days in mainland China), that right covers your first payment only, and it can end once you start to use the paid features. Apart from that, we do not refund renewals or periods that you have partly used. You can cancel at any time to stop the next charge. We refuse refunds when there are signs of abuse, for example repeated purchases followed by refunds. Questions: <mail>privacy@readfox.app</mail>.",
-        "rmb": "Buyers who pay in RMB with Alipay or WeChat Pay buy a fixed period (1 or 12 months) through Xiaodou Pay. These payments do not renew; when the period ends the account returns to Free. If you buy the same plan again before it ends, the new period starts when the current one ends. For a refund of an RMB payment, write to <mail>privacy@readfox.app</mail>; the same refund rules apply."
+        "body": "Today you can pay in RMB with Alipay or WeChat Pay through Xiaodou Pay. Card and PayPal payments through Paddle are in development.",
+        "renewal": "Plans bought in RMB cover a fixed period and do not renew. When card payments open, plans bought that way will renew each month or year until you cancel, and you will be able to cancel at any time in Settings → Plan.",
+        "refunds": "You can ask for a refund of an RMB payment within 24 hours after you pay, once per account, if you used 10% or less of the plan's AI allowance since the payment. Press Request refund in Settings → Plan, or write to <mail>privacy@readfox.app</mail>. The full terms are on the <refund>Refund policy</refund> page. We may refuse a refund when we see signs of abuse.",
+        "rmb": "Buyers who pay in RMB with Alipay or WeChat Pay buy a fixed period (1 or 12 months) through Xiaodou Pay. These payments do not renew; when the period ends the account returns to Free. If you buy the same plan again before it ends, the new period starts when the current one ends."
       },
       "acceptableUse": {
         "heading": "Acceptable use",
@@ -110,6 +110,24 @@
         "dictionaries": "Dictionary meanings come from the English Wiktionary through kaikki.org (CC BY-SA). The English dictionary is built from ECDICT by skywind3000 (MIT licence, github.com/skywind3000/ECDICT), and its example sentences come from Tatoeba (CC BY 2.0 FR).",
         "readingFeed": "Articles in the Free books dialog's News, Travel and Science tabs come from Global Voices (CC BY 3.0, globalvoices.org), Wikivoyage (CC BY-SA 3.0, wikivoyage.org), Simple English Wikipedia and Vikidia (CC BY-SA 4.0). Each article links to its licence and original source; adding one to your library appends that attribution."
       }
+    },
+    "refunds": {
+      "metaTitle": "Refund policy",
+      "title": "Refund policy",
+      "intro": "Readfox sells paid plans that give you a larger monthly AI allowance. This page says when you can get your money back.",
+      "rmbHeading": "Alipay and WeChat Pay (RMB)",
+      "rmbIntro": "Today these are the only ways to pay. Each payment buys a fixed period of 1 or 12 months and does not renew.",
+      "rule1": "You can ask for a refund within 24 hours after you pay.",
+      "rule2": "Since the payment, you used 10% or less of your plan's monthly AI allowance. Word translations and detailed answers are counted on their own, and the higher share counts. Use before you paid does not count.",
+      "rule3": "Each account can get one refund.",
+      "how": "To ask, open Settings → Plan and press Request refund. The button shows only while you can still ask. If it does not work, write to <mail>privacy@readfox.app</mail>. We check each request, return the money to the account you paid with through Xiaodou Pay, and your plan returns to Free. The money can take a few working days to arrive.",
+      "after": "After 24 hours, or when your use is above the limit, we do not refund the period. The plan does not renew, so nothing more is charged.",
+      "cardHeading": "Card, PayPal and Apple Pay",
+      "cardBody": "Payments through Paddle are in development and not yet available. This page will list those terms when they open.",
+      "abuseHeading": "Abuse",
+      "abuseBody": "We may refuse a refund when we see signs of abuse, for example buying a plan, using the allowance, and asking for a refund again with new accounts.",
+      "contactHeading": "Questions",
+      "contactBody": "Write to <mail>privacy@readfox.app</mail>."
     }
   }
 }

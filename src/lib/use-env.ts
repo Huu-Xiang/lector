@@ -50,3 +50,12 @@ export function useReadyLanguagesSetting(): string {
     () => '',
   );
 }
+
+/** True while card and PayPal payments are in development; only RMB payments are offered. */
+export function useCardPaymentsPending(): boolean {
+  return useSyncExternalStore(
+    subscribe,
+    () => window.__ENV__?.CARD_PAYMENTS_PENDING === '1',
+    () => false,
+  );
+}

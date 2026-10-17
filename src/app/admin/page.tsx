@@ -28,6 +28,7 @@ import {
 } from '@/lib/admin-client';
 import { planName } from '@/lib/plan-names';
 import RedeemCampaigns from './RedeemCampaigns';
+import RefundRequests from './RefundRequests';
 
 function formatBytes(n: number): string {
   if (n < 1024) return `${n} B`;
@@ -337,6 +338,8 @@ export default function AdminPage() {
           {summary ? `${summary.period} · today ${summary.dayPeriod}` : ''}
         </span>
       </PageHeader>
+
+      <RefundRequests />
 
       {summary && (
         <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7">

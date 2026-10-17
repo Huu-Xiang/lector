@@ -157,3 +157,12 @@ export function endGrants(userId: string, now: Date = new Date()): number {
     .prepare(`UPDATE plan_grants SET endsAt = ? WHERE userId = ? AND endsAt > ?`)
     .run(at, userId, at).changes;
 }
+
+/** End the grant an order created (its `ref`), keeping the row so the order cannot grant again. */
+export function endGrantByRef(ref: string, now: Date = new Date()): number {
+  const at = now.toISOString();
+  db.prepare(`UPDATE plan_grants SET startsAt = ? WHERE ref = ? AND startsAt > ?`).run(at, ref, at);
+  return db
+    .prepare(`UPDATE plan_grants SET endsAt = ? WHERE ref = ? AND endsAt > ?`)
+    .run(at, ref, at).changes;
+}

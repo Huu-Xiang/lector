@@ -7,7 +7,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t('terms.metaTitle') };
 }
 
-const LAST_UPDATED = new Date(Date.UTC(2026, 9, 15));
+const LAST_UPDATED = new Date(Date.UTC(2026, 9, 17));
 
 export default async function TermsPage() {
   const t = await getTranslations('legalPages');
@@ -19,7 +19,7 @@ export default async function TermsPage() {
   }).format(LAST_UPDATED);
   const tags = {
     refund: (chunks: React.ReactNode) => (
-      <a className="underline" href="https://www.paddle.com/legal/refund-policy">
+      <a className="underline" href="/refunds">
         {chunks}
       </a>
     ),

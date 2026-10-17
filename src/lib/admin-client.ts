@@ -321,3 +321,30 @@ export async function setRedeemCampaignActive(id: string, active: boolean): Prom
   });
   if (!res.ok) throw new Error(`update failed (${res.status})`);
 }
+
+export interface RefundRequestRow {
+  id: string;
+  outTradeNo: string;
+  userId: string;
+  email: string | null;
+  plan: 'cloud' | 'plus' | 'max';
+  amountFen: number;
+  channel: string;
+  status: 'PENDING' | 'APPROVED' | 'REJECTED';
+  usedPercent: number;
+  createdAt: string;
+  decidedAt: string | null;
+}
+
+export async function getRefundRequests(): Promise<RefundRequestRow[]> {
+  const res = await apiFetch('/api/admin/refund-requests');
+  if (!res.ok) throw new Error(`refund requests failed (${res.status})`);
+  return ((await res.json()) as { requests: RefundRequestRow[] }).requests;
+}
+
+export async function decideRefundRequest(id: string, approve: boolean): Promise<void> {
+  const res = await apiFetch(`/api/admin/refund-requests/${id}/${approve ? 'approve' : 'reject'}`, {
+    method: 'POST',
+  });
+  if (!res.ok) throw new Error(`refund decision failed (${res.status})`);
+}

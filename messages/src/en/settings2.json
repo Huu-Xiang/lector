@@ -361,6 +361,20 @@
     "cnPaidStart": "Start reading",
     "grantActive": "Current plan: {plan}, valid until {date}.",
     "cnBuyMonth": "1 month · {price}",
-    "cnBuyYear": "12 months · {price}"
+    "cnBuyYear": "12 months · {price}",
+    "cardPending": "Card and PayPal payments are in development. For now you can pay with Alipay or WeChat Pay."
+  },
+  "refund": {
+    "title": "Request a refund",
+    "rules": "Your {plan} plan was bought in RMB. You can ask for a refund until {deadline} if you have used no more than 10% of the plan's AI allowance since you paid. Each account can get one refund. The refund goes back to the account you paid with, and your plan returns to Free.",
+    "request": "Request refund",
+    "confirm": "Your plan ends when the refund is approved. Do you want to send the request?",
+    "submit": "Send request",
+    "cancel": "Cancel",
+    "pending": "Your request was sent. We will check it and refund the payment.",
+    "usedTooMuch": "You used {percent}% of the allowance since you paid, which is above the 10% limit, so this order cannot be refunded.",
+    "submitted": "Request sent",
+    "notAllowed": "This order cannot be refunded now",
+    "failed": "Could not send the request"
   }
 }

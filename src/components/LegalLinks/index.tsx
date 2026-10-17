@@ -28,6 +28,9 @@ export default function LegalLinks({
       <Link href="/terms" className="hover:text-foreground hover:underline">
         {t('terms')}
       </Link>
+      <Link href="/refunds" className="hover:text-foreground hover:underline">
+        {t('refunds')}
+      </Link>
       <Link href="/about" className="hover:text-foreground hover:underline">
         {t('about')}
       </Link>

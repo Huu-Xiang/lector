@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, test } from 'bun:test';
 import { db } from '../db';
 import type { EntitlementsEngine } from '../lib/entitlements';
 import { activeGrant } from '../lib/plan-grants';
+import { decideRefund, listRefundRequests } from '../lib/cn-refund';
 import {
   DEFAULT_CN_PRICES,
   epaySign,
@@ -19,8 +20,17 @@ const CFG: XiaodouConfig = {
   prices: DEFAULT_CN_PRICES,
 };
 
+const usage = { llmRequestsPerMonth: 0, wordGlossesPerMonth: 0 };
+
 function engineOn(plan: string): EntitlementsEngine {
-  return { resolveEntitlements: () => ({ plan }) } as unknown as EntitlementsEngine;
+  return {
+    resolveEntitlements: () => ({
+      plan,
+      limits: { llmRequestsPerMonth: 300, wordGlossesPerMonth: 5_000 },
+    }),
+    currentPeriods: () => ({ month: '2026-10', day: '2026-10-17' }),
+    getUsage: (_userId: string, metric: keyof typeof usage) => usage[metric],
+  } as unknown as EntitlementsEngine;
 }
 
 function fakeClient(overrides: Partial<XiaodouClient> = {}) {
@@ -70,6 +80,9 @@ async function checkout(app: ReturnType<typeof makeCnBillingRoutes>, plan = 'clo
 }
 
 beforeEach(() => {
+  usage.llmRequestsPerMonth = 0;
+  usage.wordGlossesPerMonth = 0;
+  db.prepare("DELETE FROM cn_refund_requests WHERE userId = 'local'").run();
   db.prepare("DELETE FROM cn_orders WHERE userId = 'local'").run();
   db.prepare("DELETE FROM plan_grants WHERE userId = 'local'").run();
 });
@@ -160,5 +173,61 @@ describe('order polling', () => {
     expect(await res.json()).toMatchObject({ status: 'SUCCEEDED', plan: 'plus', months: 1 });
     expect(activeGrant('local')?.plan).toBe('plus');
     expect((await app.request('/orders/rf-not-mine')).status).toBe(404);
+  });
+});
+
+describe('refund requests', () => {
+  async function paidOrder(app: ReturnType<typeof makeCnBillingRoutes>) {
+    const { body } = await checkout(app);
+    await app.request(notice(body.outTradeNo, '15.00'));
+    return body.outTradeNo;
+  }
+  const get = (app: ReturnType<typeof makeCnBillingRoutes>) => app.request('/refund');
+  const file = (app: ReturnType<typeof makeCnBillingRoutes>) =>
+    app.request('/refund', { method: 'POST' });
+
+  test('a fresh, barely used order can be refunded; the owner approval ends the plan', async () => {
+    const app = makeCnBillingRoutes(CFG, fakeClient().client, engineOn('cloud'), () => false);
+    const outTradeNo = await paidOrder(app);
+    expect(activeGrant('local')?.plan).toBe('cloud');
+    usage.wordGlossesPerMonth = 100; // 2% of 5000
+
+    const before = await (await get(app)).json();
+    expect(before).toMatchObject({ eligible: true, block: null });
+    expect(before.order.outTradeNo).toBe(outTradeNo);
+
+    const filed = await (await file(app)).json();
+    expect(filed).toMatchObject({ eligible: false, block: 'pending', requestStatus: 'PENDING' });
+
+    const pending = listRefundRequests().filter((r) => r.outTradeNo === outTradeNo);
+    expect(pending).toHaveLength(1);
+    expect(decideRefund(pending[0].id, true)).toBe(true);
+    expect(activeGrant('local')).toBeNull();
+    expect(decideRefund(pending[0].id, true)).toBe(false);
+    expect(await (await get(app)).json()).toMatchObject({ block: 'already_refunded' });
+  });
+
+  test('use after payment above 10% blocks the request, use before payment does not', async () => {
+    usage.wordGlossesPerMonth = 900; // used on Free before paying
+    const app = makeCnBillingRoutes(CFG, fakeClient().client, engineOn('cloud'), () => false);
+    await paidOrder(app);
+    expect((await (await get(app)).json()).eligible).toBe(true);
+
+    usage.wordGlossesPerMonth = 900 + 600; // 12% of 5000 since payment
+    const blocked = await (await file(app)).json();
+    expect(blocked).toMatchObject({ eligible: false, block: 'used_too_much' });
+    expect(listRefundRequests().filter((r) => r.userId === 'local')).toHaveLength(0);
+  });
+
+  test('no request after 24 hours, and none without an order', async () => {
+    const app = makeCnBillingRoutes(CFG, fakeClient().client, engineOn('cloud'), () => false);
+    expect(await (await get(app)).json()).toMatchObject({ order: null, block: 'no_order' });
+    const outTradeNo = await paidOrder(app);
+    db.prepare('UPDATE cn_orders SET paidAt = ? WHERE outTradeNo = ?').run(
+      new Date(Date.now() - 25 * 3_600_000).toISOString(),
+      outTradeNo,
+    );
+    expect(await (await get(app)).json()).toMatchObject({ order: null, eligible: false });
+    expect(await (await file(app)).json()).toMatchObject({ eligible: false });
   });
 });

@@ -104,3 +104,29 @@ export function formatFen(fen: number, locale: string): string {
     minimumFractionDigits: fen % 100 === 0 ? 0 : 2,
   }).format(fen / 100);
 }
+
+export interface RefundStatus {
+  order: { outTradeNo: string; plan: string; paidAt: string; deadline: string } | null;
+  eligible: boolean;
+  block: 'no_order' | 'already_refunded' | 'pending' | 'used_too_much' | null;
+  usedPercent: number;
+  requestStatus: 'PENDING' | 'APPROVED' | 'REJECTED' | null;
+}
+
+export async function fetchRefundStatus(): Promise<RefundStatus | null> {
+  try {
+    const res = await apiFetch('/api/billing/cn/refund');
+    return res.ok ? ((await res.json()) as RefundStatus) : null;
+  } catch {
+    return null;
+  }
+}
+
+export async function submitRefundRequest(): Promise<RefundStatus | null> {
+  try {
+    const res = await apiFetch('/api/billing/cn/refund', { method: 'POST' });
+    return res.ok ? ((await res.json()) as RefundStatus) : null;
+  } catch {
+    return null;
+  }
+}

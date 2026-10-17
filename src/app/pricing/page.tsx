@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { LegalShell } from '@/components/LegalLinks/shell';
+import CardPendingNote from './CardPendingNote';
 import PricingTiers from './PricingTiers';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -13,6 +14,7 @@ export default async function PricingPage() {
   return (
     <LegalShell title={t('title')} wide>
       <p className="text-muted-foreground">{t('intro')}</p>
+      <CardPendingNote />
       <PricingTiers />
       <p className="text-xs text-muted-foreground">{t('notes')}</p>
     </LegalShell>

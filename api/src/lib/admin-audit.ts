@@ -13,6 +13,8 @@ export type AdminAction =
   | 'comp'
   | 'uncomp'
   | 'end_grants'
+  | 'refund_approve'
+  | 'refund_reject'
   | 'reset_mfa'
   | 'password_reset'
   | 'resend_verification'

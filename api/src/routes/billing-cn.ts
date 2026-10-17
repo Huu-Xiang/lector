@@ -6,6 +6,7 @@ import { getCurrentUserId } from '../lib/user';
 import { getUserEmail, isEntitledStatus, resolveBillingStatus } from '../lib/billing';
 import { entitlements, type EntitlementsEngine } from '../lib/entitlements';
 import { grantPlan, planRank, type GrantPlan } from '../lib/plan-grants';
+import { recordRefundBaseline, refundStatus, requestRefund } from '../lib/cn-refund';
 import {
   makeXiaodouClient,
   newOutTradeNo,
@@ -76,7 +77,12 @@ function findOrder(outTradeNo: string): CnOrderRow | undefined {
 }
 
 /** Mark an order paid and grant its period. Safe to call more than once. */
-export function settleCnOrder(outTradeNo: string, paidFen: number, now = new Date()): boolean {
+export function settleCnOrder(
+  outTradeNo: string,
+  paidFen: number,
+  now = new Date(),
+  engine: EntitlementsEngine = entitlements,
+): boolean {
   return db.transaction(() => {
     const order = findOrder(outTradeNo);
     if (!order) return false;
@@ -92,6 +98,11 @@ export function settleCnOrder(outTradeNo: string, paidFen: number, now = new Dat
       now.toISOString(),
       outTradeNo,
     );
+    try {
+      recordRefundBaseline(outTradeNo, order.userId, engine);
+    } catch (error) {
+      console.warn('[cn-billing] could not record the refund baseline:', (error as Error).message);
+    }
     grantPlan({
       userId: order.userId,
       plan: order.plan,
@@ -187,13 +198,24 @@ export function makeCnBillingRoutes(
     if (order.status !== 'SUCCEEDED' && client) {
       try {
         const remote = await client.queryPayment(order.outTradeNo);
-        if (remote.status === 'SUCCEEDED') settleCnOrder(order.outTradeNo, remote.amountFen);
+        if (remote.status === 'SUCCEEDED')
+          settleCnOrder(order.outTradeNo, remote.amountFen, new Date(), engine);
       } catch (error) {
         console.warn('[cn-billing] order query failed:', (error as Error).message);
       }
     }
     const fresh = findOrder(order.outTradeNo)!;
     return c.json({ status: fresh.status, plan: fresh.plan, months: fresh.months });
+  });
+
+  // Refund window: whether the latest paid order can be refunded, and the request itself.
+  // The owner refunds in the Xiaodou portal and approves in the admin page.
+  app.get('/refund', (c) => c.json(refundStatus(getCurrentUserId(c), engine)));
+
+  app.post('/refund', (c) => {
+    const userId = getCurrentUserId(c);
+    if (!pollLimiter.tryConsume(userId, null)) return c.json({ error: 'rate_limited' }, 429);
+    return c.json(requestRefund(userId, engine));
   });
 
   // The gateway sends a GET notice (some plugins POST a form); both carry the
@@ -204,7 +226,7 @@ export function makeCnBillingRoutes(
       return false;
     }
     if (params.trade_status === 'TRADE_SUCCESS' && params.out_trade_no) {
-      settleCnOrder(params.out_trade_no, yuanToFen(params.money ?? ''));
+      settleCnOrder(params.out_trade_no, yuanToFen(params.money ?? ''), new Date(), engine);
     }
     return true;
   };

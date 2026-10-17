@@ -361,6 +361,20 @@
     "cnPaidStart": "开始阅读",
     "grantActive": "当前套餐：{plan}，有效期至 {date}。",
     "cnBuyMonth": "1 个月 · {price}",
-    "cnBuyYear": "12 个月 · {price}"
+    "cnBuyYear": "12 个月 · {price}",
+    "cardPending": "银行卡和 PayPal 支付正在开发中，目前可以用支付宝或微信支付。"
+  },
+  "refund": {
+    "title": "申请退款",
+    "rules": "你的{plan}套餐是用人民币购买的。付款之后，如果你用掉的套餐 AI 额度不超过 10%，可以在 {deadline} 之前申请退款。每个账号可以退款一次。款项会退回你付款的账户，套餐回到免费版。",
+    "request": "申请退款",
+    "confirm": "退款通过后，你的套餐会结束。确定要提交申请吗？",
+    "submit": "提交申请",
+    "cancel": "取消",
+    "pending": "申请已提交，我们会审核并退款。",
+    "usedTooMuch": "付款之后你已用掉 {percent}% 的额度，超过 10% 的上限，这笔订单不能退款。",
+    "submitted": "申请已提交",
+    "notAllowed": "这笔订单现在不能退款",
+    "failed": "提交申请失败"
   }
 }

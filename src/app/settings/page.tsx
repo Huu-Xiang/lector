@@ -13,6 +13,7 @@ import LLMSettings from './components/LLMSettings';
 import PracticeSettings from './components/PracticeSettings';
 import ProseSettings from './components/ProseSettings';
 import LanguagesSettings from './components/LanguagesSettings';
+import CnRefund from './components/CnRefund';
 import NativeLanguage from './components/NativeLanguage';
 import InterfaceLanguage from './components/InterfaceLanguage';
 import VersionInfo from './components/VersionInfo';
@@ -30,6 +31,7 @@ export default function SettingsPage() {
       <PageHeader title={t('pageTitle')} />
       <div className="space-y-8">
         {lectorMode() === 'cloud' && <CloudPlanSettings />}
+        {lectorMode() === 'cloud' && <CnRefund />}
         <LanguagesSettings />
         <section className="panel space-y-6 p-6" data-testid="language-preferences">
           <div>

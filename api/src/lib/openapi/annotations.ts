@@ -2882,6 +2882,11 @@ const internalOps: Record<string, OperationDoc> = {
   },
   'POST /api/billing/cn/checkout': { summary: 'Start an RMB payment', tag: 'Service' },
   'GET /api/billing/cn/orders/{outTradeNo}': { summary: 'Read an RMB order', tag: 'Service' },
+  'GET /api/billing/cn/refund': {
+    summary: 'Read whether the latest RMB order can be refunded',
+    tag: 'Service',
+  },
+  'POST /api/billing/cn/refund': { summary: 'Request a refund for an RMB order', tag: 'Service' },
   'GET /api/billing/cn/webhook': {
     summary: 'Receive a Xiaodou payment notice',
     description: 'The MD5 signature with the merchant key is the credential.',
@@ -2931,6 +2936,19 @@ const internalOps: Record<string, OperationDoc> = {
   'POST /api/admin/users/{id}/restore': { summary: 'Lift a suspension', tag: 'Service' },
   'POST /api/admin/users/{id}/comp': {
     summary: 'Grant a complimentary membership',
+    tag: 'Service',
+  },
+  'POST /api/admin/users/{id}/end-grants': {
+    summary: 'End the paid plan an RMB order or code gave',
+    tag: 'Service',
+  },
+  'GET /api/admin/refund-requests': { summary: 'List RMB refund requests', tag: 'Service' },
+  'POST /api/admin/refund-requests/{id}/approve': {
+    summary: 'Approve an RMB refund request and end the plan',
+    tag: 'Service',
+  },
+  'POST /api/admin/refund-requests/{id}/reject': {
+    summary: 'Reject an RMB refund request',
     tag: 'Service',
   },
   'POST /api/admin/users/{id}/uncomp': {

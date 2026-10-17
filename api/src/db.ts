@@ -324,6 +324,19 @@ function getDb(): Database {
     );
     CREATE INDEX IF NOT EXISTS idx_cn_orders_user ON cn_orders(userId, createdAt);
 
+    -- Readfox: refund requests for RMB orders. The owner refunds in the Xiaodou
+    -- portal, then approves here, which ends the grant.
+    CREATE TABLE IF NOT EXISTS cn_refund_requests (
+      id TEXT PRIMARY KEY,
+      outTradeNo TEXT NOT NULL UNIQUE,
+      userId TEXT NOT NULL,
+      status TEXT NOT NULL,
+      usedPercent INTEGER NOT NULL DEFAULT 0,
+      createdAt TEXT NOT NULL,
+      decidedAt TEXT
+    );
+    CREATE INDEX IF NOT EXISTS idx_cn_refund_requests_user ON cn_refund_requests(userId, status);
+
     -- Readfox redeem codes: a campaign sets the tier, days and limits; its
     -- codes are either one shared word or a batch of single-use codes.
     CREATE TABLE IF NOT EXISTS redeem_campaigns (
@@ -593,6 +606,13 @@ function getDb(): Database {
   `);
 
   // Migrations for existing databases
+  const cnOrderCols = _db.prepare('PRAGMA table_info(cn_orders)').all() as { name: string }[];
+  if (!cnOrderCols.some((c) => c.name === 'baselinePeriod')) {
+    _db.exec('ALTER TABLE cn_orders ADD COLUMN baselinePeriod TEXT');
+    _db.exec('ALTER TABLE cn_orders ADD COLUMN baselineLlm INTEGER NOT NULL DEFAULT 0');
+    _db.exec('ALTER TABLE cn_orders ADD COLUMN baselineGloss INTEGER NOT NULL DEFAULT 0');
+  }
+
   const cols = _db.prepare('PRAGMA table_info(dailyStats)').all() as { name: string }[];
   if (!cols.some((c) => c.name === 'sessionStartedAt')) {
     _db.exec('ALTER TABLE dailyStats ADD COLUMN sessionStartedAt TEXT');

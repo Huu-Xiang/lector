@@ -13,6 +13,7 @@
  * $-cost dashboard (#226).
  */
 import { activeGrantMap, endGrants } from '../lib/plan-grants';
+import { decideRefund, listRefundRequests, requestOwner } from '../lib/cn-refund';
 import { Hono, type Context } from 'hono';
 import { db } from '../db';
 import {
@@ -750,6 +751,28 @@ export function makeAdminRoutes(
     audit(c, 'end_grants', id, email, `${ended} grant(s)`);
     return c.json({ id, ended });
   });
+
+  // GET /api/admin/refund-requests — RMB refund requests, pending first.
+  app.get('/refund-requests', (c) => c.json({ requests: listRefundRequests() }));
+
+  // POST /api/admin/refund-requests/:id/approve|reject — after refunding in the Xiaodou portal.
+  for (const verb of ['approve', 'reject'] as const) {
+    app.post(`/refund-requests/:id/${verb}`, (c) => {
+      const id = c.req.param('id');
+      const owner = requestOwner(id);
+      if (!owner || !decideRefund(id, verb === 'approve')) {
+        return c.json({ error: 'No pending request with that id' }, 404);
+      }
+      audit(
+        c,
+        verb === 'approve' ? 'refund_approve' : 'refund_reject',
+        owner.userId,
+        owner.email,
+        id,
+      );
+      return c.json({ id, status: verb === 'approve' ? 'APPROVED' : 'REJECTED' });
+    });
+  }
 
   // POST /api/admin/users/:id/uncomp — revoke the complimentary membership.
   // The account is billed normally again (locked to /subscribe if it has no
