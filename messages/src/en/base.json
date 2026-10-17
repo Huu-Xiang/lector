@@ -6,7 +6,7 @@
   "uiLanguage": {
     "label": "Interface language",
     "title": "Interface language",
-    "description": "The language of buttons, menus and pages. Translations and explanations use the Translation language below.",
+    "description": "The language of buttons, menus, book titles and descriptions. Translations and explanations use the translation language below.",
     "alsoNative": "Also use {language} for translations and book titles?",
     "alsoNativeYes": "Switch",
     "alsoNativeNo": "Keep",
@@ -199,7 +199,7 @@
   "settings": {
     "nativeLanguage": {
       "title": "Translation language",
-      "description": "Translations, explanations, tutor replies and journal feedback are written in this language. It can differ from the interface language, for example a Chinese interface with English explanations. Built-in dictionary entries stay in English.",
+      "description": "Word meanings, explanations, tutor replies and journal feedback are written in this language. It can differ from the interface language, for example a Chinese interface with English explanations. Built-in dictionary entries stay in English.",
       "saved": "Language saved",
       "errSave": "Could not save your language",
       "useBrowser": "Use my browser language instead",

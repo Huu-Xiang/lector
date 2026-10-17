@@ -6,7 +6,7 @@
   "uiLanguage": {
     "label": "界面语言",
     "title": "界面语言",
-    "description": "按钮、菜单和页面使用的语言。翻译和解释使用下面的\"翻译语言\"。",
+    "description": "按钮、菜单、书名和简介使用的语言。查词翻译和解释使用下面的“翻译语言”。",
     "alsoNative": "翻译和书名也改成{language}吗？",
     "alsoNativeYes": "改",
     "alsoNativeNo": "不用",
@@ -199,7 +199,7 @@
   "settings": {
     "nativeLanguage": {
       "title": "翻译语言",
-      "description": "翻译、解释、助手回复和日记批改会使用这种语言。它可以和界面语言不同,比如界面用中文、解释用英文。内置词典的释义仍为英文。",
+      "description": "查词释义、句子解释、助手回复和日记批改使用这种语言。它可以和界面语言不同，比如界面用中文、解释用英文。内置词典的释义仍为英文。",
       "saved": "已保存语言",
       "errSave": "无法保存语言设置",
       "useBrowser": "改用浏览器的语言",
