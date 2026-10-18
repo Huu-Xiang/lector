@@ -43,6 +43,7 @@ import {
   setCampaignActive,
 } from '../lib/redeem';
 import { maskEmail } from '../lib/mask-email';
+import { buildAdminTrends, parseTrendRange } from '../lib/admin-trends';
 import { stopImpersonation } from '../lib/impersonation';
 import { getAuthEngine } from '../lib/accounts';
 import {
@@ -637,6 +638,21 @@ export function makeAdminRoutes(
       withLibrary: rows.filter((r) => r.library.lessons > 0).length,
       onboarding: onboardingCounts(),
     });
+  });
+
+  // GET /api/admin/trends?days=7|30|90 — daily service totals, without
+  // operator and billing-exempt accounts.
+  app.get('/trends', (c) => {
+    const users = db.prepare('SELECT id, email FROM user').all() as { id: string; email: string }[];
+    const excluded = new Set(
+      users
+        .filter((u) => {
+          const email = u.email.toLowerCase();
+          return gate.emails.has(email) || billingExemptEmails.has(email);
+        })
+        .map((u) => u.id),
+    );
+    return c.json(buildAdminTrends(parseTrendRange(c.req.query('days')), now(), excluded));
   });
 
   // The dashboard never lists a real address or a name. An operator who needs the

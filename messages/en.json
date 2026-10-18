@@ -1218,7 +1218,7 @@
       },
       "operator": {
         "heading": "What the operator can and cannot see",
-        "dashboard": "The admin dashboard shows account-level numbers (sign-up date, last activity, counts of lessons and words, storage used) and a masked email address such as xi***@gmail.com. It does not show your name. It has no screen that displays your book text, and it has no “view as user” or per-user export feature. The operator can reveal a full email address to give you support, handle a deletion request or stop abuse. Each reveal is written to an audit log.",
+        "dashboard": "The admin dashboard shows account-level numbers (sign-up date, last activity, counts of lessons and words, storage used) and a masked email address such as xi***@gmail.com. It also shows service-wide daily totals, such as sign-ups, active learners, lookups and payments, which do not name any account. It does not show your name. It has no screen that displays your book text, and it has no “view as user” or per-user export feature. The operator can reveal a full email address to give you support, handle a deletion request or stop abuse. Each reveal is written to an audit log.",
         "access": "Be aware that the operator still has technical access to the server and its database, so we cannot promise that viewing is technically impossible. We do not look at your content. If you ask for support and send us an export, we use it only to fix your problem and then delete it. Please do not upload material you would not want a server to process."
       },
       "backups": {

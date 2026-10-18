@@ -348,3 +348,46 @@ export async function decideRefundRequest(id: string, approve: boolean): Promise
   });
   if (!res.ok) throw new Error(`refund decision failed (${res.status})`);
 }
+
+export type AdminTrendRange = 7 | 30 | 90;
+
+export interface AdminTrendDay {
+  date: string;
+  signups: number;
+  active: number;
+  lookups: number;
+  wordsSaved: number;
+  practiced: number;
+  minutesRead: number;
+  freePhraseTranslations: number;
+  freeContextTranslations: number;
+  rmbOrders: number;
+  rmbFen: number;
+}
+
+export interface AdminTrends {
+  range: AdminTrendRange;
+  from: string;
+  to: string;
+  excludedAccounts: number;
+  daily: AdminTrendDay[];
+  funnel: {
+    signedUp: number;
+    verified: number;
+    finishedSetup: number;
+    studied: number;
+    finishedOnboarding: number;
+    cameBack: number;
+  };
+  retention: {
+    nextDay: { eligible: number; returned: number };
+    afterWeek: { eligible: number; returned: number };
+  };
+  rmb: { orders: number; fen: number; refundedOrders: number; refundedFen: number };
+}
+
+export async function getAdminTrends(days: AdminTrendRange): Promise<AdminTrends> {
+  const res = await apiFetch(`/api/admin/trends?days=${days}`);
+  if (!res.ok) throw new Error(`admin trends failed (${res.status})`);
+  return res.json();
+}

@@ -427,6 +427,117 @@ describe('GET /api/admin/summary', () => {
   });
 });
 
+describe('GET /api/admin/trends', () => {
+  const NOW = () => new Date('2026-07-20T12:00:00Z');
+
+  function seedStudyDay(userId: string, date: string, lookups = 0) {
+    db.prepare(
+      `INSERT INTO dailyStats (userId, date, language, wordsRead, dictionaryLookups, sessionStartedAt)
+       VALUES (?, ?, 'en', 10, ?, ?)`,
+    ).run(userId, date, lookups, `${date}T09:00:00Z`);
+  }
+
+  function seedOrder(
+    id: string,
+    userId: string,
+    status: string,
+    fen: number,
+    paidAt: string | null,
+  ) {
+    db.prepare(
+      `INSERT INTO cn_orders (outTradeNo, userId, plan, months, amountFen, channel, status, createdAt, paidAt)
+       VALUES (?, ?, 'cloud', 1, ?, 'alipay', ?, ?, ?)`,
+    ).run(id, userId, fen, status, paidAt ?? '2026-07-12T00:00:00Z', paidAt);
+  }
+
+  beforeEach(() => {
+    db.prepare('DELETE FROM cn_orders').run();
+    const setCreated = db.prepare('UPDATE user SET createdAt = ? WHERE id = ?');
+    setCreated.run('2026-07-15T03:00:00Z', ADMIN);
+    setCreated.run('2026-07-10T08:00:00Z', ALICE);
+    setCreated.run('2026-07-19T10:00:00Z', BOB);
+
+    db.prepare(
+      `INSERT INTO onboarding_progress (userId, status, currentStep, language, startedAt, completedAt, updatedAt)
+       VALUES (?, 'completed', 'summary', 'en', ?, ?, ?)`,
+    ).run(ALICE, '2026-07-10T08:05:00Z', '2026-07-10T08:30:00Z', '2026-07-10T08:30:00Z');
+    seedStudyDay(ALICE, '2026-07-10', 3);
+    seedStudyDay(ALICE, '2026-07-11');
+    seedStudyDay(ALICE, '2026-07-18');
+    db.prepare(
+      `INSERT INTO dailyStats (userId, date, language) VALUES (?, '2026-07-12', 'en')`,
+    ).run(ALICE);
+    seedStudyDay(ADMIN, '2026-07-15', 50);
+
+    const counter = db.prepare(
+      'INSERT INTO usage_counters (userId, metric, period, value, updatedAt) VALUES (?, ?, ?, ?, ?)',
+    );
+    counter.run(ALICE, 'phraseTranslationsPerDay', '2026-07-10', 4, '2026-07-10T09:00:00Z');
+    counter.run(ALICE, 'contextTranslationsPerDay', '2026-07-11', 2, '2026-07-11T09:00:00Z');
+    counter.run(ALICE, 'wordGlossesPerMonth', '2026-07', 9, '2026-07-11T09:00:00Z');
+
+    seedOrder('o1', ALICE, 'SUCCEEDED', 2900, '2026-07-12T05:00:00Z');
+    seedOrder('o2', ALICE, 'REFUNDED', 1900, '2026-07-13T05:00:00Z');
+    seedOrder('o3', ALICE, 'PENDING', 2900, null);
+    seedOrder('o4', ADMIN, 'SUCCEEDED', 9900, '2026-07-15T05:00:00Z');
+  });
+
+  afterAll(() => {
+    db.prepare('DELETE FROM cn_orders').run();
+  });
+
+  test('non-admin → 403', async () => {
+    const res = await buildApp(gate, { now: NOW }).request('/api/admin/trends', asUser(ALICE));
+    expect(res.status).toBe(403);
+  });
+
+  test('daily totals, funnel, retention and RMB revenue without operator accounts', async () => {
+    const res = await buildApp(gate, { now: NOW }).request('/api/admin/trends', asUser(ADMIN));
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body.range).toBe(30);
+    expect(body.from).toBe('2026-06-21');
+    expect(body.to).toBe('2026-07-20');
+    expect(body.excludedAccounts).toBe(1);
+    expect(body.daily).toHaveLength(30);
+
+    const day = (date: string) => body.daily.find((d: { date: string }) => d.date === date);
+    expect(day('2026-07-10')).toMatchObject({
+      signups: 1,
+      active: 1,
+      lookups: 3,
+      freePhraseTranslations: 4,
+    });
+    expect(day('2026-07-11')).toMatchObject({ active: 1, freeContextTranslations: 2 });
+    expect(day('2026-07-12')).toMatchObject({ active: 0, rmbOrders: 1, rmbFen: 2900 });
+    expect(day('2026-07-15')).toMatchObject({ signups: 0, active: 0, lookups: 0, rmbFen: 0 });
+    expect(day('2026-07-19')).toMatchObject({ signups: 1 });
+
+    expect(body.funnel).toEqual({
+      signedUp: 2,
+      verified: 1,
+      finishedSetup: 1,
+      studied: 1,
+      finishedOnboarding: 1,
+      cameBack: 1,
+    });
+    expect(body.retention).toEqual({
+      nextDay: { eligible: 1, returned: 1 },
+      afterWeek: { eligible: 1, returned: 1 },
+    });
+    expect(body.rmb).toEqual({ orders: 1, fen: 2900, refundedOrders: 1, refundedFen: 1900 });
+  });
+
+  test('days picks 7, 30 or 90 and falls back to 30', async () => {
+    const app = buildApp(gate, { now: NOW });
+    const seven = await (await app.request('/api/admin/trends?days=7', asUser(ADMIN))).json();
+    expect(seven.daily).toHaveLength(7);
+    expect(seven.funnel.signedUp).toBe(1);
+    const odd = await (await app.request('/api/admin/trends?days=12', asUser(ADMIN))).json();
+    expect(odd.range).toBe(30);
+  });
+});
+
 describe('GET /api/admin/users languages', () => {
   test('lists target, enabled, and content languages per account', async () => {
     seedSetting(ALICE, 'targetLanguage', 'de');

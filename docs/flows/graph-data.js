@@ -448,6 +448,12 @@
     summary: "Admin page loads summary and users. requireAdmin gates every /api/admin route.",
     steps: ["file:admin-page", "fn:getAdminUsers", "route:admin-users", "file:admin-lib"],
   });
+  N("flow:admin-trends", "flow", "Admin trends", {
+    domain: "admin",
+    md: "admin.md#admin-trends",
+    summary: "Daily signups, active learners, lookups, Free AI translations, RMB revenue, funnel and retention.",
+    steps: ["file:admin-trends-ui", "fn:getAdminTrends", "route:admin-trends", "file:admin-trends-lib"],
+  });
   N("flow:admin-support", "flow", "Admin support action", {
     domain: "admin",
     md: "admin.md#admin-support-action",
@@ -525,6 +531,8 @@
   N("file:billing-client", "file", "billing.ts (client)", { path: "src/lib/billing.ts", domain: "billing" });
   N("file:admin-page", "file", "Admin page", { path: "src/app/admin/page.tsx", domain: "admin" });
   N("file:admin-client", "file", "admin-client.ts", { path: "src/lib/admin-client.ts", domain: "admin" });
+  N("file:admin-trends-ui", "file", "Trends.tsx", { path: "src/app/admin/Trends.tsx", domain: "admin" });
+  N("file:admin-trends-lib", "file", "admin-trends.ts", { path: "api/src/lib/admin-trends.ts", domain: "admin" });
   N("file:admin-lib", "file", "admin.ts", { path: "api/src/lib/admin.ts", domain: "admin" });
   N("file:user-export", "file", "user-export.ts", { path: "api/src/lib/user-export.ts", domain: "data" });
   N("file:byok-lib", "file", "byok.ts", { path: "api/src/lib/byok.ts", domain: "settings" });
@@ -662,6 +670,7 @@
   N("fn:previewPlanChange", "fn", "previewPlanChange", { path: "src/lib/billing.ts" });
   N("fn:applyPlanChange", "fn", "applyPlanChange", { path: "src/lib/billing.ts" });
   N("fn:getAdminUsers", "fn", "getAdminUsers", { path: "src/lib/admin-client.ts" });
+  N("fn:getAdminTrends", "fn", "getAdminTrends", { path: "src/lib/admin-client.ts" });
   N("fn:suspendUser", "fn", "suspendUser", { path: "src/lib/admin-client.ts" });
   N("fn:startImpersonation", "fn", "startImpersonation", { path: "src/lib/admin-client.ts" });
   N("fn:createAuthEngine", "fn", "createAuthEngine", { path: "api/src/lib/accounts.ts" });
@@ -729,6 +738,7 @@
   N("route:billing-change", "route", "POST /api/billing/change", { path: "api/src/routes/billing.ts" });
   N("route:billing-webhook", "route", "POST /api/billing/webhook", { path: "api/src/routes/billing.ts" });
   N("route:admin-users", "route", "GET /api/admin/users", { path: "api/src/routes/admin.ts" });
+  N("route:admin-trends", "route", "GET /api/admin/trends", { path: "api/src/routes/admin.ts" });
   N("route:admin-suspend", "route", "POST /api/admin/users/:id/suspend", { path: "api/src/routes/admin.ts" });
   N("route:admin-impersonate", "route", "POST /api/admin/users/:id/impersonate", { path: "api/src/routes/admin.ts" });
   N("route:impersonation-status", "route", "GET /api/impersonation/status", { path: "api/src/routes/impersonation.ts" });
@@ -842,7 +852,7 @@
   domainFlows("settings", ["flow:save-settings", "flow:configure-llm", "flow:api-tokens", "flow:delete-account"]);
   domainFlows("data", ["flow:export-data", "flow:restore-data"]);
   domainFlows("billing", ["flow:subscribe", "flow:entitlements", "flow:plan-change"]);
-  domainFlows("admin", ["flow:admin-list", "flow:admin-support", "flow:impersonate"]);
+  domainFlows("admin", ["flow:admin-list", "flow:admin-trends", "flow:admin-support", "flow:impersonate"]);
 
   // Cross-flow walks
   edge("flow:load-library-item", "flow:translate-word", "then");
@@ -1353,11 +1363,19 @@
   // ── Admin ─────────────────────────────────────────────────────────────────
 
   edge("flow:admin-list", "file:admin-page", "starts");
+  edge("flow:admin-trends", "file:admin-trends-ui", "starts");
   edge("file:admin-page", "fn:getAdminUsers", "calls");
   edge("fn:getAdminUsers", "file:admin-client", "in");
   edge("fn:getAdminUsers", "route:admin-users", "http");
   edge("route:admin-users", "file:route-admin", "in");
   edge("route:admin-users", "fn:requireAdmin", "calls");
+  edge("file:admin-page", "file:admin-trends-ui", "calls");
+  edge("file:admin-trends-ui", "fn:getAdminTrends", "calls");
+  edge("fn:getAdminTrends", "file:admin-client", "in");
+  edge("fn:getAdminTrends", "route:admin-trends", "http");
+  edge("route:admin-trends", "file:route-admin", "in");
+  edge("route:admin-trends", "fn:requireAdmin", "calls");
+  edge("route:admin-trends", "file:admin-trends-lib", "calls");
   edge("fn:requireAdmin", "file:admin-lib", "in");
   edge("flow:admin-support", "file:admin-page", "starts");
   edge("file:admin-page", "fn:suspendUser", "calls");

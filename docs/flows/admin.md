@@ -19,6 +19,25 @@ The admin page loads a summary and a member list.
 
 Each row shows plan, status, last active, library size, and month usage.
 
+## Admin trends
+
+**App domain:** Admin
+
+The Trends section shows daily totals for 7, 30 or 90 days.
+
+| Role | Path | Function |
+| --- | --- | --- |
+| Page | `src/app/admin/Trends.tsx` | Trends section |
+| Client | `src/lib/admin-client.ts` | `getAdminTrends` |
+| API | `api/src/routes/admin.ts` | `GET /trends?days=7\|30\|90` |
+| Logic | `api/src/lib/admin-trends.ts` | `buildAdminTrends` |
+
+It counts only totals. Admin and billing-exempt accounts are left out.
+
+- Active learners and lookups come from `dailyStats`, which uses each learner's time zone.
+- Signups, Free AI translations (`usage_counters`) and RMB orders (`cn_orders`) use UTC days.
+- Paid AI calls are counted per month only, so the chart leaves them out.
+
 ## Admin support action
 
 **App domain:** Admin

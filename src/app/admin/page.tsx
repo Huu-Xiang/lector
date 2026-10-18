@@ -29,6 +29,8 @@ import {
 import { planName } from '@/lib/plan-names';
 import RedeemCampaigns from './RedeemCampaigns';
 import RefundRequests from './RefundRequests';
+import StatCard from './StatCard';
+import Trends from './Trends';
 
 function formatBytes(n: number): string {
   if (n < 1024) return `${n} B`;
@@ -76,26 +78,6 @@ function planBadge(row: AdminUserRow): { label: string; className: string } {
     return { label: 'Free', className: 'bg-muted text-muted-foreground' };
   }
   return { label: row.status, className: 'bg-muted text-muted-foreground' };
-}
-
-function StatCard({
-  label,
-  value,
-  hint,
-}: {
-  label: string;
-  value: string | number;
-  hint?: string;
-}) {
-  return (
-    <div className="rounded-xl border border-border bg-card p-4">
-      <div className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
-        {label}
-      </div>
-      <div className="mt-1 text-2xl font-extrabold text-foreground">{value}</div>
-      {hint && <div className="mt-0.5 text-xs text-muted-foreground">{hint}</div>}
-    </div>
-  );
 }
 
 export default function AdminPage() {
@@ -410,6 +392,8 @@ export default function AdminPage() {
           />
         </div>
       )}
+
+      <Trends />
 
       {summary && (summary.languages ?? []).length > 0 && (
         <section className="mb-8">
