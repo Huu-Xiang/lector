@@ -1,5 +1,6 @@
 import '../../test-guard';
 import { beforeEach, describe, expect, test } from 'bun:test';
+import path from 'path';
 import { db } from '../../db';
 import { refreshReadingFeed } from './refresh';
 import { listReadingFeed, pruneReadingFeed } from './store';
@@ -126,5 +127,29 @@ describe('refreshReadingFeed', () => {
     }
     pruneReadingFeed(source.language, source.interest);
     expect(listReadingFeed(source.language, source.interest)).toHaveLength(30);
+  });
+
+  test('prune waits for a short write lock held by another connection', async () => {
+    const source = READING_FEED_SOURCES[0];
+    const dbPath = path.resolve(process.env.DATA_DIR!, 'lector.db');
+    const holder = Bun.spawn(
+      [
+        process.execPath,
+        '-e',
+        `const { Database } = require('bun:sqlite');
+         const conn = new Database(${JSON.stringify(dbPath)});
+         conn.exec('BEGIN IMMEDIATE');
+         console.log('locked');
+         Bun.sleepSync(300);
+         conn.exec('COMMIT');`,
+      ],
+      { stdout: 'pipe' },
+    );
+    const reader = holder.stdout.getReader();
+    const { value } = await reader.read();
+    expect(new TextDecoder().decode(value)).toContain('locked');
+
+    expect(() => pruneReadingFeed(source.language, source.interest)).not.toThrow();
+    expect(await holder.exited).toBe(0);
   });
 });

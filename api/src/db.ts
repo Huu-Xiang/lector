@@ -42,6 +42,8 @@ function getDb(): Database {
 
   _db = new Database(DB_PATH);
   _db.exec('PRAGMA journal_mode = WAL');
+  // Litestream takes the write lock briefly in each checkpoint; wait instead of failing.
+  _db.exec('PRAGMA busy_timeout = 5000');
 
   _db.exec(`
     CREATE TABLE IF NOT EXISTS collections (
