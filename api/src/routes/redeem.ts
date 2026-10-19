@@ -46,7 +46,11 @@ export function makeRedeemRoutes(
         result.error === 'invalid_code' ? 404 : 409,
       );
     }
-    return c.json({ plan: result.grant.plan, endsAt: result.grant.endsAt });
+    if (result.stored) {
+      const { plan, days, expiresAt } = result.card;
+      return c.json({ stored: true, plan, days, expiresAt });
+    }
+    return c.json({ stored: false, plan: result.grant.plan, endsAt: result.grant.endsAt });
   });
 
   return app;

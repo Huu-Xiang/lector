@@ -9,6 +9,8 @@ import { invalidateEntitlementsCache } from '@/lib/data-layer';
 import { planName } from '@/lib/plan-names';
 import { useRetryCountdown } from '@/lib/use-retry-countdown';
 
+export const CARDS_CHANGED_EVENT = 'readfox:cards-changed';
+
 interface InviteState {
   code: string;
   rewardDays: number;
@@ -17,7 +19,7 @@ interface InviteState {
   rewarded: number;
   invitedBy: { status: string } | null;
   canClaim: boolean;
-  cards: Array<{ id: string; days: number; expiresAt: string }>;
+  cards: Array<{ id: string; plan: string; days: number; expiresAt: string }>;
 }
 
 async function readError(res: Response): Promise<{ error?: string; [key: string]: unknown }> {
@@ -40,7 +42,10 @@ export default function InviteCard() {
   }, []);
 
   useEffect(() => {
-    void load().catch(() => {});
+    const reload = () => void load().catch(() => {});
+    reload();
+    window.addEventListener(CARDS_CHANGED_EVENT, reload);
+    return () => window.removeEventListener(CARDS_CHANGED_EVENT, reload);
   }, [load]);
 
   if (!state) return null;
@@ -160,7 +165,7 @@ export default function InviteCard() {
             >
               <div className="min-w-0">
                 <p className="text-sm font-medium text-foreground">
-                  {t('card', { days: card.days })}
+                  {t('card', { plan: planName(card.plan), days: card.days })}
                 </p>
                 <p className="text-xs text-muted-foreground">
                   {t('cardUntil', {

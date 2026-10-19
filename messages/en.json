@@ -646,13 +646,12 @@
       "submit": "Redeem",
       "redeeming": "Redeeming…",
       "success": "Code redeemed: {plan} until {date}.",
+      "stored": "Saved as a {plan} card ({days} days). Your current plan is not changed. Find it under Your cards and use it by {date}.",
       "errors": {
         "invalid_code": "That code is not valid.",
         "expired": "That code has expired.",
         "used_up": "That code has been used up.",
         "already_redeemed": "You have already used this offer.",
-        "higher_plan_active": "Your current plan is higher than this code's plan.",
-        "subscription_active": "You have a subscription that renews automatically, so codes cannot be used now.",
         "email_not_verified": "Verify your email address first.",
         "too_many_attempts": "Too many wrong codes. Try again in {minutes} min.",
         "generic": "The code could not be redeemed. Try again later."
@@ -670,7 +669,7 @@
       "joinedDone": "You joined with an invite. Your card is in your cards below.",
       "cardsTitle": "Your cards",
       "cardsEmpty": "No cards yet.",
-      "card": "Plus card · {days} days",
+      "card": "{plan} card · {days} days",
       "cardUntil": "Use it by {date}.",
       "activate": "Activate",
       "activating": "Activating…",
@@ -690,7 +689,7 @@
         "not_found": "That card could not be found.",
         "already_used": "That card was already used.",
         "expired": "That card has expired.",
-        "higher_plan_active": "Your current plan is higher than Plus. Use the card after it ends.",
+        "higher_plan_active": "Your current plan is higher than this card. Use the card after it ends.",
         "subscription_active": "You have a subscription that renews automatically. Use the card after it ends.",
         "generic": "Something went wrong. Try again later."
       },

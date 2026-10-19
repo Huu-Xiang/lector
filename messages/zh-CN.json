@@ -646,13 +646,12 @@
       "submit": "兑换",
       "redeeming": "正在兑换…",
       "success": "兑换成功：{plan}，有效期至 {date}。",
+      "stored": "已存为 {plan} 卡（{days} 天）。你当前的套餐不变。请在“我的卡”里找到它，并在 {date} 前使用。",
       "errors": {
         "invalid_code": "兑换码无效。",
         "expired": "兑换码已过期。",
         "used_up": "兑换码已被用完。",
         "already_redeemed": "你已经参加过这个活动了。",
-        "higher_plan_active": "你当前的套餐比这个兑换码的套餐高。",
-        "subscription_active": "你有自动续订的订阅，现在不能使用兑换码。",
         "email_not_verified": "请先验证你的邮箱。",
         "too_many_attempts": "输错次数太多，请 {minutes} 分钟后再试。",
         "generic": "兑换失败，请稍后再试。"
@@ -670,7 +669,7 @@
       "joinedDone": "你是通过邀请加入的。你的卡已在下面的卡包里。",
       "cardsTitle": "我的卡包",
       "cardsEmpty": "还没有卡。",
-      "card": "Plus 卡 · {days} 天",
+      "card": "{plan} 卡 · {days} 天",
       "cardUntil": "请在 {date} 前使用。",
       "activate": "激活",
       "activating": "激活中…",
@@ -690,7 +689,7 @@
         "not_found": "找不到这张卡。",
         "already_used": "这张卡已经用过了。",
         "expired": "这张卡已过期。",
-        "higher_plan_active": "你当前的套餐高于 Plus。请在它到期后再使用这张卡。",
+        "higher_plan_active": "你当前的套餐高于这张卡。请在它到期后再使用这张卡。",
         "subscription_active": "你有自动续费的订阅。请在订阅结束后再使用这张卡。",
         "generic": "出错了，请稍后再试。"
       },

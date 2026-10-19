@@ -60,7 +60,7 @@ export function activeGrant(
   return best;
 }
 
-function addMonths(start: Date, months: number): Date {
+export function addMonths(start: Date, months: number): Date {
   const end = new Date(start);
   end.setUTCDate(1);
   end.setUTCMonth(end.getUTCMonth() + months);

@@ -1,6 +1,16 @@
 import { randomBytes, randomUUID } from 'crypto';
 import { db } from '../db';
-import { grantPlan, planRank, type GrantPlan, type PlanGrant } from './plan-grants';
+import {
+  activeGrant,
+  addMonths,
+  grantPlan,
+  planRank,
+  type GrantPlan,
+  type PlanGrant,
+} from './plan-grants';
+
+/** A card saved from a code stays usable this long after the plan that blocked it ends. */
+export const STORED_CARD_MONTHS = 6;
 
 export interface RedeemCampaign {
   id: string;
@@ -19,9 +29,19 @@ export type RedeemError =
   | 'expired'
   | 'used_up'
   | 'already_redeemed'
-  | 'higher_plan_active'
-  | 'subscription_active'
   | 'email_not_verified';
+
+export interface StoredCard {
+  id: string;
+  plan: GrantPlan;
+  days: number;
+  expiresAt: string;
+}
+
+export type RedeemResult =
+  | { ok: true; stored: false; grant: PlanGrant }
+  | { ok: true; stored: true; card: StoredCard }
+  | { ok: false; error: RedeemError };
 
 /** Codes are case-insensitive; spaces and dashes typed by people are ignored. */
 export function normalizeCode(raw: string): string {
@@ -121,8 +141,9 @@ export function setCampaignActive(campaignId: string, active: boolean): boolean 
 }
 
 /**
- * Redeem `rawCode` for `userId`. Same tier extends the current period; a
- * higher tier starts now; a lower tier than the current plan is refused.
+ * Redeem `rawCode` for `userId`. Same tier extends the current period and a
+ * higher tier starts now. A lower tier, or any code while a subscription runs,
+ * is saved as a card (`reward_cards`) to activate later from Settings.
  */
 export function redeemCode(args: {
   userId: string;
@@ -131,13 +152,13 @@ export function redeemCode(args: {
   hasSubscription: boolean;
   emailVerified: boolean;
   now?: Date;
-}): { ok: true; grant: PlanGrant } | { ok: false; error: RedeemError } {
+}): RedeemResult {
   const now = args.now ?? new Date();
   const code = normalizeCode(args.rawCode);
   if (!code) return { ok: false, error: 'invalid_code' };
   if (!args.emailVerified) return { ok: false, error: 'email_not_verified' };
 
-  return db.transaction((): { ok: true; grant: PlanGrant } | { ok: false; error: RedeemError } => {
+  return db.transaction((): RedeemResult => {
     const row = db
       .prepare(
         `SELECT k.code, k.maxUses, k.uses, c.id AS campaignId, c.plan, c.days, c.perUserLimit,
@@ -171,20 +192,41 @@ export function redeemCode(args: {
       .prepare('SELECT COUNT(*) AS n FROM redeem_uses WHERE campaignId = ? AND userId = ?')
       .get(row.campaignId, args.userId) as { n: number };
     if (mine.n >= row.perUserLimit) return { ok: false, error: 'already_redeemed' };
-    if (args.hasSubscription) return { ok: false, error: 'subscription_active' };
-    const current = args.currentPlan;
-    if (
-      (current === 'cloud' || current === 'plus' || current === 'max') &&
-      planRank(current) > planRank(row.plan)
-    ) {
-      return { ok: false, error: 'higher_plan_active' };
-    }
 
     const useId = randomUUID();
     db.prepare(
       'INSERT INTO redeem_uses (id, code, campaignId, userId, at) VALUES (?, ?, ?, ?, ?)',
     ).run(useId, code, row.campaignId, args.userId, now.toISOString());
     db.prepare('UPDATE redeem_codes SET uses = uses + 1 WHERE code = ?').run(code);
+
+    const current = args.currentPlan;
+    const higherPlanActive =
+      (current === 'cloud' || current === 'plus' || current === 'max') &&
+      planRank(current) > planRank(row.plan);
+    if (args.hasSubscription || higherPlanActive) {
+      const heldUntil = activeGrant(args.userId, now)?.endsAt;
+      const from = heldUntil && heldUntil > now.toISOString() ? new Date(heldUntil) : now;
+      const card: StoredCard = {
+        id: randomUUID(),
+        plan: row.plan,
+        days: row.days,
+        expiresAt: addMonths(from, STORED_CARD_MONTHS).toISOString(),
+      };
+      db.prepare(
+        `INSERT INTO reward_cards (id, userId, plan, days, source, ref, createdAt, expiresAt)
+         VALUES (?, ?, ?, ?, 'redeem', ?, ?, ?)`,
+      ).run(
+        card.id,
+        args.userId,
+        card.plan,
+        card.days,
+        `redeem:${useId}`,
+        now.toISOString(),
+        card.expiresAt,
+      );
+      return { ok: true, stored: true, card };
+    }
+
     const grant = grantPlan({
       userId: args.userId,
       plan: row.plan,
@@ -193,6 +235,6 @@ export function redeemCode(args: {
       ref: `redeem:${useId}`,
       now,
     });
-    return { ok: true, grant };
+    return { ok: true, stored: false, grant };
   })();
 }

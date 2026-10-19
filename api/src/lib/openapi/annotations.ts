@@ -2871,7 +2871,7 @@ const internalOps: Record<string, OperationDoc> = {
     summary: 'Read the plan limits and the usage',
     tag: 'Service',
   },
-  'POST /api/redeem': { summary: 'Redeem a code for a paid plan', tag: 'Service' },
+  'POST /api/redeem': { summary: 'Redeem a code, or save it as a card', tag: 'Service' },
   'GET /api/invite': {
     summary: 'Read your invite code, invite counts and reward cards',
     tag: 'Service',

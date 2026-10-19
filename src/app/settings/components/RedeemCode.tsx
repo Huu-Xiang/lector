@@ -7,14 +7,13 @@ import { Button } from '@/components/ui/button';
 import { apiFetch } from '@/lib/api-base';
 import { planName } from '@/lib/plan-names';
 import { useRetryCountdown } from '@/lib/use-retry-countdown';
+import { CARDS_CHANGED_EVENT } from './InviteCard';
 
 const ERRORS = new Set([
   'invalid_code',
   'expired',
   'used_up',
   'already_redeemed',
-  'higher_plan_active',
-  'subscription_active',
   'email_not_verified',
   'too_many_attempts',
 ]);
@@ -51,12 +50,23 @@ export default function RedeemCode({ onRedeemed }: { onRedeemed: () => void }) {
         );
         return;
       }
-      toast.success(
-        t('success', {
-          plan: planName(body.plan),
-          date: new Date(body.endsAt).toLocaleDateString(locale),
-        }),
-      );
+      if (body.stored) {
+        toast.success(
+          t('stored', {
+            plan: planName(body.plan),
+            days: body.days,
+            date: new Date(body.expiresAt).toLocaleDateString(locale),
+          }),
+        );
+        window.dispatchEvent(new Event(CARDS_CHANGED_EVENT));
+      } else {
+        toast.success(
+          t('success', {
+            plan: planName(body.plan),
+            date: new Date(body.endsAt).toLocaleDateString(locale),
+          }),
+        );
+      }
       setCode('');
       setOpen(false);
       onRedeemed();
