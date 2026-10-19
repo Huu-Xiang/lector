@@ -1,4 +1,19 @@
 {
+  "announcements": {
+    "button": "新功能",
+    "buttonUnseen": "新功能，有未读更新",
+    "title": "新功能",
+    "close": "关闭",
+    "bannerLabel": "新",
+    "dismiss": "关闭提示",
+    "learnMore": "了解更多",
+    "items": {
+      "skipGuide": {
+        "title": "首课引导现在可以跳过",
+        "body": "第一次读文章时，左下角的引导卡片多了“跳过引导”按钮。"
+      }
+    }
+  },
   "common": {
     "appName": "Readfox",
     "tagline": "用阅读学会一门新语言"

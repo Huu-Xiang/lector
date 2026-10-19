@@ -1,4 +1,19 @@
 {
+  "announcements": {
+    "button": "What's new",
+    "buttonUnseen": "What's new, you have unread updates",
+    "title": "What's new",
+    "close": "Close",
+    "bannerLabel": "New",
+    "dismiss": "Dismiss",
+    "learnMore": "Learn more",
+    "items": {
+      "skipGuide": {
+        "title": "You can skip the first-lesson guide",
+        "body": "The guide card in your first lesson now has a Skip guide button."
+      }
+    }
+  },
   "common": {
     "appName": "Readfox",
     "tagline": "Read your way to a new language"

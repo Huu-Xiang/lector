@@ -20,6 +20,7 @@ import AppName from './components/AppName';
 import AccountMenu from './components/AccountMenu';
 import AdminNavLink from './components/AdminNavLink';
 import SidebarCollapseButton from './components/SidebarCollapseButton';
+import WhatsNew from '@/components/WhatsNew';
 import type { NavTourTip } from './components/NavLink';
 
 export default function NavHeader() {
@@ -64,6 +65,7 @@ export default function NavHeader() {
         <AppName />
         <div className="flex items-center gap-1">
           <LanguageSelector compact />
+          <WhatsNew variant="topbar" />
           <AccountMenu compact />
         </div>
       </div>
@@ -99,6 +101,10 @@ export default function NavHeader() {
         </nav>
 
         <AiQuota compact={collapsed} />
+
+        <div className={clsx(collapsed ? 'flex justify-center px-1' : 'px-3')}>
+          <WhatsNew variant="sidebar" collapsed={collapsed} />
+        </div>
 
         <div className={clsx(collapsed ? 'flex justify-center py-1' : '')}>
           <AccountMenu compact={collapsed} />

@@ -52,6 +52,7 @@ import {
   type CollectionGroup,
 } from '@/lib/data-layer';
 import { Button } from '@/components/ui/button';
+import AnnouncementBanner from '@/components/AnnouncementBanner';
 import PageHeader from '@/components/PageHeader';
 import { getOnboardingSnapshot, type OnboardingSnapshot } from '@/lib/onboarding';
 import { toast } from 'sonner';
@@ -490,6 +491,7 @@ export default function Home() {
           />
         </div>
       </PageHeader>
+      {!isLoading && onboarding?.progress?.status !== 'in_progress' && <AnnouncementBanner />}
       {onboarding?.progress?.status === 'in_progress' && (
         <section
           aria-labelledby="resume-guide-heading"
