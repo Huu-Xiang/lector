@@ -53,6 +53,7 @@ import { useActiveLanguage } from '@/utils/hooks';
 import { patchWordState } from '@/components/MarkdownReader/optimistic-word-state';
 import type { WordSource } from '@/components/MarkdownReader/types';
 import {
+  dismissOnboarding,
   encounteredOnboardingTerms,
   getOnboardingSnapshot,
   hasOnboardingPhraseLookup,
@@ -135,6 +136,14 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
   useEffect(() => {
     void refreshOnboarding();
   }, [refreshOnboarding]);
+
+  const skipOnboardingGuide = useCallback(async () => {
+    try {
+      setOnboarding(await dismissOnboarding());
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : t('onboardingSkipFailed'));
+    }
+  }, [t]);
 
   // Load lesson
   useEffect(() => {
@@ -1392,6 +1401,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
           onStartPractice={
             onboardingCoachStage === 'practice' ? startOnboardingPractice : undefined
           }
+          onSkip={skipOnboardingGuide}
         />
       )}
     </div>

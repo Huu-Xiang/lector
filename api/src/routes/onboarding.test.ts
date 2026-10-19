@@ -190,6 +190,27 @@ describe('guided onboarding state', () => {
     );
   });
 
+  test('dismiss ends a run in progress and keeps the profile', async () => {
+    expect(
+      ((await (await post(onboarding, '/dismiss')).json()) as TestSnapshot).progress,
+    ).toBeNull();
+
+    await post(onboarding, '/start', profile);
+    const dismissed = (await (await post(onboarding, '/dismiss')).json()) as TestSnapshot;
+    expect(dismissed.progress.status).toBe('skipped');
+    expect(dismissed.profile.dailyMinutes).toBe(15);
+    expect(dismissed.events.map((event) => event.eventType)).toEqual([
+      'onboarding.started',
+      'onboarding.profile_saved',
+      'onboarding.skipped',
+    ]);
+
+    const again = (await (await post(onboarding, '/dismiss')).json()) as TestSnapshot;
+    expect(again.events).toHaveLength(3);
+    const restart = (await (await post(onboarding, '/start', profile)).json()) as TestSnapshot;
+    expect(restart.progress.status).toBe('skipped');
+  });
+
   test('rejects malformed profile and progress updates without partial writes', async () => {
     expect((await post(onboarding, '/start', { ...profile, dailyMinutes: 2 })).status).toBe(400);
     expect((await post(onboarding, '/start', { ...profile, interests: ['not-real'] })).status).toBe(

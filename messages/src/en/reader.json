@@ -15,6 +15,7 @@
       "levelFailed": "Could not set the word level — check your connection.",
       "onboardingWordAdded": "“{word}” added — {count} of 3 review words ready",
       "miniReviewFailed": "Could not start the mini-review. Please try again.",
+      "onboardingSkipFailed": "Could not skip the guide. Please try again.",
       "copied": "Copied",
       "loading": "Loading lesson...",
       "goToLibrary": "Go to Library",
@@ -138,6 +139,7 @@
     },
     "coach": {
       "ariaLabel": "Guided first lesson",
+      "skip": "Skip guide",
       "progressLabel": "{count} of 3 review words ready",
       "wordPlaceholder": "Word {n}",
       "startPractice": "Start 3-word practice",

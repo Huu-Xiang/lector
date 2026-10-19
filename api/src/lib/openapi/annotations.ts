@@ -2714,6 +2714,13 @@ const onboardingOps: Record<string, OperationDoc> = {
     requestBody: { required: true, schema: PROFILE_BODY },
     responses: { '200': { description: 'The new state.', schema: ref('OnboardingSnapshot') } },
   },
+  'POST /api/onboarding/dismiss': {
+    summary: 'Skip the guided first run from the reader',
+    description:
+      'Marks a run in progress as skipped and keeps the stored profile. Any other state is returned unchanged.',
+    tag: 'Onboarding',
+    responses: { '200': { description: 'The new state.', schema: ref('OnboardingSnapshot') } },
+  },
   'PATCH /api/onboarding': {
     summary: 'Advance the guided first run',
     tag: 'Onboarding',

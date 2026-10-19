@@ -354,6 +354,29 @@ app.post('/skip', async (c) => {
   }
 });
 
+app.post('/dismiss', (c) => {
+  const userId = getCurrentUserId(c);
+  const existing = db.prepare('SELECT * FROM onboarding_progress WHERE userId = ?').get(userId) as
+    | OnboardingProgressRow
+    | undefined;
+  if (!existing || existing.status !== 'in_progress') return c.json(buildSnapshot(userId));
+
+  const now = new Date().toISOString();
+  db.transaction(() => {
+    db.prepare(
+      `UPDATE onboarding_progress SET status = 'skipped', currentStep = 'summary',
+       completedAt = ?, updatedAt = ? WHERE userId = ?`,
+    ).run(now, now, userId);
+    recordLearnerEvent(userId, {
+      eventType: 'onboarding.skipped',
+      language: existing.language,
+      properties: { source: 'onboarding', via: 'reader' },
+      idempotencyKey: 'onboarding:v1:skipped',
+    });
+  })();
+  return c.json(buildSnapshot(userId));
+});
+
 app.patch('/', async (c) => {
   const userId = getCurrentUserId(c);
   try {

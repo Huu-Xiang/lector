@@ -5,4 +5,5 @@ export interface IOnboardingCoachProps {
   savedCount: number;
   savedWords: string[];
   onStartPractice?: () => void;
+  onSkip: () => void;
 }

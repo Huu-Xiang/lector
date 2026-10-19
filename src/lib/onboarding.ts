@@ -116,6 +116,12 @@ export async function skipOnboarding(
   return jsonOrThrow<OnboardingSnapshot>(response, 'Could not skip the guided session');
 }
 
+/** End the in-reader guide early. The server keeps the saved profile. */
+export async function dismissOnboarding(): Promise<OnboardingSnapshot> {
+  const response = await apiFetch('/api/onboarding/dismiss', { method: 'POST' });
+  return jsonOrThrow<OnboardingSnapshot>(response, 'Could not skip the guide');
+}
+
 export async function updateOnboardingProgress(input: {
   currentStep?: OnboardingStep;
   nextLessonId?: string | null;

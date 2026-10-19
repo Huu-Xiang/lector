@@ -339,6 +339,23 @@ test.describe('guided onboarding — selfhost', () => {
     await second.close();
   });
 
+  test('skipping the reader guide hides it for good', async ({ browser }) => {
+    const context = await browser.newContext({ storageState: { cookies: [], origins: [] } });
+    const page = await context.newPage();
+    await mockReaderDefinitions(page);
+    await startSpanishGuide(page);
+
+    await page.getByTestId('onboarding-coach-skip').click();
+    await expect(page.getByTestId('onboarding-coach-lookup')).toHaveCount(0);
+
+    await page.reload();
+    await expect(page.getByRole('button', { name: /^Look up / }).first()).toBeVisible({
+      timeout: 15_000,
+    });
+    await expect(page.getByTestId('onboarding-coach-lookup')).toHaveCount(0);
+    await context.close();
+  });
+
   test('fresh Spanish learner completes reader → saved words → practice → summary', async ({
     browser,
   }) => {

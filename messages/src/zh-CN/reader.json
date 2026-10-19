@@ -15,6 +15,7 @@
       "levelFailed": "无法设置单词等级，请检查网络连接。",
       "onboardingWordAdded": "已添加“{word}”，复习单词已就绪 {count}/3",
       "miniReviewFailed": "无法开始小复习，请重试。",
+      "onboardingSkipFailed": "无法跳过引导，请重试。",
       "copied": "已复制",
       "loading": "正在加载课文...",
       "goToLibrary": "前往书库",
@@ -138,6 +139,7 @@
     },
     "coach": {
       "ariaLabel": "首课引导",
+      "skip": "跳过引导",
       "progressLabel": "复习单词已就绪 {count}/3",
       "wordPlaceholder": "单词 {n}",
       "startPractice": "开始 3 词练习",

@@ -11,6 +11,7 @@ export default function OnboardingCoach({
   savedCount,
   savedWords,
   onStartPractice,
+  onSkip,
 }: IOnboardingCoachProps) {
   const t = useTranslations('reader.coach');
   const content = getContent({
@@ -32,9 +33,19 @@ export default function OnboardingCoach({
           <Icon className="h-5 w-5" aria-hidden="true" />
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-xs font-bold tracking-wide text-[var(--gold-strong)] uppercase">
-            {content.eyebrow}
-          </p>
+          <div className="flex items-start justify-between gap-2">
+            <p className="text-xs font-bold tracking-wide text-[var(--gold-strong)] uppercase">
+              {content.eyebrow}
+            </p>
+            <button
+              type="button"
+              onClick={onSkip}
+              data-testid="onboarding-coach-skip"
+              className="-mt-1 -mr-1 shrink-0 rounded-md px-2 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            >
+              {t('skip')}
+            </button>
+          </div>
           <h2 className="mt-0.5 text-base font-bold text-foreground">{content.title}</h2>
           <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{content.body}</p>
           {(stage === 'save' || stage === 'phrase') && (
