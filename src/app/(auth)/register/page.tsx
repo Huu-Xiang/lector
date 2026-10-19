@@ -13,6 +13,8 @@ import PasswordMeter from '@/components/PasswordMeter';
 import { authClient } from '@/lib/auth-client';
 import { authHref, sanitizeAuthReturnPath } from '@/lib/auth-return';
 import { meetsRules } from '@/lib/password-strength';
+import { readPendingInvite, writePendingInvite } from '@/lib/pending-invite';
+import { useInviteRequired } from '@/lib/use-env';
 
 export default function RegisterPage() {
   return (
@@ -34,10 +36,18 @@ function RegisterForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
+  const inviteRequired = useInviteRequired();
+  const [invite, setInvite] = useState(() => params.get('invite') ?? '');
   const [captchaToken, setCaptchaToken] = useState('');
   const [captchaRound, setCaptchaRound] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [sentTo, setSentTo] = useState<string | null>(null);
+
+  /* eslint-disable react-hooks/set-state-in-effect -- restore a code saved before a reload */
+  useEffect(() => {
+    if (!params.get('invite')) setInvite((current) => current || readPendingInvite());
+  }, [params]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   useEffect(() => {
     if (!isPending && session) router.replace(destination);
@@ -64,7 +74,10 @@ function RegisterForm() {
       // here after confirming; a bare '/' would resolve against the API.
       callbackURL: `${window.location.origin}${destination}`,
       fetchOptions: {
-        headers: captchaToken ? { 'x-captcha-response': captchaToken } : {},
+        headers: {
+          ...(captchaToken ? { 'x-captcha-response': captchaToken } : {}),
+          ...(invite.trim() ? { 'x-invite-code': invite.trim() } : {}),
+        },
       },
     });
 
@@ -73,14 +86,17 @@ function RegisterForm() {
       setCaptchaToken('');
       setCaptchaRound((r) => r + 1);
       toast.error(
-        error.code === 'EMAIL_DISPOSABLE'
-          ? t('errEmailDisposable')
-          : error.code === 'EMAIL_ALIAS_TAKEN'
-            ? t('errEmailAlias')
-            : (error.message ?? t('errFailed')),
+        error.message === 'invite_required'
+          ? t('errInviteRequired')
+          : error.code === 'EMAIL_DISPOSABLE'
+            ? t('errEmailDisposable')
+            : error.code === 'EMAIL_ALIAS_TAKEN'
+              ? t('errEmailAlias')
+              : (error.message ?? t('errFailed')),
       );
       return;
     }
+    writePendingInvite(invite.trim());
     setSentTo(email);
   }
 
@@ -164,6 +180,22 @@ function RegisterForm() {
             {confirm === password ? t('matches') : t('errMismatch')}
           </p>
         )}
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="invite">
+          {t('invite')} {inviteRequired ? t('inviteRequired') : t('inviteOptional')}
+        </Label>
+        <Input
+          id="invite"
+          autoComplete="off"
+          required={inviteRequired}
+          maxLength={64}
+          value={invite}
+          onChange={(e) => setInvite(e.target.value)}
+          data-testid="register-invite"
+        />
+        <p className="text-xs text-muted-foreground">{t('inviteHint')}</p>
       </div>
 
       <TurnstileWidget key={captchaRound} onToken={setCaptchaToken} />

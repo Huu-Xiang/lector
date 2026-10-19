@@ -70,7 +70,12 @@
       "errWeak": "Choose a stronger password: at least 8 characters, with a letter and a digit.",
       "matches": "Passwords match",
       "errEmailDisposable": "Temporary email addresses can't be used. Please use your usual email.",
-      "errEmailAlias": "An account already uses this email address in another form. Sign in with that address instead."
+      "errEmailAlias": "An account already uses this email address in another form. Sign in with that address instead.",
+      "invite": "Invite code",
+      "inviteOptional": "(optional)",
+      "inviteRequired": "(required)",
+      "inviteHint": "A friend's invite code. You both get a free Plus card.",
+      "errInviteRequired": "A valid invite code is required to sign up."
     },
     "reset": {
       "expiredTitle": "Link expired",

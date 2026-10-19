@@ -18,6 +18,7 @@ import { aliasDomains, canonicalEmail, isDisposableEmail } from './signup-email'
 import { sendWelcomeEmail } from './lifecycle-email';
 import { purgeTenantData } from './account-deletion';
 import { getDatabaseInstance } from '../db';
+import { attachInvite, inviteRequired, isAcceptableSignupCode } from './invites';
 
 /** One account per mailbox: refuse throwaway domains and +tag / Gmail-dot variants of a taken address. */
 function checkSignupEmail(raw: unknown, database: Database): void {
@@ -146,6 +147,12 @@ export function createAuthEngine(opts: AuthEngineOptions) {
     hooks: {
       before: createAuthMiddleware(async (ctx) => {
         if (ctx.path === '/sign-up/email') {
+          if (
+            inviteRequired() &&
+            !isAcceptableSignupCode(ctx.headers?.get('x-invite-code') ?? '')
+          ) {
+            throw new APIError('FORBIDDEN', { message: 'invite_required' });
+          }
           checkSignupEmail((ctx.body as Record<string, unknown> | undefined)?.email, opts.database);
         }
         const field = PASSWORD_FIELDS[ctx.path];
@@ -153,6 +160,16 @@ export function createAuthEngine(opts: AuthEngineOptions) {
         const problem = passwordProblem((ctx.body as Record<string, unknown> | undefined)?.[field]);
         if (problem)
           throw new APIError('BAD_REQUEST', { message: passwordProblemMessage(problem) });
+      }),
+      after: createAuthMiddleware(async (ctx) => {
+        const code = ctx.headers?.get('x-invite-code');
+        const user = (ctx.context.returned as { user?: { id?: string } } | undefined)?.user;
+        if (ctx.path !== '/sign-up/email' || !code || !user?.id) return;
+        try {
+          attachInvite({ inviteeId: user.id, rawCode: code });
+        } catch (err) {
+          console.error('[accounts] failed to record invite:', err);
+        }
       }),
     },
     emailAndPassword: {

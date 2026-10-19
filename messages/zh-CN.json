@@ -85,7 +85,12 @@
       "errWeak": "密码太弱：至少 8 个字符，并包含字母和数字。",
       "matches": "两次密码一致",
       "errEmailDisposable": "不能使用临时邮箱，请使用你常用的邮箱。",
-      "errEmailAlias": "这个邮箱的另一种写法已经注册过账号，请用那个地址登录。"
+      "errEmailAlias": "这个邮箱的另一种写法已经注册过账号，请用那个地址登录。",
+      "invite": "邀请码",
+      "inviteOptional": "（选填）",
+      "inviteRequired": "（必填）",
+      "inviteHint": "好友的邀请码。你们都会得到一张免费的 Plus 卡。",
+      "errInviteRequired": "注册需要有效的邀请码。"
     },
     "reset": {
       "expiredTitle": "链接已过期",
@@ -645,9 +650,47 @@
         "higher_plan_active": "你当前的套餐比这个兑换码的套餐高。",
         "subscription_active": "你有自动续订的订阅，现在不能使用兑换码。",
         "email_not_verified": "请先验证你的邮箱。",
-        "too_many_attempts": "输错次数太多，请一小时后再试。",
+        "too_many_attempts": "输错次数太多，请 {minutes} 分钟后再试。",
         "generic": "兑换失败，请稍后再试。"
-      }
+      },
+      "attemptsLeft": "还剩 {count} 次机会。"
+    },
+    "invite": {
+      "title": "邀请好友",
+      "intro": "分享你的链接。好友注册并开始阅读后，你们各得一张 {days} 天 Plus 卡。最多可以这样获得 {max} 张卡。",
+      "linkLabel": "你的邀请链接",
+      "copy": "复制链接",
+      "copied": "链接已复制。",
+      "stats": "已邀请 {invited} 人 · 已奖励 {rewarded} 人",
+      "joinedPending": "你是通过邀请加入的。读几分钟或保存 3 个词后，你的卡会发到卡包里。",
+      "joinedDone": "你是通过邀请加入的。你的卡已在下面的卡包里。",
+      "cardsTitle": "我的卡包",
+      "cardsEmpty": "还没有卡。",
+      "card": "Plus 卡 · {days} 天",
+      "cardUntil": "请在 {date} 前使用。",
+      "activate": "激活",
+      "activating": "激活中…",
+      "activated": "卡已激活：{plan} 有效至 {date}。",
+      "haveCode": "有好友的邀请码？",
+      "codePlaceholder": "邀请码",
+      "codeSubmit": "使用邀请码",
+      "claimed": "邀请码已接受。",
+      "errors": {
+        "invalid_code": "这个邀请码无效。",
+        "self_invite": "不能使用自己的邀请码。",
+        "already_attached": "你已经使用过邀请码了。",
+        "window_closed": "邀请码只能在注册后 7 天内补填。",
+        "used_up": "这个邀请码的名额已满。",
+        "email_used": "这个邮箱已经领过邀请奖励。",
+        "too_many_attempts": "输错次数太多，请 {minutes} 分钟后再试。",
+        "not_found": "找不到这张卡。",
+        "already_used": "这张卡已经用过了。",
+        "expired": "这张卡已过期。",
+        "higher_plan_active": "你当前的套餐高于 Plus。请在它到期后再使用这张卡。",
+        "subscription_active": "你有自动续费的订阅。请在订阅结束后再使用这张卡。",
+        "generic": "出错了，请稍后再试。"
+      },
+      "attemptsLeft": "还剩 {count} 次机会。"
     }
   },
   "plans": {
@@ -1216,7 +1259,9 @@
           "aiKey": "如果你添加了自己的 AI 密钥，它会被加密存储（AES-256-GCM），并且绝不会回传到你的浏览器。",
           "usage": "你每月使用 AI 查词和 AI 请求的次数统计，用来执行每月额度。",
           "session": "用于保持登录状态的会话 Cookie，以及保留时间很短的服务器日志（例如 IP 地址和请求错误），用于保障服务安全、正常运行。",
-          "sharedWords": "一份所有账号共用的缓存，包含单词翻译，以及翻译成学习者母语的词典释义（语言对、单词及其翻译）。其中不含任何账号信息，也不含你的句子。"
+          "sharedWords": "一份所有账号共用的缓存，包含单词翻译，以及翻译成学习者母语的词典释义（语言对、单词及其翻译）。其中不含任何账号信息，也不含你的句子。",
+          "invites": "你的邀请码、谁邀请了你或你邀请了谁（仅为内部账号关联），以及你持有的奖励卡。",
+          "inviteFingerprint": "如果你获得邀请奖励，即使之后删除账号，我们也会把你邮箱地址的一个带密钥的单向哈希保留 24 个月。它无法还原成你的邮箱地址，只用来防止同一个邮箱重复领取奖励。"
         }
       },
       "others": {

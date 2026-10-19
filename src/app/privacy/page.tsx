@@ -7,7 +7,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t('privacy.metaTitle') };
 }
 
-const LAST_UPDATED = new Date(Date.UTC(2026, 9, 15));
+const LAST_UPDATED = new Date(Date.UTC(2026, 9, 19));
 const STORE_ITEMS = ['account', 'text', 'learning', 'aiKey', 'session', 'sharedWords'] as const;
 const OTHERS_ITEMS = ['cloudflare', 'resend', 'paddle', 'xiaodou', 'aiBuiltIn', 'aiProvider'] as const;
 const CONTROLS_ITEMS = ['export', 'delete', 'aiKey'] as const;

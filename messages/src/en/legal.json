@@ -15,7 +15,9 @@
           "aiKey": "If you add your own AI key, it is stored encrypted (AES-256-GCM). It is never sent back to your browser.",
           "usage": "Monthly counters of how many AI lookups and requests you used, so we can apply the monthly allowance.",
           "session": "A session cookie that keeps you signed in, and short-lived server logs (such as IP address and request errors) used to keep the service secure and working.",
-          "sharedWords": "A shared cache of single-word translations and dictionary meanings translated into a learner's language (the language pair, the word and its translation), reused for every account. It holds no account information and none of your sentences."
+          "sharedWords": "A shared cache of single-word translations and dictionary meanings translated into a learner's language (the language pair, the word and its translation), reused for every account. It holds no account information and none of your sentences.",
+          "invites": "Your invite code, who invited you or whom you invited (as an internal account link), and any reward cards you hold.",
+          "inviteFingerprint": "If you earn an invite reward, we keep a keyed one-way hash of your email address for 24 months, even after you delete your account. It cannot be turned back into your address. It only stops the same address from earning the reward twice."
         }
       },
       "others": {

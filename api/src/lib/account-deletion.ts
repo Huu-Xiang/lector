@@ -42,6 +42,7 @@
 import { db } from '../db';
 import { TENANT_TABLES } from './adopt-local-data';
 import { deleteAudioFile } from './audio-files';
+import { detachInviteData } from './invites';
 
 export const ERASURE_TABLES = [
   ...TENANT_TABLES,
@@ -50,6 +51,8 @@ export const ERASURE_TABLES = [
   'cn_orders',
   'cn_refund_requests',
   'redeem_uses',
+  'invite_codes',
+  'reward_cards',
   'admin_account_flags',
   'twoFactor',
   'email_sends',
@@ -106,6 +109,8 @@ export function purgeTenantData(userId: string, email?: string): void {
       if (!present.has(table)) continue;
       db.prepare(`DELETE FROM ${table} WHERE userId = ?`).run(userId);
     }
+
+    if (present.has('invites')) detachInviteData(userId);
 
     if (present.has('billing_customers')) {
       for (const customerId of customerIds) {

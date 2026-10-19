@@ -21,6 +21,7 @@ import DeleteAccount from './components/DeleteAccount';
 import PageHeader from '@/components/PageHeader';
 import BYOKSettings from './components/BYOKSettings';
 import CloudPlanSettings from './components/CloudPlanSettings';
+import InviteCard from './components/InviteCard';
 import { lectorMode } from '@/lib/api-base';
 import { useTranslations } from 'next-intl';
 
@@ -32,6 +33,7 @@ export default function SettingsPage() {
       <div className="space-y-8">
         {lectorMode() === 'cloud' && <CloudPlanSettings />}
         {lectorMode() === 'cloud' && <CnRefund />}
+        {lectorMode() === 'cloud' && <InviteCard />}
         <LanguagesSettings />
         <section className="panel space-y-6 p-6" data-testid="language-preferences">
           <div>

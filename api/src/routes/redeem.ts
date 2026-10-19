@@ -4,9 +4,7 @@ import { getCurrentUserId } from '../lib/user';
 import { getUserEmail, isEntitledStatus, resolveBillingStatus } from '../lib/billing';
 import { entitlements, type EntitlementsEngine } from '../lib/entitlements';
 import { redeemCode } from '../lib/redeem';
-
-const FAILURE_WINDOW_MS = 60 * 60_000;
-const MAX_FAILURES = 10;
+import { AttemptLimiter } from '../lib/attempt-limiter';
 
 export function makeRedeemRoutes(
   engine: EntitlementsEngine = entitlements,
@@ -22,12 +20,15 @@ export function makeRedeemRoutes(
   now: () => number = Date.now,
 ) {
   const app = new Hono();
-  const failures = new Map<string, number[]>();
+  const limiter = new AttemptLimiter();
 
   app.post('/', async (c) => {
     const userId = getCurrentUserId(c);
-    const recent = (failures.get(userId) ?? []).filter((t) => now() - t < FAILURE_WINDOW_MS);
-    if (recent.length >= MAX_FAILURES) return c.json({ error: 'too_many_attempts' }, 429);
+    const wait = limiter.retryAfterSeconds(userId, now());
+    if (wait > 0) {
+      c.header('Retry-After', String(wait));
+      return c.json({ error: 'too_many_attempts', retryAfterSeconds: wait }, 429);
+    }
 
     const body = (await c.req.json().catch(() => ({}))) as { code?: unknown };
     const result = redeemCode({
@@ -39,8 +40,11 @@ export function makeRedeemRoutes(
       now: new Date(now()),
     });
     if (!result.ok) {
-      if (result.error === 'invalid_code') failures.set(userId, [...recent, now()]);
-      return c.json({ error: result.error }, result.error === 'invalid_code' ? 404 : 409);
+      if (result.error === 'invalid_code') limiter.fail(userId, now());
+      return c.json(
+        { error: result.error, attemptsLeft: limiter.attemptsLeft(userId, now()) },
+        result.error === 'invalid_code' ? 404 : 409,
+      );
     }
     return c.json({ plan: result.grant.plan, endsAt: result.grant.endsAt });
   });

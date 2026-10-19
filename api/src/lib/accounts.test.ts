@@ -18,6 +18,7 @@ import { hashToken } from './crypto';
 import { makeSessionMiddleware } from './session';
 import { resolveUserId, LOCAL_USER_ID } from './user';
 import { setEmailTransport, type EmailMessage } from './email';
+import { getOrCreateInviteCode } from './invites';
 
 const BASE = 'http://localhost:9999';
 
@@ -505,5 +506,44 @@ describe('selfhost stays auth-off single-user', () => {
 
   test('the identity seam fails closed in cloud when no middleware ran (wiring bug ≠ shared tenant)', () => {
     expect(() => resolveUserId(true, undefined)).toThrow(HTTPException);
+  });
+});
+
+describe('invite codes at sign-up', () => {
+  async function signUpWith(email: string, code?: string): Promise<Response> {
+    return await app.request(`${BASE}/api/auth/sign-up/email`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...(code ? { 'x-invite-code': code } : {}) },
+      body: JSON.stringify({ email, password: 'correct-horse-battery-9', name: 'Invitee' }),
+    });
+  }
+
+  afterEach(() => {
+    delete process.env.INVITE_REQUIRED;
+  });
+
+  test('with the gate on, a missing or wrong code is refused', async () => {
+    process.env.INVITE_REQUIRED = '1';
+    expect((await signUpWith('gate-none@example.test')).status).toBe(403);
+    expect((await signUpWith('gate-bad@example.test', 'WRONGCODE')).status).toBe(403);
+  });
+
+  test('with the gate on, a personal code lets the sign-up through and links the invite', async () => {
+    process.env.INVITE_REQUIRED = '1';
+    const code = getOrCreateInviteCode('iv-signup-inviter');
+    const res = await signUpWith('gate-ok@example.test', code);
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as { user: { id: string } };
+    const row = db
+      .prepare('SELECT inviterId, status FROM invites WHERE inviteeId = ?')
+      .get(body.user.id) as { inviterId: string; status: string };
+    expect(row).toEqual({ inviterId: 'iv-signup-inviter', status: 'pending' });
+    db.prepare("DELETE FROM invites WHERE inviterId = 'iv-signup-inviter'").run();
+    db.prepare("DELETE FROM invite_codes WHERE userId = 'iv-signup-inviter'").run();
+  });
+
+  test('with the gate off, no code is needed and a bad code does not block', async () => {
+    expect((await signUpWith('open-none@example.test')).status).toBe(200);
+    expect((await signUpWith('open-bad@example.test', 'WRONGCODE')).status).toBe(200);
   });
 });

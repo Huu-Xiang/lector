@@ -2872,6 +2872,15 @@ const internalOps: Record<string, OperationDoc> = {
     tag: 'Service',
   },
   'POST /api/redeem': { summary: 'Redeem a code for a paid plan', tag: 'Service' },
+  'GET /api/invite': {
+    summary: 'Read your invite code, invite counts and reward cards',
+    tag: 'Service',
+  },
+  'POST /api/invite/claim': { summary: "Enter a friend's invite code", tag: 'Service' },
+  'POST /api/invite/cards/{id}/activate': {
+    summary: 'Activate a reward card as a Plus period',
+    tag: 'Service',
+  },
   'GET /api/admin/redeem/campaigns': { summary: 'List redeem-code campaigns', tag: 'Service' },
   'POST /api/admin/redeem/campaigns': { summary: 'Create a redeem-code campaign', tag: 'Service' },
   'GET /api/admin/redeem/campaigns/{id}/codes': {

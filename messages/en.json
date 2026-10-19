@@ -85,7 +85,12 @@
       "errWeak": "Choose a stronger password: at least 8 characters, with a letter and a digit.",
       "matches": "Passwords match",
       "errEmailDisposable": "Temporary email addresses can't be used. Please use your usual email.",
-      "errEmailAlias": "An account already uses this email address in another form. Sign in with that address instead."
+      "errEmailAlias": "An account already uses this email address in another form. Sign in with that address instead.",
+      "invite": "Invite code",
+      "inviteOptional": "(optional)",
+      "inviteRequired": "(required)",
+      "inviteHint": "A friend's invite code. You both get a free Plus card.",
+      "errInviteRequired": "A valid invite code is required to sign up."
     },
     "reset": {
       "expiredTitle": "Link expired",
@@ -645,9 +650,47 @@
         "higher_plan_active": "Your current plan is higher than this code's plan.",
         "subscription_active": "You have a subscription that renews automatically, so codes cannot be used now.",
         "email_not_verified": "Verify your email address first.",
-        "too_many_attempts": "Too many wrong codes. Try again in an hour.",
+        "too_many_attempts": "Too many wrong codes. Try again in {minutes} min.",
         "generic": "The code could not be redeemed. Try again later."
-      }
+      },
+      "attemptsLeft": "{count, plural, one {# try left.} other {# tries left.}}"
+    },
+    "invite": {
+      "title": "Invite friends",
+      "intro": "Share your link. When a friend signs up and starts reading, you both get a {days}-day Plus card. You can earn up to {max} cards this way.",
+      "linkLabel": "Your invite link",
+      "copy": "Copy link",
+      "copied": "Link copied.",
+      "stats": "{invited} invited · {rewarded} rewarded",
+      "joinedPending": "You joined with an invite. Your card arrives after you read for a few minutes or save 3 words.",
+      "joinedDone": "You joined with an invite. Your card is in your cards below.",
+      "cardsTitle": "Your cards",
+      "cardsEmpty": "No cards yet.",
+      "card": "Plus card · {days} days",
+      "cardUntil": "Use it by {date}.",
+      "activate": "Activate",
+      "activating": "Activating…",
+      "activated": "Card activated: {plan} until {date}.",
+      "haveCode": "Have a friend's invite code?",
+      "codePlaceholder": "Invite code",
+      "codeSubmit": "Use code",
+      "claimed": "Invite code accepted.",
+      "errors": {
+        "invalid_code": "That invite code is not valid.",
+        "self_invite": "You cannot use your own invite code.",
+        "already_attached": "You already used an invite code.",
+        "window_closed": "Invite codes can only be added in the first 7 days after sign-up.",
+        "used_up": "That invite code has no places left.",
+        "email_used": "This email address already received an invite reward.",
+        "too_many_attempts": "Too many wrong codes. Try again in {minutes} min.",
+        "not_found": "That card could not be found.",
+        "already_used": "That card was already used.",
+        "expired": "That card has expired.",
+        "higher_plan_active": "Your current plan is higher than Plus. Use the card after it ends.",
+        "subscription_active": "You have a subscription that renews automatically. Use the card after it ends.",
+        "generic": "Something went wrong. Try again later."
+      },
+      "attemptsLeft": "{count, plural, one {# try left.} other {# tries left.}}"
     }
   },
   "plans": {
@@ -1216,7 +1259,9 @@
           "aiKey": "If you add your own AI key, it is stored encrypted (AES-256-GCM). It is never sent back to your browser.",
           "usage": "Monthly counters of how many AI lookups and requests you used, so we can apply the monthly allowance.",
           "session": "A session cookie that keeps you signed in, and short-lived server logs (such as IP address and request errors) used to keep the service secure and working.",
-          "sharedWords": "A shared cache of single-word translations and dictionary meanings translated into a learner's language (the language pair, the word and its translation), reused for every account. It holds no account information and none of your sentences."
+          "sharedWords": "A shared cache of single-word translations and dictionary meanings translated into a learner's language (the language pair, the word and its translation), reused for every account. It holds no account information and none of your sentences.",
+          "invites": "Your invite code, who invited you or whom you invited (as an internal account link), and any reward cards you hold.",
+          "inviteFingerprint": "If you earn an invite reward, we keep a keyed one-way hash of your email address for 24 months, even after you delete your account. It cannot be turned back into your address. It only stops the same address from earning the reward twice."
         }
       },
       "others": {

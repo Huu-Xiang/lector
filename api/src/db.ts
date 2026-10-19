@@ -369,6 +369,42 @@ function getDb(): Database {
     );
     CREATE INDEX IF NOT EXISTS idx_redeem_uses_user ON redeem_uses(userId, campaignId);
 
+    -- Readfox invites. invite_codes: one personal code per user. invites: who
+    -- invited whom; inviteeId becomes NULL when the invitee deletes the account,
+    -- so the inviter's reward count survives. reward_cards: unused plan cards.
+    -- invite_burned_emails: keyed fingerprints of rewarded emails, no userId.
+    CREATE TABLE IF NOT EXISTS invite_codes (
+      userId TEXT PRIMARY KEY,
+      code TEXT NOT NULL UNIQUE,
+      createdAt TEXT NOT NULL
+    );
+    CREATE TABLE IF NOT EXISTS invites (
+      id TEXT PRIMARY KEY,
+      inviteeId TEXT UNIQUE,
+      inviterId TEXT NOT NULL,
+      code TEXT NOT NULL,
+      status TEXT NOT NULL DEFAULT 'pending',
+      claimedAt TEXT NOT NULL,
+      rewardedAt TEXT
+    );
+    CREATE INDEX IF NOT EXISTS idx_invites_inviter ON invites(inviterId, status);
+    CREATE TABLE IF NOT EXISTS reward_cards (
+      id TEXT PRIMARY KEY,
+      userId TEXT NOT NULL,
+      plan TEXT NOT NULL,
+      days INTEGER NOT NULL,
+      source TEXT NOT NULL,
+      ref TEXT NOT NULL UNIQUE,
+      createdAt TEXT NOT NULL,
+      expiresAt TEXT NOT NULL,
+      usedAt TEXT
+    );
+    CREATE INDEX IF NOT EXISTS idx_reward_cards_user ON reward_cards(userId, usedAt);
+    CREATE TABLE IF NOT EXISTS invite_burned_emails (
+      fingerprint TEXT PRIMARY KEY,
+      burnedAt TEXT NOT NULL
+    );
+
     -- Admin support flags (#221): manual per-account state the operator sets
     -- from the admin dashboard. Distinct from the Paddle billing mirror (that
     -- reflects Paddle; these are our own operator actions):

@@ -284,9 +284,47 @@
         "higher_plan_active": "你当前的套餐比这个兑换码的套餐高。",
         "subscription_active": "你有自动续订的订阅，现在不能使用兑换码。",
         "email_not_verified": "请先验证你的邮箱。",
-        "too_many_attempts": "输错次数太多，请一小时后再试。",
+        "too_many_attempts": "输错次数太多，请 {minutes} 分钟后再试。",
         "generic": "兑换失败，请稍后再试。"
-      }
+      },
+      "attemptsLeft": "还剩 {count} 次机会。"
+    },
+    "invite": {
+      "title": "邀请好友",
+      "intro": "分享你的链接。好友注册并开始阅读后，你们各得一张 {days} 天 Plus 卡。最多可以这样获得 {max} 张卡。",
+      "linkLabel": "你的邀请链接",
+      "copy": "复制链接",
+      "copied": "链接已复制。",
+      "stats": "已邀请 {invited} 人 · 已奖励 {rewarded} 人",
+      "joinedPending": "你是通过邀请加入的。读几分钟或保存 3 个词后，你的卡会发到卡包里。",
+      "joinedDone": "你是通过邀请加入的。你的卡已在下面的卡包里。",
+      "cardsTitle": "我的卡包",
+      "cardsEmpty": "还没有卡。",
+      "card": "Plus 卡 · {days} 天",
+      "cardUntil": "请在 {date} 前使用。",
+      "activate": "激活",
+      "activating": "激活中…",
+      "activated": "卡已激活：{plan} 有效至 {date}。",
+      "haveCode": "有好友的邀请码？",
+      "codePlaceholder": "邀请码",
+      "codeSubmit": "使用邀请码",
+      "claimed": "邀请码已接受。",
+      "errors": {
+        "invalid_code": "这个邀请码无效。",
+        "self_invite": "不能使用自己的邀请码。",
+        "already_attached": "你已经使用过邀请码了。",
+        "window_closed": "邀请码只能在注册后 7 天内补填。",
+        "used_up": "这个邀请码的名额已满。",
+        "email_used": "这个邮箱已经领过邀请奖励。",
+        "too_many_attempts": "输错次数太多，请 {minutes} 分钟后再试。",
+        "not_found": "找不到这张卡。",
+        "already_used": "这张卡已经用过了。",
+        "expired": "这张卡已过期。",
+        "higher_plan_active": "你当前的套餐高于 Plus。请在它到期后再使用这张卡。",
+        "subscription_active": "你有自动续费的订阅。请在订阅结束后再使用这张卡。",
+        "generic": "出错了，请稍后再试。"
+      },
+      "attemptsLeft": "还剩 {count} 次机会。"
     }
   },
   "subscribe": {

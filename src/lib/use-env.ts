@@ -25,6 +25,14 @@ export function useGithubLogin(): boolean {
   );
 }
 
+export function useInviteRequired(): boolean {
+  return useSyncExternalStore(
+    subscribe,
+    () => window.__ENV__?.INVITE_REQUIRED === '1',
+    () => false,
+  );
+}
+
 export function useOidcLogin(): boolean {
   return useSyncExternalStore(
     subscribe,

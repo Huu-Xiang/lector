@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { apiFetch } from '@/lib/api-base';
 import { planName } from '@/lib/plan-names';
+import { useRetryCountdown } from '@/lib/use-retry-countdown';
 
 const ERRORS = new Set([
   'invalid_code',
@@ -25,6 +26,7 @@ export default function RedeemCode({ onRedeemed }: { onRedeemed: () => void }) {
   const [open, setOpen] = useState(false);
   const [code, setCode] = useState('');
   const [busy, setBusy] = useState(false);
+  const wait = useRetryCountdown();
 
   async function redeem() {
     setBusy(true);
@@ -36,7 +38,17 @@ export default function RedeemCode({ onRedeemed }: { onRedeemed: () => void }) {
       });
       const body = await res.json().catch(() => ({}));
       if (!res.ok) {
-        toast.error(t(`errors.${ERRORS.has(body.error) ? body.error : 'generic'}`));
+        if (body.error === 'too_many_attempts' && body.retryAfterSeconds) {
+          wait.block(body.retryAfterSeconds);
+        }
+        const message = t(`errors.${ERRORS.has(body.error) ? body.error : 'generic'}`, {
+          minutes: Math.ceil((body.retryAfterSeconds ?? 3600) / 60),
+        });
+        toast.error(
+          body.error === 'invalid_code' && body.attemptsLeft <= 3
+            ? `${message} ${t('attemptsLeft', { count: body.attemptsLeft })}`
+            : message,
+        );
         return;
       }
       toast.success(
@@ -84,9 +96,19 @@ export default function RedeemCode({ onRedeemed }: { onRedeemed: () => void }) {
         maxLength={64}
         data-testid="redeem-input"
       />
-      <Button type="submit" size="sm" disabled={busy || !code.trim()} data-testid="redeem-submit">
+      <Button
+        type="submit"
+        size="sm"
+        disabled={busy || !code.trim() || wait.secondsLeft > 0}
+        data-testid="redeem-submit"
+      >
         {busy ? t('redeeming') : t('submit')}
       </Button>
+      {wait.secondsLeft > 0 && (
+        <p className="w-full text-xs text-destructive" role="status" data-testid="redeem-locked">
+          {t('errors.too_many_attempts', { minutes: wait.minutesLeft })}
+        </p>
+      )}
     </form>
   );
 }
