@@ -24,6 +24,7 @@ export const PANEL_LIMIT = 5;
 
 /** Newest first. Add an entry here and its texts in `messages/src/<locale>/announcements.json`. */
 export const ANNOUNCEMENTS: Announcement[] = [
+  { id: 'inviteCodes', date: '2026-10-19', level: 'important', href: '/settings' },
   { id: 'skipGuide', date: '2026-10-19', level: 'info' },
 ];
 

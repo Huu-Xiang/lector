@@ -8,6 +8,10 @@
     "dismiss": "Dismiss",
     "learnMore": "Learn more",
     "items": {
+      "inviteCodes": {
+        "title": "Invite friends, get free Plus",
+        "body": "Share your invite link from Settings. When a friend signs up and starts reading, you both get a 14-day Plus card to activate whenever you like."
+      },
       "skipGuide": {
         "title": "You can skip the first-lesson guide",
         "body": "The guide card in your first lesson now has a Skip guide button."
