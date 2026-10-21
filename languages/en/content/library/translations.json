@@ -37,6 +37,44 @@
       "tr": "Noel arifesinde cimri yaşlı bir iş adamını üç hayalet ziyaret eder ve ona geçmişini, bugününü ve geleceğini gösterir."
     }
   },
+  "a-little-princess": {
+    "title": {
+      "en": "A Little Princess",
+      "zh-CN": "小公主",
+      "zh-TW": "小公主",
+      "es": "La princesita",
+      "fr": "La Petite Princesse",
+      "de": "Eine kleine Prinzessin",
+      "it": "La piccola principessa",
+      "pt": "A Pequena Princesa",
+      "ru": "Маленькая принцесса",
+      "ja": "小公女",
+      "ko": "소공녀",
+      "ar": "الأميرة الصغيرة",
+      "hi": "छोटी राजकुमारी",
+      "id": "Putri Kecil",
+      "vi": "Tiểu công chúa",
+      "tr": "Küçük Prenses"
+    },
+    "blurb": {
+      "en": "Sara Crewe, a rich girl at a London school, loses everything when her father dies but keeps acting like a princess.",
+      "zh-CN": "伦敦寄宿学校里的富家女萨拉·克鲁，父亲去世后一无所有，却依然像公主一样生活。",
+      "zh-TW": "倫敦寄宿學校裡的富家女莎拉·克魯，父親去世後一無所有，卻依然像公主一樣生活。",
+      "es": "Sara Crewe, una niña rica de un internado de Londres, lo pierde todo cuando muere su padre, pero sigue comportándose como una princesa.",
+      "fr": "Sara Crewe, riche élève d'un pensionnat de Londres, perd tout à la mort de son père mais continue à se conduire en princesse.",
+      "de": "Sara Crewe, ein reiches Mädchen in einem Londoner Internat, verliert nach dem Tod ihres Vaters alles, benimmt sich aber weiter wie eine Prinzessin.",
+      "it": "Sara Crewe, ricca allieva di un collegio londinese, perde tutto alla morte del padre ma continua a comportarsi da principessa.",
+      "pt": "Sara Crewe, uma menina rica num internato de Londres, perde tudo quando o pai morre, mas continua a agir como uma princesa.",
+      "ru": "Богатая девочка Сара Кру из лондонского пансиона теряет всё после смерти отца, но продолжает вести себя как принцесса.",
+      "ja": "ロンドンの寄宿学校にいる裕福な少女セーラは、父の死ですべてを失うが、それでも王女のように振る舞い続ける。",
+      "ko": "런던 기숙학교의 부유한 소녀 세라 크루는 아버지가 죽자 모든 것을 잃지만 여전히 공주처럼 행동한다.",
+      "ar": "سارة كرو، فتاة ثرية في مدرسة داخلية بلندن، تفقد كل شيء بعد موت أبيها لكنها تواصل التصرف كأميرة.",
+      "hi": "लंदन के एक बोर्डिंग स्कूल की अमीर लड़की सारा क्रू पिता की मौत के बाद सब कुछ खो देती है, फिर भी राजकुमारी की तरह व्यवहार करती है।",
+      "id": "Sara Crewe, gadis kaya di sekolah asrama London, kehilangan segalanya setelah ayahnya meninggal, tetapi tetap bersikap seperti seorang putri.",
+      "vi": "Sara Crewe, cô bé giàu có ở một trường nội trú London, mất tất cả khi cha qua đời nhưng vẫn cư xử như một công chúa.",
+      "tr": "Londra'daki yatılı okulda okuyan zengin kız Sara Crewe, babası ölünce her şeyini kaybeder ama yine de bir prenses gibi davranmayı sürdürür."
+    }
+  },
   "adventures-of-sherlock-holmes": {
     "title": {
       "en": "The Adventures of Sherlock Holmes",
@@ -189,6 +227,44 @@
       "tr": "Uysal bir at, Viktorya dönemi İngiltere'sinde iyi ve zalim sahipleriyle geçen hayatını anlatır."
     }
   },
+  "english-fairy-tales": {
+    "title": {
+      "en": "English Fairy Tales",
+      "zh-CN": "英国童话",
+      "zh-TW": "英國童話",
+      "es": "Cuentos de hadas ingleses",
+      "fr": "Contes de fées anglais",
+      "de": "Englische Märchen",
+      "it": "Fiabe inglesi",
+      "pt": "Contos de Fadas Ingleses",
+      "ru": "Английские сказки",
+      "ja": "イギリス童話集",
+      "ko": "영국 동화집",
+      "ar": "حكايات خرافية إنجليزية",
+      "hi": "अंग्रेज़ी परी-कथाएँ",
+      "id": "Dongeng Inggris",
+      "vi": "Truyện cổ tích Anh",
+      "tr": "İngiliz Masalları"
+    },
+    "blurb": {
+      "en": "Joseph Jacobs' collection of old English tales, including Tom Tit Tot, Jack and the Beanstalk and The Three Little Pigs.",
+      "zh-CN": "约瑟夫·雅各布斯收集的英国古老故事，包括《汤姆·蒂特·托特》《杰克与豌豆》和《三只小猪》。",
+      "zh-TW": "約瑟夫·雅各布斯收集的英國古老故事，包括《湯姆·提特·托特》《傑克與魔豆》和《三隻小豬》。",
+      "es": "La colección de cuentos antiguos ingleses de Joseph Jacobs, con Tom Tit Tot, Jack y las habichuelas mágicas y Los tres cerditos.",
+      "fr": "Le recueil de vieux contes anglais de Joseph Jacobs, avec Tom Tit Tot, Jack et le haricot magique et Les Trois Petits Cochons.",
+      "de": "Joseph Jacobs' Sammlung alter englischer Geschichten, darunter Tom Tit Tot, Jack und die Bohnenranke und Die drei kleinen Schweinchen.",
+      "it": "La raccolta di antichi racconti inglesi di Joseph Jacobs, con Tom Tit Tot, Jack e la pianta di fagioli e I tre porcellini.",
+      "pt": "A coletânea de velhos contos ingleses de Joseph Jacobs, com Tom Tit Tot, João e o Pé de Feijão e Os Três Porquinhos.",
+      "ru": "Сборник старинных английских сказок Джозефа Джейкобса: «Том Тит Тот», «Джек и бобовый стебель», «Три поросёнка».",
+      "ja": "ジョゼフ・ジェイコブズが集めたイギリスの昔話集。「トム・ティット・トット」「ジャックと豆の木」「三匹の子ぶた」などを収める。",
+      "ko": "조지프 제이콥스가 모은 영국 옛이야기 모음으로, '톰 팃 톳', '잭과 콩나무', '아기 돼지 삼형제' 등이 들어 있다.",
+      "ar": "مجموعة جوزيف جاكوبس من الحكايات الإنجليزية القديمة، ومنها توم تيت توت وجاك وشجرة الفاصولياء والخنازير الثلاثة الصغيرة.",
+      "hi": "जोसेफ़ जैकब्स का पुरानी अंग्रेज़ी कहानियों का संग्रह, जिसमें टॉम टिट टॉट, जैक और सेम का पौधा और तीन छोटे सूअर शामिल हैं।",
+      "id": "Kumpulan dongeng Inggris kuno oleh Joseph Jacobs, termasuk Tom Tit Tot, Jack dan Pohon Kacang, dan Tiga Babi Kecil.",
+      "vi": "Tuyển tập truyện cổ Anh của Joseph Jacobs, gồm Tom Tit Tot, Jack và cây đậu thần và Ba chú heo con.",
+      "tr": "Joseph Jacobs'ın eski İngiliz masallarından derlemesi; Tom Tit Tot, Jack ve Fasulye Sırığı ile Üç Küçük Domuz da içinde."
+    }
+  },
   "great-expectations": {
     "title": {
       "en": "Great Expectations (Chapters 1–11)",
@@ -303,6 +379,44 @@
       "tr": "İlk bölümler: öksüz bir kız önce zalim bir yengenin yanında, sonra sert bir yardım okulunda büyür."
     }
   },
+  "just-so-stories": {
+    "title": {
+      "en": "Just So Stories",
+      "zh-CN": "原来如此的故事",
+      "zh-TW": "原來如此的故事",
+      "es": "Cuentos así",
+      "fr": "Histoires comme ça",
+      "de": "Nur so Geschichten",
+      "it": "Storie proprio così",
+      "pt": "Histórias Assim",
+      "ru": "Просто сказки",
+      "ja": "なぜなぜ物語",
+      "ko": "그냥 그런 이야기들",
+      "ar": "حكايات كذا فقط",
+      "hi": "जस्ट सो कहानियाँ",
+      "id": "Kisah-Kisah Begitulah",
+      "vi": "Những truyện chỉ là vậy",
+      "tr": "Öyle Öyküler"
+    },
+    "blurb": {
+      "en": "Kipling's playful tales of how the whale got his throat, the camel his hump and the elephant his long nose.",
+      "zh-CN": "吉卜林的趣味故事，讲鲸鱼怎么有了喉咙、骆驼怎么长出驼峰、大象怎么有了长鼻子。",
+      "zh-TW": "吉卜林的趣味故事，講鯨魚怎麼有了喉嚨、駱駝怎麼長出駝峰、大象怎麼有了長鼻子。",
+      "es": "Los divertidos relatos de Kipling sobre cómo la ballena consiguió su garganta, el camello su joroba y el elefante su larga trompa.",
+      "fr": "Les récits malicieux de Kipling sur la façon dont la baleine a eu sa gorge, le chameau sa bosse et l'éléphant sa longue trompe.",
+      "de": "Kiplings verspielte Geschichten darüber, wie der Wal zu seinem Schlund, das Kamel zu seinem Höcker und der Elefant zu seinem langen Rüssel kam.",
+      "it": "I racconti giocosi di Kipling su come la balena ebbe la gola, il cammello la gobba e l'elefante la lunga proboscide.",
+      "pt": "Os contos divertidos de Kipling sobre como a baleia ganhou a garganta, o camelo a corcova e o elefante a tromba comprida.",
+      "ru": "Весёлые сказки Киплинга о том, как кит получил горло, верблюд — горб, а слонёнок — длинный хобот.",
+      "ja": "クジラののど、ラクダのこぶ、ゾウの長い鼻はどうしてできたのか。キップリングの楽しいお話集。",
+      "ko": "고래의 목구멍, 낙타의 혹, 코끼리의 긴 코가 어떻게 생겼는지를 들려주는 키플링의 재미있는 이야기.",
+      "ar": "حكايات مرحة لكيبلنغ عن كيف حصل الحوت على حلقه، والجمل على سنامه، والفيل على خرطومه الطويل.",
+      "hi": "किपलिंग की मज़ेदार कहानियाँ कि व्हेल को गला, ऊँट को कूबड़ और हाथी को लंबी सूँड़ कैसे मिली।",
+      "id": "Kisah jenaka Kipling tentang bagaimana paus mendapat kerongkongannya, unta punuknya, dan gajah belalai panjangnya.",
+      "vi": "Những truyện vui của Kipling kể vì sao cá voi có cổ họng, lạc đà có bướu và voi có chiếc vòi dài.",
+      "tr": "Kipling'in balinanın boğazını, devenin hörgücünü ve filin uzun hortumunu nasıl edindiğini anlatan neşeli öyküleri."
+    }
+  },
   "kittens-and-cats": {
     "title": {
       "en": "Kittens and Cats: A First Reader",
@@ -377,6 +491,44 @@
       "id": "Elizabeth Bennet yang lincah dan Tuan Darcy yang angkuh saling salah menilai dalam masyarakat pedesaan Inggris.",
       "vi": "Trong xã hội thôn quê nước Anh, cô Elizabeth Bennet hoạt bát và anh Darcy kiêu ngạo hiểu lầm nhau.",
       "tr": "Canlı Elizabeth Bennet ile kibirli Bay Darcy, İngiliz taşra sosyetesinde birbirlerini yanlış değerlendirir."
+    }
+  },
+  "stories-from-hans-andersen": {
+    "title": {
+      "en": "Stories from Hans Andersen",
+      "zh-CN": "安徒生童话选",
+      "zh-TW": "安徒生童話選",
+      "es": "Cuentos de Hans Andersen",
+      "fr": "Contes de Hans Andersen",
+      "de": "Märchen von Hans Christian Andersen",
+      "it": "Fiabe di Hans Andersen",
+      "pt": "Contos de Hans Andersen",
+      "ru": "Сказки Ганса Христиана Андерсена",
+      "ja": "アンデルセン童話集",
+      "ko": "안데르센 동화집",
+      "ar": "حكايات هانز أندرسن",
+      "hi": "हैंस एंडरसन की कहानियाँ",
+      "id": "Dongeng Hans Andersen",
+      "vi": "Truyện cổ Andersen",
+      "tr": "Andersen Masalları"
+    },
+    "blurb": {
+      "en": "Seven famous tales, including The Snow Queen, The Nightingale, The Mermaid and The Emperor's New Clothes, with pictures by Edmund Dulac.",
+      "zh-CN": "七篇著名童话，包括《冰雪女王》《夜莺》《海的女儿》和《皇帝的新装》，配有埃德蒙·杜拉克的插画。",
+      "zh-TW": "七篇著名童話，包括《冰雪皇后》《夜鶯》《人魚公主》和《國王的新衣》，配有埃德蒙·杜拉克的插畫。",
+      "es": "Siete cuentos famosos, entre ellos La reina de las nieves, El ruiseñor, La sirenita y El traje nuevo del emperador, con ilustraciones de Edmund Dulac.",
+      "fr": "Sept contes célèbres, dont La Reine des neiges, Le Rossignol, La Petite Sirène et Les Habits neufs de l'empereur, illustrés par Edmund Dulac.",
+      "de": "Sieben berühmte Märchen, darunter Die Schneekönigin, Die Nachtigall, Die kleine Meerjungfrau und Des Kaisers neue Kleider, mit Bildern von Edmund Dulac.",
+      "it": "Sette celebri fiabe, tra cui La regina delle nevi, L'usignolo, La sirenetta e I vestiti nuovi dell'imperatore, con illustrazioni di Edmund Dulac.",
+      "pt": "Sete contos famosos, entre eles A Rainha da Neve, O Rouxinol, A Pequena Sereia e A Roupa Nova do Imperador, com ilustrações de Edmund Dulac.",
+      "ru": "Семь знаменитых сказок, среди них «Снежная королева», «Соловей», «Русалочка» и «Новое платье короля», с рисунками Эдмунда Дюлака.",
+      "ja": "「雪の女王」「ナイチンゲール」「人魚姫」「裸の王様」など有名な七つの童話。エドマンド・デュラックの挿絵つき。",
+      "ko": "'눈의 여왕', '나이팅게일', '인어 공주', '벌거벗은 임금님' 등 유명한 동화 일곱 편을 에드먼드 뒬락의 삽화와 함께 싣는다.",
+      "ar": "سبع حكايات مشهورة منها ملكة الثلج والبلبل وحورية البحر وثياب الإمبراطور الجديدة، برسوم إدموند دولاك.",
+      "hi": "सात प्रसिद्ध कहानियाँ, जिनमें हिम रानी, बुलबुल, जलपरी और सम्राट के नए कपड़े शामिल हैं, एडमंड ड्यूलैक के चित्रों के साथ।",
+      "id": "Tujuh dongeng terkenal, termasuk Ratu Salju, Burung Bulbul, Putri Duyung, dan Pakaian Baru Kaisar, dengan gambar karya Edmund Dulac.",
+      "vi": "Bảy truyện nổi tiếng, gồm Nữ hoàng tuyết, Chim sơn ca, Nàng tiên cá và Bộ quần áo mới của hoàng đế, kèm tranh của Edmund Dulac.",
+      "tr": "Kar Kraliçesi, Bülbül, Deniz Kızı ve İmparatorun Yeni Giysileri dahil yedi ünlü masal; resimleri Edmund Dulac'a ait."
     }
   },
   "the-call-of-the-wild": {
@@ -531,6 +683,44 @@
       "tr": "Yakışıklı bir genç hep genç ve güzel kalırken portresi yaşlanıp çirkinleşir."
     }
   },
+  "the-secret-garden": {
+    "title": {
+      "en": "The Secret Garden",
+      "zh-CN": "秘密花园",
+      "zh-TW": "秘密花園",
+      "es": "El jardín secreto",
+      "fr": "Le Jardin secret",
+      "de": "Der geheime Garten",
+      "it": "Il giardino segreto",
+      "pt": "O Jardim Secreto",
+      "ru": "Таинственный сад",
+      "ja": "秘密の花園",
+      "ko": "비밀의 화원",
+      "ar": "الحديقة السرية",
+      "hi": "गुप्त बाग़",
+      "id": "Taman Rahasia",
+      "vi": "Khu vườn bí mật",
+      "tr": "Gizli Bahçe"
+    },
+    "blurb": {
+      "en": "Orphaned Mary Lennox moves to a big house in Yorkshire, finds a locked garden and helps her sickly cousin Colin.",
+      "zh-CN": "孤女玛丽·伦诺克斯搬到约克郡的大宅，发现了一座上锁的花园，并帮助体弱的表弟科林。",
+      "zh-TW": "孤女瑪麗·倫諾克斯搬到約克郡的大宅，發現了一座上鎖的花園，並幫助體弱的表弟柯林。",
+      "es": "La huérfana Mary Lennox se muda a una gran casa de Yorkshire, descubre un jardín cerrado con llave y ayuda a su primo enfermizo Colin.",
+      "fr": "Mary Lennox, orpheline, s'installe dans une grande maison du Yorkshire, découvre un jardin fermé à clé et aide son cousin Colin, malade.",
+      "de": "Die Waise Mary Lennox zieht in ein großes Haus in Yorkshire, entdeckt einen verschlossenen Garten und hilft ihrem kränklichen Cousin Colin.",
+      "it": "L'orfana Mary Lennox si trasferisce in una grande casa nello Yorkshire, scopre un giardino chiuso a chiave e aiuta il cugino malaticcio Colin.",
+      "pt": "A órfã Mary Lennox muda-se para uma casa grande em Yorkshire, descobre um jardim trancado e ajuda o primo doente Colin.",
+      "ru": "Сирота Мэри Леннокс переезжает в большой дом в Йоркшире, находит запертый сад и помогает больному кузену Колину.",
+      "ja": "孤児のメアリー・レノックスはヨークシャーの大きな屋敷に移り、鍵のかかった庭を見つけ、病弱ないとこのコリンを助ける。",
+      "ko": "고아 메리 레녹스는 요크셔의 큰 저택으로 가서 잠긴 정원을 발견하고, 몸이 약한 사촌 콜린을 돕는다.",
+      "ar": "تنتقل اليتيمة ماري لينوكس إلى بيت كبير في يوركشاير، وتكتشف حديقة مغلقة، وتساعد ابن عمها العليل كولن.",
+      "hi": "अनाथ मैरी लेनॉक्स यॉर्कशायर के एक बड़े घर में जाती है, एक बंद बाग़ ढूँढ़ती है और अपने बीमार चचेरे भाई कॉलिन की मदद करती है।",
+      "id": "Mary Lennox, anak yatim piatu, pindah ke rumah besar di Yorkshire, menemukan taman terkunci, dan menolong sepupunya Colin yang sakit-sakitan.",
+      "vi": "Cô bé mồ côi Mary Lennox chuyển đến một ngôi nhà lớn ở Yorkshire, tìm thấy khu vườn bị khóa và giúp cậu em họ ốm yếu Colin.",
+      "tr": "Yetim Mary Lennox, Yorkshire'daki büyük bir eve taşınır, kilitli bir bahçe bulur ve hasta kuzeni Colin'e yardım eder."
+    }
+  },
   "the-summers-first-reader": {
     "title": {
       "en": "The Summers Readers: First Reader",
@@ -643,6 +833,44 @@
       "id": "Seekor kelinci kecil yang nakal menyelinap ke kebun Pak McGregor dan harus mencari jalan untuk kabur.",
       "vi": "Chú thỏ con nghịch ngợm lẻn vào vườn rau của ông McGregor và phải tìm cách trốn thoát.",
       "tr": "Yaramaz küçük bir tavşan Bay McGregor'ın bahçesine gizlice girer ve kaçmanın bir yolunu bulmak zorunda kalır."
+    }
+  },
+  "the-velveteen-rabbit": {
+    "title": {
+      "en": "The Velveteen Rabbit",
+      "zh-CN": "绒布小兔",
+      "zh-TW": "絨布小兔",
+      "es": "El conejito de terciopelo",
+      "fr": "Le Lapin en velours",
+      "de": "Das Samthäschen",
+      "it": "Il coniglio di velluto",
+      "pt": "O Coelhinho de Veludo",
+      "ru": "Плюшевый кролик",
+      "ja": "ビロードうさぎ",
+      "ko": "벨벳 토끼",
+      "ar": "الأرنب المخملي",
+      "hi": "मखमली खरगोश",
+      "id": "Kelinci Beludru",
+      "vi": "Chú thỏ nhung",
+      "tr": "Kadife Tavşan"
+    },
+    "blurb": {
+      "en": "A toy rabbit in a nursery longs to become Real, and the old Skin Horse explains what it takes.",
+      "zh-CN": "育儿室里的玩具兔子渴望变成“真的”，年老的皮马告诉它需要经历什么。",
+      "zh-TW": "育兒室裡的玩具兔子渴望變成「真的」，年老的皮馬告訴牠需要經歷什麼。",
+      "es": "Un conejo de juguete en la habitación de los niños sueña con ser Real, y el viejo Caballo de Piel le explica qué hace falta.",
+      "fr": "Un lapin en peluche, dans la chambre d'enfant, rêve de devenir Réel, et le vieux Cheval de peau lui explique ce qu'il faut pour cela.",
+      "de": "Ein Spielzeughase im Kinderzimmer möchte Wirklich werden, und das alte Fellpferd erklärt ihm, was dazu nötig ist.",
+      "it": "Un coniglio di peluche nella stanza dei giochi sogna di diventare Vero, e il vecchio Cavallo di Pelle gli spiega cosa serve.",
+      "pt": "Um coelho de brinquedo no quarto das crianças sonha em se tornar Real, e o velho Cavalo de Pele explica o que é preciso.",
+      "ru": "Игрушечный кролик в детской мечтает стать Настоящим, а старая Лошадка объясняет, что для этого нужно.",
+      "ja": "子ども部屋のおもちゃのうさぎは「ほんもの」になりたいと願い、年老いた革の馬がそのために必要なことを教えてくれる。",
+      "ko": "아이 방의 장난감 토끼는 '진짜'가 되고 싶어 하고, 늙은 가죽 말이 그러려면 무엇이 필요한지 알려 준다.",
+      "ar": "أرنب لعبة في غرفة الأطفال يتمنى أن يصبح حقيقيًا، والحصان الجلدي العجوز يشرح له ما يلزم لذلك.",
+      "hi": "बच्चों के कमरे का एक खिलौना खरगोश 'असली' बनना चाहता है, और बूढ़ा चमड़े का घोड़ा बताता है कि इसके लिए क्या चाहिए।",
+      "id": "Seekor kelinci mainan di kamar anak ingin menjadi Nyata, dan Kuda Kulit tua menjelaskan apa yang diperlukan.",
+      "vi": "Một chú thỏ đồ chơi trong phòng trẻ mong trở thành Thật, và Con Ngựa Da già giải thích điều cần có để làm được.",
+      "tr": "Çocuk odasındaki oyuncak tavşan Gerçek olmak ister; yaşlı Deri At bunun için ne gerektiğini anlatır."
     }
   },
   "the-wonderful-wizard-of-oz": {

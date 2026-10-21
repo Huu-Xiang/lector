@@ -1,0 +1,113 @@
+{
+  "title": "Stories from Hans Andersen",
+  "author": "Hans Christian Andersen, illustrated by Edmund Dulac",
+  "level": "B1",
+  "wordCount": 36272,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/17860",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. The Snow Queen"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Hans Andersen"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Hans Andersen"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Hans Andersen"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Hans Andersen"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Hans Andersen"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Hans Andersen"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Hans Andersen"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Hans Andersen"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Hans Andersen"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Hans Andersen"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Hans Andersen"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Hans Andersen"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Hans Andersen"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Hans Andersen"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Hans Andersen"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Hans Andersen"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Hans Andersen"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Hans Andersen"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Hans Andersen"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Hans Andersen"
+    },
+    {
+      "file": "22.md",
+      "title": "22. Hans Andersen"
+    },
+    {
+      "file": "23.md",
+      "title": "23. Hans Andersen"
+    },
+    {
+      "file": "24.md",
+      "title": "24. Hans Andersen"
+    },
+    {
+      "file": "25.md",
+      "title": "25. Hans Andersen"
+    }
+  ]
+}

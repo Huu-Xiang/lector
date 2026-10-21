@@ -1,0 +1,25 @@
+{
+  "title": "The Velveteen Rabbit",
+  "author": "Margery Williams",
+  "level": "A2",
+  "wordCount": 3953,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/11757",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. The Velveteen Rabbit"
+    },
+    {
+      "file": "02.md",
+      "title": "2. The Velveteen Rabbit"
+    },
+    {
+      "file": "03.md",
+      "title": "3. The Velveteen Rabbit"
+    }
+  ]
+}

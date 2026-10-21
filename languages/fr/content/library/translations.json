@@ -37,6 +37,44 @@
       "tr": "Jules Lemaître'in küçük çocuklar için yazdığı, alfabenin her harfi için bir tane olan kısa hikâyeler."
     }
   },
+  "alice-au-pays-des-merveilles": {
+    "title": {
+      "en": "Alice's Adventures in Wonderland (French translation)",
+      "zh-CN": "爱丽丝漫游奇境（法语译本）",
+      "zh-TW": "愛麗絲夢遊仙境（法語譯本）",
+      "es": "Las aventuras de Alicia en el país de las maravillas (traducción al francés)",
+      "fr": "Aventures d'Alice au pays des merveilles",
+      "de": "Alice im Wunderland (französische Übersetzung)",
+      "it": "Alice nel Paese delle Meraviglie (traduzione francese)",
+      "pt": "Alice no País das Maravilhas (tradução francesa)",
+      "ru": "Алиса в Стране чудес (французский перевод)",
+      "ja": "ふしぎの国のアリス（フランス語訳）",
+      "ko": "이상한 나라의 앨리스 (프랑스어 번역)",
+      "ar": "أليس في بلاد العجائب (ترجمة فرنسية)",
+      "hi": "एलिस इन वंडरलैंड (फ़्रेंच अनुवाद)",
+      "id": "Alice di Negeri Ajaib (terjemahan Prancis)",
+      "vi": "Alice ở xứ sở thần tiên (bản dịch tiếng Pháp)",
+      "tr": "Alice Harikalar Diyarında (Fransızca çeviri)"
+    },
+    "blurb": {
+      "en": "The 1869 French translation by Henri Bué of Lewis Carroll's story of a girl who falls down a rabbit hole into a strange world.",
+      "zh-CN": "亨利·比埃1869年的法语译本，讲述女孩掉进兔子洞、来到奇异世界的刘易斯·卡罗尔名作。",
+      "zh-TW": "亨利·比埃1869年的法語譯本，講述女孩掉進兔子洞、來到奇異世界的路易斯·卡羅名作。",
+      "es": "La traducción francesa de 1869 de Henri Bué del cuento de Lewis Carroll sobre una niña que cae por una madriguera a un mundo extraño.",
+      "fr": "La traduction d'Henri Bué (1869) du récit de Lewis Carroll : une petite fille tombe dans un terrier de lapin et découvre un monde étrange.",
+      "de": "Henri Bués französische Übersetzung von 1869 der Geschichte von Lewis Carroll über ein Mädchen, das durch einen Kaninchenbau in eine seltsame Welt fällt.",
+      "it": "La traduzione francese del 1869 di Henri Bué del racconto di Lewis Carroll su una bambina che cade in una tana di coniglio e arriva in un mondo strano.",
+      "pt": "A tradução francesa de 1869, de Henri Bué, da história de Lewis Carroll sobre uma menina que cai numa toca de coelho e chega a um mundo estranho.",
+      "ru": "Французский перевод Анри Бюэ (1869) сказки Льюиса Кэрролла о девочке, которая падает в кроличью нору и попадает в странный мир.",
+      "ja": "アンリ・ビュエによる1869年のフランス語訳。ウサギの穴に落ちた少女が不思議な世界へ迷い込む、ルイス・キャロルの物語。",
+      "ko": "앙리 뷔에가 1869년에 옮긴 프랑스어판으로, 토끼굴에 떨어져 이상한 세계로 간 소녀를 그린 루이스 캐럴의 이야기.",
+      "ar": "الترجمة الفرنسية التي أنجزها هنري بويه عام 1869 لقصة لويس كارول عن فتاة تسقط في جحر أرنب إلى عالم غريب.",
+      "hi": "हेनरी ब्यूए का 1869 का फ़्रेंच अनुवाद, लुईस कैरोल की उस कहानी का जिसमें एक लड़की खरगोश के बिल से गिरकर अजीब दुनिया में पहुँचती है।",
+      "id": "Terjemahan Prancis tahun 1869 oleh Henri Bué atas kisah Lewis Carroll tentang gadis yang jatuh ke lubang kelinci menuju dunia aneh.",
+      "vi": "Bản dịch tiếng Pháp năm 1869 của Henri Bué cho truyện của Lewis Carroll về cô bé rơi xuống hang thỏ và lạc vào một thế giới kỳ lạ.",
+      "tr": "Henri Bué'nin 1869 tarihli Fransızca çevirisi; Lewis Carroll'ın tavşan deliğinden garip bir dünyaya düşen kızın öyküsü."
+    }
+  },
   "boule-de-suif": {
     "title": {
       "en": "Boule de Suif and Other Stories",
@@ -111,6 +149,44 @@
       "id": "Kisah satir Voltaire tentang pemuda lugu yang berkelana keliling dunia dan menguji gagasan bahwa semuanya serba terbaik.",
       "vi": "Truyện châm biếm của Voltaire về một chàng trai ngây thơ đi khắp thế giới và thử thách niềm tin rằng mọi sự đều tốt đẹp nhất.",
       "tr": "Voltaire'in, dünyayı dolaşıp her şeyin en iyisi için olduğu fikrini sınayan saf bir gencin hicivli öyküsü."
+    }
+  },
+  "contes-choisis-grimm": {
+    "title": {
+      "en": "Selected Household Tales (Grimm)",
+      "zh-CN": "格林家庭童话选",
+      "zh-TW": "格林家庭童話選",
+      "es": "Cuentos escogidos de la familia (Grimm)",
+      "fr": "Contes choisis de la famille",
+      "de": "Ausgewählte Hausmärchen (Grimm)",
+      "it": "Fiabe scelte per la famiglia (Grimm)",
+      "pt": "Contos Escolhidos da Família (Grimm)",
+      "ru": "Избранные семейные сказки (Гримм)",
+      "ja": "家庭童話選集（グリム）",
+      "ko": "가정 동화 선집 (그림 형제)",
+      "ar": "حكايات عائلية مختارة (الأخوان غريم)",
+      "hi": "परिवार की चुनिंदा कहानियाँ (ग्रिम)",
+      "id": "Dongeng Pilihan Keluarga (Grimm)",
+      "vi": "Truyện chọn lọc cho gia đình (Grimm)",
+      "tr": "Aile İçin Seçme Masallar (Grimm)"
+    },
+    "blurb": {
+      "en": "Twenty short tales by the Brothers Grimm, in French translation, about clever foxes, foolish wolves and sly peasants.",
+      "zh-CN": "格林兄弟的二十篇短故事的法语译本，讲狡猾的狐狸、愚蠢的狼和机灵的农夫。",
+      "zh-TW": "格林兄弟的二十篇短故事的法語譯本，講狡猾的狐狸、愚蠢的狼和機靈的農夫。",
+      "es": "Veinte cuentos breves de los hermanos Grimm, en traducción francesa, sobre zorros astutos, lobos tontos y campesinos pícaros.",
+      "fr": "Vingt contes courts des frères Grimm, traduits de l'allemand : renards rusés, loups naïfs et paysans malins.",
+      "de": "Zwanzig kurze Märchen der Brüder Grimm in französischer Übersetzung, über schlaue Füchse, dumme Wölfe und gewitzte Bauern.",
+      "it": "Venti brevi fiabe dei fratelli Grimm in traduzione francese, con volpi astute, lupi sciocchi e contadini furbi.",
+      "pt": "Vinte contos curtos dos irmãos Grimm, em tradução francesa, sobre raposas astutas, lobos tolos e camponeses espertos.",
+      "ru": "Двадцать коротких сказок братьев Гримм во французском переводе — о хитрых лисах, глупых волках и смекалистых крестьянах.",
+      "ja": "グリム兄弟の短い童話二十編のフランス語訳。ずる賢いキツネ、間抜けなオオカミ、機転のきく農民が登場する。",
+      "ko": "그림 형제의 짧은 동화 스무 편을 프랑스어로 옮긴 책으로, 꾀 많은 여우, 어리석은 늑대, 영리한 농부가 나온다.",
+      "ar": "عشرون حكاية قصيرة للأخوين غريم بترجمة فرنسية، عن ثعالب ماكرة وذئاب حمقاء وفلاحين أذكياء.",
+      "hi": "ग्रिम भाइयों की बीस छोटी कहानियाँ, फ़्रेंच अनुवाद में, चालाक लोमड़ियों, मूर्ख भेड़ियों और होशियार किसानों के बारे में।",
+      "id": "Dua puluh dongeng pendek Grimm bersaudara dalam terjemahan Prancis, tentang rubah cerdik, serigala bodoh, dan petani yang licik.",
+      "vi": "Hai mươi truyện ngắn của anh em nhà Grimm, bản dịch tiếng Pháp, về cáo xảo quyệt, sói ngốc nghếch và nông dân tinh khôn.",
+      "tr": "Grimm Kardeşler'in yirmi kısa masalı, Fransızca çeviriyle; kurnaz tilkiler, budala kurtlar ve açıkgöz köylüler anlatılır."
     }
   },
   "contes-et-legendes": {
@@ -341,6 +417,44 @@
       "tr": "Balzac'ın, Paris'te köhne bir pansiyonda genç bir öğrencinin kızlarına adanmış yaşlı bir adamla tanıştığı romanının başlangıcı."
     }
   },
+  "le-petit-chose": {
+    "title": {
+      "en": "Le Petit Chose (beginning)",
+      "zh-CN": "小东西（开头部分）",
+      "zh-TW": "小東西（開頭部分）",
+      "es": "Le Petit Chose (comienzo)",
+      "fr": "Le Petit Chose (début)",
+      "de": "Le Petit Chose (Anfang)",
+      "it": "Le Petit Chose (inizio)",
+      "pt": "Le Petit Chose (início)",
+      "ru": "Le Petit Chose (начало)",
+      "ja": "プチ・ショーズ（冒頭）",
+      "ko": "르 프티 쇼즈 (앞부분)",
+      "ar": "لو بوتي شوز (البداية)",
+      "hi": "ल प्ती शोज़ (शुरुआत)",
+      "id": "Le Petit Chose (bagian awal)",
+      "vi": "Le Petit Chose (phần đầu)",
+      "tr": "Le Petit Chose (başlangıç)"
+    },
+    "blurb": {
+      "en": "Daniel Eyssette tells of his childhood in a silk factory in southern France, his family's ruin and his first job as a school monitor.",
+      "zh-CN": "丹尼尔·艾赛特讲述自己在法国南方丝绸工厂度过的童年、家道中落，以及第一份学监的工作。",
+      "zh-TW": "丹尼爾·艾賽特講述自己在法國南方絲綢工廠度過的童年、家道中落，以及第一份學監的工作。",
+      "es": "Daniel Eyssette cuenta su infancia en una fábrica de seda del sur de Francia, la ruina de su familia y su primer trabajo como vigilante escolar.",
+      "fr": "Daniel Eyssette raconte son enfance dans une fabrique du Midi, la ruine de sa famille et son premier emploi de pion.",
+      "de": "Daniel Eyssette erzählt von seiner Kindheit in einer Seidenfabrik in Südfrankreich, vom Ruin seiner Familie und seiner ersten Stelle als Hilfslehrer.",
+      "it": "Daniel Eyssette racconta la sua infanzia in una fabbrica di seta del sud della Francia, la rovina della famiglia e il primo lavoro come sorvegliante di collegio.",
+      "pt": "Daniel Eyssette conta sua infância numa fábrica de seda do sul da França, a ruína da família e o primeiro emprego como inspetor escolar.",
+      "ru": "Даниэль Эссет рассказывает о детстве на шёлковой фабрике на юге Франции, о разорении семьи и о первой работе школьным надзирателем.",
+      "ja": "ダニエル・エセットが、南フランスの絹織物工場での子ども時代、家の没落、そして最初の仕事である学校の監督係を語る。",
+      "ko": "다니엘 에세트가 남프랑스 비단 공장에서 보낸 어린 시절과 집안의 몰락, 그리고 학교 사감으로 얻은 첫 직장을 이야기한다.",
+      "ar": "يروي دانيال إيسيت طفولته في مصنع حرير بجنوب فرنسا، وانهيار عائلته، وعمله الأول مراقبًا في مدرسة.",
+      "hi": "डैनियल एसेट दक्षिणी फ़्रांस की एक रेशम फ़ैक्ट्री में अपने बचपन, परिवार की बर्बादी और स्कूल निरीक्षक की पहली नौकरी की कहानी सुनाता है।",
+      "id": "Daniel Eyssette menceritakan masa kecilnya di pabrik sutra di Prancis selatan, kehancuran keluarganya, dan pekerjaan pertamanya sebagai pengawas sekolah.",
+      "vi": "Daniel Eyssette kể về tuổi thơ trong một xưởng tơ lụa ở miền Nam nước Pháp, sự sa sút của gia đình và công việc đầu tiên làm giám thị trường học.",
+      "tr": "Daniel Eyssette, Güney Fransa'daki bir ipek fabrikasında geçen çocukluğunu, ailesinin yıkımını ve okul gözetmenliği olan ilk işini anlatır."
+    }
+  },
   "le-premier-livre": {
     "title": {
       "en": "The First Book",
@@ -493,6 +607,44 @@
       "tr": "Cadichon adlı akıllı bir eşek hayatını, sahiplerini ve kırsaldaki maceralarını anlatır."
     }
   },
+  "les-petites-filles-modeles": {
+    "title": {
+      "en": "The Model Little Girls",
+      "zh-CN": "模范小姑娘",
+      "zh-TW": "模範小女孩",
+      "es": "Las niñas modelo",
+      "fr": "Les Petites Filles modèles",
+      "de": "Die mustergültigen Mädchen",
+      "it": "Le bambine modello",
+      "pt": "As Meninas Exemplares",
+      "ru": "Благонравные девочки",
+      "ja": "お行儀のよい少女たち",
+      "ko": "모범 소녀들",
+      "ar": "الفتيات النموذجيات",
+      "hi": "आदर्श छोटी लड़कियाँ",
+      "id": "Gadis-Gadis Kecil Teladan",
+      "vi": "Những cô bé gương mẫu",
+      "tr": "Örnek Küçük Kızlar"
+    },
+    "blurb": {
+      "en": "Camille and Madeleine, two kind little girls, live in the country with their mothers and friends, and learn lessons about good behaviour.",
+      "zh-CN": "善良的小姐妹卡米耶和玛德莱娜与妈妈、朋友们住在乡下，在生活里学习怎样做个好孩子。",
+      "zh-TW": "善良的小姊妹卡米耶和瑪德萊娜與媽媽、朋友們住在鄉下，在生活裡學習怎樣做個好孩子。",
+      "es": "Camille y Madeleine, dos niñas bondadosas, viven en el campo con sus madres y amigas, y aprenden lecciones de buen comportamiento.",
+      "fr": "Camille et Madeleine, deux petites filles gentilles, vivent à la campagne avec leurs mères et leurs amies et y apprennent à bien se conduire.",
+      "de": "Camille und Madeleine, zwei liebe kleine Mädchen, leben mit ihren Müttern und Freundinnen auf dem Land und lernen, sich gut zu benehmen.",
+      "it": "Camille e Madeleine, due bambine gentili, vivono in campagna con le madri e le amiche e imparano a comportarsi bene.",
+      "pt": "Camille e Madeleine, duas meninas bondosas, vivem no campo com as mães e as amigas e aprendem a se comportar bem.",
+      "ru": "Камилла и Мадлен, две добрые девочки, живут в деревне с мамами и подругами и учатся хорошему поведению.",
+      "ja": "心優しい二人の少女カミーユとマドレーヌは、母親や友だちと田舎で暮らし、よい行いについて学んでいく。",
+      "ko": "착한 두 소녀 카미유와 마들렌은 시골에서 엄마와 친구들과 함께 살며 바른 행동을 배운다.",
+      "ar": "كاميل ومادلين، فتاتان طيبتان، تعيشان في الريف مع أمّيهما وصديقاتهما وتتعلمان حسن السلوك.",
+      "hi": "कैमिल और मैडलेन, दो भली छोटी लड़कियाँ, अपनी माँओं और सहेलियों के साथ गाँव में रहती हैं और अच्छे व्यवहार के पाठ सीखती हैं।",
+      "id": "Camille dan Madeleine, dua gadis kecil yang baik hati, tinggal di desa bersama ibu dan teman-teman mereka dan belajar bersikap baik.",
+      "vi": "Camille và Madeleine, hai cô bé tốt bụng, sống ở miền quê cùng mẹ và bạn bè, và học cách cư xử đúng mực.",
+      "tr": "İyi kalpli iki küçük kız Camille ve Madeleine, anneleri ve arkadaşlarıyla kırda yaşar ve iyi davranış dersleri alır."
+    }
+  },
   "lettres-de-mon-moulin": {
     "title": {
       "en": "Letters from My Windmill",
@@ -607,6 +759,44 @@
       "tr": "Victor Hugo'nun ortaçağ Paris'ini, 1482'de büyük katedralin çevresinde anlatan romanının başlangıcı."
     }
   },
+  "poil-de-carotte": {
+    "title": {
+      "en": "Carrot-Top (Poil de Carotte)",
+      "zh-CN": "胡萝卜须",
+      "zh-TW": "紅蘿蔔鬚",
+      "es": "Pelo de zanahoria",
+      "fr": "Poil de Carotte",
+      "de": "Rotfuchs",
+      "it": "Pel di carota",
+      "pt": "Poil de Carotte",
+      "ru": "Рыжик",
+      "ja": "にんじん",
+      "ko": "홍당무",
+      "ar": "بوال دو كاروت",
+      "hi": "पॉयल दे कैरोट",
+      "id": "Poil de Carotte",
+      "vi": "Tóc Cà Rốt",
+      "tr": "Havuç Saç (Poil de Carotte)"
+    },
+    "blurb": {
+      "en": "Short, sharp chapters about a red-haired boy in the French countryside whose mother treats him unkindly.",
+      "zh-CN": "一个法国乡下的红头发男孩总被母亲苛待，全书由简短而辛辣的小篇章组成。",
+      "zh-TW": "一個法國鄉下的紅頭髮男孩總被母親苛待，全書由簡短而辛辣的小篇章組成。",
+      "es": "Capítulos breves y punzantes sobre un niño pelirrojo del campo francés al que su madre trata con dureza.",
+      "fr": "De courts chapitres vifs sur un garçon roux de la campagne dont la mère est dure avec lui.",
+      "de": "Kurze, scharfe Kapitel über einen rothaarigen Jungen auf dem französischen Land, den seine Mutter lieblos behandelt.",
+      "it": "Brevi capitoli pungenti su un ragazzo dai capelli rossi della campagna francese, trattato duramente dalla madre.",
+      "pt": "Capítulos curtos e incisivos sobre um menino ruivo do campo francês, tratado com dureza pela mãe.",
+      "ru": "Короткие острые главы о рыжем мальчике из французской деревни, с которым жестока его мать.",
+      "ja": "フランスの田舎に住む赤毛の少年と、彼につらく当たる母親を描いた、短くて鋭い章の連なり。",
+      "ko": "프랑스 시골의 붉은 머리 소년과 그를 모질게 대하는 어머니를 그린, 짧고 날카로운 장들로 이루어진 이야기.",
+      "ar": "فصول قصيرة لاذعة عن صبي أحمر الشعر في الريف الفرنسي تعامله أمه بقسوة.",
+      "hi": "फ्रांस के गाँव के एक लाल बालों वाले लड़के की छोटी, तीखी कथाएँ, जिसके साथ उसकी माँ कठोर व्यवहार करती है।",
+      "id": "Bab-bab pendek yang tajam tentang anak laki-laki berambut merah di pedesaan Prancis yang diperlakukan kasar oleh ibunya.",
+      "vi": "Những chương ngắn, sắc sảo về cậu bé tóc đỏ ở vùng quê nước Pháp bị mẹ đối xử khắc nghiệt.",
+      "tr": "Fransız kırsalında annesinin sert davrandığı kızıl saçlı bir çocuğu anlatan kısa ve keskin bölümler."
+    }
+  },
   "riquet-a-la-houppe": {
     "title": {
       "en": "Ricky of the Tuft",
@@ -681,6 +871,44 @@
       "id": "Buku terakhir yang diselesaikan Flaubert: tiga kisah tentang pelayan sederhana, seorang santo abad pertengahan, dan istana Herodes.",
       "vi": "Cuốn sách hoàn chỉnh cuối cùng của Flaubert: ba truyện về một người hầu gái khiêm nhường, một vị thánh thời trung cổ và triều đình vua Hêrôđê.",
       "tr": "Flaubert'in tamamladığı son kitap: alçakgönüllü bir hizmetçi, bir ortaçağ azizi ve Hirodes'in sarayı üzerine üç hikâye."
+    }
+  },
+  "un-bon-petit-diable": {
+    "title": {
+      "en": "A Good Little Devil",
+      "zh-CN": "好心的小魔鬼",
+      "zh-TW": "好心的小魔鬼",
+      "es": "Un buen diablillo",
+      "fr": "Un bon petit diable",
+      "de": "Ein guter kleiner Teufel",
+      "it": "Un bravo diavoletto",
+      "pt": "Um Bom Diabinho",
+      "ru": "Славный чертёнок",
+      "ja": "いい子の小悪魔",
+      "ko": "착한 꼬마 악마",
+      "ar": "شيطان صغير طيب",
+      "hi": "एक भला नन्हा शैतान",
+      "id": "Setan Kecil yang Baik",
+      "vi": "Một cậu bé quỷ tốt bụng",
+      "tr": "İyi Bir Küçük Şeytan"
+    },
+    "blurb": {
+      "en": "Charles, a lively orphan boy, is mistreated by his greedy cousin, and a kind blind girl named Juliette helps him become a better person.",
+      "zh-CN": "活泼的孤儿查尔斯被贪婪的表姑虐待，一位善良的盲女孩朱丽叶帮助他变成更好的人。",
+      "zh-TW": "活潑的孤兒查爾斯被貪婪的表姑虐待，一位善良的盲女孩茱麗葉幫助他變成更好的人。",
+      "es": "Charles, un huérfano travieso, es maltratado por su avara prima, y una dulce niña ciega llamada Juliette le ayuda a ser mejor persona.",
+      "fr": "Charles, un orphelin espiègle, est maltraité par sa cousine avare ; Juliette, une gentille petite aveugle, l'aide à devenir meilleur.",
+      "de": "Der muntere Waisenjunge Charles wird von seiner geizigen Cousine schlecht behandelt, und das gütige blinde Mädchen Juliette hilft ihm, ein besserer Mensch zu werden.",
+      "it": "Charles, un orfano vivace, è maltrattato dalla cugina avara, e Juliette, una dolce bambina cieca, lo aiuta a diventare migliore.",
+      "pt": "Charles, um órfão travesso, é maltratado pela prima avarenta, e Juliette, uma menina cega e gentil, o ajuda a se tornar melhor.",
+      "ru": "Шаловливого сироту Шарля обижает жадная кузина, а добрая слепая девочка Жюльетта помогает ему стать лучше.",
+      "ja": "いたずら好きな孤児シャルルは欲深い親戚にいじめられるが、心優しい盲目の少女ジュリエットのおかげで立派な人になっていく。",
+      "ko": "장난꾸러기 고아 샤를은 욕심 많은 친척에게 학대받지만, 마음씨 고운 눈먼 소녀 쥘리에트의 도움으로 더 나은 사람이 된다.",
+      "ar": "شارل، يتيم مشاغب، تسيء معاملته قريبته الجشعة، وتساعده فتاة عمياء طيبة اسمها جولييت على أن يصبح إنسانًا أفضل.",
+      "hi": "शरारती अनाथ लड़का शार्ल अपनी लालची रिश्तेदार से बुरा बर्ताव पाता है, और जूलिएट नाम की भली नेत्रहीन लड़की उसे बेहतर इंसान बनने में मदद करती है।",
+      "id": "Charles, anak yatim yang nakal, diperlakukan buruk oleh sepupunya yang serakah, dan Juliette, gadis buta yang baik hati, membantunya menjadi pribadi yang lebih baik.",
+      "vi": "Charles, cậu bé mồ côi nghịch ngợm, bị bà họ tham lam ngược đãi, và cô bé mù hiền lành Juliette giúp cậu trở thành người tốt hơn.",
+      "tr": "Yaramaz yetim Charles, cimri akrabası tarafından kötü davranılır; Juliette adlı iyi kalpli kör kız onun daha iyi biri olmasına yardım eder."
     }
   }
 }

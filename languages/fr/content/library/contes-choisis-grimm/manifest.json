@@ -1,0 +1,45 @@
+{
+  "title": "Contes choisis de la famille",
+  "author": "Frères Grimm, traduit de l'allemand",
+  "level": "A2",
+  "wordCount": 10386,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/12250",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Le loup et l'homme"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Contes de Grimm"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Contes de Grimm"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Contes de Grimm"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Contes de Grimm"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Contes de Grimm"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Contes de Grimm"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Contes de Grimm"
+    }
+  ]
+}

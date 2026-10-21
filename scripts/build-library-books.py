@@ -16,6 +16,49 @@ from pathlib import Path
 
 LESSON_WORDS = 1400
 
+TITLE_SMALL_WORDS = {
+    "a", "an", "the", "of", "in", "on", "at", "to", "and", "or", "for", "with", "from", "by",
+    "de", "du", "des", "la", "le", "les", "un", "une", "au", "aux", "et", "à", "en", "sur", "dans",
+}
+
+
+def title_case(text: str) -> str:
+    """Capitalise an all-caps title, keeping short function words in lower case."""
+    out = []
+    for n, word in enumerate(text.split()):
+        low = word.lower()
+        if n and low.strip(".,;:!?") in TITLE_SMALL_WORDS:
+            out.append(low)
+            continue
+        m = re.match(r"^([dlqDLQ]['’])(.+)$", word)
+        prefix, rest = (m[1].lower(), m[2]) if m else ("", word)
+        i = next((k for k, ch in enumerate(rest) if ch.isalpha()), None)
+        out.append(prefix + (rest if i is None else rest[:i] + rest[i].upper() + rest[i + 1:].lower()))
+    return " ".join(out)
+
+
+def sentence_case(text: str, names: tuple = ()) -> str:
+    """Lower-case an all-caps title after its first letter, then restore the listed proper names."""
+    out = text.rstrip(".").lower()
+    out = out[:1].upper() + out[1:]
+    out = re.sub(r"(?<=\. )[a-zà-ÿ]", lambda m: m[0].upper(), out)
+    for name in names:
+        out = re.sub(rf"(?<!\w){re.escape(name)}(?!\w)", name, out, flags=re.I)
+    return out
+
+
+POIL_DE_CAROTTE_TITLES = [re.escape(t) for t in (
+    "Les Poules", "Les Perdrix", "C'est le chien", "Le Cauchemar", "Sauf votre respect", "Le Pot",
+    "Les Lapins", "La Pioche", "La Carabine", "La Taupe", "La Luzerne", "Le Timbale", "La Mie de pain",
+    "Le Trompette", "Ma Mèche", "Le Bain", "Honorine", "La Marmite", "Réticence", "Agathe",
+    "Le Programme", "L'Aveugle", "Le Jour de l'An", "Aller et retour", "Le Porte-plume",
+    "Les Joues rouges", "Les Poux", "Comme Brutus", "Le Toiton", "Le Chat", "Les Moutons", "Parrain",
+    "La Fontaine", "Les Prunes", "Mathilde", "Le Coffre-fort", "Les Têtards", "Coup de théâtre",
+    "En Chasse", "La Mouche", "La Première Bécasse", "L'Hameçon", "La Pièce d'argent",
+    "Les Idées personnelles", "Lettres choisies", "La Tempête de feuilles", "La Révolte", "Le Mot de la fin",
+    "L'Album de Poil de Carotte",
+)]
+
 BOOKS = [
     dict(lang="fr", slug="le-premier-livre", id=48011, title="Le Premier Livre (histoire de Remi)",
          author="Albert A. Méras et B. Méras", level="A1", start="", short="Remi",
@@ -71,6 +114,58 @@ BOOKS = [
          subs=[(r"(?s)\[Illustration:.*?\]", "")]),
     dict(lang="fr", slug="notre-dame-de-paris", id=19657, title="Notre-Dame de Paris (début)", author="Victor Hugo",
          level="C2", start=r"^LIVRE PREMIER\s*$", short="Notre-Dame de Paris", max_words=35000),
+    dict(lang="fr", slug="poil-de-carotte", id=4559, title="Poil de Carotte", author="Jules Renard",
+         level="A2", start=r"^Les Poules\s*$", short="Poil de Carotte", cut=r"^TABLE\s*$",
+         heading_names=["Brutus", "Poil de Carotte", "Lepic"],
+         subs=[(r"^(?i:(" + "|".join(POIL_DE_CAROTTE_TITLES) + r"))\.?[ \t]*$", lambda m: m[1].upper())]),
+    dict(lang="fr", slug="contes-choisis-grimm", id=12250, title="Contes choisis de la famille",
+         author="Frères Grimm, traduit de l'allemand", level="A2", start=r"^LE LOUP ET L'HOMME\.",
+         short="Contes de Grimm", cut=r"^TABLE\s*$", heading_names=[]),
+    dict(lang="fr", slug="les-petites-filles-modeles", id=35404, title="Les Petites Filles modèles",
+         author="Comtesse de Ségur", level="B1", start=r"^I\s*\n\s*\nCAMILLE ET MADELEINE",
+         short="Les Petites Filles modèles", cut=r"^FIN\.\s*$",
+         heading_names=["Camille", "Madeleine", "Marguerite", "Jeannette", "Sophie", "Françoise", "Lucie", "Hurel"],
+         subs=[(r"^([A-ZÀ-Ý][A-ZÀ-Ý' -]{2,})\.[ \t]*\n\s*\n", lambda m: title_case(m[1]) + " : ")]),
+    dict(lang="fr", slug="un-bon-petit-diable", id=12993, title="Un bon petit diable", author="Comtesse de Ségur",
+         level="B1", start=r"^I\s*\n\s*\nLES FÉES", short="Un bon petit diable",
+         heading_names=["Charles", "Juliette", "Mac'Miche", "Marianne", "Charybde", "Scylla", "Madame"],
+         subs=[(r"(?s)\[Note \d+:.*?\]", "")]),
+    dict(lang="fr", slug="le-petit-chose", id=13256, title="Le Petit Chose (début)", author="Alphonse Daudet",
+         level="B1", start=r"^I\s*\n\s*\nLA FABRIQUE", short="Le Petit Chose", max_words=35000,
+         heading_names=["Boucoyran", "Viot", "M."],
+         subs=[(r"(?s)\[Footnote \d+:.*?\]", ""),
+               (r"^(PREMIÈRE|DEUXIÈME) PARTIE[ \t]*$", lambda m: m[0].capitalize()),
+               (r"^«([A-ZÀ-Ý .'-]+?)\.?»[ \t]*$", lambda m: "«" + title_case(m[1]) + ".»")]),
+    dict(lang="fr", slug="alice-au-pays-des-merveilles", id=55456, title="Aventures d'Alice au pays des merveilles",
+         author="Lewis Carroll, traduit par Henri Bué", level="B1", start=r"^CHAPITRE PREMIER\.\s*$",
+         short="Alice au pays des merveilles", cut=r"^FIN\.\s*$",
+         subs=[(r"^CHAPITRE (\S+?)\.[ \t]*\n\s*\n([^\n]+)$",
+                lambda m: f"Chapitre {'I' if m[1] == 'PREMIER' else m[1]}. {sentence_case(m[2], ('Alice',))}")]),
+    dict(lang="en", slug="the-velveteen-rabbit", id=11757, title="The Velveteen Rabbit", author="Margery Williams",
+         level="A2", start=r"^HERE was once a velveteen rabbit", short="The Velveteen Rabbit",
+         subs=[(r"^HERE was once", "There was once"), (r"^ {10,}\S.*$", "")]),
+    dict(lang="en", slug="english-fairy-tales", id=7439, title="English Fairy Tales", author="Joseph Jacobs (collector)",
+         level="A2", start=r"^TOM TIT TOT\s*$", short="English Fairy Tales", stop=r"^OYEZ-OYEZ-OYEZ\s*$",
+         title_headings=True,
+         subs=[(r"^BE BOLD, BE BOLD[^\n]*(\n(?!\n)[^\n]+)?$",
+                lambda m: sentence_case(" ".join(m[0].split())) + "."),
+               (r"^(“NIMMY NIMMY NOT[^\n]*|“THOU HAST IT!”)[ \t]*$", lambda m: title_case(m[1]))]),
+    dict(lang="en", slug="stories-from-hans-andersen", id=17860, title="Stories from Hans Andersen",
+         author="Hans Christian Andersen, illustrated by Edmund Dulac", level="B1", start=r"^THE SNOW QUEEN\s*$",
+         short="Hans Andersen", title_headings=True,
+         cut=r"^Printed in Great Britain"),
+    dict(lang="en", slug="the-secret-garden", id=113, title="The Secret Garden", author="Frances Hodgson Burnett",
+         level="B1", start=r"^CHAPTER I\.\s*\nTHERE IS NO ONE LEFT", short="The Secret Garden",
+         cut=r"^THE END\s*$",
+         subs=[(r"^CHAPTER ([IVXL]+)\.?[ \t]*\n(\S.*(?:\n\S.*)*)",
+                lambda m: f"Chapter {m[1]}. " + title_case(" ".join(m[2].split())))]),
+    dict(lang="en", slug="just-so-stories", id=2781, title="Just So Stories", author="Rudyard Kipling",
+         level="B1", start=r"^HOW THE WHALE GOT HIS THROAT\s*\n\s*\nIN the sea", short="Just So Stories",
+         title_headings=True, verse="auto"),
+    dict(lang="en", slug="a-little-princess", id=146, title="A Little Princess", author="Frances Hodgson Burnett",
+         level="B1", start=r"^1\s*\n\s*\nSara\s*\n", short="A Little Princess",
+         subs=[(r"^(\d{1,2})[ \t]*\n\s*\n([^\n]+)$", lambda m: f"Chapter {m[1]}. {m[2]}"),
+               (r"^MISS MINCHIN,[ \t]*$", "Miss Minchin,")]),
     dict(lang="en", slug="kittens-and-cats", id=61852, title="Kittens and Cats: A First Reader",
          author="Eulalie Osgood Grover", level="A1", start=r"^THE QUEEN\s*$", short="Kittens and Cats",
          cut=r"^A WORD TO THE TEACHER", capitalise_headings=True),
@@ -217,6 +312,8 @@ def clean_paragraph(par: str, verse: bool) -> str | None:
     lines = [ln.strip() for ln in par.splitlines() if ln.strip()]
     if not lines:
         return None
+    if verse == "auto":
+        verse = len(lines) >= 3 and all(re.match(r"^[\"“‘'A-Z]", ln) for ln in lines)
     if verse and len(lines) > 1:
         return "  \n".join(lines)
     return re.sub(r"\s+", " ", " ".join(lines))
@@ -265,8 +362,16 @@ def _keep_roman(cased: str) -> str:
     return ROMAN_WORD.sub(lambda m: m.group(0).upper(), cased)
 
 
-def titlecase_heading(text: str, capitalise: bool = False) -> str:
+def titlecase_heading(text: str, capitalise: bool = False, title: bool = False, names: tuple | None = None) -> str:
     t = text.strip(" _*")
+    if (title or names is not None) and ROMAN.match(t):
+        return t.rstrip(".")
+    if title and t.isupper():
+        m = re.match(r"^([IVXLC]+)\.\s+(.*)$", t)
+        return f"{m[1]}. {title_case(m[2])}" if m else title_case(t.rstrip("."))
+    if names is not None and t.isupper():
+        m = re.match(r"^([IVXLC]+)\.\s+(.*)$", t)
+        return f"{m[1]}. {sentence_case(m[2], names)}" if m else sentence_case(t, names)
     if capitalise and t.isupper():
         return _keep_roman(_capitalise_words(t))
     m = re.match(r"^([IVXLC]+)\.\s+(.*)$", t)
@@ -312,12 +417,14 @@ def build(book: dict, raw_dir: Path, out_dir: Path) -> None:
     book_dir.mkdir(parents=True)
     entries = []
     cap = book.get("capitalise_headings", False)
+    title_mode = book.get("title_headings", False)
+    names = tuple(book["heading_names"]) if "heading_names" in book else None
     for n, chunk in enumerate(lessons, start=1):
-        head = next((titlecase_heading(p, cap) for p in chunk[:1] if is_heading(p)), None)
+        head = next((titlecase_heading(p, cap, title_mode, names) for p in chunk[:1] if is_heading(p)), None)
         title = f"{n}. {head}" if head else f"{n}. {book['short']}"
         body = []
         for p in chunk:
-            body.append(f"## {titlecase_heading(p, cap)}" if is_heading(p) else p)
+            body.append(f"## {titlecase_heading(p, cap, title_mode, names)}" if is_heading(p) else p)
         name = f"{n:02d}.md"
         (book_dir / name).write_text(f"# {title}\n\n" + "\n\n".join(body) + "\n", encoding="utf8")
         entries.append({"file": name, "title": title})
@@ -342,9 +449,11 @@ def main() -> None:
     ap.add_argument("--raw", required=True, type=Path)
     ap.add_argument("--out", required=True, type=Path)
     ap.add_argument("--lang", required=True, choices=sorted({b["lang"] for b in BOOKS}))
+    ap.add_argument("--only", help="comma-separated slugs to build; the others are left untouched")
     args = ap.parse_args()
+    only = set(args.only.split(",")) if args.only else None
     for book in BOOKS:
-        if book["lang"] == args.lang:
+        if book["lang"] == args.lang and (only is None or book["slug"] in only):
             build(book, args.raw, args.out)
 
 
