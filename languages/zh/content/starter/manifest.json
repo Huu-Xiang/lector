@@ -1,0 +1,108 @@
+{
+  "title": "你的前一千个词",
+  "author": "Lector",
+  "allow": ["小明", "小玲", "玲", "小林", "你好"],
+  "maxNewLemmasPerLesson": 60,
+  "lessons": [
+    {
+      "file": "01-wo-shi-xuesheng.md",
+      "title": "我是学生",
+      "maxRank": 250
+    },
+    {
+      "file": "02-jintian.md",
+      "title": "今天",
+      "maxRank": 250
+    },
+    {
+      "file": "03-chengshi.md",
+      "title": "我的城市",
+      "maxRank": 250
+    },
+    {
+      "file": "04-xiaoming-de-wenti.md",
+      "title": "小明的问题",
+      "maxRank": 250
+    },
+    {
+      "file": "05-youxi.md",
+      "title": "电影和游戏",
+      "maxRank": 250
+    },
+    {
+      "file": "06-daxue.md",
+      "title": "大学",
+      "maxRank": 500
+    },
+    {
+      "file": "07-huiyi.md",
+      "title": "会议",
+      "maxRank": 500
+    },
+    {
+      "file": "08-shichang.md",
+      "title": "市场",
+      "maxRank": 500
+    },
+    {
+      "file": "09-xinwen.md",
+      "title": "新闻",
+      "maxRank": 500
+    },
+    {
+      "file": "10-shouji.md",
+      "title": "手机和网络",
+      "maxRank": 500
+    },
+    {
+      "file": "11-jiaren.md",
+      "title": "我的家庭",
+      "maxRank": 750
+    },
+    {
+      "file": "12-yiyuan.md",
+      "title": "医院",
+      "maxRank": 750
+    },
+    {
+      "file": "13-lvyou.md",
+      "title": "旅游",
+      "maxRank": 750
+    },
+    {
+      "file": "14-yinyue.md",
+      "title": "音乐",
+      "maxRank": 750
+    },
+    {
+      "file": "15-shu.md",
+      "title": "书和语言",
+      "maxRank": 750
+    },
+    {
+      "file": "16-zhizuo.md",
+      "title": "做电影",
+      "maxRank": 1000
+    },
+    {
+      "file": "17-fangying.md",
+      "title": "第一次节目",
+      "maxRank": 1000
+    },
+    {
+      "file": "18-waiguo.md",
+      "title": "去外国",
+      "maxRank": 1000
+    },
+    {
+      "file": "19-zeren.md",
+      "title": "责任",
+      "maxRank": 1000
+    },
+    {
+      "file": "20-yinian.md",
+      "title": "一年",
+      "maxRank": 1000
+    }
+  ]
+}

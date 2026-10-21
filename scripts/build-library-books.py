@@ -290,13 +290,107 @@ BOOKS = [
          author="José Ortega y Gasset", level="C2", start=r"^LECTOR\.\.\.\s*$", stop=r"^\s*ÍNDICE\s*$",
          short="Meditaciones", max_words=35000, subs=ES_PLATES,
          heading_names=["Quijote", "Hermann Cohen", "Ethik des reinen Willens"]),
+    dict(lang="zh", zh=True, slug="gushi-xin-dubo", id=67976, title="故事新读本（第一册）",
+         author="上海大东书局", level="B1", start=r"^（一）\u3000文彥博灌穴取球", cut=r"^抄者後記", short="故事新读本",
+         heading_re=r"^（[一二三四五六七八九十]+） ",
+         subs=[(r"[{}]", ""), (r"^\[图：[^\]]*\]\s*$", "")]),
+    dict(lang="zh", zh=True, slug="rulin-waishi", id=24032, title="儒林外史（开头）", author="吴敬梓", level="B2",
+         start=r"^第一回\u3000說楔子敷陳大義", short="儒林外史", max_words=35000, short_break=True,
+         heading_re=r"^第[一二三四五六七八九十百零〇]+回"),
+    dict(lang="zh", zh=True, slug="jingshi-tongyan", id=24141, title="警世通言（开头）", author="冯梦龙", level="C1",
+         start=r"^第一卷\s+俞伯牙", short="警世通言", max_words=35000,
+         heading_re=r"^第[一二三四五六七八九十百零〇]+卷"),
+    dict(lang="zh", zh=True, slug="shuihu-zhuan", id=23863, title="水浒传（开头）", author="施耐庵", level="C1",
+         start=r"^楔子\u3000張天師祈禳瘟疫", short="水浒传", max_words=35000,
+         heading_re=r"^(楔子|第[一二三四五六七八九十百零〇]+回)"),
+    dict(lang="zh", zh=True, slug="xiyouji", id=23962, title="西游记（开头）", author="吴承恩", level="C1",
+         start=r"^第一回\s+靈根育孕源流出", short="西游记", max_words=35000,
+         heading_re=r"^第[一二三四五六七八九十百零〇]+回"),
+    dict(lang="zh", zh=True, slug="honglou-meng", id=24264, title="红楼梦（开头）", author="曹雪芹", level="C2",
+         start=r"^第一回\u3000甄士隱夢幻識通靈", short="红楼梦", max_words=35000,
+         heading_re=r"^第[一二三四五六七八九十百零〇]+回",
+         subs=[(r"^-{10,}\s*$", ""), (r"．", "。"), (r"^(第[一二三四五六七八九十百零〇]+回)[ \t]*\n\s*([^\n]+)$", r"\1 \2")]),
+    dict(lang="zh", zh=True, slug="sanguo-yanyi", id=23950, title="三国演义（开头）", author="罗贯中", level="C2",
+         start=r"^第一回：宴桃園豪傑三結義", short="三国演义", max_words=35000,
+         heading_re=r"^第[一二三四五六七八九十百零〇]+回"),
+    dict(lang="zh", zh=True, slug="lunyu", id=23839, title="论语", author="孔子弟子及再传弟子", level="C2",
+         start=r"^學而第一", short="论语", heading_re=r"^.{1,5}第[一二三四五六七八九十]+$"),
 ]
 
 ROMAN = re.compile(r"^[IVXLC]+\.?$")
 
 
+HAN = re.compile(r"[\u3400-\u9fff]")
+
+
 def words(text: str) -> int:
-    return len(re.findall(r"\w+", text))
+    """Latin words count one each; Han characters count 1 per 1.6 (the usual word length)."""
+    han = len(HAN.findall(text))
+    return len(re.findall(r"\w+", HAN.sub(" ", text))) + round(han / 1.6)
+
+
+ZH_MAP: tuple | None = None
+ZH_TERMINAL = tuple("。！？…」』”’）")
+
+
+def zh_simplify(text: str) -> str:
+    """Traditional to Simplified with the dictionary build's map: listed words first, then single characters."""
+    global ZH_MAP
+    if ZH_MAP is None:
+        m = json.loads(Path(__file__).with_name("zh-t2s-map.json").read_text(encoding="utf8"))
+        keys = sorted((k for k in m["words"] if len(k) > 1), key=len, reverse=True)
+        ZH_MAP = (re.compile("|".join(map(re.escape, keys))), m["words"], m["chars"])
+    pattern, wmap, cmap = ZH_MAP
+    out: list[str] = []
+    pos = 0
+    for hit in pattern.finditer(text):
+        out.append("".join(cmap.get(c, c) for c in text[pos:hit.start()]))
+        out.append(wmap[hit.group(0)])
+        pos = hit.end()
+    out.append("".join(cmap.get(c, c) for c in text[pos:]))
+    return "".join(out)
+
+
+def zh_paragraphs(text: str, heading_re: str | None, short_break: bool = False) -> list[str]:
+    """Join hard-wrapped Chinese lines. A paragraph starts at an indented line after an unindented one,
+    after two blank lines, or after a blank line that follows a closed sentence. With short_break, a closed
+    sentence on a line shorter than most lines also ends a paragraph."""
+    heading = re.compile(heading_re) if heading_re else None
+    paras: list[str] = []
+    cur: list[str] = []
+    prev_indented = False
+    blanks = 0
+    width = max((len(ln.strip(" \t\u3000\xa0")) for ln in text.split("\n")), default=0)
+
+    def flush() -> None:
+        if cur:
+            paras.append(re.sub(r"[\u3000\xa0□]+", "", "".join(cur)))
+            cur.clear()
+
+    for line in text.split("\n"):
+        stripped = line.strip(" \t\u3000\xa0")
+        if not stripped:
+            blanks += 1
+            continue
+        indented = line[:1] == "\u3000" or line.startswith("  ")
+        spaced = re.sub(r"[\s\u3000\xa0]+", " ", stripped)
+        if heading and heading.match(spaced):
+            flush()
+            paras.append(spaced)
+            prev_indented, blanks = False, 0
+            continue
+        if cur and (
+            blanks >= 2
+            or (blanks == 1 and cur[-1].endswith(ZH_TERMINAL))
+            or (short_break and cur[-1].endswith(ZH_TERMINAL) and len(cur[-1]) < width * 0.85)
+            or (indented and not prev_indented)
+            or re.match(r"^\d+\. ", stripped)
+        ):
+            flush()
+        cur.append(stripped)
+        prev_indented, blanks = indented, 0
+    flush()
+    return paras
 
 
 def body_of(raw: str, start: str, cut: str | None = None, stop: str | None = None) -> str:
@@ -436,7 +530,12 @@ def clean_paragraph(par: str, verse: bool) -> str | None:
     return re.sub(r"\s+", " ", " ".join(lines))
 
 
+ZH_HEADING: re.Pattern | None = None
+
+
 def is_heading(par: str) -> bool:
+    if ZH_HEADING is not None:
+        return bool(ZH_HEADING.match(par.strip()))
     if "\n" in par or len(par) > 80:
         return False
     plain = par.strip(" _*.")
@@ -506,10 +605,15 @@ def build(book: dict, raw_dir: Path, out_dir: Path) -> None:
         text = unicodedata.normalize("NFC", extract_lecturas_faciles(raw))
     else:
         text = unicodedata.normalize("NFC", body_of(raw, book["start"], book.get("cut"), book.get("stop")))
+    global ZH_HEADING
+    zh = book.get("zh", False)
+    if zh:
+        text = zh_simplify(text)
     for pattern, repl in book.get("subs", ()):
         text = re.sub(pattern, repl, text, flags=re.M)
     lesson_words = book.get("lesson_words", LESSON_WORDS)
-    pars = paragraphs(text, book.get("verse", False))
+    ZH_HEADING = re.compile(book["heading_re"]) if zh and book.get("heading_re") else None
+    pars = zh_paragraphs(text, book.get("heading_re"), book.get("short_break", False)) if zh else paragraphs(text, book.get("verse", False))
     budget = book.get("max_words")
     lessons: list[list[str]] = [[]]
     count = 0

@@ -1,0 +1,45 @@
+{
+  "title": "论语",
+  "author": "孔子弟子及再传弟子",
+  "level": "C2",
+  "wordCount": 10512,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/23839",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. 学而第一"
+    },
+    {
+      "file": "02.md",
+      "title": "2. 论语"
+    },
+    {
+      "file": "03.md",
+      "title": "3. 论语"
+    },
+    {
+      "file": "04.md",
+      "title": "4. 论语"
+    },
+    {
+      "file": "05.md",
+      "title": "5. 论语"
+    },
+    {
+      "file": "06.md",
+      "title": "6. 论语"
+    },
+    {
+      "file": "07.md",
+      "title": "7. 论语"
+    },
+    {
+      "file": "08.md",
+      "title": "8. 论语"
+    }
+  ]
+}

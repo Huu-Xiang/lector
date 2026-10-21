@@ -1,0 +1,109 @@
+{
+  "title": "水浒传（开头）",
+  "author": "施耐庵",
+  "level": "C1",
+  "wordCount": 34796,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/23863",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. 楔子 张天师祈禳瘟疫 洪太尉误走妖魔"
+    },
+    {
+      "file": "02.md",
+      "title": "2. 水浒传"
+    },
+    {
+      "file": "03.md",
+      "title": "3. 水浒传"
+    },
+    {
+      "file": "04.md",
+      "title": "4. 水浒传"
+    },
+    {
+      "file": "05.md",
+      "title": "5. 水浒传"
+    },
+    {
+      "file": "06.md",
+      "title": "6. 水浒传"
+    },
+    {
+      "file": "07.md",
+      "title": "7. 水浒传"
+    },
+    {
+      "file": "08.md",
+      "title": "8. 水浒传"
+    },
+    {
+      "file": "09.md",
+      "title": "9. 水浒传"
+    },
+    {
+      "file": "10.md",
+      "title": "10. 水浒传"
+    },
+    {
+      "file": "11.md",
+      "title": "11. 水浒传"
+    },
+    {
+      "file": "12.md",
+      "title": "12. 水浒传"
+    },
+    {
+      "file": "13.md",
+      "title": "13. 水浒传"
+    },
+    {
+      "file": "14.md",
+      "title": "14. 水浒传"
+    },
+    {
+      "file": "15.md",
+      "title": "15. 水浒传"
+    },
+    {
+      "file": "16.md",
+      "title": "16. 水浒传"
+    },
+    {
+      "file": "17.md",
+      "title": "17. 水浒传"
+    },
+    {
+      "file": "18.md",
+      "title": "18. 水浒传"
+    },
+    {
+      "file": "19.md",
+      "title": "19. 水浒传"
+    },
+    {
+      "file": "20.md",
+      "title": "20. 水浒传"
+    },
+    {
+      "file": "21.md",
+      "title": "21. 水浒传"
+    },
+    {
+      "file": "22.md",
+      "title": "22. 水浒传"
+    },
+    {
+      "file": "23.md",
+      "title": "23. 水浒传"
+    },
+    {
+      "file": "24.md",
+      "title": "24. 水浒传"
+    }
+  ]
+}

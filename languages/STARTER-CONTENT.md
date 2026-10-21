@@ -146,6 +146,14 @@ only `wordlist.json` seeds nothing.
 - **it** — wordfreq. The tokenizer keeps elision as one token. `l'acqua`
   does not resolve in the verifier. Write `la` before a consonant. Do not
   write `c'è`. `è` is rank 11.
+- **zh** — no wordfreq install needed: `scripts/coverage-corpus-zh.txt` is the
+  top-5,000 wordfreq tokens in rank order, so a `--freq-csv` built from it gives
+  the wordlist. Single Han characters (我, 的, 是) are words, not letter names.
+  The reader draws a lesson from its stored word list, cut to dictionary words
+  (`refineSegmentForms`), and the verifier does the same, so ICU joins such as
+  我是 or 很大 become 我 + 是 and 很 + 大. Names the dictionary lacks split into
+  characters; list those characters in the manifest `allow` (小玲 → 玲). The
+  ranked list is news-heavy, so the series reads as a story told in news words.
 - **future packs** — a language without wordfreq mirrors af's pipeline
   (see `woordeboek/process/FREQUENCY.md`); a language without a dictionary
   can't have starter content, by construction.

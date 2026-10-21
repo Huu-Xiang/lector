@@ -1,0 +1,105 @@
+{
+  "title": "红楼梦（开头）",
+  "author": "曹雪芹",
+  "level": "C2",
+  "wordCount": 34970,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/24264",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. 第一回 甄士隐梦幻识通灵 贾雨村风尘怀闺秀"
+    },
+    {
+      "file": "02.md",
+      "title": "2. 红楼梦"
+    },
+    {
+      "file": "03.md",
+      "title": "3. 红楼梦"
+    },
+    {
+      "file": "04.md",
+      "title": "4. 红楼梦"
+    },
+    {
+      "file": "05.md",
+      "title": "5. 红楼梦"
+    },
+    {
+      "file": "06.md",
+      "title": "6. 第三回 贾雨村夤缘复旧职 林黛玉抛父进京都"
+    },
+    {
+      "file": "07.md",
+      "title": "7. 红楼梦"
+    },
+    {
+      "file": "08.md",
+      "title": "8. 红楼梦"
+    },
+    {
+      "file": "09.md",
+      "title": "9. 红楼梦"
+    },
+    {
+      "file": "10.md",
+      "title": "10. 红楼梦"
+    },
+    {
+      "file": "11.md",
+      "title": "11. 红楼梦"
+    },
+    {
+      "file": "12.md",
+      "title": "12. 红楼梦"
+    },
+    {
+      "file": "13.md",
+      "title": "13. 红楼梦"
+    },
+    {
+      "file": "14.md",
+      "title": "14. 红楼梦"
+    },
+    {
+      "file": "15.md",
+      "title": "15. 红楼梦"
+    },
+    {
+      "file": "16.md",
+      "title": "16. 红楼梦"
+    },
+    {
+      "file": "17.md",
+      "title": "17. 红楼梦"
+    },
+    {
+      "file": "18.md",
+      "title": "18. 红楼梦"
+    },
+    {
+      "file": "19.md",
+      "title": "19. 红楼梦"
+    },
+    {
+      "file": "20.md",
+      "title": "20. 红楼梦"
+    },
+    {
+      "file": "21.md",
+      "title": "21. 红楼梦"
+    },
+    {
+      "file": "22.md",
+      "title": "22. 红楼梦"
+    },
+    {
+      "file": "23.md",
+      "title": "23. 红楼梦"
+    }
+  ]
+}

@@ -1,0 +1,109 @@
+{
+  "title": "三国演义（开头）",
+  "author": "罗贯中",
+  "level": "C2",
+  "wordCount": 34956,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/23950",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. 第一回：宴桃园豪杰三结义，斩黄巾英雄首立功"
+    },
+    {
+      "file": "02.md",
+      "title": "2. 三国演义"
+    },
+    {
+      "file": "03.md",
+      "title": "3. 三国演义"
+    },
+    {
+      "file": "04.md",
+      "title": "4. 三国演义"
+    },
+    {
+      "file": "05.md",
+      "title": "5. 三国演义"
+    },
+    {
+      "file": "06.md",
+      "title": "6. 三国演义"
+    },
+    {
+      "file": "07.md",
+      "title": "7. 三国演义"
+    },
+    {
+      "file": "08.md",
+      "title": "8. 三国演义"
+    },
+    {
+      "file": "09.md",
+      "title": "9. 三国演义"
+    },
+    {
+      "file": "10.md",
+      "title": "10. 三国演义"
+    },
+    {
+      "file": "11.md",
+      "title": "11. 三国演义"
+    },
+    {
+      "file": "12.md",
+      "title": "12. 三国演义"
+    },
+    {
+      "file": "13.md",
+      "title": "13. 三国演义"
+    },
+    {
+      "file": "14.md",
+      "title": "14. 三国演义"
+    },
+    {
+      "file": "15.md",
+      "title": "15. 三国演义"
+    },
+    {
+      "file": "16.md",
+      "title": "16. 三国演义"
+    },
+    {
+      "file": "17.md",
+      "title": "17. 三国演义"
+    },
+    {
+      "file": "18.md",
+      "title": "18. 三国演义"
+    },
+    {
+      "file": "19.md",
+      "title": "19. 三国演义"
+    },
+    {
+      "file": "20.md",
+      "title": "20. 三国演义"
+    },
+    {
+      "file": "21.md",
+      "title": "21. 三国演义"
+    },
+    {
+      "file": "22.md",
+      "title": "22. 三国演义"
+    },
+    {
+      "file": "23.md",
+      "title": "23. 三国演义"
+    },
+    {
+      "file": "24.md",
+      "title": "24. 三国演义"
+    }
+  ]
+}

@@ -56,6 +56,11 @@ def is_wordlike(word: str) -> bool:
     return len(core) > 0 and all(unicodedata.category(c).startswith("L") for c in core)
 
 
+def is_han(word: str) -> bool:
+    """A Han character is a word by itself (我, 的), unlike a Latin letter-name entry."""
+    return "\u3400" <= word[0] <= "\u9fff"
+
+
 class Dictionary:
     def __init__(self, path: Path):
         if not path.exists():
@@ -234,7 +239,7 @@ def main() -> None:
         if dictionary.is_name_only(lemma):
             stats["name_only"] += 1
             continue
-        if len(lemma.replace("'", "")) == 1 and not dictionary.is_function_single_letter(lemma):
+        if len(lemma.replace("'", "")) == 1 and not is_han(lemma) and not dictionary.is_function_single_letter(lemma):
             stats["letter_name"] = stats.get("letter_name", 0) + 1
             continue
         seen_lemmas.add(lemma)

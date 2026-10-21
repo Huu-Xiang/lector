@@ -1,0 +1,109 @@
+{
+  "title": "西游记（开头）",
+  "author": "吴承恩",
+  "level": "C1",
+  "wordCount": 34925,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/23962",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. 第一回 灵根育孕源流出 心性修持大道生"
+    },
+    {
+      "file": "02.md",
+      "title": "2. 西游记"
+    },
+    {
+      "file": "03.md",
+      "title": "3. 西游记"
+    },
+    {
+      "file": "04.md",
+      "title": "4. 西游记"
+    },
+    {
+      "file": "05.md",
+      "title": "5. 西游记"
+    },
+    {
+      "file": "06.md",
+      "title": "6. 西游记"
+    },
+    {
+      "file": "07.md",
+      "title": "7. 西游记"
+    },
+    {
+      "file": "08.md",
+      "title": "8. 西游记"
+    },
+    {
+      "file": "09.md",
+      "title": "9. 西游记"
+    },
+    {
+      "file": "10.md",
+      "title": "10. 西游记"
+    },
+    {
+      "file": "11.md",
+      "title": "11. 西游记"
+    },
+    {
+      "file": "12.md",
+      "title": "12. 西游记"
+    },
+    {
+      "file": "13.md",
+      "title": "13. 第六回 观音赴会问原因 小圣施威降大圣"
+    },
+    {
+      "file": "14.md",
+      "title": "14. 西游记"
+    },
+    {
+      "file": "15.md",
+      "title": "15. 西游记"
+    },
+    {
+      "file": "16.md",
+      "title": "16. 西游记"
+    },
+    {
+      "file": "17.md",
+      "title": "17. 西游记"
+    },
+    {
+      "file": "18.md",
+      "title": "18. 西游记"
+    },
+    {
+      "file": "19.md",
+      "title": "19. 西游记"
+    },
+    {
+      "file": "20.md",
+      "title": "20. 西游记"
+    },
+    {
+      "file": "21.md",
+      "title": "21. 西游记"
+    },
+    {
+      "file": "22.md",
+      "title": "22. 西游记"
+    },
+    {
+      "file": "23.md",
+      "title": "23. 西游记"
+    },
+    {
+      "file": "24.md",
+      "title": "24. 西游记"
+    }
+  ]
+}

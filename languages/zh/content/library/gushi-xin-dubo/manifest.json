@@ -1,0 +1,25 @@
+{
+  "title": "故事新读本（第一册）",
+  "author": "上海大东书局",
+  "level": "B1",
+  "wordCount": 3694,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/67976",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. （一） 文彦博灌穴取球"
+    },
+    {
+      "file": "02.md",
+      "title": "2. 故事新读本"
+    },
+    {
+      "file": "03.md",
+      "title": "3. 故事新读本"
+    }
+  ]
+}
