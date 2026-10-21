@@ -85,3 +85,30 @@ describe('buildSegmentWords', () => {
     expect(stored).toContain('勉強');
   });
 });
+
+describe('buildSegmentWords with a dictionary', () => {
+  const dictionary = new Set(['喜欢', '读书', '学生', '一起', '不是', '中国']);
+  const known = (word: string) => dictionary.has(word);
+
+  test('cuts a form the dictionary lacks into the known pieces', () => {
+    const stored = JSON.parse(buildSegmentWords('我是学生。我们一起去。', zh, known)!) as string[];
+    expect(stored.sort()).toEqual(['一起', '学生']);
+  });
+
+  test('the reader then draws 我 and 是 apart, and never 我是', () => {
+    const text = '我是学生。';
+    const words = makeWordSegmentation(JSON.parse(buildSegmentWords(text, zh, known)!) as string[]);
+    expect(tokenizeWords(text, zh, words).map((t) => t.text)).toEqual(['我', '是', '学生']);
+  });
+
+  test('keeps the ICU list when the language has no dictionary on the box', () => {
+    const text = '我喜欢读书。';
+    expect(buildSegmentWords(text, zh, null)).toBe(buildSegmentWords(text, zh));
+  });
+
+  test('leaves Japanese to its analyser', () => {
+    const text = '私は日本語を勉強しています。';
+    const realJa = getLanguageConfig('ja');
+    expect(buildSegmentWords(text, realJa, () => false)).toBe(buildSegmentWords(text, realJa));
+  });
+});

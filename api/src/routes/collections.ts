@@ -4,7 +4,8 @@ import { db, CollectionRow, LessonRow } from '../db';
 import { packForLanguage, resolveLanguage } from '../lib/active-language';
 import { getCurrentUserId } from '../lib/user';
 import { randomUUID } from 'crypto';
-import { buildSegmentWords, countWords } from '../lib/html-to-markdown';
+import { countWords } from '../lib/html-to-markdown';
+import { segmentWordsFor } from '../lib/segment-words';
 import { normalizeText } from '../lib/languages';
 import { entitlements, planLimitResponse } from '../lib/entitlements';
 import {
@@ -376,7 +377,7 @@ app.post('/:id/lessons', async (c) => {
         nextOrder,
         textContent,
         countWords(textContent, packForLanguage(language)),
-        buildSegmentWords(textContent, packForLanguage(language)),
+        segmentWordsFor(textContent, packForLanguage(language)),
         language,
         now,
         now,

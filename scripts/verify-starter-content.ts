@@ -28,7 +28,7 @@ import fs from 'fs';
 import path from 'path';
 import { LANGUAGES, isValidLanguageCode } from '../languages/registry';
 import { foldWord, normalizeText } from '../languages/text';
-import { tokenizeWords } from '../languages/tokenizer';
+import { makeWordSegmentation, refineSegmentForms, tokenizeWords } from '../languages/tokenizer';
 import {
   defaultLessonCaps,
   verify,
@@ -91,22 +91,8 @@ const wordlistFile = JSON.parse(fs.readFileSync(wordlistPath, 'utf8')) as {
 };
 const wordlist = wordlistFile.words;
 
-const foldAll = (words: string[] | undefined) => new Set((words ?? []).map((w) => foldWord(w, pack)));
-
-const caps = defaultLessonCaps(manifest.lessons.length, wordlist.length, wordlistFile.bandSize ?? 250);
-const lessons: LessonTokens[] = manifest.lessons.map((lesson, i) => {
-  const markdown = normalizeText(fs.readFileSync(path.join(dir, lesson.file), 'utf8'));
-  const tokens = tokenizeWords(markdown, pack)
-    .map((t) => foldWord(t.text, pack))
-    .filter((t) => !/^\d+$/.test(t)); // bare numbers aren't vocabulary
-  return {
-    title: lesson.title,
-    maxRank: lesson.maxRank ?? caps[i],
-    allow: foldAll(lesson.allow),
-    tokens,
-    ...(lesson.maxNewLemmas !== undefined && { maxNewLemmas: lesson.maxNewLemmas }),
-  };
-});
+const foldAll = (words: string[] | undefined) =>
+  new Set((words ?? []).map((w) => foldWord(w, pack)));
 
 // The static half of api/src/lib/dictionary-db.ts lookupWord.
 const db = new Database(dictPath, { readonly: true, fileMustExist: true });
@@ -120,6 +106,35 @@ const resolve: Resolver = (folded) => {
   const infl = selectLemma.get(folded) as { lemma: string } | null;
   return infl ? infl.lemma : null;
 };
+
+const caps = defaultLessonCaps(
+  manifest.lessons.length,
+  wordlist.length,
+  wordlistFile.bandSize ?? 250,
+);
+// An unspaced pack is read through the lesson's stored word list, cut to words the
+// dictionary defines (api/src/lib/segment-words.ts). Japanese keeps its analyser.
+function lessonWords(markdown: string) {
+  if (pack.script.kind !== 'cjk-unspaced' || lang === 'ja') return null;
+  const forms = tokenizeWords(markdown, pack).map((t) => t.text);
+  return makeWordSegmentation(
+    refineSegmentForms(forms, (word) => resolve(foldWord(word, pack)) !== null),
+  );
+}
+
+const lessons: LessonTokens[] = manifest.lessons.map((lesson, i) => {
+  const markdown = normalizeText(fs.readFileSync(path.join(dir, lesson.file), 'utf8'));
+  const tokens = tokenizeWords(markdown, pack, lessonWords(markdown))
+    .map((t) => foldWord(t.text, pack))
+    .filter((t) => !/^\d+$/.test(t)); // bare numbers aren't vocabulary
+  return {
+    title: lesson.title,
+    maxRank: lesson.maxRank ?? caps[i],
+    allow: foldAll(lesson.allow),
+    tokens,
+    ...(lesson.maxNewLemmas !== undefined && { maxNewLemmas: lesson.maxNewLemmas }),
+  };
+});
 
 const summary = verify(lessons, wordlist, resolve, {
   allow: foldAll(manifest.allow),
@@ -146,17 +161,23 @@ if (summary.violations.length) {
 }
 
 const cov = summary.coverage;
-console.log(`\nCoverage: ${cov.introduced}/${cov.reachableTotal} reachable target lemmas introduced (${cov.pct}%)`);
+console.log(
+  `\nCoverage: ${cov.introduced}/${cov.reachableTotal} reachable target lemmas introduced (${cov.pct}%)`,
+);
 if (cov.missing.length) {
   const preview = cov.missing.slice(0, 15).join(', ');
-  console.log(`  never introduced: ${preview}${cov.missing.length > 15 ? ` … +${cov.missing.length - 15} more` : ''}`);
+  console.log(
+    `  never introduced: ${preview}${cov.missing.length > 15 ? ` … +${cov.missing.length - 15} more` : ''}`,
+  );
 }
 if (summary.underRecycled.length) {
   const preview = summary.underRecycled
     .slice(0, 15)
     .map((r) => `${r.lemma}(${r.count})`)
     .join(', ');
-  console.log(`Under-recycled (<3): ${preview}${summary.underRecycled.length > 15 ? ` … +${summary.underRecycled.length - 15} more` : ''}`);
+  console.log(
+    `Under-recycled (<3): ${preview}${summary.underRecycled.length > 15 ? ` … +${summary.underRecycled.length - 15} more` : ''}`,
+  );
 }
 
 let failed = summary.violations.length > 0;
@@ -167,7 +188,9 @@ if (requireCoverage !== null && cov.pct < requireCoverage) {
 if (requireRecycles !== null) {
   const short = summary.underRecycled.filter((r) => r.count < requireRecycles);
   if (short.length) {
-    console.log(`\n✗ ${short.length} introduced lemma(s) recycled fewer than ${requireRecycles} times`);
+    console.log(
+      `\n✗ ${short.length} introduced lemma(s) recycled fewer than ${requireRecycles} times`,
+    );
     failed = true;
   }
 }

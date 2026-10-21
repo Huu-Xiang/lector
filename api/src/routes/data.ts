@@ -5,7 +5,8 @@ import { db } from '../db';
 import { getCurrentUserId } from '../lib/user';
 import { REDACTION_SENTINEL, validateSettingWrite } from '../lib/settings-keys';
 import { buildUserExport, USER_EXPORT_FORMAT, USER_EXPORT_VERSION } from '../lib/user-export';
-import { buildSegmentWords, countWords } from '../lib/html-to-markdown';
+import { countWords } from '../lib/html-to-markdown';
+import { segmentWordsFor } from '../lib/segment-words';
 import { countTypedWords, foldWord, isValidLanguageCode, normalizeText } from '../lib/languages';
 import { getActiveLanguageCode, packForLanguage } from '../lib/active-language';
 import { ensureLanguageEnabled } from '../lib/enabled-languages';
@@ -1250,7 +1251,7 @@ app.post(
             // Derived here, never taken from the envelope: the restoring
             // instance's segmenter is the authority, and an uploaded list is
             // unvalidated client input.
-            buildSegmentWords(textContent, packFor(l.language)),
+            segmentWordsFor(textContent, packFor(l.language)),
             l.language || 'af',
             l.createdAt || new Date().toISOString(),
             l.lastReadAt || new Date().toISOString(),

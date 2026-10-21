@@ -175,6 +175,49 @@ export function makeWordSegmentation(
   return { has: (word) => set.has(word), maxLength, size: set.size };
 }
 
+const HAN_CHARACTER = /[\u3400-\u9fff]/u;
+const MAX_REFINED_FORM = 12;
+
+/**
+ * The segmentation vocabulary of a Han-script text, cut to what the dictionary
+ * can define. A form the dictionary knows stays whole. Any other form is split
+ * by forward longest match into the known pieces of two or more characters; a
+ * single character needs no entry, because the reader falls back to it.
+ *
+ * ICU joins words the dictionary lacks (我是, 很大), and a reader would draw
+ * those as one tap that finds no entry. Cutting them here makes the reader tap
+ * 我 and 是 instead.
+ */
+export function refineSegmentForms(
+  forms: Iterable<string>,
+  isKnown: (word: string) => boolean,
+): string[] {
+  const out = new Set<string>();
+  const seen = new Set<string>();
+  for (const form of forms) {
+    if (form.length < 2 || seen.has(form)) continue;
+    seen.add(form);
+    if (!HAN_CHARACTER.test(form) || form.length > MAX_REFINED_FORM || isKnown(form)) {
+      out.add(form);
+      continue;
+    }
+    let i = 0;
+    while (i < form.length) {
+      let piece = '';
+      for (let end = form.length; end > i + 1; end--) {
+        const candidate = form.slice(i, end);
+        if (isKnown(candidate)) {
+          piece = candidate;
+          break;
+        }
+      }
+      if (piece) out.add(piece);
+      i += piece ? piece.length : 1;
+    }
+  }
+  return [...out];
+}
+
 /** A character that is part of a word when no list entry covers it. */
 const WORD_CODEPOINT = /[\p{L}\p{N}\p{M}]/u;
 

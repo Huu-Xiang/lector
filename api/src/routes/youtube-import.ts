@@ -2,7 +2,8 @@ import { Hono } from 'hono';
 import { db } from '../db';
 import { resolveLanguage } from '../lib/active-language';
 import { getCurrentUserId } from '../lib/user';
-import { buildSegmentWords, countWords } from '../lib/html-to-markdown';
+import { countWords } from '../lib/html-to-markdown';
+import { segmentWordsFor } from '../lib/segment-words';
 import { getLanguageConfig, normalizeText } from '../lib/languages';
 import { safeFetch, readBodyCapped, SsrfError } from '../lib/safe-fetch';
 import { config } from '../lib/config';
@@ -453,7 +454,7 @@ export function makeYoutubeImportRoutes({
           0,
           textContent,
           countWords(textContent, getLanguageConfig(lang)),
-          buildSegmentWords(textContent, getLanguageConfig(lang)),
+          segmentWordsFor(textContent, getLanguageConfig(lang)),
           'youtube',
           sourceMeta,
           segmentsJson,

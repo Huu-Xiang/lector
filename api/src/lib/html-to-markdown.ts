@@ -1,6 +1,7 @@
 import {
   countWords as countWordsForPack,
   normalizeText,
+  refineSegmentForms,
   tokenizeWords,
   type LanguageConfig,
 } from './languages';
@@ -185,7 +186,11 @@ export function countWords(text: string, pack?: LanguageConfig): number {
  * reader then falls back to `Intl.Segmenter`, so a missing value is never an
  * error.
  */
-export function buildSegmentWords(text: string, pack?: LanguageConfig): string | null {
+export function buildSegmentWords(
+  text: string,
+  pack?: LanguageConfig,
+  knownWord?: ((word: string) => boolean) | null,
+): string | null {
   if (pack?.script.kind !== 'cjk-unspaced') return null;
   const normalized = normalizeText(text);
 
@@ -198,11 +203,14 @@ export function buildSegmentWords(text: string, pack?: LanguageConfig): string |
     pack.code === 'ja' ? analyseJapanese(normalized)?.map((token) => token.surface) : undefined;
 
   const forms = new Set<string>();
-  for (const form of analysed ?? tokenizeWords(normalized, pack).map((token) => token.text)) {
-    // Single characters are the longest-match fallback anyway, so storing them
-    // buys nothing and would dominate the list for a Chinese text.
-    if (form.length > 1) forms.add(form);
-  }
+  const surfaces = analysed ?? tokenizeWords(normalized, pack).map((token) => token.text);
+  // Single characters are the longest-match fallback anyway, so storing them
+  // buys nothing and would dominate the list for a Chinese text.
+  const kept =
+    knownWord && pack.code !== 'ja' && !analysed
+      ? refineSegmentForms(surfaces, knownWord)
+      : surfaces.filter((form) => form.length > 1);
+  for (const form of kept) forms.add(form);
   if (forms.size === 0) return null;
   return JSON.stringify([...forms]);
 }

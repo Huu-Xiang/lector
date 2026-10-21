@@ -3,7 +3,8 @@ import { createHash } from 'crypto';
 import { db } from '../db';
 import { getCurrentUserId } from '../lib/user';
 import { LANGUAGES, isValidLanguageCode } from '../lib/languages';
-import { buildSegmentWords, countWords } from '../lib/html-to-markdown';
+import { countWords } from '../lib/html-to-markdown';
+import { segmentWordsFor } from '../lib/segment-words';
 import { isLibrarySlug, listLibraryBooks, loadLibraryBook } from '../lib/library-content';
 import { entitlements, planLimitResponse, type AtomicLimitCheck } from '../lib/entitlements';
 import { collectionMetadataBytes, lessonTextBytes } from '../lib/storage-limits';
@@ -100,7 +101,7 @@ app.post('/add', async (c) => {
           lesson.sortOrder,
           lesson.markdown,
           countWords(lesson.markdown, pack),
-          buildSegmentWords(lesson.markdown, pack),
+          segmentWordsFor(lesson.markdown, pack),
           language,
           now,
           now,

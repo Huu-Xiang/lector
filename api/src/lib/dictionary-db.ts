@@ -1011,6 +1011,24 @@ function stripTranscriptionDelimiters(ipa: string): string {
 }
 
 /**
+ * Whether the installed dictionary defines a word, as an exact headword or an
+ * inflection of one. Null when the language has no dictionary on this box.
+ */
+export function knownWordChecker(language: string): ((word: string) => boolean) | null {
+  const stmts = getStmts(language);
+  if (!stmts) return null;
+  return (word) => {
+    const key = foldKey(word, language);
+    if (!key) return false;
+    try {
+      return Boolean(stmts.selectEntry.get(key) ?? stmts.selectInflectionLemma.get(key));
+    } catch {
+      return false;
+    }
+  };
+}
+
+/**
  * Pronunciation for MANY words at once, for the reader's annotation layer
  * (#289 4.4). Keyed by the FOLDED form, which is what the reader looks up.
  *

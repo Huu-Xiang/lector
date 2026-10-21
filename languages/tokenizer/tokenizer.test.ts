@@ -11,6 +11,7 @@ import {
   clozeTokenSeparator,
   resolveClozeTokens,
   makeWordSegmentation,
+  refineSegmentForms,
   type Token,
 } from './index';
 import { foldWord, normalizeText } from '../text';
@@ -1959,5 +1960,33 @@ describe('English', () => {
 
   it('folds case', () => {
     expect(foldWord('HELLO', en)).toBe('hello');
+  });
+});
+
+describe('refineSegmentForms', () => {
+  const dictionary = new Set(['学生', '一起', '不是', '中国', '你好']);
+  const known = (word: string) => dictionary.has(word);
+
+  it('keeps a form the dictionary knows', () => {
+    expect(refineSegmentForms(['学生', '你好'], known)).toEqual(['学生', '你好']);
+  });
+
+  it('splits an unknown form by forward longest match', () => {
+    expect(refineSegmentForms(['我不是', '一起去'], known)).toEqual(['不是', '一起']);
+  });
+
+  it('drops an unknown form with no known piece, so the reader taps single characters', () => {
+    expect(refineSegmentForms(['我是', '很大'], known)).toEqual([]);
+  });
+
+  it('leaves forms without Han characters and very long runs alone', () => {
+    expect(refineSegmentForms(['hello', '一二三四五六七八九十一二三'], known)).toEqual([
+      'hello',
+      '一二三四五六七八九十一二三',
+    ]);
+  });
+
+  it('de-duplicates and skips single characters', () => {
+    expect(refineSegmentForms(['学生', '学生', '我'], known)).toEqual(['学生']);
   });
 });

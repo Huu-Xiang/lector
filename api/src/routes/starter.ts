@@ -3,7 +3,8 @@ import { createHash } from 'crypto';
 import { db } from '../db';
 import { getCurrentUserId } from '../lib/user';
 import { LANGUAGES, isValidLanguageCode } from '../lib/languages';
-import { buildSegmentWords, countWords } from '../lib/html-to-markdown';
+import { countWords } from '../lib/html-to-markdown';
+import { segmentWordsFor } from '../lib/segment-words';
 import { hasStarterContent, loadStarterContent } from '../lib/starter-content';
 import {
   entitlements,
@@ -198,7 +199,7 @@ app.post('/seed', async (c) => {
           lesson.sortOrder,
           lesson.markdown,
           countWords(lesson.markdown, pack),
-          buildSegmentWords(lesson.markdown, pack),
+          segmentWordsFor(lesson.markdown, pack),
           language,
           now,
           now,

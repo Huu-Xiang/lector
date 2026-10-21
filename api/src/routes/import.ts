@@ -5,7 +5,7 @@ import { db } from '../db';
 import { resolveLanguage } from '../lib/active-language';
 import { getCurrentUserId } from '../lib/user';
 import { parseEpub, type ParsedEpub } from '../lib/epub-parser';
-import { buildSegmentWords } from '../lib/html-to-markdown';
+import { segmentWordsFor } from '../lib/segment-words';
 import { entitlements, planLimitResponse, type EntitlementsEngine } from '../lib/entitlements';
 import { collectionMetadataBytes, lessonTextBytes } from '../lib/storage-limits';
 import {
@@ -149,7 +149,7 @@ export function makeImportRoutes({
                 i,
                 chapter.markdown,
                 chapter.wordCount,
-                buildSegmentWords(chapter.markdown, getLanguageConfig(lang)),
+                segmentWordsFor(chapter.markdown, getLanguageConfig(lang)),
                 lang,
                 now,
                 now,
