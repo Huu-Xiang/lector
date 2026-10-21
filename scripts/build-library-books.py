@@ -59,6 +59,9 @@ POIL_DE_CAROTTE_TITLES = [re.escape(t) for t in (
     "L'Album de Poil de Carotte",
 )]
 
+ES_OLD_ACCENTS = [(r"\bá\b", "a"), (r"\bÁ\b", "A"), (r"\bó\b", "o"), (r"\bÓ\b", "O")]
+ES_PLATES = [(r"\[(Ilustración|imagen)[^\]]*\]", ""), (r"^\s*\*(\s+\*)+\s*$", "")]
+
 BOOKS = [
     dict(lang="fr", slug="le-premier-livre", id=48011, title="Le Premier Livre (histoire de Remi)",
          author="Albert A. Méras et B. Méras", level="A1", start="", short="Remi",
@@ -220,6 +223,73 @@ BOOKS = [
     dict(lang="en", slug="wuthering-heights", id=768, title="Wuthering Heights (Chapters 1–10)",
          author="Emily Brontë", level="C2", start=r"^CHAPTER I\s*$", short="Wuthering Heights",
          stop=r"^CHAPTER XI\s*$", subs=[(r"^CHAPTER ([IVXL]+)[ \t]*$", r"Chapter \1")]),
+    dict(lang="es", slug="libro-segundo-de-lectura", id=11047, title="Libro segundo de lectura",
+         author="Ellen M. Cyr", level="A1", start=r"^--¡Buenos días, amiguita Luisa!", short="Libro segundo",
+         subs=[(r"^ {6,}.*$", ""), (r"^[^\s-]\S*(--\S+)+\.?[ \t]*$", "")]),
+    dict(lang="es", slug="a-first-spanish-reader", id=15353, title="A First Spanish Reader",
+         author="Erwin W. Roessler y Alfred Remy", level="A1", start=r"^1\. LA ESCUELA\s*$", short="Primer libro",
+         cut=r"^PREGUNTAS\s*$", subs=[(r"^\d{1,2}\. (?=[A-ZÁÉÍÓÚÑ¿])", "")], verse="auto",
+         heading_names=["España", "Estados Unidos", "Brasil", "Chile", "Méjico", "Argentina", "Cuba", "David", "Suez",
+                        "Coruña", "Salamanca", "Panamá", "Matsuyama", "Tamburí", "Manuel Fenollosa", "Marica",
+                        "Guatemala", "I", "II", "III", "Iriarte", "Madrid", "Jaime Nuñó", "Rafael Alvarez"]),
+    dict(lang="es", slug="an-elementary-spanish-reader", id=22065, title="An Elementary Spanish Reader",
+         author="Earl Stanley Harrison", level="A2", start=r"^EL CUENTO DEL POLLO\s*\n\s*\nUn día",
+         short="Cuentos", stop=r"^ABBREVIATIONS\s*$",
+         verse="auto", heading_names=["Juan Bolondrón", "Jalma", "Madrid", "Aliatar", "Iriarte"],
+         subs=[(r"(?s)\[Note \d+:.*?\]", ""), (r"[ \t]{2,}\d{1,3}[ \t]*$", "")]),
+    dict(lang="es", slug="lecturas-faciles", id=24250, title="Lecturas fáciles",
+         author="Lawrence A. Wilkins y Max A. Luria", level="A2", start="", short="Lecturas fáciles",
+         extractor="lecturas_faciles", verse="auto", subs=[(r"(?s)\[Illustration:.*?\]", "")],
+         heading_names=["Hamelin", "La vida es sueño", "Calderón de la Barca", "Colón", "Diego Pérez", "Mayflower", "Emilio Castelar", "Panamá",
+                        "Puerto Rico", "Argentina", "Brasil", "Chile", "Costa Rica", "Cuenca", "Ecuador", "Méjico",
+                        "Perú", "Venezuela", "Fray Gómez", "América", "España"]),
+    dict(lang="es", slug="spanish-tales-for-beginners", id=36805, title="Spanish Tales for Beginners",
+         author="Echegaray, Trueba, Pardo Bazán, Alarcón y otros (ed. Elijah C. Hills)", level="B1",
+         start=r"^LOS CONSEJOS DE UN PADRE\s*\n\s*\n\s*El León", short="Cuentos",
+         stop=r"^NOTES\s*$", verse="auto",
+         subs=ES_OLD_ACCENTS + ES_PLATES + [(r"\((?:After many|The scene)[^)]*\)", ""),
+                                            (r"\(From _[^)]*\)", "")]),
+    dict(lang="es", slug="corazon", id=73486, title="Corazón (comienzo)", author="Edmundo de Amicis", level="B1",
+         start=r"^\s*EL PRIMER DÍA DE ESCUELA\s*$", short="Corazón", max_words=35000, subs=ES_PLATES,
+         heading_names=["Garrón", "Coreta", "Nelle", "Estardo", "Víctor Manuel", "Franti"]),
+    dict(lang="es", slug="platero-y-yo", id=39209, title="Platero y yo", author="Juan Ramón Jiménez", level="B1",
+         start=r"^I\s*\n\s*\nPLATERO\s*$", short="Platero", stop=r"^FIN\s*$",
+         subs=ES_OLD_ACCENTS + ES_PLATES + [(r"</?i>", "_"), (r"^<tb>[ \t]*$", "")], verse="auto"),
+    dict(lang="es", slug="marianela", id=17340, title="Marianela", author="Benito Pérez Galdós", level="B2",
+         start=r"^-I-\s*\n\s*Perdido", short="Marianela",
+         heading_names=["Aldeacorba", "Celipín", "Nela", "Virgen María", "R. I. P.", "María Manuela Téllez", "Marianela"], subs=ES_PLATES + [
+             (r"^-([IVXL]+)-[ \t]*\n\s*(.+)$", lambda m: f"{m[1]}. {m[2].upper()}")]),
+    dict(lang="es", slug="raton-perez", id=36558, title="Ratón Pérez", author="Luis Coloma", level="B2",
+         start=r"^Entre la muerte del rey que rabió", short="Ratón Pérez", stop=r"^Biblioteca de RAZÓN Y FE",
+         subs=ES_OLD_ACCENTS + ES_PLATES + [(r"\[[A-Z]\]", "")]),
+    dict(lang="es", slug="cuando-la-tierra-era-nina", id=55215, title="Cuando la tierra era niña",
+         author="Nathaniel Hawthorne, traducido por G. Martínez Sierra", level="B2",
+         start=r"^EL PÓRTICO DE TANGLEWOOD\s*$", stop=r"^FIN\s*$", short="Cuando la tierra era niña", subs=ES_OLD_ACCENTS + ES_PLATES),
+    dict(lang="es", slug="cuentos-de-la-alhambra", id=52262, title="Cuentos de la Alhambra",
+         author="Washington Irving, traducido en 1833", level="C1", start=r"^El Viage\.\s*$", short="Alhambra",
+         subs=ES_OLD_ACCENTS + ES_PLATES + [
+             (r"^(?i:(El Viage|Gobierno de la Alhambra|Interior de la Alhambra|Economía doméstica|Tradiciones locales|La casa del Gallo|Leyenda del astrólogo árabe|Historia del príncipe Ahmed Al Kamel[^\n]*?))\.?[ \t]*$",
+              lambda m: m[1].upper())],
+         heading_names=["Alhambra", "Gallo", "Ahmed Al Kamel"]),
+    dict(lang="es", slug="lazarillo-de-tormes", id=320, title="Vida de Lazarillo de Tormes y de sus fortunas y adversidades",
+         author="Anónimo", level="C1", start=r"^Prólogo\s*$", short="Lazarillo", subs=ES_PLATES + [
+             (r"[{}]", ""), (r"^Prólogo[ \t]*$", "PRÓLOGO"),
+             (r"^(Tratado \w+)[ \t]*\n\s*\n(.+)$", lambda m: m[1].upper() + "\n\n" + m[2])],
+         heading_names=["Lázaro"]),
+    dict(lang="es", slug="becquer-leyendas", id=53552, title="Leyendas (selección)", author="Gustavo Adolfo Bécquer",
+         level="C1", start=r"^MAESE PÉREZ EL ORGANISTA\s*$", stop=r"^EL MONTE DE LAS ÁNIMAS\s*$", short="Leyendas",
+         subs=ES_OLD_ACCENTS + ES_PLATES, heading_names=["Maese Pérez"]),
+    dict(lang="es", slug="don-quijote", id=2000, title="Don Quijote de la Mancha (Primera parte, comienzo)",
+         author="Miguel de Cervantes Saavedra", level="C2", start=r"^Capítulo primero\. Que trata de la condición",
+         short="Don Quijote", max_words=35000, heading_names=["I", "V", "X", "L"], subs=ES_PLATES + [
+             (r"^(Cap[ií]tulo [^.\n]+)\.[ \t]+", lambda m: m[1].upper() + "\n\n")]),
+    dict(lang="es", slug="vida-de-don-quijote-y-sancho", id=75472, title="Vida de Don Quijote y Sancho (comienzo)",
+         author="Miguel de Unamuno", level="C2", start=r"^\s*PRÓLOGO A ESTA SEGUNDA EDICIÓN\s*$", short="Unamuno",
+         max_words=35000, subs=ES_PLATES, heading_names=["I", "V", "X", "L", "Miguel de Unamuno", "Don Quijote", "Quijote"]),
+    dict(lang="es", slug="meditaciones-del-quijote", id=57448, title="Meditaciones del Quijote",
+         author="José Ortega y Gasset", level="C2", start=r"^LECTOR\.\.\.\s*$", stop=r"^\s*ÍNDICE\s*$",
+         short="Meditaciones", max_words=35000, subs=ES_PLATES,
+         heading_names=["Quijote", "Hermann Cohen", "Ethik des reinen Willens"]),
 ]
 
 ROMAN = re.compile(r"^[IVXLC]+\.?$")
@@ -297,6 +367,53 @@ def extract_premier_livre(raw: str) -> str:
     return body
 
 
+def extract_lecturas_faciles(raw: str) -> str:
+    """Keep the stories and articles of 'Lecturas fáciles con ejercicios' (a 1916 school reader).
+
+    Every selection is followed by exercises (some in English) and a block of
+    notes. The text between a selection title and the next '=EJERCICIOS='
+    marker is the reading; the exercises and notes up to the next all-caps
+    title are dropped.
+    """
+    raw = raw.replace("\r", "")
+    a = raw.index("EL VIEJO Y EL ASNO", raw.rfind("SECCIÓN DE CUENTOS EUROPEOS"))
+    b = raw.index("APÉNDICE DE VERBOS", a)
+    lines = raw[a:b].split("\n")
+    out: list[str] = []
+    skipping = False
+    for i, line in enumerate(lines):
+        s = line.strip()
+        core = s.strip("= ")
+        prev_blank = i == 0 or not lines[i - 1].strip()
+        next_blank = i + 1 >= len(lines) or not lines[i + 1].strip()
+        is_title = (
+            prev_blank and next_blank and len(core) >= 4 and core == core.upper() and re.search(r"[A-ZÁÉÍÓÚÑ]{3}", core)
+            and not core.startswith(("--", "[", "NOTES")) and not re.search(r"\d", core)
+            and core not in ("EJERCICIOS",)
+        )
+        if s.startswith(("=EJERCICIOS=", "NOTES:")):
+            skipping = True
+            continue
+        if skipping and not is_title:
+            continue
+        skipping = False
+        if is_title and core == "REFRANES":
+            break
+        if is_title and (core in ("SECCIÓN PANAMERICANA",) or core.endswith("]")):
+            continue
+        if re.match(r"^\s*(/F|F/)\s*$", line) or (core.endswith("]") and core == core.upper()):
+            continue
+        if is_title:
+            line = core
+        if re.match(r"^--[A-ZÁÉÍÓÚÑ .]+\.$", s):
+            continue
+        line = re.sub(r"\s{2,}\d{1,3}\s*$", "", line)
+        line = re.sub(r"\[\*\]", "", line)
+        line = re.sub(r"=([^=]+)=", r"\1", line)
+        out.append(line)
+    return "\n".join(out)
+
+
 def clean_paragraph(par: str, verse: bool) -> str | None:
     par = par.strip("\n")
     if not par.strip():
@@ -313,7 +430,7 @@ def clean_paragraph(par: str, verse: bool) -> str | None:
     if not lines:
         return None
     if verse == "auto":
-        verse = len(lines) >= 3 and all(re.match(r"^[\"“‘'A-Z]", ln) for ln in lines)
+        verse = len(lines) >= 3 and all(re.match(r"^[\"“‘'«¡¿—A-ZÁÉÍÓÚÑ]", ln) for ln in lines)
     if verse and len(lines) > 1:
         return "  \n".join(lines)
     return re.sub(r"\s+", " ", " ".join(lines))
@@ -385,6 +502,8 @@ def build(book: dict, raw_dir: Path, out_dir: Path) -> None:
     raw = (raw_dir / f"pg{book['id']}.txt").read_text(encoding="utf8", errors="replace")
     if book.get("extractor") == "premier_livre":
         text = unicodedata.normalize("NFC", extract_premier_livre(raw))
+    elif book.get("extractor") == "lecturas_faciles":
+        text = unicodedata.normalize("NFC", extract_lecturas_faciles(raw))
     else:
         text = unicodedata.normalize("NFC", body_of(raw, book["start"], book.get("cut"), book.get("stop")))
     for pattern, repl in book.get("subs", ()):

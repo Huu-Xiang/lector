@@ -1,0 +1,81 @@
+{
+  "title": "Lecturas fáciles",
+  "author": "Lawrence A. Wilkins y Max A. Luria",
+  "level": "A2",
+  "wordCount": 24753,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/24250",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. El viejo y el asno"
+    },
+    {
+      "file": "02.md",
+      "title": "2. El príncipe y la araña"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Lecturas fáciles"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Lecturas fáciles"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Lecturas fáciles"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Lecturas fáciles"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Lecturas fáciles"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Lecturas fáciles"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Lecturas fáciles"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Lecturas fáciles"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Lecturas fáciles"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Lecturas fáciles"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Lecturas fáciles"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Lecturas fáciles"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Lecturas fáciles"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Lecturas fáciles"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Lecturas fáciles"
+    }
+  ]
+}

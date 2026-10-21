@@ -1,0 +1,101 @@
+{
+  "title": "Meditaciones del Quijote",
+  "author": "José Ortega y Gasset",
+  "level": "C2",
+  "wordCount": 32480,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/57448",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Lector"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Meditaciones"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Meditaciones"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Meditaciones"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Meditaciones"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Meditaciones"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Meditaciones"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Meditaciones"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Meditaciones"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Meditaciones"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Meditaciones"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Meditaciones"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Meditaciones"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Meditaciones"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Meditaciones"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Meditaciones"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Meditaciones"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Meditaciones"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Meditaciones"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Meditaciones"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Meditaciones"
+    },
+    {
+      "file": "22.md",
+      "title": "22. Meditaciones"
+    }
+  ]
+}

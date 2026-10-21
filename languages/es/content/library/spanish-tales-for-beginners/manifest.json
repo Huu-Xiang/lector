@@ -1,0 +1,105 @@
+{
+  "title": "Spanish Tales for Beginners",
+  "author": "Echegaray, Trueba, Pardo Bazán, Alarcón y otros (ed. Elijah C. Hills)",
+  "level": "B1",
+  "wordCount": 32491,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/36805",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Los consejos de un padre"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Cuentos"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Cuentos"
+    },
+    {
+      "file": "04.md",
+      "title": "4. La niña del vigía"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Cuentos"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Cuentos"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Cuentos"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Temprano y con sol"
+    },
+    {
+      "file": "09.md",
+      "title": "9. El premio gordo"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Cuentos"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Cuentos"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Cuentos"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Cuentos"
+    },
+    {
+      "file": "14.md",
+      "title": "14. La casa donde murió"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Cuentos"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Cuentos"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Cuentos"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Cuentos"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Cuentos"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Cuentos"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Cuentos"
+    },
+    {
+      "file": "22.md",
+      "title": "22. Cuentos"
+    },
+    {
+      "file": "23.md",
+      "title": "23. A todo hay quien gane"
+    }
+  ]
+}

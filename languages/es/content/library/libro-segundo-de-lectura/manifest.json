@@ -1,0 +1,33 @@
+{
+  "title": "Libro segundo de lectura",
+  "author": "Ellen M. Cyr",
+  "level": "A1",
+  "wordCount": 6430,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/11047",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Libro segundo"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Libro segundo"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Libro segundo"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Libro segundo"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Libro segundo"
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "title": "Vida de Lazarillo de Tormes y de sus fortunas y adversidades",
+  "author": "Anónimo",
+  "level": "C1",
+  "wordCount": 20073,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/320",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Prólogo"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Lazarillo"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Lazarillo"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Lazarillo"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Lazarillo"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Lazarillo"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Lazarillo"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Lazarillo"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Lazarillo"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Lazarillo"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Lazarillo"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Lazarillo"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Lazarillo"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Lazarillo"
+    }
+  ]
+}

@@ -1,0 +1,93 @@
+{
+  "title": "Cuentos de la Alhambra",
+  "author": "Washington Irving, traducido en 1833",
+  "level": "C1",
+  "wordCount": 29266,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/52262",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. El viage"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Alhambra"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Alhambra"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Alhambra"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Alhambra"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Alhambra"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Alhambra"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Alhambra"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Alhambra"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Alhambra"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Alhambra"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Alhambra"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Alhambra"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Alhambra"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Alhambra"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Alhambra"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Alhambra"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Alhambra"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Alhambra"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Alhambra"
+    }
+  ]
+}

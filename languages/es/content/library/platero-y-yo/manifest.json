@@ -1,0 +1,49 @@
+{
+  "title": "Platero y yo",
+  "author": "Juan Ramón Jiménez",
+  "level": "B1",
+  "wordCount": 11846,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/39209",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. I. Platero"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Platero"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Platero"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Platero"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Platero"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Platero"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Platero"
+    },
+    {
+      "file": "08.md",
+      "title": "8. LIV. Noche pura"
+    },
+    {
+      "file": "09.md",
+      "title": "9. LXII. El borriquete"
+    }
+  ]
+}

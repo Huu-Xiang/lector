@@ -1,0 +1,109 @@
+{
+  "title": "Don Quijote de la Mancha (Primera parte, comienzo)",
+  "author": "Miguel de Cervantes Saavedra",
+  "level": "C2",
+  "wordCount": 34956,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/2000",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Capítulo primero"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Don Quijote"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Don Quijote"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Don Quijote"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Don Quijote"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Don Quijote"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Don Quijote"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Don Quijote"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Don Quijote"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Don Quijote"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Don Quijote"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Don Quijote"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Don Quijote"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Don Quijote"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Don Quijote"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Don Quijote"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Don Quijote"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Don Quijote"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Don Quijote"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Don Quijote"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Don Quijote"
+    },
+    {
+      "file": "22.md",
+      "title": "22. Don Quijote"
+    },
+    {
+      "file": "23.md",
+      "title": "23. Don Quijote"
+    },
+    {
+      "file": "24.md",
+      "title": "24. Don Quijote"
+    }
+  ]
+}

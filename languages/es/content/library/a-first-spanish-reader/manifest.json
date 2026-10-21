@@ -1,0 +1,69 @@
+{
+  "title": "A First Spanish Reader",
+  "author": "Erwin W. Roessler y Alfred Remy",
+  "level": "A1",
+  "wordCount": 20013,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/15353",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. La escuela"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Primer libro"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Primer libro"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Primer libro"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Teatro real"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Primer libro"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Primer libro"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Primer libro"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Primer libro"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Primer libro"
+    },
+    {
+      "file": "11.md",
+      "title": "11. El espejo de Matsuyama"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Primer libro"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Primer libro"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Primer libro"
+    }
+  ]
+}

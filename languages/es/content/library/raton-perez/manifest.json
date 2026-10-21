@@ -1,0 +1,25 @@
+{
+  "title": "Ratón Pérez",
+  "author": "Luis Coloma",
+  "level": "B2",
+  "wordCount": 3854,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/36558",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Ratón Pérez"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Ratón Pérez"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Ratón Pérez"
+    }
+  ]
+}

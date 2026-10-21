@@ -1,0 +1,97 @@
+{
+  "title": "Leyendas (selección)",
+  "author": "Gustavo Adolfo Bécquer",
+  "level": "C1",
+  "wordCount": 31156,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/53552",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Maese Pérez el organista"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Leyendas"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Leyendas"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Leyendas"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Leyendas"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Leyendas"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Leyendas"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Leyendas"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Leyendas"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Leyendas"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Leyendas"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Leyendas"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Leyendas"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Leyendas"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Leyendas"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Leyendas"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Leyendas"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Leyendas"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Leyendas"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Leyendas"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Leyendas"
+    }
+  ]
+}

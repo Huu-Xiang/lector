@@ -1,0 +1,101 @@
+{
+  "title": "Corazón (comienzo)",
+  "author": "Edmundo de Amicis",
+  "level": "B1",
+  "wordCount": 34583,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/73486",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. El primer día de escuela"
+    },
+    {
+      "file": "02.md",
+      "title": "2. El muchacho calabrés"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Corazón"
+    },
+    {
+      "file": "04.md",
+      "title": "4. El pequeño patriota paduano"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Mi amigo Garrón"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Mi madre"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Corazón"
+    },
+    {
+      "file": "08.md",
+      "title": "8. El primero de la clase"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Corazón"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Corazón"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Las maestras"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Corazón"
+    },
+    {
+      "file": "13.md",
+      "title": "13. La voluntad"
+    },
+    {
+      "file": "14.md",
+      "title": "14. La biblioteca de Estardo"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Los funerales de Víctor Manuel"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Corazón"
+    },
+    {
+      "file": "17.md",
+      "title": "17. El amor a la patria"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Esperanza"
+    },
+    {
+      "file": "19.md",
+      "title": "19. El tren"
+    },
+    {
+      "file": "20.md",
+      "title": "20. El preso"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Corazón"
+    },
+    {
+      "file": "22.md",
+      "title": "22. Corazón"
+    }
+  ]
+}

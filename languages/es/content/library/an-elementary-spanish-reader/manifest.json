@@ -1,0 +1,45 @@
+{
+  "title": "An Elementary Spanish Reader",
+  "author": "Earl Stanley Harrison",
+  "level": "A2",
+  "wordCount": 10591,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/22065",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. El cuento del pollo"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Cuentos"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Cuentos"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Cuentos"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Cuentos"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Cuentos"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Cuentos"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Cuentos"
+    }
+  ]
+}
