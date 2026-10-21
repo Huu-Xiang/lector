@@ -31,6 +31,19 @@ describe('estimateCefrLevel', () => {
     expect(order.indexOf(simpleLevel)).toBeLessThan(order.indexOf(complexLevel));
   });
 
+  test('short, common Chinese sentences map to an easier band than long, formal ones', () => {
+    const simple = '我想去你的家。你好吗？我们都很好。他在学校。今天天气很好。'.repeat(4);
+    const formal =
+      '光合作用是植物、藻类和某些细菌利用叶绿素吸收太阳辐射能，将二氧化碳和水转化为碳水化合物并释放氧气的生物化学过程，其反应机制涉及光反应与暗反应两个相互衔接的阶段。'.repeat(
+        3,
+      );
+    const order = ['A2', 'B1', 'B2', 'C1'];
+    expect(order.indexOf(estimateCefrLevel(simple, 'zh'))).toBeLessThan(
+      order.indexOf(estimateCefrLevel(formal, 'zh')),
+    );
+    expect(estimateCefrLevel('hello world', 'zh')).toBe('B1');
+  });
+
   test('empty text falls back to B1 rather than throwing', () => {
     expect(estimateCefrLevel('', 'en')).toBe('B1');
   });

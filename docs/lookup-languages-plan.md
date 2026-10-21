@@ -52,7 +52,7 @@ Any learning language to any own language. First scope: English, French and Chin
 - Translate the etymology text too.
 - Use the same localization on the Practice page.
 - Same language for both (for example English learner, English reader): ask the AI for a simple English definition, not a translation.
-- Chinese as the learning language: show pinyin with each meaning.
+- Chinese as the learning language: the drawer shows the word's pinyin from the dictionary. The data holds one reading per word, so meanings cannot carry their own pinyin (行 xíng/háng).
 
 ## Step 5: scale
 

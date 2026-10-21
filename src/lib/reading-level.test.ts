@@ -27,6 +27,11 @@ describe('exam references', () => {
     expect(examRefs('es', 'B1', true)).toEqual([]);
   });
 
+  it('uses HSK for Chinese, whatever the native language is', () => {
+    expect(examRefs('zh', 'A1', false)).toEqual([{ exam: 'hsk', score: '1' }]);
+    expect(examRefs('zh', 'C2', true)).toEqual([{ exam: 'hsk', score: '6' }]);
+  });
+
   it('shows mainland exams for learners whose native language is Chinese', () => {
     expect(showMainlandExams('zh-CN')).toBe(true);
     expect(showMainlandExams('zh-TW')).toBe(true);

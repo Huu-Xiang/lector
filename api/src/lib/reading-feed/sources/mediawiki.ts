@@ -9,6 +9,7 @@ interface MediaWikiWikiConfig {
   license: string;
   licenseUrl: string;
   sampleSize: number;
+  variant?: string;
 }
 
 interface RandomPage {
@@ -44,8 +45,10 @@ async function fetchExtractOne(
   fetchImpl: typeof fetch,
   host: string,
   pageId: number,
+  variant?: string,
 ): Promise<ExtractPage | null> {
-  const url = `https://${host}/w/api.php?action=query&prop=extracts|info&explaintext=1&inprop=url&pageids=${pageId}&format=json`;
+  const variantParam = variant ? `&variant=${variant}` : '';
+  const url = `https://${host}/w/api.php?action=query&prop=extracts|info&explaintext=1&inprop=url&pageids=${pageId}&format=json${variantParam}`;
   const data = (await fetchJson(fetchImpl, url)) as {
     query?: { pages?: Record<string, ExtractPage> };
   };
@@ -57,9 +60,10 @@ async function fetchExtracts(
   fetchImpl: typeof fetch,
   host: string,
   pageIds: number[],
+  variant?: string,
 ): Promise<ExtractPage[]> {
   const pages = await Promise.all(
-    pageIds.map((id) => fetchExtractOne(fetchImpl, host, id).catch(() => null)),
+    pageIds.map((id) => fetchExtractOne(fetchImpl, host, id, variant).catch(() => null)),
   );
   return pages.filter((page): page is ExtractPage => page !== null);
 }
@@ -77,6 +81,7 @@ function makeMediaWikiSource(wiki: MediaWikiWikiConfig): ReadingFeedSource {
         fetchImpl,
         wiki.host,
         pages.map((p) => p.id),
+        wiki.variant,
       );
       const now = new Date().toISOString();
       return extracts
@@ -113,6 +118,17 @@ export const WIKIVOYAGE_FR = makeMediaWikiSource({
   license: 'CC BY-SA 3.0',
   licenseUrl: 'https://creativecommons.org/licenses/by-sa/3.0/',
   sampleSize: 15,
+});
+
+export const WIKIVOYAGE_ZH = makeMediaWikiSource({
+  id: 'wikivoyage',
+  interest: 'travel',
+  language: 'zh',
+  host: 'zh.wikivoyage.org',
+  license: 'CC BY-SA 3.0',
+  licenseUrl: 'https://creativecommons.org/licenses/by-sa/3.0/',
+  sampleSize: 15,
+  variant: 'zh-cn',
 });
 
 export const SIMPLE_WIKIPEDIA_EN = makeMediaWikiSource({

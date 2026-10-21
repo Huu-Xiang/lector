@@ -946,6 +946,7 @@
       "toefl": "托福 {score}",
       "delf": "DELF {score}",
       "dalf": "DALF {score}",
+      "hsk": "HSK {score}",
       "juniorHigh": "初中",
       "zhongkao": "中考",
       "gaokao": "高考",

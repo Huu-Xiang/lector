@@ -9,6 +9,7 @@ export type ExamId =
   | 'toefl'
   | 'delf'
   | 'dalf'
+  | 'hsk'
   | 'juniorHigh'
   | 'zhongkao'
   | 'gaokao'
@@ -55,6 +56,15 @@ const EXAMS: Record<string, Record<CefrLevel, ExamRef[]>> = {
     B2: [{ exam: 'delf', score: 'B2' }],
     C1: [{ exam: 'dalf', score: 'C1' }],
     C2: [{ exam: 'dalf', score: 'C2' }],
+  },
+  // HSK 2.0 has six levels; the CEFR pairing is the common one and only a guide.
+  zh: {
+    A1: [{ exam: 'hsk', score: '1' }],
+    A2: [{ exam: 'hsk', score: '2' }],
+    B1: [{ exam: 'hsk', score: '3' }],
+    B2: [{ exam: 'hsk', score: '4' }],
+    C1: [{ exam: 'hsk', score: '5' }],
+    C2: [{ exam: 'hsk', score: '6' }],
   },
 };
 

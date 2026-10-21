@@ -1,5 +1,11 @@
-import { GLOBAL_VOICES_EN, GLOBAL_VOICES_FR } from './global-voices';
-import { SIMPLE_WIKIPEDIA_EN, VIKIDIA_FR, WIKIVOYAGE_EN, WIKIVOYAGE_FR } from './mediawiki';
+import { GLOBAL_VOICES_EN, GLOBAL_VOICES_FR, GLOBAL_VOICES_ZH } from './global-voices';
+import {
+  SIMPLE_WIKIPEDIA_EN,
+  VIKIDIA_FR,
+  WIKIVOYAGE_EN,
+  WIKIVOYAGE_FR,
+  WIKIVOYAGE_ZH,
+} from './mediawiki';
 import type { ReadingFeedSource } from '../types';
 
 // VOA Learning English and Wikinews were dropped after live verification:
@@ -9,8 +15,10 @@ import type { ReadingFeedSource } from '../types';
 export const READING_FEED_SOURCES: readonly ReadingFeedSource[] = [
   GLOBAL_VOICES_EN,
   GLOBAL_VOICES_FR,
+  GLOBAL_VOICES_ZH,
   WIKIVOYAGE_EN,
   WIKIVOYAGE_FR,
+  WIKIVOYAGE_ZH,
   SIMPLE_WIKIPEDIA_EN,
   VIKIDIA_FR,
 ];

@@ -1,7 +1,7 @@
 import { db } from '../../db';
 import { getSharedContentProvider, type LLMProvider } from '../llm';
 import { isNativeLanguageCode, nativeLanguageName } from '../languages';
-import type { ReadingFeedRow } from './types';
+import type { FeedLanguage, ReadingFeedRow } from './types';
 
 export interface ArticleDescription {
   title: string;
@@ -9,6 +9,12 @@ export interface ArticleDescription {
 }
 
 const EXCERPT_CHARS = 1500;
+
+const FEED_LANGUAGE_NAMES: Record<FeedLanguage, string> = {
+  en: 'English',
+  fr: 'French',
+  zh: 'Chinese',
+};
 const MAX_PARALLEL = 4;
 
 let providerFactory: () => LLMProvider = getSharedContentProvider;
@@ -50,7 +56,7 @@ export function buildDescribePrompt(
   article: Pick<ReadingFeedRow, 'title' | 'text' | 'language'>,
   nativeName: string,
 ): string {
-  return `A language learner whose native language is ${nativeName} is choosing what to read. Below is the start of an article in ${article.language === 'fr' ? 'French' : 'English'}.
+  return `A language learner whose native language is ${nativeName} is choosing what to read. Below is the start of an article in ${FEED_LANGUAGE_NAMES[article.language]}.
 
 Reply with JSON only, no markdown: {"title": "<the article title translated into ${nativeName}>", "summary": "<one or two plain sentences in ${nativeName} saying what the article is about, at most 60 words>"}
 

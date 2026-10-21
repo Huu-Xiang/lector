@@ -1,15 +1,16 @@
 import { Hono } from 'hono';
 import { db } from '../db';
 import { getCurrentUserId } from '../lib/user';
-import { buildSegmentWords, countWords } from '../lib/html-to-markdown';
+import { countWords } from '../lib/html-to-markdown';
+import { segmentWordsFor } from '../lib/segment-words';
 import { entitlements, planLimitResponse, type AtomicLimitCheck } from '../lib/entitlements';
 import { collectionMetadataBytes, lessonTextBytes } from '../lib/storage-limits';
 import { getReadingFeedArticle, listReadingFeed } from '../lib/reading-feed/store';
 import { cachedDescriptions, describeArticles } from '../lib/reading-feed/describe';
-import { isNativeLanguageCode } from '../lib/languages';
+import { getLanguageConfig, isNativeLanguageCode } from '../lib/languages';
 import type { FeedLanguage, ReadingInterest } from '../lib/reading-feed/types';
 
-const FEED_LANGUAGES = new Set<FeedLanguage>(['en', 'fr']);
+const FEED_LANGUAGES = new Set<FeedLanguage>(['en', 'fr', 'zh']);
 const FEED_INTERESTS = new Set<ReadingInterest>(['news', 'travel', 'science']);
 
 function isFeedLanguage(value: string | undefined): value is FeedLanguage {
@@ -113,6 +114,7 @@ app.post('/add', async (c) => {
   const lessonId = `${collectionId}-lesson`;
   const now = new Date().toISOString();
   const markdown = `${article.text}\n\n${attributionBlock(article)}`;
+  const pack = getLanguageConfig(article.language);
 
   const outcome = db.transaction(() => {
     const existing = db
@@ -155,8 +157,8 @@ app.post('/add', async (c) => {
         article.title,
         0,
         markdown,
-        countWords(markdown),
-        buildSegmentWords(markdown),
+        countWords(markdown, pack),
+        segmentWordsFor(markdown, pack),
         article.language,
         now,
         now,

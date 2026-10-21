@@ -1,4 +1,5 @@
 import type { CefrLevel, FeedLanguage } from './types';
+import { ZH_COMMON_CHARS } from './zh-common-chars';
 
 function countSyllablesEn(word: string): number {
   const w = word.toLowerCase().replace(/[^a-z]/g, '');
@@ -33,6 +34,22 @@ function splitWords(text: string): string[] {
   return text.split(/\s+/).filter((w) => /[a-zA-ZÀ-ÿ]/.test(w));
 }
 
+const HAN = /[\u3400-\u9fff]/g;
+
+/** Characters per sentence plus the percent of characters outside the 1,000 commonest. */
+function estimateCefrLevelZh(text: string): CefrLevel {
+  const chars = text.match(HAN) ?? [];
+  const sentences = text.split(/[。！？!?；;\n]+/).filter((s) => (s.match(HAN) ?? []).length >= 3);
+  if (chars.length === 0 || sentences.length === 0) return 'B1';
+  const charsPerSentence = chars.length / sentences.length;
+  const rarePercent = (100 * chars.filter((c) => !ZH_COMMON_CHARS.has(c)).length) / chars.length;
+  const score = charsPerSentence + rarePercent;
+  if (score <= 24) return 'A2';
+  if (score <= 32) return 'B1';
+  if (score <= 40) return 'B2';
+  return 'C1';
+}
+
 /**
  * Flesch-Kincaid grade level for English, Kandel-Moles for French, each
  * mapped to a CEFR band. Both formulas rise with sentence length and
@@ -40,6 +57,7 @@ function splitWords(text: string): string[] {
  * not a validated linguistic equivalence.
  */
 export function estimateCefrLevel(text: string, language: FeedLanguage): CefrLevel {
+  if (language === 'zh') return estimateCefrLevelZh(text);
   const sentences = splitSentences(text);
   const words = splitWords(text);
   if (words.length === 0 || sentences.length === 0) return 'B1';

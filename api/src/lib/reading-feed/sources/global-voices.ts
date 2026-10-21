@@ -47,3 +47,4 @@ function makeGlobalVoicesSource(language: FeedLanguage, host: string): ReadingFe
 
 export const GLOBAL_VOICES_EN = makeGlobalVoicesSource('en', 'globalvoices.org');
 export const GLOBAL_VOICES_FR = makeGlobalVoicesSource('fr', 'fr.globalvoices.org');
+export const GLOBAL_VOICES_ZH = makeGlobalVoicesSource('zh', 'zhs.globalvoices.org');

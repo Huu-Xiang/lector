@@ -946,6 +946,7 @@
       "toefl": "TOEFL iBT {score}",
       "delf": "DELF {score}",
       "dalf": "DALF {score}",
+      "hsk": "HSK {score}",
       "juniorHigh": "Junior high school",
       "zhongkao": "Zhongkao",
       "gaokao": "Gaokao",

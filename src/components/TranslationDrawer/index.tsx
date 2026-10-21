@@ -182,7 +182,9 @@ export default function TranslationDrawer({
                   {entry?.ipa && (
                     <TargetText
                       className={`text-sm text-muted-foreground ${
-                        pack.script.direction === 'rtl' ? '' : 'font-mono'
+                        pack.script.direction === 'rtl' || pack.pronunciation?.annotation
+                          ? ''
+                          : 'font-mono'
                       }`}
                       as="span"
                     >

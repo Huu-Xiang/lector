@@ -1,4 +1,5 @@
 import { Sentry } from '../sentry';
+import { getLanguageConfig } from '../languages';
 import { countWords } from '../html-to-markdown';
 import { warmDescriptions } from './describe';
 import { estimateCefrLevel } from './level-heuristic';
@@ -24,7 +25,7 @@ async function refreshOneSource(
     const articles = await source.fetch(fetchImpl);
     const now = new Date().toISOString();
     for (const article of articles) {
-      const wordCount = countWords(article.text);
+      const wordCount = countWords(article.text, getLanguageConfig(source.language));
       if (wordCount < MIN_WORDS || wordCount > MAX_WORDS) continue;
       upsertReadingFeedArticle({
         language: source.language,
