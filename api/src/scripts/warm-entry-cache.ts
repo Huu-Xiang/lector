@@ -2,7 +2,7 @@
  * Fill the shared entry cache ahead of time with Chinese meanings for common
  * dictionary words.
  *
- *   bun run src/scripts/warm-entry-cache.ts translate <in.json> <out.jsonl> [--pair fr-zh|en-fr] [--task word-gloss|context-rich] [--concurrency 4]
+ *   bun run src/scripts/warm-entry-cache.ts translate <in.json> <out.jsonl> [--pair fr-zh|en-fr|zh-es|zh-fr] [--task word-gloss|context-rich] [--concurrency 4]
  *   bun run src/scripts/warm-entry-cache.ts import <out.jsonl>... [--language fr] [--native zh-CN]
  *
  * `translate` asks the deployment's managed model, one word per request, and
@@ -25,8 +25,11 @@ interface Item {
   zh?: string[];
 }
 
-/** `fr-zh`: French words, Chinese meanings. `en-fr`: English words, French equivalents. */
-export type Pair = 'fr-zh' | 'en-fr';
+/**
+ * `fr-zh`: French words, Chinese meanings. `en-fr`: English words, French equivalents.
+ * `zh-es` and `zh-fr`: Chinese words, Spanish or French equivalents of their English senses.
+ */
+export type Pair = 'fr-zh' | 'en-fr' | 'zh-es' | 'zh-fr';
 
 const ENGLISH_WORDS =
   /\b(the|of|and|to|used|with|for|before|is|from|letter|person|plural|singular|indicative|present|past|form|alternative|variant|spelling)\b/i;
@@ -54,13 +57,30 @@ export function frenchProblemWith(gloss: unknown, englishSense: string): string 
   return null;
 }
 
+export function latinProblemWith(gloss: unknown, englishSense: string): string | null {
+  if (typeof gloss !== 'string' || !gloss.trim()) return 'empty gloss';
+  if (gloss.length > 120) return 'gloss too long';
+  if (/[\u3040-\u30ff\u3100-\u312f]/.test(gloss)) return 'kana or bopomofo in gloss';
+  if (!/[a-zA-ZÀ-ÿ]/.test(gloss)) return 'no letters in gloss';
+  const plain = englishSense
+    .replace(/^[^:]*:\s*/, '')
+    .trim()
+    .toLowerCase();
+  if (plain.length > 25 && gloss.trim().toLowerCase() === plain) return 'English text copied';
+  return null;
+}
+
 export function checkAnswer(item: Item, glosses: unknown, pair: Pair = 'fr-zh'): string | null {
   if (!Array.isArray(glosses) || glosses.length !== item.senses.length) {
     return `expected ${item.senses.length} glosses`;
   }
   for (const [i, gloss] of glosses.entries()) {
     const problem =
-      pair === 'en-fr' ? frenchProblemWith(gloss, item.senses[i]) : problemWith(gloss);
+      pair === 'en-fr'
+        ? frenchProblemWith(gloss, item.senses[i])
+        : pair === 'fr-zh'
+          ? problemWith(gloss)
+          : latinProblemWith(gloss, item.senses[i]);
     if (problem) return `${problem}: ${String(gloss).slice(0, 40)}`;
   }
   const distinctSenses = new Set(item.senses.map((s) => s.replace(/^[^:]*:\s*/, ''))).size;
@@ -92,17 +112,40 @@ Rules:
 5. "chinese_meanings" are human translations of the same English word into Chinese. Use them only to understand which meaning is meant. Never output Chinese.
 6. Prefer common, natural modern French. Proper nouns: the usual French name.`;
 
+function rulesForChinese(target: 'Spanish' | 'French'): string {
+  return `You translate dictionary meanings for a Chinese dictionary used by ${target} learners of Chinese.
+For every English sense, write the ${target} equivalent. Reply with ONLY JSON: {"glosses": ["<${target} for sense 1>", ...]} with exactly one gloss per sense, in order.
+
+Rules:
+1. Give short ${target} equivalents, the way a bilingual dictionary does: one to four words or a short phrase per meaning, at most 80 characters. Separate near-synonyms with ", " and clearly different meanings with " ; ". Never write a long definition, even when the English sense is one: give the word(s) a bilingual dictionary would give.
+2. Different senses get different glosses that match their own English text. Do not repeat one gloss for all senses.
+3. Do not repeat the part-of-speech label. No English sentences, no pinyin, no examples. Put a verb in the infinitive.
+4. Keep Chinese characters that the English sense itself shows, such as a measure word in "(Classifier: 个)", and explain them in ${target}.
+5. A grammar particle or function word gets a short plain ${target} explanation of what it does, for example "partícula de aspecto perfectivo" or "particule d'aspect accompli".
+6. Prefer common, natural modern ${target}. Proper nouns: the usual ${target} name.`;
+}
+
 function userPrompt(item: Item, feedback: string | null, pair: Pair): string {
   const payload =
     pair === 'en-fr'
       ? { word: item.word, senses: item.senses, chinese_meanings: item.zh ?? [] }
-      : {
-          word: item.word,
-          senses: item.senses,
-          freedict: item.freedict ?? [],
-          cfdict_candidates: item.cfdict_candidates ?? [],
-        };
-  return `${pair === 'en-fr' ? RULES_EN_FR : RULES_FR_ZH}\n\nInput:\n${JSON.stringify(payload, null, 1)}${
+      : pair === 'zh-es' || pair === 'zh-fr'
+        ? { word: item.word, senses: item.senses }
+        : {
+            word: item.word,
+            senses: item.senses,
+            freedict: item.freedict ?? [],
+            cfdict_candidates: item.cfdict_candidates ?? [],
+          };
+  const rules =
+    pair === 'en-fr'
+      ? RULES_EN_FR
+      : pair === 'zh-es'
+        ? rulesForChinese('Spanish')
+        : pair === 'zh-fr'
+          ? rulesForChinese('French')
+          : RULES_FR_ZH;
+  return `${rules}\n\nInput:\n${JSON.stringify(payload, null, 1)}${
     feedback ? `\n\nYour previous answer was rejected (${feedback}). Fix it.` : ''
   }`;
 }

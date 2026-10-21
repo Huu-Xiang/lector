@@ -1,6 +1,6 @@
 import '../test-guard';
 import { describe, expect, test } from 'bun:test';
-import { checkAnswer, frenchProblemWith, problemWith } from './warm-entry-cache';
+import { checkAnswer, frenchProblemWith, latinProblemWith, problemWith } from './warm-entry-cache';
 
 const item = {
   word: 'tour',
@@ -44,5 +44,33 @@ describe('warm-entry-cache answer checks', () => {
     expect(checkAnswer(queen, ['the wife or widow of a king'], 'en-fr')).toContain('copied');
     expect(frenchProblemWith('', 'noun: x')).toBe('empty gloss');
     expect(frenchProblemWith('x'.repeat(101), 'noun: x')).toBe('gloss too long');
+  });
+});
+
+describe('Chinese to Spanish and French answer checks', () => {
+  const word = {
+    word: '银行',
+    senses: ['noun: bank (financial institution)', 'noun: jewellery dealer'],
+  };
+
+  test('accepts Latin-script glosses and keeps Han characters from the English sense', () => {
+    expect(checkAnswer(word, ['banco', 'joyero'], 'zh-es')).toBeNull();
+    expect(latinProblemWith('clasificador 个 para personas', 'noun: (Classifier: 个)')).toBeNull();
+  });
+
+  test('rejects an empty gloss, kana, no letters and a copied English sense', () => {
+    expect(latinProblemWith('', 'noun: bank')).toBe('empty gloss');
+    expect(latinProblemWith('ぎんこう', 'noun: bank')).toBe('kana or bopomofo in gloss');
+    expect(latinProblemWith('银行', 'noun: bank')).toBe('no letters in gloss');
+    expect(
+      latinProblemWith(
+        'bank (financial institution) of the city',
+        'noun: bank (financial institution) of the city',
+      ),
+    ).toBe('English text copied');
+  });
+
+  test('checks the sense count for both pairs', () => {
+    expect(checkAnswer(word, ['banque'], 'zh-fr')).toContain('expected 2');
   });
 });
