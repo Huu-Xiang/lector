@@ -1,0 +1,25 @@
+{
+  "title": "메밀꽃 필 무렵",
+  "author": "이효석",
+  "level": "C1",
+  "wordCount": 2016,
+  "source": {
+    "name": "Korean Wikisource",
+    "url": "https://ko.wikisource.org/wiki/%EB%A9%94%EB%B0%80%EA%BD%83_%ED%95%84_%EB%AC%B4%EB%A0%B5",
+    "license": "Public domain (the author died more than 70 years ago); Wikisource transcription CC BY-SA 4.0"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. 메밀꽃 필 무렵"
+    },
+    {
+      "file": "02.md",
+      "title": "2. 메밀꽃 필 무렵 (2)"
+    },
+    {
+      "file": "03.md",
+      "title": "3. 메밀꽃 필 무렵 (3)"
+    }
+  ]
+}

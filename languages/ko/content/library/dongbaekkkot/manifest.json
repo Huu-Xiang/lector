@@ -1,0 +1,25 @@
+{
+  "title": "동백꽃",
+  "author": "김유정",
+  "level": "B2",
+  "wordCount": 1794,
+  "source": {
+    "name": "Korean Wikisource",
+    "url": "https://ko.wikisource.org/wiki/%EB%8F%99%EB%B0%B1%EA%BD%83",
+    "license": "Public domain (the author died more than 70 years ago); Wikisource transcription CC BY-SA 4.0"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. 동백꽃"
+    },
+    {
+      "file": "02.md",
+      "title": "2. 동백꽃 (2)"
+    },
+    {
+      "file": "03.md",
+      "title": "3. 동백꽃 (3)"
+    }
+  ]
+}

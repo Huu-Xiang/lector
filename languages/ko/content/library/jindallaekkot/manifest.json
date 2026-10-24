@@ -1,0 +1,101 @@
+{
+  "title": "진달래꽃",
+  "author": "김소월",
+  "level": "B2",
+  "wordCount": 5954,
+  "source": {
+    "name": "Korean Wikisource",
+    "url": "https://ko.wikisource.org/wiki/%EC%A7%84%EB%8B%AC%EB%9E%98%EA%BD%83_(%EC%8B%9C%EC%A7%91)",
+    "license": "Public domain (the author died more than 70 years ago); Wikisource transcription CC BY-SA 4.0"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. 가는 길 외"
+    },
+    {
+      "file": "02.md",
+      "title": "2. 개여울의 노래 외"
+    },
+    {
+      "file": "03.md",
+      "title": "3. 길 외"
+    },
+    {
+      "file": "04.md",
+      "title": "4. 꿈으로 오는 한 사람 외"
+    },
+    {
+      "file": "05.md",
+      "title": "5. 님과 벗 외"
+    },
+    {
+      "file": "06.md",
+      "title": "6. 닭은 꼬꾸요 외"
+    },
+    {
+      "file": "07.md",
+      "title": "7. 맘에 있는 말이라고 다 할까 보냐 외"
+    },
+    {
+      "file": "08.md",
+      "title": "8. 무신 외"
+    },
+    {
+      "file": "09.md",
+      "title": "9. 물마름 외"
+    },
+    {
+      "file": "10.md",
+      "title": "10. 바라건대는 우리에게 우리의 보습 대일 땅이 있었더면 외"
+    },
+    {
+      "file": "11.md",
+      "title": "11. 밭고랑 위에서 외"
+    },
+    {
+      "file": "12.md",
+      "title": "12. 부헝새 외"
+    },
+    {
+      "file": "13.md",
+      "title": "13. 비단 안개 외"
+    },
+    {
+      "file": "14.md",
+      "title": "14. 산 위에 외"
+    },
+    {
+      "file": "15.md",
+      "title": "15. 수아 외"
+    },
+    {
+      "file": "16.md",
+      "title": "16. 엄숙 외"
+    },
+    {
+      "file": "17.md",
+      "title": "17. 여자의 냄새 외"
+    },
+    {
+      "file": "18.md",
+      "title": "18. 오는 봄 외"
+    },
+    {
+      "file": "19.md",
+      "title": "19. 잊었던 맘 외"
+    },
+    {
+      "file": "20.md",
+      "title": "20. 제비 외"
+    },
+    {
+      "file": "21.md",
+      "title": "21. 초혼 외"
+    },
+    {
+      "file": "22.md",
+      "title": "22. 하다못해 죽어 달려가 올라 외"
+    }
+  ]
+}

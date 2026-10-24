@@ -1,0 +1,101 @@
+{
+  "title": "칠칠단의 비밀",
+  "author": "방정환",
+  "level": "B2",
+  "wordCount": 14126,
+  "source": {
+    "name": "Korean Wikisource",
+    "url": "https://ko.wikisource.org/wiki/%EC%B9%A0%EC%B9%A0%EB%8B%A8%EC%9D%98_%EB%B9%84%EB%B0%80",
+    "license": "Public domain (the author died more than 70 years ago); Wikisource transcription CC BY-SA 4.0"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. 제1~2장"
+    },
+    {
+      "file": "02.md",
+      "title": "2. 제3장"
+    },
+    {
+      "file": "03.md",
+      "title": "3. 제4장"
+    },
+    {
+      "file": "04.md",
+      "title": "4. 제5~6장"
+    },
+    {
+      "file": "05.md",
+      "title": "5. 제7~8장"
+    },
+    {
+      "file": "06.md",
+      "title": "6. 제9~10장"
+    },
+    {
+      "file": "07.md",
+      "title": "7. 제11~12장"
+    },
+    {
+      "file": "08.md",
+      "title": "8. 제13~14장"
+    },
+    {
+      "file": "09.md",
+      "title": "9. 제15~16장"
+    },
+    {
+      "file": "10.md",
+      "title": "10. 제17~18장"
+    },
+    {
+      "file": "11.md",
+      "title": "11. 제19장"
+    },
+    {
+      "file": "12.md",
+      "title": "12. 제20~21장"
+    },
+    {
+      "file": "13.md",
+      "title": "13. 제22~23장"
+    },
+    {
+      "file": "14.md",
+      "title": "14. 제24장"
+    },
+    {
+      "file": "15.md",
+      "title": "15. 제25장"
+    },
+    {
+      "file": "16.md",
+      "title": "16. 제26장"
+    },
+    {
+      "file": "17.md",
+      "title": "17. 제27장"
+    },
+    {
+      "file": "18.md",
+      "title": "18. 제28장"
+    },
+    {
+      "file": "19.md",
+      "title": "19. 제29장"
+    },
+    {
+      "file": "20.md",
+      "title": "20. 제30장"
+    },
+    {
+      "file": "21.md",
+      "title": "21. 제31~32장"
+    },
+    {
+      "file": "22.md",
+      "title": "22. 제33장"
+    }
+  ]
+}

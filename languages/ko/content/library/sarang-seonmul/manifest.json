@@ -1,0 +1,125 @@
+{
+  "title": "사랑의 선물",
+  "author": "방정환 (편역)",
+  "level": "B1",
+  "wordCount": 17558,
+  "source": {
+    "name": "Korean Wikisource",
+    "url": "https://ko.wikisource.org/wiki/%EC%82%AC%EB%9E%91%EC%9D%98_%EC%84%A0%EB%AC%BC",
+    "license": "Public domain (the author died more than 70 years ago); Wikisource transcription CC BY-SA 4.0"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. 산드룡의 유리 구두"
+    },
+    {
+      "file": "02.md",
+      "title": "2. 산드룡의 유리 구두 (2)"
+    },
+    {
+      "file": "03.md",
+      "title": "3. 산드룡의 유리 구두 (3)"
+    },
+    {
+      "file": "04.md",
+      "title": "4. 왕자와 제비"
+    },
+    {
+      "file": "05.md",
+      "title": "5. 왕자와 제비 (2)"
+    },
+    {
+      "file": "06.md",
+      "title": "6. 왕자와 제비 (3)"
+    },
+    {
+      "file": "07.md",
+      "title": "7. 잠자는 왕녀"
+    },
+    {
+      "file": "08.md",
+      "title": "8. 잠자는 왕녀 (2)"
+    },
+    {
+      "file": "09.md",
+      "title": "9. 꽃 속의 작은이"
+    },
+    {
+      "file": "10.md",
+      "title": "10. 꽃 속의 작은이 (2)"
+    },
+    {
+      "file": "11.md",
+      "title": "11. 꽃 속의 작은이 (3)"
+    },
+    {
+      "file": "12.md",
+      "title": "12. 어린 음악가"
+    },
+    {
+      "file": "13.md",
+      "title": "13. 어린 음악가 (2)"
+    },
+    {
+      "file": "14.md",
+      "title": "14. 어린 음악가 (3)"
+    },
+    {
+      "file": "15.md",
+      "title": "15. 난파선"
+    },
+    {
+      "file": "16.md",
+      "title": "16. 난파선 (2)"
+    },
+    {
+      "file": "17.md",
+      "title": "17. 난파선 (3)"
+    },
+    {
+      "file": "18.md",
+      "title": "18. 요술왕 아아"
+    },
+    {
+      "file": "19.md",
+      "title": "19. 요술왕 아아 (2)"
+    },
+    {
+      "file": "20.md",
+      "title": "20. 요술왕 아아 (3)"
+    },
+    {
+      "file": "21.md",
+      "title": "21. 요술왕 아아 (4)"
+    },
+    {
+      "file": "22.md",
+      "title": "22. 천당가는 길"
+    },
+    {
+      "file": "23.md",
+      "title": "23. 천당가는 길 (2)"
+    },
+    {
+      "file": "24.md",
+      "title": "24. 천당가는 길 (3)"
+    },
+    {
+      "file": "25.md",
+      "title": "25. 천당가는 길 (4)"
+    },
+    {
+      "file": "26.md",
+      "title": "26. 한네레의 죽음 (2)"
+    },
+    {
+      "file": "27.md",
+      "title": "27. 한네레의 죽음 (3)"
+    },
+    {
+      "file": "28.md",
+      "title": "28. 한네레의 죽음 (4)"
+    }
+  ]
+}

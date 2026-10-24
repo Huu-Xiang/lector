@@ -1,0 +1,21 @@
+{
+  "title": "감자",
+  "author": "김동인",
+  "level": "C1",
+  "wordCount": 1563,
+  "source": {
+    "name": "Korean Wikisource",
+    "url": "https://ko.wikisource.org/wiki/%EA%B0%90%EC%9E%90",
+    "license": "Public domain (the author died more than 70 years ago); Wikisource transcription CC BY-SA 4.0"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. 감자"
+    },
+    {
+      "file": "02.md",
+      "title": "2. 감자 (2)"
+    }
+  ]
+}

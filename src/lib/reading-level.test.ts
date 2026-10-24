@@ -32,6 +32,10 @@ describe('exam references', () => {
     expect(examRefs('zh', 'C2', true)).toEqual([{ exam: 'hsk', score: '6' }]);
   });
 
+  it('uses TOPIK for Korean', () => {
+    expect(examRefs('ko', 'B1', false)).toEqual([{ exam: 'topik', score: '3' }]);
+  });
+
   it('shows mainland exams for learners whose native language is Chinese', () => {
     expect(showMainlandExams('zh-CN')).toBe(true);
     expect(showMainlandExams('zh-TW')).toBe(true);

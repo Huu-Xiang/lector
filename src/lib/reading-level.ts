@@ -10,6 +10,7 @@ export type ExamId =
   | 'delf'
   | 'dalf'
   | 'hsk'
+  | 'topik'
   | 'juniorHigh'
   | 'zhongkao'
   | 'gaokao'
@@ -65,6 +66,15 @@ const EXAMS: Record<string, Record<CefrLevel, ExamRef[]>> = {
     B2: [{ exam: 'hsk', score: '4' }],
     C1: [{ exam: 'hsk', score: '5' }],
     C2: [{ exam: 'hsk', score: '6' }],
+  },
+  // TOPIK I covers levels 1–2 and TOPIK II levels 3–6; the CEFR pairing is a guide only.
+  ko: {
+    A1: [{ exam: 'topik', score: '1' }],
+    A2: [{ exam: 'topik', score: '2' }],
+    B1: [{ exam: 'topik', score: '3' }],
+    B2: [{ exam: 'topik', score: '4' }],
+    C1: [{ exam: 'topik', score: '5' }],
+    C2: [{ exam: 'topik', score: '6' }],
   },
 };
 

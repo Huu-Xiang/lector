@@ -947,6 +947,7 @@
       "delf": "DELF {score}",
       "dalf": "DALF {score}",
       "hsk": "HSK {score}",
+      "topik": "TOPIK {score}",
       "juniorHigh": "Junior high school",
       "zhongkao": "Zhongkao",
       "gaokao": "Gaokao",
@@ -1356,7 +1357,7 @@
       "dataSources": {
         "heading": "Data sources",
         "body": "Sentence banks come from Tatoeba (CC BY 2.0 FR) and dictionaries from the sources listed in the repository README, each under its own licence.",
-        "books": "The free books in the library are public-domain texts from Project Gutenberg (gutenberg.org). Each book links back to its source page.",
+        "books": "The free books in the library are public-domain texts from Project Gutenberg (gutenberg.org). The Korean books come from Korean Wikisource (ko.wikisource.org); their transcriptions are licensed CC BY-SA 4.0. Each book links back to its source page.",
         "dictionaries": "Dictionary meanings come from the English Wiktionary through kaikki.org (CC BY-SA). The English dictionary is built from ECDICT by skywind3000 (MIT licence, github.com/skywind3000/ECDICT), and its example sentences come from Tatoeba (CC BY 2.0 FR).",
         "readingFeed": "Articles in the Free books dialog's News, Travel and Science tabs come from Global Voices (CC BY 3.0, globalvoices.org), Wikivoyage (CC BY-SA 3.0, wikivoyage.org), Simple English Wikipedia and Vikidia (CC BY-SA 4.0). Each article links to its licence and original source; adding one to your library appends that attribution."
       }

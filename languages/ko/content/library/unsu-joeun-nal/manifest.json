@@ -1,0 +1,29 @@
+{
+  "title": "운수 좋은 날",
+  "author": "현진건",
+  "level": "B2",
+  "wordCount": 2619,
+  "source": {
+    "name": "Korean Wikisource",
+    "url": "https://ko.wikisource.org/wiki/%EC%9A%B4%EC%88%98_%EC%A2%8B%EC%9D%80_%EB%82%A0",
+    "license": "Public domain (the author died more than 70 years ago); Wikisource transcription CC BY-SA 4.0"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. 운수 좋은 날"
+    },
+    {
+      "file": "02.md",
+      "title": "2. 운수 좋은 날 (2)"
+    },
+    {
+      "file": "03.md",
+      "title": "3. 운수 좋은 날 (3)"
+    },
+    {
+      "file": "04.md",
+      "title": "4. 운수 좋은 날 (4)"
+    }
+  ]
+}
