@@ -836,7 +836,9 @@ export default function PracticePage() {
 
   return (
     <div className="flex min-h-screen">
-      <main className="mx-auto max-w-2xl min-w-0 flex-1 px-4 py-8 sm:px-6 lg:px-8">
+      <main
+        className={`mx-auto max-w-2xl min-w-0 flex-1 px-4 py-8 sm:px-6 lg:px-8 ${wordTooltip ? 'pb-[calc(var(--sheet-h)+2rem)] lg:pb-8' : ''}`}
+      >
         {/* Setup screen */}
         {state === 'setup' && (
           <div className="py-6">

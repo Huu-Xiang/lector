@@ -11,6 +11,7 @@
  * tokens, never hardcode colours.
  */
 :root {
+  --sheet-h: 46dvh;
   --mobile-topbar-h: 2.5rem;
 
   /* shadcn semantic tokens — warm sand / sage (light) */

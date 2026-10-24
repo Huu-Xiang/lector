@@ -53,6 +53,7 @@ export default function TranslationDrawer({
   const t = useTranslations('reader.drawer');
   const pack = useActiveLanguage();
   const drawerRef = useRef<HTMLDivElement>(null);
+  const swipeStartY = useRef<number | null>(null);
   const [relatedExpanded, setRelatedExpanded] = useState(false);
   const screenSize = useScreenSize();
   // Anki push status for single-word cards
@@ -128,12 +129,16 @@ export default function TranslationDrawer({
       data-testid="translation-drawer"
       aria-hidden={docked ? false : !isOpen}
       className={clsx(
-        'flex flex-col border-l border-border bg-popover print:hidden',
+        'flex flex-col border-border bg-popover print:hidden',
         docked
-          ? 'relative h-full w-full translate-x-0 shadow-none'
+          ? 'relative h-full w-full translate-x-0 border-l shadow-none'
           : [
-              'fixed inset-y-0 right-0 z-50 max-h-screen w-full max-w-full shadow-2xl transition-transform duration-300 ease-out sm:max-w-96',
-              isOpen ? 'translate-x-0' : 'pointer-events-none translate-x-full',
+              'fixed z-50 shadow-2xl transition-transform duration-300 ease-out',
+              'inset-x-0 bottom-0 h-[var(--sheet-h)] rounded-t-2xl border-t',
+              'lg:inset-x-auto lg:inset-y-0 lg:right-0 lg:h-auto lg:max-h-screen lg:w-96 lg:rounded-none lg:border-t-0 lg:border-l',
+              isOpen
+                ? 'translate-y-0 lg:translate-x-0'
+                : 'pointer-events-none translate-y-full lg:translate-x-full lg:translate-y-0',
             ],
       )}
       ref={drawerRef}
@@ -157,6 +162,23 @@ export default function TranslationDrawer({
         </div>
       ) : (
         <>
+          {!docked && (
+            <div
+              data-testid="translation-drawer-handle"
+              className="flex flex-shrink-0 touch-none justify-center pt-2 pb-1 lg:hidden"
+              onTouchStart={(e) => {
+                swipeStartY.current = e.touches[0]?.clientY ?? null;
+              }}
+              onTouchEnd={(e) => {
+                const start = swipeStartY.current;
+                swipeStartY.current = null;
+                const end = e.changedTouches[0]?.clientY;
+                if (start != null && end != null && end - start > 50) onClose();
+              }}
+            >
+              <span className="h-1 w-10 rounded-full bg-border" />
+            </div>
+          )}
           {/* Header */}
           <div className="flex-shrink-0 border-b border-border bg-muted/50 px-4 py-3">
             <div className="flex items-start justify-between gap-2">
