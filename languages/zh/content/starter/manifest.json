@@ -1,6 +1,6 @@
 {
   "title": "你的前一千个词",
-  "author": "Lector",
+  "author": "Readfox",
   "allow": ["小明", "小玲", "玲", "小林", "你好"],
   "maxNewLemmasPerLesson": 60,
   "lessons": [

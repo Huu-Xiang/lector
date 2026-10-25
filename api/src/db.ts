@@ -774,6 +774,10 @@ function getDb(): Database {
   // ensurePartitionIndexes (the rebuilds drop every index on the way).
   migrateCompositeTenantKeys(_db);
 
+  _db.exec(
+    "UPDATE collections SET author = 'Readfox' WHERE author = 'Lector' AND id LIKE 'starter-%'",
+  );
+
   // lessons audio columns (#185) — audio-backed lessons (podcast import). NULL
   // on ordinary text lessons. Added after migrateCompositeTenantKeys (which
   // rebuilds lessons for the compound PK) so the columns survive that rebuild

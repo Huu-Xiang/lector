@@ -1,6 +1,6 @@
 {
   "title": "Sample: dos lecciones (es)",
-  "author": "Lector",
+  "author": "Readfox",
   "allow": ["Ana"],
   "lessons": [
     { "file": "01-mi-casa.md", "title": "Mi casa", "maxRank": 250 },

@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useArticleDescriptions } from './article-descriptions';
 import { loadCatalog as fetchCatalog } from './catalog-cache';
 import { getSetting, setSetting } from './data-layer';
@@ -138,6 +138,8 @@ export function useDisplayLanguage(): string {
   return displayLanguage(native, locale);
 }
 
+const STARTER_COLLECTION = /^starter-[a-z]{2,3}$/;
+
 const FEED_COLLECTION = /^reading-feed-(reading-feed-[0-9a-f]+)$/;
 
 export interface CollectionDisplay {
@@ -156,6 +158,7 @@ export function useCollectionDisplay(collection: {
   const book = BOOK_ID.exec(collection.id);
   const articleId = FEED_COLLECTION.exec(collection.id)?.[1] ?? null;
   const native = useDisplayLanguage();
+  const t = useTranslations('library');
   const [entry, setEntry] = useState<BookTitles | undefined>();
 
   useEffect(() => {
@@ -188,5 +191,6 @@ export function useCollectionDisplay(collection: {
   if (article) {
     return { title: article.title, original: collection.title, description: article.summary };
   }
-  return { title: collection.title, original: null, description: null };
+  const description = STARTER_COLLECTION.test(collection.id) ? t('starterBlurb') : null;
+  return { title: collection.title, original: null, description };
 }

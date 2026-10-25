@@ -1,6 +1,6 @@
 {
   "title": "처음 천 개의 단어",
-  "author": "Lector",
+  "author": "Readfox",
   "allow": ["민수", "민수가", "민수야", "민수예요", "수진", "수진의", "수진이에요"],
   "maxNewLemmasPerLesson": 60,
   "lessons": [

@@ -117,7 +117,7 @@ describe('starter route', () => {
       userId: string;
     };
     expect(collection.title).toBe('Starter Fixture ES');
-    expect(collection.author).toBe('Lector');
+    expect(collection.author).toBe('Readfox');
     expect(collection.language).toBe('es');
     expect(collection.userId).toBe('local');
 

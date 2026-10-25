@@ -10,7 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { getFluencyStats, seedStarterContent, setSetting } from '@/lib/data-layer';
+import { getFluencyStats, setSetting } from '@/lib/data-layer';
 import {
   availableLanguages,
   LANGUAGES,
@@ -78,9 +78,6 @@ export default function LanguageSelector({
       // so adding a language and switching to one are the same write.
       await setSetting('targetLanguage', code);
       setLanguageInStorage(code);
-      // First-ever switch to a language seeds its starter content before the
-      // reload lands wherever the user was; never throws (#315).
-      await seedStarterContent(code);
       // Only deployments that curate their languages ask; others keep the plain switch.
       if (ready !== null && !listed.includes(code)) flagNewLanguage(code);
       window.location.reload();
