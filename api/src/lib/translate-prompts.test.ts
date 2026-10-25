@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'bun:test';
 import {
+  phraseFieldsInWrongScript,
   buildExplainPrompt,
   buildGlossPrompt,
   buildPhrasePrompt,
@@ -144,5 +145,32 @@ describe('buildExplainPrompt', () => {
     expect(prompt).toContain('Write the whole explanation in Simplified Chinese');
     expect(prompt).toContain('Do not use markdown tables');
     expect(prompt).toContain('Study word: "Remi"');
+  });
+});
+
+describe('phraseFieldsInWrongScript', () => {
+  const english =
+    "'나무를 하다' literally means 'to do wood', but it is a fixed colloquial expression for chopping wood.";
+
+  test('flags English prose for a Chinese reader', () => {
+    expect(
+      phraseFieldsInWrongScript(
+        { translation: '我家的大公鸡被追着跑', idiomaticMeaning: english },
+        'zh-CN',
+      ),
+    ).toEqual(['idiomaticMeaning']);
+  });
+
+  test('accepts Chinese prose that quotes a Latin-script phrase', () => {
+    expect(
+      phraseFieldsInWrongScript(
+        { idiomaticMeaning: "'il pleut des cordes' 字面意思是下绳子，用来形容雨下得非常大。" },
+        'zh-CN',
+      ),
+    ).toEqual([]);
+  });
+
+  test('does not check Latin-script native languages', () => {
+    expect(phraseFieldsInWrongScript({ idiomaticMeaning: english }, 'fr')).toEqual([]);
   });
 });

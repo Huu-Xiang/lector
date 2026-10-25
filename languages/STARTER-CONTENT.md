@@ -5,6 +5,10 @@ into a user's library on first language selection (#315). The pipeline makes
 "first 1,000 words" a **checkable claim**: every target word is provably
 tappable, every lesson provably stays inside its frequency band.
 
+Readfox ships no starter series in any language. The owner allows only real
+public-domain texts, so the generated series were removed. The pipeline below is
+kept for reference; a new series needs the owner's approval.
+
 ```
 1. wordlist   scripts/gen-starter-wordlist.py     → languages/<code>/content/starter/wordlist.json
 2. draft      LLM + the recipe below              → languages/<code>/content/starter/NN-slug.md

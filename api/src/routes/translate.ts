@@ -31,6 +31,8 @@ import {
   buildSimpleContextPrompt,
   buildSimplePhrasePrompt,
   buildWordEntryPrompt,
+  phraseFieldsInWrongScript,
+  phraseLanguageReminder,
 } from '../lib/translate-prompts';
 import { recordStudySessionPing } from '../lib/study-session';
 import { notifyGlossCapHit } from '../lib/lifecycle-email';
@@ -504,23 +506,29 @@ export function makeTranslateRoutes({
         const spelreelsSection = spelreels
           ? `Use the following official spelling rules to inform your understanding of the ${langName} input:\n\n${spelreels}\n\n---\n\n`
           : '';
-        const result = await completeJson<Record<string, unknown>>(provider, {
-          messages: [
-            {
-              role: 'user',
-              content: buildPhrasePrompt(
-                langName,
-                spelreelsSection,
-                word,
-                sentence,
-                nativeName,
-                !reservation.byok && (managedPhraseUsesCheapModel() || freeOnSmallModel),
-              ),
-            },
-          ],
-          maxTokens: 1500,
-          task: 'phrase-rich',
-        });
+        const prompt = buildPhrasePrompt(
+          langName,
+          spelreelsSection,
+          word,
+          sentence,
+          nativeName,
+          !reservation.byok && (managedPhraseUsesCheapModel() || freeOnSmallModel),
+        );
+        const askPhrase = (content: string) =>
+          completeJson<Record<string, unknown>>(provider, {
+            messages: [{ role: 'user', content }],
+            maxTokens: 1500,
+            task: 'phrase-rich',
+          });
+        const result = await askPhrase(prompt);
+        // Small models sometimes drift into English for the long fields.
+        const wrong = phraseFieldsInWrongScript(result, getNativeLanguageCode(userId));
+        if (wrong.length > 0) {
+          const retried = await askPhrase(prompt + phraseLanguageReminder(wrong, nativeName)).catch(
+            () => null,
+          );
+          if (retried) return c.json(retried);
+        }
         return c.json(result);
       }
 

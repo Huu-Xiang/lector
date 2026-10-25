@@ -14,6 +14,39 @@ function writeIn(nativeName: string): string {
     : `\n\nWrite every translation, gloss and explanation in ${nativeName}, not in English. Keep the JSON keys and the partOfSpeech and register values exactly as specified.`;
 }
 
+const NATIVE_SCRIPT: Record<string, RegExp> = {
+  'zh-CN': /\p{Script=Han}/gu,
+  'zh-TW': /\p{Script=Han}/gu,
+  ja: /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}]/gu,
+  ko: /\p{Script=Hangul}/gu,
+  ru: /\p{Script=Cyrillic}/gu,
+  ar: /\p{Script=Arabic}/gu,
+  hi: /\p{Script=Devanagari}/gu,
+};
+
+/**
+ * Phrase fields written mostly in Latin letters although the native language
+ * uses another script. Latin-script native languages are not checked.
+ */
+export function phraseFieldsInWrongScript(
+  result: Record<string, unknown>,
+  nativeCode: string,
+): string[] {
+  const script = NATIVE_SCRIPT[nativeCode];
+  if (!script) return [];
+  return ['translation', 'idiomaticMeaning', 'usageNotes'].filter((key) => {
+    const value = result[key];
+    if (typeof value !== 'string') return false;
+    const latin = value.match(/\p{Script=Latin}/gu)?.length ?? 0;
+    const own = value.match(script)?.length ?? 0;
+    return latin >= 20 && latin > own * 3;
+  });
+}
+
+export function phraseLanguageReminder(fields: string[], nativeName: string): string {
+  return `\n\nYour previous answer wrote ${fields.join(', ')} in English. Write every value except register in ${nativeName}.`;
+}
+
 /**
  * Fast-path word gloss. Deliberately tiny: plain-text output (streamable, no
  * JSON to wait on), no spelreels, no IPA/etymology/related-forms. This is what
@@ -110,7 +143,7 @@ Respond with ONLY a JSON object in this exact shape (no markdown, no code blocks
     /* ...one entry per distinct sense; order most-common first */
   ],
   "ipa": "/.../ or [...] — phonetic transcription if you're confident",
-  "etymology": "Brief origin note (e.g. 'From Dutch X, from Middle Dutch Y')",
+  "etymology": "Brief origin note in ${nativeName} (e.g. 'From Dutch X, from Middle Dutch Y')",
   "relatedForms": [
     { "form": "the related word", "relation": "plural of | diminutive of | past tense of | derived from | etc." }
   ]
@@ -156,9 +189,9 @@ Sentence context: "${sentence || word}"
 Respond with ONLY a JSON object in this exact format (no markdown, no code blocks):
 {
   "translation": "the most natural ${nativeName} translation a fluent speaker would use",
-  "literalBreakdown": "word-by-word literal gloss (e.g. 'hand-shoe' for handskoen)",
-  "idiomaticMeaning": "if the phrase is an idiom, fixed expression, or compound: what it actually means and why — e.g. 'This is an idiom which literally means X. It is used when ...'",
-  "usageNotes": "register, tone, formality, or contextual notes a learner should know (e.g. 'informal', 'used by older speakers', 'often sarcastic', 'common in Bible-influenced Afrikaans')",
+  "literalBreakdown": "word-by-word literal gloss in ${nativeName} (e.g. 'hand-shoe' for handskoen)",
+  "idiomaticMeaning": "in ${nativeName}: if the phrase is an idiom, fixed expression, or compound, what it actually means and why",
+  "usageNotes": "in ${nativeName}: register, tone, formality, or contextual notes a learner should know",
   "register": "formal | informal | literary | colloquial | archaic | neutral"
 }
 

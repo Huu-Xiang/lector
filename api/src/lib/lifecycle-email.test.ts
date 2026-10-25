@@ -1,6 +1,7 @@
 import '../test-guard';
 import { describe, test, expect, afterEach } from 'bun:test';
 import { Database } from 'bun:sqlite';
+import path from 'node:path';
 import {
   ANKI_WORD_THRESHOLD,
   LIFECYCLE_TEMPLATES,
@@ -83,9 +84,7 @@ function insertUser(
 ): string {
   const id = opts.id ?? 'user-1';
   database
-    .prepare(
-      'INSERT INTO user (id, email, name, emailVerified, createdAt) VALUES (?, ?, ?, ?, ?)',
-    )
+    .prepare('INSERT INTO user (id, email, name, emailVerified, createdAt) VALUES (?, ?, ?, ?, ?)')
     .run(
       id,
       opts.email ?? 'ada@example.com',
@@ -165,7 +164,9 @@ describe('sendWelcomeEmail', () => {
       LANGUAGE: 'Afrikaans',
       APP_URL: 'https://app.lector.dev',
     });
-    expect(String(inbox[0].template?.variables?.STOP_URL)).toContain('/api/email/unsubscribe?token=');
+    expect(String(inbox[0].template?.variables?.STOP_URL)).toContain(
+      '/api/email/unsubscribe?token=',
+    );
     expect(inbox[0].headers).toBeUndefined();
     expect(sentAliases(database, userId)).toEqual([LIFECYCLE_TEMPLATES.welcome]);
   });
@@ -174,9 +175,7 @@ describe('sendWelcomeEmail', () => {
     const database = createSchema();
     const inbox: EmailMessage[] = [];
     const userId = insertUser(database);
-    expect(await sendWelcomeEmail(userId, deps(database, inbox, { cloud: false }))).toBe(
-      'skipped',
-    );
+    expect(await sendWelcomeEmail(userId, deps(database, inbox, { cloud: false }))).toBe('skipped');
     expect(inbox).toHaveLength(0);
     expect(sentAliases(database, userId)).toEqual([]);
   });
@@ -304,7 +303,9 @@ describe('sweepLifecycleEmails', () => {
     const first = await sweepLifecycleEmails(deps(database, inbox));
     expect(first.sent).toBe(1);
     expect(inbox.map((m) => m.template?.id)).toEqual([LIFECYCLE_TEMPLATES.day1]);
-    expect(String(inbox[0].template?.variables?.STOP_URL)).toContain('/api/email/unsubscribe?token=');
+    expect(String(inbox[0].template?.variables?.STOP_URL)).toContain(
+      '/api/email/unsubscribe?token=',
+    );
     expect(inbox[0].headers?.['List-Unsubscribe']).toMatch(/^<https?:\/\/.+>$/);
 
     const second = await sweepLifecycleEmails(deps(database, inbox));
@@ -445,19 +446,23 @@ describe('languageLabel', () => {
 });
 
 describe('starterLine', () => {
-  // de ships languages/de/content/starter/manifest.json, so #315 seeds its
-  // series on first language selection and that library is not empty. af ships
-  // a wordlist but no manifest, so it seeds nothing. The wrong sentence here
-  // sends a German learner off to find an EPUB while 22 lessons sit unopened.
   test('names the seeded lessons for a language that ships a starter series', () => {
-    const database = createSchema();
-    const userId = insertUser(database);
-    database
-      .prepare('INSERT INTO settings (userId, key, value) VALUES (?, ?, ?)')
-      .run(userId, 'targetLanguage', '"de"');
-    const line = starterLine(database, userId);
-    expect(line).toContain('German');
-    expect(line).toContain('already in your library');
+    process.env.STARTER_CONTENT_ROOT = path.resolve(
+      import.meta.dir,
+      '../test-fixtures/starter-content',
+    );
+    try {
+      const database = createSchema();
+      const userId = insertUser(database);
+      database
+        .prepare('INSERT INTO settings (userId, key, value) VALUES (?, ?, ?)')
+        .run(userId, 'targetLanguage', '"es"');
+      const line = starterLine(database, userId);
+      expect(line).toContain('Spanish');
+      expect(line).toContain('already in your library');
+    } finally {
+      delete process.env.STARTER_CONTENT_ROOT;
+    }
   });
 
   test('asks for a text when the language seeds nothing', () => {
