@@ -151,7 +151,7 @@ Rules:
 2. Different senses get different glosses that match their own English text. Do not repeat one gloss for all senses.
 3. Do not repeat the part-of-speech label. No English sentences, no pinyin, no examples. ${
     target === 'Korean'
-      ? 'Put a verb or adjective in the dictionary form that ends in 다. Write Hangul only, no romanization.'
+      ? 'Put a verb or adjective in the dictionary form that ends in 다. Write Hangul only: no romanization and no Chinese characters, not even in parentheses.'
       : 'Put a verb in the infinitive.'
   }
 4. Keep Chinese characters that the English sense itself shows, such as a measure word in "(Classifier: 个)", and explain them in ${target}.
