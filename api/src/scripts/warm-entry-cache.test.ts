@@ -1,6 +1,12 @@
 import '../test-guard';
 import { describe, expect, test } from 'bun:test';
-import { checkAnswer, frenchProblemWith, latinProblemWith, problemWith } from './warm-entry-cache';
+import {
+  checkAnswer,
+  frenchProblemWith,
+  koreanProblemWith,
+  latinProblemWith,
+  problemWith,
+} from './warm-entry-cache';
 
 const item = {
   word: 'tour',
@@ -72,5 +78,28 @@ describe('Chinese to Spanish and French answer checks', () => {
 
   test('checks the sense count for both pairs', () => {
     expect(checkAnswer(word, ['banque'], 'zh-fr')).toContain('expected 2');
+  });
+});
+
+describe('Korean pair answer checks', () => {
+  const sense = 'noun: book';
+
+  test('Korean to Chinese answers must hold Chinese and no English words', () => {
+    expect(checkAnswer({ word: '책', senses: [sense] }, ['书、书籍'], 'ko-zh')).toBeNull();
+    expect(checkAnswer({ word: '책', senses: [sense] }, ['the book'], 'ko-zh')).toContain(
+      'no Chinese',
+    );
+  });
+
+  test('Chinese to Korean answers must be Hangul without kana or copied English', () => {
+    expect(koreanProblemWith('책, 서적', sense)).toBeNull();
+    expect(koreanProblemWith('', sense)).toBe('empty gloss');
+    expect(koreanProblemWith('本', sense)).toBe('Han characters in gloss');
+    expect(koreanProblemWith('ほん', sense)).toBe('kana or bopomofo in gloss');
+    expect(koreanProblemWith('book', sense)).toBe('no Korean in gloss');
+    expect(
+      koreanProblemWith('보조 용언 (Classifier: 个)', 'classifier: (Classifier: 个)'),
+    ).toBeNull();
+    expect(koreanProblemWith('x'.repeat(101), sense)).toBe('gloss too long');
   });
 });

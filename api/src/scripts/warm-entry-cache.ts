@@ -2,7 +2,7 @@
  * Fill the shared entry cache ahead of time with Chinese meanings for common
  * dictionary words.
  *
- *   bun run src/scripts/warm-entry-cache.ts translate <in.json> <out.jsonl> [--pair fr-zh|en-fr|zh-es|zh-fr] [--task word-gloss|context-rich] [--concurrency 4]
+ *   bun run src/scripts/warm-entry-cache.ts translate <in.json> <out.jsonl> [--pair fr-zh|en-fr|zh-es|zh-fr|ko-zh|zh-ko] [--task word-gloss|context-rich] [--concurrency 4]
  *   bun run src/scripts/warm-entry-cache.ts import <out.jsonl>... [--language fr] [--native zh-CN]
  *
  * `translate` asks the deployment's managed model, one word per request, and
@@ -28,8 +28,9 @@ interface Item {
 /**
  * `fr-zh`: French words, Chinese meanings. `en-fr`: English words, French equivalents.
  * `zh-es` and `zh-fr`: Chinese words, Spanish or French equivalents of their English senses.
+ * `ko-zh`: Korean words, Chinese meanings. `zh-ko`: Chinese words, Korean equivalents.
  */
-export type Pair = 'fr-zh' | 'en-fr' | 'zh-es' | 'zh-fr';
+export type Pair = 'fr-zh' | 'en-fr' | 'zh-es' | 'zh-fr' | 'ko-zh' | 'zh-ko';
 
 const ENGLISH_WORDS =
   /\b(the|of|and|to|used|with|for|before|is|from|letter|person|plural|singular|indicative|present|past|form|alternative|variant|spelling)\b/i;
@@ -70,6 +71,22 @@ export function latinProblemWith(gloss: unknown, englishSense: string): string |
   return null;
 }
 
+export function koreanProblemWith(gloss: unknown, englishSense: string): string | null {
+  if (typeof gloss !== 'string' || !gloss.trim()) return 'empty gloss';
+  if (gloss.length > 100) return 'gloss too long';
+  if (/[\u3040-\u30ff\u3100-\u312f]/.test(gloss)) return 'kana or bopomofo in gloss';
+  if (/[\u4e00-\u9fff]/.test(gloss) && !/[\u4e00-\u9fff]/.test(englishSense)) {
+    return 'Han characters in gloss';
+  }
+  if (!/[가-힣]/.test(gloss)) return 'no Korean in gloss';
+  const plain = englishSense
+    .replace(/^[^:]*:\s*/, '')
+    .trim()
+    .toLowerCase();
+  if (plain.length > 25 && gloss.trim().toLowerCase() === plain) return 'English text copied';
+  return null;
+}
+
 export function checkAnswer(item: Item, glosses: unknown, pair: Pair = 'fr-zh'): string | null {
   if (!Array.isArray(glosses) || glosses.length !== item.senses.length) {
     return `expected ${item.senses.length} glosses`;
@@ -78,9 +95,11 @@ export function checkAnswer(item: Item, glosses: unknown, pair: Pair = 'fr-zh'):
     const problem =
       pair === 'en-fr'
         ? frenchProblemWith(gloss, item.senses[i])
-        : pair === 'fr-zh'
+        : pair === 'fr-zh' || pair === 'ko-zh'
           ? problemWith(gloss)
-          : latinProblemWith(gloss, item.senses[i]);
+          : pair === 'zh-ko'
+            ? koreanProblemWith(gloss, item.senses[i])
+            : latinProblemWith(gloss, item.senses[i]);
     if (problem) return `${problem}: ${String(gloss).slice(0, 40)}`;
   }
   const distinctSenses = new Set(item.senses.map((s) => s.replace(/^[^:]*:\s*/, ''))).size;
@@ -112,14 +131,29 @@ Rules:
 5. "chinese_meanings" are human translations of the same English word into Chinese. Use them only to understand which meaning is meant. Never output Chinese.
 6. Prefer common, natural modern French. Proper nouns: the usual French name.`;
 
-function rulesForChinese(target: 'Spanish' | 'French'): string {
+const RULES_KO_ZH = `You translate dictionary meanings for a Korean dictionary used by Chinese learners of Korean.
+For every English sense, write the Simplified Chinese gloss. Reply with ONLY JSON: {"glosses": ["<Chinese for sense 1>", ...]} with exactly one gloss per sense, in order.
+
+Rules:
+1. Short dictionary style, at most 60 characters. Give the 1 to 4 most common Chinese equivalents of THAT sense. Separate near-synonyms with "、" and different meanings with "；".
+2. Different senses get different glosses that match their own English text. Do not repeat one gloss for all senses.
+3. Do not repeat the part-of-speech label. No pinyin, no romanization, no English words, no explanations or examples.
+4. An inflected or particle-attached form ("polite present of 가다", "topic-marked form of 나") is written as the Korean base word plus Chinese grammar terms, for example "가다 的非格式体现在时", "나 的主题形式".
+5. Never invent a meaning that is not in the English sense. Name every meaning the English gloss lists.
+6. Prefer common, natural modern Mandarin. For a rare technical or historical sense, give a short plain Chinese explanation.`;
+
+function rulesForChinese(target: 'Spanish' | 'French' | 'Korean'): string {
   return `You translate dictionary meanings for a Chinese dictionary used by ${target} learners of Chinese.
 For every English sense, write the ${target} equivalent. Reply with ONLY JSON: {"glosses": ["<${target} for sense 1>", ...]} with exactly one gloss per sense, in order.
 
 Rules:
 1. Give short ${target} equivalents, the way a bilingual dictionary does: one to four words or a short phrase per meaning, at most 80 characters. Separate near-synonyms with ", " and clearly different meanings with " ; ". Never write a long definition, even when the English sense is one: give the word(s) a bilingual dictionary would give.
 2. Different senses get different glosses that match their own English text. Do not repeat one gloss for all senses.
-3. Do not repeat the part-of-speech label. No English sentences, no pinyin, no examples. Put a verb in the infinitive.
+3. Do not repeat the part-of-speech label. No English sentences, no pinyin, no examples. ${
+    target === 'Korean'
+      ? 'Put a verb or adjective in the dictionary form that ends in 다. Write Hangul only, no romanization.'
+      : 'Put a verb in the infinitive.'
+  }
 4. Keep Chinese characters that the English sense itself shows, such as a measure word in "(Classifier: 个)", and explain them in ${target}.
 5. A grammar particle or function word gets a short plain ${target} explanation of what it does, for example "partícula de aspecto perfectivo" or "particule d'aspect accompli".
 6. Prefer common, natural modern ${target}. Proper nouns: the usual ${target} name.`;
@@ -129,7 +163,7 @@ function userPrompt(item: Item, feedback: string | null, pair: Pair): string {
   const payload =
     pair === 'en-fr'
       ? { word: item.word, senses: item.senses, chinese_meanings: item.zh ?? [] }
-      : pair === 'zh-es' || pair === 'zh-fr'
+      : pair === 'zh-es' || pair === 'zh-fr' || pair === 'zh-ko' || pair === 'ko-zh'
         ? { word: item.word, senses: item.senses }
         : {
             word: item.word,
@@ -144,7 +178,11 @@ function userPrompt(item: Item, feedback: string | null, pair: Pair): string {
         ? rulesForChinese('Spanish')
         : pair === 'zh-fr'
           ? rulesForChinese('French')
-          : RULES_FR_ZH;
+          : pair === 'zh-ko'
+            ? rulesForChinese('Korean')
+            : pair === 'ko-zh'
+              ? RULES_KO_ZH
+              : RULES_FR_ZH;
   return `${rules}\n\nInput:\n${JSON.stringify(payload, null, 1)}${
     feedback ? `\n\nYour previous answer was rejected (${feedback}). Fix it.` : ''
   }`;
