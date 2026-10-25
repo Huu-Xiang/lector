@@ -32,10 +32,10 @@ export default function SettingsPage() {
     <main className="mx-auto max-w-3xl px-4 py-8">
       <PageHeader title={t('pageTitle')} />
       <div className="space-y-8">
+        {lectorMode() === 'cloud' && <FeedbackCard />}
         {lectorMode() === 'cloud' && <CloudPlanSettings />}
         {lectorMode() === 'cloud' && <CnRefund />}
         {lectorMode() === 'cloud' && <InviteCard />}
-        {lectorMode() === 'cloud' && <FeedbackCard />}
         <LanguagesSettings />
         <section className="panel space-y-6 p-6" data-testid="language-preferences">
           <div>

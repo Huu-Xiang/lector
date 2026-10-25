@@ -19,6 +19,7 @@ import NavLink from './components/NavLink';
 import AppName from './components/AppName';
 import AccountMenu from './components/AccountMenu';
 import AdminNavLink from './components/AdminNavLink';
+import FeedbackNavLink from './components/FeedbackNavLink';
 import SidebarCollapseButton from './components/SidebarCollapseButton';
 import PendingInvite from '@/components/PendingInvite';
 import WhatsNew from '@/components/WhatsNew';
@@ -100,6 +101,7 @@ export default function NavHeader() {
             );
           })}
           <AdminNavLink isMobile={false} collapsed={collapsed} />
+          <FeedbackNavLink collapsed={collapsed} />
         </nav>
 
         <AiQuota compact={collapsed} />

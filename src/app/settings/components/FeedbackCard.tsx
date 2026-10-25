@@ -9,10 +9,14 @@ export default function FeedbackCard() {
   const locale = useLocale();
   if (!locale.startsWith('zh')) return null;
   return (
-    <section className="panel flex flex-col gap-4 p-6 sm:flex-row" data-testid="feedback-card">
-      <div className="space-y-2">
-        <h2 className="text-lg font-semibold text-foreground">{t('title')}</h2>
-        <p className="text-sm text-muted-foreground">{t('body')}</p>
+    <section
+      id="feedback"
+      className="panel flex scroll-mt-6 flex-col items-center gap-6 border-primary/40 p-6 sm:flex-row sm:p-8"
+      data-testid="feedback-card"
+    >
+      <div className="flex-1 space-y-3">
+        <h2 className="text-2xl font-semibold text-foreground">{t('title')}</h2>
+        <p className="text-base text-muted-foreground">{t('body')}</p>
       </div>
       <Image
         src="/wechat-qr.jpg"
@@ -20,7 +24,7 @@ export default function FeedbackCard() {
         width={888}
         height={1137}
         unoptimized
-        className="h-auto w-44 shrink-0 self-center rounded-lg bg-white sm:self-start"
+        className="h-auto w-64 shrink-0 rounded-xl bg-white shadow-md sm:w-72"
       />
     </section>
   );

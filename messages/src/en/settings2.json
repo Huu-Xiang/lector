@@ -328,7 +328,8 @@
     "feedback": {
       "title": "Feedback and chat",
       "body": "Questions, feature ideas, a wrong meaning? Scan the code to add me on WeChat. I build Readfox. Please write \"Readfox\" in the friend request.",
-      "alt": "WeChat QR code of the Readfox author"
+      "alt": "WeChat QR code of the Readfox author",
+      "nav": "Feedback"
     }
   },
   "subscribe": {
