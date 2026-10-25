@@ -103,6 +103,7 @@ export default function TranslationDrawer({
   const currentState = wordState ?? existingEntry?.state ?? 'new';
   const stateColors = wordStateColors[currentState];
   const isPhrase = word.includes(' ');
+  const longTitle = isPhrase || word.length > 30;
   // After a nested lookup (issue #106) the drawer keeps the sentence of the
   // word the user originally clicked — genuine provenance, but not context
   // for the current word unless it actually occurs in it ("sien" is not in
@@ -188,7 +189,15 @@ export default function TranslationDrawer({
                     className={`h-2.5 w-2.5 flex-shrink-0 rounded-full ${stateColors.dot}`}
                     title={t(`state.${currentState}`)}
                   />
-                  <h2 className="text-xl font-semibold break-words text-foreground">
+                  <h2
+                    className={clsx(
+                      'font-semibold break-words text-foreground',
+                      longTitle
+                        ? 'line-clamp-2 text-base lg:line-clamp-none lg:text-xl'
+                        : 'text-xl',
+                    )}
+                    title={longTitle ? word : undefined}
+                  >
                     <TargetText>{word}</TargetText>
                   </h2>
                   {speakable && (
