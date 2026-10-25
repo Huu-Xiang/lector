@@ -101,8 +101,15 @@ export default function LanguageSelector({
   // The active language is always listed, whatever the stored list says.
   const listed = normalizeEnabledLanguages([...enabledCodes, activeLang.code]);
   const addable = withoutNative(availableLanguages(listed), native);
+  const addableReady = addable.filter((code) => isLanguageReady(code, ready));
+  const addableLater = addable.filter((code) => !isLanguageReady(code, ready));
 
-  function languageRow(code: LanguageCode, testIdPrefix: string, markActive: boolean) {
+  function languageRow(
+    code: LanguageCode,
+    testIdPrefix: string,
+    markActive: boolean,
+    showBadge = true,
+  ) {
     const isActive = markActive && code === activeLang.code;
     const inDevelopment = !markActive && !isLanguageReady(code, ready);
     const localized = languageDisplayName(code, locale, LANGUAGES[code].name);
@@ -114,17 +121,17 @@ export default function LanguageSelector({
         data-testid={`${testIdPrefix}-${code}`}
         className={isActive ? 'font-medium' : undefined}
       >
-        <span className="text-lg">{LANGUAGES[code].flag}</span>
-        <span>{LANGUAGES[code].native}</span>
+        <span className="shrink-0 text-lg">{LANGUAGES[code].flag}</span>
+        <span className="shrink-0 whitespace-nowrap">{LANGUAGES[code].native}</span>
         {localized !== LANGUAGES[code].native && (
-          <span className="text-xs text-muted-foreground">{localized}</span>
+          <span className="min-w-0 truncate text-xs text-muted-foreground">{localized}</span>
         )}
-        {inDevelopment && (
-          <span className="ml-auto rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
+        {inDevelopment && showBadge && (
+          <span className="ml-auto shrink-0 rounded-full bg-muted px-2 py-0.5 text-xs whitespace-nowrap text-muted-foreground">
             {t('inDevelopment')}
           </span>
         )}
-        {isActive && <Check className="ml-auto size-4" />}
+        {isActive && <Check className="ml-auto size-4 shrink-0" />}
       </DropdownMenuItem>
     );
   }
@@ -146,9 +153,20 @@ export default function LanguageSelector({
   );
 
   const menuItems = listed.map((code) => languageRow(code, 'language-option', true));
-  const addItems = addOpen
-    ? addable.map((code) => languageRow(code, 'language-add-option', false))
-    : null;
+  const addItems = addOpen ? (
+    <>
+      {addableReady.map((code) => languageRow(code, 'language-add-option', false))}
+      {addableLater.length > 0 && (
+        <div
+          className="px-3 pt-3 pb-1 text-xs text-muted-foreground"
+          data-testid="language-add-later"
+        >
+          {t('inDevelopment')}
+        </div>
+      )}
+      {addableLater.map((code) => languageRow(code, 'language-add-option', false, false))}
+    </>
+  ) : null;
 
   const addSection =
     addable.length > 0 ? (
@@ -220,7 +238,7 @@ export default function LanguageSelector({
       <DropdownMenuContent
         align={variant === 'compact' ? 'end' : 'start'}
         aria-label={t('select')}
-        className={`${variant === 'compact' ? 'w-44' : 'min-w-44'} max-h-80 overflow-y-auto`}
+        className={`${variant === 'compact' ? 'w-52' : 'min-w-56'} max-h-80 overflow-y-auto`}
       >
         {searchBox}
         {searching ? (
