@@ -22,6 +22,7 @@ import PageHeader from '@/components/PageHeader';
 import BYOKSettings from './components/BYOKSettings';
 import CloudPlanSettings from './components/CloudPlanSettings';
 import InviteCard from './components/InviteCard';
+import FeedbackCard from './components/FeedbackCard';
 import { lectorMode } from '@/lib/api-base';
 import { useTranslations } from 'next-intl';
 
@@ -34,6 +35,7 @@ export default function SettingsPage() {
         {lectorMode() === 'cloud' && <CloudPlanSettings />}
         {lectorMode() === 'cloud' && <CnRefund />}
         {lectorMode() === 'cloud' && <InviteCard />}
+        {lectorMode() === 'cloud' && <FeedbackCard />}
         <LanguagesSettings />
         <section className="panel space-y-6 p-6" data-testid="language-preferences">
           <div>
