@@ -1,15 +1,8 @@
 #!/usr/bin/env python3
 """Generate the Korean starter wordlist from scripts/starter/ko-seed-words.txt.
 
-wordfreq lists Korean as morphemes (하, 들, 어), so the frequency route of
-gen-starter-wordlist.py yields stems and grammar, not words a learner can read.
-The seed file is a hand-ordered beginner vocabulary instead: most basic first, in
-dictionary form. This script keeps each word the on-device dictionary resolves
-(exact headword, else inflection to lemma), drops duplicates, grammar-only and
-proper-name entries, and writes the first N as languages/ko/content/starter/wordlist.json.
-
-Usage: python3 scripts/gen-starter-wordlist-ko.py [--top 1000] [--report]
-Needs data/dictionary-ko.db (fetch per dict.env). The output is a committed artifact.
+wordfreq lists Korean as morphemes (하, 들, 어), so the seed file is a hand-ordered beginner vocabulary.
+Usage: python3 scripts/gen-starter-wordlist-ko.py [--top 1000] [--report]. Needs data/dictionary-ko.db.
 """
 import argparse
 import json

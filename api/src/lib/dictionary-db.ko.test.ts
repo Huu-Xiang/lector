@@ -81,14 +81,36 @@ beforeAll(() => {
   // 집을 is the noun 집 plus 을, and also an adnominal of the unrelated verb 집다.
   entry.run('집다', 10);
   sense.run('집다', 'verb', 'to pick up');
+  // The real dictionary lists the hanja 扠 for 집을 ahead of 집다.
+  entry.run('扠', null);
+  sense.run('扠', 'character', 'to pick');
+  inflection.run('집을', '扠', 'eumhun');
   inflection.run('집을', '집다', 'determiner,formal,future');
   inflection.run('먹는', '먹다', 'determiner,formal,present');
+  for (const [word, pos, gloss] of [
+    ['주', 'noun', 'week'],
+    ['주다', 'verb', 'to give'],
+    ['우리', 'pron', 'we'],
+    ['우리다', 'verb', 'to soak'],
+    ['물', 'noun', 'water'],
+    ['묻다', 'verb', 'to ask'],
+  ] as const) {
+    entry.run(word, 10);
+    sense.run(word, pos, gloss);
+  }
+  inflection.run('주는', '주다', 'determiner,formal,present');
+  inflection.run('우리는', '우리다', 'determiner,formal,present');
+  inflection.run('물을', '묻다', 'determiner,formal,future');
   db.close();
   process.env.DICT_DIR = FIXTURE_DIR;
   fs.mkdirSync(path.join(STARTER_DIR, 'ko', 'content', 'starter'), { recursive: true });
   fs.writeFileSync(
     path.join(STARTER_DIR, 'ko', 'content', 'starter', 'wordlist.json'),
-    JSON.stringify({ words: [{ lemma: '집' }, { lemma: '먹다' }, { lemma: '마시다' }] }),
+    JSON.stringify({
+      words: ['집', '주', '주다', '먹다', '마시다', '물', '묻다', '우리'].map((lemma) => ({
+        lemma,
+      })),
+    }),
   );
   process.env.STARTER_CONTENT_ROOT = STARTER_DIR;
 });
@@ -186,5 +208,14 @@ describe('unranked inflection ties', () => {
   test('a real adnominal form keeps its verb', () => {
     const entry = lookupWord(USER, '먹는', 'ko');
     expect(entry?.lemmaInfo?.stem).toBe('먹다');
+  });
+
+  test('a listed noun beats an unlisted verb, as 는 too', () => {
+    expect(lookupWord(USER, '우리는', 'ko')?.lemmaInfo?.stem).toBe('우리');
+  });
+
+  test('a listed noun beats a listed verb only as 을 or 은 after a final consonant', () => {
+    expect(lookupWord(USER, '물을', 'ko')?.lemmaInfo?.stem).toBe('물');
+    expect(lookupWord(USER, '주는', 'ko')?.lemmaInfo?.stem).toBe('주다');
   });
 });

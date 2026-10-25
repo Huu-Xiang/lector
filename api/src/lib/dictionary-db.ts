@@ -408,18 +408,14 @@ export function invalidateDictionaryCache(language: string): void {
   _stmtsByLang.delete(language);
 }
 
-/**
- * Resolve an inflected form to one lemma. The SQL prefers the lemma with the best
- * entry rank. A dictionary with no ranks (ko) keeps insertion order, which puts
- * 마다 "to smash" ahead of 마시다 "to drink" for 마셔요, so ties among unranked
- * lemmas go to the one the pack's starter wordlist lists first.
- */
+// An unranked dictionary (ko) keeps insertion order, so 마셔요 gave 마다 "to smash".
+// Ties among unranked lemmas go to the one the starter wordlist lists first.
 function inflectionLemmaStatement(db: Database, priority: Map<string, number> | null): Statement {
   const base = db.prepare(
     `SELECT i.lemma, i.type, e.rank FROM inflections i
      JOIN entries e ON e.word = i.lemma
      WHERE i.inflected_form = ?
-     ORDER BY (e.rank IS NULL), e.rank, i.rowid LIMIT ?`,
+     ORDER BY (e.rank IS NULL), e.rank, (i.type IN ('eumhun', 'hangeul')), i.rowid LIMIT ?`,
   );
   if (!priority) {
     return { get: (key: string) => base.get(key, 1) } as unknown as Statement;
@@ -443,6 +439,9 @@ function inflectionLemmaStatement(db: Database, priority: Map<string, number> | 
 }
 
 function starterLemmaPriority(language: string): Map<string, number> | null {
+  if (!isValidLanguageCode(language) || !getLanguageConfig(language).morphology?.citation) {
+    return null;
+  }
   const root =
     process.env.STARTER_CONTENT_ROOT || path.resolve(import.meta.dir, '../../../languages');
   try {
@@ -454,13 +453,9 @@ function starterLemmaPriority(language: string): Map<string, number> | null {
   }
 }
 
-/**
- * Korean noun plus particle collides with an adnominal verb form: 집을 is 집 plus 을,
- * and kaikki also lists it as 집다 "to pick up". When the inflection is such an
- * adnominal and the peeled stem ranks higher in the pack's starter wordlist than the
- * inflected lemma, the peeled stem wins. Words outside the wordlist keep the
- * inflection answer.
- */
+// kaikki lists 집을 and 우리는 as adnominals of 집다 and 우리다 as well as noun plus particle.
+// A listed noun wins over an unlisted verb. Over a listed verb it wins only as 을 or 은 after
+// a final consonant (물을), never as 는 (주는 stays 주다).
 function preferPeeledStem(
   stmts: Stmts,
   language: string,
@@ -468,15 +463,23 @@ function preferPeeledStem(
   infl: { lemma: string; type: string | null },
 ): { row: EntryRow; info: { stem: string; label: string } } | null {
   const priority = stmts.starterPriority;
-  if (!priority || !infl.type?.includes('determiner') || !isValidLanguageCode(language))
+  if (!priority || !infl.type?.includes('determiner') || !isValidLanguageCode(language)) {
     return null;
+  }
   const morphology = getLanguageConfig(language).morphology;
   if (!morphology) return null;
   const inflRank = priority.get(infl.lemma) ?? Infinity;
   for (const candidate of stemCandidates(lower, morphology)) {
+    const [clitic] = candidate.peeled;
+    if (candidate.peeled.length !== 1 || !morphology.clitics.includes(clitic)) continue;
+    if (inflRank !== Infinity) {
+      const last = candidate.key.charCodeAt(candidate.key.length - 1);
+      const closed = last >= 0xac00 && last <= 0xd7a3 && (last - 0xac00) % 28 !== 0;
+      if (!closed || !['을', '은'].includes(clitic)) continue;
+    }
     const row = stmts.selectEntry.get(candidate.key) as EntryRow | undefined;
     if (row && (priority.get(row.word) ?? Infinity) < inflRank) {
-      return { row, info: { stem: row.word, label: `${candidate.peeled.join(' + ')} form of` } };
+      return { row, info: { stem: row.word, label: `${clitic} form of` } };
     }
   }
   return null;
@@ -526,8 +529,8 @@ function getStmts(language: string): Stmts | null {
       //
       // Both arms hit an index: entries.word is the PRIMARY KEY, and
       // inflections is covered by its (inflected_form, lemma) autoindex. The
-      // inflection arm repeats the ORDER BY of selectInflectionLemma so a
-      // surface form claimed by several lemmas resolves identically either way.
+      // inflection arm repeats the ORDER BY of selectInflectionLemma. Unranked ties
+      // use insertion order here and the starter wordlist order there.
       selectReadings: db.prepare(
         `SELECT k.value AS word,
                 COALESCE(

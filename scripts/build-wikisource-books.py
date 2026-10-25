@@ -1,13 +1,8 @@
 #!/usr/bin/env python3
-"""Turn Korean Wikisource pages into library book packs.
+"""Turn Korean Wikisource pages into library book packs (same output as build-library-books.py).
 
-Usage:
-  python3 -I scripts/build-wikisource-books.py --raw <dir> --out languages/ko/content/library [--fetch] [--only slug,slug]
-
-Each book lists Wikisource page titles. `--fetch` downloads their wikitext into
-<raw>/<slug>/NNN.wiki (one request per page, throttled); without it the build
-reads that cache. The raw files are never committed. The output matches
-build-library-books.py: <out>/<slug>/manifest.json plus NN.md lesson files.
+Usage: python3 -I scripts/build-wikisource-books.py --raw <cache dir> --out languages/ko/content/library [--fetch] [--only slug,slug]
+--fetch downloads each book's wikitext into <raw>/<slug>/NNN.wiki. The cache is never committed.
 """
 import argparse
 import json
@@ -25,13 +20,9 @@ LICENSE = "Public domain (the author died more than 70 years ago); Wikisource tr
 LESSON_WORDS = 650
 
 
-def pages(prefix: str, numeric: bool = False) -> dict:
-    return dict(prefix=prefix, numeric=numeric)
-
-
 BOOKS = [
     dict(slug="sarang-seonmul", title="사랑의 선물", author="방정환 (편역)", level="B1", short="사랑의 선물",
-         prefix="사랑의 선물/", exclude=("한레네의 죽음", "마음의 꽃"), by_page=True,
+         prefix="사랑의 선물/", exclude=("한레네의 죽음", "마음의 꽃"),
          order=["산드룡의 유리 구두", "왕자와 제비", "잠자는 왕녀", "꽃 속의 작은이", "어린 음악가", "난파선", "요술왕 아아", "천당가는 길", "한네레의 죽음"],
          page="사랑의 선물"),
     dict(slug="chilchildan-bimil", title="칠칠단의 비밀", author="방정환", level="B2", short="칠칠단의 비밀",
@@ -214,7 +205,8 @@ def build(book: dict, raw_dir: Path, out_dir: Path) -> None:
         block = ([f"## {heading}"] if heading else []) + pars
         w = sum(words(p) for p in block)
         long = w > cap
-        if count and count + w > cap and (not long or count >= lesson_words * 0.4):
+        story_book = bool(heading) and not book.get('verse') and not book.get('numeric')
+        if count and (story_book or (count + w > cap and (not long or count >= lesson_words * 0.4))):
             lessons.append([])
             labels.append("")
             count = 0

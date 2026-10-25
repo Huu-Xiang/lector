@@ -57,18 +57,24 @@ test.describe('Word drawer on small screens', () => {
       await page.setViewportSize(size);
       collectionId = await openLesson(page);
 
-      const word = page.getByRole('button', { name: 'Look up Perdekraal-fees' }).first();
+      const word = page.getByRole('button', { name: 'Look up Perdekraal-fees' }).last();
+      await word.scrollIntoViewIfNeeded();
       await word.click();
 
       const drawer = page.getByTestId('translation-drawer');
-      await expect(drawer).toHaveClass(/translate-y-0/, { timeout: 5000 });
+      await expect(drawer).toHaveClass(/(^|\s)translate-y-0(\s|$)/, { timeout: 5000 });
       await expect(drawer.getByRole('heading', { name: 'Perdekraal-fees' })).toBeVisible();
 
+      await expect
+        .poll(async () => {
+          const settled = await drawer.boundingBox();
+          return settled ? Math.round(settled.y + settled.height) : null;
+        })
+        .toBe(size.height);
       const box = await drawer.boundingBox();
       expect(box).not.toBeNull();
       expect(box!.width).toBeCloseTo(size.width, 0);
       expect(box!.height).toBeLessThan(size.height * 0.6);
-      expect(box!.y + box!.height).toBeCloseTo(size.height, 0);
 
       await expect(page.locator('[data-active-word]').first()).toBeVisible();
       await expect
@@ -87,9 +93,9 @@ test.describe('Word drawer on small screens', () => {
     collectionId = await openLesson(page);
     await page.getByRole('button', { name: 'Look up Perdekraal-fees' }).first().click();
     const drawer = page.getByTestId('translation-drawer');
-    await expect(drawer).toHaveClass(/translate-y-0/, { timeout: 5000 });
+    await expect(drawer).toHaveClass(/(^|\s)translate-y-0(\s|$)/, { timeout: 5000 });
 
-    await page.getByRole('button', { name: /close/i }).first().click();
+    await drawer.getByRole('button', { name: /close/i }).click();
     await expect(drawer).toHaveClass(/translate-y-full/);
   });
 
@@ -98,7 +104,7 @@ test.describe('Word drawer on small screens', () => {
     collectionId = await openLesson(page);
     await page.getByRole('button', { name: 'Look up Perdekraal-fees' }).first().click();
     const drawer = page.getByTestId('translation-drawer');
-    await expect(drawer).toHaveClass(/translate-x-0/, { timeout: 5000 });
+    await expect(drawer).toHaveClass(/(^|\s)translate-x-0(\s|$)/, { timeout: 5000 });
 
     const box = await drawer.boundingBox();
     expect(box!.width).toBeCloseTo(384, 0);

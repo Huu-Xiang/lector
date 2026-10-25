@@ -100,10 +100,13 @@ const db = new Database(dictPath, { readonly: true, fileMustExist: true });
 const selectEntry = db.prepare('SELECT word FROM entries WHERE word = ?');
 const selectLemmas = db.prepare(
   `SELECT i.lemma, i.type, e.rank FROM inflections i JOIN entries e ON e.word = i.lemma
-   WHERE i.inflected_form = ? ORDER BY (e.rank IS NULL), e.rank, i.rowid LIMIT 16`,
+   WHERE i.inflected_form = ?
+   ORDER BY (e.rank IS NULL), e.rank, (i.type IN ('eumhun', 'hangeul')), i.rowid LIMIT 16`,
 );
 // Same tie-break as api/src/lib/dictionary-db.ts: among unranked lemmas the wordlist order wins.
-const priority = new Map(wordlist.map((w, i) => [w.lemma, i] as const));
+// Korean only (pack morphology has a citation ending), as in dictionary-db.ts.
+const korean = Boolean(pack.morphology?.citation);
+const priority = new Map(korean ? wordlist.map((w, i) => [w.lemma, i] as const) : []);
 const selectLemma = {
   get(key: string): { lemma: string; type: string | null } | null {
     const rows = selectLemmas.all(key) as Array<{
@@ -121,7 +124,7 @@ const selectLemma = {
 };
 const resolve: Resolver = (folded) => {
   const exact = selectEntry.get(folded) as { word: string } | null;
-  if (exact && priority.has(exact.word)) return exact.word;
+  if (exact && (!korean || priority.has(exact.word))) return exact.word;
   if (exact) {
     // A conjugated form has its own entry (가요, 먹어요). It counts as its lemma
     // when the wordlist holds the lemma, which is what the learner studies.
@@ -138,9 +141,16 @@ const resolve: Resolver = (folded) => {
   const infl = selectLemma.get(folded);
   if (infl) {
     // A noun plus particle (집을) beats an unrelated adnominal verb form (집다), as in lookupWord.
-    if (pack.morphology && infl.type?.includes('determiner')) {
+    if (korean && pack.morphology && infl.type?.includes('determiner')) {
       const inflRank = priority.get(infl.lemma) ?? Infinity;
       for (const candidate of stemCandidates(folded, pack.morphology)) {
+        const [clitic] = candidate.peeled;
+        if (candidate.peeled.length !== 1 || !pack.morphology.clitics.includes(clitic)) continue;
+        if (inflRank !== Infinity) {
+          const last = candidate.key.charCodeAt(candidate.key.length - 1);
+          const closed = last >= 0xac00 && last <= 0xd7a3 && (last - 0xac00) % 28 !== 0;
+          if (!closed || !['을', '은'].includes(clitic)) continue;
+        }
         const hit = selectEntry.get(candidate.key) as { word: string } | null;
         if (hit && (priority.get(hit.word) ?? Infinity) < inflRank) return hit.word;
       }

@@ -91,6 +91,12 @@ describe('Korean pair answer checks', () => {
     );
   });
 
+  test('the zh-ko pair routes through the Korean check', () => {
+    const item = { word: '本', senses: [sense] };
+    expect(checkAnswer(item, ['책'], 'zh-ko')).toBeNull();
+    expect(checkAnswer(item, ['book'], 'zh-ko')).toContain('no Korean');
+  });
+
   test('Chinese to Korean answers must be Hangul without kana or copied English', () => {
     expect(koreanProblemWith('책, 서적', sense)).toBeNull();
     expect(koreanProblemWith('', sense)).toBe('empty gloss');
