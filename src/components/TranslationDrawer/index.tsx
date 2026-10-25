@@ -15,6 +15,15 @@ import NestedWordButton from './components/NestedWordButton';
 import Gloss from './components/Gloss';
 import { EntryBadges, EntryExtras, SenseGroups } from './components/EntryDetails';
 import { lookupAnnouncement } from './lookup-announcement';
+import {
+  SHEET_VH_CLOSE_BELOW,
+  SHEET_VH_DEFAULT,
+  applySheetVh,
+  clampSheetVh,
+  readStoredSheetVh,
+  sheetVhFromPointer,
+  storeSheetVh,
+} from './sheet-height';
 
 export { type ExpandedDictionaryEntry } from './types';
 export { TranslationDrawerSlot } from './slot';
@@ -53,8 +62,13 @@ export default function TranslationDrawer({
   const t = useTranslations('reader.drawer');
   const pack = useActiveLanguage();
   const drawerRef = useRef<HTMLDivElement>(null);
-  const swipeStartY = useRef<number | null>(null);
+  const dragStartVh = useRef<number | null>(null);
+  const dragVh = useRef(0);
   const [relatedExpanded, setRelatedExpanded] = useState(false);
+  useEffect(() => {
+    const stored = readStoredSheetVh();
+    if (stored !== null) applySheetVh(stored);
+  }, []);
   const screenSize = useScreenSize();
   // Anki push status for single-word cards
   const [ankiStatus, setAnkiStatus] = useState<'idle' | 'loading' | 'done' | 'error'>('idle');
@@ -166,18 +180,34 @@ export default function TranslationDrawer({
           {!docked && (
             <div
               data-testid="translation-drawer-handle"
-              className="flex flex-shrink-0 touch-none justify-center pt-2 pb-1 lg:hidden"
-              onTouchStart={(e) => {
-                swipeStartY.current = e.touches[0]?.clientY ?? null;
+              className="flex flex-shrink-0 cursor-row-resize touch-none justify-center pt-3 pb-2 lg:hidden"
+              onPointerDown={(e) => {
+                e.currentTarget.setPointerCapture(e.pointerId);
+                dragStartVh.current = readStoredSheetVh() ?? SHEET_VH_DEFAULT;
+                dragVh.current = dragStartVh.current;
               }}
-              onTouchEnd={(e) => {
-                const start = swipeStartY.current;
-                swipeStartY.current = null;
-                const end = e.changedTouches[0]?.clientY;
-                if (start != null && end != null && end - start > 50) onClose();
+              onPointerMove={(e) => {
+                if (dragStartVh.current === null) return;
+                dragVh.current = sheetVhFromPointer(e.clientY, window.innerHeight);
+                applySheetVh(clampSheetVh(dragVh.current));
+              }}
+              onPointerUp={() => {
+                const before = dragStartVh.current;
+                dragStartVh.current = null;
+                if (before === null) return;
+                if (dragVh.current < SHEET_VH_CLOSE_BELOW) {
+                  applySheetVh(before);
+                  onClose();
+                  return;
+                }
+                storeSheetVh(clampSheetVh(dragVh.current));
+              }}
+              onPointerCancel={() => {
+                if (dragStartVh.current !== null) applySheetVh(dragStartVh.current);
+                dragStartVh.current = null;
               }}
             >
-              <span className="h-1 w-10 rounded-full bg-border" />
+              <span className="h-1.5 w-12 rounded-full bg-border" />
             </div>
           )}
           {/* Header */}

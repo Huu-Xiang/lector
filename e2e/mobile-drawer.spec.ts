@@ -99,12 +99,69 @@ test.describe('Word drawer on small screens', () => {
     await expect(drawer).toHaveClass(/translate-y-full/);
   });
 
+  test('phone: dragging the handle resizes the sheet and the height is remembered', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    collectionId = await openLesson(page);
+    await page.getByRole('button', { name: 'Look up Perdekraal-fees' }).first().click();
+    const drawer = page.getByTestId('translation-drawer');
+    await expect(drawer).toHaveClass(/(^|\s)translate-y-0(\s|$)/, { timeout: 5000 });
+
+    await expect
+      .poll(async () => {
+        const settled = await drawer.boundingBox();
+        return settled ? Math.round(settled.y + settled.height) : null;
+      })
+      .toBe(844);
+    const handle = page.getByTestId('translation-drawer-handle');
+    const before = await drawer.boundingBox();
+    const grip = (await handle.boundingBox())!;
+    await page.mouse.move(grip.x + grip.width / 2, grip.y + grip.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(grip.x + grip.width / 2, 300, { steps: 8 });
+    await page.mouse.up();
+
+    await expect
+      .poll(async () => (await drawer.boundingBox())!.height)
+      .toBeGreaterThan(before!.height + 100);
+    await expect(drawer).toHaveClass(/(^|\s)translate-y-0(\s|$)/);
+    const resized = (await drawer.boundingBox())!.height;
+
+    await page.reload();
+    await page.waitForLoadState('networkidle');
+    await page.getByRole('button', { name: 'Look up Perdekraal-fees' }).first().click();
+    await expect(drawer).toHaveClass(/(^|\s)translate-y-0(\s|$)/, { timeout: 5000 });
+    await expect.poll(async () => (await drawer.boundingBox())!.height).toBeCloseTo(resized, -1);
+  });
+
+  test('phone: dragging the handle far down closes the sheet', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    collectionId = await openLesson(page);
+    await page.getByRole('button', { name: 'Look up Perdekraal-fees' }).first().click();
+    const drawer = page.getByTestId('translation-drawer');
+    await expect(drawer).toHaveClass(/(^|\s)translate-y-0(\s|$)/, { timeout: 5000 });
+
+    await expect
+      .poll(async () => {
+        const settled = await drawer.boundingBox();
+        return settled ? Math.round(settled.y + settled.height) : null;
+      })
+      .toBe(844);
+    const grip = (await page.getByTestId('translation-drawer-handle').boundingBox())!;
+    await page.mouse.move(grip.x + grip.width / 2, grip.y + grip.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(grip.x + grip.width / 2, 835, { steps: 8 });
+    await page.mouse.up();
+    await expect(drawer).toHaveClass(/translate-y-full/);
+  });
+
   test('desktop: the drawer stays a side panel', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 800 });
     collectionId = await openLesson(page);
     await page.getByRole('button', { name: 'Look up Perdekraal-fees' }).first().click();
     const drawer = page.getByTestId('translation-drawer');
-    await expect(drawer).toHaveClass(/(^|\s)translate-x-0(\s|$)/, { timeout: 5000 });
+    await expect(drawer).toHaveClass(/(^|\s)lg:translate-x-0(\s|$)/, { timeout: 5000 });
 
     const box = await drawer.boundingBox();
     expect(box!.width).toBeCloseTo(384, 0);
