@@ -1,0 +1,6008 @@
+{
+  "language": "ko",
+  "source": "seed",
+  "bandSize": 250,
+  "count": 1000,
+  "words": [
+    {
+      "rank": 1,
+      "lemma": "나",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 2,
+      "lemma": "저",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 3,
+      "lemma": "우리",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 4,
+      "lemma": "너",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 5,
+      "lemma": "당신",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 6,
+      "lemma": "내",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 7,
+      "lemma": "제",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 8,
+      "lemma": "이다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 9,
+      "lemma": "아니다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 10,
+      "lemma": "있다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 11,
+      "lemma": "없다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 12,
+      "lemma": "하다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 13,
+      "lemma": "되다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 14,
+      "lemma": "가다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 15,
+      "lemma": "오다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 16,
+      "lemma": "않다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 17,
+      "lemma": "사람",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 18,
+      "lemma": "학생",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 19,
+      "lemma": "선생님",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 20,
+      "lemma": "친구",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 21,
+      "lemma": "씨",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 22,
+      "lemma": "분",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 23,
+      "lemma": "한국",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 24,
+      "lemma": "서울",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 25,
+      "lemma": "도시",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 26,
+      "lemma": "나라",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 27,
+      "lemma": "학교",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 28,
+      "lemma": "이름",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 29,
+      "lemma": "여자",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 30,
+      "lemma": "남자",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 31,
+      "lemma": "안녕하세요",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 32,
+      "lemma": "안녕",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 33,
+      "lemma": "한국어",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 34,
+      "lemma": "영어",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 35,
+      "lemma": "배우다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 36,
+      "lemma": "가르치다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 37,
+      "lemma": "공부하다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 38,
+      "lemma": "살다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 39,
+      "lemma": "만나다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 40,
+      "lemma": "말하다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 41,
+      "lemma": "같이",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 42,
+      "lemma": "함께",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 43,
+      "lemma": "아주",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 44,
+      "lemma": "좋다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 45,
+      "lemma": "크다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 46,
+      "lemma": "작다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 47,
+      "lemma": "하지만",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 48,
+      "lemma": "그리고",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 49,
+      "lemma": "이것",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 50,
+      "lemma": "그것",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 51,
+      "lemma": "여기",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 52,
+      "lemma": "거기",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 53,
+      "lemma": "누구",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 54,
+      "lemma": "무엇",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 55,
+      "lemma": "뭐",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 56,
+      "lemma": "어디",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 57,
+      "lemma": "한",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 58,
+      "lemma": "그",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 59,
+      "lemma": "것",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 60,
+      "lemma": "거",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 61,
+      "lemma": "이런",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 62,
+      "lemma": "그런",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 63,
+      "lemma": "어떤",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 64,
+      "lemma": "무슨",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 65,
+      "lemma": "왜",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 66,
+      "lemma": "어떻게",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 67,
+      "lemma": "이",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 68,
+      "lemma": "공부",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 69,
+      "lemma": "사람들",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 70,
+      "lemma": "오늘",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 71,
+      "lemma": "어제",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 72,
+      "lemma": "내일",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 73,
+      "lemma": "지금",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 74,
+      "lemma": "아침",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 75,
+      "lemma": "점심",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 76,
+      "lemma": "저녁",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 77,
+      "lemma": "밤",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 78,
+      "lemma": "시간",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 79,
+      "lemma": "시",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 80,
+      "lemma": "일어나다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 81,
+      "lemma": "자다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 82,
+      "lemma": "먹다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 83,
+      "lemma": "마시다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 84,
+      "lemma": "물",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 85,
+      "lemma": "밥",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 86,
+      "lemma": "빵",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 87,
+      "lemma": "우유",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 88,
+      "lemma": "커피",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 89,
+      "lemma": "집",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 90,
+      "lemma": "버스",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 91,
+      "lemma": "타다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 92,
+      "lemma": "수업",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 93,
+      "lemma": "책",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 94,
+      "lemma": "읽다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 95,
+      "lemma": "쓰다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 96,
+      "lemma": "듣다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 97,
+      "lemma": "말",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 98,
+      "lemma": "어머니",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 99,
+      "lemma": "아버지",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 100,
+      "lemma": "엄마",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 101,
+      "lemma": "아빠",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 102,
+      "lemma": "많다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 103,
+      "lemma": "적다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 104,
+      "lemma": "조금",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 105,
+      "lemma": "많이",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 106,
+      "lemma": "모두",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 107,
+      "lemma": "또",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 108,
+      "lemma": "다시",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 109,
+      "lemma": "매일",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 110,
+      "lemma": "하루",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 111,
+      "lemma": "하나",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 112,
+      "lemma": "둘",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 113,
+      "lemma": "셋",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 114,
+      "lemma": "넷",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 115,
+      "lemma": "다섯",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 116,
+      "lemma": "여섯",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 117,
+      "lemma": "일곱",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 118,
+      "lemma": "여덟",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 119,
+      "lemma": "아홉",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 120,
+      "lemma": "열",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 121,
+      "lemma": "두",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 122,
+      "lemma": "세",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 123,
+      "lemma": "네",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 124,
+      "lemma": "춥다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 125,
+      "lemma": "덥다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 126,
+      "lemma": "날씨",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 127,
+      "lemma": "이렇게",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 128,
+      "lemma": "그렇게",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 129,
+      "lemma": "매우",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 130,
+      "lemma": "너무",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 131,
+      "lemma": "정말",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 132,
+      "lemma": "잘",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 133,
+      "lemma": "못",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 134,
+      "lemma": "더",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 135,
+      "lemma": "다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 136,
+      "lemma": "제일",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 137,
+      "lemma": "가장",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 138,
+      "lemma": "아니요",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 139,
+      "lemma": "감사합니다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 140,
+      "lemma": "고맙습니다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 141,
+      "lemma": "미안하다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 142,
+      "lemma": "고맙다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 143,
+      "lemma": "죄송하다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 144,
+      "lemma": "반갑다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 145,
+      "lemma": "바쁘다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 146,
+      "lemma": "쉽다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 147,
+      "lemma": "어렵다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 148,
+      "lemma": "웃다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 149,
+      "lemma": "좋아하다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 150,
+      "lemma": "싫어하다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 151,
+      "lemma": "보다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 152,
+      "lemma": "가게",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 153,
+      "lemma": "시장",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 154,
+      "lemma": "식당",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 155,
+      "lemma": "병원",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 156,
+      "lemma": "은행",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 157,
+      "lemma": "공원",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 158,
+      "lemma": "역",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 159,
+      "lemma": "길",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 160,
+      "lemma": "지하철",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 161,
+      "lemma": "근처",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 162,
+      "lemma": "앞",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 163,
+      "lemma": "뒤",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 164,
+      "lemma": "옆",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 165,
+      "lemma": "위",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 166,
+      "lemma": "아래",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 167,
+      "lemma": "안",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 168,
+      "lemma": "밖",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 169,
+      "lemma": "속",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 170,
+      "lemma": "나무",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 171,
+      "lemma": "꽃",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 172,
+      "lemma": "하늘",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 173,
+      "lemma": "비",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 174,
+      "lemma": "바람",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 175,
+      "lemma": "싸다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 176,
+      "lemma": "비싸다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 177,
+      "lemma": "편하다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 178,
+      "lemma": "빠르다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 179,
+      "lemma": "느리다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 180,
+      "lemma": "멀다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 181,
+      "lemma": "가깝다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 182,
+      "lemma": "넓다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 183,
+      "lemma": "좁다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 184,
+      "lemma": "예쁘다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 185,
+      "lemma": "깨끗하다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 186,
+      "lemma": "시끄럽다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 187,
+      "lemma": "조용하다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 188,
+      "lemma": "사다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 189,
+      "lemma": "팔다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 190,
+      "lemma": "돈",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 191,
+      "lemma": "값",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 192,
+      "lemma": "옷",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 193,
+      "lemma": "과일",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 194,
+      "lemma": "고기",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 195,
+      "lemma": "자주",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 196,
+      "lemma": "가끔",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 197,
+      "lemma": "항상",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 198,
+      "lemma": "여러분",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 199,
+      "lemma": "모든",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 200,
+      "lemma": "다른",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 201,
+      "lemma": "같다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 202,
+      "lemma": "다르다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 203,
+      "lemma": "저것",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 204,
+      "lemma": "저기",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 205,
+      "lemma": "몇",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 206,
+      "lemma": "얼마",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 207,
+      "lemma": "언제",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 208,
+      "lemma": "그러나",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 209,
+      "lemma": "그래서",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 210,
+      "lemma": "그런데",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 211,
+      "lemma": "그러면",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 212,
+      "lemma": "그래도",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 213,
+      "lemma": "또는",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 214,
+      "lemma": "의자",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 215,
+      "lemma": "책상",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 216,
+      "lemma": "앉다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 217,
+      "lemma": "나쁘다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 218,
+      "lemma": "길다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 219,
+      "lemma": "짧다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 220,
+      "lemma": "높다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 221,
+      "lemma": "낮다",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 222,
+      "lemma": "가족",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 223,
+      "lemma": "부모님",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 224,
+      "lemma": "형",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 225,
+      "lemma": "누나",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 226,
+      "lemma": "오빠",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 227,
+      "lemma": "언니",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 228,
+      "lemma": "동생",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 229,
+      "lemma": "남동생",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 230,
+      "lemma": "여동생",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 231,
+      "lemma": "아들",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 232,
+      "lemma": "딸",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 233,
+      "lemma": "아이",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 234,
+      "lemma": "아기",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 235,
+      "lemma": "할아버지",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 236,
+      "lemma": "할머니",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 237,
+      "lemma": "남편",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 238,
+      "lemma": "아내",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 239,
+      "lemma": "결혼",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 240,
+      "lemma": "나이",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 241,
+      "lemma": "살",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 242,
+      "lemma": "일",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 243,
+      "lemma": "삼",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 244,
+      "lemma": "사",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 245,
+      "lemma": "오",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 246,
+      "lemma": "육",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 247,
+      "lemma": "칠",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 248,
+      "lemma": "팔",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 249,
+      "lemma": "구",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 250,
+      "lemma": "십",
+      "zipf": 0,
+      "band": 1
+    },
+    {
+      "rank": 251,
+      "lemma": "백",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 252,
+      "lemma": "천",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 253,
+      "lemma": "만",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 254,
+      "lemma": "번",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 255,
+      "lemma": "명",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 256,
+      "lemma": "개",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 257,
+      "lemma": "사랑하다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 258,
+      "lemma": "행복하다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 259,
+      "lemma": "기쁘다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 260,
+      "lemma": "울다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 261,
+      "lemma": "방",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 262,
+      "lemma": "문",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 263,
+      "lemma": "창문",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 264,
+      "lemma": "침대",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 265,
+      "lemma": "사진",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 266,
+      "lemma": "이야기",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 267,
+      "lemma": "생일",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 268,
+      "lemma": "선물",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 269,
+      "lemma": "어른",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 270,
+      "lemma": "중국",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 271,
+      "lemma": "미국",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 272,
+      "lemma": "일본",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 273,
+      "lemma": "날",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 274,
+      "lemma": "달",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 275,
+      "lemma": "해",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 276,
+      "lemma": "년",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 277,
+      "lemma": "월",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 278,
+      "lemma": "주",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 279,
+      "lemma": "낮",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 280,
+      "lemma": "사이",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 281,
+      "lemma": "들어오다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 282,
+      "lemma": "나오다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 283,
+      "lemma": "두다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 284,
+      "lemma": "가지다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 285,
+      "lemma": "들다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 286,
+      "lemma": "보내다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 287,
+      "lemma": "음식",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 288,
+      "lemma": "맛",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 289,
+      "lemma": "맛있다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 290,
+      "lemma": "맛없다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 291,
+      "lemma": "맵다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 292,
+      "lemma": "달다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 293,
+      "lemma": "짜다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 294,
+      "lemma": "뜨겁다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 295,
+      "lemma": "차갑다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 296,
+      "lemma": "따뜻하다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 297,
+      "lemma": "배고프다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 298,
+      "lemma": "배부르다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 299,
+      "lemma": "목마르다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 300,
+      "lemma": "쌀",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 301,
+      "lemma": "김치",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 302,
+      "lemma": "불고기",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 303,
+      "lemma": "비빔밥",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 304,
+      "lemma": "라면",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 305,
+      "lemma": "생선",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 306,
+      "lemma": "야채",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 307,
+      "lemma": "채소",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 308,
+      "lemma": "과자",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 309,
+      "lemma": "케이크",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 310,
+      "lemma": "사탕",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 311,
+      "lemma": "아이스크림",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 312,
+      "lemma": "맥주",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 313,
+      "lemma": "술",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 314,
+      "lemma": "소금",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 315,
+      "lemma": "설탕",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 316,
+      "lemma": "계란",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 317,
+      "lemma": "달걀",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 318,
+      "lemma": "주스",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 319,
+      "lemma": "딸기",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 320,
+      "lemma": "바나나",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 321,
+      "lemma": "포도",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 322,
+      "lemma": "수박",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 323,
+      "lemma": "귤",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 324,
+      "lemma": "감자",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 325,
+      "lemma": "양파",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 326,
+      "lemma": "당근",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 327,
+      "lemma": "사과",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 328,
+      "lemma": "메뉴",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 329,
+      "lemma": "주문하다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 330,
+      "lemma": "시키다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 331,
+      "lemma": "계산하다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 332,
+      "lemma": "요리하다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 333,
+      "lemma": "식사",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 334,
+      "lemma": "아침밥",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 335,
+      "lemma": "접시",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 336,
+      "lemma": "컵",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 337,
+      "lemma": "숟가락",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 338,
+      "lemma": "젓가락",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 339,
+      "lemma": "봄",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 340,
+      "lemma": "여름",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 341,
+      "lemma": "가을",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 342,
+      "lemma": "겨울",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 343,
+      "lemma": "계절",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 344,
+      "lemma": "눈",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 345,
+      "lemma": "구름",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 346,
+      "lemma": "별",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 347,
+      "lemma": "온도",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 348,
+      "lemma": "시원하다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 349,
+      "lemma": "맑다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 350,
+      "lemma": "흐리다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 351,
+      "lemma": "우산",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 352,
+      "lemma": "코트",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 353,
+      "lemma": "모자",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 354,
+      "lemma": "장갑",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 355,
+      "lemma": "바다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 356,
+      "lemma": "산",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 357,
+      "lemma": "강",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 358,
+      "lemma": "호수",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 359,
+      "lemma": "섬",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 360,
+      "lemma": "숲",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 361,
+      "lemma": "풀",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 362,
+      "lemma": "새",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 363,
+      "lemma": "고양이",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 364,
+      "lemma": "동물",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 365,
+      "lemma": "여행",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 366,
+      "lemma": "휴가",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 367,
+      "lemma": "방학",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 368,
+      "lemma": "주말",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 369,
+      "lemma": "월요일",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 370,
+      "lemma": "화요일",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 371,
+      "lemma": "수요일",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 372,
+      "lemma": "목요일",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 373,
+      "lemma": "금요일",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 374,
+      "lemma": "토요일",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 375,
+      "lemma": "일요일",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 376,
+      "lemma": "요일",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 377,
+      "lemma": "지난",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 378,
+      "lemma": "다음",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 379,
+      "lemma": "이번",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 380,
+      "lemma": "올해",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 381,
+      "lemma": "작년",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 382,
+      "lemma": "내년",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 383,
+      "lemma": "백화점",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 384,
+      "lemma": "마트",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 385,
+      "lemma": "편의점",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 386,
+      "lemma": "카페",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 387,
+      "lemma": "가격",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 388,
+      "lemma": "신발",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 389,
+      "lemma": "가방",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 390,
+      "lemma": "구두",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 391,
+      "lemma": "양말",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 392,
+      "lemma": "바지",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 393,
+      "lemma": "치마",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 394,
+      "lemma": "셔츠",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 395,
+      "lemma": "안경",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 396,
+      "lemma": "시계",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 397,
+      "lemma": "지갑",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 398,
+      "lemma": "열쇠",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 399,
+      "lemma": "거울",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 400,
+      "lemma": "색",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 401,
+      "lemma": "빨강",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 402,
+      "lemma": "파랑",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 403,
+      "lemma": "노랑",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 404,
+      "lemma": "초록",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 405,
+      "lemma": "하양",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 406,
+      "lemma": "검정",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 407,
+      "lemma": "빨갛다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 408,
+      "lemma": "파랗다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 409,
+      "lemma": "노랗다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 410,
+      "lemma": "하얗다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 411,
+      "lemma": "까맣다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 412,
+      "lemma": "무겁다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 413,
+      "lemma": "가볍다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 414,
+      "lemma": "입다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 415,
+      "lemma": "신다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 416,
+      "lemma": "벗다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 417,
+      "lemma": "사이즈",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 418,
+      "lemma": "크기",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 419,
+      "lemma": "지불하다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 420,
+      "lemma": "현금",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 421,
+      "lemma": "카드",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 422,
+      "lemma": "할인",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 423,
+      "lemma": "영수증",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 424,
+      "lemma": "포장",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 425,
+      "lemma": "고르다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 426,
+      "lemma": "찾다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 427,
+      "lemma": "주다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 428,
+      "lemma": "받다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 429,
+      "lemma": "돌려주다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 430,
+      "lemma": "바꾸다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 431,
+      "lemma": "원",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 432,
+      "lemma": "어서",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 433,
+      "lemma": "택시",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 434,
+      "lemma": "기차",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 435,
+      "lemma": "비행기",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 436,
+      "lemma": "자전거",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 437,
+      "lemma": "자동차",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 438,
+      "lemma": "오토바이",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 439,
+      "lemma": "정류장",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 440,
+      "lemma": "지하철역",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 441,
+      "lemma": "기차역",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 442,
+      "lemma": "공항",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 443,
+      "lemma": "신호등",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 444,
+      "lemma": "횡단보도",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 445,
+      "lemma": "도로",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 446,
+      "lemma": "거리",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 447,
+      "lemma": "다리",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 448,
+      "lemma": "표",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 449,
+      "lemma": "자리",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 450,
+      "lemma": "지도",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 451,
+      "lemma": "주소",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 452,
+      "lemma": "번호",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 453,
+      "lemma": "왼쪽",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 454,
+      "lemma": "오른쪽",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 455,
+      "lemma": "가운데",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 456,
+      "lemma": "쪽",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 457,
+      "lemma": "똑바로",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 458,
+      "lemma": "건너다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 459,
+      "lemma": "내리다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 460,
+      "lemma": "갈아타다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 461,
+      "lemma": "들어가다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 462,
+      "lemma": "나가다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 463,
+      "lemma": "올라가다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 464,
+      "lemma": "내려가다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 465,
+      "lemma": "돌아가다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 466,
+      "lemma": "돌아오다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 467,
+      "lemma": "도착하다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 468,
+      "lemma": "출발하다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 469,
+      "lemma": "기다리다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 470,
+      "lemma": "걷다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 471,
+      "lemma": "뛰다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 472,
+      "lemma": "서다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 473,
+      "lemma": "멈추다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 474,
+      "lemma": "묻다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 475,
+      "lemma": "물어보다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 476,
+      "lemma": "늦다",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 477,
+      "lemma": "일찍",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 478,
+      "lemma": "빨리",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 479,
+      "lemma": "천천히",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 480,
+      "lemma": "먼저",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 481,
+      "lemma": "나중",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 482,
+      "lemma": "교실",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 483,
+      "lemma": "숙제",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 484,
+      "lemma": "시험",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 485,
+      "lemma": "질문",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 486,
+      "lemma": "대답",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 487,
+      "lemma": "문제",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 488,
+      "lemma": "답",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 489,
+      "lemma": "수학",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 490,
+      "lemma": "과학",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 491,
+      "lemma": "역사",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 492,
+      "lemma": "음악",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 493,
+      "lemma": "미술",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 494,
+      "lemma": "체육",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 495,
+      "lemma": "중국어",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 496,
+      "lemma": "일본어",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 497,
+      "lemma": "언어",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 498,
+      "lemma": "단어",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 499,
+      "lemma": "문장",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 500,
+      "lemma": "글",
+      "zipf": 0,
+      "band": 2
+    },
+    {
+      "rank": 501,
+      "lemma": "글자",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 502,
+      "lemma": "편지",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 503,
+      "lemma": "대학교",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 504,
+      "lemma": "대학생",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 505,
+      "lemma": "학년",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 506,
+      "lemma": "졸업",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 507,
+      "lemma": "입학",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 508,
+      "lemma": "도서관",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 509,
+      "lemma": "교과서",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 510,
+      "lemma": "공책",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 511,
+      "lemma": "연필",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 512,
+      "lemma": "볼펜",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 513,
+      "lemma": "칠판",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 514,
+      "lemma": "알다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 515,
+      "lemma": "모르다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 516,
+      "lemma": "이해하다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 517,
+      "lemma": "기억하다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 518,
+      "lemma": "잊다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 519,
+      "lemma": "생각하다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 520,
+      "lemma": "외우다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 521,
+      "lemma": "연습하다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 522,
+      "lemma": "시작하다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 523,
+      "lemma": "끝나다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 524,
+      "lemma": "끝내다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 525,
+      "lemma": "쉬다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 526,
+      "lemma": "재미있다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 527,
+      "lemma": "지루하다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 528,
+      "lemma": "열심히",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 529,
+      "lemma": "노력하다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 530,
+      "lemma": "오전",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 531,
+      "lemma": "오후",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 532,
+      "lemma": "새벽",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 533,
+      "lemma": "모레",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 534,
+      "lemma": "매주",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 535,
+      "lemma": "매년",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 536,
+      "lemma": "날짜",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 537,
+      "lemma": "달력",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 538,
+      "lemma": "때",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 539,
+      "lemma": "동안",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 540,
+      "lemma": "전",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 541,
+      "lemma": "후",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 542,
+      "lemma": "이전",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 543,
+      "lemma": "이후",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 544,
+      "lemma": "처음",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 545,
+      "lemma": "마지막",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 546,
+      "lemma": "중간",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 547,
+      "lemma": "끝",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 548,
+      "lemma": "시작",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 549,
+      "lemma": "요즘",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 550,
+      "lemma": "최근",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 551,
+      "lemma": "예전",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 552,
+      "lemma": "옛날",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 553,
+      "lemma": "미래",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 554,
+      "lemma": "과거",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 555,
+      "lemma": "현재",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 556,
+      "lemma": "순간",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 557,
+      "lemma": "잠깐",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 558,
+      "lemma": "잠시",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 559,
+      "lemma": "오래",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 560,
+      "lemma": "곧",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 561,
+      "lemma": "바로",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 562,
+      "lemma": "이미",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 563,
+      "lemma": "아직",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 564,
+      "lemma": "벌써",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 565,
+      "lemma": "이제",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 566,
+      "lemma": "갑자기",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 567,
+      "lemma": "보통",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 568,
+      "lemma": "거의",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 569,
+      "lemma": "대부분",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 570,
+      "lemma": "아마",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 571,
+      "lemma": "혹시",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 572,
+      "lemma": "꼭",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 573,
+      "lemma": "계속",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 574,
+      "lemma": "취미",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 575,
+      "lemma": "영화",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 576,
+      "lemma": "드라마",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 577,
+      "lemma": "노래",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 578,
+      "lemma": "운동",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 579,
+      "lemma": "축구",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 580,
+      "lemma": "야구",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 581,
+      "lemma": "농구",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 582,
+      "lemma": "수영",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 583,
+      "lemma": "등산",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 584,
+      "lemma": "게임",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 585,
+      "lemma": "그림",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 586,
+      "lemma": "춤",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 587,
+      "lemma": "악기",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 588,
+      "lemma": "피아노",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 589,
+      "lemma": "기타",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 590,
+      "lemma": "독서",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 591,
+      "lemma": "소설",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 592,
+      "lemma": "잡지",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 593,
+      "lemma": "신문",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 594,
+      "lemma": "뉴스",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 595,
+      "lemma": "인터넷",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 596,
+      "lemma": "컴퓨터",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 597,
+      "lemma": "휴대폰",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 598,
+      "lemma": "전화",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 599,
+      "lemma": "메시지",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 600,
+      "lemma": "이메일",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 601,
+      "lemma": "영상",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 602,
+      "lemma": "라디오",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 603,
+      "lemma": "텔레비전",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 604,
+      "lemma": "극장",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 605,
+      "lemma": "영화관",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 606,
+      "lemma": "박물관",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 607,
+      "lemma": "공연",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 608,
+      "lemma": "축제",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 609,
+      "lemma": "모임",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 610,
+      "lemma": "파티",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 611,
+      "lemma": "놀다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 612,
+      "lemma": "즐기다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 613,
+      "lemma": "부르다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 614,
+      "lemma": "치다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 615,
+      "lemma": "그리다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 616,
+      "lemma": "찍다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 617,
+      "lemma": "만들다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 618,
+      "lemma": "즐겁다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 619,
+      "lemma": "신나다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 620,
+      "lemma": "심심하다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 621,
+      "lemma": "몸",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 622,
+      "lemma": "머리",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 623,
+      "lemma": "얼굴",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 624,
+      "lemma": "코",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 625,
+      "lemma": "입",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 626,
+      "lemma": "귀",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 627,
+      "lemma": "목",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 628,
+      "lemma": "어깨",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 629,
+      "lemma": "손",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 630,
+      "lemma": "손가락",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 631,
+      "lemma": "발",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 632,
+      "lemma": "배",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 633,
+      "lemma": "등",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 634,
+      "lemma": "가슴",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 635,
+      "lemma": "피부",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 636,
+      "lemma": "머리카락",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 637,
+      "lemma": "건강",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 638,
+      "lemma": "병",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 639,
+      "lemma": "감기",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 640,
+      "lemma": "약",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 641,
+      "lemma": "의사",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 642,
+      "lemma": "간호사",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 643,
+      "lemma": "환자",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 644,
+      "lemma": "아프다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 645,
+      "lemma": "피곤하다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 646,
+      "lemma": "졸리다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 647,
+      "lemma": "괜찮다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 648,
+      "lemma": "건강하다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 649,
+      "lemma": "눕다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 650,
+      "lemma": "씻다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 651,
+      "lemma": "닦다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 652,
+      "lemma": "운동하다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 653,
+      "lemma": "약국",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 654,
+      "lemma": "치료",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 655,
+      "lemma": "검사",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 656,
+      "lemma": "휴식",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 657,
+      "lemma": "잠",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 658,
+      "lemma": "스트레스",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 659,
+      "lemma": "기분",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 660,
+      "lemma": "마음",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 661,
+      "lemma": "감정",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 662,
+      "lemma": "슬프다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 663,
+      "lemma": "화나다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 664,
+      "lemma": "무섭다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 665,
+      "lemma": "걱정하다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 666,
+      "lemma": "놀라다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 667,
+      "lemma": "외롭다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 668,
+      "lemma": "부끄럽다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 669,
+      "lemma": "사랑",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 670,
+      "lemma": "정",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 671,
+      "lemma": "생각",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 672,
+      "lemma": "꿈",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 673,
+      "lemma": "기억",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 674,
+      "lemma": "소리",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 675,
+      "lemma": "냄새",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 676,
+      "lemma": "느끼다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 677,
+      "lemma": "믿다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 678,
+      "lemma": "바라다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 679,
+      "lemma": "원하다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 680,
+      "lemma": "필요하다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 681,
+      "lemma": "그립다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 682,
+      "lemma": "아쉽다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 683,
+      "lemma": "서운하다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 684,
+      "lemma": "부럽다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 685,
+      "lemma": "자랑하다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 686,
+      "lemma": "후회하다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 687,
+      "lemma": "용서하다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 688,
+      "lemma": "기대하다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 689,
+      "lemma": "실망하다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 690,
+      "lemma": "당황하다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 691,
+      "lemma": "긴장하다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 692,
+      "lemma": "편안하다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 693,
+      "lemma": "불안하다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 694,
+      "lemma": "안심하다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 695,
+      "lemma": "걱정",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 696,
+      "lemma": "희망",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 697,
+      "lemma": "용기",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 698,
+      "lemma": "웃음",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 699,
+      "lemma": "눈물",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 700,
+      "lemma": "표정",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 701,
+      "lemma": "목소리",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 702,
+      "lemma": "성격",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 703,
+      "lemma": "태도",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 704,
+      "lemma": "습관",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 705,
+      "lemma": "관광",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 706,
+      "lemma": "관광객",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 707,
+      "lemma": "호텔",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 708,
+      "lemma": "숙소",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 709,
+      "lemma": "예약하다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 710,
+      "lemma": "예약",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 711,
+      "lemma": "취소하다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 712,
+      "lemma": "여권",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 713,
+      "lemma": "비자",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 714,
+      "lemma": "짐",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 715,
+      "lemma": "안내",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 716,
+      "lemma": "방향",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 717,
+      "lemma": "위치",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 718,
+      "lemma": "장소",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 719,
+      "lemma": "곳",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 720,
+      "lemma": "지역",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 721,
+      "lemma": "마을",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 722,
+      "lemma": "동네",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 723,
+      "lemma": "시골",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 724,
+      "lemma": "외국",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 725,
+      "lemma": "외국인",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 726,
+      "lemma": "미국인",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 727,
+      "lemma": "중국인",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 728,
+      "lemma": "일본인",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 729,
+      "lemma": "부산",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 730,
+      "lemma": "제주",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 731,
+      "lemma": "비행",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 732,
+      "lemma": "출발",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 733,
+      "lemma": "도착",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 734,
+      "lemma": "환승",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 735,
+      "lemma": "승객",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 736,
+      "lemma": "요금",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 737,
+      "lemma": "교통",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 738,
+      "lemma": "운전",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 739,
+      "lemma": "속도",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 740,
+      "lemma": "신호",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 741,
+      "lemma": "주차",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 742,
+      "lemma": "사고",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 743,
+      "lemma": "기념",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 744,
+      "lemma": "추억",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 745,
+      "lemma": "경험",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 746,
+      "lemma": "아름답다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 747,
+      "lemma": "멋있다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 748,
+      "lemma": "멋지다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 749,
+      "lemma": "유명하다",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 750,
+      "lemma": "직업",
+      "zipf": 0,
+      "band": 3
+    },
+    {
+      "rank": 751,
+      "lemma": "회사",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 752,
+      "lemma": "회사원",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 753,
+      "lemma": "사무실",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 754,
+      "lemma": "직장",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 755,
+      "lemma": "일자리",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 756,
+      "lemma": "취직",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 757,
+      "lemma": "월급",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 758,
+      "lemma": "회의",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 759,
+      "lemma": "약속",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 760,
+      "lemma": "출장",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 761,
+      "lemma": "퇴근",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 762,
+      "lemma": "출근",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 763,
+      "lemma": "사장",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 764,
+      "lemma": "직원",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 765,
+      "lemma": "손님",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 766,
+      "lemma": "주인",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 767,
+      "lemma": "고객",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 768,
+      "lemma": "서비스",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 769,
+      "lemma": "상품",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 770,
+      "lemma": "물건",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 771,
+      "lemma": "제품",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 772,
+      "lemma": "광고",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 773,
+      "lemma": "사업",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 774,
+      "lemma": "공장",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 775,
+      "lemma": "경력",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 776,
+      "lemma": "능력",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 777,
+      "lemma": "실력",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 778,
+      "lemma": "성공",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 779,
+      "lemma": "실패",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 780,
+      "lemma": "기회",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 781,
+      "lemma": "해결",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 782,
+      "lemma": "도움",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 783,
+      "lemma": "돕다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 784,
+      "lemma": "도와주다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 785,
+      "lemma": "부탁하다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 786,
+      "lemma": "허락하다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 787,
+      "lemma": "일하다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 788,
+      "lemma": "중요하다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 789,
+      "lemma": "가능하다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 790,
+      "lemma": "준비하다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 791,
+      "lemma": "결정하다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 792,
+      "lemma": "계획하다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 793,
+      "lemma": "확인하다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 794,
+      "lemma": "전화하다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 795,
+      "lemma": "연락하다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 796,
+      "lemma": "인사하다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 797,
+      "lemma": "소개하다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 798,
+      "lemma": "초대하다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 799,
+      "lemma": "설명하다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 800,
+      "lemma": "대답하다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 801,
+      "lemma": "질문하다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 802,
+      "lemma": "말씀하다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 803,
+      "lemma": "이야기하다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 804,
+      "lemma": "사과하다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 805,
+      "lemma": "감사하다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 806,
+      "lemma": "축하하다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 807,
+      "lemma": "환영하다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 808,
+      "lemma": "거절하다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 809,
+      "lemma": "찬성하다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 810,
+      "lemma": "반대하다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 811,
+      "lemma": "비교하다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 812,
+      "lemma": "선택하다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 813,
+      "lemma": "정하다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 814,
+      "lemma": "결심하다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 815,
+      "lemma": "조사하다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 816,
+      "lemma": "발견하다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 817,
+      "lemma": "발표하다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 818,
+      "lemma": "보고하다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 819,
+      "lemma": "신청하다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 820,
+      "lemma": "참가하다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 821,
+      "lemma": "참석하다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 822,
+      "lemma": "이유",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 823,
+      "lemma": "방법",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 824,
+      "lemma": "결과",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 825,
+      "lemma": "의견",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 826,
+      "lemma": "의미",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 827,
+      "lemma": "목적",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 828,
+      "lemma": "모습",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 829,
+      "lemma": "모양",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 830,
+      "lemma": "종류",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 831,
+      "lemma": "부분",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 832,
+      "lemma": "전체",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 833,
+      "lemma": "이웃",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 834,
+      "lemma": "동료",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 835,
+      "lemma": "상사",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 836,
+      "lemma": "선배",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 837,
+      "lemma": "후배",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 838,
+      "lemma": "아이들",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 839,
+      "lemma": "어린이",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 840,
+      "lemma": "청소년",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 841,
+      "lemma": "세대",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 842,
+      "lemma": "사회",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 843,
+      "lemma": "문화",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 844,
+      "lemma": "경제",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 845,
+      "lemma": "정치",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 846,
+      "lemma": "환경",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 847,
+      "lemma": "교육",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 848,
+      "lemma": "기술",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 849,
+      "lemma": "자연",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 850,
+      "lemma": "세계",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 851,
+      "lemma": "세상",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 852,
+      "lemma": "인생",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 853,
+      "lemma": "생활",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 854,
+      "lemma": "사실",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 855,
+      "lemma": "국가",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 856,
+      "lemma": "정부",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 857,
+      "lemma": "시민",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 858,
+      "lemma": "국민",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 859,
+      "lemma": "법",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 860,
+      "lemma": "규칙",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 861,
+      "lemma": "질서",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 862,
+      "lemma": "권리",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 863,
+      "lemma": "의무",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 864,
+      "lemma": "책임",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 865,
+      "lemma": "범죄",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 866,
+      "lemma": "재판",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 867,
+      "lemma": "변호사",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 868,
+      "lemma": "선거",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 869,
+      "lemma": "국회",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 870,
+      "lemma": "의원",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 871,
+      "lemma": "투표",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 872,
+      "lemma": "토론",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 873,
+      "lemma": "대화",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 874,
+      "lemma": "목표",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 875,
+      "lemma": "기준",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 876,
+      "lemma": "조건",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 877,
+      "lemma": "제안",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 878,
+      "lemma": "계약",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 879,
+      "lemma": "합의",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 880,
+      "lemma": "협력",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 881,
+      "lemma": "경쟁",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 882,
+      "lemma": "승리",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 883,
+      "lemma": "패배",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 884,
+      "lemma": "우승",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 885,
+      "lemma": "선수",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 886,
+      "lemma": "팀",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 887,
+      "lemma": "경기",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 888,
+      "lemma": "시합",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 889,
+      "lemma": "자유",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 890,
+      "lemma": "평화",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 891,
+      "lemma": "전쟁",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 892,
+      "lemma": "전통",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 893,
+      "lemma": "명절",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 894,
+      "lemma": "설날",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 895,
+      "lemma": "추석",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 896,
+      "lemma": "행사",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 897,
+      "lemma": "예술",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 898,
+      "lemma": "작가",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 899,
+      "lemma": "작품",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 900,
+      "lemma": "가수",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 901,
+      "lemma": "배우",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 902,
+      "lemma": "요리사",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 903,
+      "lemma": "기자",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 904,
+      "lemma": "경찰",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 905,
+      "lemma": "운전사",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 906,
+      "lemma": "청년",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 907,
+      "lemma": "노인",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 908,
+      "lemma": "이사",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 909,
+      "lemma": "집안",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 910,
+      "lemma": "살림",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 911,
+      "lemma": "가정",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 912,
+      "lemma": "신랑",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 913,
+      "lemma": "신부",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 914,
+      "lemma": "결혼식",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 915,
+      "lemma": "부부",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 916,
+      "lemma": "연애",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 917,
+      "lemma": "우정",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 918,
+      "lemma": "만남",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 919,
+      "lemma": "이별",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 920,
+      "lemma": "만화",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 921,
+      "lemma": "방송",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 922,
+      "lemma": "대통령",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 923,
+      "lemma": "한국인",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 924,
+      "lemma": "지식",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 925,
+      "lemma": "정보",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 926,
+      "lemma": "연구",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 927,
+      "lemma": "논문",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 928,
+      "lemma": "대학",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 929,
+      "lemma": "대학원",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 930,
+      "lemma": "전공",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 931,
+      "lemma": "실험",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 932,
+      "lemma": "기후",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 933,
+      "lemma": "태풍",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 934,
+      "lemma": "홍수",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 935,
+      "lemma": "가뭄",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 936,
+      "lemma": "지진",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 937,
+      "lemma": "화재",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 938,
+      "lemma": "오염",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 939,
+      "lemma": "쓰레기",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 940,
+      "lemma": "에너지",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 941,
+      "lemma": "전기",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 942,
+      "lemma": "가스",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 943,
+      "lemma": "지구",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 944,
+      "lemma": "우주",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 945,
+      "lemma": "안개",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 946,
+      "lemma": "번개",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 947,
+      "lemma": "무지개",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 948,
+      "lemma": "건물",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 949,
+      "lemma": "건설",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 950,
+      "lemma": "터널",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 951,
+      "lemma": "공사",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 952,
+      "lemma": "수리",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 953,
+      "lemma": "고장",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 954,
+      "lemma": "청소",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 955,
+      "lemma": "빨래",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 956,
+      "lemma": "설거지",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 957,
+      "lemma": "정리",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 958,
+      "lemma": "사용하다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 959,
+      "lemma": "이용하다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 960,
+      "lemma": "관리",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 961,
+      "lemma": "운영",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 962,
+      "lemma": "생산",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 963,
+      "lemma": "수출",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 964,
+      "lemma": "수입",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 965,
+      "lemma": "판매",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 966,
+      "lemma": "구매",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 967,
+      "lemma": "배달",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 968,
+      "lemma": "알리다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 969,
+      "lemma": "빌리다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 970,
+      "lemma": "갚다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 971,
+      "lemma": "잃다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 972,
+      "lemma": "잃어버리다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 973,
+      "lemma": "나타나다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 974,
+      "lemma": "사라지다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 975,
+      "lemma": "생기다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 976,
+      "lemma": "늘다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 977,
+      "lemma": "줄다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 978,
+      "lemma": "커지다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 979,
+      "lemma": "작아지다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 980,
+      "lemma": "많아지다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 981,
+      "lemma": "좋아지다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 982,
+      "lemma": "나빠지다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 983,
+      "lemma": "달라지다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 984,
+      "lemma": "바뀌다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 985,
+      "lemma": "변하다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 986,
+      "lemma": "자라다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 987,
+      "lemma": "던지다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 988,
+      "lemma": "잡다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 989,
+      "lemma": "놓다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 990,
+      "lemma": "밀다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 991,
+      "lemma": "당기다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 992,
+      "lemma": "누르다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 993,
+      "lemma": "자르다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 994,
+      "lemma": "붙이다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 995,
+      "lemma": "넣다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 996,
+      "lemma": "꺼내다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 997,
+      "lemma": "열다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 998,
+      "lemma": "닫다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 999,
+      "lemma": "켜다",
+      "zipf": 0,
+      "band": 4
+    },
+    {
+      "rank": 1000,
+      "lemma": "끄다",
+      "zipf": 0,
+      "band": 4
+    }
+  ]
+}

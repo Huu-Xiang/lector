@@ -1,0 +1,117 @@
+{
+  "title": "처음 천 개의 단어",
+  "author": "Lector",
+  "allow": ["민수", "민수가", "민수야", "민수예요", "수진", "수진의", "수진이에요"],
+  "maxNewLemmasPerLesson": 60,
+  "lessons": [
+    {
+      "file": "01-jeoneun-minsu-yeyo.md",
+      "title": "저는 민수예요",
+      "maxRank": 109,
+      "maxNewLemmas": 90
+    },
+    {
+      "file": "02-achim.md",
+      "title": "오늘 아침",
+      "maxRank": 191,
+      "maxNewLemmas": 90
+    },
+    {
+      "file": "03-seoul.md",
+      "title": "서울",
+      "maxRank": 261,
+      "maxNewLemmas": 90
+    },
+    {
+      "file": "04-gajok.md",
+      "title": "우리 가족",
+      "maxRank": 326,
+      "maxNewLemmas": 90
+    },
+    {
+      "file": "05-sikdang.md",
+      "title": "식당에서",
+      "maxRank": 378
+    },
+    {
+      "file": "06-gyejeol.md",
+      "title": "한국의 계절",
+      "maxRank": 422
+    },
+    {
+      "file": "07-baekhwajeom.md",
+      "title": "백화점에서",
+      "maxRank": 472
+    },
+    {
+      "file": "08-gireul-chajayo.md",
+      "title": "공항에 가요",
+      "maxRank": 521
+    },
+    {
+      "file": "09-suneop.md",
+      "title": "한국어 수업",
+      "maxRank": 569
+    },
+    {
+      "file": "10-myeot-si.md",
+      "title": "몇 시예요?",
+      "maxRank": 613
+    },
+    {
+      "file": "11-chwimi.md",
+      "title": "우리의 취미",
+      "maxRank": 660
+    },
+    {
+      "file": "12-byeongwon.md",
+      "title": "병원에서",
+      "maxRank": 698
+    },
+    {
+      "file": "13-maeum.md",
+      "title": "마음",
+      "maxRank": 744
+    },
+    {
+      "file": "14-yeohaeng.md",
+      "title": "부산 여행",
+      "maxRank": 789
+    },
+    {
+      "file": "15-hoesa.md",
+      "title": "회사",
+      "maxRank": 833
+    },
+    {
+      "file": "16-chodae.md",
+      "title": "파티",
+      "maxRank": 881,
+      "maxNewLemmas": 80
+    },
+    {
+      "file": "17-teuron.md",
+      "title": "토론",
+      "maxRank": 931,
+      "maxNewLemmas": 80
+    },
+    {
+      "file": "18-munhwa.md",
+      "title": "한국의 문화",
+      "maxRank": 971,
+      "maxNewLemmas": 80
+    },
+    {
+      "file": "19-taepung.md",
+      "title": "태풍",
+      "maxRank": 1000,
+      "maxNewLemmas": 80
+    },
+    {
+      "file": "20-hanhae.md",
+      "title": "한 해",
+      "maxRank": 1000,
+      "maxNewLemmas": 80
+    }
+  ]
+}

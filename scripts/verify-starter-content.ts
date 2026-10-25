@@ -27,6 +27,7 @@ import Database from 'better-sqlite3';
 import fs from 'fs';
 import path from 'path';
 import { LANGUAGES, isValidLanguageCode } from '../languages/registry';
+import { stemCandidates } from '../languages/morphology';
 import { foldWord, normalizeText } from '../languages/text';
 import { makeWordSegmentation, refineSegmentForms, tokenizeWords } from '../languages/tokenizer';
 import {
@@ -97,14 +98,66 @@ const foldAll = (words: string[] | undefined) =>
 // The static half of api/src/lib/dictionary-db.ts lookupWord.
 const db = new Database(dictPath, { readonly: true, fileMustExist: true });
 const selectEntry = db.prepare('SELECT word FROM entries WHERE word = ?');
-const selectLemma = db.prepare(
-  'SELECT i.lemma FROM inflections i JOIN entries e ON e.word = i.lemma WHERE i.inflected_form = ? LIMIT 1',
+const selectLemmas = db.prepare(
+  `SELECT i.lemma, i.type, e.rank FROM inflections i JOIN entries e ON e.word = i.lemma
+   WHERE i.inflected_form = ? ORDER BY (e.rank IS NULL), e.rank, i.rowid LIMIT 16`,
 );
+// Same tie-break as api/src/lib/dictionary-db.ts: among unranked lemmas the wordlist order wins.
+const priority = new Map(wordlist.map((w, i) => [w.lemma, i] as const));
+const selectLemma = {
+  get(key: string): { lemma: string; type: string | null } | null {
+    const rows = selectLemmas.all(key) as Array<{
+      lemma: string;
+      type: string | null;
+      rank: number | null;
+    }>;
+    if (!rows.length || rows[0].rank !== null || rows.length === 1) return rows[0] ?? null;
+    const unranked = rows.filter((r) => r.rank === null);
+    unranked.sort(
+      (a, b) => (priority.get(a.lemma) ?? Infinity) - (priority.get(b.lemma) ?? Infinity),
+    );
+    return unranked[0];
+  },
+};
 const resolve: Resolver = (folded) => {
   const exact = selectEntry.get(folded) as { word: string } | null;
-  if (exact) return exact.word;
-  const infl = selectLemma.get(folded) as { lemma: string } | null;
-  return infl ? infl.lemma : null;
+  if (exact && priority.has(exact.word)) return exact.word;
+  if (exact) {
+    // A conjugated form has its own entry (가요, 먹어요). It counts as its lemma
+    // when the wordlist holds the lemma, which is what the learner studies.
+    const via = selectLemma.get(folded);
+    if (via && priority.has(via.lemma)) return via.lemma;
+    if (pack.morphology) {
+      for (const candidate of stemCandidates(folded, pack.morphology)) {
+        const hit = selectEntry.get(candidate.key) as { word: string } | null;
+        if (hit && priority.has(hit.word)) return hit.word;
+      }
+    }
+    return exact.word;
+  }
+  const infl = selectLemma.get(folded);
+  if (infl) {
+    // A noun plus particle (집을) beats an unrelated adnominal verb form (집다), as in lookupWord.
+    if (pack.morphology && infl.type?.includes('determiner')) {
+      const inflRank = priority.get(infl.lemma) ?? Infinity;
+      for (const candidate of stemCandidates(folded, pack.morphology)) {
+        const hit = selectEntry.get(candidate.key) as { word: string } | null;
+        if (hit && (priority.get(hit.word) ?? Infinity) < inflRank) return hit.word;
+      }
+    }
+    return infl.lemma;
+  }
+  // Step 5-morph of lookupWord: a pack that declares morphology peels what the
+  // dictionary does not key (ko postpositions and endings).
+  if (pack.morphology) {
+    for (const candidate of stemCandidates(folded, pack.morphology)) {
+      const hit = selectEntry.get(candidate.key) as { word: string } | null;
+      if (hit) return hit.word;
+      const viaInfl = selectLemma.get(candidate.key);
+      if (viaInfl) return viaInfl.lemma;
+    }
+  }
+  return null;
 };
 
 const caps = defaultLessonCaps(

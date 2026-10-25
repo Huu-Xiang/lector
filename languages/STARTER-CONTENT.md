@@ -38,7 +38,7 @@ Two semantics worth knowing:
 - **Form-level, like the reader.** Resolution is exact-first, so very frequent
   inflected forms that have their own dictionary entries ("es", "está", "las")
   are their own wordlist targets. That mirrors exactly what a tap resolves to
-  in the reader — the list is "the 1,000 most frequent *tappable word-keys*",
+  in the reader — the list is "the 1,000 most frequent _tappable word-keys_",
   not an abstract lemma inventory.
 - **The wordlist is a committed artifact.** CI never runs the generator;
   regenerate deliberately (dictionary or frequency-source updates) and review
@@ -60,7 +60,7 @@ Working LLM constraints for each lesson draft:
 
 1. You may use ONLY: words whose dictionary resolution lands in the wordlist
    at rank ≤ this lesson's cap, plus the lesson's whitelisted proper nouns.
-   (Careful with inflections: a conjugated form is fine when it *resolves* to
+   (Careful with inflections: a conjugated form is fine when it _resolves_ to
    an in-band target — "tengo" credits "tengo"/"tener" per the dictionary.)
 2. Introduce at most ~50 wordlist targets not used in earlier lessons; lean on
    earlier vocabulary for everything else (that's the recycling).
@@ -110,12 +110,12 @@ the verifier's optional knobs:
 {
   "title": "Tus primeras 1000 palabras",
   "author": "Lector",
-  "allow": ["Ana", "Toto"],              // series-wide whitelist (proper nouns)
-  "maxNewLemmasPerLesson": 60,           // default 60
+  "allow": ["Ana", "Toto"], // series-wide whitelist (proper nouns)
+  "maxNewLemmasPerLesson": 60, // default 60
   "lessons": [
-    { "file": "01-hola.md", "title": "Hola", "maxRank": 250, "allow": ["Madrid"] }
+    { "file": "01-hola.md", "title": "Hola", "maxRank": 250, "allow": ["Madrid"] },
     // maxRank optional — defaults ramp by band (5 lessons per 250-band for 20 lessons)
-  ]
+  ],
 }
 ```
 
@@ -154,6 +154,16 @@ only `wordlist.json` seeds nothing.
   我是 or 很大 become 我 + 是 and 很 + 大. Names the dictionary lacks split into
   characters; list those characters in the manifest `allow` (小玲 → 玲). The
   ranked list is news-heavy, so the series reads as a story told in news words.
+- **ko** — the wordlist is hand-ordered, not frequency-ranked: wordfreq lists Korean
+  as morphemes (하, 들, 어), which are not words a learner can read. Edit
+  `scripts/starter/ko-seed-words.txt` (one line per lesson, dictionary forms) and run
+  `python3 scripts/gen-starter-wordlist-ko.py`. Lesson caps follow the seed lines, not the
+  250-word bands (`maxRank` in the manifest). The verifier peels postpositions and endings
+  with the pack morphology, as `lookupWord` does. A conjugated form that has its own entry
+  (가요, 먹어요) counts as its lemma. Among unranked inflection lemmas the wordlist order wins,
+  in the verifier and in `api/src/lib/dictionary-db.ts`. Write a noun phrase with `X를 해요`
+  when `X하다` is not on the list. Do not use `~은요`; it does not resolve. List a name with
+  its postposition forms in the manifest `allow` (민수가, 민수예요).
 - **future packs** — a language without wordfreq mirrors af's pipeline
   (see `woordeboek/process/FREQUENCY.md`); a language without a dictionary
   can't have starter content, by construction.
