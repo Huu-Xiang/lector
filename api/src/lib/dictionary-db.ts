@@ -379,6 +379,8 @@ type Stmts = {
   selectSenses: Statement;
   selectRelated: Statement;
   selectInflectionLemma: Statement;
+  /** Lemma order of the pack's starter wordlist; null when the pack ships none. */
+  starterPriority: Map<string, number> | null;
   selectReadings: Statement;
   /** Present only in dictionaries that ship the extra tables (English). */
   selectMeta: Statement | null;
@@ -406,6 +408,80 @@ export function invalidateDictionaryCache(language: string): void {
   _stmtsByLang.delete(language);
 }
 
+/**
+ * Resolve an inflected form to one lemma. The SQL prefers the lemma with the best
+ * entry rank. A dictionary with no ranks (ko) keeps insertion order, which puts
+ * 마다 "to smash" ahead of 마시다 "to drink" for 마셔요, so ties among unranked
+ * lemmas go to the one the pack's starter wordlist lists first.
+ */
+function inflectionLemmaStatement(db: Database, priority: Map<string, number> | null): Statement {
+  const base = db.prepare(
+    `SELECT i.lemma, i.type, e.rank FROM inflections i
+     JOIN entries e ON e.word = i.lemma
+     WHERE i.inflected_form = ?
+     ORDER BY (e.rank IS NULL), e.rank, i.rowid LIMIT ?`,
+  );
+  if (!priority) {
+    return { get: (key: string) => base.get(key, 1) } as unknown as Statement;
+  }
+  return {
+    get: (key: string) => {
+      const rows = base.all(key, 16) as Array<{
+        lemma: string;
+        type: string | null;
+        rank: number | null;
+      }>;
+      const first = rows[0];
+      if (!first || first.rank !== null || rows.length === 1) return first;
+      const unranked = rows.filter((row) => row.rank === null);
+      unranked.sort(
+        (a, b) => (priority.get(a.lemma) ?? Infinity) - (priority.get(b.lemma) ?? Infinity),
+      );
+      return unranked[0];
+    },
+  } as unknown as Statement;
+}
+
+function starterLemmaPriority(language: string): Map<string, number> | null {
+  const root =
+    process.env.STARTER_CONTENT_ROOT || path.resolve(import.meta.dir, '../../../languages');
+  try {
+    const file = path.join(root, language, 'content', 'starter', 'wordlist.json');
+    const list = JSON.parse(fs.readFileSync(file, 'utf8')) as { words: Array<{ lemma: string }> };
+    return new Map(list.words.map((word, index) => [word.lemma, index]));
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Korean noun plus particle collides with an adnominal verb form: 집을 is 집 plus 을,
+ * and kaikki also lists it as 집다 "to pick up". When the inflection is such an
+ * adnominal and the peeled stem ranks higher in the pack's starter wordlist than the
+ * inflected lemma, the peeled stem wins. Words outside the wordlist keep the
+ * inflection answer.
+ */
+function preferPeeledStem(
+  stmts: Stmts,
+  language: string,
+  lower: string,
+  infl: { lemma: string; type: string | null },
+): { row: EntryRow; info: { stem: string; label: string } } | null {
+  const priority = stmts.starterPriority;
+  if (!priority || !infl.type?.includes('determiner') || !isValidLanguageCode(language))
+    return null;
+  const morphology = getLanguageConfig(language).morphology;
+  if (!morphology) return null;
+  const inflRank = priority.get(infl.lemma) ?? Infinity;
+  for (const candidate of stemCandidates(lower, morphology)) {
+    const row = stmts.selectEntry.get(candidate.key) as EntryRow | undefined;
+    if (row && (priority.get(row.word) ?? Infinity) < inflRank) {
+      return { row, info: { stem: row.word, label: `${candidate.peeled.join(' + ')} form of` } };
+    }
+  }
+  return null;
+}
+
 function getStmts(language: string): Stmts | null {
   const cached = _stmtsByLang.get(language);
   if (cached) return cached;
@@ -419,6 +495,7 @@ function getStmts(language: string): Stmts | null {
     }
   };
   try {
+    const starterPriority = starterLemmaPriority(language);
     const stmts: Stmts = {
       selectMeta: optional('SELECT collins, oxford, tags FROM entry_meta WHERE word = ?'),
       selectI18n: optional(
@@ -435,12 +512,8 @@ function getStmts(language: string): Stmts | null {
       // τὸν is claimed by ὁ AND -κτόνος). Prefer the most frequent lemma by
       // entry rank; unranked dictionaries (rank all NULL) keep insertion
       // order, and the JOIN also skips rows whose lemma has no entry.
-      selectInflectionLemma: db.prepare(
-        `SELECT i.lemma, i.type FROM inflections i
-         JOIN entries e ON e.word = i.lemma
-         WHERE i.inflected_form = ?
-         ORDER BY (e.rank IS NULL), e.rank, i.rowid LIMIT 1`,
-      ),
+      selectInflectionLemma: inflectionLemmaStatement(db, starterPriority),
+      starterPriority,
       // Batch pronunciation reader for the annotation layer (#289 4.4). One
       // statement for the whole page, driven by a JSON array of folded keys.
       //
@@ -1124,6 +1197,8 @@ function resolveWord(
       | { lemma: string; type: string | null }
       | undefined;
     if (infl) {
+      const peeled = preferPeeledStem(stmts, language, lower, infl);
+      if (peeled) return buildEntry(peeled.row, stmts, lower, peeled.info);
       const lemmaRow = stmts.selectEntry.get(infl.lemma) as EntryRow | undefined;
       if (lemmaRow) {
         const label = inflectionLabel(infl.type);

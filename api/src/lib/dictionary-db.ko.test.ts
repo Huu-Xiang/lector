@@ -14,7 +14,9 @@ import { lookupWord } from './dictionary-db';
 // over 5,000 Tatoeba eojeol and answers 93.5% of them.
 
 const FIXTURE_DIR = path.resolve('.test-data', 'dict-ko-fixture');
+const STARTER_DIR = path.resolve('.test-data', 'starter-ko-fixture');
 const previousDictDir = process.env.DICT_DIR;
+const previousStarterRoot = process.env.STARTER_CONTENT_ROOT;
 const USER = 'ko-fixture-user';
 
 beforeAll(() => {
@@ -61,17 +63,41 @@ beforeAll(() => {
     entry.run(word, 10);
     sense.run(word, pos, gloss);
   }
+  // kaikki gives one form to several unranked lemmas. 마셔요 belongs to 마시다
+  // (to drink); 마다 (to smash) comes first in insertion order.
+  for (const [word, gloss] of [
+    ['마다', 'to smash'],
+    ['말다', 'to stop'],
+    ['마시다', 'to drink'],
+  ]) {
+    entry.run(word, null);
+    sense.run(word, 'verb', gloss);
+    inflection.run('마셔요', word, 'indicative,informal,non-past,polite');
+  }
   // The finite conjugation kaikki DOES enumerate. These rows are why Korean
   // needs no morphological analyser.
   inflection.run('먹었어요', '먹다', 'indicative,informal,past,polite');
   inflection.run('먹습니다', '먹다', 'formal,indicative,non-past,polite');
+  // 집을 is the noun 집 plus 을, and also an adnominal of the unrelated verb 집다.
+  entry.run('집다', 10);
+  sense.run('집다', 'verb', 'to pick up');
+  inflection.run('집을', '집다', 'determiner,formal,future');
+  inflection.run('먹는', '먹다', 'determiner,formal,present');
   db.close();
   process.env.DICT_DIR = FIXTURE_DIR;
+  fs.mkdirSync(path.join(STARTER_DIR, 'ko', 'content', 'starter'), { recursive: true });
+  fs.writeFileSync(
+    path.join(STARTER_DIR, 'ko', 'content', 'starter', 'wordlist.json'),
+    JSON.stringify({ words: [{ lemma: '집' }, { lemma: '먹다' }, { lemma: '마시다' }] }),
+  );
+  process.env.STARTER_CONTENT_ROOT = STARTER_DIR;
 });
 
 afterAll(() => {
   if (previousDictDir === undefined) delete process.env.DICT_DIR;
   else process.env.DICT_DIR = previousDictDir;
+  if (previousStarterRoot === undefined) delete process.env.STARTER_CONTENT_ROOT;
+  else process.env.STARTER_CONTENT_ROOT = previousStarterRoot;
 });
 
 // `word` on the answer is the form the reader tapped, and the entry it resolved
@@ -144,4 +170,21 @@ describe('Korean lookup through postpositions and endings (#289)', () => {
   // fixture, and the module caches one connection per language for the life of
   // the process. Touching zh or ja from here caches it as "no dictionary" and
   // fails the fixture suite that runs later.
+});
+
+describe('unranked inflection ties', () => {
+  test('a form claimed by several unranked lemmas goes to the starter wordlist word', () => {
+    const entry = lookupWord(USER, '마셔요', 'ko');
+    expect(entry?.lemmaInfo?.stem).toBe('마시다');
+  });
+
+  test('a noun plus particle beats an unrelated adnominal verb form', () => {
+    const entry = lookupWord(USER, '집을', 'ko');
+    expect(entry?.lemmaInfo?.stem).toBe('집');
+  });
+
+  test('a real adnominal form keeps its verb', () => {
+    const entry = lookupWord(USER, '먹는', 'ko');
+    expect(entry?.lemmaInfo?.stem).toBe('먹다');
+  });
 });
