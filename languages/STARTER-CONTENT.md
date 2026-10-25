@@ -146,24 +146,9 @@ only `wordlist.json` seeds nothing.
 - **it** — wordfreq. The tokenizer keeps elision as one token. `l'acqua`
   does not resolve in the verifier. Write `la` before a consonant. Do not
   write `c'è`. `è` is rank 11.
-- **zh** — no wordfreq install needed: `scripts/coverage-corpus-zh.txt` is the
-  top-5,000 wordfreq tokens in rank order, so a `--freq-csv` built from it gives
-  the wordlist. Single Han characters (我, 的, 是) are words, not letter names.
-  The reader draws a lesson from its stored word list, cut to dictionary words
-  (`refineSegmentForms`), and the verifier does the same, so ICU joins such as
-  我是 or 很大 become 我 + 是 and 很 + 大. Names the dictionary lacks split into
-  characters; list those characters in the manifest `allow` (小玲 → 玲). The
-  ranked list is news-heavy, so the series reads as a story told in news words.
-- **ko** — the wordlist is hand-ordered, not frequency-ranked: wordfreq lists Korean
-  as morphemes (하, 들, 어), which are not words a learner can read. Edit
-  `scripts/starter/ko-seed-words.txt` (one line per lesson, dictionary forms) and run
-  `python3 scripts/gen-starter-wordlist-ko.py`. Lesson caps follow the seed lines, not the
-  250-word bands (`maxRank` in the manifest). The verifier peels postpositions and endings
-  with the pack morphology, as `lookupWord` does. A conjugated form that has its own entry
-  (가요, 먹어요) counts as its lemma. Among unranked inflection lemmas the wordlist order wins,
-  in the verifier and in `api/src/lib/dictionary-db.ts`. Write a noun phrase with `X를 해요`
-  when `X하다` is not on the list. Do not use `~은요`; it does not resolve. List a name with
-  its postposition forms in the manifest `allow` (민수가, 민수예요).
+- **zh**, **ko** — no starter series. Only real public-domain texts ship for
+  these languages. `languages/ko/content/lemma-priority.json` orders unranked
+  Korean lemmas for word lookup (`api/src/lib/dictionary-db.ts`); it is not a lesson list.
 - **future packs** — a language without wordfreq mirrors af's pipeline
   (see `woordeboek/process/FREQUENCY.md`); a language without a dictionary
   can't have starter content, by construction.

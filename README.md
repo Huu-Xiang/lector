@@ -115,7 +115,7 @@ Language packs ship for:
 - Turkish
 - Ukrainian
 
-A pack includes a dictionary, frequency data, and cloze sentences. Japanese and Korean have a dictionary. They do not have a cloze bank yet. The reader still works for a language with no pack. Depth is lower without a pack. Korean also has free books and a 20-lesson starter course.
+A pack includes a dictionary, frequency data, and cloze sentences. Japanese and Korean have a dictionary. They do not have a cloze bank yet. The reader still works for a language with no pack. Depth is lower without a pack. Korean also has free books.
 
 The language picker lists only the languages that you study. Open the picker and select **Add a language** to start another one. Open Settings, then Languages, to add a language or to remove one from the list. A language that you remove keeps its words, texts, and cards.
 

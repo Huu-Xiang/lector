@@ -103,9 +103,9 @@ beforeAll(() => {
   inflection.run('물을', '묻다', 'determiner,formal,future');
   db.close();
   process.env.DICT_DIR = FIXTURE_DIR;
-  fs.mkdirSync(path.join(STARTER_DIR, 'ko', 'content', 'starter'), { recursive: true });
+  fs.mkdirSync(path.join(STARTER_DIR, 'ko', 'content'), { recursive: true });
   fs.writeFileSync(
-    path.join(STARTER_DIR, 'ko', 'content', 'starter', 'wordlist.json'),
+    path.join(STARTER_DIR, 'ko', 'content', 'lemma-priority.json'),
     JSON.stringify({
       words: ['집', '주', '주다', '먹다', '마시다', '물', '묻다', '우리'].map((lemma) => ({
         lemma,

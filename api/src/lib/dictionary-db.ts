@@ -379,7 +379,7 @@ type Stmts = {
   selectSenses: Statement;
   selectRelated: Statement;
   selectInflectionLemma: Statement;
-  /** Lemma order of the pack's starter wordlist; null when the pack ships none. */
+  /** Lemma order of the pack's `content/lemma-priority.json`; null when the pack ships none. */
   starterPriority: Map<string, number> | null;
   selectReadings: Statement;
   /** Present only in dictionaries that ship the extra tables (English). */
@@ -409,7 +409,7 @@ export function invalidateDictionaryCache(language: string): void {
 }
 
 // An unranked dictionary (ko) keeps insertion order, so 마셔요 gave 마다 "to smash".
-// Ties among unranked lemmas go to the one the starter wordlist lists first.
+// Ties among unranked lemmas go to the one `lemma-priority.json` lists first.
 function inflectionLemmaStatement(db: Database, priority: Map<string, number> | null): Statement {
   const base = db.prepare(
     `SELECT i.lemma, i.type, e.rank FROM inflections i
@@ -445,7 +445,7 @@ function starterLemmaPriority(language: string): Map<string, number> | null {
   const root =
     process.env.STARTER_CONTENT_ROOT || path.resolve(import.meta.dir, '../../../languages');
   try {
-    const file = path.join(root, language, 'content', 'starter', 'wordlist.json');
+    const file = path.join(root, language, 'content', 'lemma-priority.json');
     const list = JSON.parse(fs.readFileSync(file, 'utf8')) as { words: Array<{ lemma: string }> };
     return new Map(list.words.map((word, index) => [word.lemma, index]));
   } catch {
@@ -530,7 +530,7 @@ function getStmts(language: string): Stmts | null {
       // Both arms hit an index: entries.word is the PRIMARY KEY, and
       // inflections is covered by its (inflected_form, lemma) autoindex. The
       // inflection arm repeats the ORDER BY of selectInflectionLemma. Unranked ties
-      // use insertion order here and the starter wordlist order there.
+      // use insertion order here and the lemma-priority order there.
       selectReadings: db.prepare(
         `SELECT k.value AS word,
                 COALESCE(
