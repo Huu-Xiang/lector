@@ -1,8 +1,8 @@
 {
-  "title": "Du côté de chez Swann (Combray, début)",
+  "title": "Du côté de chez Swann",
   "author": "Marcel Proust",
   "level": "C2",
-  "wordCount": 19605,
+  "wordCount": 181490,
   "source": {
     "name": "Project Gutenberg",
     "url": "https://www.gutenberg.org/ebooks/2650",
@@ -11,51 +11,439 @@
   "lessons": [
     {
       "file": "01.md",
-      "title": "1. Combray"
+      "title": "1. Première partie: Combray"
     },
     {
       "file": "02.md",
-      "title": "2. Combray"
+      "title": "2. Du côté de chez Swann"
     },
     {
       "file": "03.md",
-      "title": "3. Combray"
+      "title": "3. Du côté de chez Swann"
     },
     {
       "file": "04.md",
-      "title": "4. Combray"
+      "title": "4. Du côté de chez Swann"
     },
     {
       "file": "05.md",
-      "title": "5. Combray"
+      "title": "5. Du côté de chez Swann"
     },
     {
       "file": "06.md",
-      "title": "6. Combray"
+      "title": "6. Du côté de chez Swann"
     },
     {
       "file": "07.md",
-      "title": "7. Combray"
+      "title": "7. Du côté de chez Swann"
     },
     {
       "file": "08.md",
-      "title": "8. Combray"
+      "title": "8. Du côté de chez Swann"
     },
     {
       "file": "09.md",
-      "title": "9. Combray"
+      "title": "9. Du côté de chez Swann"
     },
     {
       "file": "10.md",
-      "title": "10. Combray"
+      "title": "10. Du côté de chez Swann"
     },
     {
       "file": "11.md",
-      "title": "11. Combray"
+      "title": "11. Du côté de chez Swann"
     },
     {
       "file": "12.md",
-      "title": "12. Combray"
+      "title": "12. Du côté de chez Swann"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Du côté de chez Swann"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Du côté de chez Swann"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Du côté de chez Swann"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Du côté de chez Swann"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Du côté de chez Swann"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Du côté de chez Swann"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Du côté de chez Swann"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Du côté de chez Swann"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Du côté de chez Swann"
+    },
+    {
+      "file": "22.md",
+      "title": "22. Du côté de chez Swann"
+    },
+    {
+      "file": "23.md",
+      "title": "23. Du côté de chez Swann"
+    },
+    {
+      "file": "24.md",
+      "title": "24. Du côté de chez Swann"
+    },
+    {
+      "file": "25.md",
+      "title": "25. Du côté de chez Swann"
+    },
+    {
+      "file": "26.md",
+      "title": "26. Du côté de chez Swann"
+    },
+    {
+      "file": "27.md",
+      "title": "27. Du côté de chez Swann"
+    },
+    {
+      "file": "28.md",
+      "title": "28. Du côté de chez Swann"
+    },
+    {
+      "file": "29.md",
+      "title": "29. Du côté de chez Swann"
+    },
+    {
+      "file": "30.md",
+      "title": "30. Du côté de chez Swann"
+    },
+    {
+      "file": "31.md",
+      "title": "31. Du côté de chez Swann"
+    },
+    {
+      "file": "32.md",
+      "title": "32. Du côté de chez Swann"
+    },
+    {
+      "file": "33.md",
+      "title": "33. Du côté de chez Swann"
+    },
+    {
+      "file": "34.md",
+      "title": "34. Du côté de chez Swann"
+    },
+    {
+      "file": "35.md",
+      "title": "35. Du côté de chez Swann"
+    },
+    {
+      "file": "36.md",
+      "title": "36. Du côté de chez Swann"
+    },
+    {
+      "file": "37.md",
+      "title": "37. Du côté de chez Swann"
+    },
+    {
+      "file": "38.md",
+      "title": "38. Du côté de chez Swann"
+    },
+    {
+      "file": "39.md",
+      "title": "39. Du côté de chez Swann"
+    },
+    {
+      "file": "40.md",
+      "title": "40. Du côté de chez Swann"
+    },
+    {
+      "file": "41.md",
+      "title": "41. Du côté de chez Swann"
+    },
+    {
+      "file": "42.md",
+      "title": "42. Du côté de chez Swann"
+    },
+    {
+      "file": "43.md",
+      "title": "43. Du côté de chez Swann"
+    },
+    {
+      "file": "44.md",
+      "title": "44. Du côté de chez Swann"
+    },
+    {
+      "file": "45.md",
+      "title": "45. Du côté de chez Swann"
+    },
+    {
+      "file": "46.md",
+      "title": "46. Du côté de chez Swann"
+    },
+    {
+      "file": "47.md",
+      "title": "47. Du côté de chez Swann"
+    },
+    {
+      "file": "48.md",
+      "title": "48. Du côté de chez Swann"
+    },
+    {
+      "file": "49.md",
+      "title": "49. Deuxième partie: un amour de Swann"
+    },
+    {
+      "file": "50.md",
+      "title": "50. Du côté de chez Swann"
+    },
+    {
+      "file": "51.md",
+      "title": "51. Du côté de chez Swann"
+    },
+    {
+      "file": "52.md",
+      "title": "52. Du côté de chez Swann"
+    },
+    {
+      "file": "53.md",
+      "title": "53. Du côté de chez Swann"
+    },
+    {
+      "file": "54.md",
+      "title": "54. Du côté de chez Swann"
+    },
+    {
+      "file": "55.md",
+      "title": "55. Du côté de chez Swann"
+    },
+    {
+      "file": "56.md",
+      "title": "56. Du côté de chez Swann"
+    },
+    {
+      "file": "57.md",
+      "title": "57. Du côté de chez Swann"
+    },
+    {
+      "file": "58.md",
+      "title": "58. Du côté de chez Swann"
+    },
+    {
+      "file": "59.md",
+      "title": "59. Du côté de chez Swann"
+    },
+    {
+      "file": "60.md",
+      "title": "60. Du côté de chez Swann"
+    },
+    {
+      "file": "61.md",
+      "title": "61. Du côté de chez Swann"
+    },
+    {
+      "file": "62.md",
+      "title": "62. Du côté de chez Swann"
+    },
+    {
+      "file": "63.md",
+      "title": "63. Du côté de chez Swann"
+    },
+    {
+      "file": "64.md",
+      "title": "64. Du côté de chez Swann"
+    },
+    {
+      "file": "65.md",
+      "title": "65. Du côté de chez Swann"
+    },
+    {
+      "file": "66.md",
+      "title": "66. Du côté de chez Swann"
+    },
+    {
+      "file": "67.md",
+      "title": "67. Du côté de chez Swann"
+    },
+    {
+      "file": "68.md",
+      "title": "68. Du côté de chez Swann"
+    },
+    {
+      "file": "69.md",
+      "title": "69. Du côté de chez Swann"
+    },
+    {
+      "file": "70.md",
+      "title": "70. Du côté de chez Swann"
+    },
+    {
+      "file": "71.md",
+      "title": "71. Du côté de chez Swann"
+    },
+    {
+      "file": "72.md",
+      "title": "72. Du côté de chez Swann"
+    },
+    {
+      "file": "73.md",
+      "title": "73. Du côté de chez Swann"
+    },
+    {
+      "file": "74.md",
+      "title": "74. Du côté de chez Swann"
+    },
+    {
+      "file": "75.md",
+      "title": "75. Du côté de chez Swann"
+    },
+    {
+      "file": "76.md",
+      "title": "76. Du côté de chez Swann"
+    },
+    {
+      "file": "77.md",
+      "title": "77. Du côté de chez Swann"
+    },
+    {
+      "file": "78.md",
+      "title": "78. Du côté de chez Swann"
+    },
+    {
+      "file": "79.md",
+      "title": "79. Du côté de chez Swann"
+    },
+    {
+      "file": "80.md",
+      "title": "80. Du côté de chez Swann"
+    },
+    {
+      "file": "81.md",
+      "title": "81. Du côté de chez Swann"
+    },
+    {
+      "file": "82.md",
+      "title": "82. Du côté de chez Swann"
+    },
+    {
+      "file": "83.md",
+      "title": "83. Du côté de chez Swann"
+    },
+    {
+      "file": "84.md",
+      "title": "84. Du côté de chez Swann"
+    },
+    {
+      "file": "85.md",
+      "title": "85. Du côté de chez Swann"
+    },
+    {
+      "file": "86.md",
+      "title": "86. Du côté de chez Swann"
+    },
+    {
+      "file": "87.md",
+      "title": "87. Du côté de chez Swann"
+    },
+    {
+      "file": "88.md",
+      "title": "88. Du côté de chez Swann"
+    },
+    {
+      "file": "89.md",
+      "title": "89. Du côté de chez Swann"
+    },
+    {
+      "file": "90.md",
+      "title": "90. Du côté de chez Swann"
+    },
+    {
+      "file": "91.md",
+      "title": "91. Du côté de chez Swann"
+    },
+    {
+      "file": "92.md",
+      "title": "92. Du côté de chez Swann"
+    },
+    {
+      "file": "93.md",
+      "title": "93. Du côté de chez Swann"
+    },
+    {
+      "file": "94.md",
+      "title": "94. Du côté de chez Swann"
+    },
+    {
+      "file": "95.md",
+      "title": "95. Du côté de chez Swann"
+    },
+    {
+      "file": "96.md",
+      "title": "96. Du côté de chez Swann"
+    },
+    {
+      "file": "97.md",
+      "title": "97. Du côté de chez Swann"
+    },
+    {
+      "file": "98.md",
+      "title": "98. Du côté de chez Swann"
+    },
+    {
+      "file": "99.md",
+      "title": "99. Du côté de chez Swann"
+    },
+    {
+      "file": "100.md",
+      "title": "100. Du côté de chez Swann"
+    },
+    {
+      "file": "101.md",
+      "title": "101. Du côté de chez Swann"
+    },
+    {
+      "file": "102.md",
+      "title": "102. Du côté de chez Swann"
+    },
+    {
+      "file": "103.md",
+      "title": "103. Du côté de chez Swann"
+    },
+    {
+      "file": "104.md",
+      "title": "104. Du côté de chez Swann"
+    },
+    {
+      "file": "105.md",
+      "title": "105. Du côté de chez Swann"
+    },
+    {
+      "file": "106.md",
+      "title": "106. Du côté de chez Swann"
+    },
+    {
+      "file": "107.md",
+      "title": "107. Du côté de chez Swann"
+    },
+    {
+      "file": "108.md",
+      "title": "108. Du côté de chez Swann"
+    },
+    {
+      "file": "109.md",
+      "title": "109. Du côté de chez Swann"
     }
   ]
 }

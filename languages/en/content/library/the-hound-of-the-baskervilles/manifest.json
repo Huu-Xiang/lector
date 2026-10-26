@@ -1,0 +1,177 @@
+{
+  "title": "The Hound of the Baskervilles",
+  "author": "Arthur Conan Doyle",
+  "level": "B2",
+  "wordCount": 59898,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/2852",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Chapter 1. Mr. Sherlock Holmes"
+    },
+    {
+      "file": "02.md",
+      "title": "2. The Hound of the Baskervilles"
+    },
+    {
+      "file": "03.md",
+      "title": "3. The Hound of the Baskervilles"
+    },
+    {
+      "file": "04.md",
+      "title": "4. The Hound of the Baskervilles"
+    },
+    {
+      "file": "05.md",
+      "title": "5. The Hound of the Baskervilles"
+    },
+    {
+      "file": "06.md",
+      "title": "6. The Hound of the Baskervilles"
+    },
+    {
+      "file": "07.md",
+      "title": "7. The Hound of the Baskervilles"
+    },
+    {
+      "file": "08.md",
+      "title": "8. The Hound of the Baskervilles"
+    },
+    {
+      "file": "09.md",
+      "title": "9. The Hound of the Baskervilles"
+    },
+    {
+      "file": "10.md",
+      "title": "10. The Hound of the Baskervilles"
+    },
+    {
+      "file": "11.md",
+      "title": "11. The Hound of the Baskervilles"
+    },
+    {
+      "file": "12.md",
+      "title": "12. The Hound of the Baskervilles"
+    },
+    {
+      "file": "13.md",
+      "title": "13. The Hound of the Baskervilles"
+    },
+    {
+      "file": "14.md",
+      "title": "14. The Hound of the Baskervilles"
+    },
+    {
+      "file": "15.md",
+      "title": "15. The Hound of the Baskervilles"
+    },
+    {
+      "file": "16.md",
+      "title": "16. The Hound of the Baskervilles"
+    },
+    {
+      "file": "17.md",
+      "title": "17. The Hound of the Baskervilles"
+    },
+    {
+      "file": "18.md",
+      "title": "18. The Hound of the Baskervilles"
+    },
+    {
+      "file": "19.md",
+      "title": "19. The Hound of the Baskervilles"
+    },
+    {
+      "file": "20.md",
+      "title": "20. The Hound of the Baskervilles"
+    },
+    {
+      "file": "21.md",
+      "title": "21. The Hound of the Baskervilles"
+    },
+    {
+      "file": "22.md",
+      "title": "22. The Hound of the Baskervilles"
+    },
+    {
+      "file": "23.md",
+      "title": "23. The Hound of the Baskervilles"
+    },
+    {
+      "file": "24.md",
+      "title": "24. The Hound of the Baskervilles"
+    },
+    {
+      "file": "25.md",
+      "title": "25. The Hound of the Baskervilles"
+    },
+    {
+      "file": "26.md",
+      "title": "26. The Hound of the Baskervilles"
+    },
+    {
+      "file": "27.md",
+      "title": "27. The Hound of the Baskervilles"
+    },
+    {
+      "file": "28.md",
+      "title": "28. The Hound of the Baskervilles"
+    },
+    {
+      "file": "29.md",
+      "title": "29. The Hound of the Baskervilles"
+    },
+    {
+      "file": "30.md",
+      "title": "30. The Hound of the Baskervilles"
+    },
+    {
+      "file": "31.md",
+      "title": "31. The Hound of the Baskervilles"
+    },
+    {
+      "file": "32.md",
+      "title": "32. The Hound of the Baskervilles"
+    },
+    {
+      "file": "33.md",
+      "title": "33. The Hound of the Baskervilles"
+    },
+    {
+      "file": "34.md",
+      "title": "34. The Hound of the Baskervilles"
+    },
+    {
+      "file": "35.md",
+      "title": "35. The Hound of the Baskervilles"
+    },
+    {
+      "file": "36.md",
+      "title": "36. The Hound of the Baskervilles"
+    },
+    {
+      "file": "37.md",
+      "title": "37. The Hound of the Baskervilles"
+    },
+    {
+      "file": "38.md",
+      "title": "38. The Hound of the Baskervilles"
+    },
+    {
+      "file": "39.md",
+      "title": "39. The Hound of the Baskervilles"
+    },
+    {
+      "file": "40.md",
+      "title": "40. The Hound of the Baskervilles"
+    },
+    {
+      "file": "41.md",
+      "title": "41. The Hound of the Baskervilles"
+    }
+  ]
+}

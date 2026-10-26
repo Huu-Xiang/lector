@@ -1,8 +1,8 @@
 {
-  "title": "Germinal (début)",
+  "title": "Germinal",
   "author": "Émile Zola",
   "level": "C1",
-  "wordCount": 34952,
+  "wordCount": 177192,
   "source": {
     "name": "Project Gutenberg",
     "url": "https://www.gutenberg.org/ebooks/5711",
@@ -104,6 +104,394 @@
     {
       "file": "24.md",
       "title": "24. Germinal"
+    },
+    {
+      "file": "25.md",
+      "title": "25. Germinal"
+    },
+    {
+      "file": "26.md",
+      "title": "26. Germinal"
+    },
+    {
+      "file": "27.md",
+      "title": "27. Germinal"
+    },
+    {
+      "file": "28.md",
+      "title": "28. Germinal"
+    },
+    {
+      "file": "29.md",
+      "title": "29. Germinal"
+    },
+    {
+      "file": "30.md",
+      "title": "30. Germinal"
+    },
+    {
+      "file": "31.md",
+      "title": "31. Germinal"
+    },
+    {
+      "file": "32.md",
+      "title": "32. Germinal"
+    },
+    {
+      "file": "33.md",
+      "title": "33. Germinal"
+    },
+    {
+      "file": "34.md",
+      "title": "34. Germinal"
+    },
+    {
+      "file": "35.md",
+      "title": "35. Germinal"
+    },
+    {
+      "file": "36.md",
+      "title": "36. Germinal"
+    },
+    {
+      "file": "37.md",
+      "title": "37. Germinal"
+    },
+    {
+      "file": "38.md",
+      "title": "38. Germinal"
+    },
+    {
+      "file": "39.md",
+      "title": "39. Germinal"
+    },
+    {
+      "file": "40.md",
+      "title": "40. Germinal"
+    },
+    {
+      "file": "41.md",
+      "title": "41. Germinal"
+    },
+    {
+      "file": "42.md",
+      "title": "42. Germinal"
+    },
+    {
+      "file": "43.md",
+      "title": "43. Germinal"
+    },
+    {
+      "file": "44.md",
+      "title": "44. Germinal"
+    },
+    {
+      "file": "45.md",
+      "title": "45. Germinal"
+    },
+    {
+      "file": "46.md",
+      "title": "46. Germinal"
+    },
+    {
+      "file": "47.md",
+      "title": "47. Germinal"
+    },
+    {
+      "file": "48.md",
+      "title": "48. Germinal"
+    },
+    {
+      "file": "49.md",
+      "title": "49. Germinal"
+    },
+    {
+      "file": "50.md",
+      "title": "50. Germinal"
+    },
+    {
+      "file": "51.md",
+      "title": "51. Germinal"
+    },
+    {
+      "file": "52.md",
+      "title": "52. Germinal"
+    },
+    {
+      "file": "53.md",
+      "title": "53. Germinal"
+    },
+    {
+      "file": "54.md",
+      "title": "54. Germinal"
+    },
+    {
+      "file": "55.md",
+      "title": "55. Germinal"
+    },
+    {
+      "file": "56.md",
+      "title": "56. Germinal"
+    },
+    {
+      "file": "57.md",
+      "title": "57. Germinal"
+    },
+    {
+      "file": "58.md",
+      "title": "58. Germinal"
+    },
+    {
+      "file": "59.md",
+      "title": "59. Germinal"
+    },
+    {
+      "file": "60.md",
+      "title": "60. Germinal"
+    },
+    {
+      "file": "61.md",
+      "title": "61. Germinal"
+    },
+    {
+      "file": "62.md",
+      "title": "62. Germinal"
+    },
+    {
+      "file": "63.md",
+      "title": "63. Germinal"
+    },
+    {
+      "file": "64.md",
+      "title": "64. Germinal"
+    },
+    {
+      "file": "65.md",
+      "title": "65. Germinal"
+    },
+    {
+      "file": "66.md",
+      "title": "66. Germinal"
+    },
+    {
+      "file": "67.md",
+      "title": "67. Germinal"
+    },
+    {
+      "file": "68.md",
+      "title": "68. Germinal"
+    },
+    {
+      "file": "69.md",
+      "title": "69. Germinal"
+    },
+    {
+      "file": "70.md",
+      "title": "70. Germinal"
+    },
+    {
+      "file": "71.md",
+      "title": "71. Germinal"
+    },
+    {
+      "file": "72.md",
+      "title": "72. Germinal"
+    },
+    {
+      "file": "73.md",
+      "title": "73. Germinal"
+    },
+    {
+      "file": "74.md",
+      "title": "74. Germinal"
+    },
+    {
+      "file": "75.md",
+      "title": "75. Germinal"
+    },
+    {
+      "file": "76.md",
+      "title": "76. IV"
+    },
+    {
+      "file": "77.md",
+      "title": "77. Germinal"
+    },
+    {
+      "file": "78.md",
+      "title": "78. Germinal"
+    },
+    {
+      "file": "79.md",
+      "title": "79. Germinal"
+    },
+    {
+      "file": "80.md",
+      "title": "80. Germinal"
+    },
+    {
+      "file": "81.md",
+      "title": "81. Germinal"
+    },
+    {
+      "file": "82.md",
+      "title": "82. Germinal"
+    },
+    {
+      "file": "83.md",
+      "title": "83. Germinal"
+    },
+    {
+      "file": "84.md",
+      "title": "84. Germinal"
+    },
+    {
+      "file": "85.md",
+      "title": "85. Germinal"
+    },
+    {
+      "file": "86.md",
+      "title": "86. Germinal"
+    },
+    {
+      "file": "87.md",
+      "title": "87. Germinal"
+    },
+    {
+      "file": "88.md",
+      "title": "88. Germinal"
+    },
+    {
+      "file": "89.md",
+      "title": "89. Germinal"
+    },
+    {
+      "file": "90.md",
+      "title": "90. Germinal"
+    },
+    {
+      "file": "91.md",
+      "title": "91. Germinal"
+    },
+    {
+      "file": "92.md",
+      "title": "92. Germinal"
+    },
+    {
+      "file": "93.md",
+      "title": "93. Germinal"
+    },
+    {
+      "file": "94.md",
+      "title": "94. Germinal"
+    },
+    {
+      "file": "95.md",
+      "title": "95. Germinal"
+    },
+    {
+      "file": "96.md",
+      "title": "96. Germinal"
+    },
+    {
+      "file": "97.md",
+      "title": "97. Germinal"
+    },
+    {
+      "file": "98.md",
+      "title": "98. Germinal"
+    },
+    {
+      "file": "99.md",
+      "title": "99. Germinal"
+    },
+    {
+      "file": "100.md",
+      "title": "100. Germinal"
+    },
+    {
+      "file": "101.md",
+      "title": "101. Germinal"
+    },
+    {
+      "file": "102.md",
+      "title": "102. Germinal"
+    },
+    {
+      "file": "103.md",
+      "title": "103. Germinal"
+    },
+    {
+      "file": "104.md",
+      "title": "104. Germinal"
+    },
+    {
+      "file": "105.md",
+      "title": "105. Germinal"
+    },
+    {
+      "file": "106.md",
+      "title": "106. Germinal"
+    },
+    {
+      "file": "107.md",
+      "title": "107. Germinal"
+    },
+    {
+      "file": "108.md",
+      "title": "108. Germinal"
+    },
+    {
+      "file": "109.md",
+      "title": "109. Germinal"
+    },
+    {
+      "file": "110.md",
+      "title": "110. Germinal"
+    },
+    {
+      "file": "111.md",
+      "title": "111. Germinal"
+    },
+    {
+      "file": "112.md",
+      "title": "112. Germinal"
+    },
+    {
+      "file": "113.md",
+      "title": "113. Germinal"
+    },
+    {
+      "file": "114.md",
+      "title": "114. Germinal"
+    },
+    {
+      "file": "115.md",
+      "title": "115. Germinal"
+    },
+    {
+      "file": "116.md",
+      "title": "116. Germinal"
+    },
+    {
+      "file": "117.md",
+      "title": "117. Germinal"
+    },
+    {
+      "file": "118.md",
+      "title": "118. Germinal"
+    },
+    {
+      "file": "119.md",
+      "title": "119. Germinal"
+    },
+    {
+      "file": "120.md",
+      "title": "120. Germinal"
+    },
+    {
+      "file": "121.md",
+      "title": "121. Germinal"
     }
   ]
 }

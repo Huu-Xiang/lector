@@ -1,0 +1,105 @@
+{
+  "title": "Fifty Famous Stories Retold",
+  "author": "James Baldwin",
+  "level": "A2",
+  "wordCount": 32638,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/18442",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. King Alfred and the Cakes"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Fifty Famous Stories"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Fifty Famous Stories"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Fifty Famous Stories"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Fifty Famous Stories"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Fifty Famous Stories"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Fifty Famous Stories"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Fifty Famous Stories"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Fifty Famous Stories"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Fifty Famous Stories"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Fifty Famous Stories"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Fifty Famous Stories"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Fifty Famous Stories"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Fifty Famous Stories"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Fifty Famous Stories"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Fifty Famous Stories"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Fifty Famous Stories"
+    },
+    {
+      "file": "18.md",
+      "title": "18. The Blind Men and the Elephant"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Fifty Famous Stories"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Fifty Famous Stories"
+    },
+    {
+      "file": "21.md",
+      "title": "21. V. The Fortune."
+    },
+    {
+      "file": "22.md",
+      "title": "22. Fifty Famous Stories"
+    },
+    {
+      "file": "23.md",
+      "title": "23. Fifty Famous Stories"
+    }
+  ]
+}

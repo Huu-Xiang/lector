@@ -1,0 +1,33 @@
+{
+  "title": "A First Reader",
+  "author": "Frank E. Spaulding and Catherine T. Bryce",
+  "level": "A1",
+  "wordCount": 7457,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/65323",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. With the Birds"
+    },
+    {
+      "file": "02.md",
+      "title": "2. First Reader"
+    },
+    {
+      "file": "03.md",
+      "title": "3. First Reader"
+    },
+    {
+      "file": "04.md",
+      "title": "4. The Dandelion’s Friends"
+    },
+    {
+      "file": "05.md",
+      "title": "5. First Reader"
+    }
+  ]
+}

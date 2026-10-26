@@ -1,0 +1,449 @@
+{
+  "title": "Dracula",
+  "author": "Bram Stoker",
+  "level": "C1",
+  "wordCount": 163411,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/345",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Chapter I"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Dracula"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Dracula"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Dracula"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Chapter II"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Dracula"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Dracula"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Dracula"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Dracula"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Dracula"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Dracula"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Dracula"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Dracula"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Dracula"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Dracula"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Dracula"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Dracula"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Dracula"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Dracula"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Dracula"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Dracula"
+    },
+    {
+      "file": "22.md",
+      "title": "22. Dracula"
+    },
+    {
+      "file": "23.md",
+      "title": "23. Dracula"
+    },
+    {
+      "file": "24.md",
+      "title": "24. Dracula"
+    },
+    {
+      "file": "25.md",
+      "title": "25. Dracula"
+    },
+    {
+      "file": "26.md",
+      "title": "26. Dracula"
+    },
+    {
+      "file": "27.md",
+      "title": "27. Dracula"
+    },
+    {
+      "file": "28.md",
+      "title": "28. Dracula"
+    },
+    {
+      "file": "29.md",
+      "title": "29. Dracula"
+    },
+    {
+      "file": "30.md",
+      "title": "30. Dracula"
+    },
+    {
+      "file": "31.md",
+      "title": "31. Dracula"
+    },
+    {
+      "file": "32.md",
+      "title": "32. Dracula"
+    },
+    {
+      "file": "33.md",
+      "title": "33. Dracula"
+    },
+    {
+      "file": "34.md",
+      "title": "34. Dracula"
+    },
+    {
+      "file": "35.md",
+      "title": "35. Dracula"
+    },
+    {
+      "file": "36.md",
+      "title": "36. Dracula"
+    },
+    {
+      "file": "37.md",
+      "title": "37. Dracula"
+    },
+    {
+      "file": "38.md",
+      "title": "38. Dracula"
+    },
+    {
+      "file": "39.md",
+      "title": "39. Dracula"
+    },
+    {
+      "file": "40.md",
+      "title": "40. Dracula"
+    },
+    {
+      "file": "41.md",
+      "title": "41. Dracula"
+    },
+    {
+      "file": "42.md",
+      "title": "42. Chapter XII"
+    },
+    {
+      "file": "43.md",
+      "title": "43. Dracula"
+    },
+    {
+      "file": "44.md",
+      "title": "44. Dracula"
+    },
+    {
+      "file": "45.md",
+      "title": "45. Dracula"
+    },
+    {
+      "file": "46.md",
+      "title": "46. Dracula"
+    },
+    {
+      "file": "47.md",
+      "title": "47. Dracula"
+    },
+    {
+      "file": "48.md",
+      "title": "48. Dracula"
+    },
+    {
+      "file": "49.md",
+      "title": "49. Dracula"
+    },
+    {
+      "file": "50.md",
+      "title": "50. Dracula"
+    },
+    {
+      "file": "51.md",
+      "title": "51. Dracula"
+    },
+    {
+      "file": "52.md",
+      "title": "52. Dracula"
+    },
+    {
+      "file": "53.md",
+      "title": "53. Dracula"
+    },
+    {
+      "file": "54.md",
+      "title": "54. Dracula"
+    },
+    {
+      "file": "55.md",
+      "title": "55. Dracula"
+    },
+    {
+      "file": "56.md",
+      "title": "56. Dracula"
+    },
+    {
+      "file": "57.md",
+      "title": "57. Dracula"
+    },
+    {
+      "file": "58.md",
+      "title": "58. Dracula"
+    },
+    {
+      "file": "59.md",
+      "title": "59. Dracula"
+    },
+    {
+      "file": "60.md",
+      "title": "60. Dracula"
+    },
+    {
+      "file": "61.md",
+      "title": "61. Dracula"
+    },
+    {
+      "file": "62.md",
+      "title": "62. Dracula"
+    },
+    {
+      "file": "63.md",
+      "title": "63. Dracula"
+    },
+    {
+      "file": "64.md",
+      "title": "64. Dracula"
+    },
+    {
+      "file": "65.md",
+      "title": "65. Dracula"
+    },
+    {
+      "file": "66.md",
+      "title": "66. Dracula"
+    },
+    {
+      "file": "67.md",
+      "title": "67. Dracula"
+    },
+    {
+      "file": "68.md",
+      "title": "68. Dracula"
+    },
+    {
+      "file": "69.md",
+      "title": "69. Dracula"
+    },
+    {
+      "file": "70.md",
+      "title": "70. Dracula"
+    },
+    {
+      "file": "71.md",
+      "title": "71. Dracula"
+    },
+    {
+      "file": "72.md",
+      "title": "72. Dracula"
+    },
+    {
+      "file": "73.md",
+      "title": "73. Dracula"
+    },
+    {
+      "file": "74.md",
+      "title": "74. Dracula"
+    },
+    {
+      "file": "75.md",
+      "title": "75. Dracula"
+    },
+    {
+      "file": "76.md",
+      "title": "76. Dracula"
+    },
+    {
+      "file": "77.md",
+      "title": "77. Dracula"
+    },
+    {
+      "file": "78.md",
+      "title": "78. Dracula"
+    },
+    {
+      "file": "79.md",
+      "title": "79. Chapter XXI"
+    },
+    {
+      "file": "80.md",
+      "title": "80. Dracula"
+    },
+    {
+      "file": "81.md",
+      "title": "81. Dracula"
+    },
+    {
+      "file": "82.md",
+      "title": "82. Dracula"
+    },
+    {
+      "file": "83.md",
+      "title": "83. Dracula"
+    },
+    {
+      "file": "84.md",
+      "title": "84. Dracula"
+    },
+    {
+      "file": "85.md",
+      "title": "85. Dracula"
+    },
+    {
+      "file": "86.md",
+      "title": "86. Dracula"
+    },
+    {
+      "file": "87.md",
+      "title": "87. Dracula"
+    },
+    {
+      "file": "88.md",
+      "title": "88. Dracula"
+    },
+    {
+      "file": "89.md",
+      "title": "89. Dracula"
+    },
+    {
+      "file": "90.md",
+      "title": "90. Dracula"
+    },
+    {
+      "file": "91.md",
+      "title": "91. Dracula"
+    },
+    {
+      "file": "92.md",
+      "title": "92. Dracula"
+    },
+    {
+      "file": "93.md",
+      "title": "93. Dracula"
+    },
+    {
+      "file": "94.md",
+      "title": "94. Dracula"
+    },
+    {
+      "file": "95.md",
+      "title": "95. Dracula"
+    },
+    {
+      "file": "96.md",
+      "title": "96. Dracula"
+    },
+    {
+      "file": "97.md",
+      "title": "97. Dracula"
+    },
+    {
+      "file": "98.md",
+      "title": "98. Dracula"
+    },
+    {
+      "file": "99.md",
+      "title": "99. Dracula"
+    },
+    {
+      "file": "100.md",
+      "title": "100. Dracula"
+    },
+    {
+      "file": "101.md",
+      "title": "101. Dracula"
+    },
+    {
+      "file": "102.md",
+      "title": "102. Dracula"
+    },
+    {
+      "file": "103.md",
+      "title": "103. Dracula"
+    },
+    {
+      "file": "104.md",
+      "title": "104. Dracula"
+    },
+    {
+      "file": "105.md",
+      "title": "105. Dracula"
+    },
+    {
+      "file": "106.md",
+      "title": "106. Dracula"
+    },
+    {
+      "file": "107.md",
+      "title": "107. Dracula"
+    },
+    {
+      "file": "108.md",
+      "title": "108. Dracula"
+    },
+    {
+      "file": "109.md",
+      "title": "109. Dracula"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "title": "The Tale of Tom Kitten",
+  "author": "Beatrix Potter",
+  "level": "A2",
+  "wordCount": 714,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/14837",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Tom Kitten"
+    }
+  ]
+}

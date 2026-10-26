@@ -1,0 +1,529 @@
+{
+  "title": "Le Rouge et le Noir",
+  "author": "Stendhal",
+  "level": "C1",
+  "wordCount": 185448,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/798",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Volume premier"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Le Rouge et le Noir"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Le Rouge et le Noir"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Le Rouge et le Noir"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Le Rouge et le Noir"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Le Rouge et le Noir"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Le Rouge et le Noir"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Le Rouge et le Noir"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Chapitre VII. Les affinités électives"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Le Rouge et le Noir"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Le Rouge et le Noir"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Le Rouge et le Noir"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Le Rouge et le Noir"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Le Rouge et le Noir"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Le Rouge et le Noir"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Le Rouge et le Noir"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Le Rouge et le Noir"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Le Rouge et le Noir"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Le Rouge et le Noir"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Le Rouge et le Noir"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Le Rouge et le Noir"
+    },
+    {
+      "file": "22.md",
+      "title": "22. Le Rouge et le Noir"
+    },
+    {
+      "file": "23.md",
+      "title": "23. Le Rouge et le Noir"
+    },
+    {
+      "file": "24.md",
+      "title": "24. Le Rouge et le Noir"
+    },
+    {
+      "file": "25.md",
+      "title": "25. Le Rouge et le Noir"
+    },
+    {
+      "file": "26.md",
+      "title": "26. Le Rouge et le Noir"
+    },
+    {
+      "file": "27.md",
+      "title": "27. Le Rouge et le Noir"
+    },
+    {
+      "file": "28.md",
+      "title": "28. Le Rouge et le Noir"
+    },
+    {
+      "file": "29.md",
+      "title": "29. Le Rouge et le Noir"
+    },
+    {
+      "file": "30.md",
+      "title": "30. Le Rouge et le Noir"
+    },
+    {
+      "file": "31.md",
+      "title": "31. Le Rouge et le Noir"
+    },
+    {
+      "file": "32.md",
+      "title": "32. Le Rouge et le Noir"
+    },
+    {
+      "file": "33.md",
+      "title": "33. Le Rouge et le Noir"
+    },
+    {
+      "file": "34.md",
+      "title": "34. Le Rouge et le Noir"
+    },
+    {
+      "file": "35.md",
+      "title": "35. Le Rouge et le Noir"
+    },
+    {
+      "file": "36.md",
+      "title": "36. Le Rouge et le Noir"
+    },
+    {
+      "file": "37.md",
+      "title": "37. Le Rouge et le Noir"
+    },
+    {
+      "file": "38.md",
+      "title": "38. Le Rouge et le Noir"
+    },
+    {
+      "file": "39.md",
+      "title": "39. Le Rouge et le Noir"
+    },
+    {
+      "file": "40.md",
+      "title": "40. Le Rouge et le Noir"
+    },
+    {
+      "file": "41.md",
+      "title": "41. Le Rouge et le Noir"
+    },
+    {
+      "file": "42.md",
+      "title": "42. Le Rouge et le Noir"
+    },
+    {
+      "file": "43.md",
+      "title": "43. Le Rouge et le Noir"
+    },
+    {
+      "file": "44.md",
+      "title": "44. Le Rouge et le Noir"
+    },
+    {
+      "file": "45.md",
+      "title": "45. Le Rouge et le Noir"
+    },
+    {
+      "file": "46.md",
+      "title": "46. Le Rouge et le Noir"
+    },
+    {
+      "file": "47.md",
+      "title": "47. Le Rouge et le Noir"
+    },
+    {
+      "file": "48.md",
+      "title": "48. Le Rouge et le Noir"
+    },
+    {
+      "file": "49.md",
+      "title": "49. Le Rouge et le Noir"
+    },
+    {
+      "file": "50.md",
+      "title": "50. Le Rouge et le Noir"
+    },
+    {
+      "file": "51.md",
+      "title": "51. Le Rouge et le Noir"
+    },
+    {
+      "file": "52.md",
+      "title": "52. Le Rouge et le Noir"
+    },
+    {
+      "file": "53.md",
+      "title": "53. Le Rouge et le Noir"
+    },
+    {
+      "file": "54.md",
+      "title": "54. Le Rouge et le Noir"
+    },
+    {
+      "file": "55.md",
+      "title": "55. Le Rouge et le Noir"
+    },
+    {
+      "file": "56.md",
+      "title": "56. Le Rouge et le Noir"
+    },
+    {
+      "file": "57.md",
+      "title": "57. Le Rouge et le Noir"
+    },
+    {
+      "file": "58.md",
+      "title": "58. Le Rouge et le Noir"
+    },
+    {
+      "file": "59.md",
+      "title": "59. Le Rouge et le Noir"
+    },
+    {
+      "file": "60.md",
+      "title": "60. Le Rouge et le Noir"
+    },
+    {
+      "file": "61.md",
+      "title": "61. Le Rouge et le Noir"
+    },
+    {
+      "file": "62.md",
+      "title": "62. Le Rouge et le Noir"
+    },
+    {
+      "file": "63.md",
+      "title": "63. Le Rouge et le Noir"
+    },
+    {
+      "file": "64.md",
+      "title": "64. Le Rouge et le Noir"
+    },
+    {
+      "file": "65.md",
+      "title": "65. Le Rouge et le Noir"
+    },
+    {
+      "file": "66.md",
+      "title": "66. Le Rouge et le Noir"
+    },
+    {
+      "file": "67.md",
+      "title": "67. Le Rouge et le Noir"
+    },
+    {
+      "file": "68.md",
+      "title": "68. Le Rouge et le Noir"
+    },
+    {
+      "file": "69.md",
+      "title": "69. Le Rouge et le Noir"
+    },
+    {
+      "file": "70.md",
+      "title": "70. Le Rouge et le Noir"
+    },
+    {
+      "file": "71.md",
+      "title": "71. Le Rouge et le Noir"
+    },
+    {
+      "file": "72.md",
+      "title": "72. Chapitre VIII. Quelle est la décoration qui distingue?"
+    },
+    {
+      "file": "73.md",
+      "title": "73. Le Rouge et le Noir"
+    },
+    {
+      "file": "74.md",
+      "title": "74. Le Rouge et le Noir"
+    },
+    {
+      "file": "75.md",
+      "title": "75. Le Rouge et le Noir"
+    },
+    {
+      "file": "76.md",
+      "title": "76. Le Rouge et le Noir"
+    },
+    {
+      "file": "77.md",
+      "title": "77. Chapitre X. La reine marguerite"
+    },
+    {
+      "file": "78.md",
+      "title": "78. Le Rouge et le Noir"
+    },
+    {
+      "file": "79.md",
+      "title": "79. Le Rouge et le Noir"
+    },
+    {
+      "file": "80.md",
+      "title": "80. Le Rouge et le Noir"
+    },
+    {
+      "file": "81.md",
+      "title": "81. Le Rouge et le Noir"
+    },
+    {
+      "file": "82.md",
+      "title": "82. Le Rouge et le Noir"
+    },
+    {
+      "file": "83.md",
+      "title": "83. Le Rouge et le Noir"
+    },
+    {
+      "file": "84.md",
+      "title": "84. Le Rouge et le Noir"
+    },
+    {
+      "file": "85.md",
+      "title": "85. Le Rouge et le Noir"
+    },
+    {
+      "file": "86.md",
+      "title": "86. Le Rouge et le Noir"
+    },
+    {
+      "file": "87.md",
+      "title": "87. Le Rouge et le Noir"
+    },
+    {
+      "file": "88.md",
+      "title": "88. Le Rouge et le Noir"
+    },
+    {
+      "file": "89.md",
+      "title": "89. Le Rouge et le Noir"
+    },
+    {
+      "file": "90.md",
+      "title": "90. Le Rouge et le Noir"
+    },
+    {
+      "file": "91.md",
+      "title": "91. Le Rouge et le Noir"
+    },
+    {
+      "file": "92.md",
+      "title": "92. Le Rouge et le Noir"
+    },
+    {
+      "file": "93.md",
+      "title": "93. Le Rouge et le Noir"
+    },
+    {
+      "file": "94.md",
+      "title": "94. Le Rouge et le Noir"
+    },
+    {
+      "file": "95.md",
+      "title": "95. Le Rouge et le Noir"
+    },
+    {
+      "file": "96.md",
+      "title": "96. Le Rouge et le Noir"
+    },
+    {
+      "file": "97.md",
+      "title": "97. Le Rouge et le Noir"
+    },
+    {
+      "file": "98.md",
+      "title": "98. Le Rouge et le Noir"
+    },
+    {
+      "file": "99.md",
+      "title": "99. Le Rouge et le Noir"
+    },
+    {
+      "file": "100.md",
+      "title": "100. Le Rouge et le Noir"
+    },
+    {
+      "file": "101.md",
+      "title": "101. Le Rouge et le Noir"
+    },
+    {
+      "file": "102.md",
+      "title": "102. Chapitre XXV. Le ministère de la vertu"
+    },
+    {
+      "file": "103.md",
+      "title": "103. Le Rouge et le Noir"
+    },
+    {
+      "file": "104.md",
+      "title": "104. Le Rouge et le Noir"
+    },
+    {
+      "file": "105.md",
+      "title": "105. Le Rouge et le Noir"
+    },
+    {
+      "file": "106.md",
+      "title": "106. Le Rouge et le Noir"
+    },
+    {
+      "file": "107.md",
+      "title": "107. Le Rouge et le Noir"
+    },
+    {
+      "file": "108.md",
+      "title": "108. Le Rouge et le Noir"
+    },
+    {
+      "file": "109.md",
+      "title": "109. Le Rouge et le Noir"
+    },
+    {
+      "file": "110.md",
+      "title": "110. Le Rouge et le Noir"
+    },
+    {
+      "file": "111.md",
+      "title": "111. Le Rouge et le Noir"
+    },
+    {
+      "file": "112.md",
+      "title": "112. Le Rouge et le Noir"
+    },
+    {
+      "file": "113.md",
+      "title": "113. Le Rouge et le Noir"
+    },
+    {
+      "file": "114.md",
+      "title": "114. Le Rouge et le Noir"
+    },
+    {
+      "file": "115.md",
+      "title": "115. Le Rouge et le Noir"
+    },
+    {
+      "file": "116.md",
+      "title": "116. Le Rouge et le Noir"
+    },
+    {
+      "file": "117.md",
+      "title": "117. Le Rouge et le Noir"
+    },
+    {
+      "file": "118.md",
+      "title": "118. Le Rouge et le Noir"
+    },
+    {
+      "file": "119.md",
+      "title": "119. Le Rouge et le Noir"
+    },
+    {
+      "file": "120.md",
+      "title": "120. Le Rouge et le Noir"
+    },
+    {
+      "file": "121.md",
+      "title": "121. Le Rouge et le Noir"
+    },
+    {
+      "file": "122.md",
+      "title": "122. Le Rouge et le Noir"
+    },
+    {
+      "file": "123.md",
+      "title": "123. Le Rouge et le Noir"
+    },
+    {
+      "file": "124.md",
+      "title": "124. Le Rouge et le Noir"
+    },
+    {
+      "file": "125.md",
+      "title": "125. Le Rouge et le Noir"
+    },
+    {
+      "file": "126.md",
+      "title": "126. Le Rouge et le Noir"
+    },
+    {
+      "file": "127.md",
+      "title": "127. Le Rouge et le Noir"
+    },
+    {
+      "file": "128.md",
+      "title": "128. Le Rouge et le Noir"
+    },
+    {
+      "file": "129.md",
+      "title": "129. Le Rouge et le Noir"
+    }
+  ]
+}

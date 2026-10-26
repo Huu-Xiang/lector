@@ -1,8 +1,8 @@
 {
-  "title": "Le Petit Chose (début)",
+  "title": "Le Petit Chose",
   "author": "Alphonse Daudet",
   "level": "B1",
-  "wordCount": 34942,
+  "wordCount": 87771,
   "source": {
     "name": "Project Gutenberg",
     "url": "https://www.gutenberg.org/ebooks/13256",
@@ -104,6 +104,150 @@
     {
       "file": "24.md",
       "title": "24. Le Petit Chose"
+    },
+    {
+      "file": "25.md",
+      "title": "25. Le Petit Chose"
+    },
+    {
+      "file": "26.md",
+      "title": "26. Le Petit Chose"
+    },
+    {
+      "file": "27.md",
+      "title": "27. Le Petit Chose"
+    },
+    {
+      "file": "28.md",
+      "title": "28. Le Petit Chose"
+    },
+    {
+      "file": "29.md",
+      "title": "29. Le Petit Chose"
+    },
+    {
+      "file": "30.md",
+      "title": "30. Le Petit Chose"
+    },
+    {
+      "file": "31.md",
+      "title": "31. Le Petit Chose"
+    },
+    {
+      "file": "32.md",
+      "title": "32. Le Petit Chose"
+    },
+    {
+      "file": "33.md",
+      "title": "33. Le Petit Chose"
+    },
+    {
+      "file": "34.md",
+      "title": "34. Le Petit Chose"
+    },
+    {
+      "file": "35.md",
+      "title": "35. Le Petit Chose"
+    },
+    {
+      "file": "36.md",
+      "title": "36. Le Petit Chose"
+    },
+    {
+      "file": "37.md",
+      "title": "37. Le Petit Chose"
+    },
+    {
+      "file": "38.md",
+      "title": "38. Le Petit Chose"
+    },
+    {
+      "file": "39.md",
+      "title": "39. Le Petit Chose"
+    },
+    {
+      "file": "40.md",
+      "title": "40. Le Petit Chose"
+    },
+    {
+      "file": "41.md",
+      "title": "41. La bête a bon dieu"
+    },
+    {
+      "file": "42.md",
+      "title": "42. Le Petit Chose"
+    },
+    {
+      "file": "43.md",
+      "title": "43. Le Petit Chose"
+    },
+    {
+      "file": "44.md",
+      "title": "44. Le Petit Chose"
+    },
+    {
+      "file": "45.md",
+      "title": "45. Le Petit Chose"
+    },
+    {
+      "file": "46.md",
+      "title": "46. Le Petit Chose"
+    },
+    {
+      "file": "47.md",
+      "title": "47. Le Petit Chose"
+    },
+    {
+      "file": "48.md",
+      "title": "48. Le Petit Chose"
+    },
+    {
+      "file": "49.md",
+      "title": "49. Le Petit Chose"
+    },
+    {
+      "file": "50.md",
+      "title": "50. Le Petit Chose"
+    },
+    {
+      "file": "51.md",
+      "title": "51. Le Petit Chose"
+    },
+    {
+      "file": "52.md",
+      "title": "52. Le Petit Chose"
+    },
+    {
+      "file": "53.md",
+      "title": "53. Le Petit Chose"
+    },
+    {
+      "file": "54.md",
+      "title": "54. Le Petit Chose"
+    },
+    {
+      "file": "55.md",
+      "title": "55. Le Petit Chose"
+    },
+    {
+      "file": "56.md",
+      "title": "56. Le Petit Chose"
+    },
+    {
+      "file": "57.md",
+      "title": "57. Le Petit Chose"
+    },
+    {
+      "file": "58.md",
+      "title": "58. Le Petit Chose"
+    },
+    {
+      "file": "59.md",
+      "title": "59. Le Petit Chose"
+    },
+    {
+      "file": "60.md",
+      "title": "60. Le Petit Chose"
     }
   ]
 }

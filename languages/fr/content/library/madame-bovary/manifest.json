@@ -1,8 +1,8 @@
 {
-  "title": "Madame Bovary (début)",
+  "title": "Madame Bovary",
   "author": "Gustave Flaubert",
   "level": "C1",
-  "wordCount": 34827,
+  "wordCount": 120227,
   "source": {
     "name": "Project Gutenberg",
     "url": "https://www.gutenberg.org/ebooks/14155",
@@ -104,6 +104,238 @@
     {
       "file": "24.md",
       "title": "24. Madame Bovary"
+    },
+    {
+      "file": "25.md",
+      "title": "25. Madame Bovary"
+    },
+    {
+      "file": "26.md",
+      "title": "26. Madame Bovary"
+    },
+    {
+      "file": "27.md",
+      "title": "27. Madame Bovary"
+    },
+    {
+      "file": "28.md",
+      "title": "28. Madame Bovary"
+    },
+    {
+      "file": "29.md",
+      "title": "29. Madame Bovary"
+    },
+    {
+      "file": "30.md",
+      "title": "30. Madame Bovary"
+    },
+    {
+      "file": "31.md",
+      "title": "31. Madame Bovary"
+    },
+    {
+      "file": "32.md",
+      "title": "32. Madame Bovary"
+    },
+    {
+      "file": "33.md",
+      "title": "33. Madame Bovary"
+    },
+    {
+      "file": "34.md",
+      "title": "34. Madame Bovary"
+    },
+    {
+      "file": "35.md",
+      "title": "35. Madame Bovary"
+    },
+    {
+      "file": "36.md",
+      "title": "36. Madame Bovary"
+    },
+    {
+      "file": "37.md",
+      "title": "37. Madame Bovary"
+    },
+    {
+      "file": "38.md",
+      "title": "38. Madame Bovary"
+    },
+    {
+      "file": "39.md",
+      "title": "39. Madame Bovary"
+    },
+    {
+      "file": "40.md",
+      "title": "40. Madame Bovary"
+    },
+    {
+      "file": "41.md",
+      "title": "41. Madame Bovary"
+    },
+    {
+      "file": "42.md",
+      "title": "42. Madame Bovary"
+    },
+    {
+      "file": "43.md",
+      "title": "43. Madame Bovary"
+    },
+    {
+      "file": "44.md",
+      "title": "44. Madame Bovary"
+    },
+    {
+      "file": "45.md",
+      "title": "45. Madame Bovary"
+    },
+    {
+      "file": "46.md",
+      "title": "46. Madame Bovary"
+    },
+    {
+      "file": "47.md",
+      "title": "47. Madame Bovary"
+    },
+    {
+      "file": "48.md",
+      "title": "48. Madame Bovary"
+    },
+    {
+      "file": "49.md",
+      "title": "49. Madame Bovary"
+    },
+    {
+      "file": "50.md",
+      "title": "50. Madame Bovary"
+    },
+    {
+      "file": "51.md",
+      "title": "51. Madame Bovary"
+    },
+    {
+      "file": "52.md",
+      "title": "52. Madame Bovary"
+    },
+    {
+      "file": "53.md",
+      "title": "53. Madame Bovary"
+    },
+    {
+      "file": "54.md",
+      "title": "54. Madame Bovary"
+    },
+    {
+      "file": "55.md",
+      "title": "55. Madame Bovary"
+    },
+    {
+      "file": "56.md",
+      "title": "56. Madame Bovary"
+    },
+    {
+      "file": "57.md",
+      "title": "57. Madame Bovary"
+    },
+    {
+      "file": "58.md",
+      "title": "58. Madame Bovary"
+    },
+    {
+      "file": "59.md",
+      "title": "59. Madame Bovary"
+    },
+    {
+      "file": "60.md",
+      "title": "60. Madame Bovary"
+    },
+    {
+      "file": "61.md",
+      "title": "61. Madame Bovary"
+    },
+    {
+      "file": "62.md",
+      "title": "62. Madame Bovary"
+    },
+    {
+      "file": "63.md",
+      "title": "63. Madame Bovary"
+    },
+    {
+      "file": "64.md",
+      "title": "64. Madame Bovary"
+    },
+    {
+      "file": "65.md",
+      "title": "65. Madame Bovary"
+    },
+    {
+      "file": "66.md",
+      "title": "66. Madame Bovary"
+    },
+    {
+      "file": "67.md",
+      "title": "67. Madame Bovary"
+    },
+    {
+      "file": "68.md",
+      "title": "68. Madame Bovary"
+    },
+    {
+      "file": "69.md",
+      "title": "69. Madame Bovary"
+    },
+    {
+      "file": "70.md",
+      "title": "70. Madame Bovary"
+    },
+    {
+      "file": "71.md",
+      "title": "71. Madame Bovary"
+    },
+    {
+      "file": "72.md",
+      "title": "72. Madame Bovary"
+    },
+    {
+      "file": "73.md",
+      "title": "73. Madame Bovary"
+    },
+    {
+      "file": "74.md",
+      "title": "74. Madame Bovary"
+    },
+    {
+      "file": "75.md",
+      "title": "75. Madame Bovary"
+    },
+    {
+      "file": "76.md",
+      "title": "76. Madame Bovary"
+    },
+    {
+      "file": "77.md",
+      "title": "77. Madame Bovary"
+    },
+    {
+      "file": "78.md",
+      "title": "78. Madame Bovary"
+    },
+    {
+      "file": "79.md",
+      "title": "79. Madame Bovary"
+    },
+    {
+      "file": "80.md",
+      "title": "80. Madame Bovary"
+    },
+    {
+      "file": "81.md",
+      "title": "81. Madame Bovary"
+    },
+    {
+      "file": "82.md",
+      "title": "82. Madame Bovary"
     }
   ]
 }

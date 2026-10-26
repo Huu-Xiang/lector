@@ -1,8 +1,8 @@
 {
-  "title": "Fables de La Fontaine (extraits)",
+  "title": "Fables de La Fontaine",
   "author": "Jean de La Fontaine",
   "level": "B2",
-  "wordCount": 13997,
+  "wordCount": 74498,
   "source": {
     "name": "Project Gutenberg",
     "url": "https://www.gutenberg.org/ebooks/56327",
@@ -11,7 +11,7 @@
   "lessons": [
     {
       "file": "01.md",
-      "title": "1. La cigale et la fourmi."
+      "title": "1. La cigale et la fourmi"
     },
     {
       "file": "02.md",
@@ -35,7 +35,7 @@
     },
     {
       "file": "07.md",
-      "title": "7. XVIII. La chatte métamorphosée en femme."
+      "title": "7. XVIII. La chatte métamorphosée en femme"
     },
     {
       "file": "08.md",
@@ -43,7 +43,167 @@
     },
     {
       "file": "09.md",
-      "title": "9. VII. L'ivrogne et sa femme."
+      "title": "9. VII. L'ivrogne et sa femme"
+    },
+    {
+      "file": "10.md",
+      "title": "10. XVI. La femme noyée"
+    },
+    {
+      "file": "11.md",
+      "title": "11. IV. Le jardinier et son seigneur"
+    },
+    {
+      "file": "12.md",
+      "title": "12. IX. Le geai paré des plumes du paon"
+    },
+    {
+      "file": "13.md",
+      "title": "13. XIV. Le renard et le buste"
+    },
+    {
+      "file": "14.md",
+      "title": "14. XXI. L'œil du maitre"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Fables"
+    },
+    {
+      "file": "16.md",
+      "title": "16. IX. Le laboureur et ses enfants"
+    },
+    {
+      "file": "17.md",
+      "title": "17. XIX. Le lion s'en allant en guerre"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Fables"
+    },
+    {
+      "file": "19.md",
+      "title": "19. XI. L'ane et ses maitres"
+    },
+    {
+      "file": "20.md",
+      "title": "20. XX. La discorde"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Fables"
+    },
+    {
+      "file": "22.md",
+      "title": "22. VII. La cour du lion"
+    },
+    {
+      "file": "23.md",
+      "title": "23. XII"
+    },
+    {
+      "file": "24.md",
+      "title": "24. Fables"
+    },
+    {
+      "file": "25.md",
+      "title": "25. Fables"
+    },
+    {
+      "file": "26.md",
+      "title": "26. Fables"
+    },
+    {
+      "file": "27.md",
+      "title": "27. Fables"
+    },
+    {
+      "file": "28.md",
+      "title": "28. XV. Le rat et l'éléphant"
+    },
+    {
+      "file": "29.md",
+      "title": "29. Fables"
+    },
+    {
+      "file": "30.md",
+      "title": "30. XXIII. Le torrent et la rivière"
+    },
+    {
+      "file": "31.md",
+      "title": "31. Fables"
+    },
+    {
+      "file": "32.md",
+      "title": "32. III. Le singe et le léopard"
+    },
+    {
+      "file": "33.md",
+      "title": "33. Fables"
+    },
+    {
+      "file": "34.md",
+      "title": "34. Fables"
+    },
+    {
+      "file": "35.md",
+      "title": "35. XIX. Le berger et son troupeau"
+    },
+    {
+      "file": "36.md",
+      "title": "36. Fables"
+    },
+    {
+      "file": "37.md",
+      "title": "37. Fables"
+    },
+    {
+      "file": "38.md",
+      "title": "38. Fables"
+    },
+    {
+      "file": "39.md",
+      "title": "39. XIII. La lionne et l'ourse"
+    },
+    {
+      "file": "40.md",
+      "title": "40. Fables"
+    },
+    {
+      "file": "41.md",
+      "title": "41. Fables"
+    },
+    {
+      "file": "42.md",
+      "title": "42. VIII. Le vieillard et les trois jeunes hommes"
+    },
+    {
+      "file": "43.md",
+      "title": "43. Fables"
+    },
+    {
+      "file": "44.md",
+      "title": "44. Fables"
+    },
+    {
+      "file": "45.md",
+      "title": "45. Fables"
+    },
+    {
+      "file": "46.md",
+      "title": "46. Fables"
+    },
+    {
+      "file": "47.md",
+      "title": "47. Fables"
+    },
+    {
+      "file": "48.md",
+      "title": "48. XXII. Un fou et un sage"
+    },
+    {
+      "file": "49.md",
+      "title": "49. Fables"
     }
   ]
 }

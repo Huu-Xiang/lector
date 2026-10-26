@@ -1,0 +1,157 @@
+{
+  "title": "The Jungle Book",
+  "author": "Rudyard Kipling",
+  "level": "B1",
+  "wordCount": 52308,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/236",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Mowgli’s Brothers"
+    },
+    {
+      "file": "02.md",
+      "title": "2. The Jungle Book"
+    },
+    {
+      "file": "03.md",
+      "title": "3. The Jungle Book"
+    },
+    {
+      "file": "04.md",
+      "title": "4. The Jungle Book"
+    },
+    {
+      "file": "05.md",
+      "title": "5. The Jungle Book"
+    },
+    {
+      "file": "06.md",
+      "title": "6. The Jungle Book"
+    },
+    {
+      "file": "07.md",
+      "title": "7. The Jungle Book"
+    },
+    {
+      "file": "08.md",
+      "title": "8. The Jungle Book"
+    },
+    {
+      "file": "09.md",
+      "title": "9. The Jungle Book"
+    },
+    {
+      "file": "10.md",
+      "title": "10. The Jungle Book"
+    },
+    {
+      "file": "11.md",
+      "title": "11. The Jungle Book"
+    },
+    {
+      "file": "12.md",
+      "title": "12. The Jungle Book"
+    },
+    {
+      "file": "13.md",
+      "title": "13. The Jungle Book"
+    },
+    {
+      "file": "14.md",
+      "title": "14. The Jungle Book"
+    },
+    {
+      "file": "15.md",
+      "title": "15. The Jungle Book"
+    },
+    {
+      "file": "16.md",
+      "title": "16. The Jungle Book"
+    },
+    {
+      "file": "17.md",
+      "title": "17. The Jungle Book"
+    },
+    {
+      "file": "18.md",
+      "title": "18. The Jungle Book"
+    },
+    {
+      "file": "19.md",
+      "title": "19. The Jungle Book"
+    },
+    {
+      "file": "20.md",
+      "title": "20. The Jungle Book"
+    },
+    {
+      "file": "21.md",
+      "title": "21. The Jungle Book"
+    },
+    {
+      "file": "22.md",
+      "title": "22. The Jungle Book"
+    },
+    {
+      "file": "23.md",
+      "title": "23. The Jungle Book"
+    },
+    {
+      "file": "24.md",
+      "title": "24. The Jungle Book"
+    },
+    {
+      "file": "25.md",
+      "title": "25. The Jungle Book"
+    },
+    {
+      "file": "26.md",
+      "title": "26. The Jungle Book"
+    },
+    {
+      "file": "27.md",
+      "title": "27. The Jungle Book"
+    },
+    {
+      "file": "28.md",
+      "title": "28. The Jungle Book"
+    },
+    {
+      "file": "29.md",
+      "title": "29. The Jungle Book"
+    },
+    {
+      "file": "30.md",
+      "title": "30. The Jungle Book"
+    },
+    {
+      "file": "31.md",
+      "title": "31. The Jungle Book"
+    },
+    {
+      "file": "32.md",
+      "title": "32. The Jungle Book"
+    },
+    {
+      "file": "33.md",
+      "title": "33. The Jungle Book"
+    },
+    {
+      "file": "34.md",
+      "title": "34. The Jungle Book"
+    },
+    {
+      "file": "35.md",
+      "title": "35. The Jungle Book"
+    },
+    {
+      "file": "36.md",
+      "title": "36. The Jungle Book"
+    }
+  ]
+}

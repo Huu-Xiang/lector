@@ -1,0 +1,397 @@
+{
+  "title": "A Tale of Two Cities",
+  "author": "Charles Dickens",
+  "level": "C1",
+  "wordCount": 138192,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/98",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Book the First—Recalled to Life"
+    },
+    {
+      "file": "02.md",
+      "title": "2. A Tale of Two Cities"
+    },
+    {
+      "file": "03.md",
+      "title": "3. A Tale of Two Cities"
+    },
+    {
+      "file": "04.md",
+      "title": "4. A Tale of Two Cities"
+    },
+    {
+      "file": "05.md",
+      "title": "5. A Tale of Two Cities"
+    },
+    {
+      "file": "06.md",
+      "title": "6. A Tale of Two Cities"
+    },
+    {
+      "file": "07.md",
+      "title": "7. A Tale of Two Cities"
+    },
+    {
+      "file": "08.md",
+      "title": "8. A Tale of Two Cities"
+    },
+    {
+      "file": "09.md",
+      "title": "9. A Tale of Two Cities"
+    },
+    {
+      "file": "10.md",
+      "title": "10. A Tale of Two Cities"
+    },
+    {
+      "file": "11.md",
+      "title": "11. A Tale of Two Cities"
+    },
+    {
+      "file": "12.md",
+      "title": "12. A Tale of Two Cities"
+    },
+    {
+      "file": "13.md",
+      "title": "13. A Tale of Two Cities"
+    },
+    {
+      "file": "14.md",
+      "title": "14. A Tale of Two Cities"
+    },
+    {
+      "file": "15.md",
+      "title": "15. A Tale of Two Cities"
+    },
+    {
+      "file": "16.md",
+      "title": "16. A Tale of Two Cities"
+    },
+    {
+      "file": "17.md",
+      "title": "17. A Tale of Two Cities"
+    },
+    {
+      "file": "18.md",
+      "title": "18. A Tale of Two Cities"
+    },
+    {
+      "file": "19.md",
+      "title": "19. A Tale of Two Cities"
+    },
+    {
+      "file": "20.md",
+      "title": "20. A Tale of Two Cities"
+    },
+    {
+      "file": "21.md",
+      "title": "21. A Tale of Two Cities"
+    },
+    {
+      "file": "22.md",
+      "title": "22. A Tale of Two Cities"
+    },
+    {
+      "file": "23.md",
+      "title": "23. A Tale of Two Cities"
+    },
+    {
+      "file": "24.md",
+      "title": "24. A Tale of Two Cities"
+    },
+    {
+      "file": "25.md",
+      "title": "25. A Tale of Two Cities"
+    },
+    {
+      "file": "26.md",
+      "title": "26. A Tale of Two Cities"
+    },
+    {
+      "file": "27.md",
+      "title": "27. A Tale of Two Cities"
+    },
+    {
+      "file": "28.md",
+      "title": "28. A Tale of Two Cities"
+    },
+    {
+      "file": "29.md",
+      "title": "29. A Tale of Two Cities"
+    },
+    {
+      "file": "30.md",
+      "title": "30. A Tale of Two Cities"
+    },
+    {
+      "file": "31.md",
+      "title": "31. A Tale of Two Cities"
+    },
+    {
+      "file": "32.md",
+      "title": "32. A Tale of Two Cities"
+    },
+    {
+      "file": "33.md",
+      "title": "33. A Tale of Two Cities"
+    },
+    {
+      "file": "34.md",
+      "title": "34. A Tale of Two Cities"
+    },
+    {
+      "file": "35.md",
+      "title": "35. A Tale of Two Cities"
+    },
+    {
+      "file": "36.md",
+      "title": "36. A Tale of Two Cities"
+    },
+    {
+      "file": "37.md",
+      "title": "37. A Tale of Two Cities"
+    },
+    {
+      "file": "38.md",
+      "title": "38. A Tale of Two Cities"
+    },
+    {
+      "file": "39.md",
+      "title": "39. A Tale of Two Cities"
+    },
+    {
+      "file": "40.md",
+      "title": "40. A Tale of Two Cities"
+    },
+    {
+      "file": "41.md",
+      "title": "41. A Tale of Two Cities"
+    },
+    {
+      "file": "42.md",
+      "title": "42. A Tale of Two Cities"
+    },
+    {
+      "file": "43.md",
+      "title": "43. A Tale of Two Cities"
+    },
+    {
+      "file": "44.md",
+      "title": "44. A Tale of Two Cities"
+    },
+    {
+      "file": "45.md",
+      "title": "45. A Tale of Two Cities"
+    },
+    {
+      "file": "46.md",
+      "title": "46. A Tale of Two Cities"
+    },
+    {
+      "file": "47.md",
+      "title": "47. A Tale of Two Cities"
+    },
+    {
+      "file": "48.md",
+      "title": "48. A Tale of Two Cities"
+    },
+    {
+      "file": "49.md",
+      "title": "49. A Tale of Two Cities"
+    },
+    {
+      "file": "50.md",
+      "title": "50. A Tale of Two Cities"
+    },
+    {
+      "file": "51.md",
+      "title": "51. A Tale of Two Cities"
+    },
+    {
+      "file": "52.md",
+      "title": "52. A Tale of Two Cities"
+    },
+    {
+      "file": "53.md",
+      "title": "53. A Tale of Two Cities"
+    },
+    {
+      "file": "54.md",
+      "title": "54. A Tale of Two Cities"
+    },
+    {
+      "file": "55.md",
+      "title": "55. A Tale of Two Cities"
+    },
+    {
+      "file": "56.md",
+      "title": "56. A Tale of Two Cities"
+    },
+    {
+      "file": "57.md",
+      "title": "57. A Tale of Two Cities"
+    },
+    {
+      "file": "58.md",
+      "title": "58. A Tale of Two Cities"
+    },
+    {
+      "file": "59.md",
+      "title": "59. A Tale of Two Cities"
+    },
+    {
+      "file": "60.md",
+      "title": "60. A Tale of Two Cities"
+    },
+    {
+      "file": "61.md",
+      "title": "61. A Tale of Two Cities"
+    },
+    {
+      "file": "62.md",
+      "title": "62. A Tale of Two Cities"
+    },
+    {
+      "file": "63.md",
+      "title": "63. A Tale of Two Cities"
+    },
+    {
+      "file": "64.md",
+      "title": "64. A Tale of Two Cities"
+    },
+    {
+      "file": "65.md",
+      "title": "65. A Tale of Two Cities"
+    },
+    {
+      "file": "66.md",
+      "title": "66. A Tale of Two Cities"
+    },
+    {
+      "file": "67.md",
+      "title": "67. A Tale of Two Cities"
+    },
+    {
+      "file": "68.md",
+      "title": "68. A Tale of Two Cities"
+    },
+    {
+      "file": "69.md",
+      "title": "69. A Tale of Two Cities"
+    },
+    {
+      "file": "70.md",
+      "title": "70. A Tale of Two Cities"
+    },
+    {
+      "file": "71.md",
+      "title": "71. A Tale of Two Cities"
+    },
+    {
+      "file": "72.md",
+      "title": "72. A Tale of Two Cities"
+    },
+    {
+      "file": "73.md",
+      "title": "73. A Tale of Two Cities"
+    },
+    {
+      "file": "74.md",
+      "title": "74. A Tale of Two Cities"
+    },
+    {
+      "file": "75.md",
+      "title": "75. A Tale of Two Cities"
+    },
+    {
+      "file": "76.md",
+      "title": "76. A Tale of Two Cities"
+    },
+    {
+      "file": "77.md",
+      "title": "77. A Tale of Two Cities"
+    },
+    {
+      "file": "78.md",
+      "title": "78. A Tale of Two Cities"
+    },
+    {
+      "file": "79.md",
+      "title": "79. A Tale of Two Cities"
+    },
+    {
+      "file": "80.md",
+      "title": "80. A Tale of Two Cities"
+    },
+    {
+      "file": "81.md",
+      "title": "81. A Tale of Two Cities"
+    },
+    {
+      "file": "82.md",
+      "title": "82. A Tale of Two Cities"
+    },
+    {
+      "file": "83.md",
+      "title": "83. A Tale of Two Cities"
+    },
+    {
+      "file": "84.md",
+      "title": "84. A Tale of Two Cities"
+    },
+    {
+      "file": "85.md",
+      "title": "85. A Tale of Two Cities"
+    },
+    {
+      "file": "86.md",
+      "title": "86. A Tale of Two Cities"
+    },
+    {
+      "file": "87.md",
+      "title": "87. A Tale of Two Cities"
+    },
+    {
+      "file": "88.md",
+      "title": "88. A Tale of Two Cities"
+    },
+    {
+      "file": "89.md",
+      "title": "89. A Tale of Two Cities"
+    },
+    {
+      "file": "90.md",
+      "title": "90. A Tale of Two Cities"
+    },
+    {
+      "file": "91.md",
+      "title": "91. A Tale of Two Cities"
+    },
+    {
+      "file": "92.md",
+      "title": "92. A Tale of Two Cities"
+    },
+    {
+      "file": "93.md",
+      "title": "93. A Tale of Two Cities"
+    },
+    {
+      "file": "94.md",
+      "title": "94. A Tale of Two Cities"
+    },
+    {
+      "file": "95.md",
+      "title": "95. A Tale of Two Cities"
+    },
+    {
+      "file": "96.md",
+      "title": "96. A Tale of Two Cities"
+    }
+  ]
+}

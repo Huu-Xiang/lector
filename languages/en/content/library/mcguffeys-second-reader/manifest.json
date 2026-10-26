@@ -1,0 +1,57 @@
+{
+  "title": "McGuffey's Second Eclectic Reader",
+  "author": "William Holmes McGuffey",
+  "level": "A2",
+  "wordCount": 14783,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/14668",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Lesson I"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Second Reader"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Second Reader"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Lesson XXV"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Lesson XXXIII"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Second Reader"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Second Reader"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Second Reader"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Second Reader"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Second Reader"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Second Reader"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "title": "McGuffey's Eclectic Primer",
+  "author": "William Holmes McGuffey",
+  "level": "A1",
+  "wordCount": 2672,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/14642",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Primer"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Lesson XXXIV."
+    }
+  ]
+}

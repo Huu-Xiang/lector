@@ -1,0 +1,593 @@
+{
+  "title": "Moby-Dick; or, The Whale",
+  "author": "Herman Melville",
+  "level": "C2",
+  "wordCount": 214940,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/2701",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Chapter 1. Loomings."
+    },
+    {
+      "file": "02.md",
+      "title": "2. Moby-Dick"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Moby-Dick"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Moby-Dick"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Moby-Dick"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Moby-Dick"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Moby-Dick"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Moby-Dick"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Moby-Dick"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Moby-Dick"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Moby-Dick"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Moby-Dick"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Moby-Dick"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Moby-Dick"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Moby-Dick"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Moby-Dick"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Moby-Dick"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Moby-Dick"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Moby-Dick"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Moby-Dick"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Moby-Dick"
+    },
+    {
+      "file": "22.md",
+      "title": "22. Moby-Dick"
+    },
+    {
+      "file": "23.md",
+      "title": "23. Moby-Dick"
+    },
+    {
+      "file": "24.md",
+      "title": "24. Moby-Dick"
+    },
+    {
+      "file": "25.md",
+      "title": "25. Moby-Dick"
+    },
+    {
+      "file": "26.md",
+      "title": "26. Moby-Dick"
+    },
+    {
+      "file": "27.md",
+      "title": "27. Moby-Dick"
+    },
+    {
+      "file": "28.md",
+      "title": "28. Moby-Dick"
+    },
+    {
+      "file": "29.md",
+      "title": "29. Moby-Dick"
+    },
+    {
+      "file": "30.md",
+      "title": "30. Moby-Dick"
+    },
+    {
+      "file": "31.md",
+      "title": "31. Moby-Dick"
+    },
+    {
+      "file": "32.md",
+      "title": "32. Moby-Dick"
+    },
+    {
+      "file": "33.md",
+      "title": "33. Chapter 30. The Pipe."
+    },
+    {
+      "file": "34.md",
+      "title": "34. Moby-Dick"
+    },
+    {
+      "file": "35.md",
+      "title": "35. Moby-Dick"
+    },
+    {
+      "file": "36.md",
+      "title": "36. Moby-Dick"
+    },
+    {
+      "file": "37.md",
+      "title": "37. Moby-Dick"
+    },
+    {
+      "file": "38.md",
+      "title": "38. Moby-Dick"
+    },
+    {
+      "file": "39.md",
+      "title": "39. Moby-Dick"
+    },
+    {
+      "file": "40.md",
+      "title": "40. Moby-Dick"
+    },
+    {
+      "file": "41.md",
+      "title": "41. Moby-Dick"
+    },
+    {
+      "file": "42.md",
+      "title": "42. Moby-Dick"
+    },
+    {
+      "file": "43.md",
+      "title": "43. Moby-Dick"
+    },
+    {
+      "file": "44.md",
+      "title": "44. Chapter 39. First Night-Watch."
+    },
+    {
+      "file": "45.md",
+      "title": "45. Moby-Dick"
+    },
+    {
+      "file": "46.md",
+      "title": "46. Moby-Dick"
+    },
+    {
+      "file": "47.md",
+      "title": "47. Moby-Dick"
+    },
+    {
+      "file": "48.md",
+      "title": "48. Moby-Dick"
+    },
+    {
+      "file": "49.md",
+      "title": "49. Moby-Dick"
+    },
+    {
+      "file": "50.md",
+      "title": "50. Chapter 43. Hark!"
+    },
+    {
+      "file": "51.md",
+      "title": "51. Moby-Dick"
+    },
+    {
+      "file": "52.md",
+      "title": "52. Moby-Dick"
+    },
+    {
+      "file": "53.md",
+      "title": "53. Moby-Dick"
+    },
+    {
+      "file": "54.md",
+      "title": "54. Moby-Dick"
+    },
+    {
+      "file": "55.md",
+      "title": "55. Moby-Dick"
+    },
+    {
+      "file": "56.md",
+      "title": "56. Moby-Dick"
+    },
+    {
+      "file": "57.md",
+      "title": "57. Moby-Dick"
+    },
+    {
+      "file": "58.md",
+      "title": "58. Chapter 49. The Hyena."
+    },
+    {
+      "file": "59.md",
+      "title": "59. Moby-Dick"
+    },
+    {
+      "file": "60.md",
+      "title": "60. Moby-Dick"
+    },
+    {
+      "file": "61.md",
+      "title": "61. Moby-Dick"
+    },
+    {
+      "file": "62.md",
+      "title": "62. Moby-Dick"
+    },
+    {
+      "file": "63.md",
+      "title": "63. Moby-Dick"
+    },
+    {
+      "file": "64.md",
+      "title": "64. Moby-Dick"
+    },
+    {
+      "file": "65.md",
+      "title": "65. Moby-Dick"
+    },
+    {
+      "file": "66.md",
+      "title": "66. Moby-Dick"
+    },
+    {
+      "file": "67.md",
+      "title": "67. Moby-Dick"
+    },
+    {
+      "file": "68.md",
+      "title": "68. Moby-Dick"
+    },
+    {
+      "file": "69.md",
+      "title": "69. Moby-Dick"
+    },
+    {
+      "file": "70.md",
+      "title": "70. Moby-Dick"
+    },
+    {
+      "file": "71.md",
+      "title": "71. Moby-Dick"
+    },
+    {
+      "file": "72.md",
+      "title": "72. Moby-Dick"
+    },
+    {
+      "file": "73.md",
+      "title": "73. Moby-Dick"
+    },
+    {
+      "file": "74.md",
+      "title": "74. Moby-Dick"
+    },
+    {
+      "file": "75.md",
+      "title": "75. Moby-Dick"
+    },
+    {
+      "file": "76.md",
+      "title": "76. Moby-Dick"
+    },
+    {
+      "file": "77.md",
+      "title": "77. Moby-Dick"
+    },
+    {
+      "file": "78.md",
+      "title": "78. Moby-Dick"
+    },
+    {
+      "file": "79.md",
+      "title": "79. Moby-Dick"
+    },
+    {
+      "file": "80.md",
+      "title": "80. Moby-Dick"
+    },
+    {
+      "file": "81.md",
+      "title": "81. Moby-Dick"
+    },
+    {
+      "file": "82.md",
+      "title": "82. Moby-Dick"
+    },
+    {
+      "file": "83.md",
+      "title": "83. Moby-Dick"
+    },
+    {
+      "file": "84.md",
+      "title": "84. Moby-Dick"
+    },
+    {
+      "file": "85.md",
+      "title": "85. Moby-Dick"
+    },
+    {
+      "file": "86.md",
+      "title": "86. Moby-Dick"
+    },
+    {
+      "file": "87.md",
+      "title": "87. Moby-Dick"
+    },
+    {
+      "file": "88.md",
+      "title": "88. Moby-Dick"
+    },
+    {
+      "file": "89.md",
+      "title": "89. Moby-Dick"
+    },
+    {
+      "file": "90.md",
+      "title": "90. Moby-Dick"
+    },
+    {
+      "file": "91.md",
+      "title": "91. Moby-Dick"
+    },
+    {
+      "file": "92.md",
+      "title": "92. Moby-Dick"
+    },
+    {
+      "file": "93.md",
+      "title": "93. Moby-Dick"
+    },
+    {
+      "file": "94.md",
+      "title": "94. Moby-Dick"
+    },
+    {
+      "file": "95.md",
+      "title": "95. Moby-Dick"
+    },
+    {
+      "file": "96.md",
+      "title": "96. Moby-Dick"
+    },
+    {
+      "file": "97.md",
+      "title": "97. Moby-Dick"
+    },
+    {
+      "file": "98.md",
+      "title": "98. Moby-Dick"
+    },
+    {
+      "file": "99.md",
+      "title": "99. Moby-Dick"
+    },
+    {
+      "file": "100.md",
+      "title": "100. Moby-Dick"
+    },
+    {
+      "file": "101.md",
+      "title": "101. Moby-Dick"
+    },
+    {
+      "file": "102.md",
+      "title": "102. Chapter 90. Heads or Tails."
+    },
+    {
+      "file": "103.md",
+      "title": "103. Moby-Dick"
+    },
+    {
+      "file": "104.md",
+      "title": "104. Moby-Dick"
+    },
+    {
+      "file": "105.md",
+      "title": "105. Moby-Dick"
+    },
+    {
+      "file": "106.md",
+      "title": "106. Moby-Dick"
+    },
+    {
+      "file": "107.md",
+      "title": "107. Moby-Dick"
+    },
+    {
+      "file": "108.md",
+      "title": "108. Moby-Dick"
+    },
+    {
+      "file": "109.md",
+      "title": "109. Chapter 98. Stowing Down and Clearing Up."
+    },
+    {
+      "file": "110.md",
+      "title": "110. Moby-Dick"
+    },
+    {
+      "file": "111.md",
+      "title": "111. Moby-Dick"
+    },
+    {
+      "file": "112.md",
+      "title": "112. Moby-Dick"
+    },
+    {
+      "file": "113.md",
+      "title": "113. Moby-Dick"
+    },
+    {
+      "file": "114.md",
+      "title": "114. Moby-Dick"
+    },
+    {
+      "file": "115.md",
+      "title": "115. Moby-Dick"
+    },
+    {
+      "file": "116.md",
+      "title": "116. Moby-Dick"
+    },
+    {
+      "file": "117.md",
+      "title": "117. Moby-Dick"
+    },
+    {
+      "file": "118.md",
+      "title": "118. Moby-Dick"
+    },
+    {
+      "file": "119.md",
+      "title": "119. Moby-Dick"
+    },
+    {
+      "file": "120.md",
+      "title": "120. Moby-Dick"
+    },
+    {
+      "file": "121.md",
+      "title": "121. Moby-Dick"
+    },
+    {
+      "file": "122.md",
+      "title": "122. Moby-Dick"
+    },
+    {
+      "file": "123.md",
+      "title": "123. Chapter 111. The Pacific."
+    },
+    {
+      "file": "124.md",
+      "title": "124. Moby-Dick"
+    },
+    {
+      "file": "125.md",
+      "title": "125. Moby-Dick"
+    },
+    {
+      "file": "126.md",
+      "title": "126. Moby-Dick"
+    },
+    {
+      "file": "127.md",
+      "title": "127. Moby-Dick"
+    },
+    {
+      "file": "128.md",
+      "title": "128. Moby-Dick"
+    },
+    {
+      "file": "129.md",
+      "title": "129. Moby-Dick"
+    },
+    {
+      "file": "130.md",
+      "title": "130. Moby-Dick"
+    },
+    {
+      "file": "131.md",
+      "title": "131. Moby-Dick"
+    },
+    {
+      "file": "132.md",
+      "title": "132. Moby-Dick"
+    },
+    {
+      "file": "133.md",
+      "title": "133. Chapter 127. The Deck."
+    },
+    {
+      "file": "134.md",
+      "title": "134. Moby-Dick"
+    },
+    {
+      "file": "135.md",
+      "title": "135. Moby-Dick"
+    },
+    {
+      "file": "136.md",
+      "title": "136. Moby-Dick"
+    },
+    {
+      "file": "137.md",
+      "title": "137. Moby-Dick"
+    },
+    {
+      "file": "138.md",
+      "title": "138. Moby-Dick"
+    },
+    {
+      "file": "139.md",
+      "title": "139. Moby-Dick"
+    },
+    {
+      "file": "140.md",
+      "title": "140. Moby-Dick"
+    },
+    {
+      "file": "141.md",
+      "title": "141. Moby-Dick"
+    },
+    {
+      "file": "142.md",
+      "title": "142. Chapter 135. The Chase.—Third Day."
+    },
+    {
+      "file": "143.md",
+      "title": "143. Moby-Dick"
+    },
+    {
+      "file": "144.md",
+      "title": "144. Moby-Dick"
+    },
+    {
+      "file": "145.md",
+      "title": "145. Moby-Dick"
+    }
+  ]
+}

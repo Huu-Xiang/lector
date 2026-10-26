@@ -75,6 +75,44 @@
       "tr": "Londra'daki yatılı okulda okuyan zengin kız Sara Crewe, babası ölünce her şeyini kaybeder ama yine de bir prenses gibi davranmayı sürdürür."
     }
   },
+  "a-tale-of-two-cities": {
+    "title": {
+      "en": "A Tale of Two Cities",
+      "zh-CN": "双城记",
+      "zh-TW": "雙城記",
+      "es": "Historia de dos ciudades",
+      "fr": "Le Conte de deux cités",
+      "de": "Eine Geschichte aus zwei Städten",
+      "it": "Racconto di due città",
+      "pt": "Um conto de duas cidades",
+      "ru": "Повесть о двух городах",
+      "ja": "二都物語",
+      "ko": "두 도시 이야기",
+      "ar": "قصة مدينتين",
+      "hi": "दो शहरों की कहानी",
+      "id": "Kisah Dua Kota",
+      "vi": "Hai kinh thành",
+      "tr": "İki Şehrin Hikâyesi"
+    },
+    "blurb": {
+      "en": "In London and Paris during the French Revolution, the lives of a doctor's family, an English lawyer and a French nobleman become bound together.",
+      "zh-CN": "法国大革命时期的伦敦和巴黎，一位医生的家人、一位英国律师和一位法国贵族的命运紧紧连在了一起。",
+      "zh-TW": "法國大革命時期的倫敦和巴黎，一位醫生的家人、一位英國律師和一位法國貴族的命運緊緊連在了一起。",
+      "es": "En Londres y París durante la Revolución francesa, las vidas de la familia de un médico, un abogado inglés y un noble francés quedan unidas.",
+      "fr": "À Londres et à Paris pendant la Révolution française, les vies de la famille d'un médecin, d'un avocat anglais et d'un noble français se trouvent liées.",
+      "de": "In London und Paris während der Französischen Revolution verbinden sich die Leben der Familie eines Arztes, eines englischen Anwalts und eines französischen Adligen.",
+      "it": "A Londra e a Parigi durante la Rivoluzione francese, le vite della famiglia di un medico, di un avvocato inglese e di un nobile francese si intrecciano.",
+      "pt": "Em Londres e Paris, durante a Revolução Francesa, as vidas da família de um médico, de um advogado inglês e de um nobre francês ficam ligadas.",
+      "ru": "В Лондоне и Париже времён Французской революции переплетаются судьбы семьи доктора, английского адвоката и французского аристократа.",
+      "ja": "フランス革命のころのロンドンとパリで、ある医師の家族、イギリスの弁護士、フランスの貴族の運命が結びついていきます。",
+      "ko": "프랑스 혁명기의 런던과 파리에서 한 의사의 가족, 영국인 변호사, 프랑스 귀족의 삶이 서로 얽힙니다.",
+      "ar": "في لندن وباريس إبان الثورة الفرنسية، تتشابك حياة عائلة طبيب ومحامٍ إنجليزي ونبيل فرنسي.",
+      "hi": "फ़्रांसीसी क्रांति के दौर में लंदन और पेरिस में एक डॉक्टर के परिवार, एक अंग्रेज़ वकील और एक फ़्रांसीसी रईस की ज़िंदगियाँ आपस में जुड़ जाती हैं।",
+      "id": "Di London dan Paris pada masa Revolusi Prancis, kehidupan keluarga seorang dokter, seorang pengacara Inggris, dan seorang bangsawan Prancis saling terikat.",
+      "vi": "Ở London và Paris thời Cách mạng Pháp, số phận gia đình một bác sĩ, một luật sư người Anh và một quý tộc Pháp gắn chặt với nhau.",
+      "tr": "Fransız Devrimi sırasında Londra ve Paris'te bir doktorun ailesi, İngiliz bir avukat ve Fransız bir soylunun hayatları birbirine bağlanır."
+    }
+  },
   "adventures-of-sherlock-holmes": {
     "title": {
       "en": "The Adventures of Sherlock Holmes",
@@ -149,6 +187,82 @@
       "id": "Kisah-kisah kuno pendek tentang hewan, masing-masing diakhiri pelajaran sederhana tentang hidup.",
       "vi": "Những câu chuyện cổ ngắn về loài vật, mỗi chuyện kết thúc bằng một bài học giản dị về cuộc sống.",
       "tr": "Hayvanlarla ilgili kısa eski öyküler; her biri hayata dair basit bir dersle biter."
+    }
+  },
+  "aldine-first-reader": {
+    "title": {
+      "en": "A First Reader",
+      "zh-CN": "阿尔丁读本 第一册",
+      "zh-TW": "阿爾丁讀本 第一冊",
+      "es": "Primer libro de lectura (Aldine)",
+      "fr": "Premier livre de lecture (Aldine)",
+      "de": "Erstes Lesebuch (Aldine)",
+      "it": "Primo libro di lettura (Aldine)",
+      "pt": "Primeiro livro de leitura (Aldine)",
+      "ru": "Первая книга для чтения (Aldine)",
+      "ja": "オールダイン読本 第1巻",
+      "ko": "올딘 독본 1권",
+      "ar": "كتاب القراءة الأول (ألداين)",
+      "hi": "पहली पाठ्य-पुस्तक (एल्डाइन)",
+      "id": "Buku Bacaan Pertama (Aldine)",
+      "vi": "Sách tập đọc thứ nhất (Aldine)",
+      "tr": "Birinci Okuma Kitabı (Aldine)"
+    },
+    "blurb": {
+      "en": "Short rhymes and stories about birds, wind, flowers and Christmas, written for children who are just starting to read.",
+      "zh-CN": "关于小鸟、风、花朵和圣诞节的短小儿歌和故事，写给刚开始学认字的孩子。",
+      "zh-TW": "關於小鳥、風、花朵和聖誕節的短小兒歌和故事，寫給剛開始學認字的孩子。",
+      "es": "Rimas y cuentos cortos sobre pájaros, el viento, las flores y la Navidad, escritos para niños que empiezan a leer.",
+      "fr": "Courtes comptines et histoires sur les oiseaux, le vent, les fleurs et Noël, écrites pour les enfants qui commencent à lire.",
+      "de": "Kurze Reime und Geschichten über Vögel, Wind, Blumen und Weihnachten, geschrieben für Kinder, die gerade lesen lernen.",
+      "it": "Brevi filastrocche e storie su uccelli, vento, fiori e Natale, scritte per i bambini che iniziano a leggere.",
+      "pt": "Rimas e histórias curtas sobre pássaros, vento, flores e Natal, escritas para crianças que estão começando a ler.",
+      "ru": "Короткие стишки и рассказы о птицах, ветре, цветах и Рождестве для детей, которые только начинают читать.",
+      "ja": "鳥、風、花、クリスマスについての短い詩とお話。字を読みはじめたばかりの子どものために書かれています。",
+      "ko": "새, 바람, 꽃, 크리스마스에 관한 짧은 동시와 이야기로, 이제 막 글을 읽기 시작한 아이들을 위해 쓰였습니다.",
+      "ar": "أناشيد وقصص قصيرة عن الطيور والريح والأزهار وعيد الميلاد، كُتبت للأطفال الذين بدأوا القراءة للتو.",
+      "hi": "पक्षियों, हवा, फूलों और क्रिसमस पर छोटी कविताएँ और कहानियाँ, उन बच्चों के लिए जो अभी पढ़ना शुरू कर रहे हैं।",
+      "id": "Sajak dan cerita pendek tentang burung, angin, bunga, dan Natal, ditulis untuk anak-anak yang baru mulai membaca.",
+      "vi": "Những bài vè và truyện ngắn về chim, gió, hoa và Giáng sinh, viết cho trẻ mới bắt đầu tập đọc.",
+      "tr": "Okumaya yeni başlayan çocuklar için kuşlar, rüzgâr, çiçekler ve Noel üzerine kısa tekerlemeler ve öyküler."
+    }
+  },
+  "aldine-second-reader": {
+    "title": {
+      "en": "A Second Reader",
+      "zh-CN": "阿尔丁读本 第二册",
+      "zh-TW": "阿爾丁讀本 第二冊",
+      "es": "Segundo libro de lectura (Aldine)",
+      "fr": "Deuxième livre de lecture (Aldine)",
+      "de": "Zweites Lesebuch (Aldine)",
+      "it": "Secondo libro di lettura (Aldine)",
+      "pt": "Segundo livro de leitura (Aldine)",
+      "ru": "Вторая книга для чтения (Aldine)",
+      "ja": "オールダイン読本 第2巻",
+      "ko": "올딘 독본 2권",
+      "ar": "كتاب القراءة الثاني (ألداين)",
+      "hi": "दूसरी पाठ्य-पुस्तक (एल्डाइन)",
+      "id": "Buku Bacaan Kedua (Aldine)",
+      "vi": "Sách tập đọc thứ hai (Aldine)",
+      "tr": "İkinci Okuma Kitabı (Aldine)"
+    },
+    "blurb": {
+      "en": "Simple animal tales and folk stories, such as the cat who pretends to be a doctor, with a few new words in each story.",
+      "zh-CN": "简单的动物故事和民间故事，比如假扮医生的猫，每个故事只出现几个新词。",
+      "zh-TW": "簡單的動物故事和民間故事，比如假扮醫生的貓，每個故事只出現幾個新詞。",
+      "es": "Sencillos cuentos de animales y relatos populares, como el gato que se hace pasar por médico, con pocas palabras nuevas en cada uno.",
+      "fr": "Contes d'animaux et histoires populaires très simples, comme le chat qui se fait passer pour un médecin, avec peu de mots nouveaux.",
+      "de": "Einfache Tiergeschichten und Volksmärchen, etwa von der Katze, die sich als Arzt ausgibt, mit wenigen neuen Wörtern pro Geschichte.",
+      "it": "Semplici storie di animali e racconti popolari, come il gatto che si finge dottore, con poche parole nuove in ognuno.",
+      "pt": "Histórias simples de animais e contos populares, como o gato que se faz passar por médico, com poucas palavras novas em cada uma.",
+      "ru": "Простые рассказы о животных и народные сказки, например о коте, который притворился доктором, в каждой лишь несколько новых слов.",
+      "ja": "お医者さんのふりをするねこなど、やさしい動物のお話や昔話。お話ごとに新しい単語が少しずつ出てきます。",
+      "ko": "의사인 척하는 고양이 같은 쉬운 동물 이야기와 민담으로, 이야기마다 새 낱말이 몇 개씩 나옵니다.",
+      "ar": "حكايات بسيطة عن الحيوانات وقصص شعبية، مثل القط الذي يتظاهر بأنه طبيب، وفي كل قصة كلمات جديدة قليلة.",
+      "hi": "जानवरों की सरल कहानियाँ और लोककथाएँ, जैसे डॉक्टर बनने का नाटक करने वाली बिल्ली, हर कहानी में कुछ ही नए शब्द।",
+      "id": "Cerita hewan dan cerita rakyat yang sederhana, seperti kucing yang berpura-pura jadi dokter, dengan sedikit kata baru di tiap cerita.",
+      "vi": "Những truyện con vật và truyện dân gian đơn giản, như chú mèo giả làm bác sĩ, mỗi truyện chỉ vài từ mới.",
+      "tr": "Doktor kılığına giren kedi gibi basit hayvan öyküleri ve halk masalları; her öyküde birkaç yeni kelime var."
     }
   },
   "alices-adventures-in-wonderland": {
@@ -227,6 +341,44 @@
       "tr": "Yaşlı bir ağabey ile kız kardeşi çiftlikte yardım edecek yetim bir oğlan ister, ama geveze, kızıl saçlı bir kız gelir ve hayatlarını değiştirir."
     }
   },
+  "around-the-world-in-eighty-days": {
+    "title": {
+      "en": "Around the World in Eighty Days",
+      "zh-CN": "八十天环游地球",
+      "zh-TW": "環遊世界八十天",
+      "es": "La vuelta al mundo en ochenta días",
+      "fr": "Le Tour du monde en quatre-vingts jours",
+      "de": "Reise um die Erde in achtzig Tagen",
+      "it": "Il giro del mondo in ottanta giorni",
+      "pt": "A volta ao mundo em oitenta dias",
+      "ru": "Вокруг света за восемьдесят дней",
+      "ja": "八十日間世界一周",
+      "ko": "80일간의 세계 일주",
+      "ar": "حول العالم في ثمانين يومًا",
+      "hi": "अस्सी दिनों में दुनिया की सैर",
+      "id": "Mengelilingi Dunia dalam Delapan Puluh Hari",
+      "vi": "Tám mươi ngày vòng quanh thế giới",
+      "tr": "Seksen Günde Devrialem"
+    },
+    "blurb": {
+      "en": "A calm English gentleman bets that he can travel around the world in eighty days and sets off with his French servant, chased by a detective.",
+      "zh-CN": "一位冷静的英国绅士打赌能在八十天内环游地球，带着法国仆人出发，身后还跟着一名侦探。",
+      "zh-TW": "一位冷靜的英國紳士打賭能在八十天內環遊世界，帶著法國僕人出發，身後還跟著一名偵探。",
+      "es": "Un tranquilo caballero inglés apuesta que puede dar la vuelta al mundo en ochenta días y parte con su criado francés, perseguido por un detective.",
+      "fr": "Un gentleman anglais impassible parie qu'il fera le tour du monde en quatre-vingts jours et part avec son domestique français, poursuivi par un détective.",
+      "de": "Ein gelassener englischer Gentleman wettet, dass er in achtzig Tagen um die Welt reisen kann, und bricht mit seinem französischen Diener auf, verfolgt von einem Detektiv.",
+      "it": "Un imperturbabile gentiluomo inglese scommette di fare il giro del mondo in ottanta giorni e parte con il suo domestico francese, inseguito da un detective.",
+      "pt": "Um calmo cavalheiro inglês aposta que dá a volta ao mundo em oitenta dias e parte com o seu criado francês, perseguido por um detetive.",
+      "ru": "Невозмутимый английский джентльмен держит пари, что объедет вокруг света за восемьдесят дней, и отправляется в путь с французским слугой, а за ним гонится сыщик.",
+      "ja": "冷静なイギリス紳士が八十日で世界を一周できると賭けをし、フランス人の召使いと出発します。その後を刑事が追いかけます。",
+      "ko": "침착한 영국 신사가 80일 만에 세계를 일주할 수 있다고 내기를 하고 프랑스인 하인과 함께 떠나며, 형사가 그 뒤를 쫓습니다.",
+      "ar": "رجل إنجليزي هادئ يراهن على أنه سيدور حول العالم في ثمانين يومًا، فينطلق مع خادمه الفرنسي ويطارده محقق.",
+      "hi": "एक शांत अंग्रेज़ सज्जन शर्त लगाता है कि वह अस्सी दिनों में दुनिया घूम लेगा, और अपने फ़्रांसीसी नौकर के साथ निकल पड़ता है, पीछे एक जासूस लगा है।",
+      "id": "Seorang pria Inggris yang tenang bertaruh bisa mengelilingi dunia dalam delapan puluh hari dan berangkat bersama pelayan Prancisnya, dikejar seorang detektif.",
+      "vi": "Một quý ông người Anh điềm tĩnh đánh cược rằng mình có thể đi vòng quanh thế giới trong tám mươi ngày và lên đường cùng người hầu Pháp, bị một thám tử bám theo.",
+      "tr": "Soğukkanlı bir İngiliz centilmen dünyayı seksen günde dolaşabileceğine dair iddiaya girer ve Fransız uşağıyla yola çıkar; peşinde bir dedektif vardır."
+    }
+  },
   "black-beauty": {
     "title": {
       "en": "Black Beauty",
@@ -303,6 +455,82 @@
       "tr": "Londralı bir avukat, saygın dostu Dr. Jekyll ile Hyde adındaki zalim ve şiddetli adam arasındaki bağı araştırır."
     }
   },
+  "dracula": {
+    "title": {
+      "en": "Dracula",
+      "zh-CN": "德古拉",
+      "zh-TW": "德古拉",
+      "es": "Drácula",
+      "fr": "Dracula",
+      "de": "Dracula",
+      "it": "Dracula",
+      "pt": "Drácula",
+      "ru": "Дракула",
+      "ja": "吸血鬼ドラキュラ",
+      "ko": "드라큘라",
+      "ar": "دراكولا",
+      "hi": "ड्रैकुला",
+      "id": "Dracula",
+      "vi": "Dracula",
+      "tr": "Drakula"
+    },
+    "blurb": {
+      "en": "Told through diaries and letters: a young lawyer visits a count in Transylvania, and later a group of friends must stop the vampire in England.",
+      "zh-CN": "以日记和书信讲述：一位年轻律师去特兰西瓦尼亚拜访一位伯爵，后来一群朋友必须在英国阻止这个吸血鬼。",
+      "zh-TW": "以日記和書信講述：一位年輕律師去外西凡尼亞拜訪一位伯爵，後來一群朋友必須在英國阻止這個吸血鬼。",
+      "es": "Contada en diarios y cartas: un joven abogado visita a un conde en Transilvania y después un grupo de amigos debe detener al vampiro en Inglaterra.",
+      "fr": "Racontée par des journaux intimes et des lettres : un jeune notaire rend visite à un comte en Transylvanie, puis un groupe d'amis doit arrêter le vampire en Angleterre.",
+      "de": "Erzählt in Tagebüchern und Briefen: Ein junger Anwalt besucht einen Grafen in Transsilvanien, und später müssen Freunde den Vampir in England aufhalten.",
+      "it": "Raccontato attraverso diari e lettere: un giovane avvocato visita un conte in Transilvania e poi un gruppo di amici deve fermare il vampiro in Inghilterra.",
+      "pt": "Contado em diários e cartas: um jovem advogado visita um conde na Transilvânia e, depois, um grupo de amigos tem de deter o vampiro na Inglaterra.",
+      "ru": "Рассказ в дневниках и письмах: молодой юрист едет к графу в Трансильванию, а потом группа друзей должна остановить вампира в Англии.",
+      "ja": "日記と手紙で語られる物語。若い弁護士がトランシルヴァニアの伯爵を訪ね、やがて仲間たちがイギリスで吸血鬼を止めようとします。",
+      "ko": "일기와 편지로 이야기가 전개됩니다. 젊은 변호사가 트란실바니아의 백작을 찾아가고, 뒤에 친구들이 영국에서 흡혈귀를 막아야 합니다.",
+      "ar": "تُروى عبر اليوميات والرسائل: محامٍ شاب يزور كونتًا في ترانسيلفانيا، ثم يتعين على مجموعة من الأصدقاء إيقاف مصاص الدماء في إنجلترا.",
+      "hi": "डायरियों और पत्रों के ज़रिए कही गई कहानी: एक युवा वकील ट्रांसिल्वेनिया में एक काउंट से मिलने जाता है, और बाद में दोस्तों का एक दल इंग्लैंड में पिशाच को रोकता है।",
+      "id": "Dikisahkan lewat buku harian dan surat: seorang pengacara muda mengunjungi seorang count di Transilvania, lalu sekelompok sahabat harus menghentikan vampir itu di Inggris.",
+      "vi": "Kể qua nhật ký và thư từ: một luật sư trẻ đến thăm một bá tước ở Transylvania, rồi một nhóm bạn phải ngăn con ma cà rồng ở nước Anh.",
+      "tr": "Günlükler ve mektuplarla anlatılır: genç bir avukat Transilvanya'da bir kontu ziyaret eder, sonra bir grup arkadaş vampiri İngiltere'de durdurmak zorunda kalır."
+    }
+  },
+  "emma": {
+    "title": {
+      "en": "Emma",
+      "zh-CN": "爱玛",
+      "zh-TW": "艾瑪",
+      "es": "Emma",
+      "fr": "Emma",
+      "de": "Emma",
+      "it": "Emma",
+      "pt": "Emma",
+      "ru": "Эмма",
+      "ja": "エマ",
+      "ko": "에마",
+      "ar": "إيما",
+      "hi": "एमा",
+      "id": "Emma",
+      "vi": "Emma",
+      "tr": "Emma"
+    },
+    "blurb": {
+      "en": "A clever, rich young woman loves to arrange other people's love lives, but she misunderstands almost everyone, including herself.",
+      "zh-CN": "一位聪明富有的年轻小姐热衷于替别人牵红线，却几乎误解了每一个人，包括她自己。",
+      "zh-TW": "一位聰明富有的年輕小姐熱衷於替別人牽紅線，卻幾乎誤解了每一個人，包括她自己。",
+      "es": "Una joven lista y rica adora organizar la vida amorosa de los demás, pero malinterpreta a casi todos, incluso a sí misma.",
+      "fr": "Une jeune femme riche et intelligente adore arranger la vie amoureuse des autres, mais elle se trompe sur presque tout le monde, y compris sur elle-même.",
+      "de": "Eine kluge, reiche junge Frau stiftet gern Liebesbeziehungen für andere, doch sie versteht fast alle falsch, auch sich selbst.",
+      "it": "Una giovane ricca e intelligente adora combinare la vita sentimentale degli altri, ma fraintende quasi tutti, compresa se stessa.",
+      "pt": "Uma jovem rica e inteligente adora arranjar a vida amorosa dos outros, mas entende mal quase todos, inclusive a si mesma.",
+      "ru": "Умная и богатая девушка любит устраивать чужие сердечные дела, но ошибается почти во всех, включая себя.",
+      "ja": "賢く裕福な若い女性が他人の恋の世話を焼くのが大好き。でも、自分自身も含めて、ほとんど全員のことを誤解しています。",
+      "ko": "영리하고 부유한 젊은 여성이 남의 연애를 맺어 주기를 좋아하지만, 자신을 포함해 거의 모든 사람을 오해합니다.",
+      "ar": "شابة ذكية وثرية تحب أن ترتب حياة الآخرين العاطفية، لكنها تسيء فهم الجميع تقريبًا، حتى نفسها.",
+      "hi": "एक चतुर, अमीर युवती दूसरों के प्रेम-संबंध जोड़ना पसंद करती है, पर वह लगभग हर किसी को, ख़ुद को भी, ग़लत समझती है।",
+      "id": "Seorang wanita muda yang cerdas dan kaya gemar mengatur kisah cinta orang lain, tetapi ia salah memahami hampir semua orang, termasuk dirinya sendiri.",
+      "vi": "Một cô gái trẻ thông minh, giàu có thích se duyên cho người khác, nhưng lại hiểu lầm gần như tất cả mọi người, kể cả chính mình.",
+      "tr": "Zeki ve zengin genç bir kadın başkalarının aşk hayatlarını düzenlemeye bayılır, ama kendisi dahil neredeyse herkesi yanlış anlar."
+    }
+  },
   "english-fairy-tales": {
     "title": {
       "en": "English Fairy Tales",
@@ -339,6 +567,82 @@
       "id": "Kumpulan dongeng Inggris kuno oleh Joseph Jacobs, termasuk Tom Tit Tot, Jack dan Pohon Kacang, dan Tiga Babi Kecil.",
       "vi": "Tuyển tập truyện cổ Anh của Joseph Jacobs, gồm Tom Tit Tot, Jack và cây đậu thần và Ba chú heo con.",
       "tr": "Joseph Jacobs'ın eski İngiliz masallarından derlemesi; Tom Tit Tot, Jack ve Fasulye Sırığı ile Üç Küçük Domuz da içinde."
+    }
+  },
+  "fifty-famous-stories-retold": {
+    "title": {
+      "en": "Fifty Famous Stories Retold",
+      "zh-CN": "五十个著名故事",
+      "zh-TW": "五十個著名故事",
+      "es": "Cincuenta historias famosas",
+      "fr": "Cinquante histoires célèbres",
+      "de": "Fünfzig berühmte Geschichten",
+      "it": "Cinquanta storie famose",
+      "pt": "Cinquenta histórias famosas",
+      "ru": "Пятьдесят знаменитых историй",
+      "ja": "有名な50のお話",
+      "ko": "유명한 이야기 50편",
+      "ar": "خمسون قصة شهيرة",
+      "hi": "पचास प्रसिद्ध कहानियाँ",
+      "id": "Lima Puluh Kisah Terkenal",
+      "vi": "Năm mươi câu chuyện nổi tiếng",
+      "tr": "Elli Ünlü Öykü"
+    },
+    "blurb": {
+      "en": "Short, simple retellings of famous tales from history and legend, such as King Alfred and the cakes and William Tell.",
+      "zh-CN": "用简短浅显的语言重讲历史和传说中的著名故事，比如阿尔弗雷德国王烤焦饼、威廉·退尔射苹果。",
+      "zh-TW": "用簡短淺顯的語言重講歷史和傳說中的著名故事，比如阿佛烈國王烤焦餅、威廉·泰爾射蘋果。",
+      "es": "Versiones breves y sencillas de historias famosas de la historia y la leyenda, como el rey Alfredo y los pasteles o Guillermo Tell.",
+      "fr": "Récits courts et simples d'histoires célèbres de l'histoire et de la légende, comme le roi Alfred et les gâteaux ou Guillaume Tell.",
+      "de": "Kurze, einfache Nacherzählungen berühmter Geschichten aus Geschichte und Sage, etwa König Alfred und die Kuchen oder Wilhelm Tell.",
+      "it": "Brevi e semplici racconti di storie famose della storia e della leggenda, come re Alfredo e le focacce o Guglielmo Tell.",
+      "pt": "Recontos curtos e simples de histórias famosas da história e da lenda, como o rei Alfredo e os bolos ou Guilherme Tell.",
+      "ru": "Короткие и простые пересказы знаменитых историй и легенд, например о короле Альфреде и лепёшках или о Вильгельме Телле.",
+      "ja": "アルフレッド王とこげたパン、ウィリアム・テルなど、歴史や伝説の有名なお話を短くやさしく語り直したもの。",
+      "ko": "알프레드 왕과 타 버린 빵, 윌리엄 텔처럼 역사와 전설 속 유명한 이야기를 짧고 쉽게 다시 들려줍니다.",
+      "ar": "إعادة سرد قصيرة وبسيطة لقصص شهيرة من التاريخ والأساطير، مثل الملك ألفريد والكعك وويليام تل.",
+      "hi": "इतिहास और किंवदंतियों की प्रसिद्ध कहानियाँ छोटे और सरल रूप में, जैसे राजा अल्फ्रेड और केक या विलियम टेल।",
+      "id": "Kisah-kisah terkenal dari sejarah dan legenda yang diceritakan ulang secara singkat dan sederhana, seperti Raja Alfred dan kue atau William Tell.",
+      "vi": "Những câu chuyện nổi tiếng trong lịch sử và truyền thuyết được kể lại ngắn gọn, dễ hiểu, như vua Alfred và mẻ bánh hay William Tell.",
+      "tr": "Tarihten ve efsanelerden ünlü öykülerin kısa ve basit anlatımları; Kral Alfred ile kekler ya da Wilhelm Tell gibi."
+    }
+  },
+  "five-children-and-it": {
+    "title": {
+      "en": "Five Children and It",
+      "zh-CN": "五个孩子和一个怪物",
+      "zh-TW": "五個孩子和一個怪物",
+      "es": "Cinco niños y eso",
+      "fr": "Les Cinq Enfants et la Chose",
+      "de": "Fünf Kinder und Es",
+      "it": "Cinque bambini e la Cosa",
+      "pt": "Cinco crianças e o Coiso",
+      "ru": "Пятеро детей и чудище",
+      "ja": "砂の妖精",
+      "ko": "모래요정과 다섯 아이",
+      "ar": "خمسة أطفال والمخلوق",
+      "hi": "पाँच बच्चे और वह जीव",
+      "id": "Lima Anak dan Makhluk Itu",
+      "vi": "Năm đứa trẻ và Nó",
+      "tr": "Beş Çocuk ve O"
+    },
+    "blurb": {
+      "en": "Five children find a grumpy sand fairy that grants one wish a day, but every wish goes wrong before sunset.",
+      "zh-CN": "五个孩子在沙坑里发现一个脾气古怪的沙精，它每天能实现一个愿望，可每个愿望在日落前都会出岔子。",
+      "zh-TW": "五個孩子在沙坑裡發現一個脾氣古怪的沙精，牠每天能實現一個願望，可每個願望在日落前都會出差錯。",
+      "es": "Cinco niños encuentran un hada de arena gruñona que concede un deseo al día, pero cada deseo sale mal antes de la puesta de sol.",
+      "fr": "Cinq enfants découvrent une fée des sables grincheuse qui exauce un vœu par jour, mais chaque vœu tourne mal avant le coucher du soleil.",
+      "de": "Fünf Kinder finden einen mürrischen Sandelf, der jeden Tag einen Wunsch erfüllt, doch jeder Wunsch geht vor Sonnenuntergang schief.",
+      "it": "Cinque bambini trovano una fata della sabbia brontolona che esaudisce un desiderio al giorno, ma ogni desiderio va storto prima del tramonto.",
+      "pt": "Cinco crianças encontram uma fada da areia rabugenta que realiza um desejo por dia, mas todo desejo dá errado antes do pôr do sol.",
+      "ru": "Пятеро детей находят ворчливого песчаного эльфа, который исполняет одно желание в день, но каждое желание к закату оборачивается бедой.",
+      "ja": "五人のきょうだいが、一日にひとつ願いをかなえてくれる気むずかしい砂の妖精を見つけます。でも願いはいつも日没前にうまくいかなくなります。",
+      "ko": "다섯 아이가 하루에 소원 하나를 들어주는 심술궂은 모래요정을 찾지만, 소원은 해가 지기 전에 늘 엉망이 됩니다.",
+      "ar": "يجد خمسة أطفال جنّيّ رمال متجهمًا يحقق أمنية واحدة كل يوم، لكن كل أمنية تفسد قبل غروب الشمس.",
+      "hi": "पाँच बच्चों को एक चिड़चिड़ा रेत-परी मिलता है जो रोज़ एक इच्छा पूरी करता है, पर हर इच्छा सूरज ढलने से पहले उलटी पड़ जाती है।",
+      "id": "Lima anak menemukan peri pasir pemarah yang mengabulkan satu permintaan setiap hari, tetapi setiap permintaan berantakan sebelum matahari terbenam.",
+      "vi": "Năm đứa trẻ tìm thấy một tiên cát khó tính, mỗi ngày ban cho một điều ước, nhưng điều ước nào cũng hỏng trước khi mặt trời lặn.",
+      "tr": "Beş çocuk, her gün bir dilek yerine getiren huysuz bir kum perisi bulur, ama her dilek gün batmadan ters gider."
     }
   },
   "frankenstein": {
@@ -455,6 +759,44 @@
       "tr": "Bir denizci, gizemli bir fildişi tüccarını bulmak için bir Afrika nehrinde yukarı doğru yol alır."
     }
   },
+  "heidi": {
+    "title": {
+      "en": "Heidi",
+      "zh-CN": "海蒂",
+      "zh-TW": "海蒂",
+      "es": "Heidi",
+      "fr": "Heidi",
+      "de": "Heidi",
+      "it": "Heidi",
+      "pt": "Heidi",
+      "ru": "Хайди",
+      "ja": "ハイジ",
+      "ko": "하이디",
+      "ar": "هايدي",
+      "hi": "हाइडी",
+      "id": "Heidi",
+      "vi": "Heidi",
+      "tr": "Heidi"
+    },
+    "blurb": {
+      "en": "An orphan girl is sent to live with her grumpy grandfather in the Swiss Alps and comes to love the mountains, the goats and her friend Peter.",
+      "zh-CN": "一个孤女被送到瑞士阿尔卑斯山，和脾气古怪的爷爷一起生活，渐渐爱上了大山、山羊和她的朋友彼得。",
+      "zh-TW": "一個孤女被送到瑞士阿爾卑斯山，和脾氣古怪的爺爺一起生活，漸漸愛上了大山、山羊和她的朋友彼得。",
+      "es": "Una niña huérfana va a vivir con su abuelo gruñón en los Alpes suizos y llega a amar las montañas, las cabras y a su amigo Pedro.",
+      "fr": "Une petite orpheline part vivre chez son grand-père bourru dans les Alpes suisses et se met à aimer les montagnes, les chèvres et son ami Peter.",
+      "de": "Ein Waisenmädchen kommt zu seinem mürrischen Großvater in die Schweizer Alpen und lernt die Berge, die Ziegen und seinen Freund Peter lieben.",
+      "it": "Una bambina orfana va a vivere con il nonno burbero sulle Alpi svizzere e impara ad amare i monti, le capre e l'amico Peter.",
+      "pt": "Uma menina órfã vai morar com o avô rabugento nos Alpes suíços e passa a amar as montanhas, as cabras e o amigo Pedro.",
+      "ru": "Девочку-сироту отправляют жить к угрюмому деду в Швейцарские Альпы, и она полюбит горы, коз и своего друга Петера.",
+      "ja": "孤児の少女はスイス・アルプスに住む気むずかしいおじいさんのもとへ送られ、山とヤギと友だちのペーターを大好きになっていきます。",
+      "ko": "고아 소녀가 스위스 알프스에 사는 무뚝뚝한 할아버지에게 보내져, 산과 염소와 친구 페터를 사랑하게 됩니다.",
+      "ar": "تُرسل فتاة يتيمة لتعيش مع جدها العابس في جبال الألب السويسرية، فتحب الجبال والماعز وصديقها بيتر.",
+      "hi": "एक अनाथ लड़की को स्विस आल्प्स में उसके चिड़चिड़े दादा के पास भेजा जाता है, और वह पहाड़ों, बकरियों और अपने दोस्त पीटर से प्यार करने लगती है।",
+      "id": "Seorang gadis yatim piatu dikirim untuk tinggal bersama kakeknya yang pemarah di Pegunungan Alpen Swiss, lalu jatuh cinta pada gunung, kambing, dan sahabatnya Peter.",
+      "vi": "Một cô bé mồ côi được gửi lên sống với ông nội khó tính ở vùng núi Alps của Thụy Sĩ và dần yêu núi non, đàn dê và cậu bạn Peter.",
+      "tr": "Öksüz bir kız, İsviçre Alplerinde huysuz dedesinin yanına gönderilir ve dağları, keçileri ve arkadaşı Peter'ı sevmeye başlar."
+    }
+  },
   "jane-eyre": {
     "title": {
       "en": "Jane Eyre",
@@ -569,6 +911,44 @@
       "tr": "Kraliçelerini ziyarete gelen kedilerin ve yavru kedilerin anlattığı basit öyküler ve tekerlemeler."
     }
   },
+  "mcguffeys-eclectic-primer": {
+    "title": {
+      "en": "McGuffey's Eclectic Primer",
+      "zh-CN": "麦加菲启蒙识字课本",
+      "zh-TW": "麥加菲啟蒙識字課本",
+      "es": "Cartilla de McGuffey",
+      "fr": "L'abécédaire de McGuffey",
+      "de": "McGuffeys Fibel",
+      "it": "Il sillabario di McGuffey",
+      "pt": "Cartilha de McGuffey",
+      "ru": "Букварь Макгаффи",
+      "ja": "マクガフィー・プライマー",
+      "ko": "맥거피 기초 읽기책",
+      "ar": "كتاب القراءة التمهيدي لماكغافي",
+      "hi": "मैकगफ़ी की प्राइमर",
+      "id": "Buku Abjad McGuffey",
+      "vi": "Sách vỡ lòng McGuffey",
+      "tr": "McGuffey'nin Alfabe Kitabı"
+    },
+    "blurb": {
+      "en": "The first book of the classic American school series: tiny lessons about cats, dogs and children, with a few new words in each.",
+      "zh-CN": "美国经典小学课本系列的第一本：一篇篇很短的课文，讲猫、狗和孩子，每课只学几个新词。",
+      "zh-TW": "美國經典小學課本系列的第一本：一篇篇很短的課文，講貓、狗和孩子，每課只學幾個新詞。",
+      "es": "El primer libro de la clásica serie escolar estadounidense: lecciones diminutas sobre gatos, perros y niños, con pocas palabras nuevas en cada una.",
+      "fr": "Le premier livre de la célèbre série scolaire américaine : de toutes petites leçons sur les chats, les chiens et les enfants, avec peu de mots nouveaux.",
+      "de": "Das erste Buch der klassischen amerikanischen Schulreihe: winzige Lektionen über Katzen, Hunde und Kinder mit wenigen neuen Wörtern.",
+      "it": "Il primo libro della classica serie scolastica americana: lezioni brevissime su gatti, cani e bambini, con poche parole nuove ciascuna.",
+      "pt": "O primeiro livro da clássica série escolar americana: lições minúsculas sobre gatos, cães e crianças, com poucas palavras novas em cada uma.",
+      "ru": "Первая книга классической американской школьной серии: крошечные уроки о кошках, собаках и детях, в каждом лишь несколько новых слов.",
+      "ja": "アメリカの定番教科書シリーズの第一巻。ねこ、いぬ、子どもについてのごく短い課で、新しい単語は少しずつ出てきます。",
+      "ko": "미국 고전 교과서 시리즈의 첫 권. 고양이, 개, 아이들에 관한 아주 짧은 과로, 과마다 새 낱말이 몇 개씩 나옵니다.",
+      "ar": "الكتاب الأول من السلسلة المدرسية الأمريكية الكلاسيكية: دروس صغيرة جدًا عن القطط والكلاب والأطفال، في كل منها كلمات جديدة قليلة.",
+      "hi": "क्लासिक अमेरिकी स्कूली श्रृंखला की पहली किताब: बिल्लियों, कुत्तों और बच्चों पर बहुत छोटे पाठ, हर पाठ में कुछ ही नए शब्द।",
+      "id": "Buku pertama dari seri sekolah klasik Amerika: pelajaran sangat pendek tentang kucing, anjing, dan anak-anak, dengan sedikit kata baru di tiap pelajaran.",
+      "vi": "Cuốn đầu tiên của bộ sách học kinh điển của Mỹ: những bài rất ngắn về mèo, chó và trẻ em, mỗi bài chỉ vài từ mới.",
+      "tr": "Klasik Amerikan okul dizisinin ilk kitabı: kediler, köpekler ve çocuklar üzerine, her birinde birkaç yeni kelime olan minik dersler."
+    }
+  },
   "mcguffeys-first-reader": {
     "title": {
       "en": "McGuffey's First Eclectic Reader",
@@ -605,6 +985,120 @@
       "id": "Buku pelajaran membaca klasik Amerika dari tahun 1879: pelajaran sangat pendek tentang anak-anak, hewan peliharaan, dan kehidupan di peternakan, dengan kata-kata paling sederhana.",
       "vi": "Sách tập đọc kinh điển của Mỹ năm 1879: những bài rất ngắn về trẻ em, vật nuôi và cuộc sống ở nông trại, dùng từ đơn giản nhất.",
       "tr": "1879'dan klasik bir Amerikan okuma kitabı: çocuklar, evcil hayvanlar ve çiftlik hayatı üzerine en basit kelimelerle yazılmış çok kısa dersler."
+    }
+  },
+  "mcguffeys-second-reader": {
+    "title": {
+      "en": "McGuffey's Second Eclectic Reader",
+      "zh-CN": "麦加菲第二读本",
+      "zh-TW": "麥加菲第二讀本",
+      "es": "Segundo libro de lectura de McGuffey",
+      "fr": "Le deuxième livre de lecture de McGuffey",
+      "de": "McGuffeys zweites Lesebuch",
+      "it": "Il secondo libro di lettura di McGuffey",
+      "pt": "Segundo livro de leitura de McGuffey",
+      "ru": "Вторая книга для чтения Макгаффи",
+      "ja": "マクガフィー・リーダー 第二巻",
+      "ko": "맥거피 제2 독본",
+      "ar": "كتاب القراءة الثاني لماكغافي",
+      "hi": "मैकगफ़ी की दूसरी पाठ्य-पुस्तक",
+      "id": "Buku Bacaan Kedua McGuffey",
+      "vi": "Sách tập đọc thứ hai của McGuffey",
+      "tr": "McGuffey'nin İkinci Okuma Kitabı"
+    },
+    "blurb": {
+      "en": "The second book of the classic American school series: short stories and poems about family, animals and good behaviour.",
+      "zh-CN": "美国经典小学课本系列的第二本：关于家庭、动物和好品行的短故事和小诗。",
+      "zh-TW": "美國經典小學課本系列的第二本：關於家庭、動物和好品行的短故事和小詩。",
+      "es": "El segundo libro de la clásica serie escolar estadounidense: cuentos y poemas cortos sobre la familia, los animales y la buena conducta.",
+      "fr": "Le deuxième livre de la célèbre série scolaire américaine : courtes histoires et poèmes sur la famille, les animaux et la bonne conduite.",
+      "de": "Das zweite Buch der klassischen amerikanischen Schulreihe: kurze Geschichten und Gedichte über Familie, Tiere und gutes Benehmen.",
+      "it": "Il secondo libro della classica serie scolastica americana: brevi storie e poesie su famiglia, animali e buona condotta.",
+      "pt": "O segundo livro da clássica série escolar americana: histórias e poemas curtos sobre família, animais e bom comportamento.",
+      "ru": "Вторая книга классической американской школьной серии: короткие рассказы и стихи о семье, животных и хорошем поведении.",
+      "ja": "アメリカの定番教科書シリーズの第二巻。家族や動物、よいふるまいについての短いお話と詩。",
+      "ko": "미국 고전 교과서 시리즈의 둘째 권. 가족, 동물, 바른 행동에 관한 짧은 이야기와 시.",
+      "ar": "الكتاب الثاني من السلسلة المدرسية الأمريكية الكلاسيكية: قصص وقصائد قصيرة عن الأسرة والحيوانات والسلوك الحسن.",
+      "hi": "क्लासिक अमेरिकी स्कूली श्रृंखला की दूसरी किताब: परिवार, जानवरों और अच्छे व्यवहार पर छोटी कहानियाँ और कविताएँ।",
+      "id": "Buku kedua dari seri sekolah klasik Amerika: cerita dan puisi pendek tentang keluarga, hewan, dan perilaku baik.",
+      "vi": "Cuốn thứ hai của bộ sách học kinh điển của Mỹ: truyện ngắn và thơ về gia đình, con vật và cách cư xử tốt.",
+      "tr": "Klasik Amerikan okul dizisinin ikinci kitabı: aile, hayvanlar ve iyi davranış üzerine kısa öyküler ve şiirler."
+    }
+  },
+  "middlemarch": {
+    "title": {
+      "en": "Middlemarch",
+      "zh-CN": "米德尔马契",
+      "zh-TW": "米德爾馬契",
+      "es": "Middlemarch",
+      "fr": "Middlemarch",
+      "de": "Middlemarch",
+      "it": "Middlemarch",
+      "pt": "Middlemarch",
+      "ru": "Мидлмарч",
+      "ja": "ミドルマーチ",
+      "ko": "미들마치",
+      "ar": "ميدلمارش",
+      "hi": "मिडिलमार्च",
+      "id": "Middlemarch",
+      "vi": "Middlemarch",
+      "tr": "Middlemarch"
+    },
+    "blurb": {
+      "en": "In a small English town around 1830, an idealistic young woman and an ambitious young doctor both make marriages that test their hopes.",
+      "zh-CN": "1830年前后英国的一个小镇上，一位怀抱理想的年轻女子和一位雄心勃勃的年轻医生，各自的婚姻都让希望经受考验。",
+      "zh-TW": "1830年前後英國的一個小鎮上，一位懷抱理想的年輕女子和一位雄心勃勃的年輕醫生，各自的婚姻都讓希望經受考驗。",
+      "es": "En un pequeño pueblo inglés hacia 1830, una joven idealista y un joven médico ambicioso contraen matrimonios que ponen a prueba sus esperanzas.",
+      "fr": "Dans une petite ville anglaise vers 1830, une jeune femme idéaliste et un jeune médecin ambitieux font des mariages qui mettent leurs espoirs à l'épreuve.",
+      "de": "In einer englischen Kleinstadt um 1830 schließen eine idealistische junge Frau und ein ehrgeiziger junger Arzt Ehen, die ihre Hoffnungen auf die Probe stellen.",
+      "it": "In una piccola città inglese verso il 1830, una giovane idealista e un giovane medico ambizioso fanno matrimoni che mettono alla prova le loro speranze.",
+      "pt": "Numa pequena cidade inglesa por volta de 1830, uma jovem idealista e um jovem médico ambicioso fazem casamentos que põem à prova as suas esperanças.",
+      "ru": "В маленьком английском городке около 1830 года идеалистка-девушка и честолюбивый молодой врач вступают в браки, которые испытывают их надежды.",
+      "ja": "1830年ごろのイギリスの小さな町で、理想に燃える若い女性と野心ある若い医師が、それぞれ希望を試される結婚をします。",
+      "ko": "1830년 무렵 영국의 작은 마을에서 이상주의자인 젊은 여성과 야심 찬 젊은 의사가 각자 희망을 시험받는 결혼을 합니다.",
+      "ar": "في بلدة إنجليزية صغيرة نحو عام 1830، تتزوج شابة مثالية ويتزوج طبيب شاب طموح زواجين يمتحنان آمالهما.",
+      "hi": "1830 के आसपास एक छोटे अंग्रेज़ी क़स्बे में एक आदर्शवादी युवती और एक महत्वाकांक्षी युवा डॉक्टर ऐसी शादियाँ करते हैं जो उनकी उम्मीदों की परीक्षा लेती हैं।",
+      "id": "Di sebuah kota kecil di Inggris sekitar tahun 1830, seorang wanita muda yang idealis dan seorang dokter muda yang ambisius menikah dan harapan mereka pun diuji.",
+      "vi": "Ở một thị trấn nhỏ nước Anh khoảng năm 1830, một cô gái trẻ giàu lý tưởng và một bác sĩ trẻ đầy tham vọng bước vào những cuộc hôn nhân thử thách hy vọng của họ.",
+      "tr": "1830 civarında küçük bir İngiliz kasabasında idealist genç bir kadın ile hırslı genç bir doktor, umutlarını sınayan evlilikler yapar."
+    }
+  },
+  "moby-dick": {
+    "title": {
+      "en": "Moby-Dick; or, The Whale",
+      "zh-CN": "白鲸",
+      "zh-TW": "白鯨記",
+      "es": "Moby Dick",
+      "fr": "Moby Dick",
+      "de": "Moby-Dick",
+      "it": "Moby Dick",
+      "pt": "Moby Dick",
+      "ru": "Моби Дик, или Белый кит",
+      "ja": "白鯨",
+      "ko": "모비 딕",
+      "ar": "موبي ديك",
+      "hi": "मोबी डिक",
+      "id": "Moby Dick",
+      "vi": "Moby Dick",
+      "tr": "Moby Dick"
+    },
+    "blurb": {
+      "en": "A young sailor joins a whaling ship whose captain, Ahab, is set on revenge against the great white whale that took his leg.",
+      "zh-CN": "一个年轻水手登上一艘捕鲸船，船长亚哈一心要向咬掉他一条腿的大白鲸复仇。",
+      "zh-TW": "一個年輕水手登上一艘捕鯨船，船長亞哈一心要向咬掉他一條腿的大白鯨復仇。",
+      "es": "Un joven marinero se embarca en un ballenero cuyo capitán, Ahab, está decidido a vengarse de la gran ballena blanca que le arrancó la pierna.",
+      "fr": "Un jeune marin embarque sur un baleinier dont le capitaine, Achab, veut se venger de la grande baleine blanche qui lui a arraché la jambe.",
+      "de": "Ein junger Seemann heuert auf einem Walfänger an, dessen Kapitän Ahab sich an dem großen weißen Wal rächen will, der ihm das Bein nahm.",
+      "it": "Un giovane marinaio si imbarca su una baleniera il cui capitano, Achab, vuole vendicarsi della grande balena bianca che gli ha strappato una gamba.",
+      "pt": "Um jovem marinheiro embarca num baleeiro cujo capitão, Ahab, está decidido a vingar-se da grande baleia branca que lhe levou a perna.",
+      "ru": "Молодой моряк нанимается на китобойное судно, капитан которого, Ахав, одержим местью огромному белому киту, отнявшему у него ногу.",
+      "ja": "若い船乗りが捕鯨船に乗りこみます。船長のエイハブは、片足を奪った巨大な白いクジラへの復讐に取りつかれています。",
+      "ko": "젊은 선원이 포경선에 오르는데, 선장 에이해브는 자기 다리를 앗아 간 거대한 흰 고래에게 복수하려고 합니다.",
+      "ar": "بحّار شاب ينضم إلى سفينة صيد حيتان قبطانها آهاب مصمم على الانتقام من الحوت الأبيض الضخم الذي أخذ ساقه.",
+      "hi": "एक युवा नाविक व्हेल पकड़ने वाले जहाज़ पर जाता है, जिसका कप्तान अहाब उस विशाल सफ़ेद व्हेल से बदला लेने पर तुला है जिसने उसकी टाँग छीन ली थी।",
+      "id": "Seorang pelaut muda bergabung dengan kapal pemburu paus yang kaptennya, Ahab, bertekad membalas dendam pada paus putih raksasa yang merenggut kakinya.",
+      "vi": "Một thủy thủ trẻ lên một tàu săn cá voi mà thuyền trưởng Ahab quyết trả thù con cá voi trắng khổng lồ đã cướp mất một chân của ông.",
+      "tr": "Genç bir denizci, kaptanı Ahab'ın bacağını koparan dev beyaz balinadan intikam almaya kararlı olduğu bir balina gemisine katılır."
     }
   },
   "peter-pan": {
@@ -681,6 +1175,44 @@
       "id": "Elizabeth Bennet yang lincah dan Tuan Darcy yang angkuh saling salah menilai dalam masyarakat pedesaan Inggris.",
       "vi": "Trong xã hội thôn quê nước Anh, cô Elizabeth Bennet hoạt bát và anh Darcy kiêu ngạo hiểu lầm nhau.",
       "tr": "Canlı Elizabeth Bennet ile kibirli Bay Darcy, İngiliz taşra sosyetesinde birbirlerini yanlış değerlendirir."
+    }
+  },
+  "robinson-crusoe": {
+    "title": {
+      "en": "Robinson Crusoe",
+      "zh-CN": "鲁滨逊漂流记",
+      "zh-TW": "魯賓遜漂流記",
+      "es": "Robinson Crusoe",
+      "fr": "Robinson Crusoé",
+      "de": "Robinson Crusoe",
+      "it": "Robinson Crusoe",
+      "pt": "Robinson Crusoé",
+      "ru": "Робинзон Крузо",
+      "ja": "ロビンソン・クルーソー",
+      "ko": "로빈슨 크루소",
+      "ar": "روبنسون كروزو",
+      "hi": "रॉबिन्सन क्रूसो",
+      "id": "Robinson Crusoe",
+      "vi": "Robinson Crusoe",
+      "tr": "Robinson Crusoe"
+    },
+    "blurb": {
+      "en": "After a shipwreck, a sailor lives alone on a desert island for many years and builds a home with his own hands, until he meets Friday.",
+      "zh-CN": "一场海难后，一个水手独自在荒岛上生活了许多年，亲手建起自己的家，直到遇见了星期五。",
+      "zh-TW": "一場船難後，一個水手獨自在荒島上生活了許多年，親手建起自己的家，直到遇見了星期五。",
+      "es": "Tras un naufragio, un marinero vive solo muchos años en una isla desierta y construye un hogar con sus manos, hasta que conoce a Viernes.",
+      "fr": "Après un naufrage, un marin vit seul pendant des années sur une île déserte et se bâtit une maison de ses mains, jusqu'à sa rencontre avec Vendredi.",
+      "de": "Nach einem Schiffbruch lebt ein Seemann viele Jahre allein auf einer einsamen Insel und baut sich mit eigenen Händen ein Zuhause, bis er Freitag begegnet.",
+      "it": "Dopo un naufragio, un marinaio vive da solo per molti anni su un'isola deserta e si costruisce una casa con le sue mani, finché incontra Venerdì.",
+      "pt": "Depois de um naufrágio, um marinheiro vive sozinho numa ilha deserta durante muitos anos e constrói um lar com as próprias mãos, até conhecer Sexta-Feira.",
+      "ru": "После кораблекрушения моряк много лет живёт один на необитаемом острове и своими руками строит дом, пока не встречает Пятницу.",
+      "ja": "難破した船乗りが無人島で何年もひとりで暮らし、自分の手で住まいを作ります。やがてフライデーと出会います。",
+      "ko": "난파당한 선원이 무인도에서 여러 해 동안 홀로 살며 손수 집을 짓다가 프라이데이를 만납니다.",
+      "ar": "بعد غرق سفينته، يعيش بحّار وحيدًا على جزيرة مهجورة سنوات طويلة ويبني بيتًا بيديه، حتى يلتقي بفرايدي.",
+      "hi": "जहाज़ डूबने के बाद एक नाविक कई साल एक सुनसान टापू पर अकेला रहता है और अपने हाथों से घर बनाता है, जब तक उसकी मुलाक़ात फ़्राइडे से नहीं होती।",
+      "id": "Setelah kapalnya karam, seorang pelaut hidup sendirian bertahun-tahun di pulau terpencil dan membangun rumah dengan tangannya sendiri, sampai ia bertemu Friday.",
+      "vi": "Sau một vụ đắm tàu, một thủy thủ sống một mình nhiều năm trên hoang đảo và tự tay dựng nhà, cho đến khi gặp Thứ Sáu.",
+      "tr": "Bir gemi kazasından sonra bir denizci yıllarca ıssız bir adada tek başına yaşar ve kendi elleriyle bir ev kurar, ta ki Cuma'yla karşılaşana kadar."
     }
   },
   "stories-from-hans-andersen": {
@@ -911,6 +1443,82 @@
       "tr": "Oscar Wilde'ın iyilik, sevgi ve fedakârlık üzerine beş masalı; ilki altın bir heykel ile bir kırlangıç hakkındadır."
     }
   },
+  "the-hound-of-the-baskervilles": {
+    "title": {
+      "en": "The Hound of the Baskervilles",
+      "zh-CN": "巴斯克维尔的猎犬",
+      "zh-TW": "巴斯克維爾的獵犬",
+      "es": "El sabueso de los Baskerville",
+      "fr": "Le Chien des Baskerville",
+      "de": "Der Hund der Baskervilles",
+      "it": "Il mastino dei Baskerville",
+      "pt": "O cão dos Baskervilles",
+      "ru": "Собака Баскервилей",
+      "ja": "バスカヴィル家の犬",
+      "ko": "바스커빌 가의 개",
+      "ar": "كلب آل باسكرفيل",
+      "hi": "बास्करविल का शिकारी कुत्ता",
+      "id": "Anjing Keluarga Baskerville",
+      "vi": "Con chó của dòng họ Baskerville",
+      "tr": "Baskerville'lerin Köpeği"
+    },
+    "blurb": {
+      "en": "Sherlock Holmes and Dr Watson look into the legend of a huge ghostly dog that is said to kill the heirs of an old family on the lonely moors.",
+      "zh-CN": "福尔摩斯和华生调查一个传说：荒凉的沼地上有一条巨大的幽灵猎犬，专门害死一个古老家族的继承人。",
+      "zh-TW": "福爾摩斯和華生調查一個傳說：荒涼的沼地上有一條巨大的幽靈獵犬，專門害死一個古老家族的繼承人。",
+      "es": "Sherlock Holmes y el doctor Watson investigan la leyenda de un enorme perro fantasmal que, según dicen, mata a los herederos de una vieja familia en los páramos.",
+      "fr": "Sherlock Holmes et le docteur Watson enquêtent sur la légende d'un énorme chien fantôme qui tuerait les héritiers d'une vieille famille sur la lande.",
+      "de": "Sherlock Holmes und Dr. Watson gehen der Legende eines riesigen Geisterhundes nach, der die Erben einer alten Familie im einsamen Moor töten soll.",
+      "it": "Sherlock Holmes e il dottor Watson indagano sulla leggenda di un enorme cane spettrale che ucciderebbe gli eredi di un'antica famiglia nella brughiera.",
+      "pt": "Sherlock Holmes e o Dr. Watson investigam a lenda de um enorme cão fantasma que mataria os herdeiros de uma velha família nas charnecas.",
+      "ru": "Шерлок Холмс и доктор Ватсон расследуют легенду об огромной призрачной собаке, которая будто бы убивает наследников старинного рода на пустынных болотах.",
+      "ja": "シャーロック・ホームズとワトスン博士が、さびしい荒れ野で旧家の跡継ぎを殺すという巨大な魔犬の伝説を調べます。",
+      "ko": "셜록 홈스와 왓슨 박사가 쓸쓸한 황무지에서 오래된 가문의 상속자를 죽인다는 거대한 유령 개의 전설을 파헤칩니다.",
+      "ar": "يحقق شرلوك هولمز والدكتور واطسون في أسطورة كلب شبحي ضخم يُقال إنه يقتل ورثة عائلة عريقة في البراري الموحشة.",
+      "hi": "शर्लक होम्स और डॉ. वॉटसन एक विशाल भूतिया कुत्ते की किंवदंती की जाँच करते हैं, जो सुनसान दलदली मैदानों में एक पुराने परिवार के वारिसों को मारता है।",
+      "id": "Sherlock Holmes dan Dr. Watson menyelidiki legenda anjing hantu raksasa yang konon membunuh para pewaris sebuah keluarga tua di padang sepi.",
+      "vi": "Sherlock Holmes và bác sĩ Watson điều tra truyền thuyết về một con chó ma khổng lồ được cho là giết hại những người thừa kế của một dòng họ lâu đời trên vùng đồng hoang.",
+      "tr": "Sherlock Holmes ve Dr. Watson, ıssız bozkırlarda eski bir ailenin varislerini öldürdüğü söylenen dev bir hayalet köpeğin efsanesini araştırır."
+    }
+  },
+  "the-jungle-book": {
+    "title": {
+      "en": "The Jungle Book",
+      "zh-CN": "丛林之书",
+      "zh-TW": "叢林奇譚",
+      "es": "El libro de la selva",
+      "fr": "Le Livre de la jungle",
+      "de": "Das Dschungelbuch",
+      "it": "Il libro della giungla",
+      "pt": "O livro da selva",
+      "ru": "Книга джунглей",
+      "ja": "ジャングル・ブック",
+      "ko": "정글북",
+      "ar": "كتاب الأدغال",
+      "hi": "द जंगल बुक",
+      "id": "Buku Rimba",
+      "vi": "Câu chuyện rừng xanh",
+      "tr": "Orman Kitabı"
+    },
+    "blurb": {
+      "en": "Mowgli, a boy raised by wolves in the Indian jungle, learns its laws from Baloo the bear and Bagheera the panther; other stories include Rikki-Tikki-Tavi.",
+      "zh-CN": "在印度丛林里被狼养大的男孩毛克利，跟着熊巴鲁和黑豹巴希拉学习丛林法则；书中还有獴哥里奇的故事等。",
+      "zh-TW": "在印度叢林裡被狼養大的男孩毛克利，跟著熊巴魯和黑豹巴希拉學習叢林法則；書中還有獴哥里奇的故事等。",
+      "es": "Mowgli, un niño criado por lobos en la selva de la India, aprende sus leyes con el oso Baloo y la pantera Bagheera; incluye otros cuentos como Rikki-Tikki-Tavi.",
+      "fr": "Mowgli, un garçon élevé par les loups dans la jungle indienne, apprend ses lois avec l'ours Baloo et la panthère Bagheera ; d'autres récits suivent, dont Rikki-Tikki-Tavi.",
+      "de": "Mowgli, ein Junge, der im indischen Dschungel bei Wölfen aufwächst, lernt dessen Gesetze von Balu dem Bären und Baghira dem Panther; dazu kommen Geschichten wie Rikki-Tikki-Tavi.",
+      "it": "Mowgli, un bambino cresciuto dai lupi nella giungla indiana, impara le sue leggi dall'orso Baloo e dalla pantera Bagheera; seguono altri racconti come Rikki-Tikki-Tavi.",
+      "pt": "Mogli, um menino criado por lobos na selva indiana, aprende as suas leis com o urso Balu e a pantera Baguera; há ainda contos como Rikki-Tikki-Tavi.",
+      "ru": "Маугли, мальчик, выросший среди волков в индийских джунглях, учит их законы у медведя Балу и пантеры Багиры; есть и другие истории, например «Рикки-Тикки-Тави».",
+      "ja": "インドのジャングルでオオカミに育てられた少年モーグリが、クマのバルーと黒ヒョウのバギーラからおきてを学びます。「リッキ・ティッキ・タビ」などのお話も入っています。",
+      "ko": "인도 정글에서 늑대에게 길러진 소년 모글리가 곰 발루와 흑표범 바기라에게 정글의 법칙을 배웁니다. '리키티키타비' 같은 다른 이야기도 실려 있습니다.",
+      "ar": "ماوكلي، صبي ربّته الذئاب في أدغال الهند، يتعلم قوانينها من الدب بالو والنمر الأسود باغيرا؛ وفي الكتاب قصص أخرى مثل ريكي تيكي تافي.",
+      "hi": "भारत के जंगल में भेड़ियों द्वारा पाला गया लड़का मोगली, भालू बल्लू और तेंदुए बघीरा से जंगल के नियम सीखता है; रिक्की-टिक्की-टावी जैसी और कहानियाँ भी हैं।",
+      "id": "Mowgli, anak yang dibesarkan serigala di rimba India, mempelajari hukum rimba dari beruang Baloo dan macan kumbang Bagheera; ada juga kisah lain seperti Rikki-Tikki-Tavi.",
+      "vi": "Mowgli, cậu bé được bầy sói nuôi lớn trong rừng Ấn Độ, học luật rừng từ gấu Baloo và báo đen Bagheera; sách còn có những truyện khác như Rikki-Tikki-Tavi.",
+      "tr": "Hindistan ormanında kurtlar tarafından büyütülen Mowgli, ormanın yasalarını ayı Baloo ile panter Bagheera'dan öğrenir; Rikki-Tikki-Tavi gibi başka öyküler de var."
+    }
+  },
   "the-little-red-hen": {
     "title": {
       "en": "The Little Red Hen",
@@ -985,6 +1593,82 @@
       "id": "Seorang pemuda tampan tetap muda dan rupawan, sementara potretnya menua dan menjadi buruk rupa.",
       "vi": "Một chàng trai đẹp mãi trẻ trung, còn bức chân dung của anh ta thì già đi và xấu xí.",
       "tr": "Yakışıklı bir genç hep genç ve güzel kalırken portresi yaşlanıp çirkinleşir."
+    }
+  },
+  "the-railway-children": {
+    "title": {
+      "en": "The Railway Children",
+      "zh-CN": "铁路边的孩子们",
+      "zh-TW": "鐵路邊的孩子們",
+      "es": "Los chicos del ferrocarril",
+      "fr": "Les Enfants du chemin de fer",
+      "de": "Die Eisenbahnkinder",
+      "it": "I ragazzi della ferrovia",
+      "pt": "As crianças da ferrovia",
+      "ru": "Дети железной дороги",
+      "ja": "鉄道きょうだい",
+      "ko": "기찻길 옆 아이들",
+      "ar": "أطفال السكة الحديدية",
+      "hi": "रेलवे के बच्चे",
+      "id": "Anak-Anak Rel Kereta",
+      "vi": "Những đứa trẻ đường tàu",
+      "tr": "Demiryolu Çocukları"
+    },
+    "blurb": {
+      "en": "When their father is suddenly taken away, three children move to a cottage by a railway line and make friends with the trains and the people on them.",
+      "zh-CN": "父亲突然被带走后，三个孩子搬到铁路边的一间小屋，和火车以及车上的人们交上了朋友。",
+      "zh-TW": "父親突然被帶走後，三個孩子搬到鐵路邊的一間小屋，和火車以及車上的人們交上了朋友。",
+      "es": "Cuando se llevan de repente a su padre, tres niños se mudan a una casita junto a la vía del tren y se hacen amigos de los trenes y de su gente.",
+      "fr": "Quand leur père est soudain emmené, trois enfants s'installent dans une maison près d'une voie ferrée et se lient d'amitié avec les trains et leurs voyageurs.",
+      "de": "Als ihr Vater plötzlich fortgebracht wird, ziehen drei Kinder in ein Häuschen an einer Bahnlinie und freunden sich mit den Zügen und ihren Leuten an.",
+      "it": "Quando il padre viene portato via all'improvviso, tre bambini si trasferiscono in una casetta vicino alla ferrovia e fanno amicizia con i treni e la loro gente.",
+      "pt": "Quando o pai é levado de repente, três crianças se mudam para uma casinha junto à linha do trem e fazem amizade com os trens e as pessoas neles.",
+      "ru": "Когда отца внезапно увозят, трое детей переезжают в домик у железной дороги и дружат с поездами и людьми в них.",
+      "ja": "父親が突然連れ去られ、三人のきょうだいは線路ぞいの小さな家に引っこし、汽車や乗っている人たちと友だちになります。",
+      "ko": "아버지가 갑자기 끌려가자 세 아이는 기찻길 옆 오두막으로 이사해 기차와 기차를 탄 사람들과 친구가 됩니다.",
+      "ar": "حين يُؤخذ أبوهم فجأة، ينتقل ثلاثة أطفال إلى كوخ بجانب سكة الحديد ويصادقون القطارات وركابها.",
+      "hi": "पिता को अचानक ले जाए जाने के बाद तीन बच्चे रेल लाइन के पास एक कॉटेज में रहने आते हैं और रेलगाड़ियों और उनके लोगों से दोस्ती कर लेते हैं।",
+      "id": "Ketika ayah mereka tiba-tiba dibawa pergi, tiga anak pindah ke pondok di tepi rel kereta dan bersahabat dengan kereta serta orang-orang di dalamnya.",
+      "vi": "Khi cha bất ngờ bị đưa đi, ba đứa trẻ chuyển đến một ngôi nhà nhỏ cạnh đường ray và kết bạn với những chuyến tàu cùng người trên đó.",
+      "tr": "Babaları aniden götürülünce üç çocuk bir demiryolu hattının yanındaki kulübeye taşınır ve trenlerle, trendeki insanlarla dost olurlar."
+    }
+  },
+  "the-scarlet-letter": {
+    "title": {
+      "en": "The Scarlet Letter",
+      "zh-CN": "红字",
+      "zh-TW": "紅字",
+      "es": "La letra escarlata",
+      "fr": "La Lettre écarlate",
+      "de": "Der scharlachrote Buchstabe",
+      "it": "La lettera scarlatta",
+      "pt": "A letra escarlate",
+      "ru": "Алая буква",
+      "ja": "緋文字",
+      "ko": "주홍 글자",
+      "ar": "الحرف القرمزي",
+      "hi": "लाल अक्षर",
+      "id": "Huruf Merah",
+      "vi": "Chữ A màu đỏ",
+      "tr": "Kızıl Damga"
+    },
+    "blurb": {
+      "en": "In a strict Puritan town in the 1640s, a young woman must wear a red letter A as punishment, while she keeps the father of her child a secret.",
+      "zh-CN": "17世纪40年代一个严苛的清教徒小镇上，一个年轻女人被罚佩戴红色的字母A，却始终不肯说出孩子的父亲是谁。",
+      "zh-TW": "17世紀40年代一個嚴苛的清教徒小鎮上，一個年輕女人被罰佩戴紅色的字母A，卻始終不肯說出孩子的父親是誰。",
+      "es": "En un severo pueblo puritano de la década de 1640, una joven debe llevar una letra A roja como castigo mientras guarda en secreto quién es el padre de su hija.",
+      "fr": "Dans une stricte ville puritaine des années 1640, une jeune femme doit porter une lettre A rouge en punition, tout en taisant le nom du père de son enfant.",
+      "de": "In einer strengen puritanischen Stadt der 1640er-Jahre muss eine junge Frau zur Strafe ein rotes A tragen, während sie den Vater ihres Kindes geheim hält.",
+      "it": "In una severa città puritana degli anni Quaranta del Seicento, una giovane deve portare come punizione una lettera A rossa, mentre tiene segreto il padre di sua figlia.",
+      "pt": "Numa rígida cidade puritana da década de 1640, uma jovem tem de usar uma letra A vermelha como castigo, enquanto mantém em segredo o pai da filha.",
+      "ru": "В строгом пуританском городке 1640-х годов молодая женщина в наказание должна носить алую букву «A» и хранит в тайне имя отца своего ребёнка.",
+      "ja": "1640年代の厳格なピューリタンの町で、若い女性が罰として赤いAの文字を身につけさせられます。彼女は子どもの父親の名を明かしません。",
+      "ko": "1640년대 엄격한 청교도 마을에서 한 젊은 여성이 벌로 붉은 글자 A를 달고 다니며, 아이의 아버지가 누구인지 끝내 숨깁니다.",
+      "ar": "في بلدة متزمتة من بلدات البيوريتانيين في أربعينيات القرن السابع عشر، تُجبر امرأة شابة على ارتداء حرف A أحمر عقابًا، بينما تُخفي هوية والد طفلتها.",
+      "hi": "1640 के दशक के एक कट्टर प्यूरिटन क़स्बे में एक युवती को सज़ा के तौर पर लाल अक्षर A पहनना पड़ता है, और वह अपने बच्चे के पिता का नाम छिपाए रखती है।",
+      "id": "Di sebuah kota Puritan yang keras pada tahun 1640-an, seorang wanita muda harus memakai huruf A merah sebagai hukuman, sementara ia merahasiakan ayah anaknya.",
+      "vi": "Ở một thị trấn Thanh giáo khắt khe những năm 1640, một phụ nữ trẻ bị buộc đeo chữ A màu đỏ để chịu phạt, trong khi giữ kín cha của đứa con mình.",
+      "tr": "1640'larda katı bir Püriten kasabasında genç bir kadın ceza olarak kırmızı bir A harfi takmak zorunda kalır ve çocuğunun babasını gizli tutar."
     }
   },
   "the-secret-garden": {
@@ -1215,6 +1899,82 @@
       "tr": "Yaramaz küçük bir tavşan Bay McGregor'ın bahçesine gizlice girer ve kaçmanın bir yolunu bulmak zorunda kalır."
     }
   },
+  "the-tale-of-squirrel-nutkin": {
+    "title": {
+      "en": "The Tale of Squirrel Nutkin",
+      "zh-CN": "松鼠纳特金的故事",
+      "zh-TW": "松鼠納特金的故事",
+      "es": "El cuento de la ardilla Nutkin",
+      "fr": "Le Conte de Noisette l'écureuil",
+      "de": "Die Geschichte von Eichhörnchen Nusper",
+      "it": "La storia dello scoiattolo Nutkin",
+      "pt": "A história do esquilo Nutkin",
+      "ru": "Сказка про бельчонка Наткина",
+      "ja": "りすのナトキンのおはなし",
+      "ko": "다람쥐 넛킨 이야기",
+      "ar": "حكاية السنجاب نتكن",
+      "hi": "गिलहरी नटकिन की कहानी",
+      "id": "Kisah Tupai Nutkin",
+      "vi": "Chuyện chú sóc Nutkin",
+      "tr": "Sincap Nutkin'in Hikâyesi"
+    },
+    "blurb": {
+      "en": "A cheeky red squirrel keeps teasing Old Brown the owl with silly riddles, until the owl loses his patience.",
+      "zh-CN": "一只调皮的小红松鼠总拿傻乎乎的谜语去捉弄老猫头鹰布朗，直到猫头鹰终于失去了耐心。",
+      "zh-TW": "一隻調皮的小紅松鼠總拿傻呼呼的謎語去捉弄老貓頭鷹布朗，直到貓頭鷹終於失去了耐心。",
+      "es": "Una ardilla roja muy descarada no deja de burlarse del viejo búho Brown con adivinanzas tontas, hasta que el búho pierde la paciencia.",
+      "fr": "Un écureuil roux effronté ne cesse de taquiner le vieux hibou Brown avec des devinettes idiotes, jusqu'à ce que le hibou perde patience.",
+      "de": "Ein freches rotes Eichhörnchen neckt die alte Eule Brown immer wieder mit albernen Rätseln, bis der Eule der Geduldsfaden reißt.",
+      "it": "Uno scoiattolo rosso sfacciato continua a stuzzicare il vecchio gufo Brown con indovinelli sciocchi, finché il gufo perde la pazienza.",
+      "pt": "Um esquilo vermelho atrevido vive provocando o velho mocho Brown com adivinhas bobas, até que o mocho perde a paciência.",
+      "ru": "Дерзкий рыжий бельчонок всё дразнит старого филина Брауна глупыми загадками, пока у филина не кончается терпение.",
+      "ja": "いたずら好きの赤いりすが、ばかげたなぞなぞでふくろうのブラウンじいさまをからかい続け、とうとうふくろうを怒らせます。",
+      "ko": "건방진 빨간 다람쥐가 엉뚱한 수수께끼로 늙은 부엉이 브라운을 계속 놀리다가, 마침내 부엉이가 참지 못하게 됩니다.",
+      "ar": "سنجاب أحمر وقح يظل يغيظ البومة العجوز براون بألغاز سخيفة، حتى تفقد البومة صبرها.",
+      "hi": "एक शरारती लाल गिलहरी बूढ़े उल्लू ब्राउन को बेतुकी पहेलियों से चिढ़ाती रहती है, जब तक उल्लू का धैर्य टूट नहीं जाता।",
+      "id": "Seekor tupai merah yang nakal terus menggoda burung hantu tua Brown dengan teka-teki konyol, sampai si burung hantu kehilangan kesabaran.",
+      "vi": "Một chú sóc đỏ láu lỉnh cứ trêu ông cú già Brown bằng những câu đố ngớ ngẩn, cho đến khi ông cú hết kiên nhẫn.",
+      "tr": "Yaramaz bir kızıl sincap, yaşlı baykuş Brown'ı saçma bilmecelerle kızdırıp durur, ta ki baykuşun sabrı tükenene kadar."
+    }
+  },
+  "the-tale-of-tom-kitten": {
+    "title": {
+      "en": "The Tale of Tom Kitten",
+      "zh-CN": "汤姆小猫的故事",
+      "zh-TW": "湯姆小貓的故事",
+      "es": "El cuento de Tom Gatito",
+      "fr": "Le Conte de Tom Chaton",
+      "de": "Die Geschichte von Tom Kätzchen",
+      "it": "La storia di Tom Micino",
+      "pt": "A história de Tom Gatinho",
+      "ru": "Сказка про котёнка Тома",
+      "ja": "こねこのトムのおはなし",
+      "ko": "톰 키튼 이야기",
+      "ar": "حكاية القط الصغير توم",
+      "hi": "बिल्ली के बच्चे टॉम की कहानी",
+      "id": "Kisah Tom si Anak Kucing",
+      "vi": "Chuyện chú mèo con Tom",
+      "tr": "Kedi Yavrusu Tom'un Hikâyesi"
+    },
+    "blurb": {
+      "en": "Three kittens are dressed in their best clothes for a tea party, but they go out to play in the garden and lose them.",
+      "zh-CN": "三只小猫穿上最好的衣服准备参加茶会，却跑到花园里玩，把衣服都弄丢了。",
+      "zh-TW": "三隻小貓穿上最好的衣服準備參加茶會，卻跑到花園裡玩，把衣服都弄丟了。",
+      "es": "Visten a tres gatitos con su mejor ropa para una merienda, pero salen a jugar al jardín y la pierden.",
+      "fr": "Trois chatons portent leurs plus beaux habits pour un goûter, mais ils sortent jouer au jardin et les perdent.",
+      "de": "Drei Kätzchen bekommen für eine Teegesellschaft ihre besten Kleider an, doch sie spielen im Garten und verlieren sie.",
+      "it": "Tre gattini vengono vestiti a festa per un tè, ma escono a giocare in giardino e perdono i vestiti.",
+      "pt": "Três gatinhos vestem as melhores roupas para um chá, mas saem para brincar no jardim e as perdem.",
+      "ru": "Трёх котят наряжают к чаепитию в лучшую одежду, но они убегают играть в сад и теряют её.",
+      "ja": "お茶会のために一番いい服を着せられた三びきのこねこ。でも庭へ遊びに出て、服をなくしてしまいます。",
+      "ko": "세 마리 아기 고양이가 다과회를 위해 가장 좋은 옷을 입지만, 정원에 나가 놀다가 옷을 잃어버립니다.",
+      "ar": "تُلبَس ثلاث قطط صغيرة أجمل ثيابها لحفلة شاي، لكنها تخرج لتلعب في الحديقة فتضيع الثياب.",
+      "hi": "तीन बिल्ली के बच्चों को चाय-पार्टी के लिए सबसे अच्छे कपड़े पहनाए जाते हैं, पर वे बगीचे में खेलने जाकर कपड़े खो देते हैं।",
+      "id": "Tiga anak kucing didandani dengan baju terbaik untuk pesta teh, tetapi mereka bermain di kebun dan kehilangan bajunya.",
+      "vi": "Ba chú mèo con được mặc quần áo đẹp nhất để dự tiệc trà, nhưng lại ra vườn chơi và làm mất hết.",
+      "tr": "Üç kedi yavrusuna çay partisi için en güzel giysileri giydirilir, ama bahçeye oynamaya çıkıp giysileri kaybederler."
+    }
+  },
   "the-time-machine": {
     "title": {
       "en": "The Time Machine",
@@ -1289,6 +2049,82 @@
       "id": "Seekor kelinci mainan di kamar anak ingin menjadi Nyata, dan Kuda Kulit tua menjelaskan apa yang diperlukan.",
       "vi": "Một chú thỏ đồ chơi trong phòng trẻ mong trở thành Thật, và Con Ngựa Da già giải thích điều cần có để làm được.",
       "tr": "Çocuk odasındaki oyuncak tavşan Gerçek olmak ister; yaşlı Deri At bunun için ne gerektiğini anlatır."
+    }
+  },
+  "the-war-of-the-worlds": {
+    "title": {
+      "en": "The War of the Worlds",
+      "zh-CN": "世界大战",
+      "zh-TW": "世界大戰",
+      "es": "La guerra de los mundos",
+      "fr": "La Guerre des mondes",
+      "de": "Der Krieg der Welten",
+      "it": "La guerra dei mondi",
+      "pt": "A guerra dos mundos",
+      "ru": "Война миров",
+      "ja": "宇宙戦争",
+      "ko": "우주 전쟁",
+      "ar": "حرب العوالم",
+      "hi": "दुनियाओं का युद्ध",
+      "id": "Perang Dunia-Dunia",
+      "vi": "Chiến tranh giữa các thế giới",
+      "tr": "Dünyalar Savaşı"
+    },
+    "blurb": {
+      "en": "Martians land in the English countryside with deadly machines, and one man tries to survive as they march towards London.",
+      "zh-CN": "火星人带着致命的机器降落在英国乡间，向伦敦进发，一个普通人拼命想活下去。",
+      "zh-TW": "火星人帶著致命的機器降落在英國鄉間，向倫敦進發，一個普通人拚命想活下去。",
+      "es": "Los marcianos aterrizan en la campiña inglesa con máquinas mortíferas y un hombre intenta sobrevivir mientras avanzan hacia Londres.",
+      "fr": "Des Martiens débarquent dans la campagne anglaise avec des machines meurtrières, et un homme tente de survivre tandis qu'ils marchent sur Londres.",
+      "de": "Marsianer landen mit tödlichen Maschinen auf dem englischen Land, und ein Mann versucht zu überleben, während sie auf London vorrücken.",
+      "it": "I marziani atterrano nella campagna inglese con macchine letali e un uomo cerca di sopravvivere mentre avanzano verso Londra.",
+      "pt": "Marcianos aterram no campo inglês com máquinas mortais, e um homem tenta sobreviver enquanto eles avançam sobre Londres.",
+      "ru": "Марсиане высаживаются в английской глуши со смертоносными машинами, и один человек пытается выжить, пока они идут на Лондон.",
+      "ja": "恐ろしい機械とともにイギリスの田舎に火星人が降り立ち、ロンドンへ進んでいきます。一人の男が必死に生きのびようとします。",
+      "ko": "화성인들이 치명적인 기계를 몰고 영국 시골에 내려와 런던으로 진격하고, 한 남자가 살아남으려고 애씁니다.",
+      "ar": "يهبط المريخيون في الريف الإنجليزي بآلات قاتلة، ويحاول رجل النجاة بينما يزحفون نحو لندن.",
+      "hi": "मंगल ग्रह के प्राणी घातक मशीनों के साथ इंग्लैंड के गाँवों में उतरते हैं, और जब वे लंदन की ओर बढ़ते हैं तो एक आदमी बचने की कोशिश करता है।",
+      "id": "Makhluk Mars mendarat di pedesaan Inggris dengan mesin mematikan, dan seorang pria berusaha bertahan hidup saat mereka bergerak menuju London.",
+      "vi": "Người sao Hỏa đổ bộ xuống vùng quê nước Anh với những cỗ máy chết chóc, và một người đàn ông cố sống sót khi chúng tiến về London.",
+      "tr": "Marslılar ölümcül makinelerle İngiliz kırsalına iner ve Londra'ya doğru ilerlerken bir adam hayatta kalmaya çalışır."
+    }
+  },
+  "the-wind-in-the-willows": {
+    "title": {
+      "en": "The Wind in the Willows",
+      "zh-CN": "柳林风声",
+      "zh-TW": "柳林中的風聲",
+      "es": "El viento en los sauces",
+      "fr": "Le Vent dans les saules",
+      "de": "Der Wind in den Weiden",
+      "it": "Il vento tra i salici",
+      "pt": "O vento nos salgueiros",
+      "ru": "Ветер в ивах",
+      "ja": "たのしい川べ",
+      "ko": "버드나무에 부는 바람",
+      "ar": "الريح في أشجار الصفصاف",
+      "hi": "विलो में हवा",
+      "id": "Angin di Pohon Willow",
+      "vi": "Gió qua rặng liễu",
+      "tr": "Söğütlerdeki Rüzgâr"
+    },
+    "blurb": {
+      "en": "Mole, Rat, Badger and the boastful Toad share adventures on the river and in the Wild Wood, until Toad's love of motor cars gets him into serious trouble.",
+      "zh-CN": "鼹鼠、河鼠、獾和爱吹牛的蟾蜍在河上和野林里一起冒险，直到蟾蜍迷上汽车，惹出了大麻烦。",
+      "zh-TW": "鼴鼠、河鼠、獾和愛吹牛的蟾蜍在河上和野林裡一起冒險，直到蟾蜍迷上汽車，惹出了大麻煩。",
+      "es": "Topo, Rata, Tejón y el fanfarrón Sapo viven aventuras en el río y en el Bosque Salvaje, hasta que la pasión de Sapo por los coches lo mete en serios problemas.",
+      "fr": "Taupe, Rat, Blaireau et le vantard Crapaud vivent des aventures sur la rivière et dans le Bois sauvage, jusqu'à ce que la passion de Crapaud pour les automobiles lui attire de graves ennuis.",
+      "de": "Maulwurf, Ratte, Dachs und der angeberische Kröterich erleben Abenteuer am Fluss und im Wilden Wald, bis Kröterichs Liebe zu Autos ihn in große Schwierigkeiten bringt.",
+      "it": "Talpa, Topo, Tasso e il vanitoso Rospo vivono avventure sul fiume e nel Bosco Selvaggio, finché la passione di Rospo per le automobili lo mette nei guai.",
+      "pt": "Toupeira, Rato, Texugo e o fanfarrão Sapo vivem aventuras no rio e no Bosque Selvagem, até que a paixão do Sapo por automóveis o mete em sérios apuros.",
+      "ru": "Крот, Крыс, Барсук и хвастливый Жаб переживают приключения на реке и в Дремучем лесу, пока страсть Жаба к автомобилям не доводит его до беды.",
+      "ja": "モグラ、ネズミ、アナグマ、そしてじまん屋のヒキガエルが川や森で冒険します。やがてヒキガエルの自動車好きが大騒動を起こします。",
+      "ko": "두더지, 물쥐, 오소리, 허풍쟁이 두꺼비가 강과 거친 숲에서 모험을 하다가, 자동차에 빠진 두꺼비가 큰 곤경에 처합니다.",
+      "ar": "الخلد والجرذ والغرير والضفدع المتباهي يعيشون مغامرات على النهر وفي الغابة البرية، حتى يوقع حبُّ الضفدع للسيارات به في مأزق كبير.",
+      "hi": "छछूँदर, चूहा, बिज्जू और शेखीबाज़ मेंढक नदी और जंगली वन में रोमांच करते हैं, जब तक मेंढक का मोटर-कारों का शौक उसे बड़ी मुसीबत में नहीं डाल देता।",
+      "id": "Tikus Tanah, Tikus Air, Luak, dan Kodok yang suka pamer berpetualang di sungai dan Hutan Liar, sampai kegemaran Kodok pada mobil membuatnya terjerat masalah besar.",
+      "vi": "Chuột Chũi, Chuột Nước, Lửng và anh Cóc khoác lác cùng phiêu lưu trên sông và trong Rừng Hoang, cho đến khi tật mê ô tô khiến Cóc gặp rắc rối lớn.",
+      "tr": "Köstebek, Fare, Porsuk ve övüngen Kurbağa nehirde ve Vahşi Orman'da maceralar yaşar, ta ki Kurbağa'nın otomobil tutkusu başını büyük belaya sokana kadar."
     }
   },
   "the-wonderful-wizard-of-oz": {
