@@ -1,0 +1,69 @@
+{
+  "title": "Discours de la méthode",
+  "author": "René Descartes",
+  "level": "C2",
+  "wordCount": 23057,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/13846",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Première partie"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Discours de la méthode"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Discours de la méthode"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Discours de la méthode"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Discours de la méthode"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Discours de la méthode"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Discours de la méthode"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Discours de la méthode"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Discours de la méthode"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Discours de la méthode"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Discours de la méthode"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Discours de la méthode"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Discours de la méthode"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Discours de la méthode"
+    }
+  ]
+}

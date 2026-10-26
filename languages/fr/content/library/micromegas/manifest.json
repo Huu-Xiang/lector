@@ -1,0 +1,33 @@
+{
+  "title": "Micromégas",
+  "author": "Voltaire",
+  "level": "B2",
+  "wordCount": 7277,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/4649",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Chapitre I"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Micromégas"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Chapitre V"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Micromégas"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Micromégas"
+    }
+  ]
+}

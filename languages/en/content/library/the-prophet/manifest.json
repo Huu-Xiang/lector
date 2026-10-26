@@ -1,0 +1,49 @@
+{
+  "title": "The Prophet",
+  "author": "Kahlil Gibran",
+  "level": "B2",
+  "wordCount": 12362,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/58585",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. The Prophet"
+    },
+    {
+      "file": "02.md",
+      "title": "2. The Prophet"
+    },
+    {
+      "file": "03.md",
+      "title": "3. The Prophet"
+    },
+    {
+      "file": "04.md",
+      "title": "4. The Prophet"
+    },
+    {
+      "file": "05.md",
+      "title": "5. The Prophet"
+    },
+    {
+      "file": "06.md",
+      "title": "6. The Prophet"
+    },
+    {
+      "file": "07.md",
+      "title": "7. The Prophet"
+    },
+    {
+      "file": "08.md",
+      "title": "8. The Prophet"
+    },
+    {
+      "file": "09.md",
+      "title": "9. The Prophet"
+    }
+  ]
+}

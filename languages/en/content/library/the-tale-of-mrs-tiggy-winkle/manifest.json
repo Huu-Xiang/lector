@@ -1,0 +1,17 @@
+{
+  "title": "The Tale of Mrs. Tiggy-Winkle",
+  "author": "Beatrix Potter",
+  "level": "A2",
+  "wordCount": 1399,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/15137",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Mrs. Tiggy-Winkle"
+    }
+  ]
+}

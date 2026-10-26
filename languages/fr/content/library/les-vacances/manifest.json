@@ -1,0 +1,137 @@
+{
+  "title": "Les Vacances",
+  "author": "Comtesse de Ségur",
+  "level": "A2",
+  "wordCount": 46028,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/15057",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Chapitre I. L'arrivée."
+    },
+    {
+      "file": "02.md",
+      "title": "2. Les Vacances"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Les Vacances"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Les Vacances"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Les Vacances"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Les Vacances"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Les Vacances"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Les Vacances"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Les Vacances"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Les Vacances"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Les Vacances"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Les Vacances"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Les Vacances"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Les Vacances"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Les Vacances"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Les Vacances"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Les Vacances"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Les Vacances"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Les Vacances"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Les Vacances"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Chapitre X. Histoires de revenants."
+    },
+    {
+      "file": "22.md",
+      "title": "22. Les Vacances"
+    },
+    {
+      "file": "23.md",
+      "title": "23. Les Vacances"
+    },
+    {
+      "file": "24.md",
+      "title": "24. Les Vacances"
+    },
+    {
+      "file": "25.md",
+      "title": "25. Les Vacances"
+    },
+    {
+      "file": "26.md",
+      "title": "26. Les Vacances"
+    },
+    {
+      "file": "27.md",
+      "title": "27. Les Vacances"
+    },
+    {
+      "file": "28.md",
+      "title": "28. Les Vacances"
+    },
+    {
+      "file": "29.md",
+      "title": "29. Les Vacances"
+    },
+    {
+      "file": "30.md",
+      "title": "30. Les Vacances"
+    },
+    {
+      "file": "31.md",
+      "title": "31. Les Vacances"
+    }
+  ]
+}

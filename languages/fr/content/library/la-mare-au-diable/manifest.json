@@ -1,0 +1,125 @@
+{
+  "title": "La Mare au diable",
+  "author": "George Sand",
+  "level": "B1",
+  "wordCount": 39705,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/23582",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. L’auteur au lecteur"
+    },
+    {
+      "file": "02.md",
+      "title": "2. II. Le labour"
+    },
+    {
+      "file": "03.md",
+      "title": "3. La Mare au diable"
+    },
+    {
+      "file": "04.md",
+      "title": "4. La Mare au diable"
+    },
+    {
+      "file": "05.md",
+      "title": "5. La Mare au diable"
+    },
+    {
+      "file": "06.md",
+      "title": "6. La Mare au diable"
+    },
+    {
+      "file": "07.md",
+      "title": "7. La Mare au diable"
+    },
+    {
+      "file": "08.md",
+      "title": "8. La Mare au diable"
+    },
+    {
+      "file": "09.md",
+      "title": "9. La Mare au diable"
+    },
+    {
+      "file": "10.md",
+      "title": "10. La Mare au diable"
+    },
+    {
+      "file": "11.md",
+      "title": "11. La Mare au diable"
+    },
+    {
+      "file": "12.md",
+      "title": "12. La Mare au diable"
+    },
+    {
+      "file": "13.md",
+      "title": "13. La Mare au diable"
+    },
+    {
+      "file": "14.md",
+      "title": "14. La Mare au diable"
+    },
+    {
+      "file": "15.md",
+      "title": "15. La Mare au diable"
+    },
+    {
+      "file": "16.md",
+      "title": "16. La Mare au diable"
+    },
+    {
+      "file": "17.md",
+      "title": "17. La Mare au diable"
+    },
+    {
+      "file": "18.md",
+      "title": "18. La Mare au diable"
+    },
+    {
+      "file": "19.md",
+      "title": "19. La Mare au diable"
+    },
+    {
+      "file": "20.md",
+      "title": "20. La Mare au diable"
+    },
+    {
+      "file": "21.md",
+      "title": "21. La Mare au diable"
+    },
+    {
+      "file": "22.md",
+      "title": "22. La Mare au diable"
+    },
+    {
+      "file": "23.md",
+      "title": "23. La Mare au diable"
+    },
+    {
+      "file": "24.md",
+      "title": "24. La Mare au diable"
+    },
+    {
+      "file": "25.md",
+      "title": "25. La Mare au diable"
+    },
+    {
+      "file": "26.md",
+      "title": "26. La Mare au diable"
+    },
+    {
+      "file": "27.md",
+      "title": "27. La Mare au diable"
+    },
+    {
+      "file": "28.md",
+      "title": "28. La Mare au diable"
+    }
+  ]
+}

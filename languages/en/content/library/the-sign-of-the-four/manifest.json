@@ -1,0 +1,133 @@
+{
+  "title": "The Sign of the Four",
+  "author": "Arthur Conan Doyle",
+  "level": "B2",
+  "wordCount": 43798,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/2097",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Chapter I. The Science of Deduction"
+    },
+    {
+      "file": "02.md",
+      "title": "2. The Sign of the Four"
+    },
+    {
+      "file": "03.md",
+      "title": "3. The Sign of the Four"
+    },
+    {
+      "file": "04.md",
+      "title": "4. The Sign of the Four"
+    },
+    {
+      "file": "05.md",
+      "title": "5. The Sign of the Four"
+    },
+    {
+      "file": "06.md",
+      "title": "6. The Sign of the Four"
+    },
+    {
+      "file": "07.md",
+      "title": "7. The Sign of the Four"
+    },
+    {
+      "file": "08.md",
+      "title": "8. The Sign of the Four"
+    },
+    {
+      "file": "09.md",
+      "title": "9. The Sign of the Four"
+    },
+    {
+      "file": "10.md",
+      "title": "10. The Sign of the Four"
+    },
+    {
+      "file": "11.md",
+      "title": "11. The Sign of the Four"
+    },
+    {
+      "file": "12.md",
+      "title": "12. The Sign of the Four"
+    },
+    {
+      "file": "13.md",
+      "title": "13. The Sign of the Four"
+    },
+    {
+      "file": "14.md",
+      "title": "14. The Sign of the Four"
+    },
+    {
+      "file": "15.md",
+      "title": "15. The Sign of the Four"
+    },
+    {
+      "file": "16.md",
+      "title": "16. The Sign of the Four"
+    },
+    {
+      "file": "17.md",
+      "title": "17. The Sign of the Four"
+    },
+    {
+      "file": "18.md",
+      "title": "18. The Sign of the Four"
+    },
+    {
+      "file": "19.md",
+      "title": "19. The Sign of the Four"
+    },
+    {
+      "file": "20.md",
+      "title": "20. The Sign of the Four"
+    },
+    {
+      "file": "21.md",
+      "title": "21. The Sign of the Four"
+    },
+    {
+      "file": "22.md",
+      "title": "22. The Sign of the Four"
+    },
+    {
+      "file": "23.md",
+      "title": "23. The Sign of the Four"
+    },
+    {
+      "file": "24.md",
+      "title": "24. The Sign of the Four"
+    },
+    {
+      "file": "25.md",
+      "title": "25. The Sign of the Four"
+    },
+    {
+      "file": "26.md",
+      "title": "26. The Sign of the Four"
+    },
+    {
+      "file": "27.md",
+      "title": "27. The Sign of the Four"
+    },
+    {
+      "file": "28.md",
+      "title": "28. The Sign of the Four"
+    },
+    {
+      "file": "29.md",
+      "title": "29. The Sign of the Four"
+    },
+    {
+      "file": "30.md",
+      "title": "30. The Sign of the Four"
+    }
+  ]
+}

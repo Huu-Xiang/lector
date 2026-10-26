@@ -1,0 +1,129 @@
+{
+  "title": "Les Rêveries du promeneur solitaire",
+  "author": "Jean-Jacques Rousseau",
+  "level": "C2",
+  "wordCount": 44141,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/65434",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Première promenade"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Les Rêveries"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Seconde promenade"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Les Rêveries"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Les Rêveries"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Les Rêveries"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Les Rêveries"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Les Rêveries"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Les Rêveries"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Les Rêveries"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Les Rêveries"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Les Rêveries"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Les Rêveries"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Les Rêveries"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Les Rêveries"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Les Rêveries"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Les Rêveries"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Les Rêveries"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Septième promenade"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Les Rêveries"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Les Rêveries"
+    },
+    {
+      "file": "22.md",
+      "title": "22. Les Rêveries"
+    },
+    {
+      "file": "23.md",
+      "title": "23. Les Rêveries"
+    },
+    {
+      "file": "24.md",
+      "title": "24. Les Rêveries"
+    },
+    {
+      "file": "25.md",
+      "title": "25. Les Rêveries"
+    },
+    {
+      "file": "26.md",
+      "title": "26. Neuvième promenade"
+    },
+    {
+      "file": "27.md",
+      "title": "27. Les Rêveries"
+    },
+    {
+      "file": "28.md",
+      "title": "28. Les Rêveries"
+    },
+    {
+      "file": "29.md",
+      "title": "29. Les Rêveries"
+    }
+  ]
+}

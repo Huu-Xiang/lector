@@ -1,0 +1,561 @@
+{
+  "title": "Crime and Punishment",
+  "author": "Fyodor Dostoevsky, translated by Constance Garnett",
+  "level": "C1",
+  "wordCount": 208008,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/2554",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Part I"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Crime and Punishment"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Crime and Punishment"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Crime and Punishment"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Crime and Punishment"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Crime and Punishment"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Crime and Punishment"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Crime and Punishment"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Crime and Punishment"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Crime and Punishment"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Crime and Punishment"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Crime and Punishment"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Chapter V"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Crime and Punishment"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Crime and Punishment"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Crime and Punishment"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Crime and Punishment"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Crime and Punishment"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Crime and Punishment"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Crime and Punishment"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Crime and Punishment"
+    },
+    {
+      "file": "22.md",
+      "title": "22. Crime and Punishment"
+    },
+    {
+      "file": "23.md",
+      "title": "23. Crime and Punishment"
+    },
+    {
+      "file": "24.md",
+      "title": "24. Crime and Punishment"
+    },
+    {
+      "file": "25.md",
+      "title": "25. Crime and Punishment"
+    },
+    {
+      "file": "26.md",
+      "title": "26. Crime and Punishment"
+    },
+    {
+      "file": "27.md",
+      "title": "27. Crime and Punishment"
+    },
+    {
+      "file": "28.md",
+      "title": "28. Crime and Punishment"
+    },
+    {
+      "file": "29.md",
+      "title": "29. Crime and Punishment"
+    },
+    {
+      "file": "30.md",
+      "title": "30. Crime and Punishment"
+    },
+    {
+      "file": "31.md",
+      "title": "31. Crime and Punishment"
+    },
+    {
+      "file": "32.md",
+      "title": "32. Crime and Punishment"
+    },
+    {
+      "file": "33.md",
+      "title": "33. Crime and Punishment"
+    },
+    {
+      "file": "34.md",
+      "title": "34. Crime and Punishment"
+    },
+    {
+      "file": "35.md",
+      "title": "35. Crime and Punishment"
+    },
+    {
+      "file": "36.md",
+      "title": "36. Crime and Punishment"
+    },
+    {
+      "file": "37.md",
+      "title": "37. Crime and Punishment"
+    },
+    {
+      "file": "38.md",
+      "title": "38. Crime and Punishment"
+    },
+    {
+      "file": "39.md",
+      "title": "39. Crime and Punishment"
+    },
+    {
+      "file": "40.md",
+      "title": "40. Crime and Punishment"
+    },
+    {
+      "file": "41.md",
+      "title": "41. Crime and Punishment"
+    },
+    {
+      "file": "42.md",
+      "title": "42. Crime and Punishment"
+    },
+    {
+      "file": "43.md",
+      "title": "43. Crime and Punishment"
+    },
+    {
+      "file": "44.md",
+      "title": "44. Crime and Punishment"
+    },
+    {
+      "file": "45.md",
+      "title": "45. Crime and Punishment"
+    },
+    {
+      "file": "46.md",
+      "title": "46. Crime and Punishment"
+    },
+    {
+      "file": "47.md",
+      "title": "47. Crime and Punishment"
+    },
+    {
+      "file": "48.md",
+      "title": "48. Crime and Punishment"
+    },
+    {
+      "file": "49.md",
+      "title": "49. Crime and Punishment"
+    },
+    {
+      "file": "50.md",
+      "title": "50. Crime and Punishment"
+    },
+    {
+      "file": "51.md",
+      "title": "51. Crime and Punishment"
+    },
+    {
+      "file": "52.md",
+      "title": "52. Crime and Punishment"
+    },
+    {
+      "file": "53.md",
+      "title": "53. Crime and Punishment"
+    },
+    {
+      "file": "54.md",
+      "title": "54. Crime and Punishment"
+    },
+    {
+      "file": "55.md",
+      "title": "55. Crime and Punishment"
+    },
+    {
+      "file": "56.md",
+      "title": "56. Crime and Punishment"
+    },
+    {
+      "file": "57.md",
+      "title": "57. Crime and Punishment"
+    },
+    {
+      "file": "58.md",
+      "title": "58. Crime and Punishment"
+    },
+    {
+      "file": "59.md",
+      "title": "59. Crime and Punishment"
+    },
+    {
+      "file": "60.md",
+      "title": "60. Crime and Punishment"
+    },
+    {
+      "file": "61.md",
+      "title": "61. Crime and Punishment"
+    },
+    {
+      "file": "62.md",
+      "title": "62. Crime and Punishment"
+    },
+    {
+      "file": "63.md",
+      "title": "63. Crime and Punishment"
+    },
+    {
+      "file": "64.md",
+      "title": "64. Crime and Punishment"
+    },
+    {
+      "file": "65.md",
+      "title": "65. Crime and Punishment"
+    },
+    {
+      "file": "66.md",
+      "title": "66. Crime and Punishment"
+    },
+    {
+      "file": "67.md",
+      "title": "67. Crime and Punishment"
+    },
+    {
+      "file": "68.md",
+      "title": "68. Crime and Punishment"
+    },
+    {
+      "file": "69.md",
+      "title": "69. Crime and Punishment"
+    },
+    {
+      "file": "70.md",
+      "title": "70. Crime and Punishment"
+    },
+    {
+      "file": "71.md",
+      "title": "71. Crime and Punishment"
+    },
+    {
+      "file": "72.md",
+      "title": "72. Crime and Punishment"
+    },
+    {
+      "file": "73.md",
+      "title": "73. Crime and Punishment"
+    },
+    {
+      "file": "74.md",
+      "title": "74. Crime and Punishment"
+    },
+    {
+      "file": "75.md",
+      "title": "75. Crime and Punishment"
+    },
+    {
+      "file": "76.md",
+      "title": "76. Crime and Punishment"
+    },
+    {
+      "file": "77.md",
+      "title": "77. Crime and Punishment"
+    },
+    {
+      "file": "78.md",
+      "title": "78. Crime and Punishment"
+    },
+    {
+      "file": "79.md",
+      "title": "79. Crime and Punishment"
+    },
+    {
+      "file": "80.md",
+      "title": "80. Crime and Punishment"
+    },
+    {
+      "file": "81.md",
+      "title": "81. Crime and Punishment"
+    },
+    {
+      "file": "82.md",
+      "title": "82. Crime and Punishment"
+    },
+    {
+      "file": "83.md",
+      "title": "83. Crime and Punishment"
+    },
+    {
+      "file": "84.md",
+      "title": "84. Crime and Punishment"
+    },
+    {
+      "file": "85.md",
+      "title": "85. Crime and Punishment"
+    },
+    {
+      "file": "86.md",
+      "title": "86. Crime and Punishment"
+    },
+    {
+      "file": "87.md",
+      "title": "87. Crime and Punishment"
+    },
+    {
+      "file": "88.md",
+      "title": "88. Crime and Punishment"
+    },
+    {
+      "file": "89.md",
+      "title": "89. Crime and Punishment"
+    },
+    {
+      "file": "90.md",
+      "title": "90. Crime and Punishment"
+    },
+    {
+      "file": "91.md",
+      "title": "91. Crime and Punishment"
+    },
+    {
+      "file": "92.md",
+      "title": "92. Crime and Punishment"
+    },
+    {
+      "file": "93.md",
+      "title": "93. Crime and Punishment"
+    },
+    {
+      "file": "94.md",
+      "title": "94. Crime and Punishment"
+    },
+    {
+      "file": "95.md",
+      "title": "95. Crime and Punishment"
+    },
+    {
+      "file": "96.md",
+      "title": "96. Crime and Punishment"
+    },
+    {
+      "file": "97.md",
+      "title": "97. Crime and Punishment"
+    },
+    {
+      "file": "98.md",
+      "title": "98. Crime and Punishment"
+    },
+    {
+      "file": "99.md",
+      "title": "99. Crime and Punishment"
+    },
+    {
+      "file": "100.md",
+      "title": "100. Crime and Punishment"
+    },
+    {
+      "file": "101.md",
+      "title": "101. Crime and Punishment"
+    },
+    {
+      "file": "102.md",
+      "title": "102. Crime and Punishment"
+    },
+    {
+      "file": "103.md",
+      "title": "103. Crime and Punishment"
+    },
+    {
+      "file": "104.md",
+      "title": "104. Crime and Punishment"
+    },
+    {
+      "file": "105.md",
+      "title": "105. Crime and Punishment"
+    },
+    {
+      "file": "106.md",
+      "title": "106. Crime and Punishment"
+    },
+    {
+      "file": "107.md",
+      "title": "107. Crime and Punishment"
+    },
+    {
+      "file": "108.md",
+      "title": "108. Crime and Punishment"
+    },
+    {
+      "file": "109.md",
+      "title": "109. Crime and Punishment"
+    },
+    {
+      "file": "110.md",
+      "title": "110. Crime and Punishment"
+    },
+    {
+      "file": "111.md",
+      "title": "111. Crime and Punishment"
+    },
+    {
+      "file": "112.md",
+      "title": "112. Crime and Punishment"
+    },
+    {
+      "file": "113.md",
+      "title": "113. Crime and Punishment"
+    },
+    {
+      "file": "114.md",
+      "title": "114. Crime and Punishment"
+    },
+    {
+      "file": "115.md",
+      "title": "115. Crime and Punishment"
+    },
+    {
+      "file": "116.md",
+      "title": "116. Crime and Punishment"
+    },
+    {
+      "file": "117.md",
+      "title": "117. Crime and Punishment"
+    },
+    {
+      "file": "118.md",
+      "title": "118. Crime and Punishment"
+    },
+    {
+      "file": "119.md",
+      "title": "119. Crime and Punishment"
+    },
+    {
+      "file": "120.md",
+      "title": "120. Crime and Punishment"
+    },
+    {
+      "file": "121.md",
+      "title": "121. Crime and Punishment"
+    },
+    {
+      "file": "122.md",
+      "title": "122. Crime and Punishment"
+    },
+    {
+      "file": "123.md",
+      "title": "123. Crime and Punishment"
+    },
+    {
+      "file": "124.md",
+      "title": "124. Crime and Punishment"
+    },
+    {
+      "file": "125.md",
+      "title": "125. Crime and Punishment"
+    },
+    {
+      "file": "126.md",
+      "title": "126. Crime and Punishment"
+    },
+    {
+      "file": "127.md",
+      "title": "127. Crime and Punishment"
+    },
+    {
+      "file": "128.md",
+      "title": "128. Crime and Punishment"
+    },
+    {
+      "file": "129.md",
+      "title": "129. Crime and Punishment"
+    },
+    {
+      "file": "130.md",
+      "title": "130. Crime and Punishment"
+    },
+    {
+      "file": "131.md",
+      "title": "131. Crime and Punishment"
+    },
+    {
+      "file": "132.md",
+      "title": "132. Crime and Punishment"
+    },
+    {
+      "file": "133.md",
+      "title": "133. Epilogue"
+    },
+    {
+      "file": "134.md",
+      "title": "134. Crime and Punishment"
+    },
+    {
+      "file": "135.md",
+      "title": "135. Crime and Punishment"
+    },
+    {
+      "file": "136.md",
+      "title": "136. Crime and Punishment"
+    },
+    {
+      "file": "137.md",
+      "title": "137. Crime and Punishment"
+    }
+  ]
+}

@@ -1,0 +1,277 @@
+{
+  "title": "Tales from Shakespeare",
+  "author": "Charles and Mary Lamb",
+  "level": "B1",
+  "wordCount": 101906,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/573",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. The Tempest"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Tales from Shakespeare"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Tales from Shakespeare"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Tales from Shakespeare"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Tales from Shakespeare"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Tales from Shakespeare"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Tales from Shakespeare"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Tales from Shakespeare"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Tales from Shakespeare"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Tales from Shakespeare"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Tales from Shakespeare"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Tales from Shakespeare"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Tales from Shakespeare"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Tales from Shakespeare"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Tales from Shakespeare"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Tales from Shakespeare"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Tales from Shakespeare"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Tales from Shakespeare"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Tales from Shakespeare"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Tales from Shakespeare"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Tales from Shakespeare"
+    },
+    {
+      "file": "22.md",
+      "title": "22. Tales from Shakespeare"
+    },
+    {
+      "file": "23.md",
+      "title": "23. Tales from Shakespeare"
+    },
+    {
+      "file": "24.md",
+      "title": "24. Tales from Shakespeare"
+    },
+    {
+      "file": "25.md",
+      "title": "25. Tales from Shakespeare"
+    },
+    {
+      "file": "26.md",
+      "title": "26. Tales from Shakespeare"
+    },
+    {
+      "file": "27.md",
+      "title": "27. Tales from Shakespeare"
+    },
+    {
+      "file": "28.md",
+      "title": "28. Tales from Shakespeare"
+    },
+    {
+      "file": "29.md",
+      "title": "29. Tales from Shakespeare"
+    },
+    {
+      "file": "30.md",
+      "title": "30. Tales from Shakespeare"
+    },
+    {
+      "file": "31.md",
+      "title": "31. Tales from Shakespeare"
+    },
+    {
+      "file": "32.md",
+      "title": "32. Tales from Shakespeare"
+    },
+    {
+      "file": "33.md",
+      "title": "33. Tales from Shakespeare"
+    },
+    {
+      "file": "34.md",
+      "title": "34. Tales from Shakespeare"
+    },
+    {
+      "file": "35.md",
+      "title": "35. Tales from Shakespeare"
+    },
+    {
+      "file": "36.md",
+      "title": "36. Tales from Shakespeare"
+    },
+    {
+      "file": "37.md",
+      "title": "37. Tales from Shakespeare"
+    },
+    {
+      "file": "38.md",
+      "title": "38. Tales from Shakespeare"
+    },
+    {
+      "file": "39.md",
+      "title": "39. Tales from Shakespeare"
+    },
+    {
+      "file": "40.md",
+      "title": "40. Tales from Shakespeare"
+    },
+    {
+      "file": "41.md",
+      "title": "41. Tales from Shakespeare"
+    },
+    {
+      "file": "42.md",
+      "title": "42. Tales from Shakespeare"
+    },
+    {
+      "file": "43.md",
+      "title": "43. Tales from Shakespeare"
+    },
+    {
+      "file": "44.md",
+      "title": "44. Tales from Shakespeare"
+    },
+    {
+      "file": "45.md",
+      "title": "45. Tales from Shakespeare"
+    },
+    {
+      "file": "46.md",
+      "title": "46. Tales from Shakespeare"
+    },
+    {
+      "file": "47.md",
+      "title": "47. Tales from Shakespeare"
+    },
+    {
+      "file": "48.md",
+      "title": "48. Tales from Shakespeare"
+    },
+    {
+      "file": "49.md",
+      "title": "49. Tales from Shakespeare"
+    },
+    {
+      "file": "50.md",
+      "title": "50. Tales from Shakespeare"
+    },
+    {
+      "file": "51.md",
+      "title": "51. Tales from Shakespeare"
+    },
+    {
+      "file": "52.md",
+      "title": "52. Tales from Shakespeare"
+    },
+    {
+      "file": "53.md",
+      "title": "53. Tales from Shakespeare"
+    },
+    {
+      "file": "54.md",
+      "title": "54. Tales from Shakespeare"
+    },
+    {
+      "file": "55.md",
+      "title": "55. Tales from Shakespeare"
+    },
+    {
+      "file": "56.md",
+      "title": "56. Tales from Shakespeare"
+    },
+    {
+      "file": "57.md",
+      "title": "57. Tales from Shakespeare"
+    },
+    {
+      "file": "58.md",
+      "title": "58. Tales from Shakespeare"
+    },
+    {
+      "file": "59.md",
+      "title": "59. Tales from Shakespeare"
+    },
+    {
+      "file": "60.md",
+      "title": "60. Othello"
+    },
+    {
+      "file": "61.md",
+      "title": "61. Tales from Shakespeare"
+    },
+    {
+      "file": "62.md",
+      "title": "62. Tales from Shakespeare"
+    },
+    {
+      "file": "63.md",
+      "title": "63. Tales from Shakespeare"
+    },
+    {
+      "file": "64.md",
+      "title": "64. Tales from Shakespeare"
+    },
+    {
+      "file": "65.md",
+      "title": "65. Tales from Shakespeare"
+    },
+    {
+      "file": "66.md",
+      "title": "66. Tales from Shakespeare"
+    }
+  ]
+}

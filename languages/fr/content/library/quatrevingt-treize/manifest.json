@@ -1,0 +1,345 @@
+{
+  "title": "Quatrevingt-treize",
+  "author": "Victor Hugo",
+  "level": "C1",
+  "wordCount": 122499,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/9645",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Première partie"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Quatrevingt-treize"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Quatrevingt-treize"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Quatrevingt-treize"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Quatrevingt-treize"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Quatrevingt-treize"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Quatrevingt-treize"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Quatrevingt-treize"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Quatrevingt-treize"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Quatrevingt-treize"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Quatrevingt-treize"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Quatrevingt-treize"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Quatrevingt-treize"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Quatrevingt-treize"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Quatrevingt-treize"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Quatrevingt-treize"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Quatrevingt-treize"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Quatrevingt-treize"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Quatrevingt-treize"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Quatrevingt-treize"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Quatrevingt-treize"
+    },
+    {
+      "file": "22.md",
+      "title": "22. Quatrevingt-treize"
+    },
+    {
+      "file": "23.md",
+      "title": "23. Quatrevingt-treize"
+    },
+    {
+      "file": "24.md",
+      "title": "24. Quatrevingt-treize"
+    },
+    {
+      "file": "25.md",
+      "title": "25. Quatrevingt-treize"
+    },
+    {
+      "file": "26.md",
+      "title": "26. Quatrevingt-treize"
+    },
+    {
+      "file": "27.md",
+      "title": "27. Quatrevingt-treize"
+    },
+    {
+      "file": "28.md",
+      "title": "28. Quatrevingt-treize"
+    },
+    {
+      "file": "29.md",
+      "title": "29. Quatrevingt-treize"
+    },
+    {
+      "file": "30.md",
+      "title": "30. Quatrevingt-treize"
+    },
+    {
+      "file": "31.md",
+      "title": "31. Quatrevingt-treize"
+    },
+    {
+      "file": "32.md",
+      "title": "32. Quatrevingt-treize"
+    },
+    {
+      "file": "33.md",
+      "title": "33. Quatrevingt-treize"
+    },
+    {
+      "file": "34.md",
+      "title": "34. Quatrevingt-treize"
+    },
+    {
+      "file": "35.md",
+      "title": "35. Quatrevingt-treize"
+    },
+    {
+      "file": "36.md",
+      "title": "36. Quatrevingt-treize"
+    },
+    {
+      "file": "37.md",
+      "title": "37. Quatrevingt-treize"
+    },
+    {
+      "file": "38.md",
+      "title": "38. Quatrevingt-treize"
+    },
+    {
+      "file": "39.md",
+      "title": "39. VI. L'ame de la terre passe dans l'homme"
+    },
+    {
+      "file": "40.md",
+      "title": "40. Quatrevingt-treize"
+    },
+    {
+      "file": "41.md",
+      "title": "41. Quatrevingt-treize"
+    },
+    {
+      "file": "42.md",
+      "title": "42. Quatrevingt-treize"
+    },
+    {
+      "file": "43.md",
+      "title": "43. Quatrevingt-treize"
+    },
+    {
+      "file": "44.md",
+      "title": "44. Quatrevingt-treize"
+    },
+    {
+      "file": "45.md",
+      "title": "45. Quatrevingt-treize"
+    },
+    {
+      "file": "46.md",
+      "title": "46. Quatrevingt-treize"
+    },
+    {
+      "file": "47.md",
+      "title": "47. Quatrevingt-treize"
+    },
+    {
+      "file": "48.md",
+      "title": "48. Quatrevingt-treize"
+    },
+    {
+      "file": "49.md",
+      "title": "49. Quatrevingt-treize"
+    },
+    {
+      "file": "50.md",
+      "title": "50. Quatrevingt-treize"
+    },
+    {
+      "file": "51.md",
+      "title": "51. Quatrevingt-treize"
+    },
+    {
+      "file": "52.md",
+      "title": "52. Quatrevingt-treize"
+    },
+    {
+      "file": "53.md",
+      "title": "53. Quatrevingt-treize"
+    },
+    {
+      "file": "54.md",
+      "title": "54. Quatrevingt-treize"
+    },
+    {
+      "file": "55.md",
+      "title": "55. Quatrevingt-treize"
+    },
+    {
+      "file": "56.md",
+      "title": "56. Quatrevingt-treize"
+    },
+    {
+      "file": "57.md",
+      "title": "57. Quatrevingt-treize"
+    },
+    {
+      "file": "58.md",
+      "title": "58. Quatrevingt-treize"
+    },
+    {
+      "file": "59.md",
+      "title": "59. Quatrevingt-treize"
+    },
+    {
+      "file": "60.md",
+      "title": "60. Quatrevingt-treize"
+    },
+    {
+      "file": "61.md",
+      "title": "61. Quatrevingt-treize"
+    },
+    {
+      "file": "62.md",
+      "title": "62. Quatrevingt-treize"
+    },
+    {
+      "file": "63.md",
+      "title": "63. Quatrevingt-treize"
+    },
+    {
+      "file": "64.md",
+      "title": "64. Quatrevingt-treize"
+    },
+    {
+      "file": "65.md",
+      "title": "65. Quatrevingt-treize"
+    },
+    {
+      "file": "66.md",
+      "title": "66. Quatrevingt-treize"
+    },
+    {
+      "file": "67.md",
+      "title": "67. Quatrevingt-treize"
+    },
+    {
+      "file": "68.md",
+      "title": "68. Quatrevingt-treize"
+    },
+    {
+      "file": "69.md",
+      "title": "69. Quatrevingt-treize"
+    },
+    {
+      "file": "70.md",
+      "title": "70. Quatrevingt-treize"
+    },
+    {
+      "file": "71.md",
+      "title": "71. Quatrevingt-treize"
+    },
+    {
+      "file": "72.md",
+      "title": "72. Quatrevingt-treize"
+    },
+    {
+      "file": "73.md",
+      "title": "73. Quatrevingt-treize"
+    },
+    {
+      "file": "74.md",
+      "title": "74. Quatrevingt-treize"
+    },
+    {
+      "file": "75.md",
+      "title": "75. Quatrevingt-treize"
+    },
+    {
+      "file": "76.md",
+      "title": "76. Quatrevingt-treize"
+    },
+    {
+      "file": "77.md",
+      "title": "77. Quatrevingt-treize"
+    },
+    {
+      "file": "78.md",
+      "title": "78. Quatrevingt-treize"
+    },
+    {
+      "file": "79.md",
+      "title": "79. Quatrevingt-treize"
+    },
+    {
+      "file": "80.md",
+      "title": "80. Quatrevingt-treize"
+    },
+    {
+      "file": "81.md",
+      "title": "81. Quatrevingt-treize"
+    },
+    {
+      "file": "82.md",
+      "title": "82. Quatrevingt-treize"
+    },
+    {
+      "file": "83.md",
+      "title": "83. Quatrevingt-treize"
+    }
+  ]
+}

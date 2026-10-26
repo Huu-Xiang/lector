@@ -1,0 +1,137 @@
+{
+  "title": "Contes du jour et de la nuit",
+  "author": "Guy de Maupassant",
+  "level": "B2",
+  "wordCount": 43722,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/14790",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Le crime au père Boniface"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Contes du jour et de la nuit"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Contes du jour et de la nuit"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Contes du jour et de la nuit"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Contes du jour et de la nuit"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Contes du jour et de la nuit"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Contes du jour et de la nuit"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Contes du jour et de la nuit"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Contes du jour et de la nuit"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Contes du jour et de la nuit"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Contes du jour et de la nuit"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Contes du jour et de la nuit"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Contes du jour et de la nuit"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Contes du jour et de la nuit"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Contes du jour et de la nuit"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Contes du jour et de la nuit"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Contes du jour et de la nuit"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Contes du jour et de la nuit"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Contes du jour et de la nuit"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Contes du jour et de la nuit"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Contes du jour et de la nuit"
+    },
+    {
+      "file": "22.md",
+      "title": "22. Contes du jour et de la nuit"
+    },
+    {
+      "file": "23.md",
+      "title": "23. Contes du jour et de la nuit"
+    },
+    {
+      "file": "24.md",
+      "title": "24. Contes du jour et de la nuit"
+    },
+    {
+      "file": "25.md",
+      "title": "25. Contes du jour et de la nuit"
+    },
+    {
+      "file": "26.md",
+      "title": "26. Contes du jour et de la nuit"
+    },
+    {
+      "file": "27.md",
+      "title": "27. Contes du jour et de la nuit"
+    },
+    {
+      "file": "28.md",
+      "title": "28. Contes du jour et de la nuit"
+    },
+    {
+      "file": "29.md",
+      "title": "29. Contes du jour et de la nuit"
+    },
+    {
+      "file": "30.md",
+      "title": "30. Contes du jour et de la nuit"
+    },
+    {
+      "file": "31.md",
+      "title": "31. Contes du jour et de la nuit"
+    }
+  ]
+}

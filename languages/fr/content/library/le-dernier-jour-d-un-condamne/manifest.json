@@ -1,0 +1,85 @@
+{
+  "title": "Le Dernier Jour d'un condamné",
+  "author": "Victor Hugo",
+  "level": "B2",
+  "wordCount": 25397,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/6838",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. I"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Le Dernier Jour d'un condamné"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Le Dernier Jour d'un condamné"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Le Dernier Jour d'un condamné"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Le Dernier Jour d'un condamné"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Le Dernier Jour d'un condamné"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Le Dernier Jour d'un condamné"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Le Dernier Jour d'un condamné"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Le Dernier Jour d'un condamné"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Le Dernier Jour d'un condamné"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Le Dernier Jour d'un condamné"
+    },
+    {
+      "file": "12.md",
+      "title": "12. XXVIII"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Le Dernier Jour d'un condamné"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Le Dernier Jour d'un condamné"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Le Dernier Jour d'un condamné"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Le Dernier Jour d'un condamné"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Le Dernier Jour d'un condamné"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Le Dernier Jour d'un condamné"
+    }
+  ]
+}

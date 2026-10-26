@@ -1,0 +1,141 @@
+{
+  "title": "Pierre et Jean",
+  "author": "Guy de Maupassant",
+  "level": "B2",
+  "wordCount": 45270,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/11131",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. I"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Pierre et Jean"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Pierre et Jean"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Pierre et Jean"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Pierre et Jean"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Pierre et Jean"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Pierre et Jean"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Pierre et Jean"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Pierre et Jean"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Pierre et Jean"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Pierre et Jean"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Pierre et Jean"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Pierre et Jean"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Pierre et Jean"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Pierre et Jean"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Pierre et Jean"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Pierre et Jean"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Pierre et Jean"
+    },
+    {
+      "file": "19.md",
+      "title": "19. VI"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Pierre et Jean"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Pierre et Jean"
+    },
+    {
+      "file": "22.md",
+      "title": "22. Pierre et Jean"
+    },
+    {
+      "file": "23.md",
+      "title": "23. Pierre et Jean"
+    },
+    {
+      "file": "24.md",
+      "title": "24. Pierre et Jean"
+    },
+    {
+      "file": "25.md",
+      "title": "25. Pierre et Jean"
+    },
+    {
+      "file": "26.md",
+      "title": "26. Pierre et Jean"
+    },
+    {
+      "file": "27.md",
+      "title": "27. Pierre et Jean"
+    },
+    {
+      "file": "28.md",
+      "title": "28. Pierre et Jean"
+    },
+    {
+      "file": "29.md",
+      "title": "29. Pierre et Jean"
+    },
+    {
+      "file": "30.md",
+      "title": "30. Pierre et Jean"
+    },
+    {
+      "file": "31.md",
+      "title": "31. Pierre et Jean"
+    },
+    {
+      "file": "32.md",
+      "title": "32. Pierre et Jean"
+    }
+  ]
+}

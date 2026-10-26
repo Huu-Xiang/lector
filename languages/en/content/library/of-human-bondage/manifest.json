@@ -1,0 +1,733 @@
+{
+  "title": "Of Human Bondage",
+  "author": "W. Somerset Maugham",
+  "level": "C2",
+  "wordCount": 266095,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/351",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. I"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Of Human Bondage"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Of Human Bondage"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Of Human Bondage"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Of Human Bondage"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Of Human Bondage"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Of Human Bondage"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Of Human Bondage"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Of Human Bondage"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Of Human Bondage"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Of Human Bondage"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Of Human Bondage"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Of Human Bondage"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Of Human Bondage"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Of Human Bondage"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Of Human Bondage"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Of Human Bondage"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Of Human Bondage"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Of Human Bondage"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Of Human Bondage"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Of Human Bondage"
+    },
+    {
+      "file": "22.md",
+      "title": "22. Of Human Bondage"
+    },
+    {
+      "file": "23.md",
+      "title": "23. XXI"
+    },
+    {
+      "file": "24.md",
+      "title": "24. Of Human Bondage"
+    },
+    {
+      "file": "25.md",
+      "title": "25. Of Human Bondage"
+    },
+    {
+      "file": "26.md",
+      "title": "26. Of Human Bondage"
+    },
+    {
+      "file": "27.md",
+      "title": "27. Of Human Bondage"
+    },
+    {
+      "file": "28.md",
+      "title": "28. Of Human Bondage"
+    },
+    {
+      "file": "29.md",
+      "title": "29. Of Human Bondage"
+    },
+    {
+      "file": "30.md",
+      "title": "30. Of Human Bondage"
+    },
+    {
+      "file": "31.md",
+      "title": "31. Of Human Bondage"
+    },
+    {
+      "file": "32.md",
+      "title": "32. Of Human Bondage"
+    },
+    {
+      "file": "33.md",
+      "title": "33. Of Human Bondage"
+    },
+    {
+      "file": "34.md",
+      "title": "34. XXIX"
+    },
+    {
+      "file": "35.md",
+      "title": "35. Of Human Bondage"
+    },
+    {
+      "file": "36.md",
+      "title": "36. Of Human Bondage"
+    },
+    {
+      "file": "37.md",
+      "title": "37. Of Human Bondage"
+    },
+    {
+      "file": "38.md",
+      "title": "38. Of Human Bondage"
+    },
+    {
+      "file": "39.md",
+      "title": "39. Of Human Bondage"
+    },
+    {
+      "file": "40.md",
+      "title": "40. Of Human Bondage"
+    },
+    {
+      "file": "41.md",
+      "title": "41. Of Human Bondage"
+    },
+    {
+      "file": "42.md",
+      "title": "42. Of Human Bondage"
+    },
+    {
+      "file": "43.md",
+      "title": "43. Of Human Bondage"
+    },
+    {
+      "file": "44.md",
+      "title": "44. Of Human Bondage"
+    },
+    {
+      "file": "45.md",
+      "title": "45. Of Human Bondage"
+    },
+    {
+      "file": "46.md",
+      "title": "46. Of Human Bondage"
+    },
+    {
+      "file": "47.md",
+      "title": "47. Of Human Bondage"
+    },
+    {
+      "file": "48.md",
+      "title": "48. Of Human Bondage"
+    },
+    {
+      "file": "49.md",
+      "title": "49. Of Human Bondage"
+    },
+    {
+      "file": "50.md",
+      "title": "50. Of Human Bondage"
+    },
+    {
+      "file": "51.md",
+      "title": "51. Of Human Bondage"
+    },
+    {
+      "file": "52.md",
+      "title": "52. Of Human Bondage"
+    },
+    {
+      "file": "53.md",
+      "title": "53. XLI"
+    },
+    {
+      "file": "54.md",
+      "title": "54. Of Human Bondage"
+    },
+    {
+      "file": "55.md",
+      "title": "55. Of Human Bondage"
+    },
+    {
+      "file": "56.md",
+      "title": "56. Of Human Bondage"
+    },
+    {
+      "file": "57.md",
+      "title": "57. Of Human Bondage"
+    },
+    {
+      "file": "58.md",
+      "title": "58. Of Human Bondage"
+    },
+    {
+      "file": "59.md",
+      "title": "59. Of Human Bondage"
+    },
+    {
+      "file": "60.md",
+      "title": "60. Of Human Bondage"
+    },
+    {
+      "file": "61.md",
+      "title": "61. Of Human Bondage"
+    },
+    {
+      "file": "62.md",
+      "title": "62. Of Human Bondage"
+    },
+    {
+      "file": "63.md",
+      "title": "63. Of Human Bondage"
+    },
+    {
+      "file": "64.md",
+      "title": "64. Of Human Bondage"
+    },
+    {
+      "file": "65.md",
+      "title": "65. Of Human Bondage"
+    },
+    {
+      "file": "66.md",
+      "title": "66. Of Human Bondage"
+    },
+    {
+      "file": "67.md",
+      "title": "67. Of Human Bondage"
+    },
+    {
+      "file": "68.md",
+      "title": "68. Of Human Bondage"
+    },
+    {
+      "file": "69.md",
+      "title": "69. Of Human Bondage"
+    },
+    {
+      "file": "70.md",
+      "title": "70. Of Human Bondage"
+    },
+    {
+      "file": "71.md",
+      "title": "71. Of Human Bondage"
+    },
+    {
+      "file": "72.md",
+      "title": "72. Of Human Bondage"
+    },
+    {
+      "file": "73.md",
+      "title": "73. Of Human Bondage"
+    },
+    {
+      "file": "74.md",
+      "title": "74. Of Human Bondage"
+    },
+    {
+      "file": "75.md",
+      "title": "75. LIII"
+    },
+    {
+      "file": "76.md",
+      "title": "76. Of Human Bondage"
+    },
+    {
+      "file": "77.md",
+      "title": "77. Of Human Bondage"
+    },
+    {
+      "file": "78.md",
+      "title": "78. Of Human Bondage"
+    },
+    {
+      "file": "79.md",
+      "title": "79. LVI"
+    },
+    {
+      "file": "80.md",
+      "title": "80. Of Human Bondage"
+    },
+    {
+      "file": "81.md",
+      "title": "81. Of Human Bondage"
+    },
+    {
+      "file": "82.md",
+      "title": "82. Of Human Bondage"
+    },
+    {
+      "file": "83.md",
+      "title": "83. Of Human Bondage"
+    },
+    {
+      "file": "84.md",
+      "title": "84. Of Human Bondage"
+    },
+    {
+      "file": "85.md",
+      "title": "85. Of Human Bondage"
+    },
+    {
+      "file": "86.md",
+      "title": "86. Of Human Bondage"
+    },
+    {
+      "file": "87.md",
+      "title": "87. Of Human Bondage"
+    },
+    {
+      "file": "88.md",
+      "title": "88. Of Human Bondage"
+    },
+    {
+      "file": "89.md",
+      "title": "89. Of Human Bondage"
+    },
+    {
+      "file": "90.md",
+      "title": "90. Of Human Bondage"
+    },
+    {
+      "file": "91.md",
+      "title": "91. Of Human Bondage"
+    },
+    {
+      "file": "92.md",
+      "title": "92. Of Human Bondage"
+    },
+    {
+      "file": "93.md",
+      "title": "93. Of Human Bondage"
+    },
+    {
+      "file": "94.md",
+      "title": "94. Of Human Bondage"
+    },
+    {
+      "file": "95.md",
+      "title": "95. Of Human Bondage"
+    },
+    {
+      "file": "96.md",
+      "title": "96. Of Human Bondage"
+    },
+    {
+      "file": "97.md",
+      "title": "97. Of Human Bondage"
+    },
+    {
+      "file": "98.md",
+      "title": "98. Of Human Bondage"
+    },
+    {
+      "file": "99.md",
+      "title": "99. Of Human Bondage"
+    },
+    {
+      "file": "100.md",
+      "title": "100. Of Human Bondage"
+    },
+    {
+      "file": "101.md",
+      "title": "101. Of Human Bondage"
+    },
+    {
+      "file": "102.md",
+      "title": "102. Of Human Bondage"
+    },
+    {
+      "file": "103.md",
+      "title": "103. Of Human Bondage"
+    },
+    {
+      "file": "104.md",
+      "title": "104. Of Human Bondage"
+    },
+    {
+      "file": "105.md",
+      "title": "105. Of Human Bondage"
+    },
+    {
+      "file": "106.md",
+      "title": "106. Of Human Bondage"
+    },
+    {
+      "file": "107.md",
+      "title": "107. Of Human Bondage"
+    },
+    {
+      "file": "108.md",
+      "title": "108. Of Human Bondage"
+    },
+    {
+      "file": "109.md",
+      "title": "109. Of Human Bondage"
+    },
+    {
+      "file": "110.md",
+      "title": "110. Of Human Bondage"
+    },
+    {
+      "file": "111.md",
+      "title": "111. Of Human Bondage"
+    },
+    {
+      "file": "112.md",
+      "title": "112. Of Human Bondage"
+    },
+    {
+      "file": "113.md",
+      "title": "113. Of Human Bondage"
+    },
+    {
+      "file": "114.md",
+      "title": "114. Of Human Bondage"
+    },
+    {
+      "file": "115.md",
+      "title": "115. Of Human Bondage"
+    },
+    {
+      "file": "116.md",
+      "title": "116. Of Human Bondage"
+    },
+    {
+      "file": "117.md",
+      "title": "117. Of Human Bondage"
+    },
+    {
+      "file": "118.md",
+      "title": "118. Of Human Bondage"
+    },
+    {
+      "file": "119.md",
+      "title": "119. Of Human Bondage"
+    },
+    {
+      "file": "120.md",
+      "title": "120. Of Human Bondage"
+    },
+    {
+      "file": "121.md",
+      "title": "121. Of Human Bondage"
+    },
+    {
+      "file": "122.md",
+      "title": "122. Of Human Bondage"
+    },
+    {
+      "file": "123.md",
+      "title": "123. Of Human Bondage"
+    },
+    {
+      "file": "124.md",
+      "title": "124. Of Human Bondage"
+    },
+    {
+      "file": "125.md",
+      "title": "125. Of Human Bondage"
+    },
+    {
+      "file": "126.md",
+      "title": "126. Of Human Bondage"
+    },
+    {
+      "file": "127.md",
+      "title": "127. Of Human Bondage"
+    },
+    {
+      "file": "128.md",
+      "title": "128. Of Human Bondage"
+    },
+    {
+      "file": "129.md",
+      "title": "129. Of Human Bondage"
+    },
+    {
+      "file": "130.md",
+      "title": "130. Of Human Bondage"
+    },
+    {
+      "file": "131.md",
+      "title": "131. Of Human Bondage"
+    },
+    {
+      "file": "132.md",
+      "title": "132. Of Human Bondage"
+    },
+    {
+      "file": "133.md",
+      "title": "133. Of Human Bondage"
+    },
+    {
+      "file": "134.md",
+      "title": "134. Of Human Bondage"
+    },
+    {
+      "file": "135.md",
+      "title": "135. Of Human Bondage"
+    },
+    {
+      "file": "136.md",
+      "title": "136. Of Human Bondage"
+    },
+    {
+      "file": "137.md",
+      "title": "137. Of Human Bondage"
+    },
+    {
+      "file": "138.md",
+      "title": "138. Of Human Bondage"
+    },
+    {
+      "file": "139.md",
+      "title": "139. Of Human Bondage"
+    },
+    {
+      "file": "140.md",
+      "title": "140. Of Human Bondage"
+    },
+    {
+      "file": "141.md",
+      "title": "141. Of Human Bondage"
+    },
+    {
+      "file": "142.md",
+      "title": "142. Of Human Bondage"
+    },
+    {
+      "file": "143.md",
+      "title": "143. Of Human Bondage"
+    },
+    {
+      "file": "144.md",
+      "title": "144. XCVIII"
+    },
+    {
+      "file": "145.md",
+      "title": "145. Of Human Bondage"
+    },
+    {
+      "file": "146.md",
+      "title": "146. Of Human Bondage"
+    },
+    {
+      "file": "147.md",
+      "title": "147. Of Human Bondage"
+    },
+    {
+      "file": "148.md",
+      "title": "148. Of Human Bondage"
+    },
+    {
+      "file": "149.md",
+      "title": "149. Of Human Bondage"
+    },
+    {
+      "file": "150.md",
+      "title": "150. Of Human Bondage"
+    },
+    {
+      "file": "151.md",
+      "title": "151. Of Human Bondage"
+    },
+    {
+      "file": "152.md",
+      "title": "152. Of Human Bondage"
+    },
+    {
+      "file": "153.md",
+      "title": "153. Of Human Bondage"
+    },
+    {
+      "file": "154.md",
+      "title": "154. Of Human Bondage"
+    },
+    {
+      "file": "155.md",
+      "title": "155. Of Human Bondage"
+    },
+    {
+      "file": "156.md",
+      "title": "156. Of Human Bondage"
+    },
+    {
+      "file": "157.md",
+      "title": "157. Of Human Bondage"
+    },
+    {
+      "file": "158.md",
+      "title": "158. Of Human Bondage"
+    },
+    {
+      "file": "159.md",
+      "title": "159. Of Human Bondage"
+    },
+    {
+      "file": "160.md",
+      "title": "160. Of Human Bondage"
+    },
+    {
+      "file": "161.md",
+      "title": "161. Of Human Bondage"
+    },
+    {
+      "file": "162.md",
+      "title": "162. Of Human Bondage"
+    },
+    {
+      "file": "163.md",
+      "title": "163. Of Human Bondage"
+    },
+    {
+      "file": "164.md",
+      "title": "164. Of Human Bondage"
+    },
+    {
+      "file": "165.md",
+      "title": "165. Of Human Bondage"
+    },
+    {
+      "file": "166.md",
+      "title": "166. CXIII"
+    },
+    {
+      "file": "167.md",
+      "title": "167. Of Human Bondage"
+    },
+    {
+      "file": "168.md",
+      "title": "168. Of Human Bondage"
+    },
+    {
+      "file": "169.md",
+      "title": "169. Of Human Bondage"
+    },
+    {
+      "file": "170.md",
+      "title": "170. Of Human Bondage"
+    },
+    {
+      "file": "171.md",
+      "title": "171. Of Human Bondage"
+    },
+    {
+      "file": "172.md",
+      "title": "172. Of Human Bondage"
+    },
+    {
+      "file": "173.md",
+      "title": "173. Of Human Bondage"
+    },
+    {
+      "file": "174.md",
+      "title": "174. Of Human Bondage"
+    },
+    {
+      "file": "175.md",
+      "title": "175. Of Human Bondage"
+    },
+    {
+      "file": "176.md",
+      "title": "176. Of Human Bondage"
+    },
+    {
+      "file": "177.md",
+      "title": "177. Of Human Bondage"
+    },
+    {
+      "file": "178.md",
+      "title": "178. Of Human Bondage"
+    },
+    {
+      "file": "179.md",
+      "title": "179. Of Human Bondage"
+    },
+    {
+      "file": "180.md",
+      "title": "180. Of Human Bondage"
+    }
+  ]
+}

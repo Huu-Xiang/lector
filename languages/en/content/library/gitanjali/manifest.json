@@ -1,0 +1,49 @@
+{
+  "title": "Gitanjali",
+  "author": "Rabindranath Tagore",
+  "level": "B2",
+  "wordCount": 12153,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/7164",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Gitanjali"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Gitanjali"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Gitanjali"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Gitanjali"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Gitanjali"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Gitanjali"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Gitanjali"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Gitanjali"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Gitanjali"
+    }
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "title": "Les Fleurs du mal",
+  "author": "Charles Baudelaire",
+  "level": "C2",
+  "wordCount": 24586,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/6099",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Au lecteur"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Les Fleurs du mal"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Les Fleurs du mal"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Les Fleurs du mal"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Un fantome"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Le poison"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Les Fleurs du mal"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Spleen"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Les Fleurs du mal"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Les Fleurs du mal"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Les Fleurs du mal"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Les Fleurs du mal"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Les Fleurs du mal"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Les Fleurs du mal"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Les Fleurs du mal"
+    },
+    {
+      "file": "16.md",
+      "title": "16. II"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Les Fleurs du mal"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Les Fleurs du mal"
+    }
+  ]
+}

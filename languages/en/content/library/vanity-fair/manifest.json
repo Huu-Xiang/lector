@@ -1,0 +1,849 @@
+{
+  "title": "Vanity Fair",
+  "author": "William Makepeace Thackeray",
+  "level": "C2",
+  "wordCount": 310452,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/599",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Chapter I. Chiswick Mall"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Vanity Fair"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Vanity Fair"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Vanity Fair"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Vanity Fair"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Vanity Fair"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Vanity Fair"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Vanity Fair"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Vanity Fair"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Vanity Fair"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Vanity Fair"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Vanity Fair"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Vanity Fair"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Vanity Fair"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Vanity Fair"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Vanity Fair"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Vanity Fair"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Vanity Fair"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Vanity Fair"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Vanity Fair"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Vanity Fair"
+    },
+    {
+      "file": "22.md",
+      "title": "22. Vanity Fair"
+    },
+    {
+      "file": "23.md",
+      "title": "23. Vanity Fair"
+    },
+    {
+      "file": "24.md",
+      "title": "24. Vanity Fair"
+    },
+    {
+      "file": "25.md",
+      "title": "25. Vanity Fair"
+    },
+    {
+      "file": "26.md",
+      "title": "26. Vanity Fair"
+    },
+    {
+      "file": "27.md",
+      "title": "27. Vanity Fair"
+    },
+    {
+      "file": "28.md",
+      "title": "28. Vanity Fair"
+    },
+    {
+      "file": "29.md",
+      "title": "29. Vanity Fair"
+    },
+    {
+      "file": "30.md",
+      "title": "30. Vanity Fair"
+    },
+    {
+      "file": "31.md",
+      "title": "31. Vanity Fair"
+    },
+    {
+      "file": "32.md",
+      "title": "32. Vanity Fair"
+    },
+    {
+      "file": "33.md",
+      "title": "33. Vanity Fair"
+    },
+    {
+      "file": "34.md",
+      "title": "34. Vanity Fair"
+    },
+    {
+      "file": "35.md",
+      "title": "35. Vanity Fair"
+    },
+    {
+      "file": "36.md",
+      "title": "36. Vanity Fair"
+    },
+    {
+      "file": "37.md",
+      "title": "37. Vanity Fair"
+    },
+    {
+      "file": "38.md",
+      "title": "38. Vanity Fair"
+    },
+    {
+      "file": "39.md",
+      "title": "39. Vanity Fair"
+    },
+    {
+      "file": "40.md",
+      "title": "40. Vanity Fair"
+    },
+    {
+      "file": "41.md",
+      "title": "41. Vanity Fair"
+    },
+    {
+      "file": "42.md",
+      "title": "42. Vanity Fair"
+    },
+    {
+      "file": "43.md",
+      "title": "43. Vanity Fair"
+    },
+    {
+      "file": "44.md",
+      "title": "44. Vanity Fair"
+    },
+    {
+      "file": "45.md",
+      "title": "45. Vanity Fair"
+    },
+    {
+      "file": "46.md",
+      "title": "46. Vanity Fair"
+    },
+    {
+      "file": "47.md",
+      "title": "47. Vanity Fair"
+    },
+    {
+      "file": "48.md",
+      "title": "48. Vanity Fair"
+    },
+    {
+      "file": "49.md",
+      "title": "49. Vanity Fair"
+    },
+    {
+      "file": "50.md",
+      "title": "50. Vanity Fair"
+    },
+    {
+      "file": "51.md",
+      "title": "51. Vanity Fair"
+    },
+    {
+      "file": "52.md",
+      "title": "52. Vanity Fair"
+    },
+    {
+      "file": "53.md",
+      "title": "53. Vanity Fair"
+    },
+    {
+      "file": "54.md",
+      "title": "54. Vanity Fair"
+    },
+    {
+      "file": "55.md",
+      "title": "55. Vanity Fair"
+    },
+    {
+      "file": "56.md",
+      "title": "56. Vanity Fair"
+    },
+    {
+      "file": "57.md",
+      "title": "57. Vanity Fair"
+    },
+    {
+      "file": "58.md",
+      "title": "58. Vanity Fair"
+    },
+    {
+      "file": "59.md",
+      "title": "59. Vanity Fair"
+    },
+    {
+      "file": "60.md",
+      "title": "60. Vanity Fair"
+    },
+    {
+      "file": "61.md",
+      "title": "61. Vanity Fair"
+    },
+    {
+      "file": "62.md",
+      "title": "62. Vanity Fair"
+    },
+    {
+      "file": "63.md",
+      "title": "63. Vanity Fair"
+    },
+    {
+      "file": "64.md",
+      "title": "64. Vanity Fair"
+    },
+    {
+      "file": "65.md",
+      "title": "65. Vanity Fair"
+    },
+    {
+      "file": "66.md",
+      "title": "66. Vanity Fair"
+    },
+    {
+      "file": "67.md",
+      "title": "67. Vanity Fair"
+    },
+    {
+      "file": "68.md",
+      "title": "68. Vanity Fair"
+    },
+    {
+      "file": "69.md",
+      "title": "69. Vanity Fair"
+    },
+    {
+      "file": "70.md",
+      "title": "70. Vanity Fair"
+    },
+    {
+      "file": "71.md",
+      "title": "71. Vanity Fair"
+    },
+    {
+      "file": "72.md",
+      "title": "72. Vanity Fair"
+    },
+    {
+      "file": "73.md",
+      "title": "73. Vanity Fair"
+    },
+    {
+      "file": "74.md",
+      "title": "74. Vanity Fair"
+    },
+    {
+      "file": "75.md",
+      "title": "75. Vanity Fair"
+    },
+    {
+      "file": "76.md",
+      "title": "76. Vanity Fair"
+    },
+    {
+      "file": "77.md",
+      "title": "77. Vanity Fair"
+    },
+    {
+      "file": "78.md",
+      "title": "78. Vanity Fair"
+    },
+    {
+      "file": "79.md",
+      "title": "79. Vanity Fair"
+    },
+    {
+      "file": "80.md",
+      "title": "80. Vanity Fair"
+    },
+    {
+      "file": "81.md",
+      "title": "81. Vanity Fair"
+    },
+    {
+      "file": "82.md",
+      "title": "82. Vanity Fair"
+    },
+    {
+      "file": "83.md",
+      "title": "83. Vanity Fair"
+    },
+    {
+      "file": "84.md",
+      "title": "84. Vanity Fair"
+    },
+    {
+      "file": "85.md",
+      "title": "85. Vanity Fair"
+    },
+    {
+      "file": "86.md",
+      "title": "86. Vanity Fair"
+    },
+    {
+      "file": "87.md",
+      "title": "87. Vanity Fair"
+    },
+    {
+      "file": "88.md",
+      "title": "88. Vanity Fair"
+    },
+    {
+      "file": "89.md",
+      "title": "89. Vanity Fair"
+    },
+    {
+      "file": "90.md",
+      "title": "90. Vanity Fair"
+    },
+    {
+      "file": "91.md",
+      "title": "91. Vanity Fair"
+    },
+    {
+      "file": "92.md",
+      "title": "92. Vanity Fair"
+    },
+    {
+      "file": "93.md",
+      "title": "93. Vanity Fair"
+    },
+    {
+      "file": "94.md",
+      "title": "94. Vanity Fair"
+    },
+    {
+      "file": "95.md",
+      "title": "95. Vanity Fair"
+    },
+    {
+      "file": "96.md",
+      "title": "96. Vanity Fair"
+    },
+    {
+      "file": "97.md",
+      "title": "97. Vanity Fair"
+    },
+    {
+      "file": "98.md",
+      "title": "98. Vanity Fair"
+    },
+    {
+      "file": "99.md",
+      "title": "99. Vanity Fair"
+    },
+    {
+      "file": "100.md",
+      "title": "100. Vanity Fair"
+    },
+    {
+      "file": "101.md",
+      "title": "101. Vanity Fair"
+    },
+    {
+      "file": "102.md",
+      "title": "102. Vanity Fair"
+    },
+    {
+      "file": "103.md",
+      "title": "103. Vanity Fair"
+    },
+    {
+      "file": "104.md",
+      "title": "104. Vanity Fair"
+    },
+    {
+      "file": "105.md",
+      "title": "105. Vanity Fair"
+    },
+    {
+      "file": "106.md",
+      "title": "106. Vanity Fair"
+    },
+    {
+      "file": "107.md",
+      "title": "107. Vanity Fair"
+    },
+    {
+      "file": "108.md",
+      "title": "108. Vanity Fair"
+    },
+    {
+      "file": "109.md",
+      "title": "109. Vanity Fair"
+    },
+    {
+      "file": "110.md",
+      "title": "110. Chapter XXXVII. The Subject Continued"
+    },
+    {
+      "file": "111.md",
+      "title": "111. Vanity Fair"
+    },
+    {
+      "file": "112.md",
+      "title": "112. Vanity Fair"
+    },
+    {
+      "file": "113.md",
+      "title": "113. Vanity Fair"
+    },
+    {
+      "file": "114.md",
+      "title": "114. Vanity Fair"
+    },
+    {
+      "file": "115.md",
+      "title": "115. Vanity Fair"
+    },
+    {
+      "file": "116.md",
+      "title": "116. Vanity Fair"
+    },
+    {
+      "file": "117.md",
+      "title": "117. Vanity Fair"
+    },
+    {
+      "file": "118.md",
+      "title": "118. Vanity Fair"
+    },
+    {
+      "file": "119.md",
+      "title": "119. Vanity Fair"
+    },
+    {
+      "file": "120.md",
+      "title": "120. Vanity Fair"
+    },
+    {
+      "file": "121.md",
+      "title": "121. Vanity Fair"
+    },
+    {
+      "file": "122.md",
+      "title": "122. Vanity Fair"
+    },
+    {
+      "file": "123.md",
+      "title": "123. Vanity Fair"
+    },
+    {
+      "file": "124.md",
+      "title": "124. Vanity Fair"
+    },
+    {
+      "file": "125.md",
+      "title": "125. Vanity Fair"
+    },
+    {
+      "file": "126.md",
+      "title": "126. Vanity Fair"
+    },
+    {
+      "file": "127.md",
+      "title": "127. Vanity Fair"
+    },
+    {
+      "file": "128.md",
+      "title": "128. Vanity Fair"
+    },
+    {
+      "file": "129.md",
+      "title": "129. Vanity Fair"
+    },
+    {
+      "file": "130.md",
+      "title": "130. Vanity Fair"
+    },
+    {
+      "file": "131.md",
+      "title": "131. Vanity Fair"
+    },
+    {
+      "file": "132.md",
+      "title": "132. Vanity Fair"
+    },
+    {
+      "file": "133.md",
+      "title": "133. Vanity Fair"
+    },
+    {
+      "file": "134.md",
+      "title": "134. Vanity Fair"
+    },
+    {
+      "file": "135.md",
+      "title": "135. Vanity Fair"
+    },
+    {
+      "file": "136.md",
+      "title": "136. Vanity Fair"
+    },
+    {
+      "file": "137.md",
+      "title": "137. Vanity Fair"
+    },
+    {
+      "file": "138.md",
+      "title": "138. Vanity Fair"
+    },
+    {
+      "file": "139.md",
+      "title": "139. Vanity Fair"
+    },
+    {
+      "file": "140.md",
+      "title": "140. Vanity Fair"
+    },
+    {
+      "file": "141.md",
+      "title": "141. Vanity Fair"
+    },
+    {
+      "file": "142.md",
+      "title": "142. Vanity Fair"
+    },
+    {
+      "file": "143.md",
+      "title": "143. Vanity Fair"
+    },
+    {
+      "file": "144.md",
+      "title": "144. Vanity Fair"
+    },
+    {
+      "file": "145.md",
+      "title": "145. Vanity Fair"
+    },
+    {
+      "file": "146.md",
+      "title": "146. Vanity Fair"
+    },
+    {
+      "file": "147.md",
+      "title": "147. Vanity Fair"
+    },
+    {
+      "file": "148.md",
+      "title": "148. Vanity Fair"
+    },
+    {
+      "file": "149.md",
+      "title": "149. Vanity Fair"
+    },
+    {
+      "file": "150.md",
+      "title": "150. Vanity Fair"
+    },
+    {
+      "file": "151.md",
+      "title": "151. Vanity Fair"
+    },
+    {
+      "file": "152.md",
+      "title": "152. Vanity Fair"
+    },
+    {
+      "file": "153.md",
+      "title": "153. Vanity Fair"
+    },
+    {
+      "file": "154.md",
+      "title": "154. Vanity Fair"
+    },
+    {
+      "file": "155.md",
+      "title": "155. Vanity Fair"
+    },
+    {
+      "file": "156.md",
+      "title": "156. Vanity Fair"
+    },
+    {
+      "file": "157.md",
+      "title": "157. Vanity Fair"
+    },
+    {
+      "file": "158.md",
+      "title": "158. Vanity Fair"
+    },
+    {
+      "file": "159.md",
+      "title": "159. Vanity Fair"
+    },
+    {
+      "file": "160.md",
+      "title": "160. Vanity Fair"
+    },
+    {
+      "file": "161.md",
+      "title": "161. Vanity Fair"
+    },
+    {
+      "file": "162.md",
+      "title": "162. Vanity Fair"
+    },
+    {
+      "file": "163.md",
+      "title": "163. Vanity Fair"
+    },
+    {
+      "file": "164.md",
+      "title": "164. Vanity Fair"
+    },
+    {
+      "file": "165.md",
+      "title": "165. Vanity Fair"
+    },
+    {
+      "file": "166.md",
+      "title": "166. Vanity Fair"
+    },
+    {
+      "file": "167.md",
+      "title": "167. Vanity Fair"
+    },
+    {
+      "file": "168.md",
+      "title": "168. Vanity Fair"
+    },
+    {
+      "file": "169.md",
+      "title": "169. Vanity Fair"
+    },
+    {
+      "file": "170.md",
+      "title": "170. Vanity Fair"
+    },
+    {
+      "file": "171.md",
+      "title": "171. Vanity Fair"
+    },
+    {
+      "file": "172.md",
+      "title": "172. Vanity Fair"
+    },
+    {
+      "file": "173.md",
+      "title": "173. Vanity Fair"
+    },
+    {
+      "file": "174.md",
+      "title": "174. Chapter LVIII. Our Friend the Major"
+    },
+    {
+      "file": "175.md",
+      "title": "175. Vanity Fair"
+    },
+    {
+      "file": "176.md",
+      "title": "176. Vanity Fair"
+    },
+    {
+      "file": "177.md",
+      "title": "177. Vanity Fair"
+    },
+    {
+      "file": "178.md",
+      "title": "178. Vanity Fair"
+    },
+    {
+      "file": "179.md",
+      "title": "179. Vanity Fair"
+    },
+    {
+      "file": "180.md",
+      "title": "180. Vanity Fair"
+    },
+    {
+      "file": "181.md",
+      "title": "181. Vanity Fair"
+    },
+    {
+      "file": "182.md",
+      "title": "182. Vanity Fair"
+    },
+    {
+      "file": "183.md",
+      "title": "183. Vanity Fair"
+    },
+    {
+      "file": "184.md",
+      "title": "184. Vanity Fair"
+    },
+    {
+      "file": "185.md",
+      "title": "185. Vanity Fair"
+    },
+    {
+      "file": "186.md",
+      "title": "186. Vanity Fair"
+    },
+    {
+      "file": "187.md",
+      "title": "187. Vanity Fair"
+    },
+    {
+      "file": "188.md",
+      "title": "188. Vanity Fair"
+    },
+    {
+      "file": "189.md",
+      "title": "189. Vanity Fair"
+    },
+    {
+      "file": "190.md",
+      "title": "190. Vanity Fair"
+    },
+    {
+      "file": "191.md",
+      "title": "191. Vanity Fair"
+    },
+    {
+      "file": "192.md",
+      "title": "192. Vanity Fair"
+    },
+    {
+      "file": "193.md",
+      "title": "193. Vanity Fair"
+    },
+    {
+      "file": "194.md",
+      "title": "194. Vanity Fair"
+    },
+    {
+      "file": "195.md",
+      "title": "195. Vanity Fair"
+    },
+    {
+      "file": "196.md",
+      "title": "196. Vanity Fair"
+    },
+    {
+      "file": "197.md",
+      "title": "197. Vanity Fair"
+    },
+    {
+      "file": "198.md",
+      "title": "198. Vanity Fair"
+    },
+    {
+      "file": "199.md",
+      "title": "199. Vanity Fair"
+    },
+    {
+      "file": "200.md",
+      "title": "200. Vanity Fair"
+    },
+    {
+      "file": "201.md",
+      "title": "201. Vanity Fair"
+    },
+    {
+      "file": "202.md",
+      "title": "202. Vanity Fair"
+    },
+    {
+      "file": "203.md",
+      "title": "203. Vanity Fair"
+    },
+    {
+      "file": "204.md",
+      "title": "204. Vanity Fair"
+    },
+    {
+      "file": "205.md",
+      "title": "205. Vanity Fair"
+    },
+    {
+      "file": "206.md",
+      "title": "206. Vanity Fair"
+    },
+    {
+      "file": "207.md",
+      "title": "207. Vanity Fair"
+    },
+    {
+      "file": "208.md",
+      "title": "208. Vanity Fair"
+    },
+    {
+      "file": "209.md",
+      "title": "209. Vanity Fair"
+    }
+  ]
+}

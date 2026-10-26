@@ -1,0 +1,145 @@
+{
+  "title": "The Essays of Francis Bacon",
+  "author": "Francis Bacon",
+  "level": "C2",
+  "wordCount": 52577,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/575",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Of Truth"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Of Unity in Religion"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Of Revenge"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Essays"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Of Envy"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Essays"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Of Boldness"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Of Nobility"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Essays"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Of Superstition"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Essays"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Essays"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Of Cunning"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Essays"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Of Friendship"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Essays"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Essays"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Essays"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Of Regiment of Health"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Of Plantations"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Of Prophecies"
+    },
+    {
+      "file": "22.md",
+      "title": "22. Of Masques and Triumphs"
+    },
+    {
+      "file": "23.md",
+      "title": "23. Of Fortune"
+    },
+    {
+      "file": "24.md",
+      "title": "24. Essays"
+    },
+    {
+      "file": "25.md",
+      "title": "25. Of Deformity"
+    },
+    {
+      "file": "26.md",
+      "title": "26. Essays"
+    },
+    {
+      "file": "27.md",
+      "title": "27. Essays"
+    },
+    {
+      "file": "28.md",
+      "title": "28. Of Followers and Friends"
+    },
+    {
+      "file": "29.md",
+      "title": "29. Of Faction"
+    },
+    {
+      "file": "30.md",
+      "title": "30. Of Vain-glory"
+    },
+    {
+      "file": "31.md",
+      "title": "31. Essays"
+    },
+    {
+      "file": "32.md",
+      "title": "32. Essays"
+    },
+    {
+      "file": "33.md",
+      "title": "33. Essays"
+    }
+  ]
+}

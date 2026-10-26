@@ -1,0 +1,29 @@
+{
+  "title": "Stray Birds",
+  "author": "Rabindranath Tagore",
+  "level": "B1",
+  "wordCount": 5607,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/6524",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Stray Birds"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Stray Birds"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Stray Birds"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Stray Birds"
+    }
+  ]
+}

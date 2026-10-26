@@ -1,0 +1,325 @@
+{
+  "title": "Bel-Ami",
+  "author": "Guy de Maupassant",
+  "level": "C1",
+  "wordCount": 111266,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/57430",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Première partie"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Bel-Ami"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Bel-Ami"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Bel-Ami"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Bel-Ami"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Bel-Ami"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Bel-Ami"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Bel-Ami"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Bel-Ami"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Bel-Ami"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Bel-Ami"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Bel-Ami"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Bel-Ami"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Bel-Ami"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Bel-Ami"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Bel-Ami"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Bel-Ami"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Bel-Ami"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Bel-Ami"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Bel-Ami"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Bel-Ami"
+    },
+    {
+      "file": "22.md",
+      "title": "22. Bel-Ami"
+    },
+    {
+      "file": "23.md",
+      "title": "23. Bel-Ami"
+    },
+    {
+      "file": "24.md",
+      "title": "24. Bel-Ami"
+    },
+    {
+      "file": "25.md",
+      "title": "25. Bel-Ami"
+    },
+    {
+      "file": "26.md",
+      "title": "26. Bel-Ami"
+    },
+    {
+      "file": "27.md",
+      "title": "27. Bel-Ami"
+    },
+    {
+      "file": "28.md",
+      "title": "28. Bel-Ami"
+    },
+    {
+      "file": "29.md",
+      "title": "29. Bel-Ami"
+    },
+    {
+      "file": "30.md",
+      "title": "30. Bel-Ami"
+    },
+    {
+      "file": "31.md",
+      "title": "31. Bel-Ami"
+    },
+    {
+      "file": "32.md",
+      "title": "32. Bel-Ami"
+    },
+    {
+      "file": "33.md",
+      "title": "33. Bel-Ami"
+    },
+    {
+      "file": "34.md",
+      "title": "34. Bel-Ami"
+    },
+    {
+      "file": "35.md",
+      "title": "35. Bel-Ami"
+    },
+    {
+      "file": "36.md",
+      "title": "36. Bel-Ami"
+    },
+    {
+      "file": "37.md",
+      "title": "37. Bel-Ami"
+    },
+    {
+      "file": "38.md",
+      "title": "38. Bel-Ami"
+    },
+    {
+      "file": "39.md",
+      "title": "39. Bel-Ami"
+    },
+    {
+      "file": "40.md",
+      "title": "40. Bel-Ami"
+    },
+    {
+      "file": "41.md",
+      "title": "41. Bel-Ami"
+    },
+    {
+      "file": "42.md",
+      "title": "42. Bel-Ami"
+    },
+    {
+      "file": "43.md",
+      "title": "43. Bel-Ami"
+    },
+    {
+      "file": "44.md",
+      "title": "44. Bel-Ami"
+    },
+    {
+      "file": "45.md",
+      "title": "45. Bel-Ami"
+    },
+    {
+      "file": "46.md",
+      "title": "46. Bel-Ami"
+    },
+    {
+      "file": "47.md",
+      "title": "47. Bel-Ami"
+    },
+    {
+      "file": "48.md",
+      "title": "48. Bel-Ami"
+    },
+    {
+      "file": "49.md",
+      "title": "49. Bel-Ami"
+    },
+    {
+      "file": "50.md",
+      "title": "50. Bel-Ami"
+    },
+    {
+      "file": "51.md",
+      "title": "51. Bel-Ami"
+    },
+    {
+      "file": "52.md",
+      "title": "52. Bel-Ami"
+    },
+    {
+      "file": "53.md",
+      "title": "53. Bel-Ami"
+    },
+    {
+      "file": "54.md",
+      "title": "54. Bel-Ami"
+    },
+    {
+      "file": "55.md",
+      "title": "55. Bel-Ami"
+    },
+    {
+      "file": "56.md",
+      "title": "56. Bel-Ami"
+    },
+    {
+      "file": "57.md",
+      "title": "57. Bel-Ami"
+    },
+    {
+      "file": "58.md",
+      "title": "58. Bel-Ami"
+    },
+    {
+      "file": "59.md",
+      "title": "59. Bel-Ami"
+    },
+    {
+      "file": "60.md",
+      "title": "60. Bel-Ami"
+    },
+    {
+      "file": "61.md",
+      "title": "61. Bel-Ami"
+    },
+    {
+      "file": "62.md",
+      "title": "62. Bel-Ami"
+    },
+    {
+      "file": "63.md",
+      "title": "63. Bel-Ami"
+    },
+    {
+      "file": "64.md",
+      "title": "64. Bel-Ami"
+    },
+    {
+      "file": "65.md",
+      "title": "65. Bel-Ami"
+    },
+    {
+      "file": "66.md",
+      "title": "66. Bel-Ami"
+    },
+    {
+      "file": "67.md",
+      "title": "67. Bel-Ami"
+    },
+    {
+      "file": "68.md",
+      "title": "68. Bel-Ami"
+    },
+    {
+      "file": "69.md",
+      "title": "69. Bel-Ami"
+    },
+    {
+      "file": "70.md",
+      "title": "70. Bel-Ami"
+    },
+    {
+      "file": "71.md",
+      "title": "71. Bel-Ami"
+    },
+    {
+      "file": "72.md",
+      "title": "72. Bel-Ami"
+    },
+    {
+      "file": "73.md",
+      "title": "73. Bel-Ami"
+    },
+    {
+      "file": "74.md",
+      "title": "74. Bel-Ami"
+    },
+    {
+      "file": "75.md",
+      "title": "75. Bel-Ami"
+    },
+    {
+      "file": "76.md",
+      "title": "76. Bel-Ami"
+    },
+    {
+      "file": "77.md",
+      "title": "77. Bel-Ami"
+    },
+    {
+      "file": "78.md",
+      "title": "78. Bel-Ami"
+    }
+  ]
+}

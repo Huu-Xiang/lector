@@ -1,0 +1,17 @@
+{
+  "title": "The Tale of Two Bad Mice",
+  "author": "Beatrix Potter",
+  "level": "A2",
+  "wordCount": 946,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/45264",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Two Bad Mice"
+    }
+  ]
+}

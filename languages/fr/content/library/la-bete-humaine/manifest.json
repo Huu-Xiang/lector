@@ -1,0 +1,381 @@
+{
+  "title": "La Bête humaine",
+  "author": "Émile Zola",
+  "level": "C1",
+  "wordCount": 136497,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/5154",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. I"
+    },
+    {
+      "file": "02.md",
+      "title": "2. La Bête humaine"
+    },
+    {
+      "file": "03.md",
+      "title": "3. La Bête humaine"
+    },
+    {
+      "file": "04.md",
+      "title": "4. La Bête humaine"
+    },
+    {
+      "file": "05.md",
+      "title": "5. La Bête humaine"
+    },
+    {
+      "file": "06.md",
+      "title": "6. La Bête humaine"
+    },
+    {
+      "file": "07.md",
+      "title": "7. La Bête humaine"
+    },
+    {
+      "file": "08.md",
+      "title": "8. La Bête humaine"
+    },
+    {
+      "file": "09.md",
+      "title": "9. II"
+    },
+    {
+      "file": "10.md",
+      "title": "10. La Bête humaine"
+    },
+    {
+      "file": "11.md",
+      "title": "11. La Bête humaine"
+    },
+    {
+      "file": "12.md",
+      "title": "12. La Bête humaine"
+    },
+    {
+      "file": "13.md",
+      "title": "13. La Bête humaine"
+    },
+    {
+      "file": "14.md",
+      "title": "14. La Bête humaine"
+    },
+    {
+      "file": "15.md",
+      "title": "15. La Bête humaine"
+    },
+    {
+      "file": "16.md",
+      "title": "16. La Bête humaine"
+    },
+    {
+      "file": "17.md",
+      "title": "17. La Bête humaine"
+    },
+    {
+      "file": "18.md",
+      "title": "18. La Bête humaine"
+    },
+    {
+      "file": "19.md",
+      "title": "19. La Bête humaine"
+    },
+    {
+      "file": "20.md",
+      "title": "20. La Bête humaine"
+    },
+    {
+      "file": "21.md",
+      "title": "21. La Bête humaine"
+    },
+    {
+      "file": "22.md",
+      "title": "22. La Bête humaine"
+    },
+    {
+      "file": "23.md",
+      "title": "23. La Bête humaine"
+    },
+    {
+      "file": "24.md",
+      "title": "24. La Bête humaine"
+    },
+    {
+      "file": "25.md",
+      "title": "25. La Bête humaine"
+    },
+    {
+      "file": "26.md",
+      "title": "26. La Bête humaine"
+    },
+    {
+      "file": "27.md",
+      "title": "27. La Bête humaine"
+    },
+    {
+      "file": "28.md",
+      "title": "28. La Bête humaine"
+    },
+    {
+      "file": "29.md",
+      "title": "29. La Bête humaine"
+    },
+    {
+      "file": "30.md",
+      "title": "30. La Bête humaine"
+    },
+    {
+      "file": "31.md",
+      "title": "31. La Bête humaine"
+    },
+    {
+      "file": "32.md",
+      "title": "32. La Bête humaine"
+    },
+    {
+      "file": "33.md",
+      "title": "33. La Bête humaine"
+    },
+    {
+      "file": "34.md",
+      "title": "34. La Bête humaine"
+    },
+    {
+      "file": "35.md",
+      "title": "35. La Bête humaine"
+    },
+    {
+      "file": "36.md",
+      "title": "36. La Bête humaine"
+    },
+    {
+      "file": "37.md",
+      "title": "37. La Bête humaine"
+    },
+    {
+      "file": "38.md",
+      "title": "38. La Bête humaine"
+    },
+    {
+      "file": "39.md",
+      "title": "39. La Bête humaine"
+    },
+    {
+      "file": "40.md",
+      "title": "40. La Bête humaine"
+    },
+    {
+      "file": "41.md",
+      "title": "41. La Bête humaine"
+    },
+    {
+      "file": "42.md",
+      "title": "42. La Bête humaine"
+    },
+    {
+      "file": "43.md",
+      "title": "43. La Bête humaine"
+    },
+    {
+      "file": "44.md",
+      "title": "44. La Bête humaine"
+    },
+    {
+      "file": "45.md",
+      "title": "45. La Bête humaine"
+    },
+    {
+      "file": "46.md",
+      "title": "46. La Bête humaine"
+    },
+    {
+      "file": "47.md",
+      "title": "47. La Bête humaine"
+    },
+    {
+      "file": "48.md",
+      "title": "48. La Bête humaine"
+    },
+    {
+      "file": "49.md",
+      "title": "49. La Bête humaine"
+    },
+    {
+      "file": "50.md",
+      "title": "50. La Bête humaine"
+    },
+    {
+      "file": "51.md",
+      "title": "51. La Bête humaine"
+    },
+    {
+      "file": "52.md",
+      "title": "52. La Bête humaine"
+    },
+    {
+      "file": "53.md",
+      "title": "53. La Bête humaine"
+    },
+    {
+      "file": "54.md",
+      "title": "54. La Bête humaine"
+    },
+    {
+      "file": "55.md",
+      "title": "55. La Bête humaine"
+    },
+    {
+      "file": "56.md",
+      "title": "56. La Bête humaine"
+    },
+    {
+      "file": "57.md",
+      "title": "57. La Bête humaine"
+    },
+    {
+      "file": "58.md",
+      "title": "58. La Bête humaine"
+    },
+    {
+      "file": "59.md",
+      "title": "59. La Bête humaine"
+    },
+    {
+      "file": "60.md",
+      "title": "60. La Bête humaine"
+    },
+    {
+      "file": "61.md",
+      "title": "61. La Bête humaine"
+    },
+    {
+      "file": "62.md",
+      "title": "62. La Bête humaine"
+    },
+    {
+      "file": "63.md",
+      "title": "63. La Bête humaine"
+    },
+    {
+      "file": "64.md",
+      "title": "64. La Bête humaine"
+    },
+    {
+      "file": "65.md",
+      "title": "65. La Bête humaine"
+    },
+    {
+      "file": "66.md",
+      "title": "66. La Bête humaine"
+    },
+    {
+      "file": "67.md",
+      "title": "67. La Bête humaine"
+    },
+    {
+      "file": "68.md",
+      "title": "68. La Bête humaine"
+    },
+    {
+      "file": "69.md",
+      "title": "69. La Bête humaine"
+    },
+    {
+      "file": "70.md",
+      "title": "70. La Bête humaine"
+    },
+    {
+      "file": "71.md",
+      "title": "71. La Bête humaine"
+    },
+    {
+      "file": "72.md",
+      "title": "72. La Bête humaine"
+    },
+    {
+      "file": "73.md",
+      "title": "73. La Bête humaine"
+    },
+    {
+      "file": "74.md",
+      "title": "74. La Bête humaine"
+    },
+    {
+      "file": "75.md",
+      "title": "75. La Bête humaine"
+    },
+    {
+      "file": "76.md",
+      "title": "76. La Bête humaine"
+    },
+    {
+      "file": "77.md",
+      "title": "77. La Bête humaine"
+    },
+    {
+      "file": "78.md",
+      "title": "78. La Bête humaine"
+    },
+    {
+      "file": "79.md",
+      "title": "79. La Bête humaine"
+    },
+    {
+      "file": "80.md",
+      "title": "80. La Bête humaine"
+    },
+    {
+      "file": "81.md",
+      "title": "81. La Bête humaine"
+    },
+    {
+      "file": "82.md",
+      "title": "82. La Bête humaine"
+    },
+    {
+      "file": "83.md",
+      "title": "83. La Bête humaine"
+    },
+    {
+      "file": "84.md",
+      "title": "84. La Bête humaine"
+    },
+    {
+      "file": "85.md",
+      "title": "85. La Bête humaine"
+    },
+    {
+      "file": "86.md",
+      "title": "86. La Bête humaine"
+    },
+    {
+      "file": "87.md",
+      "title": "87. La Bête humaine"
+    },
+    {
+      "file": "88.md",
+      "title": "88. La Bête humaine"
+    },
+    {
+      "file": "89.md",
+      "title": "89. La Bête humaine"
+    },
+    {
+      "file": "90.md",
+      "title": "90. La Bête humaine"
+    },
+    {
+      "file": "91.md",
+      "title": "91. La Bête humaine"
+    },
+    {
+      "file": "92.md",
+      "title": "92. La Bête humaine"
+    }
+  ]
+}

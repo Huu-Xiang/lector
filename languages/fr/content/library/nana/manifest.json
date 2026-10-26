@@ -1,0 +1,429 @@
+{
+  "title": "Nana",
+  "author": "Émile Zola",
+  "level": "C1",
+  "wordCount": 151933,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/5250",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. I"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Nana"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Nana"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Nana"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Nana"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Nana"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Nana"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Nana"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Nana"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Nana"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Nana"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Nana"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Nana"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Nana"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Nana"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Nana"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Nana"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Nana"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Nana"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Nana"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Nana"
+    },
+    {
+      "file": "22.md",
+      "title": "22. Nana"
+    },
+    {
+      "file": "23.md",
+      "title": "23. Nana"
+    },
+    {
+      "file": "24.md",
+      "title": "24. Nana"
+    },
+    {
+      "file": "25.md",
+      "title": "25. Nana"
+    },
+    {
+      "file": "26.md",
+      "title": "26. Nana"
+    },
+    {
+      "file": "27.md",
+      "title": "27. Nana"
+    },
+    {
+      "file": "28.md",
+      "title": "28. Nana"
+    },
+    {
+      "file": "29.md",
+      "title": "29. Nana"
+    },
+    {
+      "file": "30.md",
+      "title": "30. Nana"
+    },
+    {
+      "file": "31.md",
+      "title": "31. Nana"
+    },
+    {
+      "file": "32.md",
+      "title": "32. Nana"
+    },
+    {
+      "file": "33.md",
+      "title": "33. Nana"
+    },
+    {
+      "file": "34.md",
+      "title": "34. Nana"
+    },
+    {
+      "file": "35.md",
+      "title": "35. Nana"
+    },
+    {
+      "file": "36.md",
+      "title": "36. Nana"
+    },
+    {
+      "file": "37.md",
+      "title": "37. Nana"
+    },
+    {
+      "file": "38.md",
+      "title": "38. Nana"
+    },
+    {
+      "file": "39.md",
+      "title": "39. Nana"
+    },
+    {
+      "file": "40.md",
+      "title": "40. Nana"
+    },
+    {
+      "file": "41.md",
+      "title": "41. Nana"
+    },
+    {
+      "file": "42.md",
+      "title": "42. Nana"
+    },
+    {
+      "file": "43.md",
+      "title": "43. Nana"
+    },
+    {
+      "file": "44.md",
+      "title": "44. Nana"
+    },
+    {
+      "file": "45.md",
+      "title": "45. Nana"
+    },
+    {
+      "file": "46.md",
+      "title": "46. Nana"
+    },
+    {
+      "file": "47.md",
+      "title": "47. Nana"
+    },
+    {
+      "file": "48.md",
+      "title": "48. Nana"
+    },
+    {
+      "file": "49.md",
+      "title": "49. Nana"
+    },
+    {
+      "file": "50.md",
+      "title": "50. Nana"
+    },
+    {
+      "file": "51.md",
+      "title": "51. Nana"
+    },
+    {
+      "file": "52.md",
+      "title": "52. Nana"
+    },
+    {
+      "file": "53.md",
+      "title": "53. Nana"
+    },
+    {
+      "file": "54.md",
+      "title": "54. Nana"
+    },
+    {
+      "file": "55.md",
+      "title": "55. Nana"
+    },
+    {
+      "file": "56.md",
+      "title": "56. Nana"
+    },
+    {
+      "file": "57.md",
+      "title": "57. Nana"
+    },
+    {
+      "file": "58.md",
+      "title": "58. Nana"
+    },
+    {
+      "file": "59.md",
+      "title": "59. Nana"
+    },
+    {
+      "file": "60.md",
+      "title": "60. Nana"
+    },
+    {
+      "file": "61.md",
+      "title": "61. Nana"
+    },
+    {
+      "file": "62.md",
+      "title": "62. Nana"
+    },
+    {
+      "file": "63.md",
+      "title": "63. Nana"
+    },
+    {
+      "file": "64.md",
+      "title": "64. Nana"
+    },
+    {
+      "file": "65.md",
+      "title": "65. Nana"
+    },
+    {
+      "file": "66.md",
+      "title": "66. Nana"
+    },
+    {
+      "file": "67.md",
+      "title": "67. Nana"
+    },
+    {
+      "file": "68.md",
+      "title": "68. Nana"
+    },
+    {
+      "file": "69.md",
+      "title": "69. Nana"
+    },
+    {
+      "file": "70.md",
+      "title": "70. Nana"
+    },
+    {
+      "file": "71.md",
+      "title": "71. Nana"
+    },
+    {
+      "file": "72.md",
+      "title": "72. Nana"
+    },
+    {
+      "file": "73.md",
+      "title": "73. Nana"
+    },
+    {
+      "file": "74.md",
+      "title": "74. Nana"
+    },
+    {
+      "file": "75.md",
+      "title": "75. Nana"
+    },
+    {
+      "file": "76.md",
+      "title": "76. Nana"
+    },
+    {
+      "file": "77.md",
+      "title": "77. Nana"
+    },
+    {
+      "file": "78.md",
+      "title": "78. Nana"
+    },
+    {
+      "file": "79.md",
+      "title": "79. Nana"
+    },
+    {
+      "file": "80.md",
+      "title": "80. Nana"
+    },
+    {
+      "file": "81.md",
+      "title": "81. Nana"
+    },
+    {
+      "file": "82.md",
+      "title": "82. Nana"
+    },
+    {
+      "file": "83.md",
+      "title": "83. Nana"
+    },
+    {
+      "file": "84.md",
+      "title": "84. Nana"
+    },
+    {
+      "file": "85.md",
+      "title": "85. Nana"
+    },
+    {
+      "file": "86.md",
+      "title": "86. Nana"
+    },
+    {
+      "file": "87.md",
+      "title": "87. Nana"
+    },
+    {
+      "file": "88.md",
+      "title": "88. Nana"
+    },
+    {
+      "file": "89.md",
+      "title": "89. Nana"
+    },
+    {
+      "file": "90.md",
+      "title": "90. Nana"
+    },
+    {
+      "file": "91.md",
+      "title": "91. Nana"
+    },
+    {
+      "file": "92.md",
+      "title": "92. Nana"
+    },
+    {
+      "file": "93.md",
+      "title": "93. Nana"
+    },
+    {
+      "file": "94.md",
+      "title": "94. Nana"
+    },
+    {
+      "file": "95.md",
+      "title": "95. Nana"
+    },
+    {
+      "file": "96.md",
+      "title": "96. Nana"
+    },
+    {
+      "file": "97.md",
+      "title": "97. Nana"
+    },
+    {
+      "file": "98.md",
+      "title": "98. Nana"
+    },
+    {
+      "file": "99.md",
+      "title": "99. Nana"
+    },
+    {
+      "file": "100.md",
+      "title": "100. Nana"
+    },
+    {
+      "file": "101.md",
+      "title": "101. Nana"
+    },
+    {
+      "file": "102.md",
+      "title": "102. Nana"
+    },
+    {
+      "file": "103.md",
+      "title": "103. Nana"
+    },
+    {
+      "file": "104.md",
+      "title": "104. Nana"
+    }
+  ]
+}

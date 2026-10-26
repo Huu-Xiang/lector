@@ -1,0 +1,37 @@
+{
+  "title": "Histoires naturelles",
+  "author": "Jules Renard",
+  "level": "A2",
+  "wordCount": 7580,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/44255",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Le chasseur d'images"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Histoires naturelles"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Les moutons"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Histoires naturelles"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Histoires naturelles"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Histoires naturelles"
+    }
+  ]
+}

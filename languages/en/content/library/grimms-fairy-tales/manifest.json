@@ -1,0 +1,281 @@
+{
+  "title": "Grimms' Fairy Tales",
+  "author": "Jacob and Wilhelm Grimm, translated by Edgar Taylor and Marian Edwardes",
+  "level": "B1",
+  "wordCount": 101651,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/2591",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. The Golden Bird"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Grimms' Fairy Tales"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Grimms' Fairy Tales"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Grimms' Fairy Tales"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Grimms' Fairy Tales"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Old Sultan"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Grimms' Fairy Tales"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Grimms' Fairy Tales"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Grimms' Fairy Tales"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Grimms' Fairy Tales"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Grimms' Fairy Tales"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Grimms' Fairy Tales"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Grimms' Fairy Tales"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Grimms' Fairy Tales"
+    },
+    {
+      "file": "15.md",
+      "title": "15. 2. How Chanticleer and Partlet Went to Visit Mr Korbes"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Grimms' Fairy Tales"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Grimms' Fairy Tales"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Grimms' Fairy Tales"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Grimms' Fairy Tales"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Grimms' Fairy Tales"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Grimms' Fairy Tales"
+    },
+    {
+      "file": "22.md",
+      "title": "22. Grimms' Fairy Tales"
+    },
+    {
+      "file": "23.md",
+      "title": "23. Grimms' Fairy Tales"
+    },
+    {
+      "file": "24.md",
+      "title": "24. Grimms' Fairy Tales"
+    },
+    {
+      "file": "25.md",
+      "title": "25. Grimms' Fairy Tales"
+    },
+    {
+      "file": "26.md",
+      "title": "26. Grimms' Fairy Tales"
+    },
+    {
+      "file": "27.md",
+      "title": "27. Grimms' Fairy Tales"
+    },
+    {
+      "file": "28.md",
+      "title": "28. The Old Man and His Grandson"
+    },
+    {
+      "file": "29.md",
+      "title": "29. Grimms' Fairy Tales"
+    },
+    {
+      "file": "30.md",
+      "title": "30. Grimms' Fairy Tales"
+    },
+    {
+      "file": "31.md",
+      "title": "31. Grimms' Fairy Tales"
+    },
+    {
+      "file": "32.md",
+      "title": "32. Grimms' Fairy Tales"
+    },
+    {
+      "file": "33.md",
+      "title": "33. Grimms' Fairy Tales"
+    },
+    {
+      "file": "34.md",
+      "title": "34. Grimms' Fairy Tales"
+    },
+    {
+      "file": "35.md",
+      "title": "35. Grimms' Fairy Tales"
+    },
+    {
+      "file": "36.md",
+      "title": "36. Grimms' Fairy Tales"
+    },
+    {
+      "file": "37.md",
+      "title": "37. Grimms' Fairy Tales"
+    },
+    {
+      "file": "38.md",
+      "title": "38. Grimms' Fairy Tales"
+    },
+    {
+      "file": "39.md",
+      "title": "39. Grimms' Fairy Tales"
+    },
+    {
+      "file": "40.md",
+      "title": "40. Grimms' Fairy Tales"
+    },
+    {
+      "file": "41.md",
+      "title": "41. Grimms' Fairy Tales"
+    },
+    {
+      "file": "42.md",
+      "title": "42. Grimms' Fairy Tales"
+    },
+    {
+      "file": "43.md",
+      "title": "43. Grimms' Fairy Tales"
+    },
+    {
+      "file": "44.md",
+      "title": "44. Grimms' Fairy Tales"
+    },
+    {
+      "file": "45.md",
+      "title": "45. The Four Clever Brothers"
+    },
+    {
+      "file": "46.md",
+      "title": "46. Grimms' Fairy Tales"
+    },
+    {
+      "file": "47.md",
+      "title": "47. Grimms' Fairy Tales"
+    },
+    {
+      "file": "48.md",
+      "title": "48. Grimms' Fairy Tales"
+    },
+    {
+      "file": "49.md",
+      "title": "49. Grimms' Fairy Tales"
+    },
+    {
+      "file": "50.md",
+      "title": "50. Grimms' Fairy Tales"
+    },
+    {
+      "file": "51.md",
+      "title": "51. Grimms' Fairy Tales"
+    },
+    {
+      "file": "52.md",
+      "title": "52. Grimms' Fairy Tales"
+    },
+    {
+      "file": "53.md",
+      "title": "53. Grimms' Fairy Tales"
+    },
+    {
+      "file": "54.md",
+      "title": "54. Grimms' Fairy Tales"
+    },
+    {
+      "file": "55.md",
+      "title": "55. Grimms' Fairy Tales"
+    },
+    {
+      "file": "56.md",
+      "title": "56. Grimms' Fairy Tales"
+    },
+    {
+      "file": "57.md",
+      "title": "57. Grimms' Fairy Tales"
+    },
+    {
+      "file": "58.md",
+      "title": "58. Grimms' Fairy Tales"
+    },
+    {
+      "file": "59.md",
+      "title": "59. Grimms' Fairy Tales"
+    },
+    {
+      "file": "60.md",
+      "title": "60. Grimms' Fairy Tales"
+    },
+    {
+      "file": "61.md",
+      "title": "61. Grimms' Fairy Tales"
+    },
+    {
+      "file": "62.md",
+      "title": "62. Grimms' Fairy Tales"
+    },
+    {
+      "file": "63.md",
+      "title": "63. Grimms' Fairy Tales"
+    },
+    {
+      "file": "64.md",
+      "title": "64. Grimms' Fairy Tales"
+    },
+    {
+      "file": "65.md",
+      "title": "65. Grimms' Fairy Tales"
+    },
+    {
+      "file": "66.md",
+      "title": "66. Grimms' Fairy Tales"
+    },
+    {
+      "file": "67.md",
+      "title": "67. Grimms' Fairy Tales"
+    }
+  ]
+}

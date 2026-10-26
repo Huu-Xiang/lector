@@ -1,0 +1,425 @@
+{
+  "title": "Les Liaisons dangereuses",
+  "author": "Choderlos de Laclos",
+  "level": "C2",
+  "wordCount": 150968,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/52006",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Préface du rédacteur"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Les Liaisons dangereuses"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Les Liaisons dangereuses"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Les Liaisons dangereuses"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Les Liaisons dangereuses"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Les Liaisons dangereuses"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Les Liaisons dangereuses"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Les Liaisons dangereuses"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Les Liaisons dangereuses"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Les Liaisons dangereuses"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Les Liaisons dangereuses"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Les Liaisons dangereuses"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Les Liaisons dangereuses"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Les Liaisons dangereuses"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Les Liaisons dangereuses"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Les Liaisons dangereuses"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Les Liaisons dangereuses"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Les Liaisons dangereuses"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Les Liaisons dangereuses"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Les Liaisons dangereuses"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Les Liaisons dangereuses"
+    },
+    {
+      "file": "22.md",
+      "title": "22. Les Liaisons dangereuses"
+    },
+    {
+      "file": "23.md",
+      "title": "23. Les Liaisons dangereuses"
+    },
+    {
+      "file": "24.md",
+      "title": "24. Les Liaisons dangereuses"
+    },
+    {
+      "file": "25.md",
+      "title": "25. Les Liaisons dangereuses"
+    },
+    {
+      "file": "26.md",
+      "title": "26. Les Liaisons dangereuses"
+    },
+    {
+      "file": "27.md",
+      "title": "27. Les Liaisons dangereuses"
+    },
+    {
+      "file": "28.md",
+      "title": "28. Les Liaisons dangereuses"
+    },
+    {
+      "file": "29.md",
+      "title": "29. Les Liaisons dangereuses"
+    },
+    {
+      "file": "30.md",
+      "title": "30. Les Liaisons dangereuses"
+    },
+    {
+      "file": "31.md",
+      "title": "31. Les Liaisons dangereuses"
+    },
+    {
+      "file": "32.md",
+      "title": "32. Les Liaisons dangereuses"
+    },
+    {
+      "file": "33.md",
+      "title": "33. Les Liaisons dangereuses"
+    },
+    {
+      "file": "34.md",
+      "title": "34. Les Liaisons dangereuses"
+    },
+    {
+      "file": "35.md",
+      "title": "35. Les Liaisons dangereuses"
+    },
+    {
+      "file": "36.md",
+      "title": "36. Les Liaisons dangereuses"
+    },
+    {
+      "file": "37.md",
+      "title": "37. Les Liaisons dangereuses"
+    },
+    {
+      "file": "38.md",
+      "title": "38. Les Liaisons dangereuses"
+    },
+    {
+      "file": "39.md",
+      "title": "39. Les Liaisons dangereuses"
+    },
+    {
+      "file": "40.md",
+      "title": "40. Les Liaisons dangereuses"
+    },
+    {
+      "file": "41.md",
+      "title": "41. Les Liaisons dangereuses"
+    },
+    {
+      "file": "42.md",
+      "title": "42. Les Liaisons dangereuses"
+    },
+    {
+      "file": "43.md",
+      "title": "43. Les Liaisons dangereuses"
+    },
+    {
+      "file": "44.md",
+      "title": "44. Les Liaisons dangereuses"
+    },
+    {
+      "file": "45.md",
+      "title": "45. Les Liaisons dangereuses"
+    },
+    {
+      "file": "46.md",
+      "title": "46. Les Liaisons dangereuses"
+    },
+    {
+      "file": "47.md",
+      "title": "47. Les Liaisons dangereuses"
+    },
+    {
+      "file": "48.md",
+      "title": "48. Les Liaisons dangereuses"
+    },
+    {
+      "file": "49.md",
+      "title": "49. Les Liaisons dangereuses"
+    },
+    {
+      "file": "50.md",
+      "title": "50. Les Liaisons dangereuses"
+    },
+    {
+      "file": "51.md",
+      "title": "51. Les Liaisons dangereuses"
+    },
+    {
+      "file": "52.md",
+      "title": "52. Les Liaisons dangereuses"
+    },
+    {
+      "file": "53.md",
+      "title": "53. Les Liaisons dangereuses"
+    },
+    {
+      "file": "54.md",
+      "title": "54. Les Liaisons dangereuses"
+    },
+    {
+      "file": "55.md",
+      "title": "55. Les Liaisons dangereuses"
+    },
+    {
+      "file": "56.md",
+      "title": "56. Les Liaisons dangereuses"
+    },
+    {
+      "file": "57.md",
+      "title": "57. Les Liaisons dangereuses"
+    },
+    {
+      "file": "58.md",
+      "title": "58. Les Liaisons dangereuses"
+    },
+    {
+      "file": "59.md",
+      "title": "59. Les Liaisons dangereuses"
+    },
+    {
+      "file": "60.md",
+      "title": "60. Les Liaisons dangereuses"
+    },
+    {
+      "file": "61.md",
+      "title": "61. Les Liaisons dangereuses"
+    },
+    {
+      "file": "62.md",
+      "title": "62. Les Liaisons dangereuses"
+    },
+    {
+      "file": "63.md",
+      "title": "63. Les Liaisons dangereuses"
+    },
+    {
+      "file": "64.md",
+      "title": "64. Les Liaisons dangereuses"
+    },
+    {
+      "file": "65.md",
+      "title": "65. Les Liaisons dangereuses"
+    },
+    {
+      "file": "66.md",
+      "title": "66. Les Liaisons dangereuses"
+    },
+    {
+      "file": "67.md",
+      "title": "67. Les Liaisons dangereuses"
+    },
+    {
+      "file": "68.md",
+      "title": "68. Les Liaisons dangereuses"
+    },
+    {
+      "file": "69.md",
+      "title": "69. Les Liaisons dangereuses"
+    },
+    {
+      "file": "70.md",
+      "title": "70. Les Liaisons dangereuses"
+    },
+    {
+      "file": "71.md",
+      "title": "71. Les Liaisons dangereuses"
+    },
+    {
+      "file": "72.md",
+      "title": "72. Les Liaisons dangereuses"
+    },
+    {
+      "file": "73.md",
+      "title": "73. Les Liaisons dangereuses"
+    },
+    {
+      "file": "74.md",
+      "title": "74. Les Liaisons dangereuses"
+    },
+    {
+      "file": "75.md",
+      "title": "75. Les Liaisons dangereuses"
+    },
+    {
+      "file": "76.md",
+      "title": "76. Les Liaisons dangereuses"
+    },
+    {
+      "file": "77.md",
+      "title": "77. Les Liaisons dangereuses"
+    },
+    {
+      "file": "78.md",
+      "title": "78. Les Liaisons dangereuses"
+    },
+    {
+      "file": "79.md",
+      "title": "79. Les Liaisons dangereuses"
+    },
+    {
+      "file": "80.md",
+      "title": "80. Les Liaisons dangereuses"
+    },
+    {
+      "file": "81.md",
+      "title": "81. Les Liaisons dangereuses"
+    },
+    {
+      "file": "82.md",
+      "title": "82. Les Liaisons dangereuses"
+    },
+    {
+      "file": "83.md",
+      "title": "83. Les Liaisons dangereuses"
+    },
+    {
+      "file": "84.md",
+      "title": "84. Les Liaisons dangereuses"
+    },
+    {
+      "file": "85.md",
+      "title": "85. Les Liaisons dangereuses"
+    },
+    {
+      "file": "86.md",
+      "title": "86. Les Liaisons dangereuses"
+    },
+    {
+      "file": "87.md",
+      "title": "87. Les Liaisons dangereuses"
+    },
+    {
+      "file": "88.md",
+      "title": "88. Les Liaisons dangereuses"
+    },
+    {
+      "file": "89.md",
+      "title": "89. Les Liaisons dangereuses"
+    },
+    {
+      "file": "90.md",
+      "title": "90. Les Liaisons dangereuses"
+    },
+    {
+      "file": "91.md",
+      "title": "91. Les Liaisons dangereuses"
+    },
+    {
+      "file": "92.md",
+      "title": "92. Les Liaisons dangereuses"
+    },
+    {
+      "file": "93.md",
+      "title": "93. Les Liaisons dangereuses"
+    },
+    {
+      "file": "94.md",
+      "title": "94. Les Liaisons dangereuses"
+    },
+    {
+      "file": "95.md",
+      "title": "95. Les Liaisons dangereuses"
+    },
+    {
+      "file": "96.md",
+      "title": "96. Les Liaisons dangereuses"
+    },
+    {
+      "file": "97.md",
+      "title": "97. Les Liaisons dangereuses"
+    },
+    {
+      "file": "98.md",
+      "title": "98. Les Liaisons dangereuses"
+    },
+    {
+      "file": "99.md",
+      "title": "99. Les Liaisons dangereuses"
+    },
+    {
+      "file": "100.md",
+      "title": "100. Les Liaisons dangereuses"
+    },
+    {
+      "file": "101.md",
+      "title": "101. Les Liaisons dangereuses"
+    },
+    {
+      "file": "102.md",
+      "title": "102. Les Liaisons dangereuses"
+    },
+    {
+      "file": "103.md",
+      "title": "103. Les Liaisons dangereuses"
+    }
+  ]
+}

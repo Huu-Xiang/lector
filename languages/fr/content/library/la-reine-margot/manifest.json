@@ -1,0 +1,625 @@
+{
+  "title": "La Reine Margot",
+  "author": "Alexandre Dumas et Auguste Maquet",
+  "level": "C1",
+  "wordCount": 217555,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/13856",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Première partie"
+    },
+    {
+      "file": "02.md",
+      "title": "2. La Reine Margot"
+    },
+    {
+      "file": "03.md",
+      "title": "3. La Reine Margot"
+    },
+    {
+      "file": "04.md",
+      "title": "4. La Reine Margot"
+    },
+    {
+      "file": "05.md",
+      "title": "5. La Reine Margot"
+    },
+    {
+      "file": "06.md",
+      "title": "6. La Reine Margot"
+    },
+    {
+      "file": "07.md",
+      "title": "7. La Reine Margot"
+    },
+    {
+      "file": "08.md",
+      "title": "8. La Reine Margot"
+    },
+    {
+      "file": "09.md",
+      "title": "9. La Reine Margot"
+    },
+    {
+      "file": "10.md",
+      "title": "10. La Reine Margot"
+    },
+    {
+      "file": "11.md",
+      "title": "11. La Reine Margot"
+    },
+    {
+      "file": "12.md",
+      "title": "12. La Reine Margot"
+    },
+    {
+      "file": "13.md",
+      "title": "13. La Reine Margot"
+    },
+    {
+      "file": "14.md",
+      "title": "14. La Reine Margot"
+    },
+    {
+      "file": "15.md",
+      "title": "15. La Reine Margot"
+    },
+    {
+      "file": "16.md",
+      "title": "16. La Reine Margot"
+    },
+    {
+      "file": "17.md",
+      "title": "17. La Reine Margot"
+    },
+    {
+      "file": "18.md",
+      "title": "18. La Reine Margot"
+    },
+    {
+      "file": "19.md",
+      "title": "19. La Reine Margot"
+    },
+    {
+      "file": "20.md",
+      "title": "20. La Reine Margot"
+    },
+    {
+      "file": "21.md",
+      "title": "21. La Reine Margot"
+    },
+    {
+      "file": "22.md",
+      "title": "22. La Reine Margot"
+    },
+    {
+      "file": "23.md",
+      "title": "23. La Reine Margot"
+    },
+    {
+      "file": "24.md",
+      "title": "24. La Reine Margot"
+    },
+    {
+      "file": "25.md",
+      "title": "25. La Reine Margot"
+    },
+    {
+      "file": "26.md",
+      "title": "26. La Reine Margot"
+    },
+    {
+      "file": "27.md",
+      "title": "27. La Reine Margot"
+    },
+    {
+      "file": "28.md",
+      "title": "28. La Reine Margot"
+    },
+    {
+      "file": "29.md",
+      "title": "29. La Reine Margot"
+    },
+    {
+      "file": "30.md",
+      "title": "30. La Reine Margot"
+    },
+    {
+      "file": "31.md",
+      "title": "31. La Reine Margot"
+    },
+    {
+      "file": "32.md",
+      "title": "32. La Reine Margot"
+    },
+    {
+      "file": "33.md",
+      "title": "33. La Reine Margot"
+    },
+    {
+      "file": "34.md",
+      "title": "34. La Reine Margot"
+    },
+    {
+      "file": "35.md",
+      "title": "35. La Reine Margot"
+    },
+    {
+      "file": "36.md",
+      "title": "36. La Reine Margot"
+    },
+    {
+      "file": "37.md",
+      "title": "37. La Reine Margot"
+    },
+    {
+      "file": "38.md",
+      "title": "38. La Reine Margot"
+    },
+    {
+      "file": "39.md",
+      "title": "39. La Reine Margot"
+    },
+    {
+      "file": "40.md",
+      "title": "40. La Reine Margot"
+    },
+    {
+      "file": "41.md",
+      "title": "41. La Reine Margot"
+    },
+    {
+      "file": "42.md",
+      "title": "42. La Reine Margot"
+    },
+    {
+      "file": "43.md",
+      "title": "43. La Reine Margot"
+    },
+    {
+      "file": "44.md",
+      "title": "44. La Reine Margot"
+    },
+    {
+      "file": "45.md",
+      "title": "45. La Reine Margot"
+    },
+    {
+      "file": "46.md",
+      "title": "46. La Reine Margot"
+    },
+    {
+      "file": "47.md",
+      "title": "47. La Reine Margot"
+    },
+    {
+      "file": "48.md",
+      "title": "48. La Reine Margot"
+    },
+    {
+      "file": "49.md",
+      "title": "49. La Reine Margot"
+    },
+    {
+      "file": "50.md",
+      "title": "50. La Reine Margot"
+    },
+    {
+      "file": "51.md",
+      "title": "51. La Reine Margot"
+    },
+    {
+      "file": "52.md",
+      "title": "52. La Reine Margot"
+    },
+    {
+      "file": "53.md",
+      "title": "53. La Reine Margot"
+    },
+    {
+      "file": "54.md",
+      "title": "54. La Reine Margot"
+    },
+    {
+      "file": "55.md",
+      "title": "55. La Reine Margot"
+    },
+    {
+      "file": "56.md",
+      "title": "56. La Reine Margot"
+    },
+    {
+      "file": "57.md",
+      "title": "57. La Reine Margot"
+    },
+    {
+      "file": "58.md",
+      "title": "58. La Reine Margot"
+    },
+    {
+      "file": "59.md",
+      "title": "59. La Reine Margot"
+    },
+    {
+      "file": "60.md",
+      "title": "60. La Reine Margot"
+    },
+    {
+      "file": "61.md",
+      "title": "61. La Reine Margot"
+    },
+    {
+      "file": "62.md",
+      "title": "62. La Reine Margot"
+    },
+    {
+      "file": "63.md",
+      "title": "63. La Reine Margot"
+    },
+    {
+      "file": "64.md",
+      "title": "64. La Reine Margot"
+    },
+    {
+      "file": "65.md",
+      "title": "65. La Reine Margot"
+    },
+    {
+      "file": "66.md",
+      "title": "66. La Reine Margot"
+    },
+    {
+      "file": "67.md",
+      "title": "67. La Reine Margot"
+    },
+    {
+      "file": "68.md",
+      "title": "68. La Reine Margot"
+    },
+    {
+      "file": "69.md",
+      "title": "69. La Reine Margot"
+    },
+    {
+      "file": "70.md",
+      "title": "70. La Reine Margot"
+    },
+    {
+      "file": "71.md",
+      "title": "71. La Reine Margot"
+    },
+    {
+      "file": "72.md",
+      "title": "72. La Reine Margot"
+    },
+    {
+      "file": "73.md",
+      "title": "73. La Reine Margot"
+    },
+    {
+      "file": "74.md",
+      "title": "74. La Reine Margot"
+    },
+    {
+      "file": "75.md",
+      "title": "75. La Reine Margot"
+    },
+    {
+      "file": "76.md",
+      "title": "76. La Reine Margot"
+    },
+    {
+      "file": "77.md",
+      "title": "77. La Reine Margot"
+    },
+    {
+      "file": "78.md",
+      "title": "78. Chapitre XXXI. La chasse à courre"
+    },
+    {
+      "file": "79.md",
+      "title": "79. La Reine Margot"
+    },
+    {
+      "file": "80.md",
+      "title": "80. La Reine Margot"
+    },
+    {
+      "file": "81.md",
+      "title": "81. La Reine Margot"
+    },
+    {
+      "file": "82.md",
+      "title": "82. La Reine Margot"
+    },
+    {
+      "file": "83.md",
+      "title": "83. La Reine Margot"
+    },
+    {
+      "file": "84.md",
+      "title": "84. La Reine Margot"
+    },
+    {
+      "file": "85.md",
+      "title": "85. La Reine Margot"
+    },
+    {
+      "file": "86.md",
+      "title": "86. La Reine Margot"
+    },
+    {
+      "file": "87.md",
+      "title": "87. La Reine Margot"
+    },
+    {
+      "file": "88.md",
+      "title": "88. La Reine Margot"
+    },
+    {
+      "file": "89.md",
+      "title": "89. La Reine Margot"
+    },
+    {
+      "file": "90.md",
+      "title": "90. La Reine Margot"
+    },
+    {
+      "file": "91.md",
+      "title": "91. La Reine Margot"
+    },
+    {
+      "file": "92.md",
+      "title": "92. La Reine Margot"
+    },
+    {
+      "file": "93.md",
+      "title": "93. La Reine Margot"
+    },
+    {
+      "file": "94.md",
+      "title": "94. La Reine Margot"
+    },
+    {
+      "file": "95.md",
+      "title": "95. La Reine Margot"
+    },
+    {
+      "file": "96.md",
+      "title": "96. La Reine Margot"
+    },
+    {
+      "file": "97.md",
+      "title": "97. La Reine Margot"
+    },
+    {
+      "file": "98.md",
+      "title": "98. La Reine Margot"
+    },
+    {
+      "file": "99.md",
+      "title": "99. La Reine Margot"
+    },
+    {
+      "file": "100.md",
+      "title": "100. La Reine Margot"
+    },
+    {
+      "file": "101.md",
+      "title": "101. La Reine Margot"
+    },
+    {
+      "file": "102.md",
+      "title": "102. La Reine Margot"
+    },
+    {
+      "file": "103.md",
+      "title": "103. La Reine Margot"
+    },
+    {
+      "file": "104.md",
+      "title": "104. La Reine Margot"
+    },
+    {
+      "file": "105.md",
+      "title": "105. La Reine Margot"
+    },
+    {
+      "file": "106.md",
+      "title": "106. La Reine Margot"
+    },
+    {
+      "file": "107.md",
+      "title": "107. La Reine Margot"
+    },
+    {
+      "file": "108.md",
+      "title": "108. La Reine Margot"
+    },
+    {
+      "file": "109.md",
+      "title": "109. La Reine Margot"
+    },
+    {
+      "file": "110.md",
+      "title": "110. La Reine Margot"
+    },
+    {
+      "file": "111.md",
+      "title": "111. La Reine Margot"
+    },
+    {
+      "file": "112.md",
+      "title": "112. La Reine Margot"
+    },
+    {
+      "file": "113.md",
+      "title": "113. La Reine Margot"
+    },
+    {
+      "file": "114.md",
+      "title": "114. La Reine Margot"
+    },
+    {
+      "file": "115.md",
+      "title": "115. La Reine Margot"
+    },
+    {
+      "file": "116.md",
+      "title": "116. La Reine Margot"
+    },
+    {
+      "file": "117.md",
+      "title": "117. La Reine Margot"
+    },
+    {
+      "file": "118.md",
+      "title": "118. La Reine Margot"
+    },
+    {
+      "file": "119.md",
+      "title": "119. La Reine Margot"
+    },
+    {
+      "file": "120.md",
+      "title": "120. La Reine Margot"
+    },
+    {
+      "file": "121.md",
+      "title": "121. La Reine Margot"
+    },
+    {
+      "file": "122.md",
+      "title": "122. La Reine Margot"
+    },
+    {
+      "file": "123.md",
+      "title": "123. La Reine Margot"
+    },
+    {
+      "file": "124.md",
+      "title": "124. La Reine Margot"
+    },
+    {
+      "file": "125.md",
+      "title": "125. La Reine Margot"
+    },
+    {
+      "file": "126.md",
+      "title": "126. La Reine Margot"
+    },
+    {
+      "file": "127.md",
+      "title": "127. La Reine Margot"
+    },
+    {
+      "file": "128.md",
+      "title": "128. La Reine Margot"
+    },
+    {
+      "file": "129.md",
+      "title": "129. La Reine Margot"
+    },
+    {
+      "file": "130.md",
+      "title": "130. La Reine Margot"
+    },
+    {
+      "file": "131.md",
+      "title": "131. La Reine Margot"
+    },
+    {
+      "file": "132.md",
+      "title": "132. La Reine Margot"
+    },
+    {
+      "file": "133.md",
+      "title": "133. La Reine Margot"
+    },
+    {
+      "file": "134.md",
+      "title": "134. La Reine Margot"
+    },
+    {
+      "file": "135.md",
+      "title": "135. La Reine Margot"
+    },
+    {
+      "file": "136.md",
+      "title": "136. La Reine Margot"
+    },
+    {
+      "file": "137.md",
+      "title": "137. La Reine Margot"
+    },
+    {
+      "file": "138.md",
+      "title": "138. La Reine Margot"
+    },
+    {
+      "file": "139.md",
+      "title": "139. La Reine Margot"
+    },
+    {
+      "file": "140.md",
+      "title": "140. La Reine Margot"
+    },
+    {
+      "file": "141.md",
+      "title": "141. La Reine Margot"
+    },
+    {
+      "file": "142.md",
+      "title": "142. La Reine Margot"
+    },
+    {
+      "file": "143.md",
+      "title": "143. La Reine Margot"
+    },
+    {
+      "file": "144.md",
+      "title": "144. La Reine Margot"
+    },
+    {
+      "file": "145.md",
+      "title": "145. La Reine Margot"
+    },
+    {
+      "file": "146.md",
+      "title": "146. La Reine Margot"
+    },
+    {
+      "file": "147.md",
+      "title": "147. La Reine Margot"
+    },
+    {
+      "file": "148.md",
+      "title": "148. La Reine Margot"
+    },
+    {
+      "file": "149.md",
+      "title": "149. La Reine Margot"
+    },
+    {
+      "file": "150.md",
+      "title": "150. La Reine Margot"
+    },
+    {
+      "file": "151.md",
+      "title": "151. La Reine Margot"
+    },
+    {
+      "file": "152.md",
+      "title": "152. La Reine Margot"
+    },
+    {
+      "file": "153.md",
+      "title": "153. La Reine Margot"
+    }
+  ]
+}

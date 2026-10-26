@@ -1,0 +1,85 @@
+{
+  "title": "McGuffey's Third Eclectic Reader",
+  "author": "William Holmes McGuffey",
+  "level": "A2",
+  "wordCount": 25531,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/14766",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Lesson I"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Third Reader"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Third Reader"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Third Reader"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Third Reader"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Third Reader"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Lesson XXXII"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Third Reader"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Third Reader"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Third Reader"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Third Reader"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Lesson LIII"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Third Reader"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Third Reader"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Third Reader"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Third Reader"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Third Reader"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Third Reader"
+    }
+  ]
+}

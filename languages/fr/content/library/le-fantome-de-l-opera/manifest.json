@@ -1,0 +1,313 @@
+{
+  "title": "Le Fantôme de l'Opéra",
+  "author": "Gaston Leroux",
+  "level": "B1",
+  "wordCount": 108353,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/62215",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Avant-propos"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "22.md",
+      "title": "22. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "23.md",
+      "title": "23. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "24.md",
+      "title": "24. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "25.md",
+      "title": "25. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "26.md",
+      "title": "26. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "27.md",
+      "title": "27. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "28.md",
+      "title": "28. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "29.md",
+      "title": "29. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "30.md",
+      "title": "30. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "31.md",
+      "title": "31. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "32.md",
+      "title": "32. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "33.md",
+      "title": "33. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "34.md",
+      "title": "34. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "35.md",
+      "title": "35. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "36.md",
+      "title": "36. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "37.md",
+      "title": "37. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "38.md",
+      "title": "38. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "39.md",
+      "title": "39. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "40.md",
+      "title": "40. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "41.md",
+      "title": "41. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "42.md",
+      "title": "42. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "43.md",
+      "title": "43. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "44.md",
+      "title": "44. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "45.md",
+      "title": "45. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "46.md",
+      "title": "46. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "47.md",
+      "title": "47. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "48.md",
+      "title": "48. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "49.md",
+      "title": "49. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "50.md",
+      "title": "50. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "51.md",
+      "title": "51. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "52.md",
+      "title": "52. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "53.md",
+      "title": "53. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "54.md",
+      "title": "54. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "55.md",
+      "title": "55. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "56.md",
+      "title": "56. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "57.md",
+      "title": "57. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "58.md",
+      "title": "58. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "59.md",
+      "title": "59. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "60.md",
+      "title": "60. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "61.md",
+      "title": "61. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "62.md",
+      "title": "62. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "63.md",
+      "title": "63. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "64.md",
+      "title": "64. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "65.md",
+      "title": "65. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "66.md",
+      "title": "66. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "67.md",
+      "title": "67. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "68.md",
+      "title": "68. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "69.md",
+      "title": "69. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "70.md",
+      "title": "70. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "71.md",
+      "title": "71. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "72.md",
+      "title": "72. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "73.md",
+      "title": "73. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "74.md",
+      "title": "74. Le Fantôme de l'Opéra"
+    },
+    {
+      "file": "75.md",
+      "title": "75. Le Fantôme de l'Opéra"
+    }
+  ]
+}

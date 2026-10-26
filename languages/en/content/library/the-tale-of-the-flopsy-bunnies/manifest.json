@@ -1,0 +1,17 @@
+{
+  "title": "The Tale of the Flopsy Bunnies",
+  "author": "Beatrix Potter",
+  "level": "A2",
+  "wordCount": 1010,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/14220",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. The Flopsy Bunnies"
+    }
+  ]
+}

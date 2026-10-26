@@ -1,0 +1,169 @@
+{
+  "title": "Andersen's Fairy Tales",
+  "author": "Hans Christian Andersen",
+  "level": "B1",
+  "wordCount": 56331,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/1597",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. The Emperor's New Clothes"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Andersen's Fairy Tales"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Andersen's Fairy Tales"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Andersen's Fairy Tales"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Andersen's Fairy Tales"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Andersen's Fairy Tales"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Andersen's Fairy Tales"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Andersen's Fairy Tales"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Andersen's Fairy Tales"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Andersen's Fairy Tales"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Andersen's Fairy Tales"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Andersen's Fairy Tales"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Andersen's Fairy Tales"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Andersen's Fairy Tales"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Andersen's Fairy Tales"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Andersen's Fairy Tales"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Andersen's Fairy Tales"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Andersen's Fairy Tales"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Andersen's Fairy Tales"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Andersen's Fairy Tales"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Andersen's Fairy Tales"
+    },
+    {
+      "file": "22.md",
+      "title": "22. Andersen's Fairy Tales"
+    },
+    {
+      "file": "23.md",
+      "title": "23. Andersen's Fairy Tales"
+    },
+    {
+      "file": "24.md",
+      "title": "24. Andersen's Fairy Tales"
+    },
+    {
+      "file": "25.md",
+      "title": "25. Andersen's Fairy Tales"
+    },
+    {
+      "file": "26.md",
+      "title": "26. Andersen's Fairy Tales"
+    },
+    {
+      "file": "27.md",
+      "title": "27. Andersen's Fairy Tales"
+    },
+    {
+      "file": "28.md",
+      "title": "28. Andersen's Fairy Tales"
+    },
+    {
+      "file": "29.md",
+      "title": "29. Andersen's Fairy Tales"
+    },
+    {
+      "file": "30.md",
+      "title": "30. Andersen's Fairy Tales"
+    },
+    {
+      "file": "31.md",
+      "title": "31. Andersen's Fairy Tales"
+    },
+    {
+      "file": "32.md",
+      "title": "32. Andersen's Fairy Tales"
+    },
+    {
+      "file": "33.md",
+      "title": "33. Andersen's Fairy Tales"
+    },
+    {
+      "file": "34.md",
+      "title": "34. Andersen's Fairy Tales"
+    },
+    {
+      "file": "35.md",
+      "title": "35. Andersen's Fairy Tales"
+    },
+    {
+      "file": "36.md",
+      "title": "36. Andersen's Fairy Tales"
+    },
+    {
+      "file": "37.md",
+      "title": "37. Andersen's Fairy Tales"
+    },
+    {
+      "file": "38.md",
+      "title": "38. Andersen's Fairy Tales"
+    },
+    {
+      "file": "39.md",
+      "title": "39. Andersen's Fairy Tales"
+    }
+  ]
+}
