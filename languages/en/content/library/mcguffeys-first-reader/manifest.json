@@ -1,0 +1,29 @@
+{
+  "title": "McGuffey's First Eclectic Reader",
+  "author": "William Holmes McGuffey",
+  "level": "A1",
+  "wordCount": 5245,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/14640",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Lesson I."
+    },
+    {
+      "file": "02.md",
+      "title": "2. First Reader"
+    },
+    {
+      "file": "03.md",
+      "title": "3. First Reader"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Lesson LVII."
+    }
+  ]
+}

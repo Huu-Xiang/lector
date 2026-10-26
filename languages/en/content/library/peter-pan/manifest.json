@@ -1,0 +1,145 @@
+{
+  "title": "Peter Pan",
+  "author": "J. M. Barrie",
+  "level": "B1",
+  "wordCount": 47892,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/16",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Chapter I. Peter Breaks Through"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Peter Pan"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Peter Pan"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Peter Pan"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Peter Pan"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Peter Pan"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Peter Pan"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Peter Pan"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Peter Pan"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Peter Pan"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Peter Pan"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Peter Pan"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Peter Pan"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Peter Pan"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Peter Pan"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Peter Pan"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Peter Pan"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Peter Pan"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Peter Pan"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Peter Pan"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Peter Pan"
+    },
+    {
+      "file": "22.md",
+      "title": "22. Peter Pan"
+    },
+    {
+      "file": "23.md",
+      "title": "23. Peter Pan"
+    },
+    {
+      "file": "24.md",
+      "title": "24. Peter Pan"
+    },
+    {
+      "file": "25.md",
+      "title": "25. Peter Pan"
+    },
+    {
+      "file": "26.md",
+      "title": "26. Peter Pan"
+    },
+    {
+      "file": "27.md",
+      "title": "27. Peter Pan"
+    },
+    {
+      "file": "28.md",
+      "title": "28. Peter Pan"
+    },
+    {
+      "file": "29.md",
+      "title": "29. Peter Pan"
+    },
+    {
+      "file": "30.md",
+      "title": "30. Peter Pan"
+    },
+    {
+      "file": "31.md",
+      "title": "31. Peter Pan"
+    },
+    {
+      "file": "32.md",
+      "title": "32. Peter Pan"
+    },
+    {
+      "file": "33.md",
+      "title": "33. Peter Pan"
+    }
+  ]
+}

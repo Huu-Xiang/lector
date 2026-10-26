@@ -1,0 +1,129 @@
+{
+  "title": "The Adventures of Pinocchio",
+  "author": "Carlo Collodi, translated by Carol Della Chiesa",
+  "level": "B1",
+  "wordCount": 40489,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/500",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Chapter 1"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Pinocchio"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Pinocchio"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Pinocchio"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Pinocchio"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Pinocchio"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Pinocchio"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Pinocchio"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Pinocchio"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Pinocchio"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Pinocchio"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Pinocchio"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Pinocchio"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Pinocchio"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Pinocchio"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Pinocchio"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Pinocchio"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Pinocchio"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Pinocchio"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Pinocchio"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Pinocchio"
+    },
+    {
+      "file": "22.md",
+      "title": "22. Pinocchio"
+    },
+    {
+      "file": "23.md",
+      "title": "23. Pinocchio"
+    },
+    {
+      "file": "24.md",
+      "title": "24. Pinocchio"
+    },
+    {
+      "file": "25.md",
+      "title": "25. Pinocchio"
+    },
+    {
+      "file": "26.md",
+      "title": "26. Pinocchio"
+    },
+    {
+      "file": "27.md",
+      "title": "27. Pinocchio"
+    },
+    {
+      "file": "28.md",
+      "title": "28. Pinocchio"
+    },
+    {
+      "file": "29.md",
+      "title": "29. Pinocchio"
+    }
+  ]
+}

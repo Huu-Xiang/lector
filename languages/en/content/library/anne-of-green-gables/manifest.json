@@ -1,0 +1,113 @@
+{
+  "title": "Anne of Green Gables (Chapters 1–14)",
+  "author": "L. M. Montgomery",
+  "level": "B2",
+  "wordCount": 35575,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/45",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Chapter I. Mrs. Rachel Lynde Is Surprised"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Anne of Green Gables"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Anne of Green Gables"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Anne of Green Gables"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Anne of Green Gables"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Anne of Green Gables"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Anne of Green Gables"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Chapter IV. Morning at Green Gables"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Anne of Green Gables"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Anne of Green Gables"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Anne of Green Gables"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Anne of Green Gables"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Anne of Green Gables"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Anne of Green Gables"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Anne of Green Gables"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Anne of Green Gables"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Anne of Green Gables"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Anne of Green Gables"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Anne of Green Gables"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Anne of Green Gables"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Anne of Green Gables"
+    },
+    {
+      "file": "22.md",
+      "title": "22. Anne of Green Gables"
+    },
+    {
+      "file": "23.md",
+      "title": "23. Anne of Green Gables"
+    },
+    {
+      "file": "24.md",
+      "title": "24. Anne of Green Gables"
+    },
+    {
+      "file": "25.md",
+      "title": "25. Anne of Green Gables"
+    }
+  ]
+}

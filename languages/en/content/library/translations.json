@@ -189,6 +189,44 @@
       "tr": "Bir kız beyaz bir tavşanı izleyerek bir deliğe düşer ve tuhaf yaratıklarla dolu garip bir dünyaya varır."
     }
   },
+  "anne-of-green-gables": {
+    "title": {
+      "en": "Anne of Green Gables (Chapters 1–14)",
+      "zh-CN": "绿山墙的安妮（第1–14章）",
+      "zh-TW": "清秀佳人（第1–14章）",
+      "es": "Ana de las Tejas Verdes (capítulos 1–14)",
+      "fr": "Anne… la maison aux pignons verts (chapitres 1 à 14)",
+      "de": "Anne auf Green Gables (Kapitel 1–14)",
+      "it": "Anna dai capelli rossi (capitoli 1–14)",
+      "pt": "Anne de Green Gables (capítulos 1–14)",
+      "ru": "Аня из Зелёных Мезонинов (главы 1–14)",
+      "ja": "赤毛のアン（第1～14章）",
+      "ko": "빨강 머리 앤 (1~14장)",
+      "ar": "آن في المرتفعات الخضراء (الفصول 1–14)",
+      "hi": "ग्रीन गेबल्स की ऐन (अध्याय 1–14)",
+      "id": "Anne of Green Gables (bab 1–14)",
+      "vi": "Anne tóc đỏ dưới chái nhà xanh (chương 1–14)",
+      "tr": "Yeşil Evli Anne (1–14. bölümler)"
+    },
+    "blurb": {
+      "en": "The opening chapters: an elderly brother and sister ask for an orphan boy to help on their farm, but a talkative red-haired girl arrives instead.",
+      "zh-CN": "开篇章节：一对年老的兄妹想领养一个男孩帮忙干农活，来的却是一个话很多的红发女孩。",
+      "zh-TW": "開篇章節：一對年老的兄妹想領養一個男孩幫忙做農活，來的卻是一個話很多的紅髮女孩。",
+      "es": "Los primeros capítulos: dos hermanos mayores piden un niño huérfano para ayudar en la granja, pero llega una niña pelirroja muy habladora.",
+      "fr": "Les premiers chapitres : un frère et une sœur âgés demandent un orphelin pour aider à la ferme, mais c'est une fillette rousse et bavarde qui arrive.",
+      "de": "Die ersten Kapitel: Ein älteres Geschwisterpaar will einen Waisenjungen für die Farm, doch es kommt ein redseliges rothaariges Mädchen.",
+      "it": "I primi capitoli: due anziani fratelli chiedono un orfano per aiutarli alla fattoria, ma arriva una bambina dai capelli rossi che parla senza sosta.",
+      "pt": "Os primeiros capítulos: dois irmãos idosos pedem um órfão para ajudar na fazenda, mas chega uma menina ruiva muito falante.",
+      "ru": "Первые главы: пожилые брат и сестра хотят взять сироту-мальчика в помощь на ферме, но приезжает разговорчивая рыжая девочка.",
+      "ja": "最初の章：年老いた兄妹は農場を手伝う孤児の男の子をたのみますが、やって来たのはおしゃべりな赤毛の女の子でした。",
+      "ko": "첫 장들: 나이 든 남매가 농장 일을 도울 고아 소년을 부탁했지만, 수다스러운 빨강 머리 소녀가 대신 옵니다.",
+      "ar": "الفصول الأولى: أخ وأخت مسنّان يطلبان صبيًا يتيمًا ليساعدهما في المزرعة، لكن تصل بدلًا منه فتاة ثرثارة حمراء الشعر.",
+      "hi": "शुरुआती अध्याय: एक बुज़ुर्ग भाई-बहन खेत में मदद के लिए एक अनाथ लड़का माँगते हैं, पर उसकी जगह एक बातूनी लाल बालों वाली लड़की आ जाती है।",
+      "id": "Bab-bab awal: kakak-adik yang sudah tua meminta anak yatim laki-laki untuk membantu di pertanian, tetapi yang datang justru gadis berambut merah yang cerewet.",
+      "vi": "Những chương đầu: hai anh em già muốn nhận một cậu bé mồ côi phụ việc nông trại, nhưng người đến lại là một cô bé tóc đỏ nói rất nhiều.",
+      "tr": "İlk bölümler: yaşlı bir ağabey ile kız kardeşi çiftlikte yardım edecek yetim bir oğlan ister, ama gelen geveze, kızıl saçlı bir kızdır."
+    }
+  },
   "black-beauty": {
     "title": {
       "en": "Black Beauty",
@@ -227,6 +265,44 @@
       "tr": "Uysal bir at, Viktorya dönemi İngiltere'sinde iyi ve zalim sahipleriyle geçen hayatını anlatır."
     }
   },
+  "dr-jekyll-and-mr-hyde": {
+    "title": {
+      "en": "Strange Case of Dr Jekyll and Mr Hyde",
+      "zh-CN": "化身博士",
+      "zh-TW": "化身博士",
+      "es": "El extraño caso del doctor Jekyll y el señor Hyde",
+      "fr": "L'Étrange Cas du docteur Jekyll et de M. Hyde",
+      "de": "Der seltsame Fall des Dr. Jekyll und Mr. Hyde",
+      "it": "Lo strano caso del dottor Jekyll e del signor Hyde",
+      "pt": "O estranho caso do Dr. Jekyll e do Sr. Hyde",
+      "ru": "Странная история доктора Джекила и мистера Хайда",
+      "ja": "ジキル博士とハイド氏",
+      "ko": "지킬 박사와 하이드 씨",
+      "ar": "الحالة الغريبة للدكتور جيكل والسيد هايد",
+      "hi": "डॉ. जेकिल और मिस्टर हाइड का अजीब मामला",
+      "id": "Kasus Aneh Dr. Jekyll dan Mr. Hyde",
+      "vi": "Bác sĩ Jekyll và ông Hyde",
+      "tr": "Dr. Jekyll ile Bay Hyde"
+    },
+    "blurb": {
+      "en": "A London lawyer looks into the link between his respected friend Dr Jekyll and a cruel, violent man named Mr Hyde.",
+      "zh-CN": "伦敦的一位律师追查他受人尊敬的朋友杰基尔博士，和一个名叫海德的残暴男人之间有什么关系。",
+      "zh-TW": "倫敦的一位律師追查他受人尊敬的朋友傑奇博士，和一個名叫海德的殘暴男人之間有什麼關係。",
+      "es": "Un abogado de Londres investiga qué une a su respetado amigo, el doctor Jekyll, con un hombre cruel y violento llamado Hyde.",
+      "fr": "Un notaire londonien cherche le lien entre son ami respecté, le docteur Jekyll, et un homme cruel et violent nommé Hyde.",
+      "de": "Ein Londoner Anwalt untersucht, was seinen angesehenen Freund Dr. Jekyll mit einem grausamen, gewalttätigen Mann namens Hyde verbindet.",
+      "it": "Un avvocato londinese indaga sul legame tra il suo stimato amico, il dottor Jekyll, e un uomo crudele e violento di nome Hyde.",
+      "pt": "Um advogado de Londres investiga a ligação entre seu respeitado amigo, o Dr. Jekyll, e um homem cruel e violento chamado Hyde.",
+      "ru": "Лондонский адвокат выясняет, что связывает его уважаемого друга доктора Джекила с жестоким и злобным мистером Хайдом.",
+      "ja": "ロンドンの弁護士が、尊敬される友人ジキル博士と、ハイドという残忍で乱暴な男とのつながりを調べます。",
+      "ko": "런던의 한 변호사가 존경받는 친구 지킬 박사와 하이드라는 잔인하고 난폭한 남자 사이의 관계를 파헤칩니다.",
+      "ar": "محامٍ في لندن يبحث في الصلة بين صديقه المحترم الدكتور جيكل ورجل قاسٍ عنيف يُدعى السيد هايد.",
+      "hi": "लंदन का एक वकील पता लगाता है कि उसके सम्मानित दोस्त डॉ. जेकिल और हाइड नाम के एक क्रूर, हिंसक आदमी के बीच क्या रिश्ता है।",
+      "id": "Seorang pengacara London menyelidiki hubungan antara temannya yang terhormat, Dr. Jekyll, dan seorang pria kejam bernama Mr. Hyde.",
+      "vi": "Một luật sư ở London điều tra mối liên hệ giữa người bạn đáng kính, bác sĩ Jekyll, và một kẻ tàn bạo tên là Hyde.",
+      "tr": "Londralı bir avukat, saygın dostu Dr. Jekyll ile Hyde adındaki zalim ve şiddetli adam arasındaki bağı araştırır."
+    }
+  },
   "english-fairy-tales": {
     "title": {
       "en": "English Fairy Tales",
@@ -263,6 +339,44 @@
       "id": "Kumpulan dongeng Inggris kuno oleh Joseph Jacobs, termasuk Tom Tit Tot, Jack dan Pohon Kacang, dan Tiga Babi Kecil.",
       "vi": "Tuyển tập truyện cổ Anh của Joseph Jacobs, gồm Tom Tit Tot, Jack và cây đậu thần và Ba chú heo con.",
       "tr": "Joseph Jacobs'ın eski İngiliz masallarından derlemesi; Tom Tit Tot, Jack ve Fasulye Sırığı ile Üç Küçük Domuz da içinde."
+    }
+  },
+  "frankenstein": {
+    "title": {
+      "en": "Frankenstein (Letters and Chapters 1–10)",
+      "zh-CN": "弗兰肯斯坦（书信及第1–10章）",
+      "zh-TW": "科學怪人（書信及第1–10章）",
+      "es": "Frankenstein (cartas y capítulos 1–10)",
+      "fr": "Frankenstein (lettres et chapitres 1 à 10)",
+      "de": "Frankenstein (Briefe und Kapitel 1–10)",
+      "it": "Frankenstein (lettere e capitoli 1–10)",
+      "pt": "Frankenstein (cartas e capítulos 1–10)",
+      "ru": "Франкенштейн (письма и главы 1–10)",
+      "ja": "フランケンシュタイン（手紙と第1～10章）",
+      "ko": "프랑켄슈타인 (편지와 1~10장)",
+      "ar": "فرانكنشتاين (الرسائل والفصول 1–10)",
+      "hi": "फ्रैंकनस्टाइन (पत्र और अध्याय 1–10)",
+      "id": "Frankenstein (surat dan bab 1–10)",
+      "vi": "Frankenstein (các bức thư và chương 1–10)",
+      "tr": "Frankenstein (mektuplar ve 1–10. bölümler)"
+    },
+    "blurb": {
+      "en": "The first half: a young scientist builds a living creature from dead bodies, runs from what he has made, and finally hears the creature's side.",
+      "zh-CN": "前半部：一位年轻的科学家用尸体造出一个活的怪物，被吓得逃走，最后终于听怪物讲述它的经历。",
+      "zh-TW": "前半部：一位年輕的科學家用屍體造出一個活的怪物，被嚇得逃走，最後終於聽怪物講述牠的經歷。",
+      "es": "La primera mitad: un joven científico crea un ser vivo con cuerpos muertos, huye de su obra y al final escucha la versión de la criatura.",
+      "fr": "La première moitié : un jeune savant donne vie à une créature faite de corps morts, fuit son œuvre, puis écoute enfin la créature.",
+      "de": "Die erste Hälfte: Ein junger Wissenschaftler erschafft aus Leichen ein lebendes Wesen, flieht vor seinem Werk und hört schließlich dessen Geschichte.",
+      "it": "La prima metà: un giovane scienziato crea una creatura viva da corpi morti, fugge dalla sua opera e infine ascolta la versione della creatura.",
+      "pt": "A primeira metade: um jovem cientista cria um ser vivo a partir de cadáveres, foge do que fez e por fim ouve o lado da criatura.",
+      "ru": "Первая половина: молодой учёный создаёт живое существо из мёртвых тел, бежит от своего творения и наконец выслушивает его.",
+      "ja": "前半：若い科学者が死体から生きた怪物を作り、自分の作ったものから逃げ出し、ついに怪物の話を聞くことになります。",
+      "ko": "전반부: 젊은 과학자가 시체로 살아 있는 존재를 만들고는 달아나지만, 마침내 그 피조물의 이야기를 듣게 됩니다.",
+      "ar": "النصف الأول: عالم شاب يصنع مخلوقًا حيًا من الجثث، ثم يهرب مما صنعه، وأخيرًا يستمع إلى رواية المخلوق.",
+      "hi": "पहला हिस्सा: एक युवा वैज्ञानिक मुर्दा शरीरों से एक जीवित प्राणी बनाता है, अपनी रचना से भागता है और आखिर में उस प्राणी की बात सुनता है।",
+      "id": "Paruh pertama: seorang ilmuwan muda menciptakan makhluk hidup dari mayat, lari dari ciptaannya, lalu akhirnya mendengar kisah makhluk itu.",
+      "vi": "Nửa đầu: một nhà khoa học trẻ tạo ra một sinh vật sống từ xác chết, bỏ chạy khỏi tác phẩm của mình và cuối cùng nghe sinh vật kể chuyện.",
+      "tr": "İlk yarı: genç bir bilim insanı cesetlerden canlı bir yaratık yapar, eserinden kaçar ve sonunda yaratığın anlattıklarını dinler."
     }
   },
   "great-expectations": {
@@ -455,6 +569,82 @@
       "tr": "Kraliçelerini ziyarete gelen kedilerin ve yavru kedilerin anlattığı basit öyküler ve tekerlemeler."
     }
   },
+  "mcguffeys-first-reader": {
+    "title": {
+      "en": "McGuffey's First Eclectic Reader",
+      "zh-CN": "麦加菲第一读本",
+      "zh-TW": "麥加菲第一讀本",
+      "es": "Primer libro de lectura de McGuffey",
+      "fr": "Le premier livre de lecture de McGuffey",
+      "de": "McGuffeys erstes Lesebuch",
+      "it": "Il primo libro di lettura di McGuffey",
+      "pt": "Primeiro livro de leitura de McGuffey",
+      "ru": "Первая книга для чтения Макгаффи",
+      "ja": "マクガフィー・リーダー 第一巻",
+      "ko": "맥거피 제1 독본",
+      "ar": "كتاب القراءة الأول لماكغافي",
+      "hi": "मैकगफ़ी की पहली पाठ्य-पुस्तक",
+      "id": "Buku Bacaan Pertama McGuffey",
+      "vi": "Sách tập đọc đầu tiên của McGuffey",
+      "tr": "McGuffey'nin İlk Okuma Kitabı"
+    },
+    "blurb": {
+      "en": "A classic American school reader from 1879: very short lessons about children, pets and farm life, in the simplest words.",
+      "zh-CN": "1879 年的美国经典小学课本：一篇篇很短的课文，讲孩子、宠物和农场生活，用词最简单。",
+      "zh-TW": "1879 年的美國經典小學課本：一篇篇很短的課文，講孩子、寵物和農場生活，用詞最簡單。",
+      "es": "Un clásico libro escolar estadounidense de 1879: lecciones muy cortas sobre niños, mascotas y la vida en la granja, con las palabras más sencillas.",
+      "fr": "Un manuel scolaire américain classique de 1879 : de très courtes leçons sur les enfants, les animaux et la vie à la ferme, avec les mots les plus simples.",
+      "de": "Ein klassisches amerikanisches Schullesebuch von 1879: sehr kurze Lektionen über Kinder, Haustiere und das Leben auf dem Bauernhof, in einfachsten Worten.",
+      "it": "Un classico libro di lettura americano del 1879: lezioni brevissime su bambini, animali e vita in fattoria, con le parole più semplici.",
+      "pt": "Um clássico livro escolar americano de 1879: lições muito curtas sobre crianças, animais e a vida na fazenda, com as palavras mais simples.",
+      "ru": "Классический американский школьный букварь 1879 года: очень короткие уроки о детях, домашних животных и жизни на ферме самыми простыми словами.",
+      "ja": "1879年のアメリカの定番の読本。子ども、ペット、農場の暮らしをいちばんやさしい言葉で書いた、とても短い課ばかりです。",
+      "ko": "1879년 미국의 고전 초등 독본. 아이들, 반려동물, 농장 생활을 가장 쉬운 낱말로 쓴 아주 짧은 과들입니다.",
+      "ar": "كتاب مدرسي أمريكي كلاسيكي من عام 1879: دروس قصيرة جدًا عن الأطفال والحيوانات الأليفة وحياة المزرعة بأبسط الكلمات.",
+      "hi": "1879 की एक क्लासिक अमेरिकी स्कूली किताब: बच्चों, पालतू जानवरों और खेत के जीवन पर बहुत छोटे पाठ, सबसे आसान शब्दों में।",
+      "id": "Buku pelajaran membaca klasik Amerika dari tahun 1879: pelajaran sangat pendek tentang anak-anak, hewan peliharaan, dan kehidupan di peternakan, dengan kata-kata paling sederhana.",
+      "vi": "Sách tập đọc kinh điển của Mỹ năm 1879: những bài rất ngắn về trẻ em, vật nuôi và cuộc sống ở nông trại, dùng từ đơn giản nhất.",
+      "tr": "1879'dan klasik bir Amerikan okuma kitabı: çocuklar, evcil hayvanlar ve çiftlik hayatı üzerine en basit kelimelerle yazılmış çok kısa dersler."
+    }
+  },
+  "peter-pan": {
+    "title": {
+      "en": "Peter Pan",
+      "zh-CN": "彼得·潘",
+      "zh-TW": "彼得潘",
+      "es": "Peter Pan",
+      "fr": "Peter Pan",
+      "de": "Peter Pan",
+      "it": "Peter Pan",
+      "pt": "Peter Pan",
+      "ru": "Питер Пэн",
+      "ja": "ピーター・パン",
+      "ko": "피터 팬",
+      "ar": "بيتر بان",
+      "hi": "पीटर पैन",
+      "id": "Peter Pan",
+      "vi": "Peter Pan",
+      "tr": "Peter Pan"
+    },
+    "blurb": {
+      "en": "Peter, the boy who never grows up, flies Wendy and her brothers to Neverland, where they meet fairies, mermaids and Captain Hook.",
+      "zh-CN": "永远长不大的男孩彼得带着温迪和她的弟弟们飞到梦幻岛，在那里遇见仙子、美人鱼和胡克船长。",
+      "zh-TW": "永遠長不大的男孩彼得帶著溫蒂和她的弟弟們飛到夢幻島，在那裡遇見仙子、美人魚和虎克船長。",
+      "es": "Peter, el niño que nunca crece, lleva volando a Wendy y a sus hermanos al País de Nunca Jamás, donde conocen hadas, sirenas y al capitán Garfio.",
+      "fr": "Peter, le garçon qui ne grandit jamais, emmène Wendy et ses frères au Pays imaginaire, où ils rencontrent fées, sirènes et le capitaine Crochet.",
+      "de": "Peter, der Junge, der nie erwachsen wird, fliegt mit Wendy und ihren Brüdern nach Nimmerland, wo sie Feen, Meerjungfrauen und Käpt'n Hook begegnen.",
+      "it": "Peter, il ragazzo che non cresce mai, porta in volo Wendy e i suoi fratelli all'Isola che non c'è, tra fate, sirene e Capitan Uncino.",
+      "pt": "Peter, o menino que nunca cresce, leva Wendy e os irmãos voando para a Terra do Nunca, onde encontram fadas, sereias e o Capitão Gancho.",
+      "ru": "Питер, мальчик, который никогда не вырастет, уносит Венди и её братьев в Нетландию, где их ждут феи, русалки и капитан Крюк.",
+      "ja": "大人にならない少年ピーターは、ウェンディと弟たちをネバーランドへ連れて飛び、妖精や人魚、フック船長に出会います。",
+      "ko": "영원히 자라지 않는 소년 피터는 웬디와 남동생들을 데리고 네버랜드로 날아가 요정, 인어, 후크 선장을 만납니다.",
+      "ar": "بيتر، الفتى الذي لا يكبر أبدًا، يطير بويندي وإخوتها إلى أرض اللامكان، حيث يلتقون بالجنيات وحوريات البحر والقبطان هوك.",
+      "hi": "कभी बड़ा न होने वाला लड़का पीटर, वेंडी और उसके भाइयों को उड़ाकर नेवरलैंड ले जाता है, जहाँ वे परियों, जलपरियों और कैप्टन हुक से मिलते हैं।",
+      "id": "Peter, anak yang tidak pernah dewasa, membawa Wendy dan adik-adiknya terbang ke Neverland, tempat mereka bertemu peri, putri duyung, dan Kapten Hook.",
+      "vi": "Peter, cậu bé không bao giờ lớn, đưa Wendy và các em bay tới Xứ Sở Thần Tiên, nơi họ gặp tiên, nàng tiên cá và thuyền trưởng Hook.",
+      "tr": "Hiç büyümeyen çocuk Peter, Wendy ile kardeşlerini Varolmayan Ülke'ye uçurur; orada periler, deniz kızları ve Kaptan Kanca ile karşılaşırlar."
+    }
+  },
   "pride-and-prejudice": {
     "title": {
       "en": "Pride and Prejudice",
@@ -531,6 +721,82 @@
       "tr": "Kar Kraliçesi, Bülbül, Deniz Kızı ve İmparatorun Yeni Giysileri dahil yedi ünlü masal; resimleri Edmund Dulac'a ait."
     }
   },
+  "the-adventures-of-pinocchio": {
+    "title": {
+      "en": "The Adventures of Pinocchio",
+      "zh-CN": "木偶奇遇记",
+      "zh-TW": "木偶奇遇記",
+      "es": "Las aventuras de Pinocho",
+      "fr": "Les Aventures de Pinocchio",
+      "de": "Die Abenteuer des Pinocchio",
+      "it": "Le avventure di Pinocchio",
+      "pt": "As aventuras de Pinóquio",
+      "ru": "Приключения Пиноккио",
+      "ja": "ピノッキオの冒険",
+      "ko": "피노키오의 모험",
+      "ar": "مغامرات بينوكيو",
+      "hi": "पिनोकियो के कारनामे",
+      "id": "Petualangan Pinokio",
+      "vi": "Những cuộc phiêu lưu của Pinocchio",
+      "tr": "Pinokyo'nun Maceraları"
+    },
+    "blurb": {
+      "en": "A wooden puppet comes to life, then keeps lying, running away and getting into trouble while he learns how to become a real boy.",
+      "zh-CN": "一个木偶活了过来，总是撒谎、逃跑、闯祸，一路上慢慢学会怎样变成一个真正的男孩。",
+      "zh-TW": "一個木偶活了過來，總是說謊、逃跑、闖禍，一路上慢慢學會怎樣變成一個真正的男孩。",
+      "es": "Un muñeco de madera cobra vida y no deja de mentir, escaparse y meterse en líos, mientras aprende a convertirse en un niño de verdad.",
+      "fr": "Un pantin de bois prend vie, ment, fugue et s'attire des ennuis sans cesse, tout en apprenant à devenir un vrai petit garçon.",
+      "de": "Eine Holzpuppe wird lebendig, lügt, läuft weg und gerät ständig in Schwierigkeiten, während sie lernt, ein richtiger Junge zu werden.",
+      "it": "Un burattino di legno prende vita e continua a mentire, scappare e cacciarsi nei guai, mentre impara a diventare un bambino vero.",
+      "pt": "Um boneco de madeira ganha vida e não para de mentir, fugir e se meter em confusão, enquanto aprende a se tornar um menino de verdade.",
+      "ru": "Деревянная кукла оживает, без конца врёт, убегает и попадает в беду, пока учится становиться настоящим мальчиком.",
+      "ja": "命を得た木のあやつり人形が、うそをつき、逃げ出し、何度もトラブルを起こしながら、本当の男の子になる道を学びます。",
+      "ko": "생명을 얻은 나무 인형이 거짓말하고 도망치고 말썽을 일으키면서 진짜 소년이 되는 법을 배웁니다.",
+      "ar": "دمية خشبية تدب فيها الحياة، فتكذب وتهرب وتقع في المشاكل باستمرار، بينما تتعلم كيف تصبح صبيًا حقيقيًا.",
+      "hi": "लकड़ी की एक कठपुतली में जान आ जाती है; वह झूठ बोलती, भागती और मुसीबत में पड़ती रहती है, और सीखती है कि असली लड़का कैसे बनें।",
+      "id": "Sebuah boneka kayu menjadi hidup, lalu terus berbohong, kabur, dan terjebak masalah sambil belajar menjadi anak laki-laki sungguhan.",
+      "vi": "Một con rối gỗ bỗng sống dậy, cứ nói dối, bỏ trốn và gặp rắc rối, trong khi học cách trở thành một cậu bé thật sự.",
+      "tr": "Tahta bir kukla canlanır; sürekli yalan söyler, kaçar ve başını belaya sokar, bu arada gerçek bir çocuk olmayı öğrenir."
+    }
+  },
+  "the-adventures-of-tom-sawyer": {
+    "title": {
+      "en": "The Adventures of Tom Sawyer (Chapters 1–15)",
+      "zh-CN": "汤姆·索亚历险记（第1–15章）",
+      "zh-TW": "湯姆歷險記（第1–15章）",
+      "es": "Las aventuras de Tom Sawyer (capítulos 1–15)",
+      "fr": "Les Aventures de Tom Sawyer (chapitres 1 à 15)",
+      "de": "Die Abenteuer des Tom Sawyer (Kapitel 1–15)",
+      "it": "Le avventure di Tom Sawyer (capitoli 1–15)",
+      "pt": "As aventuras de Tom Sawyer (capítulos 1–15)",
+      "ru": "Приключения Тома Сойера (главы 1–15)",
+      "ja": "トム・ソーヤーの冒険（第1～15章）",
+      "ko": "톰 소여의 모험 (1~15장)",
+      "ar": "مغامرات توم سوير (الفصول 1–15)",
+      "hi": "टॉम सॉयर के कारनामे (अध्याय 1–15)",
+      "id": "Petualangan Tom Sawyer (bab 1–15)",
+      "vi": "Những cuộc phiêu lưu của Tom Sawyer (chương 1–15)",
+      "tr": "Tom Sawyer'ın Maceraları (1–15. bölümler)"
+    },
+    "blurb": {
+      "en": "The opening chapters: a clever, lazy boy on the Mississippi tricks his friends into painting a fence, falls in love and sees a crime in a graveyard at night.",
+      "zh-CN": "开篇章节：密西西比河边一个聪明又贪玩的男孩，骗朋友替他刷篱笆，爱上了一个女孩，还在夜里的墓地目睹了一桩罪案。",
+      "zh-TW": "開篇章節：密西西比河邊一個聰明又貪玩的男孩，騙朋友替他刷籬笆，愛上了一個女孩，還在夜裡的墓地目睹了一樁罪案。",
+      "es": "Los primeros capítulos: un chico listo y perezoso del Misisipi engaña a sus amigos para que pinten una valla, se enamora y ve un crimen de noche en un cementerio.",
+      "fr": "Les premiers chapitres : un garçon malin et paresseux du Mississippi fait peindre une palissade par ses amis, tombe amoureux et voit un crime la nuit dans un cimetière.",
+      "de": "Die ersten Kapitel: Ein schlauer, fauler Junge am Mississippi bringt seine Freunde dazu, einen Zaun zu streichen, verliebt sich und sieht nachts auf dem Friedhof ein Verbrechen.",
+      "it": "I primi capitoli: un ragazzo furbo e pigro sul Mississippi convince gli amici a dipingergli lo steccato, si innamora e di notte assiste a un delitto nel cimitero.",
+      "pt": "Os primeiros capítulos: um garoto esperto e preguiçoso do Mississippi engana os amigos para pintarem uma cerca, se apaixona e vê um crime à noite num cemitério.",
+      "ru": "Первые главы: хитрый и ленивый мальчишка с Миссисипи заставляет друзей красить забор, влюбляется и ночью на кладбище видит преступление.",
+      "ja": "最初の章：ミシシッピ川沿いの、かしこくてなまけ者の少年が、友だちをだましてへいのペンキぬりをさせ、恋をし、夜の墓地で事件を目撃します。",
+      "ko": "첫 장들: 미시시피 강가의 영리하고 게으른 소년이 친구들을 꾀어 울타리를 칠하게 하고, 사랑에 빠지고, 밤 묘지에서 범죄를 목격합니다.",
+      "ar": "الفصول الأولى: صبي ذكي وكسول على نهر المسيسيبي يخدع أصدقاءه ليطلوا السياج، ويقع في الحب، ويشهد جريمة ليلًا في المقبرة.",
+      "hi": "शुरुआती अध्याय: मिसिसिपी किनारे का एक चालाक, आलसी लड़का दोस्तों से बाड़ रंगवा लेता है, प्यार में पड़ता है और रात को कब्रिस्तान में एक अपराध देखता है।",
+      "id": "Bab-bab awal: anak cerdik dan malas di tepi Sungai Mississippi menipu teman-temannya agar mengecat pagar, jatuh cinta, dan menyaksikan kejahatan di pemakaman pada malam hari.",
+      "vi": "Những chương đầu: một cậu bé lanh lợi mà lười bên sông Mississippi lừa bạn bè quét vôi hàng rào, phải lòng một cô bé và chứng kiến một vụ án trong nghĩa địa ban đêm.",
+      "tr": "İlk bölümler: Mississippi kıyısında akıllı ama tembel bir çocuk arkadaşlarına çit boyatır, âşık olur ve bir gece mezarlıkta bir suça tanık olur."
+    }
+  },
   "the-call-of-the-wild": {
     "title": {
       "en": "The Call of the Wild",
@@ -567,6 +833,44 @@
       "id": "Seekor anjing keluarga dicuri dan dibawa ke Utara yang membeku, tempat ia harus belajar bertahan sebagai anjing penarik kereta salju.",
       "vi": "Một chú chó nhà bị bắt trộm và đưa lên phương Bắc băng giá, nơi nó phải học cách sống sót như một chó kéo xe trượt tuyết.",
       "tr": "Bir aile köpeği çalınıp donmuş Kuzey'e götürülür ve orada kızak köpeği olarak hayatta kalmayı öğrenmek zorunda kalır."
+    }
+  },
+  "the-great-gatsby": {
+    "title": {
+      "en": "The Great Gatsby",
+      "zh-CN": "了不起的盖茨比",
+      "zh-TW": "大亨小傳",
+      "es": "El gran Gatsby",
+      "fr": "Gatsby le Magnifique",
+      "de": "Der große Gatsby",
+      "it": "Il grande Gatsby",
+      "pt": "O grande Gatsby",
+      "ru": "Великий Гэтсби",
+      "ja": "グレート・ギャツビー",
+      "ko": "위대한 개츠비",
+      "ar": "غاتسبي العظيم",
+      "hi": "द ग्रेट गैट्सबी",
+      "id": "Gatsby yang Agung",
+      "vi": "Gatsby vĩ đại",
+      "tr": "Muhteşem Gatsby"
+    },
+    "blurb": {
+      "en": "Near 1920s New York, a mysterious rich man throws huge parties in the hope of winning back the woman he loved years ago.",
+      "zh-CN": "20 世纪 20 年代的纽约近郊，一个神秘的富翁举办盛大的派对，只为赢回多年前爱过的女人。",
+      "zh-TW": "1920 年代的紐約近郊，一個神祕的富翁舉辦盛大的派對，只為贏回多年前愛過的女人。",
+      "es": "Cerca de Nueva York en los años veinte, un misterioso millonario da fiestas enormes con la esperanza de recuperar a la mujer que amó años atrás.",
+      "fr": "Près de New York dans les années 1920, un riche et mystérieux personnage donne d'immenses fêtes dans l'espoir de reconquérir la femme qu'il aimait autrefois.",
+      "de": "Bei New York in den 1920er-Jahren gibt ein geheimnisvoller reicher Mann riesige Feste, um die Frau zurückzugewinnen, die er vor Jahren liebte.",
+      "it": "Vicino a New York negli anni Venti, un misterioso uomo ricco organizza feste enormi sperando di riconquistare la donna che amava anni prima.",
+      "pt": "Perto de Nova York nos anos 1920, um homem rico e misterioso dá festas enormes na esperança de reconquistar a mulher que amou anos atrás.",
+      "ru": "Под Нью-Йорком 1920-х таинственный богач устраивает огромные приёмы, надеясь вернуть женщину, которую любил много лет назад.",
+      "ja": "1920年代のニューヨーク近郊。なぞの大富豪は、昔愛した女性を取りもどそうと、盛大なパーティーを開き続けます。",
+      "ko": "1920년대 뉴욕 근교, 수수께끼의 부자가 오래전 사랑한 여인을 되찾으려고 성대한 파티를 엽니다.",
+      "ar": "قرب نيويورك في عشرينيات القرن الماضي، يقيم ثري غامض حفلات ضخمة على أمل استعادة المرأة التي أحبها قبل سنوات.",
+      "hi": "1920 के दशक में न्यूयॉर्क के पास एक रहस्यमय अमीर आदमी बड़ी-बड़ी पार्टियाँ देता है, ताकि बरसों पहले जिस औरत से प्यार किया था उसे वापस पा सके।",
+      "id": "Di dekat New York pada tahun 1920-an, seorang kaya yang misterius mengadakan pesta besar-besaran demi merebut kembali wanita yang dicintainya bertahun-tahun lalu.",
+      "vi": "Gần New York những năm 1920, một người giàu bí ẩn mở những bữa tiệc lớn với hy vọng giành lại người phụ nữ anh từng yêu nhiều năm trước.",
+      "tr": "1920'lerde New York yakınlarında gizemli, zengin bir adam, yıllar önce sevdiği kadını geri kazanmak umuduyla büyük partiler verir."
     }
   },
   "the-happy-prince": {
@@ -797,6 +1101,82 @@
       "tr": "Çocuklar, evcil hayvanlar, oyunlar ve mevsimler üzerine çok kısa cümleler; okumaya ilk adımlar için."
     }
   },
+  "the-tale-of-benjamin-bunny": {
+    "title": {
+      "en": "The Tale of Benjamin Bunny",
+      "zh-CN": "小兔本杰明的故事",
+      "zh-TW": "小兔班傑明的故事",
+      "es": "El cuento de Benjamín Conejo",
+      "fr": "Le Conte de Jeannot Lapin",
+      "de": "Die Geschichte von Benjamin Kaninchen",
+      "it": "La storia di Benjamin Coniglio",
+      "pt": "A história de Benjamim Coelho",
+      "ru": "Сказка про Бенджамина Банни",
+      "ja": "ベンジャミン バニーのおはなし",
+      "ko": "벤저민 버니 이야기",
+      "ar": "حكاية الأرنب بنيامين",
+      "hi": "बेंजामिन बनी की कहानी",
+      "id": "Kisah Benjamin Bunny",
+      "vi": "Chuyện chú thỏ Benjamin",
+      "tr": "Benjamin Tavşan'ın Hikâyesi"
+    },
+    "blurb": {
+      "en": "Peter Rabbit's cousin Benjamin takes him back into Mr. McGregor's garden to get his lost clothes, but a cat is waiting.",
+      "zh-CN": "彼得兔的表弟本杰明带他溜回麦格雷戈先生的菜园，去拿丢掉的衣服，可是一只猫正等着他们。",
+      "zh-TW": "彼得兔的表弟班傑明帶他溜回麥格雷戈先生的菜園，去拿弄丟的衣服，可是一隻貓正等著他們。",
+      "es": "Benjamín, el primo de Perico el Conejo, lo lleva de vuelta al huerto del señor McGregor para recuperar su ropa, pero un gato los espera.",
+      "fr": "Jeannot, le cousin de Pierre Lapin, le ramène dans le jardin de M. McGregor pour reprendre ses vêtements, mais un chat les attend.",
+      "de": "Benjamin, der Vetter von Peter Hase, geht mit ihm zurück in Mr. McGregors Garten, um seine Kleider zu holen, doch dort wartet eine Katze.",
+      "it": "Benjamin, il cugino di Peter Coniglio, lo riporta nell'orto del signor McGregor a riprendere i vestiti perduti, ma un gatto li aspetta.",
+      "pt": "Benjamim, primo de Pedro Coelho, leva-o de volta à horta do senhor McGregor para buscar as roupas perdidas, mas um gato está à espera.",
+      "ru": "Кузен Кролика Питера, Бенджамин, ведёт его обратно в огород мистера Макгрегора за потерянной одеждой, но там их ждёт кошка.",
+      "ja": "ピーターラビットのいとこのベンジャミンは、なくした服を取りもどしに、ピーターとマグレガーさんの畑へもどります。でも、ねこが待っていました。",
+      "ko": "피터 래빗의 사촌 벤저민은 잃어버린 옷을 찾으러 피터와 함께 맥그리거 씨의 밭으로 돌아가지만, 고양이가 기다리고 있습니다.",
+      "ar": "يعود بنيامين، ابن عم الأرنب بيتر، معه إلى حديقة السيد ماكغريغور لاستعادة ملابسه الضائعة، لكن قطة تنتظرهما.",
+      "hi": "पीटर रैबिट का चचेरा भाई बेंजामिन उसे खोए कपड़े लाने मिस्टर मैकग्रेगर के बगीचे में वापस ले जाता है, पर वहाँ एक बिल्ली इंतज़ार कर रही है।",
+      "id": "Benjamin, sepupu Peter Rabbit, mengajaknya kembali ke kebun Pak McGregor untuk mengambil bajunya yang hilang, tetapi seekor kucing sudah menunggu.",
+      "vi": "Benjamin, em họ của thỏ Peter, dẫn Peter quay lại vườn ông McGregor để lấy quần áo bị mất, nhưng một con mèo đang chờ sẵn.",
+      "tr": "Tavşan Peter'ın kuzeni Benjamin, kaybolan giysilerini almak için onu Bay McGregor'un bahçesine geri götürür, ama orada bir kedi beklemektedir."
+    }
+  },
+  "the-tale-of-jemima-puddle-duck": {
+    "title": {
+      "en": "The Tale of Jemima Puddle-Duck",
+      "zh-CN": "鸭子杰迈玛的故事",
+      "zh-TW": "鴨子潔瑪的故事",
+      "es": "El cuento de Jemima Pata-de-charco",
+      "fr": "Le Conte de Sophie Canétang",
+      "de": "Die Geschichte von Jemima Pratschel-Watschel",
+      "it": "La storia di Jemima Anatra-Pozzanghera",
+      "pt": "A história de Jemima Pata-Poça",
+      "ru": "Сказка про утку Джемайму",
+      "ja": "あひるのジマイマのおはなし",
+      "ko": "제미마 퍼들덕 이야기",
+      "ar": "حكاية البطة جمايما",
+      "hi": "जेमिमा बत्तख की कहानी",
+      "id": "Kisah Jemima si Bebek",
+      "vi": "Chuyện cô vịt Jemima",
+      "tr": "Ördek Jemima'nın Hikâyesi"
+    },
+    "blurb": {
+      "en": "A farm duck wants to hatch her own eggs, so she flies off to find a hidden nest and meets a very polite gentleman fox.",
+      "zh-CN": "一只农场里的鸭子想自己孵蛋，于是飞出去找一个隐蔽的窝，却遇到了一位彬彬有礼的狐狸先生。",
+      "zh-TW": "一隻農場裡的鴨子想自己孵蛋，於是飛出去找一個隱密的窩，卻遇到了一位彬彬有禮的狐狸先生。",
+      "es": "Una pata de granja quiere empollar sus propios huevos, así que vuela en busca de un nido escondido y conoce a un zorro muy educado.",
+      "fr": "Une cane de la ferme veut couver ses propres œufs : elle s'envole chercher un nid caché et rencontre un renard très poli.",
+      "de": "Eine Ente vom Bauernhof will ihre Eier selbst ausbrüten, fliegt los, um ein verstecktes Nest zu finden, und trifft einen sehr höflichen Herrn Fuchs.",
+      "it": "Un'anatra della fattoria vuole covare da sola le sue uova, vola via in cerca di un nido nascosto e incontra un signor volpe molto cortese.",
+      "pt": "Uma pata da fazenda quer chocar os próprios ovos, voa à procura de um ninho escondido e conhece um raposo muito educado.",
+      "ru": "Деревенская утка хочет сама высидеть яйца, улетает искать тайное гнездо и встречает очень вежливого джентльмена-лиса.",
+      "ja": "農場のあひるは自分で卵をかえしたくて、かくれた巣をさがしに飛んでいき、とても礼儀正しいきつねの紳士に出会います。",
+      "ko": "농장의 오리는 직접 알을 품고 싶어서 숨은 둥지를 찾아 날아가다가 아주 예의 바른 여우 신사를 만납니다.",
+      "ar": "بطة في المزرعة تريد أن تحضن بيضها بنفسها، فتطير بحثًا عن عش مخفي وتلتقي بثعلب مهذب جدًا.",
+      "hi": "खेत की एक बत्तख अपने अंडे खुद सेना चाहती है, इसलिए छिपा घोंसला ढूँढ़ने उड़ जाती है और एक बहुत शिष्ट लोमड़ी सज्जन से मिलती है।",
+      "id": "Seekor bebek peternakan ingin mengerami telurnya sendiri, jadi ia terbang mencari sarang tersembunyi dan bertemu seekor rubah yang sangat sopan.",
+      "vi": "Một cô vịt ở nông trại muốn tự ấp trứng nên bay đi tìm một cái tổ kín đáo, và gặp một quý ông cáo rất lịch sự.",
+      "tr": "Çiftlikteki bir ördek yumurtalarını kendisi kuluçkaya yatırmak ister, gizli bir yuva bulmak için uçar ve çok kibar bir tilki beyle tanışır."
+    }
+  },
   "the-tale-of-peter-rabbit": {
     "title": {
       "en": "The Tale of Peter Rabbit",
@@ -833,6 +1213,44 @@
       "id": "Seekor kelinci kecil yang nakal menyelinap ke kebun Pak McGregor dan harus mencari jalan untuk kabur.",
       "vi": "Chú thỏ con nghịch ngợm lẻn vào vườn rau của ông McGregor và phải tìm cách trốn thoát.",
       "tr": "Yaramaz küçük bir tavşan Bay McGregor'ın bahçesine gizlice girer ve kaçmanın bir yolunu bulmak zorunda kalır."
+    }
+  },
+  "the-time-machine": {
+    "title": {
+      "en": "The Time Machine",
+      "zh-CN": "时间机器",
+      "zh-TW": "時光機器",
+      "es": "La máquina del tiempo",
+      "fr": "La Machine à explorer le temps",
+      "de": "Die Zeitmaschine",
+      "it": "La macchina del tempo",
+      "pt": "A máquina do tempo",
+      "ru": "Машина времени",
+      "ja": "タイム・マシン",
+      "ko": "타임머신",
+      "ar": "آلة الزمن",
+      "hi": "टाइम मशीन",
+      "id": "Mesin Waktu",
+      "vi": "Cỗ máy thời gian",
+      "tr": "Zaman Makinesi"
+    },
+    "blurb": {
+      "en": "An inventor travels to the year 802,701 and finds two strange races: the gentle Eloi and the Morlocks who live underground.",
+      "zh-CN": "一位发明家来到公元 802701 年，发现了两个奇怪的种族：温和的埃洛伊人和住在地下的莫洛克人。",
+      "zh-TW": "一位發明家來到西元 802701 年，發現了兩個奇怪的種族：溫和的埃洛伊人和住在地底的莫洛克人。",
+      "es": "Un inventor viaja al año 802.701 y encuentra dos razas extrañas: los apacibles eloi y los morlocks, que viven bajo tierra.",
+      "fr": "Un inventeur voyage jusqu'en l'an 802 701 et découvre deux races étranges : les doux Éloïs et les Morlocks, qui vivent sous terre.",
+      "de": "Ein Erfinder reist ins Jahr 802.701 und trifft zwei seltsame Völker: die sanften Eloi und die Morlocks, die unter der Erde leben.",
+      "it": "Un inventore viaggia fino all'anno 802.701 e trova due strane razze: i miti Eloi e i Morlock che vivono sottoterra.",
+      "pt": "Um inventor viaja até o ano 802.701 e encontra duas raças estranhas: os gentis Elóis e os Morlocks, que vivem debaixo da terra.",
+      "ru": "Изобретатель попадает в 802 701 год и встречает два странных народа: кротких элоев и морлоков, живущих под землёй.",
+      "ja": "ある発明家が西暦802701年へ旅し、おだやかなイーロイと地下に住むモーロックという二つの奇妙な種族に出会います。",
+      "ko": "한 발명가가 802701년으로 가서 온순한 엘로이와 땅속에 사는 몰록이라는 두 이상한 종족을 만납니다.",
+      "ar": "مخترع يسافر إلى عام 802701 فيجد سلالتين غريبتين: الإيلوي الوديعين والمورلوك الذين يعيشون تحت الأرض.",
+      "hi": "एक आविष्कारक वर्ष 802,701 में पहुँचता है और दो अजीब जातियों से मिलता है: सीधे-सादे एलॉय और ज़मीन के नीचे रहने वाले मॉरलॉक।",
+      "id": "Seorang penemu bepergian ke tahun 802.701 dan menemukan dua ras aneh: kaum Eloi yang lembut dan kaum Morlock yang hidup di bawah tanah.",
+      "vi": "Một nhà phát minh du hành tới năm 802.701 và gặp hai giống loài kỳ lạ: người Eloi hiền lành và người Morlock sống dưới lòng đất.",
+      "tr": "Bir mucit 802.701 yılına gider ve iki tuhaf ırkla karşılaşır: uysal Eloi'ler ve yer altında yaşayan Morlock'lar."
     }
   },
   "the-velveteen-rabbit": {
@@ -947,6 +1365,44 @@
       "id": "Seorang anak laki-laki menemukan peta harta karun bajak laut dan berlayar ke pulau jauh bersama awak kapal, termasuk Long John Silver.",
       "vi": "Một cậu bé tìm được tấm bản đồ kho báu của cướp biển và giong buồm tới hòn đảo xa cùng thủy thủ đoàn có cả Long John Silver.",
       "tr": "Bir çocuk bir korsanın define haritasını bulur ve aralarında Uzun John Silver'ın da olduğu bir tayfayla uzak bir adaya yelken açar."
+    }
+  },
+  "walden": {
+    "title": {
+      "en": "Walden (Chapters 1–3)",
+      "zh-CN": "瓦尔登湖（第1–3章）",
+      "zh-TW": "湖濱散記（第1–3章）",
+      "es": "Walden (capítulos 1–3)",
+      "fr": "Walden ou la Vie dans les bois (chapitres 1 à 3)",
+      "de": "Walden oder Leben in den Wäldern (Kapitel 1–3)",
+      "it": "Walden ovvero Vita nei boschi (capitoli 1–3)",
+      "pt": "Walden (capítulos 1–3)",
+      "ru": "Уолден, или Жизнь в лесу (главы 1–3)",
+      "ja": "ウォールデン 森の生活（第1～3章）",
+      "ko": "월든 (1~3장)",
+      "ar": "والدن (الفصول 1–3)",
+      "hi": "वॉल्डेन (अध्याय 1–3)",
+      "id": "Walden (bab 1–3)",
+      "vi": "Walden (chương 1–3)",
+      "tr": "Walden (1–3. bölümler)"
+    },
+    "blurb": {
+      "en": "The first three chapters: Thoreau builds a small hut by a pond, lives there alone, and asks what a person really needs to live well.",
+      "zh-CN": "前三章：梭罗在湖边自己盖了一间小木屋，独自住下，思考一个人真正需要什么才能好好生活。",
+      "zh-TW": "前三章：梭羅在湖邊自己蓋了一間小木屋，獨自住下，思考一個人真正需要什麼才能好好生活。",
+      "es": "Los tres primeros capítulos: Thoreau construye una cabaña junto a un lago, vive allí solo y se pregunta qué necesita de verdad una persona para vivir bien.",
+      "fr": "Les trois premiers chapitres : Thoreau bâtit une petite cabane au bord d'un étang, y vit seul et se demande ce dont on a vraiment besoin pour bien vivre.",
+      "de": "Die ersten drei Kapitel: Thoreau baut eine kleine Hütte an einem Teich, lebt dort allein und fragt, was ein Mensch wirklich zum guten Leben braucht.",
+      "it": "I primi tre capitoli: Thoreau costruisce una capanna vicino a uno stagno, ci vive da solo e si chiede di cosa abbia davvero bisogno una persona per vivere bene.",
+      "pt": "Os três primeiros capítulos: Thoreau constrói uma pequena cabana junto a um lago, vive ali sozinho e pergunta o que uma pessoa realmente precisa para viver bem.",
+      "ru": "Первые три главы: Торо строит хижину у пруда, живёт там один и спрашивает, что на самом деле нужно человеку, чтобы жить хорошо.",
+      "ja": "最初の三章：ソローは池のほとりに小屋を建てて一人で暮らし、よく生きるために人に本当に必要なものは何かを問いかけます。",
+      "ko": "첫 세 장: 소로는 호숫가에 작은 오두막을 짓고 홀로 살며, 잘 살기 위해 사람에게 정말 필요한 것이 무엇인지 묻습니다.",
+      "ar": "الفصول الثلاثة الأولى: يبني ثورو كوخًا صغيرًا بجانب بحيرة ويعيش فيه وحده، ويتساءل عمّا يحتاجه الإنسان حقًا ليعيش حياة طيبة.",
+      "hi": "पहले तीन अध्याय: थोरो एक तालाब के किनारे छोटी झोपड़ी बनाकर अकेले रहता है और पूछता है कि अच्छी ज़िंदगी के लिए इंसान को सच में क्या चाहिए।",
+      "id": "Tiga bab pertama: Thoreau membangun pondok kecil di tepi danau, tinggal di sana sendirian, dan bertanya apa yang sungguh dibutuhkan manusia untuk hidup dengan baik.",
+      "vi": "Ba chương đầu: Thoreau dựng một căn chòi nhỏ bên hồ, sống một mình ở đó và tự hỏi con người thật sự cần gì để sống tốt.",
+      "tr": "İlk üç bölüm: Thoreau bir gölün kıyısına küçük bir kulübe yapar, orada yalnız yaşar ve insanın iyi yaşamak için gerçekte neye ihtiyacı olduğunu sorar."
     }
   },
   "wuthering-heights": {

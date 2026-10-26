@@ -1,0 +1,105 @@
+{
+  "title": "The Adventures of Tom Sawyer (Chapters 1–15)",
+  "author": "Mark Twain",
+  "level": "B2",
+  "wordCount": 33943,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/74",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Chapter I"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Tom Sawyer"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Tom Sawyer"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Tom Sawyer"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Tom Sawyer"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Tom Sawyer"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Tom Sawyer"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Tom Sawyer"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Tom Sawyer"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Tom Sawyer"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Tom Sawyer"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Tom Sawyer"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Tom Sawyer"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Tom Sawyer"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Tom Sawyer"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Chapter X"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Tom Sawyer"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Tom Sawyer"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Tom Sawyer"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Tom Sawyer"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Tom Sawyer"
+    },
+    {
+      "file": "22.md",
+      "title": "22. Tom Sawyer"
+    },
+    {
+      "file": "23.md",
+      "title": "23. Tom Sawyer"
+    }
+  ]
+}

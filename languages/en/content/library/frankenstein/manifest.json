@@ -1,0 +1,97 @@
+{
+  "title": "Frankenstein (Letters and Chapters 1–10)",
+  "author": "Mary Shelley",
+  "level": "C1",
+  "wordCount": 31194,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/84",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Letter 1"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Frankenstein"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Frankenstein"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Frankenstein"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Frankenstein"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Frankenstein"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Frankenstein"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Frankenstein"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Frankenstein"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Frankenstein"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Frankenstein"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Frankenstein"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Frankenstein"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Frankenstein"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Frankenstein"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Frankenstein"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Frankenstein"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Frankenstein"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Frankenstein"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Frankenstein"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Frankenstein"
+    }
+  ]
+}

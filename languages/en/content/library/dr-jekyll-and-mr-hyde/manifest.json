@@ -1,0 +1,85 @@
+{
+  "title": "Strange Case of Dr Jekyll and Mr Hyde",
+  "author": "Robert Louis Stevenson",
+  "level": "C1",
+  "wordCount": 25912,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/43",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Story of the Door"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Jekyll and Hyde"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Jekyll and Hyde"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Jekyll and Hyde"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Jekyll and Hyde"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Jekyll and Hyde"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Jekyll and Hyde"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Jekyll and Hyde"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Jekyll and Hyde"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Jekyll and Hyde"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Jekyll and Hyde"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Jekyll and Hyde"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Jekyll and Hyde"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Jekyll and Hyde"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Jekyll and Hyde"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Jekyll and Hyde"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Jekyll and Hyde"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Jekyll and Hyde"
+    }
+  ]
+}

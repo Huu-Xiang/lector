@@ -1,0 +1,109 @@
+{
+  "title": "Walden (Chapters 1–3)",
+  "author": "Henry David Thoreau",
+  "level": "C2",
+  "wordCount": 35833,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/205",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Economy"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Walden"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Walden"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Walden"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Walden"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Walden"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Walden"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Walden"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Walden"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Walden"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Walden"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Walden"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Walden"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Walden"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Walden"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Walden"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Walden"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Walden"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Walden"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Walden"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Walden"
+    },
+    {
+      "file": "22.md",
+      "title": "22. Walden"
+    },
+    {
+      "file": "23.md",
+      "title": "23. Walden"
+    },
+    {
+      "file": "24.md",
+      "title": "24. Walden"
+    }
+  ]
+}
