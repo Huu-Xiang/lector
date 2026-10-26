@@ -1,8 +1,8 @@
 {
-  "title": "Frankenstein (Letters and Chapters 1–10)",
+  "title": "Frankenstein",
   "author": "Mary Shelley",
   "level": "C1",
-  "wordCount": 31194,
+  "wordCount": 75312,
   "source": {
     "name": "Project Gutenberg",
     "url": "https://www.gutenberg.org/ebooks/84",
@@ -92,6 +92,126 @@
     {
       "file": "21.md",
       "title": "21. Frankenstein"
+    },
+    {
+      "file": "22.md",
+      "title": "22. Frankenstein"
+    },
+    {
+      "file": "23.md",
+      "title": "23. Frankenstein"
+    },
+    {
+      "file": "24.md",
+      "title": "24. Frankenstein"
+    },
+    {
+      "file": "25.md",
+      "title": "25. Frankenstein"
+    },
+    {
+      "file": "26.md",
+      "title": "26. Frankenstein"
+    },
+    {
+      "file": "27.md",
+      "title": "27. Frankenstein"
+    },
+    {
+      "file": "28.md",
+      "title": "28. Chapter 15"
+    },
+    {
+      "file": "29.md",
+      "title": "29. Frankenstein"
+    },
+    {
+      "file": "30.md",
+      "title": "30. Frankenstein"
+    },
+    {
+      "file": "31.md",
+      "title": "31. Frankenstein"
+    },
+    {
+      "file": "32.md",
+      "title": "32. Frankenstein"
+    },
+    {
+      "file": "33.md",
+      "title": "33. Frankenstein"
+    },
+    {
+      "file": "34.md",
+      "title": "34. Frankenstein"
+    },
+    {
+      "file": "35.md",
+      "title": "35. Frankenstein"
+    },
+    {
+      "file": "36.md",
+      "title": "36. Frankenstein"
+    },
+    {
+      "file": "37.md",
+      "title": "37. Frankenstein"
+    },
+    {
+      "file": "38.md",
+      "title": "38. Frankenstein"
+    },
+    {
+      "file": "39.md",
+      "title": "39. Frankenstein"
+    },
+    {
+      "file": "40.md",
+      "title": "40. Frankenstein"
+    },
+    {
+      "file": "41.md",
+      "title": "41. Frankenstein"
+    },
+    {
+      "file": "42.md",
+      "title": "42. Frankenstein"
+    },
+    {
+      "file": "43.md",
+      "title": "43. Frankenstein"
+    },
+    {
+      "file": "44.md",
+      "title": "44. Frankenstein"
+    },
+    {
+      "file": "45.md",
+      "title": "45. Frankenstein"
+    },
+    {
+      "file": "46.md",
+      "title": "46. Frankenstein"
+    },
+    {
+      "file": "47.md",
+      "title": "47. Frankenstein"
+    },
+    {
+      "file": "48.md",
+      "title": "48. Frankenstein"
+    },
+    {
+      "file": "49.md",
+      "title": "49. Frankenstein"
+    },
+    {
+      "file": "50.md",
+      "title": "50. Frankenstein"
+    },
+    {
+      "file": "51.md",
+      "title": "51. Frankenstein"
     }
   ]
 }

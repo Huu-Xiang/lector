@@ -1,8 +1,8 @@
 {
-  "title": "Aesop's Fables (selection)",
+  "title": "Aesop's Fables",
   "author": "Aesop, translated by V. S. Vernon Jones",
   "level": "A2",
-  "wordCount": 13946,
+  "wordCount": 38532,
   "source": {
     "name": "Project Gutenberg",
     "url": "https://www.gutenberg.org/ebooks/11339",
@@ -11,11 +11,11 @@
   "lessons": [
     {
       "file": "01.md",
-      "title": "1. The fox and the grapes"
+      "title": "1. The Fox and the Grapes"
     },
     {
       "file": "02.md",
-      "title": "2. The wolf and the lamb"
+      "title": "2. Aesop's Fables"
     },
     {
       "file": "03.md",
@@ -27,7 +27,7 @@
     },
     {
       "file": "05.md",
-      "title": "5. The flea and the man"
+      "title": "5. Aesop's Fables"
     },
     {
       "file": "06.md",
@@ -35,19 +35,87 @@
     },
     {
       "file": "07.md",
-      "title": "7. The owl and the birds"
+      "title": "7. The She-goats and Their Beards"
     },
     {
       "file": "08.md",
-      "title": "8. Jupiter and the tortoise"
+      "title": "8. Aesop's Fables"
     },
     {
       "file": "09.md",
-      "title": "9. The traveller and his dog"
+      "title": "9. The Wild Boar and the Fox"
     },
     {
       "file": "10.md",
-      "title": "10. The bear and the fox"
+      "title": "10. Aesop's Fables"
+    },
+    {
+      "file": "11.md",
+      "title": "11. The Rich Man and the Tanner"
+    },
+    {
+      "file": "12.md",
+      "title": "12. The Horse and His Rider"
+    },
+    {
+      "file": "13.md",
+      "title": "13. The Wolf and the Crane"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Aesop's Fables"
+    },
+    {
+      "file": "15.md",
+      "title": "15. The Grasshopper and the Ants"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Aesop's Fables"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Aesop's Fables"
+    },
+    {
+      "file": "18.md",
+      "title": "18. The Labourer and the Snake"
+    },
+    {
+      "file": "19.md",
+      "title": "19. The Thief and the Innkeeper"
+    },
+    {
+      "file": "20.md",
+      "title": "20. The Ass and the Dog"
+    },
+    {
+      "file": "21.md",
+      "title": "21. The Rivers and the Sea"
+    },
+    {
+      "file": "22.md",
+      "title": "22. The Ploughman, the Ass, and the Ox"
+    },
+    {
+      "file": "23.md",
+      "title": "23. The Ploughman and the Wolf"
+    },
+    {
+      "file": "24.md",
+      "title": "24. The Eagle and the Fox"
+    },
+    {
+      "file": "25.md",
+      "title": "25. The Crow and the Raven"
+    },
+    {
+      "file": "26.md",
+      "title": "26. The Man Who Lost His Spade"
+    },
+    {
+      "file": "27.md",
+      "title": "27. The Swallow and the Crow"
     }
   ]
 }

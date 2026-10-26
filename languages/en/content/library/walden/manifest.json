@@ -1,8 +1,8 @@
 {
-  "title": "Walden (Chapters 1–3)",
+  "title": "Walden",
   "author": "Henry David Thoreau",
   "level": "C2",
-  "wordCount": 35833,
+  "wordCount": 107887,
   "source": {
     "name": "Project Gutenberg",
     "url": "https://www.gutenberg.org/ebooks/205",
@@ -104,6 +104,190 @@
     {
       "file": "24.md",
       "title": "24. Walden"
+    },
+    {
+      "file": "25.md",
+      "title": "25. Walden"
+    },
+    {
+      "file": "26.md",
+      "title": "26. Walden"
+    },
+    {
+      "file": "27.md",
+      "title": "27. Walden"
+    },
+    {
+      "file": "28.md",
+      "title": "28. Solitude"
+    },
+    {
+      "file": "29.md",
+      "title": "29. Walden"
+    },
+    {
+      "file": "30.md",
+      "title": "30. Walden"
+    },
+    {
+      "file": "31.md",
+      "title": "31. Walden"
+    },
+    {
+      "file": "32.md",
+      "title": "32. Walden"
+    },
+    {
+      "file": "33.md",
+      "title": "33. Walden"
+    },
+    {
+      "file": "34.md",
+      "title": "34. Walden"
+    },
+    {
+      "file": "35.md",
+      "title": "35. Walden"
+    },
+    {
+      "file": "36.md",
+      "title": "36. Walden"
+    },
+    {
+      "file": "37.md",
+      "title": "37. Walden"
+    },
+    {
+      "file": "38.md",
+      "title": "38. Walden"
+    },
+    {
+      "file": "39.md",
+      "title": "39. Walden"
+    },
+    {
+      "file": "40.md",
+      "title": "40. Walden"
+    },
+    {
+      "file": "41.md",
+      "title": "41. Walden"
+    },
+    {
+      "file": "42.md",
+      "title": "42. Walden"
+    },
+    {
+      "file": "43.md",
+      "title": "43. Baker Farm"
+    },
+    {
+      "file": "44.md",
+      "title": "44. Walden"
+    },
+    {
+      "file": "45.md",
+      "title": "45. Walden"
+    },
+    {
+      "file": "46.md",
+      "title": "46. Walden"
+    },
+    {
+      "file": "47.md",
+      "title": "47. Walden"
+    },
+    {
+      "file": "48.md",
+      "title": "48. Walden"
+    },
+    {
+      "file": "49.md",
+      "title": "49. Walden"
+    },
+    {
+      "file": "50.md",
+      "title": "50. Walden"
+    },
+    {
+      "file": "51.md",
+      "title": "51. Walden"
+    },
+    {
+      "file": "52.md",
+      "title": "52. Walden"
+    },
+    {
+      "file": "53.md",
+      "title": "53. Walden"
+    },
+    {
+      "file": "54.md",
+      "title": "54. Former Inhabitants and Winter Visitors"
+    },
+    {
+      "file": "55.md",
+      "title": "55. Walden"
+    },
+    {
+      "file": "56.md",
+      "title": "56. Walden"
+    },
+    {
+      "file": "57.md",
+      "title": "57. Walden"
+    },
+    {
+      "file": "58.md",
+      "title": "58. Walden"
+    },
+    {
+      "file": "59.md",
+      "title": "59. Walden"
+    },
+    {
+      "file": "60.md",
+      "title": "60. Walden"
+    },
+    {
+      "file": "61.md",
+      "title": "61. Walden"
+    },
+    {
+      "file": "62.md",
+      "title": "62. Walden"
+    },
+    {
+      "file": "63.md",
+      "title": "63. Walden"
+    },
+    {
+      "file": "64.md",
+      "title": "64. Walden"
+    },
+    {
+      "file": "65.md",
+      "title": "65. Walden"
+    },
+    {
+      "file": "66.md",
+      "title": "66. Walden"
+    },
+    {
+      "file": "67.md",
+      "title": "67. Walden"
+    },
+    {
+      "file": "68.md",
+      "title": "68. Walden"
+    },
+    {
+      "file": "69.md",
+      "title": "69. Walden"
+    },
+    {
+      "file": "70.md",
+      "title": "70. Walden"
     }
   ]
 }

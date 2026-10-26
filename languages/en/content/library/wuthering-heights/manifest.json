@@ -1,8 +1,8 @@
 {
-  "title": "Wuthering Heights (Chapters 1–10)",
+  "title": "Wuthering Heights",
   "author": "Emily Brontë",
   "level": "C2",
-  "wordCount": 37528,
+  "wordCount": 119372,
   "source": {
     "name": "Project Gutenberg",
     "url": "https://www.gutenberg.org/ebooks/768",
@@ -112,6 +112,230 @@
     {
       "file": "26.md",
       "title": "26. Wuthering Heights"
+    },
+    {
+      "file": "27.md",
+      "title": "27. Wuthering Heights"
+    },
+    {
+      "file": "28.md",
+      "title": "28. Wuthering Heights"
+    },
+    {
+      "file": "29.md",
+      "title": "29. Wuthering Heights"
+    },
+    {
+      "file": "30.md",
+      "title": "30. Wuthering Heights"
+    },
+    {
+      "file": "31.md",
+      "title": "31. Wuthering Heights"
+    },
+    {
+      "file": "32.md",
+      "title": "32. Wuthering Heights"
+    },
+    {
+      "file": "33.md",
+      "title": "33. Wuthering Heights"
+    },
+    {
+      "file": "34.md",
+      "title": "34. Wuthering Heights"
+    },
+    {
+      "file": "35.md",
+      "title": "35. Wuthering Heights"
+    },
+    {
+      "file": "36.md",
+      "title": "36. Wuthering Heights"
+    },
+    {
+      "file": "37.md",
+      "title": "37. Wuthering Heights"
+    },
+    {
+      "file": "38.md",
+      "title": "38. Wuthering Heights"
+    },
+    {
+      "file": "39.md",
+      "title": "39. Wuthering Heights"
+    },
+    {
+      "file": "40.md",
+      "title": "40. Wuthering Heights"
+    },
+    {
+      "file": "41.md",
+      "title": "41. Wuthering Heights"
+    },
+    {
+      "file": "42.md",
+      "title": "42. Wuthering Heights"
+    },
+    {
+      "file": "43.md",
+      "title": "43. Wuthering Heights"
+    },
+    {
+      "file": "44.md",
+      "title": "44. Wuthering Heights"
+    },
+    {
+      "file": "45.md",
+      "title": "45. Wuthering Heights"
+    },
+    {
+      "file": "46.md",
+      "title": "46. Wuthering Heights"
+    },
+    {
+      "file": "47.md",
+      "title": "47. Wuthering Heights"
+    },
+    {
+      "file": "48.md",
+      "title": "48. Wuthering Heights"
+    },
+    {
+      "file": "49.md",
+      "title": "49. Chapter XIX"
+    },
+    {
+      "file": "50.md",
+      "title": "50. Wuthering Heights"
+    },
+    {
+      "file": "51.md",
+      "title": "51. Wuthering Heights"
+    },
+    {
+      "file": "52.md",
+      "title": "52. Wuthering Heights"
+    },
+    {
+      "file": "53.md",
+      "title": "53. Wuthering Heights"
+    },
+    {
+      "file": "54.md",
+      "title": "54. Wuthering Heights"
+    },
+    {
+      "file": "55.md",
+      "title": "55. Wuthering Heights"
+    },
+    {
+      "file": "56.md",
+      "title": "56. Wuthering Heights"
+    },
+    {
+      "file": "57.md",
+      "title": "57. Wuthering Heights"
+    },
+    {
+      "file": "58.md",
+      "title": "58. Wuthering Heights"
+    },
+    {
+      "file": "59.md",
+      "title": "59. Wuthering Heights"
+    },
+    {
+      "file": "60.md",
+      "title": "60. Wuthering Heights"
+    },
+    {
+      "file": "61.md",
+      "title": "61. Wuthering Heights"
+    },
+    {
+      "file": "62.md",
+      "title": "62. Wuthering Heights"
+    },
+    {
+      "file": "63.md",
+      "title": "63. Wuthering Heights"
+    },
+    {
+      "file": "64.md",
+      "title": "64. Wuthering Heights"
+    },
+    {
+      "file": "65.md",
+      "title": "65. Wuthering Heights"
+    },
+    {
+      "file": "66.md",
+      "title": "66. Wuthering Heights"
+    },
+    {
+      "file": "67.md",
+      "title": "67. Wuthering Heights"
+    },
+    {
+      "file": "68.md",
+      "title": "68. Wuthering Heights"
+    },
+    {
+      "file": "69.md",
+      "title": "69. Wuthering Heights"
+    },
+    {
+      "file": "70.md",
+      "title": "70. Wuthering Heights"
+    },
+    {
+      "file": "71.md",
+      "title": "71. Wuthering Heights"
+    },
+    {
+      "file": "72.md",
+      "title": "72. Wuthering Heights"
+    },
+    {
+      "file": "73.md",
+      "title": "73. Wuthering Heights"
+    },
+    {
+      "file": "74.md",
+      "title": "74. Wuthering Heights"
+    },
+    {
+      "file": "75.md",
+      "title": "75. Wuthering Heights"
+    },
+    {
+      "file": "76.md",
+      "title": "76. Wuthering Heights"
+    },
+    {
+      "file": "77.md",
+      "title": "77. Wuthering Heights"
+    },
+    {
+      "file": "78.md",
+      "title": "78. Wuthering Heights"
+    },
+    {
+      "file": "79.md",
+      "title": "79. Wuthering Heights"
+    },
+    {
+      "file": "80.md",
+      "title": "80. Wuthering Heights"
+    },
+    {
+      "file": "81.md",
+      "title": "81. Wuthering Heights"
+    },
+    {
+      "file": "82.md",
+      "title": "82. Wuthering Heights"
     }
   ]
 }

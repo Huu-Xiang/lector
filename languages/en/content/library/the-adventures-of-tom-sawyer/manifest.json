@@ -1,8 +1,8 @@
 {
-  "title": "The Adventures of Tom Sawyer (Chapters 1–15)",
+  "title": "The Adventures of Tom Sawyer",
   "author": "Mark Twain",
   "level": "B2",
-  "wordCount": 33943,
+  "wordCount": 73289,
   "source": {
     "name": "Project Gutenberg",
     "url": "https://www.gutenberg.org/ebooks/74",
@@ -100,6 +100,114 @@
     {
       "file": "23.md",
       "title": "23. Tom Sawyer"
+    },
+    {
+      "file": "24.md",
+      "title": "24. Chapter XVI"
+    },
+    {
+      "file": "25.md",
+      "title": "25. Tom Sawyer"
+    },
+    {
+      "file": "26.md",
+      "title": "26. Tom Sawyer"
+    },
+    {
+      "file": "27.md",
+      "title": "27. Tom Sawyer"
+    },
+    {
+      "file": "28.md",
+      "title": "28. Tom Sawyer"
+    },
+    {
+      "file": "29.md",
+      "title": "29. Tom Sawyer"
+    },
+    {
+      "file": "30.md",
+      "title": "30. Tom Sawyer"
+    },
+    {
+      "file": "31.md",
+      "title": "31. Tom Sawyer"
+    },
+    {
+      "file": "32.md",
+      "title": "32. Tom Sawyer"
+    },
+    {
+      "file": "33.md",
+      "title": "33. Chapter XXIII"
+    },
+    {
+      "file": "34.md",
+      "title": "34. Tom Sawyer"
+    },
+    {
+      "file": "35.md",
+      "title": "35. Tom Sawyer"
+    },
+    {
+      "file": "36.md",
+      "title": "36. Tom Sawyer"
+    },
+    {
+      "file": "37.md",
+      "title": "37. Tom Sawyer"
+    },
+    {
+      "file": "38.md",
+      "title": "38. Tom Sawyer"
+    },
+    {
+      "file": "39.md",
+      "title": "39. Tom Sawyer"
+    },
+    {
+      "file": "40.md",
+      "title": "40. Tom Sawyer"
+    },
+    {
+      "file": "41.md",
+      "title": "41. Tom Sawyer"
+    },
+    {
+      "file": "42.md",
+      "title": "42. Tom Sawyer"
+    },
+    {
+      "file": "43.md",
+      "title": "43. Tom Sawyer"
+    },
+    {
+      "file": "44.md",
+      "title": "44. Tom Sawyer"
+    },
+    {
+      "file": "45.md",
+      "title": "45. Tom Sawyer"
+    },
+    {
+      "file": "46.md",
+      "title": "46. Tom Sawyer"
+    },
+    {
+      "file": "47.md",
+      "title": "47. Tom Sawyer"
+    },
+    {
+      "file": "48.md",
+      "title": "48. Tom Sawyer"
+    },
+    {
+      "file": "49.md",
+      "title": "49. Tom Sawyer"
+    },
+    {
+      "file": "50.md",
+      "title": "50. Tom Sawyer"
     }
   ]
 }
