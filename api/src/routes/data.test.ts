@@ -3,6 +3,8 @@ import { describe, test, expect, beforeEach, afterEach } from 'bun:test';
 import { db } from '../db';
 import type { CacheAcceptedInput } from '../lib/dictionary-db';
 import { buildUserExport } from '../lib/user-export';
+import { libraryLessonIdFor, loadLibraryBook } from '../lib/library-content';
+import path from 'path';
 import {
   makeEntitlements,
   NO_STORAGE_LIMITS,
@@ -643,6 +645,36 @@ describe('restore enforces Free library and request bounds', () => {
       expect(db.prepare('SELECT COUNT(*) AS n FROM knownWords').get()).toEqual({ n: 0 });
     } finally {
       restoreEngine();
+    }
+  });
+
+  test('restores a free library book without counting its lessons', async () => {
+    process.env.LIBRARY_CONTENT_ROOT = path.resolve(
+      import.meta.dir,
+      '../test-fixtures/library-content',
+    );
+    seedCollection('at-cap');
+    seedLesson('lesson-at-cap', 'at-cap');
+    const restoreEngine = installLimitedEngine();
+    try {
+      const book = loadLibraryBook('es', 'cuento-corto')!;
+      const response = await importData({
+        lessons: book.lessons.map((lesson, sortOrder) => ({
+          id: libraryLessonIdFor('es', 'cuento-corto', lesson.sourceFile),
+          collectionId: 'at-cap',
+          title: lesson.title,
+          textContent: lesson.markdown,
+          sortOrder,
+          language: 'es',
+        })),
+      });
+      expect(response.status).toBe(200);
+      expect(
+        db.prepare("SELECT COUNT(*) AS n FROM lessons WHERE id LIKE 'library-%'").get(),
+      ).toEqual({ n: 2 });
+    } finally {
+      restoreEngine();
+      delete process.env.LIBRARY_CONTENT_ROOT;
     }
   });
 

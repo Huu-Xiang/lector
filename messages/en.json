@@ -715,7 +715,7 @@
     "getStarted": "Start free",
     "features": {
       "glosses": "{count, number} AI word lookups each month (words the dictionary doesn't have)",
-      "freeLibrary": "Up to 10 collections and 200 lessons",
+      "freeLibrary": "Up to 10 collections and 200 lessons; free library books do not use up lessons",
       "byok": "Add your own AI key when you want more",
       "detailed": "{count, number} detailed AI answers each month (phrase translations and word explanations)",
       "phraseWords": "Select up to {count} words for one translation",

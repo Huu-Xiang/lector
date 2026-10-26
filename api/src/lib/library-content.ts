@@ -1,6 +1,8 @@
+import { createHash } from 'crypto';
 import fs from 'fs';
 import path from 'path';
 import type { LanguageCode } from './languages';
+import { lessonTextBytes } from './storage-limits';
 
 /**
  * Free library: public-domain books a language pack ships under
@@ -41,10 +43,56 @@ interface Manifest {
   lessons?: Array<{ file?: unknown; title?: unknown }>;
 }
 
+function contentRoot(): string {
+  return process.env.LIBRARY_CONTENT_ROOT || path.resolve(import.meta.dir, '../../../languages');
+}
+
 function libraryDir(language: LanguageCode): string {
-  const root =
-    process.env.LIBRARY_CONTENT_ROOT || path.resolve(import.meta.dir, '../../../languages');
-  return path.join(root, language, 'content', 'library');
+  return path.join(contentRoot(), language, 'content', 'library');
+}
+
+export const libraryCollectionIdFor = (language: string, slug: string) =>
+  `library-${language}-${slug}`;
+
+export function libraryLessonIdFor(language: string, slug: string, sourceFile: string): string {
+  const digest = createHash('sha256').update(`${slug}/${sourceFile}`).digest('hex');
+  return `library-${language}-lesson-${digest}`;
+}
+
+const shippedLessonBytes = new Map<string, Map<string, number>>();
+
+/** Bytes of every shipped library lesson as an add stores it, keyed by lesson id. */
+export function libraryLessonBytes(): Map<string, number> {
+  const root = contentRoot();
+  const cached = shippedLessonBytes.get(root);
+  if (cached) return cached;
+  const sizes = new Map<string, number>();
+  const languages = fs.existsSync(root) ? fs.readdirSync(root) : [];
+  for (const language of languages as LanguageCode[]) {
+    if (!fs.existsSync(libraryDir(language))) continue;
+    for (const { slug } of listLibraryBooks(language)) {
+      for (const lesson of loadLibraryBook(language, slug)?.lessons ?? []) {
+        sizes.set(
+          libraryLessonIdFor(language, slug, lesson.sourceFile),
+          lessonTextBytes(lesson.markdown, lesson.title),
+        );
+      }
+    }
+  }
+  shippedLessonBytes.set(root, sizes);
+  return sizes;
+}
+
+/**
+ * Free library lessons do not count toward the lesson and text limits. Only a
+ * shipped lesson id qualifies, and only up to its shipped size.
+ */
+export function isShippedLibraryLesson(id: string): boolean {
+  return libraryLessonBytes().has(id);
+}
+
+export function countableLessonBytes(id: string, bytes: number): number {
+  return bytes - Math.min(bytes, libraryLessonBytes().get(id) ?? 0);
 }
 
 export function isLibrarySlug(value: unknown): value is string {

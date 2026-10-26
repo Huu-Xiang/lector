@@ -1,11 +1,16 @@
 import { Hono } from 'hono';
-import { createHash } from 'crypto';
 import { db } from '../db';
 import { getCurrentUserId } from '../lib/user';
 import { LANGUAGES, isValidLanguageCode } from '../lib/languages';
 import { countWords } from '../lib/html-to-markdown';
 import { segmentWordsFor } from '../lib/segment-words';
-import { isLibrarySlug, listLibraryBooks, loadLibraryBook } from '../lib/library-content';
+import {
+  isLibrarySlug,
+  libraryCollectionIdFor as collectionIdFor,
+  libraryLessonIdFor as lessonIdFor,
+  listLibraryBooks,
+  loadLibraryBook,
+} from '../lib/library-content';
 import { entitlements, planLimitResponse, type AtomicLimitCheck } from '../lib/entitlements';
 import { collectionMetadataBytes, lessonTextBytes } from '../lib/storage-limits';
 
@@ -13,13 +18,6 @@ import { collectionMetadataBytes, lessonTextBytes } from '../lib/storage-limits'
 // the learner's own collections. Adding is idempotent per user and book.
 
 const app = new Hono();
-
-const collectionIdFor = (language: string, slug: string) => `library-${language}-${slug}`;
-
-function lessonIdFor(language: string, slug: string, sourceFile: string): string {
-  const digest = createHash('sha256').update(`${slug}/${sourceFile}`).digest('hex');
-  return `library-${language}-lesson-${digest}`;
-}
 
 // GET /api/library/catalog?language=fr
 app.get('/catalog', (c) => {
@@ -76,11 +74,10 @@ app.post('/add', async (c) => {
       id: lessonIdFor(language, slug, lesson.sourceFile),
     }));
     const bytes = lessons.map((lesson) => lessonTextBytes(lesson.markdown, lesson.title));
+    // Library lessons do not count toward maxLessons or maxLessonTextBytesTotal.
     const checks: AtomicLimitCheck[] = [
       { metric: 'maxCollections', requested: 1 },
-      { metric: 'maxLessons', requested: lessons.length },
       { metric: 'maxLessonTextBytes', requested: Math.max(0, ...bytes) },
-      { metric: 'maxLessonTextBytesTotal', requested: bytes.reduce((a, b) => a + b, 0) },
       { metric: 'maxCollectionMetadataBytes', requested: collectionMetadataBytes(book) },
     ];
 

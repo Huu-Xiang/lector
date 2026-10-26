@@ -4,6 +4,7 @@ import path from 'path';
 import { db } from '../db';
 import app from './library';
 import {
+  entitlements,
   makeEntitlements,
   parsePlanLimitOverrides,
   setEntitlementsEngineForTests,
@@ -126,11 +127,46 @@ describe('library route', () => {
     expect((await add({ language: 'es', slug: 'no-such-book' })).status).toBe(404);
   });
 
-  test('stops with a plan-limit response when the lessons do not fit, adding nothing', async () => {
-    useLimits({ maxLessons: 1 });
+  test('stops with a plan-limit response when the collection does not fit, adding nothing', async () => {
+    useLimits({ maxCollections: 0 });
     const res = await add({ language: 'es', slug: 'cuento-corto' });
     expect(res.status).toBe(429);
-    expect(await res.json()).toMatchObject({ error: 'plan_limit', metric: 'maxLessons' });
+    expect(await res.json()).toMatchObject({ error: 'plan_limit', metric: 'maxCollections' });
     expect((db.prepare('SELECT COUNT(*) AS n FROM collections').get() as { n: number }).n).toBe(0);
+  });
+});
+
+describe('library lessons and the lesson limits', () => {
+  beforeEach(reset);
+
+  const ownerId = () =>
+    (db.prepare('SELECT userId FROM collections LIMIT 1').get() as { userId: string }).userId;
+
+  test('an added book does not count toward maxLessons or maxLessonTextBytesTotal', async () => {
+    useLimits({ maxLessons: 1, maxLessonTextBytesTotal: 100 });
+    const res = await add({ language: 'es', slug: 'cuento-corto' });
+    expect(res.status).toBe(200);
+    expect(entitlements.checkLimit(ownerId(), 'maxLessons', 1).allowed).toBe(true);
+    expect(entitlements.checkLimit(ownerId(), 'maxLessonTextBytesTotal', 100).allowed).toBe(true);
+  });
+
+  test('text added to a library lesson beyond its shipped size counts', async () => {
+    useLimits({ maxLessonTextBytesTotal: 100 });
+    await add({ language: 'es', slug: 'cuento-corto' });
+    db.prepare(
+      "UPDATE lessons SET textContent = textContent || ? WHERE collectionId = 'library-es-cuento-corto' AND sortOrder = 0",
+    ).run('x'.repeat(60));
+    expect(entitlements.checkLimit(ownerId(), 'maxLessonTextBytesTotal', 40).allowed).toBe(true);
+    expect(entitlements.checkLimit(ownerId(), 'maxLessonTextBytesTotal', 41).allowed).toBe(false);
+  });
+
+  test('a lesson with a library-style id that was never shipped still counts', async () => {
+    useLimits({ maxLessons: 1 });
+    await add({ language: 'es', slug: 'cuento-corto' });
+    db.prepare(
+      `INSERT INTO lessons (id, collectionId, title, sortOrder, textContent, wordCount, language, createdAt, lastReadAt, userId)
+       VALUES ('library-es-lesson-forged', 'library-es-cuento-corto', 'x', 9, 'x', 1, 'es', '', '', ?)`,
+    ).run(ownerId());
+    expect(entitlements.checkLimit(ownerId(), 'maxLessons', 1).allowed).toBe(false);
   });
 });

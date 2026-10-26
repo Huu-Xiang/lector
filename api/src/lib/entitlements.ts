@@ -35,6 +35,7 @@ import { getCompedPlan } from './account-flags';
 import { hasByokCredential } from './byok';
 import { activeGrant } from './plan-grants';
 import { paddleCheckoutAllowed } from './admin';
+import { countableLessonBytes, isShippedLibraryLesson } from './library-content';
 
 export type PaidPlanId = 'cloud' | 'plus' | 'max';
 export type PlanId = 'free' | PaidPlanId;
@@ -892,12 +893,33 @@ export function makeEntitlements(deps: EntitlementsDeps): EntitlementsEngine {
     return row.used ?? 0;
   }
 
+  function libraryAllowance(userId: string): { lessons: number; bytes: number } {
+    const rows = db
+      .prepare(
+        `SELECT id, length(CAST(title AS BLOB)) + length(CAST(textContent AS BLOB)) AS bytes
+           FROM lessons WHERE userId = ? AND id LIKE 'library-%'`,
+      )
+      .all(userId) as Array<{ id: string; bytes: number | null }>;
+    let lessons = 0;
+    let bytes = 0;
+    for (const row of rows) {
+      if (!isShippedLibraryLesson(row.id)) continue;
+      const total = row.bytes ?? 0;
+      lessons += 1;
+      bytes += total - countableLessonBytes(row.id, total);
+    }
+    return { lessons, bytes };
+  }
+
   function liveUsage(userId: string, metric: LiveLimitMetric): number {
     switch (metric) {
       case 'maxCollections':
         return scalarUsage('SELECT COUNT(*) AS used FROM collections WHERE userId = ?', userId);
       case 'maxLessons':
-        return scalarUsage('SELECT COUNT(*) AS used FROM lessons WHERE userId = ?', userId);
+        return (
+          scalarUsage('SELECT COUNT(*) AS used FROM lessons WHERE userId = ?', userId) -
+          libraryAllowance(userId).lessons
+        );
       case 'maxCollectionGroups':
         return scalarUsage(
           'SELECT COUNT(*) AS used FROM collection_groups WHERE userId = ?',
@@ -922,12 +944,14 @@ export function makeEntitlements(deps: EntitlementsDeps): EntitlementsEngine {
       case 'maxAnkiPendingRows':
         return scalarUsage('SELECT COUNT(*) AS used FROM anki_pending WHERE userId = ?', userId);
       case 'maxLessonTextBytesTotal':
-        return scalarUsage(
-          `SELECT COALESCE(SUM(
-             length(CAST(title AS BLOB)) + length(CAST(textContent AS BLOB))
-           ), 0) AS used
-             FROM lessons WHERE userId = ?`,
-          userId,
+        return (
+          scalarUsage(
+            `SELECT COALESCE(SUM(
+               length(CAST(title AS BLOB)) + length(CAST(textContent AS BLOB))
+             ), 0) AS used
+               FROM lessons WHERE userId = ?`,
+            userId,
+          ) - libraryAllowance(userId).bytes
         );
       case 'maxVocabTextBytesTotal':
         return scalarUsage(

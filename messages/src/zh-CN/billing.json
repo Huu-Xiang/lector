@@ -8,7 +8,7 @@
     "getStarted": "免费开始",
     "features": {
       "glosses": "每月 {count, number} 次 AI 查词（词典里没有的词）",
-      "freeLibrary": "最多 10 个合集、200 篇课文",
+      "freeLibrary": "最多 10 个合集、200 篇课文；免费书库的书不占课文数",
       "byok": "想用更多时，可以添加自己的 AI 密钥",
       "detailed": "每月 {count, number} 次详细的 AI 回答（划词翻译和单词详解）",
       "phraseWords": "一次最多选 {count} 个词翻译",

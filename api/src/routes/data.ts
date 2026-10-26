@@ -34,6 +34,7 @@ import {
   validatePersistedId,
   vocabContentBytes,
 } from '../lib/storage-limits';
+import { countableLessonBytes, isShippedLibraryLesson } from '../lib/library-content';
 
 const app = new Hono();
 
@@ -1036,11 +1037,15 @@ app.post(
       userId,
       [...finalCollections.keys()],
     );
-    const lessonBefore = existingBytesById(
-      'lessons',
-      'length(CAST(title AS BLOB)) + length(CAST(textContent AS BLOB))',
-      userId,
-      [...finalLessons.keys()],
+    const lessonBefore = new Map(
+      [
+        ...existingBytesById(
+          'lessons',
+          'length(CAST(title AS BLOB)) + length(CAST(textContent AS BLOB))',
+          userId,
+          [...finalLessons.keys()],
+        ),
+      ].map(([id, bytes]) => [id, countableLessonBytes(id, bytes)]),
     );
     const vocabBefore = existingBytesById(
       'vocab',
@@ -1080,7 +1085,7 @@ app.post(
       }),
     );
     const lessonGrowth = byteGrowthStats(finalLessons, lessonBefore, (row) =>
-      lessonTextBytes(row.textContent, row.title),
+      countableLessonBytes(row.id as string, lessonTextBytes(row.textContent, row.title)),
     );
     const vocabGrowth = byteGrowthStats(finalVocab, vocabBefore, (row) => vocabContentBytes(row));
     const clozeGrowth = byteGrowthStats(finalCloze, clozeBefore, (row) => clozeContentBytes(row));
@@ -1104,7 +1109,11 @@ app.post(
     const netNew = {
       groups: countNetNewIds('collection_groups', userId, [...finalGroups.keys()]),
       collections: countNetNewIds('collections', userId, [...finalCollections.keys()]),
-      lessons: countNetNewIds('lessons', userId, [...finalLessons.keys()]),
+      lessons: countNetNewIds(
+        'lessons',
+        userId,
+        [...finalLessons.keys()].filter((id) => !isShippedLibraryLesson(id)),
+      ),
       vocab: countNetNewIds('vocab', userId, [...finalVocab.keys()]),
       cloze: countNetNewIds('clozeSentences', userId, [...finalCloze.keys()]),
       journal: countNetNewIds('journal_entries', userId, [...finalJournal.keys()]),
