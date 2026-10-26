@@ -11,7 +11,7 @@
  * tokens, never hardcode colours.
  */
 :root {
-  --sheet-h: 46dvh;
+  --sheet-h: 52dvh;
   --mobile-topbar-h: 2.5rem;
 
   /* shadcn semantic tokens — warm sand / sage (light) */
@@ -567,6 +567,13 @@ html {
      callout as well. */
   [data-word-state] {
     -webkit-touch-callout: none;
+  }
+}
+
+/* On phones the onboarding coach sits where the chat button does. */
+@media (width < 40rem) {
+  body[data-onboarding-coach] [data-chat-toggle] {
+    display: none;
   }
 }
 

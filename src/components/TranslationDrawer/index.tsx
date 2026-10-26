@@ -14,6 +14,7 @@ import TargetText from '@/components/TargetText';
 import NestedWordButton from './components/NestedWordButton';
 import Gloss from './components/Gloss';
 import { EntryBadges, EntryExtras, SenseGroups } from './components/EntryDetails';
+import { LemmaLine, usePosLabel } from './components/DrawerLabels';
 import { lookupAnnouncement } from './lookup-announcement';
 import {
   SHEET_VH_CLOSE_BELOW,
@@ -60,6 +61,7 @@ export default function TranslationDrawer({
   onAddCloze,
 }: TranslationDrawerProps) {
   const t = useTranslations('reader.drawer');
+  const posLabel = usePosLabel();
   const pack = useActiveLanguage();
   const drawerRef = useRef<HTMLDivElement>(null);
   const dragStartVh = useRef<number | null>(null);
@@ -255,18 +257,22 @@ export default function TranslationDrawer({
                 </div>
                 {entry?.lemmaInfo && (
                   <p className="mt-1 text-xs text-muted-foreground">
-                    {entry.lemmaInfo.label}{' '}
-                    {onLookupWord ? (
-                      <NestedWordButton
-                        word={entry.lemmaInfo.stem}
-                        onLookupWord={onLookupWord}
-                        testId="lemma-stem-link"
-                      />
-                    ) : (
-                      <TargetText className="font-medium text-foreground" as="span">
-                        {entry.lemmaInfo.stem}
-                      </TargetText>
-                    )}
+                    <LemmaLine
+                      label={entry.lemmaInfo.label}
+                      stem={
+                        onLookupWord ? (
+                          <NestedWordButton
+                            word={entry.lemmaInfo.stem}
+                            onLookupWord={onLookupWord}
+                            testId="lemma-stem-link"
+                          />
+                        ) : (
+                          <TargetText className="font-medium text-foreground" as="span">
+                            {entry.lemmaInfo.stem}
+                          </TargetText>
+                        )
+                      }
+                    />
                   </p>
                 )}
                 <div className="mt-2 flex flex-wrap items-center gap-2">
@@ -331,7 +337,7 @@ export default function TranslationDrawer({
                   <div>
                     {aiContextPartOfSpeech && (
                       <span className="mr-2 inline-block rounded bg-muted px-1.5 py-0.5 align-middle text-[10px] font-semibold tracking-wide text-muted-foreground uppercase">
-                        {aiContextPartOfSpeech}
+                        {posLabel(aiContextPartOfSpeech)}
                       </span>
                     )}
                     <span className="leading-relaxed text-foreground">{aiContextTranslation}</span>
@@ -351,7 +357,7 @@ export default function TranslationDrawer({
                             <div className="min-w-0 flex-1">
                               {sense.partOfSpeech && (
                                 <span className="mr-2 inline-block rounded bg-muted px-1.5 py-0.5 align-middle text-[10px] font-semibold tracking-wide text-muted-foreground uppercase">
-                                  {sense.partOfSpeech}
+                                  {posLabel(sense.partOfSpeech)}
                                 </span>
                               )}
                               <span className="text-foreground">
@@ -373,7 +379,7 @@ export default function TranslationDrawer({
                 <div>
                   {aiPartOfSpeech && (
                     <span className="mr-2 inline-block rounded bg-muted px-1.5 py-0.5 align-middle text-[10px] font-semibold tracking-wide text-muted-foreground uppercase">
-                      {aiPartOfSpeech}
+                      {posLabel(aiPartOfSpeech)}
                     </span>
                   )}
                   <span className="leading-relaxed text-foreground">
@@ -583,7 +589,7 @@ export default function TranslationDrawer({
             <div className="flex-shrink-0 space-y-2 border-t border-border bg-muted/50 px-4 py-3">
               {onboardingSaveProgress && (
                 <div
-                  className="rounded-xl border border-[var(--gold-lip)] bg-[var(--gold-soft)] p-3"
+                  className="rounded-xl border border-[var(--gold-lip)] bg-[var(--gold-soft)] px-3 py-2 lg:p-3"
                   data-testid="onboarding-drawer-progress"
                   role="status"
                 >
@@ -603,7 +609,7 @@ export default function TranslationDrawer({
                       })}
                     </span>
                   </div>
-                  <div className="mt-2 grid grid-cols-3 gap-1.5" aria-hidden="true">
+                  <div className="mt-1.5 grid grid-cols-3 gap-1.5 lg:mt-2" aria-hidden="true">
                     {Array.from({ length: onboardingSaveProgress.target }, (_, index) => (
                       <span
                         key={index}
@@ -672,48 +678,53 @@ export default function TranslationDrawer({
                   )}
                 </div>
               )}
-              {onRetranslate && (
-                <button
-                  onClick={onRetranslate}
-                  className="flex w-full items-center justify-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-                  title={t('retranslateTitle')}
-                >
-                  <RefreshCw className="h-3.5 w-3.5" />
-                  {t('retranslate')}
-                </button>
-              )}
-              {/* Anki — single word: pure word card */}
-              {!isPhrase && onAddToAnki && (hasRichEntry || fallbackTranslation) && !isLoading && (
-                <button
-                  data-testid="add-to-anki-btn"
-                  onClick={async () => {
-                    if (ankiStatus === 'loading' || ankiStatus === 'done') return;
-                    setAnkiStatus('loading');
-                    try {
-                      await onAddToAnki();
-                      setAnkiStatus('done');
-                    } catch {
-                      setAnkiStatus('error');
-                    }
-                  }}
-                  disabled={ankiStatus === 'loading' || ankiStatus === 'done'}
-                  className={`flex w-full items-center justify-center gap-1.5 rounded-md border px-3 py-1.5 text-xs font-medium transition-colors ${
-                    ankiStatus === 'done'
-                      ? 'cursor-default border-primary/40 bg-primary/10 text-[var(--primary-text)]'
-                      : ankiStatus === 'error'
-                        ? 'border-destructive/40 bg-destructive/10 text-destructive hover:bg-destructive/20'
-                        : 'border-border text-muted-foreground hover:bg-accent hover:text-foreground'
-                  }`}
-                >
-                  {ankiStatus === 'done'
-                    ? t('ankiAdded')
-                    : ankiStatus === 'loading'
-                      ? t('ankiAdding')
-                      : ankiStatus === 'error'
-                        ? t('ankiError')
-                        : t('ankiAdd')}
-                </button>
-              )}
+              <div className="flex gap-2 empty:hidden lg:flex-col">
+                {onRetranslate && (
+                  <button
+                    onClick={onRetranslate}
+                    className="flex w-full min-w-0 flex-1 items-center justify-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                    title={t('retranslateTitle')}
+                  >
+                    <RefreshCw className="h-3.5 w-3.5" />
+                    {t('retranslate')}
+                  </button>
+                )}
+                {/* Anki — single word: pure word card */}
+                {!isPhrase &&
+                  onAddToAnki &&
+                  (hasRichEntry || fallbackTranslation) &&
+                  !isLoading && (
+                    <button
+                      data-testid="add-to-anki-btn"
+                      onClick={async () => {
+                        if (ankiStatus === 'loading' || ankiStatus === 'done') return;
+                        setAnkiStatus('loading');
+                        try {
+                          await onAddToAnki();
+                          setAnkiStatus('done');
+                        } catch {
+                          setAnkiStatus('error');
+                        }
+                      }}
+                      disabled={ankiStatus === 'loading' || ankiStatus === 'done'}
+                      className={`flex w-full min-w-0 flex-1 items-center justify-center gap-1.5 rounded-md border px-3 py-1.5 text-xs font-medium transition-colors ${
+                        ankiStatus === 'done'
+                          ? 'cursor-default border-primary/40 bg-primary/10 text-[var(--primary-text)]'
+                          : ankiStatus === 'error'
+                            ? 'border-destructive/40 bg-destructive/10 text-destructive hover:bg-destructive/20'
+                            : 'border-border text-muted-foreground hover:bg-accent hover:text-foreground'
+                      }`}
+                    >
+                      {ankiStatus === 'done'
+                        ? t('ankiAdded')
+                        : ankiStatus === 'loading'
+                          ? t('ankiAdding')
+                          : ankiStatus === 'error'
+                            ? t('ankiError')
+                            : t('ankiAdd')}
+                    </button>
+                  )}
+              </div>
               {/* Anki — phrase: cloze card with inline word picker */}
               {isPhrase && onAddCloze && (fallbackTranslation || aiPhraseDetails) && !isLoading && (
                 <div data-testid="add-cloze-section">

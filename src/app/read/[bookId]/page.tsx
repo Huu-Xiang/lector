@@ -44,7 +44,13 @@ import {
 } from '@/lib/dictionary-client';
 import { speak } from '@/lib/tts';
 import { isComposing } from '@/lib/keyboard';
-import { foldWord, getLanguageConfig, isValidLanguageCode } from '@/lib/languages';
+import {
+  foldWord,
+  getLanguageConfig,
+  isValidLanguageCode,
+  lookupByVocabKeys,
+  vocabKeys,
+} from '@/lib/languages';
 import { toast } from 'sonner';
 import { Headphones, LoaderCircle } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
@@ -62,6 +68,14 @@ import {
   updateOnboardingProgress,
   type OnboardingSnapshot,
 } from '@/lib/onboarding';
+
+/** The saved row under the first of `keys` that has one. */
+async function findVocab(keys: string[]): Promise<VocabEntry | undefined> {
+  for (const key of keys) {
+    const entry = await getVocabByText(key);
+    if (entry) return entry;
+  }
+}
 
 export default function ReadPage({ params }: { params: Promise<{ bookId: string }> }) {
   const { bookId: lessonId } = use(params);
@@ -222,9 +236,23 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     }
   }
 
+  // A Korean particle form saves under its noun (수탉이 → 수탉), the key vocabKeys
+  // shares. A row saved before keeps its own text.
+  const vocabTextOf = useCallback(
+    (word: string) => {
+      if (wordPanel.existingEntry && wordPanel.word === word) return wordPanel.existingEntry.text;
+      const folded = foldWord(word, activeLang);
+      const stem = wordPanel.word === word ? wordPanel.dictEntry?.lemmaInfo?.stem : undefined;
+      if (!stem || word.includes(' ')) return folded;
+      const key = foldWord(stem, activeLang);
+      return vocabKeys(word, activeLang).includes(key) ? key : folded;
+    },
+    [activeLang, wordPanel.word, wordPanel.existingEntry, wordPanel.dictEntry],
+  );
+
   const applyReaderWordState = useCallback(
     (word: string, state: WordState) => {
-      const key = foldWord(word, activeLang);
+      const key = vocabTextOf(word);
       const patch = patchWordState(readerWordStatesRef.current, key, state);
       readerWordStatesRef.current = patch.map;
       setReaderWordStates(patch.map);
@@ -236,7 +264,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         setReaderWordStates(restored);
       };
     },
-    [activeLang],
+    [vocabTextOf],
   );
 
   // Explicitly record a real reader open (not the background GET /lessons)
@@ -383,7 +411,9 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       incrementDailyStat('dictionaryLookups');
       trackOnboardingLookup(word);
 
-      const lookupPromise = getVocabByText(foldWord(word, activeLang));
+      const lookupPromise = findVocab(
+        isPhrase ? [foldWord(word, activeLang)] : vocabKeys(word, activeLang),
+      );
       existingEntryLookup.current = lookupPromise;
       const existingEntry = await lookupPromise;
       if (requestId !== translationRequestId.current) return;
@@ -649,7 +679,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     const isPhrase = wordPanel.word.includes(' ');
     const entry: VocabEntry = {
       id: existing?.id || uuidv4(),
-      text: foldWord(wordPanel.word, activeLang),
+      text: vocabTextOf(wordPanel.word),
       type: isPhrase ? 'phrase' : 'word',
       sentence: wordPanel.sentence,
       translation: wordPanel.translation,
@@ -680,9 +710,9 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
   }, [
     wordPanel,
     lessonId,
-    activeLang,
     resolveExistingEntry,
     applyReaderWordState,
+    vocabTextOf,
     persistAcceptedTranslation,
     trackOnboardingVocab,
     t,
@@ -703,7 +733,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     if (!existing) {
       const entry: VocabEntry = {
         id: uuidv4(),
-        text: foldWord(wordPanel.word, activeLang),
+        text: vocabTextOf(wordPanel.word),
         type: 'word',
         sentence: wordPanel.sentence,
         translation: wordPanel.translation || '',
@@ -736,8 +766,8 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
   }, [
     wordPanel,
     lessonId,
-    activeLang,
     applyReaderWordState,
+    vocabTextOf,
     closeWordPanel,
     resolveExistingEntry,
     persistAcceptedTranslation,
@@ -760,7 +790,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     if (!existing) {
       const entry: VocabEntry = {
         id: uuidv4(),
-        text: foldWord(wordPanel.word, activeLang),
+        text: vocabTextOf(wordPanel.word),
         type: 'word',
         sentence: wordPanel.sentence,
         translation: wordPanel.translation || '',
@@ -791,8 +821,8 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
   }, [
     wordPanel,
     lessonId,
-    activeLang,
     applyReaderWordState,
+    vocabTextOf,
     closeWordPanel,
     resolveExistingEntry,
     trackOnboardingVocab,
@@ -820,7 +850,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       if (!existing) {
         const entry: VocabEntry = {
           id: uuidv4(),
-          text: foldWord(wordPanel.word, activeLang),
+          text: vocabTextOf(wordPanel.word),
           type: wordPanel.word.includes(' ') ? 'phrase' : 'word',
           sentence: wordPanel.sentence,
           translation: wordPanel.translation,
@@ -872,8 +902,8 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     [
       wordPanel,
       lessonId,
-      activeLang,
       applyReaderWordState,
+      vocabTextOf,
       onboarding,
       onboardingActive,
       closeWordPanel,
@@ -917,7 +947,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     const isPhrase = wordPanel.word.includes(' ');
     const entry: VocabEntry = {
       id: uuidv4(),
-      text: foldWord(wordPanel.word, activeLang),
+      text: vocabTextOf(wordPanel.word),
       type: isPhrase ? 'phrase' : 'word',
       sentence: wordPanel.sentence,
       translation: wordPanel.translation || '',
@@ -941,8 +971,8 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
   }, [
     wordPanel,
     lessonId,
-    activeLang,
     applyReaderWordState,
+    vocabTextOf,
     resolveExistingEntry,
     persistAcceptedTranslation,
     trackOnboardingVocab,
@@ -1370,7 +1400,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
           isEnriching={wordPanel.isEnriching}
           error={wordPanel.error}
           existingEntry={wordPanel.existingEntry}
-          wordState={readerWordStates.get(foldWord(wordPanel.word, activeLang))}
+          wordState={lookupByVocabKeys(readerWordStates, wordPanel.word, activeLang)}
           onboardingSaveProgress={
             onboardingActive && !wordPanel.word.includes(' ')
               ? {

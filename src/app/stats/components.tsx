@@ -313,7 +313,7 @@ export function FluencyBadge({ fluency }: { fluency: FluencyStats }) {
           </span>
           <div>
             <h3 className="text-lg font-semibold text-foreground">
-              {estimatedLevel.code} &mdash; {estimatedLevel.label}
+              {estimatedLevel.code} &mdash; {t(`levelName.${estimatedLevel.code}`)}
             </h3>
             <p className="text-sm text-muted-foreground">{t('estimatedLevel')}</p>
           </div>

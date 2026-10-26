@@ -126,6 +126,53 @@
         "toefl": "托福",
         "ielts": "雅思",
         "gre": "GRE"
+      },
+      "lemma": {
+        "formOf": "原形：",
+        "derivedFrom": "派生自：",
+        "pastParticiple": "过去分词，原形：",
+        "repetition": "重复形式，原形：",
+        "abstractNoun": "抽象名词，来自：",
+        "diminutive": "指小形式，原形：",
+        "nominalization": "名词化，来自：",
+        "adverbial": "副词形式，原形：",
+        "plural": "复数，原形：",
+        "presentTense": "现在时，原形：",
+        "pastTense": "过去时，原形：",
+        "futureTense": "将来时，原形：",
+        "conditional": "条件式，原形：",
+        "imperative": "命令式，原形：",
+        "compound": "复合词，后半部分：",
+        "related": "相关词：",
+        "ending": "（+{ending}）"
+      },
+      "pos": {
+        "noun": "名词",
+        "verb": "动词",
+        "adj": "形容词",
+        "adv": "副词",
+        "pron": "代词",
+        "prep": "介词",
+        "postp": "后置词",
+        "conj": "连词",
+        "intj": "感叹词",
+        "num": "数词",
+        "det": "限定词",
+        "article": "冠词",
+        "particle": "助词",
+        "phrase": "短语",
+        "name": "专有名词",
+        "prefix": "前缀",
+        "suffix": "后缀",
+        "affix": "词缀",
+        "root": "词根",
+        "counter": "量词",
+        "proverb": "谚语",
+        "contraction": "缩约形",
+        "character": "汉字",
+        "symbol": "符号",
+        "punct": "标点",
+        "abbrev": "缩写"
       }
     },
     "onboardingTip": {
@@ -146,14 +193,14 @@
       "ready": "已就绪 {count}/3",
       "lookup": {
         "eyebrow": "试试阅读器",
-        "title": "选择任意一个高亮单词",
-        "body": "带颜色的词对你来说还是生词。点按或点击其中一个，即可在课文中查看释义。"
+        "title": "点一个你不认识的词",
+        "body": "课文里的每个词都能查。点按或点击一个，就能在这里看到释义。"
       },
       "save": {
         "titleFirst": "把这个词加入复习",
         "titleNext": "再选一个有用的词",
         "bodyFirst": "在释义面板中选择 1-4 级，下方的复习进度会显示这个词。",
-        "bodyNext": "关闭释义，选择另一个高亮单词，然后设置等级即可添加。"
+        "bodyNext": "关闭释义，再点另一个词，设置等级即可添加。"
       },
       "phrase": {
         "title": "现在试试翻译整个短语",

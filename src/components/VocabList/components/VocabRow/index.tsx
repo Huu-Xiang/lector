@@ -26,7 +26,7 @@ export default function VocabRow({
       onClick={() => onClick(entry)}
     >
       {/* Checkbox */}
-      <td className="w-12 px-4 py-3">
+      <td className="w-10 px-2 py-3 sm:w-12 sm:px-4">
         <input
           type="checkbox"
           checked={isSelected}
@@ -40,9 +40,9 @@ export default function VocabRow({
       </td>
 
       {/* Word/Phrase */}
-      <td className="px-4 py-3">
+      <td className="px-2 py-3 sm:px-4">
         <div className="flex flex-col">
-          <span className="font-medium text-foreground">{entry.text}</span>
+          <span className="font-medium break-keep text-foreground">{entry.text}</span>
           {entry.type === 'phrase' && (
             <span className="text-xs text-muted-foreground">{t('phrase')}</span>
           )}
@@ -50,22 +50,26 @@ export default function VocabRow({
       </td>
 
       {/* Translation */}
-      <td className="max-w-xs px-4 py-3">
+      <td className="max-w-xs min-w-32 px-2 py-3 sm:px-4">
         <span className="line-clamp-2 text-muted-foreground">{entry.translation}</span>
       </td>
 
       {/* State */}
-      <td className="px-4 py-3">
+      <td className="px-2 py-3 sm:px-4">
         <div className="flex items-center justify-center">
           <StateIndicator state={entry.state} />
         </div>
       </td>
 
-      <td className="max-w-[150px] px-4 py-3">
-        <span className="line-clamp-1 text-sm text-muted-foreground">{bookTitle || '-'}</span>
+      <td className="max-w-[150px] min-w-20 px-2 py-3 sm:px-4">
+        <span className="line-clamp-2 text-sm text-muted-foreground sm:line-clamp-1">
+          {bookTitle || '-'}
+        </span>
       </td>
-      <td className="px-4 py-3 text-sm whitespace-nowrap text-muted-foreground">{formattedDate}</td>
-      <td className="px-4 py-3">
+      <td className="hidden px-4 py-3 text-sm whitespace-nowrap text-muted-foreground sm:table-cell">
+        {formattedDate}
+      </td>
+      <td className="hidden px-4 py-3 sm:table-cell">
         <AnkiStatus pushedToAnki={entry.pushedToAnki} ankiNoteId={entry.ankiNoteId} />
       </td>
     </tr>

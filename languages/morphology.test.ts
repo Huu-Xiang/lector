@@ -210,4 +210,13 @@ describe('vocabKeys', () => {
   it('does not treat an Indonesian prefix peel as the same spelling', () => {
     expect(vocabKeys('membeli', LANGUAGES.id)).toEqual(['membeli']);
   });
+
+  it('lets a Korean particle form share the noun key', () => {
+    expect(vocabKeys('수탉이', LANGUAGES.ko)).toEqual(['수탉이', '수탉']);
+    expect(vocabKeys('도서관에서는', LANGUAGES.ko)).toContain('도서관');
+  });
+
+  it('keeps a Korean ending peel apart, since the citation form is another key', () => {
+    expect(vocabKeys('좋아하지', LANGUAGES.ko)).not.toContain('좋아하다');
+  });
 });

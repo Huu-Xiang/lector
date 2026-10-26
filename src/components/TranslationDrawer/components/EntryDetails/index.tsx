@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 import type { ExpandedDictionaryEntry } from '../../types';
 import Gloss from '../Gloss';
+import { usePosLabel } from '../DrawerLabels';
 
 interface Sense {
   partOfSpeech: string;
@@ -47,11 +48,12 @@ export function SenseGroups({
   senses: Sense[];
   onLookupWord?: (word: string) => void;
 }) {
+  const posLabel = usePosLabel();
   return (
     <div className="space-y-3">
       {groupByPartOfSpeech(senses).map((group, g) => (
         <div key={g}>
-          {group.partOfSpeech && <span className={POS_BADGE}>{group.partOfSpeech}</span>}
+          {group.partOfSpeech && <span className={POS_BADGE}>{posLabel(group.partOfSpeech)}</span>}
           <ol className={group.partOfSpeech ? 'mt-1.5 space-y-1.5' : 'space-y-1.5'}>
             {group.items.map((sense, i) => (
               <li key={i} className="flex gap-3">

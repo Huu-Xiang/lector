@@ -201,9 +201,11 @@ export default function ChatWidget() {
 
   return (
     <>
-      {/* Floating trigger button */}
+      {/* Keeps the last row of a page clear of the button on phones. */}
+      <div className="h-16 sm:hidden print:hidden" aria-hidden="true" />
       <Button
         onClick={toggleOpen}
+        data-chat-toggle
         className={clsx(
           'fixed right-4 bottom-20 z-50 flex h-12 w-12 rounded-full shadow-lg transition-all hover:shadow-xl sm:right-6 sm:bottom-6 print:hidden',
           pathname.includes('/read') && '2xl:right-[406px]',

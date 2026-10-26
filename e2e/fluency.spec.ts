@@ -53,8 +53,7 @@ test.describe('Fluency Benchmarks', () => {
     // Should show "A1 — Beginner" text
     await expect(section.getByText(/A1\s*—\s*Beginner/)).toBeVisible();
 
-    // Should show "Estimated CEFR Level" subtitle
-    await expect(section.getByText('Estimated CEFR Level')).toBeVisible();
+    await expect(section.getByText('Estimated from the words you know')).toBeVisible();
   });
 
   test('fluency API endpoint should return valid data', async ({ page }) => {

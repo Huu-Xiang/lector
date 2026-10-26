@@ -116,6 +116,23 @@ describe('onboarding mined cloze queue', () => {
     ).toEqual(['onboard-dos', 'onboard-uno']);
   });
 
+  test('blanks the written particle form of a Korean noun saved by its stem', async () => {
+    db.prepare(
+      `INSERT INTO vocab
+         (userId, id, text, type, sentence, translation, state, stateUpdatedAt, language, createdAt)
+       VALUES ('local', 'onboard-ko', '수탉', 'word', ?, 'rooster', 'level1', ?, 'ko', ?)`,
+    ).run('오늘도 우리 수탉이 쫓기었다.', TS, TS);
+    const res = await create({
+      language: 'ko',
+      vocabId: 'onboard-ko',
+      word: '수탉',
+      sentence: '오늘도 우리 수탉이 쫓기었다.',
+      translation: 'Today our rooster was chased again.',
+    });
+    expect(res.status).toBe(201);
+    expect(await res.json()).toMatchObject({ clozeWord: '수탉이', clozeIndex: 2 });
+  });
+
   test('rejects phrases, terminal vocabulary, missing sentence tokens, and foreign rows', async () => {
     seedVocab('onboard-phrase', 'buen día', { type: 'phrase' });
     seedVocab('onboard-known', 'hola', { state: 'known' });

@@ -95,14 +95,22 @@
       }
     },
     "fluency": {
-      "estimatedLevel": "Estimated CEFR Level",
+      "estimatedLevel": "Estimated from the words you know, not from the level you chose",
       "vsLastWeek": "{count, number} vs last week",
       "sameAsLast": "{count, number} this week (same as last)",
       "progressTo": "Progress to {level}",
       "topLevel": "Top level reached",
       "wordsToNext": "{count, number} words to {level}",
       "known": "Known",
-      "learning": "Learning"
+      "learning": "Learning",
+      "levelName": {
+        "A1": "Beginner",
+        "A2": "Elementary",
+        "B1": "Intermediate",
+        "B2": "Upper Intermediate",
+        "C1": "Advanced",
+        "C2": "Proficiency"
+      }
     },
     "heatmap": {
       "title": "Activity",

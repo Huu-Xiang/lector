@@ -126,6 +126,53 @@
         "toefl": "TOEFL",
         "ielts": "IELTS",
         "gre": "GRE"
+      },
+      "lemma": {
+        "formOf": "form of",
+        "derivedFrom": "derived from",
+        "pastParticiple": "past participle of",
+        "repetition": "repetition of",
+        "abstractNoun": "abstract noun from",
+        "diminutive": "diminutive of",
+        "nominalization": "nominalization of",
+        "adverbial": "adverbial form of",
+        "plural": "plural of",
+        "presentTense": "present tense of",
+        "pastTense": "past tense of",
+        "futureTense": "future tense of",
+        "conditional": "conditional of",
+        "imperative": "imperative of",
+        "compound": "compound ending in",
+        "related": "related to",
+        "ending": "(+{ending})"
+      },
+      "pos": {
+        "noun": "noun",
+        "verb": "verb",
+        "adj": "adj",
+        "adv": "adv",
+        "pron": "pron",
+        "prep": "prep",
+        "postp": "postp",
+        "conj": "conj",
+        "intj": "intj",
+        "num": "num",
+        "det": "det",
+        "article": "article",
+        "particle": "particle",
+        "phrase": "phrase",
+        "name": "name",
+        "prefix": "prefix",
+        "suffix": "suffix",
+        "affix": "affix",
+        "root": "root",
+        "counter": "counter",
+        "proverb": "proverb",
+        "contraction": "contraction",
+        "character": "character",
+        "symbol": "symbol",
+        "punct": "punct",
+        "abbrev": "abbrev"
       }
     },
     "onboardingTip": {
@@ -146,14 +193,14 @@
       "ready": "{count} of 3 ready",
       "lookup": {
         "eyebrow": "Try the reader",
-        "title": "Choose any highlighted word",
-        "body": "Coloured words are still new to you. Tap or click one to see its meaning here in the lesson."
+        "title": "Tap a word you don't know",
+        "body": "Every word in the lesson can be looked up. Tap or click one to see its meaning here."
       },
       "save": {
         "titleFirst": "Add this word to your review",
         "titleNext": "Choose another useful word",
         "bodyFirst": "Choose level 1-4 in the definition panel. You will see this word fill the review progress below.",
-        "bodyNext": "Close the definition, choose a different highlighted word, then set its level to add it."
+        "bodyNext": "Close the definition, tap a different word, then set its level to add it."
       },
       "phrase": {
         "title": "Now translate a whole phrase",

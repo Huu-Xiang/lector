@@ -1,5 +1,6 @@
 export const SHEET_VH_KEY = 'readfox-sheet-vh';
-export const SHEET_VH_DEFAULT = 46;
+// Mirrors --sheet-h in globals.css.
+export const SHEET_VH_DEFAULT = 52;
 export const SHEET_VH_MIN = 24;
 export const SHEET_VH_MAX = 85;
 export const SHEET_VH_CLOSE_BELOW = 16;

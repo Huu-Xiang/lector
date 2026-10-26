@@ -440,7 +440,7 @@ export default function VocabList({
         <table className="w-full text-left">
           <thead className="bg-muted">
             <tr>
-              <th className="w-12 px-4 py-3">
+              <th className="w-10 px-2 py-3 sm:w-12 sm:px-4">
                 <input
                   type="checkbox"
                   checked={allSelected}
@@ -449,37 +449,37 @@ export default function VocabList({
                 />
               </th>
               <th
-                className="cursor-pointer px-4 py-3 text-sm font-semibold text-foreground hover:text-foreground"
+                className="cursor-pointer px-2 py-3 text-sm font-semibold whitespace-nowrap text-foreground hover:text-foreground sm:px-4"
                 onClick={() => handleSort('text')}
               >
                 {t('columns.text')}
                 <SortIndicator field="text" />
               </th>
-              <th className="px-4 py-3 text-sm font-semibold text-foreground">
+              <th className="px-2 py-3 text-sm font-semibold whitespace-nowrap text-foreground sm:px-4">
                 {t('columns.translation')}
               </th>
               <th
-                className="cursor-pointer px-4 py-3 text-center text-sm font-semibold text-foreground hover:text-foreground"
+                className="cursor-pointer px-2 py-3 text-center text-sm font-semibold whitespace-nowrap text-foreground hover:text-foreground sm:px-4"
                 onClick={() => handleSort('state')}
               >
                 {t('columns.state')}
                 <SortIndicator field="state" />
               </th>
               <th
-                className="cursor-pointer px-4 py-3 text-sm font-semibold text-foreground hover:text-foreground"
+                className="cursor-pointer px-2 py-3 text-sm font-semibold whitespace-nowrap text-foreground hover:text-foreground sm:px-4"
                 onClick={() => handleSort('bookId')}
               >
                 {t('columns.source')}
                 <SortIndicator field="bookId" />
               </th>
               <th
-                className="cursor-pointer px-4 py-3 text-sm font-semibold text-foreground hover:text-foreground"
+                className="hidden cursor-pointer px-4 py-3 text-sm font-semibold text-foreground hover:text-foreground sm:table-cell"
                 onClick={() => handleSort('createdAt')}
               >
                 {t('columns.dateAdded')}
                 <SortIndicator field="createdAt" />
               </th>
-              <th className="px-4 py-3 text-sm font-semibold text-foreground">
+              <th className="hidden px-4 py-3 text-sm font-semibold text-foreground sm:table-cell">
                 {t('columns.anki')}
               </th>
             </tr>

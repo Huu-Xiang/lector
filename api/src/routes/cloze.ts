@@ -8,6 +8,7 @@ import {
   isValidLanguageCode,
   normalizeText,
   resolveClozeTokens,
+  vocabKeys,
   type LanguageCode,
 } from '../lib/languages';
 import { getCurrentUserId } from '../lib/user';
@@ -459,9 +460,11 @@ app.post('/onboarding', async (c) => {
   if (!wanted || wanted !== punctuationInsensitiveToken(vocab.text, language)) {
     return c.json({ error: 'word does not match the vocabulary entry' }, 400);
   }
+  // A Korean noun saved as 수탉 blanks the written 수탉이 (see vocabKeys).
+  const pack = getLanguageConfig(language);
   const tokens = sentence.split(/\s+/u);
-  const clozeIndex = tokens.findIndex(
-    (token) => punctuationInsensitiveToken(token, language) === wanted,
+  const clozeIndex = tokens.findIndex((token) =>
+    vocabKeys(sourceTokenWord(token), pack).includes(wanted),
   );
   if (clozeIndex < 0) {
     return c.json({ error: 'word was not found in sentence' }, 400);

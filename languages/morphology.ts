@@ -127,8 +127,11 @@ export function vocabKeys(word: string, pack: LanguageConfig): string[] {
   if (!pack.morphology) return [folded];
   const keys = [folded];
   const seen = new Set(keys);
+  const shareClitics = pack.morphology.cliticsShareKey === true;
   for (const candidate of stemCandidates(folded, pack.morphology)) {
-    if (!candidate.peeled.some((part) => part.includes("'"))) continue;
+    // A clitic peel leaves a prefix of the word; ending and prefix peels do not.
+    const cliticPeel = shareClitics && folded.startsWith(candidate.key);
+    if (!cliticPeel && !candidate.peeled.some((part) => part.includes("'"))) continue;
     if (seen.has(candidate.key)) continue;
     seen.add(candidate.key);
     keys.push(candidate.key);

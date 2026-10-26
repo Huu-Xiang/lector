@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { Check } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
@@ -20,6 +21,13 @@ export default function OnboardingCoach({
     t,
   });
   const Icon = content.icon;
+
+  useEffect(() => {
+    document.body.dataset.onboardingCoach = '';
+    return () => {
+      delete document.body.dataset.onboardingCoach;
+    };
+  }, []);
 
   return (
     <aside

@@ -95,14 +95,22 @@
       }
     },
     "fluency": {
-      "estimatedLevel": "预估 CEFR 等级",
+      "estimatedLevel": "按已掌握的词数估算，不是你自己选的阅读水平",
       "vsLastWeek": "较上周 {count, number}",
       "sameAsLast": "本周 {count, number}（与上周持平）",
       "progressTo": "升至 {level} 的进度",
       "topLevel": "已达到最高等级",
       "wordsToNext": "距 {level} 还差 {count, number} 个词",
       "known": "已掌握",
-      "learning": "学习中"
+      "learning": "学习中",
+      "levelName": {
+        "A1": "入门",
+        "A2": "初级",
+        "B1": "中级",
+        "B2": "中高级",
+        "C1": "高级",
+        "C2": "精通"
+      }
     },
     "heatmap": {
       "title": "活跃度",

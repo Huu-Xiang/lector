@@ -266,6 +266,11 @@ export interface MorphologyConfig {
    * بالقلم, which is not a key.
    */
   maxPrefixes?: number;
+  /**
+   * A form with `clitics` peeled is the same word for vocab: 수탉이 and 수탉을
+   * share the key 수탉 for known-word colour and saving. Korean.
+   */
+  cliticsShareKey?: boolean;
 }
 
 export interface LanguageConfig {

@@ -264,6 +264,7 @@ export const ko = {
       '이란',
     ],
     maxClitics: 2,
+    cliticsShareKey: true,
     // Connective and auxiliary endings. kaikki enumerates the finite forms and
     // none of these, so the stem is peeled and 다 is appended to make the
     // dictionary form. 좋아하지 gives 좋아하, and the entry is 좋아하다.
