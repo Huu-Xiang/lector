@@ -43,7 +43,8 @@
     "terms": "Terms",
     "about": "About",
     "source": "Source code",
-    "refunds": "Refunds"
+    "refunds": "Refunds",
+    "freeBooks": "Free books"
   },
   "nav": {
     "library": "Library",
@@ -193,6 +194,7 @@
     "metaTitle": "Readfox – read real books in the language you are learning",
     "metaDescription": "Import a book or paste any text, tap a word for an instant translation, and turn what you read into spaced-repetition practice. Free and open source.",
     "signIn": "Sign in",
+    "freeBooks": "Free books",
     "getStarted": "Get started free",
     "heroTitle": "Read real books in the language you are learning",
     "heroBody": "Readfox turns reading into learning. Tap any word for a translation, collect vocabulary as you go, and practise it with spaced repetition. {count} languages, free to use.",
@@ -770,7 +772,15 @@
       "feedAddedLabel": "Added",
       "feedAdded": "Added {title} to your library",
       "feedErrAdd": "Could not add the article",
-      "feedSource": "Source: {source} · {license}"
+      "feedSource": "Source: {source} · {license}",
+      "search": "Search by title or author",
+      "sortLabel": "Sort books",
+      "sortDefault": "Suggested order",
+      "sortShort": "Shortest first",
+      "sortLong": "Longest first",
+      "noMatch": "No book matches “{query}”.",
+      "readingHours": "about {hours} h",
+      "readingMinutes": "about {minutes} min"
     },
     "empty": {
       "browseBooks": "Browse free books",
@@ -1016,6 +1026,24 @@
   "descriptions": {
     "toggle": "Show descriptions"
   },
+  "publicBooks": {
+    "indexTitle": "Free books in the language you are learning",
+    "indexMetaDescription": "{count} classic books in English, French, Spanish, Chinese and Korean, sorted by level from A1 to C2. Read them free on Readfox and tap any word for its meaning.",
+    "indexIntro": "Every book here is a full public-domain text, sorted by CEFR level. Open one to see how it begins, then read it free on Readfox. Tap any word to see its meaning in your language.",
+    "bookCount": "{count} books",
+    "level": "Level {level}",
+    "byAuthor": "by {author}",
+    "readingHours": "About {hours} hours of reading",
+    "readingMinutes": "About {minutes} minutes of reading",
+    "lessons": "{count, plural, one {# lesson} other {# lessons}}",
+    "opening": "How it begins",
+    "readFree": "Read it free on Readfox",
+    "ctaNote": "Tap any word for its meaning in your language. Save new words and review them later.",
+    "source": "Source: <link>{source}</link>. {license}.",
+    "moreAtLevel": "More {language} books at level {level}",
+    "allBooks": "All free books",
+    "metaTitle": "{title} by {author}: read it free in {language} | Readfox"
+  },
   "journal": {
     "title": "Journal",
     "newEntry": "New Entry",
@@ -1221,13 +1249,6 @@
       "practiceBody": "Go to the Practice tab to review words later.",
       "vocabTitle": "Your vocabulary",
       "vocabBody": "Review the vocabulary you've interacted with in the Vocabulary tab."
-    },
-    "impersonation": {
-      "viewingAs": "Viewing as <strong>{user}</strong> · read-only",
-      "timeLeft": "{time} left",
-      "exiting": "Exiting…",
-      "exit": "Exit",
-      "exitFailed": "Could not confirm exit; returning to admin anyway."
     },
     "loading": {
       "app": "Loading Readfox",
@@ -1691,6 +1712,7 @@
       "phraseFailed": "Failed to translate phrase. Check AI provider in settings.",
       "wordFailed": "Failed to translate word. Check AI provider in settings.",
       "contextFailed": "Failed to get contextual translation.",
+      "aiDeclined": "The AI service declined this passage. Try another sentence or a shorter selection.",
       "retranslateFailed": "Re-translate failed",
       "saveFailed": "Could not save the word — check your connection and try again.",
       "saveFailedShort": "Could not save the word — check your connection.",

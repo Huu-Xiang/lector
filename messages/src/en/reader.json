@@ -7,6 +7,7 @@
       "phraseFailed": "Failed to translate phrase. Check AI provider in settings.",
       "wordFailed": "Failed to translate word. Check AI provider in settings.",
       "contextFailed": "Failed to get contextual translation.",
+      "aiDeclined": "The AI service declined this passage. Try another sentence or a shorter selection.",
       "retranslateFailed": "Re-translate failed",
       "saveFailed": "Could not save the word — check your connection and try again.",
       "saveFailedShort": "Could not save the word — check your connection.",

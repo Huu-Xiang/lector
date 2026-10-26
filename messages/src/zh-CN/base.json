@@ -20,7 +20,8 @@
     "terms": "条款",
     "about": "关于",
     "source": "源代码",
-    "refunds": "退款"
+    "refunds": "退款",
+    "freeBooks": "免费书"
   },
   "nav": {
     "library": "书库",
@@ -170,6 +171,7 @@
     "metaTitle": "Readfox：读原版书，学地道外语",
     "metaDescription": "导入电子书或粘贴一篇文章，生词点一下就有释义。查过的词自动收进生词本，按记忆曲线提醒你复习。免费、开源。",
     "signIn": "登录",
+    "freeBooks": "免费书",
     "getStarted": "免费注册",
     "heroTitle": "读原版书，学地道外语",
     "heroBody": "遇到生词点一下，就能看到贴合上下文的释义。查过的词自动收进生词本，到点提醒你复习。支持 {count} 种语言，免费就能用。",

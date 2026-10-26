@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 import { useFormatter, useLocale, useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { buttonVariants, Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Select } from '@/components/ui/select';
 import { Dialog, DialogClose, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import {
   addLibraryBook,
@@ -31,6 +33,7 @@ import {
   type CefrLevel,
 } from '@/lib/reading-level';
 import { useActiveLanguage } from '@/utils/hooks';
+import { readingMinutes } from '@/lib/reading-time';
 
 // Only 'en' and 'fr' have a working reading-feed source today (see
 // api/src/lib/reading-feed/sources/index.ts); every other target language
@@ -40,6 +43,15 @@ type FeedInterest = (typeof FEED_INTERESTS)[number];
 const FEED_LANGUAGES = new Set(['en', 'fr']);
 
 type TabId = 'books' | FeedInterest;
+type BookSort = 'default' | 'short' | 'long';
+
+function matchesQuery(book: LibraryBook, query: string): boolean {
+  const needle = query.trim().toLocaleLowerCase();
+  if (!needle) return true;
+  return [book.title, book.author, ...Object.values(book.titles)].some((text) =>
+    text.toLocaleLowerCase().includes(needle),
+  );
+}
 
 export default function FreeBooksModal({
   isOpen,
@@ -63,6 +75,8 @@ export default function FreeBooksModal({
   const [filter, setFilter] = useState<CefrLevel | 'all'>('all');
   const [readingInterests, setReadingInterests] = useState<string[]>([]);
   const [tab, setTab] = useState<TabId>('books');
+  const [query, setQuery] = useState('');
+  const [sort, setSort] = useState<BookSort>('default');
   const [feed, setFeed] = useState<ReadingFeedArticle[] | null>(null);
   const [feedFailed, setFeedFailed] = useState(false);
   const languageName = languageDisplayName(activeLang.code, locale, activeLang.name);
@@ -175,7 +189,23 @@ export default function FreeBooksModal({
 
   const levels = CEFR_LEVELS.filter((level) => books?.some((book) => book.level === level));
   const current = filter !== 'all' && levels.includes(filter) ? filter : 'all';
-  const shownLevels = current === 'all' ? levels : levels.filter((level) => level === current);
+  const searching = query.trim() !== '';
+  const matching = (books ?? []).filter((book) => matchesQuery(book, query));
+  const sorted =
+    sort === 'default'
+      ? matching
+      : [...matching].sort((a, b) =>
+          sort === 'short' ? a.wordCount - b.wordCount : b.wordCount - a.wordCount,
+        );
+  const shownLevels = (searching || current === 'all' ? levels : [current]).filter((level) =>
+    sorted.some((book) => book.level === level),
+  );
+  const timeLabel = (book: LibraryBook) => {
+    const minutes = readingMinutes(book.wordCount, activeLang.code);
+    return minutes >= 60
+      ? t('readingHours', { hours: Math.round(minutes / 60) })
+      : t('readingMinutes', { minutes });
+  };
 
   const examLine = (level: CefrLevel) =>
     examLabels(activeLang.code, level, native, (exam, score) => tl(`exam.${exam}`, { score })).join(
@@ -234,7 +264,36 @@ export default function FreeBooksModal({
                 {t('none', { language: languageName })}
               </p>
             )}
-            {levels.length > 0 && (
+            {(books?.length ?? 0) > 0 && (
+              <div className="mb-3 flex flex-wrap gap-2">
+                <Input
+                  type="search"
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
+                  placeholder={t('search')}
+                  aria-label={t('search')}
+                  className="min-w-0 flex-1 basis-48"
+                  data-testid="free-books-search"
+                />
+                <Select
+                  value={sort}
+                  onChange={(event) => setSort(event.target.value as BookSort)}
+                  aria-label={t('sortLabel')}
+                  wrapperClassName="w-40"
+                  data-testid="free-books-sort"
+                >
+                  <option value="default">{t('sortDefault')}</option>
+                  <option value="short">{t('sortShort')}</option>
+                  <option value="long">{t('sortLong')}</option>
+                </Select>
+              </div>
+            )}
+            {searching && shownLevels.length === 0 && (
+              <p className="text-sm text-muted-foreground" data-testid="free-books-no-match">
+                {t('noMatch', { query: query.trim() })}
+              </p>
+            )}
+            {levels.length > 0 && !searching && (
               <div className="mb-4 flex flex-wrap gap-2" data-testid="free-books-levels">
                 {(['all', ...levels] as const).map((level) => (
                   <button
@@ -270,8 +329,8 @@ export default function FreeBooksModal({
                     </p>
                   )}
                   <ul className="space-y-3">
-                    {books
-                      ?.filter((book) => book.level === level)
+                    {sorted
+                      .filter((book) => book.level === level)
                       .map((book) => {
                         const shownTitle = titleFor(book);
                         const blurb = book.blurbs[native];
@@ -297,6 +356,8 @@ export default function FreeBooksModal({
                                   words: format.number(book.wordCount),
                                   lessons: format.number(book.lessonCount),
                                 })}
+                                {' · '}
+                                {timeLabel(book)}
                                 {' · '}
                                 <BookReviewLink
                                   native={native}

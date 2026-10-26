@@ -131,7 +131,7 @@
     md: "billing.md",
   });
   N("domain:admin", "domain", "Admin", {
-    summary: "Operator dashboard. Member list, support actions, and impersonation.",
+    summary: "Operator dashboard. Member list, support actions, and trends.",
     md: "admin.md",
   });
 
@@ -460,12 +460,6 @@
     summary: "Suspend, restore, comp, export, reset MFA, or revoke sessions. Each write hits the audit log.",
     steps: ["file:admin-page", "fn:suspendUser", "route:admin-suspend", "table:admin_audit_log"],
   });
-  N("flow:impersonate", "flow", "Impersonate", {
-    domain: "admin",
-    md: "admin.md#impersonate",
-    summary: "Operator acts as a member. AuthGuard namespaces caches under the target user.",
-    steps: ["fn:startImpersonation", "route:admin-impersonate", "table:admin_impersonation", "file:auth-guard"],
-  });
 
   // ── Shared files ──────────────────────────────────────────────────────────
 
@@ -544,7 +538,6 @@
   N("file:route-tokens", "file", "tokens.ts", { path: "api/src/routes/tokens.ts", domain: "settings" });
   N("file:route-byok", "file", "byok.ts (API)", { path: "api/src/routes/byok.ts", domain: "settings" });
   N("file:route-groups", "file", "groups.ts", { path: "api/src/routes/groups.ts", domain: "library" });
-  N("file:route-impersonation", "file", "impersonation.ts", { path: "api/src/routes/impersonation.ts", domain: "admin" });
 
   N("file:registry", "file", "registry.ts", { path: "api/src/routes/registry.ts" });
   N("file:route-collections", "file", "collections.ts", { path: "api/src/routes/collections.ts", domain: "library" });
@@ -672,7 +665,6 @@
   N("fn:getAdminUsers", "fn", "getAdminUsers", { path: "src/lib/admin-client.ts" });
   N("fn:getAdminTrends", "fn", "getAdminTrends", { path: "src/lib/admin-client.ts" });
   N("fn:suspendUser", "fn", "suspendUser", { path: "src/lib/admin-client.ts" });
-  N("fn:startImpersonation", "fn", "startImpersonation", { path: "src/lib/admin-client.ts" });
   N("fn:createAuthEngine", "fn", "createAuthEngine", { path: "api/src/lib/accounts.ts" });
   N("fn:sendWelcomeEmail", "fn", "sendWelcomeEmail", { path: "api/src/lib/lifecycle-email.ts" });
   N("fn:sweepLifecycleEmails", "fn", "sweepLifecycleEmails", { path: "api/src/lib/lifecycle-email.ts" });
@@ -740,8 +732,6 @@
   N("route:admin-users", "route", "GET /api/admin/users", { path: "api/src/routes/admin.ts" });
   N("route:admin-trends", "route", "GET /api/admin/trends", { path: "api/src/routes/admin.ts" });
   N("route:admin-suspend", "route", "POST /api/admin/users/:id/suspend", { path: "api/src/routes/admin.ts" });
-  N("route:admin-impersonate", "route", "POST /api/admin/users/:id/impersonate", { path: "api/src/routes/admin.ts" });
-  N("route:impersonation-status", "route", "GET /api/impersonation/status", { path: "api/src/routes/impersonation.ts" });
 
   // ── Tables ────────────────────────────────────────────────────────────────
 
@@ -768,7 +758,6 @@
   N("table:billing_subscriptions", "table", "billing_subscriptions", { path: "api/src/db.ts" });
   N("table:billing_customers", "table", "billing_customers", { path: "api/src/db.ts" });
   N("table:admin_audit_log", "table", "admin_audit_log", { path: "api/src/db.ts" });
-  N("table:admin_impersonation", "table", "admin_impersonation", { path: "api/src/db.ts" });
   N("table:admin_account_flags", "table", "admin_account_flags", { path: "api/src/db.ts" });
 
   // ── Edges: app, layers, domains ───────────────────────────────────────────
@@ -852,7 +841,7 @@
   domainFlows("settings", ["flow:save-settings", "flow:configure-llm", "flow:api-tokens", "flow:delete-account"]);
   domainFlows("data", ["flow:export-data", "flow:restore-data"]);
   domainFlows("billing", ["flow:subscribe", "flow:entitlements", "flow:plan-change"]);
-  domainFlows("admin", ["flow:admin-list", "flow:admin-trends", "flow:admin-support", "flow:impersonate"]);
+  domainFlows("admin", ["flow:admin-list", "flow:admin-trends", "flow:admin-support"]);
 
   // Cross-flow walks
   edge("flow:load-library-item", "flow:translate-word", "then");
@@ -1384,15 +1373,7 @@
   edge("route:admin-suspend", "file:route-admin", "in");
   edge("route:admin-suspend", "table:admin_audit_log", "writes");
   edge("route:admin-suspend", "table:admin_account_flags", "writes");
-  edge("flow:impersonate", "fn:startImpersonation", "starts");
-  edge("fn:startImpersonation", "file:admin-client", "in");
-  edge("fn:startImpersonation", "route:admin-impersonate", "http");
-  edge("route:admin-impersonate", "file:route-admin", "in");
-  edge("route:admin-impersonate", "table:admin_impersonation", "writes");
-  edge("route:impersonation-status", "file:route-impersonation", "in");
-  edge("file:auth-guard", "route:impersonation-status", "http");
   edge("flow:admin-list", "flow:admin-support", "then");
-  edge("flow:admin-support", "flow:impersonate", "then");
 
   // File-in-layer (so a file walk reaches the stack)
   edge("file:home-page", "layer:ui", "in");

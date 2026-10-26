@@ -1,5 +1,5 @@
 import { db } from '../../db';
-import { getSharedContentProvider, type LLMProvider } from '../llm';
+import { getSharedContentProvider, LLMContentFilterError, type LLMProvider } from '../llm';
 import { isNativeLanguageCode, nativeLanguageName } from '../languages';
 import type { FeedLanguage, ReadingFeedRow } from './types';
 
@@ -24,6 +24,8 @@ export function setDescribeProviderForTests(factory: (() => LLMProvider) | null)
 }
 
 const inFlight = new Map<string, Promise<ArticleDescription | null>>();
+/** `articleId|native` pairs the provider's moderation refused; asking again gets the same answer. */
+const declined = new Set<string>();
 
 export function cachedDescriptions(ids: string[], native: string): Map<string, ArticleDescription> {
   const found = new Map<string, ArticleDescription>();
@@ -73,6 +75,7 @@ async function generate(
   const key = `${article.id}|${native}`;
   const running = inFlight.get(key);
   if (running) return running;
+  if (declined.has(key)) return Promise.resolve(null);
   const job = (async () => {
     try {
       const text = await providerFactory().complete({
@@ -89,6 +92,11 @@ async function generate(
       ).run(article.id, native, description.title, description.summary, new Date().toISOString());
       return description;
     } catch (err) {
+      if (err instanceof LLMContentFilterError) {
+        declined.add(key);
+        console.warn(`[reading-feed] describe declined by the provider: ${article.id}`);
+        return null;
+      }
       console.error('[reading-feed] describe failed:', err);
       return null;
     } finally {

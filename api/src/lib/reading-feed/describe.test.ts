@@ -1,7 +1,7 @@
 import '../../test-guard';
 import { afterEach, beforeEach, describe, expect, test } from 'bun:test';
 import { db } from '../../db';
-import type { CompletionOptions, LLMProvider } from '../llm';
+import { LLMContentFilterError, type CompletionOptions, type LLMProvider } from '../llm';
 import {
   buildDescribePrompt,
   describeArticles,
@@ -92,6 +92,17 @@ describe('describeArticles', () => {
     fake.reply = 'sorry';
     const article = seed();
     expect((await describeArticles([article], 'zh-CN')).size).toBe(0);
+  });
+
+  test('does not ask again after the provider declines an article', async () => {
+    const article = seed();
+    fake.complete = async (options: CompletionOptions) => {
+      fake.calls.push(options);
+      throw new LLMContentFilterError();
+    };
+    expect((await describeArticles([article], 'ko')).size).toBe(0);
+    expect((await describeArticles([article], 'ko')).size).toBe(0);
+    expect(fake.calls).toHaveLength(1);
   });
 
   test('the prompt carries the title and an excerpt', () => {

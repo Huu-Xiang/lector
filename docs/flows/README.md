@@ -68,7 +68,7 @@ flowchart LR
 | Settings | User keys, LLM provider, tokens, and account delete | [settings.md](settings.md) |
 | Data | Export and restore of learning data | [data.md](data.md) |
 | Billing | Plan gate, Paddle checkout, and entitlements | [billing.md](billing.md) |
-| Admin | Operator dashboard, support actions, and impersonation | [admin.md](admin.md) |
+| Admin | Operator dashboard, support actions, and trends | [admin.md](admin.md) |
 
 ## Layers
 
@@ -154,4 +154,3 @@ Cloud mode adds Auth, Billing, and Admin. Selfhost skips those three domains. Se
 | Change plan | Billing | [billing.md](billing.md#change-plan) |
 | Admin member list | Admin | [admin.md](admin.md#admin-member-list) |
 | Admin support action | Admin | [admin.md](admin.md#admin-support-action) |
-| Impersonate | Admin | [admin.md](admin.md#impersonate) |

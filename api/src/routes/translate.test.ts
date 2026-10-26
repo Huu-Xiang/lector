@@ -8,7 +8,12 @@ import {
   type PaidPlanId,
   type PlanLimits,
 } from '../lib/entitlements';
-import type { CompletionOptions, LLMProvider, ProviderAccessOptions } from '../lib/llm';
+import {
+  LLMContentFilterError,
+  type CompletionOptions,
+  type LLMProvider,
+  type ProviderAccessOptions,
+} from '../lib/llm';
 import { InMemoryTranslationBurstLimiter } from '../lib/rate-limit';
 import { getSpelreelsContext } from '../lib/spelreels';
 import type { GlossCache } from '../lib/gloss-cache';
@@ -130,6 +135,7 @@ function makeApp(options: {
   engine: EntitlementsEngine;
   provider?: FakeProvider;
   limiter?: InMemoryTranslationBurstLimiter;
+  dailyLimiter?: InMemoryTranslationBurstLimiter;
   providerForUser?: (userId: string, access: ProviderAccessOptions) => LLMProvider;
   glossCache?: GlossCache | null;
   entryCache?: EntryCache | null;
@@ -148,6 +154,8 @@ function makeApp(options: {
     rateLimiter:
       options.limiter ??
       new InMemoryTranslationBurstLimiter({ glossPerWindow: 10_000, detailPerWindow: 10_000 }),
+    dailyLocalizeLimiter:
+      options.dailyLimiter ?? new InMemoryTranslationBurstLimiter({ localizePerWindow: 10_000 }),
     glossCache: options.glossCache ?? null,
     entryCache: options.entryCache ?? null,
     lookupEntry: options.lookupEntry ?? (() => null),
@@ -552,8 +560,12 @@ describe('refunds and burst protection', () => {
     const { app } = makeApp({ engine, provider });
 
     const failed = await post(app, '/gloss', { word: 'huis' });
-    expect(failed.status).toBe(200);
-    expect(await failed.text()).toBe('');
+    expect(failed.status).toBe(502);
+    expect(engine.getUsage('local', 'wordGlossesPerMonth')).toBe(0);
+
+    provider.streamImpl = async function* () {};
+    const empty = await post(app, '/gloss', { word: 'huis' });
+    expect(await empty.text()).toBe('');
     expect(engine.getUsage('local', 'wordGlossesPerMonth')).toBe(0);
 
     provider.streamImpl = async function* () {
@@ -562,6 +574,31 @@ describe('refunds and burst protection', () => {
     const ok = await post(app, '/gloss', { word: 'huis' });
     expect(await ok.text()).toBe('meaning');
     expect(engine.getUsage('local', 'wordGlossesPerMonth')).toBe(1);
+  });
+
+  test('a moderation refusal answers content_filtered and refunds', async () => {
+    const engine = makeEngine({ now: () => new Date('2026-07-15T12:00:00Z') });
+    const provider = new FakeProvider();
+    provider.streamImpl = async function* () {
+      throw new LLMContentFilterError();
+    };
+    provider.completeImpl = async () => {
+      throw new LLMContentFilterError();
+    };
+    const { app } = makeApp({ engine, provider });
+
+    for (const [path, body] of [
+      ['/gloss', { word: 'huis' }],
+      ['/', { word: 'goeie dag', type: 'phrase' }],
+      ['/', { word: 'huis', type: 'word' }],
+    ] as const) {
+      const res = await post(app, path, body);
+      expect(res.status).toBe(422);
+      expect(await res.json()).toEqual({ error: 'content_filtered' });
+    }
+    expect(engine.getUsage('local', 'wordGlossesPerMonth')).toBe(0);
+    expect(engine.getUsage('local', 'phraseTranslationsPerDay')).toBe(0);
+    expect(engine.getUsage('local', 'contextTranslationsPerDay')).toBe(0);
   });
 
   test('Free burst rejection happens before durable quota and provider work', async () => {
@@ -722,6 +759,21 @@ describe('dictionary entry localization', () => {
     expect((await post(app, '/localize', { word: 'fois', language: 'fr' })).status).toBe(429);
     expect(provider.calls).toHaveLength(2);
     expect(engine.getUsage('local', 'wordGlossesPerMonth')).toBe(0);
+  });
+
+  test('a daily ceiling stops new localizations even under the burst limit', async () => {
+    setNative('zh-CN');
+    const engine = makeEngine({ now });
+    const dailyLimiter = new InMemoryTranslationBurstLimiter({ localizePerWindow: 1 });
+    const { app, provider } = makeApp({
+      engine,
+      provider: chineseProvider(),
+      dailyLimiter,
+      lookupEntry,
+    });
+    expect((await post(app, '/localize', { word: 'fois', language: 'fr' })).status).toBe(200);
+    expect((await post(app, '/localize', { word: 'fois', language: 'fr' })).status).toBe(429);
+    expect(provider.calls).toHaveLength(1);
   });
 
   test('returns null for an English reader and never calls the model', async () => {

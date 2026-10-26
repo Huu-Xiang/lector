@@ -71,23 +71,6 @@ Export uses `buildUserExport`. See [Data](data.md).
 
 Comp writes a flag. It does not create a Paddle row. The entitlements engine treats the flag as a paid plan.
 
-## Impersonate
-
-**App domain:** Admin
-
-The operator acts as a member. Ordinary API routes then serve the target tenant.
-
-| Role | Path | Function |
-| --- | --- | --- |
-| Client | `src/lib/admin-client.ts` | `startImpersonation`, `stopImpersonation`, `getImpersonationStatus` |
-| Start | `api/src/routes/admin.ts` | `POST /users/:id/impersonate` |
-| Stop | `api/src/routes/admin.ts` | `POST /impersonation/stop` |
-| Status | `api/src/routes/impersonation.ts` | `GET /status` |
-| Grant | `api/src/lib/impersonation.ts` | `startImpersonation`, `stopImpersonation` |
-| Banner | `src/components/ImpersonationBanner/index.tsx` | ImpersonationBanner |
-
-AuthGuard namespaces client caches under the target user id. A stop returns the operator to the operator tenant.
-
 ### Tables
 
-`admin_account_flags`, `admin_audit_log`, `admin_impersonation`.
+`admin_account_flags`, `admin_audit_log`. The unused `admin_impersonation` table stays in the schema.

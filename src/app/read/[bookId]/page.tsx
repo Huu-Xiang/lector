@@ -35,7 +35,13 @@ import { addWordCard, addClozeCard, buildSourceLinkHtml } from '@/lib/anki';
 import { queueForAnki } from '@/lib/anki-queue';
 import { useAnkiTransport } from '@/lib/anki-transport';
 import { useLectorMode } from '@/lib/use-env';
-import { translateWord, translatePhrase, streamWordGloss, enrichWord } from '@/lib/claude';
+import {
+  CONTENT_FILTERED,
+  translateWord,
+  translatePhrase,
+  streamWordGloss,
+  enrichWord,
+} from '@/lib/claude';
 import {
   lookupWordRemote,
   localizeEntrySenses,
@@ -75,6 +81,10 @@ async function findVocab(keys: string[]): Promise<VocabEntry | undefined> {
     const entry = await getVocabByText(key);
     if (entry) return entry;
   }
+}
+
+function isContentFiltered(err: unknown): boolean {
+  return err instanceof Error && err.message === CONTENT_FILTERED;
 }
 
 export default function ReadPage({ params }: { params: Promise<{ bookId: string }> }) {
@@ -449,7 +459,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
             setWordPanel((prev) => ({
               ...prev,
               isLoading: false,
-              error: t('phraseFailed'),
+              error: isContentFiltered(err) ? t('aiDeclined') : t('phraseFailed'),
             }));
           }
         }
@@ -520,7 +530,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
               ...prev,
               isLoading: false,
               isStreamingGloss: false,
-              error: t('wordFailed'),
+              error: isContentFiltered(err) ? t('aiDeclined') : t('wordFailed'),
             }));
           }
         } else {
@@ -589,7 +599,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       setWordPanel((prev) => ({
         ...prev,
         isContextLoading: false,
-        error: t('contextFailed'),
+        error: isContentFiltered(err) ? t('aiDeclined') : t('contextFailed'),
       }));
     }
   }, [wordPanel.word, wordPanel.sentence, t]);

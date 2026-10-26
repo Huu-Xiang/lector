@@ -8,6 +8,7 @@ import { config, type TrustedProxy } from '../lib/config';
 import { getCurrentUserId } from '../lib/user';
 import { getActiveLanguageConfig } from '../lib/active-language';
 import { extractionBurstLimiter, type ExtractionBurstLimiter } from '../lib/rate-limit';
+import { extractUrlGate, gateMiddleware } from '../lib/concurrency-gate';
 
 // Cap the fetched page so a hostile/huge response can't exhaust memory.
 const MAX_RESPONSE_BYTES = 10 * 1024 * 1024; // 10 MB
@@ -58,7 +59,7 @@ export function makeExtractUrlRoutes({
   const app = new Hono();
 
   // POST /api/extract-url — fetch a URL and extract its readable article as markdown.
-  app.post('/', async (c) => {
+  app.post('/', gateMiddleware(extractUrlGate), async (c) => {
     const userId = getCurrentUserId(c);
     if (enforceRateLimit && !rateLimiter.tryConsume(userId, clientIp(c, trustedProxy))) {
       c.header('Retry-After', '60');

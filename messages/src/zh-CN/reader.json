@@ -7,6 +7,7 @@
       "phraseFailed": "短语翻译失败。请在设置中检查 AI 服务商。",
       "wordFailed": "单词翻译失败。请在设置中检查 AI 服务商。",
       "contextFailed": "无法获取语境翻译。",
+      "aiDeclined": "AI 服务拒绝处理这段文字。请换一句，或选短一点再试。",
       "retranslateFailed": "重新翻译失败",
       "saveFailed": "无法保存该单词，请检查网络连接后重试。",
       "saveFailedShort": "无法保存该单词，请检查网络连接。",

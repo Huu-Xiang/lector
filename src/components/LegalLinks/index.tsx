@@ -56,6 +56,9 @@ export default function LegalLinks({
       aria-label={t('nav')}
       className={`flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs text-muted-foreground ${className}`}
     >
+      <Link href="/books" className="hover:text-foreground hover:underline">
+        {t('freeBooks')}
+      </Link>
       {links}
       <UiLanguageSelect />
     </nav>

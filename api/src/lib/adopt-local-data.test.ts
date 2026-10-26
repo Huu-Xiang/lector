@@ -251,6 +251,8 @@ describe('TENANT_TABLES ratchet', () => {
   //   - email_sends: cloud lifecycle mail log (#558). Self-host never writes it.
   //   - plan_grants / cn_orders / redeem_uses: Readfox paid periods, RMB orders
   //     and code redemptions, cloud-only.
+  //   - cn_refund_requests / invite_codes / reward_cards: Readfox refunds,
+  //     invites and reward cards, cloud-only account state.
   // Subtracted here so the assertion stays meaningful even on a DB that has
   // them (a fresh getDb() schema omits Better Auth's, but not billing's).
   const NON_TENANT_USERID_TABLES = new Set([
@@ -263,6 +265,9 @@ describe('TENANT_TABLES ratchet', () => {
     'plan_grants',
     'cn_orders',
     'redeem_uses',
+    'cn_refund_requests',
+    'invite_codes',
+    'reward_cards',
   ]);
 
   test('every table with a userId column is covered by adoption', () => {

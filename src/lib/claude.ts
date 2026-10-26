@@ -28,6 +28,9 @@ export interface PhraseTranslation {
   register?: 'formal' | 'informal' | 'literary' | 'colloquial' | 'archaic' | 'neutral';
 }
 
+/** Error message thrown when the AI provider's moderation refused the passage. */
+export const CONTENT_FILTERED = 'content_filtered';
+
 /**
  * Translate a single word with surrounding sentence context
  * @param word - The word to translate

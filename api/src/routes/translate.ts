@@ -3,6 +3,7 @@ import { bodyLimit } from 'hono/body-limit';
 import { streamText } from 'hono/streaming';
 import {
   completeJson,
+  LLMContentFilterError,
   providerAnswered,
   getProvider,
   managedPhraseUsesCheapModel,
@@ -46,6 +47,7 @@ import {
   selfManagedFreeAi,
 } from '../lib/entitlements';
 import {
+  localizeDailyLimiter,
   translationBurstLimiter,
   type TranslationBurstKind,
   type TranslationBurstLimiter,
@@ -61,6 +63,8 @@ interface TranslateRouteDeps {
   providerForUser: (userId: string, access: ProviderAccessOptions) => LLMProvider;
   engine: EntitlementsEngine;
   rateLimiter: TranslationBurstLimiter;
+  /** Daily ceiling on new localizations, on top of the per-minute burst limit. */
+  dailyLocalizeLimiter?: TranslationBurstLimiter;
   /** Shared word-gloss cache; `null` turns it off. */
   glossCache?: GlossCache | null;
   /** Shared cache of dictionary senses translated into the learner's language; `null` turns it off. */
@@ -259,10 +263,16 @@ function isShareableGloss(gloss: string): boolean {
   return text.length <= 60 && !/https?:|www\.|@|[a-z0-9-]\.[a-z]{2,}/i.test(text);
 }
 
+/** The client shows its own message for `content_filtered`; nothing to retry or fix in settings. */
+function contentFiltered(c: Context) {
+  return c.json({ error: 'content_filtered' }, 422);
+}
+
 export function makeTranslateRoutes({
   providerForUser,
   engine,
   rateLimiter,
+  dailyLocalizeLimiter = localizeDailyLimiter,
   glossCache = sharedGlossCache,
   entryCache = sharedEntryCache,
   lookupEntry = lookupWord,
@@ -316,16 +326,30 @@ export function makeTranslateRoutes({
       return c.json({ error: 'Translation failed' }, 500);
     }
 
+    // Read the first chunk before answering so a refusal can still set the status.
+    const deltas = provider
+      .stream({
+        messages: [{ role: 'user', content: prompt }],
+        maxTokens: 32,
+        task: 'word-gloss',
+      })
+      [Symbol.asyncIterator]();
+    let first: IteratorResult<string>;
+    try {
+      first = await deltas.next();
+    } catch (error) {
+      engine.refund(reservation);
+      if (error instanceof LLMContentFilterError) return contentFiltered(c);
+      console.error('Gloss stream error:', error);
+      return c.json({ error: 'Translation failed' }, 502);
+    }
+
     return streamText(c, async (stream) => {
       let output = '';
       try {
-        for await (const delta of provider.stream({
-          messages: [{ role: 'user', content: prompt }],
-          maxTokens: 32,
-          task: 'word-gloss',
-        })) {
-          output += delta;
-          await stream.write(delta);
+        for (let next = first; !next.done; next = await deltas.next()) {
+          output += next.value;
+          await stream.write(next.value);
         }
         if (!output.trim()) engine.refund(reservation);
         // Only server-funded answers are shared; a user's own model never writes here.
@@ -372,7 +396,13 @@ export function makeTranslateRoutes({
     // bounded by the dictionary size. Only a burst limit stops one account from
     // draining it.
     const byok = engine.resolveEntitlements(userId).byok;
-    if (!byok && !rateLimiter.tryConsume(userId, 'localize')) return burstResponse(c);
+    if (
+      !byok &&
+      (!rateLimiter.tryConsume(userId, 'localize') ||
+        !dailyLocalizeLimiter.tryConsume(userId, 'localize'))
+    ) {
+      return burstResponse(c);
+    }
 
     try {
       const result = await completeJson<{ glosses?: unknown }>(providerForUser(userId, { byok }), {
@@ -427,6 +457,7 @@ export function makeTranslateRoutes({
       return c.json(entry);
     } catch (error) {
       if (!providerAnswered(error)) engine.refund(reservation);
+      if (error instanceof LLMContentFilterError) return contentFiltered(c);
       console.error('Enrich error:', error);
       return c.json({ error: error instanceof Error ? error.message : 'Enrich failed' }, 500);
     }
@@ -545,6 +576,7 @@ export function makeTranslateRoutes({
       return c.json(entry);
     } catch (error) {
       if (!providerAnswered(error)) engine.refund(reservation);
+      if (error instanceof LLMContentFilterError) return contentFiltered(c);
       console.error('Translation error:', error);
       return c.json({ error: error instanceof Error ? error.message : 'Translation failed' }, 500);
     }

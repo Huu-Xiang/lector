@@ -1,6 +1,6 @@
 import { describe, test, expect, afterEach, mock } from 'bun:test';
 import { OpenAICompatibleProvider } from './openai-compatible';
-import { LLMTruncatedError } from './errors';
+import { LLMContentFilterError, LLMTruncatedError } from './errors';
 import { completeJson } from './complete-json';
 
 describe('OpenAICompatibleProvider', () => {
@@ -467,6 +467,22 @@ describe('OpenAICompatibleProvider', () => {
       await expect(
         provider.complete({ messages: [{ role: 'user', content: 'Hi' }], maxTokens: 10 }),
       ).rejects.toThrow('LLM provider error: Bad request');
+    });
+
+    test('turns a moderation refusal into LLMContentFilterError', async () => {
+      const body = JSON.stringify({
+        error: {
+          code: 'data_inspection_failed',
+          message: 'Input text data may contain inappropriate content.',
+        },
+      });
+      globalThis.fetch = mock(
+        async () => new Response(body, { status: 400 }),
+      ) as unknown as typeof fetch;
+      const provider = new OpenAICompatibleProvider();
+      await expect(
+        provider.complete({ messages: [{ role: 'user', content: 'Hi' }], maxTokens: 10 }),
+      ).rejects.toBeInstanceOf(LLMContentFilterError);
     });
   });
 

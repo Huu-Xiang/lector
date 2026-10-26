@@ -123,7 +123,7 @@ export default function RedeemCampaigns() {
           />
         </label>
         <label>
-          Total uses (empty = no limit)
+          {form.mode === 'shared' ? 'Total uses (required)' : 'Total uses (empty = no limit)'}
           <input
             className={input}
             type="number"
@@ -150,7 +150,7 @@ export default function RedeemCampaigns() {
         </label>
         {form.mode === 'shared' ? (
           <label className="sm:col-span-2">
-            Shared code (e.g. WELCOME123)
+            Shared code, 8–32 letters or digits (e.g. WELCOME2026)
             <input
               className={input}
               value={form.code}

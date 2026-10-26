@@ -1184,3 +1184,19 @@ describe('account-status middleware (suspension enforcement)', () => {
     expect((await app.request('/api/collections')).status).toBe(200);
   });
 });
+
+describe('POST /api/admin/redeem/campaigns', () => {
+  const create = (body: Record<string, unknown>) =>
+    buildApp().request('/api/admin/redeem/campaigns', {
+      method: 'POST',
+      headers: { 'X-Test-User': ADMIN, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: 'Test', plan: 'cloud', days: 7, mode: 'shared', ...body }),
+    });
+
+  test('a shared code needs 8+ characters and a total limit', async () => {
+    expect((await create({ code: 'SHORT1', totalLimit: 5 })).status).toBe(400);
+    expect((await create({ code: 'LONGENOUGH1' })).status).toBe(400);
+    const ok = await create({ code: `OK${Date.now()}`, totalLimit: 5 });
+    expect(ok.status).toBe(201);
+  });
+});

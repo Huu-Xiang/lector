@@ -205,13 +205,6 @@
       "vocabTitle": "你的词汇",
       "vocabBody": "在“词汇”标签页查看你接触过的词汇。"
     },
-    "impersonation": {
-      "viewingAs": "正在以 <strong>{user}</strong> 的身份查看 · 只读",
-      "timeLeft": "剩余 {time}",
-      "exiting": "正在退出…",
-      "exit": "退出",
-      "exitFailed": "无法确认退出，仍将返回管理页面。"
-    },
     "loading": {
       "app": "正在加载 Readfox",
       "session": "正在加载会话",

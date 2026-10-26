@@ -20,7 +20,8 @@
     "terms": "Terms",
     "about": "About",
     "source": "Source code",
-    "refunds": "Refunds"
+    "refunds": "Refunds",
+    "freeBooks": "Free books"
   },
   "nav": {
     "library": "Library",
@@ -170,6 +171,7 @@
     "metaTitle": "Readfox – read real books in the language you are learning",
     "metaDescription": "Import a book or paste any text, tap a word for an instant translation, and turn what you read into spaced-repetition practice. Free and open source.",
     "signIn": "Sign in",
+    "freeBooks": "Free books",
     "getStarted": "Get started free",
     "heroTitle": "Read real books in the language you are learning",
     "heroBody": "Readfox turns reading into learning. Tap any word for a translation, collect vocabulary as you go, and practise it with spaced repetition. {count} languages, free to use.",

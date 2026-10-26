@@ -30,7 +30,15 @@
       "feedAddedLabel": "Added",
       "feedAdded": "Added {title} to your library",
       "feedErrAdd": "Could not add the article",
-      "feedSource": "Source: {source} · {license}"
+      "feedSource": "Source: {source} · {license}",
+      "search": "Search by title or author",
+      "sortLabel": "Sort books",
+      "sortDefault": "Suggested order",
+      "sortShort": "Shortest first",
+      "sortLong": "Longest first",
+      "noMatch": "No book matches “{query}”.",
+      "readingHours": "about {hours} h",
+      "readingMinutes": "about {minutes} min"
     },
     "empty": {
       "browseBooks": "Browse free books"
@@ -108,5 +116,23 @@
   },
   "descriptions": {
     "toggle": "Show descriptions"
+  },
+  "publicBooks": {
+    "indexTitle": "Free books in the language you are learning",
+    "indexMetaDescription": "{count} classic books in English, French, Spanish, Chinese and Korean, sorted by level from A1 to C2. Read them free on Readfox and tap any word for its meaning.",
+    "indexIntro": "Every book here is a full public-domain text, sorted by CEFR level. Open one to see how it begins, then read it free on Readfox. Tap any word to see its meaning in your language.",
+    "bookCount": "{count} books",
+    "level": "Level {level}",
+    "byAuthor": "by {author}",
+    "readingHours": "About {hours} hours of reading",
+    "readingMinutes": "About {minutes} minutes of reading",
+    "lessons": "{count, plural, one {# lesson} other {# lessons}}",
+    "opening": "How it begins",
+    "readFree": "Read it free on Readfox",
+    "ctaNote": "Tap any word for its meaning in your language. Save new words and review them later.",
+    "source": "Source: <link>{source}</link>. {license}.",
+    "moreAtLevel": "More {language} books at level {level}",
+    "allBooks": "All free books",
+    "metaTitle": "{title} by {author}: read it free in {language} | Readfox"
   }
 }

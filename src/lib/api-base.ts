@@ -108,6 +108,7 @@ export const AUTH_ROUTES = [
   '/landing',
   '/pricing',
   '/checkout',
+  '/books',
 ] as const;
 
 export function isAuthRoute(pathname: string): boolean {

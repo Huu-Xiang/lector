@@ -124,4 +124,4 @@ flowchart TD
 - Cloud: AuthGuard waits for a session. BillingGuard waits for `accessAllowed`. SetupGuard waits for `targetLanguage`.
 - Selfhost: AuthGuard and BillingGuard pass through. SetupGuard still runs.
 - `apiFetch` treats 401 as `bounceToLogin` and 402 as `bounceToSubscribe`.
-- Impersonation changes the tenant id inside AuthGuard. See [Admin](admin.md#impersonate).
+- Public pages (`AUTH_ROUTES`) render at once, also during server rendering, so their text is in the HTML.

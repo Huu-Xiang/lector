@@ -1,5 +1,5 @@
 import type { LLMProvider, CompletionOptions, LLMTask, LLMUsageEvent } from './types';
-import { LLMTruncatedError } from './errors';
+import { LLMContentFilterError, LLMTruncatedError, providerError } from './errors';
 
 const DEFAULT_URL = 'http://localhost:11434';
 const DEFAULT_TIMEOUT_MS = 60_000;
@@ -179,7 +179,7 @@ export class OpenAICompatibleProvider implements LLMProvider {
 
       if (!response.ok) {
         const error = await response.text();
-        throw new Error(`LLM provider error: ${error}`);
+        throw providerError(error);
       }
 
       const data = await response.json();
@@ -187,13 +187,13 @@ export class OpenAICompatibleProvider implements LLMProvider {
       usage = this.parseUsage(data.usage);
       if (data.error) {
         const detail = data.error.message || data.error.code || 'Unknown provider error';
-        throw new Error(`LLM provider error: ${detail}`);
+        throw providerError(detail);
       }
       const choice = data.choices?.[0];
       if (choice?.error || choice?.finish_reason === 'error') {
         const detail =
           choice?.error?.message || choice?.native_finish_reason || 'Unknown provider error';
-        throw new Error(`LLM provider error: ${detail}`);
+        throw providerError(detail);
       }
       if (
         (options.responseFormat === 'json-object' || options.responseFormat === 'json-array') &&
@@ -249,7 +249,7 @@ export class OpenAICompatibleProvider implements LLMProvider {
         const error = response.ok
           ? 'no response body'
           : await response.text().catch(() => `HTTP ${response.status}`);
-        throw new Error(`LLM provider error: ${error}`);
+        throw providerError(error);
       }
 
       reader = response.body.getReader();
@@ -278,12 +278,15 @@ export class OpenAICompatibleProvider implements LLMProvider {
             if (frameUsage) usage = frameUsage;
             if (json.error) {
               const detail = json.error.message || json.error.code || 'Unknown provider error';
-              throw new Error(`LLM provider error: ${detail}`);
+              throw providerError(detail);
             }
             const delta = json.choices?.[0]?.delta?.content;
             if (delta) yield delta as string;
           } catch (error) {
-            if (error instanceof Error && error.message.startsWith('LLM provider error:')) {
+            if (
+              error instanceof LLMContentFilterError ||
+              (error instanceof Error && error.message.startsWith('LLM provider error:'))
+            ) {
               throw error;
             }
             // keep-alive ping or non-JSON line — ignore

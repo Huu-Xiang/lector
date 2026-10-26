@@ -2996,9 +2996,7 @@ const internalOps: Record<string, OperationDoc> = {
     summary: 'Sign an account out everywhere',
     tag: 'Service',
   },
-  'POST /api/admin/impersonation/stop': { summary: 'End the read-only view', tag: 'Service' },
   'GET /api/admin/audit': { summary: 'Read the operator action trail', tag: 'Service' },
-  'GET /api/impersonation/status': { summary: 'Read the active read-only view', tag: 'Service' },
 };
 
 export const operations: Record<string, OperationDoc> = {

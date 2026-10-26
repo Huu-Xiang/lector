@@ -43,7 +43,8 @@
     "terms": "条款",
     "about": "关于",
     "source": "源代码",
-    "refunds": "退款"
+    "refunds": "退款",
+    "freeBooks": "免费书"
   },
   "nav": {
     "library": "书库",
@@ -193,6 +194,7 @@
     "metaTitle": "Readfox：读原版书，学地道外语",
     "metaDescription": "导入电子书或粘贴一篇文章，生词点一下就有释义。查过的词自动收进生词本，按记忆曲线提醒你复习。免费、开源。",
     "signIn": "登录",
+    "freeBooks": "免费书",
     "getStarted": "免费注册",
     "heroTitle": "读原版书，学地道外语",
     "heroBody": "遇到生词点一下，就能看到贴合上下文的释义。查过的词自动收进生词本，到点提醒你复习。支持 {count} 种语言，免费就能用。",
@@ -770,7 +772,15 @@
       "feedAddedLabel": "已添加",
       "feedAdded": "已把《{title}》添加到书库",
       "feedErrAdd": "无法添加这篇文章",
-      "feedSource": "来源：{source} · {license}"
+      "feedSource": "来源：{source} · {license}",
+      "search": "按书名或作者搜索",
+      "sortLabel": "排序",
+      "sortDefault": "推荐顺序",
+      "sortShort": "短的在前",
+      "sortLong": "长的在前",
+      "noMatch": "没有找到“{query}”。",
+      "readingHours": "约 {hours} 小时",
+      "readingMinutes": "约 {minutes} 分钟"
     },
     "empty": {
       "browseBooks": "浏览免费书籍",
@@ -1016,6 +1026,24 @@
   "descriptions": {
     "toggle": "显示简介"
   },
+  "publicBooks": {
+    "indexTitle": "免费外语原版书",
+    "indexMetaDescription": "{count} 本英语、法语、西班牙语、中文和韩语经典原著，按 A1 到 C2 分级。在 Readfox 免费阅读，点任何词都能看到释义。",
+    "indexIntro": "这里每一本都是公版的完整原文，按欧洲语言共同参考框架（CEFR）分级。打开一本可以先看开头，再到 Readfox 免费阅读。点任何词，都能看到中文释义。",
+    "bookCount": "{count} 本",
+    "level": "{level} 级",
+    "byAuthor": "作者：{author}",
+    "readingHours": "约 {hours} 小时读完",
+    "readingMinutes": "约 {minutes} 分钟读完",
+    "lessons": "{count, plural, other {# 课}}",
+    "opening": "开头",
+    "readFree": "在 Readfox 免费阅读",
+    "ctaNote": "点任何词都能看到中文释义。生词可以保存，以后复习。",
+    "source": "来源：<link>{source}</link>。{license}。",
+    "moreAtLevel": "更多 {level} 级{language}书",
+    "allBooks": "全部免费书",
+    "metaTitle": "{title}（{author}）{language}原版免费在线阅读 | Readfox"
+  },
   "journal": {
     "title": "日记",
     "newEntry": "新日记",
@@ -1221,13 +1249,6 @@
       "practiceBody": "稍后可到“练习”标签页复习词汇。",
       "vocabTitle": "你的词汇",
       "vocabBody": "在“词汇”标签页查看你接触过的词汇。"
-    },
-    "impersonation": {
-      "viewingAs": "正在以 <strong>{user}</strong> 的身份查看 · 只读",
-      "timeLeft": "剩余 {time}",
-      "exiting": "正在退出…",
-      "exit": "退出",
-      "exitFailed": "无法确认退出，仍将返回管理页面。"
     },
     "loading": {
       "app": "正在加载 Readfox",
@@ -1691,6 +1712,7 @@
       "phraseFailed": "短语翻译失败。请在设置中检查 AI 服务商。",
       "wordFailed": "单词翻译失败。请在设置中检查 AI 服务商。",
       "contextFailed": "无法获取语境翻译。",
+      "aiDeclined": "AI 服务拒绝处理这段文字。请换一句，或选短一点再试。",
       "retranslateFailed": "重新翻译失败",
       "saveFailed": "无法保存该单词，请检查网络连接后重试。",
       "saveFailedShort": "无法保存该单词，请检查网络连接。",

@@ -205,13 +205,6 @@
       "vocabTitle": "Your vocabulary",
       "vocabBody": "Review the vocabulary you've interacted with in the Vocabulary tab."
     },
-    "impersonation": {
-      "viewingAs": "Viewing as <strong>{user}</strong> · read-only",
-      "timeLeft": "{time} left",
-      "exiting": "Exiting…",
-      "exit": "Exit",
-      "exitFailed": "Could not confirm exit; returning to admin anyway."
-    },
     "loading": {
       "app": "Loading Readfox",
       "session": "Loading session",

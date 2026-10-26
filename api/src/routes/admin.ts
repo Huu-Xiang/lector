@@ -44,7 +44,6 @@ import {
 } from '../lib/redeem';
 import { maskEmail } from '../lib/mask-email';
 import { buildAdminTrends, parseTrendRange } from '../lib/admin-trends';
-import { stopImpersonation } from '../lib/impersonation';
 import { getAuthEngine } from '../lib/accounts';
 import {
   isValidLanguageCode,
@@ -942,18 +941,6 @@ export function makeAdminRoutes(
     return c.json({ id, revoked });
   });
 
-  // POST /api/admin/impersonation/stop — end the operator's active "view as"
-  // session. On a control plane, so it's reachable even while impersonating
-  // (the swap never touches /api/admin/*). No-op if nothing is active.
-  app.post('/impersonation/stop', (c) => {
-    const caller = c.get('userId');
-    const ended = stopImpersonation(caller, now);
-    if (!ended) return c.json({ active: false });
-    const minutes = Math.max(1, Math.round(ended.durationMs / 60000));
-    audit(c, 'impersonate_stop', ended.grant.targetUserId, ended.grant.targetEmail, `${minutes}m`);
-    return c.json({ active: false, stoppedTargetUserId: ended.grant.targetUserId });
-  });
-
   // GET /api/admin/audit — the operator action trail, newest first.
   app.get('/audit', (c) =>
     c.json({
@@ -1000,8 +987,12 @@ export function makeAdminRoutes(
     let codes: Parameters<typeof createCampaign>[0]['codes'];
     if (mode === 'shared') {
       const code = typeof body.code === 'string' ? normalizeCode(body.code) : '';
-      if (!/^[A-Z0-9]{4,32}$/.test(code)) {
-        return c.json({ error: 'code must be 4–32 letters or digits' }, 400);
+      if (!/^[A-Z0-9]{8,32}$/.test(code)) {
+        return c.json({ error: 'code must be 8–32 letters or digits' }, 400);
+      }
+      // A shared code word spreads beyond the people it was given to.
+      if (totalLimit === null) {
+        return c.json({ error: 'a shared code needs a total use limit' }, 400);
       }
       if (db.prepare('SELECT 1 FROM redeem_codes WHERE code = ?').get(code)) {
         return c.json({ error: 'that code already exists' }, 409);

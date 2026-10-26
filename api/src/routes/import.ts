@@ -18,6 +18,7 @@ import { estimateTranscriptionMinutes, probeAudioDurationMs } from '../lib/audio
 import { getLanguageConfig, normalizeText, type LanguageConfig } from '../lib/languages';
 import { validateOwnedReference } from '../lib/persisted-input';
 import { randomUUID } from 'crypto';
+import { gateMiddleware, uploadGate } from '../lib/concurrency-gate';
 
 // Cap the upload before it's buffered into memory. EPUBs are small; this stops a
 // large/zip-bomb upload from exhausting memory (the multipart body is buffered
@@ -56,6 +57,7 @@ export function makeImportRoutes({
       maxSize: MAX_UPLOAD_BYTES,
       onError: (c) => c.json({ error: 'EPUB is too large (max 50 MB).' }, 413),
     }),
+    gateMiddleware(uploadGate),
     async (c) => {
       // formData() parsing is inside the try so a malformed multipart body returns
       // this route's 400 rather than escaping to the global 500 handler.
@@ -182,6 +184,7 @@ export function makeImportRoutes({
       maxSize: MAX_AUDIO_UPLOAD_BYTES,
       onError: (c) => c.json({ error: 'Audio file is too large (max 500 MB).' }, 413),
     }),
+    gateMiddleware(uploadGate),
     async (c) => {
       try {
         const userId = getCurrentUserId(c);

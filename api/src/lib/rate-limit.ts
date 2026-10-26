@@ -152,4 +152,9 @@ export class InMemoryTranslationBurstLimiter implements TranslationBurstLimiter 
 }
 
 export const translationBurstLimiter = new InMemoryTranslationBurstLimiter();
+/** New dictionary localizations per user per day; cache hits do not count. */
+export const localizeDailyLimiter = new InMemoryTranslationBurstLimiter({
+  windowMs: 24 * 60 * 60 * 1000,
+  localizePerWindow: 500,
+});
 export const extractionBurstLimiter = new InMemoryExtractionBurstLimiter();

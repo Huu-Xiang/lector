@@ -33,7 +33,6 @@ import billingCn from './billing-cn';
 import redeem from './redeem';
 import invite from './invite';
 import admin from './admin';
-import impersonation from './impersonation';
 import byok from './byok';
 import onboarding from './onboarding';
 import learnerEvents from './learner-events';
@@ -100,7 +99,6 @@ export const routeMounts: readonly RouteMount[] = [
   { prefix: '/api/invite', app: invite },
   { prefix: '/api/billing', app: billing },
   { prefix: '/api/admin', app: admin },
-  { prefix: '/api/impersonation', app: impersonation },
   { prefix: '/api/byok', app: byok },
   { prefix: '/api/onboarding', app: onboarding },
   { prefix: '/api/learner-events', app: learnerEvents },

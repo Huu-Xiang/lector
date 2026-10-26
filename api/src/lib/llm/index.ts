@@ -17,7 +17,7 @@ export type {
 } from './types';
 export { parseLooseJson } from './parse-json';
 export { completeJson, providerAnswered } from './complete-json';
-export { LLMInvalidJsonError } from './errors';
+export { LLMContentFilterError, LLMInvalidJsonError } from './errors';
 
 let cachedProvider: LLMProvider | null = null;
 let cachedProviderKey: string | null = null;

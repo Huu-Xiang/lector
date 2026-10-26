@@ -1,14 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { bounceToLogin } from '@/lib/api-base';
 import { setActiveTenant } from '@/lib/language-cache';
 import { useLectorMode } from '@/lib/use-env';
 import { authClient, isAuthRoute } from '@/lib/auth-client';
-import { getImpersonationStatus, type ImpersonationStatus } from '@/lib/admin-client';
-import ImpersonationBanner from '@/components/ImpersonationBanner';
 import { Spinner } from '@/components/ui/spinner';
 
 /**
@@ -26,6 +24,10 @@ import { Spinner } from '@/components/ui/spinner';
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const t = useTranslations('chrome.loading');
   const mode = useLectorMode();
+  const pathname = usePathname();
+
+  // Public pages need no session; rendering them during SSR puts their text in the HTML for crawlers.
+  if (isAuthRoute(pathname)) return <>{children}</>;
 
   if (mode === 'unknown') {
     return (
@@ -45,37 +47,9 @@ function CloudSessionGate({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { data: session, isPending } = authClient.useSession();
   const onAuthRoute = isAuthRoute(pathname);
-  const [impersonation, setImpersonation] = useState<ImpersonationStatus | null>(null);
 
-  // Admin impersonation (#320): while a grant is active, the API serves the
-  // TARGET's data on ordinary routes, so the client's tenant-keyed caches must
-  // namespace under the target too — else the operator's own cached data would
-  // sit over the target's view. Probe once per session; a non-admin (or an
-  // operator who isn't impersonating) just gets { active: false }.
-  const userId = session?.user.id;
-  useEffect(() => {
-    if (!userId) return;
-    let live = true;
-    getImpersonationStatus()
-      .then((s) => live && setImpersonation(s))
-      .catch(() => live && setImpersonation({ active: false }));
-    return () => {
-      live = false;
-    };
-  }, [userId]);
-
-  // Effective tenant = the impersonation target while active, else the session
-  // user. Set during render (not an effect) so gated children read the right
-  // namespace from their first render — the #281 rule. When the async probe
-  // flips this operator→target, setActiveTenant clears the query cache (same
-  // machinery as a language switch), so no cross-account data survives.
-  if (session) {
-    const effectiveTenant =
-      impersonation?.active && impersonation.targetUserId
-        ? impersonation.targetUserId
-        : session.user.id;
-    setActiveTenant(effectiveTenant);
-  }
+  // Set during render so gated children read the right namespace from their first render.
+  if (session) setActiveTenant(session.user.id);
 
   useEffect(() => {
     if (isPending || onAuthRoute || session) return;
@@ -96,10 +70,5 @@ function CloudSessionGate({ children }: { children: React.ReactNode }) {
     );
   }
 
-  return (
-    <>
-      {impersonation?.active && <ImpersonationBanner status={impersonation} />}
-      {children}
-    </>
-  );
+  return <>{children}</>;
 }

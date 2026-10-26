@@ -21,7 +21,7 @@
     "@sglkc/kuromoji": "1.1.0",
     "adm-zip": "^0.5.17",
     "better-auth": "^1.6.23",
-    "hono": "^4.12.25",
+    "hono": "^4.13.14",
     "jsonrepair": "^3.14.0",
     "linkedom": "^0.18.12",
     "uuid": "^14.0.0",
