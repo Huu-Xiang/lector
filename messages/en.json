@@ -8,6 +8,10 @@
     "dismiss": "Dismiss",
     "learnMore": "Learn more",
     "items": {
+      "installApp": {
+        "title": "Use Readfox like an app on your phone",
+        "body": "Add Readfox to your home screen and read full screen from its icon. Settings shows the steps."
+      },
       "koreanSupport": {
         "title": "Korean is now available",
         "body": "You can learn Korean now. It has 8 free books and meanings in your own language. Add it from the language menu."
@@ -706,6 +710,21 @@
       "body": "Questions, feature ideas, a wrong meaning? Scan the code to add me on WeChat. I build Readfox. Please write \"Readfox\" in the friend request.",
       "alt": "WeChat QR code of the Readfox author",
       "nav": "Feedback"
+    },
+    "installApp": {
+      "title": "Add Readfox to your home screen",
+      "body": "Then open it from its icon, full screen like an app, without typing the address.",
+      "install": "Add to home screen",
+      "desktop": "Open readfox.app in your phone's browser, sign in, and come back here for the steps.",
+      "steps": {
+        "ios1": "Open readfox.app in Safari.",
+        "ios2": "Tap the Share button (a square with an arrow up).",
+        "ios3": "Choose \"Add to Home Screen\", then tap \"Add\".",
+        "wechat1": "WeChat cannot add it. Tap \"···\" at the top right and choose \"Open in browser\".",
+        "wechat2": "Open Settings in the browser and follow the steps there.",
+        "android1": "Tap the browser menu (usually ⋮ at the top right).",
+        "android2": "Choose \"Add to Home screen\" or \"Install app\"."
+      }
     }
   },
   "plans": {

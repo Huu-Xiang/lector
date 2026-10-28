@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Nunito, Literata } from 'next/font/google';
 import Script from 'next/script';
 import { NextIntlClientProvider } from 'next-intl';
@@ -34,6 +34,14 @@ export const metadata: Metadata = {
   title: 'Readfox',
   description:
     'Read real books in the language you are learning, with instant translations and spaced-repetition practice',
+  appleWebApp: { capable: true, title: 'Readfox', statusBarStyle: 'default' },
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#f3eee3' },
+    { media: '(prefers-color-scheme: dark)', color: '#17140f' },
+  ],
 };
 
 export default async function RootLayout({
@@ -58,6 +66,11 @@ export default async function RootLayout({
             19 doesn't warn about a script tag inside the component tree. */}
         <Script id="lector-theme-init" strategy="beforeInteractive">
           {`(function(){if(!localStorage.getItem('lector-migrated')){var m={'afrikaans-reader-api-key':'lector-api-key','afrikaans-reader-google-api-key':'lector-google-api-key','afrikaans-reader-anki-deck':'lector-anki-deck','afrikaans-reader-anki-cloze-deck':'lector-anki-cloze-deck','afrikaans-reader-card-type':'lector-card-type','afrikaans-reader-tts-speed':'lector-tts-speed','afrikaans-reader-theme':'lector-theme','afrikaans-reader-tts-voice':'lector-tts-voice','afrikaans-reader-tts-mode':'lector-tts-mode'};for(var k in m){var v=localStorage.getItem(k);if(v!==null){localStorage.setItem(m[k],v);localStorage.removeItem(k)}}localStorage.setItem('lector-migrated','1')}var t=localStorage.getItem('theme')||'system';var d=t==='dark'||(t==='system'&&window.matchMedia('(prefers-color-scheme:dark)').matches);if(d)document.documentElement.classList.add('dark')})()`}
+        </Script>
+        {/* Chrome fires beforeinstallprompt once, often before Settings mounts;
+            src/lib/pwa.ts reads the saved event. */}
+        <Script id="readfox-install-prompt" strategy="beforeInteractive">
+          {`window.addEventListener('beforeinstallprompt',function(e){window.__installPrompt=e;window.dispatchEvent(new Event('readfox:installprompt'))})`}
         </Script>
       </head>
 

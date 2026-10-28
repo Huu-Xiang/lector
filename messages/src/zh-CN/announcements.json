@@ -8,6 +8,10 @@
     "dismiss": "关闭提示",
     "learnMore": "了解更多",
     "items": {
+      "installApp": {
+        "title": "手机上也能像 App 一样用",
+        "body": "把 Readfox 加到手机主屏幕，点图标就能全屏阅读。设置页里有添加步骤。"
+      },
       "koreanSupport": {
         "title": "现在可以学韩语了",
         "body": "韩语已经上线：8 本免费书，词义会翻成你的母语。在语言菜单里添加即可。"

@@ -8,6 +8,10 @@
     "dismiss": "Dismiss",
     "learnMore": "Learn more",
     "items": {
+      "installApp": {
+        "title": "Use Readfox like an app on your phone",
+        "body": "Add Readfox to your home screen and read full screen from its icon. Settings shows the steps."
+      },
       "koreanSupport": {
         "title": "Korean is now available",
         "body": "You can learn Korean now. It has 8 free books and meanings in your own language. Add it from the language menu."
