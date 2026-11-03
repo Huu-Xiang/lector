@@ -25,6 +25,7 @@ A public, multi-user language-reading app at https://readfox.app. It is a self-m
 | Reading level | Setup asks for a CEFR level and saves it per target language (`readingLevels` setting). The free-books dialog groups by level and opens on it. Exam equivalents: `src/lib/reading-level.ts`; mainland Chinese exams show only for the zh-CN interface or a mainland time zone. |
 | Admin | `api/src/routes/admin.ts`, `src/app/admin/page.tsx` |
 | Public pages | `src/app/{landing,privacy,terms,about}`, text in `messages/src/*/legal.json` |
+| Search and AI discovery | `src/app/sitemap.ts`, `src/app/robots.ts`, `/llms.txt` (`src/lib/llms-txt.ts`: site facts and every free book, in English). Book, level and author pages carry schema.org data (`Book`, `BreadcrumbList`, `ItemList`) through `src/components/JsonLd`. Keep the facts in `llms-txt.ts` true when plans or the library change. |
 | Deploy files | `deploy/readfox/` |
 
 ## Decisions that are easy to undo by mistake

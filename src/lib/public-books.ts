@@ -195,3 +195,33 @@ export function pickLocalized(map: Record<string, string>, locale: string, fallb
 export function readingHours(book: PublicBook): number {
   return readingMinutes(book.wordCount, book.language) / 60;
 }
+
+export const SITE_ORIGIN = 'https://readfox.app';
+
+export function bookUrl(book: PublicBook): string {
+  return `${SITE_ORIGIN}/books/${book.language}/${book.slug}`;
+}
+
+/** schema.org duration, such as `PT3H20M`. */
+export function readingDuration(book: PublicBook): string {
+  const minutes = readingMinutes(book.wordCount, book.language);
+  const hours = Math.floor(minutes / 60);
+  return `PT${hours ? `${hours}H` : ''}${minutes % 60 || !hours ? `${minutes % 60}M` : ''}`;
+}
+
+/** schema.org ItemList of book pages, for the level and author lists. */
+export function bookListJsonLd(name: string, path: string, books: PublicBook[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name,
+    url: `${SITE_ORIGIN}${path}`,
+    numberOfItems: books.length,
+    itemListElement: books.map((book, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      url: bookUrl(book),
+      name: book.title,
+    })),
+  };
+}

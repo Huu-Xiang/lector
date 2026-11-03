@@ -2,16 +2,20 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getLocale, getTranslations } from 'next-intl/server';
+import JsonLd from '@/components/JsonLd';
 import { LegalShell, H2 } from '@/components/LegalLinks/shell';
 import {
   AUTHOR_PAGE_MIN_BOOKS,
+  SITE_ORIGIN,
   authorSlug,
   bookOpening,
+  bookUrl,
   booksByAuthor,
   findPublicBook,
   levelSlug,
   listPublicBooks,
   pickLocalized,
+  readingDuration,
   readingHours,
 } from '@/lib/public-books';
 
@@ -29,9 +33,11 @@ function bookJsonLd(book: NonNullable<ReturnType<typeof findPublicBook>>) {
     name: book.title,
     author: { '@type': 'Person', name: book.author },
     inLanguage: book.language,
-    url: `https://readfox.app/books/${book.language}/${book.slug}`,
+    url: bookUrl(book),
     isAccessibleForFree: true,
     educationalLevel: book.level,
+    wordCount: book.wordCount,
+    timeRequired: readingDuration(book),
     license: ccBySa
       ? 'https://creativecommons.org/licenses/by-sa/4.0/'
       : 'https://creativecommons.org/publicdomain/mark/1.0/',
@@ -89,13 +95,24 @@ export default async function BookPage({ params }: Props) {
     ...bookJsonLd(book),
     ...(blurb ? { description: blurb } : {}),
   };
+  const levelPath = `/books/${language}/level/${levelSlug(book.level)}`;
+  const breadcrumb = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { name: t('allBooks'), item: `${SITE_ORIGIN}/books` },
+      {
+        name: t('levelTitle', { language: languageName, level: book.level }),
+        item: `${SITE_ORIGIN}${levelPath}`,
+      },
+      { name: shown, item: bookUrl(book) },
+    ].map((entry, i) => ({ '@type': 'ListItem', position: i + 1, ...entry })),
+  };
 
   return (
     <LegalShell title={shown}>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }}
-      />
+      <JsonLd data={jsonLd} />
+      <JsonLd data={breadcrumb} />
       <div className="-mt-3 space-y-1 text-muted-foreground">
         {shown !== book.title && <p className="text-base text-foreground">{book.title}</p>}
         <p>
@@ -112,7 +129,7 @@ export default async function BookPage({ params }: Props) {
         </p>
         <p className="flex flex-wrap gap-x-3">
           <Link
-            href={`/books/${language}/level/${levelSlug(book.level)}`}
+            href={levelPath}
             className="rounded bg-muted px-1.5 font-medium text-foreground hover:underline"
           >
             {t('level', { level: book.level })}

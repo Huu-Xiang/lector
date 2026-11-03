@@ -2,13 +2,16 @@ import { describe, expect, it } from 'vitest';
 import {
   authorSlug,
   authorsOf,
+  bookListJsonLd,
   bookOpening,
+  bookUrl,
   booksAtLevel,
   booksByAuthor,
   findPublicBook,
   firstChapter,
   listPublicBooks,
   pickLocalized,
+  readingDuration,
   readingHours,
 } from './public-books';
 
@@ -75,5 +78,23 @@ describe('public books', () => {
     expect(booksByAuthor('en', 'arthur-conan-doyle').length).toBeGreaterThan(1);
     const doyle = authorsOf('en').find((a) => a.slug === 'arthur-conan-doyle');
     expect(doyle?.count).toBe(booksByAuthor('en', 'arthur-conan-doyle').length);
+  });
+});
+
+describe('public book structured data', () => {
+  it('writes the reading time as a schema.org duration', () => {
+    const book = findPublicBook('en', 'walden')!;
+    expect(readingDuration(book)).toMatch(/^PT(\d+H)?(\d+M)?$/);
+    expect(readingDuration({ ...book, wordCount: 200 * 90 })).toBe('PT1H30M');
+    expect(readingDuration({ ...book, wordCount: 200 * 120 })).toBe('PT2H');
+    expect(readingDuration({ ...book, wordCount: 100 })).toBe('PT1M');
+  });
+
+  it('lists books in order with their page URLs', () => {
+    const books = booksAtLevel('en', 'b1').slice(0, 2);
+    const ld = bookListJsonLd('English B1', '/books/en/level/b1', books);
+    expect(ld.url).toBe('https://readfox.app/books/en/level/b1');
+    expect(ld.numberOfItems).toBe(2);
+    expect(ld.itemListElement[1]).toMatchObject({ position: 2, url: bookUrl(books[1]) });
   });
 });

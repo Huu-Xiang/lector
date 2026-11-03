@@ -2,8 +2,15 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getLocale, getTranslations } from 'next-intl/server';
+import JsonLd from '@/components/JsonLd';
 import { LegalShell } from '@/components/LegalLinks/shell';
-import { booksAtLevel, levelSlug, listPublicBooks, pickLocalized } from '@/lib/public-books';
+import {
+  bookListJsonLd,
+  booksAtLevel,
+  levelSlug,
+  listPublicBooks,
+  pickLocalized,
+} from '@/lib/public-books';
 import BookList from '../../../BookList';
 
 interface Props {
@@ -52,8 +59,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function LevelPage({ params }: Props) {
   const { language, level, books, locale, languageName } = await load(params);
   const t = await getTranslations('publicBooks');
+  const title = t('levelTitle', { language: languageName, level });
   return (
-    <LegalShell title={t('levelTitle', { language: languageName, level })} wide>
+    <LegalShell title={title} wide>
+      <JsonLd data={bookListJsonLd(title, `/books/${language}/level/${levelSlug(level)}`, books)} />
       <p className="text-muted-foreground">
         {t('levelIntro', { count: books.length, language: languageName, level })}
       </p>

@@ -40,4 +40,34 @@ test.describe('public book landing pages', () => {
     expect(body).toContain('/books/en/authors');
     expect(body).toContain('/books/en/author/arthur-conan-doyle');
   });
+
+  test('book and list pages carry schema.org data for search engines and AI', async ({ page }) => {
+    const blocks = async () =>
+      (await page.locator('script[type="application/ld+json"]').allTextContents()).map(
+        (text) => JSON.parse(text) as Record<string, unknown>,
+      );
+
+    await page.goto('/books/en/walden');
+    const book = await blocks();
+    expect(book.find((b) => b['@type'] === 'Book')).toMatchObject({
+      name: 'Walden',
+      wordCount: expect.any(Number),
+      timeRequired: expect.stringMatching(/^PT/),
+    });
+    const crumbs = book.find((b) => b['@type'] === 'BreadcrumbList');
+    expect(crumbs?.itemListElement).toHaveLength(3);
+
+    await page.goto('/books/en/level/c2');
+    const list = (await blocks()).find((b) => b['@type'] === 'ItemList');
+    expect(JSON.stringify(list)).toContain('https://readfox.app/books/en/walden');
+  });
+
+  test('llms.txt sums up the site and links the book pages', async ({ request }) => {
+    const response = await request.get('/llms.txt');
+    expect(response.status()).toBe(200);
+    expect(response.headers()['content-type']).toContain('text/plain');
+    const body = await response.text();
+    expect(body).toMatch(/^# Readfox\n/);
+    expect(body).toContain('(https://readfox.app/books/en/walden)');
+  });
 });

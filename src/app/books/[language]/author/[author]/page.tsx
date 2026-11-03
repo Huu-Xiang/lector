@@ -2,10 +2,12 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getLocale, getTranslations } from 'next-intl/server';
+import JsonLd from '@/components/JsonLd';
 import { LegalShell } from '@/components/LegalLinks/shell';
 import {
   AUTHOR_PAGE_MIN_BOOKS,
   authorsOf,
+  bookListJsonLd,
   booksByAuthor,
   pickLocalized,
   PUBLIC_BOOK_LANGUAGES,
@@ -61,10 +63,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function AuthorPage({ params }: Props) {
-  const { language, name, books, locale, languageName } = await load(params);
+  const { language, slug, name, books, locale, languageName } = await load(params);
   const t = await getTranslations('publicBooks');
+  const title = t('authorTitle', { author: name, language: languageName });
   return (
-    <LegalShell title={t('authorTitle', { author: name, language: languageName })} wide>
+    <LegalShell title={title} wide>
+      <JsonLd
+        data={bookListJsonLd(title, `/books/${language}/author/${encodeURIComponent(slug)}`, books)}
+      />
       <p className="text-muted-foreground">
         {t('authorIntro', { author: name, count: books.length })}
       </p>
