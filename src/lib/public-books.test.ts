@@ -1,7 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import {
+  authorSlug,
+  authorsOf,
   bookOpening,
+  booksAtLevel,
+  booksByAuthor,
   findPublicBook,
+  firstChapter,
   listPublicBooks,
   pickLocalized,
   readingHours,
@@ -42,5 +47,33 @@ describe('public books', () => {
   it('estimates reading time from the word count', () => {
     const walden = findPublicBook('en', 'walden')!;
     expect(readingHours(walden)).toBeCloseTo(walden.wordCount / 200 / 60, 1);
+  });
+
+  it('reads the hard words for spaced languages only', () => {
+    expect(findPublicBook('en', 'walden')!.hardWords).toHaveLength(50);
+    expect(findPublicBook('en', 'walden')!.hardWords).not.toContain('walden');
+    const korean = listPublicBooks().find((b) => b.language === 'ko')!;
+    expect(korean.hardWords).toEqual([]);
+  });
+
+  it('gives the whole first lesson as the first chapter', () => {
+    const walden = findPublicBook('en', 'walden')!;
+    expect(firstChapter(walden).join('').length).toBeGreaterThan(
+      bookOpening(walden).join('').length,
+    );
+  });
+
+  it('makes author slugs that keep any script and fold Latin accents', () => {
+    expect(authorSlug('Benito Pérez Galdós')).toBe('benito-perez-galdos');
+    expect(authorSlug('Andrew Lang (editor)')).toBe('andrew-lang-editor');
+    expect(authorSlug('방정환 (편역)')).toBe('방정환-편역');
+  });
+
+  it('groups books by level and by author', () => {
+    expect(booksAtLevel('en', 'c2').map((b) => b.slug)).toContain('walden');
+    expect(booksAtLevel('en', 'z9')).toEqual([]);
+    expect(booksByAuthor('en', 'arthur-conan-doyle').length).toBeGreaterThan(1);
+    const doyle = authorsOf('en').find((a) => a.slug === 'arthur-conan-doyle');
+    expect(doyle?.count).toBe(booksByAuthor('en', 'arthur-conan-doyle').length);
   });
 });

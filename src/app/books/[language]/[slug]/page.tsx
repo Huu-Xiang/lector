@@ -4,8 +4,12 @@ import { notFound } from 'next/navigation';
 import { getLocale, getTranslations } from 'next-intl/server';
 import { LegalShell, H2 } from '@/components/LegalLinks/shell';
 import {
+  AUTHOR_PAGE_MIN_BOOKS,
+  authorSlug,
   bookOpening,
+  booksByAuthor,
   findPublicBook,
+  levelSlug,
   listPublicBooks,
   pickLocalized,
   readingHours,
@@ -76,6 +80,8 @@ export default async function BookPage({ params }: Props) {
   const shown = pickLocalized(book.titles, locale, book.title);
   const blurb = pickLocalized(book.blurbs, locale);
   const hours = readingHours(book);
+  const authorBooks = booksByAuthor(language, authorSlug(book.author)).length;
+  const readHref = `/books/${language}/${slug}/read`;
   const related = listPublicBooks()
     .filter((b) => b.language === book.language && b.level === book.level && b.slug !== slug)
     .slice(0, RELATED);
@@ -92,11 +98,25 @@ export default async function BookPage({ params }: Props) {
       />
       <div className="-mt-3 space-y-1 text-muted-foreground">
         {shown !== book.title && <p className="text-base text-foreground">{book.title}</p>}
-        <p>{t('byAuthor', { author: book.author })}</p>
+        <p>
+          {authorBooks >= AUTHOR_PAGE_MIN_BOOKS ? (
+            <Link
+              href={`/books/${language}/author/${authorSlug(book.author)}`}
+              className="hover:underline"
+            >
+              {t('byAuthor', { author: book.author })}
+            </Link>
+          ) : (
+            t('byAuthor', { author: book.author })
+          )}
+        </p>
         <p className="flex flex-wrap gap-x-3">
-          <span className="rounded bg-muted px-1.5 font-medium text-foreground">
+          <Link
+            href={`/books/${language}/level/${levelSlug(book.level)}`}
+            className="rounded bg-muted px-1.5 font-medium text-foreground hover:underline"
+          >
             {t('level', { level: book.level })}
-          </span>
+          </Link>
           <span>{languageName}</span>
           <span>{t('lessons', { count: book.lessonCount })}</span>
           <span>
@@ -110,14 +130,39 @@ export default async function BookPage({ params }: Props) {
       {blurb && <p className="text-base">{blurb}</p>}
 
       <div className="rounded-lg border bg-muted/40 p-4">
-        <Link
-          href="/register"
-          className="inline-block rounded-lg bg-primary px-4 py-2 font-semibold text-primary-foreground hover:opacity-90"
-        >
-          {t('readFree')}
-        </Link>
+        <div className="flex flex-wrap gap-2">
+          <Link
+            href={readHref}
+            className="inline-block rounded-lg bg-primary px-4 py-2 font-semibold text-primary-foreground hover:opacity-90"
+            data-testid="book-try-read"
+          >
+            {t('tryRead')}
+          </Link>
+          <Link
+            href="/register"
+            className="inline-block rounded-lg border border-border bg-card px-4 py-2 font-semibold text-foreground hover:bg-muted"
+          >
+            {t('readFree')}
+          </Link>
+        </div>
         <p className="mt-2 text-muted-foreground">{t('ctaNote')}</p>
       </div>
+
+      {book.hardWords.length > 0 && (
+        <section data-testid="book-hard-words">
+          <H2>{t('hardWordsTitle')}</H2>
+          <p className="mb-2 text-muted-foreground">
+            {t('hardWordsNote', { count: book.hardWords.length, language: languageName })}
+          </p>
+          <ul lang={language} className="flex flex-wrap gap-1.5">
+            {book.hardWords.map((word) => (
+              <li key={word} className="rounded-md border border-border bg-card px-2 py-0.5">
+                {word}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       <H2>{t('opening')}</H2>
       <div lang={language} className="space-y-3 font-serif text-base leading-7">
@@ -125,6 +170,11 @@ export default async function BookPage({ params }: Props) {
           <p key={i}>{paragraph}</p>
         ))}
       </div>
+      <p>
+        <Link href={readHref} className="font-medium text-primary hover:underline">
+          {t('readWholeChapter')} →
+        </Link>
+      </p>
 
       <p className="text-xs text-muted-foreground">
         {t.rich('source', {

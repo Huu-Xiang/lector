@@ -4,6 +4,7 @@ import { getLocale, getTranslations } from 'next-intl/server';
 import { LegalShell, H2 } from '@/components/LegalLinks/shell';
 import {
   PUBLIC_BOOK_LANGUAGES,
+  levelSlug,
   listPublicBooks,
   pickLocalized,
   type PublicBook,
@@ -47,6 +48,21 @@ export default async function BooksPage() {
                 {t('bookCount', { count: own.length })}
               </span>
             </H2>
+            <p className="flex flex-wrap gap-x-3 text-muted-foreground">
+              <span>{t('browseLevels')}:</span>
+              {groupByLevel(own).map(([level]) => (
+                <Link
+                  key={level}
+                  href={`/books/${language}/level/${levelSlug(level)}`}
+                  className="underline hover:text-foreground"
+                >
+                  {level}
+                </Link>
+              ))}
+              <Link href={`/books/${language}/authors`} className="underline hover:text-foreground">
+                {t('browseAuthors')}
+              </Link>
+            </p>
             {groupByLevel(own).map(([level, group]) => (
               <div key={level}>
                 <h3 className="mb-1 text-sm font-semibold text-muted-foreground">

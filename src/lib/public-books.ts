@@ -7,7 +7,7 @@ import { readingMinutes } from './reading-time';
 export const PUBLIC_BOOK_LANGUAGES = ['en', 'fr', 'es', 'zh', 'ko'] as const;
 export type PublicBookLanguage = (typeof PUBLIC_BOOK_LANGUAGES)[number];
 
-const LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'] as const;
+export const LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'] as const;
 
 export interface PublicBook {
   language: PublicBookLanguage;
@@ -21,6 +21,8 @@ export interface PublicBook {
   firstFile: string;
   titles: Record<string, string>;
   blurbs: Record<string, string>;
+  /** Built by scripts/build-hard-words.py; empty for Chinese and Korean. */
+  hardWords: string[];
 }
 
 interface Manifest {
@@ -70,6 +72,7 @@ export function listPublicBooks(): PublicBook[] {
     const dir = libraryDir(language);
     if (!fs.existsSync(dir)) continue;
     const translations = readJson<Translations>(path.join(dir, 'translations.json')) ?? {};
+    const hardWords = readJson<Record<string, string[]>>(path.join(dir, 'hard-words.json')) ?? {};
     for (const slug of fs.readdirSync(dir).sort()) {
       const manifest = readJson<Manifest>(path.join(dir, slug, 'manifest.json'));
       if (!manifest || manifest.lessons.length === 0) continue;
@@ -85,6 +88,7 @@ export function listPublicBooks(): PublicBook[] {
         firstFile: manifest.lessons[0].file,
         titles: translations[slug]?.title ?? {},
         blurbs: translations[slug]?.blurb ?? {},
+        hardWords: hardWords[slug] ?? [],
       });
     }
   }
@@ -102,14 +106,17 @@ export function findPublicBook(language: string, slug: string): PublicBook | nul
   return listPublicBooks().find((b) => b.language === language && b.slug === slug) ?? null;
 }
 
+function firstLessonText(book: PublicBook): string {
+  try {
+    return fs.readFileSync(path.join(libraryDir(book.language), book.slug, book.firstFile), 'utf8');
+  } catch {
+    return '';
+  }
+}
+
 /** The opening paragraphs of the first chapter, at most about `maxChars` characters. */
 export function bookOpening(book: PublicBook, maxChars = 1500): string[] {
-  let text: string;
-  try {
-    text = fs.readFileSync(path.join(libraryDir(book.language), book.slug, book.firstFile), 'utf8');
-  } catch {
-    return [];
-  }
+  const text = firstLessonText(book);
   const paragraphs: string[] = [];
   let used = 0;
   for (const block of text.split(/\n\s*\n/)) {
@@ -131,6 +138,53 @@ export function bookOpening(book: PublicBook, maxChars = 1500): string[] {
     if (used >= maxChars) break;
   }
   return paragraphs;
+}
+
+/** Every paragraph of the first lesson, with headings and emphasis marks removed. */
+export function firstChapter(book: PublicBook): string[] {
+  return bookOpening(book, Number.POSITIVE_INFINITY);
+}
+
+export function levelSlug(level: string): string {
+  return level.toLowerCase();
+}
+
+/** URL segment for an author; keeps letters of any script, folds Latin accents. */
+export function authorSlug(author: string): string {
+  return author
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .normalize('NFC')
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}]+/gu, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+export function booksAtLevel(language: string, level: string): PublicBook[] {
+  return listPublicBooks().filter(
+    (b) => b.language === language && levelSlug(b.level) === level.toLowerCase(),
+  );
+}
+
+export function booksByAuthor(language: string, slug: string): PublicBook[] {
+  return listPublicBooks().filter((b) => b.language === language && authorSlug(b.author) === slug);
+}
+
+/** An author with one book links straight to it; two or more get an author page. */
+export const AUTHOR_PAGE_MIN_BOOKS = 2;
+
+/** Distinct authors of one language, by name. */
+export function authorsOf(language: string): Array<{ name: string; slug: string; count: number }> {
+  const bySlug = new Map<string, { name: string; slug: string; count: number }>();
+  for (const book of listPublicBooks()) {
+    if (book.language !== language) continue;
+    const slug = authorSlug(book.author);
+    if (!slug) continue;
+    const entry = bySlug.get(slug) ?? { name: book.author, slug, count: 0 };
+    entry.count += 1;
+    bySlug.set(slug, entry);
+  }
+  return [...bySlug.values()].sort((a, b) => a.name.localeCompare(b.name));
 }
 
 /** The value for the interface locale, else English, else the given fallback. */
