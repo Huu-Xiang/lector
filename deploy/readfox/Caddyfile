@@ -1,6 +1,30 @@
 readfox.app {
     encode zstd gzip
 
+    log {
+        output file /var/log/caddy/readfox.json {
+            roll_size 20MiB
+            roll_keep 10
+            roll_keep_for 720h
+        }
+        format filter {
+            wrap json
+            request>remote_ip ip_mask {
+                ipv4 24
+                ipv6 48
+            }
+            request>client_ip ip_mask {
+                ipv4 24
+                ipv6 48
+            }
+            request>headers>Cookie delete
+            request>headers>Authorization delete
+            request>uri query {
+                delete token
+            }
+        }
+    }
+
     header {
         Strict-Transport-Security "max-age=31536000"
         X-Content-Type-Options nosniff
@@ -13,7 +37,10 @@ readfox.app {
         path /
         not header_regexp Cookie better-auth\.session_token
     }
-    redir @anonHome /landing 302
+    # /landing is served at "/" (200); old /landing URLs 301 to "/".
+    @landingDirect expression {http.request.orig_uri.path} == "/landing"
+    redir @landingDirect / 301
+    rewrite @anonHome /landing
     handle /api/import/* {
         request_body {
             max_size 60MB

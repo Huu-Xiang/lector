@@ -19,6 +19,7 @@ services:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy-data:/data
       - caddy-config:/config
+      - ./logs:/var/log/caddy
     depends_on: [lector]
   litestream:
     image: litestream/litestream:0.3.13
