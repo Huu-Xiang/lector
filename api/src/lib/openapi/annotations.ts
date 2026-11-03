@@ -2937,6 +2937,14 @@ const internalOps: Record<string, OperationDoc> = {
   },
 
   'GET /api/admin/access': { summary: 'Check whether the caller is an operator', tag: 'Service' },
+  'GET /api/admin/email-switch': {
+    summary: 'Read the switch for lifecycle mail',
+    tag: 'Service',
+  },
+  'PUT /api/admin/email-switch': {
+    summary: 'Turn lifecycle mail on or off for the whole service',
+    tag: 'Service',
+  },
   'GET /api/admin/summary': { summary: 'Read the service-wide aggregates', tag: 'Service' },
   'GET /api/admin/trends': { summary: 'Read the daily service totals', tag: 'Service' },
   'GET /api/admin/users': { summary: 'List every account', tag: 'Service' },

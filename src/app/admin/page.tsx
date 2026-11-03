@@ -27,6 +27,7 @@ import {
   type AdminAuditEntry,
 } from '@/lib/admin-client';
 import { planName } from '@/lib/plan-names';
+import EmailSwitch from './EmailSwitch';
 import RedeemCampaigns from './RedeemCampaigns';
 import RefundRequests from './RefundRequests';
 import StatCard from './StatCard';
@@ -394,6 +395,7 @@ export default function AdminPage() {
       )}
 
       <Trends />
+      <EmailSwitch />
 
       {summary && (summary.languages ?? []).length > 0 && (
         <section className="mb-8">

@@ -40,5 +40,67 @@
     "opening": "正在打开安全付款页面",
     "failed": "付款页面打不开。请返回后重试。",
     "back": "返回套餐页"
+  },
+  "planLimits": {
+    "upgradePlus": "升级到 Plus",
+    "seePlans": "查看套餐",
+    "addKey": "添加 API 密钥",
+    "notNow": "以后再说",
+    "upgradeLine": {
+      "cloud": "升级到 Plus 可以提高这个上限。",
+      "plus": "升级到 Pro 可以提高这个上限。",
+      "max": "升级到 Max 可以提高这个上限。",
+      "byok": "添加你自己的 API 密钥可以解除这个上限。"
+    },
+    "generic": {
+      "title": "已达到套餐上限",
+      "body": "这个操作超出了你当前套餐的额度。"
+    },
+    "metrics": {
+      "phraseSelectionWords": {
+        "title": "短语超出套餐长度",
+        "body": "你的套餐一次最多翻译 {limit, number} 个词的短语。"
+      },
+      "journalWordsPerMonth": {
+        "title": "本月日记字数已用完",
+        "body": "本月你已写了 {used, number} 个词，上限是 {limit, number} 个。"
+      },
+      "llmRequestsPerMonth": {
+        "title": "本月 AI 详细讲解已用完",
+        "body": "你已用完本月的 {limit, number} 次 AI 详细讲解。"
+      },
+      "wordGlossesPerMonth": {
+        "title": "本月 AI 查词次数已用完",
+        "body": "你已用完本月的 {limit, number} 次 AI 查词。离线词典里有的词仍然可以查。"
+      },
+      "phraseTranslationsPerDay": {
+        "title": "今天的短语翻译已用完",
+        "body": "你已用完今天的 {limit, number} 次短语翻译，北京时间早上 8 点重置。"
+      },
+      "contextTranslationsPerDay": {
+        "title": "今天的语境翻译已用完",
+        "body": "你已用完今天的 {limit, number} 次语境翻译，北京时间早上 8 点重置。"
+      },
+      "ttsCharsPerMonth": {
+        "title": "本月朗读额度已用完",
+        "body": "本月剩下的时间里，朗读会改用浏览器自带的声音。"
+      },
+      "maxCollections": {
+        "title": "书库已满",
+        "body": "你的套餐最多可以有 {limit, number} 个合集。"
+      },
+      "maxLessons": {
+        "title": "书库已满",
+        "body": "你的套餐最多可以有 {limit, number} 课。"
+      },
+      "maxVocabEntries": {
+        "title": "生词本已满",
+        "body": "你的套餐最多可以保存 {limit, number} 个生词。"
+      }
+    },
+    "dialog": {
+      "plus": "Plus 每月有 {glosses, number} 次 AI 查词和 {detailed, number} 次详细讲解。你的免费书和生词都会保留。",
+      "freeReset": "也可以继续免费读，额度下个月会重新开始。"
+    }
   }
 }

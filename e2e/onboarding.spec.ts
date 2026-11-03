@@ -11,7 +11,7 @@ const CLOUD_PASSWORD = 'guided-reader-password-123';
 const AUTH_HEADERS = { Origin: UI_ORIGIN };
 // Present with the same casing in both the lightweight dev fixture and the
 // shipped Spanish starter lesson used by the cloud API.
-const GUIDED_WORDS = ['Ana', 'Soy', 'una'] as const;
+const GUIDED_WORD = 'Ana';
 
 interface OnboardingSnapshot {
   progress: null | {
@@ -106,78 +106,28 @@ function waitForSavedEvent(page: Page) {
   );
 }
 
-async function saveGuidedWord(
-  page: Page,
-  word: (typeof GUIDED_WORDS)[number],
-  count: number,
-  onboardingUrl: string,
-) {
-  const trigger = page.getByRole('button', { name: `Look up ${word}`, exact: true }).first();
+async function saveGuidedWord(page: Page, onboardingUrl: string) {
+  const trigger = page.getByRole('button', { name: `Look up ${GUIDED_WORD}`, exact: true }).first();
   await expect(trigger).toBeVisible();
   await trigger.click();
 
   const drawer = page.getByTestId('translation-drawer');
   await expect(drawer).toHaveClass(/translate-x-0/, { timeout: 5_000 });
-  await expect(drawer.getByText(`meaning of ${word}`, { exact: false })).toBeVisible({
+  await expect(drawer.getByText(`meaning of ${GUIDED_WORD}`, { exact: false })).toBeVisible({
     timeout: 5_000,
   });
-  await expect(drawer.getByTestId('onboarding-drawer-progress')).toContainText(
-    `${count - 1}/3 ready`,
-  );
+  await expect(page.getByTestId('onboarding-coach-save')).toContainText('Step 2 of 3');
+  await expect(drawer.getByTestId('onboarding-drawer-progress')).toContainText('0/1 ready');
   const savedEvent = waitForSavedEvent(page);
   await drawer.getByTestId('word-level-1').click();
   const savedResponse = await savedEvent;
   expect(savedResponse.status(), await savedResponse.text()).toBeLessThan(300);
 
   const current = await snapshot(page, onboardingUrl);
-  expect(current.events.filter((event) => event.eventType === 'vocab.saved')).toHaveLength(count);
+  expect(current.events.filter((event) => event.eventType === 'vocab.saved')).toHaveLength(1);
   await expect(
-    page.getByText(`“${word}” added — ${count} of 3 review words ready`, { exact: true }),
+    page.getByText(`“${GUIDED_WORD}” added. Your practice is ready.`, { exact: true }),
   ).toBeVisible();
-  await page.keyboard.press('Escape');
-}
-
-async function translateGuidedPhrase(page: Page): Promise<void> {
-  await expect(page.getByTestId('onboarding-coach-phrase')).toBeVisible();
-  const translated = page.waitForResponse((response) => {
-    if (!response.url().endsWith('/api/translate') || response.request().method() !== 'POST') {
-      return false;
-    }
-    try {
-      return (response.request().postDataJSON() as { type?: string }).type === 'phrase';
-    } catch {
-      return false;
-    }
-  });
-
-  const selectedPhrase = await page.evaluate(() => {
-    const paragraph = [...document.querySelectorAll('p')].find(
-      (candidate) => candidate.querySelectorAll('[data-testid="reader-word"]').length >= 2,
-    );
-    if (!paragraph) throw new Error('No two-word reader paragraph found');
-    const words = [...paragraph.querySelectorAll<HTMLElement>('[data-testid="reader-word"]')];
-    const start = words[0].firstChild;
-    const end = words[1].firstChild;
-    if (!start || !end) throw new Error('Reader word text nodes missing');
-
-    const range = document.createRange();
-    range.setStart(start, 0);
-    range.setEnd(end, end.textContent?.length || 0);
-    const selection = window.getSelection();
-    selection?.removeAllRanges();
-    selection?.addRange(range);
-    const phrase = selection?.toString().trim() || '';
-    words[1].dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
-    return phrase;
-  });
-
-  expect(selectedPhrase).toContain(' ');
-  const response = await translated;
-  expect(response.status(), await response.text()).toBeLessThan(300);
-  await expect(page.getByTestId('translation-drawer')).toContainText(
-    `meaning of ${selectedPhrase}`,
-  );
-  await expect(page.getByTestId('onboarding-coach-save')).toBeVisible();
   await page.keyboard.press('Escape');
 }
 
@@ -185,31 +135,29 @@ async function completeGuidedRound(
   page: Page,
   onboardingUrl = apiUrl('/api/onboarding'),
 ): Promise<void> {
-  await saveGuidedWord(page, GUIDED_WORDS[0], 1, onboardingUrl);
-  await translateGuidedPhrase(page);
-  await saveGuidedWord(page, GUIDED_WORDS[1], 2, onboardingUrl);
-  await saveGuidedWord(page, GUIDED_WORDS[2], 3, onboardingUrl);
+  await expect(page.getByTestId('onboarding-coach-lookup')).toContainText('Step 1 of 3');
+  await saveGuidedWord(page, onboardingUrl);
 
-  await expect(page.getByTestId('onboarding-coach-practice')).toBeVisible({ timeout: 10_000 });
+  await expect(page.getByTestId('onboarding-coach-practice')).toContainText('Step 3 of 3', {
+    timeout: 10_000,
+  });
   await page.getByTestId('start-onboarding-practice').click();
   await expect(page).toHaveURL(/\/practice\?onboarding=1$/, { timeout: 15_000 });
 
-  for (const word of GUIDED_WORDS) {
-    await expect(page.getByTestId('mc-option')).toHaveCount(4);
-    // MC options expose their keyboard number as part of the accessible name
-    // (for example "1 Ana"), so target the exact numbered answer rather than
-    // relying on option order after shuffling.
-    await page.getByRole('button', { name: new RegExp(`^\\d+\\s+${word}$`) }).click();
-    await expect(page.getByRole('heading', { name: 'Correct!' })).toBeVisible({ timeout: 5_000 });
-    await page.getByRole('button', { name: 'Next Sentence', exact: true }).click();
-  }
+  await expect(page.getByTestId('mc-option')).toHaveCount(4);
+  // MC options expose their keyboard number as part of the accessible name
+  // (for example "1 Ana"), so target the exact numbered answer rather than
+  // relying on option order after shuffling.
+  await page.getByRole('button', { name: new RegExp(`^\\d+\\s+${GUIDED_WORD}$`) }).click();
+  await expect(page.getByRole('heading', { name: 'Correct!' })).toBeVisible({ timeout: 5_000 });
+  await page.getByRole('button', { name: 'Next Sentence', exact: true }).click();
 
   const summary = page.getByTestId('onboarding-summary');
   await expect(summary).toBeVisible({ timeout: 10_000 });
   await expect(
     summary.getByRole('heading', { name: 'First learning loop complete' }),
   ).toBeVisible();
-  await expect(summary.getByText('3/3', { exact: true })).toBeVisible();
+  await expect(summary.getByText('1/1', { exact: true })).toBeVisible();
   await expect(page.getByTestId('onboarding-library')).toBeEnabled({ timeout: 10_000 });
 }
 
@@ -356,7 +304,7 @@ test.describe('guided onboarding — selfhost', () => {
     await context.close();
   });
 
-  test('fresh Spanish learner completes reader → saved words → practice → summary', async ({
+  test('fresh Spanish learner completes reader → saved word → practice → summary', async ({
     browser,
   }) => {
     test.setTimeout(120_000);
@@ -371,11 +319,11 @@ test.describe('guided onboarding — selfhost', () => {
     expect(current.progress?.currentStep).toBe('summary');
     expect(
       current.events.filter((event) => event.eventType === 'reader.term_looked_up'),
-    ).toHaveLength(4);
-    expect(current.events.filter((event) => event.eventType === 'vocab.saved')).toHaveLength(3);
+    ).toHaveLength(1);
+    expect(current.events.filter((event) => event.eventType === 'vocab.saved')).toHaveLength(1);
     expect(
       current.events.filter((event) => event.eventType === 'practice.answer_submitted'),
-    ).toHaveLength(3);
+    ).toHaveLength(1);
     expect(current.events.map((event) => event.eventType)).toEqual(
       expect.arrayContaining(['practice.round_completed', 'onboarding.completed']),
     );
@@ -420,41 +368,31 @@ test.describe('guided onboarding — selfhost', () => {
     const coach = page.getByRole('complementary', { name: 'Guided first lesson' });
     await expect(coach).toHaveAttribute('aria-live', 'polite');
 
-    for (let i = 0; i < GUIDED_WORDS.length; i++) {
-      const word = GUIDED_WORDS[i];
-      const trigger = page.getByRole('button', { name: `Look up ${word}`, exact: true }).first();
-      await trigger.focus();
-      await expect(trigger).toBeFocused();
-      await trigger.press('Enter');
-      await expect(page.getByRole('dialog', { name: `Definition of ${word}` })).toBeVisible();
-      await expect(page.getByText(`meaning of ${word}`, { exact: false })).toBeVisible({
-        timeout: 5_000,
-      });
+    const trigger = page
+      .getByRole('button', { name: `Look up ${GUIDED_WORD}`, exact: true })
+      .first();
+    await trigger.focus();
+    await expect(trigger).toBeFocused();
+    await trigger.press('Enter');
+    await expect(page.getByRole('dialog', { name: `Definition of ${GUIDED_WORD}` })).toBeVisible();
+    await expect(page.getByText(`meaning of ${GUIDED_WORD}`, { exact: false })).toBeVisible({
+      timeout: 5_000,
+    });
 
-      const level = page.getByTestId('word-level-1');
-      await level.focus();
-      await expect(level).toBeFocused();
-      const savedEvent = waitForSavedEvent(page);
-      await level.press('Enter');
-      const savedResponse = await savedEvent;
-      expect(savedResponse.status(), await savedResponse.text()).toBeLessThan(300);
-      const current = await snapshot(page);
-      expect(current.events.filter((event) => event.eventType === 'vocab.saved')).toHaveLength(
-        i + 1,
-      );
+    const level = page.getByTestId('word-level-1');
+    await level.focus();
+    await expect(level).toBeFocused();
+    const savedEvent = waitForSavedEvent(page);
+    await level.press('Enter');
+    const savedResponse = await savedEvent;
+    expect(savedResponse.status(), await savedResponse.text()).toBeLessThan(300);
+    const current = await snapshot(page);
+    expect(current.events.filter((event) => event.eventType === 'vocab.saved')).toHaveLength(1);
+    await expect(page.getByTestId('onboarding-coach-practice')).toBeVisible();
 
-      if (i < GUIDED_WORDS.length - 1) {
-        await expect(page.getByTestId('onboarding-coach-phrase')).toContainText(
-          `${i + 1} of 3 ready`,
-        );
-      } else {
-        await expect(page.getByTestId('onboarding-coach-practice')).toBeVisible();
-      }
-
-      await page.keyboard.press('Escape');
-      await expect(page.getByTestId('translation-drawer')).toHaveClass(/translate-x-full/);
-      await expect(trigger).not.toHaveAttribute('data-active-word', 'true');
-    }
+    await page.keyboard.press('Escape');
+    await expect(page.getByTestId('translation-drawer')).toHaveClass(/translate-x-full/);
+    await expect(trigger).not.toHaveAttribute('data-active-word', 'true');
 
     const startPractice = page.getByTestId('start-onboarding-practice');
     await expect(startPractice).toBeVisible();

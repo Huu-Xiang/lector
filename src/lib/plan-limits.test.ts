@@ -2,8 +2,9 @@ import { describe, expect, it } from 'vitest';
 import {
   phraseSelectionLimitPayload,
   planLimitAction,
-  planLimitUpgradeLine,
+  planLimitWantsDialog,
   recommendedUpgrade,
+  type PlanLimitPayload,
 } from './plan-limits';
 
 describe('plan-limit upgrade routing', () => {
@@ -22,25 +23,33 @@ describe('plan-limit upgrade routing', () => {
 
   it('only exposes safe navigation targets', () => {
     expect(planLimitAction('cloud')).toEqual({
-      label: 'Upgrade to Plus',
-      href: '/subscribe',
+      label: 'upgradePlus',
+      href: '/subscribe?plan=cloud',
     });
-    expect(planLimitAction('byok')).toEqual({
-      label: 'Add API key',
-      href: '/settings#byok',
-    });
-    expect(planLimitAction('plus')).toBeNull();
-    expect(planLimitAction('max')).toBeNull();
+    expect(planLimitAction('plus')).toEqual({ label: 'seePlans', href: '/pricing' });
+    expect(planLimitAction('max')).toEqual({ label: 'seePlans', href: '/pricing' });
+    expect(planLimitAction('byok')).toEqual({ label: 'addKey', href: '/settings#byok' });
     expect(planLimitAction(null)).toBeNull();
   });
 
   it('offers BYOK only for AI-backed limits', () => {
-    expect(planLimitUpgradeLine('wordGlossesPerMonth', 'cloud')).toContain('own AI key');
-    expect(planLimitUpgradeLine('ttsCharsPerMonth', 'cloud')).toBe('Plus lifts this limit.');
-    expect(planLimitUpgradeLine('maxCollections', 'cloud')).toBe('Plus lifts this limit.');
-    expect(planLimitUpgradeLine('maxCollections', 'max')).toBe('Max lifts this limit.');
-    expect(planLimitUpgradeLine('ttsCharsPerMonth', 'byok')).toBe('');
+    expect(planLimitAction('byok', 'wordGlossesPerMonth')).not.toBeNull();
     expect(planLimitAction('byok', 'ttsCharsPerMonth')).toBeNull();
+  });
+
+  it('opens the upgrade dialog only for Free accounts out of AI help', () => {
+    const payload = (plan: string, metric: string): PlanLimitPayload => ({
+      error: 'plan_limit',
+      metric,
+      limit: 1000,
+      used: 1000,
+      requested: 1,
+      plan,
+      upgrade: recommendedUpgrade(plan),
+    });
+    expect(planLimitWantsDialog(payload('free', 'wordGlossesPerMonth'))).toBe(true);
+    expect(planLimitWantsDialog(payload('free', 'journalWordsPerMonth'))).toBe(false);
+    expect(planLimitWantsDialog(payload('cloud', 'wordGlossesPerMonth'))).toBe(false);
   });
 
   it('preflights the Free six-word phrase boundary before a provider call', () => {

@@ -34,7 +34,7 @@
       "guidedLabel": "Guided first lesson",
       "guidedTitle": "Your first learning loop",
       "back": "← Back",
-      "threeWord": "3-word review",
+      "threeWord": "Quick review",
       "starterWords": "Words from your starter lesson",
       "loading": "Loading sentences..."
     },
@@ -80,7 +80,7 @@
       },
       "recovery": {
         "title": "Your practice words aren't ready yet",
-        "missingWords": "Your mini-review needs three words saved from the starter lesson. Return to the lesson and save any missing words, then try again.",
+        "missingWords": "Your mini-review needs a word saved from the starter lesson. Return to the lesson, save a word, then try again.",
         "loadFailed": "We could not load your saved practice words. Return to the starter lesson and try the mini-review again.",
         "backToLesson": "Back to starter lesson"
       }

@@ -14,7 +14,7 @@
       "knownFailed": "无法将该单词标为已掌握，请检查网络连接。",
       "ignoreFailed": "无法忽略该单词，请检查网络连接。",
       "levelFailed": "无法设置单词等级，请检查网络连接。",
-      "onboardingWordAdded": "已添加“{word}”，复习单词已就绪 {count}/3",
+      "onboardingWordAdded": "已加入“{word}”，练习已经准备好。",
       "miniReviewFailed": "无法开始小复习，请重试。",
       "onboardingSkipFailed": "无法跳过引导，请重试。",
       "copied": "已复制",
@@ -188,30 +188,20 @@
     "coach": {
       "ariaLabel": "首课引导",
       "skip": "跳过引导",
-      "progressLabel": "复习单词已就绪 {count}/3",
-      "wordPlaceholder": "单词 {n}",
-      "startPractice": "开始 3 词练习",
-      "ready": "已就绪 {count}/3",
+      "startPractice": "开始快速练习",
       "lookup": {
-        "eyebrow": "试试阅读器",
         "title": "点一个你不认识的词",
         "body": "课文里的每个词都能查。点按或点击一个，就能在这里看到释义。"
       },
       "save": {
-        "titleFirst": "把这个词加入复习",
-        "titleNext": "再选一个有用的词",
-        "bodyFirst": "在释义面板中选择 1-4 级，下方的复习进度会显示这个词。",
-        "bodyNext": "关闭释义，再点另一个词，设置等级即可添加。"
-      },
-      "phrase": {
-        "title": "现在试试翻译整个短语",
-        "body": "关闭释义，然后拖选两个或更多单词（手机上请长按），松开即可翻译所选短语。"
+        "title": "把这个词加入复习",
+        "body": "在释义面板里选择 1–4 级，这个词就会进入你的复习列表。"
       },
       "practice": {
-        "eyebrow": "你的小复习已准备好",
         "title": "练习刚读到的单词",
-        "body": "三张快速卡片，趁课文记忆犹新，帮你巩固所学。"
-      }
+        "body": "趁记忆犹新做一张快速练习卡，帮你记住这个词。"
+      },
+      "step": "第 {step}/{total} 步"
     },
     "listen": {
       "back": "返回",

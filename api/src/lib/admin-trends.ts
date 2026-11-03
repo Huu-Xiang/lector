@@ -28,8 +28,12 @@ export interface AdminTrends {
     verified: number;
     finishedSetup: number;
     studied: number;
+    lookedUp: number;
+    savedWord: number;
     finishedOnboarding: number;
     cameBack: number;
+    hitLimit: number;
+    paid: number;
   };
   retention: {
     nextDay: { eligible: number; returned: number };
@@ -65,10 +69,22 @@ export function parseTrendRange(raw: string | undefined): TrendRange {
  * Service-wide daily totals for the admin dashboard. Signups, AI counters and
  * orders use UTC days; dailyStats rows use each learner's own time zone.
  */
+/** AI allowances that end a learner's free help for the day or month. */
+const AI_LIMIT_METRICS = [
+  'wordGlossesPerMonth',
+  'llmRequestsPerMonth',
+  'phraseTranslationsPerDay',
+  'contextTranslationsPerDay',
+] as const;
+
+/** A learner's current allowance for a metric; null means no limit. */
+export type LimitOf = (userId: string, metric: (typeof AI_LIMIT_METRICS)[number]) => number | null;
+
 export function buildAdminTrends(
   range: TrendRange,
   now: Date,
   excludeUserIds: ReadonlySet<string>,
+  limitOf: LimitOf = () => null,
 ): AdminTrends {
   const to = isoDay(now.getTime());
   const from = addDays(to, -(range - 1));
@@ -123,8 +139,12 @@ export function buildAdminTrends(
     practiced: number;
     minutes: number;
   }[];
+  const lookedUp = new Set<string>();
+  const savedWord = new Set<string>();
   for (const row of studyRows) {
     if (!knownUsers.has(row.userId)) continue;
+    if (row.lookups > 0) lookedUp.add(row.userId);
+    if (row.saved > 0) savedWord.add(row.userId);
     let set = activeDays.get(row.userId);
     if (!set) {
       set = new Set();
@@ -194,13 +214,53 @@ export function buildAdminTrends(
     ).map((r) => r.userId),
   );
 
+  for (const row of db.prepare('SELECT DISTINCT userId FROM vocab').all() as {
+    userId: string;
+  }[]) {
+    savedWord.add(row.userId);
+  }
+
+  const hitLimit = new Set<string>();
+  const usageRows = db
+    .prepare(
+      `SELECT userId, metric, MAX(value) AS value FROM usage_counters
+       WHERE metric IN (${AI_LIMIT_METRICS.map(() => '?').join(', ')})
+       GROUP BY userId, metric`,
+    )
+    .all(...AI_LIMIT_METRICS) as {
+    userId: string;
+    metric: (typeof AI_LIMIT_METRICS)[number];
+    value: number;
+  }[];
+  for (const row of usageRows) {
+    if (!knownUsers.has(row.userId) || hitLimit.has(row.userId)) continue;
+    const limit = limitOf(row.userId, row.metric);
+    if (limit !== null && limit > 0 && row.value >= limit) hitLimit.add(row.userId);
+  }
+
+  const paid = new Set<string>(
+    (
+      db
+        .prepare(
+          `SELECT userId FROM cn_orders WHERE status = 'SUCCEEDED'
+           UNION SELECT userId FROM billing_subscriptions
+           WHERE userId IS NOT NULL AND status IN ('active', 'trialing', 'past_due', 'paused', 'canceled')`,
+        )
+        .all() as { userId: string }[]
+    ).map((r) => r.userId),
+  );
+
   const funnel = {
     signedUp: 0,
     verified: 0,
     finishedSetup: 0,
     studied: 0,
+    lookedUp: 0,
+    savedWord: 0,
     finishedOnboarding: 0,
     cameBack: 0,
+    hitLimit: 0,
+    paid: 0,
   };
   const retention = {
     nextDay: { eligible: 0, returned: 0 },
@@ -216,8 +276,12 @@ export function buildAdminTrends(
     if (user.emailVerified === 1) funnel.verified += 1;
     if (setupDone.has(user.id)) funnel.finishedSetup += 1;
     if (studied.length > 0) funnel.studied += 1;
+    if (lookedUp.has(user.id)) funnel.lookedUp += 1;
+    if (savedWord.has(user.id)) funnel.savedWord += 1;
     if (onboardingDone.has(user.id)) funnel.finishedOnboarding += 1;
     if (studied.some((d) => d > joined)) funnel.cameBack += 1;
+    if (hitLimit.has(user.id)) funnel.hitLimit += 1;
+    if (paid.has(user.id)) funnel.paid += 1;
 
     const nextDay = addDays(joined, 1);
     if (nextDay < to) {

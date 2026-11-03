@@ -478,6 +478,13 @@ function getDb(): Database {
     -- Product-mail opt-out (#558). Keyed on a hash of the address, not
     -- userId, so a later account on the same address stays quiet. Erasure
     -- does not drop it. The column is named email; the value is a hash.
+    -- Service-wide operator switches, one row per key (lib/app-settings.ts).
+    CREATE TABLE IF NOT EXISTS app_settings (
+      key TEXT PRIMARY KEY,
+      value TEXT NOT NULL,
+      updatedAt TEXT NOT NULL
+    );
+
     CREATE TABLE IF NOT EXISTS email_unsubscribes (
       email TEXT PRIMARY KEY,
       unsubscribedAt TEXT NOT NULL

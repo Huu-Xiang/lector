@@ -165,6 +165,9 @@ export function onboardingEvents(snapshot: OnboardingSnapshot | null): LearnerEv
   });
 }
 
+/** Words saved in the starter lesson before the guided practice opens. */
+export const ONBOARDING_SAVE_TARGET = 1;
+
 export function savedOnboardingWords(
   snapshot: OnboardingSnapshot | null,
 ): Array<{ id: string; text: string }> {

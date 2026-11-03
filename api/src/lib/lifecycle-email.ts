@@ -7,12 +7,9 @@ import { Database } from 'bun:sqlite';
 import { db } from '../db';
 import { config } from './config';
 import { sendEmail, type EmailMessage } from './email';
+import { productEmailsEnabled } from './app-settings';
 import { renderLifecycleEmail } from './lifecycle-copy';
-import {
-  isUnsubscribed,
-  listUnsubscribeHeaders,
-  unsubscribeUrl,
-} from './email-unsubscribe';
+import { isUnsubscribed, listUnsubscribeHeaders, unsubscribeUrl } from './email-unsubscribe';
 import { LANGUAGES, isValidLanguageCode, type LanguageCode } from './languages';
 import { Sentry } from './sentry';
 import { hasStarterContent } from './starter-content';
@@ -66,6 +63,8 @@ export interface LifecycleDeps {
   send: (message: EmailMessage) => Promise<void>;
   cloud: boolean;
   hasResendKey: boolean;
+  /** The admin switch for lifecycle mail (lib/app-settings.ts). */
+  enabled: boolean;
   appUrl: string;
 }
 
@@ -76,6 +75,7 @@ export function defaultLifecycleDeps(): LifecycleDeps {
     send: sendEmail,
     cloud: config.authRequired,
     hasResendKey: Boolean(process.env.RESEND_API_KEY),
+    enabled: productEmailsEnabled(),
     appUrl: process.env.BETTER_AUTH_URL || process.env.APP_URL || 'https://readfox.app',
   };
 }
@@ -190,9 +190,7 @@ function loadUser(database: Database, userId: string): LifecycleUser | null {
 function loadVerifiedUsers(database: Database): LifecycleUser[] {
   if (!userTableExists(database)) return [];
   return database
-    .prepare(
-      'SELECT id, email, name, emailVerified, createdAt FROM user WHERE emailVerified = 1',
-    )
+    .prepare('SELECT id, email, name, emailVerified, createdAt FROM user WHERE emailVerified = 1')
     .all() as LifecycleUser[];
 }
 
@@ -228,7 +226,7 @@ async function sendOnce(
   alias: LifecycleAlias,
   deps: LifecycleDeps,
 ): Promise<LifecycleSendResult> {
-  if (!deps.cloud || !deps.hasResendKey) return 'skipped';
+  if (!deps.cloud || !deps.hasResendKey || !deps.enabled) return 'skipped';
   if (!isVerified(user.emailVerified) || !user.email) return 'skipped';
   if (alreadySent(deps.database, user.id, alias)) return 'skipped';
   if (isUnsubscribed(deps.database, user.email)) return 'skipped';
@@ -329,7 +327,7 @@ export async function sweepLifecycleEmails(
     const deps = mergeDeps(overrides);
     let sent = 0;
     let skipped = 0;
-    if (!deps.cloud || !deps.hasResendKey) return { sent, skipped };
+    if (!deps.cloud || !deps.hasResendKey || !deps.enabled) return { sent, skipped };
 
     const nowMs = deps.now().getTime();
     for (const user of loadVerifiedUsers(deps.database)) {
@@ -347,11 +345,7 @@ export async function sweepLifecycleEmails(
       ) {
         results.push(await sendOnce(user, LIFECYCLE_TEMPLATES.day1, deps));
       }
-      if (
-        ageMs >= DAY3_AFTER_MS &&
-        ageMs < DAY3_UNTIL_MS &&
-        !hasRealUse(deps.database, user.id)
-      ) {
+      if (ageMs >= DAY3_AFTER_MS && ageMs < DAY3_UNTIL_MS && !hasRealUse(deps.database, user.id)) {
         results.push(await sendOnce(user, LIFECYCLE_TEMPLATES.day3, deps));
       }
       for (const result of results) {
@@ -367,10 +361,9 @@ export async function sweepLifecycleEmails(
   }
 }
 
+/** The worker runs in cloud mode; each sweep checks the admin switch itself. */
 function lifecycleWorkerEnabled(): boolean {
-  // Fork: these mails use Resend templates that live in the upstream account,
-  // so they stay off unless explicitly enabled with your own templates.
-  return config.authRequired && process.env.LIFECYCLE_EMAILS === '1';
+  return config.authRequired;
 }
 
 let loopTimer: ReturnType<typeof setInterval> | null = null;

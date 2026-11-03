@@ -40,5 +40,67 @@
     "opening": "Opening secure checkout",
     "failed": "Checkout couldn't be opened. Go back and try again.",
     "back": "Back to plans"
+  },
+  "planLimits": {
+    "upgradePlus": "Upgrade to Plus",
+    "seePlans": "See plans",
+    "addKey": "Add API key",
+    "notNow": "Not now",
+    "upgradeLine": {
+      "cloud": "Plus lifts this limit.",
+      "plus": "Pro lifts this limit.",
+      "max": "Max lifts this limit.",
+      "byok": "Adding your own API key lifts this limit."
+    },
+    "generic": {
+      "title": "Plan limit reached",
+      "body": "This is over your plan's allowance."
+    },
+    "metrics": {
+      "phraseSelectionWords": {
+        "title": "Phrase too long for your plan",
+        "body": "Phrase lookups are limited to {limit, number} words on your plan."
+      },
+      "journalWordsPerMonth": {
+        "title": "Monthly journal limit reached",
+        "body": "You've written {used, number} of {limit, number} journal words this month."
+      },
+      "llmRequestsPerMonth": {
+        "title": "Monthly AI allowance used",
+        "body": "You've used this month's {limit, number} detailed AI answers."
+      },
+      "wordGlossesPerMonth": {
+        "title": "Monthly AI word lookups used",
+        "body": "You've used this month's {limit, number} AI word lookups. Words in the offline dictionary still work."
+      },
+      "phraseTranslationsPerDay": {
+        "title": "Daily phrase allowance used",
+        "body": "You've used today's {limit, number} phrase translations. It resets at midnight UTC."
+      },
+      "contextTranslationsPerDay": {
+        "title": "Daily context allowance used",
+        "body": "You've used today's {limit, number} in-context translations. It resets at midnight UTC."
+      },
+      "ttsCharsPerMonth": {
+        "title": "Monthly audio allowance used",
+        "body": "Text-to-speech uses your browser voice for the rest of the month."
+      },
+      "maxCollections": {
+        "title": "Library limit reached",
+        "body": "Your plan holds up to {limit, number} collections."
+      },
+      "maxLessons": {
+        "title": "Library limit reached",
+        "body": "Your plan holds up to {limit, number} lessons."
+      },
+      "maxVocabEntries": {
+        "title": "Saved words limit reached",
+        "body": "Your plan holds up to {limit, number} saved words."
+      }
+    },
+    "dialog": {
+      "plus": "Plus gives you {glosses, number} AI word lookups and {detailed, number} detailed answers each month. Free books and saved words stay as they are.",
+      "freeReset": "Or keep reading free: the allowance starts again next month."
+    }
   }
 }

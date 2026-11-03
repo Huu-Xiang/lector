@@ -34,7 +34,7 @@
       "guidedLabel": "首课引导",
       "guidedTitle": "你的第一个学习循环",
       "back": "← 返回",
-      "threeWord": "3 词复习",
+      "threeWord": "快速复习",
       "starterWords": "入门课文中的词",
       "loading": "正在加载句子..."
     },
@@ -80,7 +80,7 @@
       },
       "recovery": {
         "title": "你的练习词还没准备好",
-        "missingWords": "小复习需要从入门课文中保存三个词。请回到课文保存缺少的词，然后再试一次。",
+        "missingWords": "迷你复习需要你先在入门课文里保存一个词。请回到课文保存一个词，再试一次。",
         "loadFailed": "无法加载你保存的练习词。请回到入门课文，再试一次小复习。",
         "backToLesson": "返回入门课文"
       }

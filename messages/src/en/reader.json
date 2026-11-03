@@ -14,7 +14,7 @@
       "knownFailed": "Could not mark the word as known — check your connection.",
       "ignoreFailed": "Could not ignore the word — check your connection.",
       "levelFailed": "Could not set the word level — check your connection.",
-      "onboardingWordAdded": "“{word}” added — {count} of 3 review words ready",
+      "onboardingWordAdded": "“{word}” added. Your practice is ready.",
       "miniReviewFailed": "Could not start the mini-review. Please try again.",
       "onboardingSkipFailed": "Could not skip the guide. Please try again.",
       "copied": "Copied",
@@ -188,30 +188,20 @@
     "coach": {
       "ariaLabel": "Guided first lesson",
       "skip": "Skip guide",
-      "progressLabel": "{count} of 3 review words ready",
-      "wordPlaceholder": "Word {n}",
-      "startPractice": "Start 3-word practice",
-      "ready": "{count} of 3 ready",
+      "startPractice": "Start a quick practice",
       "lookup": {
-        "eyebrow": "Try the reader",
         "title": "Tap a word you don't know",
         "body": "Every word in the lesson can be looked up. Tap or click one to see its meaning here."
       },
       "save": {
-        "titleFirst": "Add this word to your review",
-        "titleNext": "Choose another useful word",
-        "bodyFirst": "Choose level 1-4 in the definition panel. You will see this word fill the review progress below.",
-        "bodyNext": "Close the definition, tap a different word, then set its level to add it."
-      },
-      "phrase": {
-        "title": "Now translate a whole phrase",
-        "body": "Close the definition, then drag across two or more words (or long-press on mobile). Release to translate the highlighted phrase."
+        "title": "Save this word for review",
+        "body": "In the meaning panel, choose a level from 1 to 4. The word goes to your review list."
       },
       "practice": {
-        "eyebrow": "Your mini-review is ready",
         "title": "Practise the words you just read",
-        "body": "Three quick cards will close the loop while the lesson is still fresh."
-      }
+        "body": "One quick card while the lesson is fresh helps the word stay with you."
+      },
+      "step": "Step {step} of {total}"
     },
     "listen": {
       "back": "Back",

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, type ReactNode } from 'react';
+import Link from 'next/link';
 import {
   Bar,
   BarChart,
@@ -124,7 +125,13 @@ export default function Trends() {
     <section className="mb-8">
       <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
         <h2 className="text-sm font-semibold tracking-wide text-muted-foreground uppercase">
-          Trends
+          Trends{' '}
+          <Link
+            href="/admin/funnel"
+            className="ml-2 text-xs text-primary normal-case hover:underline"
+          >
+            Full conversion funnel →
+          </Link>
         </h2>
         <div className="flex items-center gap-3">
           {data && (

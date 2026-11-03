@@ -131,6 +131,7 @@ function deps(
     },
     cloud: true,
     hasResendKey: true,
+    enabled: true,
     appUrl: 'https://app.lector.dev',
     ...extra,
   };
@@ -146,6 +147,21 @@ function withUnsubSecret(): void {
 }
 
 describe('sendWelcomeEmail', () => {
+  test('sends nothing while the product email switch is off', async () => {
+    withUnsubSecret();
+    const database = createSchema();
+    const inbox: EmailMessage[] = [];
+    const userId = insertUser(database);
+    expect(await sendWelcomeEmail(userId, deps(database, inbox, { enabled: false }))).toBe(
+      'skipped',
+    );
+    expect(await sweepLifecycleEmails(deps(database, inbox, { enabled: false }))).toEqual({
+      sent: 0,
+      skipped: 0,
+    });
+    expect(inbox).toHaveLength(0);
+  });
+
   test('sends the welcome template once to a verified cloud user', async () => {
     withUnsubSecret();
     const database = createSchema();
@@ -164,9 +180,7 @@ describe('sendWelcomeEmail', () => {
       LANGUAGE: 'Afrikaans',
       APP_URL: 'https://app.lector.dev',
     });
-    expect(String(inbox[0].meta?.variables?.STOP_URL)).toContain(
-      '/api/email/unsubscribe?token=',
-    );
+    expect(String(inbox[0].meta?.variables?.STOP_URL)).toContain('/api/email/unsubscribe?token=');
     expect(inbox[0].headers).toBeUndefined();
     expect(sentAliases(database, userId)).toEqual([LIFECYCLE_TEMPLATES.welcome]);
   });
@@ -303,9 +317,7 @@ describe('sweepLifecycleEmails', () => {
     const first = await sweepLifecycleEmails(deps(database, inbox));
     expect(first.sent).toBe(1);
     expect(inbox.map((m) => m.meta?.alias)).toEqual([LIFECYCLE_TEMPLATES.day1]);
-    expect(String(inbox[0].meta?.variables?.STOP_URL)).toContain(
-      '/api/email/unsubscribe?token=',
-    );
+    expect(String(inbox[0].meta?.variables?.STOP_URL)).toContain('/api/email/unsubscribe?token=');
     expect(inbox[0].headers?.['List-Unsubscribe']).toMatch(/^<https?:\/\/.+>$/);
 
     const second = await sweepLifecycleEmails(deps(database, inbox));

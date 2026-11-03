@@ -518,8 +518,12 @@ describe('GET /api/admin/trends', () => {
       verified: 1,
       finishedSetup: 1,
       studied: 1,
+      lookedUp: 1,
+      savedWord: 0,
       finishedOnboarding: 1,
       cameBack: 1,
+      hitLimit: 0,
+      paid: 1,
     });
     expect(body.retention).toEqual({
       nextDay: { eligible: 1, returned: 1 },

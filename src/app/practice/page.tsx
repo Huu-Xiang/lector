@@ -69,6 +69,7 @@ import {
   encounteredOnboardingTerms,
   getOnboardingSnapshot,
   recordLearnerEvent,
+  ONBOARDING_SAVE_TARGET,
   savedOnboardingWords,
   type OnboardingSnapshot,
 } from '@/lib/onboarding';
@@ -416,13 +417,16 @@ export default function PracticePage() {
         const savedWords = savedOnboardingWords(snapshot).slice(0, 3);
         const sentences = await getOnboardingCloze(savedWords.map((word) => word.id));
 
-        if (savedWords.length < 3 || sentences.length < 3) {
+        if (
+          savedWords.length < ONBOARDING_SAVE_TARGET ||
+          sentences.length < ONBOARDING_SAVE_TARGET
+        ) {
           setOnboardingRecovery('missingWords');
           setState('empty');
           return;
         }
 
-        const guidedQueue = sentences.slice(0, 3);
+        const guidedQueue = sentences.slice(0, savedWords.length);
         if (isValidLanguageCode(snapshot.progress.language)) {
           const pack = getLanguageConfig(snapshot.progress.language);
           onboardingDistractorWordsRef.current = guidedQueue.flatMap((sentence) =>

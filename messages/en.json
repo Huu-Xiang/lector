@@ -769,6 +769,68 @@
     "failed": "Checkout couldn't be opened. Go back and try again.",
     "back": "Back to plans"
   },
+  "planLimits": {
+    "upgradePlus": "Upgrade to Plus",
+    "seePlans": "See plans",
+    "addKey": "Add API key",
+    "notNow": "Not now",
+    "upgradeLine": {
+      "cloud": "Plus lifts this limit.",
+      "plus": "Pro lifts this limit.",
+      "max": "Max lifts this limit.",
+      "byok": "Adding your own API key lifts this limit."
+    },
+    "generic": {
+      "title": "Plan limit reached",
+      "body": "This is over your plan's allowance."
+    },
+    "metrics": {
+      "phraseSelectionWords": {
+        "title": "Phrase too long for your plan",
+        "body": "Phrase lookups are limited to {limit, number} words on your plan."
+      },
+      "journalWordsPerMonth": {
+        "title": "Monthly journal limit reached",
+        "body": "You've written {used, number} of {limit, number} journal words this month."
+      },
+      "llmRequestsPerMonth": {
+        "title": "Monthly AI allowance used",
+        "body": "You've used this month's {limit, number} detailed AI answers."
+      },
+      "wordGlossesPerMonth": {
+        "title": "Monthly AI word lookups used",
+        "body": "You've used this month's {limit, number} AI word lookups. Words in the offline dictionary still work."
+      },
+      "phraseTranslationsPerDay": {
+        "title": "Daily phrase allowance used",
+        "body": "You've used today's {limit, number} phrase translations. It resets at midnight UTC."
+      },
+      "contextTranslationsPerDay": {
+        "title": "Daily context allowance used",
+        "body": "You've used today's {limit, number} in-context translations. It resets at midnight UTC."
+      },
+      "ttsCharsPerMonth": {
+        "title": "Monthly audio allowance used",
+        "body": "Text-to-speech uses your browser voice for the rest of the month."
+      },
+      "maxCollections": {
+        "title": "Library limit reached",
+        "body": "Your plan holds up to {limit, number} collections."
+      },
+      "maxLessons": {
+        "title": "Library limit reached",
+        "body": "Your plan holds up to {limit, number} lessons."
+      },
+      "maxVocabEntries": {
+        "title": "Saved words limit reached",
+        "body": "Your plan holds up to {limit, number} saved words."
+      }
+    },
+    "dialog": {
+      "plus": "Plus gives you {glosses, number} AI word lookups and {detailed, number} detailed answers each month. Free books and saved words stay as they are.",
+      "freeReset": "Or keep reading free: the allowance starts again next month."
+    }
+  },
   "library": {
     "freeBooks": {
       "button": "Free books",
@@ -1362,7 +1424,7 @@
         "heading": "Who else is involved",
         "items": {
           "cloudflare": "<strong>Cloudflare</strong> – DNS, the Turnstile bot check on sign-up, and R2 storage for backups.",
-          "resend": "<strong>Resend</strong> – delivers the verification and password-reset emails.",
+          "resend": "<strong>Resend</strong> – delivers the verification and password-reset emails. When product emails are on, it also delivers a welcome email, short reading reminders in the first days, and a note when you reach a free limit. Each of those has an unsubscribe link.",
           "aiProvider": "<strong>Your AI provider (OpenRouter or Anthropic)</strong> – if you add your own key and use translation, explanations or chat, the text you select, with some surrounding context, is sent to the provider using <em>your</em> key. Their privacy terms apply to that data, and the usage is billed to you.",
           "aiBuiltIn": "<strong>Alibaba Cloud (Model Studio)</strong> – if you use Readfox's built-in AI allowance instead of your own key, the text you select, with some surrounding context, is sent to Alibaba Cloud's Qwen models through our workspace to produce the translation or explanation. Alibaba Cloud's terms apply to that data. The allowance is limited each month.",
           "paddle": "<strong>Paddle</strong> – our reseller (Merchant of Record) for card and PayPal payments, which are in development. Once they open, if you subscribe, Paddle collects your payment details and billing address under its own privacy policy. We receive your email address, your plan and its status, never your card or account numbers.",
@@ -1505,7 +1567,7 @@
       "guidedLabel": "Guided first lesson",
       "guidedTitle": "Your first learning loop",
       "back": "← Back",
-      "threeWord": "3-word review",
+      "threeWord": "Quick review",
       "starterWords": "Words from your starter lesson",
       "loading": "Loading sentences..."
     },
@@ -1551,7 +1613,7 @@
       },
       "recovery": {
         "title": "Your practice words aren't ready yet",
-        "missingWords": "Your mini-review needs three words saved from the starter lesson. Return to the lesson and save any missing words, then try again.",
+        "missingWords": "Your mini-review needs a word saved from the starter lesson. Return to the lesson, save a word, then try again.",
         "loadFailed": "We could not load your saved practice words. Return to the starter lesson and try the mini-review again.",
         "backToLesson": "Back to starter lesson"
       }
@@ -1768,7 +1830,7 @@
       "knownFailed": "Could not mark the word as known — check your connection.",
       "ignoreFailed": "Could not ignore the word — check your connection.",
       "levelFailed": "Could not set the word level — check your connection.",
-      "onboardingWordAdded": "“{word}” added — {count} of 3 review words ready",
+      "onboardingWordAdded": "“{word}” added. Your practice is ready.",
       "miniReviewFailed": "Could not start the mini-review. Please try again.",
       "onboardingSkipFailed": "Could not skip the guide. Please try again.",
       "copied": "Copied",
@@ -1942,30 +2004,20 @@
     "coach": {
       "ariaLabel": "Guided first lesson",
       "skip": "Skip guide",
-      "progressLabel": "{count} of 3 review words ready",
-      "wordPlaceholder": "Word {n}",
-      "startPractice": "Start 3-word practice",
-      "ready": "{count} of 3 ready",
+      "startPractice": "Start a quick practice",
       "lookup": {
-        "eyebrow": "Try the reader",
         "title": "Tap a word you don't know",
         "body": "Every word in the lesson can be looked up. Tap or click one to see its meaning here."
       },
       "save": {
-        "titleFirst": "Add this word to your review",
-        "titleNext": "Choose another useful word",
-        "bodyFirst": "Choose level 1-4 in the definition panel. You will see this word fill the review progress below.",
-        "bodyNext": "Close the definition, tap a different word, then set its level to add it."
-      },
-      "phrase": {
-        "title": "Now translate a whole phrase",
-        "body": "Close the definition, then drag across two or more words (or long-press on mobile). Release to translate the highlighted phrase."
+        "title": "Save this word for review",
+        "body": "In the meaning panel, choose a level from 1 to 4. The word goes to your review list."
       },
       "practice": {
-        "eyebrow": "Your mini-review is ready",
         "title": "Practise the words you just read",
-        "body": "Three quick cards will close the loop while the lesson is still fresh."
-      }
+        "body": "One quick card while the lesson is fresh helps the word stay with you."
+      },
+      "step": "Step {step} of {total}"
     },
     "listen": {
       "back": "Back",

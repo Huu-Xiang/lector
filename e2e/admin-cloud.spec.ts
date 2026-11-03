@@ -240,4 +240,38 @@ test.describe.serial('admin dashboard (#221)', () => {
     const restoredMember = await signIn(browser, USER_EMAIL);
     expect((await restoredMember.request.get(`${ADMIN_API}/api/collections`)).status()).toBe(200);
   });
+
+  test('the funnel page lists every step from sign-up to payment', async ({ browser }) => {
+    const operator = await signIn(browser, ADMIN_EMAIL);
+    await operator.goto('/admin');
+    await operator.getByRole('link', { name: /Full conversion funnel/ }).click();
+    await operator.waitForURL('**/admin/funnel');
+    await expect(operator.getByTestId('funnel-step-signedUp')).toBeVisible();
+    await expect(operator.getByTestId('funnel-step-paid')).toBeVisible();
+  });
+
+  test('the product email switch turns lifecycle mail off and on, audit-logged', async ({
+    browser,
+  }) => {
+    const operator = await signIn(browser, ADMIN_EMAIL);
+    const off = await operator.request.put(`${ADMIN_API}/api/admin/email-switch`, {
+      data: { enabled: false },
+    });
+    expect(await off.json()).toEqual({ enabled: false, source: 'admin' });
+
+    operator.on('dialog', (dialog) => dialog.accept());
+    await operator.goto('/admin');
+    const card = operator.getByTestId('email-switch');
+    await expect(card).toContainText('Product emails: off');
+    await card.getByTestId('email-switch-toggle').click();
+    await expect(card).toContainText('Product emails: on');
+
+    const audit = await operator.request.get(`${ADMIN_API}/api/admin/audit`);
+    expect(JSON.stringify(await audit.json())).toContain('product_emails');
+
+    const bad = await operator.request.put(`${ADMIN_API}/api/admin/email-switch`, {
+      data: { enabled: 'yes' },
+    });
+    expect(bad.status()).toBe(400);
+  });
 });

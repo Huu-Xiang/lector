@@ -68,8 +68,8 @@ import {
   dismissOnboarding,
   encounteredOnboardingTerms,
   getOnboardingSnapshot,
-  hasOnboardingPhraseLookup,
   recordLearnerEvent,
+  ONBOARDING_SAVE_TARGET,
   savedOnboardingWords,
   updateOnboardingProgress,
   type OnboardingSnapshot,
@@ -901,10 +901,10 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       if (onboardingActive && trackedEntry.type === 'word' && nextOnboarding) {
         const savedAfter = savedOnboardingWords(nextOnboarding).length;
         if (savedAfter > savedBefore) {
-          toast.success(
-            t('onboardingWordAdded', { word: wordPanel.word, count: Math.min(savedAfter, 3) }),
-            { id: `onboarding-saved-${trackedEntry.id}`, duration: 3500 },
-          );
+          toast.success(t('onboardingWordAdded', { word: wordPanel.word }), {
+            id: `onboarding-saved-${trackedEntry.id}`,
+            duration: 3500,
+          });
           closeWordPanel();
         }
       }
@@ -1331,15 +1331,12 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
   const onboardingSavedWords = savedOnboardingWords(onboarding);
   const onboardingSavedCount = onboardingSavedWords.length;
   const onboardingEncounteredCount = encounteredOnboardingTerms(onboarding).length;
-  const onboardingPhraseLookedUp = hasOnboardingPhraseLookup(onboarding);
   const onboardingCoachStage =
-    onboardingSavedCount >= 3
+    onboardingSavedCount >= ONBOARDING_SAVE_TARGET
       ? 'practice'
-      : onboardingSavedCount > 0 && !onboardingPhraseLookedUp
-        ? 'phrase'
-        : onboardingEncounteredCount > 0
-          ? 'save'
-          : 'lookup';
+      : onboardingEncounteredCount > 0
+        ? 'save'
+        : 'lookup';
   const onboardingCurrentWordSaved = onboardingSavedWords.some(
     (savedWord) => savedWord.id === wordPanel.existingEntry?.id,
   );
@@ -1415,7 +1412,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
             onboardingActive && !wordPanel.word.includes(' ')
               ? {
                   savedCount: onboardingSavedCount,
-                  target: 3,
+                  target: ONBOARDING_SAVE_TARGET,
                   currentWordSaved: onboardingCurrentWordSaved,
                 }
               : undefined
@@ -1436,8 +1433,6 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       {onboardingActive && (
         <OnboardingCoach
           stage={onboardingCoachStage}
-          savedCount={onboardingSavedCount}
-          savedWords={onboardingSavedWords.map((word) => word.text)}
           onStartPractice={
             onboardingCoachStage === 'practice' ? startOnboardingPractice : undefined
           }

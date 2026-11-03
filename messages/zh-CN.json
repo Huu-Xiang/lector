@@ -769,6 +769,68 @@
     "failed": "付款页面打不开。请返回后重试。",
     "back": "返回套餐页"
   },
+  "planLimits": {
+    "upgradePlus": "升级到 Plus",
+    "seePlans": "查看套餐",
+    "addKey": "添加 API 密钥",
+    "notNow": "以后再说",
+    "upgradeLine": {
+      "cloud": "升级到 Plus 可以提高这个上限。",
+      "plus": "升级到 Pro 可以提高这个上限。",
+      "max": "升级到 Max 可以提高这个上限。",
+      "byok": "添加你自己的 API 密钥可以解除这个上限。"
+    },
+    "generic": {
+      "title": "已达到套餐上限",
+      "body": "这个操作超出了你当前套餐的额度。"
+    },
+    "metrics": {
+      "phraseSelectionWords": {
+        "title": "短语超出套餐长度",
+        "body": "你的套餐一次最多翻译 {limit, number} 个词的短语。"
+      },
+      "journalWordsPerMonth": {
+        "title": "本月日记字数已用完",
+        "body": "本月你已写了 {used, number} 个词，上限是 {limit, number} 个。"
+      },
+      "llmRequestsPerMonth": {
+        "title": "本月 AI 详细讲解已用完",
+        "body": "你已用完本月的 {limit, number} 次 AI 详细讲解。"
+      },
+      "wordGlossesPerMonth": {
+        "title": "本月 AI 查词次数已用完",
+        "body": "你已用完本月的 {limit, number} 次 AI 查词。离线词典里有的词仍然可以查。"
+      },
+      "phraseTranslationsPerDay": {
+        "title": "今天的短语翻译已用完",
+        "body": "你已用完今天的 {limit, number} 次短语翻译，北京时间早上 8 点重置。"
+      },
+      "contextTranslationsPerDay": {
+        "title": "今天的语境翻译已用完",
+        "body": "你已用完今天的 {limit, number} 次语境翻译，北京时间早上 8 点重置。"
+      },
+      "ttsCharsPerMonth": {
+        "title": "本月朗读额度已用完",
+        "body": "本月剩下的时间里，朗读会改用浏览器自带的声音。"
+      },
+      "maxCollections": {
+        "title": "书库已满",
+        "body": "你的套餐最多可以有 {limit, number} 个合集。"
+      },
+      "maxLessons": {
+        "title": "书库已满",
+        "body": "你的套餐最多可以有 {limit, number} 课。"
+      },
+      "maxVocabEntries": {
+        "title": "生词本已满",
+        "body": "你的套餐最多可以保存 {limit, number} 个生词。"
+      }
+    },
+    "dialog": {
+      "plus": "Plus 每月有 {glosses, number} 次 AI 查词和 {detailed, number} 次详细讲解。你的免费书和生词都会保留。",
+      "freeReset": "也可以继续免费读，额度下个月会重新开始。"
+    }
+  },
   "library": {
     "freeBooks": {
       "button": "免费书籍",
@@ -1362,7 +1424,7 @@
         "heading": "还有谁参与其中",
         "items": {
           "cloudflare": "<strong>Cloudflare</strong> – 提供 DNS、注册时的 Turnstile 机器人验证，以及用于备份的 R2 存储。",
-          "resend": "<strong>Resend</strong> – 发送验证邮件和重置密码邮件。",
+          "resend": "<strong>Resend</strong> – 发送验证邮件和重置密码邮件。开启产品邮件时，它还会发送欢迎邮件、注册头几天的简短阅读提醒，以及达到免费额度时的提示。每一封都带退订链接。",
           "aiProvider": "<strong>你的 AI 服务商（OpenRouter 或 Anthropic）</strong> – 如果你添加了自己的密钥并使用翻译、解释或聊天功能，你选中的文本及部分上下文会通过<em>你自己的</em>密钥发送给该服务商。该数据适用其隐私条款，相关用量由你承担费用。",
           "aiBuiltIn": "<strong>阿里云（Model Studio）</strong> – 如果你使用 Readfox 内置的 AI 额度而不是自己的密钥，你选中的文本及部分上下文会通过我们的工作空间发送给阿里云的通义千问（Qwen）模型，用来生成翻译或解释。该数据适用阿里云的条款。内置额度每月有限。",
           "paddle": "<strong>Paddle</strong> – 我们银行卡和 PayPal 支付的经销商（记录商家），这类支付正在开发中。开放后，如果你订阅，Paddle 会按它自己的隐私政策收集你的付款信息和账单地址。我们只收到你的邮箱、套餐及其状态，不会收到你的卡号或账号。",
@@ -1505,7 +1567,7 @@
       "guidedLabel": "首课引导",
       "guidedTitle": "你的第一个学习循环",
       "back": "← 返回",
-      "threeWord": "3 词复习",
+      "threeWord": "快速复习",
       "starterWords": "入门课文中的词",
       "loading": "正在加载句子..."
     },
@@ -1551,7 +1613,7 @@
       },
       "recovery": {
         "title": "你的练习词还没准备好",
-        "missingWords": "小复习需要从入门课文中保存三个词。请回到课文保存缺少的词，然后再试一次。",
+        "missingWords": "迷你复习需要你先在入门课文里保存一个词。请回到课文保存一个词，再试一次。",
         "loadFailed": "无法加载你保存的练习词。请回到入门课文，再试一次小复习。",
         "backToLesson": "返回入门课文"
       }
@@ -1768,7 +1830,7 @@
       "knownFailed": "无法将该单词标为已掌握，请检查网络连接。",
       "ignoreFailed": "无法忽略该单词，请检查网络连接。",
       "levelFailed": "无法设置单词等级，请检查网络连接。",
-      "onboardingWordAdded": "已添加“{word}”，复习单词已就绪 {count}/3",
+      "onboardingWordAdded": "已加入“{word}”，练习已经准备好。",
       "miniReviewFailed": "无法开始小复习，请重试。",
       "onboardingSkipFailed": "无法跳过引导，请重试。",
       "copied": "已复制",
@@ -1942,30 +2004,20 @@
     "coach": {
       "ariaLabel": "首课引导",
       "skip": "跳过引导",
-      "progressLabel": "复习单词已就绪 {count}/3",
-      "wordPlaceholder": "单词 {n}",
-      "startPractice": "开始 3 词练习",
-      "ready": "已就绪 {count}/3",
+      "startPractice": "开始快速练习",
       "lookup": {
-        "eyebrow": "试试阅读器",
         "title": "点一个你不认识的词",
         "body": "课文里的每个词都能查。点按或点击一个，就能在这里看到释义。"
       },
       "save": {
-        "titleFirst": "把这个词加入复习",
-        "titleNext": "再选一个有用的词",
-        "bodyFirst": "在释义面板中选择 1-4 级，下方的复习进度会显示这个词。",
-        "bodyNext": "关闭释义，再点另一个词，设置等级即可添加。"
-      },
-      "phrase": {
-        "title": "现在试试翻译整个短语",
-        "body": "关闭释义，然后拖选两个或更多单词（手机上请长按），松开即可翻译所选短语。"
+        "title": "把这个词加入复习",
+        "body": "在释义面板里选择 1–4 级，这个词就会进入你的复习列表。"
       },
       "practice": {
-        "eyebrow": "你的小复习已准备好",
         "title": "练习刚读到的单词",
-        "body": "三张快速卡片，趁课文记忆犹新，帮你巩固所学。"
-      }
+        "body": "趁记忆犹新做一张快速练习卡，帮你记住这个词。"
+      },
+      "step": "第 {step}/{total} 步"
     },
     "listen": {
       "back": "返回",

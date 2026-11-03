@@ -343,8 +343,12 @@ export interface AdminTrends {
     verified: number;
     finishedSetup: number;
     studied: number;
+    lookedUp: number;
+    savedWord: number;
     finishedOnboarding: number;
     cameBack: number;
+    hitLimit: number;
+    paid: number;
   };
   retention: {
     nextDay: { eligible: number; returned: number };
@@ -356,5 +360,26 @@ export interface AdminTrends {
 export async function getAdminTrends(days: AdminTrendRange): Promise<AdminTrends> {
   const res = await apiFetch(`/api/admin/trends?days=${days}`);
   if (!res.ok) throw new Error(`admin trends failed (${res.status})`);
+  return res.json();
+}
+
+export interface EmailSwitch {
+  enabled: boolean;
+  source: 'admin' | 'env';
+}
+
+export async function getEmailSwitch(): Promise<EmailSwitch> {
+  const res = await apiFetch('/api/admin/email-switch');
+  if (!res.ok) throw new Error(`email switch failed (${res.status})`);
+  return res.json();
+}
+
+export async function setEmailSwitch(enabled: boolean): Promise<EmailSwitch> {
+  const res = await apiFetch('/api/admin/email-switch', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ enabled }),
+  });
+  if (!res.ok) throw new Error(`email switch failed (${res.status})`);
   return res.json();
 }

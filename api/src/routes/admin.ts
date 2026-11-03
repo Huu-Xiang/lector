@@ -44,6 +44,8 @@ import {
 } from '../lib/redeem';
 import { maskEmail } from '../lib/mask-email';
 import { buildAdminTrends, parseTrendRange } from '../lib/admin-trends';
+import { productEmailsSetting, setProductEmails } from '../lib/app-settings';
+import { entitlements } from '../lib/entitlements';
 import { getAuthEngine } from '../lib/accounts';
 import {
   isValidLanguageCode,
@@ -111,10 +113,8 @@ const realAuthActions: AdminAuthActions = {
   },
 };
 
-// The plan a priceId maps to, from billing config — kept local so this route
-// does not depend on the entitlements engine (#222), which may or may not be
-// merged. An entitled subscription whose price we can't map is still a paying
-// account; label it 'cloud' (the base plan).
+// The plan a priceId maps to, from billing config. An entitled subscription
+// whose price we can't map is still a paying account; label it 'cloud' (the base plan).
 function priceToPlan(priceId: string | null): 'cloud' | 'plus' | 'max' | null {
   if (!priceId) return null;
   return billingConfig.prices.find((p) => p.id === priceId)?.plan ?? null;
@@ -651,7 +651,26 @@ export function makeAdminRoutes(
         })
         .map((u) => u.id),
     );
-    return c.json(buildAdminTrends(parseTrendRange(c.req.query('days')), now(), excluded));
+    return c.json(
+      buildAdminTrends(
+        parseTrendRange(c.req.query('days')),
+        now(),
+        excluded,
+        (userId, metric) => entitlements.resolveEntitlements(userId).limits[metric] ?? null,
+      ),
+    );
+  });
+
+  // GET/PUT /api/admin/email-switch — the one switch for every lifecycle mail.
+  app.get('/email-switch', (c) => c.json(productEmailsSetting()));
+
+  app.put('/email-switch', async (c) => {
+    const body = (await c.req.json().catch(() => null)) as { enabled?: unknown } | null;
+    if (typeof body?.enabled !== 'boolean')
+      return c.json({ error: 'enabled must be a boolean' }, 400);
+    setProductEmails(body.enabled);
+    audit(c, 'product_emails', 'service', null, body.enabled ? 'on' : 'off');
+    return c.json(productEmailsSetting());
   });
 
   // The dashboard never lists a real address or a name. An operator who needs the

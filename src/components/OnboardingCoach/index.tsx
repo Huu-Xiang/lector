@@ -1,25 +1,14 @@
 'use client';
 
 import { useEffect } from 'react';
-import { Check } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { IOnboardingCoachProps } from './types';
 import { getContent } from './utils';
 
-export default function OnboardingCoach({
-  stage,
-  savedCount,
-  savedWords,
-  onStartPractice,
-  onSkip,
-}: IOnboardingCoachProps) {
+export default function OnboardingCoach({ stage, onStartPractice, onSkip }: IOnboardingCoachProps) {
   const t = useTranslations('reader.coach');
-  const content = getContent({
-    stage,
-    savedCount,
-    t,
-  });
+  const content = getContent({ stage, t });
   const Icon = content.icon;
 
   useEffect(() => {
@@ -56,39 +45,6 @@ export default function OnboardingCoach({
           </div>
           <h2 className="mt-0.5 text-base font-bold text-foreground">{content.title}</h2>
           <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{content.body}</p>
-          {(stage === 'save' || stage === 'phrase') && (
-            <div className="mt-3" data-testid="onboarding-word-progress">
-              <div
-                className="grid grid-cols-3 gap-2"
-                role="progressbar"
-                aria-label={t('progressLabel', { count: Math.min(savedCount, 3) })}
-                aria-valuemin={0}
-                aria-valuemax={3}
-                aria-valuenow={Math.min(savedCount, 3)}
-              >
-                {[0, 1, 2].map((index) => {
-                  const savedWord = savedWords[index];
-                  return (
-                    <div
-                      key={index}
-                      className={`flex min-w-0 items-center justify-center gap-1 rounded-lg border px-2 py-1.5 text-xs font-semibold transition-all duration-300 ${
-                        savedWord
-                          ? 'border-primary/40 bg-[var(--primary-soft)] text-primary'
-                          : 'border-border bg-muted/50 text-muted-foreground'
-                      }`}
-                    >
-                      {savedWord ? (
-                        <Check className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                      ) : null}
-                      <span className="truncate">
-                        {savedWord || t('wordPlaceholder', { n: index + 1 })}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
           {stage === 'practice' && onStartPractice && (
             <Button
               type="button"
