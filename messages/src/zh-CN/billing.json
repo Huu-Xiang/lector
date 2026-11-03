@@ -3,7 +3,11 @@
     "freePrice": "¥0",
     "perMonth": "{price}/月",
     "perYear": "或 {price}/年",
+    "perYearMain": "{price}/年",
+    "annualEquivalent": "约合 {price}/月，按年付",
+    "annualEquivalentSave": "约合 {price}/月，按年付，省 {percent}%",
     "chinaPrice": "中国大陆：{price}/月（支持支付宝）",
+    "chinaPriceYear": "中国大陆：{price}/年（支持支付宝）",
     "priceAtCheckout": "价格在付款页显示",
     "getStarted": "免费开始",
     "features": {
@@ -18,14 +22,19 @@
       "byokPaid": "想用更多时，可以添加自己的 AI 密钥"
     },
     "current": "当前套餐",
-    "choose": "选择 {plan}"
+    "choose": "选择 {plan}",
+    "cycleLabel": "付费周期",
+    "cycleYear": "年付",
+    "cycleYearSave": "年付（最多省 {percent}%）",
+    "cycleMonth": "月付"
   },
   "pricing": {
     "metaTitle": "价格 – Readfox",
     "title": "价格",
     "intro": "先免费用。想要详细的 AI 解释和更多额度时再升级。随时可以取消。",
-    "notes": "适用的销售税或增值税会在付款时另外加上。付款由我们的经销商 Paddle 处理。中国大陆的买家用人民币付款，可以使用支付宝。年付约省 20%。",
-    "cardPending": "银行卡、PayPal 和 Apple Pay 支付正在开发中，目前只支持支付宝和微信支付。"
+    "notes": "适用的销售税或增值税会在付款时另外加上。付款由我们的经销商 Paddle 处理。中国大陆的买家用人民币付款，可以使用支付宝。",
+    "cardPending": "银行卡、PayPal 和 Apple Pay 支付正在开发中，目前只支持支付宝和微信支付。",
+    "metaDescription": "Readfox 套餐：免费版每月 1,000 次 AI 查词。Plus、Pro 和 Max 提供更多查词次数、详细的 AI 讲解和更大的书库。支持银行卡、PayPal 和支付宝。"
   },
   "checkoutPage": {
     "opening": "正在打开安全付款页面",

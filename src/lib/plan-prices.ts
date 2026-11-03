@@ -57,6 +57,25 @@ export function findPrice(
   return prices?.find((p) => p.plan === plan && p.cycle === cycle);
 }
 
+/** Whole percent an annual plan saves against twelve monthly payments; null when it saves nothing. */
+export function annualSavingPercent(
+  monthly: Money | null | undefined,
+  annual: Money | null | undefined,
+): number | null {
+  if (!monthly || !annual || monthly.currencyCode !== annual.currencyCode) return null;
+  const twelve = Number(monthly.amount) * 12;
+  const saving = Math.floor(((twelve - Number(annual.amount)) / twelve) * 100);
+  return Number.isFinite(saving) && saving > 0 ? saving : null;
+}
+
+/** Annual price spread over twelve months, rounded down to the cent. */
+export function monthlyEquivalent(annual: Money): Money {
+  return {
+    amount: String(Math.floor(Number(annual.amount) / 12)),
+    currencyCode: annual.currencyCode,
+  };
+}
+
 /** The price a buyer in mainland China pays, when Paddle has an override for it. */
 export function chinaPrice(price: PlanPrice | undefined): Money | null {
   return price?.overrides.find((o) => o.countryCodes.includes('CN'))?.unitPrice ?? null;

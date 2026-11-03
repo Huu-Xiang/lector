@@ -731,7 +731,11 @@
     "freePrice": "¥0",
     "perMonth": "{price}/月",
     "perYear": "或 {price}/年",
+    "perYearMain": "{price}/年",
+    "annualEquivalent": "约合 {price}/月，按年付",
+    "annualEquivalentSave": "约合 {price}/月，按年付，省 {percent}%",
     "chinaPrice": "中国大陆：{price}/月（支持支付宝）",
+    "chinaPriceYear": "中国大陆：{price}/年（支持支付宝）",
     "priceAtCheckout": "价格在付款页显示",
     "getStarted": "免费开始",
     "features": {
@@ -746,14 +750,19 @@
       "byokPaid": "想用更多时，可以添加自己的 AI 密钥"
     },
     "current": "当前套餐",
-    "choose": "选择 {plan}"
+    "choose": "选择 {plan}",
+    "cycleLabel": "付费周期",
+    "cycleYear": "年付",
+    "cycleYearSave": "年付（最多省 {percent}%）",
+    "cycleMonth": "月付"
   },
   "pricing": {
     "metaTitle": "价格 – Readfox",
     "title": "价格",
     "intro": "先免费用。想要详细的 AI 解释和更多额度时再升级。随时可以取消。",
-    "notes": "适用的销售税或增值税会在付款时另外加上。付款由我们的经销商 Paddle 处理。中国大陆的买家用人民币付款，可以使用支付宝。年付约省 20%。",
-    "cardPending": "银行卡、PayPal 和 Apple Pay 支付正在开发中，目前只支持支付宝和微信支付。"
+    "notes": "适用的销售税或增值税会在付款时另外加上。付款由我们的经销商 Paddle 处理。中国大陆的买家用人民币付款，可以使用支付宝。",
+    "cardPending": "银行卡、PayPal 和 Apple Pay 支付正在开发中，目前只支持支付宝和微信支付。",
+    "metaDescription": "Readfox 套餐：免费版每月 1,000 次 AI 查词。Plus、Pro 和 Max 提供更多查词次数、详细的 AI 讲解和更大的书库。支持银行卡、PayPal 和支付宝。"
   },
   "checkoutPage": {
     "opening": "正在打开安全付款页面",
@@ -1381,8 +1390,8 @@
       },
       "payments": {
         "heading": "付费套餐、续订和退款",
-        "body": "目前可以用支付宝或微信支付，以人民币通过小豆支付付款。通过 Paddle 的银行卡和 PayPal 支付正在开发中。",
-        "renewal": "用人民币购买的套餐是固定时长，不会自动续费。将来开放银行卡支付后，用那种方式购买的套餐会按月或按年自动续订，直到你取消；你可以随时在“设置 → 套餐”中取消。",
+        "body": "你可以通过小豆支付，用支付宝或微信支付以人民币付款。定价页开放银行卡付款后，你也可以通过 Paddle 用银行卡、PayPal 或 Apple Pay 付款。Paddle.com 是我们的经销商，也是这些订单的记录商户（Merchant of Record）：它负责收款、加收销售税或增值税、发送收据，并处理付款相关的问题。这些订单同时适用 Paddle 的买家条款。",
+        "renewal": "用人民币购买的套餐只覆盖固定时长，不会自动续费。通过 Paddle 购买的套餐会按你选择的周期每月或每年自动续费，直到你取消。你可以随时在“设置 → 套餐”里取消。取消后，套餐一直有效到已付费周期结束，之后不再扣费。如果你的套餐价格有变化，我们会在新价格生效前发邮件通知你。",
         "refunds": "人民币付款可以在付款后 24 小时内申请退款，每个账号一次，条件是付款之后用掉的套餐 AI 额度不超过 10%。在“设置 → 套餐”里点“申请退款”，或写信到 <mail>privacy@readfox.app</mail>。完整规则见<refund>退款政策</refund>页面。如果有滥用迹象，我们可以拒绝退款。",
         "rmb": "使用支付宝或微信支付人民币的买家，通过小豆支付购买固定时长（1 个月或 12 个月）。这类付款不会自动续费；到期后账户回到免费版。如果在到期前再次购买同一套餐，新的时长从当前时长结束时开始计算。"
       },
@@ -1426,14 +1435,14 @@
       "title": "退款政策",
       "intro": "Readfox 出售付费套餐，让你每月有更多的 AI 额度。本页说明什么情况下可以退款。",
       "rmbHeading": "支付宝和微信支付（人民币）",
-      "rmbIntro": "目前这是仅有的付款方式。每次付款购买固定的 1 个月或 12 个月，不会自动续费。",
+      "rmbIntro": "每次付款购买固定的 1 个月或 12 个月，不会自动续费。",
       "rule1": "付款后 24 小时内可以申请退款。",
       "rule2": "付款之后，你用掉的套餐每月 AI 额度不超过 10%。单词翻译和详细回答分别计算，取比例较高的一项。付款之前的用量不计入。",
       "rule3": "每个账号可以退款一次。",
       "how": "申请方式：打开“设置 → 套餐”，点“申请退款”。只有在还能申请时，按钮才会出现。如果按钮不能用，请写信到 <mail>privacy@readfox.app</mail>。我们会逐个审核，通过小豆支付把钱退回你付款的账户，你的套餐回到免费版。钱可能需要几个工作日到账。",
       "after": "超过 24 小时，或者用量超过上限，我们不退这一期的费用。套餐不会自动续费，所以不会再扣款。",
       "cardHeading": "银行卡、PayPal 和 Apple Pay",
-      "cardBody": "通过 Paddle 的支付正在开发中，目前还不能使用。开放后，本页会列出相应的条款。",
+      "cardBody": "这些付款由我们的经销商 Paddle.com 处理。每次付款后 14 天内，你都可以申请全额退款，首次付款和续费都适用。请用账户邮箱写信到 privacy@readfox.app，或直接回复 Paddle 的收据邮件。退款后套餐立即结束，钱会退回你付款用的银行卡或账户。超过 14 天后，我们不退还当前周期的费用，但你可以随时在“设置 → 套餐”里取消，之后就不会再续费。这不影响你作为消费者依法享有的权利。",
       "abuseHeading": "滥用",
       "abuseBody": "如果有滥用迹象，例如买套餐、用完额度、再用新账号反复申请退款，我们可以拒绝退款。",
       "contactHeading": "有问题",
@@ -1995,7 +2004,8 @@
     "orYear": "或 {price}/年，约省 20%",
     "selected": "已选择",
     "perMonth": "/月",
-    "annualNote": "{price}/年，约省 20%",
+    "annualNote": "{price}/年，省 {percent}%",
+    "annualNoteNoSave": "{price}/年",
     "openingCheckoutLabel": "正在打开结账页面",
     "openingCheckout": "正在打开结账页面…",
     "exportData": "导出我的数据",

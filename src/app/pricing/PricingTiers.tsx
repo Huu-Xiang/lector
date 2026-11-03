@@ -8,27 +8,43 @@ import { planName } from '@/lib/plan-names';
 import {
   PAID_TIERS,
   TIER_ALLOWANCES,
+  annualSavingPercent,
   chinaPrice,
   fetchPlanPrices,
   findPrice,
   formatMoney,
+  monthlyEquivalent,
   type PaidTier,
   type PlanPrice,
 } from '@/lib/plan-prices';
 
 type Tier = 'free' | PaidTier;
+type Cycle = 'year' | 'month';
 
-export default function PricingTiers() {
+/** `initialPrices` comes from the server render, so the amounts are in the HTML. */
+export default function PricingTiers({ initialPrices }: { initialPrices: PlanPrice[] | null }) {
   const t = useTranslations('plans');
   const locale = useLocale();
-  const [prices, setPrices] = useState<PlanPrice[] | null>(null);
+  const [prices, setPrices] = useState<PlanPrice[] | null>(initialPrices);
   const [current, setCurrent] = useState<string | null>(null);
+  const [cycle, setCycle] = useState<Cycle>('year');
 
   useEffect(() => {
-    fetchPlanPrices().then(setPrices);
+    if (!initialPrices) fetchPlanPrices().then(setPrices);
     // Signed out on this public page: no plan to highlight.
     getEntitlements().then((ent) => setCurrent(ent?.plan ?? null));
-  }, []);
+  }, [initialPrices]);
+
+  const bestSaving = Math.max(
+    0,
+    ...PAID_TIERS.map(
+      (plan) =>
+        annualSavingPercent(
+          findPrice(prices, plan, 'month')?.unitPrice,
+          findPrice(prices, plan, 'year')?.unitPrice,
+        ) ?? 0,
+    ),
+  );
 
   const signedIn = current !== null;
   const free = TIER_ALLOWANCES.free;
@@ -49,19 +65,33 @@ export default function PricingTiers() {
       ],
     },
     ...PAID_TIERS.map((plan) => {
-      const monthly = findPrice(prices, plan, 'month');
-      const annual = findPrice(prices, plan, 'year');
+      const monthly = findPrice(prices, plan, 'month')?.unitPrice;
+      const annual = findPrice(prices, plan, 'year')?.unitPrice;
       const allowance = TIER_ALLOWANCES[plan];
-      const cn = chinaPrice(monthly);
+      const showAnnual = cycle === 'year' && annual;
+      const saving = annualSavingPercent(monthly, annual);
+      const cnMonth = chinaPrice(findPrice(prices, plan, 'month'));
+      const cnYear = chinaPrice(findPrice(prices, plan, 'year'));
+      let price = t('priceAtCheckout');
+      if (showAnnual) price = t('perYearMain', { price: formatMoney(annual, locale) });
+      else if (monthly) price = t('perMonth', { price: formatMoney(monthly, locale) });
       return {
         tier: plan as Tier,
-        price: monthly?.unitPrice
-          ? t('perMonth', { price: formatMoney(monthly.unitPrice, locale) })
-          : t('priceAtCheckout'),
-        secondary: [
-          annual?.unitPrice ? t('perYear', { price: formatMoney(annual.unitPrice, locale) }) : null,
-          cn ? t('chinaPrice', { price: formatMoney(cn, locale) }) : null,
-        ],
+        price,
+        secondary: showAnnual
+          ? [
+              saving
+                ? t('annualEquivalentSave', {
+                    price: formatMoney(monthlyEquivalent(annual), locale),
+                    percent: saving,
+                  })
+                : t('annualEquivalent', { price: formatMoney(monthlyEquivalent(annual), locale) }),
+              cnYear ? t('chinaPriceYear', { price: formatMoney(cnYear, locale) }) : null,
+            ]
+          : [
+              annual ? t('perYear', { price: formatMoney(annual, locale) }) : null,
+              cnMonth ? t('chinaPrice', { price: formatMoney(cnMonth, locale) }) : null,
+            ],
         features: [
           t('features.glosses', { count: allowance.glosses }),
           t('features.detailed', { count: allowance.detailed }),
@@ -76,68 +106,96 @@ export default function PricingTiers() {
   ];
 
   return (
-    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4" data-testid="pricing-tiers">
-      {tiers.map(({ tier, price, secondary, features }) => {
-        const isCurrent = current === tier;
-        const href =
-          tier === 'free'
-            ? signedIn
-              ? '/'
-              : '/register'
-            : signedIn
-              ? `/subscribe?plan=${tier}`
-              : `/register?next=${encodeURIComponent(`/subscribe?plan=${tier}`)}`;
-        return (
-          <div
-            key={tier}
-            className={`flex flex-col rounded-xl border bg-card p-4 ${
-              isCurrent ? 'border-primary ring-2 ring-primary/30' : 'border-border'
+    <div className="space-y-4">
+      <div
+        role="group"
+        aria-label={t('cycleLabel')}
+        className="mx-auto flex w-fit rounded-lg border border-border bg-card p-0.5"
+      >
+        {(['year', 'month'] as const).map((id) => (
+          <button
+            key={id}
+            type="button"
+            aria-pressed={cycle === id}
+            onClick={() => setCycle(id)}
+            data-testid={`pricing-cycle-${id}`}
+            className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
+              cycle === id
+                ? 'bg-primary text-primary-foreground'
+                : 'text-muted-foreground hover:text-foreground'
             }`}
-            data-testid={`pricing-tier-${tier}`}
-            data-current={isCurrent || undefined}
           >
-            <div className="flex items-center justify-between gap-2">
-              <p className="font-semibold">{planName(tier)}</p>
-              {isCurrent && (
-                <span className="rounded-full bg-primary px-2 py-0.5 text-xs font-medium text-primary-foreground">
-                  {t('current')}
-                </span>
+            {id === 'year'
+              ? bestSaving > 0
+                ? t('cycleYearSave', { percent: bestSaving })
+                : t('cycleYear')
+              : t('cycleMonth')}
+          </button>
+        ))}
+      </div>
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4" data-testid="pricing-tiers">
+        {tiers.map(({ tier, price, secondary, features }) => {
+          const isCurrent = current === tier;
+          const href =
+            tier === 'free'
+              ? signedIn
+                ? '/'
+                : '/register'
+              : signedIn
+                ? `/subscribe?plan=${tier}`
+                : `/register?next=${encodeURIComponent(`/subscribe?plan=${tier}`)}`;
+          return (
+            <div
+              key={tier}
+              className={`flex flex-col rounded-xl border bg-card p-4 ${
+                isCurrent ? 'border-primary ring-2 ring-primary/30' : 'border-border'
+              }`}
+              data-testid={`pricing-tier-${tier}`}
+              data-current={isCurrent || undefined}
+            >
+              <div className="flex items-center justify-between gap-2">
+                <p className="font-semibold">{planName(tier)}</p>
+                {isCurrent && (
+                  <span className="rounded-full bg-primary px-2 py-0.5 text-xs font-medium text-primary-foreground">
+                    {t('current')}
+                  </span>
+                )}
+              </div>
+              <p className="mt-1 text-xl font-bold">{price}</p>
+              {secondary
+                .filter((line): line is string => line !== null)
+                .map((line) => (
+                  <p key={line} className="text-xs text-muted-foreground">
+                    {line}
+                  </p>
+                ))}
+              <ul className="mt-3 mb-4 space-y-1 text-xs text-muted-foreground">
+                {features.map((feature) => (
+                  <li key={feature} className="flex gap-2">
+                    <span aria-hidden="true" className="text-primary">
+                      ✓
+                    </span>
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+              {!isCurrent && !(tier === 'free' && signedIn) && (
+                <Link
+                  href={href}
+                  className={`mt-auto rounded-lg px-3 py-2 text-center text-sm font-semibold ${
+                    tier === 'free'
+                      ? 'border border-border text-foreground hover:bg-muted'
+                      : 'bg-primary text-primary-foreground hover:opacity-90'
+                  }`}
+                  data-testid={`pricing-choose-${tier}`}
+                >
+                  {tier === 'free' ? t('getStarted') : t('choose', { plan: planName(tier) })}
+                </Link>
               )}
             </div>
-            <p className="mt-1 text-xl font-bold">{price}</p>
-            {secondary
-              .filter((line): line is string => line !== null)
-              .map((line) => (
-                <p key={line} className="text-xs text-muted-foreground">
-                  {line}
-                </p>
-              ))}
-            <ul className="mt-3 mb-4 space-y-1 text-xs text-muted-foreground">
-              {features.map((feature) => (
-                <li key={feature} className="flex gap-2">
-                  <span aria-hidden="true" className="text-primary">
-                    ✓
-                  </span>
-                  {feature}
-                </li>
-              ))}
-            </ul>
-            {!isCurrent && !(tier === 'free' && signedIn) && (
-              <Link
-                href={href}
-                className={`mt-auto rounded-lg px-3 py-2 text-center text-sm font-semibold ${
-                  tier === 'free'
-                    ? 'border border-border text-foreground hover:bg-muted'
-                    : 'bg-primary text-primary-foreground hover:opacity-90'
-                }`}
-                data-testid={`pricing-choose-${tier}`}
-              >
-                {tier === 'free' ? t('getStarted') : t('choose', { plan: planName(tier) })}
-              </Link>
-            )}
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 }

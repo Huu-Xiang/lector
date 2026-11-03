@@ -3,7 +3,11 @@
     "freePrice": "$0",
     "perMonth": "{price}/month",
     "perYear": "or {price}/year",
+    "perYearMain": "{price}/year",
+    "annualEquivalent": "About {price}/month, billed yearly",
+    "annualEquivalentSave": "About {price}/month, billed yearly. Save {percent}%",
     "chinaPrice": "Mainland China: {price}/month (Alipay)",
+    "chinaPriceYear": "Mainland China: {price}/year (Alipay)",
     "priceAtCheckout": "Price shown at checkout",
     "getStarted": "Start free",
     "features": {
@@ -18,14 +22,19 @@
       "byokPaid": "Use your own AI key if you want more"
     },
     "current": "Current plan",
-    "choose": "Choose {plan}"
+    "choose": "Choose {plan}",
+    "cycleLabel": "Billing period",
+    "cycleYear": "Yearly",
+    "cycleYearSave": "Yearly (save up to {percent}%)",
+    "cycleMonth": "Monthly"
   },
   "pricing": {
     "metaTitle": "Pricing – Readfox",
     "title": "Pricing",
     "intro": "Start free. Upgrade when you want detailed AI explanations and larger allowances. Cancel at any time.",
-    "notes": "Sales tax or VAT is added at checkout where it applies. Payments are handled by Paddle, our reseller. Buyers in mainland China pay in RMB and can use Alipay. Annual plans save about 20%.",
-    "cardPending": "Card, PayPal and Apple Pay payments are in development. For now we accept Alipay and WeChat Pay only."
+    "notes": "Sales tax or VAT is added at checkout where it applies. Payments are handled by Paddle, our reseller. Buyers in mainland China pay in RMB and can use Alipay.",
+    "cardPending": "Card, PayPal and Apple Pay payments are in development. For now we accept Alipay and WeChat Pay only.",
+    "metaDescription": "Readfox plans: start free with 1,000 AI word lookups a month. Plus, Pro and Max give more lookups, detailed AI explanations and a bigger library. Pay by card, PayPal or Alipay."
   },
   "checkoutPage": {
     "opening": "Opening secure checkout",

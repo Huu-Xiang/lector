@@ -34,6 +34,7 @@ import { useCardPaymentsPending } from '@/lib/use-env';
 import {
   PAID_TIERS,
   TIER_ALLOWANCES,
+  annualSavingPercent,
   chinaPrice,
   fetchPlanPrices,
   findPrice,
@@ -667,6 +668,10 @@ export default function SubscribePage() {
             const monthlyPrice = shownPrice(plan, 'month');
             const annualPrice = shownPrice(plan, 'year');
             const cn = chinaPrice(findPrice(prices, plan, 'month'));
+            const annualSaving = annualSavingPercent(
+              findPrice(prices, plan, 'month')?.unitPrice,
+              findPrice(prices, plan, 'year')?.unitPrice,
+            );
             const allowance = TIER_ALLOWANCES[plan];
             const features = [
               tp('features.glosses', { count: allowance.glosses }),
@@ -740,7 +745,9 @@ export default function SubscribePage() {
                 )}
                 {method === 'card' && annual && annualPrice && (
                   <p className="mt-1 text-xs font-medium text-primary">
-                    {t('annualNote', { price: annualPrice })}
+                    {annualSaving
+                      ? t('annualNote', { price: annualPrice, percent: annualSaving })
+                      : t('annualNoteNoSave', { price: annualPrice })}
                   </p>
                 )}
                 {method === 'card' && cn && (
