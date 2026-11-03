@@ -14,6 +14,7 @@ import {
   getClozeSentencesByCollection,
   getNewSentencesByCollection,
   getCollectionCounts,
+  getLesson,
   getOnboardingCloze,
   getTodayStats,
   migrateClozeSentences,
@@ -68,6 +69,7 @@ import {
   completeOnboarding,
   encounteredOnboardingTerms,
   getOnboardingSnapshot,
+  onboardingEvents,
   recordLearnerEvent,
   ONBOARDING_SAVE_TARGET,
   savedOnboardingWords,
@@ -429,9 +431,15 @@ export default function PracticePage() {
         const guidedQueue = sentences.slice(0, savedWords.length);
         if (isValidLanguageCode(snapshot.progress.language)) {
           const pack = getLanguageConfig(snapshot.progress.language);
-          onboardingDistractorWordsRef.current = guidedQueue.flatMap((sentence) =>
-            tokenizeWords(sentence.sentence, pack).map((token) => token.text),
-          );
+          // One short sentence ("Me llamo Ana.") cannot fill three wrong answers; the lesson can.
+          const lessonId =
+            onboardingEvents(snapshot).find((event) => event.eventType === 'vocab.saved')
+              ?.lessonId ?? snapshot.progress.recommendedLessonId;
+          const lesson = lessonId ? await getLesson(lessonId).catch(() => undefined) : undefined;
+          onboardingDistractorWordsRef.current = [
+            ...guidedQueue.map((sentence) => sentence.sentence),
+            lesson?.textContent.slice(0, 2000) ?? '',
+          ].flatMap((text) => tokenizeWords(text, pack).map((token) => token.text));
         }
         setSelectedCollection('mined');
         setOriginalRoundSize(guidedQueue.length);
