@@ -6,7 +6,12 @@ import PricingTiers from './PricingTiers';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('pricing');
-  return { title: t('metaTitle'), alternates: { canonical: '/pricing' } };
+  return {
+    title: t('metaTitle'),
+    description:
+      'Readfox plans: start free with 1,000 AI word lookups a month, or upgrade to Plus, Pro or Max for more lookups, detailed explanations and an unlimited library. Alipay accepted.',
+    alternates: { canonical: '/pricing' },
+  };
 }
 
 export default async function PricingPage() {

@@ -28,6 +28,10 @@ export interface EmailMessage {
   to: string;
   subject: string;
   text: string;
+  /** Optional inline HTML body (lifecycle mail). */
+  html?: string;
+  /** Local metadata (lifecycle alias + render vars). Never sent to Resend. */
+  meta?: { alias: string; variables: Record<string, string> };
   /** Resend template. The HTML stays on Resend. Auth mail omits this. */
   template?: EmailTemplate;
   /** Extra Resend headers (List-Unsubscribe on product mail). */
@@ -71,6 +75,7 @@ export function resendPayload(from: string, message: EmailMessage): Record<strin
     to: message.to,
     subject: message.subject,
     text: message.text,
+    ...(message.html ? { html: message.html } : {}),
     ...(headers ? { headers } : {}),
   };
 }

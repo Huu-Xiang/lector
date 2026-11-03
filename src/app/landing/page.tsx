@@ -13,10 +13,31 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title,
     description,
-    alternates: { canonical: '/landing' },
-    openGraph: { title, description, url: '/landing', siteName: 'Readfox', type: 'website' },
+    alternates: { canonical: '/' },
+    openGraph: {
+      title,
+      description,
+      url: '/',
+      siteName: 'Readfox',
+      type: 'website',
+      images: [{ url: '/og.png', width: 1200, height: 630, alt: 'Readfox' }],
+    },
+    twitter: { card: 'summary_large_image', title, description, images: ['/og.png'] },
   };
 }
+
+const SOFTWARE_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'Readfox',
+  url: 'https://readfox.app/',
+  applicationCategory: 'EducationalApplication',
+  operatingSystem: 'Web',
+  description:
+    'Read real books in the language you are learning, with instant translations and spaced-repetition practice.',
+  image: 'https://readfox.app/og.png',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+};
 
 const features = [
   { key: 'read', icon: BookOpen },
@@ -31,8 +52,13 @@ export default async function LandingPage() {
   const languageCount = Object.keys(LANGUAGES).length;
   return (
     <div className="min-h-screen w-full bg-background">
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(SOFTWARE_LD) }}
+      />
       <header className="mx-auto flex w-full max-w-5xl items-center justify-between px-4 py-5">
-        <Link href="/landing" className="flex items-center gap-2" title="Readfox">
+        <Link href="/" className="flex items-center gap-2" title="Readfox">
           <Image src="/logo.png" alt="" width={32} height={32} className="rounded" />
           <span className="text-lg font-extrabold tracking-tight text-foreground">Readfox</span>
         </Link>

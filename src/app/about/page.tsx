@@ -5,7 +5,12 @@ import { SOURCE_URL } from '@/components/LegalLinks';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('legalPages');
-  return { title: t('about.metaTitle') };
+  return {
+    title: t('about.metaTitle'),
+    description:
+      'About Readfox: an open-source reader for learning languages from real books, with tap-to-translate, a vocabulary list and spaced-repetition review.',
+    alternates: { canonical: '/about' },
+  };
 }
 
 function externalLink(href: string) {

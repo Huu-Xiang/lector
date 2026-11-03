@@ -17,6 +17,25 @@ interface Props {
 
 const RELATED = 8;
 
+function bookJsonLd(book: NonNullable<ReturnType<typeof findPublicBook>>) {
+  const ccBySa = /CC BY-SA 4\.0/i.test(book.source.license);
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Book',
+    name: book.title,
+    author: { '@type': 'Person', name: book.author },
+    inLanguage: book.language,
+    url: `https://readfox.app/books/${book.language}/${book.slug}`,
+    isAccessibleForFree: true,
+    educationalLevel: book.level,
+    license: ccBySa
+      ? 'https://creativecommons.org/licenses/by-sa/4.0/'
+      : 'https://creativecommons.org/publicdomain/mark/1.0/',
+    copyrightNotice: book.source.license,
+    ...(book.source.url ? { isBasedOn: book.source.url } : {}),
+  };
+}
+
 export const dynamicParams = false;
 
 export function generateStaticParams() {
@@ -61,13 +80,7 @@ export default async function BookPage({ params }: Props) {
     .filter((b) => b.language === book.language && b.level === book.level && b.slug !== slug)
     .slice(0, RELATED);
   const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Book',
-    name: book.title,
-    author: { '@type': 'Person', name: book.author },
-    inLanguage: language,
-    isAccessibleForFree: true,
-    url: `https://readfox.app/books/${language}/${slug}`,
+    ...bookJsonLd(book),
     ...(blurb ? { description: blurb } : {}),
   };
 

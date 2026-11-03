@@ -158,13 +158,13 @@ describe('sendWelcomeEmail', () => {
     expect(await sendWelcomeEmail(userId, deps(database, inbox))).toBe('sent');
     expect(await sendWelcomeEmail(userId, deps(database, inbox))).toBe('skipped');
     expect(inbox).toHaveLength(1);
-    expect(inbox[0].template?.id).toBe(LIFECYCLE_TEMPLATES.welcome);
-    expect(inbox[0].template?.variables).toMatchObject({
+    expect(inbox[0].meta?.alias).toBe(LIFECYCLE_TEMPLATES.welcome);
+    expect(inbox[0].meta?.variables).toMatchObject({
       USER_NAME: 'Ada',
       LANGUAGE: 'Afrikaans',
       APP_URL: 'https://app.lector.dev',
     });
-    expect(String(inbox[0].template?.variables?.STOP_URL)).toContain(
+    expect(String(inbox[0].meta?.variables?.STOP_URL)).toContain(
       '/api/email/unsubscribe?token=',
     );
     expect(inbox[0].headers).toBeUndefined();
@@ -236,7 +236,7 @@ describe('notifyVocabSaved', () => {
     expect(await notifyVocabSaved(userId, deps(database, inbox))).toBe('sent');
     expect(await notifyVocabSaved(userId, deps(database, inbox))).toBe('skipped');
     expect(inbox).toHaveLength(1);
-    expect(inbox[0].template?.id).toBe(LIFECYCLE_TEMPLATES.anki);
+    expect(inbox[0].meta?.alias).toBe(LIFECYCLE_TEMPLATES.anki);
   });
 
   test('ignored words do not count toward the Anki threshold', async () => {
@@ -258,7 +258,7 @@ describe('notifyGlossCapHit', () => {
     expect(await notifyGlossCapHit(userId, deps(database, inbox))).toBe('sent');
     expect(await notifyGlossCapHit(userId, deps(database, inbox))).toBe('skipped');
     expect(inbox).toHaveLength(1);
-    expect(inbox[0].template?.id).toBe(LIFECYCLE_TEMPLATES.glossCap);
+    expect(inbox[0].meta?.alias).toBe(LIFECYCLE_TEMPLATES.glossCap);
   });
 });
 
@@ -302,8 +302,8 @@ describe('sweepLifecycleEmails', () => {
     });
     const first = await sweepLifecycleEmails(deps(database, inbox));
     expect(first.sent).toBe(1);
-    expect(inbox.map((m) => m.template?.id)).toEqual([LIFECYCLE_TEMPLATES.day1]);
-    expect(String(inbox[0].template?.variables?.STOP_URL)).toContain(
+    expect(inbox.map((m) => m.meta?.alias)).toEqual([LIFECYCLE_TEMPLATES.day1]);
+    expect(String(inbox[0].meta?.variables?.STOP_URL)).toContain(
       '/api/email/unsubscribe?token=',
     );
     expect(inbox[0].headers?.['List-Unsubscribe']).toMatch(/^<https?:\/\/.+>$/);
@@ -354,7 +354,7 @@ describe('sweepLifecycleEmails', () => {
       )
       .run('les-starter', userId, 0, 0, NOW.toISOString());
     await sweepLifecycleEmails(deps(database, inbox));
-    expect(inbox.map((m) => m.template?.id)).toEqual([LIFECYCLE_TEMPLATES.day3]);
+    expect(inbox.map((m) => m.meta?.alias)).toEqual([LIFECYCLE_TEMPLATES.day3]);
     expect(sentAliases(database, userId)).toEqual([LIFECYCLE_TEMPLATES.day3]);
   });
 

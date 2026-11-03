@@ -7,6 +7,7 @@ import { Database } from 'bun:sqlite';
 import { db } from '../db';
 import { config } from './config';
 import { sendEmail, type EmailMessage } from './email';
+import { renderLifecycleEmail } from './lifecycle-copy';
 import {
   isUnsubscribed,
   listUnsubscribeHeaders,
@@ -239,25 +240,23 @@ async function sendOnce(
   const wantsStop = UNSUBSCRIBE_ALIASES.has(alias);
 
   try {
+    const vars = {
+      USER_NAME: user.name?.trim() || 'there',
+      LANGUAGE: languageLabel(deps.database, user.id),
+      APP_URL: deps.appUrl,
+      STOP_URL: stopUrl || `${deps.appUrl.replace(/\/$/, '')}/api/email/unsubscribe`,
+      STARTER_LINE: starterLine(deps.database, user.id),
+      WORD_COUNT: String(savedWordCount(deps.database, user.id)),
+    };
+    // Inline copy; Resend hosted templates were never published (404).
+    const rendered = renderLifecycleEmail(alias, vars);
     await deps.send({
       to: user.email,
-      subject: alias,
-      text: alias,
+      subject: rendered.subject,
+      text: rendered.text,
+      html: rendered.html,
+      meta: { alias, variables: vars },
       headers: wantsStop && stopUrl ? listUnsubscribeHeaders(stopUrl) : undefined,
-      template: {
-        id: alias,
-        variables: {
-          USER_NAME: user.name?.trim() || 'there',
-          LANGUAGE: languageLabel(deps.database, user.id),
-          APP_URL: deps.appUrl,
-          STOP_URL: stopUrl || `${deps.appUrl.replace(/\/$/, '')}/api/email/unsubscribe`,
-          STARTER_LINE: starterLine(deps.database, user.id),
-          // Every template gets it, though only the Anki one prints it. Saying
-          // the real number is the point: it is evidence that Lector is
-          // watching, which is what "a modest word list" failed to be.
-          WORD_COUNT: String(savedWordCount(deps.database, user.id)),
-        },
-      },
     });
     return 'sent';
   } catch (err) {

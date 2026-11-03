@@ -35,6 +35,11 @@ export const metadata: Metadata = {
   description:
     'Read real books in the language you are learning, with instant translations and spaced-repetition practice',
   appleWebApp: { capable: true, title: 'Readfox', statusBarStyle: 'default' },
+  openGraph: {
+    siteName: 'Readfox',
+    images: [{ url: '/og.png', width: 1200, height: 630, alt: 'Readfox' }],
+  },
+  twitter: { card: 'summary_large_image', images: ['/og.png'] },
 };
 
 export const viewport: Viewport = {
