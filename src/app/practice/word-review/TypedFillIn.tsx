@@ -7,8 +7,7 @@ import { Input } from '@/components/ui/input';
 import { getActivePack } from '@/lib/data-layer';
 import { isComposing } from '@/lib/keyboard';
 import type { ReviewItem } from '@/types';
-import { checkAnswer } from '../utils';
-import { blankSentence } from './questions';
+import { blankSentence, isTypedAnswerRight } from './questions';
 import SentenceTranslation from './SentenceTranslation';
 import SourceLine from './SourceLine';
 
@@ -61,7 +60,7 @@ export default function TypedFillIn({
         onSubmit={(event) => {
           event.preventDefault();
           if (disabled || !typed.trim()) return;
-          void submit(checkAnswer(typed, item.word, pack) ? 'right' : 'wrong');
+          void submit(isTypedAnswerRight(typed, item, pack) ? 'right' : 'wrong');
         }}
         onKeyDown={(event) => {
           if (isComposing(event.nativeEvent) && event.key === 'Enter') event.preventDefault();

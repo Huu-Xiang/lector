@@ -1,7 +1,7 @@
 import { db, type VocabRow, type VocabType, type WordState } from '../../db';
 import { foldWord, getLanguageConfig, type LanguageCode } from '../languages';
 import { seedFromReaderLevel } from './scheduler';
-import { stageOf, type ReviewStage } from './stages';
+import { readerStateForStage, stageOf, type ReviewStage } from './stages';
 import { fsrsColumns, insertWordCard, reviewCardOf, type WordCardRow } from './word-card-rows';
 
 export type WordStateSource = 'reader' | 'import' | 'anki' | 'restore' | 'review';
@@ -24,6 +24,8 @@ export interface SyncWordStateInput {
   newest?: SyncVocab;
   /** Skip the vocab and knownWords writes; the caller already made them. */
   keepRows?: boolean;
+  /** A new vocab row was saved: an active card keeps its schedule and its stage wins. */
+  create?: boolean;
   now?: number;
 }
 
@@ -84,9 +86,16 @@ function cardFor(userId: string, language: string, wordKey: string) {
 }
 
 export function syncWordState(input: SyncWordStateInput): void {
-  const { userId, language, wordKey, state, source } = input;
+  const { userId, language, wordKey, source } = input;
+  let { state } = input;
   const now = input.now ?? Date.now();
   const nowIso = new Date(now).toISOString();
+
+  const existing = input.create ? cardFor(userId, language, wordKey) : undefined;
+  const keepSchedule = !!existing && existing.retiredAt === null && !isRetiringState(state);
+  if (existing && keepSchedule) {
+    state = readerStateForStage(stageOf(reviewCardOf(existing)));
+  }
 
   if (!input.keepRows) {
     if (source === 'review') {
@@ -119,7 +128,7 @@ export function syncWordState(input: SyncWordStateInput): void {
     'UPDATE wordCards SET lastSyncedAt = ?, updatedAt = ? WHERE userId = ? AND id = ?',
   );
 
-  if (source === 'review') {
+  if (source === 'review' || keepSchedule) {
     if (card) touch.run(nowIso, nowIso, userId, card.id);
     return;
   }

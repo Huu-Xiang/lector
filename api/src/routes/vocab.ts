@@ -206,6 +206,7 @@ app.post('/', async (c) => {
       source: 'reader',
       vocab: row,
       newest: row,
+      create: true,
       now: Date.parse(now),
     });
   });

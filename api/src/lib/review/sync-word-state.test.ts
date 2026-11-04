@@ -258,6 +258,48 @@ describe('syncWordState', () => {
   });
 });
 
+describe('syncWordState when a new vocab row is saved', () => {
+  beforeEach(clear);
+  afterEach(clear);
+
+  test('an active card keeps its schedule and its stage wins over the posted level', () => {
+    seedVocab('v1', 'harbor');
+    sync('harbor', 'level3', 'reader');
+    const before = card('harbor')!;
+    seedVocab('v2', 'harbor', { createdAt: '2026-02-01T00:00:00Z' });
+    sync('harbor', 'level1', 'reader', {
+      vocab: { id: 'v2', type: 'word', createdAt: '2026-02-01T00:00:00Z' },
+      create: true,
+    });
+
+    const after = card('harbor')!;
+    expect(after.stability).toBe(before.stability);
+    expect(after.due).toBe(before.due);
+    expect(after.vocabId).toBe('v2');
+    const known = db
+      .prepare('SELECT state FROM knownWords WHERE userId = ? AND word = ? AND language = ?')
+      .get(USER, 'harbor', 'en') as { state: string };
+    expect(known.state).toBe('level3');
+    const v2 = db.prepare('SELECT state FROM vocab WHERE id = ?').get('v2') as { state: string };
+    expect(v2.state).toBe('level3');
+  });
+
+  test('a retired card is reseeded by the save like a level change', () => {
+    seedVocab('v1', 'quay');
+    sync('quay', 'level2', 'reader');
+    sync('quay', 'known', 'reader');
+    seedVocab('v2', 'quay', { createdAt: '2026-02-01T00:00:00Z' });
+    sync('quay', 'level1', 'reader', {
+      vocab: { id: 'v2', type: 'word', createdAt: '2026-02-01T00:00:00Z' },
+      create: true,
+    });
+
+    const after = card('quay')!;
+    expect(after.retiredAt).toBeNull();
+    expect(stageOf(reviewCardOf(after))).toBe('new');
+  });
+});
+
 describe('syncWordDelete', () => {
   beforeEach(clear);
   afterEach(clear);

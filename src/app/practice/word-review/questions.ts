@@ -3,7 +3,7 @@ import { resolveClozeTokens } from '@/lib/languages';
 import { isComposing } from '@/lib/keyboard';
 import { splitTrailingPunctuation } from '@/lib/words';
 import type { RecognitionAnswer, ReviewItem, ReviewQuestionType, SentenceBlank } from '@/types';
-import { createBlankedSentence, normalize } from '../utils';
+import { checkAnswer, createBlankedSentence, normalize } from '../utils';
 
 export interface FillInQuestion {
   blanked: string;
@@ -33,6 +33,26 @@ export function renderBlank(sentence: string, blank: SentenceBlank | undefined):
   const [core, punct] = splitTrailingPunctuation(span);
   const lead = span.slice(0, span.length - core.length - punct.length);
   return sentence.slice(0, start) + lead + BLANK + punct + sentence.slice(end);
+}
+
+/** The word as it appears in the blanked sentence, which may be an inflected form. */
+export function blankedWord(item: ReviewItem): string | null {
+  const blank = item.sentenceBlank;
+  if (!blank || blank.start < 0 || blank.end <= blank.start || blank.end > item.sentence.length) {
+    return null;
+  }
+  const [core] = splitTrailingPunctuation(item.sentence.slice(blank.start, blank.end));
+  const word = core.replace(/^[^\p{L}\p{N}]+/u, '');
+  return word || null;
+}
+
+export function isTypedAnswerRight(
+  typed: string,
+  item: ReviewItem,
+  pack?: LanguageConfig,
+): boolean {
+  const surface = blankedWord(item);
+  return checkAnswer(typed, item.word, pack) || (!!surface && checkAnswer(typed, surface, pack));
 }
 
 export function blankSentence(item: ReviewItem, pack?: LanguageConfig): string | null {

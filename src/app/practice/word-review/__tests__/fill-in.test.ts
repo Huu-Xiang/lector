@@ -1,7 +1,12 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { ReviewItem, SentenceBlank } from '@/types';
 import { applyCardPatch, resolveLazySentence, type CardPatch } from '../lazy-sentence';
-import { blankSentence, effectiveQuestionType, renderBlank } from '../questions';
+import {
+  blankSentence,
+  effectiveQuestionType,
+  isTypedAnswerRight,
+  renderBlank,
+} from '../questions';
 import { buildSourceLine } from '../sentence-source';
 import { createInitialWordRound, wordRoundReducer } from '../use-word-review-round';
 
@@ -228,5 +233,30 @@ describe('card patch reducer', () => {
     expect(state.queue[0].translationPending).toBeUndefined();
     expect(state.items[a.cardId].sentenceTranslation?.text).toBe('Le port');
     expect(state.queue[1]).toBe(b);
+  });
+});
+
+describe('typed fill-in answers', () => {
+  const item = {
+    cardId: 'c1',
+    word: 'harbor',
+    type: 'word',
+    stage: 'familiar',
+    questionType: 'typed_fill_in',
+    sentence: 'Two harbors, quiet at night.',
+    translation: '',
+    sentenceBlank: { tokenStart: 1, tokenEnd: 2, start: 4, end: 12 },
+  } as unknown as ReviewItem;
+
+  it('accepts the form shown in the sentence and the saved word', () => {
+    expect(isTypedAnswerRight('harbors', item)).toBe(true);
+    expect(isTypedAnswerRight('harbor', item)).toBe(true);
+    expect(isTypedAnswerRight('harbinger', item)).toBe(false);
+  });
+
+  it('accepts only the saved word without a server blank', () => {
+    const plain = { ...item, sentenceBlank: undefined } as ReviewItem;
+    expect(isTypedAnswerRight('harbors', plain)).toBe(false);
+    expect(isTypedAnswerRight('harbor', plain)).toBe(true);
   });
 });
