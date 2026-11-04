@@ -24,6 +24,7 @@ import {
 } from '../lib/anki-protocol';
 import { randomUUID } from 'crypto';
 import { syncWordState } from '../lib/review/sync-word-state';
+import { newestVocabByKey, type NewestVocab } from '../lib/review/word-card-rows';
 import { entitlements, planLimitResponse, type AtomicLimitCheck } from '../lib/entitlements';
 import {
   aggregateGrowthCheck,
@@ -970,9 +971,19 @@ app.post('/reviews', async (c) => {
       INSERT INTO vocab (id, text, type, sentence, translation, state, stateUpdatedAt, reviewCount, bookId, chapter, createdAt, pushedToAnki, ankiNoteId, language, userId)
       VALUES (?, ?, 'word', ?, ?, ?, ?, 0, NULL, NULL, ?, 1, ?, ?, ?)
     `);
+    const newestByLanguage = new Map<string, Map<string, NewestVocab>>();
+    const newestFor = (language: string) => {
+      let map = newestByLanguage.get(language);
+      if (!map) {
+        map = newestVocabByKey(userId, language);
+        newestByLanguage.set(language, map);
+      }
+      return map;
+    };
     const verdict = entitlements.reserveCount(userId, checks, () => {
       for (const write of planned) {
         if (write.kind === 'update') {
+          const held = newestFor(write.language).get(write.word);
           syncWordState({
             userId,
             language: write.language,
@@ -980,6 +991,7 @@ app.post('/reviews', async (c) => {
             state: write.state,
             source: 'anki',
             vocab: { id: write.id, type: write.type, createdAt: write.createdAt },
+            newest: held?.id === write.id ? held : undefined,
             now: Date.parse(now),
           });
         } else {
@@ -996,6 +1008,16 @@ app.post('/reviews', async (c) => {
             userId,
           );
           const row = { id: write.id, type: 'word' as const, createdAt: now };
+          const held = newestFor(write.language);
+          const prior = held.get(write.word);
+          if (!prior || now > prior.createdAt) {
+            held.set(write.word, {
+              ...row,
+              state: write.state,
+              stateUpdatedAt: now,
+              createdAt: now,
+            });
+          }
           syncWordState({
             userId,
             language: write.language,

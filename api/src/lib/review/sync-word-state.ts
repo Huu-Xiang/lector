@@ -186,9 +186,16 @@ export function repointWordCard(
   ).run(newest.id, newest.type, userId, language, wordKey);
 }
 
-export function syncWordDelete(input: { userId: string; language: string; wordKey: string }) {
+export function syncWordDelete(input: {
+  userId: string;
+  language: string;
+  wordKey: string;
+  /** The newest remaining vocab row, or null for none; omit to look it up. */
+  newest?: SyncVocab | null;
+}) {
   const { userId, language, wordKey } = input;
-  const newest = newestVocabForWord(userId, language, wordKey);
+  const newest =
+    input.newest === undefined ? newestVocabForWord(userId, language, wordKey) : input.newest;
   if (newest) {
     const card = cardFor(userId, language, wordKey);
     if (card && card.vocabId !== newest.id) repointWordCard(userId, language, wordKey, newest);

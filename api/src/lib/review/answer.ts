@@ -157,7 +157,7 @@ function adjustStats(
   if (!verdict.allowed) throw new StatsLimitError(verdict);
 }
 
-function pruneLog(userId: string, limit: number | null): void {
+function pruneLog(userId: string, limit: number | null, keepEventId: string): void {
   if (limit === null) return;
   const { total } = db
     .prepare('SELECT COUNT(*) AS total FROM wordReviewLog WHERE userId = ?')
@@ -170,6 +170,14 @@ function pruneLog(userId: string, limit: number | null): void {
           AND rowid NOT IN (SELECT MAX(rowid) FROM wordReviewLog WHERE userId = ?1 GROUP BY cardId)
         ORDER BY rowid LIMIT ?2)`,
   ).run(userId, total - limit);
+  const { left } = db
+    .prepare('SELECT COUNT(*) AS left FROM wordReviewLog WHERE userId = ?')
+    .get(userId) as { left: number };
+  if (left <= limit) return;
+  db.prepare(
+    `DELETE FROM wordReviewLog WHERE rowid IN (
+       SELECT rowid FROM wordReviewLog WHERE userId = ?1 AND eventId != ?2 ORDER BY rowid LIMIT ?3)`,
+  ).run(userId, keepEventId, left - limit);
 }
 
 function applyAnswer(
@@ -257,7 +265,7 @@ function applyAnswer(
     vocab,
     now,
   });
-  pruneLog(userId, deps.logRowLimit(userId));
+  pruneLog(userId, deps.logRowLimit(userId), eventId);
 
   return {
     cardId,

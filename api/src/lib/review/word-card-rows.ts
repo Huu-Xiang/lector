@@ -101,18 +101,31 @@ export interface NewestVocab {
   createdAt: string;
 }
 
-export function newestVocabByKey(userId: string, language: string): Map<string, NewestVocab> {
+export function vocabRowsByKey(userId: string, language: string): Map<string, NewestVocab[]> {
   const pack = getLanguageConfig(language as LanguageCode);
   const rows = db
     .prepare(
       'SELECT id, text, type, state, stateUpdatedAt, createdAt FROM vocab WHERE userId = ? AND language = ?',
     )
     .all(userId, language) as Array<NewestVocab & { text: string }>;
-  const newest = new Map<string, NewestVocab>();
+  const byKey = new Map<string, NewestVocab[]>();
   for (const row of rows) {
     const key = foldWord(row.text, pack);
-    const held = newest.get(key);
-    if (!held || row.createdAt > held.createdAt) newest.set(key, row);
+    const group = byKey.get(key);
+    if (group) group.push(row);
+    else byKey.set(key, [row]);
   }
+  return byKey;
+}
+
+export function newestOf(rows: NewestVocab[]): NewestVocab | undefined {
+  let newest: NewestVocab | undefined;
+  for (const row of rows) if (!newest || row.createdAt > newest.createdAt) newest = row;
+  return newest;
+}
+
+export function newestVocabByKey(userId: string, language: string): Map<string, NewestVocab> {
+  const newest = new Map<string, NewestVocab>();
+  for (const [key, rows] of vocabRowsByKey(userId, language)) newest.set(key, newestOf(rows)!);
   return newest;
 }

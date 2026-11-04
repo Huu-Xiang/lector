@@ -391,4 +391,23 @@ describe('vocab routes keep word cards in step', () => {
     expect(res.status).toBe(200);
     expect(cardRows().map((r) => r.wordKey)).toEqual(['harbor']);
   });
+
+  test('bulk delete repoints the card to the remaining row, and removes it when none remain', async () => {
+    for (const [id, at] of [
+      ['v1', '2026-01-01T00:00:01Z'],
+      ['v2', '2026-01-01T00:00:02Z'],
+      ['v3', '2026-01-01T00:00:03Z'],
+    ]) {
+      await save(id, id === 'v2' ? 'Harbor' : 'harbor', 'level2');
+      db.prepare('UPDATE vocab SET createdAt = ? WHERE id = ?').run(at, id);
+    }
+    db.prepare("UPDATE wordCards SET vocabId = 'v3'").run();
+
+    await send('POST', '/bulk-delete', { vocabIDs: ['v3', 'v2'] });
+    expect(cardRows().map((r) => r.vocabId)).toEqual(['v1']);
+
+    await send('POST', '/bulk-delete', { vocabIDs: ['v1'] });
+    expect(cardRows()).toHaveLength(0);
+    expect(db.prepare('SELECT 1 FROM knownWords').get()).toBeNull();
+  });
 });

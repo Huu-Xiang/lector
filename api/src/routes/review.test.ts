@@ -361,6 +361,34 @@ describe('review routes', () => {
     expect(kept).not.toContain('a1');
   });
 
+  test('pruning cuts the oldest rows, even a newest row, when cards outnumber the limit', async () => {
+    for (const w of ['alpha', 'beta', 'gamma', 'delta', 'epsilon']) seedVocab(w, w);
+    logLimit = 3;
+    const round = await getQueue();
+    const ids = round.items.map((i) => i.cardId);
+    expect(ids).toHaveLength(5);
+    for (const [i, id] of ids.entries()) {
+      await answer(round.roundId, id, 'wrong', 'choose_meaning', `e${i}`);
+    }
+    expect(logRows().map((r) => r.eventId)).toEqual(['e2', 'e3', 'e4']);
+  });
+
+  test('undo fails cleanly for a card whose newest row was pruned', async () => {
+    for (const w of ['alpha', 'beta', 'gamma']) seedVocab(w, w);
+    logLimit = 2;
+    const round = await getQueue();
+    const ids = round.items.map((i) => i.cardId);
+    for (const [i, id] of ids.entries()) {
+      await answer(round.roundId, id, 'wrong', 'choose_meaning', `u${i}`);
+    }
+    const res = await post('/undo', {
+      roundId: round.roundId,
+      eventId: 'u0',
+      newEventId: 'u-undo',
+    });
+    expect(res.status).toBe(404);
+  });
+
   test('creating a round prunes rounds older than a day', async () => {
     seedVocab('a', 'harbor');
     db.prepare(

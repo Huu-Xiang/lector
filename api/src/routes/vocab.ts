@@ -25,6 +25,7 @@ import {
 } from '../lib/persisted-input';
 import { notifyVocabSaved } from '../lib/lifecycle-email';
 import { syncWordDelete, syncWordState } from '../lib/review/sync-word-state';
+import { newestOf, vocabRowsByKey, type NewestVocab } from '../lib/review/word-card-rows';
 
 const app = new Hono();
 const VOCAB_TYPES = new Set(['word', 'phrase'] as const);
@@ -401,6 +402,7 @@ app.post('/bulk-delete', async (c) => {
   const deleteVocab = db.prepare('DELETE FROM vocab WHERE id = ? AND userId = ?');
 
   let deleted = 0;
+  const groupsByLanguage = new Map<string, Map<string, NewestVocab[]>>();
 
   db.transaction((ids: string[]) => {
     ids.forEach((id) => {
@@ -412,13 +414,27 @@ app.post('/bulk-delete', async (c) => {
         return;
       }
 
+      const vocabLang = vocab.language;
+      let groups = groupsByLanguage.get(vocabLang);
+      if (!groups) {
+        groups = vocabRowsByKey(userId, vocabLang);
+        groupsByLanguage.set(vocabLang, groups);
+      }
+
       deleteVocab.run(id, userId);
       deleted = deleted + 1;
 
-      const vocabLang = vocab.language;
       const vocabPack = getLanguageConfig(resolveLanguage(vocabLang, userId));
       const foldedText = foldWord(vocab.text, vocabPack);
-      syncWordDelete({ userId, language: vocabLang, wordKey: foldedText });
+      const remaining = (groups.get(foldedText) ?? []).filter((row) => row.id !== id);
+      if (remaining.length > 0) groups.set(foldedText, remaining);
+      else groups.delete(foldedText);
+      syncWordDelete({
+        userId,
+        language: vocabLang,
+        wordKey: foldedText,
+        newest: newestOf(remaining) ?? null,
+      });
     });
   })(body.vocabIDs);
 
