@@ -186,3 +186,15 @@ export function loadLibraryBook(language: LanguageCode, slug: string): LibraryBo
   });
   return { ...summary, lessons };
 }
+
+export function loadLibraryLesson(
+  language: LanguageCode,
+  slug: string,
+  sourceFile: string,
+): string | null {
+  if (!isLibrarySlug(slug)) return null;
+  const bookDir = path.resolve(libraryDir(language), slug);
+  const filePath = path.resolve(bookDir, sourceFile);
+  if (!filePath.startsWith(bookDir + path.sep) || !fs.existsSync(filePath)) return null;
+  return fs.readFileSync(filePath, 'utf8');
+}

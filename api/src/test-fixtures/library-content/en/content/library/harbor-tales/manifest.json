@@ -1,0 +1,11 @@
+{
+  "title": "Harbor Tales",
+  "author": "Test Author",
+  "level": "A2",
+  "wordCount": 120,
+  "source": { "name": "Test source", "url": "https://example.test/harbor", "license": "Public domain" },
+  "lessons": [
+    { "file": "01.md", "title": "1. The Port" },
+    { "file": "02.md", "title": "2. The Storm" }
+  ]
+}

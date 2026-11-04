@@ -1415,3 +1415,67 @@ function resolveWord(
 
   return undefined;
 }
+
+const MAX_FORMS = 200;
+
+function lemmasOf(conn: Database, word: string): string[] {
+  const lemmas = conn
+    .prepare('SELECT DISTINCT lemma FROM inflections WHERE inflected_form = ? LIMIT 8')
+    .all(word) as Array<{ lemma: string }>;
+  return [word, ...lemmas.map((row) => row.lemma)].filter(
+    (lemma, i, all) => all.indexOf(lemma) === i,
+  );
+}
+
+/** The word, its lemmas and every inflected form of those lemmas. Empty without a dictionary. */
+export function dictionaryWordForms(word: string, language: string): string[] {
+  const conn = getDb(language);
+  if (!conn) return [];
+  try {
+    const forms = new Set<string>([word]);
+    for (const lemma of lemmasOf(conn, word)) {
+      forms.add(lemma);
+      const rows = conn
+        .prepare('SELECT inflected_form FROM inflections WHERE lemma = ? LIMIT ?')
+        .all(lemma, MAX_FORMS) as Array<{ inflected_form: string }>;
+      for (const row of rows) forms.add(row.inflected_form);
+    }
+    return [...forms];
+  } catch {
+    return [];
+  }
+}
+
+/** Bundled example sentences of the word and its lemmas, in dictionary order. */
+export function dictionaryExampleSentences(
+  word: string,
+  language: string,
+): Array<{ text: string; translation?: string; translationLang?: string }> {
+  const conn = getDb(language);
+  if (!conn) return [];
+  try {
+    const out: Array<{ text: string; translation?: string; translationLang?: string }> = [];
+    for (const lemma of lemmasOf(conn, word)) {
+      const rows = conn
+        .prepare(
+          'SELECT sentence, translation, translation_lang FROM examples WHERE word = ? ORDER BY sort_order LIMIT 20',
+        )
+        .all(lemma) as Array<{
+        sentence: string;
+        translation: string | null;
+        translation_lang: string | null;
+      }>;
+      for (const row of rows) {
+        out.push({
+          text: row.sentence,
+          ...(row.translation && row.translation_lang
+            ? { translation: row.translation, translationLang: row.translation_lang }
+            : {}),
+        });
+      }
+    }
+    return out;
+  } catch {
+    return [];
+  }
+}

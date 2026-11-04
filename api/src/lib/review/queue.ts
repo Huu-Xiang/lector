@@ -4,6 +4,12 @@ import { dateStringInTimeZone, getConfiguredTimeZone } from '../dates';
 import { LANGUAGES, isValidLanguageCode } from '../languages';
 import { chooseMeanings, dictionarySense, fillMeaning, type SenseLookup } from './meanings';
 import { stageOf, type ReviewStage } from './stages';
+import {
+  findSentence,
+  type FoundSentence,
+  type SentenceBlank,
+  type SentenceSource,
+} from './sentence-sources';
 import { reviewCardOf, type WordCardRow } from './word-card-rows';
 
 export type QuestionType =
@@ -55,6 +61,19 @@ export function readReviewGoal(userId: string): ReviewGoal {
     return JSON.parse(row.value) === 'recognize_spell' ? 'recognize_spell' : 'recognize';
   } catch {
     return 'recognize';
+  }
+}
+
+export function readLearnerLevel(userId: string, language: string): string | null {
+  const row = db
+    .prepare('SELECT value FROM settings WHERE userId = ? AND key = ?')
+    .get(userId, 'readingLevels') as { value: string } | undefined;
+  if (!row) return null;
+  try {
+    const level = (JSON.parse(row.value) as Record<string, unknown> | null)?.[language];
+    return typeof level === 'string' ? level : null;
+  } catch {
+    return null;
   }
 }
 
@@ -134,7 +153,18 @@ export interface QueueItem {
   sentence: string;
   translation: string;
   choices?: string[];
+  sentenceSource?: SentenceSource;
+  sentenceBlank?: SentenceBlank;
+  sentenceTranslation?: { text: string; lang: string };
+  example?: {
+    text: string;
+    blank?: SentenceBlank;
+    source: SentenceSource;
+    translation?: { text: string; lang: string };
+  };
 }
+
+const SENTENCE_TYPES = new Set<QuestionType>(['fill_in', 'typed_fill_in', 'dictation']);
 
 export function buildRound(
   userId: string,
@@ -142,11 +172,27 @@ export function buildRound(
   size: number,
   now: number,
   lookup: SenseLookup = dictionarySense,
+  finder: typeof findSentence = findSentence,
 ) {
   const { due, newCards } = selection(userId, language, now);
   const goal = readReviewGoal(userId);
   const pool = activeCards(userId, language).filter((card) => card.translation.trim() !== '');
   const items: QueueItem[] = [];
+  const served = new Map<string, string>();
+  const level = readLearnerLevel(userId, language);
+  const find = (card: CardWithVocab, skipSaved: boolean): FoundSentence | null => {
+    const found = finder({
+      word: card.text,
+      type: card.type,
+      language,
+      level,
+      savedSentence: card.sentence,
+      lastSentenceKey: card.lastSentenceKey,
+      skipSaved,
+    });
+    if (found) served.set(card.id, found.key);
+    return found;
+  };
   for (const card of [...due, ...newCards]) {
     if (items.length >= size) break;
     let translation = card.translation;
@@ -172,15 +218,38 @@ export function buildRound(
       if (options) choices = options;
       else questionType = 'recognition';
     }
+    const found = SENTENCE_TYPES.has(questionType)
+      ? find(card, false)
+      : questionType === 'recognition'
+        ? find(card, true)
+        : null;
+    const fillIn = SENTENCE_TYPES.has(questionType);
     items.push({
       cardId: card.id,
       word: card.text,
       type: card.type,
       stage,
       questionType,
-      sentence: card.sentence,
+      sentence: fillIn && found ? found.text : card.sentence,
       translation,
       ...(choices ? { choices } : {}),
+      ...(fillIn && found
+        ? {
+            sentenceSource: found.source,
+            ...(found.blank ? { sentenceBlank: found.blank } : {}),
+            ...(found.translation ? { sentenceTranslation: found.translation } : {}),
+          }
+        : {}),
+      ...(!fillIn && found
+        ? {
+            example: {
+              text: found.text,
+              ...(found.blank ? { blank: found.blank } : {}),
+              source: found.source,
+              ...(found.translation ? { translation: found.translation } : {}),
+            },
+          }
+        : {}),
     });
   }
   const roundId = randomUUID();
@@ -198,6 +267,8 @@ export function buildRound(
       JSON.stringify(items.map((item) => item.cardId)),
       new Date(now).toISOString(),
     );
+    const mark = db.prepare('UPDATE wordCards SET lastSentenceKey = ? WHERE userId = ? AND id = ?');
+    for (const [cardId, key] of served) mark.run(key, userId, cardId);
   })();
   return { roundId, items };
 }

@@ -1,0 +1,8 @@
+{
+  "title": "Sea Stories",
+  "author": "Test Author",
+  "level": "B2",
+  "wordCount": 40,
+  "source": { "name": "Test source", "url": "https://example.test/sea", "license": "Public domain" },
+  "lessons": [{ "file": "01.md", "title": "1. Night Watch" }]
+}

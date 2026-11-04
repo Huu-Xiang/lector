@@ -38,6 +38,7 @@ import {
   validateSafeInteger,
   validateTimestamp,
 } from '../lib/persisted-input';
+import { loadSentenceBankRows } from '../lib/sentence-bank-loader';
 
 type BankEntry = {
   id: number | string;
@@ -172,52 +173,8 @@ function clozeWriteChecks(
   ];
 }
 
-// Per-language sentence banks, lazily loaded. Each value is a LITERAL dynamic
-// import so the bundler still includes the JSON, but the file is only read when
-// that language is actually seeded — no need to load every language's bank up
-// front. Add a language by dropping in a sentence-bank-<code>.json and
-// registering it here. Rows are stored under the language whose bank we load,
-// so seeding can never mislabel one language's sentences as another's.
-const SENTENCE_BANKS: Record<string, () => Promise<{ default: unknown }>> = {
-  af: () => import('../lib/sentence-bank-af.json'),
-  ar: () => import('../lib/sentence-bank-ar.json'),
-  bn: () => import('../lib/sentence-bank-bn.json'),
-  cs: () => import('../lib/sentence-bank-cs.json'),
-  de: () => import('../lib/sentence-bank-de.json'),
-  el: () => import('../lib/sentence-bank-el.json'),
-  eo: () => import('../lib/sentence-bank-eo.json'),
-  es: () => import('../lib/sentence-bank-es.json'),
-  fi: () => import('../lib/sentence-bank-fi.json'),
-  grc: () => import('../lib/sentence-bank-grc.json'),
-  hi: () => import('../lib/sentence-bank-hi.json'),
-  hu: () => import('../lib/sentence-bank-hu.json'),
-  id: () => import('../lib/sentence-bank-id.json'),
-  fr: () => import('../lib/sentence-bank-fr.json'),
-  it: () => import('../lib/sentence-bank-it.json'),
-  nl: () => import('../lib/sentence-bank-nl.json'),
-  pl: () => import('../lib/sentence-bank-pl.json'),
-  pt: () => import('../lib/sentence-bank-pt.json'),
-  ru: () => import('../lib/sentence-bank-ru.json'),
-  nb: () => import('../lib/sentence-bank-nb.json'),
-  sv: () => import('../lib/sentence-bank-sv.json'),
-  tr: () => import('../lib/sentence-bank-tr.json'),
-  uk: () => import('../lib/sentence-bank-uk.json'),
-  // The first bank that ships `tokens` (#289 4.3). Mandarin has no whitespace,
-  // so the client cannot re-derive the segmentation, and jieba disagrees with
-  // the browser's Intl.Segmenter anyway.
-  zh: () => import('../lib/sentence-bank-zh.json'),
-  // Also ships `tokens`, and segmented by the SAME analyser the reader uses.
-  // See api/scripts/build-cloze-ja.ts for why that matters: the Mandarin bank
-  // was built with a different segmenter than the reader, and the two disagree.
-  ja: () => import('../lib/sentence-bank-ja.json'),
-  ko: () => import('../lib/sentence-bank-ko.json'),
-  la: () => import('../lib/sentence-bank-la.json'),
-};
-
 async function loadSentenceBank(lang: string): Promise<BankEntry[]> {
-  const loader = SENTENCE_BANKS[lang];
-  if (!loader) return [];
-  return (await loader()).default as BankEntry[];
+  return (await loadSentenceBankRows(lang)) as BankEntry[];
 }
 
 const bankScheduler = createScheduler({ fuzz: process.env.NODE_ENV !== 'test' });
