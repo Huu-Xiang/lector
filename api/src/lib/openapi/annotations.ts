@@ -1222,6 +1222,145 @@ const CLOZE_CREATE_ITEM: JsonSchema = {
 };
 
 const practiceOps: Record<string, OperationDoc> = {
+  'GET /api/review/counts': {
+    summary: 'Count the word cards for review',
+    description: 'Cards due now, new cards still open today, and the next due time.',
+    tag: 'Practice',
+    sharedParams: LANG,
+    responses: {
+      '200': {
+        description: 'The counts.',
+        schema: {
+          type: 'object',
+          properties: {
+            dueNow: { type: 'integer' },
+            newAvailable: { type: 'integer' },
+            nextDue: { type: ['string', 'null'] },
+          },
+        },
+      },
+    },
+  },
+  'GET /api/review/queue': {
+    summary: 'Start a word review round',
+    description:
+      'Due cards first, then new cards, up to the daily cap of 20 new cards. The round id goes with every answer.',
+    tag: 'Practice',
+    sharedParams: LANG,
+    query: [
+      {
+        name: 'limit',
+        description: 'Maximum cards in the round. The default is 20 and the maximum is 50.',
+        schema: { type: 'integer' },
+      },
+    ],
+    responses: {
+      '200': {
+        description: 'The round id and its cards.',
+        schema: {
+          type: 'object',
+          properties: {
+            roundId: { type: 'string' },
+            items: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  cardId: { type: 'string' },
+                  word: { type: 'string' },
+                  type: { type: 'string', enum: ['word', 'phrase'] },
+                  stage: { type: 'string', enum: ['new', 'learning', 'familiar', 'mastered'] },
+                  questionType: {
+                    type: 'string',
+                    enum: [
+                      'choose_meaning',
+                      'recognition',
+                      'fill_in',
+                      'typed_fill_in',
+                      'dictation',
+                    ],
+                  },
+                  sentence: { type: 'string' },
+                  translation: { type: 'string' },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  'POST /api/review/answer': {
+    summary: 'Answer a word card',
+    description:
+      'A repeat of the same event id returns the first result. The card must belong to the round.',
+    tag: 'Practice',
+    requestBody: {
+      required: true,
+      schema: {
+        type: 'object',
+        required: ['roundId', 'eventId', 'cardId', 'rawAnswer', 'questionType'],
+        properties: {
+          roundId: { type: 'string' },
+          eventId: { type: 'string' },
+          cardId: { type: 'string' },
+          rawAnswer: { type: 'string', enum: ['dont_know', 'fuzzy', 'know', 'right', 'wrong'] },
+          questionType: {
+            type: 'string',
+            enum: ['choose_meaning', 'recognition', 'fill_in', 'typed_fill_in', 'dictation'],
+          },
+        },
+      },
+    },
+    responses: {
+      '200': {
+        description: 'The new stage and due time.',
+        schema: {
+          type: 'object',
+          properties: {
+            cardId: { type: 'string' },
+            eventId: { type: 'string' },
+            stage: { type: 'string', enum: ['new', 'learning', 'familiar', 'mastered'] },
+            due: { type: 'string' },
+            requeue: { type: 'boolean' },
+          },
+        },
+      },
+    },
+  },
+  'POST /api/review/undo': {
+    summary: 'Undo the newest answer of a card and answer Again',
+    description:
+      'Only the newest answer of the card can be undone. A repeat of the new event id returns the first result.',
+    tag: 'Practice',
+    requestBody: {
+      required: true,
+      schema: {
+        type: 'object',
+        required: ['roundId', 'eventId', 'newEventId'],
+        properties: {
+          roundId: { type: 'string' },
+          eventId: { type: 'string' },
+          newEventId: { type: 'string' },
+        },
+      },
+    },
+    responses: {
+      '200': {
+        description: 'The card after the Again answer.',
+        schema: {
+          type: 'object',
+          properties: {
+            cardId: { type: 'string' },
+            eventId: { type: 'string' },
+            stage: { type: 'string', enum: ['new', 'learning', 'familiar', 'mastered'] },
+            due: { type: 'string' },
+            requeue: { type: 'boolean' },
+          },
+        },
+      },
+    },
+  },
   'GET /api/cloze': {
     summary: 'List practice cards',
     description: 'Cards in the language, soonest review first. Hidden cards stay out.',

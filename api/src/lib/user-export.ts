@@ -37,7 +37,12 @@ export interface UserExport {
 // the restore envelope. Ownership is also transport metadata, not learner data.
 const NON_PORTABLE_TEXT_CONTROLS = /[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g;
 
-const PORTABLE_SETTING_KEYS = ['enabledLanguages', 'targetLanguage', 'timezone'] as const;
+const PORTABLE_SETTING_KEYS = [
+  'enabledLanguages',
+  'targetLanguage',
+  'timezone',
+  'reviewGoal',
+] as const;
 
 function portableValue(value: unknown): unknown {
   if (typeof value === 'string') return value.replace(NON_PORTABLE_TEXT_CONTROLS, '');

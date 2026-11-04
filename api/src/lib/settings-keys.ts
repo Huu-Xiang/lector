@@ -42,6 +42,7 @@ const SETTING_VALUE_BYTE_LIMITS: Record<string, number> = {
   readingLevels: 1024,
   // Up to 4 interest ids, e.g. ["news","travel","science","literature"].
   readingInterests: 64,
+  reviewGoal: 24,
 };
 
 export function settingValueByteLimit(key: string): number {
@@ -60,6 +61,8 @@ export const KNOWN_SETTING_KEYS = new Set([
   'readingLevels',
   // Opt-in topics for the reading feed (setup), e.g. ["news","travel"].
   'readingInterests',
+  // Word review: 'recognize' (default) or 'recognize_spell'.
+  'reviewGoal',
   // LLM provider config (Settings → AI, setup)
   'llmProvider',
   'openaiPreset',
@@ -92,6 +95,7 @@ export const KNOWN_SETTING_KEYS = new Set([
  */
 const ANKI_TRANSPORTS = new Set(['ankiconnect', 'addon']);
 const CEFR_LEVELS = new Set(['A1', 'A2', 'B1', 'B2', 'C1', 'C2']);
+const REVIEW_GOALS = new Set(['recognize', 'recognize_spell']);
 const READING_INTERESTS = new Set(['news', 'travel', 'science', 'literature']);
 
 export function validateSettingWrite(key: string, value: unknown): string | null {
@@ -131,6 +135,9 @@ export function validateSettingWrite(key: string, value: unknown): string | null
     if (new Set(value).size !== value.length) {
       return 'readingInterests must not repeat an interest';
     }
+  }
+  if (key === 'reviewGoal' && (typeof value !== 'string' || !REVIEW_GOALS.has(value))) {
+    return "reviewGoal must be 'recognize' or 'recognize_spell'";
   }
   if (key === 'enabledLanguages') {
     if (!Array.isArray(value)) return 'enabledLanguages must be an array of language codes';

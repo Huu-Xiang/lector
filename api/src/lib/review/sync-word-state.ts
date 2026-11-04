@@ -58,6 +58,25 @@ export function newestVocabForWord(
   return newest;
 }
 
+function writeStateToWordRows(
+  userId: string,
+  language: string,
+  wordKey: string,
+  state: WordState,
+  nowIso: string,
+): void {
+  const pack = getLanguageConfig(language as LanguageCode);
+  const rows = db
+    .prepare('SELECT id, text FROM vocab WHERE userId = ? AND language = ?')
+    .all(userId, language) as Array<Pick<VocabRow, 'id' | 'text'>>;
+  const update = db.prepare(
+    'UPDATE vocab SET state = ?, stateUpdatedAt = ? WHERE id = ? AND userId = ?',
+  );
+  for (const row of rows) {
+    if (foldWord(row.text, pack) === wordKey) update.run(state, nowIso, row.id, userId);
+  }
+}
+
 function cardFor(userId: string, language: string, wordKey: string) {
   return db
     .prepare('SELECT * FROM wordCards WHERE userId = ? AND language = ? AND wordKey = ?')
@@ -70,7 +89,9 @@ export function syncWordState(input: SyncWordStateInput): void {
   const nowIso = new Date(now).toISOString();
 
   if (!input.keepRows) {
-    if (input.vocab) {
+    if (source === 'review') {
+      writeStateToWordRows(userId, language, wordKey, state, nowIso);
+    } else if (input.vocab) {
       db.prepare('UPDATE vocab SET state = ?, stateUpdatedAt = ? WHERE id = ? AND userId = ?').run(
         state,
         nowIso,

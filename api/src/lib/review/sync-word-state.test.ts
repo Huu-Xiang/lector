@@ -284,3 +284,28 @@ describe('syncWordDelete', () => {
     expect(db.prepare('SELECT 1 FROM knownWords').get()).toBeNull();
   });
 });
+
+describe('syncWordState with the review source', () => {
+  beforeEach(clear);
+  afterEach(clear);
+
+  test('writes the state to every vocab row that folds to the word, and to no other word', () => {
+    seedVocab('v1', 'harbor');
+    seedVocab('v2', 'Harbor', { createdAt: '2026-02-01T00:00:00Z' });
+    seedVocab('v3', 'quay');
+    sync('harbor', 'level1', 'reader');
+    sync('harbor', 'level2', 'review', {
+      vocab: { id: 'v2', type: 'word', createdAt: '2026-02-01T00:00:00Z' },
+    });
+    const rows = db
+      .prepare('SELECT id, state, stateUpdatedAt FROM vocab ORDER BY id')
+      .all() as Array<{
+      id: string;
+      state: string;
+      stateUpdatedAt: string;
+    }>;
+    expect(rows.map((r) => r.state)).toEqual(['level2', 'level2', 'level1']);
+    expect(rows[0].stateUpdatedAt).toBe(new Date(NOW).toISOString());
+    expect(rows[2].stateUpdatedAt).toBe(TS);
+  });
+});

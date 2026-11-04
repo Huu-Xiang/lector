@@ -8364,6 +8364,514 @@
         "x-token-scope": "stats:write"
       }
     },
+    "/api/review/answer": {
+      "post": {
+        "operationId": "postApiReviewAnswer",
+        "summary": "Answer a word card",
+        "description": "A repeat of the same event id returns the first result. The card must belong to the round.",
+        "tags": [
+          "Practice"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "roundId",
+                  "eventId",
+                  "cardId",
+                  "rawAnswer",
+                  "questionType"
+                ],
+                "properties": {
+                  "roundId": {
+                    "type": "string"
+                  },
+                  "eventId": {
+                    "type": "string"
+                  },
+                  "cardId": {
+                    "type": "string"
+                  },
+                  "rawAnswer": {
+                    "type": "string",
+                    "enum": [
+                      "dont_know",
+                      "fuzzy",
+                      "know",
+                      "right",
+                      "wrong"
+                    ]
+                  },
+                  "questionType": {
+                    "type": "string",
+                    "enum": [
+                      "choose_meaning",
+                      "recognition",
+                      "fill_in",
+                      "typed_fill_in",
+                      "dictation"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The new stage and due time.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "cardId": {
+                      "type": "string"
+                    },
+                    "eventId": {
+                      "type": "string"
+                    },
+                    "stage": {
+                      "type": "string",
+                      "enum": [
+                        "new",
+                        "learning",
+                        "familiar",
+                        "mastered"
+                      ]
+                    },
+                    "due": {
+                      "type": "string"
+                    },
+                    "requeue": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The body is malformed, or a field is not valid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The credential is missing, invalid or expired.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The token does not carry the scope this endpoint needs.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "A plan limit or a rate limit stopped the call.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanLimitError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The API failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "PersonalAccessToken": []
+          },
+          {
+            "SessionCookie": []
+          }
+        ],
+        "x-token-scope": "vocab:write"
+      }
+    },
+    "/api/review/counts": {
+      "get": {
+        "operationId": "getApiReviewCounts",
+        "summary": "Count the word cards for review",
+        "description": "Cards due now, new cards still open today, and the next due time.",
+        "tags": [
+          "Practice"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/LanguageQuery"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The counts.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "dueNow": {
+                      "type": "integer"
+                    },
+                    "newAvailable": {
+                      "type": "integer"
+                    },
+                    "nextDue": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The credential is missing, invalid or expired.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The token does not carry the scope this endpoint needs.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "A plan limit or a rate limit stopped the call.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanLimitError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The API failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "PersonalAccessToken": []
+          },
+          {
+            "SessionCookie": []
+          }
+        ],
+        "x-token-scope": "vocab:read"
+      }
+    },
+    "/api/review/queue": {
+      "get": {
+        "operationId": "getApiReviewQueue",
+        "summary": "Start a word review round",
+        "description": "Due cards first, then new cards, up to the daily cap of 20 new cards. The round id goes with every answer.",
+        "tags": [
+          "Practice"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/LanguageQuery"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Maximum cards in the round. The default is 20 and the maximum is 50.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The round id and its cards.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "roundId": {
+                      "type": "string"
+                    },
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "cardId": {
+                            "type": "string"
+                          },
+                          "word": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "word",
+                              "phrase"
+                            ]
+                          },
+                          "stage": {
+                            "type": "string",
+                            "enum": [
+                              "new",
+                              "learning",
+                              "familiar",
+                              "mastered"
+                            ]
+                          },
+                          "questionType": {
+                            "type": "string",
+                            "enum": [
+                              "choose_meaning",
+                              "recognition",
+                              "fill_in",
+                              "typed_fill_in",
+                              "dictation"
+                            ]
+                          },
+                          "sentence": {
+                            "type": "string"
+                          },
+                          "translation": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The credential is missing, invalid or expired.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The token does not carry the scope this endpoint needs.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "A plan limit or a rate limit stopped the call.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanLimitError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The API failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "PersonalAccessToken": []
+          },
+          {
+            "SessionCookie": []
+          }
+        ],
+        "x-token-scope": "vocab:read"
+      }
+    },
+    "/api/review/undo": {
+      "post": {
+        "operationId": "postApiReviewUndo",
+        "summary": "Undo the newest answer of a card and answer Again",
+        "description": "Only the newest answer of the card can be undone. A repeat of the new event id returns the first result.",
+        "tags": [
+          "Practice"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "roundId",
+                  "eventId",
+                  "newEventId"
+                ],
+                "properties": {
+                  "roundId": {
+                    "type": "string"
+                  },
+                  "eventId": {
+                    "type": "string"
+                  },
+                  "newEventId": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The card after the Again answer.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "cardId": {
+                      "type": "string"
+                    },
+                    "eventId": {
+                      "type": "string"
+                    },
+                    "stage": {
+                      "type": "string",
+                      "enum": [
+                        "new",
+                        "learning",
+                        "familiar",
+                        "mastered"
+                      ]
+                    },
+                    "due": {
+                      "type": "string"
+                    },
+                    "requeue": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The body is malformed, or a field is not valid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The credential is missing, invalid or expired.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The token does not carry the scope this endpoint needs.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "A plan limit or a rate limit stopped the call.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanLimitError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The API failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "PersonalAccessToken": []
+          },
+          {
+            "SessionCookie": []
+          }
+        ],
+        "x-token-scope": "vocab:write"
+      }
+    },
     "/api/settings": {
       "get": {
         "operationId": "getApiSettings",

@@ -33,3 +33,12 @@ describe('readingInterests setting', () => {
     expect(validateSettingWrite('readingInterests', [1])).not.toBeNull();
   });
 });
+
+describe('reviewGoal setting', () => {
+  test('accepts the two goals only', () => {
+    expect(validateSettingWrite('reviewGoal', 'recognize')).toBeNull();
+    expect(validateSettingWrite('reviewGoal', 'recognize_spell')).toBeNull();
+    expect(validateSettingWrite('reviewGoal', 'spell')).not.toBeNull();
+    expect(validateSettingWrite('reviewGoal', 1)).not.toBeNull();
+  });
+});
