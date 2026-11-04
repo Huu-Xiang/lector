@@ -7,7 +7,18 @@
       "translationLabel": "翻译",
       "translationHint": "练习时默认隐藏翻译。随时可按 <keys></keys> 切换。",
       "shown": "显示",
-      "hidden": "隐藏"
+      "hidden": "隐藏",
+      "wordReviewHeading": "单词复习",
+      "reviewGoalLabel": "复习目标",
+      "reviewGoalFailed": "无法保存复习目标。请重试。",
+      "reviewGoal": {
+        "recognize": "认识",
+        "recognize_spell": "认识并拼写"
+      },
+      "reviewGoalHint": {
+        "recognize": "见到单词能认出词义。选择词义，识别单词。",
+        "recognize_spell": "还要会写单词。熟悉和已掌握的词会要求你输入或听写。"
+      }
     },
     "prose": {
       "title": "阅读文字",

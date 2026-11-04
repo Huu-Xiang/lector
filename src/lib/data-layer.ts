@@ -129,6 +129,12 @@ import type {
   ClozeCollection,
   ClozeMasteryLevel,
   AudioTranscriptSegment,
+  ReviewAnswerResult,
+  ReviewCounts,
+  ReviewGoal,
+  ReviewQueue,
+  ReviewQuestionType,
+  ReviewRawAnswer,
 } from '@/types';
 
 // ============================================================================
@@ -1242,6 +1248,65 @@ export async function deleteSetting(key: string): Promise<void> {
 export async function getAllSettings(): Promise<Record<string, unknown>> {
   const res = await apiFetch('/api/settings');
   return res.json();
+}
+
+// ============================================================================
+// Helper Functions - Word review
+// ============================================================================
+
+const REVIEW_GOAL_SETTING_KEY = 'reviewGoal';
+
+export async function getReviewCounts(): Promise<ReviewCounts> {
+  const res = await apiFetch(`/api/review/counts${langParam()}`);
+  await requireOk(res, 'Could not load your review');
+  return res.json();
+}
+
+export async function getReviewQueue(limit = 20): Promise<ReviewQueue> {
+  const res = await apiFetch(`/api/review/queue${langParam()}&limit=${limit}`);
+  await requireOk(res, 'Could not load your review');
+  return res.json();
+}
+
+export async function submitReviewAnswer(input: {
+  roundId: string;
+  eventId: string;
+  cardId: string;
+  rawAnswer: ReviewRawAnswer;
+  questionType: ReviewQuestionType;
+}): Promise<ReviewAnswerResult> {
+  const res = await apiFetch(`/api/review/answer${langParam()}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(input),
+  });
+  await requireOk(res, 'Could not save your answer');
+  invalidateDailyStats();
+  return res.json();
+}
+
+export async function undoReviewAnswer(input: {
+  roundId: string;
+  eventId: string;
+  newEventId: string;
+}): Promise<ReviewAnswerResult> {
+  const res = await apiFetch(`/api/review/undo${langParam()}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(input),
+  });
+  await requireOk(res, 'Could not change your answer');
+  invalidateDailyStats();
+  return res.json();
+}
+
+export async function getReviewGoal(): Promise<ReviewGoal> {
+  const value = await getSetting<unknown>(REVIEW_GOAL_SETTING_KEY);
+  return value === 'recognize_spell' ? 'recognize_spell' : 'recognize';
+}
+
+export async function setReviewGoal(goal: ReviewGoal): Promise<void> {
+  await setSetting(REVIEW_GOAL_SETTING_KEY, goal);
 }
 
 // ============================================================================

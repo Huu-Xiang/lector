@@ -251,7 +251,18 @@
       "translationLabel": "Translation",
       "translationHint": "Hide the English translation by default while practicing. Toggle it anytime with <keys></keys>.",
       "shown": "Shown",
-      "hidden": "Hidden"
+      "hidden": "Hidden",
+      "wordReviewHeading": "Word review",
+      "reviewGoalLabel": "Review goal",
+      "reviewGoalFailed": "Could not save the review goal. Try again.",
+      "reviewGoal": {
+        "recognize": "Recognize",
+        "recognize_spell": "Recognize and spell"
+      },
+      "reviewGoalHint": {
+        "recognize": "Know a word when you see it. Choose meanings and recognize words.",
+        "recognize_spell": "Also write the word. Familiar and Mastered words ask you to type it or take dictation."
+      }
     },
     "prose": {
       "title": "Reading text",
@@ -1682,6 +1693,56 @@
       "surrender": "Surrender",
       "check": "Check",
       "mastery": "Mastery:"
+    },
+    "words": {
+      "loading": "Loading your words",
+      "loadFailed": "Could not load your words. Check your connection and try again.",
+      "retry": "Try again",
+      "saveFailed": "Could not save your answer. Check your connection and try again.",
+      "undoFailed": "Could not change your answer. Try again.",
+      "back": "← Back",
+      "left": "{count} left",
+      "listen": "Listen",
+      "chooseMeaning": "Choose the meaning",
+      "fillIn": "Which word fits the blank?",
+      "typedFillIn": "Type the missing word",
+      "typedPlaceholder": "Missing word",
+      "check": "Check",
+      "showAnswer": "Show answer",
+      "correct": "Correct",
+      "incorrect": "Not quite",
+      "next": "Next",
+      "wasWrong": "I was wrong",
+      "nothingDue": "Nothing to review right now.",
+      "complete": "Round complete",
+      "answered": "{count, plural, one {# word reviewed} other {# words reviewed}}",
+      "retried": "{count, plural, one {# word to see again} other {# words to see again}}",
+      "nextDue": "Next review: {time}",
+      "stage": {
+        "new": "New",
+        "learning": "Learning",
+        "familiar": "Familiar",
+        "mastered": "Mastered"
+      },
+      "goal": {
+        "recognize": "Recognize",
+        "recognize_spell": "Recognize and spell"
+      },
+      "recognition": {
+        "reveal": "Show meaning",
+        "dontKnow": "Don't know",
+        "fuzzy": "Fuzzy",
+        "know": "Know"
+      },
+      "entry": {
+        "title": "My words",
+        "ready": "{due} due, {fresh} new",
+        "open": "Review words",
+        "nothingDue": "Nothing to review right now. Next review: {time}",
+        "noWords": "Save words while you read, and they appear here to review.",
+        "failed": "Could not load your words.",
+        "goal": "Goal: {goal}"
+      }
     }
   },
   "vocab": {

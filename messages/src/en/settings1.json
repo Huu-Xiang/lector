@@ -7,7 +7,18 @@
       "translationLabel": "Translation",
       "translationHint": "Hide the English translation by default while practicing. Toggle it anytime with <keys></keys>.",
       "shown": "Shown",
-      "hidden": "Hidden"
+      "hidden": "Hidden",
+      "wordReviewHeading": "Word review",
+      "reviewGoalLabel": "Review goal",
+      "reviewGoalFailed": "Could not save the review goal. Try again.",
+      "reviewGoal": {
+        "recognize": "Recognize",
+        "recognize_spell": "Recognize and spell"
+      },
+      "reviewGoalHint": {
+        "recognize": "Know a word when you see it. Choose meanings and recognize words.",
+        "recognize_spell": "Also write the word. Familiar and Mastered words ask you to type it or take dictation."
+      }
     },
     "prose": {
       "title": "Reading text",

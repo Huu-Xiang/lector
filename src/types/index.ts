@@ -192,3 +192,46 @@ export interface Settings {
   key: string; // primary key
   value: unknown;
 }
+
+export type WordStage = 'new' | 'learning' | 'familiar' | 'mastered';
+
+export type ReviewQuestionType =
+  | 'choose_meaning'
+  | 'recognition'
+  | 'fill_in'
+  | 'typed_fill_in'
+  | 'dictation';
+
+export type RecognitionAnswer = 'dont_know' | 'fuzzy' | 'know';
+export type ReviewRawAnswer = RecognitionAnswer | 'right' | 'wrong';
+export type ReviewGoal = 'recognize' | 'recognize_spell';
+
+export interface ReviewCounts {
+  dueNow: number;
+  newAvailable: number;
+  nextDue: string | null;
+}
+
+export interface ReviewItem {
+  cardId: string;
+  word: string;
+  type: 'word' | 'phrase';
+  stage: WordStage;
+  questionType: ReviewQuestionType;
+  sentence: string;
+  translation: string;
+  choices?: string[];
+}
+
+export interface ReviewQueue {
+  roundId: string;
+  items: ReviewItem[];
+}
+
+export interface ReviewAnswerResult {
+  cardId: string;
+  eventId: string;
+  stage: WordStage;
+  due: string;
+  requeue: boolean;
+}

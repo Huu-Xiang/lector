@@ -65,6 +65,8 @@ import PageHeader from '@/components/PageHeader';
 import Feedback from './components/Feedback';
 import DictationCard from './components/Dictation/DictationCard';
 import DictationFeedback from './components/Dictation/DictationFeedback';
+import WordReviewEntry from './word-review/WordReviewEntry';
+import WordReviewRound from './word-review/WordReviewRound';
 import {
   completeOnboarding,
   encounteredOnboardingTerms,
@@ -83,7 +85,7 @@ function isInteractiveKeyTarget(event: KeyboardEvent): boolean {
   return target instanceof HTMLElement && !!target.closest('button, input, textarea, select, a');
 }
 
-export default function PracticePage() {
+function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
   const router = useRouter();
   const t = useTranslations('practice');
   const format = useFormatter();
@@ -858,6 +860,8 @@ export default function PracticePage() {
               title={practiceFormat === 'dictation' ? t('title.dictation') : t('title.cloze')}
             ></PageHeader>
 
+            {!onboardingMode && <WordReviewEntry onStart={onOpenWordReview} />}
+
             {/* Practice format: Cloze (fill the blank) vs Dictation (hear the
                 sentence, type it back). Both share the collection / round size /
                 review options below. */}
@@ -1606,4 +1610,19 @@ export default function PracticePage() {
       </TranslationDrawerSlot>
     </div>
   );
+}
+
+export default function PracticePage() {
+  const [wordReview, setWordReview] = useState(false);
+
+  if (wordReview) {
+    return (
+      <div className="flex min-h-screen">
+        <main className="mx-auto max-w-2xl min-w-0 flex-1 px-4 py-8 sm:px-6 lg:px-8">
+          <WordReviewRound onExit={() => setWordReview(false)} />
+        </main>
+      </div>
+    );
+  }
+  return <ClozePractice onOpenWordReview={() => setWordReview(true)} />;
 }

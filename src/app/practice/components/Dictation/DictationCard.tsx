@@ -21,11 +21,13 @@ export default function DictationCard({
   onSubmit,
   onSurrender,
   onSentenceBlacklisted,
+  hideMastery = false,
 }: {
   current: CurrentSentence;
   onSubmit: (typed: string) => void;
   onSurrender: (typed: string) => void;
-  onSentenceBlacklisted: () => void;
+  onSentenceBlacklisted?: () => void;
+  hideMastery?: boolean;
 }) {
   const t = useTranslations('practice.dictation');
   const [typed, setTyped] = useState('');
@@ -87,7 +89,9 @@ export default function DictationCard({
       <div className="mb-6">
         <div className="mb-4 flex items-center justify-between">
           <span className="text-sm font-medium text-muted-foreground">{t('prompt')}</span>
-          <BlacklistSentence current={current} onSentenceBlacklisted={onSentenceBlacklisted} />
+          {onSentenceBlacklisted && (
+            <BlacklistSentence current={current} onSentenceBlacklisted={onSentenceBlacklisted} />
+          )}
         </div>
 
         {/* Audio focus: a large speaker that replays on click */}
@@ -181,17 +185,18 @@ export default function DictationCard({
         </span>
       </div>
 
-      {/* Mastery indicator */}
-      <div className="mt-6 flex items-center justify-center gap-2 text-sm text-muted-foreground">
-        <span>{t('mastery')}</span>
-        <div className="flex h-2 w-24 overflow-hidden rounded-full bg-muted">
-          <div
-            className="bg-primary transition-all"
-            style={{ width: `${current.sentence.masteryLevel}%` }}
-          />
+      {!hideMastery && (
+        <div className="mt-6 flex items-center justify-center gap-2 text-sm text-muted-foreground">
+          <span>{t('mastery')}</span>
+          <div className="flex h-2 w-24 overflow-hidden rounded-full bg-muted">
+            <div
+              className="bg-primary transition-all"
+              style={{ width: `${current.sentence.masteryLevel}%` }}
+            />
+          </div>
+          <span>{current.sentence.masteryLevel}%</span>
         </div>
-        <span>{current.sentence.masteryLevel}%</span>
-      </div>
+      )}
     </div>
   );
 }
