@@ -1905,6 +1905,7 @@
       "onboardingReady": "已就绪 {count}/{target}",
       "saveAtLevel": "以学习等级 {level} 保存",
       "levelTitle": "{level} 级",
+      "levelCaption": "1 新 · 2 学习中 · 3 熟悉 · 4 掌握",
       "markKnownTitle": "标为已掌握 (K)",
       "known": "✓ 已掌握",
       "ignoreTitle": "忽略 (X)",

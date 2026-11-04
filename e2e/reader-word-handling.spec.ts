@@ -129,6 +129,16 @@ test.describe('Reader word handling', () => {
     await expect(page.locator('[data-active-word]')).toHaveCount(0);
   });
 
+  test('level buttons show the level caption', async ({ page }) => {
+    await page.getByRole('button', { name: 'Look up Perdekraal-fees' }).click();
+    const drawer = page.getByTestId('translation-drawer');
+    await expect(drawer.getByTestId('word-level-1')).toBeVisible();
+    await expect(drawer.getByTestId('word-level-caption')).toBeVisible();
+    await expect(drawer.getByTestId('word-level-caption')).toHaveText(
+      '1 New · 2 Learning · 3 Familiar · 4 Mastered',
+    );
+  });
+
   test('choosing the level that is already set clears it', async ({ page }) => {
     const word = page.getByRole('button', { name: 'Look up Perdekraal-fees' });
     await word.click();

@@ -35,6 +35,7 @@ import { addWordCard, addClozeCard, buildSourceLinkHtml } from '@/lib/anki';
 import { queueForAnki } from '@/lib/anki-queue';
 import { useAnkiTransport } from '@/lib/anki-transport';
 import { useLectorMode } from '@/lib/use-env';
+import { useRefreshOnReturn } from '@/lib/use-refresh-on-return';
 import {
   CONTENT_FILTERED,
   translateWord,
@@ -210,6 +211,15 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
 
     loadLesson();
   }, [activeLang.code, lessonId, t]);
+
+  useRefreshOnReturn(() => {
+    getKnownWordsMap()
+      .then((map) => {
+        readerWordStatesRef.current = map;
+        setReaderWordStates(map);
+      })
+      .catch(() => {});
+  });
 
   // Audio lesson (#185): fetch segments once transcription is done, and poll
   // the lesson while it's still transcribing so the reader unlocks by itself.

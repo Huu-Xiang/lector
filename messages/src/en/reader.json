@@ -89,6 +89,7 @@
       "onboardingReady": "{count}/{target} ready",
       "saveAtLevel": "Save at learning level {level}",
       "levelTitle": "Level {level}",
+      "levelCaption": "1 New · 2 Learning · 3 Familiar · 4 Mastered",
       "markKnownTitle": "Mark as known (K)",
       "known": "✓ Known",
       "ignoreTitle": "Ignore (X)",

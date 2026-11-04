@@ -9,6 +9,7 @@ import { sentenceContainsWord } from '@/lib/words';
 import { useActiveLanguage, useScreenSize } from '@/utils/hooks';
 import { TranslationDrawerProps } from './types';
 import { wordStateColors } from './constants';
+import { LevelCaption } from './LevelCaption';
 import { ChevronRight, RefreshCw, Sparkles, Volume2, X, Zap } from 'lucide-react';
 import TargetText from '@/components/TargetText';
 import NestedWordButton from './components/NestedWordButton';
@@ -621,6 +622,7 @@ export default function TranslationDrawer({
                   </div>
                 </div>
               )}
+              {onSetLevel && <LevelCaption />}
               {(onSetLevel || onMarkKnown || onIgnore) && (
                 <div className="flex flex-wrap items-center gap-2">
                   {onSetLevel && (
