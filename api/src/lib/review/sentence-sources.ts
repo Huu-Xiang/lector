@@ -102,7 +102,6 @@ function bundledBank(language: string, words: string[]): SentenceBankRow[] | nul
     banks.set(language, created);
     const pack = getLanguageConfig(language as LanguageCode);
     loadSentenceBankRows(language)
-      .catch(() => [])
       .then((rows) => {
         for (const row of rows) {
           if (row.source === 'mined' || typeof row.id !== 'number') continue;
@@ -112,6 +111,10 @@ function bundledBank(language: string, words: string[]): SentenceBankRow[] | nul
           else created.byWord.set(key, [row]);
         }
         created.loaded = true;
+      })
+      .catch((error) => {
+        console.error(`Sentence bank load failed for ${language}`, error);
+        banks.delete(language);
       });
   }
   if (!entry.loaded) return null;
@@ -310,8 +313,7 @@ function tatoebaSentences(
 }
 
 /**
- * The next sentence for a card: its saved sentence on the first serve, then
- * library sentences, then bundled Tatoeba ones, then the saved sentence again.
+ * Source order: saved sentence, library, bundled Tatoeba, saved sentence again.
  * The sentence served last time is skipped whenever another exists.
  */
 export function findSentence(

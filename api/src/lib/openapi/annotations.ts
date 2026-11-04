@@ -1673,7 +1673,7 @@ const practiceOps: Record<string, OperationDoc> = {
     notFound: true,
     summary: 'Record a practice answer',
     description:
-      'The client owns the schedule. Send the new mastery level and the next review time with the answer.',
+      'The server schedules the card with FSRS. `masteryLevel` and `nextReview` are accepted but ignored; the response carries the schedule it chose.',
     tag: 'Practice',
     sharedParams: LANG,
     pathParams: { id: 'Card identifier.' },
@@ -1686,7 +1686,7 @@ const practiceOps: Record<string, OperationDoc> = {
           masteryLevel: { type: 'integer', enum: [0, 25, 50, 75, 100] },
           nextReview: ISO_DATE_TIME,
         },
-        required: ['correct', 'masteryLevel', 'nextReview'],
+        required: ['correct'],
       },
     },
     responses: { '200': { description: 'The answer is recorded.', schema: ref('Success') } },

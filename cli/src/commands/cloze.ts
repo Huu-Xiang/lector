@@ -46,7 +46,7 @@ export async function handle(
     }
 
     case 'review': {
-      if (!id) { console.error('Usage: lector cloze review <id> --correct --mastery 50'); process.exit(1); }
+      if (!id) { console.error('Usage: lector cloze review <id> [--correct]'); process.exit(1); }
       const data = await client.post(`/api/cloze/${id}/review`, {
         correct: 'correct' in flags,
         masteryLevel: flags.mastery ? parseInt(flags.mastery) : undefined,

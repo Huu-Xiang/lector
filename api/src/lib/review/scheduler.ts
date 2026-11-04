@@ -15,8 +15,10 @@ export const MAX_INTERVAL_DAYS = 365;
 const DAY_MS = 86_400_000;
 const SEED_DIFFICULTY = 5;
 
-export type CardState = 'new' | 'learning' | 'review' | 'relearning';
-export type ReviewRating = 'again' | 'hard' | 'good';
+export const CARD_STATES = ['new', 'learning', 'review', 'relearning'] as const;
+export type CardState = (typeof CARD_STATES)[number];
+export const REVIEW_RATINGS = ['again', 'hard', 'good'] as const;
+export type ReviewRating = (typeof REVIEW_RATINGS)[number];
 export type ReviewAnswer = 'dont_know' | 'fuzzy' | 'know' | 'right' | 'wrong';
 
 /** Times are epoch ms; stability, elapsedDays and scheduledDays are days. */

@@ -35,7 +35,13 @@ import {
   vocabContentBytes,
 } from '../lib/storage-limits';
 import { countableLessonBytes, isShippedLibraryLesson } from '../lib/library-content';
-import { FSRS_CONFIG_VERSION, FSRS_MODEL } from '../lib/review/scheduler';
+import {
+  CARD_STATES,
+  FSRS_CONFIG_VERSION,
+  FSRS_MODEL,
+  REVIEW_RATINGS,
+} from '../lib/review/scheduler';
+import { RAW_ANSWERS } from '../lib/review/answer';
 import { insertMissingWordCards } from '../lib/review/reconcile';
 
 const app = new Hono();
@@ -188,9 +194,9 @@ const LEARNER_INTERESTS = new Set([
 ]);
 const ONBOARDING_STATUSES = new Set(['in_progress', 'completed', 'skipped']);
 const ONBOARDING_STEPS = new Set(['reader', 'practice', 'summary']);
-const CARD_STATES = new Set(['new', 'learning', 'review', 'relearning']);
-const REVIEW_RATINGS = new Set(['again', 'hard', 'good']);
-const REVIEW_ANSWERS = new Set(['dont_know', 'fuzzy', 'know', 'right', 'wrong']);
+const CARD_STATE_SET = new Set<string>(CARD_STATES);
+const REVIEW_RATING_SET = new Set<string>(REVIEW_RATINGS);
+const REVIEW_ANSWER_SET = new Set<string>(RAW_ANSWERS);
 const REVIEW_TOKEN = /^[A-Za-z0-9_.-]{1,32}$/;
 const MAX_WORD_KEY_BYTES = 256;
 
@@ -863,7 +869,7 @@ app.post(
       if (row.type !== undefined && row.type !== 'word' && row.type !== 'phrase') {
         return c.json({ error: "wordCards.type must be 'word' or 'phrase'" }, 400);
       }
-      if (row.state !== undefined && !CARD_STATES.has(row.state)) {
+      if (row.state !== undefined && !CARD_STATE_SET.has(row.state)) {
         return c.json({ error: 'wordCards.state is invalid' }, 400);
       }
       if (
@@ -900,13 +906,13 @@ app.post(
     }
 
     for (const row of data.wordReviewLog ?? []) {
-      if (!REVIEW_RATINGS.has(row.rating)) {
+      if (!REVIEW_RATING_SET.has(row.rating)) {
         return c.json({ error: 'wordReviewLog.rating is invalid' }, 400);
       }
-      if (!REVIEW_ANSWERS.has(row.rawAnswer)) {
+      if (!REVIEW_ANSWER_SET.has(row.rawAnswer)) {
         return c.json({ error: 'wordReviewLog.rawAnswer is invalid' }, 400);
       }
-      if (!CARD_STATES.has(row.prevState)) {
+      if (!CARD_STATE_SET.has(row.prevState)) {
         return c.json({ error: 'wordReviewLog.prevState is invalid' }, 400);
       }
       for (const field of ['questionType', 'source', 'modelVersion'] as const) {

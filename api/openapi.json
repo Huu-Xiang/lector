@@ -2249,7 +2249,7 @@
       "post": {
         "operationId": "postApiClozeByIdReview",
         "summary": "Record a practice answer",
-        "description": "The client owns the schedule. Send the new mastery level and the next review time with the answer.",
+        "description": "The server schedules the card with FSRS. `masteryLevel` and `nextReview` are accepted but ignored; the response carries the schedule it chose.",
         "tags": [
           "Practice"
         ],
@@ -2293,9 +2293,7 @@
                   }
                 },
                 "required": [
-                  "correct",
-                  "masteryLevel",
-                  "nextReview"
+                  "correct"
                 ]
               }
             }

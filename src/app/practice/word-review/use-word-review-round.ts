@@ -227,11 +227,13 @@ export function useWordReviewRound() {
   const [round, dispatch] = useReducer(wordRoundReducer, undefined, createInitialWordRound);
   const busy = useRef(false);
   const requested = useRef(new Set<string>());
+  const pendingEvents = useRef(new Map<string, string>());
 
   const start = useCallback(
     async function load(size = 20) {
       dispatch({ type: 'begin' });
       requested.current.clear();
+      pendingEvents.current.clear();
       try {
         const queue = await getReviewQueue(size);
         dispatch({ type: 'loaded', roundId: queue.roundId, items: queue.items });
@@ -249,7 +251,9 @@ export function useWordReviewRound() {
     async (item: ReviewItem, rawAnswer: ReviewRawAnswer, questionType: ReviewQuestionType) => {
       if (busy.current) return false;
       busy.current = true;
-      const eventId = crypto.randomUUID();
+      const eventKey = `${round.roundId}:${item.cardId}:${rawAnswer}:${questionType}`;
+      const eventId = pendingEvents.current.get(eventKey) ?? crypto.randomUUID();
+      pendingEvents.current.set(eventKey, eventId);
       try {
         const result = await submitReviewAnswer({
           roundId: round.roundId,
@@ -260,6 +264,7 @@ export function useWordReviewRound() {
         });
         if (rawAnswer === 'right') playCorrectSound();
         if (rawAnswer === 'wrong') playIncorrectSound();
+        pendingEvents.current.delete(eventKey);
         dispatch({ type: 'answered', item, eventId, rawAnswer, result });
         return true;
       } catch {

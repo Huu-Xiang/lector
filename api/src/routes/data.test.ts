@@ -1136,6 +1136,47 @@ describe('export/restore — word cards and review log', () => {
     );
   });
 
+  test('a restore rejects invalid word-review rows with a 400', async () => {
+    seedWordReview();
+    const backup = (await (await app.request('/')).json()) as {
+      wordCards: Record<string, unknown>[];
+      wordReviewLog: Record<string, unknown>[];
+    };
+    const cases: [string, (b: typeof backup) => void, string][] = [
+      ['rating', (b) => (b.wordReviewLog[0].rating = 'x'), 'wordReviewLog.rating is invalid'],
+      [
+        'rawAnswer',
+        (b) => (b.wordReviewLog[0].rawAnswer = 'x'),
+        'wordReviewLog.rawAnswer is invalid',
+      ],
+      [
+        'prevState',
+        (b) => (b.wordReviewLog[0].prevState = 'x'),
+        'wordReviewLog.prevState is invalid',
+      ],
+      ['card state', (b) => (b.wordCards[0].state = 'x'), 'wordCards.state is invalid'],
+      [
+        'card type',
+        (b) => (b.wordCards[0].type = 'sentence'),
+        "wordCards.type must be 'word' or 'phrase'",
+      ],
+      ['empty word key', (b) => (b.wordCards[0].wordKey = ''), 'wordCards.wordKey must be'],
+      [
+        'long word key',
+        (b) => (b.wordCards[0].wordKey = 'a'.repeat(257)),
+        'wordCards.wordKey must be',
+      ],
+    ];
+    for (const [, mutate, message] of cases) {
+      const copy = structuredClone(backup);
+      mutate(copy);
+      reset();
+      const response = await importData(copy);
+      expect(response.status).toBe(400);
+      expect(((await response.json()) as { error: string }).error).toContain(message);
+    }
+  });
+
   test('a restore without word-review arrays leaves both tables empty', async () => {
     seedWordReview();
     const backup = (await (await app.request('/')).json()) as Record<string, unknown>;

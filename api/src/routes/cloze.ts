@@ -963,10 +963,10 @@ app.post('/:id/review', async (c) => {
     return c.json({ error: correctError ?? 'correct is required' }, 400);
   }
   const masteryError = validateMasteryLevel(body.masteryLevel, 'masteryLevel', {
-    optional: false,
+    optional: true,
   });
   if (masteryError) return c.json({ error: masteryError }, 400);
-  const nextReviewError = validateTimestamp(body.nextReview, 'nextReview', { optional: false });
+  const nextReviewError = validateTimestamp(body.nextReview, 'nextReview', { optional: true });
   if (nextReviewError) return c.json({ error: nextReviewError }, 400);
 
   const correct = booleanLikeToSql(body.correct as boolean | 0 | 1) === 1;

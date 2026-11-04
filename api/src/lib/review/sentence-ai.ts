@@ -100,8 +100,7 @@ function mayRequest(deps: SentenceAiDeps, userId: string, byok: boolean): boolea
 const UNSHAREABLE = /https?:|www\.|@/i;
 
 /**
- * Translate a non-learner sentence into the learner's own language. Reads the shared
- * cache first, then asks the provider. A managed answer is stored; a BYOK answer is not.
+ * A managed answer is stored in the shared cache; a BYOK answer is not.
  * Returns null on any failure or when a burst limit is reached.
  */
 export async function translateSentence(
