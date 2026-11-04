@@ -313,3 +313,82 @@ describe('POST /api/vocab/bulk-delete (#569)', () => {
     expect(vocabIds()).toEqual(['v1']);
   });
 });
+
+describe('vocab routes keep word cards in step', () => {
+  const clear = () => {
+    db.prepare('DELETE FROM wordCards').run();
+    db.prepare('DELETE FROM knownWords').run();
+    db.prepare('DELETE FROM vocab').run();
+  };
+  beforeEach(clear);
+  afterEach(clear);
+
+  const send = (method: string, path: string, body: unknown) =>
+    app.request(path, {
+      method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+  const save = (id: string, text: string, state?: string) =>
+    send('POST', '/', { id, text, language: 'en', state });
+  const cardRows = () =>
+    db.prepare('SELECT wordKey, state, stability, retiredAt, vocabId FROM wordCards').all() as {
+      wordKey: string;
+      state: string;
+      stability: number;
+      retiredAt: string | null;
+      vocabId: string;
+    }[];
+
+  test('create makes one New card, and a case variant adds none', async () => {
+    expect((await save('v1', 'harbor', 'level1')).status).toBe(200);
+    expect((await save('v2', 'Harbor', 'level1')).status).toBe(200);
+
+    const rows = cardRows();
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toMatchObject({ wordKey: 'harbor', state: 'new', vocabId: 'v2' });
+  });
+
+  test('create with state known makes no card', async () => {
+    await save('v1', 'quay', 'known');
+    expect(cardRows()).toHaveLength(0);
+  });
+
+  test('update seeds the card from the level and known retires it', async () => {
+    await save('v1', 'harbor', 'level1');
+    await send('PUT', '/v1', { state: 'level3' });
+    expect(cardRows()[0]).toMatchObject({ state: 'review', stability: 10, retiredAt: null });
+
+    await send('PUT', '/v1', { state: 'known' });
+    expect(cardRows()[0].retiredAt).not.toBeNull();
+    expect(db.prepare("SELECT state FROM knownWords WHERE word = 'harbor'").get()).toEqual({
+      state: 'known',
+    });
+
+    await send('PUT', '/v1', { state: 'level4' });
+    expect(cardRows()[0].retiredAt).toBeNull();
+  });
+
+  test('delete keeps the card while another row folds to the word, then removes it', async () => {
+    await save('v1', 'harbor', 'level2');
+    await save('v2', 'Harbor', 'level2');
+
+    expect((await app.request('/v2', { method: 'DELETE' })).status).toBe(200);
+    expect(cardRows()).toHaveLength(1);
+    expect(cardRows()[0].vocabId).toBe('v1');
+
+    await app.request('/v1', { method: 'DELETE' });
+    expect(cardRows()).toHaveLength(0);
+    expect(db.prepare('SELECT 1 FROM knownWords').get()).toBeNull();
+  });
+
+  test('bulk delete removes the cards of fully deleted words only', async () => {
+    await save('v1', 'harbor', 'level2');
+    await save('v2', 'Harbor', 'level2');
+    await save('v3', 'quay', 'level2');
+
+    const res = await send('POST', '/bulk-delete', { vocabIDs: ['v2', 'v3'] });
+    expect(res.status).toBe(200);
+    expect(cardRows().map((r) => r.wordKey)).toEqual(['harbor']);
+  });
+});

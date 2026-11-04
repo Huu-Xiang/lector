@@ -57,6 +57,7 @@ function vocabRow(
 }
 
 function clear() {
+  db.prepare('DELETE FROM wordCards').run();
   db.prepare('DELETE FROM vocab').run();
   db.prepare('DELETE FROM anki_pending').run();
   db.prepare('DELETE FROM anki_collections').run();
@@ -614,6 +615,32 @@ describe('POST /api/anki/reviews', () => {
       )
       .get('huis') as { state: string };
     expect(known.state).toBe('known');
+  });
+
+  test('an upgrade moves the word card, and an import creates one', async () => {
+    seedVocab('learning', 'huis', { state: 'level1' });
+    const insertCard = db.prepare(
+      `INSERT INTO wordCards (userId, id, language, wordKey, vocabId, type, state, due, modelVersion, configVersion, createdAt, updatedAt)
+       VALUES ('local', 'c1', 'af', 'huis', 'learning', 'word', 'new', ?, 'FSRS-6', 1, ?, ?)`,
+    );
+    insertCard.run(TS, TS, TS);
+
+    const res = await post('/reviews', {
+      reviews: [
+        { lectorId: 'learning', type: 3, interval: 5 },
+        { word: 'Berge', lang: 'af', type: 3, interval: 5, noteId: 42 },
+      ],
+    });
+    expect(res.status).toBe(200);
+
+    expect(vocabRow('learning')!.state).toBe('level2');
+    const cards = db
+      .prepare('SELECT wordKey, state, stability FROM wordCards ORDER BY wordKey')
+      .all();
+    expect(cards).toEqual([
+      { wordKey: 'berge', state: 'review', stability: 2 },
+      { wordKey: 'huis', state: 'review', stability: 2 },
+    ]);
   });
 
   test('falls back to folded word matching and keeps the strongest card per target', async () => {

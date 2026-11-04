@@ -1146,7 +1146,46 @@ describe('export/restore — word cards and review log', () => {
     const restored = await importData(backup);
     expect(restored.status).toBe(200);
     expect(db.prepare('SELECT COUNT(*) AS n FROM vocab').get()).toEqual({ n: 1 });
-    expect(db.prepare('SELECT COUNT(*) AS n FROM wordCards').get()).toEqual({ n: 0 });
     expect(db.prepare('SELECT COUNT(*) AS n FROM wordReviewLog').get()).toEqual({ n: 0 });
+  });
+
+  test('a restore without word-review arrays creates one card per saved word', async () => {
+    seedWordReview();
+    const backup = (await (await app.request('/')).json()) as Record<string, unknown>;
+    delete backup.wordCards;
+    delete backup.wordReviewLog;
+    const vocab = backup.vocab as Record<string, unknown>[];
+    vocab.push(
+      { ...vocab[0], id: 'voc-maison-2', text: 'maison' },
+      {
+        ...vocab[0],
+        id: 'voc-known',
+        text: 'chat',
+        state: 'known',
+      },
+    );
+
+    reset();
+    expect((await importData(backup)).status).toBe(200);
+    expect(db.prepare('SELECT wordKey, state, stability FROM wordCards').all()).toEqual([
+      { wordKey: 'maison', state: 'review', stability: 2 },
+    ]);
+
+    expect((await importData(backup)).status).toBe(200);
+    expect(db.prepare('SELECT COUNT(*) AS n FROM wordCards').get()).toEqual({ n: 1 });
+  });
+
+  test('a restored Mastered card stays active when its known state comes back', async () => {
+    seedWordReview();
+    db.prepare("UPDATE vocab SET state = 'known'").run();
+    db.prepare('UPDATE wordCards SET stability = 40').run();
+    const backup = (await (await app.request('/')).json()) as Record<string, unknown>;
+
+    reset();
+    expect((await importData(backup)).status).toBe(200);
+    expect(db.prepare('SELECT retiredAt, stability FROM wordCards').get()).toEqual({
+      retiredAt: null,
+      stability: 40,
+    });
   });
 });

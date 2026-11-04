@@ -1,7 +1,7 @@
 import { Hono, type Context, type Next } from 'hono';
 import { config } from '../lib/config';
 import { getCurrentUserId } from '../lib/user';
-import { db, VocabRow, AnkiCardType, WordState } from '../db';
+import { db, VocabRow, AnkiCardType, WordState, type VocabType } from '../db';
 import { getActiveLanguageCode, packForLanguage, resolveLanguage } from '../lib/active-language';
 import { getTodayDate } from '../lib/dates';
 import { foldWord, getLanguageConfig } from '../lib/languages';
@@ -23,6 +23,7 @@ import {
   upgradeAnkiRequest,
 } from '../lib/anki-protocol';
 import { randomUUID } from 'crypto';
+import { syncWordState } from '../lib/review/sync-word-state';
 import { entitlements, planLimitResponse, type AtomicLimitCheck } from '../lib/entitlements';
 import {
   aggregateGrowthCheck,
@@ -803,10 +804,15 @@ app.post('/reviews', async (c) => {
     // One vocab snapshot per call for the word-fallback resolution — folded
     // comparison happens in app code, never SQL LOWER() (#289).
     const allVocab = db
-      .prepare('SELECT id, text, state, language FROM vocab WHERE userId = ?')
-      .all(userId) as Array<Pick<VocabRow, 'id' | 'text' | 'state' | 'language'>>;
+      .prepare('SELECT id, text, type, state, language, createdAt FROM vocab WHERE userId = ?')
+      .all(userId) as Array<
+      Pick<VocabRow, 'id' | 'text' | 'type' | 'state' | 'language' | 'createdAt'>
+    >;
     const byId = new Map(allVocab.map((v) => [v.id, v]));
-    const byWord = new Map<string, Pick<VocabRow, 'id' | 'text' | 'state' | 'language'>>();
+    const byWord = new Map<
+      string,
+      Pick<VocabRow, 'id' | 'text' | 'type' | 'state' | 'language' | 'createdAt'>
+    >();
     for (const v of allVocab) {
       byWord.set(
         `${v.language}:${foldWord(v.text, getLanguageConfig(resolveLanguage(v.language, userId)))}`,
@@ -816,7 +822,15 @@ app.post('/reviews', async (c) => {
 
     const now = new Date().toISOString();
     type PlannedReviewWrite =
-      | { kind: 'update'; id: string; state: WordState; word: string; language: string }
+      | {
+          kind: 'update';
+          id: string;
+          type: VocabType;
+          createdAt: string;
+          state: WordState;
+          word: string;
+          language: string;
+        }
       | {
           kind: 'create';
           id: string;
@@ -848,6 +862,8 @@ app.post('/reviews', async (c) => {
         planned.push({
           kind: 'update',
           id: entry.id,
+          type: entry.type,
+          createdAt: entry.createdAt,
           state,
           word: foldWord(entry.text, getLanguageConfig(entryLang)),
           language: entryLang,
@@ -876,7 +892,14 @@ app.post('/reviews', async (c) => {
         noteId,
       };
       planned.push(createdRow);
-      const importedRow = { id, text: folded, state, language: lang };
+      const importedRow = {
+        id,
+        text: folded,
+        type: 'word' as const,
+        state,
+        language: lang,
+        createdAt: now,
+      };
       byId.set(id, importedRow);
       byWord.set(`${lang}:${folded}`, importedRow);
     }
@@ -943,13 +966,6 @@ app.post('/reviews', async (c) => {
       ...batchGrowthCheck(vocabGrowth + knownGrowth),
     ];
 
-    const updateState = db.prepare(
-      'UPDATE vocab SET state = ?, stateUpdatedAt = ? WHERE id = ? AND userId = ?',
-    );
-    const upsertKnown = db.prepare(
-      `INSERT INTO knownWords (userId, word, language, state) VALUES (?, ?, ?, ?)
-       ON CONFLICT(userId, word, language) DO UPDATE SET state = excluded.state`,
-    );
     const insertVocab = db.prepare(`
       INSERT INTO vocab (id, text, type, sentence, translation, state, stateUpdatedAt, reviewCount, bookId, chapter, createdAt, pushedToAnki, ankiNoteId, language, userId)
       VALUES (?, ?, 'word', ?, ?, ?, ?, 0, NULL, NULL, ?, 1, ?, ?, ?)
@@ -957,7 +973,15 @@ app.post('/reviews', async (c) => {
     const verdict = entitlements.reserveCount(userId, checks, () => {
       for (const write of planned) {
         if (write.kind === 'update') {
-          updateState.run(write.state, now, write.id, userId);
+          syncWordState({
+            userId,
+            language: write.language,
+            wordKey: write.word,
+            state: write.state,
+            source: 'anki',
+            vocab: { id: write.id, type: write.type, createdAt: write.createdAt },
+            now: Date.parse(now),
+          });
         } else {
           insertVocab.run(
             write.id,
@@ -971,8 +995,18 @@ app.post('/reviews', async (c) => {
             write.language,
             userId,
           );
+          const row = { id: write.id, type: 'word' as const, createdAt: now };
+          syncWordState({
+            userId,
+            language: write.language,
+            wordKey: write.word,
+            state: write.state,
+            source: 'anki',
+            vocab: row,
+            newest: row,
+            now: Date.parse(now),
+          });
         }
-        upsertKnown.run(userId, write.word, write.language, write.state);
       }
     });
     if (!verdict.allowed) return planLimitResponse(c, verdict);

@@ -91,3 +91,41 @@ describe('known-words route', () => {
     );
   });
 });
+
+describe('known-words route and word cards', () => {
+  beforeEach(() => {
+    db.prepare('DELETE FROM wordCards').run();
+    db.prepare('DELETE FROM vocab').run();
+    reset();
+  });
+  afterEach(() => {
+    db.prepare('DELETE FROM wordCards').run();
+    db.prepare('DELETE FROM vocab').run();
+    reset();
+  });
+
+  test('a bulk import retires the card of a known word and creates no card for a stray word', async () => {
+    db.prepare(
+      `INSERT INTO vocab (id, text, type, sentence, translation, state, stateUpdatedAt, createdAt, language)
+       VALUES ('v1', 'harbor', 'word', 's', 't', 'level2', '2026-01-01T00:00:00Z', '2026-01-01T00:00:00Z', 'en')`,
+    ).run();
+    db.prepare(
+      `INSERT INTO wordCards (userId, id, language, wordKey, vocabId, type, state, due, modelVersion, configVersion, createdAt, updatedAt)
+       VALUES ('local', 'c1', 'en', 'harbor', 'v1', 'word', 'new', '2026-01-01T00:00:00Z', 'FSRS-6', 1, '2026-01-01T00:00:00Z', '2026-01-01T00:00:00Z')`,
+    ).run();
+
+    const response = await post({
+      language: 'en',
+      updates: [
+        { word: 'Harbor', state: 'known' },
+        { word: 'stray', state: 'level2' },
+      ],
+    });
+
+    expect(response.status).toBe(200);
+    expect(
+      db.prepare("SELECT retiredAt IS NOT NULL AS retired FROM wordCards WHERE id = 'c1'").get(),
+    ).toEqual({ retired: 1 });
+    expect(db.prepare('SELECT COUNT(*) AS n FROM wordCards').get()).toEqual({ n: 1 });
+  });
+});

@@ -1,6 +1,6 @@
 import type { SQLQueryBindings } from 'bun:sqlite';
 import { Hono } from 'hono';
-import { db, VocabRow } from '../db';
+import { db, VocabRow, type WordState } from '../db';
 import { resolveLanguage } from '../lib/active-language';
 import { foldWord, getLanguageConfig, normalizeText } from '../lib/languages';
 import { getCurrentUserId } from '../lib/user';
@@ -24,6 +24,7 @@ import {
   validateWordKey,
 } from '../lib/persisted-input';
 import { notifyVocabSaved } from '../lib/lifecycle-email';
+import { syncWordDelete, syncWordState } from '../lib/review/sync-word-state';
 
 const app = new Hono();
 const VOCAB_TYPES = new Set(['word', 'phrase'] as const);
@@ -196,10 +197,17 @@ app.post('/', async (c) => {
       userId,
     );
 
-    db.prepare(
-      `INSERT INTO knownWords (userId, word, language, state) VALUES (?, ?, ?, ?)
-       ON CONFLICT(userId, word, language) DO UPDATE SET state = excluded.state`,
-    ).run(userId, foldedText, lang, body.state ?? 'new');
+    const row = { id, type: body.type ?? 'word', createdAt: now };
+    syncWordState({
+      userId,
+      language: lang,
+      wordKey: foldedText,
+      state: body.state ?? 'new',
+      source: 'reader',
+      vocab: row,
+      newest: row,
+      now: Date.parse(now),
+    });
   });
   if (!verdict.allowed) return planLimitResponse(c, verdict);
 
@@ -254,8 +262,6 @@ app.put('/:id', async (c) => {
   let knownWrite: { word: string; language: string; state: string } | null = null;
 
   if (body.state !== undefined) {
-    updates.push('state = ?', 'stateUpdatedAt = ?');
-    values.push(body.state, new Date().toISOString());
     const vocabLang = existing.language;
     const vocabPack = getLanguageConfig(resolveLanguage(vocabLang, userId));
     knownWrite = {
@@ -308,18 +314,24 @@ app.put('/:id', async (c) => {
     ),
   ];
 
-  if (updates.length > 0) {
+  if (updates.length > 0 || knownWrite) {
     values.push(id, userId);
     const verdict = entitlements.reserveCount(userId, checks, () => {
-      if (knownWrite) {
-        db.prepare(
-          `INSERT INTO knownWords (userId, word, language, state) VALUES (?, ?, ?, ?)
-           ON CONFLICT(userId, word, language) DO UPDATE SET state = excluded.state`,
-        ).run(userId, knownWrite.word, knownWrite.language, knownWrite.state);
+      if (updates.length > 0) {
+        db.prepare(`UPDATE vocab SET ${updates.join(', ')} WHERE id = ? AND userId = ?`).run(
+          ...values,
+        );
       }
-      db.prepare(`UPDATE vocab SET ${updates.join(', ')} WHERE id = ? AND userId = ?`).run(
-        ...values,
-      );
+      if (knownWrite) {
+        syncWordState({
+          userId,
+          language: knownWrite.language,
+          wordKey: knownWrite.word,
+          state: knownWrite.state as WordState,
+          source: 'reader',
+          vocab: existing,
+        });
+      }
     });
     if (!verdict.allowed) return planLimitResponse(c, verdict);
   }
@@ -340,22 +352,12 @@ app.delete('/:id', (c) => {
   const vocabLang = vocab.language;
   db.prepare('DELETE FROM vocab WHERE id = ? AND userId = ?').run(id, userId);
 
-  // Compare folded keys in app code, not SQL (#289): SQLite's LOWER() is
-  // ASCII-only, so LOWER('HÄUSER') keeps the Ä and case-variant duplicates
-  // were miscounted for any non-ASCII word — Cyrillic/Greek entirely so.
   const vocabPack = getLanguageConfig(resolveLanguage(vocabLang, userId));
-  const foldedText = foldWord(vocab.text, vocabPack);
-  const remaining = db
-    .prepare('SELECT text FROM vocab WHERE userId = ? AND language = ?')
-    .all(userId, vocabLang) as { text: string }[];
-  const others = remaining.filter((r) => foldWord(r.text, vocabPack) === foldedText).length;
-  if (others === 0) {
-    db.prepare('DELETE FROM knownWords WHERE userId = ? AND word = ? AND language = ?').run(
-      userId,
-      foldedText,
-      vocabLang,
-    );
-  }
+  syncWordDelete({
+    userId,
+    language: vocabLang,
+    wordKey: foldWord(vocab.text, vocabPack),
+  });
 
   return c.json({ success: true });
 });
@@ -396,10 +398,6 @@ app.post('/bulk-delete', async (c) => {
     'SELECT text, language FROM vocab WHERE id = ? AND userId = ?',
   );
   const deleteVocab = db.prepare('DELETE FROM vocab WHERE id = ? AND userId = ?');
-  const selectRemaining = db.prepare('SELECT text FROM vocab WHERE userId = ? AND language = ?');
-  const deleteKnownWords = db.prepare(
-    'DELETE FROM knownWords WHERE userId = ? AND word = ? AND language = ?',
-  );
 
   let deleted = 0;
 
@@ -419,11 +417,7 @@ app.post('/bulk-delete', async (c) => {
       const vocabLang = vocab.language;
       const vocabPack = getLanguageConfig(resolveLanguage(vocabLang, userId));
       const foldedText = foldWord(vocab.text, vocabPack);
-      const remaining = selectRemaining.all(userId, vocabLang) as { text: string }[];
-      const others = remaining.filter((r) => foldWord(r.text, vocabPack) === foldedText).length;
-      if (others === 0) {
-        deleteKnownWords.run(userId, foldedText, vocabLang);
-      }
+      syncWordDelete({ userId, language: vocabLang, wordKey: foldedText });
     });
   })(body.vocabIDs);
 

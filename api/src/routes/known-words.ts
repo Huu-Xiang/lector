@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { db, KnownWordRow } from '../db';
+import { db, KnownWordRow, type WordState } from '../db';
 import { resolveLanguage } from '../lib/active-language';
 import { foldWord, getLanguageConfig } from '../lib/languages';
 import { getCurrentUserId } from '../lib/user';
@@ -11,6 +11,7 @@ import {
   utf8Bytes,
 } from '../lib/storage-limits';
 import { validateEnum, validateOptionalLanguage, validateWordKey } from '../lib/persisted-input';
+import { syncWordState } from '../lib/review/sync-word-state';
 
 const app = new Hono();
 const WORD_STATES = new Set([
@@ -88,15 +89,17 @@ app.post('/', async (c) => {
     ...batchGrowthCheck(growthBytes),
   ];
 
-  const stmt = db.prepare(
-    `INSERT INTO knownWords (userId, word, language, state) VALUES (?, ?, ?, ?)
-     ON CONFLICT(userId, word, language) DO UPDATE SET state = excluded.state`,
-  );
   const verdict = entitlements.reserveCount(userId, checks, () => {
     for (const [word, state] of normalized) {
       // Keys are folded (#289): NFC + per-script case fold, enforced
       // server-side so every client (UI, PAT, CLI) lands on the same key.
-      stmt.run(userId, word, lang, state);
+      syncWordState({
+        userId,
+        language: lang,
+        wordKey: word,
+        state: state as WordState,
+        source: 'import',
+      });
     }
   });
   if (!verdict.allowed) return planLimitResponse(c, verdict);

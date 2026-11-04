@@ -36,6 +36,7 @@ import {
 } from '../lib/storage-limits';
 import { countableLessonBytes, isShippedLibraryLesson } from '../lib/library-content';
 import { FSRS_CONFIG_VERSION, FSRS_MODEL } from '../lib/review/scheduler';
+import { insertMissingWordCards } from '../lib/review/reconcile';
 
 const app = new Hono();
 
@@ -1570,6 +1571,12 @@ app.post(
           );
           results.wordCards++;
         }
+      }
+
+      for (const { language } of db
+        .prepare('SELECT DISTINCT language FROM vocab WHERE userId = ?')
+        .all(userId) as Array<{ language: string }>) {
+        insertMissingWordCards(userId, language, 'restore');
       }
 
       if (finalReviewLog.size) {
