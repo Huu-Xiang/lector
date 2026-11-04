@@ -45,6 +45,8 @@ function envTaskModels(): Partial<Record<LLMTask, string>> {
     ['word-gloss', process.env.OPENAI_COMPAT_WORD_GLOSS_MODEL],
     ['phrase-simple', process.env.OPENAI_COMPAT_SIMPLE_PHRASE_MODEL],
     ['context-simple', process.env.OPENAI_COMPAT_SIMPLE_CONTEXT_MODEL],
+    ['sentence-translation', process.env.OPENAI_COMPAT_SIMPLE_CONTEXT_MODEL],
+    ['example-sentence', process.env.OPENAI_COMPAT_SIMPLE_CONTEXT_MODEL],
     ['phrase-rich', process.env.OPENAI_COMPAT_PHRASE_RICH_MODEL],
   ];
   return Object.fromEntries(entries.filter(([, model]) => model)) as Partial<
@@ -236,6 +238,10 @@ export function getProvider(
             'phrase-simple':
               process.env.OPENAI_COMPAT_SIMPLE_PHRASE_MODEL || MANAGED_TRANSLATION_MODEL,
             'context-simple':
+              process.env.OPENAI_COMPAT_SIMPLE_CONTEXT_MODEL || MANAGED_TRANSLATION_MODEL,
+            'sentence-translation':
+              process.env.OPENAI_COMPAT_SIMPLE_CONTEXT_MODEL || MANAGED_TRANSLATION_MODEL,
+            'example-sentence':
               process.env.OPENAI_COMPAT_SIMPLE_CONTEXT_MODEL || MANAGED_TRANSLATION_MODEL,
             ...(process.env.OPENAI_COMPAT_PHRASE_RICH_MODEL
               ? { 'phrase-rich': process.env.OPENAI_COMPAT_PHRASE_RICH_MODEL }

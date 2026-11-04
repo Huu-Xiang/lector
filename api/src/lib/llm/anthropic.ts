@@ -103,6 +103,8 @@ export class AnthropicProvider implements LLMProvider {
       case 'word-enrichment':
       case 'context-simple':
       case 'context-rich':
+      case 'sentence-translation':
+      case 'example-sentence':
         return this.models.word;
       case 'phrase-simple':
       case 'phrase-rich':

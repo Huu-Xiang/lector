@@ -2,7 +2,9 @@ import { describe, expect, test } from 'bun:test';
 import {
   phraseFieldsInWrongScript,
   buildExplainPrompt,
+  buildExampleSentencePrompt,
   buildGlossPrompt,
+  buildSentenceTranslationPrompt,
   buildPhrasePrompt,
   buildSimpleContextPrompt,
   buildSimplePhrasePrompt,
@@ -172,5 +174,23 @@ describe('phraseFieldsInWrongScript', () => {
 
   test('does not check Latin-script native languages', () => {
     expect(phraseFieldsInWrongScript({ idiomaticMeaning: english }, 'fr')).toEqual([]);
+  });
+});
+
+describe('sentence prompts', () => {
+  test('translation prompt carries the sentence as data and names both languages', () => {
+    const prompt = buildSentenceTranslationPrompt('French', 'Chinese', 'Le chat "dort".');
+    expect(prompt).toContain('French');
+    expect(prompt).toContain('Chinese');
+    expect(prompt).toContain(JSON.stringify('Le chat "dort".'));
+    expect(prompt).toContain('"translation"');
+  });
+
+  test('example prompt sends the word and language only', () => {
+    const prompt = buildExampleSentencePrompt('French', 'éponge');
+    expect(prompt).toContain('French');
+    expect(prompt).toContain('éponge');
+    expect(prompt).toContain('"sentence"');
+    expect(prompt).toContain('"translation"');
   });
 });

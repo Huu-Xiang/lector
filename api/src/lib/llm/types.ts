@@ -17,7 +17,9 @@ export type LLMTask =
   | 'phrase-simple'
   | 'phrase-rich'
   | 'chat'
-  | 'word-classification';
+  | 'word-classification'
+  | 'sentence-translation'
+  | 'example-sentence';
 
 /** Cost-safe, text-free telemetry for one upstream provider attempt. */
 export interface LLMUsageEvent {

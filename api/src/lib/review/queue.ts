@@ -11,6 +11,18 @@ import {
   type SentenceSource,
 } from './sentence-sources';
 import { reviewCardOf, type WordCardRow } from './word-card-rows';
+import { getNativeLanguageCode } from '../native-language';
+import { sharedExampleSentenceCache, type ExampleSentenceCache } from '../example-sentence-cache';
+import {
+  sharedSentenceTranslationCache,
+  type SentenceTranslationCache,
+} from '../sentence-translation-cache';
+import {
+  AI_SENTENCE_KEY,
+  cachedExample,
+  exampleAsFound,
+  sentenceTranslationFor,
+} from './sentence-ai';
 
 export type QuestionType =
   | 'choose_meaning'
@@ -156,6 +168,10 @@ export interface QueueItem {
   sentenceSource?: SentenceSource;
   sentenceBlank?: SentenceBlank;
   sentenceTranslation?: { text: string; lang: string };
+  /** The shown non-saved sentence has no translation yet; POST /api/review/sentence-translation can fill it. */
+  translationPending?: true;
+  /** A fill-in card has only its saved sentence; POST /api/review/example-sentence can fetch an AI example. */
+  aiExamplePending?: true;
   example?: {
     text: string;
     blank?: SentenceBlank;
@@ -165,6 +181,19 @@ export interface QueueItem {
 }
 
 const SENTENCE_TYPES = new Set<QuestionType>(['fill_in', 'typed_fill_in', 'dictation']);
+const SAVED_SERVED = 'saved';
+
+export interface RoundCaches {
+  translations: SentenceTranslationCache;
+  examples: ExampleSentenceCache;
+  /** Passed to the AI-example matcher; replaced in tests. */
+  forms?: (word: string, language: string) => string[];
+}
+
+const defaultCaches: RoundCaches = {
+  translations: sharedSentenceTranslationCache,
+  examples: sharedExampleSentenceCache,
+};
 
 export function buildRound(
   userId: string,
@@ -173,6 +202,7 @@ export function buildRound(
   now: number,
   lookup: SenseLookup = dictionarySense,
   finder: typeof findSentence = findSentence,
+  caches: RoundCaches = defaultCaches,
 ) {
   const { due, newCards } = selection(userId, language, now);
   const goal = readReviewGoal(userId);
@@ -180,6 +210,8 @@ export function buildRound(
   const items: QueueItem[] = [];
   const served = new Map<string, string>();
   const level = readLearnerLevel(userId, language);
+  const native = getNativeLanguageCode(userId);
+  const sentenceDeps = caches.forms ? { forms: caches.forms } : undefined;
   const find = (card: CardWithVocab, skipSaved: boolean): FoundSentence | null => {
     const found = finder({
       word: card.text,
@@ -218,12 +250,32 @@ export function buildRound(
       if (options) choices = options;
       else questionType = 'recognition';
     }
-    const found = SENTENCE_TYPES.has(questionType)
+    const fillIn = SENTENCE_TYPES.has(questionType);
+    let found = fillIn
       ? find(card, false)
       : questionType === 'recognition'
         ? find(card, true)
         : null;
-    const fillIn = SENTENCE_TYPES.has(questionType);
+    let aiExamplePending = false;
+    if (
+      fillIn &&
+      card.type !== 'phrase' &&
+      card.lastSentenceKey === SAVED_SERVED &&
+      (!found || found.source.kind === 'saved')
+    ) {
+      const request = { word: card.text, type: card.type, language };
+      const example = cachedExample({ examples: caches.examples, sentenceDeps }, request);
+      if (example) {
+        found = exampleAsFound(example);
+        served.set(card.id, AI_SENTENCE_KEY);
+      } else {
+        aiExamplePending = true;
+      }
+    }
+    const resolved = found
+      ? sentenceTranslationFor(found, language, native, caches.translations)
+      : null;
+    const translated = resolved?.translation;
     items.push({
       cardId: card.id,
       word: card.text,
@@ -237,16 +289,18 @@ export function buildRound(
         ? {
             sentenceSource: found.source,
             ...(found.blank ? { sentenceBlank: found.blank } : {}),
-            ...(found.translation ? { sentenceTranslation: found.translation } : {}),
+            ...(translated ? { sentenceTranslation: translated } : {}),
           }
         : {}),
+      ...(resolved?.pending ? { translationPending: true as const } : {}),
+      ...(aiExamplePending ? { aiExamplePending: true as const } : {}),
       ...(!fillIn && found
         ? {
             example: {
               text: found.text,
               ...(found.blank ? { blank: found.blank } : {}),
               source: found.source,
-              ...(found.translation ? { translation: found.translation } : {}),
+              ...(translated ? { translation: translated } : {}),
             },
           }
         : {}),

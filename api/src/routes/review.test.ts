@@ -5,6 +5,9 @@ import { randomBytes, randomUUID } from 'crypto';
 import { db } from '../db';
 import { authMiddleware } from '../lib/auth';
 import { hashToken } from '../lib/crypto';
+import type { CompletionOptions, LLMProvider } from '../lib/llm';
+import { InMemoryTranslationBurstLimiter } from '../lib/rate-limit';
+import type { SentenceAiDeps } from '../lib/review/sentence-ai';
 import { createScheduler } from '../lib/review/scheduler';
 import { makeReviewRoutes } from './review';
 import review from './review';
@@ -413,5 +416,277 @@ describe('review routes behind a personal access token', () => {
     expect((await outer.request('/api/review/counts', { headers: read })).status).toBe(200);
     const denied = await outer.request('/api/review/answer', { method: 'POST', headers: read });
     expect(denied.status).toBe(403);
+  });
+});
+
+describe('review sentence translations and AI examples', () => {
+  const calls: CompletionOptions[] = [];
+  let reply = '{}';
+  let byok = false;
+  let reserved = 0;
+  let minuteLimit = 30;
+  let examples: Array<{ text: string; translation?: string; translationLang?: string }> = [];
+
+  const provider: LLMProvider = {
+    name: 'fake',
+    model: 'fake',
+    async complete(options) {
+      calls.push(options);
+      return reply;
+    },
+    async *stream() {
+      yield reply;
+    },
+    async healthCheck() {
+      return { ok: true };
+    },
+  };
+
+  function aiApp() {
+    return makeReviewRoutes({
+      now: () => clock,
+      scheduler: createScheduler({ fuzz: false }),
+      sentenceDeps: {
+        forms: () => [],
+        examples: () => examples,
+        bank: () => [],
+        library: () => null,
+        random: () => 0,
+      },
+      ai: {
+        providerForUser: () => provider,
+        engine: {
+          resolveEntitlements: () => ({ byok }),
+          reserve: () => {
+            reserved++;
+          },
+        } as unknown as SentenceAiDeps['engine'],
+        rateLimiter: new InMemoryTranslationBurstLimiter({ localizePerWindow: minuteLimit }),
+        dailyLimiter: new InMemoryTranslationBurstLimiter({ localizePerWindow: 500 }),
+      },
+    });
+  }
+
+  async function seedFillIn(word = 'harbor') {
+    seedVocab('v1', word);
+    await warm();
+    db.prepare(
+      "UPDATE wordCards SET state = 'review', stability = 10, reps = 3, due = ? WHERE vocabId = 'v1'",
+    ).run('2026-11-01T00:00:00Z');
+  }
+
+  const sharedRows = () =>
+    (
+      db
+        .prepare(
+          `SELECT (SELECT COUNT(*) FROM shared_sentence_translation)
+                + (SELECT COUNT(*) FROM shared_example_sentence) AS n`,
+        )
+        .get() as { n: number }
+    ).n;
+
+  const lastKey = () =>
+    (
+      db.prepare("SELECT lastSentenceKey AS k FROM wordCards WHERE vocabId = 'v1'").get() as {
+        k: string | null;
+      }
+    ).k;
+
+  beforeEach(() => {
+    clear();
+    db.prepare('DELETE FROM shared_sentence_translation').run();
+    db.prepare('DELETE FROM shared_example_sentence').run();
+    db.prepare("DELETE FROM settings WHERE key = 'nativeLanguage'").run();
+    clock = NOW;
+    calls.length = 0;
+    reply = '{}';
+    byok = false;
+    reserved = 0;
+    minuteLimit = 30;
+    examples = [];
+    setSetting('timezone', 'UTC');
+    setSetting('nativeLanguage', 'zh-CN');
+    app = aiApp();
+  });
+  afterEach(() => {
+    clear();
+    db.prepare('DELETE FROM shared_sentence_translation').run();
+    db.prepare('DELETE FROM shared_example_sentence').run();
+    db.prepare("DELETE FROM settings WHERE key = 'nativeLanguage'").run();
+  });
+
+  interface Rich extends Item {
+    sentenceSource?: { kind: string };
+    sentenceBlank?: unknown;
+    sentenceTranslation?: { text: string; lang: string };
+    translationPending?: boolean;
+    aiExamplePending?: boolean;
+  }
+
+  async function queue() {
+    const res = await app.request('/queue?language=en');
+    expect(res.status).toBe(200);
+    return (await res.json()) as { roundId: string; items: Rich[] };
+  }
+
+  test('the saved sentence on the first serve is not translated, requested or stored', async () => {
+    await seedFillIn();
+    const { items } = await queue();
+    expect(items[0].sentenceSource?.kind).toBe('saved');
+    expect(items[0].translationPending).toBeUndefined();
+    expect(items[0].aiExamplePending).toBeUndefined();
+    expect(calls).toHaveLength(0);
+    expect(sharedRows()).toBe(0);
+  });
+
+  test('a bundled zh-CN translation of a dictionary example is used with no request', async () => {
+    await seedFillIn();
+    examples = [
+      {
+        text: 'The ship left the harbor.',
+        translation: '船离开了港口。',
+        translationLang: 'zh-CN',
+      },
+    ];
+    await queue();
+    const { items } = await queue();
+    expect(items[0].sentenceSource?.kind).toBe('tatoeba');
+    expect(items[0].sentenceTranslation).toEqual({ text: '船离开了港口。', lang: 'zh-CN' });
+    expect(items[0].translationPending).toBeUndefined();
+    expect(calls).toHaveLength(0);
+  });
+
+  test('a pending translation is fetched once, stored, and then served from the cache', async () => {
+    await seedFillIn();
+    examples = [{ text: 'The ship left the harbor.', translation: 'x', translationLang: 'en' }];
+    await queue();
+    const second = await queue();
+    expect(second.items[0].sentenceSource?.kind).toBe('tatoeba');
+    expect(second.items[0].sentenceTranslation).toBeUndefined();
+    expect(second.items[0].translationPending).toBe(true);
+
+    reply = JSON.stringify({ translation: '船离开了港口。' });
+    const res = await post('/sentence-translation', {
+      roundId: second.roundId,
+      cardId: second.items[0].cardId,
+    });
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ translation: { text: '船离开了港口。', lang: 'zh-CN' } });
+    expect(calls).toHaveLength(1);
+    expect(calls[0].task).toBe('sentence-translation');
+    expect(reserved).toBe(0);
+    expect(sharedRows()).toBe(1);
+
+    await post('/sentence-translation', {
+      roundId: second.roundId,
+      cardId: second.items[0].cardId,
+    });
+    expect(calls).toHaveLength(1);
+    db.prepare("UPDATE wordCards SET lastSentenceKey = 'saved' WHERE vocabId = 'v1'").run();
+    const third = await queue();
+    expect(third.items[0].sentenceTranslation).toEqual({ text: '船离开了港口。', lang: 'zh-CN' });
+  });
+
+  test('the translation request refuses a card outside the round and never sends the saved sentence', async () => {
+    await seedFillIn();
+    const first = await queue();
+    const outside = await post('/sentence-translation', { roundId: first.roundId, cardId: 'nope' });
+    expect(outside.status).toBe(400);
+    const saved = await post('/sentence-translation', {
+      roundId: first.roundId,
+      cardId: first.items[0].cardId,
+    });
+    expect(await saved.json()).toEqual({ translation: null });
+    expect(calls).toHaveLength(0);
+    expect(sharedRows()).toBe(0);
+  });
+
+  test('burst limit reached: no translation comes back and the card keeps its sentence', async () => {
+    minuteLimit = 0;
+    app = aiApp();
+    await seedFillIn();
+    examples = [{ text: 'The ship left the harbor.' }];
+    await queue();
+    const round = await queue();
+    const res = await post('/sentence-translation', {
+      roundId: round.roundId,
+      cardId: round.items[0].cardId,
+    });
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ translation: null });
+    expect(calls).toHaveLength(0);
+    expect(sharedRows()).toBe(0);
+  });
+
+  test('AE9: a word with no library or Tatoeba sentence gets one AI example at the fill-in stage', async () => {
+    await seedFillIn('quiddity');
+    const first = await queue();
+    expect(first.items[0].sentenceSource?.kind).toBe('saved');
+    expect(first.items[0].aiExamplePending).toBeUndefined();
+    const second = await queue();
+    expect(second.items[0].sentenceSource?.kind).toBe('saved');
+    expect(second.items[0].aiExamplePending).toBe(true);
+
+    reply = JSON.stringify({
+      sentence: 'The quiddity of the argument escaped her.',
+      translation: 'The essence of the argument escaped her.',
+    });
+    const res = await post('/example-sentence', {
+      roundId: second.roundId,
+      cardId: second.items[0].cardId,
+    });
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as {
+      sentence: {
+        text: string;
+        source: { kind: string };
+        blank: { start: number; end: number };
+      } | null;
+      translationPending?: boolean;
+    };
+    expect(body.sentence?.source.kind).toBe('ai');
+    expect(body.sentence?.text).toBe('The quiddity of the argument escaped her.');
+    expect(body.sentence?.text.slice(body.sentence.blank.start, body.sentence.blank.end)).toBe(
+      'quiddity',
+    );
+    expect(body.translationPending).toBe(true);
+    expect(lastKey()).toBe('ai');
+    expect(sharedRows()).toBe(1);
+    expect(reserved).toBe(0);
+
+    const third = await queue();
+    expect(third.items[0].sentenceSource?.kind).toBe('saved');
+    const fourth = await queue();
+    expect(fourth.items[0].sentenceSource?.kind).toBe('ai');
+    expect(fourth.items[0].sentence).toBe('The quiddity of the argument escaped her.');
+    expect(fourth.items[0].aiExamplePending).toBeUndefined();
+    expect(calls).toHaveLength(1);
+  });
+
+  test('an AI sentence without the word is rejected and not stored', async () => {
+    await seedFillIn('quiddity');
+    await queue();
+    const round = await queue();
+    reply = JSON.stringify({ sentence: 'The cat sat on the mat today.', translation: 'x' });
+    const res = await post('/example-sentence', {
+      roundId: round.roundId,
+      cardId: round.items[0].cardId,
+    });
+    expect(await res.json()).toEqual({ sentence: null });
+    expect(sharedRows()).toBe(0);
+    expect(lastKey()).toBe('saved');
+  });
+
+  test('no AI example while a library or Tatoeba sentence exists', async () => {
+    await seedFillIn('harbor');
+    examples = [{ text: 'The ship left the harbor.' }];
+    await queue();
+    const round = await queue();
+    const res = await post('/example-sentence', {
+      roundId: round.roundId,
+      cardId: round.items[0].cardId,
+    });
+    expect(await res.json()).toEqual({ sentence: null });
+    expect(calls).toHaveLength(0);
   });
 });

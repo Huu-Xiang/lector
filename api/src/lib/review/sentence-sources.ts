@@ -26,7 +26,7 @@ export interface SentenceBlank {
 }
 
 export interface SentenceSource {
-  kind: 'saved' | 'library' | 'tatoeba';
+  kind: 'saved' | 'library' | 'tatoeba' | 'ai';
   bookSlug?: string;
   bookTitle?: string;
   chapterTitle?: string;
@@ -344,4 +344,46 @@ export function findSentence(
     pickFrom(tatoebaSentences(request, deps, m, saved), request.lastSentenceKey, deps.random) ??
     savedResult()
   );
+}
+
+function matcherFor(
+  request: Pick<SentenceRequest, 'word' | 'type' | 'language'>,
+  deps: Pick<SentenceDeps, 'forms'>,
+): Matcher {
+  const forms =
+    request.type === 'phrase'
+      ? [request.word]
+      : [request.word, ...deps.forms(request.word, request.language)];
+  return makeMatcher(request.language, forms);
+}
+
+/** Where the word or one of its forms stands in `text` as whole tokens, or null if it does not. */
+export function blankIn(
+  request: Pick<SentenceRequest, 'word' | 'type' | 'language'>,
+  text: string,
+  deps: Pick<SentenceDeps, 'forms'> = defaultDeps,
+): SentenceBlank | null {
+  if (!supportsSentenceFinder(request.language)) return null;
+  return matchSpan(text, matcherFor(request, deps))?.blank ?? null;
+}
+
+/** The library or Tatoeba sentence a key names, so a client sends a key and never text. */
+export function findSentenceByKey(
+  request: SentenceRequest,
+  key: string,
+  deps: SentenceDeps = defaultDeps,
+): FoundSentence | null {
+  if (!supportsSentenceFinder(request.language)) return null;
+  const m = matcherFor(request, deps);
+  if (m.all.length === 0) return null;
+  const saved = normal(request.savedSentence);
+  const candidates = key.startsWith('L:')
+    ? librarySentences(request, deps, m, saved)
+    : key.startsWith('E:') || key.startsWith('T:')
+      ? tatoebaSentences(request, deps, m, saved)
+      : [];
+  const hit = candidates.find((c) => c.key === key);
+  if (!hit) return null;
+  const { levelDistance: _distance, ...found } = hit;
+  return found;
 }

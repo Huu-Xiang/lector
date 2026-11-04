@@ -249,6 +249,32 @@ function getDb(): Database {
       PRIMARY KEY (language, nativeLanguage, word, promptVersion)
     );
 
+    -- Sentence translations and AI example sentences, shared like shared_gloss_cache:
+    -- no user id. Only managed answers are stored. The learner's own saved sentence
+    -- never enters either table.
+    CREATE TABLE IF NOT EXISTS shared_sentence_translation (
+      language TEXT NOT NULL,
+      nativeLanguage TEXT NOT NULL,
+      sentenceHash TEXT NOT NULL,
+      promptVersion INTEGER NOT NULL,
+      sourceText TEXT NOT NULL,
+      translation TEXT NOT NULL,
+      hits INTEGER NOT NULL DEFAULT 0,
+      createdAt TEXT NOT NULL,
+      PRIMARY KEY (language, nativeLanguage, sentenceHash, promptVersion)
+    );
+
+    CREATE TABLE IF NOT EXISTS shared_example_sentence (
+      language TEXT NOT NULL,
+      word TEXT NOT NULL,
+      promptVersion INTEGER NOT NULL,
+      sentence TEXT NOT NULL,
+      translation TEXT,
+      hits INTEGER NOT NULL DEFAULT 0,
+      createdAt TEXT NOT NULL,
+      PRIMARY KEY (language, word, promptVersion)
+    );
+
     CREATE TABLE IF NOT EXISTS cached_senses (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       userId TEXT NOT NULL DEFAULT 'local',

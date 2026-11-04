@@ -12,7 +12,9 @@ beforeEach(() => {
   for (const table of ['wordReviewLog', 'reviewRounds', 'wordCards', 'knownWords', 'vocab']) {
     db.prepare(`DELETE FROM ${table}`).run();
   }
-  db.prepare("DELETE FROM settings WHERE key IN ('timezone','reviewGoal','readingLevels')").run();
+  db.prepare(
+    "DELETE FROM settings WHERE key IN ('timezone','reviewGoal','readingLevels','nativeLanguage')",
+  ).run();
 });
 
 function seedCard(stability: number, language = 'en') {
@@ -34,7 +36,7 @@ const finder = (calls: SentenceRequest[]) => (req: SentenceRequest) => {
     wordCount: 5,
     blank: { tokenStart: 4, tokenEnd: 5, start: 18, end: 24 },
     source: { kind: 'library' as const, bookSlug: 'book', bookTitle: 'Book', chapterTitle: '1' },
-    translation: { text: 'x', lang: 'en' },
+    translation: { text: 'x', lang: 'zh-CN' },
   };
 };
 
@@ -51,13 +53,16 @@ describe('buildRound sentences', () => {
     db.prepare(
       "INSERT INTO settings (userId, key, value) VALUES ('local', 'readingLevels', ?)",
     ).run(JSON.stringify({ en: 'B1' }));
+    db.prepare(
+      "INSERT INTO settings (userId, key, value) VALUES ('local', 'nativeLanguage', '\"zh-CN\"')",
+    ).run();
     const calls: SentenceRequest[] = [];
     const [item] = buildRound('local', 'en', 5, NOW, () => null, finder(calls)).items;
     expect(item.questionType).toBe('fill_in');
     expect(item.sentence).toBe('The ship left the harbor.');
     expect(item.sentenceSource?.kind).toBe('library');
     expect(item.sentenceBlank).toEqual({ tokenStart: 4, tokenEnd: 5, start: 18, end: 24 });
-    expect(item.sentenceTranslation).toEqual({ text: 'x', lang: 'en' });
+    expect(item.sentenceTranslation).toEqual({ text: 'x', lang: 'zh-CN' });
     expect(item.example).toBeUndefined();
     expect(storedKey()).toBe('L:book:0:5');
     expect(calls[0]).toMatchObject({

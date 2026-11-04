@@ -1290,6 +1290,75 @@ const practiceOps: Record<string, OperationDoc> = {
       },
     },
   },
+  'POST /api/review/sentence-translation': {
+    summary: 'Translate the sentence last served for a card',
+    description:
+      "The server finds the sentence from its key. The learner's saved sentence is never translated here. The answer is null when a limit is reached or the request fails.",
+    tag: 'Practice',
+    requestBody: {
+      required: true,
+      schema: {
+        type: 'object',
+        required: ['roundId', 'cardId'],
+        properties: { roundId: { type: 'string' }, cardId: { type: 'string' } },
+      },
+    },
+    responses: {
+      '200': {
+        description: "The translation in the learner's own language, or null.",
+        schema: {
+          type: 'object',
+          properties: {
+            translation: {
+              ...{
+                type: 'object',
+                properties: { text: { type: 'string' }, lang: { type: 'string' } },
+              },
+              nullable: true,
+            },
+          },
+        },
+      },
+    },
+  },
+  'POST /api/review/example-sentence': {
+    summary: 'Fetch an AI example sentence for a fill-in card',
+    description:
+      'Only for a card whose sentences are all the saved one. The answer is null when another source has a sentence, a limit is reached, or the request fails.',
+    tag: 'Practice',
+    requestBody: {
+      required: true,
+      schema: {
+        type: 'object',
+        required: ['roundId', 'cardId'],
+        properties: { roundId: { type: 'string' }, cardId: { type: 'string' } },
+      },
+    },
+    responses: {
+      '200': {
+        description: 'The sentence with its blank and source, or null.',
+        schema: {
+          type: 'object',
+          properties: {
+            sentence: {
+              type: 'object',
+              nullable: true,
+              properties: {
+                text: { type: 'string' },
+                blank: { type: 'object' },
+                source: { type: 'object', properties: { kind: { type: 'string', enum: ['ai'] } } },
+                translation: {
+                  type: 'object',
+                  properties: { text: { type: 'string' }, lang: { type: 'string' } },
+                },
+              },
+            },
+            translationPending: { type: 'boolean' },
+          },
+        },
+      },
+    },
+  },
   'POST /api/review/answer': {
     summary: 'Answer a word card',
     description:
