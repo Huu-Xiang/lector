@@ -12,6 +12,14 @@ import {
   type LanguageCode,
 } from '../lib/languages';
 import { getCurrentUserId } from '../lib/user';
+import {
+  loadBankCard,
+  masteryForCard,
+  writeBankCard,
+  type BankFsrsRow,
+} from '../lib/review/bank-fsrs';
+import { createScheduler, ratingForAnswer } from '../lib/review/scheduler';
+import { newestVocabForWord, syncWordState } from '../lib/review/sync-word-state';
 import { randomUUID } from 'crypto';
 import { entitlements, planLimitResponse, type AtomicLimitCheck } from '../lib/entitlements';
 import {
@@ -211,6 +219,8 @@ async function loadSentenceBank(lang: string): Promise<BankEntry[]> {
   if (!loader) return [];
   return (await loader()).default as BankEntry[];
 }
+
+const bankScheduler = createScheduler({ fuzz: process.env.NODE_ENV !== 'test' });
 
 const app = new Hono();
 
@@ -1003,8 +1013,6 @@ app.post('/:id/review', async (c) => {
   if (nextReviewError) return c.json({ error: nextReviewError }, 400);
 
   const correct = booleanLikeToSql(body.correct as boolean | 0 | 1) === 1;
-  const newMasteryLevel = body.masteryLevel as ClozeMasteryLevel;
-  const nextReview = body.nextReview as string;
   const nextReviewCount = sentence.reviewCount + 1;
   const nextTimesCorrect = sentence.timesCorrect + (correct ? 1 : 0);
   const nextTimesIncorrect = sentence.timesIncorrect + (correct ? 0 : 1);
@@ -1017,30 +1025,58 @@ app.post('/:id/review', async (c) => {
     if (error) return c.json({ error: `${field} would exceed the safe counter range` }, 400);
   }
 
-  db.prepare(
-    `
-    UPDATE clozeSentences SET
-      masteryLevel = ?,
-      nextReview = ?,
-      reviewCount = ?,
-      lastReviewed = ?,
-      timesCorrect = ?,
-      timesIncorrect = ?
-    WHERE id = ? AND userId = ? AND language = ?
-  `,
-  ).run(
-    newMasteryLevel,
-    nextReview,
-    nextReviewCount,
-    new Date().toISOString(),
-    nextTimesCorrect,
-    nextTimesIncorrect,
-    id,
-    userId,
-    lang,
+  const at = Date.now();
+  const nowIso = new Date(at).toISOString();
+  const nextCard = bankScheduler.review(
+    loadBankCard(sentence as BankFsrsRow, at),
+    ratingForAnswer(correct ? 'right' : 'wrong'),
+    at,
   );
+  const masteryLevel = masteryForCard(nextCard);
+  const nextReview = new Date(nextCard.due).toISOString();
 
-  return c.json({ success: true });
+  db.transaction(() => {
+    db.prepare(
+      `
+      UPDATE clozeSentences SET
+        masteryLevel = ?,
+        nextReview = ?,
+        reviewCount = ?,
+        lastReviewed = ?,
+        timesCorrect = ?,
+        timesIncorrect = ?
+      WHERE id = ? AND userId = ? AND language = ?
+    `,
+    ).run(
+      masteryLevel,
+      nextReview,
+      nextReviewCount,
+      nowIso,
+      nextTimesCorrect,
+      nextTimesIncorrect,
+      id,
+      userId,
+      lang,
+    );
+    writeBankCard(userId, id, lang, nextCard, nowIso);
+
+    if (masteryLevel === 100) {
+      const wordKey = punctuationInsensitiveToken(sentence.clozeWord, lang);
+      if (wordKey) {
+        syncWordState({
+          userId,
+          language: lang,
+          wordKey,
+          state: 'known',
+          source: 'review',
+          newest: newestVocabForWord(userId, lang, wordKey),
+          now: at,
+        });
+      }
+    }
+  })();
+
+  return c.json({ success: true, masteryLevel, nextReview });
 });
 
 export default app;

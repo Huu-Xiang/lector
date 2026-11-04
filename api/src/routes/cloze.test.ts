@@ -1294,3 +1294,157 @@ describe('cloze display tokens (#289 4.3)', () => {
     expect(row?.tokens).toEqual(['Die', 'hond', 'is', 'groot.']);
   });
 });
+
+describe('POST /api/cloze/:id/review — FSRS scheduling (U8)', () => {
+  const DAY = 86_400_000;
+  const IDS = ['rv-new', 'rv-fam', 'rv-top', 'rv-wrong', 'rv-unsaved'];
+  const clear = () => {
+    db.prepare(`DELETE FROM clozeSentences WHERE id IN (${IDS.map(() => '?').join(',')})`).run(
+      ...IDS,
+    );
+    db.prepare("DELETE FROM vocab WHERE id LIKE 'rv-%'").run();
+    db.prepare("DELETE FROM knownWords WHERE word IN ('hond', 'kat')").run();
+  };
+  beforeEach(clear);
+  afterEach(clear);
+
+  const insert = (id: string, word: string, fields: Record<string, unknown> = {}) => {
+    const row = {
+      masteryLevel: 0,
+      nextReview: new Date(Date.now() - 1000).toISOString(),
+      reviewCount: 0,
+      lastReviewed: null,
+      timesCorrect: 0,
+      timesIncorrect: 0,
+      ...fields,
+    };
+    const columns = Object.keys(row);
+    db.prepare(
+      `INSERT INTO clozeSentences (id, sentence, clozeWord, clozeIndex, translation, source, collection, language, userId, ${columns.join(',')})
+       VALUES (?, 'Die hond is groot.', ?, 1, 't', 'tatoeba', 'random', 'af', 'local', ${columns.map(() => '?').join(',')})`,
+    ).run(id, word, ...(Object.values(row) as never[]));
+  };
+  const stored = (id: string) =>
+    db.prepare('SELECT * FROM clozeSentences WHERE id = ?').get(id) as Record<string, any>;
+  const review = (id: string, body: Record<string, unknown>) =>
+    app.request(`/${id}/review?language=af`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+  const legacyBody = { correct: true, masteryLevel: 25, nextReview: '2030-01-01T00:00:00.000Z' };
+
+  test('the CLI request body still succeeds', async () => {
+    insert('rv-new', 'hond');
+    const res = await review('rv-new', legacyBody);
+    expect(res.status).toBe(200);
+    expect((await res.json()).success).toBe(true);
+  });
+
+  test('the server ignores the client mastery and nextReview', async () => {
+    insert('rv-new', 'hond');
+    const res = await review('rv-new', legacyBody);
+    const body = await res.json();
+    const row = stored('rv-new');
+    expect(row.nextReview).not.toBe(legacyBody.nextReview);
+    expect(row.nextReview).toBe(row.fsrsDue);
+    expect(body.masteryLevel).toBe(row.masteryLevel);
+    expect(body.nextReview).toBe(row.nextReview);
+  });
+
+  test('a right answer writes FSRS fields, masteryLevel and nextReview together', async () => {
+    insert('rv-new', 'hond');
+    await review('rv-new', legacyBody);
+    const row = stored('rv-new');
+    expect(row.fsrsState).toBe('review');
+    expect(row.fsrsUpdatedAt).toBe(row.lastReviewed);
+    expect(row.fsrsReps).toBe(1);
+    expect(row.masteryLevel).toBe(25);
+    expect(row.reviewCount).toBe(1);
+    expect(row.timesCorrect).toBe(1);
+    expect(Date.parse(row.nextReview)).toBeGreaterThan(Date.now());
+  });
+
+  test('a Familiar card writes masteryLevel 75', async () => {
+    const due = Date.now();
+    insert('rv-fam', 'hond', {
+      masteryLevel: 50,
+      reviewCount: 3,
+      timesCorrect: 3,
+      lastReviewed: new Date(due - 7 * DAY).toISOString(),
+      nextReview: new Date(due).toISOString(),
+    });
+    await review('rv-fam', { ...legacyBody, masteryLevel: 50 });
+    const row = stored('rv-fam');
+    expect(row.fsrsState).toBe('review');
+    expect(row.fsrsStability).toBeGreaterThanOrEqual(7);
+    expect(row.fsrsStability).toBeLessThan(30);
+    expect(row.masteryLevel).toBe(75);
+  });
+
+  test('a wrong answer lowers the card to Learning', async () => {
+    const due = Date.now();
+    insert('rv-wrong', 'hond', {
+      masteryLevel: 75,
+      reviewCount: 3,
+      lastReviewed: new Date(due - 10 * DAY).toISOString(),
+      nextReview: new Date(due).toISOString(),
+    });
+    await review('rv-wrong', { ...legacyBody, correct: false });
+    const row = stored('rv-wrong');
+    expect(row.masteryLevel).toBe(25);
+    expect(row.timesIncorrect).toBe(1);
+    expect(row.fsrsState).toBe('relearning');
+  });
+
+  test('reaching Mastered marks a saved word known on every vocab row', async () => {
+    const due = Date.now();
+    insert('rv-top', 'hond.', {
+      masteryLevel: 100,
+      reviewCount: 6,
+      lastReviewed: new Date(due - 40 * DAY).toISOString(),
+      nextReview: new Date(due).toISOString(),
+    });
+    db.prepare(
+      `INSERT INTO vocab (id, text, type, sentence, translation, state, stateUpdatedAt, createdAt, language)
+       VALUES ('rv-v1', 'Hond', 'word', 's', 't', 'level2', '2026-01-01T00:00:00Z', '2026-01-01T00:00:00Z', 'af')`,
+    ).run();
+    const res = await review('rv-top', legacyBody);
+    expect((await res.json()).masteryLevel).toBe(100);
+    expect(
+      (db.prepare("SELECT state FROM vocab WHERE id = 'rv-v1'").get() as { state: string }).state,
+    ).toBe('known');
+    expect(
+      (
+        db
+          .prepare("SELECT state FROM knownWords WHERE word = 'hond' AND language = 'af'")
+          .get() as { state: string }
+      ).state,
+    ).toBe('known');
+  });
+
+  test('reaching Mastered marks an unsaved word known in knownWords', async () => {
+    const due = Date.now();
+    insert('rv-unsaved', 'kat', {
+      masteryLevel: 100,
+      reviewCount: 6,
+      lastReviewed: new Date(due - 40 * DAY).toISOString(),
+      nextReview: new Date(due).toISOString(),
+    });
+    await review('rv-unsaved', legacyBody);
+    expect(
+      (
+        db.prepare("SELECT state FROM knownWords WHERE word = 'kat' AND language = 'af'").get() as {
+          state: string;
+        }
+      ).state,
+    ).toBe('known');
+    expect(db.prepare("SELECT 1 FROM vocab WHERE id LIKE 'rv-%'").get()).toBeNull();
+  });
+
+  test('a card below Mastered leaves knownWords alone', async () => {
+    insert('rv-new', 'hond');
+    await review('rv-new', legacyBody);
+    expect(db.prepare("SELECT 1 FROM knownWords WHERE word = 'hond'").get()).toBeNull();
+  });
+});

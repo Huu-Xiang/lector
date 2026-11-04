@@ -5,13 +5,11 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 // secondary writes still return true but tell the learner.
 
 const updateClozeAfterReview = vi.fn();
-const updateWordState = vi.fn();
 const incrementDailyStat = vi.fn();
 const toastError = vi.fn();
 
 vi.mock('@/lib/data-layer', () => ({
   updateClozeAfterReview: (...args: unknown[]) => updateClozeAfterReview(...args),
-  updateWordState: (...args: unknown[]) => updateWordState(...args),
   incrementDailyStat: (...args: unknown[]) => incrementDailyStat(...args),
 }));
 
@@ -25,7 +23,6 @@ const NEXT = new Date('2026-01-02T00:00:00Z');
 
 beforeEach(() => {
   updateClozeAfterReview.mockReset().mockResolvedValue(1);
-  updateWordState.mockReset().mockResolvedValue(true);
   incrementDailyStat.mockReset().mockResolvedValue(true);
   toastError.mockReset();
 });
@@ -47,18 +44,15 @@ describe('persistReview (#232)', () => {
 
     expect(ok).toBe(false);
     expect(toastError).toHaveBeenCalledTimes(1);
-    // No stats and no word-state writes for an unsaved review.
+    // No stats writes for an unsaved review.
     expect(incrementDailyStat).not.toHaveBeenCalled();
-    expect(updateWordState).not.toHaveBeenCalled();
   });
 
-  it('marks the word known only at mastery 100, with punctuation stripped', async () => {
-    await persistReview('s1', 'huis!', true, 8, 100, NEXT);
-    expect(updateWordState).toHaveBeenCalledWith('huis', 'known');
-
-    updateWordState.mockClear();
-    await persistReview('s1', 'huis!', true, 8, 75, NEXT);
-    expect(updateWordState).not.toHaveBeenCalled();
+  it('leaves the known-word write to the server at mastery 100', async () => {
+    const ok = await persistReview('s1', 'huis!', true, 8, 100, NEXT);
+    expect(ok).toBe(true);
+    expect(updateClozeAfterReview).toHaveBeenCalledWith('s1', true, 100, NEXT);
+    expect(toastError).not.toHaveBeenCalled();
   });
 
   it('awards no points stat when none were earned', async () => {
