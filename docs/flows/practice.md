@@ -73,7 +73,21 @@ sequenceDiagram
 - Stages by stability: New, Learning, Familiar, Mastered. Retention is 0.9. Intervals cap at 365 days.
 - Free accounts keep at most 5,000 log rows. Pruning keeps each card's newest row.
 - Cards and the log travel with export and restore. Restore skips cards whose word has no saved vocab row.
-- Stage 2 (library, Tatoeba and AI sentences) is not built. Fill-in uses the saved sentence.
+- Review sentences are described in the next part.
+
+### Review sentences
+
+The saved sentence comes first. After that, a card rotates through free-library sentences and bundled Tatoeba sentences (English dictionary examples and sentence-bank rows). It skips the last sentence shown. Saved words match inflected forms through the dictionary. Phrases match exact tokens. Shorter sentences near the learner's level rank first. Chinese and Korean skip the finder.
+
+- Finder: `api/src/lib/review/sentence-sources.ts`. Index: `api/src/lib/review/sentence-index.ts`. The index uses a per-chapter word filter, about 53 MB for en and fr. It is built on first use.
+- Source line: a small line under the sentence. It shows the book and chapter (linking to `/books/<lang>/<slug>`), Tatoeba (the sentence page, or a search link when there is no id), or "AI example".
+- Translation follows the cloze hide-translation setting and Alt+T.
+- `GET /api/review/queue` stays DB-only and marks pending work. The client then asks for the visible card only.
+- `POST /api/review/sentence-translation` and `POST /api/review/example-sentence` take `{roundId, cardId}`. Code: `api/src/lib/review/sentence-ai.ts`.
+- Shared caches have no user id: table `shared_sentence_translation` (`api/src/lib/sentence-translation-cache.ts`) and table `shared_example_sentence`, source `ai`, one example per language and word (`api/src/lib/example-sentence-cache.ts`). Both expire after 180 days.
+- Both endpoints use the `/localize` burst limits. They do not meter the AI allowance. A learner with their own key uses it and writes nothing shared.
+- The server finds the sentence from the card's `lastSentenceKey`. The saved sentence never goes to the model or to a shared table. The AI example request sends only the word and the language name.
+- Not built: Tatoeba ids in the English dictionary examples (needs a new dictionary release), and Chinese or Korean fill-in.
 
 ### Bank cloze scheduling
 
@@ -81,7 +95,7 @@ sequenceDiagram
 
 ### Tables
 
-`wordCards`, `wordReviewLog`, `reviewRounds`, `vocab`, `knownWords`, `dailyStats`.
+`wordCards`, `wordReviewLog`, `reviewRounds`, `shared_sentence_translation`, `shared_example_sentence`, `vocab`, `knownWords`, `dailyStats`.
 
 ### Tests
 

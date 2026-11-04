@@ -265,6 +265,10 @@
       "fn:syncWordState",
       "table:wordCards",
       "table:wordReviewLog",
+      "route:review-sentence-translation",
+      "route:review-example-sentence",
+      "table:shared_sentence_translation",
+      "table:shared_example_sentence",
     ],
   });
   N("flow:dictation", "flow", "Dictation", {
@@ -643,6 +647,9 @@
   N("fn:backfillWordCards", "fn", "backfillWordCards", { path: "api/src/lib/review/backfill.ts" });
   N("fn:reconcileWordCards", "fn", "reconcileWordCards", { path: "api/src/lib/review/reconcile.ts" });
   N("fn:submitAnswer", "fn", "submitAnswer", { path: "api/src/lib/review/answer.ts" });
+  N("fn:findReviewSentences", "fn", "findSentence", { path: "api/src/lib/review/sentence-sources.ts" });
+  N("fn:buildSentenceIndex", "fn", "sentence index", { path: "api/src/lib/review/sentence-index.ts" });
+  N("fn:sentenceAi", "fn", "translateSentence / generateExample", { path: "api/src/lib/review/sentence-ai.ts" });
   N("fn:submitUndo", "fn", "submitUndo", { path: "api/src/lib/review/answer.ts" });
   N("fn:updateClozeAfterReview", "fn", "updateClozeAfterReview", { path: "src/lib/data-layer.ts" });
   N("fn:journal-handleSubmit", "fn", "JournalPage.handleSubmit", { path: "src/app/journal/page.tsx" });
@@ -722,6 +729,8 @@
   N("route:review-counts", "route", "GET /api/review/counts", { path: "api/src/routes/review.ts" });
   N("route:review-queue", "route", "GET /api/review/queue", { path: "api/src/routes/review.ts" });
   N("route:review-answer", "route", "POST /api/review/answer", { path: "api/src/routes/review.ts" });
+  N("route:review-sentence-translation", "route", "POST /api/review/sentence-translation", { path: "api/src/routes/review.ts" });
+  N("route:review-example-sentence", "route", "POST /api/review/example-sentence", { path: "api/src/routes/review.ts" });
   N("route:review-undo", "route", "POST /api/review/undo", { path: "api/src/routes/review.ts" });
   N("route:cloze-put", "route", "PUT /api/cloze/:id", { path: "api/src/routes/cloze.ts" });
   N("route:journal-list", "route", "GET /api/journal", { path: "api/src/routes/journal.ts" });
@@ -767,6 +776,8 @@
   N("table:clozeSentences", "table", "clozeSentences", { path: "api/src/db.ts" });
   N("table:wordCards", "table", "wordCards", { path: "api/src/db.ts" });
   N("table:wordReviewLog", "table", "wordReviewLog", { path: "api/src/db.ts" });
+  N("table:shared_sentence_translation", "table", "shared_sentence_translation", { path: "api/src/db.ts" });
+  N("table:shared_example_sentence", "table", "shared_example_sentence", { path: "api/src/db.ts" });
   N("table:reviewRounds", "table", "reviewRounds", { path: "api/src/db.ts" });
   N("table:journal_entries", "table", "journal_entries", { path: "api/src/db.ts" });
   N("table:chat_messages", "table", "chat_messages", { path: "api/src/db.ts" });
@@ -1148,6 +1159,18 @@
   edge("fn:submitAnswer", "table:wordCards", "writes");
   edge("fn:submitAnswer", "table:wordReviewLog", "writes");
   edge("fn:submitAnswer", "fn:syncWordState", "calls");
+  edge("file:word-review-round", "route:review-sentence-translation", "http");
+  edge("file:word-review-round", "route:review-example-sentence", "http");
+  edge("route:review-sentence-translation", "file:route-review", "in");
+  edge("route:review-example-sentence", "file:route-review", "in");
+  edge("route:review-queue", "fn:findReviewSentences", "calls");
+  edge("fn:findReviewSentences", "fn:buildSentenceIndex", "calls");
+  edge("route:review-sentence-translation", "fn:sentenceAi", "calls");
+  edge("route:review-example-sentence", "fn:sentenceAi", "calls");
+  edge("route:review-sentence-translation", "table:reviewRounds", "reads");
+  edge("route:review-example-sentence", "table:reviewRounds", "reads");
+  edge("fn:sentenceAi", "table:shared_sentence_translation", "writes");
+  edge("fn:sentenceAi", "table:shared_example_sentence", "writes");
   edge("fn:syncWordState", "file:sync-word-state", "in");
   edge("fn:syncWordState", "table:vocab", "writes");
   edge("fn:syncWordState", "table:knownWords", "writes");
