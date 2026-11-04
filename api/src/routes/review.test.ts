@@ -57,12 +57,13 @@ function seedVocab(
 ) {
   db.prepare(
     `INSERT INTO vocab (id, text, type, sentence, translation, state, stateUpdatedAt, createdAt, language)
-     VALUES (?, ?, ?, ?, 'a meaning', ?, ?, ?, ?)`,
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
   ).run(
     id,
     text,
     opts.type ?? 'word',
     `I saw the ${text} there.`,
+    `meaning of ${text}`,
     opts.state ?? 'level1',
     TS,
     opts.createdAt ?? TS,
@@ -82,6 +83,7 @@ interface Item {
   questionType: string;
   sentence: string;
   translation: string;
+  choices?: string[];
 }
 
 async function getQueue(query = '') {
@@ -154,6 +156,10 @@ describe('review routes', () => {
     const round = await getQueue('&limit=50');
     expect(round.items.filter((i) => i.questionType === 'choose_meaning')).toHaveLength(20);
     expect(round.items).toHaveLength(20);
+    for (const item of round.items) {
+      expect(item.choices).toHaveLength(4);
+      expect(item.choices).toContain(item.translation);
+    }
 
     for (const item of round.items) {
       expect((await answer(round.roundId, item.cardId, 'right', 'choose_meaning')).status).toBe(

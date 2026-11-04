@@ -2,6 +2,7 @@ import { randomUUID } from 'crypto';
 import { db, type VocabType } from '../../db';
 import { dateStringInTimeZone, getConfiguredTimeZone } from '../dates';
 import { LANGUAGES, isValidLanguageCode } from '../languages';
+import { chooseMeanings, dictionarySense, fillMeaning, type SenseLookup } from './meanings';
 import { stageOf, type ReviewStage } from './stages';
 import { reviewCardOf, type WordCardRow } from './word-card-rows';
 
@@ -132,23 +133,56 @@ export interface QueueItem {
   questionType: QuestionType;
   sentence: string;
   translation: string;
+  choices?: string[];
 }
 
-export function buildRound(userId: string, language: string, size: number, now: number) {
+export function buildRound(
+  userId: string,
+  language: string,
+  size: number,
+  now: number,
+  lookup: SenseLookup = dictionarySense,
+) {
   const { due, newCards } = selection(userId, language, now);
   const goal = readReviewGoal(userId);
-  const items = [...due, ...newCards].slice(0, size).map((card): QueueItem => {
+  const pool = activeCards(userId, language).filter((card) => card.translation.trim() !== '');
+  const items: QueueItem[] = [];
+  for (const card of [...due, ...newCards]) {
+    if (items.length >= size) break;
+    let translation = card.translation;
+    if (translation.trim() === '') {
+      const sense = card.vocabId
+        ? fillMeaning(userId, card.vocabId, card.text, language, lookup)
+        : null;
+      if (!sense) continue;
+      translation = sense;
+      pool.push({ ...card, translation });
+    }
     const stage = stageOf(reviewCardOf(card));
-    return {
+    let questionType = questionTypeFor({
+      stage,
+      type: card.type,
+      language,
+      goal,
+      reps: card.reps,
+    });
+    let choices: string[] | undefined;
+    if (questionType === 'choose_meaning') {
+      const options = chooseMeanings({ id: card.id, text: card.text, translation }, pool);
+      if (options) choices = options;
+      else questionType = 'recognition';
+    }
+    items.push({
       cardId: card.id,
       word: card.text,
       type: card.type,
       stage,
-      questionType: questionTypeFor({ stage, type: card.type, language, goal, reps: card.reps }),
+      questionType,
       sentence: card.sentence,
-      translation: card.translation,
-    };
-  });
+      translation,
+      ...(choices ? { choices } : {}),
+    });
+  }
   const roundId = randomUUID();
   db.transaction(() => {
     db.prepare('DELETE FROM reviewRounds WHERE userId = ? AND createdAt < ?').run(
