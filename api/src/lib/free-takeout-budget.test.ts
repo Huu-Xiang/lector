@@ -4,7 +4,7 @@ import { parsePlanLimitOverrides } from './entitlements';
 import { calculateFreeTakeoutUpperBound, FREE_RESTORE_ENVELOPE_BYTES } from './free-takeout-budget';
 
 describe('Free takeout serialization budget', () => {
-  test('the complete cap-valid Free JSON shape fits the 90 MiB restore envelope', () => {
+  test('the complete cap-valid Free JSON shape fits the 128 MiB restore envelope', () => {
     const proof = calculateFreeTakeoutUpperBound(parsePlanLimitOverrides(undefined).free);
 
     // This is deliberately much larger than raw learner text: the serialized
@@ -14,12 +14,14 @@ describe('Free takeout serialization budget', () => {
     expect(proof.counts.clozeSentences).toBe(25_000);
     expect(proof.counts.acceptedDictionaryEntries).toBe(1_000);
     expect(proof.counts.learnerEvents).toBe(50);
+    expect(proof.counts.wordCards).toBe(10_000);
+    expect(proof.counts.wordReviewLog).toBe(5_000);
     expect(proof.structureAndMetadataBytes).toBeGreaterThan(50 * 1024 * 1024);
     expect(proof.escapedLearnerTextBytes).toBeGreaterThan(35 * 1024 * 1024);
     // Grows by ~466 bytes per language pack (the witness enumerates them), so
     // this constant moves with every pack that lands. It also moves with every
     // settings key, by that key's value ceiling times the escape factor.
-    expect(proof.totalBytes).toBe(93_305_791);
+    expect(proof.totalBytes).toBe(131_095_823);
     expect(proof.totalBytes).toBeLessThanOrEqual(FREE_RESTORE_ENVELOPE_BYTES);
     expect(FREE_RESTORE_ENVELOPE_BYTES - proof.totalBytes).toBeGreaterThan(1 * 1024 * 1024);
   });

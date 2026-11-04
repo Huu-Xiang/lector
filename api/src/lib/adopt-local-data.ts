@@ -50,6 +50,9 @@ export const TENANT_TABLES = [
   'learner_profiles',
   'onboarding_progress',
   'learner_events',
+  'wordCards',
+  'wordReviewLog',
+  'reviewRounds',
   // BYOK credentials are not part of user-facing exports, but they are still
   // tenant-owned rows and must follow an explicit selfhost→cloud adoption.
   'user_provider_credentials',

@@ -39,6 +39,9 @@ const SEEDED_TABLES = [
   'learner_profiles',
   'onboarding_progress',
   'learner_events',
+  'wordCards',
+  'wordReviewLog',
+  'reviewRounds',
   'usage_counters',
   'user_provider_credentials',
   'cached_entries',
@@ -113,6 +116,41 @@ function seed(userId: string, email: string, customerId: string) {
   db.prepare(
     'INSERT INTO learner_events (userId, id, eventType, language, occurredAt) VALUES (?,?,?,?,?)',
   ).run(userId, `evt-${userId}`, 'lesson_opened', 'af', NOW);
+  db.prepare(
+    `INSERT INTO wordCards (userId, id, language, wordKey, vocabId, due, modelVersion, configVersion, createdAt, updatedAt)
+     VALUES (?,?,?,?,?,?,?,?,?,?)`,
+  ).run(userId, `card-${userId}`, 'af', 'woord', `voc-${userId}`, NOW, 'FSRS-6', 1, NOW, NOW);
+  db.prepare(
+    `INSERT INTO wordReviewLog (userId, eventId, cardId, language, roundId, rating, rawAnswer, questionType,
+       prevState, prevDue, prevStability, prevDifficulty, prevElapsedDays, prevScheduledDays,
+       prevLearningSteps, prevReps, prevLapses, modelVersion, configVersion, source, reviewedAt)
+     VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+  ).run(
+    userId,
+    `evt-${userId}`,
+    `card-${userId}`,
+    'af',
+    `round-${userId}`,
+    'good',
+    'know',
+    'recognition',
+    'new',
+    NOW,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    'FSRS-6',
+    1,
+    'practice',
+    NOW,
+  );
+  db.prepare(
+    'INSERT INTO reviewRounds (userId, id, language, cardIds, createdAt) VALUES (?,?,?,?,?)',
+  ).run(userId, `round-${userId}`, 'af', JSON.stringify([`card-${userId}`]), NOW);
   db.prepare(
     'INSERT INTO usage_counters (userId, metric, period, value, updatedAt) VALUES (?,?,?,?,?)',
   ).run(userId, 'journalWords', '2026-07', 10, NOW);

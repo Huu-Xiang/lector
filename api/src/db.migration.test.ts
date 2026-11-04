@@ -494,3 +494,134 @@ describe('migrateAcceptedCacheUserKey', () => {
     expect(cacheDb.prepare('SELECT * FROM cached_entries ORDER BY userId').all()).toEqual(before);
   });
 });
+
+describe('word review schema', () => {
+  const FSRS_CLOZE_COLUMNS = [
+    'fsrsState',
+    'fsrsDue',
+    'fsrsStability',
+    'fsrsDifficulty',
+    'fsrsElapsedDays',
+    'fsrsScheduledDays',
+    'fsrsLearningSteps',
+    'fsrsReps',
+    'fsrsLapses',
+    'fsrsLastReview',
+    'fsrsUpdatedAt',
+  ];
+  const REVIEW_TABLES = ['wordCards', 'wordReviewLog', 'reviewRounds'];
+
+  function bootDir(name: string): string {
+    const dir = path.join(process.env.DATA_DIR!, name);
+    fs.rmSync(dir, { recursive: true, force: true });
+    fs.mkdirSync(dir, { recursive: true });
+    return dir;
+  }
+
+  function boot(dir: string) {
+    const result = Bun.spawnSync({
+      cmd: [
+        process.execPath,
+        '-e',
+        "import { getDatabaseInstance } from './src/db.ts'; getDatabaseInstance().close();",
+      ],
+      cwd: path.resolve(import.meta.dir, '..'),
+      env: { ...process.env, DATA_DIR: dir },
+      stdout: 'pipe',
+      stderr: 'pipe',
+    });
+    expect(result.exitCode, new TextDecoder().decode(result.stderr)).toBe(0);
+  }
+
+  function schemaOf(dir: string) {
+    const database = new Database(path.join(dir, 'lector.db'));
+    const tables = (
+      database
+        .prepare("SELECT name FROM sqlite_master WHERE type = 'table' ORDER BY name")
+        .all() as { name: string }[]
+    ).map((row) => row.name);
+    const columns = Object.fromEntries(
+      tables.map((table) => [
+        table,
+        (database.prepare(`PRAGMA table_info(${table})`).all() as { name: string }[]).sort((a, b) =>
+          a.name.localeCompare(b.name),
+        ),
+      ]),
+    );
+    const indexes = database
+      .prepare(
+        "SELECT name, tbl_name, sql FROM sqlite_master WHERE type = 'index' AND sql IS NOT NULL ORDER BY name",
+      )
+      .all();
+    database.close();
+    return { columns, indexes };
+  }
+
+  test('a fresh database migrates twice to the same schema', () => {
+    const dir = bootDir('word-review-fresh');
+    boot(dir);
+    const first = schemaOf(dir);
+    boot(dir);
+    expect(schemaOf(dir)).toEqual(first);
+
+    for (const table of REVIEW_TABLES) expect(first.columns[table]).toBeDefined();
+    const clozeColumns = (first.columns.clozeSentences as { name: string }[]).map((c) => c.name);
+    for (const column of FSRS_CLOZE_COLUMNS) expect(clozeColumns).toContain(column);
+  });
+
+  test('a database from before word review migrates twice to the fresh schema and keeps rows', () => {
+    const freshDir = bootDir('word-review-reference');
+    boot(freshDir);
+    const fresh = schemaOf(freshDir);
+
+    const dir = bootDir('word-review-old');
+    boot(dir);
+    const old = new Database(path.join(dir, 'lector.db'));
+    for (const table of REVIEW_TABLES) old.exec(`DROP TABLE ${table}`);
+    for (const column of FSRS_CLOZE_COLUMNS) {
+      old.exec(`ALTER TABLE clozeSentences DROP COLUMN ${column}`);
+    }
+    old
+      .prepare(
+        `INSERT INTO clozeSentences (id, sentence, clozeWord, clozeIndex, translation, source, collection, nextReview, masteryLevel, language, userId)
+         VALUES ('old-card', 'n sin', 'sin', 1, 'a sentence', 'tatoeba', 'top500', ?, 50, 'af', 'local')`,
+      )
+      .run(TS);
+    old.close();
+
+    boot(dir);
+    expect(schemaOf(dir)).toEqual(fresh);
+    boot(dir);
+    expect(schemaOf(dir)).toEqual(fresh);
+
+    const migrated = new Database(path.join(dir, 'lector.db'));
+    expect(
+      migrated
+        .prepare(
+          "SELECT masteryLevel, fsrsState, fsrsUpdatedAt FROM clozeSentences WHERE id = 'old-card'",
+        )
+        .get(),
+    ).toEqual({ masteryLevel: 50, fsrsState: null, fsrsUpdatedAt: null });
+    migrated.close();
+  });
+
+  test('an older app version can still insert a bank card without the FSRS columns', () => {
+    const dir = bootDir('word-review-old-insert');
+    boot(dir);
+    const database = new Database(path.join(dir, 'lector.db'));
+    database
+      .prepare(
+        `INSERT INTO clozeSentences (userId, id, sentence, clozeWord, clozeIndex, translation, source, collection, nextReview)
+         VALUES ('local', 'legacy-insert', 'n sin', 'sin', 1, 'a sentence', 'tatoeba', 'top500', ?)`,
+      )
+      .run(TS);
+    expect(
+      database
+        .prepare(
+          "SELECT fsrsState, fsrsDue, fsrsReps FROM clozeSentences WHERE id = 'legacy-insert'",
+        )
+        .get(),
+    ).toEqual({ fsrsState: null, fsrsDue: null, fsrsReps: null });
+    database.close();
+  });
+});

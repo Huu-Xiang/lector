@@ -34,6 +34,8 @@ const TABLES = [
   'learner_events',
   'onboarding_progress',
   'learner_profiles',
+  'wordCards',
+  'wordReviewLog',
 ];
 
 function reset() {
@@ -738,7 +740,7 @@ describe('restore enforces Free library and request bounds', () => {
     }
   });
 
-  test('applies the 90 MiB envelope only to Free restores', async () => {
+  test('applies the 128 MiB envelope only to Free restores', async () => {
     const restoreEngine = installLimitedEngine();
     try {
       const oversizedFree = await app.request('/', {
@@ -751,7 +753,7 @@ describe('restore enforces Free library and request bounds', () => {
       });
       expect(oversizedFree.status).toBe(413);
       expect(await oversizedFree.json()).toEqual({
-        error: 'Backup is too large for this plan (max 90 MiB)',
+        error: 'Backup is too large for this plan (max 128 MiB)',
       });
     } finally {
       restoreEngine();
@@ -1074,5 +1076,77 @@ describe('export/restore — learner profile and onboarding history (#331)', () 
         )
         .get(),
     ).toEqual({ idempotencyKey: 'lookup-1' });
+  });
+});
+
+describe('export/restore — word cards and review log', () => {
+  beforeEach(reset);
+  afterEach(reset);
+
+  function seedWordReview() {
+    db.prepare(
+      `INSERT INTO vocab (userId, id, text, type, sentence, translation, state, stateUpdatedAt, language, createdAt)
+       VALUES ('local', 'voc-maison', 'Maison', 'word', 'La maison est grande.', 'The house is big.', 'level2', ?, 'fr', ?)`,
+    ).run(TS, TS);
+    db.prepare(
+      `INSERT INTO wordCards
+         (userId, id, language, wordKey, vocabId, type, state, due, stability, difficulty,
+          elapsedDays, scheduledDays, learningSteps, reps, lapses, lastReview, retiredAt,
+          introducedAt, lastSentenceKey, lastSyncedAt, modelVersion, configVersion, createdAt, updatedAt)
+       VALUES ('local', 'card-maison', 'fr', 'maison', 'voc-maison', 'word', 'review',
+               '2026-01-11T00:00:00.000Z', 10.5, 4.25, 3, 10, 0, 4, 1, ?, NULL, ?,
+               'library:fr:1:2', ?, 'FSRS-6', 1, ?, ?)`,
+    ).run(TS, TS, TS, TS, TS);
+    db.prepare(
+      `INSERT INTO wordReviewLog
+         (userId, eventId, cardId, language, roundId, rating, rawAnswer, questionType, wasRequeue,
+          prevState, prevDue, prevStability, prevDifficulty, prevElapsedDays, prevScheduledDays,
+          prevLearningSteps, prevReps, prevLapses, prevLastReview, undoneAt, modelVersion,
+          configVersion, source, reviewedAt)
+       VALUES ('local', 'event-1', 'card-maison', 'fr', 'round-1', 'again', 'wrong', 'choose_meaning', 1,
+               'learning', ?, 2.5, 5, 1, 0, 1, 3, 0, ?, ?, 'FSRS-6', 1, 'practice', ?)`,
+    ).run(TS, TS, TS, TS);
+  }
+
+  test('round-trips word cards and review-log rows with every column', async () => {
+    seedWordReview();
+    const cardBefore = db.prepare("SELECT * FROM wordCards WHERE id = 'card-maison'").get();
+    const logBefore = db.prepare("SELECT * FROM wordReviewLog WHERE eventId = 'event-1'").get();
+
+    const backup = (await (await app.request('/')).json()) as {
+      wordCards: Record<string, unknown>[];
+      wordReviewLog: Record<string, unknown>[];
+    };
+    expect(backup.wordCards).toHaveLength(1);
+    expect(backup.wordReviewLog).toHaveLength(1);
+    expect(backup.wordCards[0]).not.toHaveProperty('userId');
+    expect(backup).not.toHaveProperty('reviewRounds');
+
+    reset();
+    const restored = await importData(backup);
+    expect(restored.status).toBe(200);
+    expect(
+      ((await restored.json()) as { imported: Record<string, number> }).imported,
+    ).toMatchObject({ vocab: 1, wordCards: 1, wordReviewLog: 1 });
+    expect(db.prepare("SELECT * FROM wordCards WHERE id = 'card-maison'").get()).toEqual(
+      cardBefore,
+    );
+    expect(db.prepare("SELECT * FROM wordReviewLog WHERE eventId = 'event-1'").get()).toEqual(
+      logBefore,
+    );
+  });
+
+  test('a restore without word-review arrays leaves both tables empty', async () => {
+    seedWordReview();
+    const backup = (await (await app.request('/')).json()) as Record<string, unknown>;
+    delete backup.wordCards;
+    delete backup.wordReviewLog;
+
+    reset();
+    const restored = await importData(backup);
+    expect(restored.status).toBe(200);
+    expect(db.prepare('SELECT COUNT(*) AS n FROM vocab').get()).toEqual({ n: 1 });
+    expect(db.prepare('SELECT COUNT(*) AS n FROM wordCards').get()).toEqual({ n: 0 });
+    expect(db.prepare('SELECT COUNT(*) AS n FROM wordReviewLog').get()).toEqual({ n: 0 });
   });
 });

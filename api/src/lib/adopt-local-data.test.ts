@@ -36,6 +36,9 @@ function createSchema(db: Database): void {
     CREATE TABLE learner_profiles (userId TEXT NOT NULL, language TEXT NOT NULL DEFAULT 'af', PRIMARY KEY (userId, language));
     CREATE TABLE onboarding_progress (userId TEXT PRIMARY KEY);
     CREATE TABLE learner_events   (userId TEXT NOT NULL DEFAULT 'local', id TEXT NOT NULL, PRIMARY KEY (userId, id));
+    CREATE TABLE wordCards        (userId TEXT NOT NULL DEFAULT 'local', id TEXT NOT NULL, PRIMARY KEY (userId, id));
+    CREATE TABLE wordReviewLog    (userId TEXT NOT NULL DEFAULT 'local', eventId TEXT NOT NULL, PRIMARY KEY (userId, eventId));
+    CREATE TABLE reviewRounds     (userId TEXT NOT NULL DEFAULT 'local', id TEXT NOT NULL, PRIMARY KEY (userId, id));
     CREATE TABLE usage_counters   (userId TEXT NOT NULL, metric TEXT NOT NULL, period TEXT NOT NULL, value INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (userId, metric, period));
     CREATE TABLE cached_entries   (userId TEXT NOT NULL DEFAULT 'local', word TEXT NOT NULL, language TEXT NOT NULL DEFAULT 'af', PRIMARY KEY (userId, word, language));
     CREATE TABLE cached_senses    (id INTEGER PRIMARY KEY, userId TEXT NOT NULL DEFAULT 'local', word TEXT NOT NULL, language TEXT NOT NULL DEFAULT 'af');

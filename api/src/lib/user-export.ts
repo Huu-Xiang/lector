@@ -26,6 +26,8 @@ export interface UserExport {
   learnerProfiles: unknown[];
   onboardingProgress: unknown[];
   learnerEvents: unknown[];
+  wordCards: unknown[];
+  wordReviewLog: unknown[];
   settings: Array<Omit<SettingRow, 'userId'>>;
 }
 
@@ -214,6 +216,28 @@ export function buildUserExport(userId: string): UserExport {
         .prepare(
           `SELECT id, eventType, language, lessonId, vocabId, properties, idempotencyKey, occurredAt
            FROM learner_events WHERE userId = ? ORDER BY occurredAt, rowid`,
+        )
+        .all(userId),
+    ),
+    wordCards: portableRows(
+      db
+        .prepare(
+          `SELECT id, language, wordKey, vocabId, type, state, due, stability, difficulty,
+                  elapsedDays, scheduledDays, learningSteps, reps, lapses, lastReview, retiredAt,
+                  introducedAt, lastSentenceKey, lastSyncedAt, modelVersion, configVersion,
+                  createdAt, updatedAt
+           FROM wordCards WHERE userId = ? ORDER BY language, wordKey`,
+        )
+        .all(userId),
+    ),
+    wordReviewLog: portableRows(
+      db
+        .prepare(
+          `SELECT eventId, cardId, language, roundId, rating, rawAnswer, questionType, wasRequeue,
+                  prevState, prevDue, prevStability, prevDifficulty, prevElapsedDays,
+                  prevScheduledDays, prevLearningSteps, prevReps, prevLapses, prevLastReview,
+                  undoneAt, modelVersion, configVersion, source, reviewedAt
+           FROM wordReviewLog WHERE userId = ? ORDER BY reviewedAt, rowid`,
         )
         .all(userId),
     ),

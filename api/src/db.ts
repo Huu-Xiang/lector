@@ -539,6 +539,83 @@ function getDb(): Database {
       ON learner_events(userId, idempotencyKey)
       WHERE idempotencyKey IS NOT NULL;
 
+    -- wordKey is foldWord(vocab.text): one card per folded word and language.
+    CREATE TABLE IF NOT EXISTS wordCards (
+      userId TEXT NOT NULL DEFAULT 'local',
+      id TEXT NOT NULL,
+      language TEXT NOT NULL,
+      wordKey TEXT NOT NULL,
+      vocabId TEXT,
+      type TEXT NOT NULL DEFAULT 'word' CHECK (type IN ('word', 'phrase')),
+      state TEXT NOT NULL DEFAULT 'new' CHECK (state IN ('new', 'learning', 'review', 'relearning')),
+      due TEXT NOT NULL,
+      stability REAL NOT NULL DEFAULT 0,
+      difficulty REAL NOT NULL DEFAULT 0,
+      elapsedDays REAL NOT NULL DEFAULT 0,
+      scheduledDays REAL NOT NULL DEFAULT 0,
+      learningSteps INTEGER NOT NULL DEFAULT 0,
+      reps INTEGER NOT NULL DEFAULT 0,
+      lapses INTEGER NOT NULL DEFAULT 0,
+      lastReview TEXT,
+      retiredAt TEXT,
+      introducedAt TEXT,
+      lastSentenceKey TEXT,
+      lastSyncedAt TEXT,
+      modelVersion TEXT NOT NULL,
+      configVersion INTEGER NOT NULL,
+      createdAt TEXT NOT NULL,
+      updatedAt TEXT NOT NULL,
+      PRIMARY KEY (userId, id)
+    );
+    CREATE UNIQUE INDEX IF NOT EXISTS idx_word_cards_user_lang_word
+      ON wordCards(userId, language, wordKey);
+    CREATE INDEX IF NOT EXISTS idx_word_cards_user_lang_due
+      ON wordCards(userId, language, due);
+
+    -- The prev* columns hold the card's FSRS state before this answer.
+    CREATE TABLE IF NOT EXISTS wordReviewLog (
+      userId TEXT NOT NULL DEFAULT 'local',
+      eventId TEXT NOT NULL,
+      cardId TEXT NOT NULL,
+      language TEXT NOT NULL,
+      roundId TEXT,
+      rating TEXT NOT NULL,
+      rawAnswer TEXT NOT NULL,
+      questionType TEXT NOT NULL,
+      wasRequeue INTEGER NOT NULL DEFAULT 0,
+      prevState TEXT NOT NULL,
+      prevDue TEXT NOT NULL,
+      prevStability REAL NOT NULL,
+      prevDifficulty REAL NOT NULL,
+      prevElapsedDays REAL NOT NULL,
+      prevScheduledDays REAL NOT NULL,
+      prevLearningSteps INTEGER NOT NULL,
+      prevReps INTEGER NOT NULL,
+      prevLapses INTEGER NOT NULL,
+      prevLastReview TEXT,
+      undoneAt TEXT,
+      modelVersion TEXT NOT NULL,
+      configVersion INTEGER NOT NULL,
+      source TEXT NOT NULL,
+      reviewedAt TEXT NOT NULL,
+      PRIMARY KEY (userId, eventId)
+    );
+    CREATE INDEX IF NOT EXISTS idx_word_review_log_user_card
+      ON wordReviewLog(userId, cardId, reviewedAt);
+    CREATE INDEX IF NOT EXISTS idx_word_review_log_user_reviewed
+      ON wordReviewLog(userId, reviewedAt);
+
+    -- cardIds is a JSON array of the wordCards ids the queue served.
+    CREATE TABLE IF NOT EXISTS reviewRounds (
+      userId TEXT NOT NULL DEFAULT 'local',
+      id TEXT NOT NULL,
+      language TEXT NOT NULL,
+      cardIds TEXT NOT NULL DEFAULT '[]',
+      createdAt TEXT NOT NULL,
+      PRIMARY KEY (userId, id)
+    );
+    CREATE INDEX IF NOT EXISTS idx_review_rounds_created ON reviewRounds(createdAt);
+
     -- Anki export queue (#241): cards the app wants created in Anki, pulled by
     -- the Lector addon (GET /api/anki/pending) and confirmed back (POST
     -- /api/anki/ack), which flips vocab.pushedToAnki. Rows reference vocab by
@@ -821,6 +898,29 @@ function getDb(): Database {
   }[];
   if (clozeTokenCols.length > 0 && !clozeTokenCols.some((c) => c.name === 'tokens')) {
     _db.exec('ALTER TABLE clozeSentences ADD COLUMN tokens TEXT');
+  }
+
+  const clozeFsrsCols = new Set(
+    (_db.prepare('PRAGMA table_info(clozeSentences)').all() as { name: string }[]).map(
+      (c) => c.name,
+    ),
+  );
+  for (const [column, type] of [
+    ['fsrsState', 'TEXT'],
+    ['fsrsDue', 'TEXT'],
+    ['fsrsStability', 'REAL'],
+    ['fsrsDifficulty', 'REAL'],
+    ['fsrsElapsedDays', 'REAL'],
+    ['fsrsScheduledDays', 'REAL'],
+    ['fsrsLearningSteps', 'INTEGER'],
+    ['fsrsReps', 'INTEGER'],
+    ['fsrsLapses', 'INTEGER'],
+    ['fsrsLastReview', 'TEXT'],
+    ['fsrsUpdatedAt', 'TEXT'],
+  ] as const) {
+    if (clozeFsrsCols.size > 0 && !clozeFsrsCols.has(column)) {
+      _db.exec(`ALTER TABLE clozeSentences ADD COLUMN ${column} ${type}`);
+    }
   }
 
   // Dead table from a long-removed translation-comparison experiment (DEBT-03).

@@ -69,6 +69,8 @@ export interface PlanLimits {
   maxLearnerEvents: number | null;
   /** UTF-8 bytes in one learner event's JSON properties. */
   maxLearnerEventBytes: number | null;
+  /** Retained word-review answers; answers prune the oldest rows instead of failing. */
+  maxWordReviewLogRows: number | null;
   /** Fair-use ceiling: journal rows (including empty drafts). */
   maxJournalEntries: number | null;
   /** Fair-use ceiling: personal API tokens. */
@@ -136,6 +138,7 @@ export const NO_STORAGE_LIMITS = {
   maxDailyStatsRows: null,
   maxLearnerEvents: null,
   maxLearnerEventBytes: null,
+  maxWordReviewLogRows: null,
   maxJournalEntries: null,
   maxApiTokens: null,
   maxApiTokenNameBytes: null,
@@ -182,6 +185,7 @@ export type LiveLimitMetric =
   | 'maxAcceptedDictionaryEntries'
   | 'maxDailyStatsRows'
   | 'maxLearnerEvents'
+  | 'maxWordReviewLogRows'
   | 'maxJournalEntries'
   | 'maxApiTokens'
   | 'maxAnkiPendingRows'
@@ -224,9 +228,10 @@ const DEFAULT_PLAN_LIMITS: Record<PlanId, PlanLimits> = {
     maxDailyStatsRows: 5_000,
     // Onboarding emits fewer than 20 idempotent events in the normal loop.
     // This leaves ample retry/headroom while keeping their takeout footprint
-    // finite alongside the 90 MiB portability proof.
+    // finite alongside the 128 MiB portability proof.
     maxLearnerEvents: 50,
     maxLearnerEventBytes: 2 * 1024,
+    maxWordReviewLogRows: 5_000,
     maxJournalEntries: 5_000,
     maxApiTokens: 20,
     maxApiTokenNameBytes: 128,
@@ -236,7 +241,7 @@ const DEFAULT_PLAN_LIMITS: Record<PlanId, PlanLimits> = {
     // Exported learner-authored TEXT totals 17.5 MiB at all aggregate caps.
     // The serialized proof additionally budgets 2x JSON escaping, every field
     // name/row/128-byte id, metadata, settings, and all dictionary children:
-    // 93,292,434 bytes inside the Cloudflare-safe 90 MiB restore envelope.
+    // 131,095,823 bytes inside the 128 MiB restore envelope (readfox.app is DNS-only, so no proxy body cap applies).
     maxLessonTextBytes: 1024 * 1024,
     maxLessonTextBytesTotal: 5 * 1024 * 1024,
     maxVocabEntryBytes: 16 * 1024,
@@ -280,6 +285,7 @@ const DEFAULT_PLAN_LIMITS: Record<PlanId, PlanLimits> = {
     maxDailyStatsRows: null,
     maxLearnerEvents: null,
     maxLearnerEventBytes: null,
+    maxWordReviewLogRows: null,
     maxJournalEntries: null,
     maxApiTokens: null,
     maxApiTokenNameBytes: null,
@@ -323,6 +329,7 @@ const DEFAULT_PLAN_LIMITS: Record<PlanId, PlanLimits> = {
     maxDailyStatsRows: null,
     maxLearnerEvents: null,
     maxLearnerEventBytes: null,
+    maxWordReviewLogRows: null,
     maxJournalEntries: null,
     maxApiTokens: null,
     maxApiTokenNameBytes: null,
@@ -367,6 +374,7 @@ const DEFAULT_PLAN_LIMITS: Record<PlanId, PlanLimits> = {
     maxDailyStatsRows: null,
     maxLearnerEvents: null,
     maxLearnerEventBytes: null,
+    maxWordReviewLogRows: null,
     maxJournalEntries: null,
     maxApiTokens: null,
     maxApiTokenNameBytes: null,
@@ -449,6 +457,7 @@ const UNLIMITED: PlanLimits = {
   maxDailyStatsRows: null,
   maxLearnerEvents: null,
   maxLearnerEventBytes: null,
+  maxWordReviewLogRows: null,
   maxJournalEntries: null,
   maxApiTokens: null,
   maxApiTokenNameBytes: null,
@@ -483,7 +492,7 @@ const UNLIMITED: PlanLimits = {
  * tiers). Lets a deployment tune tiers without a code change, e.g.
  *   LECTOR_PLAN_LIMITS='{"cloud":{"journalWordsPerMonth":8000}}'
  * Hosted Free overrides must remain finite; `max*` fair-use values may be
- * lowered but not raised above the defaults used by the 90 MiB portability
+ * lowered but not raised above the defaults used by the 128 MiB portability
  * proof. Its rich managed-LLM and managed TTS pools are fixed at zero.
  * Unknown plans/keys and non-numeric values are ignored with a warning —
  * a typo must never silently zero someone's allowance.
@@ -937,6 +946,8 @@ export function makeEntitlements(deps: EntitlementsDeps): EntitlementsEngine {
         return scalarUsage('SELECT COUNT(*) AS used FROM dailyStats WHERE userId = ?', userId);
       case 'maxLearnerEvents':
         return scalarUsage('SELECT COUNT(*) AS used FROM learner_events WHERE userId = ?', userId);
+      case 'maxWordReviewLogRows':
+        return scalarUsage('SELECT COUNT(*) AS used FROM wordReviewLog WHERE userId = ?', userId);
       case 'maxJournalEntries':
         return scalarUsage('SELECT COUNT(*) AS used FROM journal_entries WHERE userId = ?', userId);
       case 'maxApiTokens':
@@ -1038,6 +1049,7 @@ export function makeEntitlements(deps: EntitlementsDeps): EntitlementsEngine {
     'maxAcceptedDictionaryEntries',
     'maxDailyStatsRows',
     'maxLearnerEvents',
+    'maxWordReviewLogRows',
     'maxJournalEntries',
     'maxApiTokens',
     'maxAnkiPendingRows',

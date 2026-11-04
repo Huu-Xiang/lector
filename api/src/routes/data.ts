@@ -35,11 +35,12 @@ import {
   vocabContentBytes,
 } from '../lib/storage-limits';
 import { countableLessonBytes, isShippedLibraryLesson } from '../lib/library-content';
+import { FSRS_CONFIG_VERSION, FSRS_MODEL } from '../lib/review/scheduler';
 
 const app = new Hono();
 
 export const MAX_RESTORE_BODY_BYTES = FREE_RESTORE_ENVELOPE_BYTES;
-export const MAX_NON_FREE_RESTORE_BODY_BYTES = 100 * 1024 * 1024;
+export const MAX_NON_FREE_RESTORE_BODY_BYTES = 160 * 1024 * 1024;
 export const MAX_CONCURRENT_RESTORES = 1;
 
 type RestoreAdmission =
@@ -90,7 +91,7 @@ const restoreInFlightGuard = createMiddleware(async (c, next) => {
   }
 });
 
-// Free's finite storage envelope is proven to fit within 90 MiB. Paid and
+// Free's finite storage envelope is proven to fit within 128 MiB. Paid and
 // self-hosted accounts can legitimately export much larger uncapped libraries,
 // so preserve a substantially larger, still finite process-memory guard for
 // them instead of applying the Free product boundary to every plan.
@@ -126,6 +127,8 @@ const RESTORE_ARRAY_LIMITS = {
   learnerProfiles: 100,
   onboardingProgress: 10,
   learnerEvents: 100_000,
+  wordCards: 100_000,
+  wordReviewLog: 200_000,
   settings: 1_000,
 } as const;
 
@@ -184,6 +187,15 @@ const LEARNER_INTERESTS = new Set([
 ]);
 const ONBOARDING_STATUSES = new Set(['in_progress', 'completed', 'skipped']);
 const ONBOARDING_STEPS = new Set(['reader', 'practice', 'summary']);
+const CARD_STATES = new Set(['new', 'learning', 'review', 'relearning']);
+const REVIEW_RATINGS = new Set(['again', 'hard', 'good']);
+const REVIEW_ANSWERS = new Set(['dont_know', 'fuzzy', 'know', 'right', 'wrong']);
+const REVIEW_TOKEN = /^[A-Za-z0-9_.-]{1,32}$/;
+const MAX_WORD_KEY_BYTES = 256;
+
+function isRestoreFlag(value: unknown): boolean {
+  return value === undefined || value === true || value === false || value === 0 || value === 1;
+}
 
 function validateRestoreEnvelope(value: unknown): string | null {
   if (!isRecord(value)) return 'Backup must be a JSON object';
@@ -218,6 +230,7 @@ function validateRestoreEnvelope(value: unknown): string | null {
     'clozeSentences',
     'journalEntries',
     'learnerEvents',
+    'wordCards',
   ] as const) {
     const rows = value[key];
     if (!Array.isArray(rows)) continue;
@@ -233,12 +246,23 @@ function validateRestoreEnvelope(value: unknown): string | null {
     ['lessons', 'collectionId'],
     ['vocab', 'bookId'],
     ['clozeSentences', 'vocabEntryId'],
+    ['wordCards', 'vocabId'],
+    ['wordCards', 'lastSentenceKey'],
+    ['wordReviewLog', 'roundId'],
   ] as const) {
     const rows = value[key];
     if (!Array.isArray(rows)) continue;
     for (const row of rows as Array<Record<string, unknown>>) {
       if (row[field] !== undefined && row[field] !== null && validatePersistedId(row[field])) {
         return `${key}.${field} must be a control-free id of at most ${MAX_PERSISTED_ID_BYTES} UTF-8 bytes`;
+      }
+    }
+  }
+
+  if (Array.isArray(value.wordReviewLog)) {
+    for (const row of value.wordReviewLog as Array<Record<string, unknown>>) {
+      if (validatePersistedId(row.eventId) || validatePersistedId(row.cardId)) {
+        return `wordReviewLog rows require control-free eventId and cardId of at most ${MAX_PERSISTED_ID_BYTES} UTF-8 bytes`;
       }
     }
   }
@@ -262,9 +286,11 @@ function countNetNewIds(
     | 'vocab'
     | 'clozeSentences'
     | 'journal_entries'
-    | 'learner_events',
+    | 'learner_events'
+    | 'wordReviewLog',
   userId: string,
   ids: readonly string[],
+  keyColumn: 'id' | 'eventId' = 'id',
 ): number {
   const unique = [...new Set(ids)];
   if (unique.length === 0) return 0;
@@ -275,7 +301,9 @@ function countNetNewIds(
     const chunk = unique.slice(offset, offset + chunkSize);
     const placeholders = chunk.map(() => '?').join(',');
     const rows = db
-      .prepare(`SELECT id FROM ${table} WHERE userId = ? AND id IN (${placeholders})`)
+      .prepare(
+        `SELECT ${keyColumn} AS id FROM ${table} WHERE userId = ? AND ${keyColumn} IN (${placeholders})`,
+      )
       .all(userId, ...chunk) as Array<{ id: string }>;
     for (const row of rows) existing.add(row.id);
   }
@@ -388,6 +416,7 @@ const packFor = packForLanguage;
 // "Full" means every table the POST below can rebuild (#294). The rest is
 // excluded deliberately, not by oversight:
 // - chat_messages — 7-day-TTL ephemera, expired by design
+// - reviewRounds — served-card lists that expire after a day
 // - api_tokens + user_provider_credentials — secrets; tokens are re-mintable
 //   and only hashes are stored, which are useless on another instance
 // - billing_*, usage_counters, admin_*, classify_batches, anki_pending —
@@ -450,6 +479,8 @@ app.post(
       'learnerProfiles',
       'onboardingProgress',
       'learnerEvents',
+      'wordCards',
+      'wordReviewLog',
     ] as const) {
       for (const row of data[key] ?? []) {
         if (
@@ -815,6 +846,100 @@ app.post(
       row.properties = serialized;
     }
 
+    for (const row of data.wordCards ?? []) {
+      if (
+        typeof row.wordKey !== 'string' ||
+        row.wordKey.length === 0 ||
+        utf8Bytes(row.wordKey) > MAX_WORD_KEY_BYTES
+      ) {
+        return c.json(
+          {
+            error: `wordCards.wordKey must be a non-empty string of at most ${MAX_WORD_KEY_BYTES} bytes`,
+          },
+          400,
+        );
+      }
+      if (row.type !== undefined && row.type !== 'word' && row.type !== 'phrase') {
+        return c.json({ error: "wordCards.type must be 'word' or 'phrase'" }, 400);
+      }
+      if (row.state !== undefined && !CARD_STATES.has(row.state)) {
+        return c.json({ error: 'wordCards.state is invalid' }, 400);
+      }
+      if (
+        row.modelVersion !== undefined &&
+        (typeof row.modelVersion !== 'string' || !REVIEW_TOKEN.test(row.modelVersion))
+      ) {
+        return c.json({ error: 'wordCards.modelVersion is invalid' }, 400);
+      }
+      let error: string | null = null;
+      for (const field of [
+        'stability',
+        'difficulty',
+        'elapsedDays',
+        'scheduledDays',
+        'learningSteps',
+        'reps',
+        'lapses',
+        'configVersion',
+      ] as const) {
+        error ??= validateOptionalFiniteNumber(row, field, 'wordCards');
+      }
+      for (const field of [
+        'due',
+        'lastReview',
+        'retiredAt',
+        'introducedAt',
+        'lastSyncedAt',
+        'createdAt',
+        'updatedAt',
+      ] as const) {
+        error ??= validateOptionalTimestamp(row, field, 'wordCards');
+      }
+      if (error) return c.json({ error }, 400);
+    }
+
+    for (const row of data.wordReviewLog ?? []) {
+      if (!REVIEW_RATINGS.has(row.rating)) {
+        return c.json({ error: 'wordReviewLog.rating is invalid' }, 400);
+      }
+      if (!REVIEW_ANSWERS.has(row.rawAnswer)) {
+        return c.json({ error: 'wordReviewLog.rawAnswer is invalid' }, 400);
+      }
+      if (!CARD_STATES.has(row.prevState)) {
+        return c.json({ error: 'wordReviewLog.prevState is invalid' }, 400);
+      }
+      for (const field of ['questionType', 'source', 'modelVersion'] as const) {
+        if (
+          (field !== 'modelVersion' || row[field] !== undefined) &&
+          (typeof row[field] !== 'string' || !REVIEW_TOKEN.test(row[field]))
+        ) {
+          return c.json({ error: `wordReviewLog.${field} is invalid` }, 400);
+        }
+      }
+      if (!isRestoreFlag(row.wasRequeue)) {
+        return c.json({ error: 'wordReviewLog.wasRequeue must be a boolean' }, 400);
+      }
+      if (!isValidTimestamp(row.reviewedAt) || !isValidTimestamp(row.prevDue)) {
+        return c.json({ error: 'wordReviewLog.reviewedAt and prevDue must be ISO dates' }, 400);
+      }
+      let error: string | null = null;
+      for (const field of [
+        'prevStability',
+        'prevDifficulty',
+        'prevElapsedDays',
+        'prevScheduledDays',
+        'prevLearningSteps',
+        'prevReps',
+        'prevLapses',
+        'configVersion',
+      ] as const) {
+        error ??= validateOptionalFiniteNumber(row, field, 'wordReviewLog');
+      }
+      error ??= validateOptionalTimestamp(row, 'prevLastReview', 'wordReviewLog');
+      error ??= validateOptionalTimestamp(row, 'undoneAt', 'wordReviewLog');
+      if (error) return c.json({ error }, 400);
+    }
+
     const restoreSettings: Array<{ key: string; value: string }> = [];
     for (const row of data.settings ?? []) {
       if (typeof row.key !== 'string') return c.json({ error: 'settings rows require a key' }, 400);
@@ -937,6 +1062,31 @@ app.post(
     for (const row of data.learnerEvents ?? []) {
       finalLearnerEvents.set(row.id as string, row);
     }
+
+    // A card exists only for a saved word, which keeps wordCards within maxVocabEntries.
+    const finalVocabWords = new Map<string, string>();
+    for (const row of db
+      .prepare('SELECT id, text, language FROM vocab WHERE userId = ?')
+      .all(userId) as Array<{ id: string; text: string; language: string }>) {
+      finalVocabWords.set(row.id, `${row.language}\0${foldWord(row.text, packFor(row.language))}`);
+    }
+    for (const [id, row] of finalVocab) {
+      const language = row.language || 'af';
+      finalVocabWords.set(id, `${language}\0${foldWord(row.text, packFor(language))}`);
+    }
+    const savedWordKeys = new Set(finalVocabWords.values());
+    const finalWordCards = new Map<string, RestoreRow>();
+    for (const row of data.wordCards ?? []) {
+      const language = row.language || 'af';
+      const wordKey = foldWord(row.wordKey, packFor(language));
+      const key = `${language}\0${wordKey}`;
+      if (!savedWordKeys.has(key)) continue;
+      const vocabId =
+        typeof row.vocabId === 'string' && finalVocabWords.has(row.vocabId) ? row.vocabId : null;
+      finalWordCards.set(key, { ...row, language, wordKey, vocabId });
+    }
+    const finalReviewLog = new Map<string, RestoreRow>();
+    for (const row of data.wordReviewLog ?? []) finalReviewLog.set(row.eventId as string, row);
 
     const finalKnown = new Map<
       string,
@@ -1118,6 +1268,7 @@ app.post(
       cloze: countNetNewIds('clozeSentences', userId, [...finalCloze.keys()]),
       journal: countNetNewIds('journal_entries', userId, [...finalJournal.keys()]),
       learnerEvents: countNetNewIds('learner_events', userId, [...finalLearnerEvents.keys()]),
+      reviewLog: countNetNewIds('wordReviewLog', userId, [...finalReviewLog.keys()], 'eventId'),
       accepted: [...finalAccepted.keys()].filter((key) => !acceptedBefore.has(key)).length,
     };
     const storageChecks: AtomicLimitCheck[] = [
@@ -1141,6 +1292,9 @@ app.post(
         : []),
       ...(netNew.learnerEvents
         ? [{ metric: 'maxLearnerEvents' as const, requested: netNew.learnerEvents }]
+        : []),
+      ...(netNew.reviewLog
+        ? [{ metric: 'maxWordReviewLogRows' as const, requested: netNew.reviewLog }]
         : []),
       ...(netNew.accepted
         ? [{ metric: 'maxAcceptedDictionaryEntries' as const, requested: netNew.accepted }]
@@ -1182,6 +1336,8 @@ app.post(
       learnerProfiles: 0,
       onboardingProgress: 0,
       learnerEvents: 0,
+      wordCards: 0,
+      wordReviewLog: 0,
       settings: 0,
     };
 
@@ -1372,6 +1528,87 @@ app.post(
             w.domain ?? null,
           );
           results.knownWords++;
+        }
+      }
+
+      if (finalWordCards.size) {
+        const stmt = db.prepare(`
+          INSERT OR REPLACE INTO wordCards
+            (userId, id, language, wordKey, vocabId, type, state, due, stability, difficulty,
+             elapsedDays, scheduledDays, learningSteps, reps, lapses, lastReview, retiredAt,
+             introducedAt, lastSentenceKey, lastSyncedAt, modelVersion, configVersion,
+             createdAt, updatedAt)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `);
+        for (const card of finalWordCards.values()) {
+          const now = new Date().toISOString();
+          stmt.run(
+            userId,
+            card.id,
+            card.language,
+            card.wordKey,
+            card.vocabId,
+            card.type || 'word',
+            card.state || 'new',
+            card.due || now,
+            card.stability ?? 0,
+            card.difficulty ?? 0,
+            card.elapsedDays ?? 0,
+            card.scheduledDays ?? 0,
+            card.learningSteps ?? 0,
+            card.reps ?? 0,
+            card.lapses ?? 0,
+            card.lastReview ?? null,
+            card.retiredAt ?? null,
+            card.introducedAt ?? null,
+            card.lastSentenceKey ?? null,
+            card.lastSyncedAt ?? null,
+            card.modelVersion || FSRS_MODEL,
+            card.configVersion ?? FSRS_CONFIG_VERSION,
+            card.createdAt || now,
+            card.updatedAt || now,
+          );
+          results.wordCards++;
+        }
+      }
+
+      if (finalReviewLog.size) {
+        const stmt = db.prepare(`
+          INSERT OR REPLACE INTO wordReviewLog
+            (userId, eventId, cardId, language, roundId, rating, rawAnswer, questionType,
+             wasRequeue, prevState, prevDue, prevStability, prevDifficulty, prevElapsedDays,
+             prevScheduledDays, prevLearningSteps, prevReps, prevLapses, prevLastReview,
+             undoneAt, modelVersion, configVersion, source, reviewedAt)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `);
+        for (const entry of finalReviewLog.values()) {
+          stmt.run(
+            userId,
+            entry.eventId,
+            entry.cardId,
+            entry.language || 'af',
+            entry.roundId ?? null,
+            entry.rating,
+            entry.rawAnswer,
+            entry.questionType,
+            entry.wasRequeue ? 1 : 0,
+            entry.prevState,
+            entry.prevDue,
+            entry.prevStability ?? 0,
+            entry.prevDifficulty ?? 0,
+            entry.prevElapsedDays ?? 0,
+            entry.prevScheduledDays ?? 0,
+            entry.prevLearningSteps ?? 0,
+            entry.prevReps ?? 0,
+            entry.prevLapses ?? 0,
+            entry.prevLastReview ?? null,
+            entry.undoneAt ?? null,
+            entry.modelVersion || FSRS_MODEL,
+            entry.configVersion ?? FSRS_CONFIG_VERSION,
+            entry.source,
+            entry.reviewedAt,
+          );
+          results.wordReviewLog++;
         }
       }
 

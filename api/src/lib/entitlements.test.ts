@@ -229,7 +229,7 @@ describe('parsePlanLimitOverrides', () => {
     );
   });
 
-  test('default Free raw text caps feed the serialized 90 MiB portability proof', () => {
+  test('default Free raw text caps feed the serialized 128 MiB portability proof', () => {
     const free = parsePlanLimitOverrides(undefined).free;
     const exportedTextBudget =
       free.maxLessonTextBytesTotal! +

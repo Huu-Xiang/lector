@@ -4,7 +4,7 @@ import { KNOWN_SETTING_KEYS, settingValueByteLimit } from './settings-keys';
 import { MAX_PERSISTED_ID_BYTES } from './storage-limits';
 import { LANGUAGES } from './languages';
 
-export const FREE_RESTORE_ENVELOPE_BYTES = 90 * 1024 * 1024;
+export const FREE_RESTORE_ENVELOPE_BYTES = 128 * 1024 * 1024;
 const JSON_ESCAPE_FACTOR = 2;
 const MAX_TIMESTAMP_BYTES = 64;
 const MAX_LANGUAGE_CODE_BYTES = 16;
@@ -52,6 +52,8 @@ export function calculateFreeTakeoutUpperBound(limits: PlanLimits) {
     learnerProfiles: Object.keys(LANGUAGES).length,
     onboardingProgress: 1,
     learnerEvents: requiredLimit(limits, 'maxLearnerEvents'),
+    wordCards: requiredLimit(limits, 'maxVocabEntries'),
+    wordReviewLog: requiredLimit(limits, 'maxWordReviewLogRows'),
   };
 
   const baseEnvelope = {
@@ -68,6 +70,8 @@ export function calculateFreeTakeoutUpperBound(limits: PlanLimits) {
     learnerProfiles: [],
     onboardingProgress: [],
     learnerEvents: [],
+    wordCards: [],
+    wordReviewLog: [],
     settings: [],
   };
 
@@ -216,6 +220,57 @@ export function calculateFreeTakeoutUpperBound(limits: PlanLimits) {
     occurredAt: HOSTILE_TIMESTAMP,
   };
 
+  const wordCard = {
+    id: HOSTILE_ID,
+    language: HOSTILE_LANGUAGE,
+    wordKey: '\\'.repeat(256),
+    vocabId: HOSTILE_ID,
+    type: 'phrase',
+    state: 'relearning',
+    due: HOSTILE_TIMESTAMP,
+    stability: MAX_FINITE_NUMBER,
+    difficulty: MAX_FINITE_NUMBER,
+    elapsedDays: MAX_FINITE_NUMBER,
+    scheduledDays: MAX_FINITE_NUMBER,
+    learningSteps: MAX_FINITE_NUMBER,
+    reps: MAX_FINITE_NUMBER,
+    lapses: MAX_FINITE_NUMBER,
+    lastReview: HOSTILE_TIMESTAMP,
+    retiredAt: HOSTILE_TIMESTAMP,
+    introducedAt: HOSTILE_TIMESTAMP,
+    lastSentenceKey: HOSTILE_ID,
+    lastSyncedAt: HOSTILE_TIMESTAMP,
+    modelVersion: 'x'.repeat(32),
+    configVersion: MAX_FINITE_NUMBER,
+    createdAt: HOSTILE_TIMESTAMP,
+    updatedAt: HOSTILE_TIMESTAMP,
+  };
+  const wordReviewLogRow = {
+    eventId: HOSTILE_ID,
+    cardId: HOSTILE_ID,
+    language: HOSTILE_LANGUAGE,
+    roundId: HOSTILE_ID,
+    rating: 'again',
+    rawAnswer: 'dont_know',
+    questionType: 'x'.repeat(32),
+    wasRequeue: MAX_FINITE_NUMBER,
+    prevState: 'relearning',
+    prevDue: HOSTILE_TIMESTAMP,
+    prevStability: MAX_FINITE_NUMBER,
+    prevDifficulty: MAX_FINITE_NUMBER,
+    prevElapsedDays: MAX_FINITE_NUMBER,
+    prevScheduledDays: MAX_FINITE_NUMBER,
+    prevLearningSteps: MAX_FINITE_NUMBER,
+    prevReps: MAX_FINITE_NUMBER,
+    prevLapses: MAX_FINITE_NUMBER,
+    prevLastReview: HOSTILE_TIMESTAMP,
+    undoneAt: HOSTILE_TIMESTAMP,
+    modelVersion: 'x'.repeat(32),
+    configVersion: MAX_FINITE_NUMBER,
+    source: 'x'.repeat(32),
+    reviewedAt: HOSTILE_TIMESTAMP,
+  };
+
   const structureAndMetadataBytes =
     jsonBytes(baseEnvelope) +
     populatedArrayBytes(counts.collectionGroups, collectionGroup) +
@@ -230,6 +285,8 @@ export function calculateFreeTakeoutUpperBound(limits: PlanLimits) {
     populatedArrayBytes(counts.learnerProfiles, learnerProfile) +
     populatedArrayBytes(counts.onboardingProgress, onboardingProgress) +
     populatedArrayBytes(counts.learnerEvents, learnerEvent) +
+    populatedArrayBytes(counts.wordCards, wordCard) +
+    populatedArrayBytes(counts.wordReviewLog, wordReviewLogRow) +
     [...KNOWN_SETTING_KEYS].reduce(
       (total, key, index) => total + jsonBytes({ key, value: '' }) + (index === 0 ? 0 : 1),
       0,
