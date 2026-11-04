@@ -78,6 +78,7 @@ If you do not want to run a server, use the hosted app at [app.lector.dev](https
   - a podcast
 
 - **Cloze practice.** Frequency-ordered sentences. Choose an answer from a list, or type the missing word. Spaced repetition (SRS) with mastery levels.
+- **Word review.** Each saved word becomes a review card. The card asks one of three questions: choose the meaning, a recognition card (Know, Fuzzy or Don't know), or a fill-in on the sentence you saved. An optional spelling goal also asks you to type the word. FSRS schedules the cards on the server. The card stage matches the word level in the reader.
 - **Vocabulary.** Save words as you read. Track known and learning states. Save phrases as well as single words.
 - **Anki.** The [Lector Sync add-on](https://ankiweb.net/shared/info/1098736891) on AnkiWeb is the recommended integration. The add-on code is `1098736891`. Cloud mode and a remote HTTPS self-host always use it. A local self-host can instead push cards to AnkiConnect on the computer that runs Anki. Reviews in Anki can update mastery in Lector.
 - **Tutor and journal.** Ask grammar questions in plain language. Write in the target language. The tutor returns corrections. Use the Claude API or a local model.

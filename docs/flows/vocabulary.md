@@ -37,7 +37,18 @@ Keyboard: `K` marks Known. Keys `1` to `4` set levels. `X` marks Ignore. IME com
 
 Ignore does not write the translation cache. Known and levels do, for single words with no dict hit. See [translation.md](translation.md#cache-accepted-translation).
 
-Practice mastery 100 calls `updateWordState` in `persistReview`. That is `POST /api/known-words`.
+A Mastered bank word becomes known on the server: `POST /api/cloze/:id/review` calls `syncWordState`. The client no longer calls `updateWordState` for it.
+
+### Word state writes
+
+`syncWordState` (`api/src/lib/review/sync-word-state.ts`) is the single writer of word state. It writes `vocab.state`, `knownWords` and the word card (`wordCards`) together, by the source of the change:
+
+- `reader`: levels seed the FSRS state. Known or Ignore retires the card.
+- `import` and `anki`: an incoming known state keeps a Mastered card active.
+- `restore`: the same rule as import.
+- `review`: updates every vocab row that folds to the word.
+
+Vocab create, update and delete, the known-words import, Anki back-sync, restore and bank cloze reviews all call it. See [Word review](practice.md#word-review). Do not write `vocab.state` or `knownWords` anywhere else.
 
 ### Word states
 
@@ -45,7 +56,7 @@ Practice mastery 100 calls `updateWordState` in `persistReview`. That is `POST /
 
 ### Tables
 
-`vocab`, `knownWords`, `dailyStats` (`newWordsSaved`, `wordsMarkedKnown`).
+`vocab`, `knownWords`, `wordCards`, `dailyStats` (`newWordsSaved`, `wordsMarkedKnown`).
 
 ## Vocab list
 

@@ -254,6 +254,19 @@
       "route:cloze-review",
     ],
   });
+  N("flow:word-review", "flow", "Word review", {
+    domain: "practice",
+    md: "practice.md#word-review",
+    summary: "Saved words become cards. The server builds a round, FSRS schedules each answer, and syncWordState keeps vocab, knownWords and the card in step.",
+    steps: [
+      "file:word-review-round",
+      "route:review-queue",
+      "route:review-answer",
+      "fn:syncWordState",
+      "table:wordCards",
+      "table:wordReviewLog",
+    ],
+  });
   N("flow:dictation", "flow", "Dictation", {
     domain: "practice",
     md: "practice.md#dictation",
@@ -550,6 +563,9 @@
   N("file:route-vocab", "file", "vocab.ts", { path: "api/src/routes/vocab.ts", domain: "vocabulary" });
   N("file:route-known-words", "file", "known-words.ts", { path: "api/src/routes/known-words.ts", domain: "vocabulary" });
   N("file:route-cloze", "file", "cloze.ts", { path: "api/src/routes/cloze.ts", domain: "practice" });
+  N("file:route-review", "file", "review.ts", { path: "api/src/routes/review.ts", domain: "practice" });
+  N("file:word-review-round", "file", "WordReviewRound", { path: "src/app/practice/word-review/WordReviewRound.tsx", domain: "practice" });
+  N("file:sync-word-state", "file", "sync-word-state.ts", { path: "api/src/lib/review/sync-word-state.ts", domain: "vocabulary" });
   N("file:route-journal", "file", "journal.ts", { path: "api/src/routes/journal.ts", domain: "journal" });
   N("file:route-chat", "file", "chat.ts", { path: "api/src/routes/chat.ts", domain: "tutor" });
   N("file:route-explain", "file", "explain.ts", { path: "api/src/routes/explain.ts", domain: "tutor" });
@@ -623,6 +639,11 @@
   N("fn:calculateNextReview", "fn", "calculateNextReview", { path: "src/app/practice/utils.ts" });
   N("fn:commitRoundReview", "fn", "commitRoundReview", { path: "src/app/practice/use-cloze-round.ts" });
   N("fn:persistReview", "fn", "persistReview", { path: "src/app/practice/persist-review.ts" });
+  N("fn:syncWordState", "fn", "syncWordState", { path: "api/src/lib/review/sync-word-state.ts" });
+  N("fn:backfillWordCards", "fn", "backfillWordCards", { path: "api/src/lib/review/backfill.ts" });
+  N("fn:reconcileWordCards", "fn", "reconcileWordCards", { path: "api/src/lib/review/reconcile.ts" });
+  N("fn:submitAnswer", "fn", "submitAnswer", { path: "api/src/lib/review/answer.ts" });
+  N("fn:submitUndo", "fn", "submitUndo", { path: "api/src/lib/review/answer.ts" });
   N("fn:updateClozeAfterReview", "fn", "updateClozeAfterReview", { path: "src/lib/data-layer.ts" });
   N("fn:journal-handleSubmit", "fn", "JournalPage.handleSubmit", { path: "src/app/journal/page.tsx" });
   N("fn:createJournalEntry", "fn", "createJournalEntry", { path: "src/lib/data-layer.ts" });
@@ -698,6 +719,10 @@
   N("route:cloze-seed", "route", "POST /api/cloze/seed", { path: "api/src/routes/cloze.ts" });
   N("route:cloze-due", "route", "GET /api/cloze/due", { path: "api/src/routes/cloze.ts" });
   N("route:cloze-review", "route", "POST /api/cloze/:id/review", { path: "api/src/routes/cloze.ts" });
+  N("route:review-counts", "route", "GET /api/review/counts", { path: "api/src/routes/review.ts" });
+  N("route:review-queue", "route", "GET /api/review/queue", { path: "api/src/routes/review.ts" });
+  N("route:review-answer", "route", "POST /api/review/answer", { path: "api/src/routes/review.ts" });
+  N("route:review-undo", "route", "POST /api/review/undo", { path: "api/src/routes/review.ts" });
   N("route:cloze-put", "route", "PUT /api/cloze/:id", { path: "api/src/routes/cloze.ts" });
   N("route:journal-list", "route", "GET /api/journal", { path: "api/src/routes/journal.ts" });
   N("route:journal-create", "route", "POST /api/journal", { path: "api/src/routes/journal.ts" });
@@ -740,6 +765,9 @@
   N("table:knownWords", "table", "knownWords", { path: "api/src/db.ts" });
   N("table:vocab", "table", "vocab", { path: "api/src/db.ts" });
   N("table:clozeSentences", "table", "clozeSentences", { path: "api/src/db.ts" });
+  N("table:wordCards", "table", "wordCards", { path: "api/src/db.ts" });
+  N("table:wordReviewLog", "table", "wordReviewLog", { path: "api/src/db.ts" });
+  N("table:reviewRounds", "table", "reviewRounds", { path: "api/src/db.ts" });
   N("table:journal_entries", "table", "journal_entries", { path: "api/src/db.ts" });
   N("table:chat_messages", "table", "chat_messages", { path: "api/src/db.ts" });
   N("table:cached_entries", "table", "cached_entries", { path: "api/src/db.ts" });
@@ -830,7 +858,7 @@
     "flow:cache-translation",
   ]);
   domainFlows("vocabulary", ["flow:save-vocab", "flow:vocab-list", "flow:known-word-import"]);
-  domainFlows("practice", ["flow:practice-word", "flow:dictation", "flow:blacklist"]);
+  domainFlows("practice", ["flow:practice-word", "flow:word-review", "flow:dictation", "flow:blacklist"]);
   domainFlows("journal", ["flow:journal-submit", "flow:journal-draft"]);
   domainFlows("tutor", ["flow:tutor-chat", "flow:cloze-explain"]);
   domainFlows("listen", ["flow:speak-word", "flow:listen-along", "flow:youtube-captions"]);
@@ -1084,6 +1112,7 @@
   edge("fn:updateClozeAfterReview", "file:data-layer", "in");
   edge("fn:updateClozeAfterReview", "route:cloze-review", "http");
   edge("route:cloze-review", "table:clozeSentences", "writes");
+  edge("route:cloze-review", "fn:syncWordState", "calls");
   edge("fn:persistReview", "route:known-words-post", "http");
   edge("fn:persistReview", "fn:incrementDailyStat", "calls");
   edge("file:practice-page", "file:translation-drawer", "opens");
@@ -1094,6 +1123,37 @@
   edge("flow:dictation", "fn:persistReview", "calls");
   edge("flow:blacklist", "route:cloze-put", "http");
   edge("route:cloze-put", "table:clozeSentences", "writes");
+
+  edge("flow:word-review", "file:word-review-round", "starts");
+  edge("file:word-review-round", "route:review-queue", "http");
+  edge("file:word-review-round", "route:review-counts", "http");
+  edge("file:word-review-round", "route:review-answer", "http");
+  edge("file:word-review-round", "route:review-undo", "http");
+  edge("route:review-counts", "file:route-review", "in");
+  edge("route:review-queue", "file:route-review", "in");
+  edge("route:review-answer", "file:route-review", "in");
+  edge("route:review-undo", "file:route-review", "in");
+  edge("route:review-counts", "fn:backfillWordCards", "calls");
+  edge("route:review-queue", "fn:backfillWordCards", "calls");
+  edge("route:review-queue", "fn:reconcileWordCards", "calls");
+  edge("fn:backfillWordCards", "table:wordCards", "writes");
+  edge("fn:reconcileWordCards", "table:wordCards", "writes");
+  edge("route:review-queue", "table:reviewRounds", "writes");
+  edge("route:review-queue", "table:wordCards", "reads");
+  edge("route:review-answer", "fn:submitAnswer", "calls");
+  edge("route:review-undo", "fn:submitUndo", "calls");
+  edge("fn:submitUndo", "table:wordCards", "writes");
+  edge("fn:submitUndo", "table:wordReviewLog", "writes");
+  edge("route:review-counts", "fn:reconcileWordCards", "calls");
+  edge("fn:submitAnswer", "table:wordCards", "writes");
+  edge("fn:submitAnswer", "table:wordReviewLog", "writes");
+  edge("fn:submitAnswer", "fn:syncWordState", "calls");
+  edge("fn:syncWordState", "file:sync-word-state", "in");
+  edge("fn:syncWordState", "table:vocab", "writes");
+  edge("fn:syncWordState", "table:knownWords", "writes");
+  edge("fn:syncWordState", "table:wordCards", "writes");
+  edge("route:vocab-post", "fn:syncWordState", "calls");
+  edge("route:known-words-post", "fn:syncWordState", "calls");
 
   // ── Journal ───────────────────────────────────────────────────────────────
 

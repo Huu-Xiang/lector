@@ -12,6 +12,7 @@
           "account": "Your email address, optional name, and a salted hash of your password.",
           "text": "The <strong>text</strong> extracted from books and articles you import (titles and chapters). We do not keep the original EPUB file.",
           "learning": "Your vocabulary, reading progress, practice history, journal entries and settings.",
+          "reviewHistory": "Your word review history: each answer, the time you gave it, and the card's schedule. It is part of your data export. Free accounts keep the most recent 5,000 entries.",
           "aiKey": "If you add your own AI key, it is stored encrypted (AES-256-GCM). It is never sent back to your browser.",
           "usage": "Monthly counters of how many AI lookups and requests you used, so we can apply the monthly allowance.",
           "session": "A session cookie that keeps you signed in, and server logs used to keep the service secure and working. Web access logs keep the page address, time and status, with the IP address cut to its first three parts (for example 203.0.113.x). They hold no cookies or passwords and are deleted after 30 days.",

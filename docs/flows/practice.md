@@ -1,6 +1,6 @@
 # Practice domain
 
-This domain runs cloze and dictation with spaced repetition (SRS). Cards live in `clozeSentences`. Mastery 100 also writes the Vocabulary domain.
+This domain runs word review, cloze and dictation. Word review cards live in `wordCards`. Cloze cards live in `clozeSentences`. Both use FSRS on the server. A Mastered word also writes the Vocabulary domain.
 
 Intervals in days come from `calculateNextReview`:
 
@@ -12,7 +12,80 @@ Intervals in days come from `calculateNextReview`:
 | 75 | 7 |
 | 100 | 14 |
 
-A correct answer adds 25, cap 100. A miss sets mastery to 0 and re-queues the card in the same round. Retry awards no points. When a mastery 100 card is due, it still appears.
+The table shows the legacy fixed gaps. The server now schedules bank cloze reviews with FSRS (see Bank cloze scheduling below). The client still sends the old body. A correct answer adds 25, cap 100. A miss sets mastery to 0 and re-queues the card in the same round. Retry awards no points. When a mastery 100 card is due, it still appears.
+
+## Word review
+
+**App domain:** Practice
+
+The user opens `/practice` and starts "My words". The server builds a round of due and new word cards. FSRS (ts-fsrs 5.4.2) schedules each answer on the server only. The client never runs FSRS.
+
+### Path
+
+```mermaid
+sequenceDiagram
+  actor User
+  participant UI as WordReviewRound
+  participant API as review.ts
+  participant Prep as backfill and reconcile
+  participant Ans as submitAnswer
+  participant Sync as syncWordState
+  participant DB as wordCards, wordReviewLog, reviewRounds
+
+  User->>UI: Open My words
+  UI->>API: GET /api/review/counts
+  API->>Prep: backfillWordCards, reconcileWordCards
+  UI->>API: GET /api/review/queue
+  API->>Prep: backfillWordCards, reconcileWordCards
+  API->>DB: INSERT reviewRounds, read due and new cards
+  User->>UI: Answer a card
+  UI->>API: POST /api/review/answer
+  API->>Ans: submitAnswer
+  Ans->>DB: card, log row, daily stats, points (one transaction)
+  Ans->>Sync: word state for vocab and reader
+  opt I was wrong
+    UI->>API: POST /api/review/undo
+    API->>DB: restore card from the log snapshot
+  end
+```
+
+### Key files
+
+| Role | Path | Function |
+| --- | --- | --- |
+| UI | `src/app/practice/word-review/` | `WordReviewEntry`, `WordReviewRound`, `use-word-review-round.ts`, `questions.ts` |
+| Client | `src/lib/data-layer.ts` | `getReviewQueue`, `submitReviewAnswer`, `undoReviewAnswer` |
+| API | `api/src/routes/review.ts` | `GET /counts`, `GET /queue`, `POST /answer`, `POST /undo` |
+| Queue | `api/src/lib/review/queue.ts` | `buildRound`, `getCounts` |
+| Answer | `api/src/lib/review/answer.ts` | `submitAnswer`, `submitUndo` |
+| FSRS | `api/src/lib/review/scheduler.ts`, `stages.ts` | rating map, stage from stability |
+| Meanings | `api/src/lib/review/meanings.ts` | four meanings for choose-the-meaning |
+| Prepare | `api/src/lib/review/backfill.ts`, `reconcile.ts` | `backfillWordCards`, `reconcileWordCards` |
+
+### Rules
+
+- Tables: `wordCards` (one per folded word and language), `wordReviewLog` (append-only answers with the pre-review FSRS snapshot), `reviewRounds` (short-lived, not exported).
+- Every `counts` and `queue` request runs `backfillWordCards` and then `reconcileWordCards`. Backfill makes cards for words saved before launch, at their current level, with at most 20 seeded reviews due per day. Reconcile repairs cards after a write that skipped the sync function, such as an older app version on the same database.
+- The question type follows the stage and the `reviewGoal` setting (`recognize` or `recognize_spell`). Phrases, Chinese and Korean never get a fill-in.
+- A round holds at most 20 new cards per language per learner-local day. Words saved today come first.
+- Wrong and Don't know cards come back once per round. "I was wrong" calls `/undo`.
+- Choose-the-meaning shows four meanings: the word's own and three from the learner's other saved words. With fewer than three usable distractors, the card becomes a recognition card for that round.
+- Stages by stability: New, Learning, Familiar, Mastered. Retention is 0.9. Intervals cap at 365 days.
+- Free accounts keep at most 5,000 log rows. Pruning keeps each card's newest row.
+- Cards and the log travel with export and restore. Restore skips cards whose word has no saved vocab row.
+- Stage 2 (library, Tatoeba and AI sentences) is not built. Fill-in uses the saved sentence.
+
+### Bank cloze scheduling
+
+`POST /api/cloze/:id/review` keeps its request body. It now schedules from `correct` with server time. The FSRS state of a row is seeded from its legacy mastery and gap when it is empty or older than `lastReviewed`. The route writes the FSRS columns, `masteryLevel` (0/25/75/100 from the stage) and `nextReview` (the FSRS due time). A Mastered bank word becomes known on the server through `syncWordState`. The client no longer writes `knownWords` for it.
+
+### Tables
+
+`wordCards`, `wordReviewLog`, `reviewRounds`, `vocab`, `knownWords`, `dailyStats`.
+
+### Tests
+
+`api/src/lib/review/*.test.ts`, `src/app/practice/word-review/__tests__/`.
 
 ## Practice word
 
@@ -48,9 +121,6 @@ sequenceDiagram
   Persist->>DL: updateClozeAfterReview
   DL->>API: POST /api/cloze/:id/review
   API->>DB: masteryLevel, nextReview, counters
-  opt Mastery 100
-    Persist->>DL: updateWordState known
-  end
   Persist->>DL: incrementDailyStat clozePracticed
 ```
 
@@ -94,7 +164,7 @@ Blacklisted rows stay out. Order is random.
 
 ### Tables
 
-`clozeSentences`, `knownWords` at mastery 100, and `dailyStats`.
+`clozeSentences`, `knownWords` (written by the server when the word is Mastered), and `dailyStats`.
 
 ### Tests
 

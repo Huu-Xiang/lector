@@ -20,6 +20,7 @@ This repository is **Readfox**, a public, self-managed fork of `heuwels/lector` 
 - **Public pages.** `/privacy`, `/terms`, `/about`, `/landing`, `/pricing`, `/checkout` and `/books` render without a session or app chrome: they are listed in `AUTH_ROUTES` in `src/lib/api-base.ts`. `/books` and `/books/<language>/<slug>` are the public free-library pages, read from `languages/*/content/library` by `src/lib/public-books.ts` and listed in the sitemap. The privacy text states what the service does; change it in the same commit as any change to data handling (new AI provider, new third party, new logging).
 - **Landing rewrite lives in Caddy, not in Next.** `deploy/readfox/Caddyfile` serves `/landing` at `/` (a rewrite, status 200) when no `better-auth.session_token` cookie is present, and answers a direct `/landing` request with a 301 to `/`. The repo copy holds only the `readfox.app` site; the server file has more blocks, so merge by hand. `sitemap.ts` and `robots.ts` list the public pages.
 - **Setup.** `/setup` is a bare route (no sidebar, see `isBareRoute`). It asks for the native language (default: the interface locale), the language to learn, a CEFR level and reading interests. `SETUP_READY_LANGUAGES` (comma-separated codes, passed to the browser through `__env.js`) limits which languages can be chosen; the others show "In development". Unset means every language. Production sets it to `en,fr`. Without `SETUP_READY_LANGUAGES`, `src/app/setup/page.tsx` shows `POPULAR_LANGUAGES` first and hides the rest behind `setup-language-show-all`; e2e specs click that button before picking other languages. A language with starter lessons starts the guided lesson at once. Any other language shows `RecommendedForYou` (books near the level, one article per interest); the chosen item becomes the guided lesson. The same component shows on the library page while the library has fewer than three collections.
+- **Word state.** All writes to `vocab.state` and `knownWords` go through `syncWordState` in `api/src/lib/review/sync-word-state.ts`. It keeps the word card in step. Scheduling is FSRS on the server only (`ts-fsrs` 5.4.2).
 - **Passwords.** A new password needs 8 to 128 characters with a letter and a digit (`api/src/lib/password-rules.ts`, enforced by a better-auth hook on sign-up, reset and change; mirrored by `src/lib/password-strength.ts`). Register and reset ask twice and show `PasswordMeter`.
 - **CI.** Upstream's `docker.yml`/`release.yml` (AWS deploy) were removed. `.github/workflows/build-image.yml` builds `ghcr.io/huu-xiang/lector:sha-<commit>` for amd64 on every push to `selfhosted`. The paragraphs below about `release.yml` describe upstream only.
 - **Deployment.** Production is one VPS running `deploy/readfox/docker-compose.yml` (lector, caddy, litestream) in `/srv/lector`. Deploy by running `/srv/lector/deploy.sh <commit-sha>` on the server (copy of `deploy/readfox/deploy.sh`). It sets `LECTOR_VERSION`, pulls, restarts, and removes old Lector images except the previous one (rollback). Secrets live only in the server's `.env` / `.env.backup`; never commit them. Backups (Litestream to R2 plus daily age-encrypted snapshots) are described in `deploy/readfox/README.md`; the age private key is kept offline by the owner.
@@ -150,3 +151,13 @@ Do not put agent-only or contributor-only material in `README.md`. Put the folde
 Lead with Docker Compose. Do not lead with `npm run`. Do not describe Lector as an Afrikaans-only reader. Afrikaans is the first language pack, not the product.
 
 After a README edit, run the STE linter on `README.md`, `CONTRIBUTING.md`, and `deploy/README.md`.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+## This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->
