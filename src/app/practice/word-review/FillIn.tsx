@@ -6,16 +6,22 @@ import { getActivePack } from '@/lib/data-layer';
 import type { ReviewItem } from '@/types';
 import { ChoiceList } from './ChooseMeaning';
 import { buildFillInQuestion } from './questions';
+import SentenceTranslation from './SentenceTranslation';
+import SourceLine from './SourceLine';
 
 export default function FillIn({
   item,
   roundItems,
   locked,
+  showTranslation,
+  onShowTranslation,
   onAnswer,
 }: {
   item: ReviewItem;
   roundItems: ReviewItem[];
   locked: boolean;
+  showTranslation: boolean;
+  onShowTranslation: () => void;
   onAnswer: (answer: 'right' | 'wrong') => Promise<boolean>;
 }) {
   const t = useTranslations('practice.words');
@@ -36,9 +42,18 @@ export default function FillIn({
     <div data-testid="fill-in">
       <p className="mb-2 text-center text-sm text-muted-foreground">{t('fillIn')}</p>
       <p className="mb-2 py-4 text-center text-xl leading-relaxed">{question.blanked}</p>
-      {item.translation && (
-        <p className="mb-6 text-center text-sm text-muted-foreground">{item.translation}</p>
-      )}
+      {!locked && <SourceLine source={item.sentenceSource} />}
+      {item.sentenceTranslation
+        ? !locked && (
+            <SentenceTranslation
+              text={item.sentenceTranslation.text}
+              show={showTranslation}
+              onShow={onShowTranslation}
+            />
+          )
+        : item.translation && (
+            <p className="mb-6 text-center text-sm text-muted-foreground">{item.translation}</p>
+          )}
       <ChoiceList
         options={question.options}
         correctIndex={question.correctIndex}

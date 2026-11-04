@@ -11,7 +11,9 @@ vi.mock('./language-cache', () => ({
 import {
   getReviewCounts,
   getReviewGoal,
+  getReviewExampleSentence,
   getReviewQueue,
+  getReviewSentenceTranslation,
   setReviewGoal,
   submitReviewAnswer,
   undoReviewAnswer,
@@ -73,6 +75,37 @@ describe('review writes', () => {
       undoReviewAnswer({ roundId: 'r1', eventId: 'e1', newEventId: 'e2' }),
     ).rejects.toThrow('Too late to undo');
     expect(apiFetch.mock.calls[0][0]).toBe('/api/review/undo?language=fr');
+  });
+});
+
+describe('review sentence calls', () => {
+  it('posts the card to the translation route and unwraps the translation', async () => {
+    apiFetch
+      .mockResolvedValueOnce(jsonResponse({ translation: { text: 'Bonjour', lang: 'fr' } }))
+      .mockResolvedValueOnce(jsonResponse({ translation: null }));
+    const input = { roundId: 'r1', cardId: 'c1' };
+
+    expect(await getReviewSentenceTranslation(input)).toEqual({ text: 'Bonjour', lang: 'fr' });
+    expect(await getReviewSentenceTranslation(input)).toBeNull();
+    expect(apiFetch).toHaveBeenCalledWith('/api/review/sentence-translation?language=fr', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(input),
+    });
+  });
+
+  it('posts the card to the example route and returns the body', async () => {
+    const body = { sentence: null, translationPending: false };
+    apiFetch.mockResolvedValueOnce(jsonResponse(body));
+    expect(await getReviewExampleSentence({ roundId: 'r1', cardId: 'c1' })).toEqual(body);
+    expect(apiFetch.mock.calls[0][0]).toBe('/api/review/example-sentence?language=fr');
+  });
+
+  it('rejects when the route fails', async () => {
+    apiFetch.mockResolvedValueOnce(jsonResponse({ error: 'Slow down' }, 429));
+    await expect(getReviewExampleSentence({ roundId: 'r1', cardId: 'c1' })).rejects.toThrow(
+      'Slow down',
+    );
   });
 });
 

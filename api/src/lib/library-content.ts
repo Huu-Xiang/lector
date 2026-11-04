@@ -118,6 +118,15 @@ function readTranslations(language: LanguageCode): Translations {
   return JSON.parse(fs.readFileSync(file, 'utf8')) as Translations;
 }
 
+/** Book titles by slug, keyed by interface locale. */
+export function libraryBookTitles(language: LanguageCode): Record<string, Record<string, string>> {
+  const titles: Record<string, Record<string, string>> = {};
+  for (const [slug, entry] of Object.entries(readTranslations(language))) {
+    if (entry.title) titles[slug] = entry.title;
+  }
+  return titles;
+}
+
 function readManifest(dir: string, slug: string): Manifest {
   return JSON.parse(fs.readFileSync(path.join(dir, 'manifest.json'), 'utf8')) as Manifest;
 }

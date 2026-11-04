@@ -2,7 +2,7 @@ import type { LanguageConfig } from '@/lib/languages';
 import { resolveClozeTokens } from '@/lib/languages';
 import { isComposing } from '@/lib/keyboard';
 import { splitTrailingPunctuation } from '@/lib/words';
-import type { RecognitionAnswer, ReviewItem, ReviewQuestionType } from '@/types';
+import type { RecognitionAnswer, ReviewItem, ReviewQuestionType, SentenceBlank } from '@/types';
 import { createBlankedSentence, normalize } from '../utils';
 
 export interface FillInQuestion {
@@ -22,7 +22,22 @@ function blankIndex(item: ReviewItem, pack?: LanguageConfig): number {
   );
 }
 
+const BLANK = '_____';
+
+export function renderBlank(sentence: string, blank: SentenceBlank | undefined): string | null {
+  if (!blank) return null;
+  const { start, end } = blank;
+  if (!Number.isInteger(start) || !Number.isInteger(end)) return null;
+  if (start < 0 || end <= start || end > sentence.length) return null;
+  const span = sentence.slice(start, end);
+  const [core, punct] = splitTrailingPunctuation(span);
+  const lead = span.slice(0, span.length - core.length - punct.length);
+  return sentence.slice(0, start) + lead + BLANK + punct + sentence.slice(end);
+}
+
 export function blankSentence(item: ReviewItem, pack?: LanguageConfig): string | null {
+  const fromServer = renderBlank(item.sentence, item.sentenceBlank);
+  if (fromServer !== null) return fromServer;
   const index = blankIndex(item, pack);
   if (index < 0) return null;
   const tokens = resolveClozeTokens(item.sentence, null, pack);
@@ -77,9 +92,9 @@ export function effectiveQuestionType(
       return buildFillInQuestion(item, roundItems, pack) ? 'fill_in' : 'recognition';
     case 'dictation':
       if (audio && item.sentence) return 'dictation';
-      return blankIndex(item, pack) >= 0 ? 'typed_fill_in' : 'recognition';
+      return blankSentence(item, pack) !== null ? 'typed_fill_in' : 'recognition';
     case 'typed_fill_in':
-      return blankIndex(item, pack) >= 0 ? 'typed_fill_in' : 'recognition';
+      return blankSentence(item, pack) !== null ? 'typed_fill_in' : 'recognition';
     default:
       return 'recognition';
   }

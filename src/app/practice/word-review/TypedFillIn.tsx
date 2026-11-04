@@ -9,14 +9,20 @@ import { isComposing } from '@/lib/keyboard';
 import type { ReviewItem } from '@/types';
 import { checkAnswer } from '../utils';
 import { blankSentence } from './questions';
+import SentenceTranslation from './SentenceTranslation';
+import SourceLine from './SourceLine';
 
 export default function TypedFillIn({
   item,
   locked,
+  showTranslation,
+  onShowTranslation,
   onAnswer,
 }: {
   item: ReviewItem;
   locked: boolean;
+  showTranslation: boolean;
+  onShowTranslation: () => void;
   onAnswer: (answer: 'right' | 'wrong') => Promise<boolean>;
 }) {
   const t = useTranslations('practice.words');
@@ -38,9 +44,18 @@ export default function TypedFillIn({
     <div data-testid="typed-fill-in">
       <p className="mb-2 text-center text-sm text-muted-foreground">{t('typedFillIn')}</p>
       <p className="mb-2 py-4 text-center text-xl leading-relaxed">{blanked}</p>
-      {item.translation && (
-        <p className="mb-6 text-center text-sm text-muted-foreground">{item.translation}</p>
-      )}
+      {!locked && <SourceLine source={item.sentenceSource} />}
+      {item.sentenceTranslation
+        ? !locked && (
+            <SentenceTranslation
+              text={item.sentenceTranslation.text}
+              show={showTranslation}
+              onShow={onShowTranslation}
+            />
+          )
+        : item.translation && (
+            <p className="mb-6 text-center text-sm text-muted-foreground">{item.translation}</p>
+          )}
       <form
         className="flex flex-col gap-3"
         onSubmit={(event) => {

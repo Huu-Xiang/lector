@@ -221,6 +221,51 @@ export interface ReviewItem {
   sentence: string;
   translation: string;
   choices?: string[];
+  sentenceSource?: SentenceSource;
+  sentenceBlank?: SentenceBlank;
+  sentenceTranslation?: SentenceTranslation;
+  example?: ReviewExample;
+  translationPending?: true;
+  aiExamplePending?: true;
+}
+
+export interface SentenceSource {
+  kind: 'saved' | 'library' | 'tatoeba' | 'ai';
+  bookSlug?: string;
+  bookTitle?: string;
+  bookTitles?: Record<string, string>;
+  chapterTitle?: string;
+  tatoebaId?: number;
+  tatoebaSearchText?: string;
+}
+
+export interface SentenceBlank {
+  tokenStart: number;
+  tokenEnd: number;
+  start: number;
+  end: number;
+}
+
+export interface SentenceTranslation {
+  text: string;
+  lang: string;
+}
+
+export interface ReviewExample {
+  text: string;
+  blank?: SentenceBlank;
+  source: SentenceSource;
+  translation?: SentenceTranslation;
+}
+
+export interface ReviewExampleResult {
+  sentence: {
+    text: string;
+    blank: SentenceBlank;
+    source: SentenceSource;
+    translation?: SentenceTranslation;
+  } | null;
+  translationPending?: boolean;
 }
 
 export interface ReviewQueue {

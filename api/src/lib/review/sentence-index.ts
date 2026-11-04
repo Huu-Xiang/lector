@@ -5,12 +5,18 @@ import {
   tokenizeWords,
   type LanguageCode,
 } from '../languages';
-import { listLibraryBooks, loadLibraryBook, loadLibraryLesson } from '../library-content';
+import {
+  libraryBookTitles,
+  listLibraryBooks,
+  loadLibraryBook,
+  loadLibraryLesson,
+} from '../library-content';
 
 export interface Chapter {
   id: number;
   bookSlug: string;
   bookTitle: string;
+  bookTitles: Record<string, string>;
   bookLevel: string;
   lessonIndex: number;
   sourceFile: string;
@@ -113,6 +119,7 @@ async function build(language: LanguageCode): Promise<LibraryIndex | null> {
   await yieldTurn();
   const chapters: Chapter[] = [];
   try {
+    const titles = libraryBookTitles(language);
     let sliceStart = performance.now();
     for (const summary of listLibraryBooks(language)) {
       const book = loadLibraryBook(language, summary.slug);
@@ -124,6 +131,7 @@ async function build(language: LanguageCode): Promise<LibraryIndex | null> {
           id: chapters.length,
           bookSlug: book.slug,
           bookTitle: book.title,
+          bookTitles: titles[book.slug] ?? {},
           bookLevel: book.level,
           lessonIndex,
           sourceFile: lesson.sourceFile,

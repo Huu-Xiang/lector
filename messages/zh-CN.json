@@ -1719,6 +1719,11 @@
       "answered": "已复习 {count} 个词",
       "retried": "{count} 个词会再出现一次",
       "nextDue": "下次复习：{time}",
+      "source": {
+        "library": "来自 <link>{name}</link>",
+        "tatoeba": "来自 <link>Tatoeba</link>",
+        "ai": "AI 例句"
+      },
       "stage": {
         "new": "新词",
         "learning": "学习中",

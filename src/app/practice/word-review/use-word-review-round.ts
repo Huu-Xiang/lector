@@ -1,7 +1,14 @@
 import { useCallback, useReducer, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
-import { getReviewQueue, submitReviewAnswer, undoReviewAnswer } from '@/lib/data-layer';
+import {
+  getReviewExampleSentence,
+  getReviewQueue,
+  getReviewSentenceTranslation,
+  submitReviewAnswer,
+  undoReviewAnswer,
+} from '@/lib/data-layer';
+import { applyCardPatch, resolveLazySentence, type CardPatch } from './lazy-sentence';
 import { playCorrectSound, playIncorrectSound } from '@/lib/sounds';
 import type {
   ReviewAnswerResult,
@@ -62,6 +69,7 @@ export type WordRoundAction =
       result: ReviewAnswerResult;
     }
   | { type: 'undone'; result: ReviewAnswerResult }
+  | { type: 'card-patched'; cardId: string; patch: CardPatch }
   | { type: 'advance' };
 
 export function createInitialWordRound(): WordRoundState {
@@ -166,6 +174,18 @@ export function wordRoundReducer(state: WordRoundState, action: WordRoundAction)
       }
       return next;
     }
+    case 'card-patched': {
+      const { cardId, patch } = action;
+      const update = (item: ReviewItem) =>
+        item.cardId === cardId ? applyCardPatch(item, patch) : item;
+      const known = state.items[cardId];
+      return {
+        ...state,
+        queue: state.queue.map(update),
+        retryQueue: state.retryQueue.map(update),
+        items: known ? { ...state.items, [cardId]: applyCardPatch(known, patch) } : state.items,
+      };
+    }
     case 'advance':
       return advanceRound(state);
   }
@@ -206,10 +226,12 @@ export function useWordReviewRound() {
   const t = useTranslations('practice.words');
   const [round, dispatch] = useReducer(wordRoundReducer, undefined, createInitialWordRound);
   const busy = useRef(false);
+  const requested = useRef(new Set<string>());
 
   const start = useCallback(
     async function load(size = 20) {
       dispatch({ type: 'begin' });
+      requested.current.clear();
       try {
         const queue = await getReviewQueue(size);
         dispatch({ type: 'loaded', roundId: queue.roundId, items: queue.items });
@@ -272,5 +294,21 @@ export function useWordReviewRound() {
 
   const advance = useCallback(() => dispatch({ type: 'advance' }), []);
 
-  return { round, start, answer, undoKnow, advance };
+  const loadSentence = useCallback(
+    (item: ReviewItem) => {
+      const roundId = round.roundId;
+      void resolveLazySentence(
+        item,
+        requested.current,
+        {
+          example: (cardId) => getReviewExampleSentence({ roundId, cardId }),
+          translation: (cardId) => getReviewSentenceTranslation({ roundId, cardId }),
+        },
+        (patch) => dispatch({ type: 'card-patched', cardId: item.cardId, patch }),
+      );
+    },
+    [round.roundId],
+  );
+
+  return { round, start, answer, undoKnow, advance, loadSentence };
 }

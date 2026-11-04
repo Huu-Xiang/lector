@@ -132,7 +132,9 @@ import type {
   ReviewAnswerResult,
   ReviewCounts,
   ReviewGoal,
+  ReviewExampleResult,
   ReviewQueue,
+  SentenceTranslation,
   ReviewQuestionType,
   ReviewRawAnswer,
 } from '@/types';
@@ -1297,6 +1299,33 @@ export async function undoReviewAnswer(input: {
   });
   await requireOk(res, 'Could not change your answer');
   invalidateDailyStats();
+  return res.json();
+}
+
+export async function getReviewSentenceTranslation(input: {
+  roundId: string;
+  cardId: string;
+}): Promise<SentenceTranslation | null> {
+  const res = await apiFetch(`/api/review/sentence-translation${langParam()}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(input),
+  });
+  await requireOk(res, 'Could not load the translation');
+  const body = (await res.json()) as { translation: SentenceTranslation | null };
+  return body.translation ?? null;
+}
+
+export async function getReviewExampleSentence(input: {
+  roundId: string;
+  cardId: string;
+}): Promise<ReviewExampleResult> {
+  const res = await apiFetch(`/api/review/example-sentence${langParam()}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(input),
+  });
+  await requireOk(res, 'Could not load an example');
   return res.json();
 }
 

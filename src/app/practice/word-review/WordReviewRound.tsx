@@ -12,10 +12,13 @@ import { diffDictation, scoreDictation } from '../utils';
 import ChooseMeaning from './ChooseMeaning';
 import FillIn from './FillIn';
 import RecognitionCard from './RecognitionCard';
+import SentenceTranslation from './SentenceTranslation';
+import SourceLine from './SourceLine';
 import StageBadge from './StageBadge';
 import TypedFillIn from './TypedFillIn';
 import { effectiveQuestionType } from './questions';
 import { useQuestionKeys } from './use-question-keys';
+import { useShowTranslation } from './use-show-translation';
 import { summarizeRound, useWordReviewRound } from './use-word-review-round';
 
 function dictationCurrent(item: ReviewItem) {
@@ -24,7 +27,7 @@ function dictationCurrent(item: ReviewItem) {
     sentence: item.sentence,
     clozeWord: item.word,
     clozeIndex: 0,
-    translation: item.translation,
+    translation: item.sentenceTranslation?.text ?? item.translation,
     source: 'mined',
     collection: 'top500',
     masteryLevel: 0,
@@ -43,7 +46,8 @@ function Shell({ children }: { children: React.ReactNode }) {
 export default function WordReviewRound({ onExit }: { onExit: () => void }) {
   const t = useTranslations('practice.words');
   const format = useFormatter();
-  const { round, start, answer, undoKnow, advance } = useWordReviewRound();
+  const { round, start, answer, undoKnow, advance, loadSentence } = useWordReviewRound();
+  const [showTranslation, showTranslationNow] = useShowTranslation();
   const started = useRef(false);
 
   useEffect(() => {
@@ -60,6 +64,10 @@ export default function WordReviewRound({ onExit }: { onExit: () => void }) {
       current ? effectiveQuestionType(current, roundItems, hasAudio(), getActivePack()) : null,
     [current, roundItems],
   );
+
+  useEffect(() => {
+    if (current && questionType && questionType !== 'choose_meaning') loadSentence(current);
+  }, [current, questionType, loadSentence]);
 
   useQuestionKeys((event) => {
     if (event.key !== 'Enter') return;
@@ -168,6 +176,17 @@ export default function WordReviewRound({ onExit }: { onExit: () => void }) {
   const submit = (raw: Parameters<typeof answer>[1]) => answer(current, raw, questionType);
   const left = round.queue.length + round.retryQueue.length;
   const card = `${current.cardId}:${round.step}`;
+  const shown = current.example
+    ? {
+        text: current.example.text,
+        source: current.example.source,
+        translation: current.example.translation,
+      }
+    : {
+        text: current.sentence,
+        source: current.sentenceSource,
+        translation: current.sentenceTranslation,
+      };
 
   return (
     <div className="py-6" data-testid="word-review-round">
@@ -180,7 +199,14 @@ export default function WordReviewRound({ onExit }: { onExit: () => void }) {
           <ChooseMeaning key={card} item={current} locked={locked} onAnswer={submit} />
         )}
         {questionType === 'recognition' && (
-          <RecognitionCard key={card} item={current} locked={locked} onAnswer={submit} />
+          <RecognitionCard
+            key={card}
+            item={current}
+            locked={locked}
+            showTranslation={showTranslation}
+            onShowTranslation={showTranslationNow}
+            onAnswer={submit}
+          />
         )}
         {questionType === 'fill_in' && (
           <FillIn
@@ -188,11 +214,20 @@ export default function WordReviewRound({ onExit }: { onExit: () => void }) {
             item={current}
             roundItems={roundItems}
             locked={locked}
+            showTranslation={showTranslation}
+            onShowTranslation={showTranslationNow}
             onAnswer={submit}
           />
         )}
         {questionType === 'typed_fill_in' && (
-          <TypedFillIn key={card} item={current} locked={locked} onAnswer={submit} />
+          <TypedFillIn
+            key={card}
+            item={current}
+            locked={locked}
+            showTranslation={showTranslation}
+            onShowTranslation={showTranslationNow}
+            onAnswer={submit}
+          />
         )}
         {questionType === 'dictation' && !locked && (
           <DictationCard
@@ -228,8 +263,17 @@ export default function WordReviewRound({ onExit }: { onExit: () => void }) {
                 )}
               </p>
             )}
-            {current.sentence && (
-              <p className="mt-2 text-sm text-muted-foreground">{current.sentence}</p>
+            {shown.text && (
+              <>
+                <p className="mt-2 text-sm text-muted-foreground">{shown.text}</p>
+                <SourceLine source={shown.source} className="mt-1" />
+                <SentenceTranslation
+                  text={shown.translation?.text}
+                  show={showTranslation}
+                  onShow={showTranslationNow}
+                  className="mt-1"
+                />
+              </>
             )}
             <Button className="mt-4 w-full" onClick={advance} data-testid="word-next">
               {t('next')}

@@ -29,6 +29,7 @@ export interface SentenceSource {
   kind: 'saved' | 'library' | 'tatoeba' | 'ai';
   bookSlug?: string;
   bookTitle?: string;
+  bookTitles?: Record<string, string>;
   chapterTitle?: string;
   tatoebaId?: number;
   tatoebaSearchText?: string;
@@ -256,6 +257,7 @@ function librarySentences(
           kind: 'library',
           bookSlug: chapter.bookSlug,
           bookTitle: chapter.bookTitle,
+          bookTitles: chapter.bookTitles,
           chapterTitle: chapter.chapterTitle,
         },
         levelDistance: distance,
