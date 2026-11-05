@@ -15,6 +15,7 @@ import OidcSignInButton from '@/components/OidcSignInButton';
 import { readPendingInvite } from '@/lib/pending-invite';
 import { useOAuthErrorToast } from '@/lib/use-oauth-error';
 import { useGithubLogin } from '@/lib/use-env';
+import { useIsNativeApp } from '@/lib/native-app';
 
 export default function LoginPage() {
   return (
@@ -29,6 +30,7 @@ function LoginForm() {
   const router = useRouter();
   const params = useSearchParams();
   const { data: session, isPending } = authClient.useSession();
+  const inApp = useIsNativeApp();
   const githubEnabled = useGithubLogin();
   useOAuthErrorToast();
   const returnPath = sanitizeAuthReturnPath(params.get('next'));
@@ -185,7 +187,7 @@ function LoginForm() {
         {submitting ? t('submitting') : t('submit')}
       </Button>
 
-      {githubEnabled && (
+      {githubEnabled && !inApp && (
         <Button
           type="button"
           variant="outline"

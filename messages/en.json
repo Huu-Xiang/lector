@@ -1494,6 +1494,11 @@
       "subscription": "Loading subscription",
       "setup": "Loading setup"
     },
+    "lockedInApp": {
+      "title": "This account has no active plan",
+      "body": "Readfox cannot open on this account right now.",
+      "signOut": "Sign out"
+    },
     "setup": {
       "connectError": "Could not connect to the server.",
       "retry": "Retry"
@@ -2007,6 +2012,12 @@
     }
   },
   "reader": {
+    "aiNotice": {
+      "title": "Your text goes to an AI service",
+      "body": "When you look up a phrase, ask for an explanation, translate a sentence, or chat, the text you select and some surrounding context is sent to Alibaba Cloud's Qwen models, or to the AI provider whose key you added, to write the answer. Dictionary lookups do not use AI. The privacy page has the details.",
+      "agree": "I agree",
+      "decline": "Not now"
+    },
     "page": {
       "lessonNotFound": "Lesson not found",
       "loadFailed": "Failed to load lesson",

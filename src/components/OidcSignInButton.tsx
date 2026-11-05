@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { authClient } from '@/lib/auth-client';
+import { useIsNativeApp } from '@/lib/native-app';
 import { writePendingInvite } from '@/lib/pending-invite';
 import { useOidcLogin, useOidcProviderName } from '@/lib/use-env';
 
@@ -21,7 +22,9 @@ export default function OidcSignInButton({
   const t = useTranslations('auth.oauth');
   const enabled = useOidcLogin();
   const provider = useOidcProviderName();
-  if (!enabled) return null;
+  // Google refuses OAuth inside an embedded web view (disallowed_useragent).
+  const inApp = useIsNativeApp();
+  if (!enabled || inApp) return null;
 
   async function start() {
     if (inviteCode) writePendingInvite(inviteCode);

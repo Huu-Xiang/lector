@@ -1494,6 +1494,11 @@
       "subscription": "구독 정보 불러오는 중",
       "setup": "설정 불러오는 중"
     },
+    "lockedInApp": {
+      "title": "이 계정에는 사용 중인 플랜이 없습니다",
+      "body": "지금은 이 계정으로 Readfox를 열 수 없습니다.",
+      "signOut": "로그아웃"
+    },
     "setup": {
       "connectError": "서버에 연결할 수 없어요.",
       "retry": "다시 시도"
@@ -2007,6 +2012,12 @@
     }
   },
   "reader": {
+    "aiNotice": {
+      "title": "선택한 텍스트가 AI 서비스로 전송됩니다",
+      "body": "구문 검색, 설명 요청, 문장 번역, 채팅을 하면 선택한 텍스트와 일부 앞뒤 문맥이 답변을 만들기 위해 Alibaba Cloud의 Qwen 모델(또는 키를 추가한 AI 제공업체)로 전송됩니다. 사전 검색에는 AI를 사용하지 않습니다. 자세한 내용은 개인정보처리방침을 참고하세요.",
+      "agree": "동의",
+      "decline": "나중에"
+    },
     "page": {
       "lessonNotFound": "레슨을 찾을 수 없어요",
       "loadFailed": "레슨을 불러오지 못했어요",

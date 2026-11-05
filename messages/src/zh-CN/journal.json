@@ -210,6 +210,11 @@
       "subscription": "正在加载订阅",
       "setup": "正在加载设置"
     },
+    "lockedInApp": {
+      "title": "此账号暂无有效套餐",
+      "body": "目前无法在此账号下打开 Readfox。",
+      "signOut": "退出登录"
+    },
     "setup": {
       "connectError": "无法连接到服务器。",
       "retry": "重试"

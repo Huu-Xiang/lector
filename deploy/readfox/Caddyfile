@@ -36,6 +36,7 @@ readfox.app {
     @anonHome {
         path /
         not header_regexp Cookie better-auth\.session_token
+        not header_regexp User-Agent ReadfoxApp/
     }
     # /landing is served at "/" (200); old /landing URLs 301 to "/".
     @landingDirect expression {http.request.orig_uri.path} == "/landing"

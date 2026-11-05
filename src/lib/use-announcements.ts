@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useMemo, useState, useSyncExternalStore } from 'react';
+import { useIsNativeApp } from './native-app';
 import {
   ANNOUNCEMENTS,
   parseAnnouncementState,
@@ -47,10 +48,11 @@ const withIds = (ids: string[], more: string[]) => [...new Set([...ids, ...more]
 export function useAnnouncements(signedUpAt: number) {
   const raw = useSyncExternalStore(subscribe, readRaw, () => null);
   const [now] = useState(() => Date.now());
+  const inApp = useIsNativeApp();
   const state = useMemo(() => parseAnnouncementState(raw), [raw]);
   const list = useMemo(
-    () => visibleAnnouncements(ANNOUNCEMENTS, { now, signedUpAt }),
-    [now, signedUpAt],
+    () => visibleAnnouncements(ANNOUNCEMENTS, { now, signedUpAt, inApp }),
+    [now, signedUpAt, inApp],
   );
 
   const markSeen = useCallback(() => {

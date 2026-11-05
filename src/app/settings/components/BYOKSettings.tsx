@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useIsNativeApp } from '@/lib/native-app';
 import { useTranslations } from 'next-intl';
 import { apiFetch } from '@/lib/api-base';
 import { Button } from '@/components/ui/button';
@@ -30,6 +31,7 @@ interface ByokStatus {
 
 export default function BYOKSettings() {
   const t = useTranslations('settings.byok');
+  const inApp = useIsNativeApp();
   const [status, setStatus] = useState<ByokStatus | null>(null);
   const [apiKey, setApiKey] = useState('');
   const [provider, setProvider] = useState<ByokProvider>('openrouter');
@@ -105,7 +107,7 @@ export default function BYOKSettings() {
         {plan === 'free' ? t('introFree') : t('introPaid')} {t('introTail')}
       </p>
 
-      {plan === 'free' && !status?.requiresPaidPlan && (
+      {plan === 'free' && !status?.requiresPaidPlan && !inApp && (
         <p className="mb-4 rounded-lg border border-border bg-[var(--primary-soft)] p-3 text-xs text-foreground">
           {t.rich('compareCloud', {
             link: (chunks) => (
@@ -120,11 +122,14 @@ export default function BYOKSettings() {
       {status?.requiresPaidPlan ? (
         <p className="text-sm text-muted-foreground" data-testid="byok-paid-only">
           {t.rich('paidOnly', {
-            link: (chunks) => (
-              <a href="/subscribe" className="font-semibold text-primary hover:underline">
-                {chunks}
-              </a>
-            ),
+            link: (chunks) =>
+              inApp ? (
+                <>{chunks}</>
+              ) : (
+                <a href="/subscribe" className="font-semibold text-primary hover:underline">
+                  {chunks}
+                </a>
+              ),
           })}
         </p>
       ) : status && !status.available ? (

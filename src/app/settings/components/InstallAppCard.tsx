@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { promptInstall, useInstallPlatform, type InstallPlatform } from '@/lib/pwa';
+import { useIsNativeApp } from '@/lib/native-app';
 
 const STEPS: Partial<Record<InstallPlatform, string[]>> = {
   ios: ['ios1', 'ios2', 'ios3'],
@@ -14,7 +15,8 @@ const STEPS: Partial<Record<InstallPlatform, string[]>> = {
 export default function InstallAppCard() {
   const t = useTranslations('settings.installApp');
   const platform = useInstallPlatform();
-  if (platform === 'unknown' || platform === 'installed') return null;
+  const inApp = useIsNativeApp();
+  if (inApp || platform === 'unknown' || platform === 'installed') return null;
 
   const steps = STEPS[platform];
 

@@ -47,6 +47,8 @@ const SETTING_VALUE_BYTE_LIMITS: Record<string, number> = {
   // true or false.
   autoSaveLookups: 8,
   dailyGoal: 48,
+  // An ISO timestamp, quoted.
+  aiNoticeAcceptedAt: 40,
 };
 
 export function settingValueByteLimit(key: string): number {
@@ -71,6 +73,7 @@ export const KNOWN_SETTING_KEYS = new Set([
   'autoSaveLookups',
   // Daily goal for the streak: { kind: 'minutes' | 'reviews', target }.
   'dailyGoal',
+  'aiNoticeAcceptedAt',
   // LLM provider config (Settings → AI, setup)
   'llmProvider',
   'openaiPreset',

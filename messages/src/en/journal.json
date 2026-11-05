@@ -210,6 +210,11 @@
       "subscription": "Loading subscription",
       "setup": "Loading setup"
     },
+    "lockedInApp": {
+      "title": "This account has no active plan",
+      "body": "Readfox cannot open on this account right now.",
+      "signOut": "Sign out"
+    },
     "setup": {
       "connectError": "Could not connect to the server.",
       "retry": "Retry"

@@ -20,6 +20,7 @@
 
 import { interceptPlanLimit } from './plan-limits';
 import { authHref, sanitizeAuthReturnPath } from './auth-return';
+import { isNativeApp } from './native-app';
 
 declare global {
   interface Window {
@@ -168,9 +169,22 @@ let bouncedToSubscribe = false;
  */
 export function bounceToSubscribe(): void {
   if (bouncedToSubscribe || typeof window === 'undefined') return;
+  // The app never sends a buyer to /subscribe; BillingGuard shows a notice at the root.
+  if (isNativeApp()) {
+    if (window.location.pathname !== '/') window.location.replace('/');
+    return;
+  }
   if (window.location.pathname === BILLING_ROUTE || isAuthRoute(window.location.pathname)) return;
   bouncedToSubscribe = true;
   window.location.replace(BILLING_ROUTE);
+}
+
+type AiRequestGuard = (path: string, method: string | undefined) => Promise<boolean>;
+let aiRequestGuard: AiRequestGuard | null = null;
+
+/** AiDataNotice installs this in the iPhone app; a false result blocks the call. */
+export function registerAiRequestGuard(guard: AiRequestGuard | null): void {
+  aiRequestGuard = guard;
 }
 
 /** Absolute URL for an API path (e.g. `apiUrl('/api/vocab')`). */
@@ -202,6 +216,12 @@ export type ApiFetchInit = RequestInit & {
  */
 export async function apiFetch(path: string, apiInit?: ApiFetchInit): Promise<Response> {
   const { silentPlanLimit, ...init } = apiInit ?? {};
+  if (aiRequestGuard && !(await aiRequestGuard(path, init.method))) {
+    return new Response(JSON.stringify({ error: 'ai_notice_declined' }), {
+      status: 403,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
   const cloud = lectorMode() === 'cloud';
   try {
     // Cloud sessions are cookies (#218/#220). Same-origin (the prod path-split

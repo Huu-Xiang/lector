@@ -20,6 +20,7 @@ import {
   type PlanLimitPayload,
 } from '@/lib/plan-limits';
 import { TIER_ALLOWANCES } from '@/lib/plan-prices';
+import { isNativeApp, useIsNativeApp } from '@/lib/native-app';
 
 const DIALOG_SEEN_KEY = 'readfox-plan-limit-dialog';
 
@@ -39,12 +40,13 @@ function dialogSeenToday(metric: string): boolean {
 export default function PlanLimitPrompt() {
   const t = useTranslations('planLimits');
   const [dialog, setDialog] = useState<PlanLimitPayload | null>(null);
+  const inApp = useIsNativeApp();
 
   useEffect(() => {
     const text = (payload: PlanLimitPayload) => {
       const named = NAMED_METRICS.has(payload.metric);
       const values = { limit: payload.limit, used: payload.used };
-      const upgrade = payload.upgrade ? t(`upgradeLine.${payload.upgrade}`) : '';
+      const upgrade = payload.upgrade && !isNativeApp() ? t(`upgradeLine.${payload.upgrade}`) : '';
       return {
         title: named ? t(`metrics.${payload.metric}.title`) : t('generic.title'),
         body: `${named ? t(`metrics.${payload.metric}.body`, values) : t('generic.body')} ${upgrade}`.trim(),
@@ -58,7 +60,7 @@ export default function PlanLimitPrompt() {
         return;
       }
       const { title, body } = text(payload);
-      const action = planLimitAction(payload.upgrade, payload.metric);
+      const action = planLimitAction(payload.upgrade, payload.metric, isNativeApp());
       toast.warning(title, {
         description: body,
         action: action
@@ -86,22 +88,26 @@ export default function PlanLimitPrompt() {
             <DialogDescription>
               {t(`metrics.${dialog.metric}.body`, { limit: dialog.limit, used: dialog.used })}
             </DialogDescription>
-            <p className="text-sm text-foreground">
-              {t('dialog.plus', { glosses: plus.glosses, detailed: plus.detailed })}
-            </p>
+            {!inApp && (
+              <p className="text-sm text-foreground">
+                {t('dialog.plus', { glosses: plus.glosses, detailed: plus.detailed })}
+              </p>
+            )}
             <p className="text-sm text-muted-foreground">{t('dialog.freeReset')}</p>
             <div className="flex flex-wrap justify-end gap-2 pt-2">
               <DialogClose className={buttonVariants({ variant: 'outline' })}>
                 {t('notNow')}
               </DialogClose>
-              <Link
-                href="/subscribe?plan=cloud"
-                className={buttonVariants()}
-                onClick={() => setDialog(null)}
-                data-testid="plan-limit-upgrade"
-              >
-                {t('upgradePlus')}
-              </Link>
+              {!inApp && (
+                <Link
+                  href="/subscribe?plan=cloud"
+                  className={buttonVariants()}
+                  onClick={() => setDialog(null)}
+                  data-testid="plan-limit-upgrade"
+                >
+                  {t('upgradePlus')}
+                </Link>
+              )}
             </div>
           </>
         )}

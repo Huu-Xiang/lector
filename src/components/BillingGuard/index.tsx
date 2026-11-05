@@ -7,6 +7,9 @@ import { bounceToSubscribe, BILLING_ROUTE } from '@/lib/api-base';
 import { useLectorMode } from '@/lib/use-env';
 import { isAuthRoute } from '@/lib/auth-client';
 import { fetchBillingStatus } from '@/lib/billing';
+import { authClient } from '@/lib/auth-client';
+import { useIsNativeApp } from '@/lib/native-app';
+import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 
 /**
@@ -32,6 +35,8 @@ export default function BillingGuard({ children }: { children: React.ReactNode }
 
 function CloudBillingGate({ children }: { children: React.ReactNode }) {
   const t = useTranslations('chrome.loading');
+  const tLocked = useTranslations('chrome.lockedInApp');
+  const inApp = useIsNativeApp();
   const pathname = usePathname();
   // Auth routes render pre-session (a probe could only 401); /subscribe does
   // its own status fetch and must render for exactly the accounts this guard
@@ -52,10 +57,32 @@ function CloudBillingGate({ children }: { children: React.ReactNode }) {
   }, [skip, state]);
 
   useEffect(() => {
-    if (state === 'locked') bounceToSubscribe();
-  }, [state]);
+    // The app never sends a buyer to /subscribe; it shows a notice instead.
+    if (state === 'locked' && !inApp) bounceToSubscribe();
+  }, [state, inApp]);
 
   if (skip) return <>{children}</>;
+
+  if (state === 'locked' && inApp) {
+    return (
+      <div
+        className="flex min-h-screen flex-col items-center justify-center gap-3 bg-background px-6 text-center"
+        data-testid="billing-locked-in-app"
+      >
+        <h1 className="text-lg font-semibold text-foreground">{tLocked('title')}</h1>
+        <p className="text-sm text-muted-foreground">{tLocked('body')}</p>
+        <Button
+          variant="outline"
+          onClick={async () => {
+            await authClient.signOut();
+            window.location.replace('/login');
+          }}
+        >
+          {tLocked('signOut')}
+        </Button>
+      </div>
+    );
+  }
 
   // 'locked' keeps the spinner while the hard redirect lands.
   if (state !== 'ok') {

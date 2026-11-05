@@ -5,11 +5,13 @@ import { lectorMode } from '@/lib/api-base';
 import { getEntitlements } from '@/lib/data-layer';
 import { useActiveLanguage } from '@/utils/hooks';
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import { useIsNativeApp } from '@/lib/native-app';
 import { useLocale, useTranslations } from 'next-intl';
 import { SETTINGS_KEYS } from '../../constants';
 
 export default function TTSSettings() {
   const t = useTranslations('settings.tts');
+  const inApp = useIsNativeApp();
   const locale = useLocale();
   const [ttsSpeed, setTTSSpeed] = useState(1);
   const activeLang = useActiveLanguage();
@@ -141,7 +143,7 @@ export default function TTSSettings() {
               {t('browserBuiltIn')}
             </Button>
           </div>
-          {managedTTSIncluded === false && (
+          {managedTTSIncluded === false && !inApp && (
             <p className="mt-3 rounded-lg border border-border bg-[var(--primary-soft)] p-3 text-xs text-foreground">
               {t.rich('upsell', {
                 link: (chunks) => (

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import UiLanguageSelect from '@/i18n/UiLanguageSelect';
+import HideInNativeApp from '@/components/HideInNativeApp';
 
 export const SOURCE_URL = 'https://github.com/Huu-Xiang/lector';
 
@@ -19,9 +20,11 @@ export default function LegalLinks({
   const sidebar = layout === 'start';
   const links = (
     <>
-      <Link href="/pricing" className="hover:text-foreground hover:underline">
-        {t('pricing')}
-      </Link>
+      <HideInNativeApp>
+        <Link href="/pricing" className="hover:text-foreground hover:underline">
+          {t('pricing')}
+        </Link>
+      </HideInNativeApp>
       <Link href="/privacy" className="hover:text-foreground hover:underline">
         {t('privacy')}
       </Link>

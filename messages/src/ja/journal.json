@@ -210,6 +210,11 @@
       "subscription": "サブスクリプションを読み込み中",
       "setup": "セットアップを読み込み中"
     },
+    "lockedInApp": {
+      "title": "このアカウントには有効なプランがありません",
+      "body": "現在、このアカウントでは Readfox を開けません。",
+      "signOut": "ログアウト"
+    },
     "setup": {
       "connectError": "サーバーに接続できませんでした。",
       "retry": "再試行"

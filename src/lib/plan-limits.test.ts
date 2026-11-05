@@ -30,6 +30,10 @@ describe('plan-limit upgrade routing', () => {
     expect(planLimitAction('max')).toEqual({ label: 'seePlans', href: '/pricing' });
     expect(planLimitAction('byok')).toEqual({ label: 'addKey', href: '/settings#byok' });
     expect(planLimitAction(null)).toBeNull();
+    expect(planLimitAction('cloud', undefined, true)).toBeNull();
+    expect(planLimitAction('plus', undefined, true)).toBeNull();
+    expect(planLimitAction('max', undefined, true)).toBeNull();
+    expect(planLimitAction('byok', 'wordGlossesPerMonth', true)).not.toBeNull();
   });
 
   it('offers BYOK only for AI-backed limits', () => {

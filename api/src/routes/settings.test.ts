@@ -15,6 +15,7 @@ const TEST_KEYS = [
   'ankiTransport',
   'targetLanguage',
   'enabledLanguages',
+  'aiNoticeAcceptedAt',
 ];
 
 function clear() {
@@ -56,6 +57,14 @@ describe('settings write validation (#233)', () => {
 
     expect((await putKey('timezone', 'Europe/Berlin')).status).toBe(200);
     expect(storedValue('timezone')).toBe(JSON.stringify('Europe/Berlin'));
+  });
+
+  test('the AI notice agreement time saves and reads back', async () => {
+    const at = '2026-11-05T12:00:00.000Z';
+    expect((await putKey('aiNoticeAcceptedAt', at)).status).toBe(200);
+    expect(storedValue('aiNoticeAcceptedAt')).toBe(JSON.stringify(at));
+    const read = await app.request('/aiNoticeAcceptedAt');
+    expect(await read.json()).toBe(at);
   });
 
   test('unknown key → 400 (per-key)', async () => {

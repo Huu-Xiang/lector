@@ -1494,6 +1494,11 @@
       "subscription": "正在加载订阅",
       "setup": "正在加载设置"
     },
+    "lockedInApp": {
+      "title": "此账号暂无有效套餐",
+      "body": "目前无法在此账号下打开 Readfox。",
+      "signOut": "退出登录"
+    },
     "setup": {
       "connectError": "无法连接到服务器。",
       "retry": "重试"
@@ -2007,6 +2012,12 @@
     }
   },
   "reader": {
+    "aiNotice": {
+      "title": "你选中的文字会发送给 AI 服务",
+      "body": "查询短语、请求讲解、翻译句子或聊天时，你选中的文字和部分上下文会发送给阿里云的千问模型（或你添加了密钥的 AI 服务商）来生成回答。词典查词不使用 AI。详情见隐私政策。",
+      "agree": "同意",
+      "decline": "暂不"
+    },
     "page": {
       "lessonNotFound": "找不到课文",
       "loadFailed": "课文加载失败",

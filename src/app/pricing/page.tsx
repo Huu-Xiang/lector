@@ -3,6 +3,7 @@ import { getTranslations } from 'next-intl/server';
 import { LegalShell } from '@/components/LegalLinks/shell';
 import { fetchPlanPricesOnServer } from '@/lib/plan-prices.server';
 import WelcomeOfferNote from '@/components/WelcomeOfferNote';
+import NativeAppRedirect from '@/components/NativeAppRedirect';
 import CardPendingNote from './CardPendingNote';
 import PricingTiers from './PricingTiers';
 
@@ -20,6 +21,7 @@ export default async function PricingPage() {
   const prices = await fetchPlanPricesOnServer();
   return (
     <LegalShell title={t('title')} wide>
+      <NativeAppRedirect to="/" />
       <p className="text-muted-foreground">{t('intro')}</p>
       <WelcomeOfferNote />
       <CardPendingNote />

@@ -12,6 +12,7 @@ import { LANGUAGES, NATIVE_LANGUAGES } from '@/lib/languages';
 import { PUBLIC_BOOK_LANGUAGES } from '@/lib/public-books';
 import { LOCALE_COOKIE, UI_LOCALES } from '@/i18n/locales';
 import { LANDING_ROOT_ID } from '@/lib/api-base';
+import NativeAppRedirect from '@/components/NativeAppRedirect';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('landing');
@@ -68,6 +69,7 @@ export default async function LandingPage() {
   const soonCount = Object.keys(LANGUAGES).length - PUBLIC_BOOK_LANGUAGES.length;
   return (
     <div id={LANDING_ROOT_ID} className="min-h-screen w-full bg-background">
+      <NativeAppRedirect to="/login" />
       <script
         type="application/ld+json"
         // eslint-disable-next-line react/no-danger

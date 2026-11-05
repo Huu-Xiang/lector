@@ -50,6 +50,17 @@ describe('visibleAnnouncements', () => {
   it('ignores an entry with an unreadable date', () => {
     expect(visibleAnnouncements([entry('bad', 'soon')], { now, signedUpAt })).toEqual([]);
   });
+
+  it('hides entries marked hideInApp inside the iPhone app only', () => {
+    const list = [entry('install', '2026-10-28', { hideInApp: true }), entry('news', '2026-10-27')];
+    expect(visibleAnnouncements(list, { now, signedUpAt }).map((e) => e.id)).toEqual([
+      'install',
+      'news',
+    ]);
+    expect(visibleAnnouncements(list, { now, signedUpAt, inApp: true }).map((e) => e.id)).toEqual([
+      'news',
+    ]);
+  });
 });
 
 describe('seen and dismissed state', () => {

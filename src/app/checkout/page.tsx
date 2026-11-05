@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import NativeAppRedirect from '@/components/NativeAppRedirect';
 import { useLocale, useTranslations } from 'next-intl';
 import { Spinner } from '@/components/ui/spinner';
 
@@ -78,6 +79,7 @@ export default function CheckoutPage() {
 
   return (
     <div className="flex min-h-screen w-full flex-col items-center justify-center gap-4 bg-background px-4 text-sm text-foreground">
+      <NativeAppRedirect to="/" />
       {failed ? (
         <p data-testid="checkout-failed">{t('failed')}</p>
       ) : (

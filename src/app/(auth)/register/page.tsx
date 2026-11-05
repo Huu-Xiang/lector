@@ -19,6 +19,7 @@ import { useInviteRequired, useOidcLogin } from '@/lib/use-env';
 import WelcomeOfferNote from '@/components/WelcomeOfferNote';
 import OidcSignInButton from '@/components/OidcSignInButton';
 import { useOAuthErrorToast } from '@/lib/use-oauth-error';
+import { useIsNativeApp } from '@/lib/native-app';
 
 const RESEND_WAIT_MS = 60_000;
 
@@ -53,7 +54,8 @@ function RegisterForm() {
   const [resendWait, setResendWait] = useState(false);
   const oidcLogin = useOidcLogin();
   // With required invites the provider button stays under the invite field it reads.
-  const oidcFirst = oidcLogin && !inviteRequired;
+  const inApp = useIsNativeApp();
+  const oidcFirst = oidcLogin && !inviteRequired && !inApp;
 
   /* eslint-disable react-hooks/set-state-in-effect -- restore a code saved before a reload */
   useEffect(() => {

@@ -8,6 +8,7 @@ import Image from 'next/image';
 import { Spinner } from '@/components/ui/spinner';
 import LegalLinks from '@/components/LegalLinks';
 import BackButton from '@/components/LegalLinks/BackButton';
+import NativeAppRedirect from '@/components/NativeAppRedirect';
 
 /**
  * Shared shell for the pre-session pages (#218): /login, /register,
@@ -35,6 +36,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4 py-10 md:py-6">
+      {wide && <NativeAppRedirect to="/" />}
       <div className={`mb-4 w-full md:mb-2 ${width}`}>
         <BackButton />
       </div>

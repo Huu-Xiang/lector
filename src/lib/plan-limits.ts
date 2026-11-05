@@ -51,7 +51,9 @@ export function phraseSelectionLimitPayload(
 export function planLimitAction(
   upgrade: PlanUpgradeTarget,
   metric?: string,
+  inApp = false,
 ): { label: 'upgradePlus' | 'seePlans' | 'addKey'; href: string } | null {
+  if (inApp && (upgrade === 'cloud' || upgrade === 'plus' || upgrade === 'max')) return null;
   if (upgrade === 'cloud') return { label: 'upgradePlus', href: '/subscribe?plan=cloud' };
   if (upgrade === 'plus' || upgrade === 'max') return { label: 'seePlans', href: '/pricing' };
   if (upgrade === 'byok' && (!metric || AI_METRICS.has(metric))) {

@@ -20,6 +20,7 @@ import {
   type ClientEntitlements,
 } from '@/lib/data-layer';
 import RedeemCode from './RedeemCode';
+import { useIsNativeApp } from '@/lib/native-app';
 import { Select } from '@/components/ui/select';
 
 type Translator = ReturnType<typeof useTranslations>;
@@ -49,6 +50,7 @@ function billingError(error: string, t: Translator): string {
 
 export default function CloudPlanSettings() {
   const t = useTranslations('settings.plan');
+  const inApp = useIsNativeApp();
   const locale = useLocale();
   const format = useFormatter();
   const planLabel = (plan: ClientEntitlements['plan']) => t(`labels.${plan}`);
@@ -239,10 +241,12 @@ export default function CloudPlanSettings() {
             </p>
           )}
           <div className="flex flex-wrap items-center gap-3 pt-1">
-            <Button type="button" onClick={() => (window.location.href = '/subscribe')}>
-              {t('comparePlans')}
-            </Button>
-            {billing?.management?.customerPortal && (
+            {!inApp && (
+              <Button type="button" onClick={() => (window.location.href = '/subscribe')}>
+                {t('comparePlans')}
+              </Button>
+            )}
+            {!inApp && billing?.management?.customerPortal && (
               <Button type="button" variant="ghost" onClick={openPortal} disabled={openingPortal}>
                 {openingPortal ? t('openingPaddle') : t('billingHistory')}
               </Button>
@@ -262,19 +266,25 @@ export default function CloudPlanSettings() {
                   date: new Date(entitlements.grant.endsAt).toLocaleDateString(),
                 })}
               </p>
-              <Button type="button" size="sm" onClick={() => (window.location.href = '/subscribe')}>
-                {t('renew')}
-              </Button>
+              {!inApp && (
+                <Button
+                  type="button"
+                  size="sm"
+                  onClick={() => (window.location.href = '/subscribe')}
+                >
+                  {t('renew')}
+                </Button>
+              )}
             </div>
           )}
 
-          {pendingTarget && (
+          {!inApp && pendingTarget && (
             <p className="rounded-lg border border-border bg-[var(--primary-soft)] p-3 text-foreground">
               {t('pendingAccepted', { price: priceLabel(pendingTarget) })}
             </p>
           )}
 
-          {billing?.management?.customerPortal && (
+          {!inApp && billing?.management?.customerPortal && (
             <div className="flex flex-wrap items-center gap-3">
               <Button type="button" onClick={openPortal} disabled={openingPortal}>
                 {openingPortal ? t('openingPaddle') : t('manageBilling')}
@@ -283,7 +293,7 @@ export default function CloudPlanSettings() {
             </div>
           )}
 
-          {currentSubscription?.canChange && changes.length > 0 && !pendingTarget && (
+          {!inApp && currentSubscription?.canChange && changes.length > 0 && !pendingTarget && (
             <div className="space-y-3 rounded-lg border border-border p-4">
               <div>
                 <h3 className="font-medium text-foreground">{t('changePlan')}</h3>
@@ -371,13 +381,13 @@ export default function CloudPlanSettings() {
             </div>
           )}
 
-          {currentSubscription && !currentSubscription.canChange && (
+          {!inApp && currentSubscription && !currentSubscription.canChange && (
             <p className="text-xs">{t('changesUnavailable')}</p>
           )}
         </div>
       )}
 
-      {entitlements && (
+      {entitlements && !inApp && (
         <div className="mt-4 flex justify-end" data-testid="plan-redeem">
           <RedeemCode
             onRedeemed={() => {

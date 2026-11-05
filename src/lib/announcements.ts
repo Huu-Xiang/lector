@@ -11,6 +11,8 @@ export interface Announcement {
   expires?: string;
   /** In-app path for the optional link. */
   href?: string;
+  /** Hidden inside the iPhone app, which offers no install help or plan codes. */
+  hideInApp?: boolean;
 }
 
 export interface AnnouncementState {
@@ -37,8 +39,15 @@ export const ANNOUNCEMENTS: Announcement[] = [
     level: 'important',
     expires: '2026-12-15T16:00:00Z',
     href: '/settings#plan',
+    hideInApp: true,
   },
-  { id: 'installApp', date: '2026-10-28', level: 'important', href: '/settings#install' },
+  {
+    id: 'installApp',
+    date: '2026-10-28',
+    level: 'important',
+    href: '/settings#install',
+    hideInApp: true,
+  },
   { id: 'koreanSupport', date: '2026-10-25', level: 'important' },
   { id: 'inviteCodes', date: '2026-10-19', level: 'important', href: '/settings' },
   { id: 'skipGuide', date: '2026-10-19', level: 'info' },
@@ -47,10 +56,11 @@ export const ANNOUNCEMENTS: Announcement[] = [
 /** Entries a signed-in user may see: published after sign-up, not in the future, not expired. */
 export function visibleAnnouncements(
   all: Announcement[],
-  { now, signedUpAt }: { now: number; signedUpAt: number },
+  { now, signedUpAt, inApp = false }: { now: number; signedUpAt: number; inApp?: boolean },
 ): Announcement[] {
   return all
     .filter((entry) => {
+      if (inApp && entry.hideInApp) return false;
       const published = Date.parse(entry.date);
       if (Number.isNaN(published) || published > now || published < signedUpAt) return false;
       return !entry.expires || Date.parse(entry.expires) > now;
