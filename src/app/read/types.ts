@@ -1,11 +1,12 @@
-import { ExpandedDictionaryEntry } from "@/lib/dictionary-client";
-import { VocabEntry } from "@/types";
+import { ExpandedDictionaryEntry } from '@/lib/dictionary-client';
+import { VocabEntry } from '@/types';
 
 export interface WordPanelState {
   isOpen: boolean;
   word: string;
   sentence: string;
   translation: string | null;
+  translationLang?: string | null;
   partOfSpeech: string | null;
   dictEntry: ExpandedDictionaryEntry | null;
   /** Active AI-in-context override translation. When set, the drawer renders this

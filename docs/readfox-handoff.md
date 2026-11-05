@@ -46,6 +46,8 @@ A public, multi-user language-reading app at https://readfox.app. It is a self-m
 3. If the dictionary has no entry, `/api/translate/gloss` streams a short AI meaning. It uses the monthly "word translation" allowance unless `shared_gloss_cache` has the answer.
 4. "Enrich" and phrase translation use the "detailed AI answers" allowance. When `OPENAI_COMPAT_PHRASE_RICH_MODEL` is set, phrase translation runs on that cheaper model, and its prompt asks for no idiom origins (small models invent them).
 
+Each saved word stores `vocab.translationLang`, the language of its meaning (`api/src/lib/translation-lang.ts`, mirrored in `src/lib/`). Review and the reader skip a meaning in another language than the current own language. Review refreshes such a meaning in the background through the free localize path (`lib/localize-entry.ts`, `lib/review/meaning-refresh.ts`, at most 10 words per queue fetch). This never uses the monthly allowance.
+
 The plan for any language pair, English dictionary and example sentences is in `docs/lookup-languages-plan.md`.
 
 ## Data sources and licences

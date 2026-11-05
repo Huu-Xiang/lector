@@ -411,3 +411,87 @@ describe('vocab routes keep word cards in step', () => {
     expect(db.prepare('SELECT 1 FROM knownWords').get()).toBeNull();
   });
 });
+
+describe('vocab.translationLang', () => {
+  const clear = () => {
+    db.prepare('DELETE FROM knownWords').run();
+    db.prepare('DELETE FROM vocab').run();
+    db.prepare("DELETE FROM settings WHERE userId = 'local' AND key = 'nativeLanguage'").run();
+  };
+  beforeEach(clear);
+  afterEach(clear);
+
+  function setNative(code: string) {
+    db.prepare("DELETE FROM settings WHERE userId = 'local' AND key = 'nativeLanguage'").run();
+    db.prepare(
+      "INSERT INTO settings (userId, key, value) VALUES ('local', 'nativeLanguage', ?)",
+    ).run(JSON.stringify(code));
+  }
+
+  function send(method: string, path: string, body: unknown) {
+    return app.request(path, {
+      method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+  }
+
+  const langOf = (id: string) =>
+    (
+      db.prepare('SELECT translationLang AS l FROM vocab WHERE id = ?').get(id) as {
+        l: string | null;
+      }
+    ).l;
+
+  test('POST stores the language the client names', async () => {
+    setNative('ja');
+    const res = await send('POST', '/', {
+      id: 'a',
+      text: 'dog',
+      translation: 'dog (fallback)',
+      translationLang: 'en',
+      language: 'en',
+    });
+    expect(res.status).toBe(200);
+    expect(langOf('a')).toBe('en');
+  });
+
+  test('POST derives the language when the client sends none', async () => {
+    setNative('ja');
+    await send('POST', '/', { id: 'b', text: 'inu', translation: '犬だよ', language: 'af' });
+    await send('POST', '/', { id: 'c', text: 'dog', translation: 'a dog', language: 'af' });
+    await send('POST', '/', { id: 'd', text: 'x', translation: '', language: 'af' });
+    expect(langOf('b')).toBe('ja');
+    expect(langOf('c')).toBe('en');
+    expect(langOf('d')).toBeNull();
+    setNative('fr');
+    await send('POST', '/', { id: 'e', text: 'dog', translation: 'chien', language: 'af' });
+    expect(langOf('e')).toBe('fr');
+  });
+
+  test('POST rejects an unknown language code', async () => {
+    const res = await send('POST', '/', { text: 'dog', translation: 'x', translationLang: 'xx' });
+    expect(res.status).toBe(400);
+  });
+
+  test('PUT updates the language with the translation', async () => {
+    setNative('ja');
+    await send('POST', '/', { id: 'p', text: 'dog', translation: 'a dog', language: 'af' });
+    expect(langOf('p')).toBe('en');
+    const res = await send('PUT', '/p', { translation: '犬', translationLang: 'ja' });
+    expect(res.status).toBe(200);
+    expect(langOf('p')).toBe('ja');
+    await send('PUT', '/p', { sentence: 'changed' });
+    expect(langOf('p')).toBe('ja');
+    expect((await send('PUT', '/p', { translation: 'x', translationLang: 'zz' })).status).toBe(400);
+  });
+
+  test('GET lists the language', async () => {
+    seed('g', 'huis', 'af');
+    db.prepare("UPDATE vocab SET translationLang = 'ko' WHERE id = 'g'").run();
+    const rows = (await (await app.request('/?language=af')).json()) as Array<{
+      translationLang: string | null;
+    }>;
+    expect(rows[0].translationLang).toBe('ko');
+  });
+});

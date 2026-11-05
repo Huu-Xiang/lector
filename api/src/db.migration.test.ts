@@ -625,3 +625,52 @@ describe('word review schema', () => {
     database.close();
   });
 });
+
+describe('vocab.translationLang', () => {
+  function boot(dir: string) {
+    const result = Bun.spawnSync({
+      cmd: [
+        process.execPath,
+        '-e',
+        "import { getDatabaseInstance } from './src/db.ts'; getDatabaseInstance().close();",
+      ],
+      cwd: path.resolve(import.meta.dir, '..'),
+      env: { ...process.env, DATA_DIR: dir },
+      stdout: 'pipe',
+      stderr: 'pipe',
+    });
+    expect(result.exitCode, new TextDecoder().decode(result.stderr)).toBe(0);
+  }
+
+  test('an older database gains a nullable column, keeps rows, and migrates twice', () => {
+    const dir = path.join(process.env.DATA_DIR!, 'vocab-translation-lang');
+    fs.rmSync(dir, { recursive: true, force: true });
+    fs.mkdirSync(dir, { recursive: true });
+    boot(dir);
+    const old = new Database(path.join(dir, 'lector.db'));
+    old
+      .prepare(
+        `INSERT INTO vocab (userId, id, text, type, sentence, translation, state, stateUpdatedAt, createdAt, language)
+         VALUES ('local', 'v1', 'chien', 'word', '', 'dog', 'new', ?, ?, 'fr')`,
+      )
+      .run(TS, TS);
+    old.exec('ALTER TABLE vocab DROP COLUMN translationLang');
+    old.close();
+
+    for (let run = 0; run < 2; run++) {
+      boot(dir);
+      const migrated = new Database(path.join(dir, 'lector.db'));
+      const column = (
+        migrated.prepare('PRAGMA table_info(vocab)').all() as Array<{
+          name: string;
+          notnull: number;
+        }>
+      ).find((c) => c.name === 'translationLang');
+      expect(column?.notnull).toBe(0);
+      expect(
+        migrated.prepare("SELECT translation, translationLang FROM vocab WHERE id = 'v1'").get(),
+      ).toEqual({ translation: 'dog', translationLang: null });
+      migrated.close();
+    }
+  });
+});

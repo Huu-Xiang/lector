@@ -11475,6 +11475,13 @@
                   "translation": {
                     "type": "string"
                   },
+                  "translationLang": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "description": "Language code of `translation`. Optional; the server guesses it when absent."
+                  },
                   "state": {
                     "type": "string",
                     "enum": [
@@ -11809,6 +11816,13 @@
                   },
                   "translation": {
                     "type": "string"
+                  },
+                  "translationLang": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "description": "Language code of `translation`. Optional; the server guesses it when absent."
                   },
                   "state": {
                     "type": "string",
@@ -12539,6 +12553,13 @@
           },
           "translation": {
             "type": "string"
+          },
+          "translationLang": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Language code of `translation`. Optional; the server guesses it when absent."
           },
           "state": {
             "type": "string",

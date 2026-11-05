@@ -41,11 +41,9 @@ export function fillMeaning(
 ): string | null {
   const sense = lookup(userId, word, language);
   if (!sense) return null;
-  db.prepare('UPDATE vocab SET translation = ? WHERE userId = ? AND id = ?').run(
-    sense,
-    userId,
-    vocabId,
-  );
+  db.prepare(
+    'UPDATE vocab SET translation = ?, translationLang = ? WHERE userId = ? AND id = ?',
+  ).run(sense, getNativeLanguageCode(userId), userId, vocabId);
   return sense;
 }
 

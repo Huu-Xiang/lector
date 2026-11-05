@@ -900,6 +900,11 @@ function getDb(): Database {
   // ensurePartitionIndexes (the rebuilds drop every index on the way).
   migrateCompositeTenantKeys(_db);
 
+  const vocabCols = _db.prepare('PRAGMA table_info(vocab)').all() as { name: string }[];
+  if (!vocabCols.some((c) => c.name === 'translationLang')) {
+    _db.exec('ALTER TABLE vocab ADD COLUMN translationLang TEXT');
+  }
+
   _db.exec(
     "UPDATE collections SET author = 'Readfox' WHERE author = 'Lector' AND id LIKE 'starter-%'",
   );
@@ -2169,6 +2174,7 @@ export interface VocabRow {
   createdAt: string;
   pushedToAnki: number;
   ankiNoteId: number | null;
+  translationLang: string | null;
 }
 
 export interface KnownWordRow {

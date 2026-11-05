@@ -141,3 +141,107 @@ describe('senseFromEntry', () => {
     expect(senseFromEntry(undefined, 'en')).toBeNull();
   });
 });
+
+describe('native-language meanings', () => {
+  function setNative(code: string) {
+    db.prepare("DELETE FROM settings WHERE key = 'nativeLanguage'").run();
+    db.prepare(
+      "INSERT INTO settings (userId, key, value) VALUES ('local', 'nativeLanguage', ?)",
+    ).run(JSON.stringify(code));
+  }
+  const withLang = (id: string, lang: string | null) =>
+    db.prepare('UPDATE vocab SET translationLang = ? WHERE id = ?').run(lang, id);
+  const noRefresh = () => Promise.resolve();
+
+  function seedMixed() {
+    const english = ['cat', 'dog', 'horse', 'bird'];
+    const japanese = ['猫', '犬', '馬', '鳥', '魚'];
+    english.forEach((m, i) => seed(`e${i}`, `en${i}`, m));
+    japanese.forEach((m, i) => seed(`j${i}`, `ja${i}`, m));
+    english.forEach((_, i) => withLang(`e${i}`, 'en'));
+    japanese.forEach((_, i) => withLang(`j${i}`, 'ja'));
+    backfillWordCards('local', 'en', NOW);
+  }
+
+  test('with a Japanese learner, options are all Japanese and English cards get no choice', () => {
+    setNative('ja');
+    seedMixed();
+    const stale: Array<{ word: string }> = [];
+    const items = buildRound(
+      'local',
+      'en',
+      20,
+      NOW,
+      () => null,
+      undefined,
+      undefined,
+      (_u, t) => {
+        stale.push(...t);
+        return Promise.resolve();
+      },
+    ).items;
+    expect(items).toHaveLength(9);
+    for (const item of items) {
+      if (item.word.startsWith('ja')) {
+        expect(item.questionType).toBe('choose_meaning');
+        expect(item.choices).toHaveLength(4);
+        for (const choice of item.choices!) expect(/[぀-ヿ一-鿿]/.test(choice)).toBe(true);
+      } else {
+        expect(item.questionType).toBe('recognition');
+        expect(item.choices).toBeUndefined();
+      }
+    }
+    expect(stale.map((t) => t.word).sort()).toEqual(['en0', 'en1', 'en2', 'en3']);
+  });
+
+  test('legacy rows without a language are judged by script', () => {
+    setNative('ja');
+    seedMixed();
+    for (const id of ['e0', 'e1', 'e2', 'e3', 'j0', 'j1', 'j2', 'j3', 'j4']) withLang(id, null);
+    const items = buildRound(
+      'local',
+      'en',
+      20,
+      NOW,
+      () => null,
+      undefined,
+      undefined,
+      noRefresh,
+    ).items;
+    for (const item of items.filter((i) => i.questionType === 'choose_meaning')) {
+      expect(item.word.startsWith('ja')).toBe(true);
+      for (const choice of item.choices!) expect(/[぀-ヿ一-鿿]/.test(choice)).toBe(true);
+    }
+  });
+
+  test('a free dictionary sense in the learner language replaces a mismatched meaning', () => {
+    setNative('ja');
+    seedMixed();
+    const items = buildRound(
+      'local',
+      'en',
+      20,
+      NOW,
+      (_u, word) => (word === 'en0' ? '猫だよ' : null),
+      undefined,
+      undefined,
+      noRefresh,
+    ).items;
+    const item = items.find((i) => i.word === 'en0')!;
+    expect(item.translation).toBe('猫だよ');
+    expect(item.questionType).toBe('choose_meaning');
+    expect(
+      db.prepare("SELECT translation, translationLang FROM vocab WHERE id = 'e0'").get(),
+    ).toEqual({ translation: '猫だよ', translationLang: 'ja' });
+  });
+
+  test('fillMeaning records the learner language', () => {
+    setNative('zh-TW');
+    seed('x', 'w', '', 'en');
+    backfillWordCards('local', 'en', NOW);
+    buildRound('local', 'en', 5, NOW, () => '貓', undefined, undefined, noRefresh);
+    expect(db.prepare("SELECT translationLang FROM vocab WHERE id = 'x'").get()).toEqual({
+      translationLang: 'zh-TW',
+    });
+  });
+});

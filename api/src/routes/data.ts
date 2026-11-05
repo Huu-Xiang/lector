@@ -7,7 +7,13 @@ import { REDACTION_SENTINEL, validateSettingWrite } from '../lib/settings-keys';
 import { buildUserExport, USER_EXPORT_FORMAT, USER_EXPORT_VERSION } from '../lib/user-export';
 import { countWords } from '../lib/html-to-markdown';
 import { segmentWordsFor } from '../lib/segment-words';
-import { countTypedWords, foldWord, isValidLanguageCode, normalizeText } from '../lib/languages';
+import {
+  countTypedWords,
+  foldWord,
+  isNativeLanguageCode,
+  isValidLanguageCode,
+  normalizeText,
+} from '../lib/languages';
 import { getActiveLanguageCode, packForLanguage } from '../lib/active-language';
 import { ensureLanguageEnabled } from '../lib/enabled-languages';
 import { createHash, randomUUID } from 'crypto';
@@ -582,6 +588,9 @@ app.post(
         if (row[field] !== undefined && typeof row[field] !== 'string') {
           return c.json({ error: `vocab.${field} must be a string` }, 400);
         }
+      }
+      if (row.translationLang != null && typeof row.translationLang !== 'string') {
+        return c.json({ error: 'vocab.translationLang must be a string' }, 400);
       }
       if (row.type !== undefined && row.type !== 'word' && row.type !== 'phrase') {
         return c.json({ error: "vocab.type must be 'word' or 'phrase'" }, 400);
@@ -1490,11 +1499,12 @@ app.post(
 
       if (data.vocab?.length) {
         const stmt = db.prepare(`
-      INSERT INTO vocab (id, text, type, sentence, translation, state, stateUpdatedAt, reviewCount, bookId, chapter, language, createdAt, pushedToAnki, ankiNoteId, userId)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO vocab (id, text, type, sentence, translation, translationLang, state, stateUpdatedAt, reviewCount, bookId, chapter, language, createdAt, pushedToAnki, ankiNoteId, userId)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       ON CONFLICT(userId, id) DO UPDATE SET
         text = excluded.text, type = excluded.type, sentence = excluded.sentence,
-        translation = excluded.translation, state = excluded.state, stateUpdatedAt = excluded.stateUpdatedAt,
+        translation = excluded.translation, translationLang = excluded.translationLang,
+        state = excluded.state, stateUpdatedAt = excluded.stateUpdatedAt,
         reviewCount = excluded.reviewCount, bookId = excluded.bookId, chapter = excluded.chapter,
         language = excluded.language, createdAt = excluded.createdAt,
         pushedToAnki = excluded.pushedToAnki, ankiNoteId = excluded.ankiNoteId
@@ -1507,6 +1517,7 @@ app.post(
             v.type || 'word',
             v.sentence || '',
             v.translation || '',
+            v.translation && isNativeLanguageCode(v.translationLang) ? v.translationLang : null,
             v.state || 'new',
             v.stateUpdatedAt || new Date().toISOString(),
             v.reviewCount || 0,

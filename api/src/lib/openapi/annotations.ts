@@ -315,6 +315,10 @@ export const schemas: Record<string, JsonSchema> = {
       type: { type: 'string', enum: ['word', 'phrase'] },
       sentence: { type: 'string', description: 'Sentence that held the word.' },
       translation: { type: 'string' },
+      translationLang: {
+        ...NULLABLE_STRING,
+        description: 'Language code of `translation`. Optional; the server guesses it when absent.',
+      },
       state: WORD_STATE,
       stateUpdatedAt: ISO_DATE_TIME,
       reviewCount: { type: 'integer' },
@@ -1070,6 +1074,11 @@ const vocabOps: Record<string, OperationDoc> = {
           type: { type: 'string', enum: ['word', 'phrase'] },
           sentence: { type: 'string' },
           translation: { type: 'string' },
+          translationLang: {
+            ...NULLABLE_STRING,
+            description:
+              'Language code of `translation`. Optional; the server guesses it when absent.',
+          },
           state: WORD_STATE,
           bookId: NULLABLE_STRING,
           chapter: { type: ['integer', 'null'] },
@@ -1104,6 +1113,11 @@ const vocabOps: Record<string, OperationDoc> = {
           text: { type: 'string' },
           sentence: { type: 'string' },
           translation: { type: 'string' },
+          translationLang: {
+            ...NULLABLE_STRING,
+            description:
+              'Language code of `translation`. Optional; the server guesses it when absent.',
+          },
           state: WORD_STATE,
           reviewCount: { type: 'integer' },
           pushedToAnki: { type: 'integer', enum: [0, 1] },

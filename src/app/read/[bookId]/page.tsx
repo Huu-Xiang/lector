@@ -24,6 +24,7 @@ import {
   retryTranscription,
   getKnownWordsMap,
   saveVocab,
+  updateVocabEntry,
   getVocabByText,
   updateVocabState,
   updateLesson,
@@ -75,6 +76,9 @@ import {
   updateOnboardingProgress,
   type OnboardingSnapshot,
 } from '@/lib/onboarding';
+
+import { loadNative } from '@/lib/library-titles';
+import { dictionaryMeaningLang, savedMeaningFits } from '@/lib/reader-meaning';
 
 /** The saved row under the first of `keys` that has one. */
 async function findVocab(keys: string[]): Promise<VocabEntry | undefined> {
@@ -437,11 +441,30 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       existingEntryLookup.current = lookupPromise;
       const existingEntry = await lookupPromise;
       if (requestId !== translationRequestId.current) return;
-      const hasTranslation = existingEntry?.translation && existingEntry.translation.length > 0;
+      const native = (await loadNative()) ?? 'en';
+      if (requestId !== translationRequestId.current) return;
+      const hasTranslation = !!existingEntry && savedMeaningFits(existingEntry, native);
+      const staleSaved = !!existingEntry && !hasTranslation;
+      const replaceSavedMeaning = (translation: string) => {
+        if (!existingEntry || !staleSaved || !translation.trim()) return;
+        updateVocabEntry(existingEntry.id, { translation, translationLang: native })
+          .then(() => {
+            setWordPanel((prev) =>
+              prev.existingEntry?.id === existingEntry.id
+                ? {
+                    ...prev,
+                    existingEntry: { ...prev.existingEntry, translation, translationLang: native },
+                  }
+                : prev,
+            );
+          })
+          .catch(() => {});
+      };
 
       setWordPanel((prev) => ({
         ...prev,
         translation: hasTranslation ? existingEntry.translation : null,
+        translationLang: hasTranslation ? (existingEntry.translationLang ?? null) : null,
         isLoading: !hasTranslation,
         existingEntry: existingEntry || null,
       }));
@@ -451,9 +474,11 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
           try {
             const result = await translatePhrase(word, sentence);
             if (requestId !== translationRequestId.current) return;
+            replaceSavedMeaning(result.translation);
             setWordPanel((prev) => ({
               ...prev,
               translation: result.translation,
+              translationLang: native,
               partOfSpeech: 'phrase',
               phraseDetails: {
                 literalBreakdown: result.literalBreakdown,
@@ -490,9 +515,12 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
 
         // Keep the "looking up" state until the meanings are in the reader's language,
         // so English never flashes first. If translating fails, the English stays.
+        const needsLocalization = !!dictEntry?.needsLocalization;
+        let wasLocalized = false;
         if (dictEntry?.needsLocalization) {
           const localized = await localizeEntrySenses(word);
           if (requestId !== translationRequestId.current) return;
+          wasLocalized = !!localized;
           dictEntry = localized
             ? { ...dictEntry, senses: localized, needsLocalization: false }
             : { ...dictEntry, needsLocalization: false };
@@ -500,9 +528,12 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
 
         if (dictEntry && dictEntry.senses.length > 0) {
           const translation = dictEntry.senses.map((s) => s.gloss).join('; ');
+          const translationLang = dictionaryMeaningLang(needsLocalization, wasLocalized, native);
+          if (translationLang === native) replaceSavedMeaning(translation);
           setWordPanel((prev) => ({
             ...prev,
             translation,
+            translationLang,
             partOfSpeech: dictEntry!.senses[0]?.partOfSpeech || null,
             dictEntry,
             isLoading: false,
@@ -518,6 +549,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
               setWordPanel((prev) => ({
                 ...prev,
                 translation: cumulative,
+                translationLang: native,
                 partOfSpeech: null,
                 dictEntry: null,
                 aiStructured: null,
@@ -527,9 +559,11 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
               }));
             });
             if (requestId !== translationRequestId.current) return;
+            replaceSavedMeaning(gloss);
             setWordPanel((prev) => ({
               ...prev,
               translation: gloss,
+              translationLang: native,
               isLoading: false,
               isStreamingGloss: false,
             }));
@@ -572,6 +606,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     setWordPanel((prev) => ({ ...prev, isContextLoading: true }));
     try {
       const result = await translateWord(wordPanel.word, wordPanel.sentence);
+      const native = (await loadNative()) ?? 'en';
       const structured =
         result.senses && result.senses.length > 0
           ? {
@@ -598,6 +633,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         return {
           ...prev,
           translation: result.translation,
+          translationLang: native,
           partOfSpeech: result.partOfSpeech || prev.partOfSpeech,
           aiStructured: structured ?? prev.aiStructured,
           isContextLoading: false,
@@ -623,6 +659,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     setWordPanel((prev) => ({ ...prev, isEnriching: true }));
     try {
       const result = await enrichWord(wordPanel.word, wordPanel.sentence);
+      const native = (await loadNative()) ?? 'en';
       if (requestId !== translationRequestId.current) return;
       const structured =
         result.senses && result.senses.length > 0
@@ -636,6 +673,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       setWordPanel((prev) => ({
         ...prev,
         translation: result.translation || prev.translation,
+        translationLang: result.translation ? native : prev.translationLang,
         partOfSpeech: result.partOfSpeech || prev.partOfSpeech,
         aiStructured: structured ?? prev.aiStructured,
         isEnriching: false,
@@ -703,6 +741,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       type: isPhrase ? 'phrase' : 'word',
       sentence: wordPanel.sentence,
       translation: wordPanel.translation,
+      translationLang: wordPanel.translationLang,
       state: existing?.state || 'level1',
       stateUpdatedAt: new Date(),
       reviewCount: existing?.reviewCount || 0,
@@ -757,6 +796,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         type: 'word',
         sentence: wordPanel.sentence,
         translation: wordPanel.translation || '',
+        translationLang: wordPanel.translationLang,
         state: 'known',
         stateUpdatedAt: new Date(),
         reviewCount: 0,
@@ -814,6 +854,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         type: 'word',
         sentence: wordPanel.sentence,
         translation: wordPanel.translation || '',
+        translationLang: wordPanel.translationLang,
         state: 'ignored',
         stateUpdatedAt: new Date(),
         reviewCount: 0,
@@ -874,6 +915,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
           type: wordPanel.word.includes(' ') ? 'phrase' : 'word',
           sentence: wordPanel.sentence,
           translation: wordPanel.translation,
+          translationLang: wordPanel.translationLang,
           state,
           stateUpdatedAt: new Date(),
           reviewCount: 0,
@@ -971,6 +1013,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       type: isPhrase ? 'phrase' : 'word',
       sentence: wordPanel.sentence,
       translation: wordPanel.translation || '',
+      translationLang: wordPanel.translationLang,
       state: 'level1',
       stateUpdatedAt: new Date(),
       reviewCount: 0,

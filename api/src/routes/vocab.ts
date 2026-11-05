@@ -2,7 +2,7 @@ import type { SQLQueryBindings } from 'bun:sqlite';
 import { Hono } from 'hono';
 import { db, VocabRow, type WordState } from '../db';
 import { resolveLanguage } from '../lib/active-language';
-import { foldWord, getLanguageConfig, normalizeText } from '../lib/languages';
+import { foldWord, getLanguageConfig, isNativeLanguageCode, normalizeText } from '../lib/languages';
 import { getCurrentUserId } from '../lib/user';
 import { randomUUID } from 'crypto';
 import { entitlements, planLimitResponse, type AtomicLimitCheck } from '../lib/entitlements';
@@ -25,9 +25,17 @@ import {
 } from '../lib/persisted-input';
 import { notifyVocabSaved } from '../lib/lifecycle-email';
 import { syncWordDelete, syncWordState } from '../lib/review/sync-word-state';
+import { getNativeLanguageCode } from '../lib/native-language';
+import { resolveTranslationLang } from '../lib/translation-lang';
 import { newestOf, vocabRowsByKey, type NewestVocab } from '../lib/review/word-card-rows';
 
 const app = new Hono();
+
+function translationLangError(value: unknown): string | null {
+  if (value === undefined || value === null || isNativeLanguageCode(value)) return null;
+  return 'translationLang must be a supported translation language code';
+}
+
 const VOCAB_TYPES = new Set(['word', 'phrase'] as const);
 const WORD_STATES = new Set([
   'new',
@@ -85,6 +93,7 @@ app.get('/', (c) => {
       type: v.type,
       sentence: v.sentence,
       translation: v.translation,
+      translationLang: v.translationLang,
       state: v.state,
       stateUpdatedAt: v.stateUpdatedAt,
       reviewCount: v.reviewCount,
@@ -121,6 +130,8 @@ app.post('/', async (c) => {
   if (body.translation !== undefined && typeof body.translation !== 'string') {
     return c.json({ error: 'translation must be a string' }, 400);
   }
+  const langTagError = translationLangError(body.translationLang);
+  if (langTagError) return c.json({ error: langTagError }, 400);
   const typeError = validateEnum(body.type, 'type', VOCAB_TYPES);
   if (typeError) return c.json({ error: typeError }, 400);
   const stateError = validateEnum(body.state, 'state', WORD_STATES);
@@ -143,6 +154,11 @@ app.post('/', async (c) => {
   const text = normalizeText(body.text);
   const sentence = body.sentence ?? '';
   const translation = body.translation ?? '';
+  const translationLang = resolveTranslationLang(
+    translation,
+    body.translationLang,
+    getNativeLanguageCode(userId),
+  );
   const foldedText = foldWord(text, pack);
   const existing = db
     .prepare('SELECT text, sentence, translation FROM vocab WHERE id = ? AND userId = ?')
@@ -170,12 +186,12 @@ app.post('/', async (c) => {
   const verdict = entitlements.reserveCount(userId, checks, () => {
     db.prepare(
       `
-      INSERT INTO vocab (id, text, type, sentence, translation, state, stateUpdatedAt, reviewCount, bookId, chapter, createdAt, pushedToAnki, ankiNoteId, language, userId)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO vocab (id, text, type, sentence, translation, translationLang, state, stateUpdatedAt, reviewCount, bookId, chapter, createdAt, pushedToAnki, ankiNoteId, language, userId)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       ON CONFLICT(userId, id) DO UPDATE SET
         text = excluded.text, type = excluded.type, sentence = excluded.sentence,
-        translation = excluded.translation, state = excluded.state,
-        stateUpdatedAt = excluded.stateUpdatedAt, reviewCount = excluded.reviewCount,
+        translation = excluded.translation, translationLang = excluded.translationLang,
+        state = excluded.state, stateUpdatedAt = excluded.stateUpdatedAt, reviewCount = excluded.reviewCount,
         bookId = excluded.bookId, chapter = excluded.chapter, createdAt = excluded.createdAt,
         pushedToAnki = excluded.pushedToAnki, ankiNoteId = excluded.ankiNoteId,
         language = excluded.language
@@ -186,6 +202,7 @@ app.post('/', async (c) => {
       body.type ?? 'word',
       sentence,
       translation,
+      translationLang,
       body.state ?? 'new',
       now,
       body.reviewCount ?? 0,
@@ -244,6 +261,8 @@ app.put('/:id', async (c) => {
   if (body.sentence !== undefined && typeof body.sentence !== 'string') {
     return c.json({ error: 'sentence must be a string' }, 400);
   }
+  const langTagError = translationLangError(body.translationLang);
+  if (langTagError) return c.json({ error: langTagError }, 400);
   const reviewCountError = validateSafeInteger(body.reviewCount, 'reviewCount', { min: 0 });
   if (reviewCountError) return c.json({ error: reviewCountError }, 400);
   const pushedError = validateBooleanLike(body.pushedToAnki, 'pushedToAnki');
@@ -273,8 +292,11 @@ app.put('/:id', async (c) => {
     };
   }
   if (body.translation !== undefined) {
-    updates.push('translation = ?');
-    values.push(body.translation);
+    updates.push('translation = ?', 'translationLang = ?');
+    values.push(
+      body.translation,
+      resolveTranslationLang(body.translation, body.translationLang, getNativeLanguageCode(userId)),
+    );
   }
   if (body.sentence !== undefined) {
     updates.push('sentence = ?');

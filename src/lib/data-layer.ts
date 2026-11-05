@@ -601,7 +601,7 @@ export async function updateVocabState(id: string, state: WordState): Promise<bo
 /** Persist the editable fields exposed by the vocab detail modal in one write. */
 export async function updateVocabEntry(
   id: string,
-  updates: Partial<Pick<VocabEntry, 'state' | 'translation' | 'sentence'>>,
+  updates: Partial<Pick<VocabEntry, 'state' | 'translation' | 'translationLang' | 'sentence'>>,
 ): Promise<void> {
   const res = await apiFetch(`/api/vocab/${id}`, {
     method: 'PUT',

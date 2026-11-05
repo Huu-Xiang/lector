@@ -369,6 +369,34 @@ describe('learning-data takeout', () => {
   beforeEach(reset);
   afterEach(reset);
 
+  test('keeps the meaning language through export and restore, and accepts old backups', async () => {
+    const rows = [
+      { id: 'tl-1', text: 'inu', translation: '犬', translationLang: 'ja', language: 'de' },
+      { id: 'tl-2', text: 'cat', translation: 'cat', language: 'de' },
+      { id: 'tl-3', text: 'bad', translation: 'x', translationLang: 'xx', language: 'de' },
+      { id: 'tl-4', text: 'empty', translation: '', translationLang: 'en', language: 'de' },
+    ];
+    expect((await importData({ vocab: rows })).status).toBe(200);
+    const langs = () =>
+      db.prepare("SELECT id, translationLang FROM vocab WHERE id LIKE 'tl-%' ORDER BY id").all();
+    const expected = [
+      { id: 'tl-1', translationLang: 'ja' },
+      { id: 'tl-2', translationLang: null },
+      { id: 'tl-3', translationLang: null },
+      { id: 'tl-4', translationLang: null },
+    ];
+    expect(langs()).toEqual(expected);
+
+    const exported = (await (await app.request('/')).json()) as {
+      vocab: Array<{ id: string; translationLang: string | null }>;
+    };
+    expect(exported.vocab.find((v) => v.id === 'tl-1')?.translationLang).toBe('ja');
+    db.prepare("DELETE FROM vocab WHERE id LIKE 'tl-%'").run();
+    expect((await importData({ vocab: exported.vocab })).status).toBe(200);
+    expect(langs()).toEqual(expected);
+    expect((await importData({ vocab: [{ id: 'tl-5', translationLang: 7 }] })).status).toBe(400);
+  });
+
   test('round-trips collections, reading position, vocabulary, SRS state, journal and stats', async () => {
     const original = {
       collectionGroups: [{ id: 'takeout-group', name: 'My shelf' }],

@@ -12,6 +12,8 @@ import {
 } from './sentence-sources';
 import { reviewCardOf, type WordCardRow } from './word-card-rows';
 import { getNativeLanguageCode } from '../native-language';
+import { matchesNative } from '../translation-lang';
+import { scheduleMeaningRefresh, type MeaningRefresh, type RefreshTarget } from './meaning-refresh';
 import { sharedExampleSentenceCache, type ExampleSentenceCache } from '../example-sentence-cache';
 import {
   sharedSentenceTranslationCache,
@@ -97,13 +99,14 @@ interface CardWithVocab extends WordCardRow {
   text: string;
   sentence: string;
   translation: string;
+  translationLang: string | null;
   vocabCreatedAt: string;
 }
 
 function activeCards(userId: string, language: string): CardWithVocab[] {
   return db
     .prepare(
-      `SELECT c.*, v.text, v.sentence, v.translation, v.createdAt AS vocabCreatedAt
+      `SELECT c.*, v.text, v.sentence, v.translation, v.translationLang, v.createdAt AS vocabCreatedAt
          FROM wordCards c JOIN vocab v ON v.id = c.vocabId AND v.userId = c.userId
         WHERE c.userId = ? AND c.language = ? AND c.retiredAt IS NULL`,
     )
@@ -203,14 +206,18 @@ export function buildRound(
   lookup: SenseLookup = dictionarySense,
   finder: typeof findSentence = findSentence,
   caches: RoundCaches = defaultCaches,
+  refresh: MeaningRefresh = scheduleMeaningRefresh,
 ) {
   const { due, newCards } = selection(userId, language, now);
   const goal = readReviewGoal(userId);
-  const pool = activeCards(userId, language).filter((card) => card.translation.trim() !== '');
+  const native = getNativeLanguageCode(userId);
+  const hasNativeMeaning = (card: CardWithVocab) =>
+    card.translation.trim() !== '' && matchesNative(card.translation, card.translationLang, native);
+  const pool = activeCards(userId, language).filter(hasNativeMeaning);
+  const stale: RefreshTarget[] = [];
   const items: QueueItem[] = [];
   const served = new Map<string, string>();
   const level = readLearnerLevel(userId, language);
-  const native = getNativeLanguageCode(userId);
   const sentenceDeps = caches.forms ? { forms: caches.forms } : undefined;
   const find = (card: CardWithVocab, skipSaved: boolean): FoundSentence | null => {
     const found = finder({
@@ -228,13 +235,20 @@ export function buildRound(
   for (const card of [...due, ...newCards]) {
     if (items.length >= size) break;
     let translation = card.translation;
-    if (translation.trim() === '') {
+    let nativeMeaning = hasNativeMeaning(card);
+    if (!nativeMeaning) {
       const sense = card.vocabId
         ? fillMeaning(userId, card.vocabId, card.text, language, lookup)
         : null;
-      if (!sense) continue;
-      translation = sense;
-      pool.push({ ...card, translation });
+      if (sense) {
+        translation = sense;
+        nativeMeaning = true;
+        pool.push({ ...card, translation, translationLang: native });
+      } else if (translation.trim() === '') {
+        continue;
+      } else {
+        stale.push({ word: card.text, wordKey: card.wordKey, language });
+      }
     }
     const stage = stageOf(reviewCardOf(card));
     let questionType = questionTypeFor({
@@ -245,6 +259,7 @@ export function buildRound(
       reps: card.reps,
     });
     let choices: string[] | undefined;
+    if (questionType === 'choose_meaning' && !nativeMeaning) questionType = 'recognition';
     if (questionType === 'choose_meaning') {
       const options = chooseMeanings({ id: card.id, text: card.text, translation }, pool);
       if (options) choices = options;
@@ -306,6 +321,7 @@ export function buildRound(
         : {}),
     });
   }
+  if (stale.length > 0) void refresh(userId, stale);
   const roundId = randomUUID();
   db.transaction(() => {
     db.prepare('DELETE FROM reviewRounds WHERE userId = ? AND createdAt < ?').run(

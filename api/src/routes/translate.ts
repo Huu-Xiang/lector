@@ -17,17 +17,10 @@ import { getCurrentUserId } from '../lib/user';
 import { getLanguageConfig } from '../lib/languages';
 import { getNativeLanguageCode, getNativeLanguageName } from '../lib/native-language';
 import { sharedGlossCache, type GlossCache } from '../lib/gloss-cache';
-import {
-  isCacheableGlosses,
-  MAX_ENTRY_GLOSS_CHARS,
-  MAX_ENTRY_SENSES,
-  sharedEntryCache,
-  type EntryCache,
-} from '../lib/entry-cache';
+import { sharedEntryCache, type EntryCache } from '../lib/entry-cache';
 import { lookupWord, type ExpandedDictionaryEntry } from '../lib/dictionary-db';
 import {
   buildGlossPrompt,
-  buildLocalizePrompt,
   buildPhrasePrompt,
   buildSimpleContextPrompt,
   buildSimplePhrasePrompt,
@@ -35,6 +28,7 @@ import {
   phraseFieldsInWrongScript,
   phraseLanguageReminder,
 } from '../lib/translate-prompts';
+import { localizeEntry } from '../lib/localize-entry';
 import { recordStudySessionPing } from '../lib/study-session';
 import { notifyGlossCapHit } from '../lib/lifecycle-email';
 import {
@@ -372,59 +366,23 @@ export function makeTranslateRoutes({
     if (!parsed.ok) return c.json({ error: parsed.error }, 400);
 
     const userId = getCurrentUserId(c);
-    const lang = resolveLanguage(parsed.value.language, userId);
-    const nativeCode = getNativeLanguageCode(userId);
-    if (nativeCode === 'en' || nativeCode === lang) return c.json({ senses: null });
-
-    const entry = lookupEntry(userId, parsed.value.word, lang);
-    if (!entry || entry.source === 'cache' || entry.senseLanguage || entry.senses.length === 0) {
-      return c.json({ senses: null });
-    }
-    const source = entry.senses.slice(0, MAX_ENTRY_SENSES).map((sense) => ({
-      partOfSpeech: sense.partOfSpeech,
-      gloss: sense.gloss.slice(0, MAX_ENTRY_GLOSS_CHARS),
-    }));
-    const withGlosses = (glosses: string[]) =>
-      c.json({ senses: source.map((sense, i) => ({ ...sense, gloss: glosses[i] })) });
-
-    // Inflected forms share the base word's senses, so they share its cache row.
-    const headword = entry.lemmaInfo?.stem ?? entry.word;
-    const cached = entryCache?.get(lang, nativeCode, headword) ?? null;
-    if (cached && cached.length === source.length) return withGlosses(cached);
-
-    // Not metered: a shared answer serves every later reader, so the total cost is
-    // bounded by the dictionary size. Only a burst limit stops one account from
-    // draining it.
-    const byok = engine.resolveEntitlements(userId).byok;
-    if (
-      !byok &&
-      (!rateLimiter.tryConsume(userId, 'localize') ||
-        !dailyLocalizeLimiter.tryConsume(userId, 'localize'))
-    ) {
-      return burstResponse(c);
-    }
-
     try {
-      const result = await completeJson<{ glosses?: unknown }>(providerForUser(userId, { byok }), {
-        messages: [
-          {
-            role: 'user',
-            content: buildLocalizePrompt(
-              getLanguageConfig(lang).name,
-              getNativeLanguageName(userId),
-              entry.word,
-              source.map((sense) => sense.gloss),
-            ),
-          },
-        ],
-        maxTokens: 700,
-        task: 'word-gloss',
-      });
-      if (!isCacheableGlosses(result.glosses, source.length)) {
-        throw new Error('Localization returned an unexpected shape');
-      }
-      if (!byok) entryCache?.put(lang, nativeCode, headword, result.glosses);
-      return withGlosses(result.glosses);
+      const outcome = await localizeEntry(
+        {
+          providerForUser,
+          engine,
+          rateLimiter,
+          dailyLocalizeLimiter,
+          entryCache,
+          lookupEntry,
+        },
+        userId,
+        parsed.value.word,
+        parsed.value.language,
+      );
+      if (outcome.status === 'none') return c.json({ senses: null });
+      if (outcome.status === 'limited') return burstResponse(c);
+      return c.json({ senses: outcome.senses });
     } catch (error) {
       console.error('Localize error:', error);
       return c.json({ error: 'Translation failed' }, 502);

@@ -126,6 +126,8 @@ export interface VocabEntry {
   type: VocabType;
   sentence: string;
   translation: string;
+  /** Language of `translation`; null when unknown. */
+  translationLang?: string | null;
   state: WordState;
   stateUpdatedAt: Date;
   reviewCount: number;
