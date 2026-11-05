@@ -51,6 +51,7 @@ export const ERASURE_TABLES = [
   'cn_orders',
   'cn_refund_requests',
   'redeem_uses',
+  'signup_redeem_codes',
   'invite_codes',
   'reward_cards',
   'admin_account_flags',

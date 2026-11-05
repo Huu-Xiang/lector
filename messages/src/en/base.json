@@ -73,10 +73,10 @@
       "matches": "Passwords match",
       "errEmailDisposable": "Temporary email addresses can't be used. Please use your usual email.",
       "errEmailAlias": "An account already uses this email address in another form. Sign in with that address instead.",
-      "invite": "Invite code",
+      "invite": "Invite or redeem code",
       "inviteOptional": "(optional)",
       "inviteRequired": "(required)",
-      "inviteHint": "A friend's invite code. You both get a free Plus card.",
+      "inviteHint": "A friend's invite code, or a redeem code such as WELCOME123.",
       "errInviteRequired": "A valid invite code is required to sign up."
     },
     "reset": {
@@ -218,5 +218,10 @@
       "title": "Interface and translation languages",
       "hint": "These are two separate choices. For example, you can use a Chinese interface and read explanations in English while you learn French."
     }
+  },
+  "welcomeOffer": {
+    "body": "New here? Use the code <b>{code}</b> for 15 days of Plus, free. Valid until 15 December, once per account.",
+    "use": "Use it",
+    "signUp": "Sign up"
   }
 }

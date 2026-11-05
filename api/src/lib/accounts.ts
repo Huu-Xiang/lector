@@ -19,6 +19,7 @@ import { sendWelcomeEmail } from './lifecycle-email';
 import { purgeTenantData } from './account-deletion';
 import { getDatabaseInstance } from '../db';
 import { attachInvite, inviteRequired, isAcceptableSignupCode } from './invites';
+import { redeemSignupCode, rememberSignupCode } from './redeem';
 
 /** One account per mailbox: refuse throwaway domains and +tag / Gmail-dot variants of a taken address. */
 function checkSignupEmail(raw: unknown, database: Database): void {
@@ -167,6 +168,7 @@ export function createAuthEngine(opts: AuthEngineOptions) {
         if (ctx.path !== '/sign-up/email' || !code || !user?.id) return;
         try {
           attachInvite({ inviteeId: user.id, rawCode: code });
+          rememberSignupCode(user.id, code);
         } catch (err) {
           console.error('[accounts] failed to record invite:', err);
         }
@@ -213,6 +215,11 @@ export function createAuthEngine(opts: AuthEngineOptions) {
         }
       },
       afterEmailVerification: async (user) => {
+        try {
+          redeemSignupCode(user.id);
+        } catch (err) {
+          console.error('[accounts] failed to redeem sign-up code:', err);
+        }
         try {
           await sendWelcomeEmail(user.id);
         } catch (err) {

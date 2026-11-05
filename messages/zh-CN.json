@@ -16,6 +16,10 @@
         "title": "现在可以学韩语了",
         "body": "韩语已经上线：8 本免费书，词义会翻成你的母语。在语言菜单里添加即可。"
       },
+      "welcomeCode": {
+        "title": "兑换码 WELCOME123：免费领 15 天 Plus",
+        "body": "打开设置 → 套餐，点“有兑换码？”，输入 WELCOME123，就能免费用 15 天 Plus。12 月 15 日前有效，每个账号一次。"
+      },
       "inviteCodes": {
         "title": "邀请好友，免费得 Plus",
         "body": "在设置页分享你的邀请链接。好友注册并开始阅读后，你们各得一张 14 天 Plus 卡，想用时再激活。"
@@ -100,10 +104,10 @@
       "matches": "两次密码一致",
       "errEmailDisposable": "不能使用临时邮箱，请使用你常用的邮箱。",
       "errEmailAlias": "这个邮箱的另一种写法已经注册过账号，请用那个地址登录。",
-      "invite": "邀请码",
+      "invite": "邀请码 / 兑换码",
       "inviteOptional": "（选填）",
       "inviteRequired": "（必填）",
-      "inviteHint": "好友的邀请码。你们都会得到一张免费的 Plus 卡。",
+      "inviteHint": "好友的邀请码，或 WELCOME123 这样的兑换码。",
       "errInviteRequired": "注册需要有效的邀请码。"
     },
     "reset": {
@@ -738,6 +742,11 @@
         "android2": "选“添加到主屏幕”或“安装应用”。"
       }
     }
+  },
+  "welcomeOffer": {
+    "body": "新用户福利：用兑换码 <b>{code}</b> 免费领 15 天 Plus。12 月 15 日前有效，每个账号一次。",
+    "use": "填入",
+    "signUp": "去注册"
   },
   "plans": {
     "freePrice": "¥0",

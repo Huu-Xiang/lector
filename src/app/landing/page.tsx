@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 import { BookOpen, Languages, Repeat, PenLine, Layers } from 'lucide-react';
 import LegalLinks from '@/components/LegalLinks';
+import WelcomeOfferNote from '@/components/WelcomeOfferNote';
 import { LANGUAGES } from '@/lib/languages';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -93,6 +94,9 @@ export default async function LandingPage() {
             <p className="mt-4 text-lg text-muted-foreground">
               {t('heroBody', { count: languageCount })}
             </p>
+            <div className="mt-5 max-w-md">
+              <WelcomeOfferNote />
+            </div>
             <div className="mt-6 flex flex-wrap gap-3">
               <Link
                 href="/register"

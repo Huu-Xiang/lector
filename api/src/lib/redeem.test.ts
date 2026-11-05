@@ -3,7 +3,13 @@ import { beforeEach, describe, expect, test } from 'bun:test';
 import { db } from '../db';
 import { activateCard, listCards } from './invites';
 import { activeGrant, grantPlan } from './plan-grants';
-import { createCampaign, normalizeCode, redeemCode } from './redeem';
+import {
+  createCampaign,
+  normalizeCode,
+  redeemCode,
+  redeemSignupCode,
+  rememberSignupCode,
+} from './redeem';
 
 const NOW = new Date('2026-10-15T00:00:00Z');
 
@@ -41,6 +47,7 @@ beforeEach(() => {
   db.prepare("DELETE FROM plan_grants WHERE userId LIKE 'rd-%'").run();
   db.prepare("DELETE FROM redeem_uses WHERE userId LIKE 'rd-%'").run();
   db.prepare("DELETE FROM reward_cards WHERE userId LIKE 'rd-%'").run();
+  db.prepare("DELETE FROM signup_redeem_codes WHERE userId LIKE 'rd-%'").run();
 });
 
 describe('redeem codes', () => {
@@ -122,5 +129,23 @@ describe('redeem codes', () => {
 
   test('normalizes what people type', () => {
     expect(normalizeCode(' welcome-123 ')).toBe('WELCOME123');
+  });
+
+  test('a code typed at sign-up is redeemed once the email is verified', () => {
+    const { codes } = campaign({ days: 15 });
+    rememberSignupCode('rd-s', codes[0].toLowerCase(), NOW);
+    expect(activeGrant('rd-s', NOW)).toBeFalsy();
+    expect(redeemSignupCode('rd-s', NOW)).toMatchObject({ ok: true, grant: { plan: 'cloud' } });
+    expect(activeGrant('rd-s', NOW)?.endsAt).toBe('2026-10-30T00:00:00.000Z');
+    expect(redeemSignupCode('rd-s', NOW)).toBeNull();
+  });
+
+  test('sign-up keeps only redeem codes, and an expired one grants nothing', () => {
+    rememberSignupCode('rd-t', 'NOTACODE', NOW);
+    expect(redeemSignupCode('rd-t', NOW)).toBeNull();
+    const { codes } = campaign({ expiresAt: '2026-10-16T00:00:00.000Z' });
+    rememberSignupCode('rd-t', codes[0], NOW);
+    const later = new Date('2026-10-17T00:00:00Z');
+    expect(redeemSignupCode('rd-t', later)).toEqual({ ok: false, error: 'expired' });
   });
 });

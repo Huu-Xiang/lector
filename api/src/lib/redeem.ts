@@ -238,3 +238,32 @@ export function redeemCode(args: {
     return { ok: true, stored: false, grant };
   })();
 }
+
+function isRedeemCode(code: string): boolean {
+  return !!db.prepare('SELECT 1 FROM redeem_codes WHERE code = ?').get(code);
+}
+
+/** A redeem code typed in the sign-up form waits here until the email is verified. */
+export function rememberSignupCode(userId: string, rawCode: string, now = new Date()): void {
+  const code = normalizeCode(rawCode);
+  if (!code || !isRedeemCode(code)) return;
+  db.prepare(
+    'INSERT OR REPLACE INTO signup_redeem_codes (userId, code, createdAt) VALUES (?, ?, ?)',
+  ).run(userId, code, now.toISOString());
+}
+
+export function redeemSignupCode(userId: string, now = new Date()): RedeemResult | null {
+  const row = db.prepare('SELECT code FROM signup_redeem_codes WHERE userId = ?').get(userId) as
+    | { code: string }
+    | undefined;
+  if (!row) return null;
+  db.prepare('DELETE FROM signup_redeem_codes WHERE userId = ?').run(userId);
+  return redeemCode({
+    userId,
+    rawCode: row.code,
+    currentPlan: 'free',
+    hasSubscription: false,
+    emailVerified: true,
+    now,
+  });
+}

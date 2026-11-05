@@ -15,6 +15,7 @@ import { authHref, sanitizeAuthReturnPath } from '@/lib/auth-return';
 import { meetsRules } from '@/lib/password-strength';
 import { readPendingInvite, writePendingInvite } from '@/lib/pending-invite';
 import { useInviteRequired } from '@/lib/use-env';
+import WelcomeOfferNote from '@/components/WelcomeOfferNote';
 
 export default function RegisterPage() {
   return (
@@ -120,6 +121,7 @@ function RegisterForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <h2 className="text-lg font-semibold text-foreground">{t('title')}</h2>
+      <WelcomeOfferNote onUse={setInvite} />
 
       <div className="space-y-2">
         <Label htmlFor="name">{t('name')}</Label>

@@ -16,6 +16,10 @@
         "title": "Korean is now available",
         "body": "You can learn Korean now. It has 8 free books and meanings in your own language. Add it from the language menu."
       },
+      "welcomeCode": {
+        "title": "Free Plus for 15 days: WELCOME123",
+        "body": "Open Settings → Plan, choose \"Have a code?\" and enter WELCOME123. You get 15 days of Plus, free. Valid until 15 December, once per account."
+      },
       "inviteCodes": {
         "title": "Invite friends, get free Plus",
         "body": "Share your invite link from Settings. When a friend signs up and starts reading, you both get a 14-day Plus card to activate whenever you like."
@@ -100,10 +104,10 @@
       "matches": "Passwords match",
       "errEmailDisposable": "Temporary email addresses can't be used. Please use your usual email.",
       "errEmailAlias": "An account already uses this email address in another form. Sign in with that address instead.",
-      "invite": "Invite code",
+      "invite": "Invite or redeem code",
       "inviteOptional": "(optional)",
       "inviteRequired": "(required)",
-      "inviteHint": "A friend's invite code. You both get a free Plus card.",
+      "inviteHint": "A friend's invite code, or a redeem code such as WELCOME123.",
       "errInviteRequired": "A valid invite code is required to sign up."
     },
     "reset": {
@@ -738,6 +742,11 @@
         "android2": "Choose \"Add to Home screen\" or \"Install app\"."
       }
     }
+  },
+  "welcomeOffer": {
+    "body": "New here? Use the code <b>{code}</b> for 15 days of Plus, free. Valid until 15 December, once per account.",
+    "use": "Use it",
+    "signUp": "Sign up"
   },
   "plans": {
     "freePrice": "$0",

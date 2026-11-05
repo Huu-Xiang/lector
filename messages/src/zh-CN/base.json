@@ -73,10 +73,10 @@
       "matches": "两次密码一致",
       "errEmailDisposable": "不能使用临时邮箱，请使用你常用的邮箱。",
       "errEmailAlias": "这个邮箱的另一种写法已经注册过账号，请用那个地址登录。",
-      "invite": "邀请码",
+      "invite": "邀请码 / 兑换码",
       "inviteOptional": "（选填）",
       "inviteRequired": "（必填）",
-      "inviteHint": "好友的邀请码。你们都会得到一张免费的 Plus 卡。",
+      "inviteHint": "好友的邀请码，或 WELCOME123 这样的兑换码。",
       "errInviteRequired": "注册需要有效的邀请码。"
     },
     "reset": {
@@ -218,5 +218,10 @@
       "title": "界面语言和翻译语言",
       "hint": "这是两个独立的选择。比如学法语时，可以用中文界面，同时让解释用英文。"
     }
+  },
+  "welcomeOffer": {
+    "body": "新用户福利：用兑换码 <b>{code}</b> 免费领 15 天 Plus。12 月 15 日前有效，每个账号一次。",
+    "use": "填入",
+    "signUp": "去注册"
   }
 }

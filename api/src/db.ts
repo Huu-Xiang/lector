@@ -394,6 +394,11 @@ function getDb(): Database {
       at TEXT NOT NULL
     );
     CREATE INDEX IF NOT EXISTS idx_redeem_uses_user ON redeem_uses(userId, campaignId);
+    CREATE TABLE IF NOT EXISTS signup_redeem_codes (
+      userId TEXT PRIMARY KEY,
+      code TEXT NOT NULL,
+      createdAt TEXT NOT NULL
+    );
 
     -- Readfox invites. invite_codes: one personal code per user. invites: who
     -- invited whom; inviteeId becomes NULL when the invitee deletes the account,
