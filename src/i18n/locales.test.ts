@@ -16,9 +16,22 @@ describe('resolveLocale', () => {
   it('maps regional Chinese tags to the listed Chinese locale', () => {
     expect(matchLocale('zh')).toBe('zh-CN');
     expect(matchLocale('zh-SG')).toBe('zh-CN');
+    expect(matchLocale('zh-Hans')).toBe('zh-CN');
+    expect(matchLocale('zh-CN')).toBe('zh-CN');
     expect(matchLocale('en-GB')).toBe('en');
     expect(matchLocale('ja-JP')).toBe('ja');
     expect(matchLocale('ko-KR')).toBe('ko');
     expect(matchLocale('')).toBeNull();
+  });
+
+  it('maps Traditional Chinese tags to zh-TW', () => {
+    for (const tag of ['zh-TW', 'zh-HK', 'zh-MO', 'zh-Hant-TW', 'zh-Hant']) {
+      expect(matchLocale(tag)).toBe('zh-TW');
+    }
+  });
+
+  it('resolves Accept-Language zh-TW with no cookie to zh-TW', () => {
+    expect(resolveLocale(undefined, 'zh-TW,zh;q=0.9,en;q=0.8')).toBe('zh-TW');
+    expect(resolveLocale('zh-TW', 'en-US')).toBe('zh-TW');
   });
 });

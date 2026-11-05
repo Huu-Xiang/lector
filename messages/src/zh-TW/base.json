@@ -1,0 +1,230 @@
+{
+  "common": {
+    "appName": "Readfox",
+    "tagline": "用閱讀學會一門新語言"
+  },
+  "uiLanguage": {
+    "label": "介面語言",
+    "title": "介面語言",
+    "description": "按鈕、選單、書名和簡介使用的語言。查詞翻譯和解釋使用下面的「翻譯語言」。",
+    "alsoNative": "翻譯和書名也改成{language}嗎？",
+    "alsoNativeYes": "改",
+    "alsoNativeNo": "不用",
+    "alsoNativeDone": "翻譯語言已變更",
+    "alsoNativeFailed": "翻譯語言變更失敗"
+  },
+  "legal": {
+    "nav": "法律資訊",
+    "pricing": "價格",
+    "privacy": "隱私權",
+    "terms": "條款",
+    "about": "關於",
+    "source": "原始碼",
+    "refunds": "退款",
+    "freeBooks": "免費書",
+    "back": "返回"
+  },
+  "nav": {
+    "library": "書庫",
+    "practice": "練習",
+    "journal": "日記",
+    "vocab": "詞彙",
+    "stats": "統計",
+    "settings": "設定"
+  },
+  "auth": {
+    "loadingAuth": "載入中",
+    "login": {
+      "title": "登入",
+      "deleted": "你的帳號和所有資料已被永久刪除。",
+      "unverified": "<b>{email}</b> 尚未驗證。請到收件匣點擊驗證連結。",
+      "resend": "重新傳送驗證郵件",
+      "email": "電子郵件",
+      "password": "密碼",
+      "forgot": "忘記密碼?",
+      "submit": "登入",
+      "submitting": "登入中…",
+      "github": "使用 GitHub 繼續",
+      "oidc": "使用 {provider} 繼續",
+      "noAccount": "還沒有帳號?",
+      "create": "去註冊",
+      "errInvalid": "電子郵件或密碼不正確。",
+      "errFailed": "登入失敗。",
+      "errResend": "無法重新傳送郵件。",
+      "resent": "驗證郵件已傳送,請查看收件匣。"
+    },
+    "register": {
+      "title": "建立帳號",
+      "name": "姓名",
+      "email": "電子郵件",
+      "password": "密碼",
+      "passwordHint": "至少 8 個字元，需包含字母和數字。",
+      "submit": "建立帳號",
+      "submitting": "正在建立…",
+      "haveAccount": "已有帳號?",
+      "signIn": "去登入",
+      "errFailed": "註冊失敗。",
+      "checkTitle": "請查看收件匣",
+      "checkBody": "我們已向 <b>{email}</b> 傳送了驗證連結。點擊連結啟用帳號,然後登入。",
+      "goSignIn": "前往登入",
+      "confirmPassword": "確認密碼",
+      "errMismatch": "兩次輸入的密碼不一致。",
+      "errWeak": "密碼太弱：至少 8 個字元，並包含字母和數字。",
+      "matches": "兩次密碼一致",
+      "errEmailDisposable": "不能使用臨時電子郵件，請使用你常用的電子郵件。",
+      "errEmailAlias": "這個電子郵件的另一種寫法已經註冊過帳號，請用那個地址登入。",
+      "invite": "邀請碼 / 兌換碼",
+      "inviteOptional": "（選填）",
+      "inviteRequired": "（必填）",
+      "inviteHint": "好友的邀請碼，或 WELCOME123 這樣的兌換碼。",
+      "errInviteRequired": "註冊需要有效的邀請碼。"
+    },
+    "reset": {
+      "expiredTitle": "連結已過期",
+      "expiredBody": "該重設連結無效或已過期,請在下方重新申請。",
+      "requestNew": "重新申請連結",
+      "checkTitle": "請查看收件匣",
+      "checkBody": "如果 <b>{email}</b> 對應的帳號存在,重設連結已在傳送途中。",
+      "backToSignIn": "返回登入",
+      "title": "重設密碼",
+      "intro": "輸入帳號的電子郵件,我們會傳送一封重設連結郵件。",
+      "email": "電子郵件",
+      "send": "傳送重設連結",
+      "sending": "傳送中…",
+      "errRequest": "無法申請重設。",
+      "newTitle": "設定新密碼",
+      "newPassword": "新密碼",
+      "passwordHint": "至少 8 個字元，需包含字母和數字。",
+      "setNew": "設定新密碼",
+      "updating": "更新中…",
+      "errReset": "無法重設密碼。",
+      "updated": "密碼已更新,請使用新密碼登入。",
+      "confirmPassword": "確認新密碼",
+      "errMismatch": "兩次輸入的密碼不一致。",
+      "errWeak": "密碼太弱：至少 8 個字元，並包含字母和數字。"
+    },
+    "twoFactor": {
+      "title": "兩步驟驗證",
+      "introBackup": "輸入一個備用碼,每個備用碼只能使用一次。",
+      "introTotp": "輸入驗證器應用程式中的 6 位數驗證碼。",
+      "labelBackup": "備用碼",
+      "labelTotp": "驗證碼",
+      "placeholderBackup": "例如 abcde-fghij",
+      "trust": "在此裝置上信任 30 天",
+      "verify": "驗證",
+      "verifying": "驗證中…",
+      "useTotp": "改用驗證器驗證碼",
+      "useBackup": "改用備用碼",
+      "backToSignIn": "返回登入",
+      "errExpired": "本次登入已過期,請重新輸入密碼。",
+      "errLocked": "驗證碼錯誤次數過多,請稍後再重新登入。",
+      "errBackup": "這個備用碼無效。",
+      "errTotp": "驗證碼無效,請輸入目前的驗證碼。"
+    },
+    "passwordMeter": {
+      "weak": "弱",
+      "fair": "中",
+      "strong": "強",
+      "rules": {
+        "length": "至少 8 個字元",
+        "letter": "包含字母",
+        "digit": "包含數字"
+      }
+    }
+  },
+  "setup": {
+    "badge": "你的第一次閱讀",
+    "welcome": "歡迎來到 Readfox",
+    "intro": "簡單告訴我們幾點,我們為你挑選合適的第一課。所有問題都是選填。",
+    "chooseLanguage": "2. 選擇要學的語言",
+    "learn": "學習{name}",
+    "showMore": "顯示另外 {count} 種語言",
+    "personalise": "3. 你的程度",
+    "personaliseHint": "用來優先推薦難度合適的免費書。",
+    "optional": "選填",
+    "level": "閱讀程度",
+    "ready": "準備好讀第一篇了嗎?",
+    "readyHint": "引導在一篇真實的入門課文裡進行,可以隨時退出。",
+    "skip": "直接進入書庫",
+    "preparing": "正在準備課文…",
+    "start": "開始引導課",
+    "errSave": "無法儲存你的設定",
+    "levelHint": "之後可以在「免費書籍」裡修改。",
+    "nativeTitle": "1. 你的母語",
+    "nativeHint": "單字翻譯和講解都用這種語言。介面目前有英文、簡體中文、繁體中文、日文和韓文。",
+    "interests": "你的興趣",
+    "interestsHint": "選填——選中的主題會在「免費書籍」裡顯示最新文章。",
+    "interest": {
+      "news": "時事新聞",
+      "travel": "旅行",
+      "science": "科普百科",
+      "literature": "文學名著"
+    },
+    "inDevelopment": "開發中",
+    "showMoreSoon": "查看另外 {count} 種開發中的語言",
+    "recommendBadge": "為你挑選",
+    "recommendTitle": "選一份開始讀吧",
+    "recommendIntro": "根據你的程度（{level}）和興趣挑選。選一份，我們帶你完成第一次閱讀。",
+    "recommendBack": "修改我的選擇",
+    "recommendSkip": "先去書庫逛逛"
+  },
+  "landing": {
+    "metaTitle": "Readfox：讀原版書，學道地外語",
+    "metaDescription": "匯入電子書或貼上一篇文章，生詞點一下就有釋義。查過的詞自動收進生詞本，按記憶曲線提醒你複習。免費、開源。",
+    "signIn": "登入",
+    "freeBooks": "免費書",
+    "getStarted": "免費註冊",
+    "heroTitle": "讀原版書，學道地外語",
+    "heroBody": "遇到生詞點一下，就能看到貼合上下文的釋義。查過的詞自動收進生詞本，到點提醒你複習。免費就能使用。",
+    "languagesNow": "現在可以學：",
+    "languagesSoon": "另有 {count} 種語言正在開發中",
+    "languagesUi": "介面：{ui} · 釋義和講解：{count} 種語言（可在設定裡更改）",
+    "createAccount": "免費註冊",
+    "heroAlt": "Readfox 標誌：一隻趴在書上的小狐狸",
+    "howTitle": "怎麼用",
+    "features": {
+      "read": {
+        "title": "想讀什麼，就讀什麼",
+        "body": "匯入 EPUB 電子書，或者直接貼上文章。你愛看的內容，就是你的課本。"
+      },
+      "tap": {
+        "title": "生詞一點就懂",
+        "body": "結合上下文給出翻譯和講解。每月有免費額度，付費版還能接入你自己的 AI 金鑰。"
+      },
+      "vocab": {
+        "title": "生詞本自動生成",
+        "body": "查過的每個詞都連同原句一起儲存，複習時有語境可依。"
+      },
+      "srs": {
+        "title": "按記憶曲線複習",
+        "body": "在你快要忘記的時候提醒複習，記得更牢。"
+      },
+      "write": {
+        "title": "用外語寫日記，AI 幫你改",
+        "body": "用正在學的語言寫幾句，AI 會幫你批改，指出哪裡不道地。"
+      }
+    },
+    "openTitle": "開源透明，資料歸你",
+    "openBody": "Readfox 是開源軟體（AGPL-3.0），基於開源閱讀器 Lector 開發。AI 功能每月有一定額度。網站不放廣告，也不安裝任何追蹤統計工具。詳見<privacy>隱私權政策</privacy>。",
+    "pricing": "價格"
+  },
+  "settings": {
+    "nativeLanguage": {
+      "title": "翻譯語言",
+      "description": "查詞釋義、句子解釋、助手回覆和日記批改使用這種語言。它可以和介面語言不同，比如介面用中文、解釋用英文。內建詞典的釋義仍為英文。",
+      "saved": "已儲存語言",
+      "errSave": "無法儲存語言設定",
+      "useBrowser": "改用瀏覽器的語言",
+      "sameAsLearning": "你正在學{language}，和翻譯語言相同。請換一個翻譯語言，解釋才有用。"
+    },
+    "languagePrefs": {
+      "title": "介面語言和翻譯語言",
+      "hint": "這是兩個獨立的選擇。比如學法語時，可以用中文介面，同時讓解釋用英文。"
+    }
+  },
+  "welcomeOffer": {
+    "body": "新用戶福利：用兌換碼 <b>{code}</b> 免費領 15 天 Plus。12 月 15 日前有效，每個帳號限一次。",
+    "use": "填入",
+    "signUp": "去註冊"
+  }
+}

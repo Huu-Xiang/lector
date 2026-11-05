@@ -57,6 +57,7 @@ describe('public books', () => {
   it('picks the locale, then English, then the fallback', () => {
     expect(pickLocalized({ en: 'A', 'zh-CN': '甲' }, 'zh-CN')).toBe('甲');
     expect(pickLocalized({ en: 'A' }, 'zh-CN')).toBe('A');
+    expect(pickLocalized({ en: 'A', 'zh-CN': '甲' }, 'zh-TW')).toBe('甲');
     expect(pickLocalized({}, 'zh-CN', 'X')).toBe('X');
   });
 

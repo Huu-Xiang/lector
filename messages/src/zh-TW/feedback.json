@@ -1,0 +1,33 @@
+{
+  "feedback": {
+    "nav": "意見回饋",
+    "title": "意見回饋",
+    "intro": "哪裡不好用，或是你想要什麼功能，都可以告訴我們。每一則我們都會看。",
+    "messageLabel": "你的留言",
+    "placeholder": "寫下問題或想法。可以直接把螢幕截圖貼到這裡。",
+    "counter": "{count} / {max}",
+    "addImage": "新增圖片",
+    "removeImage": "移除圖片 {name}",
+    "imagesHint": "最多 {count} 張圖片，每張不超過 {size} MB。支援 PNG、JPEG、WebP、GIF。",
+    "replyTo": "我們會回覆到 {email}。",
+    "send": "傳送",
+    "sending": "傳送中…",
+    "successTitle": "謝謝，我們收到了。我們會透過電子郵件回覆你。",
+    "sendAnother": "再傳一則",
+    "errors": {
+      "empty": "請先寫點內容。",
+      "tooLong": "留言太長了。",
+      "tooManyImages": "最多可以新增 {count} 張圖片。",
+      "imageTooLarge": "有圖片超過了 {size} MB。",
+      "imageType": "請使用 PNG、JPEG、WebP 或 GIF 圖片。",
+      "tooLarge": "留言和圖片太大了。",
+      "rateLimited": "你傳送得太頻繁了，請稍後再試。",
+      "failed": "傳送失敗，請稍後再試。"
+    },
+    "wechat": {
+      "summary": "也可以加微信",
+      "body": "有問題、想要的功能、詞義不準，都可以掃碼加我的微信告訴我。我是 Readfox 的作者。加好友時請備註「Readfox」。",
+      "alt": "Readfox 作者的微信 QR Code"
+    }
+  }
+}

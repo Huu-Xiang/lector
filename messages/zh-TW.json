@@ -1,0 +1,2248 @@
+{
+  "announcements": {
+    "button": "新功能",
+    "buttonUnseen": "新功能，有未讀更新",
+    "title": "新功能",
+    "close": "關閉",
+    "bannerLabel": "新",
+    "dismiss": "關閉提示",
+    "learnMore": "了解更多",
+    "items": {
+      "installApp": {
+        "title": "手機上也能像 App 一樣使用",
+        "body": "把 Readfox 加到手機主畫面，點圖示就能全螢幕閱讀。設定頁裡有新增步驟。"
+      },
+      "koreanSupport": {
+        "title": "現在可以學韓語了",
+        "body": "韓語已經上線：8 本免費書，詞義會翻成你的母語。在語言選單裡新增即可。"
+      },
+      "welcomeCode": {
+        "title": "老用戶也能領：兌換碼 WELCOME123 免費送 15 天 Plus",
+        "body": "開啟設定 → 方案，點「有兌換碼？」，輸入 WELCOME123，就能免費使用 15 天 Plus。12 月 15 日前有效，每個帳號限一次。"
+      },
+      "inviteCodes": {
+        "title": "邀請好友，免費得 Plus",
+        "body": "在設定頁分享你的邀請連結。好友註冊並開始閱讀後，你們各得一張 14 天 Plus 卡，想用時再啟用。"
+      },
+      "skipGuide": {
+        "title": "首課引導現在可以跳過",
+        "body": "第一次讀文章時，左下角的引導卡片多了「跳過引導」按鈕。"
+      }
+    }
+  },
+  "common": {
+    "appName": "Readfox",
+    "tagline": "用閱讀學會一門新語言"
+  },
+  "uiLanguage": {
+    "label": "介面語言",
+    "title": "介面語言",
+    "description": "按鈕、選單、書名和簡介使用的語言。查詞翻譯和解釋使用下面的「翻譯語言」。",
+    "alsoNative": "翻譯和書名也改成{language}嗎？",
+    "alsoNativeYes": "改",
+    "alsoNativeNo": "不用",
+    "alsoNativeDone": "翻譯語言已變更",
+    "alsoNativeFailed": "翻譯語言變更失敗"
+  },
+  "legal": {
+    "nav": "法律資訊",
+    "pricing": "價格",
+    "privacy": "隱私權",
+    "terms": "條款",
+    "about": "關於",
+    "source": "原始碼",
+    "refunds": "退款",
+    "freeBooks": "免費書",
+    "back": "返回"
+  },
+  "nav": {
+    "library": "書庫",
+    "practice": "練習",
+    "journal": "日記",
+    "vocab": "詞彙",
+    "stats": "統計",
+    "settings": "設定"
+  },
+  "auth": {
+    "loadingAuth": "載入中",
+    "login": {
+      "title": "登入",
+      "deleted": "你的帳號和所有資料已被永久刪除。",
+      "unverified": "<b>{email}</b> 尚未驗證。請到收件匣點擊驗證連結。",
+      "resend": "重新傳送驗證郵件",
+      "email": "電子郵件",
+      "password": "密碼",
+      "forgot": "忘記密碼?",
+      "submit": "登入",
+      "submitting": "登入中…",
+      "github": "使用 GitHub 繼續",
+      "oidc": "使用 {provider} 繼續",
+      "noAccount": "還沒有帳號?",
+      "create": "去註冊",
+      "errInvalid": "電子郵件或密碼不正確。",
+      "errFailed": "登入失敗。",
+      "errResend": "無法重新傳送郵件。",
+      "resent": "驗證郵件已傳送,請查看收件匣。"
+    },
+    "register": {
+      "title": "建立帳號",
+      "name": "姓名",
+      "email": "電子郵件",
+      "password": "密碼",
+      "passwordHint": "至少 8 個字元，需包含字母和數字。",
+      "submit": "建立帳號",
+      "submitting": "正在建立…",
+      "haveAccount": "已有帳號?",
+      "signIn": "去登入",
+      "errFailed": "註冊失敗。",
+      "checkTitle": "請查看收件匣",
+      "checkBody": "我們已向 <b>{email}</b> 傳送了驗證連結。點擊連結啟用帳號,然後登入。",
+      "goSignIn": "前往登入",
+      "confirmPassword": "確認密碼",
+      "errMismatch": "兩次輸入的密碼不一致。",
+      "errWeak": "密碼太弱：至少 8 個字元，並包含字母和數字。",
+      "matches": "兩次密碼一致",
+      "errEmailDisposable": "不能使用臨時電子郵件，請使用你常用的電子郵件。",
+      "errEmailAlias": "這個電子郵件的另一種寫法已經註冊過帳號，請用那個地址登入。",
+      "invite": "邀請碼 / 兌換碼",
+      "inviteOptional": "（選填）",
+      "inviteRequired": "（必填）",
+      "inviteHint": "好友的邀請碼，或 WELCOME123 這樣的兌換碼。",
+      "errInviteRequired": "註冊需要有效的邀請碼。"
+    },
+    "reset": {
+      "expiredTitle": "連結已過期",
+      "expiredBody": "該重設連結無效或已過期,請在下方重新申請。",
+      "requestNew": "重新申請連結",
+      "checkTitle": "請查看收件匣",
+      "checkBody": "如果 <b>{email}</b> 對應的帳號存在,重設連結已在傳送途中。",
+      "backToSignIn": "返回登入",
+      "title": "重設密碼",
+      "intro": "輸入帳號的電子郵件,我們會傳送一封重設連結郵件。",
+      "email": "電子郵件",
+      "send": "傳送重設連結",
+      "sending": "傳送中…",
+      "errRequest": "無法申請重設。",
+      "newTitle": "設定新密碼",
+      "newPassword": "新密碼",
+      "passwordHint": "至少 8 個字元，需包含字母和數字。",
+      "setNew": "設定新密碼",
+      "updating": "更新中…",
+      "errReset": "無法重設密碼。",
+      "updated": "密碼已更新,請使用新密碼登入。",
+      "confirmPassword": "確認新密碼",
+      "errMismatch": "兩次輸入的密碼不一致。",
+      "errWeak": "密碼太弱：至少 8 個字元，並包含字母和數字。"
+    },
+    "twoFactor": {
+      "title": "兩步驟驗證",
+      "introBackup": "輸入一個備用碼,每個備用碼只能使用一次。",
+      "introTotp": "輸入驗證器應用程式中的 6 位數驗證碼。",
+      "labelBackup": "備用碼",
+      "labelTotp": "驗證碼",
+      "placeholderBackup": "例如 abcde-fghij",
+      "trust": "在此裝置上信任 30 天",
+      "verify": "驗證",
+      "verifying": "驗證中…",
+      "useTotp": "改用驗證器驗證碼",
+      "useBackup": "改用備用碼",
+      "backToSignIn": "返回登入",
+      "errExpired": "本次登入已過期,請重新輸入密碼。",
+      "errLocked": "驗證碼錯誤次數過多,請稍後再重新登入。",
+      "errBackup": "這個備用碼無效。",
+      "errTotp": "驗證碼無效,請輸入目前的驗證碼。"
+    },
+    "passwordMeter": {
+      "weak": "弱",
+      "fair": "中",
+      "strong": "強",
+      "rules": {
+        "length": "至少 8 個字元",
+        "letter": "包含字母",
+        "digit": "包含數字"
+      }
+    }
+  },
+  "setup": {
+    "badge": "你的第一次閱讀",
+    "welcome": "歡迎來到 Readfox",
+    "intro": "簡單告訴我們幾點,我們為你挑選合適的第一課。所有問題都是選填。",
+    "chooseLanguage": "2. 選擇要學的語言",
+    "learn": "學習{name}",
+    "showMore": "顯示另外 {count} 種語言",
+    "personalise": "3. 你的程度",
+    "personaliseHint": "用來優先推薦難度合適的免費書。",
+    "optional": "選填",
+    "level": "閱讀程度",
+    "ready": "準備好讀第一篇了嗎?",
+    "readyHint": "引導在一篇真實的入門課文裡進行,可以隨時退出。",
+    "skip": "直接進入書庫",
+    "preparing": "正在準備課文…",
+    "start": "開始引導課",
+    "errSave": "無法儲存你的設定",
+    "levelHint": "之後可以在「免費書籍」裡修改。",
+    "nativeTitle": "1. 你的母語",
+    "nativeHint": "單字翻譯和講解都用這種語言。介面目前有英文、簡體中文、繁體中文、日文和韓文。",
+    "interests": "你的興趣",
+    "interestsHint": "選填——選中的主題會在「免費書籍」裡顯示最新文章。",
+    "interest": {
+      "news": "時事新聞",
+      "travel": "旅行",
+      "science": "科普百科",
+      "literature": "文學名著"
+    },
+    "inDevelopment": "開發中",
+    "showMoreSoon": "查看另外 {count} 種開發中的語言",
+    "recommendBadge": "為你挑選",
+    "recommendTitle": "選一份開始讀吧",
+    "recommendIntro": "根據你的程度（{level}）和興趣挑選。選一份，我們帶你完成第一次閱讀。",
+    "recommendBack": "修改我的選擇",
+    "recommendSkip": "先去書庫逛逛"
+  },
+  "landing": {
+    "metaTitle": "Readfox：讀原版書，學道地外語",
+    "metaDescription": "匯入電子書或貼上一篇文章，生詞點一下就有釋義。查過的詞自動收進生詞本，按記憶曲線提醒你複習。免費、開源。",
+    "signIn": "登入",
+    "freeBooks": "免費書",
+    "getStarted": "免費註冊",
+    "heroTitle": "讀原版書，學道地外語",
+    "heroBody": "遇到生詞點一下，就能看到貼合上下文的釋義。查過的詞自動收進生詞本，到點提醒你複習。免費就能使用。",
+    "languagesNow": "現在可以學：",
+    "languagesSoon": "另有 {count} 種語言正在開發中",
+    "languagesUi": "介面：{ui} · 釋義和講解：{count} 種語言（可在設定裡更改）",
+    "createAccount": "免費註冊",
+    "heroAlt": "Readfox 標誌：一隻趴在書上的小狐狸",
+    "howTitle": "怎麼用",
+    "features": {
+      "read": {
+        "title": "想讀什麼，就讀什麼",
+        "body": "匯入 EPUB 電子書，或者直接貼上文章。你愛看的內容，就是你的課本。"
+      },
+      "tap": {
+        "title": "生詞一點就懂",
+        "body": "結合上下文給出翻譯和講解。每月有免費額度，付費版還能接入你自己的 AI 金鑰。"
+      },
+      "vocab": {
+        "title": "生詞本自動生成",
+        "body": "查過的每個詞都連同原句一起儲存，複習時有語境可依。"
+      },
+      "srs": {
+        "title": "按記憶曲線複習",
+        "body": "在你快要忘記的時候提醒複習，記得更牢。"
+      },
+      "write": {
+        "title": "用外語寫日記，AI 幫你改",
+        "body": "用正在學的語言寫幾句，AI 會幫你批改，指出哪裡不道地。"
+      }
+    },
+    "openTitle": "開源透明，資料歸你",
+    "openBody": "Readfox 是開源軟體（AGPL-3.0），基於開源閱讀器 Lector 開發。AI 功能每月有一定額度。網站不放廣告，也不安裝任何追蹤統計工具。詳見<privacy>隱私權政策</privacy>。",
+    "pricing": "價格"
+  },
+  "settings": {
+    "nativeLanguage": {
+      "title": "翻譯語言",
+      "description": "查詞釋義、句子解釋、助手回覆和日記批改使用這種語言。它可以和介面語言不同，比如介面用中文、解釋用英文。內建詞典的釋義仍為英文。",
+      "saved": "已儲存語言",
+      "errSave": "無法儲存語言設定",
+      "useBrowser": "改用瀏覽器的語言",
+      "sameAsLearning": "你正在學{language}，和翻譯語言相同。請換一個翻譯語言，解釋才有用。"
+    },
+    "languagePrefs": {
+      "title": "介面語言和翻譯語言",
+      "hint": "這是兩個獨立的選擇。比如學法語時，可以用中文介面，同時讓解釋用英文。"
+    },
+    "pageTitle": "設定",
+    "practice": {
+      "title": "練習",
+      "clozeHeading": "克漏字設定",
+      "translationLabel": "翻譯",
+      "translationHint": "練習時預設隱藏翻譯。隨時可按 <keys></keys> 切換。",
+      "shown": "顯示",
+      "hidden": "隱藏",
+      "wordReviewHeading": "單字複習",
+      "reviewGoalLabel": "複習目標",
+      "reviewGoalFailed": "無法儲存複習目標。請重試。",
+      "reviewGoal": {
+        "recognize": "認識",
+        "recognize_spell": "認識並拼寫"
+      },
+      "reviewGoalHint": {
+        "recognize": "見到單字能認出詞義。選擇詞義，辨識單字。",
+        "recognize_spell": "還要會寫單字。熟悉和已掌握的詞會要求你輸入或聽寫。"
+      }
+    },
+    "prose": {
+      "title": "閱讀文字",
+      "description": "設定閱讀器顯示課文的方式。先在「所有語言」下設定喜歡的樣式，再單獨調整需要不同處理的語言。這些設定只儲存在此裝置上。",
+      "allLanguages": "所有語言",
+      "hasOwnSettings": "有單獨的設定",
+      "customisedNotice": "{language}有單獨的設定，其餘未更動的項目仍沿用「所有語言」。",
+      "inheritedNotice": "{language}沿用「所有語言」的設定。拖曳滑桿並儲存，即可單獨調整。",
+      "setFor": "· 已為{language}設定",
+      "save": "儲存",
+      "resetDefaults": "恢復預設",
+      "resetLanguage": "重設{language}",
+      "statusUnsaved": "上方範例已顯示你的變更。儲存後即可套用到閱讀器。",
+      "statusDefaults": "預設值為 {fontSize}px、字重 {fontWeight}、字距 0、行距 {lineHeight}。",
+      "statusResetLanguage": "重設後，{language}將重新沿用「所有語言」的設定。",
+      "controls": {
+        "fontSize": {
+          "label": "字級",
+          "hint": "課文內文的大小。"
+        },
+        "fontWeight": {
+          "label": "字重",
+          "hint": "每個詞的粗細。"
+        },
+        "letterSpacing": {
+          "label": "字距",
+          "hint": "字母之間的間距。負值會讓字母更緊湊。"
+        },
+        "lineHeight": {
+          "label": "行距",
+          "hint": "行與行之間的間距，以字級的倍數表示。"
+        }
+      }
+    },
+    "theme": {
+      "title": "外觀",
+      "label": "主題",
+      "options": {
+        "light": "淺色",
+        "dark": "深色",
+        "system": "跟隨系統"
+      }
+    },
+    "tts": {
+      "title": "語音朗讀",
+      "noAudioNote": "{language}沒有合成語音。該語言的發音存在爭議，因此 Readfox 保持靜音。",
+      "synthesizedVoice": "合成語音",
+      "browserVoiceFree": "瀏覽器語音 · 免費",
+      "managedAvailable": "託管語音可用",
+      "usingBrowser": "正在使用瀏覽器語音",
+      "espeakNote": "{language}由 eSpeak NG 朗讀。這是 Readfox 託管的合成語音，也是目前唯一支援{language}的語音合成引擎。聽起來有些機械，但每個詞的發音都很準確，而且所有方案均包含。",
+      "voiceEngine": "語音引擎",
+      "engineHintFree": "瀏覽器語音在所有方案中都免費，可用於閱讀、練習和聽寫。",
+      "engineHintPaid": "託管語音的發音更穩定；瀏覽器語音始終可用。",
+      "managedVoice": "託管語音",
+      "browserBuiltIn": "瀏覽器內建",
+      "upsell": "Readfox 在所有方案中都使用瀏覽器語音朗讀。<link>查看方案</link>。",
+      "testVoice": "試聽",
+      "speechSpeed": "語速",
+      "slow": "0.5x（慢）",
+      "normal": "1.0x",
+      "fast": "1.5x（快）"
+    },
+    "timezone": {
+      "title": "時區",
+      "description": "每日統計、連續天數和複習日在此時區的午夜更替。",
+      "auto": "自動 — 伺服器時區",
+      "useDevice": "使用此裝置的時區（{zone}）",
+      "updated": "時區已更新為 {zone}",
+      "failed": "變更時區失敗"
+    },
+    "languages": {
+      "title": "語言",
+      "description": "語言選擇器會列出這些語言。移除某種語言可縮短清單。你在該語言下的詞彙、課文和卡片仍保留在伺服器上。",
+      "inUse": "使用中",
+      "remove": "移除{language}",
+      "added": "已新增{language}",
+      "removed": "已移除{language}",
+      "saveFailed": "無法儲存你的語言",
+      "addPlaceholder": "新增語言…",
+      "add": "新增"
+    },
+    "knownWords": {
+      "title": "匯入已知詞",
+      "description": "匯入你已經認識的詞。支援 <strong>LingQ 匯出檔</strong>（含狀態等級和翻譯）或簡單的詞表。",
+      "lingqHelp": "LingQ：詞彙 → 設定齒輪 → 匯出 LingQs → 在此上傳 CSV",
+      "uploadLabel": "上傳 CSV 檔案",
+      "uploadHint": "第一欄為詞語的 CSV，或純文字檔案",
+      "pasteLabel": "或貼上詞語（每行一個）",
+      "import": "匯入",
+      "noWords": "沒有可匯入的詞。",
+      "imported": "已成功將 {count} 個詞匯入為已知詞。",
+      "importFailed": "匯入已知詞失敗",
+      "noData": "檔案中沒有資料。",
+      "noTermColumn": "在 LingQ 匯出檔中找不到「term」欄。",
+      "lingqImported": "已從 LingQ 匯入 {count} 個詞：{known} 個已知，{learning} 個學習中。",
+      "fileError": "匯入檔案出錯：{message}",
+      "unknownError": "未知錯誤"
+    },
+    "export": {
+      "title": "匯出資料",
+      "vocabCsv": "匯出詞彙（CSV）",
+      "vocabJson": "匯出詞彙（JSON）",
+      "knownWords": "匯出已知詞",
+      "failed": "匯出失敗：{message}",
+      "unknownError": "未知錯誤",
+      "csvDone": "詞彙已匯出為 CSV。",
+      "jsonDone": "詞彙已匯出為 JSON。",
+      "knownDone": "已匯出 {count} 個已知詞。"
+    },
+    "data": {
+      "title": "學習資料",
+      "description": "下載你的書庫和課文、閱讀進度、詞彙、造句練習和複習計畫、日記以及統計。不會包含 API 金鑰和供應商端點。",
+      "export": "匯出全部學習資料",
+      "import": "匯入學習資料",
+      "invalidFormat": "備份檔案格式無效",
+      "importFailedShort": "匯入失敗",
+      "imported": "學習資料已匯入",
+      "importedDetail": "{collections} 個合集，{lessons} 篇課文，{vocab} 個詞彙，{knownWords} 個已知詞，{clozeSentences} 個填空句。",
+      "importFailed": "匯入失敗：{message}",
+      "unknownError": "未知錯誤"
+    },
+    "about": {
+      "title": "關於",
+      "commit": "提交",
+      "built": "建置時間",
+      "version": "版本"
+    },
+    "plan": {
+      "labels": {
+        "free": "免費版",
+        "cloud": "Plus",
+        "plus": "Pro",
+        "max": "Max",
+        "unlimited": "無限版"
+      },
+      "cycle": {
+        "year": "年付",
+        "month": "月付"
+      },
+      "unlimited": "不限",
+      "priceLabel": "{plan} — {cycle}",
+      "errors": {
+        "pastDue": "請先在 Paddle 中更新付款方式，再變更方案。",
+        "ambiguous": "Paddle 發現多個有效訂閱。請開啟帳單管理來處理。",
+        "alreadyCurrent": "這已經是你目前的方案。",
+        "generic": "Paddle 無法完成該帳單操作，請重試。"
+      },
+      "toast": {
+        "updated": "你的 Paddle 訂閱已更新",
+        "accepted": "Paddle 已接受變更，正在更新你的方案…"
+      },
+      "heading": "Readfox 方案",
+      "currentWithCycle": "此帳號目前使用 {plan}（{cycle}）。",
+      "current": "此帳號目前使用 {plan}。",
+      "loading": "正在載入你的方案…",
+      "ownKey": "自己的 AI 金鑰",
+      "lapsed": "你的付費訂閱已結束，帳號已轉為免費版。你的課文、已儲存的詞彙、Anki 連結、歷史記錄和匯出內容都還在。",
+      "freeIntro": "免費版保留完整的學習流程：入門課文和匯入的課文、片語辨識查詞、已儲存的詞彙、練習，以及可攜帶的資料。",
+      "libraryAllowance": "書庫額度：{collections} 個合集、{lessons} 篇課文，以及每月 {words} 個日記詞數。付費方案結束後，現有資料不會被刪除。",
+      "fairUse": "對於特別大的單篇文字和大量增長的已儲存資料，我們設有寬鬆的合理使用保護措施。這些措施不會刪除現有的學習資料，也不會阻止匯出。",
+      "byokActive": "你自己的 AI 金鑰已啟用，因此翻譯和進階 AI 功能會使用你的供應商，而不是 Readfox 的託管額度。免費版的書庫和日記限制仍然適用，朗讀仍使用瀏覽器內建的語音。",
+      "managedAllowance": "每月 AI 額度：{glosses} 次 AI 查詞（詞典裡沒有的詞），{detailed} 次詳細的 AI 回答。詞典查詞和瀏覽器語音免費。",
+      "comparePlans": "比較付費方案",
+      "openingPaddle": "正在開啟 Paddle…",
+      "billingHistory": "帳單記錄",
+      "manageBilling": "管理帳單",
+      "paidIntro": "你的方案包含更多的 AI 額度。你可以隨時匯出自己的資料。",
+      "pendingAccepted": "Paddle 已接受你變更為 {price} 的請求。收到已簽署的 webhook 後，此頁面會立即更新。",
+      "paddleHandles": "Paddle 會安全地處理付款方式、發票和取消訂閱。",
+      "changePlan": "變更方案",
+      "changeIntro": "你目前使用 {plan}，按{cycle}計費。請在下方選擇其他方案。確認前請查看 Paddle 計算的稅費和按比例結算金額。",
+      "choosePlanAria": "選擇新方案",
+      "choosePlanOption": "選擇新方案…",
+      "calculating": "正在計算…",
+      "reviewChange": "查看變更",
+      "changeTo": "變更為 {price}",
+      "prorationImmediate": "方案會立即變更，Paddle 現在就會收取或抵扣按比例計算的費用。",
+      "prorationNextInvoice": "方案會立即變更，Paddle 會把按比例計算的調整金額計入你的下一張發票。",
+      "dueNow": "本次應付",
+      "noImmediateCharge": "無需立即付款",
+      "nextInvoice": "下一張發票",
+      "calculatedAtRenewal": "續訂時計算",
+      "regularRenewal": "一般續訂",
+      "unavailable": "無法使用",
+      "applying": "正在套用…",
+      "confirmPaddle": "透過 Paddle 確認",
+      "cancel": "取消",
+      "changesUnavailable": "Paddle 正在處理此訂閱，暫時無法變更方案。請使用帳單管理來更新付款方式或查看訂閱狀態。",
+      "grantUntil": "{plan} 有效期至 {date}。到期後自動回到免費版，不會自動扣款。",
+      "renew": "續費"
+    },
+    "byok": {
+      "loadFailed": "無法載入自己的 AI 金鑰設定",
+      "enableFailed": "無法啟用自己的 AI 金鑰",
+      "disableFailed": "無法停用自己的 AI 金鑰",
+      "keyActive": "你的 {provider} 金鑰已生效",
+      "reverted": "已恢復使用 Readfox 託管的 AI 額度",
+      "heading": "使用自己的 AI 金鑰",
+      "active": "已啟用",
+      "introFree": "免費版包含少量每月 AI 額度。Plus 及以上方案還可以使用你自己的 OpenRouter 或 Anthropic 金鑰。",
+      "introPaid": "使用你自己的 OpenRouter 或 Anthropic 帳號來進行翻譯、講解、日記批改和對話，而不使用託管的 AI 額度。",
+      "introTail": "你的金鑰會加密儲存，之後不會再顯示。",
+      "compareCloud": "想讓 Readfox 直接提供 AI？<link>比較方案</link>。",
+      "notConfigured": "此部署尚未支援使用自己的 AI 金鑰。",
+      "provider": "供應商",
+      "evalNote": "已評測的模型按 Readfox <link>可重現的翻譯評測</link>中的南非荷蘭語 COMET 分數排序。差距在約 1.5 分以內屬於統計意義上的持平；Flash Lite 是未經評測的低成本預設選項。",
+      "model": "模型",
+      "replaceKey": "更換金鑰或模型",
+      "useManaged": "使用託管額度",
+      "apiKeyLabel": "{provider} API 金鑰",
+      "leaveBlank": "（留空則保留原金鑰）",
+      "saving": "正在儲存…",
+      "saveChanges": "儲存變更",
+      "validateEnable": "驗證並啟用",
+      "cancel": "取消",
+      "validates": "Readfox 會在儲存前向 {provider} 驗證該金鑰。供應商回傳的錯誤訊息不會包含你的金鑰。",
+      "protectedTitle": "你的 API 金鑰如何受到保護",
+      "protectedEncryption": "金鑰在寫入資料庫之前會使用 AES-256-GCM 和全新的隨機 nonce 加密。驗證資料會把每份密文與你的帳號和所選供應商綁定，因此加密後的記錄無法轉移到其他帳號。",
+      "protectedStorage": "用來加密 API 金鑰的金鑰與資料庫分開保存在我們的伺服器上。你的 API 金鑰只寫不讀：Readfox 不會把它傳回瀏覽器、放進匯出檔，也不會在日誌中記錄它的詳細資訊。",
+      "protectedOpenSource": "Readfox 是開源的，你可以自行查證憑證如何被加密、儲存，以及在請求時如何被選用。<link>查看實作程式碼</link>。",
+      "loading": "正在載入…",
+      "paidOnly": "Plus 及以上方案可以使用自己的 AI 金鑰。<link>查看方案</link>。"
+    },
+    "llm": {
+      "fetchStatusFailed": "無法取得 LLM 狀態",
+      "saveFailed": "無法儲存設定",
+      "statusError": "狀態 {status}",
+      "noModels": "此端點未回報任何模型，請直接輸入模型名稱。",
+      "fetchModelsFailed": "無法取得模型清單",
+      "unreachable": "無法連線到伺服器",
+      "heading": "AI 供應商",
+      "connected": "已連線",
+      "notConnected": "未連線",
+      "checking": "正在檢查…",
+      "refresh": "重新整理",
+      "intro": "選擇翻譯由誰來驅動。Anthropic 使用雲端 AI，品質最高。本機 / 自行架設適用於任何相容 OpenAI 的伺服器（Ollama、LM Studio、Apfel、vLLM 等），只需一個端點、一個選填的 API 金鑰和一個模型名稱。",
+      "provider": "供應商",
+      "providerAnthropic": "Anthropic（雲端）",
+      "providerOpenai": "本機 / 自行架設（相容 OpenAI）",
+      "authMethod": "驗證方式",
+      "apiKey": "API 金鑰",
+      "oauthToken": "OAuth 權杖",
+      "bothConfigured": "兩種憑證都已設定。請選擇使用哪一種，系統會自動測試連線。",
+      "getKeyFrom": "從 <link>console.anthropic.com</link> 取得你的 API 金鑰",
+      "configured": "已設定",
+      "replace": "更換",
+      "clear": "清除",
+      "save": "儲存",
+      "cancel": "取消",
+      "or": "或",
+      "oauthPlan": "（Pro/Team 方案）",
+      "oauthHelp": "使用你的 Claude Pro 或 Team 訂閱額度。執行 <code>claude setup-token</code> 即可取得權杖。注意：首次啟動比使用 API 金鑰更慢。",
+      "preset": "預設組合",
+      "presetCustom": "自訂 / 其他相容 OpenAI 的伺服器",
+      "presetHelp": "填寫下方端點的捷徑，之後仍可手動修改。",
+      "endpoint": "端點",
+      "endpointHelp": "伺服器的基礎 URL，應用程式會自動附加 <code>/v1</code>。請求由伺服器端發出，因此即使 Readfox 部署在別處，也可以使用 localhost。",
+      "apiKeyOptional": "API 金鑰（選填）",
+      "apiKeyPlaceholder": "沒有驗證的本機伺服器請留空",
+      "apiKeyHelp": "由伺服器以 Bearer 權杖的形式傳送（儲存後不會再暴露給瀏覽器）。僅在使用反向代理、雲端或其他需要驗證的端點時才需要。",
+      "model": "模型",
+      "fetchingModels": "正在取得模型…",
+      "modelPlaceholder": "輸入模型名稱，或取得清單",
+      "fetching": "正在取得…",
+      "fetchModels": "取得模型",
+      "modelHelp": "從取得的清單中選擇（LM Studio 和 Ollama 等伺服器透過 <code>/v1/models</code> 提供該清單），也可以直接輸入伺服器支援的任意模型名稱。"
+    },
+    "anki": {
+      "addonIntro": "該外掛在 Anki 內部進行同步，因此無論 Readfox 執行在哪裡都能使用：你加入佇列的詞會在 Anki 下次開啟時變成卡片，複習結果也會自動同步回來。",
+      "addonStep1": "在下方的 <strong>API 權杖</strong>中建立一個 API 權杖，權限範圍設為 <code>anki</code>。",
+      "addonStep2": "從 <link>Lector 儲存庫中的 anki-addon</link> 安裝該外掛（需要 Anki 桌面版 2.1.50 及以上）。",
+      "addonStep3": "在 Anki 中開啟 Tools → Add-ons → Lector Sync → Config，把 <code>api_url</code> 設為下方的位址，把 <code>api_token</code> 設為你的權杖。",
+      "apiUrl": "API 位址",
+      "addonMobile": "AnkiDroid 和 AnkiMobile 無法執行外掛，請在桌面端同步，再透過 AnkiWeb 把結果帶到你的其他裝置。",
+      "saveTransportFailed": "無法儲存 Anki 連線方式",
+      "connectFailed": "無法連線到 Anki。請確認 Anki 正在執行，並且已安裝 AnkiConnect。",
+      "heading": "Anki 整合",
+      "connected": "已連線",
+      "notConnected": "未連線",
+      "checking": "正在檢查…",
+      "refresh": "重新整理",
+      "connection": "連線方式",
+      "connectionHelp": "AnkiConnect 透過瀏覽器連線本機上的 Anki。外掛則改為在 Anki 內部同步，當 Readfox 透過 HTTPS 提供服務或執行在另一台機器上時請使用它。",
+      "transportAnkiConnect": "AnkiConnect（瀏覽器）",
+      "transportAddon": "Lector Sync 外掛",
+      "ankiConnectUrl": "AnkiConnect 位址",
+      "urlHint": "提示：連線遠端 Anki 時可使用 Tailscale IP（例如 http://100.x.x.x:8765）",
+      "saveUrlFailed": "無法儲存 Anki 位址",
+      "vocabDeck": "詞彙牌組",
+      "vocabDeckHelp": "用於存放由閱讀器詞彙產生的基本卡片的牌組",
+      "deckName": "牌組名稱",
+      "clozeDeck": "克漏字練習牌組",
+      "clozeDeckHelp": "用於存放由練習模式產生的克漏字卡片的牌組",
+      "clozeDeckName": "克漏字牌組名稱",
+      "defaultCardType": "預設卡片類型",
+      "cardTypeHelp": "基本卡片顯示正面/背面，克漏字會產生填空卡片",
+      "basic": "基本",
+      "cloze": "克漏字",
+      "comingSoon": "開發中",
+      "comingSoonBody": "Anki 同步正在開發。完成後，你儲存的單字會變成 Anki 卡片，複習結果也會同步回來。在此之前，請在「練習」頁複習你儲存的單字。"
+    },
+    "twoFactor": {
+      "actions": {
+        "enable": {
+          "title": "請確認你的密碼以設定兩步驟驗證",
+          "cta": "繼續"
+        },
+        "disable": {
+          "title": "請確認你的密碼以關閉兩步驟驗證",
+          "cta": "關閉"
+        },
+        "regenerate": {
+          "title": "請確認你的密碼以更換備用碼",
+          "cta": "產生新備用碼"
+        }
+      },
+      "wrongPassword": "密碼錯誤。",
+      "startFailed": "無法開始設定。",
+      "disableFailed": "無法關閉兩步驟驗證。",
+      "generateFailed": "無法產生備用碼。",
+      "toastOff": "兩步驟驗證已關閉。",
+      "toastOn": "兩步驟驗證已開啟。",
+      "toastNewCodes": "已產生新的備用碼，舊的備用碼不再有效。",
+      "codeMismatch": "驗證碼不符，請掃描 QR Code 並輸入目前的驗證碼。",
+      "codesCopied": "備用碼已複製到剪貼簿",
+      "heading": "兩步驟驗證",
+      "enable": "啟用兩步驟驗證",
+      "intro": "除密碼外，再使用驗證器應用程式（Google Authenticator、1Password、Authy 等）產生的一次性驗證碼來保護你的帳號。",
+      "statusOn": "兩步驟驗證已開啟。登入時需要輸入驗證器應用程式中的驗證碼。",
+      "statusOff": "兩步驟驗證已關閉。",
+      "working": "處理中…",
+      "cancel": "取消",
+      "step1": "1. 用你的驗證器應用程式掃描此 QR Code",
+      "cantScan": "無法掃描？請手動輸入此金鑰：",
+      "step2": "2. 輸入應用程式目前顯示的 6 位數驗證碼",
+      "verifying": "正在驗證…",
+      "verifyActivate": "驗證並啟用",
+      "saveCodes": "請把這些備用碼保存在安全的地方。如果你遺失了驗證器，每個備用碼可以讓你登入一次，且之後不會再顯示。",
+      "copy": "複製",
+      "savedCodes": "我已儲存這些備用碼",
+      "newCodes": "新備用碼",
+      "turnOff": "關閉兩步驟驗證"
+    },
+    "apiTokens": {
+      "fetchFailed": "無法取得 API 權杖",
+      "copied": "權杖已複製到剪貼簿",
+      "heading": "API 權杖",
+      "generate": "產生權杖",
+      "intro": "建立個人存取權杖，用於命令列或 API 存取。權杖的權限範圍可限定為特定的權限。",
+      "copyNow": "請立即複製此權杖，它之後不會再顯示。",
+      "copy": "複製",
+      "saved": "我已儲存此權杖",
+      "tokenName": "權杖名稱",
+      "tokenNamePlaceholder": "例如：命令列、自動化、備份指令碼",
+      "scopes": "權限範圍",
+      "scopeLabels": {
+        "all": "完整存取",
+        "collectionsRead": "合集（讀取）",
+        "collectionsWrite": "合集（寫入）",
+        "vocabRead": "詞彙（讀取）",
+        "vocabWrite": "詞彙（寫入）",
+        "statsRead": "統計（讀取）",
+        "statsWrite": "統計（寫入）",
+        "settingsRead": "設定（讀取）",
+        "settingsWrite": "設定（寫入）",
+        "dataExport": "資料匯出",
+        "dataImport": "資料匯入",
+        "chatRead": "聊天 / LLM（讀取）",
+        "chatWrite": "聊天 / LLM（寫入）",
+        "ankiRead": "Anki 同步（讀取）",
+        "ankiWrite": "Anki 同步（寫入）"
+      },
+      "nameRequired": "請填寫權杖名稱",
+      "scopeRequired": "請至少選擇一個權限範圍",
+      "createFailed": "無法建立權杖",
+      "create": "建立權杖",
+      "cancel": "取消",
+      "created": "建立於 {date}",
+      "lastUsed": "最後使用於 {date}",
+      "neverUsed": "從未使用",
+      "revokeConfirm": "要撤銷權杖「{name}」嗎？此操作無法復原。",
+      "revokeFailed": "無法撤銷權杖",
+      "revoke": "撤銷",
+      "empty": "尚未建立任何權杖。產生一個權杖，即可使用命令列或遠端存取 API。"
+    },
+    "deleteAccount": {
+      "startFailed": "無法開始刪除帳號，請重試。",
+      "heading": "刪除帳號",
+      "intro": "永久刪除你的帳號及<strong>全部</strong>資料，包括書籍、詞彙、克漏字進度、日記、聊天記錄和設定。此操作無法復原，且與上方的匯出備份相互獨立。",
+      "billingWarning": "如果你有付費訂閱，請先取消訂閱：在這裡刪除帳號<strong>不會</strong>取消扣款（付款由我們的經銷商 Paddle 處理，管理訂閱的連結在 Paddle 的收據郵件中）。",
+      "sent": "請查看你的電子郵件，並<strong>在此瀏覽器中</strong>開啟我們剛剛傳送的連結，以永久刪除你的帳號。該連結將在 24 小時後失效。",
+      "start": "刪除帳號…",
+      "typeToConfirm": "輸入 <mono>{phrase}</mono> 以確認",
+      "sending": "正在傳送…",
+      "confirm": "刪除我的帳號",
+      "cancel": "取消"
+    },
+    "redeem": {
+      "open": "有兌換碼？點此兌換",
+      "placeholder": "兌換碼",
+      "submit": "兌換",
+      "redeeming": "正在兌換…",
+      "success": "兌換成功：{plan}，有效期至 {date}。",
+      "stored": "已存為 {plan} 卡（{days} 天）。你目前的方案不變。請在「我的卡」裡找到它，並在 {date} 前使用。",
+      "errors": {
+        "invalid_code": "兌換碼無效。",
+        "expired": "兌換碼已過期。",
+        "used_up": "兌換碼已被用完。",
+        "already_redeemed": "你已經參加過這個活動了。",
+        "email_not_verified": "請先驗證你的電子郵件。",
+        "too_many_attempts": "輸錯次數太多，請 {minutes} 分鐘後再試。",
+        "generic": "兌換失敗，請稍後再試。"
+      },
+      "attemptsLeft": "還剩 {count} 次機會。"
+    },
+    "invite": {
+      "title": "邀請好友",
+      "intro": "分享你的連結。好友註冊並開始閱讀後，你們各得一張 {days} 天 Plus 卡。最多可以這樣獲得 {max} 張卡。",
+      "linkLabel": "你的邀請連結",
+      "copy": "複製連結",
+      "copied": "連結已複製。",
+      "stats": "已邀請 {invited} 人 · 已獎勵 {rewarded} 人",
+      "joinedPending": "你是透過邀請加入的。讀幾分鐘或儲存 3 個詞後，你的卡會發到卡包裡。",
+      "joinedDone": "你是透過邀請加入的。你的卡已在下面的卡包裡。",
+      "cardsTitle": "我的卡包",
+      "cardsEmpty": "還沒有卡。",
+      "card": "{plan} 卡 · {days} 天",
+      "cardUntil": "請在 {date} 前使用。",
+      "activate": "啟用",
+      "activating": "啟用中…",
+      "activated": "卡已啟用：{plan} 有效至 {date}。",
+      "haveCode": "有好友的邀請碼？",
+      "codePlaceholder": "邀請碼",
+      "codeSubmit": "使用邀請碼",
+      "claimed": "邀請碼已接受。",
+      "errors": {
+        "invalid_code": "這個邀請碼無效。",
+        "self_invite": "不能使用自己的邀請碼。",
+        "already_attached": "你已經使用過邀請碼了。",
+        "window_closed": "邀請碼只能在註冊後 7 天內補填。",
+        "used_up": "這個邀請碼的名額已滿。",
+        "email_used": "這個電子郵件已經領過邀請獎勵。",
+        "too_many_attempts": "輸錯次數太多，請 {minutes} 分鐘後再試。",
+        "not_found": "找不到這張卡。",
+        "already_used": "這張卡已經用過了。",
+        "expired": "這張卡已過期。",
+        "higher_plan_active": "你目前的方案高於這張卡。請在它到期後再使用這張卡。",
+        "subscription_active": "你有自動續訂的訂閱。請在訂閱結束後再使用這張卡。",
+        "generic": "出錯了，請稍後再試。"
+      },
+      "attemptsLeft": "還剩 {count} 次機會。"
+    },
+    "installApp": {
+      "title": "把 Readfox 加到手機主畫面",
+      "body": "加好後，點主畫面上的圖示就能開啟，像 App 一樣全螢幕閱讀，不用每次輸入網址。",
+      "install": "加入主畫面",
+      "desktop": "在手機瀏覽器裡開啟 readfox.app，登入後來這裡看新增步驟。",
+      "steps": {
+        "ios1": "用 Safari 開啟 readfox.app。",
+        "ios2": "點瀏覽器的分享按鈕（方框加向上的箭頭）。",
+        "ios3": "選「加入主畫面」，再點「新增」。",
+        "wechat1": "微信裡不能直接新增。點右上角的「···」，選「在瀏覽器開啟」。",
+        "wechat2": "在瀏覽器裡開啟設定頁，按頁面上的步驟新增。",
+        "android1": "點瀏覽器的選單按鈕（通常是右上角的 ⋮）。",
+        "android2": "選「加到主畫面」或「安裝應用程式」。"
+      }
+    }
+  },
+  "welcomeOffer": {
+    "body": "新用戶福利：用兌換碼 <b>{code}</b> 免費領 15 天 Plus。12 月 15 日前有效，每個帳號限一次。",
+    "use": "填入",
+    "signUp": "去註冊"
+  },
+  "plans": {
+    "freePrice": "¥0",
+    "perMonth": "{price}/月",
+    "perYear": "或 {price}/年",
+    "perYearMain": "{price}/年",
+    "annualEquivalent": "約合 {price}/月，按年付",
+    "annualEquivalentSave": "約合 {price}/月，按年付，省 {percent}%",
+    "chinaPrice": "中國大陸：{price}/月（支援支付寶）",
+    "chinaPriceYear": "中國大陸：{price}/年（支援支付寶）",
+    "priceAtCheckout": "價格在付款頁顯示",
+    "getStarted": "免費開始",
+    "features": {
+      "glosses": "每月 {count, number} 次 AI 查詞（詞典裡沒有的詞）",
+      "freeLibrary": "最多 10 個合集、200 篇課文；免費書庫的書不占課文數",
+      "byok": "想用更多時，可以新增自己的 AI 金鑰",
+      "detailed": "每月 {count, number} 次詳細的 AI 回答（劃詞翻譯和單字詳解）",
+      "phraseWords": "一次最多選 {count} 個詞翻譯",
+      "phraseUnlimited": "一次翻譯的文字長度不限",
+      "moreRoom": "最多 50 個合集、1,000 篇課文",
+      "unlimitedLibrary": "合集和課文數量不限",
+      "byokPaid": "想用更多時，可以新增自己的 AI 金鑰"
+    },
+    "current": "目前方案",
+    "choose": "選擇 {plan}",
+    "cycleLabel": "付費週期",
+    "cycleYear": "年付",
+    "cycleYearSave": "年付（最多省 {percent}%）",
+    "cycleMonth": "月付"
+  },
+  "pricing": {
+    "metaTitle": "價格 – Readfox",
+    "title": "價格",
+    "intro": "先免費使用。想要詳細的 AI 解釋和更多額度時再升級。隨時可以取消。",
+    "notes": "適用的銷售稅或加值稅會在付款時另外加上。付款由我們的經銷商 Paddle 處理。中國大陸的買家用人民幣付款，可以使用支付寶。",
+    "cardPending": "信用卡、PayPal 和 Apple Pay 支付正在開發中，目前只支援支付寶和微信支付。",
+    "metaDescription": "Readfox 方案：免費版每月 1,000 次 AI 查詞。Plus、Pro 和 Max 提供更多查詞次數、詳細的 AI 講解和更大的書庫。支援信用卡、PayPal 和支付寶。"
+  },
+  "checkoutPage": {
+    "opening": "正在開啟安全付款頁面",
+    "failed": "付款頁面打不開。請返回後重試。",
+    "back": "返回方案頁"
+  },
+  "planLimits": {
+    "upgradePlus": "升級到 Plus",
+    "seePlans": "查看方案",
+    "addKey": "新增 API 金鑰",
+    "notNow": "以後再說",
+    "upgradeLine": {
+      "cloud": "升級到 Plus 可以提高這個上限。",
+      "plus": "升級到 Pro 可以提高這個上限。",
+      "max": "升級到 Max 可以提高這個上限。",
+      "byok": "新增你自己的 API 金鑰可以解除這個上限。"
+    },
+    "generic": {
+      "title": "已達到方案上限",
+      "body": "這個操作超出了你目前方案的額度。"
+    },
+    "metrics": {
+      "phraseSelectionWords": {
+        "title": "片語超出方案長度",
+        "body": "你的方案一次最多翻譯 {limit, number} 個詞的片語。"
+      },
+      "journalWordsPerMonth": {
+        "title": "本月日記字數已用完",
+        "body": "本月你已寫了 {used, number} 個詞，上限是 {limit, number} 個。"
+      },
+      "llmRequestsPerMonth": {
+        "title": "本月 AI 詳細講解已用完",
+        "body": "你已用完本月的 {limit, number} 次 AI 詳細講解。"
+      },
+      "wordGlossesPerMonth": {
+        "title": "本月 AI 查詞次數已用完",
+        "body": "你已用完本月的 {limit, number} 次 AI 查詞。離線詞典裡有的詞仍然可以查。"
+      },
+      "phraseTranslationsPerDay": {
+        "title": "今天的片語翻譯已用完",
+        "body": "你已用完今天的 {limit, number} 次片語翻譯，北京時間早上 8 點重置。"
+      },
+      "contextTranslationsPerDay": {
+        "title": "今天的語境翻譯已用完",
+        "body": "你已用完今天的 {limit, number} 次語境翻譯，北京時間早上 8 點重置。"
+      },
+      "ttsCharsPerMonth": {
+        "title": "本月朗讀額度已用完",
+        "body": "本月剩下的時間裡，朗讀會改用瀏覽器內建的聲音。"
+      },
+      "maxCollections": {
+        "title": "書庫已滿",
+        "body": "你的方案最多可以有 {limit, number} 個合集。"
+      },
+      "maxLessons": {
+        "title": "書庫已滿",
+        "body": "你的方案最多可以有 {limit, number} 課。"
+      },
+      "maxVocabEntries": {
+        "title": "生詞本已滿",
+        "body": "你的方案最多可以儲存 {limit, number} 個生詞。"
+      }
+    },
+    "dialog": {
+      "plus": "Plus 每月有 {glosses, number} 次 AI 查詞和 {detailed, number} 次詳細講解。你的免費書和生詞都會保留。",
+      "freeReset": "也可以繼續免費讀，額度下個月會重新開始。"
+    }
+  },
+  "feedback": {
+    "nav": "意見回饋",
+    "title": "意見回饋",
+    "intro": "哪裡不好用，或是你想要什麼功能，都可以告訴我們。每一則我們都會看。",
+    "messageLabel": "你的留言",
+    "placeholder": "寫下問題或想法。可以直接把螢幕截圖貼到這裡。",
+    "counter": "{count} / {max}",
+    "addImage": "新增圖片",
+    "removeImage": "移除圖片 {name}",
+    "imagesHint": "最多 {count} 張圖片，每張不超過 {size} MB。支援 PNG、JPEG、WebP、GIF。",
+    "replyTo": "我們會回覆到 {email}。",
+    "send": "傳送",
+    "sending": "傳送中…",
+    "successTitle": "謝謝，我們收到了。我們會透過電子郵件回覆你。",
+    "sendAnother": "再傳一則",
+    "errors": {
+      "empty": "請先寫點內容。",
+      "tooLong": "留言太長了。",
+      "tooManyImages": "最多可以新增 {count} 張圖片。",
+      "imageTooLarge": "有圖片超過了 {size} MB。",
+      "imageType": "請使用 PNG、JPEG、WebP 或 GIF 圖片。",
+      "tooLarge": "留言和圖片太大了。",
+      "rateLimited": "你傳送得太頻繁了，請稍後再試。",
+      "failed": "傳送失敗，請稍後再試。"
+    },
+    "wechat": {
+      "summary": "也可以加微信",
+      "body": "有問題、想要的功能、詞義不準，都可以掃碼加我的微信告訴我。我是 Readfox 的作者。加好友時請備註「Readfox」。",
+      "alt": "Readfox 作者的微信 QR Code"
+    }
+  },
+  "library": {
+    "freeBooks": {
+      "button": "免費書籍",
+      "title": "免費書籍",
+      "close": "關閉",
+      "intro": "{language}的公有領域書籍,按難度從易到難排列。新增後會複製到你的書庫。難度等級僅供參考。",
+      "loading": "載入中…",
+      "errLoad": "無法載入免費書籍。",
+      "none": "暫時還沒有{language}的免費書籍。",
+      "size": "{words} 詞,{lessons} 課",
+      "add": "新增",
+      "adding": "新增中…",
+      "addedLabel": "已新增",
+      "added": "已把《{title}》新增到書庫",
+      "errAdd": "無法新增這本書",
+      "tab": {
+        "books": "書",
+        "news": "時事",
+        "travel": "旅行",
+        "science": "科普"
+      },
+      "feedIntro": "{language}最新的{interest}文章。新增後會連同出處一起複製到你的書庫。",
+      "feedLoading": "載入中…",
+      "feedErrLoad": "無法載入這些文章。",
+      "feedNone": "暫時還沒有文章,過段時間再來看看。",
+      "feedSize": "{words} 詞",
+      "feedAdd": "新增",
+      "feedAdding": "新增中…",
+      "feedAddedLabel": "已新增",
+      "feedAdded": "已把《{title}》新增到書庫",
+      "feedErrAdd": "無法新增這篇文章",
+      "feedSource": "來源：{source} · {license}",
+      "search": "依書名或作者搜尋",
+      "sortLabel": "排序",
+      "sortDefault": "推薦順序",
+      "sortShort": "短的在前",
+      "sortLong": "長的在前",
+      "noMatch": "找不到「{query}」。",
+      "readingHours": "約 {hours} 小時",
+      "readingMinutes": "約 {minutes} 分鐘"
+    },
+    "empty": {
+      "browseBooks": "瀏覽免費書籍",
+      "title": "書庫裡還沒有書",
+      "description": "匯入一本書（EPUB 或 Markdown）開始學習。閱讀時會自動記錄你的詞彙和進度。",
+      "importBook": "匯入書籍",
+      "addStarter": "新增入門內容",
+      "adding": "正在新增…"
+    },
+    "starterBlurb": "入門短課：按實用程度由高到低，帶你學會最常用的一千個詞。",
+    "common": {
+      "close": "關閉",
+      "cancel": "取消",
+      "saving": "正在儲存...",
+      "back": "返回",
+      "delete": "刪除",
+      "title": "標題",
+      "authorSource": "作者 / 來源",
+      "saveToLibrary": "儲存到書庫",
+      "tryAgain": "重試",
+      "text": "內文",
+      "words": "{count} 個詞"
+    },
+    "errors": {
+      "createGroup": "無法建立群組",
+      "renameGroup": "無法重新命名群組",
+      "deleteGroup": "無法刪除群組",
+      "reorderCollections": "無法調整合集順序",
+      "importAudio": "匯入音訊檔案失敗。",
+      "importFile": "匯入檔案失敗，請確認檔案有效。",
+      "deleteCollection": "無法刪除合集",
+      "updateCollection": "無法更新合集",
+      "deleteLesson": "無法刪除課文",
+      "updateLesson": "無法更新課文",
+      "reorderLessons": "無法調整課文順序",
+      "retryTranscription": "無法重新轉錄"
+    },
+    "page": {
+      "title": "我的書庫",
+      "loading": "正在載入書庫",
+      "newGroup": "新增群組",
+      "groupNamePlaceholder": "群組名稱",
+      "addGroup": "新增",
+      "ungrouped": "未分組",
+      "selectFile": "請選擇 EPUB 或 Markdown 檔案",
+      "audioUploaded": "「{title}」已上傳，轉錄已開始",
+      "audioMinutes": "（約 {minutes} 分鐘音訊，通常幾分鐘內完成轉錄）"
+    },
+    "group": {
+      "expand": "展開 {name}",
+      "collapse": "收合 {name}",
+      "items": "{count} 項",
+      "newCollection": "新增合集",
+      "rename": "重新命名",
+      "delete": "刪除",
+      "renamePrompt": "重新命名群組：",
+      "deleteConfirm": "刪除群組「{name}」？該群組中的合集將變為未分組。"
+    },
+    "onboarding": {
+      "title": "繼續你的第一輪學習",
+      "practiceReady": "你儲存的三個生詞已準備好，可以快速複習。",
+      "resumeLesson": "從上次停下的地方繼續讀 {title}。",
+      "fallbackLesson": "入門課文",
+      "resume": "繼續"
+    },
+    "addTile": {
+      "placeholder": "合集標題",
+      "create": "建立"
+    },
+    "card": {
+      "coverAlt": "{title} 的封面",
+      "complete": "已完成 {percent}%",
+      "notStarted": "未開始",
+      "lessons": "{count} 篇課文",
+      "dragToReorder": "拖曳以調整 {title} 的順序",
+      "today": "今天",
+      "yesterday": "昨天",
+      "daysAgo": "{count} 天前",
+      "weeksAgo": "{count} 週前",
+      "monthsAgo": "{count} 個月前"
+    },
+    "import": {
+      "label": "匯入",
+      "importing": "正在匯入...",
+      "addTo": "新增到",
+      "ungrouped": "書庫（未分組）",
+      "options": {
+        "file": "匯入檔案",
+        "audio": "匯入音訊",
+        "url": "從網址匯入",
+        "youtube": "YouTube 字幕",
+        "paste": "貼上文字"
+      }
+    },
+    "paste": {
+      "title": "貼上文字",
+      "titlePlaceholder": "文章或文字標題",
+      "optional": "選填",
+      "textPlaceholder": "在此貼上你的{language}文字..."
+    },
+    "web": {
+      "title": "從網頁匯入",
+      "urlLabel": "文章網址",
+      "extract": "擷取",
+      "extracting": "正在擷取...",
+      "help": "貼上一篇{language}新聞或部落格文章的網址，文章內容將被擷取並新增到你的書庫。",
+      "contentPreview": "內容預覽",
+      "fromSite": "來自 {site}",
+      "saveFailed": "儲存文章失敗。",
+      "extractFailed": "擷取文章失敗",
+      "networkError": "網路錯誤，請檢查網路連線。"
+    },
+    "youtube": {
+      "title": "匯入 YouTube 字幕",
+      "urlLabel": "YouTube 影片網址",
+      "find": "尋找字幕",
+      "finding": "正在尋找…",
+      "help": "將影片的可用字幕匯入為帶可點擊時間戳記的課文。影片不會被下載或代管，點擊某一行會在 YouTube 對應的時間點開啟。",
+      "chooseTrack": "選擇字幕軌",
+      "auto": "自動產生",
+      "creator": "創作者字幕",
+      "importing": "正在匯入「{language}」字幕…",
+      "note": "自動產生的字幕可能有辨識錯誤，匯入後可以編輯字幕文字。",
+      "importFailed": "無法匯入字幕。"
+    },
+    "lessonForm": {
+      "add": "新增課文",
+      "edit": "編輯課文",
+      "create": "建立課文",
+      "save": "儲存變更",
+      "titlePlaceholder": "課文標題",
+      "textPlaceholder": "課文內容，支援 Markdown。"
+    },
+    "collection": {
+      "back": "書庫",
+      "loading": "正在載入合集",
+      "editDetails": "編輯合集詳細資料",
+      "lessonsCount": "{count} 篇課文",
+      "completed": "已完成 {count} 篇",
+      "group": "群組：",
+      "none": "無",
+      "newGroupOption": "+ 新增群組...",
+      "newGroupPrompt": "新群組名稱：",
+      "continueReading": "繼續閱讀",
+      "deleteConfirm": "刪除此合集及其所有課文？",
+      "deleteLessonConfirm": "刪除「{title}」？",
+      "addLesson": "新增課文",
+      "form": {
+        "title": "編輯合集",
+        "titlePlaceholder": "合集標題",
+        "author": "作者",
+        "authorPlaceholder": "作者",
+        "save": "儲存變更"
+      },
+      "row": {
+        "read": "閱讀",
+        "reread": "重讀",
+        "continue": "繼續",
+        "transcribing": "正在轉錄…",
+        "transcriptionFailed": "轉錄失敗",
+        "retryTranscription": "重新轉錄",
+        "edit": "編輯課文",
+        "delete": "刪除課文",
+        "dragToReorder": "拖曳以調整 {title} 的順序"
+      }
+    },
+    "view": {
+      "label": "書庫排列方式",
+      "grid": "網格檢視",
+      "list": "清單檢視"
+    }
+  },
+  "readingLevel": {
+    "names": {
+      "A1": "入門",
+      "A2": "初級",
+      "B1": "中級",
+      "B2": "中高級",
+      "C1": "高級",
+      "C2": "精通"
+    },
+    "exam": {
+      "ielts": "雅思 {score}",
+      "toefl": "托福 {score}",
+      "delf": "DELF {score}",
+      "dalf": "DALF {score}",
+      "hsk": "HSK {score}",
+      "topik": "TOPIK {score}",
+      "juniorHigh": "國中",
+      "zhongkao": "中考",
+      "gaokao": "高考",
+      "cet4": "四級",
+      "cet6": "六級",
+      "tem8": "專八"
+    },
+    "approx": "考試對照僅供參考。",
+    "notSure": "不確定",
+    "all": "全部等級",
+    "yours": "你的程度",
+    "original": "原名：{title}"
+  },
+  "recommend": {
+    "booksTitle": "適合你程度的書",
+    "articlesTitle": "你可能喜歡的新文章",
+    "interest": {
+      "news": "時事",
+      "travel": "旅行",
+      "science": "科普"
+    },
+    "original": "原名：{title}",
+    "words": "{words} 詞",
+    "harder": "比你的程度略難",
+    "start": "開始閱讀",
+    "starting": "正在開啟…",
+    "loading": "正在為你挑選…",
+    "errStart": "這篇打不開，換一篇試試。",
+    "empty": "暫時沒有可推薦的內容，去看看免費書籍吧。",
+    "homeTitle": "為你推薦",
+    "homeHint": "從這些免費的書和文章開始讀。",
+    "homeHintLevel": "根據你的程度（{level}）挑選。",
+    "more": "更多免費書籍",
+    "collapse": "收起",
+    "expand": "展開"
+  },
+  "bookLink": {
+    "view": "在{site}查看",
+    "site": {
+      "douban": "豆瓣",
+      "goodreads": "Goodreads",
+      "babelio": "Babelio",
+      "booklog": "Booklog",
+      "aladin": "Aladin"
+    }
+  },
+  "newLanguage": {
+    "title": "開始學{language}",
+    "intro": "告訴我們你的{language}程度和喜歡讀什麼，我們推薦第一份閱讀。你已經熟悉用法了，這一步很快。",
+    "submit": "看看推薦",
+    "later": "以後再說",
+    "close": "關閉",
+    "pickIntro": "選一份開始讀吧。"
+  },
+  "descriptions": {
+    "toggle": "顯示簡介"
+  },
+  "publicBooks": {
+    "indexTitle": "免費外語原版書",
+    "indexMetaDescription": "{count} 本英語、法語、西班牙語、中文和韓語經典原著，按 A1 到 C2 分級。在 Readfox 免費閱讀，點任何詞都能看到釋義。",
+    "indexIntro": "這裡每一本都是公有領域的完整原文，按歐洲語言共同參考架構（CEFR）分級。開啟一本可以先看開頭，再到 Readfox 免費閱讀。點任何詞，都能看到中文釋義。",
+    "bookCount": "{count} 本",
+    "level": "{level} 級",
+    "byAuthor": "作者：{author}",
+    "readingHours": "約 {hours} 小時讀完",
+    "readingMinutes": "約 {minutes} 分鐘讀完",
+    "lessons": "{count, plural, other {# 課}}",
+    "opening": "第一章試讀",
+    "readFree": "在 Readfox 免費閱讀",
+    "ctaNote": "點任何詞都能看到中文釋義。生詞可以儲存，以後複習。",
+    "source": "來源：<link>{source}</link>。{license}。",
+    "moreAtLevel": "更多 {level} 級{language}書",
+    "allBooks": "全部免費書",
+    "metaTitle": "{title}（{author}）{language}原版免費線上閱讀 | Readfox",
+    "readWholeChapter": "讀完第一章",
+    "tryRead": "免註冊試讀第一章",
+    "hardWordsTitle": "這本書裡的難詞",
+    "hardWordsNote": "書裡常出現、但在日常{language}裡少見的 {count} 個詞。在 Readfox 閱讀器裡點一下，就能看到釋義。",
+    "chapterTitle": "{title}：第一章",
+    "readMetaTitle": "{title} 第一章免費試讀（{language}原版）| Readfox",
+    "readMetaDescription": "免註冊線上閱讀 {author}《{title}》第一章，{level} 級。",
+    "continueTitle": "喜歡的話，繼續讀下去",
+    "continueBody": "免費註冊後可以讀完全部 {count} 課。點任何詞都能看到中文釋義，生詞可以儲存，以後複習。",
+    "continueCta": "免費註冊，繼續讀",
+    "backToBook": "返回書籍介紹",
+    "levelTitle": "{level} 級{language}讀物",
+    "levelIntro": "{count} 本 CEFR {level} 級的{language}免費書，每一本都是公有領域的完整原文。",
+    "levelMetaDescription": "{level} 級{language}原版免費書：{titles}。在 Readfox 閱讀，點任何詞都能看到釋義。",
+    "authorsTitle": "依作者瀏覽{language}書",
+    "authorsMetaDescription": "在 Readfox 瀏覽 {count} 位作者的{language}免費書，從 {first} 到 {last}。",
+    "authorTitle": "{author}的{language}免費書",
+    "authorIntro": "{author}的 {count} 本書，都可以在 Readfox 免費閱讀。每一本都是公有領域的完整原文。",
+    "authorMetaDescription": "免費線上閱讀{author}的 {count} 本{language}原著：{titles}。",
+    "browseLevels": "依難度",
+    "browseAuthors": "依作者"
+  },
+  "journal": {
+    "title": "日記",
+    "newEntry": "新日記",
+    "cancel": "取消",
+    "placeholder": "用{language}寫今天的日記……",
+    "words": "{count} 個詞",
+    "draftSaved": "草稿已儲存",
+    "saving": "正在儲存……",
+    "saveDraft": "儲存草稿",
+    "correcting": "正在批改……",
+    "submitForCorrection": "提交批改",
+    "failedToSave": "儲存失敗",
+    "correctionFailed": "批改失敗",
+    "deleteConfirm": "刪除這篇日記？",
+    "deleteFailed": "無法刪除日記",
+    "entries": "{count} 篇日記",
+    "empty": "還沒有日記",
+    "writeFirst": "寫下第一篇日記",
+    "card": {
+      "corrections": "{count} 處修改",
+      "perfect": "完美",
+      "draft": "草稿",
+      "deleteEntry": "刪除日記",
+      "words": "{count} 個詞"
+    },
+    "modal": {
+      "close": "關閉"
+    },
+    "correction": {
+      "yourText": "你的原文",
+      "clickHint": "點擊醒目提示的詞查看修改",
+      "corrected": "修改後",
+      "summary": "{count} 處修改：",
+      "perfect": "太棒了！無需修改。"
+    },
+    "types": {
+      "grammar": "文法",
+      "spelling": "拼字",
+      "wordChoice": "用詞",
+      "wordOrder": "語序",
+      "missingWord": "缺詞",
+      "extraWord": "多餘的詞"
+    }
+  },
+  "stats": {
+    "title": "統計",
+    "loadFailed": "無法載入統計資料",
+    "returnHome": "返回首頁",
+    "cards": {
+      "wordsKnown": "已掌握的詞",
+      "learning": "學習中 (L1-L4)",
+      "learningSub": "學習中的詞",
+      "wordsRead": "已讀詞數",
+      "wordsReadSub": "根據閱讀位置估算",
+      "currentStreak": "目前連續天數",
+      "days": "{count} 天",
+      "longest": "最長：{count} 天"
+    },
+    "range": {
+      "d30": "30天",
+      "d90": "90天",
+      "y1": "1年",
+      "all": "全部"
+    },
+    "states": {
+      "known": "已掌握",
+      "level4": "4 級",
+      "level3": "3 級",
+      "level2": "2 級",
+      "level1": "1 級",
+      "new": "新詞",
+      "ignored": "已忽略"
+    },
+    "wordStates": {
+      "title": "依狀態統計詞彙"
+    },
+    "cloze": {
+      "title": "克漏字練習",
+      "sentencesPracticed": "已練習句子",
+      "accuracy": "正確率",
+      "totalPoints": "總分"
+    },
+    "mastery": {
+      "title": "句子掌握度",
+      "overall": "整體 {percent}%",
+      "mastered": "已掌握 {mastered} / {total}",
+      "due": "{count} 個待複習",
+      "collections": {
+        "top500": "前 500",
+        "top1000": "前 1000",
+        "top2000": "前 2000",
+        "mined": "已收集",
+        "random": "隨機"
+      }
+    },
+    "fluency": {
+      "estimatedLevel": "依已掌握的詞數估算，不是你自己選的閱讀程度",
+      "vsLastWeek": "較上週 {count, number}",
+      "sameAsLast": "本週 {count, number}（與上週持平）",
+      "progressTo": "升至 {level} 的進度",
+      "topLevel": "已達到最高等級",
+      "wordsToNext": "距 {level} 還差 {count, number} 個詞",
+      "known": "已掌握",
+      "learning": "學習中",
+      "levelName": {
+        "A1": "入門",
+        "A2": "初級",
+        "B1": "中級",
+        "B2": "中高級",
+        "C1": "高級",
+        "C2": "精通"
+      }
+    },
+    "heatmap": {
+      "title": "活躍度",
+      "total": {
+        "actions": "過去一年 {count, number} 次操作",
+        "lookups": "過去一年 {count, number} 次查詞"
+      },
+      "count": {
+        "actions": "{count, number} 次操作",
+        "lookups": "{count, number} 次查詞"
+      },
+      "types": {
+        "lookups": "查詞",
+        "cloze": "填空",
+        "reading": "閱讀",
+        "anki": "Anki"
+      },
+      "minutes": "{count} 分鐘",
+      "noActivity": "無活動",
+      "less": "少",
+      "more": "多",
+      "activeDays": "活躍天數：",
+      "avgPerActiveDay": "每個活躍日平均："
+    },
+    "anki": {
+      "title": "Anki 複習",
+      "last90": "最近 90 天",
+      "reviews": "複習次數",
+      "reviewDays": "複習天數",
+      "avgPerDay": "日均複習",
+      "connectTitle": "連結 Anki 查看複習記錄",
+      "connectBody": "複習記錄會自動同步，並計入連續天數。",
+      "connectButton": "連結 Anki"
+    },
+    "ankiStatus": {
+      "synced": "已同步",
+      "notSynced": "未同步",
+      "noteId": "Anki 筆記 ID：{id}",
+      "pushed": "已推送到 Anki"
+    },
+    "radar": {
+      "title": "擅長領域",
+      "subtitle": "你的詞彙最強的面向",
+      "pending": "{count} 個詞等待分類",
+      "emptyTitle": "尚未產生領域圖",
+      "emptySorting": "正在把你已掌握的詞歸入各個主題領域，請稍後再來看看。",
+      "emptyHint": "多閱讀、多學詞，就能看到你最擅長哪些主題。",
+      "knownWords": "已掌握 {count} 個詞",
+      "mastery": "掌握度"
+    },
+    "vocabGrowth": {
+      "title": "詞彙成長",
+      "knownWords": "已掌握的詞",
+      "learning": "學習中",
+      "total": "總計",
+      "series": {
+        "known": "已掌握",
+        "learning": "學習中",
+        "total": "總計"
+      }
+    }
+  },
+  "chat": {
+    "error": "抱歉，我無法回覆。請檢查設定中是否已設定 LLM 供應商。",
+    "open": "開啟聊天",
+    "close": "關閉聊天",
+    "tutorTitle": "{language}導師",
+    "tutorSubtitle": "有關{language}的問題，隨便問",
+    "clearTitle": "清空聊天",
+    "clear": "清空",
+    "loadingOlder": "正在載入更早的訊息……",
+    "emptyPrompt": "問一個關於{language}的問題",
+    "via": "來自 {provider}",
+    "placeholder": "詢問{language}……"
+  },
+  "chrome": {
+    "theme": {
+      "light": "淺色",
+      "dark": "深色",
+      "system": "跟隨系統"
+    },
+    "nav": {
+      "expandSidebar": "展開側邊欄",
+      "collapseSidebar": "收合側邊欄",
+      "signOut": "登出",
+      "showEmail": "顯示電子郵件",
+      "hideEmail": "隱藏電子郵件"
+    },
+    "tour": {
+      "practiceTitle": "稍後練習",
+      "practiceBody": "稍後可到「練習」分頁複習詞彙。",
+      "vocabTitle": "你的詞彙",
+      "vocabBody": "在「詞彙」分頁查看你接觸過的詞彙。"
+    },
+    "loading": {
+      "app": "正在載入 Readfox",
+      "session": "正在載入工作階段",
+      "subscription": "正在載入訂閱",
+      "setup": "正在載入設定"
+    },
+    "lockedInApp": {
+      "title": "此帳號沒有有效的方案",
+      "body": "目前無法在此帳號下開啟 Readfox。",
+      "signOut": "登出"
+    },
+    "setup": {
+      "connectError": "無法連線到伺服器。",
+      "retry": "重試"
+    },
+    "language": {
+      "changeFailed": "無法切換語言",
+      "wordsKnown": "已掌握詞數：{count}",
+      "add": "新增語言",
+      "current": "語言：{language}",
+      "select": "選擇語言",
+      "search": "搜尋語言",
+      "noMatch": "找不到這種語言",
+      "inDevelopment": "開發中"
+    },
+    "quota": {
+      "title": "本月 AI 額度",
+      "lookups": "AI 查詞",
+      "requests": "詳細的 AI 回答",
+      "left": "剩 {left}",
+      "used": "已用 {used} / {limit}",
+      "byok": "正在使用你自己的 AI 金鑰",
+      "resets": "每月 1 日重置。",
+      "exhausted": "本月額度已用完",
+      "settings": "可在設定中填寫你自己的金鑰",
+      "note": "查詞典不限次數，也不計入額度，詞典釋義翻成你的語言也一樣。",
+      "percentUsed": "已用 {percent}%",
+      "close": "收合",
+      "info": "關於額度",
+      "tip": "點這個圓圈，可以看到本月還剩多少 AI 額度。",
+      "tipDismiss": "知道了"
+    }
+  },
+  "legalPages": {
+    "notice": "本文件以英文版本為準。提供此譯文僅為方便閱讀。",
+    "privacy": {
+      "metaTitle": "隱私權 – Readfox",
+      "title": "隱私權政策",
+      "lastUpdated": "最後更新：{date}",
+      "intro": "Readfox 是一個由個人獨立營運的小型服務。本頁如實說明我們儲存哪些資料、還有誰會接觸你的資料，以及我們能看到和看不到什麼。",
+      "store": {
+        "heading": "我們儲存什麼",
+        "items": {
+          "account": "你的電子郵件地址、選填的姓名，以及加鹽雜湊後的密碼。",
+          "text": "從你匯入的書籍和文章中擷取的<strong>文字</strong>（標題和章節）。我們不保留原始的 EPUB 檔案。",
+          "learning": "你的詞彙、閱讀進度、練習記錄、日記和設定。",
+          "reviewHistory": "你的單字複習記錄：每次作答、作答時間和該卡片的複習安排。這些記錄包含在你匯出的資料中。免費帳號保留最近 5,000 筆記錄。",
+          "aiKey": "如果你新增了自己的 AI 金鑰，它會被加密儲存（AES-256-GCM），並且絕不會傳回你的瀏覽器。",
+          "usage": "你每月使用 AI 查詞和 AI 請求的次數統計，用來執行每月額度。",
+          "session": "用於保持登入狀態的工作階段 Cookie，以及用於保障服務安全、正常運作的伺服器日誌。網頁存取日誌記錄存取的頁面、時間和結果，IP 位址只保留前三段（例如 203.0.113.x），不記錄 Cookie 或密碼，30 天後刪除。",
+          "feedback": "如果你傳送意見回饋，我們會儲存留言文字，並把它連同你的帳號電子郵件（方便我們回覆）和你附上的圖片一起透過電子郵件寄給營運者。圖片不會被儲存。你刪除帳號時，這些留言也會一併刪除。",
+          "sharedWords": "一份所有帳號共用的快取，包含單字翻譯、翻譯成學習者母語的詞典釋義、公開例句（免費書庫和 Tatoeba）的翻譯，以及 AI 為單字寫的例句（語言對、單字或公開例句及其翻譯）。其中不含任何帳號資訊，也不含你的句子。",
+          "invites": "你的邀請碼、誰邀請了你或你邀請了誰（僅為內部帳號關聯），以及你持有的獎勵卡。",
+          "inviteFingerprint": "如果你獲得邀請獎勵，即使之後刪除帳號，我們也會把你電子郵件地址的一個帶金鑰的單向雜湊保留 24 個月。它無法還原成你的電子郵件地址，只用來防止同一個電子郵件重複領取獎勵。"
+        }
+      },
+      "others": {
+        "heading": "還有誰參與其中",
+        "items": {
+          "cloudflare": "<strong>Cloudflare</strong> – 提供 DNS、註冊時的 Turnstile 機器人驗證，以及用於備份的 R2 儲存。",
+          "resend": "<strong>Resend</strong> – 傳送驗證郵件和重設密碼郵件。開啟產品郵件時，它還會傳送歡迎郵件、註冊頭幾天的簡短閱讀提醒，以及達到免費額度時的提示。每一封都附有取消訂閱連結。",
+          "aiProvider": "<strong>你的 AI 供應商（OpenRouter 或 Anthropic）</strong> – 如果你新增了自己的金鑰並使用翻譯、解釋或聊天功能，你選取的文字及部分上下文會透過<em>你自己的</em>金鑰傳送給該供應商。該資料適用其隱私權條款，相關用量由你負擔費用。",
+          "aiBuiltIn": "<strong>阿里雲（Model Studio）</strong> – 如果你使用 Readfox 內建的 AI 額度而不是自己的金鑰，你選取的文字及部分上下文會透過我們的工作空間傳送給阿里雲的通義千問（Qwen）模型，用來產生翻譯或解釋。單字複習時，也可能傳送一則公開例句或正在複習的單字，但不會傳送你儲存的句子。該資料適用阿里雲的條款。內建額度每月有限。",
+          "paddle": "<strong>Paddle</strong> – 我們信用卡和 PayPal 支付的經銷商（登記商家），這類支付正在開發中。開放後，如果你訂閱，Paddle 會依其自身的隱私權政策收集你的付款資訊和帳單地址。我們只會收到你的電子郵件、方案及其狀態，不會收到你的卡號或帳號。",
+          "xiaodou": "<strong>小豆支付（宇智人工智能（深圳）有限公司）</strong> – 處理透過支付寶和微信支付進行的人民幣一次性付款。它會收到訂單金額、訂單編號以及你裝置的公開 IP 位址。你的支付寶或微信帳戶資訊只保存在支付寶或微信，我們不會收到。"
+        },
+        "noTrackers": "我們不使用廣告或分析類追蹤器，也不出售你的資料。"
+      },
+      "operator": {
+        "heading": "營運者能看到和看不到什麼",
+        "dashboard": "管理後台顯示帳號層級的資訊（註冊日期、最近活躍時間、課文和單字數量、已用儲存空間），以及遮蔽後的電子郵件，例如 xi***@gmail.com。它還顯示整個服務每天的總數，例如註冊人數、活躍人數、查詞次數和付款金額，這些總數不對應任何特定帳號。它不顯示你的姓名，也沒有任何會顯示你書籍文字的頁面，更沒有「以用戶身分檢視」或依用戶匯出的功能。營運者只有在為你提供支援、處理刪除請求或制止濫用時，才會查看完整電子郵件，每次查看都會寫入稽核日誌。",
+        "access": "請注意，營運者仍然擁有伺服器及其資料庫的技術存取權限，因此我們不能承諾在技術上不可能查看。我們不會查看你的內容。如果你尋求支援並向我們傳送匯出檔，我們只會用它來解決你的問題，之後會將其刪除。請不要上傳你不希望伺服器處理的資料。"
+      },
+      "backups": {
+        "heading": "備份",
+        "body": "資料庫會持續複製到 Cloudflare R2，R2 會對靜態資料加密。每日快照還會使用營運者離線保管的金鑰另行加密，並保留 30 天。"
+      },
+      "controls": {
+        "heading": "你的控制權",
+        "items": {
+          "export": "<strong>匯出：</strong>設定 → 學習資料 → 匯出全部學習資料，會下載你儲存的所有內容。",
+          "delete": "<strong>刪除：</strong>設定 → 刪除帳號，會將你的帳號和資料從線上服務中移除。備份中的副本會隨每日快照過期而消失（最長 30 天）。",
+          "aiKey": "你可以隨時在設定中移除你的 AI 金鑰。"
+        }
+      },
+      "children": {
+        "heading": "兒童",
+        "body": "Readfox 不以 13 歲以下的兒童為對象，我們也不會有意收集他們的資料。"
+      },
+      "contact": {
+        "heading": "變更與聯絡",
+        "body": "如果本政策發生重大變更，我們會更新上方的日期。有關你的資料的問題或請求，請聯絡：<mail>privacy@readfox.app</mail>。"
+      }
+    },
+    "terms": {
+      "metaTitle": "條款 – Readfox",
+      "title": "使用條款",
+      "lastUpdated": "最後更新：{date}",
+      "intro": "建立帳號或使用 Readfox，即表示你同意這些條款。Readfox 由個人以業餘規模營運。",
+      "content": {
+        "heading": "你的內容",
+        "body": "你對自己匯入的內容保留所有權。請僅匯入你有權用於個人學習的文字。你須對自己上傳的內容負責；對於侵犯他人權利或濫用本服務的內容或帳號，我們可能會刪除內容或停用帳號。"
+      },
+      "limits": {
+        "heading": "限制",
+        "body": "每個帳號能使用的額度取決於它的方案，具體見價格頁。免費帳號最多可儲存 5 MB 的已匯入課文文字，付費方案最多 100 MB。不提供音訊和 Podcast 匯入。AI 功能要麼使用你自己提供的金鑰（費用由你負擔），要麼使用你的方案包含的每月額度。"
+      },
+      "payments": {
+        "heading": "付費方案、續訂和退款",
+        "body": "你可以透過小豆支付，用支付寶或微信支付以人民幣付款。價格頁開放信用卡付款後，你也可以透過 Paddle 用信用卡、PayPal 或 Apple Pay 付款。Paddle.com 是我們的經銷商，也是這些訂單的登記商家（Merchant of Record）：它負責收款、加收銷售稅或加值稅、寄送收據，並處理付款相關的問題。這些訂單同時適用 Paddle 的買家條款。",
+        "renewal": "用人民幣購買的方案只涵蓋固定時長，不會自動續費。透過 Paddle 購買的方案會依你選擇的週期每月或每年自動續費，直到你取消。你可以隨時在「設定 → 方案」裡取消。取消後，方案一直有效到已付費週期結束，之後不再扣款。如果你的方案價格有變動，我們會在新價格生效前寄電子郵件通知你。",
+        "refunds": "人民幣付款可以在付款後 24 小時內申請退款，每個帳號一次，條件是付款之後用掉的方案 AI 額度不超過 10%。在「設定 → 方案」裡點「申請退款」，或寫信到 <mail>privacy@readfox.app</mail>。完整規則見<refund>退款政策</refund>頁面。如果有濫用跡象，我們可以拒絕退款。",
+        "rmb": "使用支付寶或微信支付人民幣的買家，透過小豆支付購買固定時長（1 個月或 12 個月）。這類付款不會自動續費；到期後帳號回到免費版。如果在到期前再次購買同一方案，新的時長從目前時長結束時開始計算。"
+      },
+      "acceptableUse": {
+        "heading": "可接受的使用方式",
+        "body": "請勿攻擊、使本服務過載或對其進行探測，請勿大量建立帳號、共用你的帳號，或利用本服務從事違法行為。"
+      },
+      "warranty": {
+        "heading": "不作保證",
+        "body": "本服務按「現狀」提供，不保證可用性，也不保證適用於任何特定用途。翻譯由 AI 模型產生，可能有誤。我們會進行備份，但你應定期匯出自己的資料。在法律允許的範圍內，對於資料遺失或間接損失，我們不承擔責任。"
+      },
+      "termination": {
+        "heading": "變更與終止",
+        "body": "我們可能會變更或終止本服務，並會盡量提前通知。你可以隨時刪除自己的帳號。"
+      },
+      "openSource": {
+        "heading": "開源",
+        "body": "本軟體採用 GNU AGPL-3.0 授權。原始碼請見「關於」頁面。",
+        "contact": "聯絡方式：<mail>privacy@readfox.app</mail>"
+      }
+    },
+    "about": {
+      "metaTitle": "關於 – Readfox",
+      "title": "關於 Readfox",
+      "intro": "Readfox 讓你用所學的語言閱讀真實的書籍和文章，邊讀邊翻譯單字和片語，並把讀到的內容轉化為間隔重複練習。",
+      "freeSoftware": {
+        "heading": "開源軟體",
+        "license": "Readfox 是開源軟體，採用 <license>GNU Affero 通用公共授權條款 v3.0</license>。它基於 heuwels 及其貢獻者開發的開源閱讀器 <lector>Lector</lector>，並加入了我們的修改。",
+        "source": "本站所執行版本的完整原始碼可在此取得：<source>{url}</source>。"
+      },
+      "dataSources": {
+        "heading": "資料來源",
+        "body": "句庫來自 Tatoeba（CC BY 2.0 FR），詞典來自儲存庫 README 中列出的來源，各自適用其自身的授權。",
+        "books": "書庫裡的免費書籍是來自古騰堡計畫（gutenberg.org）的公有領域文本。韓語書籍來自韓文維基文庫（ko.wikisource.org），其轉錄文字採用 CC BY-SA 4.0 授權。每本書都附有指向來源頁面的連結。",
+        "dictionaries": "詞典釋義來自英文維基詞典（透過 kaikki.org，CC BY-SA 授權）。英語詞典由 skywind3000 的 ECDICT（MIT 授權，github.com/skywind3000/ECDICT）整理而成，例句來自 Tatoeba（CC BY 2.0 FR）。",
+        "readingFeed": "「免費書籍」對話框裡時事、旅行、科普三個分頁的文章,來自 Global Voices（CC BY 3.0,globalvoices.org）、Wikivoyage（CC BY-SA 3.0,wikivoyage.org）、簡明英語維基百科和 Vikidia（CC BY-SA 4.0）。每篇文章都附有指向授權和原始來源的連結;新增到書庫時會自動附上這些出處資訊。"
+      }
+    },
+    "refunds": {
+      "metaTitle": "退款政策",
+      "title": "退款政策",
+      "intro": "Readfox 出售付費方案，讓你每月有更多的 AI 額度。本頁說明什麼情況下可以退款。",
+      "rmbHeading": "支付寶和微信支付（人民幣）",
+      "rmbIntro": "每次付款購買固定的 1 個月或 12 個月，不會自動續費。",
+      "rule1": "付款後 24 小時內可以申請退款。",
+      "rule2": "付款之後，你用掉的方案每月 AI 額度不超過 10%。單字翻譯和詳細回答分別計算，取比例較高的一項。付款之前的用量不計入。",
+      "rule3": "每個帳號可以退款一次。",
+      "how": "申請方式：開啟「設定 → 方案」，點「申請退款」。只有在還能申請時，按鈕才會出現。如果按鈕無法使用，請寫信到 <mail>privacy@readfox.app</mail>。我們會逐筆審核，透過小豆支付把錢退回你付款的帳戶，你的方案回到免費版。款項可能需要幾個工作天才會入帳。",
+      "after": "超過 24 小時，或者用量超過上限，我們不退這一期的費用。方案不會自動續費，所以不會再扣款。",
+      "cardHeading": "信用卡、PayPal 和 Apple Pay",
+      "cardBody": "這些付款由我們的經銷商 Paddle.com 處理。每次付款後 14 天內，你都可以申請全額退款，首次付款和續費都適用。請用帳號的電子郵件寫信到 privacy@readfox.app，或直接回覆 Paddle 的收據郵件。退款後方案立即結束，錢會退回你付款用的信用卡或帳戶。超過 14 天後，我們不退還目前週期的費用，但你可以隨時在「設定 → 方案」裡取消，之後就不會再續費。這不影響你作為消費者依法享有的權利。",
+      "abuseHeading": "濫用",
+      "abuseBody": "如果有濫用跡象，例如買方案、用完額度、再用新帳號反覆申請退款，我們可以拒絕退款。",
+      "contactHeading": "有問題",
+      "contactBody": "請寫信到 <mail>privacy@readfox.app</mail>。"
+    }
+  },
+  "practice": {
+    "saveFailed": "無法儲存你的答案，請檢查網路後重試。",
+    "statsFailed": "答案已儲存，但統計更新失敗。",
+    "lookUp": "查詢 {word}",
+    "title": {
+      "cloze": "克漏字練習",
+      "dictation": "聽寫練習"
+    },
+    "format": {
+      "cloze": "克漏字",
+      "clozeHint": "填空",
+      "dictation": "聽寫",
+      "dictationHint": "輸入你聽到的內容"
+    },
+    "setup": {
+      "reviewDue": "待複習（{count}）",
+      "due": "{count} 待複習",
+      "learnNew": "學習新內容",
+      "mastered": "已掌握 {mastered}/{total}",
+      "sentences": "句子數",
+      "mode": "模式",
+      "modeType": "輸入",
+      "modeMc": "選擇題",
+      "start": "開始",
+      "loading": "載入中..."
+    },
+    "collections": {
+      "top500": "前 500",
+      "top1000": "500-1000",
+      "top2000": "1000-2000"
+    },
+    "round": {
+      "guidedLabel": "首課引導",
+      "guidedTitle": "你的第一個學習循環",
+      "back": "← 返回",
+      "threeWord": "快速複習",
+      "starterWords": "入門課文中的詞",
+      "loading": "正在載入句子..."
+    },
+    "question": {
+      "choose": "選擇正確的詞",
+      "fill": "填空",
+      "showTranslation": "顯示翻譯",
+      "translation": "翻譯",
+      "keyChoose": "選擇",
+      "keyListen": "聆聽",
+      "multipleChoice": "選擇題",
+      "multipleChoiceTitle": "本題改為選擇題",
+      "hintNone": "提示（?）",
+      "hintLetters": "提示（{count} 個字母）",
+      "hintTitle": "顯示下一個字母",
+      "submit": "提交",
+      "check": "檢查",
+      "mastery": "掌握度："
+    },
+    "complete": {
+      "title": "本輪完成！",
+      "correct": "答對 {correct}/{total}",
+      "totalPoints": "累計 {points} 分",
+      "changeSettings": "變更設定",
+      "playAgain": "再來一輪"
+    },
+    "onboarding": {
+      "starterLesson": "入門課文",
+      "complete": {
+        "title": "第一個學習循環完成",
+        "description": "你把真實閱讀中的詞變成了練習。Readfox 會陪你不斷重複這個循環。",
+        "encountered": "遇到",
+        "saved": "已儲存",
+        "score": "得分",
+        "upNext": "接下來",
+        "tomorrow": "明天",
+        "comeBack": "明天再來讀一篇短文並複習。",
+        "saving": "正在儲存進度…",
+        "saveError": "本輪成績已儲存，但無法將引導標記為完成。",
+        "trySavingAgain": "重新儲存",
+        "openLibrary": "開啟書庫",
+        "readNext": "閱讀下一課"
+      },
+      "recovery": {
+        "title": "你的練習詞還沒準備好",
+        "missingWords": "迷你複習需要你先在入門課文裡儲存一個詞。請回到課文儲存一個詞，再試一次。",
+        "loadFailed": "無法載入你儲存的練習詞。請回到入門課文，再試一次小複習。",
+        "backToLesson": "返回入門課文"
+      }
+    },
+    "wordTooltip": {
+      "tryAgain": "請重試。"
+    },
+    "blacklist": {
+      "hidden": "句子已隱藏",
+      "undo": "復原",
+      "undoFailed": "復原失敗",
+      "hideFailed": "隱藏句子失敗",
+      "title": "跳過並隱藏這個句子"
+    },
+    "empty": {
+      "reviewTitle": "沒有需要複習的內容",
+      "newTitle": "沒有新句子",
+      "reviewBody": "現在沒有到期需要複習的句子。可以學習新句子，或稍後再來。",
+      "newBody": "這個合集裡的句子你都見過了。換一個合集，或複習已學的句子。",
+      "back": "返回",
+      "learnNewInstead": "改為學習新內容"
+    },
+    "feedback": {
+      "correct": "正確！",
+      "incorrect": "不正確",
+      "listenAgain": "再聽一遍",
+      "saveWordFailed": "無法將該詞儲存到詞彙表",
+      "addToAnkiFailed": "新增到 Anki 失敗",
+      "lookUp": "查詢 {word}",
+      "answerRevealed": "已顯示答案",
+      "perfect": "完美！",
+      "accuracy": "正確率 {percent}%（{correct}/{total} 個詞）",
+      "pointsBonus": " · +{points} 分",
+      "nothingTyped": "（未輸入）",
+      "youTyped": "你的輸入",
+      "sentence": "句子",
+      "translation": "翻譯",
+      "masteryLevel": "掌握程度",
+      "mastery": {
+        "level0": "新詞",
+        "level25": "學習中",
+        "level50": "熟悉",
+        "level75": "快掌握了",
+        "level100": "已掌握"
+      },
+      "nextSentence": "下一句",
+      "nextSentenceHint": "下一句",
+      "pointsEarned": "+{points} 分",
+      "yourAnswer": "你的答案：",
+      "correctAnswer": "正確答案：",
+      "alreadyAdded": "已新增到 Anki",
+      "addToAnki": "新增到 Anki",
+      "adding": "新增中...",
+      "explain": "講解",
+      "explaining": "講解中...",
+      "explainFailed": "取得講解失敗"
+    },
+    "dictation": {
+      "prompt": "輸入你聽到的句子",
+      "replayAria": "重播音訊",
+      "speed": "語速",
+      "listenAgain": "再聽一遍（剩餘 {count} 次）",
+      "noReplays": "沒有可重播的次數了",
+      "placeholder": "輸入你聽到的內容…",
+      "surrenderTitle": "顯示句子並繼續（算作答錯）",
+      "surrender": "放棄",
+      "check": "檢查",
+      "mastery": "掌握度："
+    },
+    "words": {
+      "loading": "正在載入你的單字",
+      "loadFailed": "無法載入你的單字。請檢查網路後重試。",
+      "retry": "重試",
+      "saveFailed": "無法儲存你的答案。請檢查網路後重試。",
+      "undoFailed": "無法變更你的答案。請重試。",
+      "back": "← 返回",
+      "left": "還剩 {count} 個",
+      "listen": "聽發音",
+      "chooseMeaning": "選擇詞義",
+      "fillIn": "哪個詞適合填入空白處？",
+      "typedFillIn": "輸入缺少的詞",
+      "typedPlaceholder": "缺少的詞",
+      "check": "檢查",
+      "showAnswer": "顯示答案",
+      "correct": "答對了",
+      "incorrect": "不太對",
+      "next": "下一個",
+      "wasWrong": "我答錯了",
+      "nothingDue": "現在沒有需要複習的內容。",
+      "complete": "本輪完成",
+      "answered": "已複習 {count} 個詞",
+      "retried": "{count} 個詞會再出現一次",
+      "nextDue": "下次複習：{time}",
+      "source": {
+        "library": "來自 <link>{name}</link>",
+        "tatoeba": "來自 <link>Tatoeba</link>",
+        "ai": "AI 例句"
+      },
+      "stage": {
+        "new": "新詞",
+        "learning": "學習中",
+        "familiar": "熟悉",
+        "mastered": "已掌握"
+      },
+      "goal": {
+        "recognize": "認識",
+        "recognize_spell": "認識並拼寫"
+      },
+      "recognition": {
+        "reveal": "顯示詞義",
+        "dontKnow": "不認識",
+        "fuzzy": "模糊",
+        "know": "認識"
+      },
+      "entry": {
+        "title": "我的單字",
+        "ready": "待複習 {due} 個，新詞 {fresh} 個",
+        "open": "複習單字",
+        "nothingDue": "現在沒有需要複習的內容。下次複習：{time}",
+        "noWords": "閱讀時儲存的單字會出現在這裡，供你複習。",
+        "failed": "無法載入你的單字。",
+        "goal": "目標：{goal}"
+      }
+    }
+  },
+  "vocab": {
+    "states": {
+      "new": "新詞",
+      "level1": "1 級",
+      "level2": "2 級",
+      "level3": "3 級",
+      "level4": "4 級",
+      "known": "已掌握",
+      "ignored": "已忽略"
+    },
+    "stateTitle": {
+      "new": "新詞 - 尚未學習",
+      "level1": "1 級 - 剛開始學",
+      "level2": "2 級 - 學習中",
+      "level3": "3 級 - 熟悉",
+      "level4": "4 級 - 快掌握了",
+      "known": "已掌握 - 完全學會",
+      "ignored": "已忽略 - 不參與學習"
+    },
+    "stats": {
+      "total": "詞彙總數",
+      "learning": "學習中",
+      "known": "已掌握",
+      "ignored": "已忽略"
+    },
+    "list": {
+      "phrase": "片語",
+      "confirmBulkDelete": "確定要刪除 {count} 個詞彙條目嗎？",
+      "searchPlaceholder": "搜尋詞、翻譯或句子...",
+      "filter": {
+        "all": "全部",
+        "learning": "學習中"
+      },
+      "allCollections": "全部合集",
+      "exporting": "匯出中...",
+      "exportToAnki": "匯出到 Anki（{count}）",
+      "updating": "更新中...",
+      "markAsKnown": "標為已掌握（{count}）",
+      "deleting": "刪除中...",
+      "delete": "刪除（{count}）",
+      "syncing": "同步中...",
+      "syncWithAnki": "與 Anki 同步",
+      "ankiTip": {
+        "title": "Anki 設定",
+        "body": "需要協助設定 Anki 時，點這裡。"
+      },
+      "results": "共 {total} 筆，顯示 {filtered} 筆",
+      "resultsSelected": "共 {total} 筆，顯示 {filtered} 筆（已選 {selected} 筆）",
+      "columns": {
+        "text": "詞/片語",
+        "translation": "翻譯",
+        "state": "狀態",
+        "source": "來源",
+        "dateAdded": "新增日期",
+        "anki": "Anki"
+      },
+      "loading": "正在載入詞彙...",
+      "emptyNoEntries": "還沒有詞彙條目。開始閱讀來新增詞吧！",
+      "emptyNoMatches": "沒有符合篩選條件的條目。",
+      "exportDialog": {
+        "title": "匯出到 Anki",
+        "description": "已選 {count} 個詞。請選擇卡片類型。",
+        "basic": "基本",
+        "basicDescription": "正反面卡片。正面是句子，背面是翻譯。",
+        "cloze": "克漏字",
+        "clozeDescription": "句中隱藏該詞，根據上下文回想。",
+        "cancel": "取消",
+        "confirm": "匯出 {count} 張卡片"
+      }
+    },
+    "pagination": {
+      "label": "詞彙分頁",
+      "rowsPerPage": "每頁列數",
+      "range": "第 {from}–{to} 筆，共 {total} 筆",
+      "previous": "上一頁",
+      "next": "下一頁",
+      "page": "第 {current} 頁，共 {total} 頁"
+    },
+    "detail": {
+      "confirmDelete": "確定要刪除這個詞彙條目嗎？",
+      "phrase": "片語",
+      "word": "單字",
+      "close": "關閉",
+      "translation": "翻譯",
+      "contextSentence": "例句",
+      "learningState": "學習狀態",
+      "added": "新增於：",
+      "reviewCount": "複習次數：",
+      "syncedToAnki": "已同步到 Anki",
+      "noteId": "（筆記 #{id}）",
+      "deleting": "刪除中...",
+      "delete": "刪除",
+      "cancel": "取消",
+      "saving": "儲存中...",
+      "save": "儲存",
+      "edit": "編輯"
+    },
+    "page": {
+      "title": "詞彙",
+      "loadFailed": "載入詞彙資料失敗",
+      "entryUpdated": "條目已更新",
+      "updateFailed": "更新條目失敗",
+      "entryDeleted": "條目已刪除",
+      "deleteFailed": "刪除條目失敗",
+      "allSynced": "所選條目都已同步到 Anki。",
+      "cardType": {
+        "basic": "基本",
+        "cloze": "克漏字"
+      },
+      "queuedPartial": "已加入佇列 {queued} 張卡片，{failed} 張失敗（{error}）",
+      "queuedOk": "已將 {queued} 張{cardType}卡片加入佇列，下次 Anki 同步時會出現",
+      "queueFailed": "無法將卡片加入 Anki 佇列",
+      "notConnected": "Anki 未連線。請確認 Anki 正在執行並已啟用 AnkiConnect。",
+      "exported": "已將 {count} 張{cardType}卡片匯出到「{deck}」",
+      "exportPartial": "已匯出 {count} 張{cardType}卡片，{failed} 張失敗",
+      "markedKnown": "已將 {count} 個條目標為已掌握",
+      "markKnownFailed": "標為已掌握失敗",
+      "synced": "已同步 {cards} 張 Anki 卡片，升級 {upgraded} 個。",
+      "syncedImported": "已同步 {cards} 張 Anki 卡片，升級 {upgraded} 個，從 Anki 匯入 {imported} 個。",
+      "syncFailed": "與 Anki 同步失敗",
+      "openAnkiSetup": "開啟 Anki 設定",
+      "addonPill": "Anki 透過外掛同步",
+      "ankiTip": {
+        "title": "Anki 設定",
+        "body": "需要協助設定 Anki 時，點這裡。"
+      },
+      "checking": "正在檢查 Anki 連線...",
+      "connected": "Anki 已連線",
+      "disconnected": "Anki 未連線"
+    }
+  },
+  "reader": {
+    "aiNotice": {
+      "title": "你選取的文字會傳送給 AI 服務",
+      "body": "查詢片語、請求講解、翻譯句子或聊天時，你選取的文字和部分上下文會傳送給阿里雲的通義千問模型（或你新增了金鑰的 AI 供應商）來產生回答。詞典查詞不使用 AI。詳情見隱私權政策。",
+      "agree": "同意",
+      "decline": "暫不"
+    },
+    "page": {
+      "lessonNotFound": "找不到課文",
+      "loadFailed": "課文載入失敗",
+      "retryFailed": "無法重新轉錄",
+      "phraseFailed": "片語翻譯失敗。請在設定中檢查 AI 供應商。",
+      "wordFailed": "單字翻譯失敗。請在設定中檢查 AI 供應商。",
+      "contextFailed": "無法取得語境翻譯。",
+      "aiDeclined": "AI 服務拒絕處理這段文字。請換一句，或選短一點再試。",
+      "retranslateFailed": "重新翻譯失敗",
+      "saveFailed": "無法儲存該單字，請檢查網路連線後重試。",
+      "saveFailedShort": "無法儲存該單字，請檢查網路連線。",
+      "knownFailed": "無法將該單字標為已掌握，請檢查網路連線。",
+      "ignoreFailed": "無法忽略該單字，請檢查網路連線。",
+      "levelFailed": "無法設定單字等級，請檢查網路連線。",
+      "onboardingWordAdded": "已加入「{word}」，練習已經準備好。",
+      "miniReviewFailed": "無法開始小複習，請重試。",
+      "onboardingSkipFailed": "無法跳過引導，請重試。",
+      "copied": "已複製",
+      "loading": "正在載入課文...",
+      "goToLibrary": "前往書庫",
+      "backToLibrary": "返回書庫",
+      "transcribing": "正在轉錄音訊…",
+      "transcribingBody": "「{title}」正在背景轉錄，通常需要幾分鐘，完成後課文會自動開啟。",
+      "transcriptionFailed": "轉錄失敗",
+      "retry": "重試",
+      "listenAlong": "跟聽"
+    },
+    "markdown": {
+      "saveFailed": "儲存失敗",
+      "back": "返回",
+      "cancel": "取消",
+      "saving": "正在儲存…",
+      "saveChanges": "儲存修改",
+      "pronunciation": "讀音：{mode}",
+      "annotation": {
+        "off": "關閉",
+        "learning": "學習中的詞",
+        "all": "所有詞"
+      },
+      "editText": "編輯文字",
+      "editHint": "支援 Markdown。詞彙狀態按單字記錄，因此修改不會重置你的進度。",
+      "captionsAuto": "自動產生的字幕",
+      "captionsCreator": "作者提供的字幕",
+      "openOnYouTube": "在 YouTube 上開啟",
+      "playFromHere": "從這裡播放",
+      "playFrom": "從 {time} 開始播放"
+    },
+    "drawer": {
+      "wordDefinition": "單字釋義",
+      "definitionOf": "{word} 的釋義",
+      "clickToLookUp": "點擊單字即可查詢。",
+      "state": {
+        "new": "新詞",
+        "level1": "1 級",
+        "level2": "2 級",
+        "level3": "3 級",
+        "level4": "4 級",
+        "known": "已掌握",
+        "ignored": "已忽略"
+      },
+      "hearPronunciation": "聽發音",
+      "sourceAiInContext": "AI · 語境",
+      "sourceLearned": "已學習",
+      "sourceOnDevice": "本機詞典",
+      "sourceAi": "AI",
+      "close": "關閉",
+      "closeEsc": "關閉 (Esc)",
+      "lookingUp": "正在查詢…",
+      "showDictionary": "顯示詞典釋義（{count}）",
+      "noDefinition": "找不到釋義。",
+      "inContextTitle": "結合句子語境用 AI 翻譯",
+      "inContext": "結合語境",
+      "askingAi": "正在詢問 AI…",
+      "enrichTitle": "補充音標、詞源、完整義項和相關詞形",
+      "enrich": "豐富釋義",
+      "enriching": "正在豐富釋義…",
+      "idiomaticMeaning": "慣用含義",
+      "literally": "字面意思",
+      "usage": "用法",
+      "etymology": "詞源",
+      "relatedForms": "相關詞形",
+      "showFewer": "收合",
+      "showAll": "顯示全部（{count}）",
+      "hearSentence": "聽句子",
+      "onboardingAdded": "已加入你的第一次複習",
+      "onboardingChoose": "選擇 1–4 級即可新增該單字",
+      "onboardingReady": "已就緒 {count}/{target}",
+      "saveAtLevel": "以學習等級 {level} 儲存",
+      "levelTitle": "{level} 級",
+      "levelCaption": "1 新 · 2 學習中 · 3 熟悉 · 4 掌握",
+      "markKnownTitle": "標為已掌握 (K)",
+      "known": "✓ 已掌握",
+      "ignoreTitle": "忽略 (X)",
+      "ignore": "✕ 忽略",
+      "retranslateTitle": "強制重新用 AI 查詢（忽略詞典）",
+      "retranslate": "用 AI 重新翻譯",
+      "ankiAdded": "✓ 已新增到 Anki",
+      "ankiAdding": "正在新增…",
+      "ankiError": "Anki 出錯，點擊重試",
+      "ankiAdd": "新增到 Anki",
+      "clozeAdd": "作為克漏字卡新增到 Anki",
+      "clozePick": "選擇要挖空的單字：",
+      "clozeSent": "✓ 已傳送到 Anki",
+      "clozeSending": "正在傳送…",
+      "clozeError": "出錯，點擊重試",
+      "clozeSend": "傳送到 Anki",
+      "cancel": "取消",
+      "lookUp": "查詢 {word}",
+      "announce": {
+        "lookingUp": "正在查詢 {word}。",
+        "lookupFailed": "查詢 {word} 失敗。{error}",
+        "definitionLoaded": "已載入 {word} 的釋義。",
+        "noDefinitionFound": "找不到 {word} 的釋義。"
+      },
+      "examples": "例句",
+      "englishDefinitions": "英文釋義",
+      "oxford3000": "牛津 3000",
+      "collinsTitle": "柯林斯 {stars} 星（滿分 5 星）",
+      "frequencyRank": "詞頻第 {rank}",
+      "tags": {
+        "zk": "中考",
+        "gk": "高考",
+        "ky": "考研",
+        "cet4": "四級",
+        "cet6": "六級",
+        "toefl": "托福",
+        "ielts": "雅思",
+        "gre": "GRE"
+      },
+      "lemma": {
+        "formOf": "原形：",
+        "derivedFrom": "派生自：",
+        "pastParticiple": "過去分詞，原形：",
+        "repetition": "重複形式，原形：",
+        "abstractNoun": "抽象名詞，來自：",
+        "diminutive": "指小形式，原形：",
+        "nominalization": "名詞化，來自：",
+        "adverbial": "副詞形式，原形：",
+        "plural": "複數，原形：",
+        "presentTense": "現在式，原形：",
+        "pastTense": "過去式，原形：",
+        "futureTense": "未來式，原形：",
+        "conditional": "條件式，原形：",
+        "imperative": "命令式，原形：",
+        "compound": "複合詞，後半部分：",
+        "related": "相關詞：",
+        "ending": "（+{ending}）"
+      },
+      "pos": {
+        "noun": "名詞",
+        "verb": "動詞",
+        "adj": "形容詞",
+        "adv": "副詞",
+        "pron": "代名詞",
+        "prep": "介系詞",
+        "postp": "後置詞",
+        "conj": "連接詞",
+        "intj": "感嘆詞",
+        "num": "數詞",
+        "det": "限定詞",
+        "article": "冠詞",
+        "particle": "助詞",
+        "phrase": "片語",
+        "name": "專有名詞",
+        "prefix": "字首",
+        "suffix": "字尾",
+        "affix": "詞綴",
+        "root": "詞根",
+        "counter": "量詞",
+        "proverb": "諺語",
+        "contraction": "縮約形",
+        "character": "漢字",
+        "symbol": "符號",
+        "punct": "標點",
+        "abbrev": "縮寫"
+      }
+    },
+    "onboardingTip": {
+      "dismiss": "關閉新手提示"
+    },
+    "youtube": {
+      "playerTitle": "YouTube 影片播放器"
+    },
+    "wordCell": {
+      "lookUp": "查詢 {text}"
+    },
+    "coach": {
+      "ariaLabel": "首課引導",
+      "skip": "跳過引導",
+      "startPractice": "開始快速練習",
+      "lookup": {
+        "title": "點一個你不認識的詞",
+        "body": "課文裡的每個詞都能查。點按或點擊一個，就能在這裡看到釋義。"
+      },
+      "save": {
+        "title": "把這個詞加入複習",
+        "body": "在釋義面板裡選擇 1–4 級，這個詞就會進入你的複習清單。"
+      },
+      "practice": {
+        "title": "練習剛讀到的單字",
+        "body": "趁記憶猶新做一張快速練習卡，幫你記住這個詞。"
+      },
+      "step": "第 {step}/{total} 步"
+    },
+    "listen": {
+      "back": "返回",
+      "readAsText": "以文字閱讀",
+      "mode": {
+        "continuous": "連續",
+        "shadow": "跟讀"
+      },
+      "sentenceProgress": "第 {current} 句，共 {total} 句",
+      "seek": "跳轉",
+      "playbackSpeed": "播放速度",
+      "previousSentence": "上一句",
+      "backSeconds": "倒退 {seconds} 秒",
+      "forwardSeconds": "快轉 {seconds} 秒",
+      "pause": "暫停",
+      "play": "播放",
+      "repeatSentence": "重複本句",
+      "nextSentence": "下一句"
+    }
+  },
+  "subscribe": {
+    "checkoutFailed": "無法發起結帳，請稍後再試。",
+    "title": {
+      "suspended": "你的帳號已被停用",
+      "lapsedFree": "你現在使用的是 Readfox 免費版",
+      "lapsed": "你的訂閱已結束",
+      "free": "選擇你的學習方式",
+      "paid": "訂閱 Readfox"
+    },
+    "body": {
+      "suspended": "應用程式存取已暫停。你仍然可以在下方匯出學習資料或登出。",
+      "lapsedFree": "你的文字、詞彙、Anki 連結和學習記錄都還在。你可以繼續用免費版，也可以續訂，獲得更多 AI 額度。",
+      "lapsed": "你建立的一切都安然無恙，和你離開時一模一樣。續訂即可從上次的進度繼續。",
+      "free": "免費版可以完整地閱讀和學習，每月包含 50 次詳細的 AI 回答。想要更多額度時，再升級。",
+      "paid": "Readfox 是付費服務。想免費使用？Readfox 是開源軟體，可以自己架設。"
+    },
+    "loadingPlans": "正在載入訂閱方案",
+    "unavailable": "暫時無法結帳，請稍後再試。你的帳號和資料不受影響。",
+    "suspendedHelp": "如果你認為這是誤判，請聯絡客服。沒有任何學習資料被刪除。",
+    "promoReady": "優惠碼 <strong>{promo}</strong> 已就緒。繼續時我們會自動套用，折後總價會在結帳時顯示。",
+    "promoUnknown": "優惠碼 <strong>{promo}</strong> 無效或已過期。下方所有方案仍按原價提供。",
+    "activating": "已收到付款，正在啟用你的帳號…",
+    "slow": "已收到付款。啟用耗時比平常更長，此頁面會持續檢查，你也可以幾分鐘後再回來。",
+    "freeName": "免費版",
+    "currentPlan": "目前方案",
+    "forever": "永久免費",
+    "freeTagline": "閱讀、查詞、儲存所學，並隨時帶走你的資料。",
+    "freeFeatures": {
+      "export": "隨時匯出你的學習資料"
+    },
+    "continueFree": "繼續使用免費版",
+    "checkoutYear": "繼續結帳 — {price}/年",
+    "subscribeYear": "按年訂閱 — {price}/年",
+    "checkoutMonth": "繼續結帳 — {price}/月",
+    "subscribeMonth": "訂閱 — {price}/月",
+    "orMonth": "或 {price}/月",
+    "orYear": "或 {price}/年，約省 20%",
+    "selected": "已選擇",
+    "perMonth": "/月",
+    "annualNote": "{price}/年，省 {percent}%",
+    "annualNoteNoSave": "{price}/年",
+    "openingCheckoutLabel": "正在開啟結帳頁面",
+    "openingCheckout": "正在開啟結帳頁面…",
+    "exportData": "匯出我的資料",
+    "signOut": "登出",
+    "subscribeYearNoPrice": "按年訂閱",
+    "orYearNoPrice": "或按年付費，約省 20%",
+    "subscribeMonthNoPrice": "按月訂閱",
+    "orMonthNoPrice": "或按月付費",
+    "back": "返回應用程式",
+    "methodCn": "支付寶 / 微信（人民幣，一次性付款）",
+    "methodCard": "信用卡 / PayPal / Apple Pay（自動續訂）",
+    "channelAlipay": "支付寶",
+    "channelWechat": "微信支付",
+    "cnNote": "一次性付款，不會自動續費。到期前再次購買，時間會順延。",
+    "cnYearNote": "12 個月 {price}，約省 20%",
+    "cnHigherPlan": "你目前的方案比這個高，現在不能購買更低的方案。",
+    "cnSubscriptionActive": "你已有自動續訂的訂閱。請先在「設定 → 方案」中取消。",
+    "cnNotPaid": "這筆付款沒有完成。",
+    "cnChecking": "正在向支付平台確認這筆訂單…",
+    "cnWaitingTitle": "等待付款",
+    "cnWaitingBody": "付款頁已在新分頁開啟，請在那裡付款，這個頁面會自動更新。如果不付款直接關掉，不會扣款。",
+    "cnReopen": "重新開啟付款頁",
+    "cnUnpaidTitle": "這筆訂單還沒有付款",
+    "cnUnpaidBody": "如果你已經付款，請等幾秒再查一次。如果不想買了，取消即可，不會扣款。",
+    "cnResume": "繼續付款",
+    "cnRecheck": "我已付款，再查一次",
+    "cnCancel": "取消訂單",
+    "cnPaidTitle": "付款成功，{plan} 已開通",
+    "cnPaidUntil": "{plan} 有效期到 {date}。",
+    "cnPaidStart": "開始閱讀",
+    "grantActive": "目前方案：{plan}，有效期至 {date}。",
+    "cnBuyMonth": "1 個月 · {price}",
+    "cnBuyYear": "12 個月 · {price}",
+    "cardPending": "信用卡和 PayPal 支付正在開發中，目前可以用支付寶或微信支付。"
+  },
+  "refund": {
+    "title": "申請退款",
+    "rules": "你的{plan}方案是用人民幣購買的。付款之後，如果你用掉的方案 AI 額度不超過 10%，可以在 {deadline} 之前申請退款。每個帳號可以退款一次。款項會退回你付款的帳戶，方案回到免費版。",
+    "request": "申請退款",
+    "confirm": "退款通過後，你的方案會結束。確定要提交申請嗎？",
+    "submit": "提交申請",
+    "cancel": "取消",
+    "pending": "申請已提交，我們會審核並退款。",
+    "usedTooMuch": "付款之後你已用掉 {percent}% 的額度，超過 10% 的上限，這筆訂單不能退款。",
+    "submitted": "申請已提交",
+    "notAllowed": "這筆訂單現在不能退款",
+    "failed": "提交申請失敗"
+  }
+}

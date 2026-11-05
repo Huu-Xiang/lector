@@ -1,0 +1,106 @@
+{
+  "plans": {
+    "freePrice": "¥0",
+    "perMonth": "{price}/月",
+    "perYear": "或 {price}/年",
+    "perYearMain": "{price}/年",
+    "annualEquivalent": "約合 {price}/月，按年付",
+    "annualEquivalentSave": "約合 {price}/月，按年付，省 {percent}%",
+    "chinaPrice": "中國大陸：{price}/月（支援支付寶）",
+    "chinaPriceYear": "中國大陸：{price}/年（支援支付寶）",
+    "priceAtCheckout": "價格在付款頁顯示",
+    "getStarted": "免費開始",
+    "features": {
+      "glosses": "每月 {count, number} 次 AI 查詞（詞典裡沒有的詞）",
+      "freeLibrary": "最多 10 個合集、200 篇課文；免費書庫的書不占課文數",
+      "byok": "想用更多時，可以新增自己的 AI 金鑰",
+      "detailed": "每月 {count, number} 次詳細的 AI 回答（劃詞翻譯和單字詳解）",
+      "phraseWords": "一次最多選 {count} 個詞翻譯",
+      "phraseUnlimited": "一次翻譯的文字長度不限",
+      "moreRoom": "最多 50 個合集、1,000 篇課文",
+      "unlimitedLibrary": "合集和課文數量不限",
+      "byokPaid": "想用更多時，可以新增自己的 AI 金鑰"
+    },
+    "current": "目前方案",
+    "choose": "選擇 {plan}",
+    "cycleLabel": "付費週期",
+    "cycleYear": "年付",
+    "cycleYearSave": "年付（最多省 {percent}%）",
+    "cycleMonth": "月付"
+  },
+  "pricing": {
+    "metaTitle": "價格 – Readfox",
+    "title": "價格",
+    "intro": "先免費使用。想要詳細的 AI 解釋和更多額度時再升級。隨時可以取消。",
+    "notes": "適用的銷售稅或加值稅會在付款時另外加上。付款由我們的經銷商 Paddle 處理。中國大陸的買家用人民幣付款，可以使用支付寶。",
+    "cardPending": "信用卡、PayPal 和 Apple Pay 支付正在開發中，目前只支援支付寶和微信支付。",
+    "metaDescription": "Readfox 方案：免費版每月 1,000 次 AI 查詞。Plus、Pro 和 Max 提供更多查詞次數、詳細的 AI 講解和更大的書庫。支援信用卡、PayPal 和支付寶。"
+  },
+  "checkoutPage": {
+    "opening": "正在開啟安全付款頁面",
+    "failed": "付款頁面打不開。請返回後重試。",
+    "back": "返回方案頁"
+  },
+  "planLimits": {
+    "upgradePlus": "升級到 Plus",
+    "seePlans": "查看方案",
+    "addKey": "新增 API 金鑰",
+    "notNow": "以後再說",
+    "upgradeLine": {
+      "cloud": "升級到 Plus 可以提高這個上限。",
+      "plus": "升級到 Pro 可以提高這個上限。",
+      "max": "升級到 Max 可以提高這個上限。",
+      "byok": "新增你自己的 API 金鑰可以解除這個上限。"
+    },
+    "generic": {
+      "title": "已達到方案上限",
+      "body": "這個操作超出了你目前方案的額度。"
+    },
+    "metrics": {
+      "phraseSelectionWords": {
+        "title": "片語超出方案長度",
+        "body": "你的方案一次最多翻譯 {limit, number} 個詞的片語。"
+      },
+      "journalWordsPerMonth": {
+        "title": "本月日記字數已用完",
+        "body": "本月你已寫了 {used, number} 個詞，上限是 {limit, number} 個。"
+      },
+      "llmRequestsPerMonth": {
+        "title": "本月 AI 詳細講解已用完",
+        "body": "你已用完本月的 {limit, number} 次 AI 詳細講解。"
+      },
+      "wordGlossesPerMonth": {
+        "title": "本月 AI 查詞次數已用完",
+        "body": "你已用完本月的 {limit, number} 次 AI 查詞。離線詞典裡有的詞仍然可以查。"
+      },
+      "phraseTranslationsPerDay": {
+        "title": "今天的片語翻譯已用完",
+        "body": "你已用完今天的 {limit, number} 次片語翻譯，北京時間早上 8 點重置。"
+      },
+      "contextTranslationsPerDay": {
+        "title": "今天的語境翻譯已用完",
+        "body": "你已用完今天的 {limit, number} 次語境翻譯，北京時間早上 8 點重置。"
+      },
+      "ttsCharsPerMonth": {
+        "title": "本月朗讀額度已用完",
+        "body": "本月剩下的時間裡，朗讀會改用瀏覽器內建的聲音。"
+      },
+      "maxCollections": {
+        "title": "書庫已滿",
+        "body": "你的方案最多可以有 {limit, number} 個合集。"
+      },
+      "maxLessons": {
+        "title": "書庫已滿",
+        "body": "你的方案最多可以有 {limit, number} 課。"
+      },
+      "maxVocabEntries": {
+        "title": "生詞本已滿",
+        "body": "你的方案最多可以儲存 {limit, number} 個生詞。"
+      }
+    },
+    "dialog": {
+      "plus": "Plus 每月有 {glosses, number} 次 AI 查詞和 {detailed, number} 次詳細講解。你的免費書和生詞都會保留。",
+      "freeReset": "也可以繼續免費讀，額度下個月會重新開始。"
+    }
+  }
+}

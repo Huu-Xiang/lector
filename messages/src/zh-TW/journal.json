@@ -1,0 +1,251 @@
+{
+  "journal": {
+    "title": "日記",
+    "newEntry": "新日記",
+    "cancel": "取消",
+    "placeholder": "用{language}寫今天的日記……",
+    "words": "{count} 個詞",
+    "draftSaved": "草稿已儲存",
+    "saving": "正在儲存……",
+    "saveDraft": "儲存草稿",
+    "correcting": "正在批改……",
+    "submitForCorrection": "提交批改",
+    "failedToSave": "儲存失敗",
+    "correctionFailed": "批改失敗",
+    "deleteConfirm": "刪除這篇日記？",
+    "deleteFailed": "無法刪除日記",
+    "entries": "{count} 篇日記",
+    "empty": "還沒有日記",
+    "writeFirst": "寫下第一篇日記",
+    "card": {
+      "corrections": "{count} 處修改",
+      "perfect": "完美",
+      "draft": "草稿",
+      "deleteEntry": "刪除日記",
+      "words": "{count} 個詞"
+    },
+    "modal": {
+      "close": "關閉"
+    },
+    "correction": {
+      "yourText": "你的原文",
+      "clickHint": "點擊醒目提示的詞查看修改",
+      "corrected": "修改後",
+      "summary": "{count} 處修改：",
+      "perfect": "太棒了！無需修改。"
+    },
+    "types": {
+      "grammar": "文法",
+      "spelling": "拼字",
+      "wordChoice": "用詞",
+      "wordOrder": "語序",
+      "missingWord": "缺詞",
+      "extraWord": "多餘的詞"
+    }
+  },
+  "stats": {
+    "title": "統計",
+    "loadFailed": "無法載入統計資料",
+    "returnHome": "返回首頁",
+    "cards": {
+      "wordsKnown": "已掌握的詞",
+      "learning": "學習中 (L1-L4)",
+      "learningSub": "學習中的詞",
+      "wordsRead": "已讀詞數",
+      "wordsReadSub": "根據閱讀位置估算",
+      "currentStreak": "目前連續天數",
+      "days": "{count} 天",
+      "longest": "最長：{count} 天"
+    },
+    "range": {
+      "d30": "30天",
+      "d90": "90天",
+      "y1": "1年",
+      "all": "全部"
+    },
+    "states": {
+      "known": "已掌握",
+      "level4": "4 級",
+      "level3": "3 級",
+      "level2": "2 級",
+      "level1": "1 級",
+      "new": "新詞",
+      "ignored": "已忽略"
+    },
+    "wordStates": {
+      "title": "依狀態統計詞彙"
+    },
+    "cloze": {
+      "title": "克漏字練習",
+      "sentencesPracticed": "已練習句子",
+      "accuracy": "正確率",
+      "totalPoints": "總分"
+    },
+    "mastery": {
+      "title": "句子掌握度",
+      "overall": "整體 {percent}%",
+      "mastered": "已掌握 {mastered} / {total}",
+      "due": "{count} 個待複習",
+      "collections": {
+        "top500": "前 500",
+        "top1000": "前 1000",
+        "top2000": "前 2000",
+        "mined": "已收集",
+        "random": "隨機"
+      }
+    },
+    "fluency": {
+      "estimatedLevel": "依已掌握的詞數估算，不是你自己選的閱讀程度",
+      "vsLastWeek": "較上週 {count, number}",
+      "sameAsLast": "本週 {count, number}（與上週持平）",
+      "progressTo": "升至 {level} 的進度",
+      "topLevel": "已達到最高等級",
+      "wordsToNext": "距 {level} 還差 {count, number} 個詞",
+      "known": "已掌握",
+      "learning": "學習中",
+      "levelName": {
+        "A1": "入門",
+        "A2": "初級",
+        "B1": "中級",
+        "B2": "中高級",
+        "C1": "高級",
+        "C2": "精通"
+      }
+    },
+    "heatmap": {
+      "title": "活躍度",
+      "total": {
+        "actions": "過去一年 {count, number} 次操作",
+        "lookups": "過去一年 {count, number} 次查詞"
+      },
+      "count": {
+        "actions": "{count, number} 次操作",
+        "lookups": "{count, number} 次查詞"
+      },
+      "types": {
+        "lookups": "查詞",
+        "cloze": "填空",
+        "reading": "閱讀",
+        "anki": "Anki"
+      },
+      "minutes": "{count} 分鐘",
+      "noActivity": "無活動",
+      "less": "少",
+      "more": "多",
+      "activeDays": "活躍天數：",
+      "avgPerActiveDay": "每個活躍日平均："
+    },
+    "anki": {
+      "title": "Anki 複習",
+      "last90": "最近 90 天",
+      "reviews": "複習次數",
+      "reviewDays": "複習天數",
+      "avgPerDay": "日均複習",
+      "connectTitle": "連結 Anki 查看複習記錄",
+      "connectBody": "複習記錄會自動同步，並計入連續天數。",
+      "connectButton": "連結 Anki"
+    },
+    "ankiStatus": {
+      "synced": "已同步",
+      "notSynced": "未同步",
+      "noteId": "Anki 筆記 ID：{id}",
+      "pushed": "已推送到 Anki"
+    },
+    "radar": {
+      "title": "擅長領域",
+      "subtitle": "你的詞彙最強的面向",
+      "pending": "{count} 個詞等待分類",
+      "emptyTitle": "尚未產生領域圖",
+      "emptySorting": "正在把你已掌握的詞歸入各個主題領域，請稍後再來看看。",
+      "emptyHint": "多閱讀、多學詞，就能看到你最擅長哪些主題。",
+      "knownWords": "已掌握 {count} 個詞",
+      "mastery": "掌握度"
+    },
+    "vocabGrowth": {
+      "title": "詞彙成長",
+      "knownWords": "已掌握的詞",
+      "learning": "學習中",
+      "total": "總計",
+      "series": {
+        "known": "已掌握",
+        "learning": "學習中",
+        "total": "總計"
+      }
+    }
+  },
+  "chat": {
+    "error": "抱歉，我無法回覆。請檢查設定中是否已設定 LLM 供應商。",
+    "open": "開啟聊天",
+    "close": "關閉聊天",
+    "tutorTitle": "{language}導師",
+    "tutorSubtitle": "有關{language}的問題，隨便問",
+    "clearTitle": "清空聊天",
+    "clear": "清空",
+    "loadingOlder": "正在載入更早的訊息……",
+    "emptyPrompt": "問一個關於{language}的問題",
+    "via": "來自 {provider}",
+    "placeholder": "詢問{language}……"
+  },
+  "chrome": {
+    "theme": {
+      "light": "淺色",
+      "dark": "深色",
+      "system": "跟隨系統"
+    },
+    "nav": {
+      "expandSidebar": "展開側邊欄",
+      "collapseSidebar": "收合側邊欄",
+      "signOut": "登出",
+      "showEmail": "顯示電子郵件",
+      "hideEmail": "隱藏電子郵件"
+    },
+    "tour": {
+      "practiceTitle": "稍後練習",
+      "practiceBody": "稍後可到「練習」分頁複習詞彙。",
+      "vocabTitle": "你的詞彙",
+      "vocabBody": "在「詞彙」分頁查看你接觸過的詞彙。"
+    },
+    "loading": {
+      "app": "正在載入 Readfox",
+      "session": "正在載入工作階段",
+      "subscription": "正在載入訂閱",
+      "setup": "正在載入設定"
+    },
+    "lockedInApp": {
+      "title": "此帳號沒有有效的方案",
+      "body": "目前無法在此帳號下開啟 Readfox。",
+      "signOut": "登出"
+    },
+    "setup": {
+      "connectError": "無法連線到伺服器。",
+      "retry": "重試"
+    },
+    "language": {
+      "changeFailed": "無法切換語言",
+      "wordsKnown": "已掌握詞數：{count}",
+      "add": "新增語言",
+      "current": "語言：{language}",
+      "select": "選擇語言",
+      "search": "搜尋語言",
+      "noMatch": "找不到這種語言",
+      "inDevelopment": "開發中"
+    },
+    "quota": {
+      "title": "本月 AI 額度",
+      "lookups": "AI 查詞",
+      "requests": "詳細的 AI 回答",
+      "left": "剩 {left}",
+      "used": "已用 {used} / {limit}",
+      "byok": "正在使用你自己的 AI 金鑰",
+      "resets": "每月 1 日重置。",
+      "exhausted": "本月額度已用完",
+      "settings": "可在設定中填寫你自己的金鑰",
+      "note": "查詞典不限次數，也不計入額度，詞典釋義翻成你的語言也一樣。",
+      "percentUsed": "已用 {percent}%",
+      "close": "收合",
+      "info": "關於額度",
+      "tip": "點這個圓圈，可以看到本月還剩多少 AI 額度。",
+      "tipDismiss": "知道了"
+    }
+  }
+}

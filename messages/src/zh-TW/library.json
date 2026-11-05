@@ -1,0 +1,173 @@
+{
+  "library": {
+    "starterBlurb": "入門短課：按實用程度由高到低，帶你學會最常用的一千個詞。",
+    "common": {
+      "close": "關閉",
+      "cancel": "取消",
+      "saving": "正在儲存...",
+      "back": "返回",
+      "delete": "刪除",
+      "title": "標題",
+      "authorSource": "作者 / 來源",
+      "saveToLibrary": "儲存到書庫",
+      "tryAgain": "重試",
+      "text": "內文",
+      "words": "{count} 個詞"
+    },
+    "errors": {
+      "createGroup": "無法建立群組",
+      "renameGroup": "無法重新命名群組",
+      "deleteGroup": "無法刪除群組",
+      "reorderCollections": "無法調整合集順序",
+      "importAudio": "匯入音訊檔案失敗。",
+      "importFile": "匯入檔案失敗，請確認檔案有效。",
+      "deleteCollection": "無法刪除合集",
+      "updateCollection": "無法更新合集",
+      "deleteLesson": "無法刪除課文",
+      "updateLesson": "無法更新課文",
+      "reorderLessons": "無法調整課文順序",
+      "retryTranscription": "無法重新轉錄"
+    },
+    "page": {
+      "title": "我的書庫",
+      "loading": "正在載入書庫",
+      "newGroup": "新增群組",
+      "groupNamePlaceholder": "群組名稱",
+      "addGroup": "新增",
+      "ungrouped": "未分組",
+      "selectFile": "請選擇 EPUB 或 Markdown 檔案",
+      "audioUploaded": "「{title}」已上傳，轉錄已開始",
+      "audioMinutes": "（約 {minutes} 分鐘音訊，通常幾分鐘內完成轉錄）"
+    },
+    "group": {
+      "expand": "展開 {name}",
+      "collapse": "收合 {name}",
+      "items": "{count} 項",
+      "newCollection": "新增合集",
+      "rename": "重新命名",
+      "delete": "刪除",
+      "renamePrompt": "重新命名群組：",
+      "deleteConfirm": "刪除群組「{name}」？該群組中的合集將變為未分組。"
+    },
+    "onboarding": {
+      "title": "繼續你的第一輪學習",
+      "practiceReady": "你儲存的三個生詞已準備好，可以快速複習。",
+      "resumeLesson": "從上次停下的地方繼續讀 {title}。",
+      "fallbackLesson": "入門課文",
+      "resume": "繼續"
+    },
+    "empty": {
+      "title": "書庫裡還沒有書",
+      "description": "匯入一本書（EPUB 或 Markdown）開始學習。閱讀時會自動記錄你的詞彙和進度。",
+      "importBook": "匯入書籍",
+      "addStarter": "新增入門內容",
+      "adding": "正在新增…"
+    },
+    "addTile": {
+      "placeholder": "合集標題",
+      "create": "建立"
+    },
+    "card": {
+      "coverAlt": "{title} 的封面",
+      "complete": "已完成 {percent}%",
+      "notStarted": "未開始",
+      "lessons": "{count} 篇課文",
+      "dragToReorder": "拖曳以調整 {title} 的順序",
+      "today": "今天",
+      "yesterday": "昨天",
+      "daysAgo": "{count} 天前",
+      "weeksAgo": "{count} 週前",
+      "monthsAgo": "{count} 個月前"
+    },
+    "import": {
+      "label": "匯入",
+      "importing": "正在匯入...",
+      "addTo": "新增到",
+      "ungrouped": "書庫（未分組）",
+      "options": {
+        "file": "匯入檔案",
+        "audio": "匯入音訊",
+        "url": "從網址匯入",
+        "youtube": "YouTube 字幕",
+        "paste": "貼上文字"
+      }
+    },
+    "paste": {
+      "title": "貼上文字",
+      "titlePlaceholder": "文章或文字標題",
+      "optional": "選填",
+      "textPlaceholder": "在此貼上你的{language}文字..."
+    },
+    "web": {
+      "title": "從網頁匯入",
+      "urlLabel": "文章網址",
+      "extract": "擷取",
+      "extracting": "正在擷取...",
+      "help": "貼上一篇{language}新聞或部落格文章的網址，文章內容將被擷取並新增到你的書庫。",
+      "contentPreview": "內容預覽",
+      "fromSite": "來自 {site}",
+      "saveFailed": "儲存文章失敗。",
+      "extractFailed": "擷取文章失敗",
+      "networkError": "網路錯誤，請檢查網路連線。"
+    },
+    "youtube": {
+      "title": "匯入 YouTube 字幕",
+      "urlLabel": "YouTube 影片網址",
+      "find": "尋找字幕",
+      "finding": "正在尋找…",
+      "help": "將影片的可用字幕匯入為帶可點擊時間戳記的課文。影片不會被下載或代管，點擊某一行會在 YouTube 對應的時間點開啟。",
+      "chooseTrack": "選擇字幕軌",
+      "auto": "自動產生",
+      "creator": "創作者字幕",
+      "importing": "正在匯入「{language}」字幕…",
+      "note": "自動產生的字幕可能有辨識錯誤，匯入後可以編輯字幕文字。",
+      "importFailed": "無法匯入字幕。"
+    },
+    "lessonForm": {
+      "add": "新增課文",
+      "edit": "編輯課文",
+      "create": "建立課文",
+      "save": "儲存變更",
+      "titlePlaceholder": "課文標題",
+      "textPlaceholder": "課文內容，支援 Markdown。"
+    },
+    "collection": {
+      "back": "書庫",
+      "loading": "正在載入合集",
+      "editDetails": "編輯合集詳細資料",
+      "lessonsCount": "{count} 篇課文",
+      "completed": "已完成 {count} 篇",
+      "group": "群組：",
+      "none": "無",
+      "newGroupOption": "+ 新增群組...",
+      "newGroupPrompt": "新群組名稱：",
+      "continueReading": "繼續閱讀",
+      "deleteConfirm": "刪除此合集及其所有課文？",
+      "deleteLessonConfirm": "刪除「{title}」？",
+      "addLesson": "新增課文",
+      "form": {
+        "title": "編輯合集",
+        "titlePlaceholder": "合集標題",
+        "author": "作者",
+        "authorPlaceholder": "作者",
+        "save": "儲存變更"
+      },
+      "row": {
+        "read": "閱讀",
+        "reread": "重讀",
+        "continue": "繼續",
+        "transcribing": "正在轉錄…",
+        "transcriptionFailed": "轉錄失敗",
+        "retryTranscription": "重新轉錄",
+        "edit": "編輯課文",
+        "delete": "刪除課文",
+        "dragToReorder": "拖曳以調整 {title} 的順序"
+      }
+    },
+    "view": {
+      "label": "書庫排列方式",
+      "grid": "網格檢視",
+      "list": "清單檢視"
+    }
+  }
+}

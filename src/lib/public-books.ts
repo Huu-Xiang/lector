@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { translationFor } from './display-language';
 import { readingMinutes } from './reading-time';
 
 /** Server-only: reads the free library from `languages/<code>/content/library`. */
@@ -205,7 +206,7 @@ export function authorsOf(language: string): Array<{ name: string; slug: string;
 
 /** The value for the interface locale, else English, else the given fallback. */
 export function pickLocalized(map: Record<string, string>, locale: string, fallback = ''): string {
-  return map[locale] ?? map.en ?? fallback;
+  return translationFor(map, locale) ?? map.en ?? fallback;
 }
 
 export function readingHours(book: PublicBook): number {

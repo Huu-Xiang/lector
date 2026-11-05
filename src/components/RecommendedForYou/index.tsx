@@ -18,7 +18,7 @@ import {
   type ReadingFeedArticle,
 } from '@/lib/data-layer';
 import { nativeLanguageFromLocale } from '@/lib/languages';
-import { displayLanguage } from '@/lib/display-language';
+import { displayLanguage, translationFor } from '@/lib/display-language';
 import { loadNative } from '@/lib/library-titles';
 import { levelGap, pickNearLevel } from '@/lib/recommend';
 import type { CefrLevel } from '@/lib/reading-level';
@@ -48,12 +48,12 @@ function bookPick(
   level: CefrLevel | null,
   language: string,
 ): Pick {
-  const title = book.titles[native] || book.title;
+  const title = translationFor(book.titles, native) || book.title;
   return {
     key: `book-${book.slug}`,
     title,
     original: title !== book.title ? book.title : null,
-    blurb: book.blurbs[native] ?? null,
+    blurb: translationFor(book.blurbs, native) ?? null,
     level: book.level,
     words: book.wordCount,
     source: book.author,

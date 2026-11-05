@@ -1,0 +1,33 @@
+{
+  "announcements": {
+    "button": "新功能",
+    "buttonUnseen": "新功能，有未讀更新",
+    "title": "新功能",
+    "close": "關閉",
+    "bannerLabel": "新",
+    "dismiss": "關閉提示",
+    "learnMore": "了解更多",
+    "items": {
+      "installApp": {
+        "title": "手機上也能像 App 一樣使用",
+        "body": "把 Readfox 加到手機主畫面，點圖示就能全螢幕閱讀。設定頁裡有新增步驟。"
+      },
+      "koreanSupport": {
+        "title": "現在可以學韓語了",
+        "body": "韓語已經上線：8 本免費書，詞義會翻成你的母語。在語言選單裡新增即可。"
+      },
+      "welcomeCode": {
+        "title": "老用戶也能領：兌換碼 WELCOME123 免費送 15 天 Plus",
+        "body": "開啟設定 → 方案，點「有兌換碼？」，輸入 WELCOME123，就能免費使用 15 天 Plus。12 月 15 日前有效，每個帳號限一次。"
+      },
+      "inviteCodes": {
+        "title": "邀請好友，免費得 Plus",
+        "body": "在設定頁分享你的邀請連結。好友註冊並開始閱讀後，你們各得一張 14 天 Plus 卡，想用時再啟用。"
+      },
+      "skipGuide": {
+        "title": "首課引導現在可以跳過",
+        "body": "第一次讀文章時，左下角的引導卡片多了「跳過引導」按鈕。"
+      }
+    }
+  }
+}

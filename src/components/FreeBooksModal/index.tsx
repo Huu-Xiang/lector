@@ -23,7 +23,7 @@ import { useShowDescriptions } from '@/lib/show-descriptions';
 import LevelTags from '@/components/LevelTags';
 import { useArticleDescriptions } from '@/lib/article-descriptions';
 import { languageDisplayName } from '@/lib/language-names';
-import { displayLanguage } from '@/lib/display-language';
+import { displayLanguage, translationFor } from '@/lib/display-language';
 import { nativeLanguageFromLocale } from '@/lib/languages';
 import {
   CEFR_LEVELS,
@@ -86,7 +86,7 @@ export default function FreeBooksModal({
     native,
     activeLang.code,
   );
-  const titleFor = (book: LibraryBook) => book.titles[native] || book.title;
+  const titleFor = (book: LibraryBook) => translationFor(book.titles, native) || book.title;
 
   const feedAvailable = FEED_LANGUAGES.has(activeLang.code);
   const availableFeedInterests = feedAvailable ? FEED_INTERESTS : [];
@@ -336,7 +336,7 @@ export default function FreeBooksModal({
                       .filter((book) => book.level === level)
                       .map((book) => {
                         const shownTitle = titleFor(book);
-                        const blurb = book.blurbs[native];
+                        const blurb = translationFor(book.blurbs, native);
                         return (
                           <li
                             key={book.slug}

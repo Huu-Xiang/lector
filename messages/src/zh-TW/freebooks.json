@@ -1,0 +1,159 @@
+{
+  "library": {
+    "freeBooks": {
+      "button": "免費書籍",
+      "title": "免費書籍",
+      "close": "關閉",
+      "intro": "{language}的公有領域書籍,按難度從易到難排列。新增後會複製到你的書庫。難度等級僅供參考。",
+      "loading": "載入中…",
+      "errLoad": "無法載入免費書籍。",
+      "none": "暫時還沒有{language}的免費書籍。",
+      "size": "{words} 詞,{lessons} 課",
+      "add": "新增",
+      "adding": "新增中…",
+      "addedLabel": "已新增",
+      "added": "已把《{title}》新增到書庫",
+      "errAdd": "無法新增這本書",
+      "tab": {
+        "books": "書",
+        "news": "時事",
+        "travel": "旅行",
+        "science": "科普"
+      },
+      "feedIntro": "{language}最新的{interest}文章。新增後會連同出處一起複製到你的書庫。",
+      "feedLoading": "載入中…",
+      "feedErrLoad": "無法載入這些文章。",
+      "feedNone": "暫時還沒有文章,過段時間再來看看。",
+      "feedSize": "{words} 詞",
+      "feedAdd": "新增",
+      "feedAdding": "新增中…",
+      "feedAddedLabel": "已新增",
+      "feedAdded": "已把《{title}》新增到書庫",
+      "feedErrAdd": "無法新增這篇文章",
+      "feedSource": "來源：{source} · {license}",
+      "search": "依書名或作者搜尋",
+      "sortLabel": "排序",
+      "sortDefault": "推薦順序",
+      "sortShort": "短的在前",
+      "sortLong": "長的在前",
+      "noMatch": "找不到「{query}」。",
+      "readingHours": "約 {hours} 小時",
+      "readingMinutes": "約 {minutes} 分鐘"
+    },
+    "empty": {
+      "browseBooks": "瀏覽免費書籍"
+    }
+  },
+  "readingLevel": {
+    "names": {
+      "A1": "入門",
+      "A2": "初級",
+      "B1": "中級",
+      "B2": "中高級",
+      "C1": "高級",
+      "C2": "精通"
+    },
+    "exam": {
+      "ielts": "雅思 {score}",
+      "toefl": "托福 {score}",
+      "delf": "DELF {score}",
+      "dalf": "DALF {score}",
+      "hsk": "HSK {score}",
+      "topik": "TOPIK {score}",
+      "juniorHigh": "國中",
+      "zhongkao": "中考",
+      "gaokao": "高考",
+      "cet4": "四級",
+      "cet6": "六級",
+      "tem8": "專八"
+    },
+    "approx": "考試對照僅供參考。",
+    "notSure": "不確定",
+    "all": "全部等級",
+    "yours": "你的程度",
+    "original": "原名：{title}"
+  },
+  "recommend": {
+    "booksTitle": "適合你程度的書",
+    "articlesTitle": "你可能喜歡的新文章",
+    "interest": {
+      "news": "時事",
+      "travel": "旅行",
+      "science": "科普"
+    },
+    "original": "原名：{title}",
+    "words": "{words} 詞",
+    "harder": "比你的程度略難",
+    "start": "開始閱讀",
+    "starting": "正在開啟…",
+    "loading": "正在為你挑選…",
+    "errStart": "這篇打不開，換一篇試試。",
+    "empty": "暫時沒有可推薦的內容，去看看免費書籍吧。",
+    "homeTitle": "為你推薦",
+    "homeHint": "從這些免費的書和文章開始讀。",
+    "homeHintLevel": "根據你的程度（{level}）挑選。",
+    "more": "更多免費書籍",
+    "collapse": "收起",
+    "expand": "展開"
+  },
+  "bookLink": {
+    "view": "在{site}查看",
+    "site": {
+      "douban": "豆瓣",
+      "goodreads": "Goodreads",
+      "babelio": "Babelio",
+      "booklog": "Booklog",
+      "aladin": "Aladin"
+    }
+  },
+  "newLanguage": {
+    "title": "開始學{language}",
+    "intro": "告訴我們你的{language}程度和喜歡讀什麼，我們推薦第一份閱讀。你已經熟悉用法了，這一步很快。",
+    "submit": "看看推薦",
+    "later": "以後再說",
+    "close": "關閉",
+    "pickIntro": "選一份開始讀吧。"
+  },
+  "descriptions": {
+    "toggle": "顯示簡介"
+  },
+  "publicBooks": {
+    "indexTitle": "免費外語原版書",
+    "indexMetaDescription": "{count} 本英語、法語、西班牙語、中文和韓語經典原著，按 A1 到 C2 分級。在 Readfox 免費閱讀，點任何詞都能看到釋義。",
+    "indexIntro": "這裡每一本都是公有領域的完整原文，按歐洲語言共同參考架構（CEFR）分級。開啟一本可以先看開頭，再到 Readfox 免費閱讀。點任何詞，都能看到中文釋義。",
+    "bookCount": "{count} 本",
+    "level": "{level} 級",
+    "byAuthor": "作者：{author}",
+    "readingHours": "約 {hours} 小時讀完",
+    "readingMinutes": "約 {minutes} 分鐘讀完",
+    "lessons": "{count, plural, other {# 課}}",
+    "opening": "第一章試讀",
+    "readFree": "在 Readfox 免費閱讀",
+    "ctaNote": "點任何詞都能看到中文釋義。生詞可以儲存，以後複習。",
+    "source": "來源：<link>{source}</link>。{license}。",
+    "moreAtLevel": "更多 {level} 級{language}書",
+    "allBooks": "全部免費書",
+    "metaTitle": "{title}（{author}）{language}原版免費線上閱讀 | Readfox",
+    "readWholeChapter": "讀完第一章",
+    "tryRead": "免註冊試讀第一章",
+    "hardWordsTitle": "這本書裡的難詞",
+    "hardWordsNote": "書裡常出現、但在日常{language}裡少見的 {count} 個詞。在 Readfox 閱讀器裡點一下，就能看到釋義。",
+    "chapterTitle": "{title}：第一章",
+    "readMetaTitle": "{title} 第一章免費試讀（{language}原版）| Readfox",
+    "readMetaDescription": "免註冊線上閱讀 {author}《{title}》第一章，{level} 級。",
+    "continueTitle": "喜歡的話，繼續讀下去",
+    "continueBody": "免費註冊後可以讀完全部 {count} 課。點任何詞都能看到中文釋義，生詞可以儲存，以後複習。",
+    "continueCta": "免費註冊，繼續讀",
+    "backToBook": "返回書籍介紹",
+    "levelTitle": "{level} 級{language}讀物",
+    "levelIntro": "{count} 本 CEFR {level} 級的{language}免費書，每一本都是公有領域的完整原文。",
+    "levelMetaDescription": "{level} 級{language}原版免費書：{titles}。在 Readfox 閱讀，點任何詞都能看到釋義。",
+    "authorsTitle": "依作者瀏覽{language}書",
+    "authorsMetaDescription": "在 Readfox 瀏覽 {count} 位作者的{language}免費書，從 {first} 到 {last}。",
+    "authorTitle": "{author}的{language}免費書",
+    "authorIntro": "{author}的 {count} 本書，都可以在 Readfox 免費閱讀。每一本都是公有領域的完整原文。",
+    "authorMetaDescription": "免費線上閱讀{author}的 {count} 本{language}原著：{titles}。",
+    "browseLevels": "依難度",
+    "browseAuthors": "依作者"
+  }
+}

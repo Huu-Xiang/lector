@@ -5,7 +5,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useArticleDescriptions } from './article-descriptions';
 import { loadCatalog as fetchCatalog } from './catalog-cache';
 import { getSetting, setSetting } from './data-layer';
-import { displayLanguage } from './display-language';
+import { displayLanguage, translationFor } from './display-language';
 import { nativeLanguageFromLocale } from './languages';
 
 const BOOK_ID = /^library-([a-z]{2,3})-(.+)$/;
@@ -93,7 +93,7 @@ export function translatedBookTitle(
   native: string,
 ): string {
   if (!book || book.original !== title) return title;
-  return book.titles[native] || title;
+  return translationFor(book.titles, native) || title;
 }
 
 /** A title resolver for a list of collections, such as the vocab page filter. */
@@ -184,7 +184,8 @@ export function useCollectionDisplay(collection: {
     return {
       title,
       original: title !== collection.title ? collection.title : null,
-      description: entry.original === collection.title ? (entry.blurbs[native] ?? null) : null,
+      description:
+        entry.original === collection.title ? (translationFor(entry.blurbs, native) ?? null) : null,
     };
   }
   const article = articleId ? described[articleId] : undefined;

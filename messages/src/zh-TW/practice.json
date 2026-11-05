@@ -1,0 +1,340 @@
+{
+  "practice": {
+    "saveFailed": "無法儲存你的答案，請檢查網路後重試。",
+    "statsFailed": "答案已儲存，但統計更新失敗。",
+    "lookUp": "查詢 {word}",
+    "title": {
+      "cloze": "克漏字練習",
+      "dictation": "聽寫練習"
+    },
+    "format": {
+      "cloze": "克漏字",
+      "clozeHint": "填空",
+      "dictation": "聽寫",
+      "dictationHint": "輸入你聽到的內容"
+    },
+    "setup": {
+      "reviewDue": "待複習（{count}）",
+      "due": "{count} 待複習",
+      "learnNew": "學習新內容",
+      "mastered": "已掌握 {mastered}/{total}",
+      "sentences": "句子數",
+      "mode": "模式",
+      "modeType": "輸入",
+      "modeMc": "選擇題",
+      "start": "開始",
+      "loading": "載入中..."
+    },
+    "collections": {
+      "top500": "前 500",
+      "top1000": "500-1000",
+      "top2000": "1000-2000"
+    },
+    "round": {
+      "guidedLabel": "首課引導",
+      "guidedTitle": "你的第一個學習循環",
+      "back": "← 返回",
+      "threeWord": "快速複習",
+      "starterWords": "入門課文中的詞",
+      "loading": "正在載入句子..."
+    },
+    "question": {
+      "choose": "選擇正確的詞",
+      "fill": "填空",
+      "showTranslation": "顯示翻譯",
+      "translation": "翻譯",
+      "keyChoose": "選擇",
+      "keyListen": "聆聽",
+      "multipleChoice": "選擇題",
+      "multipleChoiceTitle": "本題改為選擇題",
+      "hintNone": "提示（?）",
+      "hintLetters": "提示（{count} 個字母）",
+      "hintTitle": "顯示下一個字母",
+      "submit": "提交",
+      "check": "檢查",
+      "mastery": "掌握度："
+    },
+    "complete": {
+      "title": "本輪完成！",
+      "correct": "答對 {correct}/{total}",
+      "totalPoints": "累計 {points} 分",
+      "changeSettings": "變更設定",
+      "playAgain": "再來一輪"
+    },
+    "onboarding": {
+      "starterLesson": "入門課文",
+      "complete": {
+        "title": "第一個學習循環完成",
+        "description": "你把真實閱讀中的詞變成了練習。Readfox 會陪你不斷重複這個循環。",
+        "encountered": "遇到",
+        "saved": "已儲存",
+        "score": "得分",
+        "upNext": "接下來",
+        "tomorrow": "明天",
+        "comeBack": "明天再來讀一篇短文並複習。",
+        "saving": "正在儲存進度…",
+        "saveError": "本輪成績已儲存，但無法將引導標記為完成。",
+        "trySavingAgain": "重新儲存",
+        "openLibrary": "開啟書庫",
+        "readNext": "閱讀下一課"
+      },
+      "recovery": {
+        "title": "你的練習詞還沒準備好",
+        "missingWords": "迷你複習需要你先在入門課文裡儲存一個詞。請回到課文儲存一個詞，再試一次。",
+        "loadFailed": "無法載入你儲存的練習詞。請回到入門課文，再試一次小複習。",
+        "backToLesson": "返回入門課文"
+      }
+    },
+    "wordTooltip": {
+      "tryAgain": "請重試。"
+    },
+    "blacklist": {
+      "hidden": "句子已隱藏",
+      "undo": "復原",
+      "undoFailed": "復原失敗",
+      "hideFailed": "隱藏句子失敗",
+      "title": "跳過並隱藏這個句子"
+    },
+    "empty": {
+      "reviewTitle": "沒有需要複習的內容",
+      "newTitle": "沒有新句子",
+      "reviewBody": "現在沒有到期需要複習的句子。可以學習新句子，或稍後再來。",
+      "newBody": "這個合集裡的句子你都見過了。換一個合集，或複習已學的句子。",
+      "back": "返回",
+      "learnNewInstead": "改為學習新內容"
+    },
+    "feedback": {
+      "correct": "正確！",
+      "incorrect": "不正確",
+      "listenAgain": "再聽一遍",
+      "saveWordFailed": "無法將該詞儲存到詞彙表",
+      "addToAnkiFailed": "新增到 Anki 失敗",
+      "lookUp": "查詢 {word}",
+      "answerRevealed": "已顯示答案",
+      "perfect": "完美！",
+      "accuracy": "正確率 {percent}%（{correct}/{total} 個詞）",
+      "pointsBonus": " · +{points} 分",
+      "nothingTyped": "（未輸入）",
+      "youTyped": "你的輸入",
+      "sentence": "句子",
+      "translation": "翻譯",
+      "masteryLevel": "掌握程度",
+      "mastery": {
+        "level0": "新詞",
+        "level25": "學習中",
+        "level50": "熟悉",
+        "level75": "快掌握了",
+        "level100": "已掌握"
+      },
+      "nextSentence": "下一句",
+      "nextSentenceHint": "下一句",
+      "pointsEarned": "+{points} 分",
+      "yourAnswer": "你的答案：",
+      "correctAnswer": "正確答案：",
+      "alreadyAdded": "已新增到 Anki",
+      "addToAnki": "新增到 Anki",
+      "adding": "新增中...",
+      "explain": "講解",
+      "explaining": "講解中...",
+      "explainFailed": "取得講解失敗"
+    },
+    "dictation": {
+      "prompt": "輸入你聽到的句子",
+      "replayAria": "重播音訊",
+      "speed": "語速",
+      "listenAgain": "再聽一遍（剩餘 {count} 次）",
+      "noReplays": "沒有可重播的次數了",
+      "placeholder": "輸入你聽到的內容…",
+      "surrenderTitle": "顯示句子並繼續（算作答錯）",
+      "surrender": "放棄",
+      "check": "檢查",
+      "mastery": "掌握度："
+    },
+    "words": {
+      "loading": "正在載入你的單字",
+      "loadFailed": "無法載入你的單字。請檢查網路後重試。",
+      "retry": "重試",
+      "saveFailed": "無法儲存你的答案。請檢查網路後重試。",
+      "undoFailed": "無法變更你的答案。請重試。",
+      "back": "← 返回",
+      "left": "還剩 {count} 個",
+      "listen": "聽發音",
+      "chooseMeaning": "選擇詞義",
+      "fillIn": "哪個詞適合填入空白處？",
+      "typedFillIn": "輸入缺少的詞",
+      "typedPlaceholder": "缺少的詞",
+      "check": "檢查",
+      "showAnswer": "顯示答案",
+      "correct": "答對了",
+      "incorrect": "不太對",
+      "next": "下一個",
+      "wasWrong": "我答錯了",
+      "nothingDue": "現在沒有需要複習的內容。",
+      "complete": "本輪完成",
+      "answered": "已複習 {count} 個詞",
+      "retried": "{count} 個詞會再出現一次",
+      "nextDue": "下次複習：{time}",
+      "source": {
+        "library": "來自 <link>{name}</link>",
+        "tatoeba": "來自 <link>Tatoeba</link>",
+        "ai": "AI 例句"
+      },
+      "stage": {
+        "new": "新詞",
+        "learning": "學習中",
+        "familiar": "熟悉",
+        "mastered": "已掌握"
+      },
+      "goal": {
+        "recognize": "認識",
+        "recognize_spell": "認識並拼寫"
+      },
+      "recognition": {
+        "reveal": "顯示詞義",
+        "dontKnow": "不認識",
+        "fuzzy": "模糊",
+        "know": "認識"
+      },
+      "entry": {
+        "title": "我的單字",
+        "ready": "待複習 {due} 個，新詞 {fresh} 個",
+        "open": "複習單字",
+        "nothingDue": "現在沒有需要複習的內容。下次複習：{time}",
+        "noWords": "閱讀時儲存的單字會出現在這裡，供你複習。",
+        "failed": "無法載入你的單字。",
+        "goal": "目標：{goal}"
+      }
+    }
+  },
+  "vocab": {
+    "states": {
+      "new": "新詞",
+      "level1": "1 級",
+      "level2": "2 級",
+      "level3": "3 級",
+      "level4": "4 級",
+      "known": "已掌握",
+      "ignored": "已忽略"
+    },
+    "stateTitle": {
+      "new": "新詞 - 尚未學習",
+      "level1": "1 級 - 剛開始學",
+      "level2": "2 級 - 學習中",
+      "level3": "3 級 - 熟悉",
+      "level4": "4 級 - 快掌握了",
+      "known": "已掌握 - 完全學會",
+      "ignored": "已忽略 - 不參與學習"
+    },
+    "stats": {
+      "total": "詞彙總數",
+      "learning": "學習中",
+      "known": "已掌握",
+      "ignored": "已忽略"
+    },
+    "list": {
+      "phrase": "片語",
+      "confirmBulkDelete": "確定要刪除 {count} 個詞彙條目嗎？",
+      "searchPlaceholder": "搜尋詞、翻譯或句子...",
+      "filter": {
+        "all": "全部",
+        "learning": "學習中"
+      },
+      "allCollections": "全部合集",
+      "exporting": "匯出中...",
+      "exportToAnki": "匯出到 Anki（{count}）",
+      "updating": "更新中...",
+      "markAsKnown": "標為已掌握（{count}）",
+      "deleting": "刪除中...",
+      "delete": "刪除（{count}）",
+      "syncing": "同步中...",
+      "syncWithAnki": "與 Anki 同步",
+      "ankiTip": {
+        "title": "Anki 設定",
+        "body": "需要協助設定 Anki 時，點這裡。"
+      },
+      "results": "共 {total} 筆，顯示 {filtered} 筆",
+      "resultsSelected": "共 {total} 筆，顯示 {filtered} 筆（已選 {selected} 筆）",
+      "columns": {
+        "text": "詞/片語",
+        "translation": "翻譯",
+        "state": "狀態",
+        "source": "來源",
+        "dateAdded": "新增日期",
+        "anki": "Anki"
+      },
+      "loading": "正在載入詞彙...",
+      "emptyNoEntries": "還沒有詞彙條目。開始閱讀來新增詞吧！",
+      "emptyNoMatches": "沒有符合篩選條件的條目。",
+      "exportDialog": {
+        "title": "匯出到 Anki",
+        "description": "已選 {count} 個詞。請選擇卡片類型。",
+        "basic": "基本",
+        "basicDescription": "正反面卡片。正面是句子，背面是翻譯。",
+        "cloze": "克漏字",
+        "clozeDescription": "句中隱藏該詞，根據上下文回想。",
+        "cancel": "取消",
+        "confirm": "匯出 {count} 張卡片"
+      }
+    },
+    "pagination": {
+      "label": "詞彙分頁",
+      "rowsPerPage": "每頁列數",
+      "range": "第 {from}–{to} 筆，共 {total} 筆",
+      "previous": "上一頁",
+      "next": "下一頁",
+      "page": "第 {current} 頁，共 {total} 頁"
+    },
+    "detail": {
+      "confirmDelete": "確定要刪除這個詞彙條目嗎？",
+      "phrase": "片語",
+      "word": "單字",
+      "close": "關閉",
+      "translation": "翻譯",
+      "contextSentence": "例句",
+      "learningState": "學習狀態",
+      "added": "新增於：",
+      "reviewCount": "複習次數：",
+      "syncedToAnki": "已同步到 Anki",
+      "noteId": "（筆記 #{id}）",
+      "deleting": "刪除中...",
+      "delete": "刪除",
+      "cancel": "取消",
+      "saving": "儲存中...",
+      "save": "儲存",
+      "edit": "編輯"
+    },
+    "page": {
+      "title": "詞彙",
+      "loadFailed": "載入詞彙資料失敗",
+      "entryUpdated": "條目已更新",
+      "updateFailed": "更新條目失敗",
+      "entryDeleted": "條目已刪除",
+      "deleteFailed": "刪除條目失敗",
+      "allSynced": "所選條目都已同步到 Anki。",
+      "cardType": {
+        "basic": "基本",
+        "cloze": "克漏字"
+      },
+      "queuedPartial": "已加入佇列 {queued} 張卡片，{failed} 張失敗（{error}）",
+      "queuedOk": "已將 {queued} 張{cardType}卡片加入佇列，下次 Anki 同步時會出現",
+      "queueFailed": "無法將卡片加入 Anki 佇列",
+      "notConnected": "Anki 未連線。請確認 Anki 正在執行並已啟用 AnkiConnect。",
+      "exported": "已將 {count} 張{cardType}卡片匯出到「{deck}」",
+      "exportPartial": "已匯出 {count} 張{cardType}卡片，{failed} 張失敗",
+      "markedKnown": "已將 {count} 個條目標為已掌握",
+      "markKnownFailed": "標為已掌握失敗",
+      "synced": "已同步 {cards} 張 Anki 卡片，升級 {upgraded} 個。",
+      "syncedImported": "已同步 {cards} 張 Anki 卡片，升級 {upgraded} 個，從 Anki 匯入 {imported} 個。",
+      "syncFailed": "與 Anki 同步失敗",
+      "openAnkiSetup": "開啟 Anki 設定",
+      "addonPill": "Anki 透過外掛同步",
+      "ankiTip": {
+        "title": "Anki 設定",
+        "body": "需要協助設定 Anki 時，點這裡。"
+      },
+      "checking": "正在檢查 Anki 連線...",
+      "connected": "Anki 已連線",
+      "disconnected": "Anki 未連線"
+    }
+  }
+}

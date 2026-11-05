@@ -1,0 +1,151 @@
+{
+  "settings": {
+    "pageTitle": "設定",
+    "practice": {
+      "title": "練習",
+      "clozeHeading": "克漏字設定",
+      "translationLabel": "翻譯",
+      "translationHint": "練習時預設隱藏翻譯。隨時可按 <keys></keys> 切換。",
+      "shown": "顯示",
+      "hidden": "隱藏",
+      "wordReviewHeading": "單字複習",
+      "reviewGoalLabel": "複習目標",
+      "reviewGoalFailed": "無法儲存複習目標。請重試。",
+      "reviewGoal": {
+        "recognize": "認識",
+        "recognize_spell": "認識並拼寫"
+      },
+      "reviewGoalHint": {
+        "recognize": "見到單字能認出詞義。選擇詞義，辨識單字。",
+        "recognize_spell": "還要會寫單字。熟悉和已掌握的詞會要求你輸入或聽寫。"
+      }
+    },
+    "prose": {
+      "title": "閱讀文字",
+      "description": "設定閱讀器顯示課文的方式。先在「所有語言」下設定喜歡的樣式，再單獨調整需要不同處理的語言。這些設定只儲存在此裝置上。",
+      "allLanguages": "所有語言",
+      "hasOwnSettings": "有單獨的設定",
+      "customisedNotice": "{language}有單獨的設定，其餘未更動的項目仍沿用「所有語言」。",
+      "inheritedNotice": "{language}沿用「所有語言」的設定。拖曳滑桿並儲存，即可單獨調整。",
+      "setFor": "· 已為{language}設定",
+      "save": "儲存",
+      "resetDefaults": "恢復預設",
+      "resetLanguage": "重設{language}",
+      "statusUnsaved": "上方範例已顯示你的變更。儲存後即可套用到閱讀器。",
+      "statusDefaults": "預設值為 {fontSize}px、字重 {fontWeight}、字距 0、行距 {lineHeight}。",
+      "statusResetLanguage": "重設後，{language}將重新沿用「所有語言」的設定。",
+      "controls": {
+        "fontSize": {
+          "label": "字級",
+          "hint": "課文內文的大小。"
+        },
+        "fontWeight": {
+          "label": "字重",
+          "hint": "每個詞的粗細。"
+        },
+        "letterSpacing": {
+          "label": "字距",
+          "hint": "字母之間的間距。負值會讓字母更緊湊。"
+        },
+        "lineHeight": {
+          "label": "行距",
+          "hint": "行與行之間的間距，以字級的倍數表示。"
+        }
+      }
+    },
+    "theme": {
+      "title": "外觀",
+      "label": "主題",
+      "options": {
+        "light": "淺色",
+        "dark": "深色",
+        "system": "跟隨系統"
+      }
+    },
+    "tts": {
+      "title": "語音朗讀",
+      "noAudioNote": "{language}沒有合成語音。該語言的發音存在爭議，因此 Readfox 保持靜音。",
+      "synthesizedVoice": "合成語音",
+      "browserVoiceFree": "瀏覽器語音 · 免費",
+      "managedAvailable": "託管語音可用",
+      "usingBrowser": "正在使用瀏覽器語音",
+      "espeakNote": "{language}由 eSpeak NG 朗讀。這是 Readfox 託管的合成語音，也是目前唯一支援{language}的語音合成引擎。聽起來有些機械，但每個詞的發音都很準確，而且所有方案均包含。",
+      "voiceEngine": "語音引擎",
+      "engineHintFree": "瀏覽器語音在所有方案中都免費，可用於閱讀、練習和聽寫。",
+      "engineHintPaid": "託管語音的發音更穩定；瀏覽器語音始終可用。",
+      "managedVoice": "託管語音",
+      "browserBuiltIn": "瀏覽器內建",
+      "upsell": "Readfox 在所有方案中都使用瀏覽器語音朗讀。<link>查看方案</link>。",
+      "testVoice": "試聽",
+      "speechSpeed": "語速",
+      "slow": "0.5x（慢）",
+      "normal": "1.0x",
+      "fast": "1.5x（快）"
+    },
+    "timezone": {
+      "title": "時區",
+      "description": "每日統計、連續天數和複習日在此時區的午夜更替。",
+      "auto": "自動 — 伺服器時區",
+      "useDevice": "使用此裝置的時區（{zone}）",
+      "updated": "時區已更新為 {zone}",
+      "failed": "變更時區失敗"
+    },
+    "languages": {
+      "title": "語言",
+      "description": "語言選擇器會列出這些語言。移除某種語言可縮短清單。你在該語言下的詞彙、課文和卡片仍保留在伺服器上。",
+      "inUse": "使用中",
+      "remove": "移除{language}",
+      "added": "已新增{language}",
+      "removed": "已移除{language}",
+      "saveFailed": "無法儲存你的語言",
+      "addPlaceholder": "新增語言…",
+      "add": "新增"
+    },
+    "knownWords": {
+      "title": "匯入已知詞",
+      "description": "匯入你已經認識的詞。支援 <strong>LingQ 匯出檔</strong>（含狀態等級和翻譯）或簡單的詞表。",
+      "lingqHelp": "LingQ：詞彙 → 設定齒輪 → 匯出 LingQs → 在此上傳 CSV",
+      "uploadLabel": "上傳 CSV 檔案",
+      "uploadHint": "第一欄為詞語的 CSV，或純文字檔案",
+      "pasteLabel": "或貼上詞語（每行一個）",
+      "import": "匯入",
+      "noWords": "沒有可匯入的詞。",
+      "imported": "已成功將 {count} 個詞匯入為已知詞。",
+      "importFailed": "匯入已知詞失敗",
+      "noData": "檔案中沒有資料。",
+      "noTermColumn": "在 LingQ 匯出檔中找不到「term」欄。",
+      "lingqImported": "已從 LingQ 匯入 {count} 個詞：{known} 個已知，{learning} 個學習中。",
+      "fileError": "匯入檔案出錯：{message}",
+      "unknownError": "未知錯誤"
+    },
+    "export": {
+      "title": "匯出資料",
+      "vocabCsv": "匯出詞彙（CSV）",
+      "vocabJson": "匯出詞彙（JSON）",
+      "knownWords": "匯出已知詞",
+      "failed": "匯出失敗：{message}",
+      "unknownError": "未知錯誤",
+      "csvDone": "詞彙已匯出為 CSV。",
+      "jsonDone": "詞彙已匯出為 JSON。",
+      "knownDone": "已匯出 {count} 個已知詞。"
+    },
+    "data": {
+      "title": "學習資料",
+      "description": "下載你的書庫和課文、閱讀進度、詞彙、造句練習和複習計畫、日記以及統計。不會包含 API 金鑰和供應商端點。",
+      "export": "匯出全部學習資料",
+      "import": "匯入學習資料",
+      "invalidFormat": "備份檔案格式無效",
+      "importFailedShort": "匯入失敗",
+      "imported": "學習資料已匯入",
+      "importedDetail": "{collections} 個合集，{lessons} 篇課文，{vocab} 個詞彙，{knownWords} 個已知詞，{clozeSentences} 個填空句。",
+      "importFailed": "匯入失敗：{message}",
+      "unknownError": "未知錯誤"
+    },
+    "about": {
+      "title": "關於",
+      "commit": "提交",
+      "built": "建置時間",
+      "version": "版本"
+    }
+  }
+}
