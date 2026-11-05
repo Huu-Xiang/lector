@@ -1,0 +1,340 @@
+{
+  "practice": {
+    "saveFailed": "답변을 저장하지 못했어요. 연결을 확인하고 다시 시도해 주세요.",
+    "statsFailed": "답변은 저장했지만 통계를 업데이트하지 못했어요.",
+    "lookUp": "{word} 찾아보기",
+    "title": {
+      "cloze": "빈칸 채우기 연습",
+      "dictation": "받아쓰기 연습"
+    },
+    "format": {
+      "cloze": "빈칸 채우기",
+      "clozeHint": "빈칸을 채워요",
+      "dictation": "받아쓰기",
+      "dictationHint": "들리는 대로 입력해요"
+    },
+    "setup": {
+      "reviewDue": "복습할 문장 ({count})",
+      "due": "복습 {count}개",
+      "learnNew": "새로 배우기",
+      "mastered": "{mastered}/{total} 숙달",
+      "sentences": "문장",
+      "mode": "방식",
+      "modeType": "입력",
+      "modeMc": "객관식",
+      "start": "시작",
+      "loading": "불러오는 중..."
+    },
+    "collections": {
+      "top500": "상위 500",
+      "top1000": "500-1000",
+      "top2000": "1000-2000"
+    },
+    "round": {
+      "guidedLabel": "가이드 첫 레슨",
+      "guidedTitle": "첫 학습 루프",
+      "back": "← 뒤로",
+      "threeWord": "빠른 복습",
+      "starterWords": "입문 레슨의 단어",
+      "loading": "문장 불러오는 중..."
+    },
+    "question": {
+      "choose": "알맞은 단어를 고르세요",
+      "fill": "빈칸을 채우세요",
+      "showTranslation": "번역 보기",
+      "translation": "번역",
+      "keyChoose": "선택",
+      "keyListen": "듣기",
+      "multipleChoice": "객관식",
+      "multipleChoiceTitle": "이 문제를 객관식으로 바꾸기",
+      "hintNone": "힌트 (?)",
+      "hintLetters": "힌트 ({count}글자)",
+      "hintTitle": "다음 글자 보기",
+      "submit": "제출",
+      "check": "확인",
+      "mastery": "숙달도:"
+    },
+    "complete": {
+      "title": "라운드 완료!",
+      "correct": "{correct}/{total} 정답",
+      "totalPoints": "총 {points}점",
+      "changeSettings": "설정 변경",
+      "playAgain": "다시 하기"
+    },
+    "onboarding": {
+      "starterLesson": "입문 레슨",
+      "complete": {
+        "title": "첫 학습 루프 완료",
+        "description": "실제 읽기에서 만난 단어로 연습까지 해 봤어요. Readfox는 이 루프를 계속 함께 쌓아 갈게요.",
+        "encountered": "만난 단어",
+        "saved": "저장함",
+        "score": "점수",
+        "upNext": "다음 단계",
+        "tomorrow": "내일",
+        "comeBack": "내일 다시 와서 짧은 읽기와 복습을 이어가세요.",
+        "saving": "진행 상황 저장 중…",
+        "saveError": "라운드는 안전하게 저장됐지만 온보딩 완료를 표시하지 못했어요.",
+        "trySavingAgain": "다시 저장하기",
+        "openLibrary": "서재 열기",
+        "readNext": "다음 레슨 읽기"
+      },
+      "recovery": {
+        "title": "연습할 단어가 아직 준비되지 않았어요",
+        "missingWords": "미니 복습에는 입문 레슨에서 저장한 단어가 필요해요. 레슨으로 돌아가 단어를 저장한 뒤 다시 시도해 주세요.",
+        "loadFailed": "저장한 연습 단어를 불러오지 못했어요. 입문 레슨으로 돌아가 미니 복습을 다시 시도해 주세요.",
+        "backToLesson": "입문 레슨으로 돌아가기"
+      }
+    },
+    "wordTooltip": {
+      "tryAgain": "다시 시도해 주세요."
+    },
+    "blacklist": {
+      "hidden": "문장을 숨겼어요",
+      "undo": "실행 취소",
+      "undoFailed": "숨김을 취소하지 못했어요",
+      "hideFailed": "문장을 숨기지 못했어요",
+      "title": "이 문장 건너뛰고 숨기기"
+    },
+    "empty": {
+      "reviewTitle": "복습할 문장이 없어요",
+      "newTitle": "새 문장이 없어요",
+      "reviewBody": "지금은 복습할 문장이 없어요. 새 문장을 배우거나 나중에 다시 확인해 주세요.",
+      "newBody": "이 컬렉션의 문장을 모두 봤어요. 다른 컬렉션을 선택하거나 기존 문장을 복습해 보세요.",
+      "back": "뒤로",
+      "learnNewInstead": "대신 새로 배우기"
+    },
+    "feedback": {
+      "correct": "정답!",
+      "incorrect": "오답",
+      "listenAgain": "다시 듣기",
+      "saveWordFailed": "단어를 단어장에 저장하지 못했어요",
+      "addToAnkiFailed": "Anki에 추가하지 못했어요",
+      "lookUp": "{word} 찾아보기",
+      "answerRevealed": "정답을 확인했어요",
+      "perfect": "완벽해요!",
+      "accuracy": "{percent}% 정답 ({correct}/{total}단어)",
+      "pointsBonus": " · +{points}점",
+      "nothingTyped": "(입력 없음)",
+      "youTyped": "내가 입력한 답",
+      "sentence": "문장",
+      "translation": "번역",
+      "masteryLevel": "숙달 단계",
+      "mastery": {
+        "level0": "새 문장",
+        "level25": "학습 중",
+        "level50": "익숙함",
+        "level75": "거의 다 왔어요",
+        "level100": "숙달"
+      },
+      "nextSentence": "다음 문장",
+      "nextSentenceHint": "다음 문장",
+      "pointsEarned": "+{points}점",
+      "yourAnswer": "내 답:",
+      "correctAnswer": "정답:",
+      "alreadyAdded": "이미 Anki에 추가됨",
+      "addToAnki": "Anki에 추가",
+      "adding": "추가하는 중...",
+      "explain": "설명 보기",
+      "explaining": "설명하는 중...",
+      "explainFailed": "설명을 가져오지 못했어요"
+    },
+    "dictation": {
+      "prompt": "들리는 문장을 입력하세요",
+      "replayAria": "오디오 다시 재생",
+      "speed": "속도",
+      "listenAgain": "다시 듣기 ({count}회 남음)",
+      "noReplays": "남은 재생 횟수가 없어요",
+      "placeholder": "들리는 대로 입력하세요…",
+      "surrenderTitle": "문장을 공개하고 넘어가기 (오답으로 처리돼요)",
+      "surrender": "포기",
+      "check": "확인",
+      "mastery": "숙달도:"
+    },
+    "words": {
+      "loading": "단어 불러오는 중",
+      "loadFailed": "단어를 불러오지 못했어요. 연결을 확인하고 다시 시도해 주세요.",
+      "retry": "다시 시도",
+      "saveFailed": "답변을 저장하지 못했어요. 연결을 확인하고 다시 시도해 주세요.",
+      "undoFailed": "답변을 바꾸지 못했어요. 다시 시도해 주세요.",
+      "back": "← 뒤로",
+      "left": "{count}개 남음",
+      "listen": "듣기",
+      "chooseMeaning": "뜻을 고르세요",
+      "fillIn": "빈칸에 알맞은 단어는 무엇일까요?",
+      "typedFillIn": "빠진 단어를 입력하세요",
+      "typedPlaceholder": "빠진 단어",
+      "check": "확인",
+      "showAnswer": "정답 보기",
+      "correct": "정답",
+      "incorrect": "아쉬워요",
+      "next": "다음",
+      "wasWrong": "틀렸어요",
+      "nothingDue": "지금은 복습할 단어가 없어요.",
+      "complete": "라운드 완료",
+      "answered": "복습한 단어 {count}개",
+      "retried": "다시 볼 단어 {count}개",
+      "nextDue": "다음 복습: {time}",
+      "source": {
+        "library": "출처: <link>{name}</link>",
+        "tatoeba": "출처: <link>Tatoeba</link>",
+        "ai": "AI 예문"
+      },
+      "stage": {
+        "new": "새 단어",
+        "learning": "학습 중",
+        "familiar": "익숙함",
+        "mastered": "숙달"
+      },
+      "goal": {
+        "recognize": "알아보기",
+        "recognize_spell": "알아보고 철자 쓰기"
+      },
+      "recognition": {
+        "reveal": "뜻 보기",
+        "dontKnow": "몰라요",
+        "fuzzy": "애매해요",
+        "know": "알아요"
+      },
+      "entry": {
+        "title": "내 단어",
+        "ready": "복습 {due}개, 새 단어 {fresh}개",
+        "open": "단어 복습",
+        "nothingDue": "지금은 복습할 단어가 없어요. 다음 복습: {time}",
+        "noWords": "읽으면서 단어를 저장하면 여기에서 복습할 수 있어요.",
+        "failed": "단어를 불러오지 못했어요.",
+        "goal": "목표: {goal}"
+      }
+    }
+  },
+  "vocab": {
+    "states": {
+      "new": "새 단어",
+      "level1": "레벨 1",
+      "level2": "레벨 2",
+      "level3": "레벨 3",
+      "level4": "레벨 4",
+      "known": "아는 단어",
+      "ignored": "무시함"
+    },
+    "stateTitle": {
+      "new": "새 단어 - 아직 학습하지 않았어요",
+      "level1": "레벨 1 - 막 배우기 시작했어요",
+      "level2": "레벨 2 - 학습 중",
+      "level3": "레벨 3 - 익숙해요",
+      "level4": "레벨 4 - 거의 알아요",
+      "known": "아는 단어 - 완전히 익혔어요",
+      "ignored": "무시함 - 학습에서 숨겨요"
+    },
+    "stats": {
+      "total": "전체 단어",
+      "learning": "학습 중",
+      "known": "아는 단어",
+      "ignored": "무시함"
+    },
+    "list": {
+      "phrase": "구절",
+      "confirmBulkDelete": "단어장 항목 {count}개를 삭제할까요?",
+      "searchPlaceholder": "단어, 번역, 문장 검색...",
+      "filter": {
+        "all": "전체",
+        "learning": "학습 중"
+      },
+      "allCollections": "모든 컬렉션",
+      "exporting": "내보내는 중...",
+      "exportToAnki": "Anki로 내보내기 ({count})",
+      "updating": "업데이트하는 중...",
+      "markAsKnown": "아는 단어로 표시 ({count})",
+      "deleting": "삭제하는 중...",
+      "delete": "삭제 ({count})",
+      "syncing": "동기화하는 중...",
+      "syncWithAnki": "Anki와 동기화",
+      "ankiTip": {
+        "title": "Anki 설정",
+        "body": "Anki 설정에 도움이 필요하면 여기를 눌러 주세요."
+      },
+      "results": "{total}개 중 {filtered}개",
+      "resultsSelected": "{total}개 중 {filtered}개 ({selected}개 선택됨)",
+      "columns": {
+        "text": "단어/구절",
+        "translation": "번역",
+        "state": "상태",
+        "source": "출처",
+        "dateAdded": "추가한 날짜",
+        "anki": "Anki"
+      },
+      "loading": "단어장 불러오는 중...",
+      "emptyNoEntries": "아직 단어장 항목이 없어요. 읽기를 시작해 단어를 추가해 보세요!",
+      "emptyNoMatches": "필터에 맞는 항목이 없어요.",
+      "exportDialog": {
+        "title": "Anki로 내보내기",
+        "description": "단어 {count}개를 선택했어요. 카드 유형을 선택하세요.",
+        "basic": "기본",
+        "basicDescription": "앞면/뒷면 카드예요. 앞면에 문장, 뒷면에 번역이 표시돼요.",
+        "cloze": "빈칸 채우기",
+        "clozeDescription": "문장에서 단어를 가리고 문맥으로 떠올려요.",
+        "cancel": "취소",
+        "confirm": "카드 {count}개 내보내기"
+      }
+    },
+    "pagination": {
+      "label": "단어장 페이지 이동",
+      "rowsPerPage": "페이지당 행 수",
+      "range": "{total}개 중 {from}–{to}",
+      "previous": "이전 페이지",
+      "next": "다음 페이지",
+      "page": "{total}페이지 중 {current}페이지"
+    },
+    "detail": {
+      "confirmDelete": "이 단어장 항목을 삭제할까요?",
+      "phrase": "구절",
+      "word": "단어",
+      "close": "닫기",
+      "translation": "번역",
+      "contextSentence": "문맥 문장",
+      "learningState": "학습 상태",
+      "added": "추가한 날짜:",
+      "reviewCount": "복습 횟수:",
+      "syncedToAnki": "Anki와 동기화됨",
+      "noteId": "(노트 #{id})",
+      "deleting": "삭제하는 중...",
+      "delete": "삭제",
+      "cancel": "취소",
+      "saving": "저장 중...",
+      "save": "저장",
+      "edit": "수정"
+    },
+    "page": {
+      "title": "단어장",
+      "loadFailed": "단어장 데이터를 불러오지 못했어요",
+      "entryUpdated": "항목을 수정했어요",
+      "updateFailed": "항목을 수정하지 못했어요",
+      "entryDeleted": "항목을 삭제했어요",
+      "deleteFailed": "항목을 삭제하지 못했어요",
+      "allSynced": "선택한 항목이 모두 이미 Anki와 동기화되었어요.",
+      "cardType": {
+        "basic": "기본",
+        "cloze": "빈칸 채우기"
+      },
+      "queuedPartial": "카드 {queued}개를 대기열에 추가했고 {failed}개는 실패했어요 ({error})",
+      "queuedOk": "{cardType} 카드 {queued}개를 대기열에 추가했어요. 다음에 Anki가 동기화될 때 나타나요",
+      "queueFailed": "Anki용 카드를 대기열에 추가하지 못했어요",
+      "notConnected": "Anki가 연결되어 있지 않아요. Anki가 AnkiConnect와 함께 실행 중인지 확인해 주세요.",
+      "exported": "{cardType} 카드 {count}개를 \"{deck}\"(으)로 내보냈어요",
+      "exportPartial": "{cardType} 카드 {count}개를 내보냈고 {failed}개는 실패했어요",
+      "markedKnown": "{count}개 항목을 아는 단어로 표시했어요",
+      "markKnownFailed": "항목을 아는 단어로 표시하지 못했어요",
+      "synced": "Anki 카드 {cards}개를 동기화했어요. {upgraded}개를 업그레이드했어요.",
+      "syncedImported": "Anki 카드 {cards}개를 동기화했어요. {upgraded}개를 업그레이드하고 Anki에서 {imported}개를 가져왔어요.",
+      "syncFailed": "Anki와 동기화하지 못했어요",
+      "openAnkiSetup": "Anki 설정 열기",
+      "addonPill": "애드온으로 Anki 동기화",
+      "ankiTip": {
+        "title": "Anki 설정",
+        "body": "Anki 설정에 도움이 필요하면 여기를 눌러 주세요."
+      },
+      "checking": "Anki 연결 확인 중...",
+      "connected": "Anki 연결됨",
+      "disconnected": "Anki 연결 끊김"
+    }
+  }
+}

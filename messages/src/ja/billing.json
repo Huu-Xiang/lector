@@ -1,0 +1,106 @@
+{
+  "plans": {
+    "freePrice": "$0",
+    "perMonth": "{price}/月",
+    "perYear": "または {price}/年",
+    "perYearMain": "{price}/年",
+    "annualEquivalent": "月あたり約 {price}（年払い）",
+    "annualEquivalentSave": "月あたり約 {price}（年払い）。{percent}% お得",
+    "chinaPrice": "中国本土：{price}/月（Alipay）",
+    "chinaPriceYear": "中国本土：{price}/年（Alipay）",
+    "priceAtCheckout": "価格はお支払い時に表示されます",
+    "getStarted": "無料で始める",
+    "features": {
+      "glosses": "毎月 {count, number} 回の AI 単語検索（辞書にない単語用）",
+      "freeLibrary": "コレクション 10 件、レッスン 200 件まで。無料ライブラリの本はレッスン数に含まれません",
+      "byok": "もっと使いたいときは自分の AI キーを追加できます",
+      "detailed": "毎月 {count, number} 回の詳細な AI 回答（フレーズの翻訳と単語の解説）",
+      "phraseWords": "1 回の翻訳で最大 {count} 語まで選択できます",
+      "phraseUnlimited": "1 回の翻訳で好きな長さのテキストを選択できます",
+      "moreRoom": "コレクション 50 件、レッスン 1,000 件まで",
+      "unlimitedLibrary": "コレクションとレッスンは無制限",
+      "byokPaid": "もっと使いたいときは自分の AI キーを使えます"
+    },
+    "current": "現在のプラン",
+    "choose": "{plan} を選ぶ",
+    "cycleLabel": "請求期間",
+    "cycleYear": "年払い",
+    "cycleYearSave": "年払い（最大 {percent}% お得）",
+    "cycleMonth": "月払い"
+  },
+  "pricing": {
+    "metaTitle": "料金 – Readfox",
+    "title": "料金",
+    "intro": "まずは無料で始めましょう。詳細な AI 解説や多めの利用枠が必要になったらアップグレードしてください。いつでも解約できます。",
+    "notes": "該当する場合、売上税または VAT はお支払い時に加算されます。お支払いは再販業者の Paddle が処理します。中国本土のお客様は人民元で支払い、Alipay を利用できます。",
+    "cardPending": "カード、PayPal、Apple Pay のお支払いは開発中です。現在は Alipay と WeChat Pay のみ利用できます。",
+    "metaDescription": "Readfox のプラン：月 1,000 回の AI 単語検索つきの無料プランから始められます。Plus、Pro、Max では検索回数、詳細な AI 解説、ライブラリの容量が増えます。カード、PayPal、Alipay でお支払いいただけます。"
+  },
+  "checkoutPage": {
+    "opening": "安全なお支払い画面を開いています",
+    "failed": "お支払い画面を開けませんでした。戻ってもう一度お試しください。",
+    "back": "プランに戻る"
+  },
+  "planLimits": {
+    "upgradePlus": "Plus にアップグレード",
+    "seePlans": "プランを見る",
+    "addKey": "API キーを追加",
+    "notNow": "今はしない",
+    "upgradeLine": {
+      "cloud": "Plus ならこの上限が引き上げられます。",
+      "plus": "Pro ならこの上限が引き上げられます。",
+      "max": "Max ならこの上限が引き上げられます。",
+      "byok": "自分の API キーを追加すると、この上限がなくなります。"
+    },
+    "generic": {
+      "title": "プランの上限に達しました",
+      "body": "お使いのプランの利用枠を超えています。"
+    },
+    "metrics": {
+      "phraseSelectionWords": {
+        "title": "フレーズがプランの上限より長いです",
+        "body": "お使いのプランでは、フレーズ検索は {limit, number} 語までです。"
+      },
+      "journalWordsPerMonth": {
+        "title": "今月の日記の上限に達しました",
+        "body": "今月は日記を {limit, number} 語中 {used, number} 語書きました。"
+      },
+      "llmRequestsPerMonth": {
+        "title": "今月の AI 利用枠を使い切りました",
+        "body": "今月の詳細な AI 回答 {limit, number} 回をすべて使いました。"
+      },
+      "wordGlossesPerMonth": {
+        "title": "今月の AI 単語検索を使い切りました",
+        "body": "今月の AI 単語検索 {limit, number} 回をすべて使いました。オフライン辞書の単語は引き続き使えます。"
+      },
+      "phraseTranslationsPerDay": {
+        "title": "本日のフレーズ翻訳枠を使い切りました",
+        "body": "本日のフレーズ翻訳 {limit, number} 回をすべて使いました。UTC の 0 時にリセットされます。"
+      },
+      "contextTranslationsPerDay": {
+        "title": "本日の文脈翻訳枠を使い切りました",
+        "body": "本日の文脈つき翻訳 {limit, number} 回をすべて使いました。UTC の 0 時にリセットされます。"
+      },
+      "ttsCharsPerMonth": {
+        "title": "今月の音声枠を使い切りました",
+        "body": "今月の残りは、音声読み上げにブラウザの音声を使います。"
+      },
+      "maxCollections": {
+        "title": "ライブラリの上限に達しました",
+        "body": "お使いのプランではコレクションを {limit, number} 件まで保存できます。"
+      },
+      "maxLessons": {
+        "title": "ライブラリの上限に達しました",
+        "body": "お使いのプランではレッスンを {limit, number} 件まで保存できます。"
+      },
+      "maxVocabEntries": {
+        "title": "保存した単語の上限に達しました",
+        "body": "お使いのプランでは単語を {limit, number} 語まで保存できます。"
+      }
+    },
+    "dialog": {
+      "plus": "Plus では毎月 {glosses, number} 回の AI 単語検索と {detailed, number} 回の詳細な回答を利用できます。無料の本と保存した単語はそのまま残ります。",
+      "freeReset": "無料のまま読み続けることもできます。利用枠は来月また始まります。"
+    }
+  }
+}

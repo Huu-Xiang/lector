@@ -1,0 +1,246 @@
+{
+  "journal": {
+    "title": "일기",
+    "newEntry": "새 일기",
+    "cancel": "취소",
+    "placeholder": "오늘의 일기를 {language}로 써 보세요...",
+    "words": "{count}단어",
+    "draftSaved": "임시 저장됨",
+    "saving": "저장 중...",
+    "saveDraft": "임시 저장",
+    "correcting": "교정 중...",
+    "submitForCorrection": "교정 요청",
+    "failedToSave": "저장하지 못했어요",
+    "correctionFailed": "교정하지 못했어요",
+    "deleteConfirm": "이 일기를 삭제할까요?",
+    "deleteFailed": "일기를 삭제하지 못했어요",
+    "entries": "일기 {count}개",
+    "empty": "아직 일기가 없어요",
+    "writeFirst": "첫 일기 쓰기",
+    "card": {
+      "corrections": "교정 {count}개",
+      "perfect": "완벽해요",
+      "draft": "임시 저장",
+      "deleteEntry": "일기 삭제",
+      "words": "{count}단어"
+    },
+    "modal": {
+      "close": "닫기"
+    },
+    "correction": {
+      "yourText": "내가 쓴 글",
+      "clickHint": "강조된 단어를 누르면 교정 내용을 볼 수 있어요",
+      "corrected": "교정된 글",
+      "summary": "교정 {count}개:",
+      "perfect": "완벽해요! 고칠 곳이 없어요."
+    },
+    "types": {
+      "grammar": "문법",
+      "spelling": "맞춤법",
+      "wordChoice": "어휘 선택",
+      "wordOrder": "어순",
+      "missingWord": "누락된 단어",
+      "extraWord": "불필요한 단어"
+    }
+  },
+  "stats": {
+    "title": "통계",
+    "loadFailed": "통계를 불러오지 못했어요",
+    "returnHome": "홈으로 돌아가기",
+    "cards": {
+      "wordsKnown": "아는 단어",
+      "learning": "학습 중 (L1-L4)",
+      "learningSub": "진행 중인 단어",
+      "wordsRead": "읽은 단어",
+      "wordsReadSub": "읽은 위치로 추정한 값",
+      "currentStreak": "연속 학습",
+      "days": "{count}일",
+      "longest": "최장: {count}일"
+    },
+    "range": {
+      "d30": "30일",
+      "d90": "90일",
+      "y1": "1년",
+      "all": "전체"
+    },
+    "states": {
+      "known": "아는 단어",
+      "level4": "레벨 4",
+      "level3": "레벨 3",
+      "level2": "레벨 2",
+      "level1": "레벨 1",
+      "new": "새 단어",
+      "ignored": "무시함"
+    },
+    "wordStates": {
+      "title": "상태별 단어"
+    },
+    "cloze": {
+      "title": "빈칸 채우기 연습",
+      "sentencesPracticed": "연습한 문장",
+      "accuracy": "정확도",
+      "totalPoints": "총 점수"
+    },
+    "mastery": {
+      "title": "문장 숙달도",
+      "overall": "전체 {percent}%",
+      "mastered": "{mastered} / {total} 숙달",
+      "due": "복습할 문장 {count}개",
+      "collections": {
+        "top500": "상위 500",
+        "top1000": "상위 1000",
+        "top2000": "상위 2000",
+        "mined": "수집한 문장",
+        "random": "무작위"
+      }
+    },
+    "fluency": {
+      "estimatedLevel": "선택한 수준이 아니라 아는 단어를 바탕으로 추정한 값이에요",
+      "vsLastWeek": "지난주 대비 {count, number}",
+      "sameAsLast": "이번 주 {count, number} (지난주와 같음)",
+      "progressTo": "{level}까지 진행도",
+      "topLevel": "최고 수준에 도달했어요",
+      "wordsToNext": "{level}까지 {count, number}단어",
+      "known": "아는 단어",
+      "learning": "학습 중",
+      "levelName": {
+        "A1": "입문",
+        "A2": "초급",
+        "B1": "중급",
+        "B2": "중고급",
+        "C1": "고급",
+        "C2": "최상급"
+      }
+    },
+    "heatmap": {
+      "title": "활동",
+      "total": {
+        "actions": "지난 1년간 활동 {count, number}회",
+        "lookups": "지난 1년간 검색 {count, number}회"
+      },
+      "count": {
+        "actions": "활동 {count, number}회",
+        "lookups": "검색 {count, number}회"
+      },
+      "types": {
+        "lookups": "검색",
+        "cloze": "빈칸 채우기",
+        "reading": "읽기",
+        "anki": "Anki"
+      },
+      "minutes": "{count}분",
+      "noActivity": "활동 없음",
+      "less": "적음",
+      "more": "많음",
+      "activeDays": "활동한 날:",
+      "avgPerActiveDay": "활동일 평균:"
+    },
+    "anki": {
+      "title": "Anki 복습",
+      "last90": "최근 90일",
+      "reviews": "복습",
+      "reviewDays": "복습한 날",
+      "avgPerDay": "복습일 평균",
+      "connectTitle": "Anki를 연결해 복습 기록을 확인하세요",
+      "connectBody": "복습 기록은 자동으로 동기화되고 연속 학습에 반영돼요.",
+      "connectButton": "Anki 연결"
+    },
+    "ankiStatus": {
+      "synced": "동기화됨",
+      "notSynced": "동기화 안 됨",
+      "noteId": "Anki 노트 ID: {id}",
+      "pushed": "Anki로 보냄"
+    },
+    "radar": {
+      "title": "유창성 영역",
+      "subtitle": "어휘가 가장 강한 분야",
+      "pending": "분류 대기 중인 단어 {count}개",
+      "emptyTitle": "아직 분석된 영역이 없어요",
+      "emptySorting": "아는 단어를 주제별로 분류하는 중이에요. 잠시 후 다시 확인해 주세요.",
+      "emptyHint": "읽고 단어를 배우면 어떤 주제에 강한지 볼 수 있어요.",
+      "knownWords": "아는 단어 {count}개",
+      "mastery": "숙달도"
+    },
+    "vocabGrowth": {
+      "title": "어휘 성장",
+      "knownWords": "아는 단어",
+      "learning": "학습 중",
+      "total": "전체",
+      "series": {
+        "known": "아는 단어",
+        "learning": "학습 중",
+        "total": "전체"
+      }
+    }
+  },
+  "chat": {
+    "error": "죄송해요, 답변하지 못했어요. 설정에서 LLM 제공자가 구성되어 있는지 확인해 주세요.",
+    "open": "채팅 열기",
+    "close": "채팅 닫기",
+    "tutorTitle": "{language} 튜터",
+    "tutorSubtitle": "{language}에 대해 무엇이든 물어보세요",
+    "clearTitle": "채팅 지우기",
+    "clear": "지우기",
+    "loadingOlder": "이전 메시지 불러오는 중...",
+    "emptyPrompt": "{language}에 대해 질문해 보세요",
+    "via": "{provider} 사용",
+    "placeholder": "{language}에 대해 물어보세요..."
+  },
+  "chrome": {
+    "theme": {
+      "light": "라이트",
+      "dark": "다크",
+      "system": "시스템"
+    },
+    "nav": {
+      "expandSidebar": "사이드바 펼치기",
+      "collapseSidebar": "사이드바 접기",
+      "signOut": "로그아웃",
+      "showEmail": "이메일 보기",
+      "hideEmail": "이메일 숨기기"
+    },
+    "tour": {
+      "practiceTitle": "나중에 연습하기",
+      "practiceBody": "연습 탭에서 나중에 단어를 복습할 수 있어요.",
+      "vocabTitle": "내 단어장",
+      "vocabBody": "단어장 탭에서 찾아본 단어를 복습할 수 있어요."
+    },
+    "loading": {
+      "app": "Readfox 불러오는 중",
+      "session": "세션 불러오는 중",
+      "subscription": "구독 정보 불러오는 중",
+      "setup": "설정 불러오는 중"
+    },
+    "setup": {
+      "connectError": "서버에 연결할 수 없어요.",
+      "retry": "다시 시도"
+    },
+    "language": {
+      "changeFailed": "언어를 변경하지 못했어요",
+      "wordsKnown": "아는 단어: {count}개",
+      "add": "언어 추가",
+      "current": "언어: {language}",
+      "select": "언어 선택",
+      "search": "언어 검색",
+      "noMatch": "언어를 찾을 수 없어요",
+      "inDevelopment": "개발 중"
+    },
+    "quota": {
+      "title": "이번 달 AI",
+      "lookups": "AI 단어 번역",
+      "requests": "상세 AI 답변",
+      "left": "{left}회 남음",
+      "used": "{limit}회 중 {used}회 사용",
+      "byok": "내 AI 키를 사용 중이에요",
+      "resets": "사용 횟수는 매달 1일에 초기화돼요.",
+      "exhausted": "이번 달 사용량을 모두 썼어요",
+      "settings": "설정에서 내 키 사용하기",
+      "note": "사전 검색은 무료이며 횟수에 포함되지 않아요. 사전 뜻풀이를 내 언어로 번역하는 것도 포함돼요.",
+      "percentUsed": "{percent}% 사용",
+      "close": "닫기",
+      "info": "사용량 안내",
+      "tip": "이 원을 누르면 이번 달 남은 AI 사용량을 볼 수 있어요.",
+      "tipDismiss": "확인"
+    }
+  }
+}

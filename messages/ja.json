@@ -1,0 +1,2237 @@
+{
+  "announcements": {
+    "button": "新着情報",
+    "buttonUnseen": "新着情報（未読の更新があります）",
+    "title": "新着情報",
+    "close": "閉じる",
+    "bannerLabel": "NEW",
+    "dismiss": "非表示にする",
+    "learnMore": "詳しく見る",
+    "items": {
+      "installApp": {
+        "title": "Readfox をスマートフォンのアプリのように使えます",
+        "body": "Readfox をホーム画面に追加すると、アイコンから全画面で読めます。手順は設定に表示されます。"
+      },
+      "koreanSupport": {
+        "title": "韓国語に対応しました",
+        "body": "韓国語を学べるようになりました。無料の本が 8 冊あり、意味はあなたの言語で表示されます。言語メニューから追加してください。"
+      },
+      "welcomeCode": {
+        "title": "全アカウント対象：WELCOME123 で Plus を 15 日間無料",
+        "body": "設定 → プランを開き、「コードをお持ちですか？」を選んで WELCOME123 を入力してください。Plus を 15 日間無料で使えます。12 月 15 日まで有効で、1 アカウントにつき 1 回です。"
+      },
+      "inviteCodes": {
+        "title": "友だちを招待して Plus を無料で",
+        "body": "設定から招待リンクを共有してください。友だちが登録して読書を始めると、お二人とも 14 日間の Plus カードがもらえます。好きなときに有効化できます。"
+      },
+      "skipGuide": {
+        "title": "最初のレッスンのガイドをスキップできます",
+        "body": "最初のレッスンのガイドカードに「ガイドをスキップ」ボタンが付きました。"
+      }
+    }
+  },
+  "common": {
+    "appName": "Readfox",
+    "tagline": "読んで身につける、新しい言語"
+  },
+  "uiLanguage": {
+    "label": "表示言語",
+    "title": "表示言語",
+    "description": "ボタン、メニュー、本のタイトルと説明の言語です。翻訳と解説には、下の翻訳言語が使われます。",
+    "alsoNative": "翻訳と本のタイトルにも {language} を使いますか？",
+    "alsoNativeYes": "切り替える",
+    "alsoNativeNo": "そのままにする",
+    "alsoNativeDone": "翻訳言語を変更しました",
+    "alsoNativeFailed": "翻訳言語を変更できませんでした"
+  },
+  "legal": {
+    "nav": "法務情報",
+    "pricing": "料金",
+    "privacy": "プライバシー",
+    "terms": "利用規約",
+    "about": "概要",
+    "source": "ソースコード",
+    "refunds": "返金",
+    "freeBooks": "無料の本",
+    "back": "戻る"
+  },
+  "nav": {
+    "library": "ライブラリ",
+    "practice": "練習",
+    "journal": "日記",
+    "vocab": "単語帳",
+    "stats": "統計",
+    "settings": "設定"
+  },
+  "auth": {
+    "loadingAuth": "認証を読み込んでいます",
+    "login": {
+      "title": "ログイン",
+      "deleted": "アカウントとすべてのデータが完全に削除されました。",
+      "unverified": "<b>{email}</b> はまだ確認されていません。受信トレイのリンクを確認してください。",
+      "resend": "確認メールを再送",
+      "email": "メールアドレス",
+      "password": "パスワード",
+      "forgot": "パスワードをお忘れですか？",
+      "submit": "ログイン",
+      "submitting": "ログイン中…",
+      "github": "GitHub で続ける",
+      "oidc": "{provider} で続ける",
+      "noAccount": "アカウントをお持ちでないですか？",
+      "create": "新規登録",
+      "errInvalid": "メールアドレスまたはパスワードが正しくありません。",
+      "errFailed": "ログインに失敗しました。",
+      "errResend": "メールを再送できませんでした。",
+      "resent": "確認メールを送信しました。受信トレイを確認してください。"
+    },
+    "register": {
+      "title": "アカウントを作成",
+      "name": "名前",
+      "email": "メールアドレス",
+      "password": "パスワード",
+      "passwordHint": "英字と数字を含む 8 文字以上にしてください。",
+      "submit": "アカウントを作成",
+      "submitting": "アカウントを作成中…",
+      "haveAccount": "すでにアカウントをお持ちですか？",
+      "signIn": "ログイン",
+      "errFailed": "登録に失敗しました。",
+      "checkTitle": "受信トレイを確認してください",
+      "checkBody": "<b>{email}</b> に確認用のリンクを送信しました。リンクを開いてアカウントを有効にしてから、ログインしてください。",
+      "goSignIn": "ログインへ",
+      "confirmPassword": "パスワード（確認）",
+      "errMismatch": "2 つのパスワードが一致しません。",
+      "errWeak": "より強いパスワードにしてください。英字と数字を含む 8 文字以上が必要です。",
+      "matches": "パスワードが一致しています",
+      "errEmailDisposable": "使い捨てのメールアドレスは使えません。普段お使いのメールアドレスを入力してください。",
+      "errEmailAlias": "このメールアドレスは、別の形式ですでにアカウントに使われています。そのアドレスでログインしてください。",
+      "invite": "招待コードまたは引き換えコード",
+      "inviteOptional": "（任意）",
+      "inviteRequired": "（必須）",
+      "inviteHint": "友だちの招待コード、または WELCOME123 などの引き換えコードです。",
+      "errInviteRequired": "登録には有効な招待コードが必要です。"
+    },
+    "reset": {
+      "expiredTitle": "リンクの有効期限が切れました",
+      "expiredBody": "このリセットリンクは無効か、有効期限が切れています。下から新しいリンクをリクエストしてください。",
+      "requestNew": "新しいリンクをリクエスト",
+      "checkTitle": "受信トレイを確認してください",
+      "checkBody": "<b>{email}</b> のアカウントがある場合は、リセット用のリンクをお送りします。",
+      "backToSignIn": "ログインに戻る",
+      "title": "パスワードをリセット",
+      "intro": "アカウントのメールアドレスを入力してください。リセット用のリンクをお送りします。",
+      "email": "メールアドレス",
+      "send": "リセットリンクを送信",
+      "sending": "送信中…",
+      "errRequest": "リセットをリクエストできませんでした。",
+      "newTitle": "新しいパスワードを設定",
+      "newPassword": "新しいパスワード",
+      "passwordHint": "英字と数字を含む 8 文字以上にしてください。",
+      "setNew": "新しいパスワードを設定",
+      "updating": "更新中…",
+      "errReset": "パスワードをリセットできませんでした。",
+      "updated": "パスワードを更新しました。新しいパスワードでログインしてください。",
+      "confirmPassword": "新しいパスワード（確認）",
+      "errMismatch": "2 つのパスワードが一致しません。",
+      "errWeak": "より強いパスワードにしてください。英字と数字を含む 8 文字以上が必要です。"
+    },
+    "twoFactor": {
+      "title": "2 段階認証",
+      "introBackup": "バックアップコードを 1 つ入力してください。各コードは 1 回だけ使えます。",
+      "introTotp": "認証アプリに表示される 6 桁のコードを入力してください。",
+      "labelBackup": "バックアップコード",
+      "labelTotp": "認証コード",
+      "placeholderBackup": "例：abcde-fghij",
+      "trust": "このデバイスを 30 日間信頼する",
+      "verify": "確認",
+      "verifying": "確認中…",
+      "useTotp": "認証アプリのコードを使う",
+      "useBackup": "バックアップコードを使う",
+      "backToSignIn": "ログインに戻る",
+      "errExpired": "このログインの有効期限が切れました。もう一度パスワードを入力してください。",
+      "errLocked": "コードの入力に何度も失敗しました。しばらく待ってから、もう一度ログインしてください。",
+      "errBackup": "そのバックアップコードは使えませんでした。",
+      "errTotp": "そのコードは使えませんでした。最新のコードを入力してください。"
+    },
+    "passwordMeter": {
+      "weak": "弱い",
+      "fair": "普通",
+      "strong": "強い",
+      "rules": {
+        "length": "8 文字以上",
+        "letter": "英字を含む",
+        "digit": "数字を含む"
+      }
+    }
+  },
+  "setup": {
+    "badge": "最初の読書セッション",
+    "welcome": "Readfox へようこそ",
+    "intro": "最初のレッスンを選ぶために、少しだけ教えてください。回答はすべて任意です。",
+    "chooseLanguage": "2. 学ぶ言語を選ぶ",
+    "learn": "{name}を学ぶ",
+    "showMore": "さらに {count} 言語を表示",
+    "personalise": "3. あなたのレベル",
+    "personaliseHint": "ちょうどよい難易度の無料の本を先に表示するために使います。",
+    "optional": "任意",
+    "level": "読解レベル",
+    "ready": "最初の文章を読む準備はできましたか？",
+    "readyHint": "ガイドは実際の入門レッスンの中で表示され、いつでも終了できます。",
+    "skip": "ライブラリへスキップ",
+    "preparing": "レッスンを準備中…",
+    "start": "ガイド付きレッスンを始める",
+    "errSave": "設定を保存できませんでした",
+    "levelHint": "あとで「無料の本」から変更できます。",
+    "nativeTitle": "1. あなたの言語",
+    "nativeHint": "翻訳と解説にはこの言語が使われます。表示言語は英語、簡体字中国語、日本語、韓国語から選べます。",
+    "interests": "興味のある分野",
+    "interestsHint": "任意です。これらのテーマの新しい記事を「無料の本」に追加します。",
+    "interest": {
+      "news": "ニュース",
+      "travel": "旅行",
+      "science": "科学",
+      "literature": "文学"
+    },
+    "inDevelopment": "開発中",
+    "showMoreSoon": "開発中の {count} 言語を表示",
+    "recommendBadge": "あなたにおすすめ",
+    "recommendTitle": "最初に読む本を選ぶ",
+    "recommendIntro": "あなたのレベル（{level}）と興味に合わせています。1 冊選ぶと、最初の読書をご案内します。",
+    "recommendBack": "回答を変更する",
+    "recommendSkip": "代わりにライブラリを見る"
+  },
+  "landing": {
+    "metaTitle": "Readfox – 学んでいる言語で本物の本を読もう",
+    "metaDescription": "本を取り込むか好きな文章を貼り付けて、単語をタップすればすぐに翻訳。読んだ内容を間隔反復の練習に変えられます。無料でオープンソースです。",
+    "signIn": "ログイン",
+    "freeBooks": "無料の本",
+    "getStarted": "無料で始める",
+    "heroTitle": "学んでいる言語で、本物の本を読もう",
+    "heroBody": "Readfox は読書を学習に変えます。単語をタップして翻訳を表示し、読みながら語彙を集め、間隔反復で練習できます。無料でお使いいただけます。",
+    "languagesNow": "いま学べる言語：",
+    "languagesSoon": "さらに {count} 言語を開発中",
+    "languagesUi": "表示言語：{ui} · 意味と解説：{count} 言語（設定で変更できます）",
+    "createAccount": "無料アカウントを作成",
+    "heroAlt": "Readfox：開いた本の上で休むキツネ",
+    "howTitle": "使い方",
+    "features": {
+      "read": {
+        "title": "好きなものを読む",
+        "body": "EPUB を取り込むか、好きな文章を貼り付けるだけ。自分の本がそのままレッスンになります。"
+      },
+      "tap": {
+        "title": "単語をタップして理解する",
+        "body": "文脈に合わせた翻訳と解説がすぐに表示されます。毎月の利用枠が付いています。有料プランでは自分の AI キーも使えます。"
+      },
+      "vocab": {
+        "title": "語彙が自然に増える",
+        "body": "調べた単語は、出会った文と一緒に保存されます。"
+      },
+      "srs": {
+        "title": "間隔反復の練習",
+        "body": "ちょうどよいタイミングで単語を復習して、しっかり定着させます。"
+      },
+      "write": {
+        "title": "書いてフィードバックをもらう",
+        "body": "学習中の言語で日記をつけて、添削してもらえます。"
+      }
+    },
+    "openTitle": "オープンソース。読書の記録はあなただけのもの",
+    "openBody": "Readfox はオープンソースソフトウェア（AGPL-3.0）で、オープンソースのリーダー Lector をもとに作られています。AI 機能には毎月の利用枠があります。広告や分析用のトラッカーは使っていません。<privacy>プライバシーポリシー</privacy>をご覧ください。",
+    "pricing": "料金"
+  },
+  "settings": {
+    "nativeLanguage": {
+      "title": "翻訳言語",
+      "description": "単語の意味、解説、チューターの返信、日記のフィードバックはこの言語で表示されます。表示言語とは別にできます。たとえば、表示は中国語で解説は英語にすることもできます。内蔵辞書の項目は英語のままです。",
+      "saved": "言語を保存しました",
+      "errSave": "言語を保存できませんでした",
+      "useBrowser": "ブラウザの言語を使う",
+      "sameAsLearning": "学習中の言語（{language}）と同じです。役に立つ解説を表示するには、別の翻訳言語を選んでください。"
+    },
+    "languagePrefs": {
+      "title": "表示言語と翻訳言語",
+      "hint": "この 2 つは別々の設定です。たとえば、フランス語を学びながら、表示は中国語、解説は英語にできます。"
+    },
+    "pageTitle": "設定",
+    "practice": {
+      "title": "練習",
+      "clozeHeading": "穴埋めの設定",
+      "translationLabel": "翻訳",
+      "translationHint": "練習中は、翻訳を最初は非表示にします。<keys></keys> でいつでも切り替えられます。",
+      "shown": "表示",
+      "hidden": "非表示",
+      "wordReviewHeading": "単語の復習",
+      "reviewGoalLabel": "復習の目標",
+      "reviewGoalFailed": "復習の目標を保存できませんでした。もう一度お試しください。",
+      "reviewGoal": {
+        "recognize": "見て分かる",
+        "recognize_spell": "見て分かり、書ける"
+      },
+      "reviewGoalHint": {
+        "recognize": "単語を見て分かるようになる目標です。意味を選んで、単語を見分けます。",
+        "recognize_spell": "単語を書くことも目標にします。「慣れてきた」と「習得済み」の単語は、入力やディクテーションで出題されます。"
+      }
+    },
+    "prose": {
+      "title": "本文の表示",
+      "description": "リーダーでレッスンをどう表示するかの設定です。まず「すべての言語」で好みに設定し、文字の種類によって調整が必要な言語だけ個別に補正してください。この設定はこの端末にだけ保存されます。",
+      "allLanguages": "すべての言語",
+      "hasOwnSettings": "は個別の設定があります",
+      "customisedNotice": "{language}には個別の設定があります。変更していない項目は、引き続き「すべての言語」の設定に従います。",
+      "inheritedNotice": "{language}は「すべての言語」の設定に従っています。スライダーを動かして保存すると、項目ごとに補正できます。",
+      "setFor": "· {language}用に設定",
+      "save": "保存",
+      "resetDefaults": "初期設定に戻す",
+      "resetLanguage": "{language}をリセット",
+      "statusUnsaved": "上のサンプルには変更が反映されています。保存すると、リーダーにも適用されます。",
+      "statusDefaults": "初期設定は、文字サイズ {fontSize}px、太さ {fontWeight}、字間 0、行間 {lineHeight} です。",
+      "statusResetLanguage": "リセットすると、{language}は再び「すべての言語」の設定に従います。",
+      "controls": {
+        "fontSize": {
+          "label": "文字サイズ",
+          "hint": "レッスンの本文の大きさです。"
+        },
+        "fontWeight": {
+          "label": "文字の太さ",
+          "hint": "各単語の見た目の太さです。"
+        },
+        "letterSpacing": {
+          "label": "字間",
+          "hint": "文字と文字の間隔です。マイナスの値にすると詰まります。"
+        },
+        "lineHeight": {
+          "label": "行間",
+          "hint": "行と行の間隔です。文字サイズに対する倍率で指定します。"
+        }
+      }
+    },
+    "theme": {
+      "title": "外観",
+      "label": "テーマ",
+      "options": {
+        "light": "ライト",
+        "dark": "ダーク",
+        "system": "システム"
+      }
+    },
+    "tts": {
+      "title": "音声読み上げ",
+      "noAudioNote": "{language}には合成音声がありません。発音について見解が分かれているため、Readfox は音声を出しません。",
+      "synthesizedVoice": "合成音声",
+      "browserVoiceFree": "ブラウザの音声 · 無料",
+      "managedAvailable": "マネージド音声を利用できます",
+      "usingBrowser": "ブラウザの音声を使用中",
+      "espeakNote": "{language}は、Readfox がホストする合成音声 eSpeak NG で読み上げます。{language}に対応する音声合成エンジンはこれしかありません。機械的な声ですが、すべての単語を正確に発音でき、全プランに含まれています。",
+      "voiceEngine": "音声エンジン",
+      "engineHintFree": "ブラウザの音声は、読書、練習、ディクテーションで全プランが無料で使えます。",
+      "engineHintPaid": "マネージド音声は発音がより安定します。ブラウザの音声もいつでも使えます。",
+      "managedVoice": "マネージド音声",
+      "browserBuiltIn": "ブラウザ内蔵",
+      "upsell": "Readfox は、全プランでブラウザの音声を使って読み上げます。<link>プランを見る</link>",
+      "testVoice": "音声をテスト",
+      "speechSpeed": "読み上げ速度",
+      "slow": "0.5x（遅い）",
+      "normal": "1.0x",
+      "fast": "1.5x（速い）"
+    },
+    "timezone": {
+      "title": "タイムゾーン",
+      "description": "日ごとの統計、連続日数、復習日は、このタイムゾーンの 0 時で切り替わります。",
+      "auto": "自動 — サーバーのタイムゾーン",
+      "useDevice": "この端末のタイムゾーンを使う（{zone}）",
+      "updated": "タイムゾーンを {zone} に変更しました",
+      "failed": "タイムゾーンを変更できませんでした"
+    },
+    "languages": {
+      "title": "言語",
+      "description": "言語の選択肢には、ここにある言語が表示されます。言語を削除すると、リストを短くできます。その言語の単語、テキスト、カードはサーバーに残ります。",
+      "inUse": "使用中",
+      "remove": "{language}を削除",
+      "added": "{language}を追加しました",
+      "removed": "{language}を削除しました",
+      "saveFailed": "言語を保存できませんでした",
+      "addPlaceholder": "言語を追加…",
+      "add": "追加"
+    },
+    "knownWords": {
+      "title": "覚えた単語を取り込む",
+      "description": "すでに知っている単語を取り込みます。<strong>LingQ のエクスポート</strong>（ステータスと翻訳つき）または単純な単語リストに対応しています。",
+      "lingqHelp": "LingQ：Vocabulary → 設定の歯車 → Export LingQs → CSV をここにアップロード",
+      "uploadLabel": "CSV ファイルをアップロード",
+      "uploadHint": "1 列目に単語が入った CSV、またはプレーンテキストのファイル",
+      "pasteLabel": "または単語を貼り付け（1 行に 1 語）",
+      "import": "取り込む",
+      "noWords": "取り込む単語がありません。",
+      "imported": "{count} 語を覚えたとして取り込みました。",
+      "importFailed": "覚えた単語を取り込めませんでした",
+      "noData": "ファイルにデータがありません。",
+      "noTermColumn": "LingQ のエクスポートに「term」列が見つかりませんでした。",
+      "lingqImported": "LingQ から {count} 語を取り込みました（覚えた {known} 語、学習中 {learning} 語）。",
+      "fileError": "ファイルの取り込みでエラーが発生しました：{message}",
+      "unknownError": "不明なエラー"
+    },
+    "export": {
+      "title": "データを書き出す",
+      "vocabCsv": "単語帳を書き出す（CSV）",
+      "vocabJson": "単語帳を書き出す（JSON）",
+      "knownWords": "覚えた単語を書き出す",
+      "failed": "書き出しに失敗しました：{message}",
+      "unknownError": "不明なエラー",
+      "csvDone": "単語帳を CSV で書き出しました。",
+      "jsonDone": "単語帳を JSON で書き出しました。",
+      "knownDone": "覚えた単語 {count} 語を書き出しました。"
+    },
+    "data": {
+      "title": "学習データ",
+      "description": "コレクションとレッスン、読書位置、単語帳、文の練習と復習スケジュール、日記、統計をダウンロードできます。API キーとプロバイダーのエンドポイントは含まれません。",
+      "export": "すべての学習データを書き出す",
+      "import": "学習データを取り込む",
+      "invalidFormat": "バックアップファイルの形式が正しくありません",
+      "importFailedShort": "取り込みに失敗しました",
+      "imported": "学習データを取り込みました",
+      "importedDetail": "コレクション {collections} 件、レッスン {lessons} 件、単語帳 {vocab} 語、覚えた単語 {knownWords} 語、穴埋め文 {clozeSentences} 件。",
+      "importFailed": "取り込みに失敗しました：{message}",
+      "unknownError": "不明なエラー"
+    },
+    "about": {
+      "title": "概要",
+      "commit": "コミット",
+      "built": "ビルド日時",
+      "version": "バージョン"
+    },
+    "plan": {
+      "labels": {
+        "free": "Free",
+        "cloud": "Plus",
+        "plus": "Pro",
+        "max": "Max",
+        "unlimited": "無制限"
+      },
+      "cycle": {
+        "year": "年払い",
+        "month": "月払い"
+      },
+      "unlimited": "無制限",
+      "priceLabel": "{plan} — {cycle}",
+      "errors": {
+        "pastDue": "プランを変更する前に、Paddle でお支払い方法を更新してください。",
+        "ambiguous": "Paddle で有効なサブスクリプションが複数見つかりました。請求管理を開いて解決してください。",
+        "alreadyCurrent": "それはすでに現在のプランです。",
+        "generic": "Paddle で請求の操作を完了できませんでした。もう一度お試しください。"
+      },
+      "toast": {
+        "updated": "Paddle のサブスクリプションを更新しました",
+        "accepted": "Paddle が変更を受け付けました。プランを更新しています…"
+      },
+      "heading": "Readfox のプラン",
+      "currentWithCycle": "このアカウントでは {plan}（{cycle}）が有効です。",
+      "current": "このアカウントでは {plan} が有効です。",
+      "loading": "プランを読み込み中…",
+      "ownKey": "自分の AI キー",
+      "lapsed": "有料のサブスクリプションが終了したため、アカウントは Free に移行しました。テキスト、保存した単語、Anki の連携、履歴、書き出しは、すべてそのまま残っています。",
+      "freeIntro": "Free では、読書のサイクルをすべて使えます。入門テキストと取り込んだテキスト、フレーズ対応の検索、保存した単語、練習、持ち運べるデータが含まれます。",
+      "libraryAllowance": "ライブラリの上限：コレクション {collections} 件、レッスン {lessons} 件、毎月の日記 {words} 語。有料プランが終了しても、既存のデータが削除されることはありません。",
+      "fairUse": "極端に大きな個別のテキストや、保存データの大量の増加には、寛容なフェアユースの制限が適用されます。既存の学習データが削除されたり、書き出しが妨げられたりすることはありません。",
+      "byokActive": "自分の AI キーが有効なため、翻訳や高度な AI 機能には、Readfox のマネージド利用枠ではなく、お使いのプロバイダーが使われます。無料のライブラリと日記の上限は引き続き適用され、音声はブラウザの音声のままです。",
+      "managedAllowance": "毎月の AI 利用枠：辞書にない単語の検索 {glosses} 回、詳細な AI 回答 {detailed} 回。辞書の検索とブラウザの音声は無料です。",
+      "comparePlans": "有料プランを比較",
+      "openingPaddle": "Paddle を開いています…",
+      "billingHistory": "請求履歴",
+      "manageBilling": "請求を管理",
+      "paidIntro": "お使いのプランには、より多くの AI 利用枠が含まれています。データはいつでも書き出せます。",
+      "pendingAccepted": "Paddle が {price} への変更を受け付けました。署名つきの Webhook が届き次第、このページが更新されます。",
+      "paddleHandles": "お支払い方法、請求書、解約は Paddle が安全に処理します。",
+      "changePlan": "プランを変更",
+      "changeIntro": "現在のプランは {plan}（{cycle}）です。下から別のプランを選んでください。確定する前に、Paddle の税額と日割り計算を確認してください。",
+      "choosePlanAria": "新しいプランを選択",
+      "choosePlanOption": "新しいプランを選択…",
+      "calculating": "計算中…",
+      "reviewChange": "変更内容を確認",
+      "changeTo": "{price} に変更",
+      "prorationImmediate": "プランはすぐに変更され、日割りの請求または返金は Paddle がいま適用します。",
+      "prorationNextInvoice": "プランはすぐに変更され、日割りの調整は次回の請求書に Paddle が適用します。",
+      "dueNow": "今回のお支払い",
+      "noImmediateCharge": "すぐの請求はありません",
+      "nextInvoice": "次回の請求",
+      "calculatedAtRenewal": "更新時に計算されます",
+      "regularRenewal": "通常の更新",
+      "unavailable": "利用できません",
+      "applying": "適用中…",
+      "confirmPaddle": "Paddle で確定",
+      "cancel": "キャンセル",
+      "changesUnavailable": "Paddle がこのサブスクリプションを処理中の間は、プランを変更できません。請求管理から、お支払い方法の更新や状態の確認を行ってください。",
+      "grantUntil": "{plan} は {date} までお支払い済みです。その後、アカウントは Free に戻ります。自動的に請求されることはありません。",
+      "renew": "更新"
+    },
+    "byok": {
+      "loadFailed": "BYOK の設定を読み込めませんでした",
+      "enableFailed": "BYOK を有効にできませんでした",
+      "disableFailed": "BYOK を無効にできませんでした",
+      "keyActive": "{provider} のキーが有効です",
+      "reverted": "Readfox のマネージド AI 利用枠に戻しました",
+      "heading": "自分の AI キーを使う",
+      "active": "有効",
+      "introFree": "Free には、毎月少しの AI 利用枠が含まれます。Plus 以上では、自分の OpenRouter または Anthropic のキーも使えます。",
+      "introPaid": "マネージド AI 利用枠の代わりに、自分の OpenRouter または Anthropic のアカウントを、翻訳、解説、日記の添削、チャットに使えます。",
+      "introTail": "キーは暗号化して保存され、二度と表示されません。",
+      "compareCloud": "Readfox に AI を任せたい場合は、<link>プランを比較</link>してください。",
+      "notConfigured": "この環境では、まだ BYOK が設定されていません。",
+      "provider": "プロバイダー",
+      "evalNote": "評価済みのモデルは、Readfox の<link>再現可能な翻訳評価</link>におけるアフリカーンス語の COMET スコア順に並んでいます。差がおよそ 1.5 ポイント未満の場合は統計的に同等です。Flash Lite は未評価の低コストな初期設定です。",
+      "model": "モデル",
+      "replaceKey": "キーまたはモデルを変更",
+      "useManaged": "マネージド利用枠を使う",
+      "apiKeyLabel": "{provider} の API キー",
+      "leaveBlank": "（空欄のままにすると現在のキーを維持します）",
+      "saving": "保存中…",
+      "saveChanges": "変更を保存",
+      "validateEnable": "検証して有効にする",
+      "cancel": "キャンセル",
+      "validates": "Readfox は、保存する前に {provider} でキーを検証します。プロバイダーのエラーにキーが含まれることはありません。",
+      "protectedTitle": "API キーの保護方法",
+      "protectedEncryption": "キーは、データベースに保存される前に、毎回新しいランダムなナンスを使った AES-256-GCM で暗号化されます。認証データによって、各暗号文があなたのアカウントと選択したプロバイダーに結び付けられるため、暗号化された行を別のアカウントに移すことはできません。",
+      "protectedStorage": "保存された API キーを暗号化する鍵は、データベースとは別に、当社のサーバーで保管されます。API キーは書き込み専用です。Readfox がブラウザに送り返したり、書き出しに含めたり、詳細をログに記録したりすることはありません。",
+      "protectedOpenSource": "Readfox はオープンソースなので、認証情報がどのように暗号化、保存され、リクエスト時に選ばれるかを確認できます。<link>実装を確認する</link>",
+      "loading": "読み込み中…",
+      "paidOnly": "自分の AI キーを使えるのは Plus 以上です。<link>プランを見る</link>"
+    },
+    "llm": {
+      "fetchStatusFailed": "LLM の状態を取得できませんでした",
+      "saveFailed": "設定を保存できませんでした",
+      "statusError": "ステータス {status}",
+      "noModels": "このエンドポイントからモデルが報告されませんでした。モデル名を直接入力してください。",
+      "fetchModelsFailed": "モデルを取得できませんでした",
+      "unreachable": "サーバーに接続できませんでした",
+      "heading": "AI プロバイダー",
+      "connected": "接続済み",
+      "notConnected": "未接続",
+      "checking": "確認中...",
+      "refresh": "更新",
+      "intro": "翻訳に使う AI を選びます。Anthropic はクラウド AI で、最も高い品質が得られます。「ローカル / セルフホスト」は、OpenAI 互換のサーバー（Ollama、LM Studio、Apfel、vLLM など）に対応し、エンドポイント、任意の API キー、モデル名を指定します。",
+      "provider": "プロバイダー",
+      "providerAnthropic": "Anthropic（クラウド）",
+      "providerOpenai": "ローカル / セルフホスト（OpenAI 互換）",
+      "authMethod": "認証方法",
+      "apiKey": "API キー",
+      "oauthToken": "OAuth トークン",
+      "bothConfigured": "両方の認証情報が設定されています。使うほうを選んでください。接続は自動的にテストされます。",
+      "getKeyFrom": "API キーは <link>console.anthropic.com</link> で取得できます",
+      "configured": "設定済み",
+      "replace": "置き換える",
+      "clear": "クリア",
+      "save": "保存",
+      "cancel": "キャンセル",
+      "or": "または",
+      "oauthPlan": "（Pro / Team プラン）",
+      "oauthHelp": "Claude Pro または Team のサブスクリプションのクレジットを使います。トークンの取得には <code>claude setup-token</code> を実行してください。注意：API キーより初回の起動が遅くなります。",
+      "preset": "プリセット",
+      "presetCustom": "カスタム / その他の OpenAI 互換サーバー",
+      "presetHelp": "下のエンドポイントを自動入力するショートカットです。入力後に編集できます。",
+      "endpoint": "エンドポイント",
+      "endpointHelp": "サーバーのベース URL です。アプリが <code>/v1</code> を付け加えます。サーバー側から呼び出されるため、Readfox が別の場所でホストされていても localhost を使えます。",
+      "apiKeyOptional": "API キー（任意）",
+      "apiKeyPlaceholder": "認証のないローカルサーバーの場合は空欄",
+      "apiKeyHelp": "サーバーから Bearer トークンとして送信されます（保存後はブラウザに公開されません）。リバースプロキシ、クラウド、その他の認証つきエンドポイントでのみ必要です。",
+      "model": "モデル",
+      "fetchingModels": "モデルを取得中…",
+      "modelPlaceholder": "モデル名を入力するか、一覧を取得してください",
+      "fetching": "取得中...",
+      "fetchModels": "モデルを取得",
+      "modelHelp": "取得した一覧から選ぶか（LM Studio や Ollama などのサーバーは <code>/v1/models</code> で一覧を返します）、サーバーが受け付けるモデル名を直接入力してください。"
+    },
+    "anki": {
+      "addonIntro": "アドオンは Anki の内部から同期するため、Readfox がどこで動いていても使えます。キューに入れた単語は次に Anki を開いたときにカードになり、復習の結果は自動的に戻ってきます。",
+      "addonStep1": "下の<strong>API トークン</strong>で、<code>anki</code> を範囲にした API トークンを作成します。",
+      "addonStep2": "<link>Lector リポジトリの anki-addon</link> からアドオンをインストールします（Anki Desktop 2.1.50 以降）。",
+      "addonStep3": "Anki で、ツール → アドオン → Lector Sync → 設定 を開き、<code>api_url</code> に下のアドレス、<code>api_token</code> にトークンを入力します。",
+      "apiUrl": "API URL",
+      "addonMobile": "AnkiDroid と AnkiMobile ではアドオンを実行できません。デスクトップで同期すると、AnkiWeb 経由で結果が各端末に届きます。",
+      "saveTransportFailed": "Anki の連携方式を保存できませんでした",
+      "connectFailed": "Anki に接続できませんでした。AnkiConnect を入れた Anki が起動しているか確認してください。",
+      "heading": "Anki 連携",
+      "connected": "接続済み",
+      "notConnected": "未接続",
+      "checking": "確認中...",
+      "refresh": "更新",
+      "connection": "接続",
+      "connectionHelp": "AnkiConnect は、ブラウザからこのコンピューターの Anki に接続します。アドオンは代わりに Anki の内部から同期します。Readfox が HTTPS で配信されている場合や、別のマシンで動いている場合は、アドオンを使ってください。",
+      "transportAnkiConnect": "AnkiConnect（ブラウザ）",
+      "transportAddon": "Lector Sync アドオン",
+      "ankiConnectUrl": "AnkiConnect の URL",
+      "urlHint": "ヒント：リモートの Anki には Tailscale の IP を使います（例：http://100.x.x.x:8765）",
+      "saveUrlFailed": "Anki の URL を保存できませんでした",
+      "vocabDeck": "単語帳デッキ",
+      "vocabDeckHelp": "リーダーの単語から作る基本カード用のデッキです",
+      "deckName": "デッキ名",
+      "clozeDeck": "穴埋め練習デッキ",
+      "clozeDeckHelp": "練習モードの穴埋めカード用のデッキです",
+      "clozeDeckName": "穴埋めデッキ名",
+      "defaultCardType": "カードの初期タイプ",
+      "cardTypeHelp": "基本は表と裏のカード、穴埋めは空欄を埋めるカードを作ります",
+      "basic": "基本",
+      "cloze": "穴埋め",
+      "comingSoon": "開発中",
+      "comingSoonBody": "Anki 同期は準備中です。保存した単語が Anki のカードになり、復習の結果が同期で戻ってくるようになります。それまでは、練習ページで保存した単語を復習してください。"
+    },
+    "twoFactor": {
+      "actions": {
+        "enable": {
+          "title": "2 段階認証を設定するため、パスワードを確認してください",
+          "cta": "続ける"
+        },
+        "disable": {
+          "title": "2 段階認証をオフにするため、パスワードを確認してください",
+          "cta": "オフにする"
+        },
+        "regenerate": {
+          "title": "バックアップコードを置き換えるため、パスワードを確認してください",
+          "cta": "新しいコードを生成"
+        }
+      },
+      "wrongPassword": "パスワードが違います。",
+      "startFailed": "設定を開始できませんでした。",
+      "disableFailed": "2 段階認証をオフにできませんでした。",
+      "generateFailed": "コードを生成できませんでした。",
+      "toastOff": "2 段階認証をオフにしました。",
+      "toastOn": "2 段階認証をオンにしました。",
+      "toastNewCodes": "新しいバックアップコードを生成しました。以前のコードは使えなくなりました。",
+      "codeMismatch": "コードが一致しませんでした。QR コードをスキャンして、現在のコードをお試しください。",
+      "codesCopied": "バックアップコードをクリップボードにコピーしました",
+      "heading": "2 段階認証",
+      "enable": "2 段階認証を有効にする",
+      "intro": "パスワードに加えて、認証アプリ（Google Authenticator、1Password、Authy など）のワンタイムコードでアカウントを守ります。",
+      "statusOn": "2 段階認証はオンです。ログイン時に、認証アプリのコードの入力が求められます。",
+      "statusOff": "2 段階認証はオフです。",
+      "working": "処理中…",
+      "cancel": "キャンセル",
+      "step1": "1. 認証アプリでこの QR コードをスキャンします",
+      "cantScan": "スキャンできませんか？このキーを手動で入力してください：",
+      "step2": "2. アプリに表示されている 6 桁のコードを入力します",
+      "verifying": "確認中…",
+      "verifyActivate": "確認して有効にする",
+      "saveCodes": "このバックアップコードを安全な場所に保存してください。認証アプリを失くしたときに、各コードで 1 回ずつログインできます。再表示はされません。",
+      "copy": "コピー",
+      "savedCodes": "コードを保存しました",
+      "newCodes": "新しいバックアップコード",
+      "turnOff": "2 段階認証をオフにする"
+    },
+    "apiTokens": {
+      "fetchFailed": "API トークンを取得できませんでした",
+      "copied": "トークンをクリップボードにコピーしました",
+      "heading": "API トークン",
+      "generate": "トークンを生成",
+      "intro": "CLI や API にアクセスするための個人用アクセストークンを作成します。トークンには、特定の権限が設定されます。",
+      "copyNow": "このトークンを今すぐコピーしてください。再表示はされません。",
+      "copy": "コピー",
+      "saved": "トークンを保存しました",
+      "tokenName": "トークン名",
+      "tokenNamePlaceholder": "例：CLI、自動化、バックアップスクリプト",
+      "scopes": "スコープ",
+      "scopeLabels": {
+        "all": "フルアクセス",
+        "collectionsRead": "コレクション（読み取り）",
+        "collectionsWrite": "コレクション（書き込み）",
+        "vocabRead": "単語帳（読み取り）",
+        "vocabWrite": "単語帳（書き込み）",
+        "statsRead": "統計（読み取り）",
+        "statsWrite": "統計（書き込み）",
+        "settingsRead": "設定（読み取り）",
+        "settingsWrite": "設定（書き込み）",
+        "dataExport": "データの書き出し",
+        "dataImport": "データの取り込み",
+        "chatRead": "チャット / LLM（読み取り）",
+        "chatWrite": "チャット / LLM（書き込み）",
+        "ankiRead": "Anki 同期（読み取り）",
+        "ankiWrite": "Anki 同期（書き込み）"
+      },
+      "nameRequired": "トークン名は必須です",
+      "scopeRequired": "スコープを 1 つ以上選択してください",
+      "createFailed": "トークンを作成できませんでした",
+      "create": "トークンを作成",
+      "cancel": "キャンセル",
+      "created": "作成日：{date}",
+      "lastUsed": "最終使用：{date}",
+      "neverUsed": "未使用",
+      "revokeConfirm": "トークン「{name}」を無効にしますか？この操作は元に戻せません。",
+      "revokeFailed": "トークンを無効にできませんでした",
+      "revoke": "無効にする",
+      "empty": "トークンはまだありません。CLI を使う場合やリモートから API にアクセスする場合は、トークンを生成してください。"
+    },
+    "deleteAccount": {
+      "startFailed": "アカウントの削除を開始できませんでした。もう一度お試しください。",
+      "heading": "アカウントを削除",
+      "intro": "アカウントと<strong>すべての</strong>データ（本、単語帳、穴埋めの進捗、日記、チャット履歴、設定）を完全に削除します。この操作は元に戻せません。上のバックアップの書き出しとは別の操作です。",
+      "billingWarning": "有料のサブスクリプションをお使いの場合は、先に解約してください。ここでアカウントを削除しても、請求は解約<strong>されません</strong>（お支払いは当社の Merchant of Record である Paddle が処理します。サブスクリプションの管理リンクは、Paddle の領収書メールにあります）。",
+      "sent": "メールを確認し、送信したリンクを<strong>このブラウザで</strong>開くと、アカウントが完全に削除されます。リンクの有効期限は 24 時間です。",
+      "start": "アカウントを削除…",
+      "typeToConfirm": "確認のため <mono>{phrase}</mono> と入力してください",
+      "sending": "送信中…",
+      "confirm": "アカウントを削除する",
+      "cancel": "キャンセル"
+    },
+    "redeem": {
+      "open": "コードをお持ちですか？引き換える",
+      "placeholder": "引き換えコード",
+      "submit": "引き換える",
+      "redeeming": "引き換え中…",
+      "success": "コードを引き換えました：{plan} を {date} まで利用できます。",
+      "stored": "{plan} カード（{days} 日間）として保存しました。現在のプランは変わりません。「カード」から {date} までに使ってください。",
+      "errors": {
+        "invalid_code": "そのコードは無効です。",
+        "expired": "そのコードは有効期限が切れています。",
+        "used_up": "そのコードは使用上限に達しました。",
+        "already_redeemed": "この特典はすでに利用済みです。",
+        "email_not_verified": "先にメールアドレスを確認してください。",
+        "too_many_attempts": "間違ったコードが多すぎます。{minutes} 分後にもう一度お試しください。",
+        "generic": "コードを引き換えられませんでした。しばらくしてからもう一度お試しください。"
+      },
+      "attemptsLeft": "あと {count} 回試せます。"
+    },
+    "invite": {
+      "title": "友だちを招待",
+      "intro": "リンクを共有してください。友だちが登録して読書を始めると、お二人とも {days} 日間の Plus カードがもらえます。この方法で最大 {max} 枚のカードを獲得できます。",
+      "linkLabel": "あなたの招待リンク",
+      "copy": "リンクをコピー",
+      "copied": "リンクをコピーしました。",
+      "stats": "招待 {invited} 人 · 特典獲得 {rewarded} 人",
+      "joinedPending": "招待で参加しました。数分間読書するか、3 語を保存すると、カードが届きます。",
+      "joinedDone": "招待で参加しました。カードは下の「カード」にあります。",
+      "cardsTitle": "カード",
+      "cardsEmpty": "カードはまだありません。",
+      "card": "{plan} カード · {days} 日間",
+      "cardUntil": "{date} までに使ってください。",
+      "activate": "有効にする",
+      "activating": "有効にしています…",
+      "activated": "カードを有効にしました：{plan} を {date} まで利用できます。",
+      "haveCode": "友だちの招待コードをお持ちですか？",
+      "codePlaceholder": "招待コード",
+      "codeSubmit": "コードを使う",
+      "claimed": "招待コードを受け付けました。",
+      "errors": {
+        "invalid_code": "その招待コードは無効です。",
+        "self_invite": "自分の招待コードは使えません。",
+        "already_attached": "すでに招待コードを使っています。",
+        "window_closed": "招待コードを追加できるのは、登録から 7 日間のみです。",
+        "used_up": "その招待コードは使用上限に達しました。",
+        "email_used": "このメールアドレスは、すでに招待特典を受け取っています。",
+        "too_many_attempts": "間違ったコードが多すぎます。{minutes} 分後にもう一度お試しください。",
+        "not_found": "そのカードが見つかりませんでした。",
+        "already_used": "そのカードはすでに使用済みです。",
+        "expired": "そのカードは有効期限が切れています。",
+        "higher_plan_active": "現在のプランのほうがこのカードより上位です。プランが終了してからカードを使ってください。",
+        "subscription_active": "自動更新のサブスクリプションがあります。サブスクリプションが終了してからカードを使ってください。",
+        "generic": "問題が発生しました。しばらくしてからもう一度お試しください。"
+      },
+      "attemptsLeft": "あと {count} 回試せます。"
+    },
+    "installApp": {
+      "title": "Readfox をホーム画面に追加",
+      "body": "アイコンから開けば、アドレスを入力せず、アプリのように全画面で使えます。",
+      "install": "ホーム画面に追加",
+      "desktop": "スマートフォンのブラウザで readfox.app を開いてログインし、ここに戻って手順を確認してください。",
+      "steps": {
+        "ios1": "Safari で readfox.app を開きます。",
+        "ios2": "共有ボタン（上向きの矢印がついた四角）をタップします。",
+        "ios3": "「ホーム画面に追加」を選び、「追加」をタップします。",
+        "wechat1": "WeChat では追加できません。右上の「···」をタップして、「ブラウザで開く」を選びます。",
+        "wechat2": "ブラウザで設定を開き、そこに表示される手順に従います。",
+        "android1": "ブラウザのメニュー（通常は右上の ⋮）をタップします。",
+        "android2": "「ホーム画面に追加」または「アプリをインストール」を選びます。"
+      }
+    }
+  },
+  "welcomeOffer": {
+    "body": "初めての方は、コード <b>{code}</b> で Plus を 15 日間無料で使えます。12 月 15 日まで有効で、1 アカウントにつき 1 回です。",
+    "use": "使う",
+    "signUp": "登録"
+  },
+  "plans": {
+    "freePrice": "$0",
+    "perMonth": "{price}/月",
+    "perYear": "または {price}/年",
+    "perYearMain": "{price}/年",
+    "annualEquivalent": "月あたり約 {price}（年払い）",
+    "annualEquivalentSave": "月あたり約 {price}（年払い）。{percent}% お得",
+    "chinaPrice": "中国本土：{price}/月（Alipay）",
+    "chinaPriceYear": "中国本土：{price}/年（Alipay）",
+    "priceAtCheckout": "価格はお支払い時に表示されます",
+    "getStarted": "無料で始める",
+    "features": {
+      "glosses": "毎月 {count, number} 回の AI 単語検索（辞書にない単語用）",
+      "freeLibrary": "コレクション 10 件、レッスン 200 件まで。無料ライブラリの本はレッスン数に含まれません",
+      "byok": "もっと使いたいときは自分の AI キーを追加できます",
+      "detailed": "毎月 {count, number} 回の詳細な AI 回答（フレーズの翻訳と単語の解説）",
+      "phraseWords": "1 回の翻訳で最大 {count} 語まで選択できます",
+      "phraseUnlimited": "1 回の翻訳で好きな長さのテキストを選択できます",
+      "moreRoom": "コレクション 50 件、レッスン 1,000 件まで",
+      "unlimitedLibrary": "コレクションとレッスンは無制限",
+      "byokPaid": "もっと使いたいときは自分の AI キーを使えます"
+    },
+    "current": "現在のプラン",
+    "choose": "{plan} を選ぶ",
+    "cycleLabel": "請求期間",
+    "cycleYear": "年払い",
+    "cycleYearSave": "年払い（最大 {percent}% お得）",
+    "cycleMonth": "月払い"
+  },
+  "pricing": {
+    "metaTitle": "料金 – Readfox",
+    "title": "料金",
+    "intro": "まずは無料で始めましょう。詳細な AI 解説や多めの利用枠が必要になったらアップグレードしてください。いつでも解約できます。",
+    "notes": "該当する場合、売上税または VAT はお支払い時に加算されます。お支払いは再販業者の Paddle が処理します。中国本土のお客様は人民元で支払い、Alipay を利用できます。",
+    "cardPending": "カード、PayPal、Apple Pay のお支払いは開発中です。現在は Alipay と WeChat Pay のみ利用できます。",
+    "metaDescription": "Readfox のプラン：月 1,000 回の AI 単語検索つきの無料プランから始められます。Plus、Pro、Max では検索回数、詳細な AI 解説、ライブラリの容量が増えます。カード、PayPal、Alipay でお支払いいただけます。"
+  },
+  "checkoutPage": {
+    "opening": "安全なお支払い画面を開いています",
+    "failed": "お支払い画面を開けませんでした。戻ってもう一度お試しください。",
+    "back": "プランに戻る"
+  },
+  "planLimits": {
+    "upgradePlus": "Plus にアップグレード",
+    "seePlans": "プランを見る",
+    "addKey": "API キーを追加",
+    "notNow": "今はしない",
+    "upgradeLine": {
+      "cloud": "Plus ならこの上限が引き上げられます。",
+      "plus": "Pro ならこの上限が引き上げられます。",
+      "max": "Max ならこの上限が引き上げられます。",
+      "byok": "自分の API キーを追加すると、この上限がなくなります。"
+    },
+    "generic": {
+      "title": "プランの上限に達しました",
+      "body": "お使いのプランの利用枠を超えています。"
+    },
+    "metrics": {
+      "phraseSelectionWords": {
+        "title": "フレーズがプランの上限より長いです",
+        "body": "お使いのプランでは、フレーズ検索は {limit, number} 語までです。"
+      },
+      "journalWordsPerMonth": {
+        "title": "今月の日記の上限に達しました",
+        "body": "今月は日記を {limit, number} 語中 {used, number} 語書きました。"
+      },
+      "llmRequestsPerMonth": {
+        "title": "今月の AI 利用枠を使い切りました",
+        "body": "今月の詳細な AI 回答 {limit, number} 回をすべて使いました。"
+      },
+      "wordGlossesPerMonth": {
+        "title": "今月の AI 単語検索を使い切りました",
+        "body": "今月の AI 単語検索 {limit, number} 回をすべて使いました。オフライン辞書の単語は引き続き使えます。"
+      },
+      "phraseTranslationsPerDay": {
+        "title": "本日のフレーズ翻訳枠を使い切りました",
+        "body": "本日のフレーズ翻訳 {limit, number} 回をすべて使いました。UTC の 0 時にリセットされます。"
+      },
+      "contextTranslationsPerDay": {
+        "title": "本日の文脈翻訳枠を使い切りました",
+        "body": "本日の文脈つき翻訳 {limit, number} 回をすべて使いました。UTC の 0 時にリセットされます。"
+      },
+      "ttsCharsPerMonth": {
+        "title": "今月の音声枠を使い切りました",
+        "body": "今月の残りは、音声読み上げにブラウザの音声を使います。"
+      },
+      "maxCollections": {
+        "title": "ライブラリの上限に達しました",
+        "body": "お使いのプランではコレクションを {limit, number} 件まで保存できます。"
+      },
+      "maxLessons": {
+        "title": "ライブラリの上限に達しました",
+        "body": "お使いのプランではレッスンを {limit, number} 件まで保存できます。"
+      },
+      "maxVocabEntries": {
+        "title": "保存した単語の上限に達しました",
+        "body": "お使いのプランでは単語を {limit, number} 語まで保存できます。"
+      }
+    },
+    "dialog": {
+      "plus": "Plus では毎月 {glosses, number} 回の AI 単語検索と {detailed, number} 回の詳細な回答を利用できます。無料の本と保存した単語はそのまま残ります。",
+      "freeReset": "無料のまま読み続けることもできます。利用枠は来月また始まります。"
+    }
+  },
+  "feedback": {
+    "nav": "フィードバック",
+    "title": "フィードバック",
+    "intro": "問題点や今後ほしい機能をお聞かせください。すべてのメッセージに目を通しています。",
+    "messageLabel": "メッセージ",
+    "placeholder": "問題やアイデアを書いてください。スクリーンショットも貼り付けられます。",
+    "counter": "{count} / {max}",
+    "addImage": "画像を追加",
+    "removeImage": "画像 {name} を削除",
+    "imagesHint": "画像は {count} 枚まで、1 枚あたり {size} MB までです。PNG、JPEG、WebP、GIF に対応しています。",
+    "replyTo": "{email} に返信します。",
+    "send": "送信",
+    "sending": "送信中…",
+    "successTitle": "ありがとうございます。受け付けました。返信はメールでお送りします。",
+    "sendAnother": "別のメッセージを送る",
+    "errors": {
+      "empty": "先にメッセージを入力してください。",
+      "tooLong": "メッセージが長すぎます。",
+      "tooManyImages": "画像は {count} 枚まで追加できます。",
+      "imageTooLarge": "{size} MB を超える画像があります。",
+      "imageType": "PNG、JPEG、WebP、GIF の画像を使ってください。",
+      "tooLarge": "メッセージと画像のサイズが大きすぎます。",
+      "rateLimited": "送信回数が多すぎます。しばらくしてからもう一度お試しください。",
+      "failed": "メッセージを送信できませんでした。しばらくしてからもう一度お試しください。"
+    },
+    "wechat": {
+      "summary": "WeChat のほうが便利ですか？",
+      "body": "質問、機能のアイデア、意味の間違いなど、何でもどうぞ。コードをスキャンして WeChat で私を追加してください。私が Readfox を作っています。友だち申請に「Readfox」と書いてください。",
+      "alt": "Readfox 作者の WeChat QR コード"
+    }
+  },
+  "library": {
+    "freeBooks": {
+      "button": "無料の本",
+      "title": "無料の本",
+      "close": "閉じる",
+      "intro": "{language}のパブリックドメインの本を、やさしい順に並べています。追加すると、ライブラリにコピーされます。レベルはおおよその目安です。",
+      "loading": "読み込み中…",
+      "errLoad": "無料の本を読み込めませんでした。",
+      "none": "{language}の無料の本はまだありません。",
+      "size": "{words} 語・{lessons} レッスン",
+      "add": "追加",
+      "adding": "追加中…",
+      "addedLabel": "追加済み",
+      "added": "「{title}」をライブラリに追加しました",
+      "errAdd": "本を追加できませんでした",
+      "tab": {
+        "books": "本",
+        "news": "ニュース",
+        "travel": "旅行",
+        "science": "科学"
+      },
+      "feedIntro": "{language}の最新の{interest}記事です。追加すると、出典つきでライブラリにコピーされます。",
+      "feedLoading": "読み込み中…",
+      "feedErrLoad": "記事を読み込めませんでした。",
+      "feedNone": "記事はまだありません。またのぞいてください。",
+      "feedSize": "{words} 語",
+      "feedAdd": "追加",
+      "feedAdding": "追加中…",
+      "feedAddedLabel": "追加済み",
+      "feedAdded": "「{title}」をライブラリに追加しました",
+      "feedErrAdd": "記事を追加できませんでした",
+      "feedSource": "出典：{source} · {license}",
+      "search": "タイトルまたは著者で検索",
+      "sortLabel": "本の並べ替え",
+      "sortDefault": "おすすめ順",
+      "sortShort": "短い順",
+      "sortLong": "長い順",
+      "noMatch": "「{query}」に一致する本はありません。",
+      "readingHours": "約 {hours} 時間",
+      "readingMinutes": "約 {minutes} 分"
+    },
+    "empty": {
+      "browseBooks": "無料の本を見る",
+      "title": "ライブラリに本がありません",
+      "description": "本（EPUB または Markdown）を取り込んで学習を始めましょう。読みながら、語彙と進捗が記録されます。",
+      "importBook": "本を取り込む",
+      "addStarter": "入門コンテンツを追加",
+      "adding": "追加中…"
+    },
+    "starterBlurb": "最初の 1,000 語を、役に立つ順に学べる短いコースです。",
+    "common": {
+      "close": "閉じる",
+      "cancel": "キャンセル",
+      "saving": "保存中...",
+      "back": "戻る",
+      "delete": "削除",
+      "title": "タイトル",
+      "authorSource": "著者 / 出典",
+      "saveToLibrary": "ライブラリに保存",
+      "tryAgain": "もう一度試す",
+      "text": "テキスト",
+      "words": "{count} 語"
+    },
+    "errors": {
+      "createGroup": "グループを作成できませんでした",
+      "renameGroup": "グループ名を変更できませんでした",
+      "deleteGroup": "グループを削除できませんでした",
+      "reorderCollections": "コレクションを並べ替えられませんでした",
+      "importAudio": "音声ファイルを取り込めませんでした。",
+      "importFile": "ファイルを取り込めませんでした。有効なファイルか確認してください。",
+      "deleteCollection": "コレクションを削除できませんでした",
+      "updateCollection": "コレクションを更新できませんでした",
+      "deleteLesson": "レッスンを削除できませんでした",
+      "updateLesson": "レッスンを更新できませんでした",
+      "reorderLessons": "レッスンを並べ替えられませんでした",
+      "retryTranscription": "文字起こしを再試行できませんでした"
+    },
+    "page": {
+      "title": "あなたのライブラリ",
+      "loading": "ライブラリを読み込み中",
+      "newGroup": "新しいグループ",
+      "groupNamePlaceholder": "グループ名",
+      "addGroup": "追加",
+      "ungrouped": "グループなし",
+      "selectFile": "EPUB または Markdown ファイルを選択してください",
+      "audioUploaded": "「{title}」をアップロードしました。文字起こしを開始しました",
+      "audioMinutes": "（音声約 {minutes} 分。通常は数分で文字起こしが終わります）"
+    },
+    "group": {
+      "expand": "{name}を開く",
+      "collapse": "{name}を閉じる",
+      "items": "{count} 件",
+      "newCollection": "新しいコレクション",
+      "rename": "名前を変更",
+      "delete": "削除",
+      "renamePrompt": "グループ名を変更：",
+      "deleteConfirm": "グループ「{name}」を削除しますか？このグループのコレクションはグループなしになります。"
+    },
+    "onboarding": {
+      "title": "最初の学習サイクルを続けましょう",
+      "practiceReady": "保存した 3 つの単語を、すぐに復習できます。",
+      "resumeLesson": "{title}の続きから再開します。",
+      "fallbackLesson": "入門レッスン",
+      "resume": "再開"
+    },
+    "addTile": {
+      "placeholder": "コレクションのタイトル",
+      "create": "作成"
+    },
+    "card": {
+      "coverAlt": "{title}の表紙",
+      "complete": "{percent}% 完了",
+      "notStarted": "未読",
+      "lessons": "{count} レッスン",
+      "dragToReorder": "ドラッグして{title}を並べ替え",
+      "today": "今日",
+      "yesterday": "昨日",
+      "daysAgo": "{count} 日前",
+      "weeksAgo": "{count} 週間前",
+      "monthsAgo": "{count} か月前"
+    },
+    "import": {
+      "label": "取り込む",
+      "importing": "取り込み中...",
+      "addTo": "追加先",
+      "ungrouped": "ライブラリ（グループなし）",
+      "options": {
+        "file": "ファイルを取り込む",
+        "audio": "音声を取り込む",
+        "url": "URL から取り込む",
+        "youtube": "YouTube の文字起こし",
+        "paste": "テキストを貼り付け"
+      }
+    },
+    "paste": {
+      "title": "テキストを貼り付け",
+      "titlePlaceholder": "記事または文章のタイトル",
+      "optional": "任意",
+      "textPlaceholder": "{language}の文章をここに貼り付けてください..."
+    },
+    "web": {
+      "title": "Web から取り込む",
+      "urlLabel": "記事の URL",
+      "extract": "抽出",
+      "extracting": "抽出中...",
+      "help": "{language}のニュース記事やブログ記事の URL を貼り付けてください。記事の本文を抽出して、ライブラリに追加します。",
+      "contentPreview": "内容のプレビュー",
+      "fromSite": "{site} より",
+      "saveFailed": "記事を保存できませんでした。",
+      "extractFailed": "記事を抽出できませんでした",
+      "networkError": "ネットワークエラーです。接続を確認してください。"
+    },
+    "youtube": {
+      "title": "YouTube の文字起こしを取り込む",
+      "urlLabel": "YouTube の動画 URL",
+      "find": "字幕を探す",
+      "finding": "探しています…",
+      "help": "動画の文字起こしを、タイムスタンプ付きのレッスンとして取り込みます。動画のダウンロードや保存は行いません。行をクリックすると、YouTube のその場面が開きます。",
+      "chooseTrack": "字幕トラックを選択",
+      "auto": "自動生成",
+      "creator": "投稿者の字幕",
+      "importing": "「{language}」の文字起こしを取り込み中…",
+      "note": "自動生成の字幕には認識ミスが含まれることがあります。取り込み後に文字起こしのテキストを編集できます。",
+      "importFailed": "文字起こしを取り込めませんでした。"
+    },
+    "lessonForm": {
+      "add": "レッスンを追加",
+      "edit": "レッスンを編集",
+      "create": "レッスンを作成",
+      "save": "変更を保存",
+      "titlePlaceholder": "レッスンのタイトル",
+      "textPlaceholder": "レッスンのテキスト。Markdown に対応しています。"
+    },
+    "collection": {
+      "back": "ライブラリ",
+      "loading": "コレクションを読み込み中",
+      "editDetails": "コレクションの詳細を編集",
+      "lessonsCount": "{count} レッスン",
+      "completed": "{count} 完了",
+      "group": "グループ：",
+      "none": "なし",
+      "newGroupOption": "+ 新しいグループ...",
+      "newGroupPrompt": "新しいグループ名：",
+      "continueReading": "続きを読む",
+      "deleteConfirm": "このコレクションとすべてのレッスンを削除しますか？",
+      "deleteLessonConfirm": "「{title}」を削除しますか？",
+      "addLesson": "レッスンを追加",
+      "form": {
+        "title": "コレクションを編集",
+        "titlePlaceholder": "コレクションのタイトル",
+        "author": "著者",
+        "authorPlaceholder": "著者",
+        "save": "変更を保存"
+      },
+      "row": {
+        "read": "読む",
+        "reread": "もう一度読む",
+        "continue": "続ける",
+        "transcribing": "文字起こし中…",
+        "transcriptionFailed": "文字起こしに失敗しました",
+        "retryTranscription": "文字起こしを再試行",
+        "edit": "レッスンを編集",
+        "delete": "レッスンを削除",
+        "dragToReorder": "ドラッグして{title}を並べ替え"
+      }
+    },
+    "view": {
+      "label": "ライブラリの表示",
+      "grid": "グリッド表示",
+      "list": "リスト表示"
+    }
+  },
+  "readingLevel": {
+    "names": {
+      "A1": "入門",
+      "A2": "初級",
+      "B1": "中級",
+      "B2": "中上級",
+      "C1": "上級",
+      "C2": "最上級"
+    },
+    "exam": {
+      "ielts": "IELTS {score}",
+      "toefl": "TOEFL iBT {score}",
+      "delf": "DELF {score}",
+      "dalf": "DALF {score}",
+      "hsk": "HSK {score}",
+      "topik": "TOPIK {score}",
+      "juniorHigh": "中学校",
+      "zhongkao": "Zhongkao",
+      "gaokao": "Gaokao",
+      "cet4": "CET-4",
+      "cet6": "CET-6",
+      "tem8": "TEM-8"
+    },
+    "approx": "試験との対応は参考です。",
+    "notSure": "わからない",
+    "all": "すべてのレベル",
+    "yours": "あなたのレベル",
+    "original": "原題：{title}"
+  },
+  "recommend": {
+    "booksTitle": "あなたのレベルの本",
+    "articlesTitle": "おすすめの最新記事",
+    "interest": {
+      "news": "ニュース",
+      "travel": "旅行",
+      "science": "科学"
+    },
+    "original": "原題：{title}",
+    "words": "{words} 語",
+    "harder": "あなたのレベルより少し難しめ",
+    "start": "読み始める",
+    "starting": "開いています…",
+    "loading": "おすすめを探しています…",
+    "errStart": "これを開けませんでした。別のものをお試しください。",
+    "empty": "まだおすすめはありません。無料の本を見てみましょう。",
+    "homeTitle": "あなたにおすすめ",
+    "homeHint": "最初に読む無料の本と記事です。",
+    "homeHintLevel": "あなたのレベル（{level}）に合わせています。",
+    "more": "無料の本をもっと見る",
+    "collapse": "このセクションを閉じる",
+    "expand": "このセクションを開く"
+  },
+  "bookLink": {
+    "view": "{site}で見る",
+    "site": {
+      "douban": "Douban",
+      "goodreads": "Goodreads",
+      "babelio": "Babelio",
+      "booklog": "Booklog",
+      "aladin": "Aladin"
+    }
+  },
+  "newLanguage": {
+    "title": "{language}を始める",
+    "intro": "{language}のレベルと読みたいものを教えてください。最初の1冊をご提案します。使い方はもうおわかりなので、1 分で終わります。",
+    "submit": "おすすめを表示",
+    "later": "今はしない",
+    "close": "閉じる",
+    "pickIntro": "1つ選んで読み始めましょう。"
+  },
+  "descriptions": {
+    "toggle": "説明を表示"
+  },
+  "publicBooks": {
+    "indexTitle": "学んでいる言語の無料の本",
+    "indexMetaDescription": "英語、フランス語、スペイン語、中国語、韓国語の名作 {count} 冊を、A1 から C2 のレベル順に掲載。Readfox で無料で読めて、単語をタップすれば意味がわかります。",
+    "indexIntro": "ここにある本はすべてパブリックドメインの全文で、CEFR レベル順に並んでいます。気になる本を開いて冒頭を見てから、Readfox で無料で読みましょう。単語をタップすると、あなたの言語で意味が表示されます。",
+    "bookCount": "{count} 冊",
+    "level": "レベル {level}",
+    "byAuthor": "著者：{author}",
+    "readingHours": "読了の目安：約 {hours} 時間",
+    "readingMinutes": "読了の目安：約 {minutes} 分",
+    "lessons": "{count} レッスン",
+    "opening": "第 1 章のプレビュー",
+    "readFree": "Readfox で無料で読む",
+    "ctaNote": "単語をタップすると、あなたの言語で意味が表示されます。新しい単語を保存して、あとで復習できます。",
+    "source": "出典：<link>{source}</link>。{license}。",
+    "moreAtLevel": "レベル {level} の{language}の本をもっと見る",
+    "allBooks": "すべての無料の本",
+    "metaTitle": "{author}『{title}』を{language}で無料で読む | Readfox",
+    "readWholeChapter": "第 1 章を最後まで読む",
+    "tryRead": "第 1 章を無料で読む（登録不要）",
+    "hardWordsTitle": "この本の難しい単語",
+    "hardWordsNote": "この本によく出てくる単語のうち、日常の{language}ではまれな {count} 語です。Readfox のリーダーで単語をタップすると、意味が表示されます。",
+    "chapterTitle": "{title}：第 1 章",
+    "readMetaTitle": "『{title}』第 1 章を{language}で無料で読む | Readfox",
+    "readMetaDescription": "{author}『{title}』の第 1 章を、アカウントなしで無料で読めます。レベル {level}。",
+    "continueTitle": "気に入りましたか？続きを読む",
+    "continueBody": "無料で登録すると、全 {count} レッスンを読めます。単語をタップするとあなたの言語で意味が表示され、新しい単語は保存して復習できます。",
+    "continueCta": "無料で登録して続きを読む",
+    "backToBook": "この本について",
+    "levelTitle": "レベル {level} の{language}の本",
+    "levelIntro": "CEFR レベル {level} の無料の{language}の本が {count} 冊あります。どれもパブリックドメインの全文です。",
+    "levelMetaDescription": "CEFR レベル {level} の無料の{language}の本：{titles}。Readfox で読めて、単語をタップすれば意味がわかります。",
+    "authorsTitle": "著者別の{language}の本",
+    "authorsMetaDescription": "Readfox の無料の{language}の本の著者 {count} 人を、{first} から {last} まで一覧で見られます。",
+    "authorTitle": "{author}：無料の{language}の本",
+    "authorIntro": "{author}の本 {count} 冊を、Readfox で無料で読めます。どれもパブリックドメインの全文です。",
+    "authorMetaDescription": "{author}の本 {count} 冊を{language}で無料で読めます：{titles}。",
+    "browseLevels": "レベル別",
+    "browseAuthors": "著者別"
+  },
+  "journal": {
+    "title": "日記",
+    "newEntry": "新しい日記",
+    "cancel": "キャンセル",
+    "placeholder": "今日の日記を{language}で書きましょう...",
+    "words": "{count} 語",
+    "draftSaved": "下書きを保存しました",
+    "saving": "保存中...",
+    "saveDraft": "下書きを保存",
+    "correcting": "添削中...",
+    "submitForCorrection": "添削に出す",
+    "failedToSave": "保存に失敗しました",
+    "correctionFailed": "添削に失敗しました",
+    "deleteConfirm": "この日記を削除しますか？",
+    "deleteFailed": "日記を削除できませんでした",
+    "entries": "{count} 件",
+    "empty": "日記はまだありません",
+    "writeFirst": "最初の日記を書く",
+    "card": {
+      "corrections": "修正 {count} 件",
+      "perfect": "完璧",
+      "draft": "下書き",
+      "deleteEntry": "日記を削除",
+      "words": "{count} 語"
+    },
+    "modal": {
+      "close": "閉じる"
+    },
+    "correction": {
+      "yourText": "あなたの文章",
+      "clickHint": "ハイライトされた語をクリックすると修正内容が表示されます",
+      "corrected": "修正後",
+      "summary": "修正 {count} 件：",
+      "perfect": "完璧です！修正の必要はありません。"
+    },
+    "types": {
+      "grammar": "文法",
+      "spelling": "スペル",
+      "wordChoice": "単語の選択",
+      "wordOrder": "語順",
+      "missingWord": "不足している語",
+      "extraWord": "余分な語"
+    }
+  },
+  "stats": {
+    "title": "統計",
+    "loadFailed": "統計を読み込めませんでした",
+    "returnHome": "ホームに戻る",
+    "cards": {
+      "wordsKnown": "覚えた単語",
+      "learning": "学習中（L1〜L4）",
+      "learningSub": "進行中の単語",
+      "wordsRead": "読んだ語数",
+      "wordsReadSub": "読書位置からの推定値",
+      "currentStreak": "現在の連続日数",
+      "days": "{count} 日",
+      "longest": "最長：{count} 日"
+    },
+    "range": {
+      "d30": "30日",
+      "d90": "90日",
+      "y1": "1年",
+      "all": "すべて"
+    },
+    "states": {
+      "known": "覚えた",
+      "level4": "レベル 4",
+      "level3": "レベル 3",
+      "level2": "レベル 2",
+      "level1": "レベル 1",
+      "new": "新規",
+      "ignored": "無視"
+    },
+    "wordStates": {
+      "title": "状態別の単語数"
+    },
+    "cloze": {
+      "title": "穴埋め練習",
+      "sentencesPracticed": "練習した文の数",
+      "accuracy": "正答率",
+      "totalPoints": "合計ポイント"
+    },
+    "mastery": {
+      "title": "文の習得度",
+      "overall": "全体で {percent}%",
+      "mastered": "{mastered} / {total} 習得済み",
+      "due": "復習の期限が来ているもの {count} 件",
+      "collections": {
+        "top500": "上位 500",
+        "top1000": "上位 1000",
+        "top2000": "上位 2000",
+        "mined": "抽出",
+        "random": "ランダム"
+      }
+    },
+    "fluency": {
+      "estimatedLevel": "選んだレベルではなく、覚えた単語から推定しています",
+      "vsLastWeek": "先週比 {count, number}",
+      "sameAsLast": "今週 {count, number}（先週と同じ）",
+      "progressTo": "{level} までの進捗",
+      "topLevel": "最高レベルに到達しました",
+      "wordsToNext": "{level} まであと {count, number} 語",
+      "known": "覚えた",
+      "learning": "学習中",
+      "levelName": {
+        "A1": "入門",
+        "A2": "初級",
+        "B1": "中級",
+        "B2": "中上級",
+        "C1": "上級",
+        "C2": "最上級"
+      }
+    },
+    "heatmap": {
+      "title": "学習の記録",
+      "total": {
+        "actions": "過去 1 年間で {count, number} 回の操作",
+        "lookups": "過去 1 年間で {count, number} 回の検索"
+      },
+      "count": {
+        "actions": "{count, number} 回の操作",
+        "lookups": "{count, number} 回の検索"
+      },
+      "types": {
+        "lookups": "検索",
+        "cloze": "穴埋め",
+        "reading": "読書",
+        "anki": "Anki"
+      },
+      "minutes": "{count} 分",
+      "noActivity": "記録なし",
+      "less": "少ない",
+      "more": "多い",
+      "activeDays": "学習した日数：",
+      "avgPerActiveDay": "学習した日の平均："
+    },
+    "anki": {
+      "title": "Anki の復習",
+      "last90": "過去 90 日間",
+      "reviews": "復習回数",
+      "reviewDays": "復習した日数",
+      "avgPerDay": "復習日あたりの平均",
+      "connectTitle": "Anki を連携して復習履歴を表示",
+      "connectBody": "復習は自動的に同期され、連続日数に反映されます。",
+      "connectButton": "Anki を連携"
+    },
+    "ankiStatus": {
+      "synced": "同期済み",
+      "notSynced": "未同期",
+      "noteId": "Anki ノート ID：{id}",
+      "pushed": "Anki に送信済み"
+    },
+    "radar": {
+      "title": "得意な分野",
+      "subtitle": "語彙が最も充実している分野",
+      "pending": "分類待ちの単語 {count} 語",
+      "emptyTitle": "分野のデータはまだありません",
+      "emptyHint": "読んで単語を覚えると、得意なテーマがわかります。",
+      "emptySorting": "覚えた単語をテーマ別に分類しています。しばらくしてからもう一度ご確認ください。",
+      "knownWords": "覚えた単語 {count} 語",
+      "mastery": "習得度"
+    },
+    "vocabGrowth": {
+      "title": "語彙の成長",
+      "knownWords": "覚えた単語",
+      "learning": "学習中",
+      "total": "合計",
+      "series": {
+        "known": "覚えた",
+        "learning": "学習中",
+        "total": "合計"
+      }
+    }
+  },
+  "chat": {
+    "error": "申し訳ありません。返信できませんでした。設定で LLM プロバイダーが設定されているか確認してください。",
+    "open": "チャットを開く",
+    "close": "チャットを閉じる",
+    "tutorTitle": "{language}チューター",
+    "tutorSubtitle": "{language}について何でも質問できます",
+    "clearTitle": "チャットを消去",
+    "clear": "消去",
+    "loadingOlder": "以前のメッセージを読み込み中...",
+    "emptyPrompt": "{language}について質問してみましょう",
+    "via": "{provider} 経由",
+    "placeholder": "{language}について質問する..."
+  },
+  "chrome": {
+    "theme": {
+      "light": "ライト",
+      "dark": "ダーク",
+      "system": "システム"
+    },
+    "nav": {
+      "expandSidebar": "サイドバーを開く",
+      "collapseSidebar": "サイドバーを閉じる",
+      "signOut": "ログアウト",
+      "showEmail": "メールアドレスを表示",
+      "hideEmail": "メールアドレスを隠す"
+    },
+    "tour": {
+      "practiceTitle": "あとで練習",
+      "practiceBody": "単語はあとで「練習」タブから復習できます。",
+      "vocabTitle": "あなたの語彙",
+      "vocabBody": "触れた単語は「単語帳」タブで見直せます。"
+    },
+    "loading": {
+      "app": "Readfox を読み込み中",
+      "session": "セッションを読み込み中",
+      "subscription": "サブスクリプションを読み込み中",
+      "setup": "セットアップを読み込み中"
+    },
+    "setup": {
+      "connectError": "サーバーに接続できませんでした。",
+      "retry": "再試行"
+    },
+    "language": {
+      "changeFailed": "言語を変更できませんでした",
+      "wordsKnown": "覚えた単語：{count}",
+      "add": "言語を追加",
+      "current": "言語：{language}",
+      "select": "言語を選択",
+      "search": "言語を検索",
+      "noMatch": "言語が見つかりません",
+      "inDevelopment": "開発中"
+    },
+    "quota": {
+      "title": "今月の AI",
+      "lookups": "AI 単語翻訳",
+      "requests": "詳細な AI 回答",
+      "left": "残り {left}",
+      "used": "{limit} 中 {used} 使用",
+      "byok": "自分の AI キーを使用中",
+      "resets": "回数は毎月 1 日にリセットされます。",
+      "exhausted": "今月分は使い切りました",
+      "settings": "設定で自分のキーを使う",
+      "note": "辞書の検索は無料で、回数に含まれません。辞書の意味をあなたの言語に翻訳する場合も同様です。",
+      "percentUsed": "{percent}% 使用",
+      "close": "閉じる",
+      "info": "この利用枠について",
+      "tip": "この円をタップすると、今月の AI の残りがわかります。",
+      "tipDismiss": "OK"
+    }
+  },
+  "legalPages": {
+    "notice": "この文書は英語版が正本です。この翻訳は便宜のために提供しています。",
+    "privacy": {
+      "metaTitle": "プライバシー – Readfox",
+      "title": "プライバシーポリシー",
+      "lastUpdated": "最終更新日：{date}",
+      "intro": "Readfox は、個人が独立して運営する小さなサービスです。このページでは、保存する情報、データに関わる第三者、私たちが見られるものと見られないものを、わかりやすく説明します。",
+      "store": {
+        "heading": "保存する情報",
+        "items": {
+          "account": "メールアドレス、任意で入力した名前、ソルトつきのパスワードのハッシュ。",
+          "text": "取り込んだ本や記事から抽出した<strong>テキスト</strong>（タイトルと章）。元の EPUB ファイルは保存しません。",
+          "learning": "単語帳、読書の進捗、練習の履歴、日記、設定。",
+          "reviewHistory": "単語の復習履歴（各回答、回答した時刻、カードのスケジュール）。学習データの書き出しに含まれます。無料アカウントでは、直近 5,000 件を保存します。",
+          "aiKey": "自分の AI キーを追加した場合、暗号化（AES-256-GCM）して保存します。ブラウザに送り返すことはありません。",
+          "usage": "AI 検索とリクエストの使用回数の月間カウンター。月ごとの利用枠を適用するために使います。",
+          "session": "ログイン状態を保つセッション Cookie と、サービスの安全性と動作を保つためのサーバーログ。Web アクセスログには、ページのアドレス、時刻、ステータスを記録し、IP アドレスは先頭の 3 つの区切りまでに切り詰めます（例：203.0.113.x）。Cookie やパスワードは含まれず、30 日後に削除されます。",
+          "feedback": "フィードバックを送信すると、メッセージ本文を保存します。返信できるよう、アカウントのメールアドレスと添付した画像とともに、運営者にメールで送信します。画像は保存しません。アカウントを削除すると、保存したメッセージも削除します。",
+          "sharedWords": "単語単位の翻訳、学習者の言語に翻訳した辞書の意味、公開されている例文（無料ライブラリの本と Tatoeba）の翻訳、AI が作成した単語の例文（言語の組み合わせ、単語または公開文、その翻訳）の共有キャッシュ。すべてのアカウントで再利用されます。アカウント情報やあなたの文は含まれません。",
+          "invites": "招待コード、あなたを招待した人またはあなたが招待した人（内部のアカウントリンクとして）、保有している特典カード。",
+          "inviteFingerprint": "招待特典を獲得すると、メールアドレスの鍵つき一方向ハッシュを 24 か月間保存します。アカウントを削除した後も保存します。ハッシュから元のアドレスに戻すことはできません。同じアドレスで特典を二重に獲得することを防ぐためだけに使います。"
+        }
+      },
+      "others": {
+        "heading": "関わる第三者",
+        "items": {
+          "cloudflare": "<strong>Cloudflare</strong> – DNS、登録時の Turnstile ボット確認、バックアップ用の R2 ストレージ。",
+          "resend": "<strong>Resend</strong> – 確認メールとパスワードリセットのメールを配信します。製品メールが有効な場合は、ウェルカムメール、最初の数日間の短い読書リマインダー、無料枠の上限に達したときのお知らせも配信します。いずれも配信停止リンクがあります。",
+          "aiProvider": "<strong>お使いの AI プロバイダー（OpenRouter または Anthropic）</strong> – 自分のキーを追加して翻訳、解説、チャットを使うと、選択したテキストと周辺の文脈の一部が、<em>あなたの</em>キーでプロバイダーに送信されます。そのデータにはプロバイダーのプライバシー条件が適用され、利用料金はあなたに請求されます。",
+          "aiBuiltIn": "<strong>Alibaba Cloud（Model Studio）</strong> – 自分のキーではなく Readfox 内蔵の AI 利用枠を使うと、選択したテキストと周辺の文脈の一部が、私たちのワークスペースを通じて Alibaba Cloud の Qwen モデルに送信され、翻訳や解説が作られます。単語の復習では、公開されている例文や復習中の単語が送信されることがありますが、あなたが保存した文は送信されません。そのデータには Alibaba Cloud の規約が適用されます。利用枠は月ごとに上限があります。",
+          "paddle": "<strong>Paddle</strong> – カードと PayPal のお支払い（開発中）における再販業者（Merchant of Record）です。お支払いが始まった後で購読すると、Paddle が自社のプライバシーポリシーに基づいて支払い情報と請求先住所を収集します。私たちが受け取るのは、メールアドレス、プラン、プランの状態のみで、カード番号や口座番号は受け取りません。",
+          "xiaodou": "<strong>Xiaodou Pay（Yuzhi AI、深圳）</strong> – Alipay と WeChat Pay による人民元の一回払いを処理します。注文金額、注文番号、端末のパブリック IP アドレスを受け取ります。Alipay や WeChat のアカウント情報は Alipay や WeChat の側に残り、私たちが受け取ることはありません。"
+        },
+        "noTrackers": "広告や分析用のトラッカーは使っておらず、データを販売することもありません。"
+      },
+      "operator": {
+        "heading": "運営者が見られるものと見られないもの",
+        "dashboard": "管理ダッシュボードに表示されるのは、アカウント単位の数値（登録日、最終アクティビティ、レッスン数と単語数、ストレージ使用量）と、xi***@gmail.com のようにマスクされたメールアドレスです。登録数、アクティブな学習者数、検索数、支払い数など、サービス全体の日次合計も表示されますが、アカウントは特定されません。名前は表示されません。本の本文を表示する画面はなく、「ユーザーとして表示」やユーザー別の書き出しの機能もありません。運営者は、サポートの提供、削除リクエストの対応、不正の防止のために、メールアドレス全体を表示できます。表示するたびに、監査ログに記録されます。",
+        "access": "ただし、運営者はサーバーとそのデータベースに技術的にアクセスできるため、閲覧が技術的に不可能だとお約束することはできません。私たちはあなたのコンテンツを見ません。サポートを依頼して書き出しデータを送っていただいた場合は、問題の解決にのみ使い、その後に削除します。サーバーに処理されたくない資料は、アップロードしないでください。"
+      },
+      "backups": {
+        "heading": "バックアップ",
+        "body": "データベースは Cloudflare R2 に継続的にレプリケートされ、保存時に暗号化されます。日次スナップショットは、運営者がオフラインで管理する鍵でさらに暗号化され、30 日間保管されます。"
+      },
+      "controls": {
+        "heading": "あなたができること",
+        "items": {
+          "export": "<strong>書き出し：</strong>設定 → 学習データ → すべての学習データを書き出す で、保存されているすべてのデータをダウンロードできます。",
+          "delete": "<strong>削除：</strong>設定 → アカウントを削除 で、稼働中のサービスからアカウントとデータが削除されます。バックアップ内のコピーは、日次スナップショットの期限が切れるにつれて消えます（最長 30 日）。",
+          "aiKey": "AI キーは、設定からいつでも削除できます。"
+        }
+      },
+      "children": {
+        "heading": "お子様について",
+        "body": "Readfox は 13 歳未満のお子様を対象としておらず、お子様のデータを意図して収集することはありません。"
+      },
+      "contact": {
+        "heading": "変更とお問い合わせ",
+        "body": "このポリシーに重要な変更があった場合は、上の日付を更新します。データに関するご質問やご依頼は、<mail>privacy@readfox.app</mail> までお寄せください。"
+      }
+    },
+    "terms": {
+      "metaTitle": "利用規約 – Readfox",
+      "title": "利用規約",
+      "lastUpdated": "最終更新日：{date}",
+      "intro": "アカウントを作成するか Readfox を利用することで、この規約に同意したものとみなされます。Readfox は、個人が趣味の規模で運営するサービスです。",
+      "content": {
+        "heading": "コンテンツ",
+        "body": "取り込んだコンテンツの所有権はあなたにあります。個人の学習のために使う権利があるテキストのみを取り込んでください。アップロードしたコンテンツについては、あなたが責任を負います。他者の権利を侵害するコンテンツやサービスを悪用するアカウントは、削除または停止することがあります。"
+      },
+      "limits": {
+        "heading": "利用上限",
+        "body": "各アカウントが使える量はプランによって異なります。利用枠は料金ページに記載しています。無料アカウントは取り込んだレッスンのテキストを最大 5 MB、有料プランは最大 100 MB まで保存できます。音声とポッドキャストの取り込みは提供していません。AI 機能は、ご自身で用意したキー（費用はご自身の負担）か、プランの月間利用枠のどちらかを使います。"
+      },
+      "payments": {
+        "heading": "有料プラン、更新、返金",
+        "body": "Xiaodou Pay を通じて、Alipay または WeChat Pay で人民元でお支払いいただけます。料金ページでカード決済が提供されている場合は、Paddle を通じて、カード、PayPal、Apple Pay でもお支払いいただけます。Paddle.com は当社の再販業者であり、これらの注文の Merchant of Record です。代金の受け取り、売上税または VAT の加算、領収書の送付、お支払いに関するお問い合わせへの対応を行います。これらの注文には、Paddle の購入者向け規約も適用されます。",
+        "renewal": "人民元で購入したプランは、一定期間のみ有効で、更新されません。Paddle で購入したプランは、選択した月または年ごとに、解約するまで更新されます。解約は、設定 → プラン からいつでもできます。解約後も、支払い済みの期間の終了までプランは有効で、それ以上の請求はありません。プランの価格が変わる場合は、新しい価格が適用される前にメールでお知らせします。",
+        "refunds": "人民元でのお支払いは、支払いから 24 時間以内で、支払い以降のプランの AI 利用枠の使用が 10% 以下の場合に限り、1 アカウントにつき 1 回、返金を依頼できます。設定 → プラン の「返金を依頼」を押すか、<mail>privacy@readfox.app</mail> にご連絡ください。詳しい条件は<refund>返金ポリシー</refund>のページに記載しています。不正の兆候がある場合は、返金をお断りすることがあります。",
+        "rmb": "Alipay または WeChat Pay で人民元で支払う場合は、Xiaodou Pay を通じて一定期間（1 か月または 12 か月）を購入します。これらのお支払いは更新されません。期間が終わると、アカウントは Free に戻ります。期間が終わる前に同じプランをもう一度購入した場合、新しい期間は現在の期間が終わった時点から始まります。"
+      },
+      "acceptableUse": {
+        "heading": "禁止事項",
+        "body": "サービスへの攻撃、過負荷、不正な探査、アカウントの大量作成、アカウントの共有、法律に違反する目的での利用はおやめください。"
+      },
+      "warranty": {
+        "heading": "保証の否認",
+        "body": "サービスは「現状のまま」提供され、可用性や特定の目的への適合性は保証されません。翻訳は AI モデルによるもので、誤りを含むことがあります。バックアップは取っていますが、ときどきご自身でもデータを書き出してください。法律で認められる範囲で、データの消失や間接的な損害について、当社は責任を負いません。"
+      },
+      "termination": {
+        "heading": "変更と終了",
+        "body": "当社は、サービスを変更または終了することがあります。その場合は、できる限り事前にお知らせします。アカウントはいつでも削除できます。"
+      },
+      "openSource": {
+        "heading": "オープンソース",
+        "body": "このソフトウェアは GNU AGPL-3.0 でライセンスされています。ソースコードは「概要」ページをご覧ください。",
+        "contact": "お問い合わせ：<mail>privacy@readfox.app</mail>"
+      }
+    },
+    "about": {
+      "metaTitle": "概要 – Readfox",
+      "title": "Readfox について",
+      "intro": "Readfox では、学んでいる言語で本物の本や記事を読み、単語やフレーズをその場で翻訳し、出会った内容を間隔反復の練習に変えられます。",
+      "freeSoftware": {
+        "heading": "オープンソース",
+        "license": "Readfox は、<license>GNU Affero General Public License v3.0</license> のもとで公開されているオープンソースソフトウェアです。heuwels とコントリビューターによるオープンソースのリーダー <lector>Lector</lector> をもとに、独自の変更を加えて作られています。",
+        "source": "このサイトで稼働しているバージョンの完全なソースコードは、<source>{url}</source> で公開されています。"
+      },
+      "dataSources": {
+        "heading": "データの出典",
+        "body": "文のバンクは Tatoeba（CC BY 2.0 FR）から、辞書はリポジトリの README に記載の出典から取得しています。それぞれ各自のライセンスに従います。",
+        "books": "ライブラリの無料の本は、Project Gutenberg（gutenberg.org）のパブリックドメインのテキストです。韓国語の本は韓国語版 Wikisource（ko.wikisource.org）から取得しており、その書き起こしは CC BY-SA 4.0 でライセンスされています。各書籍には出典ページへのリンクがあります。",
+        "dictionaries": "辞書の意味は、kaikki.org 経由で英語版 Wiktionary（CC BY-SA）から取得しています。英語の辞書は skywind3000 の ECDICT（MIT ライセンス、github.com/skywind3000/ECDICT）をもとに作られており、例文は Tatoeba（CC BY 2.0 FR）から取得しています。",
+        "readingFeed": "「無料の本」ダイアログの「ニュース」「旅行」「科学」タブの記事は、Global Voices（CC BY 3.0、globalvoices.org）、Wikivoyage（CC BY-SA 3.0、wikivoyage.org）、Simple English Wikipedia、Vikidia（CC BY-SA 4.0）から取得しています。各記事にはライセンスと元の出典へのリンクがあり、ライブラリに追加すると、その表記が付加されます。"
+      }
+    },
+    "refunds": {
+      "metaTitle": "返金ポリシー",
+      "title": "返金ポリシー",
+      "intro": "Readfox では、毎月の AI 利用枠が増える有料プランを販売しています。このページでは、返金を受けられる条件を説明します。",
+      "rmbHeading": "Alipay と WeChat Pay（人民元）",
+      "rmbIntro": "お支払いごとに、1 か月または 12 か月の一定期間を購入します。更新はされません。",
+      "rule1": "お支払いから 24 時間以内に、返金を依頼できます。",
+      "rule2": "お支払い以降の、プランの月間 AI 利用枠の使用が 10% 以下であること。単語翻訳と詳細な回答は別々に集計し、割合が高いほうを基準にします。お支払い前の使用は含まれません。",
+      "rule3": "返金は 1 アカウントにつき 1 回です。",
+      "how": "依頼するには、設定 → プラン を開き、「返金を依頼」を押してください。このボタンは、依頼できる間だけ表示されます。使えない場合は、<mail>privacy@readfox.app</mail> にご連絡ください。各依頼を確認のうえ、Xiaodou Pay を通じてお支払いに使ったアカウントに返金し、プランは Free に戻ります。返金の到着までに数営業日かかることがあります。",
+      "after": "24 時間を過ぎた場合や、使用量が上限を超えている場合は、その期間分の返金はできません。プランは更新されないため、それ以上の請求はありません。",
+      "cardHeading": "カード、PayPal、Apple Pay",
+      "cardBody": "Paddle.com は当社の再販業者であり、これらのお支払いを処理します。初回のお支払いも更新時のお支払いも、お支払いから 14 日以内であれば全額返金を受けられます。アカウントのメールアドレスを書いて privacy@readfox.app にご連絡いただくか、Paddle の領収書に返信してください。返金するとプランはすぐに終了し、代金はお支払いに使ったカードまたはアカウントに戻ります。14 日を過ぎた場合、現在の期間分は返金できませんが、設定 → プラン からいつでも解約でき、プランは更新されなくなります。消費者としての法的権利は影響を受けません。",
+      "abuseHeading": "不正利用",
+      "abuseBody": "不正の兆候がある場合（たとえば、プランを購入して利用枠を使い、新しいアカウントで再び返金を依頼するなど）は、返金をお断りすることがあります。",
+      "contactHeading": "お問い合わせ",
+      "contactBody": "<mail>privacy@readfox.app</mail> までご連絡ください。"
+    }
+  },
+  "practice": {
+    "saveFailed": "回答を保存できませんでした。接続を確認してもう一度お試しください。",
+    "statsFailed": "回答は保存されましたが、統計を更新できませんでした。",
+    "lookUp": "{word}を調べる",
+    "title": {
+      "cloze": "穴埋め練習",
+      "dictation": "ディクテーション練習"
+    },
+    "format": {
+      "cloze": "穴埋め",
+      "clozeHint": "空欄を埋める",
+      "dictation": "ディクテーション",
+      "dictationHint": "聞こえた文を入力する"
+    },
+    "setup": {
+      "reviewDue": "復習の期限（{count}）",
+      "due": "期限 {count} 件",
+      "learnNew": "新しく学ぶ",
+      "mastered": "{mastered}/{total} 習得済み",
+      "sentences": "文",
+      "mode": "モード",
+      "modeType": "入力",
+      "modeMc": "選択",
+      "start": "開始",
+      "loading": "読み込み中..."
+    },
+    "collections": {
+      "top500": "上位 500",
+      "top1000": "500〜1000",
+      "top2000": "1000〜2000"
+    },
+    "round": {
+      "guidedLabel": "ガイド付きの最初のレッスン",
+      "guidedTitle": "最初の学習サイクル",
+      "back": "← 戻る",
+      "threeWord": "かんたん復習",
+      "starterWords": "入門レッスンの単語",
+      "loading": "文を読み込み中..."
+    },
+    "question": {
+      "choose": "正しい単語を選んでください",
+      "fill": "空欄を埋めてください",
+      "showTranslation": "翻訳を表示",
+      "translation": "翻訳",
+      "keyChoose": "選択",
+      "keyListen": "聞く",
+      "multipleChoice": "選択式",
+      "multipleChoiceTitle": "この問題を選択式に切り替える",
+      "hintNone": "ヒント (?)",
+      "hintLetters": "ヒント（{count} 文字）",
+      "hintTitle": "次の文字を表示",
+      "submit": "送信",
+      "check": "確認",
+      "mastery": "習得度："
+    },
+    "complete": {
+      "title": "ラウンド完了！",
+      "correct": "{correct}/{total} 問正解",
+      "totalPoints": "合計 {points} ポイント",
+      "changeSettings": "設定を変更",
+      "playAgain": "もう一度"
+    },
+    "onboarding": {
+      "starterLesson": "入門レッスン",
+      "complete": {
+        "title": "最初の学習サイクルが完了しました",
+        "description": "実際に読んだ文章の単語を、練習につなげました。Readfox はこのサイクルを軸に、あなたの学習を支えていきます。",
+        "encountered": "出会った単語",
+        "saved": "保存した単語",
+        "score": "スコア",
+        "upNext": "次は",
+        "tomorrow": "明日",
+        "comeBack": "また来て、短い読書と復習をしましょう。",
+        "saving": "進捗を保存中…",
+        "saveError": "ラウンドの結果は保存されていますが、オンボーディングの完了を記録できませんでした。",
+        "trySavingAgain": "もう一度保存する",
+        "openLibrary": "ライブラリを開く",
+        "readNext": "次のレッスンを読む"
+      },
+      "recovery": {
+        "title": "練習用の単語がまだ準備できていません",
+        "missingWords": "かんたん復習には、入門レッスンで保存した単語が必要です。レッスンに戻って単語を保存してから、もう一度お試しください。",
+        "loadFailed": "保存した練習用の単語を読み込めませんでした。入門レッスンに戻って、かんたん復習をもう一度お試しください。",
+        "backToLesson": "入門レッスンに戻る"
+      }
+    },
+    "wordTooltip": {
+      "tryAgain": "もう一度お試しください。"
+    },
+    "blacklist": {
+      "hidden": "文を非表示にしました",
+      "undo": "元に戻す",
+      "undoFailed": "非表示を元に戻せませんでした",
+      "hideFailed": "文を非表示にできませんでした",
+      "title": "この文をスキップして非表示にする"
+    },
+    "empty": {
+      "reviewTitle": "復習するものはありません",
+      "newTitle": "新しい文はありません",
+      "reviewBody": "いま復習の期限が来ている文はありません。新しい文を学ぶか、あとでもう一度確認してください。",
+      "newBody": "このコレクションの文はすべて見ました。別のコレクションを選ぶか、これまでの文を復習してください。",
+      "back": "戻る",
+      "learnNewInstead": "代わりに新しく学ぶ"
+    },
+    "feedback": {
+      "correct": "正解！",
+      "incorrect": "不正解",
+      "listenAgain": "もう一度聞く",
+      "saveWordFailed": "単語を単語帳に保存できませんでした",
+      "addToAnkiFailed": "Anki に追加できませんでした",
+      "lookUp": "{word}を調べる",
+      "answerRevealed": "答えを表示しました",
+      "perfect": "完璧！",
+      "accuracy": "{percent}% 正解（{correct}/{total} 語）",
+      "pointsBonus": " · +{points} ポイント",
+      "nothingTyped": "（入力なし）",
+      "youTyped": "あなたの入力",
+      "sentence": "文",
+      "translation": "翻訳",
+      "masteryLevel": "習得レベル",
+      "mastery": {
+        "level0": "新規",
+        "level25": "学習中",
+        "level50": "慣れてきた",
+        "level75": "もう少し",
+        "level100": "習得済み"
+      },
+      "nextSentence": "次の文",
+      "nextSentenceHint": "次の文",
+      "pointsEarned": "+{points} ポイント",
+      "yourAnswer": "あなたの答え：",
+      "correctAnswer": "正解：",
+      "alreadyAdded": "Anki に追加済み",
+      "addToAnki": "Anki に追加",
+      "adding": "追加中...",
+      "explain": "解説",
+      "explaining": "解説を作成中...",
+      "explainFailed": "解説を取得できませんでした"
+    },
+    "dictation": {
+      "prompt": "聞こえた文を入力してください",
+      "replayAria": "音声を再生",
+      "speed": "速度",
+      "listenAgain": "もう一度聞く（残り {count} 回）",
+      "noReplays": "再生できる回数がありません",
+      "placeholder": "聞こえた文を入力…",
+      "surrenderTitle": "文を表示して次へ進む（不正解として扱われます）",
+      "surrender": "あきらめる",
+      "check": "確認",
+      "mastery": "習得度："
+    },
+    "words": {
+      "loading": "単語を読み込み中",
+      "loadFailed": "単語を読み込めませんでした。接続を確認してもう一度お試しください。",
+      "retry": "もう一度試す",
+      "saveFailed": "回答を保存できませんでした。接続を確認してもう一度お試しください。",
+      "undoFailed": "回答を変更できませんでした。もう一度お試しください。",
+      "back": "← 戻る",
+      "left": "残り {count}",
+      "listen": "聞く",
+      "chooseMeaning": "意味を選んでください",
+      "fillIn": "空欄に合う単語はどれですか？",
+      "typedFillIn": "入る単語を入力してください",
+      "typedPlaceholder": "入る単語",
+      "check": "確認",
+      "showAnswer": "答えを表示",
+      "correct": "正解",
+      "incorrect": "惜しい",
+      "next": "次へ",
+      "wasWrong": "間違えていた",
+      "nothingDue": "いま復習するものはありません。",
+      "complete": "ラウンド完了",
+      "answered": "{count} 語を復習しました",
+      "retried": "もう一度見る単語：{count} 語",
+      "nextDue": "次の復習：{time}",
+      "source": {
+        "library": "出典：<link>{name}</link>",
+        "tatoeba": "出典：<link>Tatoeba</link>",
+        "ai": "AI による例文"
+      },
+      "stage": {
+        "new": "新規",
+        "learning": "学習中",
+        "familiar": "慣れてきた",
+        "mastered": "習得済み"
+      },
+      "goal": {
+        "recognize": "見て分かる",
+        "recognize_spell": "見て分かり、書ける"
+      },
+      "recognition": {
+        "reveal": "意味を表示",
+        "dontKnow": "分からない",
+        "fuzzy": "あいまい",
+        "know": "分かる"
+      },
+      "entry": {
+        "title": "保存した単語",
+        "ready": "期限 {due} 語、新規 {fresh} 語",
+        "open": "単語を復習",
+        "nothingDue": "いま復習するものはありません。次の復習：{time}",
+        "noWords": "読書中に単語を保存すると、ここに表示されて復習できます。",
+        "failed": "単語を読み込めませんでした。",
+        "goal": "目標：{goal}"
+      }
+    }
+  },
+  "vocab": {
+    "states": {
+      "new": "新規",
+      "level1": "レベル 1",
+      "level2": "レベル 2",
+      "level3": "レベル 3",
+      "level4": "レベル 4",
+      "known": "覚えた",
+      "ignored": "無視"
+    },
+    "stateTitle": {
+      "new": "新規 - まだ学習していません",
+      "level1": "レベル 1 - 学び始めたところ",
+      "level2": "レベル 2 - 学習中",
+      "level3": "レベル 3 - 慣れてきた",
+      "level4": "レベル 4 - ほぼ覚えた",
+      "known": "覚えた - 完全に習得",
+      "ignored": "無視 - 学習から除外"
+    },
+    "stats": {
+      "total": "単語の合計",
+      "learning": "学習中",
+      "known": "覚えた",
+      "ignored": "無視"
+    },
+    "list": {
+      "phrase": "フレーズ",
+      "confirmBulkDelete": "{count} 件の単語を削除してもよろしいですか？",
+      "searchPlaceholder": "単語、翻訳、文を検索...",
+      "filter": {
+        "all": "すべて",
+        "learning": "学習中"
+      },
+      "allCollections": "すべてのコレクション",
+      "exporting": "書き出し中...",
+      "exportToAnki": "Anki に書き出す（{count}）",
+      "updating": "更新中...",
+      "markAsKnown": "覚えたにする（{count}）",
+      "deleting": "削除中...",
+      "delete": "削除（{count}）",
+      "syncing": "同期中...",
+      "syncWithAnki": "Anki と同期",
+      "ankiTip": {
+        "title": "Anki のセットアップ",
+        "body": "Anki の設定でお困りの場合は、こちらをクリックしてください。"
+      },
+      "results": "{total} 件中 {filtered} 件",
+      "resultsSelected": "{total} 件中 {filtered} 件（{selected} 件を選択中）",
+      "columns": {
+        "text": "単語 / フレーズ",
+        "translation": "翻訳",
+        "state": "状態",
+        "source": "出典",
+        "dateAdded": "追加日",
+        "anki": "Anki"
+      },
+      "loading": "単語帳を読み込み中...",
+      "emptyNoEntries": "単語はまだありません。読書を始めて単語を追加しましょう！",
+      "emptyNoMatches": "条件に一致する単語がありません。",
+      "exportDialog": {
+        "title": "Anki に書き出す",
+        "description": "{count} 語を選択中です。カードの種類を選んでください。",
+        "basic": "基本",
+        "basicDescription": "表と裏のカードです。表に文、裏に翻訳を表示します。",
+        "cloze": "穴埋め",
+        "clozeDescription": "文中の単語を隠し、文脈から思い出します。",
+        "cancel": "キャンセル",
+        "confirm": "{count} 枚のカードを書き出す"
+      }
+    },
+    "pagination": {
+      "label": "単語帳のページ送り",
+      "rowsPerPage": "1 ページの行数",
+      "range": "{total} 件中 {from}〜{to} 件",
+      "previous": "前のページ",
+      "next": "次のページ",
+      "page": "{current} / {total} ページ"
+    },
+    "detail": {
+      "confirmDelete": "この単語を削除してもよろしいですか？",
+      "phrase": "フレーズ",
+      "word": "単語",
+      "close": "閉じる",
+      "translation": "翻訳",
+      "contextSentence": "例文",
+      "learningState": "学習状態",
+      "added": "追加日：",
+      "reviewCount": "復習回数：",
+      "syncedToAnki": "Anki と同期済み",
+      "noteId": "（ノート #{id}）",
+      "deleting": "削除中...",
+      "delete": "削除",
+      "cancel": "キャンセル",
+      "saving": "保存中...",
+      "save": "保存",
+      "edit": "編集"
+    },
+    "page": {
+      "title": "単語帳",
+      "loadFailed": "単語帳のデータを読み込めませんでした",
+      "entryUpdated": "単語を更新しました",
+      "updateFailed": "単語を更新できませんでした",
+      "entryDeleted": "単語を削除しました",
+      "deleteFailed": "単語を削除できませんでした",
+      "allSynced": "選択した単語はすべて Anki と同期済みです。",
+      "cardType": {
+        "basic": "基本",
+        "cloze": "穴埋め"
+      },
+      "queuedPartial": "{queued} 枚のカードをキューに追加しました（{failed} 件は失敗：{error}）",
+      "queuedOk": "{cardType}カード {queued} 枚をキューに追加しました。次に Anki が同期するときに表示されます",
+      "queueFailed": "Anki 用のカードをキューに追加できませんでした",
+      "notConnected": "Anki に接続されていません。AnkiConnect を入れた Anki が起動しているか確認してください。",
+      "exported": "{cardType}カード {count} 枚を「{deck}」に書き出しました",
+      "exportPartial": "{cardType}カード {count} 枚を書き出しました（{failed} 件は失敗）",
+      "markedKnown": "{count} 件を覚えたにしました",
+      "markKnownFailed": "覚えたに変更できませんでした",
+      "synced": "Anki のカード {cards} 枚を同期しました（更新：{upgraded}）。",
+      "syncedImported": "Anki のカード {cards} 枚を同期しました（更新：{upgraded}、Anki から取り込み：{imported}）。",
+      "syncFailed": "Anki と同期できませんでした",
+      "openAnkiSetup": "Anki のセットアップを開く",
+      "addonPill": "アドオンで Anki と同期",
+      "ankiTip": {
+        "title": "Anki のセットアップ",
+        "body": "Anki の設定でお困りの場合は、こちらをクリックしてください。"
+      },
+      "checking": "Anki の接続を確認中...",
+      "connected": "Anki に接続済み",
+      "disconnected": "Anki に未接続"
+    }
+  },
+  "reader": {
+    "page": {
+      "lessonNotFound": "レッスンが見つかりません",
+      "loadFailed": "レッスンを読み込めませんでした",
+      "retryFailed": "文字起こしを再試行できませんでした",
+      "phraseFailed": "フレーズを翻訳できませんでした。設定で AI プロバイダーを確認してください。",
+      "wordFailed": "単語を翻訳できませんでした。設定で AI プロバイダーを確認してください。",
+      "contextFailed": "文脈に合わせた翻訳を取得できませんでした。",
+      "aiDeclined": "AI サービスがこの文章を受け付けませんでした。別の文を選ぶか、選択範囲を短くしてください。",
+      "retranslateFailed": "再翻訳に失敗しました",
+      "saveFailed": "単語を保存できませんでした。接続を確認してもう一度お試しください。",
+      "saveFailedShort": "単語を保存できませんでした。接続を確認してください。",
+      "knownFailed": "単語を覚えたにできませんでした。接続を確認してください。",
+      "ignoreFailed": "単語を無視にできませんでした。接続を確認してください。",
+      "levelFailed": "単語のレベルを設定できませんでした。接続を確認してください。",
+      "onboardingWordAdded": "「{word}」を追加しました。練習の準備ができました。",
+      "miniReviewFailed": "かんたん復習を開始できませんでした。もう一度お試しください。",
+      "onboardingSkipFailed": "ガイドをスキップできませんでした。もう一度お試しください。",
+      "copied": "コピーしました",
+      "loading": "レッスンを読み込み中...",
+      "goToLibrary": "ライブラリへ",
+      "backToLibrary": "ライブラリに戻る",
+      "transcribing": "音声を文字起こし中…",
+      "transcribingBody": "「{title}」をバックグラウンドで文字起こししています。通常は数分かかります。完了するとレッスンが自動的に開きます。",
+      "transcriptionFailed": "文字起こしに失敗しました",
+      "retry": "再試行",
+      "listenAlong": "聞きながら読む"
+    },
+    "markdown": {
+      "saveFailed": "保存に失敗しました",
+      "back": "戻る",
+      "cancel": "キャンセル",
+      "saving": "保存中…",
+      "saveChanges": "変更を保存",
+      "pronunciation": "発音：{mode}",
+      "annotation": {
+        "off": "オフ",
+        "learning": "学習中の単語",
+        "all": "すべての単語"
+      },
+      "editText": "テキストを編集",
+      "editHint": "Markdown に対応しています。単語の状態は単語ごとに記録されるため、編集しても進捗はリセットされません。",
+      "captionsAuto": "自動生成の字幕",
+      "captionsCreator": "投稿者の字幕",
+      "openOnYouTube": "YouTube で開く",
+      "playFromHere": "ここから再生",
+      "playFrom": "{time} から再生"
+    },
+    "drawer": {
+      "wordDefinition": "単語の意味",
+      "definitionOf": "{word}の意味",
+      "clickToLookUp": "単語をクリックすると調べられます。",
+      "state": {
+        "new": "新規",
+        "level1": "レベル 1",
+        "level2": "レベル 2",
+        "level3": "レベル 3",
+        "level4": "レベル 4",
+        "known": "覚えた",
+        "ignored": "無視"
+      },
+      "hearPronunciation": "発音を聞く",
+      "sourceAiInContext": "AI · 文脈つき",
+      "sourceLearned": "学習済み",
+      "sourceOnDevice": "端末内",
+      "sourceAi": "AI",
+      "close": "閉じる",
+      "closeEsc": "閉じる（Esc）",
+      "lookingUp": "調べています…",
+      "showDictionary": "辞書を表示（{count}）",
+      "noDefinition": "意味が見つかりませんでした。",
+      "inContextTitle": "文脈をふまえて AI で翻訳する",
+      "inContext": "文脈で翻訳",
+      "askingAi": "AI に確認中…",
+      "enrichTitle": "IPA、語源、すべての語義、関連語を追加する",
+      "enrich": "詳しく見る",
+      "enriching": "詳細を取得中…",
+      "idiomaticMeaning": "慣用的な意味",
+      "literally": "直訳",
+      "usage": "用法",
+      "etymology": "語源",
+      "relatedForms": "関連語",
+      "showFewer": "一部のみ表示",
+      "showAll": "すべて表示（{count}）",
+      "hearSentence": "文を聞く",
+      "onboardingAdded": "最初の復習に追加しました",
+      "onboardingChoose": "レベル 1〜4 を選ぶと、この単語を追加できます",
+      "onboardingReady": "{count}/{target} 準備完了",
+      "saveAtLevel": "学習レベル {level} で保存",
+      "levelTitle": "レベル {level}",
+      "levelCaption": "1 新規 · 2 学習中 · 3 慣れてきた · 4 習得済み",
+      "markKnownTitle": "覚えたにする（K）",
+      "known": "✓ 覚えた",
+      "ignoreTitle": "無視する（X）",
+      "ignore": "✕ 無視",
+      "retranslateTitle": "辞書を使わず、AI でもう一度調べる",
+      "retranslate": "AI で再翻訳",
+      "ankiAdded": "✓ Anki に追加しました",
+      "ankiAdding": "追加中…",
+      "ankiError": "Anki エラー（再試行）",
+      "ankiAdd": "Anki に追加",
+      "clozeAdd": "穴埋めカードとして Anki に追加",
+      "clozePick": "隠す単語を選んでください：",
+      "clozeSent": "✓ Anki に送信しました",
+      "clozeSending": "送信中…",
+      "clozeError": "エラー（再試行）",
+      "clozeSend": "Anki に送信",
+      "cancel": "キャンセル",
+      "lookUp": "{word}を調べる",
+      "announce": {
+        "lookingUp": "{word}を調べています。",
+        "lookupFailed": "{word}を調べられませんでした。{error}",
+        "definitionLoaded": "{word}の意味を読み込みました。",
+        "noDefinitionFound": "{word}の意味が見つかりませんでした。"
+      },
+      "examples": "例文",
+      "englishDefinitions": "英語の定義",
+      "oxford3000": "Oxford 3000",
+      "collinsTitle": "Collins：星 5 つ中 {stars} つ",
+      "frequencyRank": "頻度 #{rank}",
+      "tags": {
+        "zk": "Zhongkao",
+        "gk": "Gaokao",
+        "ky": "Kaoyan",
+        "cet4": "CET-4",
+        "cet6": "CET-6",
+        "toefl": "TOEFL",
+        "ielts": "IELTS",
+        "gre": "GRE"
+      },
+      "lemma": {
+        "formOf": "原形：",
+        "derivedFrom": "派生元：",
+        "pastParticiple": "過去分詞、原形：",
+        "repetition": "反復形、原形：",
+        "abstractNoun": "抽象名詞、元の語：",
+        "diminutive": "指小形、原形：",
+        "nominalization": "名詞化、元の語：",
+        "adverbial": "副詞形、原形：",
+        "plural": "複数形、原形：",
+        "presentTense": "現在形、原形：",
+        "pastTense": "過去形、原形：",
+        "futureTense": "未来形、原形：",
+        "conditional": "条件法、原形：",
+        "imperative": "命令形、原形：",
+        "compound": "複合語、後半部分：",
+        "related": "関連語：",
+        "ending": "（+{ending}）"
+      },
+      "pos": {
+        "noun": "名詞",
+        "verb": "動詞",
+        "adj": "形容詞",
+        "adv": "副詞",
+        "pron": "代名詞",
+        "prep": "前置詞",
+        "postp": "後置詞",
+        "conj": "接続詞",
+        "intj": "感動詞",
+        "num": "数詞",
+        "det": "限定詞",
+        "article": "冠詞",
+        "particle": "助詞",
+        "phrase": "句",
+        "name": "固有名詞",
+        "prefix": "接頭辞",
+        "suffix": "接尾辞",
+        "affix": "接辞",
+        "root": "語根",
+        "counter": "助数詞",
+        "proverb": "ことわざ",
+        "contraction": "短縮形",
+        "character": "文字",
+        "symbol": "記号",
+        "punct": "句読点",
+        "abbrev": "略語"
+      }
+    },
+    "onboardingTip": {
+      "dismiss": "ヒントを閉じる"
+    },
+    "youtube": {
+      "playerTitle": "YouTube 動画プレーヤー"
+    },
+    "wordCell": {
+      "lookUp": "{text}を調べる"
+    },
+    "coach": {
+      "ariaLabel": "ガイド付きの最初のレッスン",
+      "skip": "ガイドをスキップ",
+      "startPractice": "かんたん練習を始める",
+      "lookup": {
+        "title": "知らない単語をタップ",
+        "body": "レッスン内のどの単語も調べられます。タップまたはクリックすると、ここに意味が表示されます。"
+      },
+      "save": {
+        "title": "この単語を復習用に保存",
+        "body": "意味パネルでレベルを 1〜4 から選んでください。単語が復習リストに入ります。"
+      },
+      "practice": {
+        "title": "読んだばかりの単語を練習",
+        "body": "レッスンの記憶が新しいうちに 1 枚だけ練習すると、単語が定着しやすくなります。"
+      },
+      "step": "ステップ {step}/{total}"
+    },
+    "listen": {
+      "back": "戻る",
+      "readAsText": "テキストで読む",
+      "mode": {
+        "continuous": "連続再生",
+        "shadow": "シャドーイング"
+      },
+      "sentenceProgress": "{total} 文中 {current} 文目",
+      "seek": "シーク",
+      "playbackSpeed": "再生速度",
+      "previousSentence": "前の文",
+      "backSeconds": "{seconds} 秒戻る",
+      "forwardSeconds": "{seconds} 秒進む",
+      "pause": "一時停止",
+      "play": "再生",
+      "repeatSentence": "文をくり返す",
+      "nextSentence": "次の文"
+    }
+  },
+  "subscribe": {
+    "checkoutFailed": "お支払い画面を開始できませんでした。しばらくしてからもう一度お試しください。",
+    "title": {
+      "suspended": "アカウントは停止されています",
+      "lapsedFree": "Readfox Free をご利用中です",
+      "lapsed": "サブスクリプションが終了しました",
+      "free": "学び方を選びましょう",
+      "paid": "Readfox を購読する"
+    },
+    "body": {
+      "suspended": "アプリへのアクセスは一時停止されています。学習データの書き出しやログアウトは、下から行えます。",
+      "lapsedFree": "テキスト、単語帳、Anki の連携、学習履歴はそのまま残っています。Free のまま使い続けるか、より多くの AI 利用枠のために更新できます。",
+      "lapsed": "これまで積み上げたものはすべて、そのままの状態で安全に残っています。更新すると、続きから再開できます。",
+      "free": "Free は、毎月 50 回の詳細な AI 回答つきの、完全な読書サイクルです。もっと使いたくなったらアップグレードしてください。",
+      "paid": "Readfox は有料のサービスです。無料がよい方へ：Readfox はオープンソースで、セルフホストもできます。"
+    },
+    "loadingPlans": "購読プランを読み込み中",
+    "unavailable": "現在、お支払いは利用できません。しばらくしてからもう一度お試しください。アカウントとデータには影響ありません。",
+    "suspendedHelp": "誤りだと思われる場合は、サポートにご連絡ください。学習データは削除されていません。",
+    "promoReady": "コード <strong>{promo}</strong> の準備ができました。続けると自動的に適用され、割引後の合計がお支払い画面に表示されます。",
+    "promoUnknown": "コード <strong>{promo}</strong> は無効か、有効期限が切れています。下のプランは、どれも通常の価格でご利用いただけます。",
+    "activating": "お支払いを確認しました。アカウントを有効にしています…",
+    "slow": "お支払いを確認しました。有効化に通常より時間がかかっています。このページは確認を続けます。または、数分後にもう一度お試しください。",
+    "freeName": "Free",
+    "currentPlan": "現在のプラン",
+    "forever": "ずっと無料",
+    "freeTagline": "読んで、単語を調べて、学んだことを保存して、データを持ち出せます。",
+    "freeFeatures": {
+      "export": "学習データをいつでも書き出せます"
+    },
+    "continueFree": "Free で続ける",
+    "checkoutYear": "お支払いへ進む — {price}/年",
+    "subscribeYear": "年払いで購読 — {price}/年",
+    "checkoutMonth": "お支払いへ進む — {price}/月",
+    "subscribeMonth": "購読 — {price}/月",
+    "orMonth": "または {price}/月",
+    "orYear": "または {price}/年 — 約 20% お得",
+    "selected": "選択中",
+    "perMonth": "/月",
+    "annualNote": "{price}/年、{percent}% お得",
+    "annualNoteNoSave": "{price}/年",
+    "openingCheckoutLabel": "お支払い画面を開いています",
+    "openingCheckout": "お支払い画面を開いています…",
+    "exportData": "データを書き出す",
+    "signOut": "ログアウト",
+    "subscribeYearNoPrice": "年払いで購読",
+    "orYearNoPrice": "または年払い — 約 20% お得",
+    "subscribeMonthNoPrice": "月払いで購読",
+    "orMonthNoPrice": "または月払い",
+    "back": "アプリに戻る",
+    "methodCn": "Alipay / WeChat Pay（人民元、一回払い）",
+    "methodCard": "カード / PayPal / Apple Pay（自動更新）",
+    "channelAlipay": "Alipay",
+    "channelWechat": "WeChat Pay",
+    "cnNote": "更新されない一回払いです。期間が終わる前に再び購入すると、期間が加算されます。",
+    "cnYearNote": "12 か月で {price}、約 20% オフ",
+    "cnHigherPlan": "現在のプランのほうがこのプランより上位のため、下位のプランは購入できません。",
+    "cnSubscriptionActive": "自動更新のサブスクリプションがすでにあります。先に、設定 → プラン で解約してください。",
+    "cnNotPaid": "そのお支払いは完了しませんでした。",
+    "cnChecking": "決済事業者でこの注文を確認しています…",
+    "cnWaitingTitle": "お支払いをお待ちしています",
+    "cnWaitingBody": "お支払いページが新しいタブで開きました。そちらでお支払いください。このページは自動的に更新されます。お支払いせずにそのタブを閉じても、請求されません。",
+    "cnReopen": "お支払いページをもう一度開く",
+    "cnUnpaidTitle": "この注文はまだお支払いされていません",
+    "cnUnpaidBody": "お支払い済みの場合は、数秒待ってからもう一度確認してください。気が変わった場合は、キャンセルしてください。請求されません。",
+    "cnResume": "お支払いに進む",
+    "cnRecheck": "支払い済み、もう一度確認",
+    "cnCancel": "注文をキャンセル",
+    "cnPaidTitle": "お支払いを確認しました：{plan} が有効です",
+    "cnPaidUntil": "{plan} は {date} まで有効です。",
+    "cnPaidStart": "読み始める",
+    "grantActive": "現在のプラン：{plan}（{date} まで有効）。",
+    "cnBuyMonth": "1 か月 · {price}",
+    "cnBuyYear": "12 か月 · {price}",
+    "cardPending": "カードと PayPal のお支払いは開発中です。現在は Alipay または WeChat Pay でお支払いいただけます。"
+  },
+  "refund": {
+    "title": "返金を依頼",
+    "rules": "{plan} プランは人民元で購入されました。お支払い以降のプランの AI 利用枠の使用が 10% 以下であれば、{deadline} まで返金を依頼できます。返金は 1 アカウントにつき 1 回です。返金はお支払いに使ったアカウントに戻り、プランは Free に戻ります。",
+    "request": "返金を依頼",
+    "confirm": "返金が承認されると、プランは終了します。依頼を送信しますか？",
+    "submit": "依頼を送信",
+    "cancel": "キャンセル",
+    "pending": "依頼を送信しました。内容を確認のうえ、返金いたします。",
+    "usedTooMuch": "お支払い以降に利用枠の {percent}% を使用しており、上限の 10% を超えているため、この注文は返金できません。",
+    "submitted": "依頼を送信しました",
+    "notAllowed": "この注文は現在返金できません",
+    "failed": "依頼を送信できませんでした"
+  }
+}

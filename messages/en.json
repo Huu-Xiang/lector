@@ -182,7 +182,7 @@
     "errSave": "Could not save your setup",
     "levelHint": "You can change it later in Free books.",
     "nativeTitle": "1. Your language",
-    "nativeHint": "Translations and explanations use this language. The interface is available in English and Simplified Chinese.",
+    "nativeHint": "Translations and explanations use this language. The interface is available in English, Simplified Chinese, Japanese and Korean.",
     "interests": "Your interests",
     "interestsHint": "Optional — we'll add fresh articles on these topics to Free books.",
     "interest": {
@@ -209,7 +209,7 @@
     "heroBody": "Readfox turns reading into learning. Tap any word for a translation, collect vocabulary as you go, and practise it with spaced repetition. Free to use.",
     "languagesNow": "Learn now:",
     "languagesSoon": "{count} more languages in development",
-    "languagesUi": "Interface: English / 简体中文 · Meanings and explanations: {count} languages (change it in Settings)",
+    "languagesUi": "Interface: {ui} · Meanings and explanations: {count} languages (change it in Settings)",
     "createAccount": "Create a free account",
     "heroAlt": "Readfox: a fox resting on an open book",
     "howTitle": "How it works",

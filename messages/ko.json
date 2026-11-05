@@ -1,0 +1,2237 @@
+{
+  "announcements": {
+    "button": "새 소식",
+    "buttonUnseen": "새 소식, 읽지 않은 업데이트가 있어요",
+    "title": "새 소식",
+    "close": "닫기",
+    "bannerLabel": "NEW",
+    "dismiss": "닫기",
+    "learnMore": "자세히 보기",
+    "items": {
+      "installApp": {
+        "title": "휴대폰에서 Readfox를 앱처럼 사용해 보세요",
+        "body": "Readfox를 홈 화면에 추가하면 아이콘으로 전체 화면에서 읽을 수 있어요. 설정에서 방법을 확인하세요."
+      },
+      "koreanSupport": {
+        "title": "이제 한국어를 배울 수 있어요",
+        "body": "이제 한국어를 배울 수 있어요. 무료 도서 8권과 내 언어로 된 뜻풀이가 준비되어 있어요. 언어 메뉴에서 추가하세요."
+      },
+      "welcomeCode": {
+        "title": "모든 계정에 WELCOME123으로 Plus 15일 무료",
+        "body": "설정 → 플랜에서 \"코드가 있나요?\"를 선택하고 WELCOME123을 입력하세요. Plus를 15일 동안 무료로 이용할 수 있어요. 12월 15일까지 유효하며, 계정당 한 번만 사용할 수 있어요."
+      },
+      "inviteCodes": {
+        "title": "친구를 초대하고 Plus를 무료로 받으세요",
+        "body": "설정에서 초대 링크를 공유하세요. 친구가 가입하고 읽기를 시작하면 두 사람 모두 원하는 때 사용할 수 있는 14일 Plus 카드를 받아요."
+      },
+      "skipGuide": {
+        "title": "첫 레슨 가이드를 건너뛸 수 있어요",
+        "body": "첫 레슨의 가이드 카드에 이제 가이드 건너뛰기 버튼이 있어요."
+      }
+    }
+  },
+  "common": {
+    "appName": "Readfox",
+    "tagline": "읽으면서 배우는 새로운 언어"
+  },
+  "uiLanguage": {
+    "label": "인터페이스 언어",
+    "title": "인터페이스 언어",
+    "description": "버튼, 메뉴, 도서 제목과 설명에 쓰는 언어예요. 번역과 설명은 아래의 번역 언어를 사용해요.",
+    "alsoNative": "번역과 도서 제목에도 {language}을(를) 사용할까요?",
+    "alsoNativeYes": "바꾸기",
+    "alsoNativeNo": "유지",
+    "alsoNativeDone": "번역 언어를 변경했어요",
+    "alsoNativeFailed": "번역 언어를 변경하지 못했어요"
+  },
+  "legal": {
+    "nav": "법적 고지",
+    "pricing": "요금",
+    "privacy": "개인정보처리방침",
+    "terms": "이용약관",
+    "about": "소개",
+    "source": "소스 코드",
+    "refunds": "환불",
+    "freeBooks": "무료 도서",
+    "back": "뒤로"
+  },
+  "nav": {
+    "library": "서재",
+    "practice": "연습",
+    "journal": "일기",
+    "vocab": "단어장",
+    "stats": "통계",
+    "settings": "설정"
+  },
+  "auth": {
+    "loadingAuth": "인증 불러오는 중",
+    "login": {
+      "title": "로그인",
+      "deleted": "계정과 모든 데이터가 영구적으로 삭제되었어요.",
+      "unverified": "<b>{email}</b>은(는) 아직 인증되지 않았어요. 받은편지함에서 링크를 확인해 주세요.",
+      "resend": "인증 이메일 다시 보내기",
+      "email": "이메일",
+      "password": "비밀번호",
+      "forgot": "비밀번호를 잊으셨나요?",
+      "submit": "로그인",
+      "submitting": "로그인 중…",
+      "github": "GitHub로 계속하기",
+      "oidc": "{provider}(으)로 계속하기",
+      "noAccount": "아직 계정이 없나요?",
+      "create": "계정 만들기",
+      "errInvalid": "이메일 또는 비밀번호가 올바르지 않아요.",
+      "errFailed": "로그인하지 못했어요.",
+      "errResend": "이메일을 다시 보내지 못했어요.",
+      "resent": "인증 이메일을 보냈어요. 받은편지함을 확인해 주세요."
+    },
+    "register": {
+      "title": "계정 만들기",
+      "name": "이름",
+      "email": "이메일",
+      "password": "비밀번호",
+      "passwordHint": "영문자와 숫자를 포함해 8자 이상 입력해 주세요.",
+      "submit": "계정 만들기",
+      "submitting": "계정 만드는 중…",
+      "haveAccount": "이미 계정이 있나요?",
+      "signIn": "로그인",
+      "errFailed": "가입하지 못했어요.",
+      "checkTitle": "받은편지함을 확인해 주세요",
+      "checkBody": "<b>{email}</b>(으)로 인증 링크를 보냈어요. 링크를 눌러 계정을 활성화한 뒤 로그인해 주세요.",
+      "goSignIn": "로그인하러 가기",
+      "confirmPassword": "비밀번호 확인",
+      "errMismatch": "두 비밀번호가 일치하지 않아요.",
+      "errWeak": "더 안전한 비밀번호를 선택해 주세요. 영문자와 숫자를 포함해 8자 이상이어야 해요.",
+      "matches": "비밀번호가 일치해요",
+      "errEmailDisposable": "임시 이메일 주소는 사용할 수 없어요. 평소 쓰는 이메일을 사용해 주세요.",
+      "errEmailAlias": "이미 다른 형태로 이 이메일 주소를 사용하는 계정이 있어요. 해당 주소로 로그인해 주세요.",
+      "invite": "초대 코드 또는 쿠폰 코드",
+      "inviteOptional": "(선택)",
+      "inviteRequired": "(필수)",
+      "inviteHint": "친구의 초대 코드 또는 WELCOME123 같은 쿠폰 코드예요.",
+      "errInviteRequired": "가입하려면 유효한 초대 코드가 필요해요."
+    },
+    "reset": {
+      "expiredTitle": "링크가 만료되었어요",
+      "expiredBody": "재설정 링크가 올바르지 않거나 만료되었어요. 아래에서 새 링크를 요청해 주세요.",
+      "requestNew": "새 링크 요청",
+      "checkTitle": "받은편지함을 확인해 주세요",
+      "checkBody": "<b>{email}</b> 계정이 있다면 재설정 링크를 보냈어요.",
+      "backToSignIn": "로그인으로 돌아가기",
+      "title": "비밀번호 재설정",
+      "intro": "계정 이메일을 입력하면 재설정 링크를 보내 드려요.",
+      "email": "이메일",
+      "send": "재설정 링크 보내기",
+      "sending": "보내는 중…",
+      "errRequest": "재설정을 요청하지 못했어요.",
+      "newTitle": "새 비밀번호 설정",
+      "newPassword": "새 비밀번호",
+      "passwordHint": "영문자와 숫자를 포함해 8자 이상 입력해 주세요.",
+      "setNew": "새 비밀번호 설정",
+      "updating": "변경 중…",
+      "errReset": "비밀번호를 재설정하지 못했어요.",
+      "updated": "비밀번호를 변경했어요. 새 비밀번호로 로그인해 주세요.",
+      "confirmPassword": "새 비밀번호 확인",
+      "errMismatch": "두 비밀번호가 일치하지 않아요.",
+      "errWeak": "더 안전한 비밀번호를 선택해 주세요. 영문자와 숫자를 포함해 8자 이상이어야 해요."
+    },
+    "twoFactor": {
+      "title": "2단계 인증",
+      "introBackup": "백업 코드 중 하나를 입력해 주세요. 각 코드는 한 번만 사용할 수 있어요.",
+      "introTotp": "인증 앱의 6자리 코드를 입력해 주세요.",
+      "labelBackup": "백업 코드",
+      "labelTotp": "인증 코드",
+      "placeholderBackup": "예: abcde-fghij",
+      "trust": "이 기기를 30일 동안 신뢰",
+      "verify": "확인",
+      "verifying": "확인 중…",
+      "useTotp": "대신 인증 앱 코드 사용",
+      "useBackup": "대신 백업 코드 사용",
+      "backToSignIn": "로그인으로 돌아가기",
+      "errExpired": "로그인 시도가 만료되었어요. 비밀번호를 다시 입력해 주세요.",
+      "errLocked": "잘못된 코드를 너무 많이 입력했어요. 잠시 기다린 뒤 다시 로그인해 주세요.",
+      "errBackup": "백업 코드가 올바르지 않아요.",
+      "errTotp": "코드가 올바르지 않아요. 현재 코드를 입력해 주세요."
+    },
+    "passwordMeter": {
+      "weak": "약함",
+      "fair": "보통",
+      "strong": "강함",
+      "rules": {
+        "length": "8자 이상",
+        "letter": "영문자 포함",
+        "digit": "숫자 포함"
+      }
+    }
+  },
+  "setup": {
+    "badge": "첫 읽기 세션",
+    "welcome": "Readfox에 오신 것을 환영해요",
+    "intro": "첫 레슨을 고르는 데 필요한 정보만 알려 주세요. 모든 답변은 선택 사항이에요.",
+    "chooseLanguage": "2. 배울 언어 선택",
+    "learn": "{name} 배우기",
+    "showMore": "언어 {count}개 더 보기",
+    "personalise": "3. 내 수준",
+    "personaliseHint": "수준에 맞는 난이도의 무료 도서를 먼저 보여 드리는 데 사용해요.",
+    "optional": "선택",
+    "level": "읽기 수준",
+    "ready": "첫 글을 읽을 준비가 되었나요?",
+    "readyHint": "가이드는 실제 입문 레슨 안에서 진행되며 언제든 닫을 수 있어요.",
+    "skip": "서재로 건너뛰기",
+    "preparing": "레슨 준비 중…",
+    "start": "가이드 레슨 시작",
+    "errSave": "설정을 저장하지 못했어요",
+    "levelHint": "나중에 무료 도서에서 바꿀 수 있어요.",
+    "nativeTitle": "1. 내 언어",
+    "nativeHint": "번역과 설명에 이 언어를 사용해요. 인터페이스는 영어, 중국어 간체, 일본어, 한국어로 제공돼요.",
+    "interests": "관심사",
+    "interestsHint": "선택 사항이에요. 이 주제의 새 기사를 무료 도서에 추가해 드려요.",
+    "interest": {
+      "news": "뉴스",
+      "travel": "여행",
+      "science": "과학",
+      "literature": "문학"
+    },
+    "inDevelopment": "개발 중",
+    "showMoreSoon": "개발 중인 언어 {count}개 보기",
+    "recommendBadge": "추천",
+    "recommendTitle": "첫 읽을거리 고르기",
+    "recommendIntro": "내 수준({level})과 관심사를 바탕으로 골랐어요. 하나를 고르면 첫 읽기를 안내해 드려요.",
+    "recommendBack": "답변 바꾸기",
+    "recommendSkip": "대신 서재 둘러보기"
+  },
+  "landing": {
+    "metaTitle": "Readfox – 배우는 언어로 진짜 책을 읽어요",
+    "metaDescription": "책을 가져오거나 아무 글이나 붙여넣고, 단어를 눌러 바로 번역을 확인하세요. 읽은 내용은 간격 반복 연습으로 이어져요. 무료 오픈소스.",
+    "signIn": "로그인",
+    "freeBooks": "무료 도서",
+    "getStarted": "무료로 시작하기",
+    "heroTitle": "배우는 언어로 진짜 책을 읽어요",
+    "heroBody": "Readfox는 읽기를 배움으로 바꿔 줘요. 단어를 누르면 번역이 나오고, 읽으면서 어휘가 쌓이고, 간격 반복으로 연습할 수 있어요. 무료로 이용하세요.",
+    "languagesNow": "지금 배우기:",
+    "languagesSoon": "개발 중인 언어 {count}개 더",
+    "languagesUi": "인터페이스: {ui} · 뜻풀이와 설명: {count}개 언어 (설정에서 변경)",
+    "createAccount": "무료 계정 만들기",
+    "heroAlt": "Readfox: 펼친 책 위에서 쉬고 있는 여우",
+    "howTitle": "이용 방법",
+    "features": {
+      "read": {
+        "title": "좋아하는 글을 읽어요",
+        "body": "EPUB을 가져오거나 아무 글이나 붙여넣으세요. 내 책이 곧 레슨이 돼요."
+      },
+      "tap": {
+        "title": "단어를 누르면 바로 이해돼요",
+        "body": "기본 제공되는 월 사용량으로 문맥에 맞는 번역과 설명을 바로 볼 수 있어요. 유료 플랜에서는 내 AI 키도 사용할 수 있어요."
+      },
+      "vocab": {
+        "title": "단어장이 저절로 만들어져요",
+        "body": "찾아본 모든 단어가 발견한 문장과 함께 저장돼요."
+      },
+      "srs": {
+        "title": "간격 반복 연습",
+        "body": "알맞은 시점에 단어를 복습해서 오래 기억하세요."
+      },
+      "write": {
+        "title": "글을 쓰고 피드백 받기",
+        "body": "배우는 언어로 일기를 쓰고 교정을 받아 보세요."
+      }
+    },
+    "openTitle": "오픈소스, 그리고 내 독서는 내 것",
+    "openBody": "Readfox는 오픈소스 소프트웨어(AGPL-3.0)이며, 오픈소스 리더 Lector를 기반으로 만들었어요. AI 기능에는 월 사용량 제한이 있어요. 광고나 분석 추적기는 사용하지 않아요. <privacy>개인정보처리방침</privacy>을 읽어 보세요.",
+    "pricing": "요금"
+  },
+  "settings": {
+    "nativeLanguage": {
+      "title": "번역 언어",
+      "description": "단어 뜻, 설명, 튜터 답변, 일기 피드백이 이 언어로 표시돼요. 인터페이스 언어와 달라도 돼요. 예를 들어 중국어 인터페이스에 영어 설명을 쓸 수 있어요. 내장 사전 항목은 영어로 유지돼요.",
+      "saved": "언어를 저장했어요",
+      "errSave": "언어를 저장하지 못했어요",
+      "useBrowser": "대신 브라우저 언어 사용",
+      "sameAsLearning": "배우는 언어({language})와 같은 언어예요. 유용한 설명을 받으려면 다른 번역 언어를 선택해 주세요."
+    },
+    "languagePrefs": {
+      "title": "인터페이스 및 번역 언어",
+      "hint": "이 둘은 별개의 선택이에요. 예를 들어 프랑스어를 배우면서 중국어 인터페이스와 영어 설명을 함께 쓸 수 있어요."
+    },
+    "pageTitle": "설정",
+    "practice": {
+      "title": "연습",
+      "clozeHeading": "빈칸 채우기 설정",
+      "translationLabel": "번역",
+      "translationHint": "연습할 때 번역을 기본으로 숨겨요. <keys></keys>로 언제든 켜고 끌 수 있어요.",
+      "shown": "표시",
+      "hidden": "숨김",
+      "wordReviewHeading": "단어 복습",
+      "reviewGoalLabel": "복습 목표",
+      "reviewGoalFailed": "복습 목표를 저장하지 못했어요. 다시 시도해 주세요.",
+      "reviewGoal": {
+        "recognize": "알아보기",
+        "recognize_spell": "알아보고 철자 쓰기"
+      },
+      "reviewGoalHint": {
+        "recognize": "단어를 보면 알아보는 것이 목표예요. 뜻을 고르며 단어를 익혀요.",
+        "recognize_spell": "단어를 직접 쓰는 것도 연습해요. 익숙함과 숙달 단계의 단어는 직접 입력하거나 받아쓰기를 해요."
+      }
+    },
+    "prose": {
+      "title": "읽기 텍스트",
+      "description": "리더가 레슨을 표시하는 방식이에요. 모든 언어에서 원하는 대로 설정한 뒤, 문자에 따라 다르게 보여야 하는 언어만 따로 조정하세요. 이 설정은 이 기기에 저장돼요.",
+      "allLanguages": "모든 언어",
+      "hasOwnSettings": "별도 설정 있음",
+      "customisedNotice": "{language}에는 별도 설정이 있어요. 건드리지 않은 항목은 계속 모든 언어 설정을 따라요.",
+      "inheritedNotice": "{language}은(는) 모든 언어 설정을 따라요. 슬라이더를 움직이고 저장하면 해당 항목만 따로 조정돼요.",
+      "setFor": "· {language} 설정",
+      "save": "저장",
+      "resetDefaults": "기본값으로 되돌리기",
+      "resetLanguage": "{language} 초기화",
+      "statusUnsaved": "위 미리보기에 변경 사항이 반영돼 있어요. 저장하면 리더에 적용돼요.",
+      "statusDefaults": "기본값은 {fontSize}px, 굵기 {fontWeight}, 자간 0, 행간 {lineHeight}이에요.",
+      "statusResetLanguage": "초기화하면 {language}이(가) 다시 모든 언어 설정을 따라요.",
+      "controls": {
+        "fontSize": {
+          "label": "글꼴 크기",
+          "hint": "레슨 본문 글자의 크기예요."
+        },
+        "fontWeight": {
+          "label": "글꼴 굵기",
+          "hint": "각 단어가 얼마나 굵게 보일지 정해요."
+        },
+        "letterSpacing": {
+          "label": "자간",
+          "hint": "글자 사이의 간격이에요. 음수 값은 간격을 좁혀요."
+        },
+        "lineHeight": {
+          "label": "행간",
+          "hint": "글꼴 크기에 대한 배수로 나타낸 줄 사이의 간격이에요."
+        }
+      }
+    },
+    "theme": {
+      "title": "화면 모드",
+      "label": "테마",
+      "options": {
+        "light": "라이트",
+        "dark": "다크",
+        "system": "시스템"
+      }
+    },
+    "tts": {
+      "title": "텍스트 음성 변환",
+      "noAudioNote": "{language}은(는) 합성 음성이 없어요. 발음에 이견이 있어 Readfox는 소리를 내지 않아요.",
+      "synthesizedVoice": "합성 음성",
+      "browserVoiceFree": "브라우저 음성 · 무료",
+      "managedAvailable": "관리형 음성 사용 가능",
+      "usingBrowser": "브라우저 음성 사용 중",
+      "espeakNote": "{language}은(는) Readfox가 호스팅하는 합성 음성인 eSpeak NG로 읽어요. {language}에 존재하는 유일한 텍스트 음성 변환 엔진이에요. 기계적으로 들리지만 모든 단어를 정확하게 발음하고, 모든 플랜에 포함돼 있어요.",
+      "voiceEngine": "음성 엔진",
+      "engineHintFree": "브라우저 음성은 모든 플랜에서 읽기, 연습, 받아쓰기에 무료로 사용할 수 있어요.",
+      "engineHintPaid": "관리형 음성은 더 일관된 발음을 제공해요. 브라우저 음성은 항상 사용할 수 있어요.",
+      "managedVoice": "관리형 음성",
+      "browserBuiltIn": "브라우저 내장",
+      "upsell": "Readfox는 모든 플랜에서 브라우저 음성으로 소리 내어 읽어 줘요. <link>플랜 보기</link>.",
+      "testVoice": "음성 테스트",
+      "speechSpeed": "말하기 속도",
+      "slow": "0.5x (느리게)",
+      "normal": "1.0x",
+      "fast": "1.5x (빠르게)"
+    },
+    "timezone": {
+      "title": "시간대",
+      "description": "일일 통계, 연속 학습, 복습일은 이 시간대의 자정에 바뀌어요.",
+      "auto": "자동 — 서버 시간대",
+      "useDevice": "이 기기의 시간대 사용 ({zone})",
+      "updated": "시간대를 {zone}(으)로 변경했어요",
+      "failed": "시간대를 변경하지 못했어요"
+    },
+    "languages": {
+      "title": "언어",
+      "description": "언어 선택 목록에 이 언어들이 표시돼요. 언어를 삭제하면 목록이 짧아져요. 해당 언어의 단어, 글, 카드는 서버에 그대로 남아요.",
+      "inUse": "사용 중",
+      "remove": "{language} 삭제",
+      "added": "{language}을(를) 추가했어요",
+      "removed": "{language}을(를) 삭제했어요",
+      "saveFailed": "언어를 저장하지 못했어요",
+      "addPlaceholder": "언어 추가…",
+      "add": "추가"
+    },
+    "knownWords": {
+      "title": "아는 단어 가져오기",
+      "description": "이미 아는 단어를 가져와요. 상태 레벨과 번역이 포함된 <strong>LingQ 내보내기 파일</strong>이나 간단한 단어 목록을 사용할 수 있어요.",
+      "lingqHelp": "LingQ: 어휘 → 설정 톱니바퀴 → LingQs 내보내기 → CSV를 여기에 업로드",
+      "uploadLabel": "CSV 파일 업로드",
+      "uploadHint": "첫 번째 열에 단어가 있는 CSV 또는 일반 텍스트 파일",
+      "pasteLabel": "또는 단어 붙여넣기 (한 줄에 하나씩)",
+      "import": "가져오기",
+      "noWords": "가져올 단어가 없어요.",
+      "imported": "단어 {count}개를 아는 단어로 가져왔어요.",
+      "importFailed": "아는 단어를 가져오지 못했어요",
+      "noData": "파일에서 데이터를 찾지 못했어요.",
+      "noTermColumn": "LingQ 내보내기 파일에서 'term' 열을 찾지 못했어요.",
+      "lingqImported": "LingQ에서 단어 {count}개를 가져왔어요. 아는 단어 {known}개, 학습 중 {learning}개.",
+      "fileError": "파일을 가져오는 중 오류가 발생했어요: {message}",
+      "unknownError": "알 수 없는 오류"
+    },
+    "export": {
+      "title": "데이터 내보내기",
+      "vocabCsv": "단어장 내보내기 (CSV)",
+      "vocabJson": "단어장 내보내기 (JSON)",
+      "knownWords": "아는 단어 내보내기",
+      "failed": "내보내지 못했어요: {message}",
+      "unknownError": "알 수 없는 오류",
+      "csvDone": "단어장을 CSV로 내보냈어요.",
+      "jsonDone": "단어장을 JSON으로 내보냈어요.",
+      "knownDone": "아는 단어 {count}개를 내보냈어요."
+    },
+    "data": {
+      "title": "학습 데이터",
+      "description": "컬렉션과 레슨, 읽은 위치, 단어장, 문장 연습과 복습 일정, 일기, 통계를 내려받아요. API 키와 제공자 엔드포인트는 포함되지 않아요.",
+      "export": "모든 학습 데이터 내보내기",
+      "import": "학습 데이터 가져오기",
+      "invalidFormat": "백업 파일 형식이 올바르지 않아요",
+      "importFailedShort": "가져오지 못했어요",
+      "imported": "학습 데이터를 가져왔어요",
+      "importedDetail": "컬렉션 {collections}개, 레슨 {lessons}개, 단어장 {vocab}개, 아는 단어 {knownWords}개, 빈칸 문장 {clozeSentences}개.",
+      "importFailed": "가져오지 못했어요: {message}",
+      "unknownError": "알 수 없는 오류"
+    },
+    "about": {
+      "title": "정보",
+      "commit": "커밋",
+      "built": "빌드",
+      "version": "버전"
+    },
+    "plan": {
+      "labels": {
+        "free": "Free",
+        "cloud": "Plus",
+        "plus": "Pro",
+        "max": "Max",
+        "unlimited": "무제한"
+      },
+      "cycle": {
+        "year": "연간",
+        "month": "월간"
+      },
+      "unlimited": "무제한",
+      "priceLabel": "{plan} — {cycle}",
+      "errors": {
+        "pastDue": "플랜을 변경하기 전에 Paddle에서 결제 수단을 업데이트해 주세요.",
+        "ambiguous": "Paddle에서 활성 구독이 둘 이상 발견되었어요. 결제 관리를 열어 해결해 주세요.",
+        "alreadyCurrent": "이미 사용 중인 플랜이에요.",
+        "generic": "Paddle에서 결제 작업을 완료하지 못했어요. 다시 시도해 주세요."
+      },
+      "toast": {
+        "updated": "Paddle 구독을 업데이트했어요",
+        "accepted": "Paddle에서 변경을 수락했어요. 플랜을 업데이트하는 중…"
+      },
+      "heading": "Readfox 플랜",
+      "currentWithCycle": "이 계정에서 {plan}({cycle} 결제)을 사용 중이에요.",
+      "current": "이 계정에서 {plan}을 사용 중이에요.",
+      "loading": "플랜 불러오는 중…",
+      "ownKey": "내 AI 키",
+      "lapsed": "유료 구독이 종료되어 계정이 Free로 전환되었어요. 텍스트, 저장한 단어, Anki 연결, 기록, 내보내기는 모두 그대로 남아 있어요.",
+      "freeIntro": "Free에서도 읽기 루프를 모두 이용할 수 있어요: 입문 및 가져온 텍스트, 구절 인식 검색, 저장한 단어, 연습, 이동 가능한 데이터.",
+      "libraryAllowance": "서재 허용량: 컬렉션 {collections}개, 레슨 {lessons}개, 매달 일기 {words}단어. 유료 플랜이 끝나도 기존 데이터는 삭제되지 않아요.",
+      "fairUse": "비정상적으로 큰 개별 텍스트와 대량의 저장 데이터 증가에는 넉넉한 공정 사용 보호 장치가 적용돼요. 기존 학습 데이터를 삭제하거나 내보내기를 막지는 않아요.",
+      "byokActive": "내 AI 키가 활성화되어 있어서 번역과 고급 AI 기능에 Readfox의 관리형 허용량 대신 내 제공자를 사용해요. 무료 서재와 일기 한도는 그대로 적용되며, 오디오는 브라우저 음성을 사용해요.",
+      "managedAllowance": "월간 AI 허용량: 사전에 없는 단어 검색 {glosses}회, 상세 AI 답변 {detailed}회. 사전 검색과 브라우저 음성은 무료예요.",
+      "comparePlans": "유료 플랜 비교",
+      "openingPaddle": "Paddle 여는 중…",
+      "billingHistory": "결제 내역",
+      "manageBilling": "결제 관리",
+      "paidIntro": "내 플랜에는 더 넉넉한 AI 허용량이 포함돼요. 데이터는 언제든 내보낼 수 있어요.",
+      "pendingAccepted": "Paddle에서 {price}(으)로의 변경을 수락했어요. 서명된 웹훅이 도착하면 이 페이지가 바로 업데이트돼요.",
+      "paddleHandles": "결제 수단, 청구서, 해지는 Paddle에서 안전하게 처리해요.",
+      "changePlan": "플랜 변경",
+      "changeIntro": "{plan}({cycle} 결제)을 사용 중이에요. 아래에서 다른 플랜을 선택하세요. 확인하기 전에 Paddle의 세금 및 일할 계산을 검토해 주세요.",
+      "choosePlanAria": "새 플랜 선택",
+      "choosePlanOption": "새 플랜 선택…",
+      "calculating": "계산하는 중…",
+      "reviewChange": "변경 내용 검토",
+      "changeTo": "{price}(으)로 변경",
+      "prorationImmediate": "플랜이 즉시 변경되고 Paddle이 일할 계산된 청구 금액 또는 크레딧을 지금 적용해요.",
+      "prorationNextInvoice": "플랜이 즉시 변경되고 Paddle이 일할 계산된 조정 금액을 다음 청구서에 적용해요.",
+      "dueNow": "지금 결제할 금액",
+      "noImmediateCharge": "즉시 청구되는 금액 없음",
+      "nextInvoice": "다음 청구서",
+      "calculatedAtRenewal": "갱신 시 계산",
+      "regularRenewal": "정기 갱신",
+      "unavailable": "사용할 수 없음",
+      "applying": "적용하는 중…",
+      "confirmPaddle": "Paddle에서 확인",
+      "cancel": "취소",
+      "changesUnavailable": "Paddle이 이 구독을 처리하는 동안에는 플랜을 변경할 수 없어요. 결제 관리에서 결제 수단을 업데이트하거나 상태를 확인해 주세요.",
+      "grantUntil": "{plan}은(는) {date}까지 결제되어 있어요. 이후에는 계정이 Free로 돌아가며 자동으로 청구되지 않아요.",
+      "renew": "갱신"
+    },
+    "byok": {
+      "loadFailed": "BYOK 설정을 불러오지 못했어요",
+      "enableFailed": "BYOK를 켜지 못했어요",
+      "disableFailed": "BYOK를 끄지 못했어요",
+      "keyActive": "{provider} 키가 활성화되었어요",
+      "reverted": "Readfox 관리형 AI 허용량으로 되돌렸어요",
+      "heading": "내 AI 키 사용",
+      "active": "활성",
+      "introFree": "Free에는 소량의 월간 AI 허용량이 포함돼요. Plus 이상에서는 내 OpenRouter 또는 Anthropic 키도 사용할 수 있어요.",
+      "introPaid": "관리형 AI 허용량 대신 내 OpenRouter 또는 Anthropic 계정으로 번역, 설명, 일기 교정, 채팅을 사용해요.",
+      "introTail": "키는 암호화되어 저장되며 다시 표시되지 않아요.",
+      "compareCloud": "Readfox가 AI를 제공하길 원하시나요? <link>플랜 비교</link>.",
+      "notConfigured": "이 배포 환경에는 아직 BYOK가 구성되지 않았어요.",
+      "provider": "제공자",
+      "evalNote": "평가된 모델은 Readfox의 <link>재현 가능한 번역 평가</link>에서 아프리칸스어 COMET 점수 순으로 정렬돼요. 약 1.5점 미만의 차이는 통계적으로 동률이에요. Flash Lite는 평가되지 않은 저비용 기본 모델이에요.",
+      "model": "모델",
+      "replaceKey": "키 또는 모델 변경",
+      "useManaged": "관리형 허용량 사용",
+      "apiKeyLabel": "{provider} API 키",
+      "leaveBlank": "(비워 두면 유지돼요)",
+      "saving": "저장 중…",
+      "saveChanges": "변경 사항 저장",
+      "validateEnable": "확인 후 켜기",
+      "cancel": "취소",
+      "validates": "Readfox는 저장하기 전에 {provider}에서 키를 확인해요. 제공자 오류 메시지에는 키가 포함되지 않아요.",
+      "protectedTitle": "API 키 보호 방식",
+      "protectedEncryption": "키는 데이터베이스에 저장되기 전에 매번 새로운 무작위 nonce를 사용해 AES-256-GCM으로 암호화돼요. 인증 데이터가 각 암호문을 내 계정과 선택한 제공자에 묶어, 암호화된 행을 다른 계정으로 옮길 수 없어요.",
+      "protectedStorage": "저장된 API 키를 암호화하는 키는 서버에서 데이터베이스와 분리해 보관해요. API 키는 쓰기 전용이에요. Readfox는 키를 브라우저로 다시 보내거나, 내보내기에 넣거나, 세부 정보를 로그에 남기지 않아요.",
+      "protectedOpenSource": "Readfox는 오픈소스이므로 자격 증명이 어떻게 암호화, 저장되고 요청 시 선택되는지 직접 확인할 수 있어요. <link>구현 살펴보기</link>.",
+      "loading": "불러오는 중…",
+      "paidOnly": "내 AI 키 사용은 Plus 이상에서 이용할 수 있어요. <link>플랜 보기</link>."
+    },
+    "llm": {
+      "fetchStatusFailed": "LLM 상태를 가져오지 못했어요",
+      "saveFailed": "설정을 저장하지 못했어요",
+      "statusError": "상태 {status}",
+      "noModels": "이 엔드포인트가 보고한 모델이 없어요. 모델 이름을 직접 입력해 주세요.",
+      "fetchModelsFailed": "모델을 가져오지 못했어요",
+      "unreachable": "서버에 연결하지 못했어요",
+      "heading": "AI 제공자",
+      "connected": "연결됨",
+      "notConnected": "연결 안 됨",
+      "checking": "확인 중...",
+      "refresh": "새로고침",
+      "intro": "번역에 사용할 AI를 선택하세요. Anthropic은 클라우드 AI로 최고 품질을 제공해요. 로컬 및 자체 호스팅은 Ollama, LM Studio, Apfel, vLLM 등 OpenAI 호환 서버를 엔드포인트 하나, 선택 사항인 API 키, 모델 이름으로 연결해요.",
+      "provider": "제공자",
+      "providerAnthropic": "Anthropic (클라우드)",
+      "providerOpenai": "로컬 / 자체 호스팅 (OpenAI 호환)",
+      "authMethod": "인증 방식",
+      "apiKey": "API 키",
+      "oauthToken": "OAuth 토큰",
+      "bothConfigured": "두 자격 증명이 모두 구성되어 있어요. 사용할 항목을 선택하세요. 연결은 자동으로 테스트돼요.",
+      "getKeyFrom": "<link>console.anthropic.com</link>에서 API 키를 받으세요",
+      "configured": "구성됨",
+      "replace": "교체",
+      "clear": "지우기",
+      "save": "저장",
+      "cancel": "취소",
+      "or": "또는",
+      "oauthPlan": "(Pro/Team 플랜)",
+      "oauthHelp": "Claude Pro 또는 Team 구독 크레딧을 사용해요. <code>claude setup-token</code>을 실행해 토큰을 받으세요. 참고: API 키보다 처음 시작이 느려요.",
+      "preset": "프리셋",
+      "presetCustom": "직접 입력 / 기타 OpenAI 호환 서버",
+      "presetHelp": "아래 엔드포인트를 채워 주는 단축 설정이에요. 이후에 수정할 수 있어요.",
+      "endpoint": "엔드포인트",
+      "endpointHelp": "서버의 기본 URL이에요. 앱이 <code>/v1</code>을 자동으로 붙여요. 서버 측에서 호출하므로 Readfox가 다른 곳에 호스팅되어 있어도 localhost를 쓸 수 있어요.",
+      "apiKeyOptional": "API 키 (선택)",
+      "apiKeyPlaceholder": "인증이 없는 로컬 서버는 비워 두세요",
+      "apiKeyHelp": "서버에서 Bearer 토큰으로 전송돼요(저장 후에는 브라우저에 노출되지 않아요). 리버스 프록시, 클라우드 등 인증이 필요한 엔드포인트에만 필요해요.",
+      "model": "모델",
+      "fetchingModels": "모델 가져오는 중…",
+      "modelPlaceholder": "모델 이름을 입력하거나 목록을 가져오세요",
+      "fetching": "가져오는 중...",
+      "fetchModels": "모델 가져오기",
+      "modelHelp": "가져온 목록에서 선택하거나(LM Studio, Ollama 같은 서버는 <code>/v1/models</code>로 목록을 제공해요) 서버가 받는 모델 이름을 직접 입력하세요."
+    },
+    "anki": {
+      "addonIntro": "애드온은 Anki 안에서 직접 동기화하므로 Readfox가 어디에서 실행되든 작동해요. 대기열에 추가한 단어는 다음에 Anki를 열 때 카드가 되고, 복습 결과는 자동으로 돌아와요.",
+      "addonStep1": "아래 <strong>API 토큰</strong>에서 <code>anki</code> 범위의 API 토큰을 만드세요.",
+      "addonStep2": "<link>Lector 저장소의 anki-addon</link>에서 애드온을 설치하세요(Anki Desktop 2.1.50 이상).",
+      "addonStep3": "Anki에서 도구 → 애드온 → Lector Sync → 설정을 열고 <code>api_url</code>에 아래 주소를, <code>api_token</code>에 토큰을 입력하세요.",
+      "apiUrl": "API URL",
+      "addonMobile": "AnkiDroid와 AnkiMobile은 애드온을 실행할 수 없어요. 데스크톱에서 동기화하면 AnkiWeb이 결과를 내 기기로 전달해요.",
+      "saveTransportFailed": "Anki 연결 방식을 저장하지 못했어요",
+      "connectFailed": "Anki에 연결하지 못했어요. AnkiConnect가 설치된 Anki가 실행 중인지 확인해 주세요.",
+      "heading": "Anki 연동",
+      "connected": "연결됨",
+      "notConnected": "연결 안 됨",
+      "checking": "확인 중...",
+      "refresh": "새로고침",
+      "connection": "연결",
+      "connectionHelp": "AnkiConnect는 브라우저에서 이 컴퓨터의 Anki에 접근해요. 애드온은 대신 Anki 안에서 동기화해요. Readfox가 HTTPS로 제공되거나 다른 컴퓨터에서 실행될 때 사용하세요.",
+      "transportAnkiConnect": "AnkiConnect (브라우저)",
+      "transportAddon": "Lector Sync 애드온",
+      "ankiConnectUrl": "AnkiConnect URL",
+      "urlHint": "팁: 원격 Anki에는 Tailscale IP를 사용하세요(예: http://100.x.x.x:8765)",
+      "saveUrlFailed": "Anki URL을 저장하지 못했어요",
+      "vocabDeck": "단어장 덱",
+      "vocabDeckHelp": "리더 단어장의 기본 카드를 담는 덱",
+      "deckName": "덱 이름",
+      "clozeDeck": "빈칸 채우기 연습 덱",
+      "clozeDeckHelp": "연습 모드의 빈칸 카드를 담는 덱",
+      "clozeDeckName": "빈칸 덱 이름",
+      "defaultCardType": "기본 카드 유형",
+      "cardTypeHelp": "기본은 앞면/뒷면 카드이고, 빈칸은 빈칸 채우기 카드를 만들어요",
+      "basic": "기본",
+      "cloze": "빈칸 채우기",
+      "comingSoon": "개발 중",
+      "comingSoonBody": "Anki 동기화를 준비 중이에요. 저장한 단어가 Anki 카드가 되고 복습 결과도 다시 동기화될 거예요. 그때까지는 연습 페이지에서 저장한 단어를 복습하세요."
+    },
+    "twoFactor": {
+      "actions": {
+        "enable": {
+          "title": "2단계 인증을 설정하려면 비밀번호를 확인해 주세요",
+          "cta": "계속"
+        },
+        "disable": {
+          "title": "2단계 인증을 끄려면 비밀번호를 확인해 주세요",
+          "cta": "끄기"
+        },
+        "regenerate": {
+          "title": "백업 코드를 교체하려면 비밀번호를 확인해 주세요",
+          "cta": "새 코드 생성"
+        }
+      },
+      "wrongPassword": "비밀번호가 올바르지 않아요.",
+      "startFailed": "설정을 시작하지 못했어요.",
+      "disableFailed": "2단계 인증을 끄지 못했어요.",
+      "generateFailed": "코드를 생성하지 못했어요.",
+      "toastOff": "2단계 인증이 꺼졌어요.",
+      "toastOn": "2단계 인증이 켜졌어요.",
+      "toastNewCodes": "새 백업 코드를 생성했어요. 이전 코드는 더 이상 사용할 수 없어요.",
+      "codeMismatch": "코드가 일치하지 않아요. QR 코드를 스캔하고 현재 코드를 입력해 주세요.",
+      "codesCopied": "백업 코드를 클립보드에 복사했어요",
+      "heading": "2단계 인증",
+      "enable": "2단계 인증 켜기",
+      "intro": "비밀번호에 더해 인증 앱(Google Authenticator, 1Password, Authy 등)의 일회용 코드로 계정을 보호하세요.",
+      "statusOn": "2단계 인증이 켜져 있어요. 로그인할 때 인증 앱의 코드를 요청해요.",
+      "statusOff": "2단계 인증이 꺼져 있어요.",
+      "working": "처리 중…",
+      "cancel": "취소",
+      "step1": "1. 인증 앱으로 이 QR 코드를 스캔하세요",
+      "cantScan": "스캔할 수 없나요? 이 키를 직접 입력하세요:",
+      "step2": "2. 앱에 표시된 6자리 코드를 입력하세요",
+      "verifying": "확인 중…",
+      "verifyActivate": "확인 후 활성화",
+      "saveCodes": "이 백업 코드를 안전한 곳에 저장하세요. 인증 앱을 잃어버리면 각 코드로 한 번씩 로그인할 수 있으며, 다시 표시되지 않아요.",
+      "copy": "복사",
+      "savedCodes": "코드를 저장했어요",
+      "newCodes": "새 백업 코드",
+      "turnOff": "2단계 인증 끄기"
+    },
+    "apiTokens": {
+      "fetchFailed": "API 토큰을 가져오지 못했어요",
+      "copied": "토큰을 클립보드에 복사했어요",
+      "heading": "API 토큰",
+      "generate": "토큰 생성",
+      "intro": "CLI나 API 접근에 사용할 개인 액세스 토큰을 만드세요. 토큰은 특정 권한 범위로 제한돼요.",
+      "copyNow": "지금 이 토큰을 복사하세요. 다시 표시되지 않아요.",
+      "copy": "복사",
+      "saved": "토큰을 저장했어요",
+      "tokenName": "토큰 이름",
+      "tokenNamePlaceholder": "예: CLI, 자동화, 백업 스크립트",
+      "scopes": "권한 범위",
+      "scopeLabels": {
+        "all": "전체 접근",
+        "collectionsRead": "컬렉션 (읽기)",
+        "collectionsWrite": "컬렉션 (쓰기)",
+        "vocabRead": "단어장 (읽기)",
+        "vocabWrite": "단어장 (쓰기)",
+        "statsRead": "통계 (읽기)",
+        "statsWrite": "통계 (쓰기)",
+        "settingsRead": "설정 (읽기)",
+        "settingsWrite": "설정 (쓰기)",
+        "dataExport": "데이터 내보내기",
+        "dataImport": "데이터 가져오기",
+        "chatRead": "채팅 / LLM (읽기)",
+        "chatWrite": "채팅 / LLM (쓰기)",
+        "ankiRead": "Anki 동기화 (읽기)",
+        "ankiWrite": "Anki 동기화 (쓰기)"
+      },
+      "nameRequired": "토큰 이름을 입력해 주세요",
+      "scopeRequired": "권한 범위를 하나 이상 선택해 주세요",
+      "createFailed": "토큰을 만들지 못했어요",
+      "create": "토큰 만들기",
+      "cancel": "취소",
+      "created": "생성일 {date}",
+      "lastUsed": "마지막 사용 {date}",
+      "neverUsed": "사용한 적 없음",
+      "revokeConfirm": "토큰 \"{name}\"을(를) 폐기할까요? 되돌릴 수 없어요.",
+      "revokeFailed": "토큰을 폐기하지 못했어요",
+      "revoke": "폐기",
+      "empty": "아직 만든 토큰이 없어요. CLI를 사용하거나 API에 원격으로 접근하려면 토큰을 생성하세요."
+    },
+    "deleteAccount": {
+      "startFailed": "계정 삭제를 시작하지 못했어요. 다시 시도해 주세요.",
+      "heading": "계정 삭제",
+      "intro": "계정과 도서, 단어장, 빈칸 채우기 진행 상황, 일기, 채팅 기록, 설정 등 <strong>모든</strong> 데이터를 영구적으로 삭제해요. 되돌릴 수 없으며, 위의 백업 내보내기와는 별개예요.",
+      "billingWarning": "유료 구독 중이라면 먼저 해지해 주세요. 여기서 계정을 삭제해도 결제는 <strong>해지되지 않아요</strong>(결제는 Merchant of Record인 Paddle이 처리하며, 구독 관리 링크는 Paddle 영수증 이메일에 있어요).",
+      "sent": "이메일을 확인하고 <strong>이 브라우저에서</strong> 방금 보낸 링크를 열어 계정을 영구적으로 삭제하세요. 링크는 24시간 후 만료돼요.",
+      "start": "계정 삭제…",
+      "typeToConfirm": "확인하려면 <mono>{phrase}</mono>을(를) 입력하세요",
+      "sending": "보내는 중…",
+      "confirm": "내 계정 삭제",
+      "cancel": "취소"
+    },
+    "redeem": {
+      "open": "코드가 있나요? 등록하기",
+      "placeholder": "쿠폰 코드",
+      "submit": "등록",
+      "redeeming": "등록하는 중…",
+      "success": "코드를 등록했어요: {plan}을(를) {date}까지 이용할 수 있어요.",
+      "stored": "{plan} 카드({days}일)로 저장했어요. 현재 플랜은 바뀌지 않아요. 내 카드에서 확인하고 {date}까지 사용하세요.",
+      "errors": {
+        "invalid_code": "올바르지 않은 코드예요.",
+        "expired": "만료된 코드예요.",
+        "used_up": "모두 사용된 코드예요.",
+        "already_redeemed": "이미 이 혜택을 사용했어요.",
+        "email_not_verified": "먼저 이메일 주소를 인증해 주세요.",
+        "too_many_attempts": "잘못된 코드를 너무 많이 입력했어요. {minutes}분 후에 다시 시도해 주세요.",
+        "generic": "코드를 등록하지 못했어요. 나중에 다시 시도해 주세요."
+      },
+      "attemptsLeft": "{count}번 더 시도할 수 있어요."
+    },
+    "invite": {
+      "title": "친구 초대",
+      "intro": "내 링크를 공유하세요. 친구가 가입하고 읽기를 시작하면 두 사람 모두 {days}일 Plus 카드를 받아요. 이렇게 최대 {max}장까지 받을 수 있어요.",
+      "linkLabel": "내 초대 링크",
+      "copy": "링크 복사",
+      "copied": "링크를 복사했어요.",
+      "stats": "초대 {invited}명 · 보상 {rewarded}명",
+      "joinedPending": "초대로 가입했어요. 몇 분 동안 읽거나 단어 3개를 저장하면 카드가 도착해요.",
+      "joinedDone": "초대로 가입했어요. 카드는 아래 내 카드에 있어요.",
+      "cardsTitle": "내 카드",
+      "cardsEmpty": "아직 카드가 없어요.",
+      "card": "{plan} 카드 · {days}일",
+      "cardUntil": "{date}까지 사용하세요.",
+      "activate": "사용하기",
+      "activating": "활성화하는 중…",
+      "activated": "카드를 활성화했어요: {plan}을(를) {date}까지 이용할 수 있어요.",
+      "haveCode": "친구의 초대 코드가 있나요?",
+      "codePlaceholder": "초대 코드",
+      "codeSubmit": "코드 사용",
+      "claimed": "초대 코드를 등록했어요.",
+      "errors": {
+        "invalid_code": "올바르지 않은 초대 코드예요.",
+        "self_invite": "내 초대 코드는 사용할 수 없어요.",
+        "already_attached": "이미 초대 코드를 사용했어요.",
+        "window_closed": "초대 코드는 가입 후 7일 이내에만 추가할 수 있어요.",
+        "used_up": "이 초대 코드는 남은 자리가 없어요.",
+        "email_used": "이 이메일 주소는 이미 초대 보상을 받았어요.",
+        "too_many_attempts": "잘못된 코드를 너무 많이 입력했어요. {minutes}분 후에 다시 시도해 주세요.",
+        "not_found": "카드를 찾을 수 없어요.",
+        "already_used": "이미 사용한 카드예요.",
+        "expired": "만료된 카드예요.",
+        "higher_plan_active": "현재 플랜이 이 카드보다 높아요. 현재 플랜이 끝난 뒤에 카드를 사용하세요.",
+        "subscription_active": "자동으로 갱신되는 구독이 있어요. 구독이 끝난 뒤에 카드를 사용하세요.",
+        "generic": "문제가 발생했어요. 나중에 다시 시도해 주세요."
+      },
+      "attemptsLeft": "{count}번 더 시도할 수 있어요."
+    },
+    "installApp": {
+      "title": "Readfox를 홈 화면에 추가하세요",
+      "body": "주소를 입력하지 않고 아이콘으로 앱처럼 전체 화면에서 열 수 있어요.",
+      "install": "홈 화면에 추가",
+      "desktop": "휴대폰 브라우저에서 readfox.app을 열고 로그인한 뒤 이곳으로 돌아와 방법을 확인하세요.",
+      "steps": {
+        "ios1": "Safari에서 readfox.app을 여세요.",
+        "ios2": "공유 버튼(위쪽 화살표가 있는 사각형)을 누르세요.",
+        "ios3": "\"홈 화면에 추가\"를 선택한 뒤 \"추가\"를 누르세요.",
+        "wechat1": "WeChat에서는 추가할 수 없어요. 오른쪽 위의 \"···\"를 누르고 \"브라우저에서 열기\"를 선택하세요.",
+        "wechat2": "브라우저에서 설정을 열고 안내에 따라 진행하세요.",
+        "android1": "브라우저 메뉴(보통 오른쪽 위의 ⋮)를 누르세요.",
+        "android2": "\"홈 화면에 추가\" 또는 \"앱 설치\"를 선택하세요."
+      }
+    }
+  },
+  "welcomeOffer": {
+    "body": "처음 오셨나요? 코드 <b>{code}</b>로 Plus를 15일 동안 무료로 이용하세요. 12월 15일까지 유효하며, 계정당 한 번만 사용할 수 있어요.",
+    "use": "사용하기",
+    "signUp": "가입하기"
+  },
+  "plans": {
+    "freePrice": "$0",
+    "perMonth": "월 {price}",
+    "perYear": "또는 연 {price}",
+    "perYearMain": "연 {price}",
+    "annualEquivalent": "월 약 {price}, 연간 결제",
+    "annualEquivalentSave": "월 약 {price}, 연간 결제. {percent}% 절약",
+    "chinaPrice": "중국 본토: 월 {price} (Alipay)",
+    "chinaPriceYear": "중국 본토: 연 {price} (Alipay)",
+    "priceAtCheckout": "가격은 결제 화면에서 확인할 수 있어요",
+    "getStarted": "무료로 시작",
+    "features": {
+      "glosses": "매달 AI 단어 검색 {count, number}회 (사전에 없는 단어)",
+      "freeLibrary": "컬렉션 최대 10개, 레슨 최대 200개. 무료 서재 도서는 레슨 수에 포함되지 않아요",
+      "byok": "더 필요하면 내 AI 키를 추가하세요",
+      "detailed": "매달 상세 AI 답변 {count, number}회 (구절 번역과 단어 설명)",
+      "phraseWords": "한 번의 번역에 최대 {count}단어까지 선택할 수 있어요",
+      "phraseUnlimited": "한 번의 번역에 길이 제한 없이 선택할 수 있어요",
+      "moreRoom": "컬렉션 최대 50개, 레슨 최대 1,000개",
+      "unlimitedLibrary": "컬렉션과 레슨 무제한",
+      "byokPaid": "더 필요하면 내 AI 키를 사용하세요"
+    },
+    "current": "현재 플랜",
+    "choose": "{plan} 선택",
+    "cycleLabel": "결제 주기",
+    "cycleYear": "연간",
+    "cycleYearSave": "연간 (최대 {percent}% 절약)",
+    "cycleMonth": "월간"
+  },
+  "pricing": {
+    "metaTitle": "요금 – Readfox",
+    "title": "요금",
+    "intro": "무료로 시작하세요. 상세한 AI 설명과 더 넉넉한 사용량이 필요할 때 업그레이드하세요. 언제든 해지할 수 있어요.",
+    "notes": "해당하는 경우 판매세 또는 VAT가 결제 시 추가돼요. 결제는 재판매업체인 Paddle이 처리해요. 중국 본토 구매자는 RMB로 결제하며 Alipay를 사용할 수 있어요.",
+    "cardPending": "카드, PayPal, Apple Pay 결제는 개발 중이에요. 지금은 Alipay와 WeChat Pay만 지원해요.",
+    "metaDescription": "Readfox 요금제: 매달 AI 단어 검색 1,000회로 무료 시작. Plus, Pro, Max는 더 많은 검색 횟수, 상세한 AI 설명, 더 큰 서재를 제공해요. 카드, PayPal, Alipay로 결제하세요."
+  },
+  "checkoutPage": {
+    "opening": "보안 결제 화면을 여는 중",
+    "failed": "결제 화면을 열 수 없어요. 돌아가서 다시 시도해 주세요.",
+    "back": "플랜으로 돌아가기"
+  },
+  "planLimits": {
+    "upgradePlus": "Plus로 업그레이드",
+    "seePlans": "플랜 보기",
+    "addKey": "API 키 추가",
+    "notNow": "나중에",
+    "upgradeLine": {
+      "cloud": "Plus로 이 한도가 늘어나요.",
+      "plus": "Pro로 이 한도가 늘어나요.",
+      "max": "Max로 이 한도가 늘어나요.",
+      "byok": "내 API 키를 추가하면 이 한도가 늘어나요."
+    },
+    "generic": {
+      "title": "플랜 한도에 도달했어요",
+      "body": "플랜의 사용량을 초과했어요."
+    },
+    "metrics": {
+      "phraseSelectionWords": {
+        "title": "현재 플랜에서는 구절이 너무 길어요",
+        "body": "현재 플랜에서는 구절 검색을 {limit, number}단어까지 할 수 있어요."
+      },
+      "journalWordsPerMonth": {
+        "title": "이번 달 일기 한도에 도달했어요",
+        "body": "이번 달 일기 {limit, number}단어 중 {used, number}단어를 작성했어요."
+      },
+      "llmRequestsPerMonth": {
+        "title": "이번 달 AI 사용량을 모두 썼어요",
+        "body": "이번 달 상세 AI 답변 {limit, number}회를 모두 사용했어요."
+      },
+      "wordGlossesPerMonth": {
+        "title": "이번 달 AI 단어 검색을 모두 썼어요",
+        "body": "이번 달 AI 단어 검색 {limit, number}회를 모두 사용했어요. 오프라인 사전의 단어는 계속 볼 수 있어요."
+      },
+      "phraseTranslationsPerDay": {
+        "title": "오늘의 구절 번역을 모두 썼어요",
+        "body": "오늘의 구절 번역 {limit, number}회를 모두 사용했어요. UTC 자정에 초기화돼요."
+      },
+      "contextTranslationsPerDay": {
+        "title": "오늘의 문맥 번역을 모두 썼어요",
+        "body": "오늘의 문맥 번역 {limit, number}회를 모두 사용했어요. UTC 자정에 초기화돼요."
+      },
+      "ttsCharsPerMonth": {
+        "title": "이번 달 오디오 사용량을 모두 썼어요",
+        "body": "이번 달 남은 기간에는 텍스트 음성 변환에 브라우저 음성을 사용해요."
+      },
+      "maxCollections": {
+        "title": "서재 한도에 도달했어요",
+        "body": "현재 플랜에서는 컬렉션을 최대 {limit, number}개까지 보관할 수 있어요."
+      },
+      "maxLessons": {
+        "title": "서재 한도에 도달했어요",
+        "body": "현재 플랜에서는 레슨을 최대 {limit, number}개까지 보관할 수 있어요."
+      },
+      "maxVocabEntries": {
+        "title": "저장한 단어 한도에 도달했어요",
+        "body": "현재 플랜에서는 저장한 단어를 최대 {limit, number}개까지 보관할 수 있어요."
+      }
+    },
+    "dialog": {
+      "plus": "Plus에서는 매달 AI 단어 검색 {glosses, number}회와 상세 답변 {detailed, number}회를 이용할 수 있어요. 무료 도서와 저장한 단어는 그대로 유지돼요.",
+      "freeReset": "또는 무료로 계속 읽으세요. 사용량은 다음 달에 다시 시작돼요."
+    }
+  },
+  "feedback": {
+    "nav": "피드백",
+    "title": "피드백",
+    "intro": "불편한 점이나 바라는 기능을 알려 주세요. 모든 메시지를 읽고 있어요.",
+    "messageLabel": "메시지",
+    "placeholder": "문제나 아이디어를 적어 주세요. 스크린샷을 붙여넣을 수도 있어요.",
+    "counter": "{count} / {max}",
+    "addImage": "이미지 추가",
+    "removeImage": "이미지 {name} 삭제",
+    "imagesHint": "이미지는 최대 {count}장, 장당 {size}MB까지 가능해요. PNG, JPEG, WebP, GIF를 지원해요.",
+    "replyTo": "{email}(으)로 답변드릴게요.",
+    "send": "보내기",
+    "sending": "보내는 중…",
+    "successTitle": "감사합니다, 잘 받았어요. 이메일로 답변드릴게요.",
+    "sendAnother": "다른 메시지 보내기",
+    "errors": {
+      "empty": "먼저 메시지를 입력해 주세요.",
+      "tooLong": "메시지가 너무 길어요.",
+      "tooManyImages": "이미지는 최대 {count}장까지 추가할 수 있어요.",
+      "imageTooLarge": "{size}MB보다 큰 이미지가 있어요.",
+      "imageType": "PNG, JPEG, WebP, GIF 이미지를 사용해 주세요.",
+      "tooLarge": "메시지와 이미지의 용량이 너무 커요.",
+      "rateLimited": "메시지를 너무 많이 보냈어요. 나중에 다시 시도해 주세요.",
+      "failed": "메시지를 보내지 못했어요. 나중에 다시 시도해 주세요."
+    },
+    "wechat": {
+      "summary": "WeChat이 편하신가요?",
+      "body": "질문, 기능 아이디어, 잘못된 뜻풀이가 있나요? QR 코드를 스캔해 WeChat으로 저를 추가해 주세요. 제가 Readfox를 만들고 있어요. 친구 요청에 \"Readfox\"라고 적어 주세요.",
+      "alt": "Readfox 제작자의 WeChat QR 코드"
+    }
+  },
+  "library": {
+    "freeBooks": {
+      "button": "무료 도서",
+      "title": "무료 도서",
+      "close": "닫기",
+      "intro": "{language} 퍼블릭 도메인 도서를 쉬운 순서부터 보여 드려요. 도서를 추가하면 내 서재에 복사돼요. 수준은 대략적인 기준이에요.",
+      "loading": "불러오는 중…",
+      "errLoad": "무료 도서를 불러오지 못했어요.",
+      "none": "아직 {language} 무료 도서가 없어요.",
+      "size": "{words}단어, 레슨 {lessons}개",
+      "add": "추가",
+      "adding": "추가하는 중…",
+      "addedLabel": "추가됨",
+      "added": "{title}을(를) 서재에 추가했어요",
+      "errAdd": "도서를 추가하지 못했어요",
+      "tab": {
+        "books": "도서",
+        "news": "뉴스",
+        "travel": "여행",
+        "science": "과학"
+      },
+      "feedIntro": "{language} 최신 {interest} 기사예요. 기사를 추가하면 출처와 함께 내 서재에 복사돼요.",
+      "feedLoading": "불러오는 중…",
+      "feedErrLoad": "기사를 불러오지 못했어요.",
+      "feedNone": "아직 기사가 없어요. 곧 다시 확인해 주세요.",
+      "feedSize": "{words}단어",
+      "feedAdd": "추가",
+      "feedAdding": "추가하는 중…",
+      "feedAddedLabel": "추가됨",
+      "feedAdded": "{title}을(를) 서재에 추가했어요",
+      "feedErrAdd": "기사를 추가하지 못했어요",
+      "feedSource": "출처: {source} · {license}",
+      "search": "제목 또는 저자로 검색",
+      "sortLabel": "도서 정렬",
+      "sortDefault": "추천순",
+      "sortShort": "짧은 순",
+      "sortLong": "긴 순",
+      "noMatch": "“{query}”에 맞는 도서가 없어요.",
+      "readingHours": "약 {hours}시간",
+      "readingMinutes": "약 {minutes}분"
+    },
+    "empty": {
+      "browseBooks": "무료 도서 둘러보기",
+      "title": "서재에 도서가 없어요",
+      "description": "도서(EPUB 또는 Markdown)를 가져와 학습을 시작하세요. 읽는 동안 단어장과 진행 상황이 기록돼요.",
+      "importBook": "도서 가져오기",
+      "addStarter": "입문 콘텐츠 추가",
+      "adding": "추가하는 중…"
+    },
+    "starterBlurb": "처음 1,000단어를 가장 유용한 순서대로 배우는 짧은 코스예요.",
+    "common": {
+      "close": "닫기",
+      "cancel": "취소",
+      "saving": "저장 중...",
+      "back": "뒤로",
+      "delete": "삭제",
+      "title": "제목",
+      "authorSource": "저자 / 출처",
+      "saveToLibrary": "서재에 저장",
+      "tryAgain": "다시 시도",
+      "text": "본문",
+      "words": "{count}단어"
+    },
+    "errors": {
+      "createGroup": "그룹을 만들지 못했어요",
+      "renameGroup": "그룹 이름을 바꾸지 못했어요",
+      "deleteGroup": "그룹을 삭제하지 못했어요",
+      "reorderCollections": "컬렉션 순서를 바꾸지 못했어요",
+      "importAudio": "오디오 파일을 가져오지 못했어요.",
+      "importFile": "파일을 가져오지 못했어요. 올바른 파일인지 확인해 주세요.",
+      "deleteCollection": "컬렉션을 삭제하지 못했어요",
+      "updateCollection": "컬렉션을 수정하지 못했어요",
+      "deleteLesson": "레슨을 삭제하지 못했어요",
+      "updateLesson": "레슨을 수정하지 못했어요",
+      "reorderLessons": "레슨 순서를 바꾸지 못했어요",
+      "retryTranscription": "받아쓰기를 다시 시도하지 못했어요"
+    },
+    "page": {
+      "title": "내 서재",
+      "loading": "서재 불러오는 중",
+      "newGroup": "새 그룹",
+      "groupNamePlaceholder": "그룹 이름",
+      "addGroup": "추가",
+      "ungrouped": "그룹 없음",
+      "selectFile": "EPUB 또는 Markdown 파일을 선택해 주세요",
+      "audioUploaded": "\"{title}\"을(를) 업로드했어요. 받아쓰기를 시작했어요",
+      "audioMinutes": " (오디오 약 {minutes}분, 보통 몇 분 안에 끝나요)"
+    },
+    "group": {
+      "expand": "{name} 펼치기",
+      "collapse": "{name} 접기",
+      "items": "{count}개 항목",
+      "newCollection": "새 컬렉션",
+      "rename": "이름 변경",
+      "delete": "삭제",
+      "renamePrompt": "그룹 이름 변경:",
+      "deleteConfirm": "\"{name}\" 그룹을 삭제할까요? 이 그룹의 컬렉션은 그룹 없음으로 이동해요."
+    },
+    "onboarding": {
+      "title": "첫 학습 루프를 이어가세요",
+      "practiceReady": "저장한 단어 3개를 빠르게 복습할 수 있어요.",
+      "resumeLesson": "{title}을(를) 읽던 곳부터 이어서 읽어요.",
+      "fallbackLesson": "입문 레슨",
+      "resume": "이어하기"
+    },
+    "addTile": {
+      "placeholder": "컬렉션 제목",
+      "create": "만들기"
+    },
+    "card": {
+      "coverAlt": "{title} 표지",
+      "complete": "{percent}% 완료",
+      "notStarted": "시작 전",
+      "lessons": "레슨 {count}개",
+      "dragToReorder": "끌어서 {title} 순서 변경",
+      "today": "오늘",
+      "yesterday": "어제",
+      "daysAgo": "{count}일 전",
+      "weeksAgo": "{count}주 전",
+      "monthsAgo": "{count}개월 전"
+    },
+    "import": {
+      "label": "가져오기",
+      "importing": "가져오는 중...",
+      "addTo": "추가할 위치",
+      "ungrouped": "서재 (그룹 없음)",
+      "options": {
+        "file": "파일 가져오기",
+        "audio": "오디오 가져오기",
+        "url": "URL에서 가져오기",
+        "youtube": "YouTube 자막",
+        "paste": "텍스트 붙여넣기"
+      }
+    },
+    "paste": {
+      "title": "텍스트 붙여넣기",
+      "titlePlaceholder": "기사 또는 글 제목",
+      "optional": "선택",
+      "textPlaceholder": "{language} 글을 여기에 붙여넣으세요..."
+    },
+    "web": {
+      "title": "웹에서 가져오기",
+      "urlLabel": "기사 URL",
+      "extract": "추출",
+      "extracting": "추출하는 중...",
+      "help": "{language} 뉴스 기사나 블로그 글의 URL을 붙여넣으세요. 기사 내용을 추출해 서재에 추가해요.",
+      "contentPreview": "내용 미리보기",
+      "fromSite": "출처: {site}",
+      "saveFailed": "기사를 저장하지 못했어요.",
+      "extractFailed": "기사를 추출하지 못했어요",
+      "networkError": "네트워크 오류예요. 연결을 확인해 주세요."
+    },
+    "youtube": {
+      "title": "YouTube 자막 가져오기",
+      "urlLabel": "YouTube 동영상 URL",
+      "find": "자막 찾기",
+      "finding": "찾는 중…",
+      "help": "동영상의 자막을 눌러서 이동할 수 있는 타임스탬프가 있는 레슨으로 가져와요. 동영상은 다운로드하거나 저장하지 않아요. 줄을 누르면 YouTube의 해당 시점이 열려요.",
+      "chooseTrack": "자막 트랙 선택",
+      "auto": "자동 생성",
+      "creator": "제작자 자막",
+      "importing": "“{language}” 자막을 가져오는 중…",
+      "note": "자동 생성 자막에는 인식 오류가 있을 수 있어요. 가져온 뒤 자막 텍스트를 수정할 수 있어요.",
+      "importFailed": "자막을 가져오지 못했어요."
+    },
+    "lessonForm": {
+      "add": "레슨 추가",
+      "edit": "레슨 수정",
+      "create": "레슨 만들기",
+      "save": "변경 사항 저장",
+      "titlePlaceholder": "레슨 제목",
+      "textPlaceholder": "레슨 본문. Markdown을 사용할 수 있어요."
+    },
+    "collection": {
+      "back": "서재",
+      "loading": "컬렉션 불러오는 중",
+      "editDetails": "컬렉션 정보 수정",
+      "lessonsCount": "레슨 {count}개",
+      "completed": "{count}개 완료",
+      "group": "그룹:",
+      "none": "없음",
+      "newGroupOption": "+ 새 그룹...",
+      "newGroupPrompt": "새 그룹 이름:",
+      "continueReading": "이어 읽기",
+      "deleteConfirm": "이 컬렉션과 모든 레슨을 삭제할까요?",
+      "deleteLessonConfirm": "\"{title}\"을(를) 삭제할까요?",
+      "addLesson": "레슨 추가",
+      "form": {
+        "title": "컬렉션 수정",
+        "titlePlaceholder": "컬렉션 제목",
+        "author": "저자",
+        "authorPlaceholder": "저자",
+        "save": "변경 사항 저장"
+      },
+      "row": {
+        "read": "읽기",
+        "reread": "다시 읽기",
+        "continue": "이어하기",
+        "transcribing": "받아쓰는 중…",
+        "transcriptionFailed": "받아쓰기 실패",
+        "retryTranscription": "받아쓰기 다시 시도",
+        "edit": "레슨 수정",
+        "delete": "레슨 삭제",
+        "dragToReorder": "끌어서 {title} 순서 변경"
+      }
+    },
+    "view": {
+      "label": "서재 보기 방식",
+      "grid": "격자 보기",
+      "list": "목록 보기"
+    }
+  },
+  "readingLevel": {
+    "names": {
+      "A1": "입문",
+      "A2": "초급",
+      "B1": "중급",
+      "B2": "중고급",
+      "C1": "고급",
+      "C2": "최상급"
+    },
+    "exam": {
+      "ielts": "IELTS {score}",
+      "toefl": "TOEFL iBT {score}",
+      "delf": "DELF {score}",
+      "dalf": "DALF {score}",
+      "hsk": "HSK {score}",
+      "topik": "TOPIK {score}",
+      "juniorHigh": "중학교",
+      "zhongkao": "Zhongkao",
+      "gaokao": "Gaokao",
+      "cet4": "CET-4",
+      "cet6": "CET-6",
+      "tem8": "TEM-8"
+    },
+    "approx": "시험 등급 대응은 참고용이에요.",
+    "notSure": "잘 모르겠어요",
+    "all": "모든 수준",
+    "yours": "내 수준",
+    "original": "원제: {title}"
+  },
+  "recommend": {
+    "booksTitle": "내 수준에 맞는 도서",
+    "articlesTitle": "관심 있을 만한 최신 기사",
+    "interest": {
+      "news": "뉴스",
+      "travel": "여행",
+      "science": "과학"
+    },
+    "original": "원제: {title}",
+    "words": "{words}단어",
+    "harder": "내 수준보다 조금 어려워요",
+    "start": "읽기 시작",
+    "starting": "여는 중…",
+    "loading": "알맞은 글을 찾는 중…",
+    "errStart": "이 글을 열 수 없어요. 다른 글을 선택해 보세요.",
+    "empty": "아직 추천할 글이 없어요. 대신 무료 도서를 둘러보세요.",
+    "homeTitle": "추천",
+    "homeHint": "시작하기 좋은 무료 도서와 기사예요.",
+    "homeHintLevel": "내 수준({level})에 맞춰 골랐어요.",
+    "more": "무료 도서 더 보기",
+    "collapse": "이 섹션 접기",
+    "expand": "이 섹션 펼치기"
+  },
+  "bookLink": {
+    "view": "{site}에서 보기",
+    "site": {
+      "douban": "Douban",
+      "goodreads": "Goodreads",
+      "babelio": "Babelio",
+      "booklog": "Booklog",
+      "aladin": "Aladin"
+    }
+  },
+  "newLanguage": {
+    "title": "{language} 시작하기",
+    "intro": "{language} 수준과 읽고 싶은 글을 알려 주세요. 첫 읽을거리를 추천해 드려요. 이미 사용법을 아시니 1분이면 끝나요.",
+    "submit": "추천 보기",
+    "later": "나중에",
+    "close": "닫기",
+    "pickIntro": "하나를 골라 읽기를 시작해 보세요."
+  },
+  "descriptions": {
+    "toggle": "설명 보기"
+  },
+  "publicBooks": {
+    "indexTitle": "배우는 언어로 읽는 무료 도서",
+    "indexMetaDescription": "영어, 프랑스어, 스페인어, 중국어, 한국어 고전 {count}권을 A1부터 C2까지 수준별로 정리했어요. Readfox에서 무료로 읽고 단어를 눌러 뜻을 확인하세요.",
+    "indexIntro": "여기 있는 모든 도서는 CEFR 수준별로 정리한 퍼블릭 도메인 전문이에요. 도서를 열어 시작 부분을 보고 Readfox에서 무료로 읽어 보세요. 단어를 누르면 내 언어로 뜻을 볼 수 있어요.",
+    "bookCount": "도서 {count}권",
+    "level": "수준 {level}",
+    "byAuthor": "저자: {author}",
+    "readingHours": "읽는 데 약 {hours}시간",
+    "readingMinutes": "읽는 데 약 {minutes}분",
+    "lessons": "레슨 {count}개",
+    "opening": "1장 미리보기",
+    "readFree": "Readfox에서 무료로 읽기",
+    "ctaNote": "단어를 누르면 내 언어로 뜻을 볼 수 있어요. 새 단어를 저장하고 나중에 복습하세요.",
+    "source": "출처: <link>{source}</link>. {license}.",
+    "moreAtLevel": "{level} 수준의 {language} 도서 더 보기",
+    "allBooks": "모든 무료 도서",
+    "metaTitle": "{author}의 {title}: {language}로 무료로 읽기 | Readfox",
+    "readWholeChapter": "1장 전체 읽기",
+    "tryRead": "가입 없이 1장 무료로 읽기",
+    "hardWordsTitle": "이 책의 어려운 단어",
+    "hardWordsNote": "이 책에 자주 나오지만 일상 {language}에서는 드문 단어 {count}개예요. Readfox 리더에서 단어를 누르면 뜻을 볼 수 있어요.",
+    "chapterTitle": "{title}: 1장",
+    "readMetaTitle": "{title} 1장을 {language}로 무료로 읽기 | Readfox",
+    "readMetaDescription": "{author}의 {title} 첫 장을 계정 없이 무료로 읽어 보세요. 수준 {level}.",
+    "continueTitle": "마음에 드셨나요? 계속 읽어 보세요",
+    "continueBody": "무료로 가입하면 레슨 {count}개를 모두 읽을 수 있어요. 단어를 누르면 내 언어로 뜻을 볼 수 있고, 새 단어를 저장해 복습할 수 있어요.",
+    "continueCta": "무료로 가입하고 계속 읽기",
+    "backToBook": "이 책 소개",
+    "levelTitle": "{level} 수준의 {language} 도서",
+    "levelIntro": "CEFR {level} 수준의 {language} 무료 도서 {count}권이에요. 모두 퍼블릭 도메인 전문이에요.",
+    "levelMetaDescription": "CEFR {level} 수준의 {language} 무료 도서: {titles}. Readfox에서 읽고 단어를 눌러 뜻을 확인하세요.",
+    "authorsTitle": "저자별 {language} 도서",
+    "authorsMetaDescription": "Readfox의 {language} 무료 도서 저자 {count}명을 {first}부터 {last}까지 둘러보세요.",
+    "authorTitle": "{author}: {language} 무료 도서",
+    "authorIntro": "{author}의 도서 {count}권을 Readfox에서 무료로 읽을 수 있어요. 모두 퍼블릭 도메인 전문이에요.",
+    "authorMetaDescription": "{author}의 도서 {count}권을 {language}로 무료로 읽어 보세요: {titles}.",
+    "browseLevels": "수준별",
+    "browseAuthors": "저자별"
+  },
+  "journal": {
+    "title": "일기",
+    "newEntry": "새 일기",
+    "cancel": "취소",
+    "placeholder": "오늘의 일기를 {language}로 써 보세요...",
+    "words": "{count}단어",
+    "draftSaved": "임시 저장됨",
+    "saving": "저장 중...",
+    "saveDraft": "임시 저장",
+    "correcting": "교정 중...",
+    "submitForCorrection": "교정 요청",
+    "failedToSave": "저장하지 못했어요",
+    "correctionFailed": "교정하지 못했어요",
+    "deleteConfirm": "이 일기를 삭제할까요?",
+    "deleteFailed": "일기를 삭제하지 못했어요",
+    "entries": "일기 {count}개",
+    "empty": "아직 일기가 없어요",
+    "writeFirst": "첫 일기 쓰기",
+    "card": {
+      "corrections": "교정 {count}개",
+      "perfect": "완벽해요",
+      "draft": "임시 저장",
+      "deleteEntry": "일기 삭제",
+      "words": "{count}단어"
+    },
+    "modal": {
+      "close": "닫기"
+    },
+    "correction": {
+      "yourText": "내가 쓴 글",
+      "clickHint": "강조된 단어를 누르면 교정 내용을 볼 수 있어요",
+      "corrected": "교정된 글",
+      "summary": "교정 {count}개:",
+      "perfect": "완벽해요! 고칠 곳이 없어요."
+    },
+    "types": {
+      "grammar": "문법",
+      "spelling": "맞춤법",
+      "wordChoice": "어휘 선택",
+      "wordOrder": "어순",
+      "missingWord": "누락된 단어",
+      "extraWord": "불필요한 단어"
+    }
+  },
+  "stats": {
+    "title": "통계",
+    "loadFailed": "통계를 불러오지 못했어요",
+    "returnHome": "홈으로 돌아가기",
+    "cards": {
+      "wordsKnown": "아는 단어",
+      "learning": "학습 중 (L1-L4)",
+      "learningSub": "진행 중인 단어",
+      "wordsRead": "읽은 단어",
+      "wordsReadSub": "읽은 위치로 추정한 값",
+      "currentStreak": "연속 학습",
+      "days": "{count}일",
+      "longest": "최장: {count}일"
+    },
+    "range": {
+      "d30": "30일",
+      "d90": "90일",
+      "y1": "1년",
+      "all": "전체"
+    },
+    "states": {
+      "known": "아는 단어",
+      "level4": "레벨 4",
+      "level3": "레벨 3",
+      "level2": "레벨 2",
+      "level1": "레벨 1",
+      "new": "새 단어",
+      "ignored": "무시함"
+    },
+    "wordStates": {
+      "title": "상태별 단어"
+    },
+    "cloze": {
+      "title": "빈칸 채우기 연습",
+      "sentencesPracticed": "연습한 문장",
+      "accuracy": "정확도",
+      "totalPoints": "총 점수"
+    },
+    "mastery": {
+      "title": "문장 숙달도",
+      "overall": "전체 {percent}%",
+      "mastered": "{mastered} / {total} 숙달",
+      "due": "복습할 문장 {count}개",
+      "collections": {
+        "top500": "상위 500",
+        "top1000": "상위 1000",
+        "top2000": "상위 2000",
+        "mined": "수집한 문장",
+        "random": "무작위"
+      }
+    },
+    "fluency": {
+      "estimatedLevel": "선택한 수준이 아니라 아는 단어를 바탕으로 추정한 값이에요",
+      "vsLastWeek": "지난주 대비 {count, number}",
+      "sameAsLast": "이번 주 {count, number} (지난주와 같음)",
+      "progressTo": "{level}까지 진행도",
+      "topLevel": "최고 수준에 도달했어요",
+      "wordsToNext": "{level}까지 {count, number}단어",
+      "known": "아는 단어",
+      "learning": "학습 중",
+      "levelName": {
+        "A1": "입문",
+        "A2": "초급",
+        "B1": "중급",
+        "B2": "중고급",
+        "C1": "고급",
+        "C2": "최상급"
+      }
+    },
+    "heatmap": {
+      "title": "활동",
+      "total": {
+        "actions": "지난 1년간 활동 {count, number}회",
+        "lookups": "지난 1년간 검색 {count, number}회"
+      },
+      "count": {
+        "actions": "활동 {count, number}회",
+        "lookups": "검색 {count, number}회"
+      },
+      "types": {
+        "lookups": "검색",
+        "cloze": "빈칸 채우기",
+        "reading": "읽기",
+        "anki": "Anki"
+      },
+      "minutes": "{count}분",
+      "noActivity": "활동 없음",
+      "less": "적음",
+      "more": "많음",
+      "activeDays": "활동한 날:",
+      "avgPerActiveDay": "활동일 평균:"
+    },
+    "anki": {
+      "title": "Anki 복습",
+      "last90": "최근 90일",
+      "reviews": "복습",
+      "reviewDays": "복습한 날",
+      "avgPerDay": "복습일 평균",
+      "connectTitle": "Anki를 연결해 복습 기록을 확인하세요",
+      "connectBody": "복습 기록은 자동으로 동기화되고 연속 학습에 반영돼요.",
+      "connectButton": "Anki 연결"
+    },
+    "ankiStatus": {
+      "synced": "동기화됨",
+      "notSynced": "동기화 안 됨",
+      "noteId": "Anki 노트 ID: {id}",
+      "pushed": "Anki로 보냄"
+    },
+    "radar": {
+      "title": "유창성 영역",
+      "subtitle": "어휘가 가장 강한 분야",
+      "pending": "분류 대기 중인 단어 {count}개",
+      "emptyTitle": "아직 분석된 영역이 없어요",
+      "emptySorting": "아는 단어를 주제별로 분류하는 중이에요. 잠시 후 다시 확인해 주세요.",
+      "emptyHint": "읽고 단어를 배우면 어떤 주제에 강한지 볼 수 있어요.",
+      "knownWords": "아는 단어 {count}개",
+      "mastery": "숙달도"
+    },
+    "vocabGrowth": {
+      "title": "어휘 성장",
+      "knownWords": "아는 단어",
+      "learning": "학습 중",
+      "total": "전체",
+      "series": {
+        "known": "아는 단어",
+        "learning": "학습 중",
+        "total": "전체"
+      }
+    }
+  },
+  "chat": {
+    "error": "죄송해요, 답변하지 못했어요. 설정에서 LLM 제공자가 구성되어 있는지 확인해 주세요.",
+    "open": "채팅 열기",
+    "close": "채팅 닫기",
+    "tutorTitle": "{language} 튜터",
+    "tutorSubtitle": "{language}에 대해 무엇이든 물어보세요",
+    "clearTitle": "채팅 지우기",
+    "clear": "지우기",
+    "loadingOlder": "이전 메시지 불러오는 중...",
+    "emptyPrompt": "{language}에 대해 질문해 보세요",
+    "via": "{provider} 사용",
+    "placeholder": "{language}에 대해 물어보세요..."
+  },
+  "chrome": {
+    "theme": {
+      "light": "라이트",
+      "dark": "다크",
+      "system": "시스템"
+    },
+    "nav": {
+      "expandSidebar": "사이드바 펼치기",
+      "collapseSidebar": "사이드바 접기",
+      "signOut": "로그아웃",
+      "showEmail": "이메일 보기",
+      "hideEmail": "이메일 숨기기"
+    },
+    "tour": {
+      "practiceTitle": "나중에 연습하기",
+      "practiceBody": "연습 탭에서 나중에 단어를 복습할 수 있어요.",
+      "vocabTitle": "내 단어장",
+      "vocabBody": "단어장 탭에서 찾아본 단어를 복습할 수 있어요."
+    },
+    "loading": {
+      "app": "Readfox 불러오는 중",
+      "session": "세션 불러오는 중",
+      "subscription": "구독 정보 불러오는 중",
+      "setup": "설정 불러오는 중"
+    },
+    "setup": {
+      "connectError": "서버에 연결할 수 없어요.",
+      "retry": "다시 시도"
+    },
+    "language": {
+      "changeFailed": "언어를 변경하지 못했어요",
+      "wordsKnown": "아는 단어: {count}개",
+      "add": "언어 추가",
+      "current": "언어: {language}",
+      "select": "언어 선택",
+      "search": "언어 검색",
+      "noMatch": "언어를 찾을 수 없어요",
+      "inDevelopment": "개발 중"
+    },
+    "quota": {
+      "title": "이번 달 AI",
+      "lookups": "AI 단어 번역",
+      "requests": "상세 AI 답변",
+      "left": "{left}회 남음",
+      "used": "{limit}회 중 {used}회 사용",
+      "byok": "내 AI 키를 사용 중이에요",
+      "resets": "사용 횟수는 매달 1일에 초기화돼요.",
+      "exhausted": "이번 달 사용량을 모두 썼어요",
+      "settings": "설정에서 내 키 사용하기",
+      "note": "사전 검색은 무료이며 횟수에 포함되지 않아요. 사전 뜻풀이를 내 언어로 번역하는 것도 포함돼요.",
+      "percentUsed": "{percent}% 사용",
+      "close": "닫기",
+      "info": "사용량 안내",
+      "tip": "이 원을 누르면 이번 달 남은 AI 사용량을 볼 수 있어요.",
+      "tipDismiss": "확인"
+    }
+  },
+  "legalPages": {
+    "notice": "이 문서는 영어판이 우선해요. 이 번역은 편의를 위해 제공돼요.",
+    "privacy": {
+      "metaTitle": "개인정보처리방침 – Readfox",
+      "title": "개인정보처리방침",
+      "lastUpdated": "최종 수정일: {date}",
+      "intro": "Readfox는 개인이 독립적으로 운영하는 작은 서비스예요. 이 페이지에서는 어떤 정보를 저장하는지, 누가 데이터에 접근하는지, 우리가 무엇을 볼 수 있고 볼 수 없는지를 솔직하게 설명해요.",
+      "store": {
+        "heading": "저장하는 정보",
+        "items": {
+          "account": "이메일 주소, 선택 입력한 이름, 솔트를 적용한 비밀번호 해시.",
+          "text": "가져온 도서와 기사에서 추출한 <strong>텍스트</strong>(제목과 장). 원본 EPUB 파일은 보관하지 않아요.",
+          "learning": "단어장, 읽기 진행 상황, 연습 기록, 일기, 설정.",
+          "reviewHistory": "단어 복습 기록: 각 답변, 답변한 시각, 카드의 일정. 이 기록은 데이터 내보내기에 포함돼요. 무료 계정은 최근 5,000건을 보관해요.",
+          "aiKey": "내 AI 키를 추가하면 암호화(AES-256-GCM)해서 저장해요. 브라우저로 다시 보내지 않아요.",
+          "usage": "월간 허용량을 적용하기 위해 사용한 AI 검색과 요청 횟수를 월별로 집계해요.",
+          "session": "로그인 상태를 유지하는 세션 쿠키와, 서비스를 안전하고 정상적으로 운영하기 위한 서버 로그. 웹 접속 로그에는 페이지 주소, 시각, 상태가 남고 IP 주소는 앞 세 부분까지만 저장해요(예: 203.0.113.x). 쿠키와 비밀번호는 포함되지 않으며 30일 후 삭제돼요.",
+          "feedback": "피드백을 보내면 메시지 내용을 저장하고, 답변할 수 있도록 계정 이메일 주소 및 첨부한 이미지와 함께 운영자에게 이메일로 전달해요. 이미지는 저장하지 않아요. 계정을 삭제하면 저장된 메시지도 삭제해요.",
+          "sharedWords": "모든 계정이 함께 쓰는 공유 캐시예요. 단어 하나의 번역, 학습자의 언어로 번역한 사전 뜻풀이, 공개 예문(무료 서재 도서와 Tatoeba)의 번역, 단어에 대해 AI가 쓴 예문(언어 쌍, 단어 또는 공개 문장, 그 번역)이 들어 있어요. 계정 정보와 내가 쓴 문장은 포함되지 않아요.",
+          "invites": "내 초대 코드, 나를 초대한 사람 또는 내가 초대한 사람(내부 계정 연결로 저장), 보유한 보상 카드.",
+          "inviteFingerprint": "초대 보상을 받으면 이메일 주소의 키 기반 단방향 해시를 24개월 동안 보관해요. 계정을 삭제한 뒤에도 보관해요. 이 해시로는 원래 주소를 알아낼 수 없어요. 같은 주소로 보상을 두 번 받는 것을 막는 용도로만 사용해요."
+        }
+      },
+      "others": {
+        "heading": "관련된 외부 서비스",
+        "items": {
+          "cloudflare": "<strong>Cloudflare</strong> – DNS, 가입 시 봇 확인(Turnstile), 백업용 R2 스토리지.",
+          "resend": "<strong>Resend</strong> – 인증 이메일과 비밀번호 재설정 이메일을 보내요. 제품 이메일이 켜져 있으면 환영 이메일, 처음 며칠 동안의 짧은 읽기 알림, 무료 한도에 도달했을 때의 안내도 보내요. 각 이메일에는 수신 거부 링크가 있어요.",
+          "aiProvider": "<strong>내 AI 제공자(OpenRouter 또는 Anthropic)</strong> – 내 키를 추가하고 번역, 설명, 채팅을 사용하면 선택한 텍스트와 주변 문맥 일부가 <em>내</em> 키로 제공자에게 전송돼요. 그 데이터에는 제공자의 개인정보 약관이 적용되고, 사용 요금은 내게 청구돼요.",
+          "aiBuiltIn": "<strong>Alibaba Cloud (Model Studio)</strong> – 내 키 대신 Readfox의 기본 AI 허용량을 사용하면, 선택한 텍스트와 주변 문맥 일부가 번역이나 설명을 만들기 위해 우리 워크스페이스를 통해 Alibaba Cloud의 Qwen 모델로 전송돼요. 단어 복습 중에는 공개 예문이나 복습 중인 단어가 전송될 수 있으며, 내가 저장한 문장은 전송하지 않아요. 그 데이터에는 Alibaba Cloud의 약관이 적용돼요. 허용량은 매달 제한돼요.",
+          "paddle": "<strong>Paddle</strong> – 카드와 PayPal 결제를 위한 재판매업체(Merchant of Record)예요. 해당 결제는 개발 중이에요. 결제가 열린 뒤 구독하면 Paddle이 자체 개인정보처리방침에 따라 결제 정보와 청구 주소를 수집해요. 우리는 이메일 주소, 플랜과 그 상태만 받고 카드 번호나 계좌 번호는 받지 않아요.",
+          "xiaodou": "<strong>Xiaodou Pay (Yuzhi AI, Shenzhen)</strong> – Alipay와 WeChat Pay를 통한 1회성 RMB 결제를 처리해요. 주문 금액, 주문 번호, 기기의 공인 IP 주소를 받아요. Alipay나 WeChat 계정 정보는 Alipay나 WeChat에만 있고 우리는 받지 않아요."
+        },
+        "noTrackers": "광고나 분석 추적기를 사용하지 않으며 데이터를 판매하지 않아요."
+      },
+      "operator": {
+        "heading": "운영자가 볼 수 있는 것과 볼 수 없는 것",
+        "dashboard": "관리자 대시보드에는 계정 단위 수치(가입일, 마지막 활동, 레슨과 단어 수, 사용한 저장 공간)와 xi***@gmail.com 같은 마스킹된 이메일 주소가 표시돼요. 가입자 수, 활성 학습자 수, 검색 횟수, 결제 건수처럼 서비스 전체의 일별 합계도 표시되며 특정 계정을 식별하지 않아요. 이름은 표시되지 않아요. 도서 본문을 보여 주는 화면도, \"사용자로 보기\"나 사용자별 내보내기 기능도 없어요. 운영자는 지원 제공, 삭제 요청 처리, 악용 방지를 위해 전체 이메일 주소를 확인할 수 있어요. 확인할 때마다 감사 로그에 기록돼요.",
+        "access": "운영자는 여전히 서버와 데이터베이스에 기술적으로 접근할 수 있으므로 열람이 기술적으로 불가능하다고 약속할 수는 없어요. 우리는 내 콘텐츠를 보지 않아요. 지원을 요청하며 내보내기 파일을 보내 주시면 문제를 해결하는 데만 사용하고 이후 삭제해요. 서버가 처리하는 것을 원하지 않는 자료는 업로드하지 말아 주세요."
+      },
+      "backups": {
+        "heading": "백업",
+        "body": "데이터베이스는 저장 시 데이터를 암호화하는 Cloudflare R2로 계속 복제돼요. 일별 스냅샷은 운영자가 오프라인으로 보관하는 키로 추가 암호화하며 30일 동안 보관해요."
+      },
+      "controls": {
+        "heading": "내가 할 수 있는 것",
+        "items": {
+          "export": "<strong>내보내기:</strong> 설정 → 학습 데이터 → 모든 학습 데이터 내보내기를 누르면 저장된 모든 데이터를 내려받아요.",
+          "delete": "<strong>삭제:</strong> 설정 → 계정 삭제를 누르면 운영 중인 서비스에서 계정과 데이터가 삭제돼요. 백업에 있는 사본은 일별 스냅샷이 만료되면서 사라져요(최대 30일).",
+          "aiKey": "AI 키는 설정에서 언제든 삭제할 수 있어요."
+        }
+      },
+      "children": {
+        "heading": "어린이",
+        "body": "Readfox는 만 13세 미만 어린이를 대상으로 하지 않으며, 어린이의 데이터를 알면서 수집하지 않아요."
+      },
+      "contact": {
+        "heading": "변경 사항 및 문의",
+        "body": "이 방침이 의미 있게 바뀌면 위의 날짜를 업데이트해요. 데이터에 관한 질문이나 요청은 <mail>privacy@readfox.app</mail>으로 보내 주세요."
+      }
+    },
+    "terms": {
+      "metaTitle": "이용약관 – Readfox",
+      "title": "이용약관",
+      "lastUpdated": "최종 수정일: {date}",
+      "intro": "계정을 만들거나 Readfox를 사용하면 이 약관에 동의하는 것으로 봐요. Readfox는 개인이 취미 규모로 운영하는 서비스예요.",
+      "content": {
+        "heading": "내 콘텐츠",
+        "body": "가져온 콘텐츠의 소유권은 내게 있어요. 개인 학습에 사용할 권리가 있는 텍스트만 가져와 주세요. 업로드한 콘텐츠에 대한 책임은 내게 있으며, 타인의 권리를 침해하거나 서비스를 악용하는 콘텐츠는 삭제하고 계정을 정지할 수 있어요."
+      },
+      "limits": {
+        "heading": "한도",
+        "body": "각 계정이 사용할 수 있는 양은 플랜에 따라 달라요. 허용량은 요금 페이지에 나와 있어요. 무료 계정은 가져온 레슨 텍스트를 최대 5MB, 유료 플랜은 최대 100MB까지 저장할 수 있어요. 오디오와 팟캐스트 가져오기는 제공하지 않아요. AI 기능은 내가 제공한 키(비용은 내가 부담)나 플랜의 월간 허용량을 사용해요."
+      },
+      "payments": {
+        "heading": "유료 플랜, 갱신, 환불",
+        "body": "Xiaodou Pay를 통해 Alipay 또는 WeChat Pay로 RMB 결제를 할 수 있어요. 요금 페이지에서 카드 결제를 제공하면 Paddle을 통해 카드, PayPal, Apple Pay로도 결제할 수 있어요. Paddle.com은 재판매업체이자 해당 주문의 Merchant of Record로서 결제를 받고, 판매세 또는 VAT를 추가하고, 영수증을 보내고, 결제 관련 문의에 답해요. 해당 주문에는 Paddle의 구매자 약관도 적용돼요.",
+        "renewal": "RMB로 구매한 플랜은 정해진 기간 동안만 유효하며 갱신되지 않아요. Paddle로 구매한 플랜은 선택한 대로 매월 또는 매년, 해지할 때까지 갱신돼요. 설정 → 플랜에서 언제든 해지할 수 있어요. 해지하면 결제한 기간이 끝날 때까지 플랜이 유지되고 추가 요금은 청구되지 않아요. 플랜 가격이 바뀌면 새 가격이 적용되기 전에 이메일로 알려 드려요.",
+        "refunds": "RMB 결제는 결제 후 24시간 이내에, 계정당 한 번, 결제 이후 플랜의 AI 허용량을 10% 이하로 사용한 경우 환불을 요청할 수 있어요. 설정 → 플랜에서 환불 요청을 누르거나 <mail>privacy@readfox.app</mail>으로 문의해 주세요. 전체 조건은 <refund>환불 정책</refund> 페이지에 있어요. 악용이 의심되면 환불을 거절할 수 있어요.",
+        "rmb": "Alipay 또는 WeChat Pay로 RMB를 결제하는 구매자는 Xiaodou Pay를 통해 정해진 기간(1개월 또는 12개월)을 구매해요. 이 결제는 갱신되지 않으며, 기간이 끝나면 계정이 Free로 돌아가요. 기간이 끝나기 전에 같은 플랜을 다시 구매하면 새 기간은 현재 기간이 끝날 때 시작돼요."
+      },
+      "acceptableUse": {
+        "heading": "허용되는 사용",
+        "body": "서비스를 공격하거나, 과부하를 주거나, 취약점을 탐색하지 마세요. 계정을 대량으로 만들거나, 계정을 공유하거나, 법을 위반하는 데 사용하지 마세요."
+      },
+      "warranty": {
+        "heading": "보증 없음",
+        "body": "서비스는 \"있는 그대로\" 제공되며, 이용 가능성이나 특정 목적에 대한 적합성을 보증하지 않아요. 번역은 AI 모델이 만들며 틀릴 수 있어요. 백업을 하고 있지만 가끔 데이터를 직접 내보내 두세요. 법이 허용하는 범위에서 데이터 손실이나 간접 손해에 대해 책임지지 않아요."
+      },
+      "termination": {
+        "heading": "변경 및 종료",
+        "body": "서비스를 변경하거나 종료할 수 있으며, 가능하면 미리 알려 드릴게요. 계정은 언제든 삭제할 수 있어요."
+      },
+      "openSource": {
+        "heading": "오픈소스",
+        "body": "이 소프트웨어는 GNU AGPL-3.0 라이선스로 배포돼요. 소스 코드는 소개 페이지를 확인하세요.",
+        "contact": "문의: <mail>privacy@readfox.app</mail>"
+      }
+    },
+    "about": {
+      "metaTitle": "소개 – Readfox",
+      "title": "Readfox 소개",
+      "intro": "Readfox에서는 배우는 언어로 진짜 책과 기사를 읽고, 읽으면서 단어와 구절을 번역하고, 만난 내용을 간격 반복 연습으로 이어갈 수 있어요.",
+      "freeSoftware": {
+        "heading": "오픈소스",
+        "license": "Readfox는 <license>GNU Affero General Public License v3.0</license>에 따른 오픈소스 소프트웨어예요. heuwels와 기여자들이 만든 오픈소스 리더 <lector>Lector</lector>를 기반으로 하며, 우리가 변경한 내용이 포함돼 있어요.",
+        "source": "이 사이트에서 실행 중인 버전의 전체 소스 코드는 <source>{url}</source>에서 볼 수 있어요."
+      },
+      "dataSources": {
+        "heading": "데이터 출처",
+        "body": "문장 모음은 Tatoeba(CC BY 2.0 FR)에서, 사전은 저장소 README에 나열된 출처에서 가져왔으며 각각 고유한 라이선스를 따라요.",
+        "books": "서재의 무료 도서는 Project Gutenberg(gutenberg.org)의 퍼블릭 도메인 텍스트예요. 한국어 도서는 한국어 위키문헌(ko.wikisource.org)에서 가져왔으며, 전사본은 CC BY-SA 4.0 라이선스예요. 각 도서에는 출처 페이지 링크가 있어요.",
+        "dictionaries": "사전 뜻풀이는 kaikki.org를 통해 영어 Wiktionary(CC BY-SA)에서 가져왔어요. 영어 사전은 skywind3000의 ECDICT(MIT 라이선스, github.com/skywind3000/ECDICT)를 바탕으로 만들었고, 예문은 Tatoeba(CC BY 2.0 FR)에서 가져왔어요.",
+        "readingFeed": "무료 도서 창의 뉴스, 여행, 과학 탭에 있는 기사는 Global Voices(CC BY 3.0, globalvoices.org), Wikivoyage(CC BY-SA 3.0, wikivoyage.org), Simple English Wikipedia, Vikidia(CC BY-SA 4.0)에서 가져왔어요. 각 기사에는 라이선스와 원문 링크가 있고, 서재에 추가하면 이 출처 표기가 함께 추가돼요."
+      }
+    },
+    "refunds": {
+      "metaTitle": "환불 정책",
+      "title": "환불 정책",
+      "intro": "Readfox는 월간 AI 허용량이 더 큰 유료 플랜을 판매해요. 이 페이지에서는 환불받을 수 있는 경우를 설명해요.",
+      "rmbHeading": "Alipay 및 WeChat Pay (RMB)",
+      "rmbIntro": "각 결제는 1개월 또는 12개월의 정해진 기간을 구매하는 것이며 갱신되지 않아요.",
+      "rule1": "결제 후 24시간 이내에 환불을 요청할 수 있어요.",
+      "rule2": "결제 이후 플랜의 월간 AI 허용량을 10% 이하로 사용했어야 해요. 단어 번역과 상세 답변은 각각 따로 계산하며, 더 높은 비율을 기준으로 해요. 결제 전에 사용한 양은 포함하지 않아요.",
+      "rule3": "계정당 한 번만 환불받을 수 있어요.",
+      "how": "요청하려면 설정 → 플랜을 열고 환불 요청을 누르세요. 이 버튼은 요청할 수 있는 동안에만 표시돼요. 작동하지 않으면 <mail>privacy@readfox.app</mail>으로 문의해 주세요. 요청을 확인한 뒤 Xiaodou Pay를 통해 결제한 계정으로 환불하며, 플랜은 Free로 돌아가요. 환불금이 도착하기까지 영업일 기준 며칠이 걸릴 수 있어요.",
+      "after": "24시간이 지났거나 사용량이 한도를 넘으면 해당 기간은 환불하지 않아요. 플랜은 갱신되지 않으므로 추가 요금은 청구되지 않아요.",
+      "cardHeading": "카드, PayPal, Apple Pay",
+      "cardBody": "Paddle.com은 재판매업체로서 이 결제를 처리해요. 첫 결제와 갱신 결제 모두 결제 후 14일 이내에 전액 환불받을 수 있어요. 계정 이메일을 적어 privacy@readfox.app으로 문의하거나 Paddle 영수증에 회신해 주세요. 환불하면 플랜이 즉시 종료되고, 결제에 사용한 카드나 계정으로 환불돼요. 14일이 지나면 현재 기간은 환불하지 않지만, 설정 → 플랜에서 언제든 해지해 플랜이 갱신되지 않게 할 수 있어요. 소비자로서의 법적 권리에는 영향이 없어요.",
+      "abuseHeading": "악용",
+      "abuseBody": "플랜을 구매하고, 허용량을 사용하고, 새 계정으로 다시 환불을 요청하는 것처럼 악용이 의심되면 환불을 거절할 수 있어요.",
+      "contactHeading": "문의",
+      "contactBody": "<mail>privacy@readfox.app</mail>으로 문의해 주세요."
+    }
+  },
+  "practice": {
+    "saveFailed": "답변을 저장하지 못했어요. 연결을 확인하고 다시 시도해 주세요.",
+    "statsFailed": "답변은 저장했지만 통계를 업데이트하지 못했어요.",
+    "lookUp": "{word} 찾아보기",
+    "title": {
+      "cloze": "빈칸 채우기 연습",
+      "dictation": "받아쓰기 연습"
+    },
+    "format": {
+      "cloze": "빈칸 채우기",
+      "clozeHint": "빈칸을 채워요",
+      "dictation": "받아쓰기",
+      "dictationHint": "들리는 대로 입력해요"
+    },
+    "setup": {
+      "reviewDue": "복습할 문장 ({count})",
+      "due": "복습 {count}개",
+      "learnNew": "새로 배우기",
+      "mastered": "{mastered}/{total} 숙달",
+      "sentences": "문장",
+      "mode": "방식",
+      "modeType": "입력",
+      "modeMc": "객관식",
+      "start": "시작",
+      "loading": "불러오는 중..."
+    },
+    "collections": {
+      "top500": "상위 500",
+      "top1000": "500-1000",
+      "top2000": "1000-2000"
+    },
+    "round": {
+      "guidedLabel": "가이드 첫 레슨",
+      "guidedTitle": "첫 학습 루프",
+      "back": "← 뒤로",
+      "threeWord": "빠른 복습",
+      "starterWords": "입문 레슨의 단어",
+      "loading": "문장 불러오는 중..."
+    },
+    "question": {
+      "choose": "알맞은 단어를 고르세요",
+      "fill": "빈칸을 채우세요",
+      "showTranslation": "번역 보기",
+      "translation": "번역",
+      "keyChoose": "선택",
+      "keyListen": "듣기",
+      "multipleChoice": "객관식",
+      "multipleChoiceTitle": "이 문제를 객관식으로 바꾸기",
+      "hintNone": "힌트 (?)",
+      "hintLetters": "힌트 ({count}글자)",
+      "hintTitle": "다음 글자 보기",
+      "submit": "제출",
+      "check": "확인",
+      "mastery": "숙달도:"
+    },
+    "complete": {
+      "title": "라운드 완료!",
+      "correct": "{correct}/{total} 정답",
+      "totalPoints": "총 {points}점",
+      "changeSettings": "설정 변경",
+      "playAgain": "다시 하기"
+    },
+    "onboarding": {
+      "starterLesson": "입문 레슨",
+      "complete": {
+        "title": "첫 학습 루프 완료",
+        "description": "실제 읽기에서 만난 단어로 연습까지 해 봤어요. Readfox는 이 루프를 계속 함께 쌓아 갈게요.",
+        "encountered": "만난 단어",
+        "saved": "저장함",
+        "score": "점수",
+        "upNext": "다음 단계",
+        "tomorrow": "내일",
+        "comeBack": "내일 다시 와서 짧은 읽기와 복습을 이어가세요.",
+        "saving": "진행 상황 저장 중…",
+        "saveError": "라운드는 안전하게 저장됐지만 온보딩 완료를 표시하지 못했어요.",
+        "trySavingAgain": "다시 저장하기",
+        "openLibrary": "서재 열기",
+        "readNext": "다음 레슨 읽기"
+      },
+      "recovery": {
+        "title": "연습할 단어가 아직 준비되지 않았어요",
+        "missingWords": "미니 복습에는 입문 레슨에서 저장한 단어가 필요해요. 레슨으로 돌아가 단어를 저장한 뒤 다시 시도해 주세요.",
+        "loadFailed": "저장한 연습 단어를 불러오지 못했어요. 입문 레슨으로 돌아가 미니 복습을 다시 시도해 주세요.",
+        "backToLesson": "입문 레슨으로 돌아가기"
+      }
+    },
+    "wordTooltip": {
+      "tryAgain": "다시 시도해 주세요."
+    },
+    "blacklist": {
+      "hidden": "문장을 숨겼어요",
+      "undo": "실행 취소",
+      "undoFailed": "숨김을 취소하지 못했어요",
+      "hideFailed": "문장을 숨기지 못했어요",
+      "title": "이 문장 건너뛰고 숨기기"
+    },
+    "empty": {
+      "reviewTitle": "복습할 문장이 없어요",
+      "newTitle": "새 문장이 없어요",
+      "reviewBody": "지금은 복습할 문장이 없어요. 새 문장을 배우거나 나중에 다시 확인해 주세요.",
+      "newBody": "이 컬렉션의 문장을 모두 봤어요. 다른 컬렉션을 선택하거나 기존 문장을 복습해 보세요.",
+      "back": "뒤로",
+      "learnNewInstead": "대신 새로 배우기"
+    },
+    "feedback": {
+      "correct": "정답!",
+      "incorrect": "오답",
+      "listenAgain": "다시 듣기",
+      "saveWordFailed": "단어를 단어장에 저장하지 못했어요",
+      "addToAnkiFailed": "Anki에 추가하지 못했어요",
+      "lookUp": "{word} 찾아보기",
+      "answerRevealed": "정답을 확인했어요",
+      "perfect": "완벽해요!",
+      "accuracy": "{percent}% 정답 ({correct}/{total}단어)",
+      "pointsBonus": " · +{points}점",
+      "nothingTyped": "(입력 없음)",
+      "youTyped": "내가 입력한 답",
+      "sentence": "문장",
+      "translation": "번역",
+      "masteryLevel": "숙달 단계",
+      "mastery": {
+        "level0": "새 문장",
+        "level25": "학습 중",
+        "level50": "익숙함",
+        "level75": "거의 다 왔어요",
+        "level100": "숙달"
+      },
+      "nextSentence": "다음 문장",
+      "nextSentenceHint": "다음 문장",
+      "pointsEarned": "+{points}점",
+      "yourAnswer": "내 답:",
+      "correctAnswer": "정답:",
+      "alreadyAdded": "이미 Anki에 추가됨",
+      "addToAnki": "Anki에 추가",
+      "adding": "추가하는 중...",
+      "explain": "설명 보기",
+      "explaining": "설명하는 중...",
+      "explainFailed": "설명을 가져오지 못했어요"
+    },
+    "dictation": {
+      "prompt": "들리는 문장을 입력하세요",
+      "replayAria": "오디오 다시 재생",
+      "speed": "속도",
+      "listenAgain": "다시 듣기 ({count}회 남음)",
+      "noReplays": "남은 재생 횟수가 없어요",
+      "placeholder": "들리는 대로 입력하세요…",
+      "surrenderTitle": "문장을 공개하고 넘어가기 (오답으로 처리돼요)",
+      "surrender": "포기",
+      "check": "확인",
+      "mastery": "숙달도:"
+    },
+    "words": {
+      "loading": "단어 불러오는 중",
+      "loadFailed": "단어를 불러오지 못했어요. 연결을 확인하고 다시 시도해 주세요.",
+      "retry": "다시 시도",
+      "saveFailed": "답변을 저장하지 못했어요. 연결을 확인하고 다시 시도해 주세요.",
+      "undoFailed": "답변을 바꾸지 못했어요. 다시 시도해 주세요.",
+      "back": "← 뒤로",
+      "left": "{count}개 남음",
+      "listen": "듣기",
+      "chooseMeaning": "뜻을 고르세요",
+      "fillIn": "빈칸에 알맞은 단어는 무엇일까요?",
+      "typedFillIn": "빠진 단어를 입력하세요",
+      "typedPlaceholder": "빠진 단어",
+      "check": "확인",
+      "showAnswer": "정답 보기",
+      "correct": "정답",
+      "incorrect": "아쉬워요",
+      "next": "다음",
+      "wasWrong": "틀렸어요",
+      "nothingDue": "지금은 복습할 단어가 없어요.",
+      "complete": "라운드 완료",
+      "answered": "복습한 단어 {count}개",
+      "retried": "다시 볼 단어 {count}개",
+      "nextDue": "다음 복습: {time}",
+      "source": {
+        "library": "출처: <link>{name}</link>",
+        "tatoeba": "출처: <link>Tatoeba</link>",
+        "ai": "AI 예문"
+      },
+      "stage": {
+        "new": "새 단어",
+        "learning": "학습 중",
+        "familiar": "익숙함",
+        "mastered": "숙달"
+      },
+      "goal": {
+        "recognize": "알아보기",
+        "recognize_spell": "알아보고 철자 쓰기"
+      },
+      "recognition": {
+        "reveal": "뜻 보기",
+        "dontKnow": "몰라요",
+        "fuzzy": "애매해요",
+        "know": "알아요"
+      },
+      "entry": {
+        "title": "내 단어",
+        "ready": "복습 {due}개, 새 단어 {fresh}개",
+        "open": "단어 복습",
+        "nothingDue": "지금은 복습할 단어가 없어요. 다음 복습: {time}",
+        "noWords": "읽으면서 단어를 저장하면 여기에서 복습할 수 있어요.",
+        "failed": "단어를 불러오지 못했어요.",
+        "goal": "목표: {goal}"
+      }
+    }
+  },
+  "vocab": {
+    "states": {
+      "new": "새 단어",
+      "level1": "레벨 1",
+      "level2": "레벨 2",
+      "level3": "레벨 3",
+      "level4": "레벨 4",
+      "known": "아는 단어",
+      "ignored": "무시함"
+    },
+    "stateTitle": {
+      "new": "새 단어 - 아직 학습하지 않았어요",
+      "level1": "레벨 1 - 막 배우기 시작했어요",
+      "level2": "레벨 2 - 학습 중",
+      "level3": "레벨 3 - 익숙해요",
+      "level4": "레벨 4 - 거의 알아요",
+      "known": "아는 단어 - 완전히 익혔어요",
+      "ignored": "무시함 - 학습에서 숨겨요"
+    },
+    "stats": {
+      "total": "전체 단어",
+      "learning": "학습 중",
+      "known": "아는 단어",
+      "ignored": "무시함"
+    },
+    "list": {
+      "phrase": "구절",
+      "confirmBulkDelete": "단어장 항목 {count}개를 삭제할까요?",
+      "searchPlaceholder": "단어, 번역, 문장 검색...",
+      "filter": {
+        "all": "전체",
+        "learning": "학습 중"
+      },
+      "allCollections": "모든 컬렉션",
+      "exporting": "내보내는 중...",
+      "exportToAnki": "Anki로 내보내기 ({count})",
+      "updating": "업데이트하는 중...",
+      "markAsKnown": "아는 단어로 표시 ({count})",
+      "deleting": "삭제하는 중...",
+      "delete": "삭제 ({count})",
+      "syncing": "동기화하는 중...",
+      "syncWithAnki": "Anki와 동기화",
+      "ankiTip": {
+        "title": "Anki 설정",
+        "body": "Anki 설정에 도움이 필요하면 여기를 눌러 주세요."
+      },
+      "results": "{total}개 중 {filtered}개",
+      "resultsSelected": "{total}개 중 {filtered}개 ({selected}개 선택됨)",
+      "columns": {
+        "text": "단어/구절",
+        "translation": "번역",
+        "state": "상태",
+        "source": "출처",
+        "dateAdded": "추가한 날짜",
+        "anki": "Anki"
+      },
+      "loading": "단어장 불러오는 중...",
+      "emptyNoEntries": "아직 단어장 항목이 없어요. 읽기를 시작해 단어를 추가해 보세요!",
+      "emptyNoMatches": "필터에 맞는 항목이 없어요.",
+      "exportDialog": {
+        "title": "Anki로 내보내기",
+        "description": "단어 {count}개를 선택했어요. 카드 유형을 선택하세요.",
+        "basic": "기본",
+        "basicDescription": "앞면/뒷면 카드예요. 앞면에 문장, 뒷면에 번역이 표시돼요.",
+        "cloze": "빈칸 채우기",
+        "clozeDescription": "문장에서 단어를 가리고 문맥으로 떠올려요.",
+        "cancel": "취소",
+        "confirm": "카드 {count}개 내보내기"
+      }
+    },
+    "pagination": {
+      "label": "단어장 페이지 이동",
+      "rowsPerPage": "페이지당 행 수",
+      "range": "{total}개 중 {from}–{to}",
+      "previous": "이전 페이지",
+      "next": "다음 페이지",
+      "page": "{total}페이지 중 {current}페이지"
+    },
+    "detail": {
+      "confirmDelete": "이 단어장 항목을 삭제할까요?",
+      "phrase": "구절",
+      "word": "단어",
+      "close": "닫기",
+      "translation": "번역",
+      "contextSentence": "문맥 문장",
+      "learningState": "학습 상태",
+      "added": "추가한 날짜:",
+      "reviewCount": "복습 횟수:",
+      "syncedToAnki": "Anki와 동기화됨",
+      "noteId": "(노트 #{id})",
+      "deleting": "삭제하는 중...",
+      "delete": "삭제",
+      "cancel": "취소",
+      "saving": "저장 중...",
+      "save": "저장",
+      "edit": "수정"
+    },
+    "page": {
+      "title": "단어장",
+      "loadFailed": "단어장 데이터를 불러오지 못했어요",
+      "entryUpdated": "항목을 수정했어요",
+      "updateFailed": "항목을 수정하지 못했어요",
+      "entryDeleted": "항목을 삭제했어요",
+      "deleteFailed": "항목을 삭제하지 못했어요",
+      "allSynced": "선택한 항목이 모두 이미 Anki와 동기화되었어요.",
+      "cardType": {
+        "basic": "기본",
+        "cloze": "빈칸 채우기"
+      },
+      "queuedPartial": "카드 {queued}개를 대기열에 추가했고 {failed}개는 실패했어요 ({error})",
+      "queuedOk": "{cardType} 카드 {queued}개를 대기열에 추가했어요. 다음에 Anki가 동기화될 때 나타나요",
+      "queueFailed": "Anki용 카드를 대기열에 추가하지 못했어요",
+      "notConnected": "Anki가 연결되어 있지 않아요. Anki가 AnkiConnect와 함께 실행 중인지 확인해 주세요.",
+      "exported": "{cardType} 카드 {count}개를 \"{deck}\"(으)로 내보냈어요",
+      "exportPartial": "{cardType} 카드 {count}개를 내보냈고 {failed}개는 실패했어요",
+      "markedKnown": "{count}개 항목을 아는 단어로 표시했어요",
+      "markKnownFailed": "항목을 아는 단어로 표시하지 못했어요",
+      "synced": "Anki 카드 {cards}개를 동기화했어요. {upgraded}개를 업그레이드했어요.",
+      "syncedImported": "Anki 카드 {cards}개를 동기화했어요. {upgraded}개를 업그레이드하고 Anki에서 {imported}개를 가져왔어요.",
+      "syncFailed": "Anki와 동기화하지 못했어요",
+      "openAnkiSetup": "Anki 설정 열기",
+      "addonPill": "애드온으로 Anki 동기화",
+      "ankiTip": {
+        "title": "Anki 설정",
+        "body": "Anki 설정에 도움이 필요하면 여기를 눌러 주세요."
+      },
+      "checking": "Anki 연결 확인 중...",
+      "connected": "Anki 연결됨",
+      "disconnected": "Anki 연결 끊김"
+    }
+  },
+  "reader": {
+    "page": {
+      "lessonNotFound": "레슨을 찾을 수 없어요",
+      "loadFailed": "레슨을 불러오지 못했어요",
+      "retryFailed": "받아쓰기를 다시 시도하지 못했어요",
+      "phraseFailed": "구절을 번역하지 못했어요. 설정에서 AI 제공자를 확인해 주세요.",
+      "wordFailed": "단어를 번역하지 못했어요. 설정에서 AI 제공자를 확인해 주세요.",
+      "contextFailed": "문맥 번역을 가져오지 못했어요.",
+      "aiDeclined": "AI 서비스가 이 구절을 처리하지 않았어요. 다른 문장이나 더 짧은 선택 범위를 시도해 보세요.",
+      "retranslateFailed": "다시 번역하지 못했어요",
+      "saveFailed": "단어를 저장하지 못했어요. 연결을 확인하고 다시 시도해 주세요.",
+      "saveFailedShort": "단어를 저장하지 못했어요. 연결을 확인해 주세요.",
+      "knownFailed": "단어를 아는 단어로 표시하지 못했어요. 연결을 확인해 주세요.",
+      "ignoreFailed": "단어를 무시하지 못했어요. 연결을 확인해 주세요.",
+      "levelFailed": "단어 레벨을 설정하지 못했어요. 연결을 확인해 주세요.",
+      "onboardingWordAdded": "“{word}”을(를) 추가했어요. 연습 준비가 끝났어요.",
+      "miniReviewFailed": "미니 복습을 시작하지 못했어요. 다시 시도해 주세요.",
+      "onboardingSkipFailed": "가이드를 건너뛰지 못했어요. 다시 시도해 주세요.",
+      "copied": "복사했어요",
+      "loading": "레슨 불러오는 중...",
+      "goToLibrary": "서재로 이동",
+      "backToLibrary": "서재로 돌아가기",
+      "transcribing": "오디오 받아쓰는 중…",
+      "transcribingBody": "“{title}”을(를) 백그라운드에서 받아쓰는 중이에요. 보통 몇 분 걸리며, 준비되면 레슨이 자동으로 열려요.",
+      "transcriptionFailed": "받아쓰기 실패",
+      "retry": "다시 시도",
+      "listenAlong": "들으면서 읽기"
+    },
+    "markdown": {
+      "saveFailed": "저장하지 못했어요",
+      "back": "뒤로",
+      "cancel": "취소",
+      "saving": "저장 중…",
+      "saveChanges": "변경 사항 저장",
+      "pronunciation": "발음: {mode}",
+      "annotation": {
+        "off": "끄기",
+        "learning": "학습 중인 단어",
+        "all": "모든 단어"
+      },
+      "editText": "텍스트 수정",
+      "editHint": "Markdown을 사용할 수 있어요. 단어 상태는 단어를 기준으로 저장되므로 수정해도 진행 상황이 초기화되지 않아요.",
+      "captionsAuto": "자동 생성 자막",
+      "captionsCreator": "제작자 자막",
+      "openOnYouTube": "YouTube에서 열기",
+      "playFromHere": "여기서부터 재생",
+      "playFrom": "{time}부터 재생"
+    },
+    "drawer": {
+      "wordDefinition": "단어 뜻",
+      "definitionOf": "{word}의 뜻",
+      "clickToLookUp": "단어를 누르면 뜻을 찾아볼 수 있어요.",
+      "state": {
+        "new": "새 단어",
+        "level1": "레벨 1",
+        "level2": "레벨 2",
+        "level3": "레벨 3",
+        "level4": "레벨 4",
+        "known": "아는 단어",
+        "ignored": "무시함"
+      },
+      "hearPronunciation": "발음 듣기",
+      "sourceAiInContext": "AI · 문맥 기반",
+      "sourceLearned": "학습한 뜻",
+      "sourceOnDevice": "기기 내 사전",
+      "sourceAi": "AI",
+      "close": "닫기",
+      "closeEsc": "닫기 (Esc)",
+      "lookingUp": "찾는 중…",
+      "showDictionary": "사전 보기 ({count})",
+      "noDefinition": "뜻을 찾지 못했어요.",
+      "inContextTitle": "문장 문맥을 활용해 AI로 번역하기",
+      "inContext": "문맥으로 보기",
+      "askingAi": "AI에 묻는 중…",
+      "enrichTitle": "IPA, 어원, 전체 뜻, 관련 형태 추가",
+      "enrich": "자세히 보기",
+      "enriching": "불러오는 중…",
+      "idiomaticMeaning": "관용적 의미",
+      "literally": "직역",
+      "usage": "용법",
+      "etymology": "어원",
+      "relatedForms": "관련 형태",
+      "showFewer": "접기",
+      "showAll": "모두 보기 ({count})",
+      "hearSentence": "문장 듣기",
+      "onboardingAdded": "첫 복습에 추가했어요",
+      "onboardingChoose": "레벨 1–4를 선택하면 이 단어가 추가돼요",
+      "onboardingReady": "{count}/{target} 준비됨",
+      "saveAtLevel": "학습 레벨 {level}로 저장",
+      "levelTitle": "레벨 {level}",
+      "levelCaption": "1 새 단어 · 2 학습 중 · 3 익숙함 · 4 숙달",
+      "markKnownTitle": "아는 단어로 표시 (K)",
+      "known": "✓ 아는 단어",
+      "ignoreTitle": "무시 (X)",
+      "ignore": "✕ 무시",
+      "retranslateTitle": "사전을 무시하고 AI로 새로 찾기",
+      "retranslate": "AI로 다시 번역",
+      "ankiAdded": "✓ Anki에 추가됨",
+      "ankiAdding": "추가하는 중…",
+      "ankiError": "Anki 오류 - 다시 시도",
+      "ankiAdd": "Anki에 추가",
+      "clozeAdd": "Anki에 빈칸 카드로 추가",
+      "clozePick": "가릴 단어를 선택하세요:",
+      "clozeSent": "✓ Anki로 보냈어요",
+      "clozeSending": "보내는 중…",
+      "clozeError": "오류 - 다시 시도",
+      "clozeSend": "Anki로 보내기",
+      "cancel": "취소",
+      "lookUp": "{word} 찾아보기",
+      "announce": {
+        "lookingUp": "{word}을(를) 찾는 중이에요.",
+        "lookupFailed": "{word}을(를) 찾지 못했어요. {error}",
+        "definitionLoaded": "{word}의 뜻을 불러왔어요.",
+        "noDefinitionFound": "{word}의 뜻을 찾지 못했어요."
+      },
+      "examples": "예문",
+      "englishDefinitions": "영어 뜻풀이",
+      "oxford3000": "Oxford 3000",
+      "collinsTitle": "Collins: 별 5개 중 {stars}개",
+      "frequencyRank": "빈도 #{rank}",
+      "tags": {
+        "zk": "Zhongkao",
+        "gk": "Gaokao",
+        "ky": "Kaoyan",
+        "cet4": "CET-4",
+        "cet6": "CET-6",
+        "toefl": "TOEFL",
+        "ielts": "IELTS",
+        "gre": "GRE"
+      },
+      "lemma": {
+        "formOf": "원형:",
+        "derivedFrom": "파생 원형:",
+        "pastParticiple": "과거분사, 원형:",
+        "repetition": "반복형, 원형:",
+        "abstractNoun": "추상명사, 원형:",
+        "diminutive": "지소형, 원형:",
+        "nominalization": "명사화, 원형:",
+        "adverbial": "부사형, 원형:",
+        "plural": "복수형, 원형:",
+        "presentTense": "현재형, 원형:",
+        "pastTense": "과거형, 원형:",
+        "futureTense": "미래형, 원형:",
+        "conditional": "조건형, 원형:",
+        "imperative": "명령형, 원형:",
+        "compound": "합성어, 뒷부분:",
+        "related": "관련어:",
+        "ending": "(+{ending})"
+      },
+      "pos": {
+        "noun": "명사",
+        "verb": "동사",
+        "adj": "형용사",
+        "adv": "부사",
+        "pron": "대명사",
+        "prep": "전치사",
+        "postp": "후치사",
+        "conj": "접속사",
+        "intj": "감탄사",
+        "num": "수사",
+        "det": "한정사",
+        "article": "관사",
+        "particle": "조사",
+        "phrase": "구",
+        "name": "이름",
+        "prefix": "접두사",
+        "suffix": "접미사",
+        "affix": "접사",
+        "root": "어근",
+        "counter": "분류사",
+        "proverb": "속담",
+        "contraction": "축약형",
+        "character": "문자",
+        "symbol": "기호",
+        "punct": "문장부호",
+        "abbrev": "약어"
+      }
+    },
+    "onboardingTip": {
+      "dismiss": "온보딩 팁 닫기"
+    },
+    "youtube": {
+      "playerTitle": "YouTube 동영상 플레이어"
+    },
+    "wordCell": {
+      "lookUp": "{text} 찾아보기"
+    },
+    "coach": {
+      "ariaLabel": "가이드 첫 레슨",
+      "skip": "가이드 건너뛰기",
+      "startPractice": "빠른 연습 시작",
+      "lookup": {
+        "title": "모르는 단어를 눌러 보세요",
+        "body": "레슨의 모든 단어를 찾아볼 수 있어요. 단어를 누르면 여기에 뜻이 나와요."
+      },
+      "save": {
+        "title": "복습할 단어로 저장하세요",
+        "body": "뜻 패널에서 1부터 4까지 레벨을 선택하세요. 단어가 복습 목록에 추가돼요."
+      },
+      "practice": {
+        "title": "방금 읽은 단어를 연습해 보세요",
+        "body": "레슨이 생생할 때 카드 한 장만 풀어도 단어가 오래 기억에 남아요."
+      },
+      "step": "{total}단계 중 {step}단계"
+    },
+    "listen": {
+      "back": "뒤로",
+      "readAsText": "텍스트로 읽기",
+      "mode": {
+        "continuous": "연속",
+        "shadow": "쉐도잉"
+      },
+      "sentenceProgress": "문장 {current} / {total}",
+      "seek": "탐색",
+      "playbackSpeed": "재생 속도",
+      "previousSentence": "이전 문장",
+      "backSeconds": "{seconds}초 뒤로",
+      "forwardSeconds": "{seconds}초 앞으로",
+      "pause": "일시정지",
+      "play": "재생",
+      "repeatSentence": "문장 반복",
+      "nextSentence": "다음 문장"
+    }
+  },
+  "subscribe": {
+    "checkoutFailed": "결제를 시작하지 못했어요. 잠시 후 다시 시도해 주세요.",
+    "title": {
+      "suspended": "계정이 정지되었어요",
+      "lapsedFree": "이제 Readfox Free를 사용 중이에요",
+      "lapsed": "구독이 종료되었어요",
+      "free": "학습 방식을 선택하세요",
+      "paid": "Readfox 구독"
+    },
+    "body": {
+      "suspended": "앱 접근이 일시 중지되었어요. 아래에서 학습 데이터를 내보내거나 로그아웃할 수 있어요.",
+      "lapsedFree": "텍스트, 단어장, Anki 연결, 학습 기록은 그대로예요. Free를 계속 사용하거나 더 넉넉한 AI 허용량을 위해 갱신하세요.",
+      "lapsed": "만든 모든 것이 안전하게 그대로 있어요. 갱신하면 하던 곳에서 바로 이어갈 수 있어요.",
+      "free": "Free는 매달 상세 AI 답변 50회가 포함된 완전한 읽기 루프예요. 더 넉넉한 허용량이 필요하면 업그레이드하세요.",
+      "paid": "Readfox는 유료 서비스예요. 무료를 원하시나요? Readfox는 오픈소스이며 직접 호스팅할 수 있어요."
+    },
+    "loadingPlans": "구독 플랜 불러오는 중",
+    "unavailable": "지금은 결제를 이용할 수 없어요. 잠시 후 다시 시도해 주세요. 계정과 데이터에는 영향이 없어요.",
+    "suspendedHelp": "잘못된 조치라고 생각되면 지원팀에 문의해 주세요. 학습 데이터는 삭제되지 않았어요.",
+    "promoReady": "코드 <strong>{promo}</strong>이(가) 준비되었어요. 계속하면 적용되며, 할인된 합계는 결제 화면에 표시돼요.",
+    "promoUnknown": "코드 <strong>{promo}</strong>은(는) 올바르지 않거나 만료되었어요. 아래 모든 플랜은 기존 가격으로 계속 이용할 수 있어요.",
+    "activating": "결제가 확인되었어요. 계정을 활성화하는 중…",
+    "slow": "결제가 확인되었어요. 활성화가 평소보다 오래 걸리고 있어요. 이 페이지가 계속 확인하니 기다리거나 몇 분 후에 다시 오세요.",
+    "freeName": "Free",
+    "currentPlan": "현재 플랜",
+    "forever": "영구",
+    "freeTagline": "읽고, 단어를 찾아보고, 배운 것을 저장하고, 내 데이터를 가져갈 수 있어요.",
+    "freeFeatures": {
+      "export": "학습 데이터를 언제든 내보내기"
+    },
+    "continueFree": "Free로 계속하기",
+    "checkoutYear": "결제 계속하기 — 연 {price}",
+    "subscribeYear": "연간 구독 — 연 {price}",
+    "checkoutMonth": "결제 계속하기 — 월 {price}",
+    "subscribeMonth": "구독 — 월 {price}",
+    "orMonth": "또는 월 {price}",
+    "orYear": "또는 연 {price} — 약 20% 절약",
+    "selected": "선택됨",
+    "perMonth": "/월",
+    "annualNote": "연 {price}, {percent}% 절약",
+    "annualNoteNoSave": "연 {price}",
+    "openingCheckoutLabel": "결제 여는 중",
+    "openingCheckout": "결제 여는 중…",
+    "exportData": "내 데이터 내보내기",
+    "signOut": "로그아웃",
+    "subscribeYearNoPrice": "연간 구독",
+    "orYearNoPrice": "또는 연간 결제 — 약 20% 절약",
+    "subscribeMonthNoPrice": "월간 구독",
+    "orMonthNoPrice": "또는 월간 결제",
+    "back": "앱으로 돌아가기",
+    "methodCn": "Alipay / WeChat Pay (RMB, 1회 결제)",
+    "methodCard": "카드 / PayPal / Apple Pay (자동 갱신)",
+    "channelAlipay": "Alipay",
+    "channelWechat": "WeChat Pay",
+    "cnNote": "갱신되지 않는 1회 결제예요. 종료 전에 다시 구매하면 기간이 더해져요.",
+    "cnYearNote": "12개월 {price}, 약 20% 할인",
+    "cnHigherPlan": "현재 플랜이 이 플랜보다 높아서 지금은 더 낮은 플랜을 구매할 수 없어요.",
+    "cnSubscriptionActive": "이미 자동으로 갱신되는 구독이 있어요. 먼저 설정 → 플랜에서 해지해 주세요.",
+    "cnNotPaid": "결제가 완료되지 않았어요.",
+    "cnChecking": "결제 제공자에게 이 주문을 확인하는 중…",
+    "cnWaitingTitle": "결제를 기다리고 있어요",
+    "cnWaitingBody": "결제 페이지가 새 탭에서 열렸어요. 그곳에서 결제하면 이 페이지가 자동으로 업데이트돼요. 결제하지 않고 탭을 닫으면 요금은 청구되지 않아요.",
+    "cnReopen": "결제 페이지 다시 열기",
+    "cnUnpaidTitle": "이 주문은 아직 결제되지 않았어요",
+    "cnUnpaidBody": "결제했다면 몇 초 기다린 뒤 다시 확인해 주세요. 마음이 바뀌었다면 취소하세요. 요금은 청구되지 않아요.",
+    "cnResume": "결제 계속하기",
+    "cnRecheck": "결제했어요, 다시 확인",
+    "cnCancel": "주문 취소",
+    "cnPaidTitle": "결제가 확인되었어요: {plan} 활성화",
+    "cnPaidUntil": "{plan}은(는) {date}까지 유효해요.",
+    "cnPaidStart": "읽기 시작",
+    "grantActive": "현재 플랜: {plan}, {date}까지 유효",
+    "cnBuyMonth": "1개월 · {price}",
+    "cnBuyYear": "12개월 · {price}",
+    "cardPending": "카드와 PayPal 결제는 개발 중이에요. 지금은 Alipay 또는 WeChat Pay로 결제할 수 있어요."
+  },
+  "refund": {
+    "title": "환불 요청",
+    "rules": "{plan} 플랜을 RMB로 구매했어요. 결제 이후 플랜의 AI 허용량을 10% 이하로 사용했다면 {deadline}까지 환불을 요청할 수 있어요. 계정당 한 번만 환불받을 수 있어요. 환불금은 결제한 계정으로 돌아가고 플랜은 Free로 돌아가요.",
+    "request": "환불 요청",
+    "confirm": "환불이 승인되면 플랜이 종료돼요. 요청을 보낼까요?",
+    "submit": "요청 보내기",
+    "cancel": "취소",
+    "pending": "요청을 보냈어요. 확인 후 결제 금액을 환불해 드릴게요.",
+    "usedTooMuch": "결제 이후 허용량의 {percent}%를 사용해 10% 한도를 넘었기 때문에 이 주문은 환불할 수 없어요.",
+    "submitted": "요청을 보냈어요",
+    "notAllowed": "이 주문은 지금 환불할 수 없어요",
+    "failed": "요청을 보내지 못했어요"
+  }
+}

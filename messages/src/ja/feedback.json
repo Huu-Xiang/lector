@@ -1,0 +1,33 @@
+{
+  "feedback": {
+    "nav": "フィードバック",
+    "title": "フィードバック",
+    "intro": "問題点や今後ほしい機能をお聞かせください。すべてのメッセージに目を通しています。",
+    "messageLabel": "メッセージ",
+    "placeholder": "問題やアイデアを書いてください。スクリーンショットも貼り付けられます。",
+    "counter": "{count} / {max}",
+    "addImage": "画像を追加",
+    "removeImage": "画像 {name} を削除",
+    "imagesHint": "画像は {count} 枚まで、1 枚あたり {size} MB までです。PNG、JPEG、WebP、GIF に対応しています。",
+    "replyTo": "{email} に返信します。",
+    "send": "送信",
+    "sending": "送信中…",
+    "successTitle": "ありがとうございます。受け付けました。返信はメールでお送りします。",
+    "sendAnother": "別のメッセージを送る",
+    "errors": {
+      "empty": "先にメッセージを入力してください。",
+      "tooLong": "メッセージが長すぎます。",
+      "tooManyImages": "画像は {count} 枚まで追加できます。",
+      "imageTooLarge": "{size} MB を超える画像があります。",
+      "imageType": "PNG、JPEG、WebP、GIF の画像を使ってください。",
+      "tooLarge": "メッセージと画像のサイズが大きすぎます。",
+      "rateLimited": "送信回数が多すぎます。しばらくしてからもう一度お試しください。",
+      "failed": "メッセージを送信できませんでした。しばらくしてからもう一度お試しください。"
+    },
+    "wechat": {
+      "summary": "WeChat のほうが便利ですか？",
+      "body": "質問、機能のアイデア、意味の間違いなど、何でもどうぞ。コードをスキャンして WeChat で私を追加してください。私が Readfox を作っています。友だち申請に「Readfox」と書いてください。",
+      "alt": "Readfox 作者の WeChat QR コード"
+    }
+  }
+}

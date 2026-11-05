@@ -17,6 +17,8 @@ describe('resolveLocale', () => {
     expect(matchLocale('zh')).toBe('zh-CN');
     expect(matchLocale('zh-SG')).toBe('zh-CN');
     expect(matchLocale('en-GB')).toBe('en');
+    expect(matchLocale('ja-JP')).toBe('ja');
+    expect(matchLocale('ko-KR')).toBe('ko');
     expect(matchLocale('')).toBeNull();
   });
 });

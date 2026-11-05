@@ -1,0 +1,230 @@
+{
+  "common": {
+    "appName": "Readfox",
+    "tagline": "読んで身につける、新しい言語"
+  },
+  "uiLanguage": {
+    "label": "表示言語",
+    "title": "表示言語",
+    "description": "ボタン、メニュー、本のタイトルと説明の言語です。翻訳と解説には、下の翻訳言語が使われます。",
+    "alsoNative": "翻訳と本のタイトルにも {language} を使いますか？",
+    "alsoNativeYes": "切り替える",
+    "alsoNativeNo": "そのままにする",
+    "alsoNativeDone": "翻訳言語を変更しました",
+    "alsoNativeFailed": "翻訳言語を変更できませんでした"
+  },
+  "legal": {
+    "nav": "法務情報",
+    "pricing": "料金",
+    "privacy": "プライバシー",
+    "terms": "利用規約",
+    "about": "概要",
+    "source": "ソースコード",
+    "refunds": "返金",
+    "freeBooks": "無料の本",
+    "back": "戻る"
+  },
+  "nav": {
+    "library": "ライブラリ",
+    "practice": "練習",
+    "journal": "日記",
+    "vocab": "単語帳",
+    "stats": "統計",
+    "settings": "設定"
+  },
+  "auth": {
+    "loadingAuth": "認証を読み込んでいます",
+    "login": {
+      "title": "ログイン",
+      "deleted": "アカウントとすべてのデータが完全に削除されました。",
+      "unverified": "<b>{email}</b> はまだ確認されていません。受信トレイのリンクを確認してください。",
+      "resend": "確認メールを再送",
+      "email": "メールアドレス",
+      "password": "パスワード",
+      "forgot": "パスワードをお忘れですか？",
+      "submit": "ログイン",
+      "submitting": "ログイン中…",
+      "github": "GitHub で続ける",
+      "oidc": "{provider} で続ける",
+      "noAccount": "アカウントをお持ちでないですか？",
+      "create": "新規登録",
+      "errInvalid": "メールアドレスまたはパスワードが正しくありません。",
+      "errFailed": "ログインに失敗しました。",
+      "errResend": "メールを再送できませんでした。",
+      "resent": "確認メールを送信しました。受信トレイを確認してください。"
+    },
+    "register": {
+      "title": "アカウントを作成",
+      "name": "名前",
+      "email": "メールアドレス",
+      "password": "パスワード",
+      "passwordHint": "英字と数字を含む 8 文字以上にしてください。",
+      "submit": "アカウントを作成",
+      "submitting": "アカウントを作成中…",
+      "haveAccount": "すでにアカウントをお持ちですか？",
+      "signIn": "ログイン",
+      "errFailed": "登録に失敗しました。",
+      "checkTitle": "受信トレイを確認してください",
+      "checkBody": "<b>{email}</b> に確認用のリンクを送信しました。リンクを開いてアカウントを有効にしてから、ログインしてください。",
+      "goSignIn": "ログインへ",
+      "confirmPassword": "パスワード（確認）",
+      "errMismatch": "2 つのパスワードが一致しません。",
+      "errWeak": "より強いパスワードにしてください。英字と数字を含む 8 文字以上が必要です。",
+      "matches": "パスワードが一致しています",
+      "errEmailDisposable": "使い捨てのメールアドレスは使えません。普段お使いのメールアドレスを入力してください。",
+      "errEmailAlias": "このメールアドレスは、別の形式ですでにアカウントに使われています。そのアドレスでログインしてください。",
+      "invite": "招待コードまたは引き換えコード",
+      "inviteOptional": "（任意）",
+      "inviteRequired": "（必須）",
+      "inviteHint": "友だちの招待コード、または WELCOME123 などの引き換えコードです。",
+      "errInviteRequired": "登録には有効な招待コードが必要です。"
+    },
+    "reset": {
+      "expiredTitle": "リンクの有効期限が切れました",
+      "expiredBody": "このリセットリンクは無効か、有効期限が切れています。下から新しいリンクをリクエストしてください。",
+      "requestNew": "新しいリンクをリクエスト",
+      "checkTitle": "受信トレイを確認してください",
+      "checkBody": "<b>{email}</b> のアカウントがある場合は、リセット用のリンクをお送りします。",
+      "backToSignIn": "ログインに戻る",
+      "title": "パスワードをリセット",
+      "intro": "アカウントのメールアドレスを入力してください。リセット用のリンクをお送りします。",
+      "email": "メールアドレス",
+      "send": "リセットリンクを送信",
+      "sending": "送信中…",
+      "errRequest": "リセットをリクエストできませんでした。",
+      "newTitle": "新しいパスワードを設定",
+      "newPassword": "新しいパスワード",
+      "passwordHint": "英字と数字を含む 8 文字以上にしてください。",
+      "setNew": "新しいパスワードを設定",
+      "updating": "更新中…",
+      "errReset": "パスワードをリセットできませんでした。",
+      "updated": "パスワードを更新しました。新しいパスワードでログインしてください。",
+      "confirmPassword": "新しいパスワード（確認）",
+      "errMismatch": "2 つのパスワードが一致しません。",
+      "errWeak": "より強いパスワードにしてください。英字と数字を含む 8 文字以上が必要です。"
+    },
+    "twoFactor": {
+      "title": "2 段階認証",
+      "introBackup": "バックアップコードを 1 つ入力してください。各コードは 1 回だけ使えます。",
+      "introTotp": "認証アプリに表示される 6 桁のコードを入力してください。",
+      "labelBackup": "バックアップコード",
+      "labelTotp": "認証コード",
+      "placeholderBackup": "例：abcde-fghij",
+      "trust": "このデバイスを 30 日間信頼する",
+      "verify": "確認",
+      "verifying": "確認中…",
+      "useTotp": "認証アプリのコードを使う",
+      "useBackup": "バックアップコードを使う",
+      "backToSignIn": "ログインに戻る",
+      "errExpired": "このログインの有効期限が切れました。もう一度パスワードを入力してください。",
+      "errLocked": "コードの入力に何度も失敗しました。しばらく待ってから、もう一度ログインしてください。",
+      "errBackup": "そのバックアップコードは使えませんでした。",
+      "errTotp": "そのコードは使えませんでした。最新のコードを入力してください。"
+    },
+    "passwordMeter": {
+      "weak": "弱い",
+      "fair": "普通",
+      "strong": "強い",
+      "rules": {
+        "length": "8 文字以上",
+        "letter": "英字を含む",
+        "digit": "数字を含む"
+      }
+    }
+  },
+  "setup": {
+    "badge": "最初の読書セッション",
+    "welcome": "Readfox へようこそ",
+    "intro": "最初のレッスンを選ぶために、少しだけ教えてください。回答はすべて任意です。",
+    "chooseLanguage": "2. 学ぶ言語を選ぶ",
+    "learn": "{name}を学ぶ",
+    "showMore": "さらに {count} 言語を表示",
+    "personalise": "3. あなたのレベル",
+    "personaliseHint": "ちょうどよい難易度の無料の本を先に表示するために使います。",
+    "optional": "任意",
+    "level": "読解レベル",
+    "ready": "最初の文章を読む準備はできましたか？",
+    "readyHint": "ガイドは実際の入門レッスンの中で表示され、いつでも終了できます。",
+    "skip": "ライブラリへスキップ",
+    "preparing": "レッスンを準備中…",
+    "start": "ガイド付きレッスンを始める",
+    "errSave": "設定を保存できませんでした",
+    "levelHint": "あとで「無料の本」から変更できます。",
+    "nativeTitle": "1. あなたの言語",
+    "nativeHint": "翻訳と解説にはこの言語が使われます。表示言語は英語、簡体字中国語、日本語、韓国語から選べます。",
+    "interests": "興味のある分野",
+    "interestsHint": "任意です。これらのテーマの新しい記事を「無料の本」に追加します。",
+    "interest": {
+      "news": "ニュース",
+      "travel": "旅行",
+      "science": "科学",
+      "literature": "文学"
+    },
+    "inDevelopment": "開発中",
+    "showMoreSoon": "開発中の {count} 言語を表示",
+    "recommendBadge": "あなたにおすすめ",
+    "recommendTitle": "最初に読む本を選ぶ",
+    "recommendIntro": "あなたのレベル（{level}）と興味に合わせています。1 冊選ぶと、最初の読書をご案内します。",
+    "recommendBack": "回答を変更する",
+    "recommendSkip": "代わりにライブラリを見る"
+  },
+  "landing": {
+    "metaTitle": "Readfox – 学んでいる言語で本物の本を読もう",
+    "metaDescription": "本を取り込むか好きな文章を貼り付けて、単語をタップすればすぐに翻訳。読んだ内容を間隔反復の練習に変えられます。無料でオープンソースです。",
+    "signIn": "ログイン",
+    "freeBooks": "無料の本",
+    "getStarted": "無料で始める",
+    "heroTitle": "学んでいる言語で、本物の本を読もう",
+    "heroBody": "Readfox は読書を学習に変えます。単語をタップして翻訳を表示し、読みながら語彙を集め、間隔反復で練習できます。無料でお使いいただけます。",
+    "languagesNow": "いま学べる言語：",
+    "languagesSoon": "さらに {count} 言語を開発中",
+    "languagesUi": "表示言語：{ui} · 意味と解説：{count} 言語（設定で変更できます）",
+    "createAccount": "無料アカウントを作成",
+    "heroAlt": "Readfox：開いた本の上で休むキツネ",
+    "howTitle": "使い方",
+    "features": {
+      "read": {
+        "title": "好きなものを読む",
+        "body": "EPUB を取り込むか、好きな文章を貼り付けるだけ。自分の本がそのままレッスンになります。"
+      },
+      "tap": {
+        "title": "単語をタップして理解する",
+        "body": "文脈に合わせた翻訳と解説がすぐに表示されます。毎月の利用枠が付いています。有料プランでは自分の AI キーも使えます。"
+      },
+      "vocab": {
+        "title": "語彙が自然に増える",
+        "body": "調べた単語は、出会った文と一緒に保存されます。"
+      },
+      "srs": {
+        "title": "間隔反復の練習",
+        "body": "ちょうどよいタイミングで単語を復習して、しっかり定着させます。"
+      },
+      "write": {
+        "title": "書いてフィードバックをもらう",
+        "body": "学習中の言語で日記をつけて、添削してもらえます。"
+      }
+    },
+    "openTitle": "オープンソース。読書の記録はあなただけのもの",
+    "openBody": "Readfox はオープンソースソフトウェア（AGPL-3.0）で、オープンソースのリーダー Lector をもとに作られています。AI 機能には毎月の利用枠があります。広告や分析用のトラッカーは使っていません。<privacy>プライバシーポリシー</privacy>をご覧ください。",
+    "pricing": "料金"
+  },
+  "settings": {
+    "nativeLanguage": {
+      "title": "翻訳言語",
+      "description": "単語の意味、解説、チューターの返信、日記のフィードバックはこの言語で表示されます。表示言語とは別にできます。たとえば、表示は中国語で解説は英語にすることもできます。内蔵辞書の項目は英語のままです。",
+      "saved": "言語を保存しました",
+      "errSave": "言語を保存できませんでした",
+      "useBrowser": "ブラウザの言語を使う",
+      "sameAsLearning": "学習中の言語（{language}）と同じです。役に立つ解説を表示するには、別の翻訳言語を選んでください。"
+    },
+    "languagePrefs": {
+      "title": "表示言語と翻訳言語",
+      "hint": "この 2 つは別々の設定です。たとえば、フランス語を学びながら、表示は中国語、解説は英語にできます。"
+    }
+  },
+  "welcomeOffer": {
+    "body": "初めての方は、コード <b>{code}</b> で Plus を 15 日間無料で使えます。12 月 15 日まで有効で、1 アカウントにつき 1 回です。",
+    "use": "使う",
+    "signUp": "登録"
+  }
+}

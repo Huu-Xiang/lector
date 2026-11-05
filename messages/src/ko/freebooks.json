@@ -1,0 +1,159 @@
+{
+  "library": {
+    "freeBooks": {
+      "button": "무료 도서",
+      "title": "무료 도서",
+      "close": "닫기",
+      "intro": "{language} 퍼블릭 도메인 도서를 쉬운 순서부터 보여 드려요. 도서를 추가하면 내 서재에 복사돼요. 수준은 대략적인 기준이에요.",
+      "loading": "불러오는 중…",
+      "errLoad": "무료 도서를 불러오지 못했어요.",
+      "none": "아직 {language} 무료 도서가 없어요.",
+      "size": "{words}단어, 레슨 {lessons}개",
+      "add": "추가",
+      "adding": "추가하는 중…",
+      "addedLabel": "추가됨",
+      "added": "{title}을(를) 서재에 추가했어요",
+      "errAdd": "도서를 추가하지 못했어요",
+      "tab": {
+        "books": "도서",
+        "news": "뉴스",
+        "travel": "여행",
+        "science": "과학"
+      },
+      "feedIntro": "{language} 최신 {interest} 기사예요. 기사를 추가하면 출처와 함께 내 서재에 복사돼요.",
+      "feedLoading": "불러오는 중…",
+      "feedErrLoad": "기사를 불러오지 못했어요.",
+      "feedNone": "아직 기사가 없어요. 곧 다시 확인해 주세요.",
+      "feedSize": "{words}단어",
+      "feedAdd": "추가",
+      "feedAdding": "추가하는 중…",
+      "feedAddedLabel": "추가됨",
+      "feedAdded": "{title}을(를) 서재에 추가했어요",
+      "feedErrAdd": "기사를 추가하지 못했어요",
+      "feedSource": "출처: {source} · {license}",
+      "search": "제목 또는 저자로 검색",
+      "sortLabel": "도서 정렬",
+      "sortDefault": "추천순",
+      "sortShort": "짧은 순",
+      "sortLong": "긴 순",
+      "noMatch": "“{query}”에 맞는 도서가 없어요.",
+      "readingHours": "약 {hours}시간",
+      "readingMinutes": "약 {minutes}분"
+    },
+    "empty": {
+      "browseBooks": "무료 도서 둘러보기"
+    }
+  },
+  "readingLevel": {
+    "names": {
+      "A1": "입문",
+      "A2": "초급",
+      "B1": "중급",
+      "B2": "중고급",
+      "C1": "고급",
+      "C2": "최상급"
+    },
+    "exam": {
+      "ielts": "IELTS {score}",
+      "toefl": "TOEFL iBT {score}",
+      "delf": "DELF {score}",
+      "dalf": "DALF {score}",
+      "hsk": "HSK {score}",
+      "topik": "TOPIK {score}",
+      "juniorHigh": "중학교",
+      "zhongkao": "Zhongkao",
+      "gaokao": "Gaokao",
+      "cet4": "CET-4",
+      "cet6": "CET-6",
+      "tem8": "TEM-8"
+    },
+    "approx": "시험 등급 대응은 참고용이에요.",
+    "notSure": "잘 모르겠어요",
+    "all": "모든 수준",
+    "yours": "내 수준",
+    "original": "원제: {title}"
+  },
+  "recommend": {
+    "booksTitle": "내 수준에 맞는 도서",
+    "articlesTitle": "관심 있을 만한 최신 기사",
+    "interest": {
+      "news": "뉴스",
+      "travel": "여행",
+      "science": "과학"
+    },
+    "original": "원제: {title}",
+    "words": "{words}단어",
+    "harder": "내 수준보다 조금 어려워요",
+    "start": "읽기 시작",
+    "starting": "여는 중…",
+    "loading": "알맞은 글을 찾는 중…",
+    "errStart": "이 글을 열 수 없어요. 다른 글을 선택해 보세요.",
+    "empty": "아직 추천할 글이 없어요. 대신 무료 도서를 둘러보세요.",
+    "homeTitle": "추천",
+    "homeHint": "시작하기 좋은 무료 도서와 기사예요.",
+    "homeHintLevel": "내 수준({level})에 맞춰 골랐어요.",
+    "more": "무료 도서 더 보기",
+    "collapse": "이 섹션 접기",
+    "expand": "이 섹션 펼치기"
+  },
+  "bookLink": {
+    "view": "{site}에서 보기",
+    "site": {
+      "douban": "Douban",
+      "goodreads": "Goodreads",
+      "babelio": "Babelio",
+      "booklog": "Booklog",
+      "aladin": "Aladin"
+    }
+  },
+  "newLanguage": {
+    "title": "{language} 시작하기",
+    "intro": "{language} 수준과 읽고 싶은 글을 알려 주세요. 첫 읽을거리를 추천해 드려요. 이미 사용법을 아시니 1분이면 끝나요.",
+    "submit": "추천 보기",
+    "later": "나중에",
+    "close": "닫기",
+    "pickIntro": "하나를 골라 읽기를 시작해 보세요."
+  },
+  "descriptions": {
+    "toggle": "설명 보기"
+  },
+  "publicBooks": {
+    "indexTitle": "배우는 언어로 읽는 무료 도서",
+    "indexMetaDescription": "영어, 프랑스어, 스페인어, 중국어, 한국어 고전 {count}권을 A1부터 C2까지 수준별로 정리했어요. Readfox에서 무료로 읽고 단어를 눌러 뜻을 확인하세요.",
+    "indexIntro": "여기 있는 모든 도서는 CEFR 수준별로 정리한 퍼블릭 도메인 전문이에요. 도서를 열어 시작 부분을 보고 Readfox에서 무료로 읽어 보세요. 단어를 누르면 내 언어로 뜻을 볼 수 있어요.",
+    "bookCount": "도서 {count}권",
+    "level": "수준 {level}",
+    "byAuthor": "저자: {author}",
+    "readingHours": "읽는 데 약 {hours}시간",
+    "readingMinutes": "읽는 데 약 {minutes}분",
+    "lessons": "레슨 {count}개",
+    "opening": "1장 미리보기",
+    "readFree": "Readfox에서 무료로 읽기",
+    "ctaNote": "단어를 누르면 내 언어로 뜻을 볼 수 있어요. 새 단어를 저장하고 나중에 복습하세요.",
+    "source": "출처: <link>{source}</link>. {license}.",
+    "moreAtLevel": "{level} 수준의 {language} 도서 더 보기",
+    "allBooks": "모든 무료 도서",
+    "metaTitle": "{author}의 {title}: {language}로 무료로 읽기 | Readfox",
+    "readWholeChapter": "1장 전체 읽기",
+    "tryRead": "가입 없이 1장 무료로 읽기",
+    "hardWordsTitle": "이 책의 어려운 단어",
+    "hardWordsNote": "이 책에 자주 나오지만 일상 {language}에서는 드문 단어 {count}개예요. Readfox 리더에서 단어를 누르면 뜻을 볼 수 있어요.",
+    "chapterTitle": "{title}: 1장",
+    "readMetaTitle": "{title} 1장을 {language}로 무료로 읽기 | Readfox",
+    "readMetaDescription": "{author}의 {title} 첫 장을 계정 없이 무료로 읽어 보세요. 수준 {level}.",
+    "continueTitle": "마음에 드셨나요? 계속 읽어 보세요",
+    "continueBody": "무료로 가입하면 레슨 {count}개를 모두 읽을 수 있어요. 단어를 누르면 내 언어로 뜻을 볼 수 있고, 새 단어를 저장해 복습할 수 있어요.",
+    "continueCta": "무료로 가입하고 계속 읽기",
+    "backToBook": "이 책 소개",
+    "levelTitle": "{level} 수준의 {language} 도서",
+    "levelIntro": "CEFR {level} 수준의 {language} 무료 도서 {count}권이에요. 모두 퍼블릭 도메인 전문이에요.",
+    "levelMetaDescription": "CEFR {level} 수준의 {language} 무료 도서: {titles}. Readfox에서 읽고 단어를 눌러 뜻을 확인하세요.",
+    "authorsTitle": "저자별 {language} 도서",
+    "authorsMetaDescription": "Readfox의 {language} 무료 도서 저자 {count}명을 {first}부터 {last}까지 둘러보세요.",
+    "authorTitle": "{author}: {language} 무료 도서",
+    "authorIntro": "{author}의 도서 {count}권을 Readfox에서 무료로 읽을 수 있어요. 모두 퍼블릭 도메인 전문이에요.",
+    "authorMetaDescription": "{author}의 도서 {count}권을 {language}로 무료로 읽어 보세요: {titles}.",
+    "browseLevels": "수준별",
+    "browseAuthors": "저자별"
+  }
+}

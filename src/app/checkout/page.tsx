@@ -57,7 +57,11 @@ export default function CheckoutPage() {
           settings: {
             displayMode: 'overlay',
             theme,
-            locale: locale.startsWith('zh') ? 'zh-Hans' : 'en',
+            locale: locale.startsWith('zh')
+              ? 'zh-Hans'
+              : locale === 'ja' || locale === 'ko'
+                ? locale
+                : 'en',
             successUrl: `${window.location.origin}/subscribe?checkout=success`,
           },
         },

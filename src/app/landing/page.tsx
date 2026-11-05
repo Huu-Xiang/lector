@@ -7,6 +7,7 @@ import LegalLinks from '@/components/LegalLinks';
 import WelcomeOfferNote from '@/components/WelcomeOfferNote';
 import { LANGUAGES, NATIVE_LANGUAGES } from '@/lib/languages';
 import { PUBLIC_BOOK_LANGUAGES } from '@/lib/public-books';
+import { UI_LOCALES } from '@/i18n/locales';
 import { LANDING_ROOT_ID } from '@/lib/api-base';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -116,7 +117,10 @@ export default async function LandingPage() {
               </span>
             </div>
             <p className="mt-2 text-xs text-muted-foreground">
-              {t('languagesUi', { count: NATIVE_LANGUAGES.length })}
+              {t('languagesUi', {
+                ui: UI_LOCALES.map((l) => l.native).join(' / '),
+                count: NATIVE_LANGUAGES.length,
+              })}
             </p>
             <div className="mt-5 max-w-md">
               <WelcomeOfferNote />

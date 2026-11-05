@@ -182,7 +182,7 @@
     "errSave": "无法保存你的设置",
     "levelHint": "之后可以在“免费书籍”里修改。",
     "nativeTitle": "1. 你的母语",
-    "nativeHint": "单词翻译和讲解都用这种语言。界面目前有简体中文和英文。",
+    "nativeHint": "单词翻译和讲解都用这种语言。界面目前有简体中文、英文、日文和韩文。",
     "interests": "你的兴趣",
     "interestsHint": "可选——选中的主题会在“免费书籍”里显示最新文章。",
     "interest": {
@@ -209,7 +209,7 @@
     "heroBody": "遇到生词点一下，就能看到贴合上下文的释义。查过的词自动收进生词本，到点提醒你复习。免费就能用。",
     "languagesNow": "现在可以学：",
     "languagesSoon": "另有 {count} 种语言正在开发中",
-    "languagesUi": "界面：简体中文 / English · 释义和讲解：{count} 种语言（可在设置里改）",
+    "languagesUi": "界面：{ui} · 释义和讲解：{count} 种语言（可在设置里改）",
     "createAccount": "免费注册",
     "heroAlt": "Readfox 标志：一只趴在书上的小狐狸",
     "howTitle": "怎么用",

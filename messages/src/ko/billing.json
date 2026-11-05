@@ -1,0 +1,106 @@
+{
+  "plans": {
+    "freePrice": "$0",
+    "perMonth": "월 {price}",
+    "perYear": "또는 연 {price}",
+    "perYearMain": "연 {price}",
+    "annualEquivalent": "월 약 {price}, 연간 결제",
+    "annualEquivalentSave": "월 약 {price}, 연간 결제. {percent}% 절약",
+    "chinaPrice": "중국 본토: 월 {price} (Alipay)",
+    "chinaPriceYear": "중국 본토: 연 {price} (Alipay)",
+    "priceAtCheckout": "가격은 결제 화면에서 확인할 수 있어요",
+    "getStarted": "무료로 시작",
+    "features": {
+      "glosses": "매달 AI 단어 검색 {count, number}회 (사전에 없는 단어)",
+      "freeLibrary": "컬렉션 최대 10개, 레슨 최대 200개. 무료 서재 도서는 레슨 수에 포함되지 않아요",
+      "byok": "더 필요하면 내 AI 키를 추가하세요",
+      "detailed": "매달 상세 AI 답변 {count, number}회 (구절 번역과 단어 설명)",
+      "phraseWords": "한 번의 번역에 최대 {count}단어까지 선택할 수 있어요",
+      "phraseUnlimited": "한 번의 번역에 길이 제한 없이 선택할 수 있어요",
+      "moreRoom": "컬렉션 최대 50개, 레슨 최대 1,000개",
+      "unlimitedLibrary": "컬렉션과 레슨 무제한",
+      "byokPaid": "더 필요하면 내 AI 키를 사용하세요"
+    },
+    "current": "현재 플랜",
+    "choose": "{plan} 선택",
+    "cycleLabel": "결제 주기",
+    "cycleYear": "연간",
+    "cycleYearSave": "연간 (최대 {percent}% 절약)",
+    "cycleMonth": "월간"
+  },
+  "pricing": {
+    "metaTitle": "요금 – Readfox",
+    "title": "요금",
+    "intro": "무료로 시작하세요. 상세한 AI 설명과 더 넉넉한 사용량이 필요할 때 업그레이드하세요. 언제든 해지할 수 있어요.",
+    "notes": "해당하는 경우 판매세 또는 VAT가 결제 시 추가돼요. 결제는 재판매업체인 Paddle이 처리해요. 중국 본토 구매자는 RMB로 결제하며 Alipay를 사용할 수 있어요.",
+    "cardPending": "카드, PayPal, Apple Pay 결제는 개발 중이에요. 지금은 Alipay와 WeChat Pay만 지원해요.",
+    "metaDescription": "Readfox 요금제: 매달 AI 단어 검색 1,000회로 무료 시작. Plus, Pro, Max는 더 많은 검색 횟수, 상세한 AI 설명, 더 큰 서재를 제공해요. 카드, PayPal, Alipay로 결제하세요."
+  },
+  "checkoutPage": {
+    "opening": "보안 결제 화면을 여는 중",
+    "failed": "결제 화면을 열 수 없어요. 돌아가서 다시 시도해 주세요.",
+    "back": "플랜으로 돌아가기"
+  },
+  "planLimits": {
+    "upgradePlus": "Plus로 업그레이드",
+    "seePlans": "플랜 보기",
+    "addKey": "API 키 추가",
+    "notNow": "나중에",
+    "upgradeLine": {
+      "cloud": "Plus로 이 한도가 늘어나요.",
+      "plus": "Pro로 이 한도가 늘어나요.",
+      "max": "Max로 이 한도가 늘어나요.",
+      "byok": "내 API 키를 추가하면 이 한도가 늘어나요."
+    },
+    "generic": {
+      "title": "플랜 한도에 도달했어요",
+      "body": "플랜의 사용량을 초과했어요."
+    },
+    "metrics": {
+      "phraseSelectionWords": {
+        "title": "현재 플랜에서는 구절이 너무 길어요",
+        "body": "현재 플랜에서는 구절 검색을 {limit, number}단어까지 할 수 있어요."
+      },
+      "journalWordsPerMonth": {
+        "title": "이번 달 일기 한도에 도달했어요",
+        "body": "이번 달 일기 {limit, number}단어 중 {used, number}단어를 작성했어요."
+      },
+      "llmRequestsPerMonth": {
+        "title": "이번 달 AI 사용량을 모두 썼어요",
+        "body": "이번 달 상세 AI 답변 {limit, number}회를 모두 사용했어요."
+      },
+      "wordGlossesPerMonth": {
+        "title": "이번 달 AI 단어 검색을 모두 썼어요",
+        "body": "이번 달 AI 단어 검색 {limit, number}회를 모두 사용했어요. 오프라인 사전의 단어는 계속 볼 수 있어요."
+      },
+      "phraseTranslationsPerDay": {
+        "title": "오늘의 구절 번역을 모두 썼어요",
+        "body": "오늘의 구절 번역 {limit, number}회를 모두 사용했어요. UTC 자정에 초기화돼요."
+      },
+      "contextTranslationsPerDay": {
+        "title": "오늘의 문맥 번역을 모두 썼어요",
+        "body": "오늘의 문맥 번역 {limit, number}회를 모두 사용했어요. UTC 자정에 초기화돼요."
+      },
+      "ttsCharsPerMonth": {
+        "title": "이번 달 오디오 사용량을 모두 썼어요",
+        "body": "이번 달 남은 기간에는 텍스트 음성 변환에 브라우저 음성을 사용해요."
+      },
+      "maxCollections": {
+        "title": "서재 한도에 도달했어요",
+        "body": "현재 플랜에서는 컬렉션을 최대 {limit, number}개까지 보관할 수 있어요."
+      },
+      "maxLessons": {
+        "title": "서재 한도에 도달했어요",
+        "body": "현재 플랜에서는 레슨을 최대 {limit, number}개까지 보관할 수 있어요."
+      },
+      "maxVocabEntries": {
+        "title": "저장한 단어 한도에 도달했어요",
+        "body": "현재 플랜에서는 저장한 단어를 최대 {limit, number}개까지 보관할 수 있어요."
+      }
+    },
+    "dialog": {
+      "plus": "Plus에서는 매달 AI 단어 검색 {glosses, number}회와 상세 답변 {detailed, number}회를 이용할 수 있어요. 무료 도서와 저장한 단어는 그대로 유지돼요.",
+      "freeReset": "또는 무료로 계속 읽으세요. 사용량은 다음 달에 다시 시작돼요."
+    }
+  }
+}

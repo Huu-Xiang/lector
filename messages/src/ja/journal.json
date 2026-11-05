@@ -1,0 +1,246 @@
+{
+  "journal": {
+    "title": "日記",
+    "newEntry": "新しい日記",
+    "cancel": "キャンセル",
+    "placeholder": "今日の日記を{language}で書きましょう...",
+    "words": "{count} 語",
+    "draftSaved": "下書きを保存しました",
+    "saving": "保存中...",
+    "saveDraft": "下書きを保存",
+    "correcting": "添削中...",
+    "submitForCorrection": "添削に出す",
+    "failedToSave": "保存に失敗しました",
+    "correctionFailed": "添削に失敗しました",
+    "deleteConfirm": "この日記を削除しますか？",
+    "deleteFailed": "日記を削除できませんでした",
+    "entries": "{count} 件",
+    "empty": "日記はまだありません",
+    "writeFirst": "最初の日記を書く",
+    "card": {
+      "corrections": "修正 {count} 件",
+      "perfect": "完璧",
+      "draft": "下書き",
+      "deleteEntry": "日記を削除",
+      "words": "{count} 語"
+    },
+    "modal": {
+      "close": "閉じる"
+    },
+    "correction": {
+      "yourText": "あなたの文章",
+      "clickHint": "ハイライトされた語をクリックすると修正内容が表示されます",
+      "corrected": "修正後",
+      "summary": "修正 {count} 件：",
+      "perfect": "完璧です！修正の必要はありません。"
+    },
+    "types": {
+      "grammar": "文法",
+      "spelling": "スペル",
+      "wordChoice": "単語の選択",
+      "wordOrder": "語順",
+      "missingWord": "不足している語",
+      "extraWord": "余分な語"
+    }
+  },
+  "stats": {
+    "title": "統計",
+    "loadFailed": "統計を読み込めませんでした",
+    "returnHome": "ホームに戻る",
+    "cards": {
+      "wordsKnown": "覚えた単語",
+      "learning": "学習中（L1〜L4）",
+      "learningSub": "進行中の単語",
+      "wordsRead": "読んだ語数",
+      "wordsReadSub": "読書位置からの推定値",
+      "currentStreak": "現在の連続日数",
+      "days": "{count} 日",
+      "longest": "最長：{count} 日"
+    },
+    "range": {
+      "d30": "30日",
+      "d90": "90日",
+      "y1": "1年",
+      "all": "すべて"
+    },
+    "states": {
+      "known": "覚えた",
+      "level4": "レベル 4",
+      "level3": "レベル 3",
+      "level2": "レベル 2",
+      "level1": "レベル 1",
+      "new": "新規",
+      "ignored": "無視"
+    },
+    "wordStates": {
+      "title": "状態別の単語数"
+    },
+    "cloze": {
+      "title": "穴埋め練習",
+      "sentencesPracticed": "練習した文の数",
+      "accuracy": "正答率",
+      "totalPoints": "合計ポイント"
+    },
+    "mastery": {
+      "title": "文の習得度",
+      "overall": "全体で {percent}%",
+      "mastered": "{mastered} / {total} 習得済み",
+      "due": "復習の期限が来ているもの {count} 件",
+      "collections": {
+        "top500": "上位 500",
+        "top1000": "上位 1000",
+        "top2000": "上位 2000",
+        "mined": "抽出",
+        "random": "ランダム"
+      }
+    },
+    "fluency": {
+      "estimatedLevel": "選んだレベルではなく、覚えた単語から推定しています",
+      "vsLastWeek": "先週比 {count, number}",
+      "sameAsLast": "今週 {count, number}（先週と同じ）",
+      "progressTo": "{level} までの進捗",
+      "topLevel": "最高レベルに到達しました",
+      "wordsToNext": "{level} まであと {count, number} 語",
+      "known": "覚えた",
+      "learning": "学習中",
+      "levelName": {
+        "A1": "入門",
+        "A2": "初級",
+        "B1": "中級",
+        "B2": "中上級",
+        "C1": "上級",
+        "C2": "最上級"
+      }
+    },
+    "heatmap": {
+      "title": "学習の記録",
+      "total": {
+        "actions": "過去 1 年間で {count, number} 回の操作",
+        "lookups": "過去 1 年間で {count, number} 回の検索"
+      },
+      "count": {
+        "actions": "{count, number} 回の操作",
+        "lookups": "{count, number} 回の検索"
+      },
+      "types": {
+        "lookups": "検索",
+        "cloze": "穴埋め",
+        "reading": "読書",
+        "anki": "Anki"
+      },
+      "minutes": "{count} 分",
+      "noActivity": "記録なし",
+      "less": "少ない",
+      "more": "多い",
+      "activeDays": "学習した日数：",
+      "avgPerActiveDay": "学習した日の平均："
+    },
+    "anki": {
+      "title": "Anki の復習",
+      "last90": "過去 90 日間",
+      "reviews": "復習回数",
+      "reviewDays": "復習した日数",
+      "avgPerDay": "復習日あたりの平均",
+      "connectTitle": "Anki を連携して復習履歴を表示",
+      "connectBody": "復習は自動的に同期され、連続日数に反映されます。",
+      "connectButton": "Anki を連携"
+    },
+    "ankiStatus": {
+      "synced": "同期済み",
+      "notSynced": "未同期",
+      "noteId": "Anki ノート ID：{id}",
+      "pushed": "Anki に送信済み"
+    },
+    "radar": {
+      "title": "得意な分野",
+      "subtitle": "語彙が最も充実している分野",
+      "pending": "分類待ちの単語 {count} 語",
+      "emptyTitle": "分野のデータはまだありません",
+      "emptyHint": "読んで単語を覚えると、得意なテーマがわかります。",
+      "emptySorting": "覚えた単語をテーマ別に分類しています。しばらくしてからもう一度ご確認ください。",
+      "knownWords": "覚えた単語 {count} 語",
+      "mastery": "習得度"
+    },
+    "vocabGrowth": {
+      "title": "語彙の成長",
+      "knownWords": "覚えた単語",
+      "learning": "学習中",
+      "total": "合計",
+      "series": {
+        "known": "覚えた",
+        "learning": "学習中",
+        "total": "合計"
+      }
+    }
+  },
+  "chat": {
+    "error": "申し訳ありません。返信できませんでした。設定で LLM プロバイダーが設定されているか確認してください。",
+    "open": "チャットを開く",
+    "close": "チャットを閉じる",
+    "tutorTitle": "{language}チューター",
+    "tutorSubtitle": "{language}について何でも質問できます",
+    "clearTitle": "チャットを消去",
+    "clear": "消去",
+    "loadingOlder": "以前のメッセージを読み込み中...",
+    "emptyPrompt": "{language}について質問してみましょう",
+    "via": "{provider} 経由",
+    "placeholder": "{language}について質問する..."
+  },
+  "chrome": {
+    "theme": {
+      "light": "ライト",
+      "dark": "ダーク",
+      "system": "システム"
+    },
+    "nav": {
+      "expandSidebar": "サイドバーを開く",
+      "collapseSidebar": "サイドバーを閉じる",
+      "signOut": "ログアウト",
+      "showEmail": "メールアドレスを表示",
+      "hideEmail": "メールアドレスを隠す"
+    },
+    "tour": {
+      "practiceTitle": "あとで練習",
+      "practiceBody": "単語はあとで「練習」タブから復習できます。",
+      "vocabTitle": "あなたの語彙",
+      "vocabBody": "触れた単語は「単語帳」タブで見直せます。"
+    },
+    "loading": {
+      "app": "Readfox を読み込み中",
+      "session": "セッションを読み込み中",
+      "subscription": "サブスクリプションを読み込み中",
+      "setup": "セットアップを読み込み中"
+    },
+    "setup": {
+      "connectError": "サーバーに接続できませんでした。",
+      "retry": "再試行"
+    },
+    "language": {
+      "changeFailed": "言語を変更できませんでした",
+      "wordsKnown": "覚えた単語：{count}",
+      "add": "言語を追加",
+      "current": "言語：{language}",
+      "select": "言語を選択",
+      "search": "言語を検索",
+      "noMatch": "言語が見つかりません",
+      "inDevelopment": "開発中"
+    },
+    "quota": {
+      "title": "今月の AI",
+      "lookups": "AI 単語翻訳",
+      "requests": "詳細な AI 回答",
+      "left": "残り {left}",
+      "used": "{limit} 中 {used} 使用",
+      "byok": "自分の AI キーを使用中",
+      "resets": "回数は毎月 1 日にリセットされます。",
+      "exhausted": "今月分は使い切りました",
+      "settings": "設定で自分のキーを使う",
+      "note": "辞書の検索は無料で、回数に含まれません。辞書の意味をあなたの言語に翻訳する場合も同様です。",
+      "percentUsed": "{percent}% 使用",
+      "close": "閉じる",
+      "info": "この利用枠について",
+      "tip": "この円をタップすると、今月の AI の残りがわかります。",
+      "tipDismiss": "OK"
+    }
+  }
+}

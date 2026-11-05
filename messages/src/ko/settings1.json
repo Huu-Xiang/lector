@@ -1,0 +1,151 @@
+{
+  "settings": {
+    "pageTitle": "설정",
+    "practice": {
+      "title": "연습",
+      "clozeHeading": "빈칸 채우기 설정",
+      "translationLabel": "번역",
+      "translationHint": "연습할 때 번역을 기본으로 숨겨요. <keys></keys>로 언제든 켜고 끌 수 있어요.",
+      "shown": "표시",
+      "hidden": "숨김",
+      "wordReviewHeading": "단어 복습",
+      "reviewGoalLabel": "복습 목표",
+      "reviewGoalFailed": "복습 목표를 저장하지 못했어요. 다시 시도해 주세요.",
+      "reviewGoal": {
+        "recognize": "알아보기",
+        "recognize_spell": "알아보고 철자 쓰기"
+      },
+      "reviewGoalHint": {
+        "recognize": "단어를 보면 알아보는 것이 목표예요. 뜻을 고르며 단어를 익혀요.",
+        "recognize_spell": "단어를 직접 쓰는 것도 연습해요. 익숙함과 숙달 단계의 단어는 직접 입력하거나 받아쓰기를 해요."
+      }
+    },
+    "prose": {
+      "title": "읽기 텍스트",
+      "description": "리더가 레슨을 표시하는 방식이에요. 모든 언어에서 원하는 대로 설정한 뒤, 문자에 따라 다르게 보여야 하는 언어만 따로 조정하세요. 이 설정은 이 기기에 저장돼요.",
+      "allLanguages": "모든 언어",
+      "hasOwnSettings": "별도 설정 있음",
+      "customisedNotice": "{language}에는 별도 설정이 있어요. 건드리지 않은 항목은 계속 모든 언어 설정을 따라요.",
+      "inheritedNotice": "{language}은(는) 모든 언어 설정을 따라요. 슬라이더를 움직이고 저장하면 해당 항목만 따로 조정돼요.",
+      "setFor": "· {language} 설정",
+      "save": "저장",
+      "resetDefaults": "기본값으로 되돌리기",
+      "resetLanguage": "{language} 초기화",
+      "statusUnsaved": "위 미리보기에 변경 사항이 반영돼 있어요. 저장하면 리더에 적용돼요.",
+      "statusDefaults": "기본값은 {fontSize}px, 굵기 {fontWeight}, 자간 0, 행간 {lineHeight}이에요.",
+      "statusResetLanguage": "초기화하면 {language}이(가) 다시 모든 언어 설정을 따라요.",
+      "controls": {
+        "fontSize": {
+          "label": "글꼴 크기",
+          "hint": "레슨 본문 글자의 크기예요."
+        },
+        "fontWeight": {
+          "label": "글꼴 굵기",
+          "hint": "각 단어가 얼마나 굵게 보일지 정해요."
+        },
+        "letterSpacing": {
+          "label": "자간",
+          "hint": "글자 사이의 간격이에요. 음수 값은 간격을 좁혀요."
+        },
+        "lineHeight": {
+          "label": "행간",
+          "hint": "글꼴 크기에 대한 배수로 나타낸 줄 사이의 간격이에요."
+        }
+      }
+    },
+    "theme": {
+      "title": "화면 모드",
+      "label": "테마",
+      "options": {
+        "light": "라이트",
+        "dark": "다크",
+        "system": "시스템"
+      }
+    },
+    "tts": {
+      "title": "텍스트 음성 변환",
+      "noAudioNote": "{language}은(는) 합성 음성이 없어요. 발음에 이견이 있어 Readfox는 소리를 내지 않아요.",
+      "synthesizedVoice": "합성 음성",
+      "browserVoiceFree": "브라우저 음성 · 무료",
+      "managedAvailable": "관리형 음성 사용 가능",
+      "usingBrowser": "브라우저 음성 사용 중",
+      "espeakNote": "{language}은(는) Readfox가 호스팅하는 합성 음성인 eSpeak NG로 읽어요. {language}에 존재하는 유일한 텍스트 음성 변환 엔진이에요. 기계적으로 들리지만 모든 단어를 정확하게 발음하고, 모든 플랜에 포함돼 있어요.",
+      "voiceEngine": "음성 엔진",
+      "engineHintFree": "브라우저 음성은 모든 플랜에서 읽기, 연습, 받아쓰기에 무료로 사용할 수 있어요.",
+      "engineHintPaid": "관리형 음성은 더 일관된 발음을 제공해요. 브라우저 음성은 항상 사용할 수 있어요.",
+      "managedVoice": "관리형 음성",
+      "browserBuiltIn": "브라우저 내장",
+      "upsell": "Readfox는 모든 플랜에서 브라우저 음성으로 소리 내어 읽어 줘요. <link>플랜 보기</link>.",
+      "testVoice": "음성 테스트",
+      "speechSpeed": "말하기 속도",
+      "slow": "0.5x (느리게)",
+      "normal": "1.0x",
+      "fast": "1.5x (빠르게)"
+    },
+    "timezone": {
+      "title": "시간대",
+      "description": "일일 통계, 연속 학습, 복습일은 이 시간대의 자정에 바뀌어요.",
+      "auto": "자동 — 서버 시간대",
+      "useDevice": "이 기기의 시간대 사용 ({zone})",
+      "updated": "시간대를 {zone}(으)로 변경했어요",
+      "failed": "시간대를 변경하지 못했어요"
+    },
+    "languages": {
+      "title": "언어",
+      "description": "언어 선택 목록에 이 언어들이 표시돼요. 언어를 삭제하면 목록이 짧아져요. 해당 언어의 단어, 글, 카드는 서버에 그대로 남아요.",
+      "inUse": "사용 중",
+      "remove": "{language} 삭제",
+      "added": "{language}을(를) 추가했어요",
+      "removed": "{language}을(를) 삭제했어요",
+      "saveFailed": "언어를 저장하지 못했어요",
+      "addPlaceholder": "언어 추가…",
+      "add": "추가"
+    },
+    "knownWords": {
+      "title": "아는 단어 가져오기",
+      "description": "이미 아는 단어를 가져와요. 상태 레벨과 번역이 포함된 <strong>LingQ 내보내기 파일</strong>이나 간단한 단어 목록을 사용할 수 있어요.",
+      "lingqHelp": "LingQ: 어휘 → 설정 톱니바퀴 → LingQs 내보내기 → CSV를 여기에 업로드",
+      "uploadLabel": "CSV 파일 업로드",
+      "uploadHint": "첫 번째 열에 단어가 있는 CSV 또는 일반 텍스트 파일",
+      "pasteLabel": "또는 단어 붙여넣기 (한 줄에 하나씩)",
+      "import": "가져오기",
+      "noWords": "가져올 단어가 없어요.",
+      "imported": "단어 {count}개를 아는 단어로 가져왔어요.",
+      "importFailed": "아는 단어를 가져오지 못했어요",
+      "noData": "파일에서 데이터를 찾지 못했어요.",
+      "noTermColumn": "LingQ 내보내기 파일에서 'term' 열을 찾지 못했어요.",
+      "lingqImported": "LingQ에서 단어 {count}개를 가져왔어요. 아는 단어 {known}개, 학습 중 {learning}개.",
+      "fileError": "파일을 가져오는 중 오류가 발생했어요: {message}",
+      "unknownError": "알 수 없는 오류"
+    },
+    "export": {
+      "title": "데이터 내보내기",
+      "vocabCsv": "단어장 내보내기 (CSV)",
+      "vocabJson": "단어장 내보내기 (JSON)",
+      "knownWords": "아는 단어 내보내기",
+      "failed": "내보내지 못했어요: {message}",
+      "unknownError": "알 수 없는 오류",
+      "csvDone": "단어장을 CSV로 내보냈어요.",
+      "jsonDone": "단어장을 JSON으로 내보냈어요.",
+      "knownDone": "아는 단어 {count}개를 내보냈어요."
+    },
+    "data": {
+      "title": "학습 데이터",
+      "description": "컬렉션과 레슨, 읽은 위치, 단어장, 문장 연습과 복습 일정, 일기, 통계를 내려받아요. API 키와 제공자 엔드포인트는 포함되지 않아요.",
+      "export": "모든 학습 데이터 내보내기",
+      "import": "학습 데이터 가져오기",
+      "invalidFormat": "백업 파일 형식이 올바르지 않아요",
+      "importFailedShort": "가져오지 못했어요",
+      "imported": "학습 데이터를 가져왔어요",
+      "importedDetail": "컬렉션 {collections}개, 레슨 {lessons}개, 단어장 {vocab}개, 아는 단어 {knownWords}개, 빈칸 문장 {clozeSentences}개.",
+      "importFailed": "가져오지 못했어요: {message}",
+      "unknownError": "알 수 없는 오류"
+    },
+    "about": {
+      "title": "정보",
+      "commit": "커밋",
+      "built": "빌드",
+      "version": "버전"
+    }
+  }
+}

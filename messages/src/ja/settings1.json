@@ -1,0 +1,151 @@
+{
+  "settings": {
+    "pageTitle": "設定",
+    "practice": {
+      "title": "練習",
+      "clozeHeading": "穴埋めの設定",
+      "translationLabel": "翻訳",
+      "translationHint": "練習中は、翻訳を最初は非表示にします。<keys></keys> でいつでも切り替えられます。",
+      "shown": "表示",
+      "hidden": "非表示",
+      "wordReviewHeading": "単語の復習",
+      "reviewGoalLabel": "復習の目標",
+      "reviewGoalFailed": "復習の目標を保存できませんでした。もう一度お試しください。",
+      "reviewGoal": {
+        "recognize": "見て分かる",
+        "recognize_spell": "見て分かり、書ける"
+      },
+      "reviewGoalHint": {
+        "recognize": "単語を見て分かるようになる目標です。意味を選んで、単語を見分けます。",
+        "recognize_spell": "単語を書くことも目標にします。「慣れてきた」と「習得済み」の単語は、入力やディクテーションで出題されます。"
+      }
+    },
+    "prose": {
+      "title": "本文の表示",
+      "description": "リーダーでレッスンをどう表示するかの設定です。まず「すべての言語」で好みに設定し、文字の種類によって調整が必要な言語だけ個別に補正してください。この設定はこの端末にだけ保存されます。",
+      "allLanguages": "すべての言語",
+      "hasOwnSettings": "は個別の設定があります",
+      "customisedNotice": "{language}には個別の設定があります。変更していない項目は、引き続き「すべての言語」の設定に従います。",
+      "inheritedNotice": "{language}は「すべての言語」の設定に従っています。スライダーを動かして保存すると、項目ごとに補正できます。",
+      "setFor": "· {language}用に設定",
+      "save": "保存",
+      "resetDefaults": "初期設定に戻す",
+      "resetLanguage": "{language}をリセット",
+      "statusUnsaved": "上のサンプルには変更が反映されています。保存すると、リーダーにも適用されます。",
+      "statusDefaults": "初期設定は、文字サイズ {fontSize}px、太さ {fontWeight}、字間 0、行間 {lineHeight} です。",
+      "statusResetLanguage": "リセットすると、{language}は再び「すべての言語」の設定に従います。",
+      "controls": {
+        "fontSize": {
+          "label": "文字サイズ",
+          "hint": "レッスンの本文の大きさです。"
+        },
+        "fontWeight": {
+          "label": "文字の太さ",
+          "hint": "各単語の見た目の太さです。"
+        },
+        "letterSpacing": {
+          "label": "字間",
+          "hint": "文字と文字の間隔です。マイナスの値にすると詰まります。"
+        },
+        "lineHeight": {
+          "label": "行間",
+          "hint": "行と行の間隔です。文字サイズに対する倍率で指定します。"
+        }
+      }
+    },
+    "theme": {
+      "title": "外観",
+      "label": "テーマ",
+      "options": {
+        "light": "ライト",
+        "dark": "ダーク",
+        "system": "システム"
+      }
+    },
+    "tts": {
+      "title": "音声読み上げ",
+      "noAudioNote": "{language}には合成音声がありません。発音について見解が分かれているため、Readfox は音声を出しません。",
+      "synthesizedVoice": "合成音声",
+      "browserVoiceFree": "ブラウザの音声 · 無料",
+      "managedAvailable": "マネージド音声を利用できます",
+      "usingBrowser": "ブラウザの音声を使用中",
+      "espeakNote": "{language}は、Readfox がホストする合成音声 eSpeak NG で読み上げます。{language}に対応する音声合成エンジンはこれしかありません。機械的な声ですが、すべての単語を正確に発音でき、全プランに含まれています。",
+      "voiceEngine": "音声エンジン",
+      "engineHintFree": "ブラウザの音声は、読書、練習、ディクテーションで全プランが無料で使えます。",
+      "engineHintPaid": "マネージド音声は発音がより安定します。ブラウザの音声もいつでも使えます。",
+      "managedVoice": "マネージド音声",
+      "browserBuiltIn": "ブラウザ内蔵",
+      "upsell": "Readfox は、全プランでブラウザの音声を使って読み上げます。<link>プランを見る</link>",
+      "testVoice": "音声をテスト",
+      "speechSpeed": "読み上げ速度",
+      "slow": "0.5x（遅い）",
+      "normal": "1.0x",
+      "fast": "1.5x（速い）"
+    },
+    "timezone": {
+      "title": "タイムゾーン",
+      "description": "日ごとの統計、連続日数、復習日は、このタイムゾーンの 0 時で切り替わります。",
+      "auto": "自動 — サーバーのタイムゾーン",
+      "useDevice": "この端末のタイムゾーンを使う（{zone}）",
+      "updated": "タイムゾーンを {zone} に変更しました",
+      "failed": "タイムゾーンを変更できませんでした"
+    },
+    "languages": {
+      "title": "言語",
+      "description": "言語の選択肢には、ここにある言語が表示されます。言語を削除すると、リストを短くできます。その言語の単語、テキスト、カードはサーバーに残ります。",
+      "inUse": "使用中",
+      "remove": "{language}を削除",
+      "added": "{language}を追加しました",
+      "removed": "{language}を削除しました",
+      "saveFailed": "言語を保存できませんでした",
+      "addPlaceholder": "言語を追加…",
+      "add": "追加"
+    },
+    "knownWords": {
+      "title": "覚えた単語を取り込む",
+      "description": "すでに知っている単語を取り込みます。<strong>LingQ のエクスポート</strong>（ステータスと翻訳つき）または単純な単語リストに対応しています。",
+      "lingqHelp": "LingQ：Vocabulary → 設定の歯車 → Export LingQs → CSV をここにアップロード",
+      "uploadLabel": "CSV ファイルをアップロード",
+      "uploadHint": "1 列目に単語が入った CSV、またはプレーンテキストのファイル",
+      "pasteLabel": "または単語を貼り付け（1 行に 1 語）",
+      "import": "取り込む",
+      "noWords": "取り込む単語がありません。",
+      "imported": "{count} 語を覚えたとして取り込みました。",
+      "importFailed": "覚えた単語を取り込めませんでした",
+      "noData": "ファイルにデータがありません。",
+      "noTermColumn": "LingQ のエクスポートに「term」列が見つかりませんでした。",
+      "lingqImported": "LingQ から {count} 語を取り込みました（覚えた {known} 語、学習中 {learning} 語）。",
+      "fileError": "ファイルの取り込みでエラーが発生しました：{message}",
+      "unknownError": "不明なエラー"
+    },
+    "export": {
+      "title": "データを書き出す",
+      "vocabCsv": "単語帳を書き出す（CSV）",
+      "vocabJson": "単語帳を書き出す（JSON）",
+      "knownWords": "覚えた単語を書き出す",
+      "failed": "書き出しに失敗しました：{message}",
+      "unknownError": "不明なエラー",
+      "csvDone": "単語帳を CSV で書き出しました。",
+      "jsonDone": "単語帳を JSON で書き出しました。",
+      "knownDone": "覚えた単語 {count} 語を書き出しました。"
+    },
+    "data": {
+      "title": "学習データ",
+      "description": "コレクションとレッスン、読書位置、単語帳、文の練習と復習スケジュール、日記、統計をダウンロードできます。API キーとプロバイダーのエンドポイントは含まれません。",
+      "export": "すべての学習データを書き出す",
+      "import": "学習データを取り込む",
+      "invalidFormat": "バックアップファイルの形式が正しくありません",
+      "importFailedShort": "取り込みに失敗しました",
+      "imported": "学習データを取り込みました",
+      "importedDetail": "コレクション {collections} 件、レッスン {lessons} 件、単語帳 {vocab} 語、覚えた単語 {knownWords} 語、穴埋め文 {clozeSentences} 件。",
+      "importFailed": "取り込みに失敗しました：{message}",
+      "unknownError": "不明なエラー"
+    },
+    "about": {
+      "title": "概要",
+      "commit": "コミット",
+      "built": "ビルド日時",
+      "version": "バージョン"
+    }
+  }
+}

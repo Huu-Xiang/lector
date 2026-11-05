@@ -9,8 +9,8 @@ describe('displayLanguage', () => {
   });
 
   it('keeps a translation language the interface does not offer', () => {
-    expect(displayLanguage('ja', 'en')).toBe('ja');
-    expect(displayLanguage('ja', 'zh-CN')).toBe('ja');
+    expect(displayLanguage('ja', 'ko')).toBe('ko');
     expect(displayLanguage('zh-TW', 'zh-CN')).toBe('zh-TW');
+    expect(displayLanguage('de', 'ja')).toBe('de');
   });
 });

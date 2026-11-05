@@ -1,0 +1,33 @@
+{
+  "feedback": {
+    "nav": "피드백",
+    "title": "피드백",
+    "intro": "불편한 점이나 바라는 기능을 알려 주세요. 모든 메시지를 읽고 있어요.",
+    "messageLabel": "메시지",
+    "placeholder": "문제나 아이디어를 적어 주세요. 스크린샷을 붙여넣을 수도 있어요.",
+    "counter": "{count} / {max}",
+    "addImage": "이미지 추가",
+    "removeImage": "이미지 {name} 삭제",
+    "imagesHint": "이미지는 최대 {count}장, 장당 {size}MB까지 가능해요. PNG, JPEG, WebP, GIF를 지원해요.",
+    "replyTo": "{email}(으)로 답변드릴게요.",
+    "send": "보내기",
+    "sending": "보내는 중…",
+    "successTitle": "감사합니다, 잘 받았어요. 이메일로 답변드릴게요.",
+    "sendAnother": "다른 메시지 보내기",
+    "errors": {
+      "empty": "먼저 메시지를 입력해 주세요.",
+      "tooLong": "메시지가 너무 길어요.",
+      "tooManyImages": "이미지는 최대 {count}장까지 추가할 수 있어요.",
+      "imageTooLarge": "{size}MB보다 큰 이미지가 있어요.",
+      "imageType": "PNG, JPEG, WebP, GIF 이미지를 사용해 주세요.",
+      "tooLarge": "메시지와 이미지의 용량이 너무 커요.",
+      "rateLimited": "메시지를 너무 많이 보냈어요. 나중에 다시 시도해 주세요.",
+      "failed": "메시지를 보내지 못했어요. 나중에 다시 시도해 주세요."
+    },
+    "wechat": {
+      "summary": "WeChat이 편하신가요?",
+      "body": "질문, 기능 아이디어, 잘못된 뜻풀이가 있나요? QR 코드를 스캔해 WeChat으로 저를 추가해 주세요. 제가 Readfox를 만들고 있어요. 친구 요청에 \"Readfox\"라고 적어 주세요.",
+      "alt": "Readfox 제작자의 WeChat QR 코드"
+    }
+  }
+}

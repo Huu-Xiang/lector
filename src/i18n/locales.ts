@@ -8,6 +8,8 @@ export interface UiLocale {
 export const UI_LOCALES: readonly UiLocale[] = [
   { code: 'en', native: 'English' },
   { code: 'zh-CN', native: '简体中文' },
+  { code: 'ja', native: '日本語' },
+  { code: 'ko', native: '한국어' },
 ];
 
 export const DEFAULT_LOCALE = 'en';

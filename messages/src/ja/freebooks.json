@@ -1,0 +1,159 @@
+{
+  "library": {
+    "freeBooks": {
+      "button": "無料の本",
+      "title": "無料の本",
+      "close": "閉じる",
+      "intro": "{language}のパブリックドメインの本を、やさしい順に並べています。追加すると、ライブラリにコピーされます。レベルはおおよその目安です。",
+      "loading": "読み込み中…",
+      "errLoad": "無料の本を読み込めませんでした。",
+      "none": "{language}の無料の本はまだありません。",
+      "size": "{words} 語・{lessons} レッスン",
+      "add": "追加",
+      "adding": "追加中…",
+      "addedLabel": "追加済み",
+      "added": "「{title}」をライブラリに追加しました",
+      "errAdd": "本を追加できませんでした",
+      "tab": {
+        "books": "本",
+        "news": "ニュース",
+        "travel": "旅行",
+        "science": "科学"
+      },
+      "feedIntro": "{language}の最新の{interest}記事です。追加すると、出典つきでライブラリにコピーされます。",
+      "feedLoading": "読み込み中…",
+      "feedErrLoad": "記事を読み込めませんでした。",
+      "feedNone": "記事はまだありません。またのぞいてください。",
+      "feedSize": "{words} 語",
+      "feedAdd": "追加",
+      "feedAdding": "追加中…",
+      "feedAddedLabel": "追加済み",
+      "feedAdded": "「{title}」をライブラリに追加しました",
+      "feedErrAdd": "記事を追加できませんでした",
+      "feedSource": "出典：{source} · {license}",
+      "search": "タイトルまたは著者で検索",
+      "sortLabel": "本の並べ替え",
+      "sortDefault": "おすすめ順",
+      "sortShort": "短い順",
+      "sortLong": "長い順",
+      "noMatch": "「{query}」に一致する本はありません。",
+      "readingHours": "約 {hours} 時間",
+      "readingMinutes": "約 {minutes} 分"
+    },
+    "empty": {
+      "browseBooks": "無料の本を見る"
+    }
+  },
+  "readingLevel": {
+    "names": {
+      "A1": "入門",
+      "A2": "初級",
+      "B1": "中級",
+      "B2": "中上級",
+      "C1": "上級",
+      "C2": "最上級"
+    },
+    "exam": {
+      "ielts": "IELTS {score}",
+      "toefl": "TOEFL iBT {score}",
+      "delf": "DELF {score}",
+      "dalf": "DALF {score}",
+      "hsk": "HSK {score}",
+      "topik": "TOPIK {score}",
+      "juniorHigh": "中学校",
+      "zhongkao": "Zhongkao",
+      "gaokao": "Gaokao",
+      "cet4": "CET-4",
+      "cet6": "CET-6",
+      "tem8": "TEM-8"
+    },
+    "approx": "試験との対応は参考です。",
+    "notSure": "わからない",
+    "all": "すべてのレベル",
+    "yours": "あなたのレベル",
+    "original": "原題：{title}"
+  },
+  "recommend": {
+    "booksTitle": "あなたのレベルの本",
+    "articlesTitle": "おすすめの最新記事",
+    "interest": {
+      "news": "ニュース",
+      "travel": "旅行",
+      "science": "科学"
+    },
+    "original": "原題：{title}",
+    "words": "{words} 語",
+    "harder": "あなたのレベルより少し難しめ",
+    "start": "読み始める",
+    "starting": "開いています…",
+    "loading": "おすすめを探しています…",
+    "errStart": "これを開けませんでした。別のものをお試しください。",
+    "empty": "まだおすすめはありません。無料の本を見てみましょう。",
+    "homeTitle": "あなたにおすすめ",
+    "homeHint": "最初に読む無料の本と記事です。",
+    "homeHintLevel": "あなたのレベル（{level}）に合わせています。",
+    "more": "無料の本をもっと見る",
+    "collapse": "このセクションを閉じる",
+    "expand": "このセクションを開く"
+  },
+  "bookLink": {
+    "view": "{site}で見る",
+    "site": {
+      "douban": "Douban",
+      "goodreads": "Goodreads",
+      "babelio": "Babelio",
+      "booklog": "Booklog",
+      "aladin": "Aladin"
+    }
+  },
+  "newLanguage": {
+    "title": "{language}を始める",
+    "intro": "{language}のレベルと読みたいものを教えてください。最初の1冊をご提案します。使い方はもうおわかりなので、1 分で終わります。",
+    "submit": "おすすめを表示",
+    "later": "今はしない",
+    "close": "閉じる",
+    "pickIntro": "1つ選んで読み始めましょう。"
+  },
+  "descriptions": {
+    "toggle": "説明を表示"
+  },
+  "publicBooks": {
+    "indexTitle": "学んでいる言語の無料の本",
+    "indexMetaDescription": "英語、フランス語、スペイン語、中国語、韓国語の名作 {count} 冊を、A1 から C2 のレベル順に掲載。Readfox で無料で読めて、単語をタップすれば意味がわかります。",
+    "indexIntro": "ここにある本はすべてパブリックドメインの全文で、CEFR レベル順に並んでいます。気になる本を開いて冒頭を見てから、Readfox で無料で読みましょう。単語をタップすると、あなたの言語で意味が表示されます。",
+    "bookCount": "{count} 冊",
+    "level": "レベル {level}",
+    "byAuthor": "著者：{author}",
+    "readingHours": "読了の目安：約 {hours} 時間",
+    "readingMinutes": "読了の目安：約 {minutes} 分",
+    "lessons": "{count} レッスン",
+    "opening": "第 1 章のプレビュー",
+    "readFree": "Readfox で無料で読む",
+    "ctaNote": "単語をタップすると、あなたの言語で意味が表示されます。新しい単語を保存して、あとで復習できます。",
+    "source": "出典：<link>{source}</link>。{license}。",
+    "moreAtLevel": "レベル {level} の{language}の本をもっと見る",
+    "allBooks": "すべての無料の本",
+    "metaTitle": "{author}『{title}』を{language}で無料で読む | Readfox",
+    "readWholeChapter": "第 1 章を最後まで読む",
+    "tryRead": "第 1 章を無料で読む（登録不要）",
+    "hardWordsTitle": "この本の難しい単語",
+    "hardWordsNote": "この本によく出てくる単語のうち、日常の{language}ではまれな {count} 語です。Readfox のリーダーで単語をタップすると、意味が表示されます。",
+    "chapterTitle": "{title}：第 1 章",
+    "readMetaTitle": "『{title}』第 1 章を{language}で無料で読む | Readfox",
+    "readMetaDescription": "{author}『{title}』の第 1 章を、アカウントなしで無料で読めます。レベル {level}。",
+    "continueTitle": "気に入りましたか？続きを読む",
+    "continueBody": "無料で登録すると、全 {count} レッスンを読めます。単語をタップするとあなたの言語で意味が表示され、新しい単語は保存して復習できます。",
+    "continueCta": "無料で登録して続きを読む",
+    "backToBook": "この本について",
+    "levelTitle": "レベル {level} の{language}の本",
+    "levelIntro": "CEFR レベル {level} の無料の{language}の本が {count} 冊あります。どれもパブリックドメインの全文です。",
+    "levelMetaDescription": "CEFR レベル {level} の無料の{language}の本：{titles}。Readfox で読めて、単語をタップすれば意味がわかります。",
+    "authorsTitle": "著者別の{language}の本",
+    "authorsMetaDescription": "Readfox の無料の{language}の本の著者 {count} 人を、{first} から {last} まで一覧で見られます。",
+    "authorTitle": "{author}：無料の{language}の本",
+    "authorIntro": "{author}の本 {count} 冊を、Readfox で無料で読めます。どれもパブリックドメインの全文です。",
+    "authorMetaDescription": "{author}の本 {count} 冊を{language}で無料で読めます：{titles}。",
+    "browseLevels": "レベル別",
+    "browseAuthors": "著者別"
+  }
+}
