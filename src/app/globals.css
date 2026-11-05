@@ -582,7 +582,9 @@ html {
 /* Reader phrase drag. The touch gesture paints the run under the finger before
    it commits, so this must match the highlight WordCell draws inline. */
 [data-phrase-dragging] {
-  background-color: color-mix(in srgb, var(--clay) 22%, transparent);
+  background-color: color-mix(in srgb, var(--clay) 45%, transparent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--clay) 70%, transparent);
+  border-radius: 3px;
 }
 
 /* Native text selection inside the reader matches the phrase highlight, so a
@@ -599,6 +601,12 @@ html {
      callout as well. */
   [data-word-state] {
     -webkit-touch-callout: none;
+  }
+
+  /* iOS starts its own selection during the drag and scrolls the page with it. */
+  .reader-text {
+    -webkit-user-select: none;
+    user-select: none;
   }
 }
 

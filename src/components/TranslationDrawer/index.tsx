@@ -226,7 +226,7 @@ export default function TranslationDrawer({
                     className={clsx(
                       'font-semibold break-words text-foreground',
                       longTitle
-                        ? 'line-clamp-2 text-base lg:line-clamp-none lg:text-xl'
+                        ? 'line-clamp-1 min-w-0 flex-1 text-sm lg:line-clamp-none lg:text-xl'
                         : 'text-xl',
                     )}
                     title={longTitle ? word : undefined}
@@ -236,7 +236,7 @@ export default function TranslationDrawer({
                   {speakable && (
                     <button
                       onClick={handleSpeakWord}
-                      className="rounded p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                      className="flex-shrink-0 rounded p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
                       title={t('hearPronunciation')}
                       aria-label={t('hearPronunciation')}
                     >
@@ -278,7 +278,12 @@ export default function TranslationDrawer({
                 )}
                 <div className="mt-2 flex flex-wrap items-center gap-2">
                   <span
-                    className={`inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium ${stateColors.bg} ${stateColors.text}`}
+                    className={clsx(
+                      'inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium',
+                      stateColors.bg,
+                      stateColors.text,
+                      longTitle && 'max-lg:hidden',
+                    )}
                   >
                     <span className={`h-1.5 w-1.5 rounded-full ${stateColors.dot}`} />
                     {t(`state.${currentState}`)}
