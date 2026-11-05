@@ -1,6 +1,6 @@
 'use client';
 
-import { X } from 'lucide-react';
+import { SlidersHorizontal, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useFormatter, useLocale, useTranslations } from 'next-intl';
 import { toast } from 'sonner';
@@ -51,6 +51,7 @@ const FEED_LANGUAGES = new Set(['en', 'fr']);
 
 type TabId = 'books' | FeedInterest;
 type BookSort = 'default' | 'short' | 'long';
+const FILTERS_OPEN_KEY = 'readfox-free-books-filters-open';
 
 function sumCounts(counts: Record<LibraryCategory, number>): number {
   return Object.values(counts).reduce((a, b) => a + b, 0);
@@ -80,6 +81,26 @@ export default function FreeBooksModal({
   const [tab, setTab] = useState<TabId>('books');
   const [query, setQuery] = useState('');
   const [sort, setSort] = useState<BookSort>('default');
+  const [filtersOpen, setFiltersOpen] = useState(false);
+
+  useEffect(() => {
+    try {
+      setFiltersOpen(localStorage.getItem(FILTERS_OPEN_KEY) === '1');
+    } catch {
+      // storage unavailable: keep the filters folded
+    }
+  }, []);
+
+  function toggleFilters() {
+    setFiltersOpen((open) => {
+      try {
+        localStorage.setItem(FILTERS_OPEN_KEY, open ? '0' : '1');
+      } catch {
+        // storage unavailable: the choice lasts until the dialog closes
+      }
+      return !open;
+    });
+  }
   const [category, setCategory] = useState<LibraryCategory | 'all'>('all');
   const [feed, setFeed] = useState<ReadingFeedArticle[] | null>(null);
   const [feedFailed, setFeedFailed] = useState(false);
@@ -202,6 +223,8 @@ export default function FreeBooksModal({
   const activeCategory = category !== 'all' && counts[category] > 0 ? category : 'all';
   const levelsInCategory = levelsWithBooks(allBooks, activeCategory);
   const current = levelFilter !== 'all' && levelsInCategory.has(levelFilter) ? levelFilter : 'all';
+  const activeFilters =
+    (!searching && current !== 'all' ? 1 : 0) + (activeCategory !== 'all' ? 1 : 0);
   const matching = allBooks.filter((book) =>
     matchesFilters(book, { query, level: searching ? 'all' : current, category: activeCategory }),
   );
@@ -298,6 +321,21 @@ export default function FreeBooksModal({
                   <option value="short">{t('sortShort')}</option>
                   <option value="long">{t('sortLong')}</option>
                 </Select>
+                <Button
+                  type="button"
+                  variant={filtersOpen ? 'secondary' : 'outline'}
+                  onClick={toggleFilters}
+                  aria-expanded={filtersOpen}
+                  data-testid="free-books-filters-toggle"
+                >
+                  <SlidersHorizontal className="h-4 w-4" aria-hidden="true" />
+                  {t('filters')}
+                  {activeFilters > 0 && (
+                    <span className="rounded-full bg-primary px-1.5 text-xs text-primary-foreground">
+                      {activeFilters}
+                    </span>
+                  )}
+                </Button>
               </div>
             )}
             {shownLevels.length === 0 && allBooks.length > 0 && (
@@ -305,7 +343,7 @@ export default function FreeBooksModal({
                 {searching ? t('noMatch', { query: query.trim() }) : t('noMatchFilters')}
               </p>
             )}
-            {levels.length > 0 && !searching && (
+            {filtersOpen && levels.length > 0 && !searching && (
               <div
                 className="-mx-6 mb-4 flex gap-2 overflow-x-auto px-6 pb-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0"
                 data-testid="free-books-levels"
@@ -332,7 +370,7 @@ export default function FreeBooksModal({
                 ))}
               </div>
             )}
-            {presentCategories.length > 1 && (
+            {filtersOpen && presentCategories.length > 1 && (
               <div
                 className="mb-4 flex flex-wrap gap-2"
                 role="group"

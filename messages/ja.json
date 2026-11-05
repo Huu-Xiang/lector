@@ -1004,7 +1004,8 @@
         "nonfiction": "エッセイ・伝記",
         "reader": "入門読本"
       },
-      "categoryAll": "すべて"
+      "categoryAll": "すべて",
+      "filters": "絞り込み"
     },
     "empty": {
       "browseBooks": "無料の本を見る",

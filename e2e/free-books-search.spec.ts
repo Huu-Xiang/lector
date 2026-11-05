@@ -10,6 +10,12 @@ async function openEnglishFreeBooks(page: Page) {
   await expect(page.getByTestId('free-books-search')).toBeVisible();
 }
 
+async function openFilters(page: Page) {
+  const toggle = page.getByTestId('free-books-filters-toggle');
+  if ((await toggle.getAttribute('aria-expanded')) !== 'true') await toggle.click();
+  await expect(page.getByTestId('free-books-levels')).toBeVisible();
+}
+
 test.describe('Free books dialog search and sort', () => {
   test.beforeEach(async ({ page }) => {
     await page.request.put(apiUrl('/api/settings/nativeLanguage'), { data: { value: 'fr' } });
@@ -37,6 +43,8 @@ test.describe('Free books dialog search and sort', () => {
     await openEnglishFreeBooks(page);
     const list = page.getByTestId('free-books-list');
 
+    await expect(page.getByTestId('free-books-categories')).toHaveCount(0);
+    await openFilters(page);
     await page.getByTestId('free-books-level-all').click();
     await page.getByTestId('free-books-category-philosophy').click();
     await expect(list.getByTestId('free-book-apology')).toBeVisible();
@@ -54,6 +62,7 @@ test.describe('Free books dialog search and sort', () => {
 
   test('shortest first puts the shortest book of a level at the top', async ({ page }) => {
     await openEnglishFreeBooks(page);
+    await openFilters(page);
     await page.getByTestId('free-books-level-C2').click();
     await page.getByTestId('free-books-sort').selectOption('short');
 

@@ -51,7 +51,8 @@
         "nonfiction": "Essays & memoir",
         "reader": "Beginner readers"
       },
-      "categoryAll": "All"
+      "categoryAll": "All",
+      "filters": "Filters"
     },
     "empty": {
       "browseBooks": "Browse free books"

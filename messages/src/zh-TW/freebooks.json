@@ -51,7 +51,8 @@
         "nonfiction": "隨筆與傳記",
         "reader": "入門讀本"
       },
-      "categoryAll": "全部"
+      "categoryAll": "全部",
+      "filters": "篩選"
     },
     "empty": {
       "browseBooks": "瀏覽免費書籍"

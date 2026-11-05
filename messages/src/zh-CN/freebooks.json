@@ -51,7 +51,8 @@
         "nonfiction": "随笔与传记",
         "reader": "入门读本"
       },
-      "categoryAll": "全部"
+      "categoryAll": "全部",
+      "filters": "筛选"
     },
     "empty": {
       "browseBooks": "浏览免费书籍"

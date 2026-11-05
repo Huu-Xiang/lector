@@ -51,7 +51,8 @@
         "nonfiction": "수필·전기",
         "reader": "입문 독본"
       },
-      "categoryAll": "전체"
+      "categoryAll": "전체",
+      "filters": "필터"
     },
     "empty": {
       "browseBooks": "무료 도서 둘러보기"
