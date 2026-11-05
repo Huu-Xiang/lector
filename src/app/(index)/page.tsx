@@ -59,9 +59,12 @@ import DailyGoalBadge from '@/components/DailyGoalBadge';
 import { getOnboardingSnapshot, type OnboardingSnapshot } from '@/lib/onboarding';
 import { toast } from 'sonner';
 import { useActiveLanguage } from '@/utils/hooks';
+import { useIsNativeApp } from '@/lib/native-app';
 
 export default function Home() {
   const t = useTranslations('library');
+  // The app keeps one prominent button in the header; Import holds it.
+  const inApp = useIsNativeApp();
   const router = useRouter();
   const activeLanguage = useActiveLanguage().code;
   const [libraryView] = useLibraryView();
@@ -452,7 +455,11 @@ export default function Home() {
               </Button>
             </form>
           ) : (
-            <Button onClick={() => setIsCreatingGroup(true)} data-testid="new-group-btn">
+            <Button
+              onClick={() => setIsCreatingGroup(true)}
+              variant={inApp ? 'outline' : 'default'}
+              data-testid="new-group-btn"
+            >
               <Folder size="16" />
               {t('page.newGroup')}
             </Button>

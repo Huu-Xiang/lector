@@ -875,6 +875,7 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
                 <Button
                   aria-label={t('format.cloze')}
                   onClick={() => handleSetPracticeFormat('cloze')}
+                  aria-pressed={practiceFormat === 'cloze'}
                   variant={practiceFormat === 'cloze' ? 'default' : 'secondary'}
                   className="flex h-14 flex-col justify-center gap-0"
                 >
@@ -887,6 +888,7 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
                   <Button
                     aria-label={t('format.dictation')}
                     onClick={() => handleSetPracticeFormat('dictation')}
+                    aria-pressed={practiceFormat === 'dictation'}
                     variant={practiceFormat === 'dictation' ? 'default' : 'secondary'}
                     className="flex h-14 flex-col justify-center gap-0"
                   >
@@ -959,6 +961,7 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
                       <Button
                         key={coll}
                         onClick={() => setSelectedCollection(coll)}
+                        aria-pressed={selectedCollection === coll}
                         variant={selectedCollection === coll ? 'default' : 'secondary'}
                         className="flex h-14 flex-col justify-center gap-0"
                       >
@@ -985,6 +988,7 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
                       <Button
                         key={size}
                         size="sm"
+                        aria-pressed={roundSize === size}
                         variant={roundSize === size ? 'default' : 'secondary'}
                         onClick={() => {
                           setOriginalRoundSize(size);
@@ -1006,12 +1010,14 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
                     <div className="flex gap-1.5">
                       <Button
                         onClick={() => handleSetPracticeMode('type')}
+                        aria-pressed={practiceMode === 'type'}
                         variant={practiceMode === 'type' ? 'default' : 'secondary'}
                       >
                         {t('setup.modeType')}
                       </Button>
                       <Button
                         onClick={() => handleSetPracticeMode('mc')}
+                        aria-pressed={practiceMode === 'mc'}
                         variant={practiceMode === 'mc' ? 'default' : 'secondary'}
                       >
                         {t('setup.modeMc')}

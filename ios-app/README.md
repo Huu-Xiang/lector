@@ -76,7 +76,8 @@ The app draws some of its interface natively, on top of the web page.
 - `MainViewController.swift` replaces Capacitor's root view controller (set in `Main.storyboard`). It registers the two plugins below and turns on the edge swipe back.
 - `NativeTabBarPlugin.swift` is a UITabBar over the bottom of the web view. The page sends the tabs and the selection (`src/components/NativeBridge/NativeTabBarSync.tsx`) and hides the bar in the reader, under a dialog or sheet, and at iPad widths, where the web sidebar shows. The plugin hides it while the keyboard is up. Built with the iOS 26 SDK, the bar takes the Liquid Glass look.
 - `ReviewWidgetPlugin.swift` saves the review counts the page sends into the App Group, and `ReviewWidget/` is a WidgetKit extension that shows them (small, medium, and two lock screen sizes). The widget opens `readfox://practice`. It needs iOS 17; the app itself still runs on iOS 14.
-- The web side marks the page with `data-native-app` before first paint (`src/app/layout.tsx`); `globals.css` then uses the system font, flat buttons, 44-point tap targets, and a short slide on page changes.
+- The web side marks the page with `data-native-app` before first paint (`src/app/layout.tsx`); `globals.css` then uses the system font at the iOS text size setting (Dynamic Type), flat buttons, tinted selected options, 44-point tap targets, and a short slide on page changes.
+- The tab bar has five tabs; Settings is the gear in the top bar. The top bar has no background at rest and shows the small title and a blur once the page scrolls, like an iOS 26 scroll edge.
 
 `scripts/add-native-ui.rb` added these files and the ReviewWidget target to the Xcode project; it does nothing when they are there. Run it with CocoaPods' Ruby, as for the share extension script.
 

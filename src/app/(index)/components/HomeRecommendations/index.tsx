@@ -73,8 +73,8 @@ export default function HomeRecommendations({
 
   return (
     <section className="panel mb-8 p-5" data-testid="home-recommend">
-      <div className={`flex items-start justify-between gap-3 ${expanded ? 'mb-4' : ''}`}>
-        <div>
+      <div className={`flex flex-wrap items-start justify-between gap-3 ${expanded ? 'mb-4' : ''}`}>
+        <div className="min-w-48 flex-1">
           <h2 className="flex items-center gap-2 text-lg font-semibold text-foreground">
             <Sparkles className="h-4 w-4 text-primary" aria-hidden="true" />
             {t('homeTitle')}

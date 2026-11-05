@@ -796,6 +796,50 @@ html[data-native-app] {
   --app-bottom-bar: calc(4rem + env(safe-area-inset-bottom));
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
+  /* The root size follows the iOS text size setting (17px at the default), so every rem
+     scales with it. The shorthand resets line-height, which Tailwind's base sets to 1.5. */
+  font: -apple-system-body;
+  line-height: 1.5;
+}
+
+/* A selected option is tinted, so solid green stays for the main action. */
+html[data-native-app] [data-slot='button'][aria-pressed='true'] {
+  background-color: var(--primary-soft);
+  color: var(--primary-text);
+  box-shadow: inset 0 0 0 1.5px var(--primary);
+}
+
+/* Like an iOS 26 scroll edge: nothing at rest; once content scrolls under the bar it is
+   blurred and fades out toward the bar's lower edge. */
+html[data-native-app] .native-topbar::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 -16px;
+  z-index: -1;
+  background: color-mix(in srgb, var(--background) 72%, transparent);
+  -webkit-backdrop-filter: blur(14px) saturate(1.5);
+  backdrop-filter: blur(14px) saturate(1.5);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 22px), transparent);
+  opacity: 0;
+  transition: opacity 200ms ease-out;
+}
+
+html[data-native-app] .native-topbar[data-scrolled]::before {
+  opacity: 1;
+}
+
+/* The compact controls in the top bar look small but take a 44 pt tap area. */
+html[data-native-app] .native-topbar :is(button, a) {
+  position: relative;
+}
+
+html[data-native-app] .native-topbar :is(button, a)::after {
+  content: '';
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: max(100%, 44px);
+  height: 44px;
+  translate: -50% -50%;
 }
 
 html[data-native-tabbar] {

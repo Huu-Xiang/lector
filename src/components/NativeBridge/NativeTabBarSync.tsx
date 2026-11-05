@@ -3,7 +3,6 @@
 import { useEffect, useState, useSyncExternalStore } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { navLinks } from '@/components/NavHeader/constants';
 import { isBareRoute } from '@/lib/auth-client';
 import {
   configureNativeTabBar,
@@ -12,7 +11,7 @@ import {
   selectNativeTab,
   setNativeTabBarVisible,
 } from '@/lib/native-app';
-import { coversTabBar, hasOwnHeader, TAB_ICONS } from './tab-bar';
+import { coversTabBar, hasOwnHeader, NATIVE_TABS, TAB_ICONS } from './tab-bar';
 
 /** Drives the shell's UITabBar from the web routes. Mounted only inside the app. */
 export default function NativeTabBarSync() {
@@ -22,8 +21,8 @@ export default function NativeTabBarSync() {
   const [ready] = useState(hasNativeTabBar);
   const [covered, setCovered] = useState(false);
   const wide = useWideScreen();
-  const titles = navLinks.map((link) => tNav(link.labelKey)).join('\n');
-  const selected = navLinks.some((link) => link.href === pathname) ? pathname : null;
+  const titles = NATIVE_TABS.map((link) => tNav(link.labelKey)).join('\n');
+  const selected = NATIVE_TABS.some((link) => link.href === pathname) ? pathname : null;
 
   useEffect(() => {
     if (!ready) return;
@@ -34,7 +33,7 @@ export default function NativeTabBarSync() {
   useEffect(() => {
     if (!ready) return;
     const names = titles.split('\n');
-    const tabs = navLinks.map((link, i) => ({
+    const tabs = NATIVE_TABS.map((link, i) => ({
       id: link.href,
       title: names[i],
       icon: TAB_ICONS[link.href],

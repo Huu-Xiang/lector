@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { navLinks } from '@/components/NavHeader/constants';
-import { coversTabBar, hasOwnHeader, TAB_ICONS } from './tab-bar';
+import { coversTabBar, hasOwnHeader, NATIVE_TABS, TAB_ICONS } from './tab-bar';
 
 function element(opts: { hiddenAncestor?: boolean; rendered?: boolean }) {
   return {
@@ -25,9 +24,11 @@ describe('coversTabBar', () => {
   });
 });
 
-describe('TAB_ICONS', () => {
-  it('has an icon for every tab', () => {
-    for (const link of navLinks) expect(TAB_ICONS[link.href]).toBeTruthy();
+describe('NATIVE_TABS', () => {
+  it('keeps five tabs, each with an icon, and leaves Settings to the top bar', () => {
+    expect(NATIVE_TABS).toHaveLength(5);
+    expect(NATIVE_TABS.map((link) => link.href as string)).not.toContain('/settings');
+    for (const link of NATIVE_TABS) expect(TAB_ICONS[link.href]).toBeTruthy();
   });
 });
 

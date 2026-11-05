@@ -1,11 +1,15 @@
-/** SF Symbols for each tab; keys match `navLinks`. */
+import { navLinks } from '@/components/NavHeader/constants';
+
+/** The app's tab bar keeps five tabs; Settings moves to the top bar. */
+export const NATIVE_TABS = navLinks.filter((link) => link.href !== '/settings');
+
+/** Filled SF Symbols for each tab, as the HIG prefers; keys match `navLinks`. */
 export const TAB_ICONS: Record<string, string> = {
-  '/': 'books.vertical',
-  '/practice': 'rectangle.stack',
+  '/': 'books.vertical.fill',
+  '/practice': 'rectangle.stack.fill',
   '/journal': 'square.and.pencil',
-  '/vocab': 'list.bullet',
-  '/stats': 'chart.bar',
-  '/settings': 'gearshape',
+  '/vocab': 'list.bullet.rectangle.fill',
+  '/stats': 'chart.bar.fill',
 };
 
 const COVER_SELECTOR = '[role="dialog"], [role="alertdialog"], [data-slot="dialog-content"]';
