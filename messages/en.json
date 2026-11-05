@@ -209,6 +209,7 @@
     "heroBody": "Readfox turns reading into learning. Tap any word for a translation, collect vocabulary as you go, and practise it with spaced repetition. Free to use.",
     "languagesNow": "Learn now:",
     "languagesSoon": "{count} more languages in development",
+    "languagesUi": "Interface: English / 简体中文 · Meanings and explanations: {count} languages (change it in Settings)",
     "createAccount": "Create a free account",
     "heroAlt": "Readfox: a fox resting on an open book",
     "howTitle": "How it works",

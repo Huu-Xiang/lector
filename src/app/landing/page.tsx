@@ -5,7 +5,7 @@ import { getLocale, getTranslations } from 'next-intl/server';
 import { BookOpen, Languages, Repeat, PenLine, Layers } from 'lucide-react';
 import LegalLinks from '@/components/LegalLinks';
 import WelcomeOfferNote from '@/components/WelcomeOfferNote';
-import { LANGUAGES } from '@/lib/languages';
+import { LANGUAGES, NATIVE_LANGUAGES } from '@/lib/languages';
 import { PUBLIC_BOOK_LANGUAGES } from '@/lib/public-books';
 import { LANDING_ROOT_ID } from '@/lib/api-base';
 
@@ -115,6 +115,9 @@ export default async function LandingPage() {
                 {t('languagesSoon', { count: soonCount })}
               </span>
             </div>
+            <p className="mt-2 text-xs text-muted-foreground">
+              {t('languagesUi', { count: NATIVE_LANGUAGES.length })}
+            </p>
             <div className="mt-5 max-w-md">
               <WelcomeOfferNote />
             </div>
