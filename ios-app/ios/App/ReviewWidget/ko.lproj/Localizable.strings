@@ -1,0 +1,10 @@
+"widget.due" = "장 복습 대기";
+"widget.ready" = "복습할 카드가 있어요";
+"widget.done" = "모두 복습했어요";
+"widget.next %@" = "다음 복습까지 %@";
+"widget.empty" = "Readfox를 열면 여기에 복습 수가 표시됩니다.";
+"widget.new %lld" = "새 단어 %lld개";
+"widget.start" = "복습하기";
+"widget.dueCount %lld" = "복습 %lld장";
+"widget.name" = "복습";
+"widget.description" = "오늘 복습할 단어.";

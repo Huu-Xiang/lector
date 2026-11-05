@@ -28,6 +28,7 @@ export default function OnboardingCoach({
       aria-label={t('ariaLabel')}
       aria-live="polite"
       data-testid={`onboarding-coach-${stage}`}
+      data-above-tabbar
       className="fixed right-3 bottom-20 left-3 z-40 rounded-2xl border border-[var(--gold-lip)] bg-card/95 p-4 shadow-xl backdrop-blur-sm sm:right-auto sm:bottom-5 sm:left-[15rem] sm:w-[25rem]"
     >
       <div className="flex items-start gap-3">

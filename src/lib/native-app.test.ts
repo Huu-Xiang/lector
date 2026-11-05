@@ -1,7 +1,14 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
+  configureNativeTabBar,
   detectNativeApp,
+  haptic,
+  hasNativeTabBar,
   hideSplash,
+  onNativeTabSelected,
+  selectNativeTab,
+  setNativeTabBarVisible,
+  updateReviewWidget,
   isNativeUserAgent,
   isPushAvailable,
   readPushPermission,
@@ -125,6 +132,62 @@ describe('native bridge wrappers', () => {
       () => true,
     );
     expect(await readNativeFile('offline.json')).toBeNull();
+  });
+
+  it('map haptic kinds to the plugin calls', async () => {
+    const impact = vi.fn(async () => {});
+    const notification = vi.fn(async () => {});
+    stubWindow({ Haptics: { impact, notification } }, () => true);
+    await haptic();
+    await haptic('success');
+    await haptic('error');
+    expect(impact).toHaveBeenCalledWith({ style: 'LIGHT' });
+    expect(notification).toHaveBeenNthCalledWith(1, { type: 'SUCCESS' });
+    expect(notification).toHaveBeenNthCalledWith(2, { type: 'ERROR' });
+  });
+
+  it('drive the native tab bar and report taps', async () => {
+    const handlers: Record<string, (event: unknown) => void> = {};
+    const tabBar = {
+      configure: vi.fn(async () => {}),
+      select: vi.fn(async () => {}),
+      hide: vi.fn(async () => {}),
+      addListener: vi.fn(async (event: string, handler: (event: unknown) => void) => {
+        handlers[event] = handler;
+        return { remove: async () => {} };
+      }),
+    };
+    stubWindow({ NativeTabBar: tabBar }, () => true);
+    expect(hasNativeTabBar()).toBe(true);
+    const tabs = [{ id: '/', title: 'Library', icon: 'books.vertical' }];
+    await configureNativeTabBar(tabs, '/');
+    await selectNativeTab(null);
+    await setNativeTabBarVisible(false);
+    expect(tabBar.configure).toHaveBeenCalledWith({ tabs, selected: '/' });
+    expect(tabBar.select).toHaveBeenCalledWith({ selected: null });
+    expect(tabBar.hide).toHaveBeenCalledTimes(1);
+
+    const open = vi.fn();
+    onNativeTabSelected(open);
+    await Promise.resolve();
+    handlers.tabSelected({ id: '/practice' });
+    handlers.tabSelected({ id: 7 });
+    expect(open).toHaveBeenCalledTimes(1);
+    expect(open).toHaveBeenCalledWith('/practice');
+  });
+
+  it('report no native tab bar when the shell lacks it', () => {
+    stubWindow({}, () => false);
+    expect(hasNativeTabBar()).toBe(false);
+  });
+
+  it('send review counts to the widget, or clear it', async () => {
+    const update = vi.fn(async () => {});
+    stubWindow({ ReviewWidget: { update } }, () => true);
+    await updateReviewWidget({ dueNow: 3, newAvailable: 5, nextDue: null });
+    await updateReviewWidget(null);
+    expect(update).toHaveBeenNthCalledWith(1, { dueNow: 3, newAvailable: 5, nextDue: null });
+    expect(update).toHaveBeenNthCalledWith(2, { clear: true });
   });
 
   describe('push notifications', () => {

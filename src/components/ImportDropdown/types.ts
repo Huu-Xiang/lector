@@ -13,6 +13,8 @@ export interface ImportDropdownProps {
   onYouTubeImport: () => void;
   onPasteImport: () => void;
   minimalOnMobile?: boolean;
+  /** On phones the button wraps to the row start, so the menu opens to the right of it. */
+  alignStartOnMobile?: boolean;
   disabled?: boolean;
   isImporting?: boolean;
   /** Trigger label. Defaults to the translated "Import". */

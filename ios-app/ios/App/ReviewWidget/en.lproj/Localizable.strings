@@ -1,0 +1,10 @@
+"widget.due" = "to review";
+"widget.ready" = "Cards are due";
+"widget.done" = "All caught up";
+"widget.next %@" = "Next in %@";
+"widget.empty" = "Open Readfox to show your reviews here.";
+"widget.new %lld" = "%lld new words";
+"widget.start" = "Review";
+"widget.dueCount %lld" = "%lld cards to review";
+"widget.name" = "Review";
+"widget.description" = "Words due for review today.";

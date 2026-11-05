@@ -16,6 +16,7 @@ import NavHeader from '@/components/NavHeader';
 import PlanLimitPrompt from '@/components/PlanLimitPrompt';
 import AiDataNotice from '@/components/AiDataNotice';
 import NativeBridge from '@/components/NativeBridge';
+import NativePageTransition from '@/components/NativeBridge/NativePageTransition';
 import { isRtl } from '@/i18n/locales';
 
 // Nunito is the UI/chrome font; Literata stays the reading body (issue #147 §2.1).
@@ -78,6 +79,11 @@ export default async function RootLayout({
         <Script id="lector-theme-init" strategy="beforeInteractive">
           {`(function(){if(!localStorage.getItem('lector-migrated')){var m={'afrikaans-reader-api-key':'lector-api-key','afrikaans-reader-google-api-key':'lector-google-api-key','afrikaans-reader-anki-deck':'lector-anki-deck','afrikaans-reader-anki-cloze-deck':'lector-anki-cloze-deck','afrikaans-reader-card-type':'lector-card-type','afrikaans-reader-tts-speed':'lector-tts-speed','afrikaans-reader-theme':'lector-theme','afrikaans-reader-tts-voice':'lector-tts-voice','afrikaans-reader-tts-mode':'lector-tts-mode'};for(var k in m){var v=localStorage.getItem(k);if(v!==null){localStorage.setItem(m[k],v);localStorage.removeItem(k)}}localStorage.setItem('lector-migrated','1')}var t=localStorage.getItem('theme')||'system';var d=t==='dark'||(t==='system'&&window.matchMedia('(prefers-color-scheme:dark)').matches);if(d)document.documentElement.classList.add('dark')})()`}
         </Script>
+        {/* Marks the iPhone app before paint so the native styles apply without a flash.
+            The shell's bridge is injected at document start, so the plugin check works here. */}
+        <Script id="readfox-native-init" strategy="beforeInteractive">
+          {`(function(){var c=window.Capacitor;if(navigator.userAgent.indexOf('ReadfoxApp/')<0&&!(c&&c.isNativePlatform&&c.isNativePlatform()))return;var r=document.documentElement;r.setAttribute('data-native-app','');if(c&&c.isPluginAvailable&&c.isPluginAvailable('NativeTabBar'))r.setAttribute('data-native-tabbar','')})()`}
+        </Script>
         {/* Chrome fires beforeinstallprompt once, often before Settings mounts;
             src/lib/pwa.ts reads the saved event. */}
         <Script id="readfox-install-prompt" strategy="beforeInteractive">
@@ -103,7 +109,9 @@ export default async function RootLayout({
             <AuthGuard>
               <BillingGuard>
                 <TimezoneSync />
-                <SetupGuard>{children}</SetupGuard>
+                <SetupGuard>
+                  <NativePageTransition>{children}</NativePageTransition>
+                </SetupGuard>
               </BillingGuard>
             </AuthGuard>
           </div>
@@ -115,7 +123,7 @@ export default async function RootLayout({
           <AiDataNotice />
           <NativeBridge />
           {/* Spacer for mobile bottom nav — invisible on sm+ */}
-          <div className="h-16 sm:hidden print:hidden" aria-hidden="true" />
+          <div className="app-bottom-spacer h-16 sm:hidden print:hidden" aria-hidden="true" />
           {/* Move Sonner's focus hotkey off its Alt+T default — Alt+T toggles the
             translation on the Practice page. */}
           <Toaster theme="system" duration={5000} hotkey={['altKey', 'KeyN']} />

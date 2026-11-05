@@ -57,6 +57,7 @@ export default function NavLink({
           body={tourTip.body}
           onDismiss={tourTip.onDismiss}
           testId={`${tourTip.testId}-${isMobile ? 'mobile' : 'desktop'}`}
+          aboveTabBar={isMobile}
           className={
             isMobile
               ? 'fixed right-3 bottom-20 left-3 block w-auto sm:hidden'

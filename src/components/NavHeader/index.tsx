@@ -18,6 +18,7 @@ import { navLinks } from './constants';
 import NavLink from './components/NavLink';
 import AppName from './components/AppName';
 import AccountMenu from './components/AccountMenu';
+import NativeTopBar from './components/NativeTopBar';
 import AdminNavLink from './components/AdminNavLink';
 import UpgradeLink from './components/UpgradeLink';
 import FeedbackNavLink from './components/FeedbackNavLink';
@@ -65,7 +66,8 @@ export default function NavHeader() {
       <PendingInvite />
       <NewLanguagePrompt />
       {/* Mobile top bar — language selector, visible only on mobile */}
-      <div className="flex h-[var(--mobile-topbar-h)] items-center justify-between border-b border-border bg-card/80 px-3 py-2 backdrop-blur-sm sm:hidden print:hidden">
+      <NativeTopBar />
+      <div className="web-topbar flex h-[var(--mobile-topbar-h)] items-center justify-between border-b border-border bg-card/80 px-3 py-2 backdrop-blur-sm sm:hidden print:hidden">
         <AppName />
         <div className="flex items-center gap-1">
           <UpgradeLink />

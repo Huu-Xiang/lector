@@ -1,0 +1,10 @@
+"widget.due" = "枚の復習";
+"widget.ready" = "復習の時間です";
+"widget.done" = "復習完了";
+"widget.next %@" = "次の復習まで %@";
+"widget.empty" = "Readfox を開くと、ここに復習数が表示されます。";
+"widget.new %lld" = "新しい単語 %lld 個";
+"widget.start" = "復習する";
+"widget.dueCount %lld" = "復習 %lld 枚";
+"widget.name" = "復習";
+"widget.description" = "今日復習する単語。";

@@ -6,13 +6,17 @@ import {
   hideSplash,
   isNativeApp,
   saveNativeLocale,
+  setNativeAppearance,
   setStatusBarForTheme,
   useIsNativeApp,
 } from '@/lib/native-app';
 import { useLectorMode } from '@/lib/use-env';
 import { listenForAppLinks, listenForNotificationTaps } from '@/lib/app-url';
 import { rememberPendingShare } from '@/lib/share-import';
+import { SETTINGS_KEYS } from '@/app/settings/constants';
 import OfflineSync from './OfflineSync';
+import NativeTabBarSync from './NativeTabBarSync';
+import ReviewWidgetSync from './ReviewWidgetSync';
 
 /** Connects the web app to the iPhone shell. Renders nothing and does nothing on the web. */
 export default function NativeBridge() {
@@ -35,7 +39,12 @@ export default function NativeBridge() {
     keepViewportFit();
     const headObserver = new MutationObserver(keepViewportFit);
     headObserver.observe(document.head, { childList: true, subtree: true, attributes: true });
-    const syncTheme = () => void setStatusBarForTheme(root.classList.contains('dark'));
+    const syncTheme = () => {
+      const dark = root.classList.contains('dark');
+      void setStatusBarForTheme(dark);
+      const chosen = localStorage.getItem(SETTINGS_KEYS.THEME);
+      void setNativeAppearance(chosen === 'light' || chosen === 'dark' ? chosen : 'system');
+    };
     syncTheme();
     void hideSplash();
     const observer = new MutationObserver(syncTheme);
@@ -63,5 +72,12 @@ export default function NativeBridge() {
     [],
   );
 
-  return inApp && mode === 'cloud' ? <OfflineSync /> : null;
+  if (!inApp) return null;
+  return (
+    <>
+      <NativeTabBarSync />
+      <ReviewWidgetSync />
+      {mode === 'cloud' && <OfflineSync />}
+    </>
+  );
 }

@@ -68,7 +68,8 @@
     "journal": "日記",
     "vocab": "詞彙",
     "stats": "統計",
-    "settings": "設定"
+    "settings": "設定",
+    "back": "返回"
   },
   "auth": {
     "loadingAuth": "載入中",

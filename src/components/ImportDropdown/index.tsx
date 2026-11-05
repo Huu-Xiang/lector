@@ -23,6 +23,7 @@ export default function ImportDropdown({
   destinationId = null,
   onDestinationChange,
   minimalOnMobile,
+  alignStartOnMobile = false,
 }: ImportDropdownProps) {
   const t = useTranslations('library.import');
   const [isOpen, setIsOpen] = useState(false);
@@ -106,7 +107,9 @@ export default function ImportDropdown({
       </Button>
 
       {isOpen && (
-        <div className="absolute right-0 z-50 mt-2 w-56 rounded-lg border border-border bg-popover py-1 text-popover-foreground shadow-lg">
+        <div
+          className={`absolute ${alignStartOnMobile ? 'left-0 sm:right-0 sm:left-auto' : 'right-0'} z-50 mt-2 w-56 rounded-lg border border-border bg-popover py-1 text-popover-foreground shadow-lg`}
+        >
           {destinationList.length > 0 && (
             <div className="mb-1 border-b border-border pb-1">
               <p className="px-4 pt-1.5 pb-1 text-xs font-medium tracking-wide text-muted-foreground uppercase">

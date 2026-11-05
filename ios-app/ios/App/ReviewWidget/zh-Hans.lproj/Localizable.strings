@@ -1,0 +1,10 @@
+"widget.due" = "张待复习";
+"widget.ready" = "有单词到期了";
+"widget.done" = "都复习完了";
+"widget.next %@" = "%@后有新的复习";
+"widget.empty" = "打开 Readfox，这里就会显示复习数量。";
+"widget.new %lld" = "%lld 个新词";
+"widget.start" = "去复习";
+"widget.dueCount %lld" = "%lld 张待复习";
+"widget.name" = "复习";
+"widget.description" = "今天要复习的单词。";

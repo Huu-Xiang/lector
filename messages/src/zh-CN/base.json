@@ -39,7 +39,8 @@
     "journal": "日记",
     "vocab": "词汇",
     "stats": "统计",
-    "settings": "设置"
+    "settings": "设置",
+    "back": "返回"
   },
   "auth": {
     "loadingAuth": "正在加载",

@@ -35,6 +35,11 @@ describe('resolveAppLink', () => {
     );
   });
 
+  it('turns the widget link into the practice page and drops its query', () => {
+    expect(resolveAppLink('readfox://practice')).toBe('/practice');
+    expect(resolveAppLink('readfox://practice?next=https%3A%2F%2Fevil.example')).toBe('/practice');
+  });
+
   it('drops another host, an unlisted path, and other custom links', () => {
     expect(resolveAppLink('https://evil.example/register?invite=x')).toBeNull();
     expect(resolveAppLink('https://readfox.app.evil.example/register')).toBeNull();

@@ -78,7 +78,8 @@
     "journal": "Journal",
     "vocab": "Vocab",
     "stats": "Statistics",
-    "settings": "Settings"
+    "settings": "Settings",
+    "back": "Back"
   },
   "auth": {
     "loadingAuth": "Loading authentication",

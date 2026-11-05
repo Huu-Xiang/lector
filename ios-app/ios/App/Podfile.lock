@@ -7,6 +7,8 @@ PODS:
   - CapacitorFilesystem (7.1.9):
     - Capacitor
     - IONFilesystemLib (~> 1.1.4)
+  - CapacitorHaptics (7.0.5):
+    - Capacitor
   - CapacitorNetwork (7.0.4):
     - Capacitor
   - CapacitorPreferences (7.0.4):
@@ -24,6 +26,7 @@ DEPENDENCIES:
   - "CapacitorApp (from `../../node_modules/@capacitor/app`)"
   - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorFilesystem (from `../../node_modules/@capacitor/filesystem`)"
+  - "CapacitorHaptics (from `../../node_modules/@capacitor/haptics`)"
   - "CapacitorNetwork (from `../../node_modules/@capacitor/network`)"
   - "CapacitorPreferences (from `../../node_modules/@capacitor/preferences`)"
   - "CapacitorPushNotifications (from `../../node_modules/@capacitor/push-notifications`)"
@@ -43,6 +46,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/ios"
   CapacitorFilesystem:
     :path: "../../node_modules/@capacitor/filesystem"
+  CapacitorHaptics:
+    :path: "../../node_modules/@capacitor/haptics"
   CapacitorNetwork:
     :path: "../../node_modules/@capacitor/network"
   CapacitorPreferences:
@@ -59,6 +64,7 @@ SPEC CHECKSUMS:
   CapacitorApp: f01a913211780e0718dae9750442c3e23f96e106
   CapacitorCordova: 33313bf8891d44741970e16534be781ff3caa00a
   CapacitorFilesystem: 35da521d3fc5159ecaf4ae0b877ec3db7f4adb0d
+  CapacitorHaptics: 1b145fa83c622e5383a3bac04ea81e2514f0b0f5
   CapacitorNetwork: b719d692a8d1310da8d26d6648d3aa1ef1e100e1
   CapacitorPreferences: 69d9991307507aeab8ef8019c10b9babfda0e9ca
   CapacitorPushNotifications: 0527809a9619ed775439d5ab2c2d996122b48319
@@ -66,6 +72,6 @@ SPEC CHECKSUMS:
   CapacitorStatusBar: 416e9e53fd6397e668d4a181cd2131617d949bd6
   IONFilesystemLib: e6610c2b260d15e4b9cb9d5e37a87095479b669e
 
-PODFILE CHECKSUM: d86c76fd83358487942e7b9270ac83498d6ed49d
+PODFILE CHECKSUM: 867479401b17b1eae0439477bbdabbbea1c745f5
 
 COCOAPODS: 1.17.0

@@ -472,6 +472,7 @@ export default function Home() {
             disabled={isImporting}
             isImporting={isImporting && importGroupId === libraryDestination}
             testId="library-import"
+            alignStartOnMobile
             destinations={visibleGroups.map((g) => ({ id: g.id, name: g.name }))}
             destinationId={libraryDestination}
             onDestinationChange={setLibraryDestinationId}

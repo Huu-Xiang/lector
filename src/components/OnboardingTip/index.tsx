@@ -9,12 +9,14 @@ export default function OnboardingTip({
   onDismiss,
   className,
   testId,
+  aboveTabBar = false,
 }: IOnboardingTipProps) {
   const t = useTranslations('reader.onboardingTip');
   return (
     <div
       role="status"
       data-testid={testId}
+      data-above-tabbar={aboveTabBar || undefined}
       className={cn(
         'z-[70] w-64 rounded-xl border border-[var(--gold-lip)] bg-card p-3 text-left shadow-xl',
         className,

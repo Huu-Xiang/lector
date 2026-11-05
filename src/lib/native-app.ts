@@ -98,6 +98,84 @@ export async function writeNativeFile(path: string, data: string): Promise<void>
   await call('Filesystem', 'writeFile', { path, data, directory: 'DATA', encoding: 'utf8' });
 }
 
+export type HapticKind = 'light' | 'success' | 'warning' | 'error';
+
+/** A short vibration. Does nothing on the web or on a shell without the plugin. */
+export function haptic(kind: HapticKind = 'light'): Promise<void> {
+  if (kind === 'light') return call('Haptics', 'impact', { style: 'LIGHT' });
+  return call('Haptics', 'notification', { type: kind.toUpperCase() });
+}
+
+const TAB_BAR = 'NativeTabBar';
+
+export interface NativeTab {
+  /** The page path; the plugin hands it back in `tabSelected`. */
+  id: string;
+  title: string;
+  /** An SF Symbols name. */
+  icon: string;
+}
+
+/** True inside the app when this build of the shell draws the tab bar itself. */
+export function hasNativeTabBar(): boolean {
+  return plugin(TAB_BAR) !== null;
+}
+
+export function configureNativeTabBar(tabs: NativeTab[], selected: string | null): Promise<void> {
+  return call(TAB_BAR, 'configure', { tabs, selected });
+}
+
+/** `selected` null clears the highlight, for pages outside the tabs. */
+export function selectNativeTab(selected: string | null): Promise<void> {
+  return call(TAB_BAR, 'select', { selected });
+}
+
+export function setNativeTabBarVisible(visible: boolean): Promise<void> {
+  return call(TAB_BAR, visible ? 'show' : 'hide');
+}
+
+/** Native bars follow the page theme; `system` lets the system setting decide again. */
+export function setNativeAppearance(style: 'light' | 'dark' | 'system'): Promise<void> {
+  return call(TAB_BAR, 'setAppearance', { style });
+}
+
+/** Calls `open` with the tab id the user taps. Returns a function that stops listening. */
+export function onNativeTabSelected(open: (id: string) => void): () => void {
+  const addListener = plugin(TAB_BAR)?.addListener;
+  if (!addListener) return () => {};
+  let handle: { remove?: () => unknown } | null = null;
+  let stopped = false;
+  // A plugin registered from Swift alone hands back the handle itself, not a promise.
+  Promise.resolve()
+    .then(() =>
+      addListener('tabSelected', (event) => {
+        const id = (event as { id?: unknown } | null)?.id;
+        if (typeof id === 'string') open(id);
+      }),
+    )
+    .then((listener) => {
+      handle = listener as { remove?: () => unknown };
+      if (stopped) void handle.remove?.();
+    })
+    .catch(() => {});
+  return () => {
+    stopped = true;
+    void handle?.remove?.();
+  };
+}
+
+export interface WidgetSnapshot {
+  dueNow: number;
+  newAvailable: number;
+  /** ISO time of the next card that comes due, or null. */
+  nextDue: string | null;
+}
+
+/** Hands the review counts to the home screen widget; null clears it after sign-out. */
+export function updateReviewWidget(snapshot: WidgetSnapshot | null): Promise<void> {
+  return call('ReviewWidget', 'update', snapshot ? { ...snapshot } : { clear: true });
+}
+
 const PUSH = 'PushNotifications';
 const PUSH_REGISTER_TIMEOUT_MS = 10_000;
 

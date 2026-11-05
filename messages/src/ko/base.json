@@ -39,7 +39,8 @@
     "journal": "일기",
     "vocab": "단어장",
     "stats": "통계",
-    "settings": "설정"
+    "settings": "설정",
+    "back": "뒤로"
   },
   "auth": {
     "loadingAuth": "인증 불러오는 중",

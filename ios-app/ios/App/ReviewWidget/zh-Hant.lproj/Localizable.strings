@@ -1,0 +1,10 @@
+"widget.due" = "張待複習";
+"widget.ready" = "有單字到期了";
+"widget.done" = "都複習完了";
+"widget.next %@" = "%@後有新的複習";
+"widget.empty" = "打開 Readfox，這裡就會顯示複習數量。";
+"widget.new %lld" = "%lld 個新詞";
+"widget.start" = "去複習";
+"widget.dueCount %lld" = "%lld 張待複習";
+"widget.name" = "複習";
+"widget.description" = "今天要複習的單字。";

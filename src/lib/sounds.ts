@@ -1,5 +1,7 @@
 // Sound effects using Web Audio API — no audio files needed
 
+import { haptic } from './native-app';
+
 let audioContext: AudioContext | null = null;
 
 function getAudioContext(): AudioContext | null {
@@ -18,6 +20,7 @@ function getAudioContext(): AudioContext | null {
  * Correct answer: pleasant ascending two-tone chime (C5 -> E5)
  */
 export function playCorrectSound(): void {
+  void haptic('success');
   const ctx = getAudioContext();
   if (!ctx) return;
 
@@ -55,6 +58,7 @@ export function playCorrectSound(): void {
  * Incorrect answer: short low buzz (200 Hz with slight distortion)
  */
 export function playIncorrectSound(): void {
+  void haptic('error');
   const ctx = getAudioContext();
   if (!ctx) return;
 

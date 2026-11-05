@@ -22,7 +22,8 @@ function staysOnSite(value: string): boolean {
 
 /**
  * The path and query the app may load for an opened link, or null to ignore it.
- * Only https links on readfox.app with a listed path, and `readfox://share`.
+ * Only https links on readfox.app with a listed path, `readfox://share`, and the
+ * widget's `readfox://practice`.
  * The result is always relative, never a URL taken from the link.
  */
 export function resolveAppLink(raw: string): string | null {
@@ -33,7 +34,8 @@ export function resolveAppLink(raw: string): string | null {
     return null;
   }
   if (url.protocol === 'readfox:') {
-    return url.hostname === 'share' ? `/share${url.search}` : null;
+    if (url.hostname === 'share') return `/share${url.search}`;
+    return url.hostname === 'practice' ? '/practice' : null;
   }
   if (url.protocol !== 'https:' || url.hostname !== SITE_HOST) return null;
   if (!SITE_PATHS.some((pattern) => pattern.test(url.pathname))) return null;
