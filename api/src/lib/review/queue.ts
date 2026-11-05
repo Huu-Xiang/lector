@@ -321,7 +321,8 @@ export function buildRound(
         : {}),
     });
   }
-  if (stale.length > 0) void refresh(userId, stale);
+  if (stale.length > 0)
+    refresh(userId, stale).catch((error) => console.error('Meaning refresh error:', error));
   const roundId = randomUUID();
   db.transaction(() => {
     db.prepare('DELETE FROM reviewRounds WHERE userId = ? AND createdAt < ?').run(
