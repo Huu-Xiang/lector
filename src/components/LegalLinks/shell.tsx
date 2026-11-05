@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import LegalLinks from '@/components/LegalLinks';
+import BackButton from './BackButton';
 
 export function LegalShell({
   title,
@@ -20,6 +21,7 @@ export function LegalShell({
       <article
         className={`w-full ${wide ? 'max-w-6xl' : 'max-w-2xl'} space-y-5 text-sm leading-relaxed text-foreground`}
       >
+        <BackButton />
         <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
         {children}
       </article>
