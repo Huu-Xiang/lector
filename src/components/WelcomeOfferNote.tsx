@@ -8,7 +8,7 @@ import { WELCOME_CODE, welcomeOfferOpen } from '@/lib/welcome-offer';
 
 export default function WelcomeOfferNote({ onUse }: { onUse?: (code: string) => void }) {
   const t = useTranslations('welcomeOffer');
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(() => welcomeOfferOpen());
   useEffect(() => setOpen(welcomeOfferOpen()), []);
   if (!open) return null;
   return (

@@ -146,6 +146,8 @@ test.describe.serial('Free cloud learning loop', () => {
     page,
   }) => {
     await signIn(page);
+    const tip = page.getByTestId('ai-quota-tip-dismiss');
+    await tip.click({ timeout: 5000 }).catch(() => {});
     await page.getByTestId('feedback-nav-link').click();
     await expect(page).toHaveURL(/\/feedback$/);
     await expect(page.getByTestId('feedback-wechat')).not.toHaveAttribute('open', '');

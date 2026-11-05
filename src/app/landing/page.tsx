@@ -6,6 +6,7 @@ import { BookOpen, Languages, Repeat, PenLine, Layers } from 'lucide-react';
 import LegalLinks from '@/components/LegalLinks';
 import WelcomeOfferNote from '@/components/WelcomeOfferNote';
 import { LANGUAGES } from '@/lib/languages';
+import { LANDING_ROOT_ID } from '@/lib/api-base';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('landing');
@@ -52,7 +53,7 @@ export default async function LandingPage() {
   const t = await getTranslations('landing');
   const languageCount = Object.keys(LANGUAGES).length;
   return (
-    <div className="min-h-screen w-full bg-background">
+    <div id={LANDING_ROOT_ID} className="min-h-screen w-full bg-background">
       <script
         type="application/ld+json"
         // eslint-disable-next-line react/no-danger

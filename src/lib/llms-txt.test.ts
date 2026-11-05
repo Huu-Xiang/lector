@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { buildLlmsTxt } from './llms-txt';
 import { listPublicBooks } from './public-books';
 
@@ -18,5 +18,14 @@ describe('llms.txt', () => {
 
   it('counts the library in the facts', () => {
     expect(text).toContain(`Free library: ${listPublicBooks().length} public-domain`);
+  });
+
+  it('names the welcome code only while the offer runs', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-12-15T15:59:00Z'));
+    expect(buildLlmsTxt()).toContain('redeem code WELCOME123');
+    vi.setSystemTime(new Date('2026-12-15T16:00:00Z'));
+    expect(buildLlmsTxt()).not.toContain('WELCOME123');
+    vi.useRealTimers();
   });
 });

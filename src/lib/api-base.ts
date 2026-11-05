@@ -111,7 +111,16 @@ export const AUTH_ROUTES = [
   '/books',
 ] as const;
 
+/** Caddy serves /landing at "/" to visitors without a session cookie; the page carries this id. */
+export const LANDING_ROOT_ID = 'readfox-landing';
+
 export function isAuthRoute(pathname: string): boolean {
+  if (
+    pathname === '/' &&
+    typeof document !== 'undefined' &&
+    document.getElementById(LANDING_ROOT_ID)
+  )
+    return true;
   return AUTH_ROUTES.some((r) => pathname === r || pathname.startsWith(`${r}/`));
 }
 

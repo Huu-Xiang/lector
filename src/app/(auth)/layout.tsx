@@ -7,6 +7,7 @@ import { useLectorMode } from '@/lib/use-env';
 import Image from 'next/image';
 import { Spinner } from '@/components/ui/spinner';
 import LegalLinks from '@/components/LegalLinks';
+import BackButton from '@/components/LegalLinks/BackButton';
 
 /**
  * Shared shell for the pre-session pages (#218): /login, /register,
@@ -32,6 +33,9 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4 py-10">
+      <div className={`mb-4 w-full ${wide ? 'max-w-6xl' : 'max-w-sm'}`}>
+        <BackButton />
+      </div>
       <div className="mb-8 text-center">
         <Image
           src="/logo.png"

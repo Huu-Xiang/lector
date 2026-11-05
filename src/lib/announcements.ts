@@ -28,7 +28,7 @@ export const ANNOUNCEMENTS: Announcement[] = [
     id: 'welcomeCode',
     date: '2026-11-05',
     level: 'important',
-    expires: '2026-12-16',
+    expires: '2026-12-15T16:00:00Z',
     href: '/settings#plan',
   },
   { id: 'installApp', date: '2026-10-28', level: 'important', href: '/settings#install' },
