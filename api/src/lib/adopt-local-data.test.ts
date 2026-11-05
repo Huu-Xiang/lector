@@ -268,6 +268,8 @@ describe('TENANT_TABLES ratchet', () => {
     'plan_grants',
     'cn_orders',
     'redeem_uses',
+    'feedback_messages',
+    'signup_redeem_codes',
     'cn_refund_requests',
     'invite_codes',
     'reward_cards',

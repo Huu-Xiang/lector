@@ -365,6 +365,17 @@ function getDb(): Database {
     );
     CREATE INDEX IF NOT EXISTS idx_cn_refund_requests_user ON cn_refund_requests(userId, status);
 
+    -- Readfox feedback form. Text only; attached images are emailed, never stored.
+    CREATE TABLE IF NOT EXISTS feedback_messages (
+      id TEXT PRIMARY KEY,
+      userId TEXT NOT NULL,
+      createdAt TEXT NOT NULL,
+      text TEXT NOT NULL,
+      imageCount INTEGER NOT NULL DEFAULT 0,
+      emailed INTEGER NOT NULL DEFAULT 0
+    );
+    CREATE INDEX IF NOT EXISTS idx_feedback_messages_user ON feedback_messages(userId, createdAt);
+
     -- Readfox redeem codes: a campaign sets the tier, days and limits; its
     -- codes are either one shared word or a batch of single-use codes.
     CREATE TABLE IF NOT EXISTS redeem_campaigns (

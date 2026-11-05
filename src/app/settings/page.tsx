@@ -22,7 +22,6 @@ import PageHeader from '@/components/PageHeader';
 import BYOKSettings from './components/BYOKSettings';
 import CloudPlanSettings from './components/CloudPlanSettings';
 import InviteCard from './components/InviteCard';
-import FeedbackCard from './components/FeedbackCard';
 import InstallAppCard from './components/InstallAppCard';
 import { lectorMode } from '@/lib/api-base';
 import { useTranslations } from 'next-intl';
@@ -33,7 +32,6 @@ export default function SettingsPage() {
     <main className="mx-auto max-w-3xl px-4 py-8">
       <PageHeader title={t('pageTitle')} />
       <div className="space-y-8">
-        {lectorMode() === 'cloud' && <FeedbackCard />}
         {lectorMode() === 'cloud' && <CloudPlanSettings />}
         {lectorMode() === 'cloud' && <CnRefund />}
         {lectorMode() === 'cloud' && <InviteCard />}

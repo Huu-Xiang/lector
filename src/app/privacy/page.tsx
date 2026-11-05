@@ -15,6 +15,7 @@ const STORE_ITEMS = [
   'reviewHistory',
   'aiKey',
   'session',
+  'feedback',
   'sharedWords',
 ] as const;
 const OTHERS_ITEMS = [

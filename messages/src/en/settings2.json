@@ -325,12 +325,6 @@
       },
       "attemptsLeft": "{count, plural, one {# try left.} other {# tries left.}}"
     },
-    "feedback": {
-      "title": "Feedback and chat",
-      "body": "Questions, feature ideas, a wrong meaning? Scan the code to add me on WeChat. I build Readfox. Please write \"Readfox\" in the friend request.",
-      "alt": "WeChat QR code of the Readfox author",
-      "nav": "Feedback"
-    },
     "installApp": {
       "title": "Add Readfox to your home screen",
       "body": "Then open it from its icon, full screen like an app, without typing the address.",

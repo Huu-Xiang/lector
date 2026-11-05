@@ -36,6 +36,15 @@ export interface EmailMessage {
   template?: EmailTemplate;
   /** Extra Resend headers (List-Unsubscribe on product mail). */
   headers?: Record<string, string>;
+  /** Reply-To address (Resend `reply_to`). */
+  replyTo?: string;
+  /** Files for Resend `attachments`. `content` is base64. */
+  attachments?: EmailAttachment[];
+}
+
+export interface EmailAttachment {
+  filename: string;
+  content: string;
 }
 
 export type EmailTransport = (message: EmailMessage) => Promise<void>;
@@ -56,9 +65,13 @@ function fileTransport(path: string): EmailTransport {
 
 /** Body for Resend. A template send must not include text or HTML. */
 export function resendPayload(from: string, message: EmailMessage): Record<string, unknown> {
-  const headers = message.headers && Object.keys(message.headers).length > 0
-    ? message.headers
-    : undefined;
+  const headers =
+    message.headers && Object.keys(message.headers).length > 0 ? message.headers : undefined;
+  const extras = {
+    ...(headers ? { headers } : {}),
+    ...(message.replyTo ? { reply_to: message.replyTo } : {}),
+    ...(message.attachments?.length ? { attachments: message.attachments } : {}),
+  };
   if (message.template) {
     return {
       from,
@@ -67,7 +80,7 @@ export function resendPayload(from: string, message: EmailMessage): Record<strin
         id: message.template.id,
         variables: message.template.variables ?? {},
       },
-      ...(headers ? { headers } : {}),
+      ...extras,
     };
   }
   return {
@@ -76,7 +89,7 @@ export function resendPayload(from: string, message: EmailMessage): Record<strin
     subject: message.subject,
     text: message.text,
     ...(message.html ? { html: message.html } : {}),
-    ...(headers ? { headers } : {}),
+    ...extras,
   };
 }
 

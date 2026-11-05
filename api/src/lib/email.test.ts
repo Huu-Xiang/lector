@@ -27,7 +27,10 @@ describe('sendEmail transports', () => {
     await sendEmail({ to: 'x@y.z', subject: 'Reset', text: 'https://example.com/reset?token=2' });
 
     expect(existsSync(FILE)).toBe(true);
-    const lines = readFileSync(FILE, 'utf8').trim().split('\n').map((l) => JSON.parse(l));
+    const lines = readFileSync(FILE, 'utf8')
+      .trim()
+      .split('\n')
+      .map((l) => JSON.parse(l));
     expect(lines).toHaveLength(2);
     expect(lines[0].subject).toBe('Verify');
     expect(lines[1].text).toContain('token=2');
@@ -118,5 +121,36 @@ describe('resendPayload', () => {
       subject: 'Verify your Lector email address',
       text: 'Confirm here',
     });
+  });
+});
+
+describe('resendPayload reply_to and attachments', () => {
+  const base = { to: 'o@x.y', subject: 's', text: 't' };
+
+  test('maps replyTo to reply_to and passes attachments', () => {
+    const attachments = [{ filename: 'image-1.png', content: 'AAEC' }];
+    const payload = resendPayload('from@x.y', { ...base, replyTo: 'u@x.y', attachments });
+    expect(payload.reply_to).toBe('u@x.y');
+    expect(payload.attachments).toEqual(attachments);
+    expect(payload).not.toHaveProperty('replyTo');
+  });
+
+  test('omits both fields when unset or empty', () => {
+    const payload = resendPayload('from@x.y', { ...base, attachments: [] });
+    expect(payload).not.toHaveProperty('reply_to');
+    expect(payload).not.toHaveProperty('attachments');
+  });
+
+  test('the file transport keeps replyTo and attachments', async () => {
+    process.env.EMAIL_FILE = FILE;
+    setEmailTransport(null);
+    await sendEmail({
+      ...base,
+      replyTo: 'u@x.y',
+      attachments: [{ filename: 'a.png', content: 'AAEC' }],
+    });
+    const line = JSON.parse(readFileSync(FILE, 'utf8').trim());
+    expect(line.replyTo).toBe('u@x.y');
+    expect(line.attachments[0].filename).toBe('a.png');
   });
 });

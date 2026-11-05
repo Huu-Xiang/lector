@@ -141,4 +141,45 @@ test.describe.serial('Free cloud learning loop', () => {
     await page.getByTestId('subscribe-continue-free').click();
     await page.waitForURL((url) => url.pathname === '/');
   });
+
+  test('the sidebar opens Feedback and a message is emailed with a reply address', async ({
+    page,
+  }) => {
+    await signIn(page);
+    await page.getByTestId('feedback-nav-link').click();
+    await expect(page).toHaveURL(/\/feedback$/);
+    await expect(page.getByTestId('feedback-wechat')).not.toHaveAttribute('open', '');
+
+    const note = `Feedback e2e ${Date.now()}`;
+    await page.getByTestId('feedback-message').fill(note);
+    await page.getByTestId('feedback-file').setInputFiles({
+      name: 'shot.png',
+      mimeType: 'image/png',
+      buffer: Buffer.from(
+        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
+        'base64',
+      ),
+    });
+    await expect(page.getByTestId('feedback-images').locator('img')).toHaveCount(1);
+    await page.getByTestId('feedback-send').click();
+    await expect(page.getByTestId('feedback-success')).toBeVisible();
+
+    let mail: { to: string; replyTo?: string; text: string; attachments?: unknown[] } | undefined;
+    for (let attempt = 0; attempt < 40 && !mail; attempt++) {
+      try {
+        mail = readFileSync(EMAILS, 'utf8')
+          .trim()
+          .split('\n')
+          .filter(Boolean)
+          .map((line) => JSON.parse(line) as NonNullable<typeof mail>)
+          .find((item) => item.text.includes(note));
+      } catch {
+        // The file outbox is created on first delivery.
+      }
+      if (!mail) await new Promise((resolve) => setTimeout(resolve, 250));
+    }
+    expect(mail?.to).toBe('owner@e2e.test');
+    expect(mail?.replyTo).toBe(EMAIL);
+    expect(mail?.attachments).toHaveLength(1);
+  });
 });

@@ -3079,6 +3079,31 @@ const internalOps: Record<string, OperationDoc> = {
     summary: 'Read the plan limits and the usage',
     tag: 'Service',
   },
+  'POST /api/feedback': {
+    summary: 'Send feedback to the operator',
+    description:
+      'Emails the message and up to 3 images (PNG, JPEG, WebP or GIF, 5 MB each) to the operator. The reply goes to the account email. Limits: 5 per hour and 20 per day per account.',
+    tag: 'Service',
+    requestBody: {
+      contentType: 'multipart/form-data',
+      required: true,
+      schema: {
+        type: 'object',
+        properties: {
+          message: { type: 'string', minLength: 1, maxLength: 5000 },
+          locale: { type: 'string', description: 'Interface locale, for the operator.' },
+          images: { type: 'array', maxItems: 3, items: { type: 'string', format: 'binary' } },
+        },
+        required: ['message'],
+      },
+    },
+    responses: {
+      '200': {
+        description: 'The message was stored and emailed.',
+        schema: { type: 'object', properties: { ok: { type: 'boolean' } } },
+      },
+    },
+  },
   'POST /api/redeem': { summary: 'Redeem a code, or save it as a card', tag: 'Service' },
   'GET /api/invite': {
     summary: 'Read your invite code, invite counts and reward cards',

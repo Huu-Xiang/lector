@@ -268,6 +268,7 @@ export default defineConfig({
             BETTER_AUTH_URL: freeApiOrigin,
             LECTOR_TRUSTED_ORIGINS: uiOrigin,
             EMAIL_FILE: '../tmp/e2e-free-data/emails.jsonl',
+            FEEDBACK_EMAIL: 'owner@e2e.test',
             LECTOR_BILLING: 'paddle',
             LECTOR_FREE_TIER: 'true',
             PADDLE_WEBHOOK_SECRET: 'e2e-free-paddle-webhook-secret',

@@ -1,0 +1,33 @@
+{
+  "feedback": {
+    "nav": "Feedback",
+    "title": "Feedback",
+    "intro": "Tell us what is wrong, or what you want next. We read every message.",
+    "messageLabel": "Your message",
+    "placeholder": "Describe the problem or idea. You can paste screenshots here.",
+    "counter": "{count} / {max}",
+    "addImage": "Add image",
+    "removeImage": "Remove image {name}",
+    "imagesHint": "Up to {count} images, {size} MB each. PNG, JPEG, WebP or GIF.",
+    "replyTo": "We reply to {email}.",
+    "send": "Send",
+    "sending": "Sending…",
+    "successTitle": "Thanks, we got it. We reply by email.",
+    "sendAnother": "Send another message",
+    "errors": {
+      "empty": "Write a message first.",
+      "tooLong": "The message is too long.",
+      "tooManyImages": "You can add up to {count} images.",
+      "imageTooLarge": "An image is larger than {size} MB.",
+      "imageType": "Use a PNG, JPEG, WebP or GIF image.",
+      "tooLarge": "The message and images are too large.",
+      "rateLimited": "You sent many messages. Try again later.",
+      "failed": "We could not send the message. Try again later."
+    },
+    "wechat": {
+      "summary": "Prefer WeChat?",
+      "body": "Questions, feature ideas, a wrong meaning? Scan the code to add me on WeChat. I build Readfox. Please write \"Readfox\" in the friend request.",
+      "alt": "WeChat QR code of the Readfox author"
+    }
+  }
+}
