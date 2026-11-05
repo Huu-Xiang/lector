@@ -78,9 +78,9 @@ const EXAMS: Record<string, Record<CefrLevel, ExamRef[]>> = {
   },
 };
 
-/** Mainland Chinese exams show for learners whose native language is Chinese. */
-export function showMainlandExams(native: string): boolean {
-  return native.toLowerCase().startsWith('zh');
+/** Mainland Chinese exams show only when both the native language and the interface are Chinese. */
+export function showMainlandExams(native: string, locale: string): boolean {
+  return native.toLowerCase().startsWith('zh') && locale.toLowerCase().startsWith('zh');
 }
 
 export function examRefs(language: string, level: string, mainland: boolean): ExamRef[] {
@@ -93,9 +93,10 @@ export function examLabels(
   language: string,
   level: string,
   native: string,
+  locale: string,
   label: (exam: ExamId, score: string) => string,
 ): string[] {
-  return examRefs(language, level, showMainlandExams(native)).map((ref) =>
+  return examRefs(language, level, showMainlandExams(native, locale)).map((ref) =>
     label(ref.exam, ref.score ?? ''),
   );
 }

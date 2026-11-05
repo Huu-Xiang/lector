@@ -36,21 +36,23 @@ describe('exam references', () => {
     expect(examRefs('ko', 'B1', false)).toEqual([{ exam: 'topik', score: '3' }]);
   });
 
-  it('shows mainland exams for learners whose native language is Chinese', () => {
-    expect(showMainlandExams('zh-CN')).toBe(true);
-    expect(showMainlandExams('zh-TW')).toBe(true);
-    expect(showMainlandExams('en')).toBe(false);
+  it('shows mainland exams only with a Chinese native language and a Chinese interface', () => {
+    expect(showMainlandExams('zh-CN', 'zh-CN')).toBe(true);
+    expect(showMainlandExams('zh-TW', 'zh-CN')).toBe(true);
+    expect(showMainlandExams('zh-CN', 'en')).toBe(false);
+    expect(showMainlandExams('zh-CN', 'ja')).toBe(false);
+    expect(showMainlandExams('en', 'zh-CN')).toBe(false);
   });
 
   it('formats exam labels for the native language', () => {
     const label = (exam: string, score: string) => `${exam} ${score}`.trim();
-    expect(examLabels('en', 'B1', 'zh-CN', label)).toEqual([
+    expect(examLabels('en', 'B1', 'zh-CN', 'zh-CN', label)).toEqual([
       'ielts 4.0–5.0',
       'toefl 42–71',
       'gaokao',
       'cet4',
     ]);
-    expect(examLabels('en', 'B1', 'fr', label)).toEqual(['ielts 4.0–5.0', 'toefl 42–71']);
+    expect(examLabels('en', 'B1', 'fr', 'zh-CN', label)).toEqual(['ielts 4.0–5.0', 'toefl 42–71']);
   });
 });
 

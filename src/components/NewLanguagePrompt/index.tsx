@@ -119,7 +119,7 @@ export default function NewLanguagePrompt() {
                 </legend>
                 <div className="grid gap-2 sm:grid-cols-3">
                   {CEFR_LEVELS.map((option) => {
-                    const exams = examLabels(active.code, option, native, (exam, score) =>
+                    const exams = examLabels(active.code, option, native, locale, (exam, score) =>
                       tl(`exam.${exam}`, { score }),
                     ).join(' · ');
                     return (

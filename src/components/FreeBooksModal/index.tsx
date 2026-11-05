@@ -208,9 +208,9 @@ export default function FreeBooksModal({
   };
 
   const examLine = (level: CefrLevel) =>
-    examLabels(activeLang.code, level, native, (exam, score) => tl(`exam.${exam}`, { score })).join(
-      ' · ',
-    );
+    examLabels(activeLang.code, level, native, locale, (exam, score) =>
+      tl(`exam.${exam}`, { score }),
+    ).join(' · ');
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>

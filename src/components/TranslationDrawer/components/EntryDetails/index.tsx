@@ -1,6 +1,6 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import type { ExpandedDictionaryEntry } from '../../types';
 import Gloss from '../Gloss';
 import { usePosLabel } from '../DrawerLabels';
@@ -24,6 +24,7 @@ export function groupByPartOfSpeech(
 }
 
 const KNOWN_TAGS = ['zk', 'gk', 'ky', 'cet4', 'cet6', 'toefl', 'ielts', 'gre'];
+const MAINLAND_TAGS = new Set(['zk', 'gk', 'ky', 'cet4', 'cet6']);
 
 const POS_BADGE =
   'inline-block rounded bg-muted px-1.5 py-0.5 text-[10px] font-semibold tracking-wide text-muted-foreground uppercase';
@@ -75,7 +76,10 @@ export function SenseGroups({
 /** Frequency, exam tags, Collins stars and the Oxford 3000 mark. */
 export function EntryBadges({ entry }: { entry: ExpandedDictionaryEntry }) {
   const t = useTranslations('reader.drawer');
-  const tags = (entry.tags ?? []).filter((tag) => KNOWN_TAGS.includes(tag));
+  const chinese = useLocale().startsWith('zh');
+  const tags = (entry.tags ?? []).filter(
+    (tag) => KNOWN_TAGS.includes(tag) && (chinese || !MAINLAND_TAGS.has(tag)),
+  );
   if (!entry.collins && !entry.oxford && tags.length === 0 && !entry.rank) return null;
   return (
     <div className="flex flex-wrap items-center gap-1.5" data-testid="entry-badges">

@@ -1,6 +1,6 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { examLabels } from '@/lib/reading-level';
 
 /** A CEFR badge followed by exam tags that suit the learner's native language. */
@@ -14,7 +14,10 @@ export default function LevelTags({
   native: string;
 }) {
   const tl = useTranslations('readingLevel');
-  const tags = examLabels(language, level, native, (exam, score) => tl(`exam.${exam}`, { score }));
+  const locale = useLocale();
+  const tags = examLabels(language, level, native, locale, (exam, score) =>
+    tl(`exam.${exam}`, { score }),
+  );
   return (
     <>
       <span

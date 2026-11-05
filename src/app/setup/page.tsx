@@ -76,7 +76,7 @@ export default function SetupPage() {
   const tl = useTranslations('readingLevel');
   const tc = useTranslations('common');
   const ready = parseReadyLanguages(useReadyLanguagesSetting());
-  const mainland = showMainlandExams(native);
+  const mainland = showMainlandExams(native, locale);
   const [error, setError] = useState<string | null>(null);
   const [showAllLanguages, setShowAllLanguages] = useState(false);
   function toggleInterest(id: string) {
