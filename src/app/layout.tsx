@@ -15,6 +15,7 @@ import './globals.css';
 import NavHeader from '@/components/NavHeader';
 import PlanLimitPrompt from '@/components/PlanLimitPrompt';
 import AiDataNotice from '@/components/AiDataNotice';
+import NativeBridge from '@/components/NativeBridge';
 import { isRtl } from '@/i18n/locales';
 
 // Nunito is the UI/chrome font; Literata stays the reading body (issue #147 §2.1).
@@ -112,6 +113,7 @@ export default async function RootLayout({
           <SourceBeacon />
           <PlanLimitPrompt />
           <AiDataNotice />
+          <NativeBridge />
           {/* Spacer for mobile bottom nav — invisible on sm+ */}
           <div className="h-16 sm:hidden print:hidden" aria-hidden="true" />
           {/* Move Sonner's focus hotkey off its Alt+T default — Alt+T toggles the

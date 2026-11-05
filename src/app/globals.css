@@ -761,3 +761,12 @@ html {
     max-width: 100% !important;
   }
 }
+
+/* Inside the iPhone app the page runs edge to edge; keep content off the notch and the home bar. */
+html[data-native-app] body {
+  padding-top: env(safe-area-inset-top);
+}
+
+html[data-native-app] .native-bottom-nav {
+  padding-bottom: env(safe-area-inset-bottom);
+}

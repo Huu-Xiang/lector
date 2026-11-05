@@ -16,3 +16,18 @@ Notes for the reviewer:
 - The app shows no price and no purchase, upgrade, or redeem-code screen.
 - Before the first request that sends text to an AI service, the app asks for consent once.
 - Account deletion is in Settings, under Delete account.
+
+## Build the shell
+
+Needs Xcode 16 or later, Node, and CocoaPods (`brew install cocoapods`). The shell uses Capacitor 7.
+
+```bash
+cd ios-app
+npm install
+npx cap sync ios
+npx cap open ios
+```
+
+The shell opens a small bundled page (`launcher/`). It checks `https://readfox.app/health`, then loads the site. The user agent carries `ReadfoxApp/1`, which the web code reads (`src/lib/native-app.ts`). Links to other hosts open in Safari.
+
+Signing, the app icon, the launch screen, and the TestFlight upload are added with the release unit.

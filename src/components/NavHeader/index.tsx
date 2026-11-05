@@ -136,7 +136,7 @@ export default function NavHeader() {
       </aside>
 
       {/* Mobile bottom nav — hidden on sm+ */}
-      <nav className="fixed right-0 bottom-0 left-0 z-50 border-t border-border bg-card sm:hidden print:hidden">
+      <nav className="native-bottom-nav fixed right-0 bottom-0 left-0 z-50 border-t border-border bg-card sm:hidden print:hidden">
         <div className="flex items-stretch">
           {navLinks.map((link) => {
             return (

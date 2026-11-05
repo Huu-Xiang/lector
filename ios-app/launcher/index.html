@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Readfox</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        background: #fbf8f1;
+        color: #2b2a26;
+        font:
+          16px -apple-system,
+          system-ui,
+          sans-serif;
+      }
+      main {
+        min-height: 100%;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding: 24px;
+        text-align: center;
+      }
+      main.show {
+        display: flex;
+      }
+      h1 {
+        margin: 0;
+        font-size: 20px;
+      }
+      p {
+        margin: 0;
+        color: #6b6860;
+      }
+      button {
+        margin-top: 8px;
+        padding: 10px 20px;
+        border: 0;
+        border-radius: 10px;
+        background: #2f7d6b;
+        color: #fff;
+        font-size: 16px;
+      }
+      @media (prefers-color-scheme: dark) {
+        html,
+        body {
+          background: #1c1b18;
+          color: #f1efe8;
+        }
+        p {
+          color: #a9a69b;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main id="error">
+      <h1 id="title"></h1>
+      <p id="body"></p>
+      <button id="retry" type="button"></button>
+    </main>
+    <script src="strings.js"></script>
+    <script src="logic.js"></script>
+    <script src="launcher.js"></script>
+  </body>
+</html>
