@@ -15,7 +15,7 @@ test.describe.serial('Practice - Setup Screen', () => {
     await waitForSetup(page);
 
     // Title
-    await expect(page.getByText('Cloze Practice')).toBeVisible();
+    await expect(page.getByText('Fill-in Practice')).toBeVisible();
 
     // Learn New section with collection buttons should be visible
     await expect(page.getByText('Learn New')).toBeVisible();
@@ -28,7 +28,7 @@ test.describe.serial('Practice - Setup Screen', () => {
 
     // Mode buttons
     await expect(page.getByRole('button', { name: 'Type' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'MC' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Choices' })).toBeVisible();
 
     // Start button
     await expect(page.getByRole('button', { name: 'Start' })).toBeEnabled();
@@ -57,7 +57,7 @@ test.describe.serial('Practice - Setup Screen', () => {
     await waitForSetup(page);
 
     const typeBtn = page.getByRole('button', { name: 'Type' });
-    const mcBtn = page.getByRole('button', { name: 'MC' });
+    const mcBtn = page.getByRole('button', { name: 'Choices' });
 
     // Select MC mode
     await mcBtn.click();
@@ -319,7 +319,7 @@ test.describe.serial('Practice - Type Mode Full Journey', () => {
     await page.getByText('← Back').click();
 
     // Should be back at setup
-    await expect(page.getByText('Cloze Practice')).toBeVisible();
+    await expect(page.getByText('Fill-in Practice')).toBeVisible();
     await expect(page.getByRole('button', { name: 'Start' })).toBeVisible();
   });
 });
@@ -329,7 +329,7 @@ test.describe.serial('Practice - Multiple Choice Mode', () => {
     await waitForSetup(page);
 
     await page.getByRole('button', { name: '10', exact: true }).click();
-    await page.getByRole('button', { name: 'MC' }).click();
+    await page.getByRole('button', { name: 'Choices' }).click();
     await page.getByRole('button', { name: 'Start' }).click();
 
     // Should show MC instruction
@@ -347,7 +347,7 @@ test.describe.serial('Practice - Multiple Choice Mode', () => {
     await waitForSetup(page);
 
     await page.getByRole('button', { name: '10', exact: true }).click();
-    await page.getByRole('button', { name: 'MC' }).click();
+    await page.getByRole('button', { name: 'Choices' }).click();
     await page.getByRole('button', { name: 'Start' }).click();
 
     await expect(page.getByText('Choose the correct word')).toBeVisible({
@@ -376,7 +376,7 @@ test.describe.serial('Practice - Multiple Choice Mode', () => {
     await waitForSetup(page);
 
     await page.getByRole('button', { name: '10', exact: true }).click();
-    await page.getByRole('button', { name: 'MC' }).click();
+    await page.getByRole('button', { name: 'Choices' }).click();
     await page.getByRole('button', { name: 'Start' }).click();
 
     await expect(page.getByText('Choose the correct word')).toBeVisible({

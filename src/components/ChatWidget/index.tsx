@@ -10,7 +10,9 @@ import { apiFetch, isBareRoute } from '@/lib/api-base';
 import { languageDisplayName } from '@/lib/language-names';
 import { isComposing } from '@/lib/keyboard';
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { EXAMPLE_PROMPTS } from './constants';
+import { useIsNativeApp } from '@/lib/native-app';
+import { hasOwnHeader } from '@/components/NativeBridge/tab-bar';
+import { CHAT_TOGGLE_EVENT, EXAMPLE_PROMPTS } from './constants';
 import ChatMessageContent from './ChatMessageContent';
 
 interface ChatMessage {
@@ -23,6 +25,7 @@ interface ChatMessage {
 
 export default function ChatWidget() {
   const t = useTranslations('chat');
+  const inApp = useIsNativeApp();
   const locale = useLocale();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -59,10 +62,11 @@ export default function ChatWidget() {
       initialLoadDone.current = true;
       fetchMessages();
     }
-    if (isOpen) {
+    // On iOS a focused field raises the keyboard at once and pushes the sheet up.
+    if (isOpen && !inApp) {
       setTimeout(() => inputRef.current?.focus(), 100);
     }
-  }, [isOpen, fetchMessages]);
+  }, [isOpen, fetchMessages, inApp]);
 
   // Scroll to bottom on new messages
   useEffect(() => {
@@ -158,11 +162,14 @@ export default function ChatWidget() {
   // Re-focus the input once loading drops back to false. Calling .focus() in the
   // sendMessage finally block fires before React re-renders the (disabled) textarea,
   // so the focus is a no-op. Doing it via an effect runs after the DOM update.
+  // In the app only after a reply, so opening the chat does not raise the keyboard.
+  const wasLoading = useRef(false);
   useEffect(() => {
-    if (isOpen && !loading) {
+    if (isOpen && !loading && (!inApp || wasLoading.current)) {
       inputRef.current?.focus();
     }
-  }, [loading, isOpen]);
+    wasLoading.current = loading;
+  }, [loading, isOpen, inApp]);
 
   async function clearChat() {
     try {
@@ -213,28 +220,41 @@ export default function ChatWidget() {
     return () => document.removeEventListener('scroll', onScroll, { capture: true });
   }, []);
 
+  useEffect(() => {
+    const toggle = () => setIsOpen((open) => !open);
+    window.addEventListener(CHAT_TOGGLE_EVENT, toggle);
+    return () => window.removeEventListener(CHAT_TOGGLE_EVENT, toggle);
+  }, []);
+
   // Chrome-free routes (#218/#224): the widget sits outside the layout
   // guards, so hide it itself — chat could only 401/402 there.
   if (isBareRoute(pathname)) return null;
 
+  // In the app the top bar opens the chat; the reader has no top bar, so it keeps the button.
+  const floatingButton = !inApp || hasOwnHeader(pathname);
+
   return (
     <>
-      {/* Keeps the last row of a page clear of the button on phones. */}
-      <div className="h-16 sm:hidden print:hidden" aria-hidden="true" />
-      <Button
-        onClick={toggleOpen}
-        data-chat-toggle
-        data-above-tabbar
-        className={clsx(
-          'fixed right-4 bottom-20 z-50 flex h-12 w-12 rounded-full shadow-lg transition-all hover:shadow-xl sm:right-6 sm:bottom-6 print:hidden',
-          pathname.includes('/read') && '2xl:right-[406px]',
-          tucked && !isOpen && 'max-sm:pointer-events-none max-sm:translate-y-24 max-sm:opacity-0',
-        )}
-        aria-label={isOpen ? t('close') : t('open')}
-        data-testid="chat-toggle"
-      >
-        {isOpen ? <X /> : <MessageCircle />}
-      </Button>
+      {floatingButton && (
+        <>
+          {/* Keeps the last row of a page clear of the button on phones. */}
+          <div className="h-16 sm:hidden print:hidden" aria-hidden="true" />
+          <Button
+            onClick={toggleOpen}
+            data-chat-toggle
+            data-above-tabbar
+            className={clsx(
+              'fixed right-4 bottom-20 z-50 flex h-12 w-12 rounded-full shadow-lg transition-all hover:shadow-xl sm:right-6 sm:bottom-6 print:hidden',
+              pathname.includes('/read') && '2xl:right-[406px]',
+              tucked && !isOpen && 'max-sm:pointer-events-none max-sm:translate-y-24 max-sm:opacity-0',
+            )}
+            aria-label={isOpen ? t('close') : t('open')}
+            data-testid="chat-toggle"
+          >
+            {isOpen ? <X /> : <MessageCircle />}
+          </Button>
+        </>
+      )}
 
       {/* Chat panel */}
       {isOpen && (
@@ -244,6 +264,8 @@ export default function ChatWidget() {
             pathname.includes('/read') && '2xl:right-[406px]',
           )}
           data-testid="chat-panel"
+          role={inApp ? 'dialog' : undefined}
+          aria-label={inApp ? t('tutorTitle', { language: langName }) : undefined}
         >
           {/* Header */}
           <div className="flex items-center justify-between border-b border-border bg-muted px-4 py-3">
@@ -255,15 +277,28 @@ export default function ChatWidget() {
                 {t('tutorSubtitle', { language: langName })}
               </p>
             </div>
-            <Button
-              variant="ghost"
-              onClick={clearChat}
-              className="text-xs text-muted-foreground transition-colors hover:text-destructive"
-              title={t('clearTitle')}
-              data-testid="chat-clear"
-            >
-              {t('clear')}
-            </Button>
+            <div className="flex items-center">
+              <Button
+                variant="ghost"
+                onClick={clearChat}
+                className="text-xs text-muted-foreground transition-colors hover:text-destructive"
+                title={t('clearTitle')}
+                data-testid="chat-clear"
+              >
+                {t('clear')}
+              </Button>
+              {inApp && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={toggleOpen}
+                  aria-label={t('close')}
+                  data-testid="chat-close"
+                >
+                  <X />
+                </Button>
+              )}
+            </div>
           </div>
 
           {/* Messages */}

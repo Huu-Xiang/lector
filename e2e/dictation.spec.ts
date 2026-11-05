@@ -29,7 +29,7 @@ test.describe.serial('Dictation - Setup', () => {
 
     // Type/MC are cloze-only and disappear.
     await expect(page.getByRole('button', { name: 'Type', exact: true })).toHaveCount(0);
-    await expect(page.getByRole('button', { name: 'MC', exact: true })).toHaveCount(0);
+    await expect(page.getByRole('button', { name: 'Choices', exact: true })).toHaveCount(0);
 
     // The shared sentence-grouping options stay available.
     await expect(page.getByRole('button', { name: /Top 500/ }).first()).toBeVisible();
@@ -180,7 +180,7 @@ test.describe.serial('Dictation - Cloze review reminders hidden (#191)', () => {
       await expect(page.getByRole('button', { name: 'Start' })).toBeEnabled();
 
       // Switching back to cloze restores the reminder.
-      await page.getByRole('button', { name: 'Cloze', exact: true }).click();
+      await page.getByRole('button', { name: 'Fill in', exact: true }).click();
       await expect(reviewHeading).toBeVisible();
       await expect(reviewDueButton).toBeVisible();
     } finally {

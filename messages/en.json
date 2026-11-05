@@ -1718,12 +1718,12 @@
     "statsFailed": "Your answer was saved, but updating your stats failed.",
     "lookUp": "Look up {word}",
     "title": {
-      "cloze": "Cloze Practice",
+      "cloze": "Fill-in Practice",
       "dictation": "Dictation Practice"
     },
     "format": {
-      "cloze": "Cloze",
-      "clozeHint": "Fill in the blank",
+      "cloze": "Fill in",
+      "clozeHint": "Complete the sentence",
       "dictation": "Dictation",
       "dictationHint": "Type what you hear"
     },
@@ -1735,7 +1735,7 @@
       "sentences": "Sentences",
       "mode": "Mode",
       "modeType": "Type",
-      "modeMc": "MC",
+      "modeMc": "Choices",
       "start": "Start",
       "loading": "Loading..."
     },

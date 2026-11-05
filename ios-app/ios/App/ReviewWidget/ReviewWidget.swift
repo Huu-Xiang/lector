@@ -69,10 +69,14 @@ struct ReviewWidgetView: View {
         }
     }
 
+    /// What the widget counts, with a small mark at the trailing corner; the HIG says a logo is
+    /// seldom needed and the top-right corner is enough when one helps.
     private var header: some View {
-        HStack(spacing: 6) {
-            Image("Fox").resizable().frame(width: 20, height: 20).clipShape(RoundedRectangle(cornerRadius: 5))
-            Text(verbatim: "Readfox").font(.caption).fontWeight(.semibold).foregroundStyle(.secondary)
+        HStack {
+            Text("widget.name").font(.caption).fontWeight(.semibold).foregroundStyle(.secondary)
+            Spacer(minLength: 4)
+            Image("Fox").resizable().frame(width: 16, height: 16).clipShape(RoundedRectangle(cornerRadius: 4))
+                .accessibilityHidden(true)
         }
     }
 

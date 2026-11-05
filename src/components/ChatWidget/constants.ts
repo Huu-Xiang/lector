@@ -1,5 +1,8 @@
 import { LanguageCode } from '@/types/language';
 
+/** Dispatched on `window` to open or close the chat, as the app's top bar does. */
+export const CHAT_TOGGLE_EVENT = 'readfox:chat-toggle';
+
 // TODO: Scope these to the active language
 export const EXAMPLE_PROMPTS: Record<LanguageCode, string[]> = {
   af: [

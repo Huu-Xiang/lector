@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ChevronLeft, Settings } from 'lucide-react';
+import { ChevronLeft, MessageCircle, Settings } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import LanguageSelector from '@/components/LanguageSelector';
@@ -11,6 +11,7 @@ import { haptic, useIsNativeApp } from '@/lib/native-app';
 import { hasOwnHeader, NATIVE_TABS } from '@/components/NativeBridge/tab-bar';
 import { navLinks } from '../../constants';
 import AccountMenu from '../AccountMenu';
+import { CHAT_TOGGLE_EVENT } from '@/components/ChatWidget/constants';
 
 /**
  * The iOS-style bar shown instead of the web top bar inside the app. At rest it has no
@@ -21,6 +22,7 @@ export default function NativeTopBar() {
   const pathname = usePathname();
   const router = useRouter();
   const tNav = useTranslations('nav');
+  const tChat = useTranslations('chat');
   const inApp = useIsNativeApp();
   const [scrolled, setScrolled] = useState(false);
 
@@ -66,6 +68,18 @@ export default function NativeTopBar() {
         <div className="flex items-center justify-end gap-1">
           <WhatsNew variant="topbar" />
           <AccountMenu compact />
+          <button
+            type="button"
+            aria-label={tChat('open')}
+            onClick={() => {
+              void haptic();
+              window.dispatchEvent(new Event(CHAT_TOGGLE_EVENT));
+            }}
+            className="flex size-11 items-center justify-center text-foreground active:opacity-60"
+            data-testid="native-chat"
+          >
+            <MessageCircle className="size-[22px]" aria-hidden />
+          </button>
           {tab && (
             <Link
               href="/settings"

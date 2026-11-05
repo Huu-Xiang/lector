@@ -828,6 +828,18 @@ html[data-native-app] .native-topbar[data-scrolled]::before {
   opacity: 1;
 }
 
+/* On a phone the chat opens as a sheet from the bottom, like a system sheet. */
+@media (width < 40rem) {
+  html[data-native-app] [data-testid='chat-panel'] {
+    inset: calc(env(safe-area-inset-top) + 3.5rem) 0 0;
+    width: auto;
+    height: auto;
+    border-width: 0;
+    border-radius: 1.25rem 1.25rem 0 0;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
 /* The compact controls in the top bar look small but take a 44 pt tap area. */
 html[data-native-app] .native-topbar :is(button, a) {
   position: relative;
