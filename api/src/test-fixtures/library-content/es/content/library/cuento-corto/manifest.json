@@ -2,6 +2,7 @@
   "title": "Cuento corto",
   "author": "Autor de prueba",
   "level": "A2",
+  "category": "stories",
   "wordCount": 12,
   "source": { "name": "Test source", "url": "https://example.test/book", "license": "Public domain" },
   "lessons": [

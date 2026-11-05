@@ -34,6 +34,7 @@ function bookJsonLd(book: NonNullable<ReturnType<typeof findPublicBook>>) {
     name: book.title,
     author: { '@type': 'Person', name: book.author },
     inLanguage: book.language,
+    ...(book.category ? { genre: book.category } : {}),
     url: bookUrl(book),
     isAccessibleForFree: true,
     educationalLevel: book.level,
@@ -82,6 +83,7 @@ export default async function BookPage({ params }: Props) {
   if (!book) notFound();
 
   const t = await getTranslations('publicBooks');
+  const tc = await getTranslations('library.freeBooks');
   const locale = await getLocale();
   const languageName =
     new Intl.DisplayNames([locale], { type: 'language' }).of(language) ?? language;
@@ -138,6 +140,7 @@ export default async function BookPage({ params }: Props) {
               {t('level', { level: book.level })}
             </Link>
             <span>{languageName}</span>
+            {book.category && <span>{tc(`categories.${book.category}`)}</span>}
             <span>{t('lessons', { count: book.lessonCount })}</span>
             <span>
               {hours >= 1

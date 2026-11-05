@@ -2,6 +2,7 @@
   "title": "Grimms' Fairy Tales",
   "author": "Jacob and Wilhelm Grimm, translated by Edgar Taylor and Marian Edwardes",
   "level": "B1",
+  "category": "stories",
   "wordCount": 101651,
   "source": {
     "name": "Project Gutenberg",

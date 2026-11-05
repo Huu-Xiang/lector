@@ -937,7 +937,20 @@
       "sortLong": "長的在前",
       "noMatch": "找不到「{query}」。",
       "readingHours": "約 {hours} 小時",
-      "readingMinutes": "約 {minutes} 分鐘"
+      "readingMinutes": "約 {minutes} 分鐘",
+      "categoryFilter": "分類",
+      "noMatchFilters": "沒有符合這些條件的書。",
+      "categories": {
+        "novel": "長篇小說",
+        "adventure": "冒險・懸疑・科幻",
+        "children": "兒童文學",
+        "stories": "短篇與童話",
+        "poetry": "詩歌與戲劇",
+        "philosophy": "哲學與思想",
+        "nonfiction": "隨筆與傳記",
+        "reader": "入門讀本"
+      },
+      "categoryAll": "全部"
     },
     "empty": {
       "browseBooks": "瀏覽免費書籍",

@@ -2,6 +2,7 @@
   "title": "Frankenstein",
   "author": "Mary Shelley",
   "level": "C1",
+  "category": "adventure",
   "wordCount": 75312,
   "source": {
     "name": "Project Gutenberg",

@@ -991,7 +991,20 @@
       "sortLong": "긴 순",
       "noMatch": "“{query}”에 맞는 도서가 없어요.",
       "readingHours": "약 {hours}시간",
-      "readingMinutes": "약 {minutes}분"
+      "readingMinutes": "약 {minutes}분",
+      "categoryFilter": "분류",
+      "noMatchFilters": "이 조건에 맞는 책이 없습니다.",
+      "categories": {
+        "novel": "장편소설",
+        "adventure": "모험·추리·SF",
+        "children": "아동문학",
+        "stories": "단편·동화",
+        "poetry": "시·희곡",
+        "philosophy": "철학·사상",
+        "nonfiction": "수필·전기",
+        "reader": "입문 독본"
+      },
+      "categoryAll": "전체"
     },
     "empty": {
       "browseBooks": "무료 도서 둘러보기",

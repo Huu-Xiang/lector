@@ -2,6 +2,7 @@
   "title": "Les Misérables",
   "author": "Victor Hugo",
   "level": "C2",
+  "category": "novel",
   "wordCount": 556360,
   "source": {
     "name": "Project Gutenberg",

@@ -34,6 +34,13 @@ import {
 } from '@/lib/reading-level';
 import { useActiveLanguage } from '@/utils/hooks';
 import { readingMinutes } from '@/lib/reading-time';
+import {
+  LIBRARY_CATEGORIES,
+  categoryCounts,
+  levelsWithBooks,
+  matchesFilters,
+  type LibraryCategory,
+} from '@/lib/library-filter';
 
 // Only 'en' and 'fr' have a working reading-feed source today (see
 // api/src/lib/reading-feed/sources/index.ts); every other target language
@@ -45,12 +52,8 @@ const FEED_LANGUAGES = new Set(['en', 'fr']);
 type TabId = 'books' | FeedInterest;
 type BookSort = 'default' | 'short' | 'long';
 
-function matchesQuery(book: LibraryBook, query: string): boolean {
-  const needle = query.trim().toLocaleLowerCase();
-  if (!needle) return true;
-  return [book.title, book.author, ...Object.values(book.titles)].some((text) =>
-    text.toLocaleLowerCase().includes(needle),
-  );
+function sumCounts(counts: Record<LibraryCategory, number>): number {
+  return Object.values(counts).reduce((a, b) => a + b, 0);
 }
 
 export default function FreeBooksModal({
@@ -77,6 +80,7 @@ export default function FreeBooksModal({
   const [tab, setTab] = useState<TabId>('books');
   const [query, setQuery] = useState('');
   const [sort, setSort] = useState<BookSort>('default');
+  const [category, setCategory] = useState<LibraryCategory | 'all'>('all');
   const [feed, setFeed] = useState<ReadingFeedArticle[] | null>(null);
   const [feedFailed, setFeedFailed] = useState(false);
   const languageName = languageDisplayName(activeLang.code, locale, activeLang.name);
@@ -187,19 +191,27 @@ export default function FreeBooksModal({
     setReadingLevel(activeLang.code, level).catch(() => {});
   }
 
-  const levels = CEFR_LEVELS.filter((level) => books?.some((book) => book.level === level));
-  const current = filter !== 'all' && levels.includes(filter) ? filter : 'all';
+  const allBooks = books ?? [];
   const searching = query.trim() !== '';
-  const matching = (books ?? []).filter((book) => matchesQuery(book, query));
+  const levels = CEFR_LEVELS.filter((level) => allBooks.some((book) => book.level === level));
+  const levelFilter = filter !== 'all' && levels.includes(filter) ? filter : 'all';
+  const counts = categoryCounts(allBooks, { query, level: searching ? 'all' : levelFilter });
+  const presentCategories = LIBRARY_CATEGORIES.filter((c) =>
+    allBooks.some((book) => book.category === c),
+  );
+  const activeCategory = category !== 'all' && counts[category] > 0 ? category : 'all';
+  const levelsInCategory = levelsWithBooks(allBooks, activeCategory);
+  const current = levelFilter !== 'all' && levelsInCategory.has(levelFilter) ? levelFilter : 'all';
+  const matching = allBooks.filter((book) =>
+    matchesFilters(book, { query, level: searching ? 'all' : current, category: activeCategory }),
+  );
   const sorted =
     sort === 'default'
       ? matching
       : [...matching].sort((a, b) =>
           sort === 'short' ? a.wordCount - b.wordCount : b.wordCount - a.wordCount,
         );
-  const shownLevels = (searching || current === 'all' ? levels : [current]).filter((level) =>
-    sorted.some((book) => book.level === level),
-  );
+  const shownLevels = levels.filter((level) => sorted.some((book) => book.level === level));
   const timeLabel = (book: LibraryBook) => {
     const minutes = readingMinutes(book.wordCount, activeLang.code);
     return minutes >= 60
@@ -288,9 +300,9 @@ export default function FreeBooksModal({
                 </Select>
               </div>
             )}
-            {searching && shownLevels.length === 0 && (
+            {shownLevels.length === 0 && allBooks.length > 0 && (
               <p className="text-sm text-muted-foreground" data-testid="free-books-no-match">
-                {t('noMatch', { query: query.trim() })}
+                {searching ? t('noMatch', { query: query.trim() }) : t('noMatchFilters')}
               </p>
             )}
             {levels.length > 0 && !searching && (
@@ -303,9 +315,10 @@ export default function FreeBooksModal({
                     key={level}
                     type="button"
                     aria-pressed={current === level}
+                    disabled={level !== 'all' && !levelsInCategory.has(level)}
                     onClick={() => pickLevel(level)}
                     data-testid={`free-books-level-${level}`}
-                    className={`shrink-0 rounded-xl border px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
+                    className={`shrink-0 rounded-xl border px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none disabled:opacity-40 ${
                       current === level
                         ? 'border-primary bg-[var(--primary-soft)] text-[var(--primary-text)]'
                         : 'border-border bg-background text-foreground hover:bg-accent'
@@ -317,6 +330,37 @@ export default function FreeBooksModal({
                     )}
                   </button>
                 ))}
+              </div>
+            )}
+            {presentCategories.length > 1 && (
+              <div
+                className="mb-4 flex flex-wrap gap-2"
+                role="group"
+                aria-label={t('categoryFilter')}
+                data-testid="free-books-categories"
+              >
+                {(['all', ...presentCategories] as const).map((id) => {
+                  const total = id === 'all' ? sumCounts(counts) : counts[id];
+                  const selected = activeCategory === id;
+                  return (
+                    <button
+                      key={id}
+                      type="button"
+                      aria-pressed={selected}
+                      disabled={id !== 'all' && total === 0}
+                      onClick={() => setCategory(id)}
+                      data-testid={`free-books-category-${id}`}
+                      className={`rounded-full border px-3 py-1 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none disabled:opacity-40 ${
+                        selected
+                          ? 'border-primary bg-[var(--primary-soft)] text-[var(--primary-text)]'
+                          : 'border-border bg-background text-foreground hover:bg-accent'
+                      }`}
+                    >
+                      {id === 'all' ? t('categoryAll') : t(`categories.${id}`)}
+                      <span className="ml-1 text-xs text-muted-foreground">{total}</span>
+                    </button>
+                  );
+                })}
               </div>
             )}
             {shownLevels.map((level) => {
@@ -359,7 +403,10 @@ export default function FreeBooksModal({
                                   {tl('original', { title: book.title })}
                                 </p>
                               )}
-                              <p className="text-sm text-muted-foreground">{book.author}</p>
+                              <p className="text-sm text-muted-foreground">
+                                {book.author}
+                                {book.category && ` · ${t(`categories.${book.category}`)}`}
+                              </p>
                               {showDescriptions && blurb && (
                                 <p className="mt-1 text-sm text-foreground">{blurb}</p>
                               )}

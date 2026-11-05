@@ -2,6 +2,7 @@
   "title": "Emma",
   "author": "Jane Austen",
   "level": "C1",
+  "category": "novel",
   "wordCount": 161974,
   "source": {
     "name": "Project Gutenberg",

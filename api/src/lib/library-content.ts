@@ -15,11 +15,25 @@ import { lessonTextBytes } from './storage-limits';
 
 const SLUG = /^[a-z0-9][a-z0-9-]{0,63}$/;
 
+export const LIBRARY_CATEGORIES = [
+  'novel',
+  'adventure',
+  'children',
+  'stories',
+  'poetry',
+  'philosophy',
+  'nonfiction',
+  'reader',
+] as const;
+export type LibraryCategory = (typeof LIBRARY_CATEGORIES)[number];
+
 export interface LibraryBookSummary {
   slug: string;
   title: string;
   author: string;
   level: string;
+  /** Null for a book whose manifest names no known category. */
+  category: LibraryCategory | null;
   wordCount: number;
   lessonCount: number;
   sourceName: string;
@@ -39,6 +53,7 @@ interface Manifest {
   title?: unknown;
   author?: unknown;
   level?: unknown;
+  category?: unknown;
   wordCount?: unknown;
   source?: { name?: unknown; url?: unknown; license?: unknown };
   lessons?: Array<{ file?: unknown; title?: unknown }>;
@@ -202,6 +217,9 @@ function summarise(
     title: str(manifest.title, 'title', slug),
     author: str(manifest.author, 'author', slug),
     level: str(manifest.level, 'level', slug),
+    category: (LIBRARY_CATEGORIES as readonly unknown[]).includes(manifest.category)
+      ? (manifest.category as LibraryCategory)
+      : null,
     wordCount: typeof manifest.wordCount === 'number' ? manifest.wordCount : 0,
     lessonCount: manifest.lessons.length,
     sourceName: str(manifest.source?.name, 'source name', slug),

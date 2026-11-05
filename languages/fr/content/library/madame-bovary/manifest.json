@@ -2,6 +2,7 @@
   "title": "Madame Bovary",
   "author": "Gustave Flaubert",
   "level": "C1",
+  "category": "novel",
   "wordCount": 120227,
   "source": {
     "name": "Project Gutenberg",

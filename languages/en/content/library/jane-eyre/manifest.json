@@ -2,6 +2,7 @@
   "title": "Jane Eyre",
   "author": "Charlotte Brontë",
   "level": "C1",
+  "category": "novel",
   "wordCount": 188470,
   "source": {
     "name": "Project Gutenberg",

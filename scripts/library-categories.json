@@ -1,0 +1,109 @@
+{
+  "en": {
+    "novel": [
+      "a-christmas-carol", "a-tale-of-two-cities", "anna-karenina", "crime-and-punishment", "daddy-long-legs",
+      "david-copperfield", "emma", "great-expectations", "heart-of-darkness", "jane-eyre", "les-miserables",
+      "little-women", "martin-eden", "middlemarch", "moby-dick", "of-human-bondage", "oliver-twist", "persuasion",
+      "pride-and-prejudice", "sense-and-sensibility", "tess-of-the-durbervilles", "the-great-gatsby",
+      "the-moon-and-sixpence", "the-picture-of-dorian-gray", "the-scarlet-letter", "vanity-fair", "war-and-peace",
+      "wuthering-heights"
+    ],
+    "adventure": [
+      "a-study-in-scarlet", "adventures-of-sherlock-holmes", "around-the-world-in-eighty-days",
+      "dr-jekyll-and-mr-hyde", "dracula", "frankenstein", "gullivers-travels", "robinson-crusoe",
+      "the-adventures-of-tom-sawyer", "the-call-of-the-wild", "the-hound-of-the-baskervilles", "the-invisible-man",
+      "the-memoirs-of-sherlock-holmes", "the-return-of-sherlock-holmes", "the-sign-of-the-four", "the-time-machine",
+      "the-war-of-the-worlds", "treasure-island", "white-fang"
+    ],
+    "children": [
+      "a-little-princess", "alices-adventures-in-wonderland", "anne-of-green-gables", "black-beauty",
+      "five-children-and-it", "heidi", "just-so-stories", "little-lord-fauntleroy", "peter-pan",
+      "the-adventures-of-pinocchio", "the-jungle-book", "the-little-red-hen", "the-prince-and-the-pauper",
+      "the-railway-children", "the-secret-garden", "the-tale-of-benjamin-bunny", "the-tale-of-jemima-puddle-duck",
+      "the-tale-of-mr-jeremy-fisher", "the-tale-of-mrs-tiggy-winkle", "the-tale-of-peter-rabbit",
+      "the-tale-of-squirrel-nutkin", "the-tale-of-the-flopsy-bunnies", "the-tale-of-tom-kitten",
+      "the-tale-of-two-bad-mice", "the-velveteen-rabbit", "the-wind-in-the-willows", "the-wonderful-wizard-of-oz"
+    ],
+    "stories": [
+      "aesops-fables", "andersens-fairy-tales", "english-fairy-tales", "grimms-fairy-tales", "stories-from-hans-andersen",
+      "the-arabian-nights", "the-four-million", "the-happy-prince"
+    ],
+    "poetry": ["gitanjali", "stray-birds", "tales-from-shakespeare", "the-prophet"],
+    "philosophy": [
+      "analects-of-confucius", "apology", "beyond-good-and-evil", "chuang-tzu", "discourse-on-inequality",
+      "discourse-on-the-arts-and-sciences", "discourse-on-the-method",
+      "fundamental-principles-of-the-metaphysic-of-morals", "meditations", "nature-emerson", "nicomachean-ethics",
+      "on-liberty", "pascals-pensees", "phaedo", "pragmatism", "symposium", "tao-te-ching", "the-art-of-war",
+      "the-consolation-of-philosophy", "the-enchiridion", "the-essays-of-francis-bacon", "the-prince",
+      "the-problems-of-philosophy", "the-republic", "the-social-contract", "thus-spake-zarathustra"
+    ],
+    "nonfiction": ["autobiography-of-benjamin-franklin", "the-story-of-my-life", "walden"],
+    "reader": [
+      "aldine-first-reader", "aldine-second-reader", "fifty-famous-stories-retold", "kittens-and-cats",
+      "mcguffeys-eclectic-primer", "mcguffeys-first-reader", "mcguffeys-second-reader", "mcguffeys-third-reader",
+      "the-summers-first-reader", "the-summers-primer"
+    ]
+  },
+  "fr": {
+    "novel": [
+      "au-bonheur-des-dames", "bel-ami", "du-cote-de-chez-swann", "eugenie-grandet", "germinal", "l-assommoir",
+      "la-bete-humaine", "la-chartreuse-de-parme", "la-dame-aux-camelias", "la-mare-au-diable", "la-petite-fadette",
+      "le-dernier-jour-d-un-condamne", "le-grand-meaulnes", "le-pere-goriot", "le-petit-chose", "le-rouge-et-le-noir",
+      "les-liaisons-dangereuses", "les-miserables", "les-travailleurs-de-la-mer", "madame-bovary", "manon-lescaut",
+      "nana", "notre-dame-de-paris", "pierre-et-jean", "poil-de-carotte", "quatrevingt-treize", "tartarin-de-tarascon",
+      "therese-raquin", "une-vie", "colomba"
+    ],
+    "adventure": [
+      "arsene-lupin-gentleman-cambrioleur", "autour-de-la-lune", "cinq-semaines-en-ballon", "de-la-terre-a-la-lune",
+      "l-ile-mysterieuse", "la-reine-margot", "la-tulipe-noire", "le-comte-de-monte-cristo", "le-fantome-de-l-opera",
+      "le-mystere-de-la-chambre-jaune", "le-tour-du-monde-en-80-jours", "les-enfants-du-capitaine-grant",
+      "les-trois-mousquetaires", "michel-strogoff", "vingt-ans-apres", "vingt-mille-lieues-sous-les-mers",
+      "voyage-au-centre-de-la-terre"
+    ],
+    "children": [
+      "alice-au-pays-des-merveilles", "en-famille", "francois-le-bossu", "jean-qui-grogne-et-jean-qui-rit",
+      "le-general-dourakine", "les-malheurs-de-sophie", "les-memoires-d-un-ane", "les-petites-filles-modeles",
+      "les-vacances", "un-bon-petit-diable"
+    ],
+    "stories": [
+      "abc-petits-contes", "boule-de-suif", "candide", "contes-choisis-grimm", "contes-de-la-becasse",
+      "contes-du-jour-et-de-la-nuit", "contes-du-lundi", "fables-de-la-fontaine", "histoires-naturelles", "le-horla",
+      "lettres-de-mon-moulin", "micromegas", "nouveaux-contes-de-fees", "riquet-a-la-houppe", "trois-contes", "zadig"
+    ],
+    "poetry": ["les-fleurs-du-mal"],
+    "philosophy": [
+      "ainsi-parlait-zarathoustra", "aphorismes-sur-la-sagesse-dans-la-vie", "discours-de-la-methode", "esprit-des-lois",
+      "le-neveu-de-rameau", "maximes-la-rochefoucauld", "reflexions-diverses", "supplement-au-voyage-de-bougainville",
+      "traite-sur-la-tolerance"
+    ],
+    "nonfiction": [
+      "les-reveries-du-promeneur-solitaire", "regrets-sur-ma-vieille-robe-de-chambre", "souvenirs-entomologiques"
+    ],
+    "reader": ["contes-et-legendes", "entre-nous", "le-premier-livre"]
+  },
+  "es": {
+    "novel": ["don-quijote", "lazarillo-de-tormes", "marianela"],
+    "stories": ["becquer-leyendas", "cuando-la-tierra-era-nina", "cuentos-de-la-alhambra"],
+    "children": ["corazon", "raton-perez"],
+    "poetry": ["platero-y-yo"],
+    "philosophy": ["meditaciones-del-quijote", "vida-de-don-quijote-y-sancho"],
+    "reader": [
+      "a-first-spanish-reader", "an-elementary-spanish-reader", "lecturas-faciles", "libro-segundo-de-lectura",
+      "spanish-tales-for-beginners"
+    ]
+  },
+  "zh": {
+    "novel": ["honglou-meng", "rulin-waishi", "sanguo-yanyi", "shuihu-zhuan", "xiyouji"],
+    "stories": ["jingshi-tongyan"],
+    "philosophy": [
+      "chuanxilu", "daodejing", "daxue-zhangju", "hanfeizi", "jinsilu", "liezi", "lunheng", "lunyu", "mengzi", "mozi",
+      "sunzi-bingfa", "zhongyong-zhangju"
+    ],
+    "reader": ["gushi-xin-dubo"]
+  },
+  "ko": {
+    "children": ["chilchildan-bimil", "sarang-seonmul"],
+    "stories": ["dongbaekkkot", "gamja", "memilkkot-pil-muryeop", "unsu-joeun-nal"],
+    "poetry": ["jindallaekkot", "nimui-chimmuk"]
+  }
+}

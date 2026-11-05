@@ -25,6 +25,7 @@ describe('public books', () => {
       expect(book.title).toBeTruthy();
       expect(book.level).toMatch(/^[ABC][12]$/);
       expect(book.lessonCount).toBeGreaterThan(0);
+      expect(book.category, `${book.language}/${book.slug}`).toBeTruthy();
       expect(book.blurbs.en, `${book.language}/${book.slug}`).toBeTruthy();
     }
   });

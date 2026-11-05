@@ -2,6 +2,7 @@
   "title": "Pride and Prejudice",
   "author": "Jane Austen",
   "level": "C1",
+  "category": "novel",
   "wordCount": 123482,
   "source": {
     "name": "Project Gutenberg",

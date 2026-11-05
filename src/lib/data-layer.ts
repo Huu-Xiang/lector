@@ -1597,6 +1597,7 @@ export interface LibraryBook {
   title: string;
   author: string;
   level: string;
+  category: string | null;
   wordCount: number;
   lessonCount: number;
   sourceName: string;

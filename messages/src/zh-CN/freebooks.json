@@ -38,7 +38,20 @@
       "sortLong": "长的在前",
       "noMatch": "没有找到“{query}”。",
       "readingHours": "约 {hours} 小时",
-      "readingMinutes": "约 {minutes} 分钟"
+      "readingMinutes": "约 {minutes} 分钟",
+      "categoryFilter": "分类",
+      "noMatchFilters": "没有符合这些条件的书。",
+      "categories": {
+        "novel": "长篇小说",
+        "adventure": "冒险·悬疑·科幻",
+        "children": "儿童文学",
+        "stories": "短篇与童话",
+        "poetry": "诗歌与戏剧",
+        "philosophy": "哲学与思想",
+        "nonfiction": "随笔与传记",
+        "reader": "入门读本"
+      },
+      "categoryAll": "全部"
     },
     "empty": {
       "browseBooks": "浏览免费书籍"

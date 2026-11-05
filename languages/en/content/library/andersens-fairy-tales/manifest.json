@@ -2,6 +2,7 @@
   "title": "Andersen's Fairy Tales",
   "author": "Hans Christian Andersen",
   "level": "B1",
+  "category": "stories",
   "wordCount": 56331,
   "source": {
     "name": "Project Gutenberg",

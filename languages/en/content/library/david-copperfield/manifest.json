@@ -2,6 +2,7 @@
   "title": "David Copperfield",
   "author": "Charles Dickens",
   "level": "C1",
+  "category": "novel",
   "wordCount": 362944,
   "source": {
     "name": "Project Gutenberg",

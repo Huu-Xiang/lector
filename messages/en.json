@@ -991,7 +991,20 @@
       "sortLong": "Longest first",
       "noMatch": "No book matches “{query}”.",
       "readingHours": "about {hours} h",
-      "readingMinutes": "about {minutes} min"
+      "readingMinutes": "about {minutes} min",
+      "categoryFilter": "Category",
+      "noMatchFilters": "No book matches these filters.",
+      "categories": {
+        "novel": "Novels",
+        "adventure": "Adventure, mystery & sci-fi",
+        "children": "Children's books",
+        "stories": "Short stories & tales",
+        "poetry": "Poetry & drama",
+        "philosophy": "Philosophy & thought",
+        "nonfiction": "Essays & memoir",
+        "reader": "Beginner readers"
+      },
+      "categoryAll": "All"
     },
     "empty": {
       "browseBooks": "Browse free books",

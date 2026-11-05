@@ -2,6 +2,7 @@
   "title": "The Adventures of Tom Sawyer",
   "author": "Mark Twain",
   "level": "B2",
+  "category": "adventure",
   "wordCount": 73289,
   "source": {
     "name": "Project Gutenberg",

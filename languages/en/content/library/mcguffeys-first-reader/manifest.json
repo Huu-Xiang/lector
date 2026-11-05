@@ -2,6 +2,7 @@
   "title": "McGuffey's First Eclectic Reader",
   "author": "William Holmes McGuffey",
   "level": "A1",
+  "category": "reader",
   "wordCount": 5245,
   "source": {
     "name": "Project Gutenberg",

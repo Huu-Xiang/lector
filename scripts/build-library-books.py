@@ -1263,6 +1263,11 @@ def titlecase_heading(text: str, capitalise: bool = False, title: bool = False, 
     return _keep_roman(_sentence(t)) if t.isupper() else t
 
 
+def category_of(lang: str, slug: str) -> str | None:
+    groups = json.loads(Path(__file__).with_name("library-categories.json").read_text(encoding="utf8")).get(lang, {})
+    return next((cat for cat, slugs in groups.items() if slug in slugs), None)
+
+
 def build(book: dict, raw_dir: Path, out_dir: Path) -> None:
     raw = (raw_dir / f"pg{book['id']}.txt").read_text(encoding="utf8", errors="replace")
     if book.get("parts"):
@@ -1324,10 +1329,12 @@ def build(book: dict, raw_dir: Path, out_dir: Path) -> None:
         name = f"{n:02d}.md"
         (book_dir / name).write_text(f"# {title}\n\n" + "\n\n".join(body) + "\n", encoding="utf8")
         entries.append({"file": name, "title": title})
+    category = category_of(book["lang"], book["slug"])
     manifest = {
         "title": book["title"],
         "author": book["author"],
         "level": book["level"],
+        **({"category": category} if category else {}),
         "wordCount": total,
         "source": {
             "name": "Project Gutenberg",

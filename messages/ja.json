@@ -991,7 +991,20 @@
       "sortLong": "長い順",
       "noMatch": "「{query}」に一致する本はありません。",
       "readingHours": "約 {hours} 時間",
-      "readingMinutes": "約 {minutes} 分"
+      "readingMinutes": "約 {minutes} 分",
+      "categoryFilter": "ジャンル",
+      "noMatchFilters": "この条件に合う本はありません。",
+      "categories": {
+        "novel": "長編小説",
+        "adventure": "冒険・ミステリー・SF",
+        "children": "児童文学",
+        "stories": "短編・童話",
+        "poetry": "詩・戯曲",
+        "philosophy": "哲学・思想",
+        "nonfiction": "エッセイ・伝記",
+        "reader": "入門読本"
+      },
+      "categoryAll": "すべて"
     },
     "empty": {
       "browseBooks": "無料の本を見る",

@@ -33,6 +33,25 @@ test.describe('Free books dialog search and sort', () => {
     await expect(page.getByTestId('free-books-no-match')).toBeVisible();
   });
 
+  test('the category row narrows the list and works together with the level', async ({ page }) => {
+    await openEnglishFreeBooks(page);
+    const list = page.getByTestId('free-books-list');
+
+    await page.getByTestId('free-books-level-all').click();
+    await page.getByTestId('free-books-category-philosophy').click();
+    await expect(list.getByTestId('free-book-apology')).toBeVisible();
+    await expect(list.getByTestId('free-book-emma')).toHaveCount(0);
+
+    await page.getByTestId('free-books-level-B2').click();
+    await expect(list.getByTestId('free-book-apology')).toBeVisible();
+    await expect(list.getByTestId('free-book-phaedo')).toHaveCount(0);
+
+    await page.getByTestId('free-books-category-all').click();
+    await expect(list.getByTestId('free-book-emma')).toHaveCount(0);
+    await page.getByTestId('free-books-level-C1').click();
+    await expect(list.getByTestId('free-book-emma')).toBeVisible();
+  });
+
   test('shortest first puts the shortest book of a level at the top', async ({ page }) => {
     await openEnglishFreeBooks(page);
     await page.getByTestId('free-books-level-C2').click();

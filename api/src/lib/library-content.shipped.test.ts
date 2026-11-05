@@ -1,7 +1,12 @@
 import '../test-guard';
 import { describe, expect, test } from 'bun:test';
 import { getAllLanguages, NATIVE_LANGUAGES } from './languages';
-import { listLibraryBooks, loadLibraryBook } from './library-content';
+import {
+  LIBRARY_CATEGORIES,
+  listLibraryBooks,
+  loadLibraryBook,
+  type LibraryCategory,
+} from './library-content';
 
 const LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
 
@@ -28,6 +33,7 @@ describe('shipped library books', () => {
   for (const { code, book } of shipped) {
     test(`${code}/${book.slug} is complete and attributed`, () => {
       expect(LEVELS).toContain(book.level);
+      expect(LIBRARY_CATEGORIES).toContain(book.category as LibraryCategory);
       expect(book.sourceUrl).toStartWith('https://');
       expect(book.license.length).toBeGreaterThan(5);
       const loaded = loadLibraryBook(code, book.slug)!;

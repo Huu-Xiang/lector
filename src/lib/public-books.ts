@@ -16,6 +16,7 @@ export interface PublicBook {
   title: string;
   author: string;
   level: string;
+  category: string | null;
   wordCount: number;
   source: { name: string; url: string; license: string };
   lessonCount: number;
@@ -38,6 +39,7 @@ interface Manifest {
   title: string;
   author: string;
   level: string;
+  category?: string;
   wordCount: number;
   source: PublicBook['source'];
   lessons: Array<{ file: string; title: string }>;
@@ -92,6 +94,7 @@ export function listPublicBooks(): PublicBook[] {
         title: manifest.title,
         author: manifest.author,
         level: manifest.level,
+        category: manifest.category ?? null,
         wordCount: manifest.wordCount,
         source: manifest.source,
         lessonCount: manifest.lessons.length,
