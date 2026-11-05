@@ -1,11 +1,12 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
-import { getTranslations } from 'next-intl/server';
+import { getLocale, getTranslations } from 'next-intl/server';
 import { BookOpen, Languages, Repeat, PenLine, Layers } from 'lucide-react';
 import LegalLinks from '@/components/LegalLinks';
 import WelcomeOfferNote from '@/components/WelcomeOfferNote';
 import { LANGUAGES } from '@/lib/languages';
+import { PUBLIC_BOOK_LANGUAGES } from '@/lib/public-books';
 import { LANDING_ROOT_ID } from '@/lib/api-base';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -51,7 +52,11 @@ const features = [
 
 export default async function LandingPage() {
   const t = await getTranslations('landing');
-  const languageCount = Object.keys(LANGUAGES).length;
+  const locale = await getLocale();
+  const names = new Intl.DisplayNames([locale], { type: 'language' });
+  // The free-library languages are the ones production opens in setup (SETUP_READY_LANGUAGES).
+  const ready = PUBLIC_BOOK_LANGUAGES.map((code) => names.of(code) ?? code);
+  const soonCount = Object.keys(LANGUAGES).length - PUBLIC_BOOK_LANGUAGES.length;
   return (
     <div id={LANDING_ROOT_ID} className="min-h-screen w-full bg-background">
       <script
@@ -92,9 +97,24 @@ export default async function LandingPage() {
             <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
               {t('heroTitle')}
             </h1>
-            <p className="mt-4 text-lg text-muted-foreground">
-              {t('heroBody', { count: languageCount })}
-            </p>
+            <p className="mt-4 text-lg text-muted-foreground">{t('heroBody')}</p>
+            <div
+              className="mt-4 flex flex-wrap items-center gap-2 text-sm"
+              data-testid="landing-languages"
+            >
+              <span className="font-medium text-foreground">{t('languagesNow')}</span>
+              {ready.map((name) => (
+                <span
+                  key={name}
+                  className="rounded-full border border-primary/40 bg-[var(--primary-soft)] px-2.5 py-0.5 text-foreground"
+                >
+                  {name}
+                </span>
+              ))}
+              <span className="text-muted-foreground">
+                {t('languagesSoon', { count: soonCount })}
+              </span>
+            </div>
             <div className="mt-5 max-w-md">
               <WelcomeOfferNote />
             </div>
