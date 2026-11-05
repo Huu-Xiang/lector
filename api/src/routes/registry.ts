@@ -41,6 +41,7 @@ import emailUnsubscribe from './email-unsubscribe';
 import emailPreferences from './email-preferences';
 import feedback from './feedback';
 import sourceCount from './source-count';
+import push from './push';
 
 export type RouteMount = {
   /** Mount prefix, exactly as `app.route()` receives it. */
@@ -111,4 +112,5 @@ export const routeMounts: readonly RouteMount[] = [
   { prefix: '/api/email/preferences', app: emailPreferences },
   { prefix: '/api/feedback', app: feedback },
   { prefix: '/api/source-count', app: sourceCount },
+  { prefix: '/api/push', app: push },
 ];

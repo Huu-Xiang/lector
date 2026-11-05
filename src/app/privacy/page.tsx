@@ -27,6 +27,7 @@ const STORE_ITEMS = [
   'welcomeClaim',
   'sharedWords',
   'appData',
+  'pushReminder',
 ] as const;
 const OTHERS_ITEMS = [
   'cloudflare',

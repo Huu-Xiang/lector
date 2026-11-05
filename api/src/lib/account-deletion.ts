@@ -60,6 +60,8 @@ export const ERASURE_TABLES = [
   'admin_account_flags',
   'twoFactor',
   'email_sends',
+  'push_devices',
+  'notification_prefs',
 ] as const;
 
 /**

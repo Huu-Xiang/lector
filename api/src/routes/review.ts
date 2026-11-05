@@ -21,9 +21,9 @@ import {
   DEFAULT_ROUND_SIZE,
   MAX_ROUND_SIZE,
   buildRound,
-  getCounts,
   readLearnerLevel,
 } from '../lib/review/queue';
+import { reviewCounts } from '../lib/review/counts';
 import {
   AI_SENTENCE_KEY,
   cachedExample,
@@ -94,7 +94,7 @@ export function makeReviewRoutes({
   app.get('/counts', (c) => {
     const userId = getCurrentUserId(c);
     const language = resolveLanguage(c.req.query('language'), userId);
-    return c.json(getCounts(userId, language, prepare(userId, language)));
+    return c.json(reviewCounts(userId, language, now()));
   });
 
   app.get('/queue', (c) => {

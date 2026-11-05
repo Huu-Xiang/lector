@@ -256,6 +256,8 @@ describe('TENANT_TABLES ratchet', () => {
   //     and code redemptions, cloud-only.
   //   - cn_refund_requests / invite_codes / reward_cards: Readfox refunds,
   //     invites and reward cards, cloud-only account state.
+  //   - push_devices / notification_prefs: iPhone push tokens and the reminder
+  //     switch, cloud-only account state.
   // Subtracted here so the assertion stays meaningful even on a DB that has
   // them (a fresh getDb() schema omits Better Auth's, but not billing's).
   const NON_TENANT_USERID_TABLES = new Set([
@@ -273,6 +275,8 @@ describe('TENANT_TABLES ratchet', () => {
     'cn_refund_requests',
     'invite_codes',
     'reward_cards',
+    'push_devices',
+    'notification_prefs',
   ]);
 
   test('every table with a userId column is covered by adoption', () => {

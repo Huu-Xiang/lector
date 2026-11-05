@@ -1,4 +1,11 @@
 {
+  "share": {
+    "working": "正在添加文章…",
+    "errorTitle": "无法添加这篇文章",
+    "retry": "重试",
+    "library": "回到书库",
+    "invalid": "这个链接无法导入。"
+  },
   "common": {
     "appName": "Readfox",
     "tagline": "用阅读学会一门新语言"

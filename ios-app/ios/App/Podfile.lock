@@ -11,6 +11,8 @@ PODS:
     - Capacitor
   - CapacitorPreferences (7.0.4):
     - Capacitor
+  - CapacitorPushNotifications (7.0.7):
+    - Capacitor
   - CapacitorSplashScreen (7.0.5):
     - Capacitor
   - CapacitorStatusBar (7.0.6):
@@ -24,6 +26,7 @@ DEPENDENCIES:
   - "CapacitorFilesystem (from `../../node_modules/@capacitor/filesystem`)"
   - "CapacitorNetwork (from `../../node_modules/@capacitor/network`)"
   - "CapacitorPreferences (from `../../node_modules/@capacitor/preferences`)"
+  - "CapacitorPushNotifications (from `../../node_modules/@capacitor/push-notifications`)"
   - "CapacitorSplashScreen (from `../../node_modules/@capacitor/splash-screen`)"
   - "CapacitorStatusBar (from `../../node_modules/@capacitor/status-bar`)"
 
@@ -44,6 +47,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/network"
   CapacitorPreferences:
     :path: "../../node_modules/@capacitor/preferences"
+  CapacitorPushNotifications:
+    :path: "../../node_modules/@capacitor/push-notifications"
   CapacitorSplashScreen:
     :path: "../../node_modules/@capacitor/splash-screen"
   CapacitorStatusBar:
@@ -56,10 +61,11 @@ SPEC CHECKSUMS:
   CapacitorFilesystem: 35da521d3fc5159ecaf4ae0b877ec3db7f4adb0d
   CapacitorNetwork: b719d692a8d1310da8d26d6648d3aa1ef1e100e1
   CapacitorPreferences: 69d9991307507aeab8ef8019c10b9babfda0e9ca
+  CapacitorPushNotifications: 0527809a9619ed775439d5ab2c2d996122b48319
   CapacitorSplashScreen: 409eeaaeac603d264f209c0fcb718aa22fe1f7bb
   CapacitorStatusBar: 416e9e53fd6397e668d4a181cd2131617d949bd6
   IONFilesystemLib: e6610c2b260d15e4b9cb9d5e37a87095479b669e
 
-PODFILE CHECKSUM: 2bfedba3343bb2c12f8bc6627436ecf642ae9f45
+PODFILE CHECKSUM: d86c76fd83358487942e7b9270ac83498d6ed49d
 
 COCOAPODS: 1.17.0

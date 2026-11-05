@@ -1,4 +1,11 @@
 {
+  "share": {
+    "working": "Adding the article…",
+    "errorTitle": "Could not add the article",
+    "retry": "Try again",
+    "library": "Go to library",
+    "invalid": "This link cannot be imported."
+  },
   "common": {
     "appName": "Readfox",
     "tagline": "Read your way to a new language"

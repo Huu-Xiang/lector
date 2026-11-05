@@ -3,6 +3,10 @@ import {
   detectNativeApp,
   hideSplash,
   isNativeUserAgent,
+  isPushAvailable,
+  readPushPermission,
+  registerForPush,
+  requestPushPermission,
   readNativeFile,
   writeNativeFile,
   saveNativeLocale,
@@ -121,5 +125,69 @@ describe('native bridge wrappers', () => {
       () => true,
     );
     expect(await readNativeFile('offline.json')).toBeNull();
+  });
+
+  describe('push notifications', () => {
+    function pushPlugin(opts: { permission?: string; token?: string | null } = {}) {
+      const handlers: Record<string, (event: unknown) => void> = {};
+      return {
+        handlers,
+        plugin: {
+          checkPermissions: vi.fn(async () => ({ receive: opts.permission ?? 'granted' })),
+          requestPermissions: vi.fn(async () => ({ receive: opts.permission ?? 'granted' })),
+          addListener: vi.fn(async (event: string, handler: (event: unknown) => void) => {
+            handlers[event] = handler;
+            return { remove: async () => {} };
+          }),
+          register: vi.fn(async () => {
+            if (opts.token) handlers.registration({ value: opts.token });
+            else handlers.registrationError({ error: 'no token' });
+          }),
+        },
+      };
+    }
+
+    it('are unavailable outside the app and when the shell lacks the plugin', () => {
+      (globalThis as { window?: unknown }).window = undefined;
+      expect(isPushAvailable()).toBe(false);
+      stubWindow({ PushNotifications: {} }, () => false);
+      expect(isPushAvailable()).toBe(false);
+      stubWindow({ PushNotifications: {} }, () => true);
+      expect(isPushAvailable()).toBe(true);
+    });
+
+    it('ask for permission and report whether it was granted', async () => {
+      const granted = pushPlugin({ permission: 'granted' });
+      stubWindow({ PushNotifications: granted.plugin }, () => true);
+      expect(await requestPushPermission()).toBe(true);
+      expect(granted.plugin.requestPermissions).toHaveBeenCalledTimes(1);
+
+      const denied = pushPlugin({ permission: 'denied' });
+      stubWindow({ PushNotifications: denied.plugin }, () => true);
+      expect(await requestPushPermission()).toBe(false);
+    });
+
+    it('read the permission without asking', async () => {
+      const prompt = pushPlugin({ permission: 'prompt' });
+      stubWindow({ PushNotifications: prompt.plugin }, () => true);
+      expect(await readPushPermission()).toBe('prompt');
+      expect(prompt.plugin.requestPermissions).not.toHaveBeenCalled();
+    });
+
+    it('register and return the device token', async () => {
+      const { plugin } = pushPlugin({ token: 'abc123' });
+      stubWindow({ PushNotifications: plugin }, () => true);
+      expect(await registerForPush()).toBe('abc123');
+      expect(plugin.register).toHaveBeenCalledTimes(1);
+    });
+
+    it('return no token when registration fails or the plugin is missing', async () => {
+      const { plugin } = pushPlugin({ token: null });
+      stubWindow({ PushNotifications: plugin }, () => true);
+      expect(await registerForPush()).toBeNull();
+      stubWindow({}, () => false);
+      expect(await registerForPush()).toBeNull();
+      expect(await requestPushPermission()).toBe(false);
+    });
   });
 });

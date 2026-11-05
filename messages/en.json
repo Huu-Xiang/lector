@@ -38,6 +38,13 @@
       }
     }
   },
+  "share": {
+    "working": "Adding the article…",
+    "errorTitle": "Could not add the article",
+    "retry": "Try again",
+    "library": "Go to library",
+    "invalid": "This link cannot be imported."
+  },
   "common": {
     "appName": "Readfox",
     "tagline": "Read your way to a new language"
@@ -793,6 +800,17 @@
         "android1": "Tap the browser menu (usually ⋮ at the top right).",
         "android2": "Choose \"Add to Home screen\" or \"Install app\"."
       }
+    },
+    "reminder": {
+      "title": "Daily review reminder",
+      "body": "Get one notification a day when you have cards to review. It is off until you turn it on.",
+      "toggle": "Remind me every day",
+      "timeLabel": "Reminder time",
+      "timeHint": "The time follows your Time Zone setting.",
+      "saved": "Reminder saved",
+      "off": "Reminder turned off",
+      "denied": "Notifications are off for Readfox. Turn them on in the iOS Settings app, then try again.",
+      "failed": "Could not set the reminder. Please try again."
     }
   },
   "welcomeOffer": {
@@ -1563,7 +1581,8 @@
           "inviteFingerprint": "If you earn an invite reward, we keep a keyed one-way hash of your email address for 24 months, even after you delete your account. It cannot be turned back into your address. It only stops the same address from earning the reward twice.",
           "welcomeClaim": "When you receive the welcome offer, we keep a one-way hash of your email address and a one-way hash of its domain. We keep them also after you delete your account. They cannot be turned back into your address. We use them to give the offer once per mailbox, and a few times per private domain.",
           "sharedWords": "A shared cache of single-word translations, dictionary meanings translated into a learner's language, translations of public example sentences (free-library books and Tatoeba), and AI-written example sentences for a word (the language pair, the word or public sentence, and its translation), reused for every account. It holds no account information and none of your sentences.",
-          "appData": "In the iPhone app, the five lessons you opened last, and any words you saved while offline, are kept on your phone until the words sync. Signing out or deleting your account removes them from the phone."
+          "appData": "In the iPhone app, the five lessons you opened last, and any words you saved while offline, are kept on your phone until the words sync. Signing out or deleting your account removes them from the phone.",
+          "pushReminder": "In the iPhone app, if you turn on the daily review reminder, we keep your phone's push token, your interface language and the reminder time. We use them only to send one notification a day that shows how many cards are due. Apple delivers it. Turning the reminder off removes the token. Deleting your account removes both."
         }
       },
       "others": {

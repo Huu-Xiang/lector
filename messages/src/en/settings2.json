@@ -339,6 +339,17 @@
         "android1": "Tap the browser menu (usually ⋮ at the top right).",
         "android2": "Choose \"Add to Home screen\" or \"Install app\"."
       }
+    },
+    "reminder": {
+      "title": "Daily review reminder",
+      "body": "Get one notification a day when you have cards to review. It is off until you turn it on.",
+      "toggle": "Remind me every day",
+      "timeLabel": "Reminder time",
+      "timeHint": "The time follows your Time Zone setting.",
+      "saved": "Reminder saved",
+      "off": "Reminder turned off",
+      "denied": "Notifications are off for Readfox. Turn them on in the iOS Settings app, then try again.",
+      "failed": "Could not set the reminder. Please try again."
     }
   },
   "subscribe": {

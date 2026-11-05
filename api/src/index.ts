@@ -14,6 +14,7 @@ import { startClassifyWorker } from './lib/classify-worker';
 import { startTranscribeWorker } from './lib/transcribe-worker';
 import { startDictWorker } from './lib/dict-worker';
 import { startLifecycleEmailWorker } from './lib/lifecycle-email';
+import { startReminderWorker } from './lib/reminder-worker';
 import { startReadingFeedRefresher } from './lib/reading-feed/refresh';
 import { isByokAvailable } from './lib/byok';
 import { defaultRequestBodyLimit } from './lib/request-body-limit';
@@ -193,6 +194,9 @@ startDictWorker();
 // Cloud lifecycle mail (#558). No-op in selfhost. Sweeps day-1 and day-3
 // templates. Welcome, Anki, and gloss-cap send from their own hooks.
 startLifecycleEmailWorker();
+
+// Daily review reminders through APNs. No-op in selfhost and without APNS_* settings.
+startReminderWorker();
 
 // Reading feed (interests beyond the free library). Off under tests and
 // when READING_FEED=0; otherwise fetches each source once after a startup

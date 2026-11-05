@@ -24,6 +24,7 @@ import BYOKSettings from './components/BYOKSettings';
 import CloudPlanSettings from './components/CloudPlanSettings';
 import InviteCard from './components/InviteCard';
 import InstallAppCard from './components/InstallAppCard';
+import ReminderSettings from './components/ReminderSettings';
 import { lectorMode } from '@/lib/api-base';
 import { useTranslations } from 'next-intl';
 
@@ -37,6 +38,7 @@ export default function SettingsPage() {
         {lectorMode() === 'cloud' && <CnRefund />}
         {lectorMode() === 'cloud' && <InviteCard />}
         <InstallAppCard />
+        {lectorMode() === 'cloud' && <ReminderSettings />}
         <LanguagesSettings />
         <DailyGoalSettings />
         <section className="panel space-y-6 p-6" data-testid="language-preferences">

@@ -1,4 +1,11 @@
 {
+  "share": {
+    "working": "記事を追加しています…",
+    "errorTitle": "記事を追加できませんでした",
+    "retry": "もう一度試す",
+    "library": "ライブラリへ",
+    "invalid": "このリンクは取り込めません。"
+  },
   "common": {
     "appName": "Readfox",
     "tagline": "読んで身につける、新しい言語"

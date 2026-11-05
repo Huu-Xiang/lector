@@ -56,6 +56,10 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      {
+        source: '/.well-known/apple-app-site-association',
+        headers: [{ key: 'Content-Type', value: 'application/json' }],
+      },
     ];
   },
   // Turbopack is the default in Next.js 16. Empty config silences the

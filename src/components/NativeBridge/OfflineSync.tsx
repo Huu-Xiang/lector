@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import { authClient } from '@/lib/auth-client';
 import { setOfflineUser } from '@/lib/offline/identity';
 import { syncOfflineWords } from '@/lib/offline/sync';
+import { peekPendingShare } from '@/lib/share-import';
 
 /** Where the bundled launcher lists the lessons kept for offline reading. */
 const OFFLINE_LIST = 'capacitor://localhost/offline.html';
@@ -20,6 +21,11 @@ export default function OfflineSync() {
   useEffect(() => {
     setOfflineUser(userId);
     if (!userId) return;
+    // A link shared while signed out waits here until sign-in is done.
+    if (peekPendingShare() && window.location.pathname !== '/share') {
+      window.location.assign('/share');
+      return;
+    }
     const flush = async () => {
       const { rejected } = await syncOfflineWords(userId);
       if (rejected > 0) toast.warning(t('rejected', { count: rejected }));

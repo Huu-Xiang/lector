@@ -3160,6 +3160,56 @@ const internalOps: Record<string, OperationDoc> = {
       },
     },
   },
+  'GET /api/push/prefs': { summary: 'Read the daily review reminder settings', tag: 'Service' },
+  'PUT /api/push/prefs': {
+    summary: 'Turn the daily review reminder on or off and set its time',
+    description: 'The time is HH:MM on the account time zone clock.',
+    tag: 'Service',
+    requestBody: {
+      contentType: 'application/json',
+      required: true,
+      schema: {
+        type: 'object',
+        properties: {
+          enabled: { type: 'boolean' },
+          time: { type: 'string', example: '20:00' },
+        },
+        required: ['enabled', 'time'],
+      },
+    },
+  },
+  'POST /api/push/devices': {
+    summary: 'Register an iPhone push token',
+    description:
+      'A token belongs to one account. Registering it again for another account removes the first.',
+    tag: 'Service',
+    requestBody: {
+      contentType: 'application/json',
+      required: true,
+      schema: {
+        type: 'object',
+        properties: {
+          token: { type: 'string' },
+          environment: { type: 'string', enum: ['sandbox', 'production'] },
+          locale: { type: 'string', description: 'Interface locale of the notification text.' },
+        },
+        required: ['token', 'environment', 'locale'],
+      },
+    },
+  },
+  'DELETE /api/push/devices': {
+    summary: 'Remove an iPhone push token',
+    tag: 'Service',
+    requestBody: {
+      contentType: 'application/json',
+      required: true,
+      schema: {
+        type: 'object',
+        properties: { token: { type: 'string' } },
+        required: ['token'],
+      },
+    },
+  },
   'POST /api/redeem': { summary: 'Redeem a code, or save it as a card', tag: 'Service' },
   'GET /api/invite': {
     summary: 'Read your invite code, invite counts and reward cards',

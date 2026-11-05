@@ -49,6 +49,8 @@ const SEEDED_TABLES = [
   'admin_account_flags',
   'billing_subscriptions',
   'email_sends',
+  'push_devices',
+  'notification_prefs',
 ] as const;
 
 function clearAll() {
@@ -179,6 +181,13 @@ function seed(userId: string, email: string, customerId: string) {
     userId,
     'welcome-on-account-create',
     NOW,
+  );
+  db.prepare(
+    'INSERT INTO push_devices (userId, token, environment, locale, createdAt, lastSeenAt) VALUES (?,?,?,?,?,?)',
+  ).run(userId, `tok-${userId}`, 'sandbox', 'en', NOW, NOW);
+  db.prepare('INSERT INTO notification_prefs (userId, reminderEnabled) VALUES (?,?)').run(
+    userId,
+    1,
   );
 }
 

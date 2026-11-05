@@ -2,7 +2,10 @@
 
 import { useSyncExternalStore } from 'react';
 
-type PluginMethods = Record<string, (options?: unknown) => Promise<unknown>>;
+type PluginMethods = Record<
+  string,
+  (options?: unknown, listener?: (event: unknown) => void) => Promise<unknown>
+>;
 
 declare global {
   interface Window {
@@ -93,4 +96,50 @@ export async function readNativeFile(path: string): Promise<string | null> {
 
 export async function writeNativeFile(path: string, data: string): Promise<void> {
   await call('Filesystem', 'writeFile', { path, data, directory: 'DATA', encoding: 'utf8' });
+}
+
+const PUSH = 'PushNotifications';
+const PUSH_REGISTER_TIMEOUT_MS = 10_000;
+
+/** True inside the app when this build of the shell has the push plugin. */
+export function isPushAvailable(): boolean {
+  return plugin(PUSH) !== null;
+}
+
+/** The notification permission: `granted`, `denied`, or `prompt` (not asked yet). */
+export async function readPushPermission(): Promise<string | null> {
+  const result = (await callWithResult(PUSH, 'checkPermissions')) as { receive?: string } | null;
+  return result?.receive ?? null;
+}
+
+/** Shows the system prompt the first time. True when the user allows notifications. */
+export async function requestPushPermission(): Promise<boolean> {
+  const result = (await callWithResult(PUSH, 'requestPermissions')) as { receive?: string } | null;
+  return result?.receive === 'granted';
+}
+
+/** Registers with APNs and resolves with the device token; null when it fails or times out. */
+export function registerForPush(): Promise<string | null> {
+  const push = plugin(PUSH);
+  if (!push?.addListener || !push.register) return Promise.resolve(null);
+  const { addListener, register } = push;
+  return new Promise((resolve) => {
+    const handles: Array<{ remove?: () => unknown }> = [];
+    const done = (token: string | null) => {
+      clearTimeout(timer);
+      for (const handle of handles) void handle.remove?.();
+      resolve(token);
+    };
+    const timer = setTimeout(() => done(null), PUSH_REGISTER_TIMEOUT_MS);
+    const listen = async (event: string, handler: (payload: unknown) => void) => {
+      handles.push((await addListener(event, handler)) as { remove?: () => unknown });
+    };
+    listen('registration', (payload) => {
+      const value = (payload as { value?: unknown } | null)?.value;
+      done(typeof value === 'string' && value ? value : null);
+    })
+      .then(() => listen('registrationError', () => done(null)))
+      .then(() => register())
+      .catch(() => done(null));
+  });
 }

@@ -445,6 +445,25 @@ function getDb(): Database {
       usedAt TEXT
     );
     CREATE INDEX IF NOT EXISTS idx_reward_cards_user ON reward_cards(userId, usedAt);
+    -- Review reminders. push_devices: APNs tokens, one row per token. A token
+    -- belongs to the last account that registered it. notification_prefs: the
+    -- reminder switch, the local time (HH:MM) and the local date of the last send.
+    CREATE TABLE IF NOT EXISTS push_devices (
+      userId TEXT NOT NULL,
+      token TEXT NOT NULL UNIQUE,
+      environment TEXT NOT NULL DEFAULT 'production',
+      locale TEXT NOT NULL DEFAULT 'en',
+      platform TEXT NOT NULL DEFAULT 'ios',
+      createdAt TEXT NOT NULL,
+      lastSeenAt TEXT NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS idx_push_devices_user ON push_devices(userId);
+    CREATE TABLE IF NOT EXISTS notification_prefs (
+      userId TEXT PRIMARY KEY,
+      reminderEnabled INTEGER NOT NULL DEFAULT 0,
+      reminderTime TEXT NOT NULL DEFAULT '20:00',
+      lastSentDate TEXT DEFAULT NULL
+    );
     CREATE TABLE IF NOT EXISTS invite_burned_emails (
       fingerprint TEXT PRIMARY KEY,
       burnedAt TEXT NOT NULL

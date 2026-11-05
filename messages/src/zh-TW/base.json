@@ -1,4 +1,11 @@
 {
+  "share": {
+    "working": "正在新增文章…",
+    "errorTitle": "無法新增這篇文章",
+    "retry": "重試",
+    "library": "回到書庫",
+    "invalid": "這個連結無法匯入。"
+  },
   "common": {
     "appName": "Readfox",
     "tagline": "用閱讀學會一門新語言"
