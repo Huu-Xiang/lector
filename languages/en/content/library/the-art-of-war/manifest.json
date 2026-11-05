@@ -1,0 +1,45 @@
+{
+  "title": "The Art of War",
+  "author": "Sun Tzu, translated by Lionel Giles",
+  "level": "B2",
+  "wordCount": 11036,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/17405",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. I. Laying Plans"
+    },
+    {
+      "file": "02.md",
+      "title": "2. The Art of War"
+    },
+    {
+      "file": "03.md",
+      "title": "3. The Art of War"
+    },
+    {
+      "file": "04.md",
+      "title": "4. The Art of War"
+    },
+    {
+      "file": "05.md",
+      "title": "5. The Art of War"
+    },
+    {
+      "file": "06.md",
+      "title": "6. The Art of War"
+    },
+    {
+      "file": "07.md",
+      "title": "7. The Art of War"
+    },
+    {
+      "file": "08.md",
+      "title": "8. The Art of War"
+    }
+  ]
+}

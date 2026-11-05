@@ -1,0 +1,69 @@
+{
+  "title": "Discourse on the Method",
+  "author": "René Descartes, translated by John Veitch",
+  "level": "C1",
+  "wordCount": 22858,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/59",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Part I"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Discourse on the Method"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Discourse on the Method"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Discourse on the Method"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Discourse on the Method"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Discourse on the Method"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Discourse on the Method"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Discourse on the Method"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Discourse on the Method"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Discourse on the Method"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Discourse on the Method"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Discourse on the Method"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Discourse on the Method"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Discourse on the Method"
+    }
+  ]
+}

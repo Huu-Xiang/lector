@@ -1,0 +1,57 @@
+{
+  "title": "Réflexions diverses",
+  "author": "François de La Rochefoucauld",
+  "level": "C1",
+  "wordCount": 16511,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/14913",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. I. Du vrai"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Réflexions diverses"
+    },
+    {
+      "file": "03.md",
+      "title": "3. V. De la confiance"
+    },
+    {
+      "file": "04.md",
+      "title": "4. VIII. De l'incertitude de la jalousie"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Réflexions diverses"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Réflexions diverses"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Réflexions diverses"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Réflexions diverses"
+    },
+    {
+      "file": "09.md",
+      "title": "9. XVIII. De la retraite"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Réflexions diverses"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Réflexions diverses"
+    }
+  ]
+}

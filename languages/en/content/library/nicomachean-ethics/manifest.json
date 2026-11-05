@@ -1,0 +1,273 @@
+{
+  "title": "The Nicomachean Ethics",
+  "author": "Aristotle, translated by F. H. Peters",
+  "level": "C2",
+  "wordCount": 93390,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/8438",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Book I"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Nicomachean Ethics"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Nicomachean Ethics"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Nicomachean Ethics"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Nicomachean Ethics"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Nicomachean Ethics"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Nicomachean Ethics"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Nicomachean Ethics"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Nicomachean Ethics"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Nicomachean Ethics"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Nicomachean Ethics"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Nicomachean Ethics"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Nicomachean Ethics"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Nicomachean Ethics"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Nicomachean Ethics"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Nicomachean Ethics"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Nicomachean Ethics"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Nicomachean Ethics"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Book IV"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Nicomachean Ethics"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Nicomachean Ethics"
+    },
+    {
+      "file": "22.md",
+      "title": "22. Nicomachean Ethics"
+    },
+    {
+      "file": "23.md",
+      "title": "23. Nicomachean Ethics"
+    },
+    {
+      "file": "24.md",
+      "title": "24. Nicomachean Ethics"
+    },
+    {
+      "file": "25.md",
+      "title": "25. Nicomachean Ethics"
+    },
+    {
+      "file": "26.md",
+      "title": "26. Nicomachean Ethics"
+    },
+    {
+      "file": "27.md",
+      "title": "27. Nicomachean Ethics"
+    },
+    {
+      "file": "28.md",
+      "title": "28. Nicomachean Ethics"
+    },
+    {
+      "file": "29.md",
+      "title": "29. Nicomachean Ethics"
+    },
+    {
+      "file": "30.md",
+      "title": "30. Nicomachean Ethics"
+    },
+    {
+      "file": "31.md",
+      "title": "31. Nicomachean Ethics"
+    },
+    {
+      "file": "32.md",
+      "title": "32. Nicomachean Ethics"
+    },
+    {
+      "file": "33.md",
+      "title": "33. Nicomachean Ethics"
+    },
+    {
+      "file": "34.md",
+      "title": "34. Nicomachean Ethics"
+    },
+    {
+      "file": "35.md",
+      "title": "35. Nicomachean Ethics"
+    },
+    {
+      "file": "36.md",
+      "title": "36. Chapter XI."
+    },
+    {
+      "file": "37.md",
+      "title": "37. Nicomachean Ethics"
+    },
+    {
+      "file": "38.md",
+      "title": "38. Nicomachean Ethics"
+    },
+    {
+      "file": "39.md",
+      "title": "39. Nicomachean Ethics"
+    },
+    {
+      "file": "40.md",
+      "title": "40. Chapter IV."
+    },
+    {
+      "file": "41.md",
+      "title": "41. Nicomachean Ethics"
+    },
+    {
+      "file": "42.md",
+      "title": "42. Nicomachean Ethics"
+    },
+    {
+      "file": "43.md",
+      "title": "43. Nicomachean Ethics"
+    },
+    {
+      "file": "44.md",
+      "title": "44. Nicomachean Ethics"
+    },
+    {
+      "file": "45.md",
+      "title": "45. Nicomachean Ethics"
+    },
+    {
+      "file": "46.md",
+      "title": "46. Chapter III."
+    },
+    {
+      "file": "47.md",
+      "title": "47. Nicomachean Ethics"
+    },
+    {
+      "file": "48.md",
+      "title": "48. Nicomachean Ethics"
+    },
+    {
+      "file": "49.md",
+      "title": "49. Nicomachean Ethics"
+    },
+    {
+      "file": "50.md",
+      "title": "50. Nicomachean Ethics"
+    },
+    {
+      "file": "51.md",
+      "title": "51. Nicomachean Ethics"
+    },
+    {
+      "file": "52.md",
+      "title": "52. Nicomachean Ethics"
+    },
+    {
+      "file": "53.md",
+      "title": "53. Nicomachean Ethics"
+    },
+    {
+      "file": "54.md",
+      "title": "54. Nicomachean Ethics"
+    },
+    {
+      "file": "55.md",
+      "title": "55. Nicomachean Ethics"
+    },
+    {
+      "file": "56.md",
+      "title": "56. Nicomachean Ethics"
+    },
+    {
+      "file": "57.md",
+      "title": "57. Nicomachean Ethics"
+    },
+    {
+      "file": "58.md",
+      "title": "58. Nicomachean Ethics"
+    },
+    {
+      "file": "59.md",
+      "title": "59. Nicomachean Ethics"
+    },
+    {
+      "file": "60.md",
+      "title": "60. Chapter III."
+    },
+    {
+      "file": "61.md",
+      "title": "61. Nicomachean Ethics"
+    },
+    {
+      "file": "62.md",
+      "title": "62. Nicomachean Ethics"
+    },
+    {
+      "file": "63.md",
+      "title": "63. Nicomachean Ethics"
+    },
+    {
+      "file": "64.md",
+      "title": "64. Nicomachean Ethics"
+    },
+    {
+      "file": "65.md",
+      "title": "65. Nicomachean Ethics"
+    }
+  ]
+}

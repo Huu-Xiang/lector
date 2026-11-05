@@ -1,0 +1,89 @@
+{
+  "title": "近思录",
+  "author": "朱熹、吕祖谦",
+  "level": "C2",
+  "wordCount": 26368,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/25249",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. 卷一·道体"
+    },
+    {
+      "file": "02.md",
+      "title": "2. 近思录"
+    },
+    {
+      "file": "03.md",
+      "title": "3. 近思录"
+    },
+    {
+      "file": "04.md",
+      "title": "4. 近思录"
+    },
+    {
+      "file": "05.md",
+      "title": "5. 近思录"
+    },
+    {
+      "file": "06.md",
+      "title": "6. 近思录"
+    },
+    {
+      "file": "07.md",
+      "title": "7. 近思录"
+    },
+    {
+      "file": "08.md",
+      "title": "8. 近思录"
+    },
+    {
+      "file": "09.md",
+      "title": "9. 近思录"
+    },
+    {
+      "file": "10.md",
+      "title": "10. 近思录"
+    },
+    {
+      "file": "11.md",
+      "title": "11. 近思录"
+    },
+    {
+      "file": "12.md",
+      "title": "12. 近思录"
+    },
+    {
+      "file": "13.md",
+      "title": "13. 近思录"
+    },
+    {
+      "file": "14.md",
+      "title": "14. 近思录"
+    },
+    {
+      "file": "15.md",
+      "title": "15. 近思录"
+    },
+    {
+      "file": "16.md",
+      "title": "16. 近思录"
+    },
+    {
+      "file": "17.md",
+      "title": "17. 近思录"
+    },
+    {
+      "file": "18.md",
+      "title": "18. 近思录"
+    },
+    {
+      "file": "19.md",
+      "title": "19. 近思录"
+    }
+  ]
+}

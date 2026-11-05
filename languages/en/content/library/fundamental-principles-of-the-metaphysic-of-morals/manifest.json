@@ -1,0 +1,93 @@
+{
+  "title": "Fundamental Principles of the Metaphysic of Morals",
+  "author": "Immanuel Kant, translated by Thomas Kingsmill Abbott",
+  "level": "C2",
+  "wordCount": 30855,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/5682",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Preface"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Metaphysic of Morals"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Metaphysic of Morals"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Metaphysic of Morals"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Metaphysic of Morals"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Metaphysic of Morals"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Metaphysic of Morals"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Metaphysic of Morals"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Metaphysic of Morals"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Metaphysic of Morals"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Metaphysic of Morals"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Metaphysic of Morals"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Metaphysic of Morals"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Metaphysic of Morals"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Metaphysic of Morals"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Metaphysic of Morals"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Metaphysic of Morals"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Metaphysic of Morals"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Metaphysic of Morals"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Metaphysic of Morals"
+    }
+  ]
+}

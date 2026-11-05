@@ -1,0 +1,41 @@
+{
+  "title": "Apology",
+  "author": "Plato, translated by Benjamin Jowett",
+  "level": "B2",
+  "wordCount": 11479,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/1656",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Apology"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Apology"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Apology"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Apology"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Apology"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Apology"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Apology"
+    }
+  ]
+}

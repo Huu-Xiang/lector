@@ -1,0 +1,21 @@
+{
+  "title": "大学章句",
+  "author": "朱熹",
+  "level": "C2",
+  "wordCount": 4237,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/7375",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. 大学章句"
+    },
+    {
+      "file": "02.md",
+      "title": "2. 大学章句"
+    }
+  ]
+}

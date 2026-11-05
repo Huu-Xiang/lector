@@ -1,4 +1,118 @@
 {
+  "chuanxilu": {
+    "title": {
+      "en": "Instructions for Practical Living",
+      "zh-CN": "传习录",
+      "zh-TW": "傳習錄",
+      "es": "Instrucciones para la vida práctica",
+      "fr": "Instructions pour la vie pratique",
+      "de": "Anleitungen für das praktische Leben",
+      "it": "Istruzioni per la vita pratica",
+      "pt": "Instruções para a Vida Prática",
+      "ru": "Наставления для практической жизни",
+      "ja": "伝習録",
+      "ko": "전습록",
+      "ar": "تعاليم للحياة العملية",
+      "hi": "व्यावहारिक जीवन के उपदेश",
+      "id": "Ajaran untuk Hidup Praktis",
+      "vi": "Truyền tập lục",
+      "tr": "Pratik Yaşam İçin Öğretiler"
+    },
+    "blurb": {
+      "en": "Conversations and letters of the Ming philosopher Wang Yangming, who taught that knowing and doing are one.",
+      "zh-CN": "明代哲学家王阳明的对话与书信，主张知行合一。",
+      "zh-TW": "明代哲學家王陽明的對話與書信，主張知行合一。",
+      "es": "Conversaciones y cartas del filósofo Wang Yangming, de la dinastía Ming, que enseñaba que conocer y actuar son una sola cosa.",
+      "fr": "Conversations et lettres du philosophe Wang Yangming, de la dynastie Ming, pour qui connaître et agir ne font qu'un.",
+      "de": "Gespräche und Briefe des Ming-Philosophen Wang Yangming, der lehrte, dass Wissen und Handeln eins sind.",
+      "it": "Conversazioni e lettere del filosofo Wang Yangming, della dinastia Ming, che insegnava che conoscere e agire sono una cosa sola.",
+      "pt": "Conversas e cartas do filósofo Wang Yangming, da dinastia Ming, que ensinava que conhecer e agir são uma só coisa.",
+      "ru": "Беседы и письма философа эпохи Мин Ван Янмина, учившего, что знание и действие едины.",
+      "ja": "明代の哲学者・王陽明の対話と書簡。知ることと行うことは一つだと説きます。",
+      "ko": "명나라 철학자 왕양명이 지식과 행동은 하나라고 가르친 대화와 편지를 모은 책입니다.",
+      "ar": "محاورات ورسائل الفيلسوف وانغ يانغمينغ من عهد مينغ الذي علّم أن المعرفة والعمل شيء واحد.",
+      "hi": "मिंग काल के दार्शनिक वांग यांगमिंग की बातचीत और पत्र, जिन्होंने सिखाया कि जानना और करना एक ही हैं।",
+      "id": "Percakapan dan surat filsuf dinasti Ming, Wang Yangming, yang mengajarkan bahwa mengetahui dan melakukan adalah satu.",
+      "vi": "Những cuộc trò chuyện và thư từ của triết gia đời Minh Vương Dương Minh, người dạy rằng biết và làm là một.",
+      "tr": "Ming dönemi filozofu Wang Yangming'in bilmek ile yapmanın bir olduğunu öğreten konuşma ve mektupları."
+    }
+  },
+  "daodejing": {
+    "title": {
+      "en": "Dao De Jing",
+      "zh-CN": "道德经",
+      "zh-TW": "道德經",
+      "es": "Tao Te Ching",
+      "fr": "Tao Te King",
+      "de": "Daodejing",
+      "it": "Tao Te Ching",
+      "pt": "Tao Te Ching",
+      "ru": "Дао дэ цзин",
+      "ja": "老子道徳経",
+      "ko": "도덕경",
+      "ar": "داو دي جينغ",
+      "hi": "दाओ दे जिंग",
+      "id": "Dao De Jing",
+      "vi": "Đạo Đức Kinh",
+      "tr": "Dao De Jing"
+    },
+    "blurb": {
+      "en": "The original Chinese text of the 81 short chapters attributed to Laozi on the Way (Dao), simplicity and living without forcing.",
+      "zh-CN": "相传为老子所作的八十一章短文原文，谈“道”、朴素和无为而治的生活。",
+      "zh-TW": "相傳為老子所作的八十一章短文原文，談「道」、樸素和無為而治的生活。",
+      "es": "El texto original chino de los 81 capítulos breves atribuidos a Laozi sobre el Dao, la sencillez y el vivir sin forzar.",
+      "fr": "Le texte chinois original des 81 courts chapitres attribués à Laozi sur la Voie (Dao), la simplicité et le fait de vivre sans forcer.",
+      "de": "Der chinesische Originaltext der 81 kurzen Kapitel, die Laozi zugeschrieben werden, über den Weg (Dao), Einfachheit und ein Leben ohne Zwang.",
+      "it": "Il testo cinese originale degli 81 brevi capitoli attribuiti a Laozi sulla Via (Dao), la semplicità e il vivere senza forzare.",
+      "pt": "O texto chinês original dos 81 capítulos curtos atribuídos a Laozi sobre o Dao, a simplicidade e o viver sem forçar.",
+      "ru": "Подлинный китайский текст 81 короткой главы, приписываемых Лао-цзы, о Пути (Дао), простоте и жизни без насилия над естественным ходом вещей.",
+      "ja": "老子の作とされる81の短い章の中国語原文。道、素朴さ、無理をしない生き方を説きます。",
+      "ko": "노자의 것으로 전해지는 81개의 짧은 장의 중국어 원문으로, 도와 소박함, 억지로 하지 않는 삶을 다룹니다.",
+      "ar": "النص الصيني الأصلي للفصول القصيرة الـ٨١ المنسوبة إلى لاوزي عن الطريق (داو) والبساطة والعيش دون إكراه.",
+      "hi": "लाओज़ी के नाम से प्रचलित 81 छोटे अध्यायों का मूल चीनी पाठ—दाओ (मार्ग), सरलता और बिना ज़ोर-ज़बरदस्ती जीने पर।",
+      "id": "Teks asli bahasa Mandarin dari 81 bab pendek yang dikaitkan dengan Laozi tentang Jalan (Dao), kesederhanaan, dan hidup tanpa memaksa.",
+      "vi": "Nguyên văn tiếng Hán của 81 chương ngắn được cho là của Lão Tử, bàn về Đạo, sự giản dị và cách sống không cưỡng ép.",
+      "tr": "Lao Zi'ye atfedilen, Yol (Dao), sadelik ve zorlamadan yaşamak üzerine 81 kısa bölümün Çince özgün metni."
+    }
+  },
+  "daxue-zhangju": {
+    "title": {
+      "en": "The Great Learning (Zhu Xi's commentary)",
+      "zh-CN": "大学章句",
+      "zh-TW": "大學章句",
+      "es": "La Gran Enseñanza (comentario de Zhu Xi)",
+      "fr": "La Grande Étude (commentaire de Zhu Xi)",
+      "de": "Das Große Lernen (Kommentar von Zhu Xi)",
+      "it": "Il Grande Studio (commento di Zhu Xi)",
+      "pt": "O Grande Estudo (comentário de Zhu Xi)",
+      "ru": "Великое учение (комментарий Чжу Си)",
+      "ja": "大学章句",
+      "ko": "대학장구",
+      "ar": "التعلم العظيم (شرح تشو شي)",
+      "hi": "महान शिक्षा (झू शी की टीका)",
+      "id": "Pembelajaran Agung (komentar Zhu Xi)",
+      "vi": "Đại học chương cú",
+      "tr": "Büyük Öğrenim (Zhu Xi şerhi)"
+    },
+    "blurb": {
+      "en": "Zhu Xi's edition of the short classic that links self-improvement, family, state and the world, with his line-by-line commentary.",
+      "zh-CN": "朱熹校订的这部短篇经典，把修身、齐家、治国、平天下联系起来，并附有他逐句的注释。",
+      "zh-TW": "朱熹校訂的這部短篇經典，把修身、齊家、治國、平天下聯繫起來，並附有他逐句的注釋。",
+      "es": "La edición de Zhu Xi del breve clásico que une el perfeccionamiento personal, la familia, el Estado y el mundo, con su comentario línea por línea.",
+      "fr": "L'édition par Zhu Xi du court classique qui relie le perfectionnement de soi, la famille, l'État et le monde, avec son commentaire ligne par ligne.",
+      "de": "Zhu Xis Ausgabe des kurzen Klassikers, der Selbstvervollkommnung, Familie, Staat und Welt verbindet, mit seinem Zeile-für-Zeile-Kommentar.",
+      "it": "L'edizione di Zhu Xi del breve classico che collega perfezionamento di sé, famiglia, Stato e mondo, con il suo commento riga per riga.",
+      "pt": "A edição de Zhu Xi do breve clássico que liga o aperfeiçoamento pessoal, a família, o Estado e o mundo, com o seu comentário linha a linha.",
+      "ru": "Издание Чжу Си короткого канона, связывающего самосовершенствование, семью, государство и мир, с его постраничным комментарием.",
+      "ja": "修身・斉家・治国・平天下を結びつける短い古典を朱熹が整理し、一句ずつ注釈を付けた版です。",
+      "ko": "수신·제가·치국·평천하를 하나로 잇는 짧은 고전을 주희가 정리하고 구절마다 주석을 붙인 판본입니다.",
+      "ar": "نسخة تشو شي من الكتاب الكلاسيكي القصير الذي يربط تهذيب النفس بالأسرة والدولة والعالم، مع شرحه سطرًا سطرًا.",
+      "hi": "झू शी द्वारा संपादित वह छोटा क्लासिक जो आत्म-सुधार, परिवार, राज्य और संसार को जोड़ता है, उनकी पंक्ति-दर-पंक्ति टीका के साथ।",
+      "id": "Edisi Zhu Xi dari kitab klasik singkat yang menghubungkan perbaikan diri, keluarga, negara, dan dunia, lengkap dengan komentar per barisnya.",
+      "vi": "Bản của Chu Hi về tác phẩm kinh điển ngắn nối liền tu thân, tề gia, trị quốc, bình thiên hạ, kèm lời chú giải từng câu.",
+      "tr": "Zhu Xi'nin; kendini geliştirme, aile, devlet ve dünyayı birbirine bağlayan bu kısa klasiğin satır satır şerhli neşri."
+    }
+  },
   "gushi-xin-dubo": {
     "title": {
       "en": "New Story Reader, Volume 1",
@@ -35,6 +149,44 @@
       "id": "Dua puluh cerita pendek tentang anak-anak cerdas dan rajin belajar dalam sejarah Tiongkok, dari buku bacaan sekolah dasar tahun 1926, dengan bahasa sederhana.",
       "vi": "Hai mươi truyện ngắn về những đứa trẻ thông minh, chăm học trong lịch sử Trung Quốc, trích từ sách tiểu học năm 1926, ngôn ngữ giản dị.",
       "tr": "Çin tarihindeki zeki ve çalışkan çocukları anlatan yirmi kısa hikâye; 1926 tarihli bir ilkokul okuma kitabından, sade bir dille."
+    }
+  },
+  "hanfeizi": {
+    "title": {
+      "en": "Han Feizi",
+      "zh-CN": "韩非子",
+      "zh-TW": "韓非子",
+      "es": "Han Feizi",
+      "fr": "Han Fei Zi",
+      "de": "Han Feizi",
+      "it": "Han Feizi",
+      "pt": "Han Feizi",
+      "ru": "Хань Фэй-цзы",
+      "ja": "韓非子",
+      "ko": "한비자",
+      "ar": "هان فيتزي",
+      "hi": "हान फ़ेईज़ी",
+      "id": "Han Feizi",
+      "vi": "Hàn Phi Tử",
+      "tr": "Han Feizi"
+    },
+    "blurb": {
+      "en": "Essays by the Legalist thinker Han Fei on law, rewards and punishments, and the methods a ruler uses to control power.",
+      "zh-CN": "法家思想家韩非的文章，论法律、赏罚，以及君主掌握权力的方法。",
+      "zh-TW": "法家思想家韓非的文章，論法律、賞罰，以及君主掌握權力的方法。",
+      "es": "Ensayos del pensador legalista Han Fei sobre la ley, las recompensas y los castigos, y los métodos con que un gobernante controla el poder.",
+      "fr": "Essais du penseur légiste Han Fei sur la loi, les récompenses et les châtiments, et les méthodes par lesquelles un souverain contrôle le pouvoir.",
+      "de": "Essays des Legalisten Han Fei über Gesetz, Belohnung und Strafe sowie die Methoden, mit denen ein Herrscher die Macht kontrolliert.",
+      "it": "Saggi del pensatore legista Han Fei su legge, premi e punizioni e sui metodi con cui un sovrano controlla il potere.",
+      "pt": "Ensaios do pensador legalista Han Fei sobre a lei, recompensas e castigos e os métodos com que um governante controla o poder.",
+      "ru": "Эссе легиста Хань Фэя о законе, наградах и наказаниях и о способах, которыми правитель удерживает власть.",
+      "ja": "法家の思想家・韓非による、法、賞罰、そして君主が権力を握る術についての論文集です。",
+      "ko": "법가 사상가 한비가 법과 상벌, 그리고 군주가 권력을 장악하는 방법을 논한 글 모음입니다.",
+      "ar": "مقالات للمفكر القانوني هان فاي عن القانون والثواب والعقاب وأساليب الحاكم في إحكام السلطة.",
+      "hi": "विधिवादी चिंतक हान फ़ेई के निबंध—क़ानून, पुरस्कार और दंड, और शासक सत्ता को कैसे नियंत्रित करे, इन पर।",
+      "id": "Esai pemikir Legalis Han Fei tentang hukum, ganjaran dan hukuman, serta cara penguasa mengendalikan kekuasaan.",
+      "vi": "Các bài luận của nhà tư tưởng Pháp gia Hàn Phi về pháp luật, thưởng phạt và những cách người cầm quyền nắm giữ quyền lực.",
+      "tr": "Hukukçu düşünür Han Fei'nin yasa, ödül ve ceza ile hükümdarın iktidarı elinde tutma yöntemleri üzerine denemeleri."
     }
   },
   "honglou-meng": {
@@ -113,6 +265,120 @@
       "tr": "Feng Menglong'un derlediği, dostluk, aşk ve kader üzerine Ming dönemi halk dilinde kısa öyküler; ilk hikâyeler, Boya'nın çalgısını kırması da dahil."
     }
   },
+  "jinsilu": {
+    "title": {
+      "en": "Reflections on Things at Hand",
+      "zh-CN": "近思录",
+      "zh-TW": "近思錄",
+      "es": "Reflexiones sobre lo cercano",
+      "fr": "Réflexions sur ce qui est proche",
+      "de": "Gedanken über das Nächstliegende",
+      "it": "Riflessioni su ciò che è vicino",
+      "pt": "Reflexões sobre o que está ao alcance",
+      "ru": "Размышления о близком",
+      "ja": "近思録",
+      "ko": "근사록",
+      "ar": "تأملات فيما هو قريب",
+      "hi": "निकट की बातों पर चिंतन",
+      "id": "Renungan tentang Hal-Hal yang Dekat",
+      "vi": "Cận tư lục",
+      "tr": "Yakın Düşünceler"
+    },
+    "blurb": {
+      "en": "An anthology of Song-dynasty Neo-Confucian teachings compiled by Zhu Xi and Lü Zuqian in 14 chapters, a guide to study and self-cultivation.",
+      "zh-CN": "朱熹与吕祖谦编选的宋代理学语录，共十四卷，是治学与修身的入门指南。",
+      "zh-TW": "朱熹與呂祖謙編選的宋代理學語錄，共十四卷，是治學與修身的入門指南。",
+      "es": "Antología de enseñanzas neoconfucianas de la dinastía Song, compilada por Zhu Xi y Lü Zuqian en 14 capítulos, una guía para el estudio y el cultivo personal.",
+      "fr": "Anthologie d'enseignements néoconfucéens de la dynastie Song, compilée par Zhu Xi et Lü Zuqian en 14 chapitres, guide d'étude et de perfectionnement de soi.",
+      "de": "Eine Anthologie neokonfuzianischer Lehren der Song-Zeit in 14 Kapiteln, zusammengestellt von Zhu Xi und Lü Zuqian, ein Leitfaden für Studium und Selbstkultivierung.",
+      "it": "Antologia di insegnamenti neoconfuciani della dinastia Song in 14 capitoli, compilata da Zhu Xi e Lü Zuqian, guida allo studio e alla coltivazione di sé.",
+      "pt": "Antologia de ensinamentos neoconfucianos da dinastia Song, compilada por Zhu Xi e Lü Zuqian em 14 capítulos, um guia de estudo e autocultivo.",
+      "ru": "Антология неоконфуцианских наставлений эпохи Сун в 14 главах, составленная Чжу Си и Люй Цзуцянем, — руководство по учёбе и самосовершенствованию.",
+      "ja": "朱熹と呂祖謙が編んだ宋代の新儒学の語録。全14巻で、学問と修養の入門書です。",
+      "ko": "주희와 여조겸이 엮은 송나라 성리학 어록으로, 14권에 걸쳐 학문과 수양의 길잡이를 제시합니다.",
+      "ar": "مختارات من تعاليم الكونفوشيوسية الجديدة في عهد سونغ جمعها تشو شي ولو زوتشيان في ١٤ فصلًا، دليل للدراسة وتهذيب النفس.",
+      "hi": "सोंग काल की नव-कन्फ्यूशियस शिक्षाओं का संकलन, जिसे झू शी और ल्यू ज़ूछियान ने 14 अध्यायों में तैयार किया; अध्ययन और आत्म-साधना की मार्गदर्शिका।",
+      "id": "Antologi ajaran Neo-Konfusianisme dinasti Song yang disusun Zhu Xi dan Lü Zuqian dalam 14 bab, panduan belajar dan pengembangan diri.",
+      "vi": "Tuyển tập giáo huấn Tân Nho học đời Tống do Chu Hi và Lữ Tổ Khiêm biên soạn thành 14 quyển, là cẩm nang học tập và tu dưỡng.",
+      "tr": "Zhu Xi ve Lü Zuqian'ın on dört bölümde derlediği Song dönemi Yeni Konfüçyüsçü öğretiler seçkisi; öğrenim ve kendini geliştirme rehberi."
+    }
+  },
+  "liezi": {
+    "title": {
+      "en": "Liezi",
+      "zh-CN": "列子",
+      "zh-TW": "列子",
+      "es": "Liezi",
+      "fr": "Liezi",
+      "de": "Liezi",
+      "it": "Liezi",
+      "pt": "Liezi",
+      "ru": "Лецзы",
+      "ja": "列子",
+      "ko": "열자",
+      "ar": "ليزي",
+      "hi": "लीज़ी",
+      "id": "Liezi",
+      "vi": "Liệt Tử",
+      "tr": "Liezi"
+    },
+    "blurb": {
+      "en": "A Daoist classic of eight chapters full of parables and tall tales, including the Foolish Old Man who moved the mountains.",
+      "zh-CN": "道家经典，共八篇，充满寓言和奇闻，其中有愚公移山的故事。",
+      "zh-TW": "道家經典，共八篇，充滿寓言和奇聞，其中有愚公移山的故事。",
+      "es": "Un clásico taoísta de ocho capítulos lleno de parábolas e historias fantásticas, entre ellas la del viejo necio que movió las montañas.",
+      "fr": "Un classique taoïste en huit chapitres, plein de paraboles et de récits fantastiques, dont celui du Vieux Fou qui déplaça les montagnes.",
+      "de": "Ein daoistischer Klassiker in acht Kapiteln voller Gleichnisse und Wundergeschichten, darunter die vom törichten Alten, der Berge versetzte.",
+      "it": "Un classico taoista in otto capitoli, pieno di parabole e racconti fantastici, tra cui quello del Vecchio Sciocco che spostò le montagne.",
+      "pt": "Um clássico taoista em oito capítulos, cheio de parábolas e histórias fantásticas, incluindo a do Velho Tolo que moveu as montanhas.",
+      "ru": "Даосская классика в восьми главах, полная притч и небылиц, включая историю о Глупом старике, сдвинувшем горы.",
+      "ja": "八篇からなる道家の古典。寓話や奇談に満ち、山を移した愚公の話も収められています。",
+      "ko": "여덟 편으로 이루어진 도가의 고전으로, 산을 옮긴 우공 이야기를 비롯해 우화와 기담이 가득합니다.",
+      "ar": "كتاب طاوي كلاسيكي من ثمانية فصول مليء بالأمثال والحكايات العجيبة، منها قصة الشيخ الأحمق الذي أزاح الجبال.",
+      "hi": "आठ अध्यायों का दाओवादी ग्रंथ, दृष्टांतों और अजीब किस्सों से भरा, जिसमें पहाड़ हटाने वाले मूर्ख बूढ़े की कथा भी है।",
+      "id": "Klasik Daois delapan bab penuh perumpamaan dan kisah ajaib, termasuk kisah Orang Tua Bodoh yang memindahkan gunung.",
+      "vi": "Một tác phẩm kinh điển Đạo gia gồm tám thiên, đầy ngụ ngôn và chuyện lạ, trong đó có chuyện Ngu Công dời núi.",
+      "tr": "Sekiz bölümlük Daoist bir klasik; dağları kaydıran Aptal İhtiyar da dahil olmak üzere meseller ve olağanüstü hikâyelerle doludur."
+    }
+  },
+  "lunheng": {
+    "title": {
+      "en": "Balanced Inquiries (Lunheng)",
+      "zh-CN": "论衡",
+      "zh-TW": "論衡",
+      "es": "Lunheng (Discusiones equilibradas)",
+      "fr": "Lunheng (Discussions critiques)",
+      "de": "Lunheng (Abgewogene Erörterungen)",
+      "it": "Lunheng (Discussioni equilibrate)",
+      "pt": "Lunheng (Discussões equilibradas)",
+      "ru": "Луньхэн («Критические рассуждения»)",
+      "ja": "論衡",
+      "ko": "논형",
+      "ar": "لونخنغ",
+      "hi": "लुनहेंग",
+      "id": "Lunheng (Pembahasan Seimbang)",
+      "vi": "Luận hành",
+      "tr": "Lunheng (Dengeli Tartışmalar)"
+    },
+    "blurb": {
+      "en": "Wang Chong's Han-dynasty essays that question superstition, ghosts and fate and weigh popular beliefs against evidence and reason.",
+      "zh-CN": "王充的汉代文章，质疑迷信、鬼神与命运，用证据和理性衡量流行的看法。",
+      "zh-TW": "王充的漢代文章，質疑迷信、鬼神與命運，用證據和理性衡量流行的看法。",
+      "es": "Ensayos de Wang Chong, de la dinastía Han, que cuestionan la superstición, los fantasmas y el destino, y contrastan las creencias populares con la evidencia y la razón.",
+      "fr": "Essais de Wang Chong, sous les Han, qui remettent en cause la superstition, les fantômes et le destin et confrontent les croyances populaires aux preuves et à la raison.",
+      "de": "Essays von Wang Chong aus der Han-Zeit, die Aberglauben, Geister und Schicksal hinterfragen und verbreitete Überzeugungen an Belegen und Vernunft messen.",
+      "it": "Saggi di Wang Chong, di epoca Han, che mettono in dubbio superstizione, fantasmi e destino e confrontano le credenze popolari con prove e ragione.",
+      "pt": "Ensaios de Wang Chong, da dinastia Han, que questionam a superstição, os fantasmas e o destino e comparam as crenças populares com as provas e a razão.",
+      "ru": "Эссе Ван Чуна эпохи Хань, ставящие под сомнение суеверия, духов и судьбу и сверяющие народные верования с доказательствами и разумом.",
+      "ja": "漢代の王充による論文集。迷信や幽霊、運命を疑い、世間の通念を証拠と理性で吟味します。",
+      "ko": "한나라 왕충의 글 모음으로, 미신과 귀신, 운명을 의심하고 통념을 증거와 이성으로 따져 봅니다.",
+      "ar": "مقالات وانغ تشونغ من عهد هان التي تشكّك في الخرافة والأشباح والقدر وتزن المعتقدات الشائعة بالدليل والعقل.",
+      "hi": "हान काल के वांग चोंग के निबंध, जो अंधविश्वास, भूत-प्रेत और नियति पर सवाल उठाते हैं और लोकप्रिय मान्यताओं को प्रमाण और तर्क से परखते हैं।",
+      "id": "Esai Wang Chong dari dinasti Han yang mempertanyakan takhayul, hantu, dan takdir serta menimbang kepercayaan populer dengan bukti dan nalar.",
+      "vi": "Các bài luận của Vương Sung đời Hán, nghi vấn mê tín, ma quỷ và số mệnh, đem niềm tin phổ biến ra cân nhắc bằng bằng chứng và lý trí.",
+      "tr": "Han dönemi yazarı Wang Chong'un batıl inançları, hayaletleri ve kaderi sorgulayan, yaygın inanışları kanıt ve akılla tartan denemeleri."
+    }
+  },
   "lunyu": {
     "title": {
       "en": "The Analects",
@@ -149,6 +415,82 @@
       "id": "Ucapan singkat Konfusius dan murid-muridnya dalam dua puluh bab, ditulis dalam bahasa Tionghoa klasik; teks yang sulit tetapi terkenal.",
       "vi": "Những lời dạy ngắn của Khổng Tử và học trò trong hai mươi thiên, viết bằng Hán văn cổ; một văn bản khó nhưng nổi tiếng.",
       "tr": "Konfüçyüs ile öğrencilerinin yirmi bölümde toplanmış kısa sözleri, klasik Çince ile yazılmış; zor ama ünlü bir metin."
+    }
+  },
+  "mengzi": {
+    "title": {
+      "en": "Mencius",
+      "zh-CN": "孟子",
+      "zh-TW": "孟子",
+      "es": "Mencio",
+      "fr": "Mencius",
+      "de": "Menzius",
+      "it": "Mencio",
+      "pt": "Mêncio",
+      "ru": "Мэн-цзы",
+      "ja": "孟子",
+      "ko": "맹자",
+      "ar": "منشيوس",
+      "hi": "मेन्सियस",
+      "id": "Mensius",
+      "vi": "Mạnh Tử",
+      "tr": "Mencius"
+    },
+    "blurb": {
+      "en": "Mencius talks with kings and students about the goodness of human nature, kindness and how a ruler should care for the people.",
+      "zh-CN": "孟子与君王和弟子谈论人性本善、仁爱，以及统治者应如何爱护百姓。",
+      "zh-TW": "孟子與君王和弟子談論人性本善、仁愛，以及統治者應如何愛護百姓。",
+      "es": "Mencio conversa con reyes y discípulos sobre la bondad de la naturaleza humana, la benevolencia y cómo debe cuidar un gobernante al pueblo.",
+      "fr": "Mencius s'entretient avec des rois et des disciples de la bonté de la nature humaine, de la bienveillance et de la façon dont un souverain doit prendre soin du peuple.",
+      "de": "Menzius spricht mit Königen und Schülern über die Güte der menschlichen Natur, Menschlichkeit und darüber, wie ein Herrscher für das Volk sorgen soll.",
+      "it": "Mencio conversa con re e discepoli sulla bontà della natura umana, sulla benevolenza e su come un sovrano debba prendersi cura del popolo.",
+      "pt": "Mêncio conversa com reis e discípulos sobre a bondade da natureza humana, a benevolência e como um governante deve cuidar do povo.",
+      "ru": "Мэн-цзы беседует с правителями и учениками о доброте человеческой природы, человеколюбии и о том, как государь должен заботиться о народе.",
+      "ja": "孟子が王や弟子たちと、人間の本性の善、仁愛、そして君主はどう民を思いやるべきかを語り合います。",
+      "ko": "맹자가 왕과 제자들에게 인간 본성의 선함, 어짊, 그리고 통치자가 백성을 어떻게 돌봐야 하는지를 이야기합니다.",
+      "ar": "يتحدث منشيوس مع الملوك والتلاميذ عن طيبة الطبيعة البشرية والرحمة وكيف ينبغي للحاكم أن يعتني بشعبه.",
+      "hi": "मेन्सियस राजाओं और शिष्यों से मानव स्वभाव की अच्छाई, दयालुता और शासक को प्रजा की देखभाल कैसे करनी चाहिए, इस पर बात करते हैं।",
+      "id": "Mensius berbincang dengan raja dan murid tentang kebaikan kodrat manusia, kebajikan, dan cara penguasa merawat rakyat.",
+      "vi": "Mạnh Tử trò chuyện với vua chúa và học trò về tính thiện của con người, lòng nhân và cách người cầm quyền chăm lo cho dân.",
+      "tr": "Mencius, krallar ve öğrencilerle insan doğasının iyiliği, iyilikseverlik ve bir hükümdarın halkına nasıl bakması gerektiği üzerine konuşur."
+    }
+  },
+  "mozi": {
+    "title": {
+      "en": "Mozi",
+      "zh-CN": "墨子",
+      "zh-TW": "墨子",
+      "es": "Mozi",
+      "fr": "Mozi",
+      "de": "Mozi",
+      "it": "Mozi",
+      "pt": "Mozi",
+      "ru": "Мо-цзы",
+      "ja": "墨子",
+      "ko": "묵자",
+      "ar": "موزي",
+      "hi": "मोज़ी",
+      "id": "Mozi",
+      "vi": "Mặc Tử",
+      "tr": "Mozi"
+    },
+    "blurb": {
+      "en": "The writings of Mozi and his followers on impartial care for all, frugality, opposing aggressive war and defending cities.",
+      "zh-CN": "墨子及其后学的著作，主张兼爱、节用、非攻，并讲述城池防守之法。",
+      "zh-TW": "墨子及其後學的著作，主張兼愛、節用、非攻，並講述城池防守之法。",
+      "es": "Los escritos de Mozi y sus seguidores sobre el cuidado imparcial de todos, la frugalidad, el rechazo de la guerra de agresión y la defensa de las ciudades.",
+      "fr": "Les écrits de Mozi et de ses disciples sur le souci impartial de tous, la frugalité, le refus de la guerre d'agression et la défense des cités.",
+      "de": "Die Schriften Mozis und seiner Anhänger über unparteiische Fürsorge für alle, Genügsamkeit, die Ablehnung von Angriffskriegen und die Verteidigung von Städten.",
+      "it": "Gli scritti di Mozi e dei suoi seguaci sulla cura imparziale per tutti, la frugalità, il rifiuto della guerra di aggressione e la difesa delle città.",
+      "pt": "Os escritos de Mozi e seus seguidores sobre o cuidado imparcial por todos, a frugalidade, a oposição à guerra de agressão e a defesa das cidades.",
+      "ru": "Сочинения Мо-цзы и его последователей о беспристрастной заботе обо всех, бережливости, отказе от захватнических войн и обороне городов.",
+      "ja": "墨子とその後学の著作。分け隔てなくすべての人を愛すること（兼愛）、節約、侵略戦争への反対、城の守り方を説きます。",
+      "ko": "묵자와 그 후학들이 모든 이에 대한 차별 없는 사랑, 절약, 침략 전쟁 반대, 성의 방어를 논한 저작입니다.",
+      "ar": "كتابات موزي وأتباعه عن الرعاية المتساوية للجميع والاقتصاد ورفض الحروب العدوانية والدفاع عن المدن.",
+      "hi": "मोज़ी और उनके अनुयायियों की रचनाएँ—सबके प्रति निष्पक्ष स्नेह, मितव्ययिता, आक्रामक युद्ध के विरोध और नगरों की रक्षा पर।",
+      "id": "Tulisan Mozi dan para pengikutnya tentang kepedulian yang adil bagi semua, kesederhanaan, penolakan perang agresi, dan pertahanan kota.",
+      "vi": "Các tác phẩm của Mặc Tử và môn đồ về tình yêu thương không phân biệt, tiết kiệm, phản đối chiến tranh xâm lược và cách phòng thủ thành trì.",
+      "tr": "Mozi ve takipçilerinin herkese tarafsız ilgi, tutumluluk, saldırgan savaşa karşı çıkma ve şehir savunması üzerine yazıları."
     }
   },
   "rulin-waishi": {
@@ -265,6 +607,44 @@
       "tr": "Shi Nai'an'ın yozlaşmış memurlara karşı ayaklanan haydut kahramanları anlatan Ming romanı; Lu Zhishen'in ilk maceraları dahil, ilk bölümler."
     }
   },
+  "sunzi-bingfa": {
+    "title": {
+      "en": "The Art of War (Sunzi)",
+      "zh-CN": "孙子兵法",
+      "zh-TW": "孫子兵法",
+      "es": "El arte de la guerra (Sunzi)",
+      "fr": "L'Art de la guerre (Sunzi)",
+      "de": "Die Kunst des Krieges (Sunzi)",
+      "it": "L'arte della guerra (Sunzi)",
+      "pt": "A Arte da Guerra (Sunzi)",
+      "ru": "Искусство войны (Сунь-цзы)",
+      "ja": "孫子の兵法",
+      "ko": "손자병법",
+      "ar": "فن الحرب (سونزي)",
+      "hi": "युद्ध की कला (सुन ज़ू)",
+      "id": "Seni Perang (Sunzi)",
+      "vi": "Binh pháp Tôn Tử",
+      "tr": "Savaş Sanatı (Sunzi)"
+    },
+    "blurb": {
+      "en": "The original Chinese of the thirteen chapters on strategy, deception and knowing yourself and your enemy.",
+      "zh-CN": "十三篇关于战略、诡道以及知己知彼的论述，此为中文原文。",
+      "zh-TW": "十三篇關於戰略、詭道以及知己知彼的論述，此為中文原文。",
+      "es": "El texto chino original de los trece capítulos sobre estrategia, engaño y conocerse a uno mismo y al enemigo.",
+      "fr": "Le texte chinois original des treize chapitres sur la stratégie, la ruse et la connaissance de soi et de l'ennemi.",
+      "de": "Der chinesische Originaltext der dreizehn Kapitel über Strategie, Täuschung und die Kenntnis seiner selbst und des Feindes.",
+      "it": "Il testo cinese originale dei tredici capitoli su strategia, inganno e conoscenza di sé e del nemico.",
+      "pt": "O texto chinês original dos treze capítulos sobre estratégia, engano e conhecer a si mesmo e ao inimigo.",
+      "ru": "Подлинный китайский текст тринадцати глав о стратегии, обмане и знании себя и противника.",
+      "ja": "戦略、欺き、己と敵を知ることを説く13篇の中国語原文です。",
+      "ko": "전략과 기만, 자신과 적을 아는 일을 다룬 열세 편의 중국어 원문입니다.",
+      "ar": "النص الصيني الأصلي للفصول الثلاثة عشر عن الاستراتيجية والخداع ومعرفة النفس والعدو.",
+      "hi": "रणनीति, छल और खुद को तथा शत्रु को जानने पर तेरह अध्यायों का मूल चीनी पाठ।",
+      "id": "Teks asli bahasa Mandarin dari tiga belas bab tentang strategi, tipu daya, serta mengenal diri dan musuh.",
+      "vi": "Nguyên văn tiếng Hán của mười ba thiên về chiến lược, mưu lược và việc hiểu mình hiểu địch.",
+      "tr": "Strateji, aldatma ve kendini ile düşmanını tanıma üzerine on üç bölümün Çince özgün metni."
+    }
+  },
   "xiyouji": {
     "title": {
       "en": "Journey to the West (beginning)",
@@ -301,6 +681,44 @@
       "id": "Novel klasik Wu Cheng'en; bab-bab awal menceritakan lahirnya Sun Wukong si kera batu, belajar sihir, dan mengacau di Surga.",
       "vi": "Tiểu thuyết kinh điển của Ngô Thừa Ân; những hồi đầu kể về sự ra đời của khỉ đá Tôn Ngộ Không, việc học phép thuật và đại náo thiên cung.",
       "tr": "Wu Cheng'en'in klasik romanı; ilk bölümler taş maymun Sun Wukong'un doğuşunu, büyü öğrenişini ve Cennet'te çıkardığı kargaşayı anlatır."
+    }
+  },
+  "zhongyong-zhangju": {
+    "title": {
+      "en": "The Doctrine of the Mean (Zhu Xi's commentary)",
+      "zh-CN": "中庸章句",
+      "zh-TW": "中庸章句",
+      "es": "La Doctrina del Medio (comentario de Zhu Xi)",
+      "fr": "La Doctrine du juste milieu (commentaire de Zhu Xi)",
+      "de": "Die Lehre von der Mitte (Kommentar von Zhu Xi)",
+      "it": "La Dottrina del Giusto Mezzo (commento di Zhu Xi)",
+      "pt": "A Doutrina do Meio (comentário de Zhu Xi)",
+      "ru": "Учение о середине (комментарий Чжу Си)",
+      "ja": "中庸章句",
+      "ko": "중용장구",
+      "ar": "عقيدة الوسط (شرح تشو شي)",
+      "hi": "मध्यमार्ग का सिद्धांत (झू शी की टीका)",
+      "id": "Doktrin Jalan Tengah (komentar Zhu Xi)",
+      "vi": "Trung dung chương cú",
+      "tr": "Orta Yol Öğretisi (Zhu Xi şerhi)"
+    },
+    "blurb": {
+      "en": "Zhu Xi's edition and commentary of the classic on balance, sincerity and the harmony of human nature with heaven.",
+      "zh-CN": "朱熹校订并注释的经典，论中和之道、诚，以及人性与天道的和谐。",
+      "zh-TW": "朱熹校訂並注釋的經典，論中和之道、誠，以及人性與天道的和諧。",
+      "es": "La edición y el comentario de Zhu Xi del clásico sobre el equilibrio, la sinceridad y la armonía de la naturaleza humana con el cielo.",
+      "fr": "L'édition et le commentaire de Zhu Xi du classique sur l'équilibre, la sincérité et l'harmonie de la nature humaine avec le ciel.",
+      "de": "Zhu Xis Ausgabe und Kommentar zum Klassiker über Gleichgewicht, Aufrichtigkeit und die Harmonie der menschlichen Natur mit dem Himmel.",
+      "it": "L'edizione e il commento di Zhu Xi del classico su equilibrio, sincerità e armonia della natura umana con il cielo.",
+      "pt": "A edição e o comentário de Zhu Xi do clássico sobre o equilíbrio, a sinceridade e a harmonia da natureza humana com o céu.",
+      "ru": "Издание и комментарий Чжу Си к канону о равновесии, искренности и гармонии человеческой природы с Небом.",
+      "ja": "中庸（バランス）、誠、そして人の本性と天との調和を説く古典を、朱熹が整理して注釈した版です。",
+      "ko": "균형과 진실함, 그리고 인간 본성과 하늘의 조화를 다룬 고전을 주희가 정리하고 주석한 판본입니다.",
+      "ar": "نسخة تشو شي وشرحه للكتاب الكلاسيكي عن التوازن والصدق وانسجام الطبيعة البشرية مع السماء.",
+      "hi": "संतुलन, सच्चाई और मानव स्वभाव के स्वर्ग से सामंजस्य पर लिखे क्लासिक का झू शी द्वारा संपादित और टीका-सहित संस्करण।",
+      "id": "Edisi dan komentar Zhu Xi atas kitab klasik tentang keseimbangan, ketulusan, dan keselarasan kodrat manusia dengan langit.",
+      "vi": "Bản và lời chú giải của Chu Hi về tác phẩm kinh điển bàn về sự trung hòa, lòng thành và sự hòa hợp giữa bản tính con người với trời.",
+      "tr": "Zhu Xi'nin; denge, içtenlik ve insan doğasının gökle uyumunu işleyen klasiğin şerhli neşri."
     }
   }
 }

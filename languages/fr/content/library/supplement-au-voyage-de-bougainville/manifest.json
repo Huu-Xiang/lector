@@ -1,0 +1,57 @@
+{
+  "title": "Supplément au Voyage de Bougainville",
+  "author": "Denis Diderot",
+  "level": "C1",
+  "wordCount": 16994,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/6501",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Chapitre I. Jugement du voyage de Bougainville"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Supplément au Voyage de Bougainville"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Supplément au Voyage de Bougainville"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Supplément au Voyage de Bougainville"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Supplément au Voyage de Bougainville"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Supplément au Voyage de Bougainville"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Supplément au Voyage de Bougainville"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Supplément au Voyage de Bougainville"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Supplément au Voyage de Bougainville"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Supplément au Voyage de Bougainville"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Supplément au Voyage de Bougainville"
+    }
+  ]
+}

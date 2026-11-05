@@ -341,6 +341,44 @@
       "tr": "Bir kız beyaz bir tavşanı izleyerek bir deliğe düşer ve tuhaf yaratıklarla dolu garip bir dünyaya varır."
     }
   },
+  "analects-of-confucius": {
+    "title": {
+      "en": "The Analects of Confucius",
+      "zh-CN": "论语（英译）",
+      "zh-TW": "論語（英譯）",
+      "es": "Las Analectas de Confucio",
+      "fr": "Les Entretiens de Confucius",
+      "de": "Gespräche des Konfuzius",
+      "it": "I Dialoghi di Confucio",
+      "pt": "Os Analectos de Confúcio",
+      "ru": "Лунь юй",
+      "ja": "論語（英訳）",
+      "ko": "논어 (영역)",
+      "ar": "محاورات كونفوشيوس",
+      "hi": "कन्फ्यूशियस की उक्तियाँ",
+      "id": "Analek Konfusius",
+      "vi": "Luận ngữ của Khổng Tử",
+      "tr": "Konfüçyüs'ün Konuşmaları"
+    },
+    "blurb": {
+      "en": "Sayings and short conversations of Confucius and his students on learning, virtue, family and government, in James Legge's English translation.",
+      "zh-CN": "孔子及其弟子关于学习、美德、家庭与政治的言论和简短对话，为理雅各的英译本。",
+      "zh-TW": "孔子及其弟子關於學習、美德、家庭與政治的言論和簡短對話，為理雅各的英譯本。",
+      "es": "Dichos y breves conversaciones de Confucio y sus discípulos sobre el aprendizaje, la virtud, la familia y el gobierno, en la traducción inglesa de James Legge.",
+      "fr": "Paroles et courts dialogues de Confucius et de ses disciples sur l'étude, la vertu, la famille et le gouvernement, dans la traduction anglaise de James Legge.",
+      "de": "Sprüche und kurze Gespräche des Konfuzius und seiner Schüler über Lernen, Tugend, Familie und Regierung, in James Legges englischer Übersetzung.",
+      "it": "Detti e brevi conversazioni di Confucio e dei suoi discepoli su apprendimento, virtù, famiglia e governo, nella traduzione inglese di James Legge.",
+      "pt": "Ditos e breves conversas de Confúcio e dos seus discípulos sobre aprendizagem, virtude, família e governo, na tradução inglesa de James Legge.",
+      "ru": "Изречения и короткие беседы Конфуция и его учеников об учёбе, добродетели, семье и управлении — в английском переводе Джеймса Легга.",
+      "ja": "孔子と弟子たちの、学問・徳・家族・政治についての言葉と短い対話。ジェームズ・レッグによる英訳です。",
+      "ko": "공자와 제자들이 배움, 덕, 가족, 정치에 대해 나눈 말과 짧은 대화로, 제임스 레게의 영어 번역본입니다.",
+      "ar": "أقوال ومحاورات قصيرة لكونفوشيوس وتلاميذه عن التعلم والفضيلة والأسرة والحكم، بترجمة جيمس ليغ الإنجليزية.",
+      "hi": "कन्फ्यूशियस और उनके शिष्यों के सीखने, सद्गुण, परिवार और शासन पर कथन और छोटी बातचीतें, जेम्स लेग्गे के अंग्रेज़ी अनुवाद में।",
+      "id": "Ucapan dan percakapan singkat Konfusius dan murid-muridnya tentang belajar, kebajikan, keluarga, dan pemerintahan, dalam terjemahan Inggris James Legge.",
+      "vi": "Những lời dạy và đoạn đối thoại ngắn của Khổng Tử cùng học trò về học tập, đức hạnh, gia đình và chính sự, qua bản dịch tiếng Anh của James Legge.",
+      "tr": "Konfüçyüs ve öğrencilerinin öğrenme, erdem, aile ve yönetim üzerine sözleri ve kısa konuşmaları; James Legge'in İngilizce çevirisiyle."
+    }
+  },
   "andersens-fairy-tales": {
     "title": {
       "en": "Andersen's Fairy Tales",
@@ -455,6 +493,44 @@
       "tr": "Yaşlı bir ağabey ile kız kardeşi çiftlikte yardım edecek yetim bir oğlan ister, ama geveze, kızıl saçlı bir kız gelir ve hayatlarını değiştirir."
     }
   },
+  "apology": {
+    "title": {
+      "en": "Apology",
+      "zh-CN": "申辩篇",
+      "zh-TW": "申辯篇",
+      "es": "Apología de Sócrates",
+      "fr": "Apologie de Socrate",
+      "de": "Apologie des Sokrates",
+      "it": "Apologia di Socrate",
+      "pt": "Apologia de Sócrates",
+      "ru": "Апология Сократа",
+      "ja": "ソクラテスの弁明",
+      "ko": "소크라테스의 변명",
+      "ar": "دفاع سقراط",
+      "hi": "सुकरात की सफ़ाई",
+      "id": "Pembelaan Sokrates",
+      "vi": "Biện hộ của Socrates",
+      "tr": "Sokrates'in Savunması"
+    },
+    "blurb": {
+      "en": "At his trial in 399 BC, Socrates defends a life spent asking questions and refuses to beg for mercy.",
+      "zh-CN": "公元前399年的审判中，苏格拉底为自己追问求知的一生辩护，并拒绝乞求宽恕。",
+      "zh-TW": "西元前399年的審判中，蘇格拉底為自己追問求知的一生辯護，並拒絕乞求寬恕。",
+      "es": "En su juicio del 399 a. C., Sócrates defiende una vida dedicada a preguntar y se niega a suplicar clemencia.",
+      "fr": "Lors de son procès en 399 av. J.-C., Socrate défend une vie passée à questionner et refuse d'implorer la clémence.",
+      "de": "In seinem Prozess 399 v. Chr. verteidigt Sokrates ein Leben des Fragens und weigert sich, um Gnade zu bitten.",
+      "it": "Al processo del 399 a.C., Socrate difende una vita passata a porre domande e rifiuta di implorare clemenza.",
+      "pt": "No julgamento de 399 a.C., Sócrates defende uma vida dedicada a perguntar e recusa-se a pedir clemência.",
+      "ru": "На суде в 399 г. до н. э. Сократ защищает жизнь, посвящённую вопросам, и отказывается просить пощады.",
+      "ja": "紀元前399年の裁判で、ソクラテスは問い続けた生涯を弁護し、命乞いを拒みます。",
+      "ko": "기원전 399년 재판에서 소크라테스는 질문으로 일관한 삶을 변호하며 자비를 구걸하기를 거부합니다.",
+      "ar": "في محاكمته عام 399 ق.م يدافع سقراط عن حياة قضاها في طرح الأسئلة ويرفض استجداء الرحمة.",
+      "hi": "399 ईसा पूर्व के मुकदमे में सुकरात सवाल पूछते हुए बिताए जीवन का बचाव करते हैं और दया की भीख माँगने से इनकार करते हैं।",
+      "id": "Dalam pengadilannya pada 399 SM, Sokrates membela hidup yang dihabiskan untuk bertanya dan menolak memohon belas kasihan.",
+      "vi": "Tại phiên tòa năm 399 TCN, Socrates bảo vệ một đời chất vấn và từ chối van xin khoan hồng.",
+      "tr": "MÖ 399'daki yargılamasında Sokrates, soru sormakla geçen bir hayatı savunur ve merhamet dilemeyi reddeder."
+    }
+  },
   "around-the-world-in-eighty-days": {
     "title": {
       "en": "Around the World in Eighty Days",
@@ -531,6 +607,44 @@
       "tr": "Franklin, yoksul bir matbaa çırağının nasıl başarılı bir iş insanı, bilim insanı ve devlet adamı olduğunu anlatır ve iyi bir hayat için kurallarını paylaşır."
     }
   },
+  "beyond-good-and-evil": {
+    "title": {
+      "en": "Beyond Good and Evil",
+      "zh-CN": "善恶的彼岸",
+      "zh-TW": "善惡的彼岸",
+      "es": "Más allá del bien y del mal",
+      "fr": "Par-delà bien et mal",
+      "de": "Jenseits von Gut und Böse",
+      "it": "Al di là del bene e del male",
+      "pt": "Além do Bem e do Mal",
+      "ru": "По ту сторону добра и зла",
+      "ja": "善悪の彼岸",
+      "ko": "선악의 저편",
+      "ar": "ما وراء الخير والشر",
+      "hi": "भले और बुरे से परे",
+      "id": "Melampaui Baik dan Jahat",
+      "vi": "Bên kia thiện ác",
+      "tr": "İyinin ve Kötünün Ötesinde"
+    },
+    "blurb": {
+      "en": "Nietzsche questions the prejudices of earlier philosophers and the origins of our ideas of good and evil, in sharp short sections.",
+      "zh-CN": "尼采以犀利的短章，质疑前辈哲学家的偏见，以及我们的善恶观念从何而来。",
+      "zh-TW": "尼采以犀利的短章，質疑前輩哲學家的偏見，以及我們的善惡觀念從何而來。",
+      "es": "Nietzsche cuestiona los prejuicios de los filósofos anteriores y el origen de nuestras ideas del bien y del mal, en secciones breves y agudas.",
+      "fr": "Nietzsche interroge les préjugés des philosophes antérieurs et l'origine de nos idées du bien et du mal, en courtes sections incisives.",
+      "de": "Nietzsche hinterfragt die Vorurteile früherer Philosophen und den Ursprung unserer Vorstellungen von Gut und Böse, in scharfen kurzen Abschnitten.",
+      "it": "Nietzsche mette in discussione i pregiudizi dei filosofi precedenti e l'origine delle nostre idee di bene e male, in brevi sezioni taglienti.",
+      "pt": "Nietzsche questiona os preconceitos dos filósofos anteriores e a origem das nossas ideias de bem e mal, em seções curtas e incisivas.",
+      "ru": "Ницше ставит под сомнение предрассудки прежних философов и происхождение наших представлений о добре и зле — в коротких острых разделах.",
+      "ja": "ニーチェは、鋭く短い断章で、先人の哲学者たちの偏見と、善悪という観念の由来を問い直します。",
+      "ko": "니체는 날카롭고 짧은 단락들로 이전 철학자들의 편견과 선악 관념의 기원을 의심합니다.",
+      "ar": "يشكّك نيتشه، في مقاطع قصيرة حادة، في تحيزات الفلاسفة السابقين وفي أصل أفكارنا عن الخير والشر.",
+      "hi": "नीत्शे तीखे छोटे खंडों में पूर्ववर्ती दार्शनिकों के पूर्वाग्रहों और अच्छे-बुरे के हमारे विचारों की उत्पत्ति पर सवाल उठाते हैं।",
+      "id": "Nietzsche mempertanyakan prasangka para filsuf terdahulu dan asal-usul gagasan kita tentang baik dan jahat, dalam bagian-bagian pendek yang tajam.",
+      "vi": "Nietzsche chất vấn những định kiến của các triết gia trước và nguồn gốc của khái niệm thiện ác, qua những đoạn ngắn sắc bén.",
+      "tr": "Nietzsche, keskin kısa bölümlerle önceki filozofların önyargılarını ve iyi ile kötü anlayışlarımızın kökenini sorgular."
+    }
+  },
   "black-beauty": {
     "title": {
       "en": "Black Beauty",
@@ -567,6 +681,44 @@
       "id": "Seekor kuda yang lembut menceritakan hidupnya bersama pemilik yang baik dan yang kejam di Inggris era Victoria.",
       "vi": "Một chú ngựa hiền lành kể lại cuộc đời mình với những người chủ tốt bụng và tàn nhẫn ở nước Anh thời Victoria.",
       "tr": "Uysal bir at, Viktorya dönemi İngiltere'sinde iyi ve zalim sahipleriyle geçen hayatını anlatır."
+    }
+  },
+  "chuang-tzu": {
+    "title": {
+      "en": "Chuang Tzu",
+      "zh-CN": "庄子（英译）",
+      "zh-TW": "莊子（英譯）",
+      "es": "Zhuangzi",
+      "fr": "Tchouang-tseu",
+      "de": "Dschuang Dsi",
+      "it": "Zhuangzi",
+      "pt": "Zhuangzi",
+      "ru": "Чжуан-цзы",
+      "ja": "荘子（英訳）",
+      "ko": "장자 (영역)",
+      "ar": "تشوانغ تزو",
+      "hi": "ज़ुआंगज़ी",
+      "id": "Zhuangzi",
+      "vi": "Trang Tử",
+      "tr": "Zhuangzi"
+    },
+    "blurb": {
+      "en": "Playful stories and arguments from the Daoist sage Zhuangzi, including the butterfly dream and the joy of the fish, translated by Herbert Giles.",
+      "zh-CN": "道家圣贤庄子的寓言与论辩，包括庄周梦蝶和鱼之乐，为翟理斯的英译本。",
+      "zh-TW": "道家聖賢莊子的寓言與論辯，包括莊周夢蝶和魚之樂，為翟理斯的英譯本。",
+      "es": "Cuentos y argumentos juguetones del sabio taoísta Zhuangzi, con el sueño de la mariposa y la alegría de los peces, traducidos por Herbert Giles.",
+      "fr": "Histoires et raisonnements malicieux du sage taoïste Zhuangzi, dont le rêve du papillon et la joie des poissons, traduits par Herbert Giles.",
+      "de": "Verspielte Geschichten und Gedankengänge des daoistischen Weisen Zhuangzi, darunter der Schmetterlingstraum und die Freude der Fische, übersetzt von Herbert Giles.",
+      "it": "Storie e ragionamenti giocosi del saggio taoista Zhuangzi, tra cui il sogno della farfalla e la gioia dei pesci, tradotti da Herbert Giles.",
+      "pt": "Histórias e argumentos bem-humorados do sábio taoista Zhuangzi, incluindo o sonho da borboleta e a alegria dos peixes, traduzidos por Herbert Giles.",
+      "ru": "Игривые притчи и рассуждения даосского мудреца Чжуан-цзы, включая сон о бабочке и радость рыб, в переводе Герберта Джайлса.",
+      "ja": "道家の賢人荘子の遊び心あふれる寓話と議論。胡蝶の夢や魚の楽しみも含み、ハーバート・ジャイルズが英訳しています。",
+      "ko": "도가의 현인 장자의 유쾌한 우화와 논변으로, 나비 꿈과 물고기의 즐거움을 포함하며 허버트 자일스가 번역했습니다.",
+      "ar": "حكايات وحجج مرحة للحكيم الطاوي تشوانغ تزو، منها حلم الفراشة وسعادة الأسماك، بترجمة هربرت جايلز.",
+      "hi": "दाओवादी ऋषि ज़ुआंगज़ी की चंचल कहानियाँ और तर्क, जिनमें तितली का सपना और मछलियों का आनंद भी है, हर्बर्ट जाइल्स के अनुवाद में।",
+      "id": "Kisah dan argumen jenaka sang bijak Daois Zhuangzi, termasuk mimpi kupu-kupu dan kegembiraan ikan, diterjemahkan oleh Herbert Giles.",
+      "vi": "Những câu chuyện và lập luận hóm hỉnh của hiền triết Đạo gia Trang Tử, gồm giấc mơ bướm và niềm vui của loài cá, do Herbert Giles dịch.",
+      "tr": "Daoist bilge Zhuangzi'nin kelebek rüyası ve balıkların neşesi gibi oyunbaz hikâye ve tartışmaları; Herbert Giles çevirisiyle."
     }
   },
   "crime-and-punishment": {
@@ -681,6 +833,120 @@
       "id": "David menceritakan hidupnya sendiri, dari masa kecil yang berat bersama ayah tiri yang kejam hingga menemukan pekerjaan, cinta, dan sukses sebagai penulis.",
       "vi": "David kể lại cuộc đời mình, từ tuổi thơ cực khổ bên người cha dượng tàn nhẫn đến khi tìm được việc làm, tình yêu và thành công với nghề viết.",
       "tr": "David, zalim bir üvey babayla geçen zor çocukluğundan iş, aşk ve yazar olarak başarıya uzanan hayatını anlatır."
+    }
+  },
+  "discourse-on-inequality": {
+    "title": {
+      "en": "A Discourse on the Origin of Inequality",
+      "zh-CN": "论人类不平等的起源和基础",
+      "zh-TW": "論人類不平等的起源和基礎",
+      "es": "Discurso sobre el origen de la desigualdad",
+      "fr": "Discours sur l'origine de l'inégalité",
+      "de": "Abhandlung über den Ursprung der Ungleichheit",
+      "it": "Discorso sull'origine della disuguaglianza",
+      "pt": "Discurso sobre a Origem da Desigualdade",
+      "ru": "Рассуждение о происхождении неравенства",
+      "ja": "人間不平等起源論",
+      "ko": "인간 불평등 기원론",
+      "ar": "خطاب في أصل التفاوت بين الناس",
+      "hi": "असमानता की उत्पत्ति पर प्रवचन",
+      "id": "Wacana tentang Asal-Usul Ketidaksetaraan",
+      "vi": "Luận về nguồn gốc bất bình đẳng",
+      "tr": "İnsanlar Arasındaki Eşitsizliğin Kaynağı Üzerine Söylev"
+    },
+    "blurb": {
+      "en": "Rousseau imagines humans in a natural state and asks how property and society created the inequalities we know.",
+      "zh-CN": "卢梭设想人类的自然状态，追问私有财产与社会是如何造成我们所知的不平等的。",
+      "zh-TW": "盧梭設想人類的自然狀態，追問私有財產與社會是如何造成我們所知的不平等的。",
+      "es": "Rousseau imagina a los seres humanos en estado natural y se pregunta cómo la propiedad y la sociedad crearon las desigualdades que conocemos.",
+      "fr": "Rousseau imagine les humains dans l'état de nature et se demande comment la propriété et la société ont créé les inégalités que nous connaissons.",
+      "de": "Rousseau stellt sich den Menschen im Naturzustand vor und fragt, wie Eigentum und Gesellschaft die uns bekannten Ungleichheiten hervorgebracht haben.",
+      "it": "Rousseau immagina gli esseri umani allo stato di natura e si chiede come proprietà e società abbiano creato le disuguaglianze che conosciamo.",
+      "pt": "Rousseau imagina os seres humanos em estado natural e pergunta como a propriedade e a sociedade criaram as desigualdades que conhecemos.",
+      "ru": "Руссо представляет людей в естественном состоянии и спрашивает, как собственность и общество породили известное нам неравенство.",
+      "ja": "ルソーは自然状態の人間を思い描き、所有と社会が私たちの知る不平等をどう生んだのかを問います。",
+      "ko": "루소는 자연 상태의 인간을 상상하며, 사유재산과 사회가 우리가 아는 불평등을 어떻게 만들어 냈는지 묻습니다.",
+      "ar": "يتخيّل روسو البشر في حالة الطبيعة ويسأل كيف أنتجت الملكية والمجتمع أوجه التفاوت التي نعرفها.",
+      "hi": "रूसो प्रकृति की अवस्था में मनुष्यों की कल्पना करते हैं और पूछते हैं कि संपत्ति और समाज ने हमारी जानी-पहचानी असमानताएँ कैसे बनाईं।",
+      "id": "Rousseau membayangkan manusia dalam keadaan alamiah dan bertanya bagaimana kepemilikan dan masyarakat menciptakan ketidaksetaraan yang kita kenal.",
+      "vi": "Rousseau hình dung con người ở trạng thái tự nhiên và hỏi tài sản cùng xã hội đã tạo ra những bất bình đẳng mà ta biết như thế nào.",
+      "tr": "Rousseau doğal durumdaki insanı hayal eder ve mülkiyetle toplumun bildiğimiz eşitsizlikleri nasıl yarattığını sorar."
+    }
+  },
+  "discourse-on-the-arts-and-sciences": {
+    "title": {
+      "en": "A Discourse on the Arts and Sciences",
+      "zh-CN": "论科学与艺术",
+      "zh-TW": "論科學與藝術",
+      "es": "Discurso sobre las ciencias y las artes",
+      "fr": "Discours sur les sciences et les arts",
+      "de": "Abhandlung über die Wissenschaften und Künste",
+      "it": "Discorso sulle scienze e sulle arti",
+      "pt": "Discurso sobre as Ciências e as Artes",
+      "ru": "Рассуждение о науках и искусствах",
+      "ja": "学問芸術論",
+      "ko": "학문예술론",
+      "ar": "خطاب في العلوم والفنون",
+      "hi": "विज्ञान और कलाओं पर प्रवचन",
+      "id": "Wacana tentang Seni dan Ilmu Pengetahuan",
+      "vi": "Luận về khoa học và nghệ thuật",
+      "tr": "Bilimler ve Sanatlar Üzerine Söylev"
+    },
+    "blurb": {
+      "en": "Rousseau's prize-winning essay of 1750 argues that progress in arts and sciences has not made people more virtuous.",
+      "zh-CN": "卢梭1750年的获奖论文，认为科学与艺术的进步并没有让人更有美德。",
+      "zh-TW": "盧梭1750年的獲獎論文，認為科學與藝術的進步並沒有讓人更有美德。",
+      "es": "El ensayo premiado de Rousseau de 1750 sostiene que el progreso de las artes y las ciencias no ha hecho a las personas más virtuosas.",
+      "fr": "L'essai primé de Rousseau en 1750 soutient que le progrès des arts et des sciences n'a pas rendu les hommes plus vertueux.",
+      "de": "Rousseaus preisgekrönter Aufsatz von 1750 behauptet, dass der Fortschritt von Künsten und Wissenschaften die Menschen nicht tugendhafter gemacht hat.",
+      "it": "Il saggio premiato di Rousseau del 1750 sostiene che il progresso delle arti e delle scienze non ha reso gli uomini più virtuosi.",
+      "pt": "O ensaio premiado de Rousseau de 1750 defende que o progresso das artes e das ciências não tornou as pessoas mais virtuosas.",
+      "ru": "Премированное эссе Руссо 1750 года утверждает, что прогресс наук и искусств не сделал людей добродетельнее.",
+      "ja": "ルソーが1750年に受賞した論文。学問や芸術の進歩は人間を徳高くしなかったと論じます。",
+      "ko": "1750년 상을 받은 루소의 논문으로, 학문과 예술의 발전이 사람을 더 덕스럽게 만들지 못했다고 주장합니다.",
+      "ar": "مقال روسو الفائز بجائزة عام 1750، ويرى فيه أن تقدّم الفنون والعلوم لم يجعل الناس أكثر فضيلة.",
+      "hi": "1750 में पुरस्कृत रूसो का निबंध, जिसका तर्क है कि कलाओं और विज्ञान की प्रगति ने लोगों को अधिक सदाचारी नहीं बनाया।",
+      "id": "Esai Rousseau yang memenangkan hadiah pada 1750 ini berpendapat bahwa kemajuan seni dan ilmu pengetahuan tidak membuat manusia lebih berbudi.",
+      "vi": "Bài luận đoạt giải năm 1750 của Rousseau lập luận rằng sự tiến bộ của khoa học và nghệ thuật không làm con người đạo đức hơn.",
+      "tr": "Rousseau'nun 1750'de ödül kazanan denemesi, bilim ve sanattaki ilerlemenin insanları daha erdemli yapmadığını savunur."
+    }
+  },
+  "discourse-on-the-method": {
+    "title": {
+      "en": "Discourse on the Method",
+      "zh-CN": "谈谈方法",
+      "zh-TW": "談談方法",
+      "es": "Discurso del método",
+      "fr": "Discours de la méthode",
+      "de": "Abhandlung über die Methode",
+      "it": "Discorso sul metodo",
+      "pt": "Discurso do Método",
+      "ru": "Рассуждение о методе",
+      "ja": "方法序説",
+      "ko": "방법서설",
+      "ar": "مقال عن المنهج",
+      "hi": "विधि पर प्रवचन",
+      "id": "Wacana tentang Metode",
+      "vi": "Phương pháp luận",
+      "tr": "Yöntem Üzerine Konuşma"
+    },
+    "blurb": {
+      "en": "Descartes tells the story of his own thinking and gives rules for seeking truth, ending in the famous \"I think, therefore I am.\"",
+      "zh-CN": "笛卡尔讲述自己的思考历程，提出探求真理的规则，并得出著名的“我思故我在”。",
+      "zh-TW": "笛卡兒講述自己的思考歷程，提出探求真理的規則，並得出著名的「我思故我在」。",
+      "es": "Descartes cuenta la historia de su propio pensamiento y da reglas para buscar la verdad, hasta llegar al célebre «pienso, luego existo».",
+      "fr": "Descartes raconte l'histoire de sa pensée et donne des règles pour chercher la vérité, jusqu'au célèbre « je pense, donc je suis ».",
+      "de": "Descartes erzählt die Geschichte seines Denkens und gibt Regeln für die Suche nach Wahrheit, bis zum berühmten „Ich denke, also bin ich“.",
+      "it": "Descartes racconta la storia del proprio pensiero e dà regole per cercare la verità, fino al celebre «penso, dunque sono».",
+      "pt": "Descartes conta a história do seu próprio pensamento e dá regras para buscar a verdade, até ao célebre «penso, logo existo».",
+      "ru": "Декарт рассказывает историю своего мышления и даёт правила поиска истины, приходя к знаменитому «я мыслю, следовательно, существую».",
+      "ja": "デカルトは自らの思索の歩みを語り、真理を探すための規則を示して、有名な「我思う、ゆえに我あり」に至ります。",
+      "ko": "데카르트는 자신의 사유 과정을 이야기하고 진리를 찾는 규칙을 제시하며, 유명한 “나는 생각한다, 고로 존재한다”에 이릅니다.",
+      "ar": "يروي ديكارت قصة تفكيره ويضع قواعد للبحث عن الحقيقة، وينتهي إلى عبارته الشهيرة «أنا أفكر إذن أنا موجود».",
+      "hi": "देकार्त अपनी सोच की कहानी सुनाते हैं, सत्य खोजने के नियम देते हैं और प्रसिद्ध “मैं सोचता हूँ, इसलिए मैं हूँ” तक पहुँचते हैं।",
+      "id": "Descartes menceritakan perjalanan pemikirannya dan memberi aturan mencari kebenaran, hingga sampai pada \"aku berpikir, maka aku ada\" yang terkenal.",
+      "vi": "Descartes kể lại hành trình suy nghĩ của mình và đưa ra các quy tắc tìm chân lý, đi đến câu nói nổi tiếng \"tôi tư duy, vậy tôi tồn tại\".",
+      "tr": "Descartes kendi düşünce serüvenini anlatır, gerçeği aramak için kurallar verir ve ünlü \"düşünüyorum, öyleyse varım\" sözüne ulaşır."
     }
   },
   "dr-jekyll-and-mr-hyde": {
@@ -947,6 +1213,44 @@
       "id": "Seorang ilmuwan muda menciptakan makhluk hidup dari mayat, lari dari ciptaannya, lalu diburu oleh balas dendam makhluk itu.",
       "vi": "Một nhà khoa học trẻ tạo ra một sinh vật sống từ xác chết, bỏ chạy khỏi tác phẩm của mình rồi bị sự trả thù của nó truy đuổi.",
       "tr": "Genç bir bilim insanı cesetlerden canlı bir yaratık yapar, eserinden kaçar ve ardından yaratığın intikamıyla kovalanır."
+    }
+  },
+  "fundamental-principles-of-the-metaphysic-of-morals": {
+    "title": {
+      "en": "Fundamental Principles of the Metaphysic of Morals",
+      "zh-CN": "道德形而上学原理",
+      "zh-TW": "道德形上學基礎",
+      "es": "Fundamentación de la metafísica de las costumbres",
+      "fr": "Fondements de la métaphysique des mœurs",
+      "de": "Grundlegung zur Metaphysik der Sitten",
+      "it": "Fondazione della metafisica dei costumi",
+      "pt": "Fundamentação da Metafísica dos Costumes",
+      "ru": "Основы метафизики нравственности",
+      "ja": "道徳形而上学の基礎づけ",
+      "ko": "도덕형이상학 정초",
+      "ar": "تأسيس ميتافيزيقا الأخلاق",
+      "hi": "नैतिकता के तत्त्वमीमांसा की आधारभूमि",
+      "id": "Dasar-Dasar Metafisika Moral",
+      "vi": "Cơ sở của siêu hình học về đạo đức",
+      "tr": "Ahlak Metafiziğinin Temellendirilmesi"
+    },
+    "blurb": {
+      "en": "Kant explains that a good will acts from duty, and sets out the categorical imperative as the supreme principle of morality.",
+      "zh-CN": "康德阐明善良意志出于义务而行动，并提出“绝对命令”作为道德的最高原则。",
+      "zh-TW": "康德闡明善良意志出於義務而行動，並提出「定言令式」作為道德的最高原則。",
+      "es": "Kant explica que la buena voluntad actúa por deber y presenta el imperativo categórico como principio supremo de la moral.",
+      "fr": "Kant explique que la bonne volonté agit par devoir et expose l'impératif catégorique comme principe suprême de la morale.",
+      "de": "Kant erklärt, dass der gute Wille aus Pflicht handelt, und stellt den kategorischen Imperativ als obersten Grundsatz der Moral auf.",
+      "it": "Kant spiega che la buona volontà agisce per dovere ed espone l'imperativo categorico come principio supremo della morale.",
+      "pt": "Kant explica que a boa vontade age por dever e expõe o imperativo categórico como princípio supremo da moral.",
+      "ru": "Кант объясняет, что добрая воля действует из долга, и излагает категорический императив как высший принцип морали.",
+      "ja": "カントは、善意志は義務から行為すると説き、道徳の最高原理として定言命法を示します。",
+      "ko": "칸트는 선의지가 의무에서 행동한다고 설명하고, 도덕의 최고 원리로 정언명령을 제시합니다.",
+      "ar": "يشرح كانط أن الإرادة الخيّرة تتصرف من منطلق الواجب، ويعرض الأمر المطلق بوصفه المبدأ الأعلى للأخلاق.",
+      "hi": "कांट समझाते हैं कि शुभ संकल्प कर्तव्य से कार्य करता है, और नैतिकता के सर्वोच्च सिद्धांत के रूप में निरपेक्ष आदेश प्रस्तुत करते हैं।",
+      "id": "Kant menjelaskan bahwa kehendak baik bertindak karena kewajiban, dan memaparkan imperatif kategoris sebagai prinsip tertinggi moralitas.",
+      "vi": "Kant giải thích ý chí tốt hành động vì bổn phận và trình bày mệnh lệnh tuyệt đối như nguyên tắc tối cao của đạo đức.",
+      "tr": "Kant, iyi iradenin ödevden hareket ettiğini açıklar ve ahlakın en yüksek ilkesi olarak kategorik buyruğu ortaya koyar."
     }
   },
   "gitanjali": {
@@ -1595,6 +1899,44 @@
       "tr": "Klasik Amerikan okul dizisinin üçüncü kitabı: doğa, emek ve iyilik üzerine daha uzun öyküler ve şiirler."
     }
   },
+  "meditations": {
+    "title": {
+      "en": "Meditations",
+      "zh-CN": "沉思录",
+      "zh-TW": "沉思錄",
+      "es": "Meditaciones",
+      "fr": "Pensées pour moi-même",
+      "de": "Selbstbetrachtungen",
+      "it": "Pensieri",
+      "pt": "Meditações",
+      "ru": "Размышления",
+      "ja": "自省録",
+      "ko": "명상록",
+      "ar": "التأملات",
+      "hi": "मेडिटेशन्स",
+      "id": "Meditasi",
+      "vi": "Suy tưởng",
+      "tr": "Kendime Düşünceler"
+    },
+    "blurb": {
+      "en": "The private notebook of the Roman emperor Marcus Aurelius: short reminders on duty, self-control and accepting what cannot be changed.",
+      "zh-CN": "罗马皇帝马可·奥勒留的私人笔记：关于责任、自制和接受无法改变之事的简短提醒。",
+      "zh-TW": "羅馬皇帝馬可·奧理略的私人筆記：關於責任、自制和接受無法改變之事的簡短提醒。",
+      "es": "El cuaderno privado del emperador romano Marco Aurelio: breves recordatorios sobre el deber, el autocontrol y la aceptación de lo que no puede cambiarse.",
+      "fr": "Le carnet intime de l'empereur romain Marc Aurèle : de brefs rappels sur le devoir, la maîtrise de soi et l'acceptation de ce qu'on ne peut changer.",
+      "de": "Das private Notizbuch des römischen Kaisers Marc Aurel: kurze Mahnungen zu Pflicht, Selbstbeherrschung und zur Annahme des Unveränderlichen.",
+      "it": "Il taccuino privato dell'imperatore romano Marco Aurelio: brevi promemoria su dovere, autocontrollo e accettazione di ciò che non si può cambiare.",
+      "pt": "O caderno privado do imperador romano Marco Aurélio: lembretes breves sobre dever, autocontrole e aceitação do que não se pode mudar.",
+      "ru": "Личный дневник римского императора Марка Аврелия: короткие напоминания о долге, самообладании и принятии того, что нельзя изменить.",
+      "ja": "ローマ皇帝マルクス・アウレリウスの私的な手記。義務、自制、変えられないものを受け入れることについての短い覚え書きです。",
+      "ko": "로마 황제 마르쿠스 아우렐리우스의 사적인 수첩으로, 의무와 자제, 바꿀 수 없는 것을 받아들이는 일에 대한 짧은 다짐을 담았습니다.",
+      "ar": "دفتر الإمبراطور الروماني ماركوس أوريليوس الخاص: تذكيرات قصيرة عن الواجب وضبط النفس وقبول ما لا يمكن تغييره.",
+      "hi": "रोमन सम्राट मार्कस ऑरेलियस की निजी डायरी: कर्तव्य, आत्म-संयम और जो बदला नहीं जा सकता उसे स्वीकारने पर छोटे स्मरण।",
+      "id": "Buku catatan pribadi Kaisar Romawi Marcus Aurelius: pengingat singkat tentang kewajiban, pengendalian diri, dan menerima hal yang tak bisa diubah.",
+      "vi": "Cuốn sổ riêng của hoàng đế La Mã Marcus Aurelius: những lời nhắc ngắn về bổn phận, tự chủ và chấp nhận điều không thể thay đổi.",
+      "tr": "Roma imparatoru Marcus Aurelius'un özel defteri: görev, öz denetim ve değiştirilemeyeni kabul etme üzerine kısa notlar."
+    }
+  },
   "middlemarch": {
     "title": {
       "en": "Middlemarch",
@@ -1669,6 +2011,82 @@
       "id": "Seorang pelaut muda bergabung dengan kapal pemburu paus yang kaptennya, Ahab, bertekad membalas dendam pada paus putih raksasa yang merenggut kakinya.",
       "vi": "Một thủy thủ trẻ lên một tàu săn cá voi mà thuyền trưởng Ahab quyết trả thù con cá voi trắng khổng lồ đã cướp mất một chân của ông.",
       "tr": "Genç bir denizci, kaptanı Ahab'ın bacağını koparan dev beyaz balinadan intikam almaya kararlı olduğu bir balina gemisine katılır."
+    }
+  },
+  "nature-emerson": {
+    "title": {
+      "en": "Nature",
+      "zh-CN": "论自然",
+      "zh-TW": "論自然",
+      "es": "Naturaleza",
+      "fr": "La Nature",
+      "de": "Natur",
+      "it": "Natura",
+      "pt": "Natureza",
+      "ru": "Природа",
+      "ja": "自然論",
+      "ko": "자연",
+      "ar": "الطبيعة",
+      "hi": "प्रकृति",
+      "id": "Alam",
+      "vi": "Tự nhiên",
+      "tr": "Doğa"
+    },
+    "blurb": {
+      "en": "Emerson's essay invites readers to see nature with fresh eyes and to find an original relation to the universe.",
+      "zh-CN": "爱默生的这篇长文邀请读者用全新的眼光看待自然，与宇宙建立属于自己的关系。",
+      "zh-TW": "愛默生的這篇長文邀請讀者用全新的眼光看待自然，與宇宙建立屬於自己的關係。",
+      "es": "El ensayo de Emerson invita a mirar la naturaleza con ojos nuevos y a encontrar una relación original con el universo.",
+      "fr": "L'essai d'Emerson invite à regarder la nature d'un œil neuf et à trouver une relation originale avec l'univers.",
+      "de": "Emersons Essay lädt dazu ein, die Natur mit frischen Augen zu sehen und eine ursprüngliche Beziehung zum Universum zu finden.",
+      "it": "Il saggio di Emerson invita a guardare la natura con occhi nuovi e a trovare un rapporto originale con l'universo.",
+      "pt": "O ensaio de Emerson convida a olhar a natureza com olhos novos e a encontrar uma relação original com o universo.",
+      "ru": "Эссе Эмерсона призывает увидеть природу свежим взглядом и найти собственное отношение ко Вселенной.",
+      "ja": "エマソンのこのエッセイは、新鮮な目で自然を見つめ、宇宙との独自の関係を見いだすよう読者を誘います。",
+      "ko": "에머슨의 이 에세이는 새로운 눈으로 자연을 바라보고 우주와 자신만의 관계를 찾아보라고 권합니다.",
+      "ar": "يدعو مقال إيمرسون القارئ إلى النظر إلى الطبيعة بعيون جديدة وإيجاد علاقة أصيلة بالكون.",
+      "hi": "एमर्सन का यह निबंध पाठकों को प्रकृति को नई नज़र से देखने और ब्रह्मांड से अपना मौलिक संबंध खोजने के लिए आमंत्रित करता है।",
+      "id": "Esai Emerson mengajak pembaca memandang alam dengan mata baru dan menemukan hubungan yang orisinal dengan alam semesta.",
+      "vi": "Bài tiểu luận của Emerson mời người đọc nhìn thiên nhiên bằng đôi mắt mới và tìm một mối quan hệ riêng với vũ trụ.",
+      "tr": "Emerson'ın denemesi, okuru doğaya taze gözlerle bakmaya ve evrenle özgün bir ilişki kurmaya çağırır."
+    }
+  },
+  "nicomachean-ethics": {
+    "title": {
+      "en": "The Nicomachean Ethics",
+      "zh-CN": "尼各马可伦理学",
+      "zh-TW": "尼各馬可倫理學",
+      "es": "Ética a Nicómaco",
+      "fr": "Éthique à Nicomaque",
+      "de": "Nikomachische Ethik",
+      "it": "Etica Nicomachea",
+      "pt": "Ética a Nicômaco",
+      "ru": "Никомахова этика",
+      "ja": "ニコマコス倫理学",
+      "ko": "니코마코스 윤리학",
+      "ar": "الأخلاق النيقوماخية",
+      "hi": "निकोमाकी नीतिशास्त्र",
+      "id": "Etika Nikomakea",
+      "vi": "Đạo đức học Nicomaque",
+      "tr": "Nikomakhos'a Etik"
+    },
+    "blurb": {
+      "en": "Aristotle asks what the good life is and explains virtue, friendship and happiness as habits shaped by practice.",
+      "zh-CN": "亚里士多德探讨什么是美好的生活，把美德、友谊和幸福看作靠实践养成的习惯。",
+      "zh-TW": "亞里斯多德探討什麼是美好的生活，把美德、友誼和幸福看作靠實踐養成的習慣。",
+      "es": "Aristóteles se pregunta qué es la buena vida y presenta la virtud, la amistad y la felicidad como hábitos formados con la práctica.",
+      "fr": "Aristote se demande ce qu'est la vie bonne et présente la vertu, l'amitié et le bonheur comme des habitudes forgées par la pratique.",
+      "de": "Aristoteles fragt, was ein gutes Leben ist, und beschreibt Tugend, Freundschaft und Glück als durch Übung geformte Gewohnheiten.",
+      "it": "Aristotele si chiede che cos'è la vita buona e presenta virtù, amicizia e felicità come abitudini formate dalla pratica.",
+      "pt": "Aristóteles pergunta o que é a boa vida e apresenta a virtude, a amizade e a felicidade como hábitos formados pela prática.",
+      "ru": "Аристотель спрашивает, что такое хорошая жизнь, и описывает добродетель, дружбу и счастье как привычки, воспитанные практикой.",
+      "ja": "アリストテレスは善き生とは何かを問い、徳・友情・幸福を、実践によって形づくられる習慣として説明します。",
+      "ko": "아리스토텔레스는 좋은 삶이 무엇인지 묻고, 덕과 우정과 행복을 실천으로 길러지는 습관으로 설명합니다.",
+      "ar": "يسأل أرسطو عن معنى الحياة الجيدة ويشرح الفضيلة والصداقة والسعادة بوصفها عادات تتشكل بالممارسة.",
+      "hi": "अरस्तू पूछते हैं कि अच्छा जीवन क्या है और सद्गुण, मित्रता और सुख को अभ्यास से बनी आदतों के रूप में समझाते हैं।",
+      "id": "Aristoteles bertanya apa itu hidup yang baik dan menjelaskan kebajikan, persahabatan, dan kebahagiaan sebagai kebiasaan yang dibentuk lewat latihan.",
+      "vi": "Aristotle hỏi cuộc sống tốt đẹp là gì và giải thích đức hạnh, tình bạn, hạnh phúc là những thói quen được hình thành qua thực hành.",
+      "tr": "Aristoteles iyi hayatın ne olduğunu sorar; erdemi, dostluğu ve mutluluğu alıştırmayla biçimlenen alışkanlıklar olarak açıklar."
     }
   },
   "of-human-bondage": {
@@ -1747,6 +2165,82 @@
       "tr": "Öksüz bir çocuk zalim bir yoksullar evinden kaçar, Fagin'in yönettiği Londralı bir hırsız çetesine düşer ve gerçek bir yuva arar."
     }
   },
+  "on-liberty": {
+    "title": {
+      "en": "On Liberty",
+      "zh-CN": "论自由",
+      "zh-TW": "論自由",
+      "es": "Sobre la libertad",
+      "fr": "De la liberté",
+      "de": "Über die Freiheit",
+      "it": "Sulla libertà",
+      "pt": "Sobre a Liberdade",
+      "ru": "О свободе",
+      "ja": "自由論",
+      "ko": "자유론",
+      "ar": "عن الحرية",
+      "hi": "स्वतंत्रता पर",
+      "id": "Tentang Kebebasan",
+      "vi": "Bàn về tự do",
+      "tr": "Özgürlük Üzerine"
+    },
+    "blurb": {
+      "en": "Mill argues that society may limit a person's freedom only to prevent harm to others, and defends free speech and individuality.",
+      "zh-CN": "密尔主张，社会只有在为防止对他人造成伤害时才可限制个人自由，并为言论自由和个性辩护。",
+      "zh-TW": "彌爾主張，社會只有在為防止對他人造成傷害時才可限制個人自由，並為言論自由和個性辯護。",
+      "es": "Mill sostiene que la sociedad solo puede limitar la libertad de una persona para evitar daño a otros, y defiende la libertad de expresión y la individualidad.",
+      "fr": "Mill soutient que la société ne peut limiter la liberté d'une personne que pour éviter de nuire à autrui, et défend la liberté d'expression et l'individualité.",
+      "de": "Mill vertritt, dass die Gesellschaft die Freiheit des Einzelnen nur beschränken darf, um Schaden von anderen abzuwenden, und verteidigt Meinungsfreiheit und Individualität.",
+      "it": "Mill sostiene che la società può limitare la libertà di una persona solo per evitare danni agli altri, e difende la libertà di parola e l'individualità.",
+      "pt": "Mill defende que a sociedade só pode limitar a liberdade de uma pessoa para evitar dano a outros, e defende a liberdade de expressão e a individualidade.",
+      "ru": "Милль утверждает, что общество вправе ограничивать свободу человека лишь ради предотвращения вреда другим, и защищает свободу слова и индивидуальность.",
+      "ja": "ミルは、他人への危害を防ぐ場合に限って社会は個人の自由を制限できると論じ、言論の自由と個性を擁護します。",
+      "ko": "밀은 사회가 타인에게 해를 끼치는 것을 막기 위한 경우에만 개인의 자유를 제한할 수 있다고 주장하며 표현의 자유와 개성을 옹호합니다.",
+      "ar": "يرى ميل أن المجتمع لا يحق له تقييد حرية الفرد إلا لمنع الضرر عن الآخرين، ويدافع عن حرية التعبير والفردية.",
+      "hi": "मिल का तर्क है कि समाज किसी की स्वतंत्रता तभी सीमित कर सकता है जब दूसरों को हानि से बचाना हो; वे अभिव्यक्ति की स्वतंत्रता और व्यक्तित्व का पक्ष लेते हैं।",
+      "id": "Mill berpendapat bahwa masyarakat hanya boleh membatasi kebebasan seseorang untuk mencegah bahaya bagi orang lain, dan membela kebebasan berbicara serta individualitas.",
+      "vi": "Mill lập luận rằng xã hội chỉ được hạn chế tự do của một người để ngăn gây hại cho người khác, đồng thời bảo vệ tự do ngôn luận và cá tính.",
+      "tr": "Mill, toplumun bir kişinin özgürlüğünü ancak başkalarına zarar vermesini önlemek için sınırlayabileceğini savunur; ifade özgürlüğünü ve bireyselliği savunur."
+    }
+  },
+  "pascals-pensees": {
+    "title": {
+      "en": "Pascal's Pensées",
+      "zh-CN": "思想录",
+      "zh-TW": "思想錄",
+      "es": "Pensamientos de Pascal",
+      "fr": "Les Pensées de Pascal",
+      "de": "Pascals Gedanken",
+      "it": "I Pensieri di Pascal",
+      "pt": "Os Pensamentos de Pascal",
+      "ru": "Мысли Паскаля",
+      "ja": "パスカル『パンセ』",
+      "ko": "파스칼의 팡세",
+      "ar": "أفكار باسكال",
+      "hi": "पास्कल के विचार",
+      "id": "Pikiran-Pikiran Pascal",
+      "vi": "Tư tưởng của Pascal",
+      "tr": "Pascal'ın Düşünceleri"
+    },
+    "blurb": {
+      "en": "Notes left by the scientist Blaise Pascal on the misery and greatness of human beings, reason, doubt and faith, including his famous wager.",
+      "zh-CN": "科学家布莱兹·帕斯卡留下的笔记，谈人的可悲与伟大、理性、怀疑与信仰，包括著名的“赌注”。",
+      "zh-TW": "科學家布萊茲·帕斯卡留下的筆記，談人的可悲與偉大、理性、懷疑與信仰，包括著名的「賭注」。",
+      "es": "Notas que dejó el científico Blaise Pascal sobre la miseria y la grandeza del ser humano, la razón, la duda y la fe, incluida su famosa apuesta.",
+      "fr": "Notes laissées par le savant Blaise Pascal sur la misère et la grandeur de l'homme, la raison, le doute et la foi, dont son célèbre pari.",
+      "de": "Notizen des Gelehrten Blaise Pascal über Elend und Größe des Menschen, Vernunft, Zweifel und Glauben, darunter seine berühmte Wette.",
+      "it": "Appunti lasciati dallo scienziato Blaise Pascal sulla miseria e la grandezza dell'uomo, la ragione, il dubbio e la fede, compresa la sua celebre scommessa.",
+      "pt": "Notas deixadas pelo cientista Blaise Pascal sobre a miséria e a grandeza do ser humano, a razão, a dúvida e a fé, incluindo a sua célebre aposta.",
+      "ru": "Заметки учёного Блеза Паскаля о ничтожестве и величии человека, разуме, сомнении и вере, включая его знаменитое пари.",
+      "ja": "科学者ブレーズ・パスカルが遺した、人間の悲惨と偉大、理性、疑い、信仰についての覚え書き。有名な「賭け」も含みます。",
+      "ko": "과학자 블레즈 파스칼이 남긴 인간의 비참과 위대함, 이성, 의심, 신앙에 관한 단상들로, 유명한 '내기'도 담겨 있습니다.",
+      "ar": "ملاحظات تركها العالِم بليز باسكال عن بؤس الإنسان وعظمته والعقل والشك والإيمان، ومنها رهانه الشهير.",
+      "hi": "वैज्ञानिक ब्लेज़ पास्कल के छोड़े हुए नोट्स: मनुष्य की दीनता और महानता, तर्क, संदेह और आस्था पर, जिनमें उनका प्रसिद्ध दाँव भी है।",
+      "id": "Catatan-catatan ilmuwan Blaise Pascal tentang kesengsaraan dan kebesaran manusia, akal, keraguan, dan iman, termasuk taruhannya yang terkenal.",
+      "vi": "Những ghi chép nhà khoa học Blaise Pascal để lại về nỗi khốn cùng và sự cao cả của con người, lý trí, hoài nghi và đức tin, gồm cả \"canh bạc\" nổi tiếng.",
+      "tr": "Bilim insanı Blaise Pascal'ın insanın sefaleti ve büyüklüğü, akıl, şüphe ve inanç üzerine bıraktığı notlar; ünlü bahsi de bunlar arasındadır."
+    }
+  },
   "persuasion": {
     "title": {
       "en": "Persuasion",
@@ -1821,6 +2315,82 @@
       "id": "Peter, anak yang tidak pernah dewasa, membawa Wendy dan adik-adiknya terbang ke Neverland, tempat mereka bertemu peri, putri duyung, dan Kapten Hook.",
       "vi": "Peter, cậu bé không bao giờ lớn, đưa Wendy và các em bay tới Xứ Sở Thần Tiên, nơi họ gặp tiên, nàng tiên cá và thuyền trưởng Hook.",
       "tr": "Hiç büyümeyen çocuk Peter, Wendy ile kardeşlerini Varolmayan Ülke'ye uçurur; orada periler, deniz kızları ve Kaptan Kanca ile karşılaşırlar."
+    }
+  },
+  "phaedo": {
+    "title": {
+      "en": "Phaedo",
+      "zh-CN": "斐多篇",
+      "zh-TW": "斐多篇",
+      "es": "Fedón",
+      "fr": "Phédon",
+      "de": "Phaidon",
+      "it": "Fedone",
+      "pt": "Fédon",
+      "ru": "Федон",
+      "ja": "パイドン",
+      "ko": "파이돈",
+      "ar": "فيدون",
+      "hi": "फ़ेडो",
+      "id": "Phaidon",
+      "vi": "Phaedo",
+      "tr": "Phaidon"
+    },
+    "blurb": {
+      "en": "On the day he drinks the hemlock, Socrates calmly discusses with his friends why the soul may outlast the body.",
+      "zh-CN": "在饮下毒芹汁的那天，苏格拉底平静地和朋友们谈论灵魂为何可能比身体长久。",
+      "zh-TW": "在飲下毒芹汁的那天，蘇格拉底平靜地和朋友們談論靈魂為何可能比身體長久。",
+      "es": "El día en que bebe la cicuta, Sócrates conversa con calma con sus amigos sobre por qué el alma podría sobrevivir al cuerpo.",
+      "fr": "Le jour où il boit la ciguë, Socrate discute calmement avec ses amis des raisons pour lesquelles l'âme pourrait survivre au corps.",
+      "de": "An dem Tag, an dem er den Schierlingsbecher trinkt, erörtert Sokrates ruhig mit Freunden, warum die Seele den Körper überdauern könnte.",
+      "it": "Il giorno in cui beve la cicuta, Socrate discute con calma con gli amici sul perché l'anima potrebbe sopravvivere al corpo.",
+      "pt": "No dia em que bebe a cicuta, Sócrates conversa calmamente com os amigos sobre por que a alma poderia sobreviver ao corpo.",
+      "ru": "В день, когда он выпьет цикуту, Сократ спокойно беседует с друзьями о том, почему душа может пережить тело.",
+      "ja": "ドクニンジンの杯をあおぐ日、ソクラテスは友人たちと、魂が肉体より長く存続しうる理由を静かに語り合います。",
+      "ko": "독이 든 잔을 마시는 날, 소크라테스는 친구들과 영혼이 육체보다 오래 존속할 수 있는 이유를 차분히 토론합니다.",
+      "ar": "في اليوم الذي يشرب فيه السم يناقش سقراط أصدقاءه بهدوء في سبب إمكان بقاء الروح بعد الجسد.",
+      "hi": "जिस दिन सुकरात ज़हर पीते हैं, वे शांति से मित्रों के साथ चर्चा करते हैं कि आत्मा शरीर से अधिक क्यों टिक सकती है।",
+      "id": "Pada hari ia meminum racun, Sokrates dengan tenang berdiskusi dengan sahabatnya tentang mengapa jiwa mungkin bertahan melampaui tubuh.",
+      "vi": "Vào ngày uống thuốc độc, Socrates bình thản trò chuyện cùng bạn bè về lý do linh hồn có thể tồn tại lâu hơn thể xác.",
+      "tr": "Baldıran zehrini içeceği gün Sokrates, dostlarıyla ruhun neden bedenden daha uzun yaşayabileceğini sakin sakin tartışır."
+    }
+  },
+  "pragmatism": {
+    "title": {
+      "en": "Pragmatism",
+      "zh-CN": "实用主义",
+      "zh-TW": "實用主義",
+      "es": "Pragmatismo",
+      "fr": "Le Pragmatisme",
+      "de": "Pragmatismus",
+      "it": "Il pragmatismo",
+      "pt": "Pragmatismo",
+      "ru": "Прагматизм",
+      "ja": "プラグマティズム",
+      "ko": "실용주의",
+      "ar": "البراغماتية",
+      "hi": "व्यावहारिकतावाद",
+      "id": "Pragmatisme",
+      "vi": "Chủ nghĩa thực dụng",
+      "tr": "Pragmatizm"
+    },
+    "blurb": {
+      "en": "William James's lectures argue that an idea is true when it works in practice, and show how this settles old philosophical quarrels.",
+      "zh-CN": "威廉·詹姆斯的系列讲座认为，一个观念在实践中行得通就是真的，并说明这如何化解哲学上的老争论。",
+      "zh-TW": "威廉·詹姆斯的系列講座認為，一個觀念在實踐中行得通就是真的，並說明這如何化解哲學上的老爭論。",
+      "es": "Las conferencias de William James sostienen que una idea es verdadera cuando funciona en la práctica y muestran cómo eso resuelve viejas disputas filosóficas.",
+      "fr": "Les conférences de William James soutiennent qu'une idée est vraie lorsqu'elle fonctionne en pratique, et montrent comment cela règle d'anciennes querelles philosophiques.",
+      "de": "William James' Vorlesungen vertreten, dass eine Idee wahr ist, wenn sie sich in der Praxis bewährt, und zeigen, wie das alte philosophische Streitfragen löst.",
+      "it": "Le conferenze di William James sostengono che un'idea è vera quando funziona nella pratica e mostrano come ciò risolva antiche dispute filosofiche.",
+      "pt": "As conferências de William James defendem que uma ideia é verdadeira quando funciona na prática e mostram como isso resolve antigas disputas filosóficas.",
+      "ru": "Лекции Уильяма Джеймса утверждают, что идея истинна, если она работает на практике, и показывают, как это разрешает старые философские споры.",
+      "ja": "ウィリアム・ジェームズの講義は、観念は実践で役立つとき真であると論じ、それが古い哲学論争をどう解くかを示します。",
+      "ko": "윌리엄 제임스의 강연은 어떤 생각이 실제로 효과가 있을 때 참이라고 주장하며, 이것이 오래된 철학 논쟁을 어떻게 풀어 주는지 보여 줍니다.",
+      "ar": "تذهب محاضرات ويليام جيمس إلى أن الفكرة تكون صحيحة عندما تنجح في التطبيق، وتبيّن كيف يحسم ذلك خلافات فلسفية قديمة.",
+      "hi": "विलियम जेम्स के व्याख्यान तर्क देते हैं कि कोई विचार तब सत्य है जब वह व्यवहार में काम करे, और दिखाते हैं कि इससे पुराने दार्शनिक विवाद कैसे सुलझते हैं।",
+      "id": "Kuliah-kuliah William James berpendapat bahwa sebuah gagasan benar bila berhasil dalam praktik, dan menunjukkan bagaimana hal ini menyelesaikan perdebatan filsafat lama.",
+      "vi": "Các bài giảng của William James lập luận rằng một ý tưởng là đúng khi nó hiệu quả trong thực tiễn, và cho thấy điều đó giải quyết những tranh cãi triết học cũ ra sao.",
+      "tr": "William James'in konferansları, bir fikrin pratikte işe yaradığında doğru olduğunu savunur ve bunun eski felsefi tartışmaları nasıl çözdüğünü gösterir."
     }
   },
   "pride-and-prejudice": {
@@ -2013,6 +2583,44 @@
       "tr": "Tagore'un doğa, aşk ve hayat üzerine, çoğu bir iki satırlık yüzlerce çok kısa şiiri."
     }
   },
+  "symposium": {
+    "title": {
+      "en": "Symposium",
+      "zh-CN": "会饮篇",
+      "zh-TW": "會飲篇",
+      "es": "El banquete",
+      "fr": "Le Banquet",
+      "de": "Das Gastmahl",
+      "it": "Il simposio",
+      "pt": "O Banquete",
+      "ru": "Пир",
+      "ja": "饗宴",
+      "ko": "향연",
+      "ar": "المأدبة",
+      "hi": "सिम्पोज़ियम",
+      "id": "Perjamuan",
+      "vi": "Bữa tiệc",
+      "tr": "Şölen"
+    },
+    "blurb": {
+      "en": "At a dinner party in Athens, guests take turns praising Love, ending with Socrates' account of a priestess's teaching.",
+      "zh-CN": "在雅典的一次宴会上，宾客轮流赞美爱神，最后由苏格拉底转述一位女祭司的教诲。",
+      "zh-TW": "在雅典的一次宴會上，賓客輪流讚美愛神，最後由蘇格拉底轉述一位女祭司的教誨。",
+      "es": "En una cena en Atenas, los invitados elogian por turnos al Amor, hasta el relato final de Sócrates sobre la enseñanza de una sacerdotisa.",
+      "fr": "Lors d'un dîner à Athènes, les convives font tour à tour l'éloge de l'Amour, jusqu'au récit de Socrate sur l'enseignement d'une prêtresse.",
+      "de": "Bei einem Gastmahl in Athen preisen die Gäste reihum die Liebe, bis Sokrates die Lehre einer Priesterin wiedergibt.",
+      "it": "A una cena ad Atene gli ospiti elogiano a turno l'Amore, fino al racconto di Socrate sull'insegnamento di una sacerdotessa.",
+      "pt": "Num jantar em Atenas, os convidados elogiam o Amor um a um, até ao relato de Sócrates sobre o ensinamento de uma sacerdotisa.",
+      "ru": "На пиру в Афинах гости по очереди воспевают Любовь, а Сократ завершает речью о наставлении жрицы.",
+      "ja": "アテナイの宴席で客たちが順に愛を讃え、最後にソクラテスが女司祭から聞いた教えを語ります。",
+      "ko": "아테네의 연회에서 손님들이 차례로 사랑을 찬양하고, 마지막에 소크라테스가 여사제에게 들은 가르침을 전합니다.",
+      "ar": "في مأدبة في أثينا يمتدح الضيوف الحب واحدًا تلو الآخر، ثم يروي سقراط تعاليم كاهنة.",
+      "hi": "एथेंस की एक दावत में मेहमान बारी-बारी से प्रेम की स्तुति करते हैं, और अंत में सुकरात एक पुजारिन की शिक्षा सुनाते हैं।",
+      "id": "Dalam jamuan makan di Athena, para tamu bergiliran memuji Cinta, hingga Sokrates menceritakan ajaran seorang pendeta wanita.",
+      "vi": "Trong một bữa tiệc ở Athens, các vị khách lần lượt ca ngợi Tình yêu, cho đến khi Socrates kể lại lời dạy của một nữ tư tế.",
+      "tr": "Atina'daki bir ziyafette konuklar sırayla Aşk'ı över; sonunda Sokrates bir rahibenin öğretisini aktarır."
+    }
+  },
   "tales-from-shakespeare": {
     "title": {
       "en": "Tales from Shakespeare",
@@ -2049,6 +2657,44 @@
       "id": "Charles dan Mary Lamb menceritakan ulang dua puluh drama Shakespeare dalam prosa sederhana, termasuk Hamlet, Macbeth, dan Saudagar Venesia.",
       "vi": "Charles và Mary Lamb kể lại hai mươi vở kịch của Shakespeare bằng văn xuôi giản dị, trong đó có Hamlet, Macbeth và Người lái buôn thành Venice.",
       "tr": "Charles ve Mary Lamb, Hamlet, Macbeth ve Venedik Taciri dahil yirmi Shakespeare oyununu sade düzyazıyla yeniden anlatır."
+    }
+  },
+  "tao-te-ching": {
+    "title": {
+      "en": "The Tao Teh King",
+      "zh-CN": "道德经（英译）",
+      "zh-TW": "道德經（英譯）",
+      "es": "El Tao Te King",
+      "fr": "Le Tao Te King",
+      "de": "Das Tao Te King",
+      "it": "Il Tao Te Ching",
+      "pt": "O Tao Te Ching",
+      "ru": "Дао дэ цзин",
+      "ja": "老子『道徳経』（英訳）",
+      "ko": "도덕경 (영역)",
+      "ar": "داو دي جينغ",
+      "hi": "ताओ ते चिंग",
+      "id": "Tao Te Ching",
+      "vi": "Đạo Đức Kinh",
+      "tr": "Tao Te Ching"
+    },
+    "blurb": {
+      "en": "The 81 short chapters attributed to Laozi on the Way (Tao), simplicity and living without forcing, in James Legge's English translation.",
+      "zh-CN": "相传为老子所作的八十一个短章，谈“道”、朴素和顺其自然的生活，为理雅各的英译本。",
+      "zh-TW": "相傳為老子所作的八十一個短章，談「道」、樸素和順其自然的生活，為理雅各的英譯本。",
+      "es": "Los 81 capítulos breves atribuidos a Laozi sobre el Tao, la sencillez y el vivir sin forzar, en la traducción inglesa de James Legge.",
+      "fr": "Les 81 courts chapitres attribués à Laozi sur la Voie (Tao), la simplicité et le fait de vivre sans forcer, dans la traduction anglaise de James Legge.",
+      "de": "Die 81 kurzen Kapitel, die Laozi zugeschrieben werden, über den Weg (Tao), Einfachheit und ein Leben ohne Zwang, in James Legges englischer Übersetzung.",
+      "it": "Gli 81 brevi capitoli attribuiti a Laozi sulla Via (Tao), la semplicità e il vivere senza forzare, nella traduzione inglese di James Legge.",
+      "pt": "Os 81 capítulos curtos atribuídos a Laozi sobre o Caminho (Tao), a simplicidade e o viver sem forçar, na tradução inglesa de James Legge.",
+      "ru": "81 короткая глава, приписываемая Лао-цзы, о Пути (Дао), простоте и жизни без насилия над естественным ходом вещей — в английском переводе Джеймса Легга.",
+      "ja": "老子の作とされる81の短い章。道、素朴さ、無理をしない生き方を説きます。ジェームズ・レッグによる英訳です。",
+      "ko": "노자의 것으로 전해지는 81개의 짧은 장으로, 도와 소박함, 억지로 하지 않는 삶을 다룹니다. 제임스 레게의 영어 번역본입니다.",
+      "ar": "٨١ فصلًا قصيرًا يُنسب إلى لاوزي عن الطريق (التاو) والبساطة والعيش دون إكراه، بترجمة جيمس ليغ الإنجليزية.",
+      "hi": "लाओज़ी के नाम से प्रचलित 81 छोटे अध्याय—ताओ (मार्ग), सरलता और बिना ज़ोर-ज़बरदस्ती जीने पर—जेम्स लेग्गे के अंग्रेज़ी अनुवाद में।",
+      "id": "81 bab pendek yang dikaitkan dengan Laozi tentang Jalan (Tao), kesederhanaan, dan hidup tanpa memaksa, dalam terjemahan Inggris James Legge.",
+      "vi": "81 chương ngắn được cho là của Lão Tử, bàn về Đạo, sự giản dị và cách sống không cưỡng ép, qua bản dịch tiếng Anh của James Legge.",
+      "tr": "Lao Zi'ye atfedilen, Yol (Tao), sadelik ve zorlamadan yaşamak üzerine 81 kısa bölüm; James Legge'in İngilizce çevirisiyle."
     }
   },
   "tess-of-the-durbervilles": {
@@ -2203,6 +2849,44 @@
       "tr": "Şehrazat hayatını kurtarmak için her gece bir hikâye anlatır; aralarında Alaaddin, Denizci Sinbad ve büyülü at vardır."
     }
   },
+  "the-art-of-war": {
+    "title": {
+      "en": "The Art of War",
+      "zh-CN": "孙子兵法（英译）",
+      "zh-TW": "孫子兵法（英譯）",
+      "es": "El arte de la guerra",
+      "fr": "L'Art de la guerre",
+      "de": "Die Kunst des Krieges",
+      "it": "L'arte della guerra",
+      "pt": "A Arte da Guerra",
+      "ru": "Искусство войны",
+      "ja": "孫子の兵法（英訳）",
+      "ko": "손자병법 (영역)",
+      "ar": "فن الحرب",
+      "hi": "युद्ध की कला",
+      "id": "Seni Perang",
+      "vi": "Binh pháp Tôn Tử",
+      "tr": "Savaş Sanatı"
+    },
+    "blurb": {
+      "en": "Thirteen short chapters on strategy, deception and knowing yourself and your enemy, attributed to Sun Tzu and translated by Lionel Giles.",
+      "zh-CN": "十三篇关于战略、诡诈以及知己知彼的短章，相传为孙子所作，由翟林奈英译。",
+      "zh-TW": "十三篇關於戰略、詭詐以及知己知彼的短章，相傳為孫子所作，由翟林奈英譯。",
+      "es": "Trece capítulos breves sobre estrategia, engaño y conocerse a uno mismo y al enemigo, atribuidos a Sun Tzu y traducidos por Lionel Giles.",
+      "fr": "Treize courts chapitres sur la stratégie, la ruse et la connaissance de soi et de l'ennemi, attribués à Sun Tzu et traduits par Lionel Giles.",
+      "de": "Dreizehn kurze Kapitel über Strategie, Täuschung und die Kenntnis seiner selbst und des Feindes, Sunzi zugeschrieben und von Lionel Giles übersetzt.",
+      "it": "Tredici brevi capitoli su strategia, inganno e conoscenza di sé e del nemico, attribuiti a Sun Tzu e tradotti da Lionel Giles.",
+      "pt": "Treze capítulos curtos sobre estratégia, engano e conhecer a si mesmo e ao inimigo, atribuídos a Sun Tzu e traduzidos por Lionel Giles.",
+      "ru": "Тринадцать коротких глав о стратегии, обмане и знании себя и противника, приписываемых Сунь-цзы, в переводе Лайонела Джайлса.",
+      "ja": "戦略、欺き、己と敵を知ることを説く13の短い篇。孫子の作とされ、ライオネル・ジャイルズが英訳しています。",
+      "ko": "전략과 기만, 자신과 적을 아는 일을 다룬 열세 개의 짧은 편으로, 손자의 저작이라 전해지며 라이어널 자일스가 번역했습니다.",
+      "ar": "ثلاثة عشر فصلًا قصيرًا عن الاستراتيجية والخداع ومعرفة النفس والعدو، منسوبة إلى سون تزو، بترجمة ليونيل جايلز.",
+      "hi": "रणनीति, छल और खुद को तथा शत्रु को जानने पर तेरह छोटे अध्याय, जो सुन ज़ू के माने जाते हैं और लायनल जाइल्स द्वारा अनूदित हैं।",
+      "id": "Tiga belas bab pendek tentang strategi, tipu daya, serta mengenal diri dan musuh, dikaitkan dengan Sun Tzu dan diterjemahkan oleh Lionel Giles.",
+      "vi": "Mười ba chương ngắn về chiến lược, mưu lược và việc hiểu mình hiểu địch, được cho là của Tôn Tử, do Lionel Giles dịch.",
+      "tr": "Strateji, aldatma ve kendini ile düşmanını tanıma üzerine, Sun Tzu'ya atfedilen on üç kısa bölüm; Lionel Giles çevirisiyle."
+    }
+  },
   "the-call-of-the-wild": {
     "title": {
       "en": "The Call of the Wild",
@@ -2239,6 +2923,82 @@
       "id": "Seekor anjing keluarga dicuri dan dibawa ke Utara yang membeku, tempat ia harus belajar bertahan sebagai anjing penarik kereta salju.",
       "vi": "Một chú chó nhà bị bắt trộm và đưa lên phương Bắc băng giá, nơi nó phải học cách sống sót như một chó kéo xe trượt tuyết.",
       "tr": "Bir aile köpeği çalınıp donmuş Kuzey'e götürülür ve orada kızak köpeği olarak hayatta kalmayı öğrenmek zorunda kalır."
+    }
+  },
+  "the-consolation-of-philosophy": {
+    "title": {
+      "en": "The Consolation of Philosophy",
+      "zh-CN": "哲学的慰藉",
+      "zh-TW": "哲學的慰藉",
+      "es": "La consolación de la filosofía",
+      "fr": "La Consolation de la philosophie",
+      "de": "Trost der Philosophie",
+      "it": "La consolazione della filosofia",
+      "pt": "A Consolação da Filosofia",
+      "ru": "Утешение философией",
+      "ja": "哲学の慰め",
+      "ko": "철학의 위안",
+      "ar": "عزاء الفلسفة",
+      "hi": "दर्शन का सांत्वन",
+      "id": "Penghiburan Filsafat",
+      "vi": "An ủi của triết học",
+      "tr": "Felsefenin Tesellisi"
+    },
+    "blurb": {
+      "en": "Waiting in prison for his execution, Boethius is visited by Lady Philosophy, who speaks about fortune, happiness and fate.",
+      "zh-CN": "波爱修斯在狱中等待处决，哲学女神来访，与他谈论命运、幸福和天意。",
+      "zh-TW": "波愛修斯在獄中等待處決，哲學女神來訪，與他談論命運、幸福和天意。",
+      "es": "Mientras espera su ejecución en prisión, Boecio recibe la visita de la Dama Filosofía, que habla de la fortuna, la felicidad y el destino.",
+      "fr": "En prison, dans l'attente de son exécution, Boèce reçoit la visite de Dame Philosophie, qui lui parle de la fortune, du bonheur et du destin.",
+      "de": "Im Gefängnis auf seine Hinrichtung wartend, wird Boethius von Frau Philosophie besucht, die über Glück, Fortuna und Schicksal spricht.",
+      "it": "In carcere, in attesa dell'esecuzione, Boezio riceve la visita di Madonna Filosofia, che parla di fortuna, felicità e destino.",
+      "pt": "Na prisão, à espera da execução, Boécio é visitado pela Dama Filosofia, que fala da fortuna, da felicidade e do destino.",
+      "ru": "В тюрьме, ожидая казни, Боэций принимает госпожу Философию, которая говорит о судьбе, счастье и провидении.",
+      "ja": "獄中で処刑を待つボエティウスのもとに哲学の女神が現れ、運命と幸福と摂理について語ります。",
+      "ko": "감옥에서 처형을 기다리는 보에티우스를 철학의 여신이 찾아와 운명과 행복과 섭리에 대해 이야기합니다.",
+      "ar": "وفي السجن بانتظار إعدامه تزور السيدة فلسفة بوثيوس وتحدّثه عن الحظ والسعادة والقدر.",
+      "hi": "जेल में फाँसी की प्रतीक्षा कर रहे बोएथियस के पास दर्शन-देवी आती हैं और भाग्य, सुख और नियति के बारे में बात करती हैं।",
+      "id": "Di penjara menunggu eksekusi, Boethius dikunjungi Nyonya Filsafat yang berbicara tentang nasib, kebahagiaan, dan takdir.",
+      "vi": "Trong tù chờ ngày xử tử, Boethius được Nữ thần Triết học đến thăm và trò chuyện về vận may, hạnh phúc và số phận.",
+      "tr": "Hapiste idam edilmeyi bekleyen Boethius'u Felsefe Hanım ziyaret eder ve talih, mutluluk ve kader üzerine konuşur."
+    }
+  },
+  "the-enchiridion": {
+    "title": {
+      "en": "The Enchiridion",
+      "zh-CN": "手册（爱比克泰德）",
+      "zh-TW": "手冊（愛比克泰德）",
+      "es": "Enquiridión",
+      "fr": "Manuel d'Épictète",
+      "de": "Handbüchlein der Moral",
+      "it": "Manuale di Epitteto",
+      "pt": "Manual de Epicteto",
+      "ru": "Руководство (Эпиктет)",
+      "ja": "エピクテトス『提要』",
+      "ko": "엥케이리디온",
+      "ar": "دليل إبكتيتوس",
+      "hi": "एपिक्टेटस की पुस्तिका",
+      "id": "Enchiridion (Epiktetos)",
+      "vi": "Cẩm nang Epictetus",
+      "tr": "Epiktetos'un El Kitabı"
+    },
+    "blurb": {
+      "en": "A short handbook of Stoic advice: focus on what is in your power and calmly accept what is not.",
+      "zh-CN": "一本简短的斯多葛手册：专注于自己能掌控的事，平静地接受无法掌控的事。",
+      "zh-TW": "一本簡短的斯多葛手冊：專注於自己能掌控的事，平靜地接受無法掌控的事。",
+      "es": "Un breve manual de consejos estoicos: céntrate en lo que depende de ti y acepta con calma lo que no.",
+      "fr": "Un court manuel de conseils stoïciens : concentrez-vous sur ce qui dépend de vous et acceptez calmement le reste.",
+      "de": "Ein kurzes Handbuch stoischer Ratschläge: Konzentriere dich auf das, was in deiner Macht liegt, und nimm den Rest gelassen hin.",
+      "it": "Un breve manuale di consigli stoici: concentrati su ciò che dipende da te e accetta con calma il resto.",
+      "pt": "Um breve manual de conselhos estoicos: concentre-se no que depende de você e aceite com calma o que não depende.",
+      "ru": "Краткое руководство стоической мудрости: сосредоточьтесь на том, что в вашей власти, и спокойно принимайте остальное.",
+      "ja": "ストア派の短い助言集。自分の力の及ぶことに集中し、及ばないことは静かに受け入れよと説きます。",
+      "ko": "스토아 철학의 짧은 조언집. 내 힘으로 할 수 있는 일에 집중하고 그렇지 않은 일은 담담히 받아들이라고 말합니다.",
+      "ar": "دليل قصير للنصائح الرواقية: ركّز على ما تملكه وتقبّل بهدوء ما لا تملكه.",
+      "hi": "स्टोइक सलाह की एक छोटी पुस्तिका: जो आपके बस में है उस पर ध्यान दें और जो नहीं है उसे शांति से स्वीकार करें।",
+      "id": "Buku pegangan singkat berisi nasihat Stoik: fokus pada apa yang bisa kamu kendalikan dan terima dengan tenang apa yang tidak.",
+      "vi": "Cẩm nang ngắn về lời khuyên khắc kỷ: tập trung vào điều nằm trong tầm kiểm soát và bình thản chấp nhận điều không thể.",
+      "tr": "Stoacı öğütlerden oluşan kısa bir el kitabı: elinizde olana odaklanın, olmayanı sakince kabul edin."
     }
   },
   "the-essays-of-francis-bacon": {
@@ -2659,6 +3419,44 @@
       "tr": "Yakışıklı bir genç hep genç ve güzel kalırken portresi yaşlanıp çirkinleşir."
     }
   },
+  "the-prince": {
+    "title": {
+      "en": "The Prince",
+      "zh-CN": "君主论",
+      "zh-TW": "君主論",
+      "es": "El príncipe",
+      "fr": "Le Prince",
+      "de": "Der Fürst",
+      "it": "Il Principe",
+      "pt": "O Príncipe",
+      "ru": "Государь",
+      "ja": "君主論",
+      "ko": "군주론",
+      "ar": "الأمير",
+      "hi": "द प्रिंस",
+      "id": "Sang Pangeran",
+      "vi": "Quân vương",
+      "tr": "Hükümdar"
+    },
+    "blurb": {
+      "en": "Machiavelli's short guide for rulers explains how power is won and kept, and why a prince must sometimes act against conventional virtue.",
+      "zh-CN": "马基雅维利写给统治者的简短指南，讲述权力如何取得和保持，以及君主为何有时必须违背世俗的美德。",
+      "zh-TW": "馬基維利寫給統治者的簡短指南，講述權力如何取得和保持，以及君主為何有時必須違背世俗的美德。",
+      "es": "La breve guía de Maquiavelo para gobernantes explica cómo se gana y se conserva el poder, y por qué un príncipe debe a veces actuar contra la virtud convencional.",
+      "fr": "Le court guide de Machiavel pour les dirigeants explique comment le pouvoir se gagne et se garde, et pourquoi un prince doit parfois agir contre la vertu conventionnelle.",
+      "de": "Machiavellis kurzer Ratgeber für Herrscher erklärt, wie Macht gewonnen und gehalten wird und warum ein Fürst manchmal gegen die übliche Tugend handeln muss.",
+      "it": "La breve guida di Machiavelli per i governanti spiega come si conquista e si conserva il potere, e perché un principe deve talvolta agire contro la virtù convenzionale.",
+      "pt": "O breve guia de Maquiavel para governantes explica como o poder se conquista e se mantém, e por que um príncipe às vezes deve agir contra a virtude convencional.",
+      "ru": "Краткое руководство Макиавелли для правителей объясняет, как завоёвывают и удерживают власть и почему государю порой приходится действовать вопреки обычной добродетели.",
+      "ja": "マキャヴェッリが君主のために書いた短い指南書。権力の獲得と維持の方法、そして君主が時に通念上の徳に反して行動すべき理由を説きます。",
+      "ko": "마키아벨리가 통치자를 위해 쓴 짧은 안내서로, 권력을 얻고 유지하는 방법과 군주가 때로 통념적인 덕에 어긋나게 행동해야 하는 이유를 설명합니다.",
+      "ar": "دليل ميكافيلي القصير للحكّام يشرح كيف تُكتسب السلطة وتُحفظ، ولماذا يضطر الأمير أحيانًا إلى مخالفة الفضيلة المتعارف عليها.",
+      "hi": "मैकियावेली की शासकों के लिए छोटी मार्गदर्शिका बताती है कि सत्ता कैसे पाई और बनाए रखी जाती है, और राजा को कभी-कभी प्रचलित सद्गुण के विरुद्ध क्यों चलना पड़ता है।",
+      "id": "Panduan singkat Machiavelli bagi penguasa menjelaskan cara kekuasaan diraih dan dipertahankan, serta mengapa seorang pangeran kadang harus bertindak melawan kebajikan konvensional.",
+      "vi": "Cẩm nang ngắn của Machiavelli dành cho người cai trị giải thích cách giành và giữ quyền lực, và vì sao quân vương đôi khi phải hành động trái với đức hạnh thông thường.",
+      "tr": "Machiavelli'nin hükümdarlar için yazdığı kısa rehber, iktidarın nasıl kazanılıp korunduğunu ve bir hükümdarın neden bazen geleneksel erdeme aykırı davranması gerektiğini anlatır."
+    }
+  },
   "the-prince-and-the-pauper": {
     "title": {
       "en": "The Prince and the Pauper",
@@ -2695,6 +3493,44 @@
       "id": "Di London zaman Tudor, seorang pangeran dan anak miskin yang mirip sekali bertukar pakaian, dan masing-masing belajar hidup yang lain.",
       "vi": "Ở London thời Tudor, một hoàng tử và một cậu bé nghèo giống hệt nhau đổi quần áo và mỗi người nếm trải cuộc sống của người kia.",
       "tr": "Tudorlar dönemi Londra'sında birbirine tıpatıp benzeyen bir prens ile yoksul bir çocuk giysilerini değiştirir ve her biri ötekinin hayatını öğrenir."
+    }
+  },
+  "the-problems-of-philosophy": {
+    "title": {
+      "en": "The Problems of Philosophy",
+      "zh-CN": "哲学问题",
+      "zh-TW": "哲學問題",
+      "es": "Los problemas de la filosofía",
+      "fr": "Problèmes de philosophie",
+      "de": "Probleme der Philosophie",
+      "it": "I problemi della filosofia",
+      "pt": "Os Problemas da Filosofia",
+      "ru": "Проблемы философии",
+      "ja": "哲学の諸問題",
+      "ko": "철학의 문제들",
+      "ar": "مشكلات الفلسفة",
+      "hi": "दर्शनशास्त्र की समस्याएँ",
+      "id": "Masalah-Masalah Filsafat",
+      "vi": "Những vấn đề của triết học",
+      "tr": "Felsefenin Problemleri"
+    },
+    "blurb": {
+      "en": "Bertrand Russell's clear introduction to philosophy asks what we can know about the world, from matter and truth to the value of philosophy.",
+      "zh-CN": "伯特兰·罗素清晰的哲学入门书，探讨我们对世界能知道什么，从物质、真理一直谈到哲学的价值。",
+      "zh-TW": "伯特蘭·羅素清晰的哲學入門書，探討我們對世界能知道什麼，從物質、真理一直談到哲學的價值。",
+      "es": "La clara introducción a la filosofía de Bertrand Russell se pregunta qué podemos saber del mundo, desde la materia y la verdad hasta el valor de la filosofía.",
+      "fr": "La claire introduction à la philosophie de Bertrand Russell se demande ce que nous pouvons savoir du monde, de la matière et de la vérité à la valeur de la philosophie.",
+      "de": "Bertrand Russells klare Einführung in die Philosophie fragt, was wir über die Welt wissen können, von Materie und Wahrheit bis zum Wert der Philosophie.",
+      "it": "La chiara introduzione alla filosofia di Bertrand Russell si chiede che cosa possiamo conoscere del mondo, dalla materia e dalla verità al valore della filosofia.",
+      "pt": "A clara introdução à filosofia de Bertrand Russell pergunta o que podemos saber do mundo, da matéria e da verdade ao valor da filosofia.",
+      "ru": "Ясное введение в философию Бертрана Рассела спрашивает, что мы можем знать о мире, от материи и истины до ценности философии.",
+      "ja": "バートランド・ラッセルの明快な哲学入門。物質や真理から哲学の価値まで、世界について何が知りうるかを問います。",
+      "ko": "버트런드 러셀의 명료한 철학 입문서로, 물질과 진리부터 철학의 가치까지 우리가 세계에 대해 무엇을 알 수 있는지 묻습니다.",
+      "ar": "مدخل برتراند راسل الواضح إلى الفلسفة يسأل عمّا يمكننا معرفته عن العالم، من المادة والحقيقة إلى قيمة الفلسفة.",
+      "hi": "बर्ट्रेंड रसेल का स्पष्ट दर्शन-परिचय पूछता है कि हम दुनिया के बारे में क्या जान सकते हैं—पदार्थ और सत्य से लेकर दर्शन के मूल्य तक।",
+      "id": "Pengantar filsafat Bertrand Russell yang jernih ini bertanya apa yang bisa kita ketahui tentang dunia, dari materi dan kebenaran hingga nilai filsafat.",
+      "vi": "Cuốn nhập môn triết học rõ ràng của Bertrand Russell hỏi chúng ta có thể biết gì về thế giới, từ vật chất, chân lý đến giá trị của triết học.",
+      "tr": "Bertrand Russell'ın açık anlatımlı felsefe girişi, maddeden ve gerçeklikten felsefenin değerine dek dünya hakkında ne bilebileceğimizi sorar."
     }
   },
   "the-prophet": {
@@ -2771,6 +3607,44 @@
       "id": "Ketika ayah mereka tiba-tiba dibawa pergi, tiga anak pindah ke pondok di tepi rel kereta dan bersahabat dengan kereta serta orang-orang di dalamnya.",
       "vi": "Khi cha bất ngờ bị đưa đi, ba đứa trẻ chuyển đến một ngôi nhà nhỏ cạnh đường ray và kết bạn với những chuyến tàu cùng người trên đó.",
       "tr": "Babaları aniden götürülünce üç çocuk bir demiryolu hattının yanındaki kulübeye taşınır ve trenlerle, trendeki insanlarla dost olurlar."
+    }
+  },
+  "the-republic": {
+    "title": {
+      "en": "The Republic",
+      "zh-CN": "理想国",
+      "zh-TW": "理想國",
+      "es": "La república",
+      "fr": "La République",
+      "de": "Der Staat",
+      "it": "La Repubblica",
+      "pt": "A República",
+      "ru": "Государство",
+      "ja": "国家",
+      "ko": "국가",
+      "ar": "الجمهورية",
+      "hi": "गणराज्य",
+      "id": "Republik",
+      "vi": "Nền Cộng hòa",
+      "tr": "Devlet"
+    },
+    "blurb": {
+      "en": "Socrates asks what justice is and imagines an ideal city ruled by philosophers, with the famous cave allegory.",
+      "zh-CN": "苏格拉底追问正义是什么，并构想一座由哲学家统治的理想城邦，书中有著名的洞穴比喻。",
+      "zh-TW": "蘇格拉底追問正義是什麼，並構想一座由哲學家統治的理想城邦，書中有著名的洞穴比喻。",
+      "es": "Sócrates pregunta qué es la justicia e imagina una ciudad ideal gobernada por filósofos, con la célebre alegoría de la caverna.",
+      "fr": "Socrate demande ce qu'est la justice et imagine une cité idéale gouvernée par des philosophes, avec la célèbre allégorie de la caverne.",
+      "de": "Sokrates fragt, was Gerechtigkeit ist, und entwirft eine ideale, von Philosophen regierte Stadt, mit dem berühmten Höhlengleichnis.",
+      "it": "Socrate si chiede che cos'è la giustizia e immagina una città ideale governata da filosofi, con la celebre allegoria della caverna.",
+      "pt": "Sócrates pergunta o que é a justiça e imagina uma cidade ideal governada por filósofos, com a célebre alegoria da caverna.",
+      "ru": "Сократ спрашивает, что такое справедливость, и рисует идеальный город под властью философов, с известным мифом о пещере.",
+      "ja": "ソクラテスは正義とは何かを問い、哲学者が治める理想の国家を描きます。有名な洞窟の比喩も登場します。",
+      "ko": "소크라테스는 정의가 무엇인지 묻고, 철학자가 다스리는 이상 국가를 그립니다. 유명한 동굴의 비유가 나옵니다.",
+      "ar": "يسأل سقراط عن معنى العدالة ويتخيل مدينة مثالية يحكمها الفلاسفة، وفيها تمثيل الكهف الشهير.",
+      "hi": "सुकरात पूछते हैं कि न्याय क्या है और दार्शनिकों द्वारा शासित एक आदर्श नगर की कल्पना करते हैं; इसमें प्रसिद्ध गुफ़ा का रूपक है।",
+      "id": "Sokrates bertanya apa itu keadilan dan membayangkan kota ideal yang diperintah para filsuf, dengan alegori gua yang terkenal.",
+      "vi": "Socrates hỏi công lý là gì và hình dung một thành bang lý tưởng do các triết gia cai trị, với ngụ ngôn hang động nổi tiếng.",
+      "tr": "Sokrates adaletin ne olduğunu sorar ve filozofların yönettiği ideal bir kenti hayal eder; ünlü mağara alegorisi de bu kitaptadır."
     }
   },
   "the-return-of-sherlock-holmes": {
@@ -2923,6 +3797,44 @@
       "id": "Seorang wanita muda menerima sebutir mutiara setiap tahun dari pengirim tak dikenal, dan Holmes mengungkap kisah harta India yang dicuri.",
       "vi": "Một cô gái trẻ năm nào cũng nhận một viên ngọc trai từ người gửi giấu tên, và Holmes khám phá câu chuyện về kho báu Ấn Độ bị đánh cắp.",
       "tr": "Genç bir kadın her yıl tanımadığı birinden bir inci alır ve Holmes çalınmış bir Hint hazinesinin hikâyesini ortaya çıkarır."
+    }
+  },
+  "the-social-contract": {
+    "title": {
+      "en": "The Social Contract",
+      "zh-CN": "社会契约论",
+      "zh-TW": "社會契約論",
+      "es": "El contrato social",
+      "fr": "Du contrat social",
+      "de": "Der Gesellschaftsvertrag",
+      "it": "Il contratto sociale",
+      "pt": "O Contrato Social",
+      "ru": "Об общественном договоре",
+      "ja": "社会契約論",
+      "ko": "사회계약론",
+      "ar": "العقد الاجتماعي",
+      "hi": "सामाजिक अनुबंध",
+      "id": "Kontrak Sosial",
+      "vi": "Khế ước xã hội",
+      "tr": "Toplum Sözleşmesi"
+    },
+    "blurb": {
+      "en": "Rousseau asks how people can live together in society and still be free, and answers with the idea of the general will.",
+      "zh-CN": "卢梭追问人如何在社会中共同生活又保持自由，并以“公意”的思想作答。",
+      "zh-TW": "盧梭追問人如何在社會中共同生活又保持自由，並以「公意」的思想作答。",
+      "es": "Rousseau se pregunta cómo pueden las personas vivir juntas en sociedad y seguir siendo libres, y responde con la idea de la voluntad general.",
+      "fr": "Rousseau se demande comment les hommes peuvent vivre ensemble en société tout en restant libres, et répond par l'idée de la volonté générale.",
+      "de": "Rousseau fragt, wie Menschen in Gesellschaft zusammenleben und trotzdem frei bleiben können, und antwortet mit der Idee des Gemeinwillens.",
+      "it": "Rousseau si chiede come gli uomini possano vivere insieme in società restando liberi, e risponde con l'idea della volontà generale.",
+      "pt": "Rousseau pergunta como as pessoas podem viver juntas em sociedade e continuar livres, e responde com a ideia de vontade geral.",
+      "ru": "Руссо спрашивает, как люди могут жить вместе в обществе и оставаться свободными, и отвечает идеей общей воли.",
+      "ja": "ルソーは、人々が社会で共に生きながら自由でありうるかを問い、「一般意志」という考えで答えます。",
+      "ko": "루소는 사람들이 사회 속에서 함께 살면서도 자유로울 수 있는 방법을 묻고, '일반의지'라는 개념으로 답합니다.",
+      "ar": "يسأل روسو كيف يعيش الناس معًا في المجتمع ويظلون أحرارًا، ويجيب بفكرة الإرادة العامة.",
+      "hi": "रूसो पूछते हैं कि लोग समाज में साथ रहते हुए भी स्वतंत्र कैसे रह सकते हैं, और “सामान्य इच्छा” के विचार से उत्तर देते हैं।",
+      "id": "Rousseau bertanya bagaimana orang bisa hidup bersama dalam masyarakat namun tetap bebas, lalu menjawab dengan gagasan kehendak umum.",
+      "vi": "Rousseau đặt câu hỏi làm sao con người có thể chung sống trong xã hội mà vẫn tự do, và trả lời bằng ý niệm ý chí chung.",
+      "tr": "Rousseau, insanların toplumda birlikte yaşarken nasıl özgür kalabileceğini sorar ve genel irade fikriyle yanıtlar."
     }
   },
   "the-story-of-my-life": {
@@ -3569,6 +4481,44 @@
       "id": "Seorang gadis dari Kansas terbawa angin puting beliung ke Negeri Oz yang ajaib dan berangkat mencari jalan pulang.",
       "vi": "Một cô bé ở Kansas bị lốc xoáy cuốn tới xứ Oz huyền diệu và lên đường tìm cách trở về nhà.",
       "tr": "Kansaslı bir kız bir kasırgayla büyülü Oz Ülkesi'ne savrulur ve eve dönmenin yolunu aramaya koyulur."
+    }
+  },
+  "thus-spake-zarathustra": {
+    "title": {
+      "en": "Thus Spake Zarathustra",
+      "zh-CN": "查拉图斯特拉如是说",
+      "zh-TW": "查拉圖斯特拉如是說",
+      "es": "Así habló Zaratustra",
+      "fr": "Ainsi parlait Zarathoustra",
+      "de": "Also sprach Zarathustra",
+      "it": "Così parlò Zarathustra",
+      "pt": "Assim Falou Zaratustra",
+      "ru": "Так говорил Заратустра",
+      "ja": "ツァラトゥストラはこう語った",
+      "ko": "차라투스트라는 이렇게 말했다",
+      "ar": "هكذا تكلم زرادشت",
+      "hi": "ज़रथुस्त्र ने यूँ कहा",
+      "id": "Demikianlah Sabda Zarathustra",
+      "vi": "Zarathustra đã nói như thế",
+      "tr": "Böyle Buyurdu Zerdüşt"
+    },
+    "blurb": {
+      "en": "Nietzsche's poetic book in which a wise man comes down from the mountains to teach the \"overman\" and the death of God.",
+      "zh-CN": "尼采的诗意之作：一位智者走下山来，宣讲“超人”和“上帝已死”。",
+      "zh-TW": "尼采的詩意之作：一位智者走下山來，宣講「超人」和「上帝已死」。",
+      "es": "El libro poético de Nietzsche en el que un sabio baja de las montañas para enseñar el «superhombre» y la muerte de Dios.",
+      "fr": "Le livre poétique de Nietzsche où un sage descend de la montagne pour enseigner le « surhomme » et la mort de Dieu.",
+      "de": "Nietzsches poetisches Buch, in dem ein Weiser aus den Bergen herabsteigt, um den „Übermenschen“ und den Tod Gottes zu lehren.",
+      "it": "Il libro poetico di Nietzsche in cui un saggio scende dalle montagne per insegnare il «superuomo» e la morte di Dio.",
+      "pt": "O livro poético de Nietzsche em que um sábio desce das montanhas para ensinar o «super-homem» e a morte de Deus.",
+      "ru": "Поэтическая книга Ницше: мудрец сходит с гор, чтобы возвестить «сверхчеловека» и смерть Бога.",
+      "ja": "ニーチェの詩的な書。賢者が山を下り、「超人」と神の死を説きます。",
+      "ko": "니체의 시적인 책으로, 한 현자가 산에서 내려와 '위버멘슈'와 신의 죽음을 가르칩니다.",
+      "ar": "كتاب نيتشه الشعري الذي ينزل فيه حكيم من الجبال ليعلّم «الإنسان الأعلى» وموت الإله.",
+      "hi": "नीत्शे की काव्यात्मक पुस्तक, जिसमें एक ज्ञानी पहाड़ से उतरकर “अतिमानव” और ईश्वर की मृत्यु की शिक्षा देता है।",
+      "id": "Buku puitis Nietzsche tentang seorang bijak yang turun dari gunung untuk mengajarkan \"manusia unggul\" dan matinya Tuhan.",
+      "vi": "Cuốn sách đầy chất thơ của Nietzsche, trong đó một bậc hiền triết xuống núi để giảng về \"siêu nhân\" và cái chết của Thượng đế.",
+      "tr": "Nietzsche'nin şiirsel kitabı: bir bilge dağdan iner ve \"üstinsan\"ı ile Tanrı'nın ölümünü öğretir."
     }
   },
   "treasure-island": {

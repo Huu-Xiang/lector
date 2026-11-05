@@ -1,0 +1,25 @@
+{
+  "title": "孙子兵法",
+  "author": "孙武",
+  "level": "C1",
+  "wordCount": 3809,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/23864",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. 始计第一"
+    },
+    {
+      "file": "02.md",
+      "title": "2. 军争第七"
+    },
+    {
+      "file": "03.md",
+      "title": "3. 火攻第十二"
+    }
+  ]
+}

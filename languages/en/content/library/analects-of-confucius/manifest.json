@@ -1,0 +1,97 @@
+{
+  "title": "The Analects of Confucius",
+  "author": "Confucius, translated by James Legge",
+  "level": "C1",
+  "wordCount": 29754,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/3330",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Book I. Hsio R"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Analects"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Analects"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Analects"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Analects"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Book VII. Shu R"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Analects"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Analects"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Analects"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Analects"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Analects"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Analects"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Analects"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Analects"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Analects"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Analects"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Analects"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Analects"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Analects"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Analects"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Analects"
+    }
+  ]
+}

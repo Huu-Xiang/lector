@@ -1,0 +1,65 @@
+{
+  "title": "列子",
+  "author": "列御寇",
+  "level": "C2",
+  "wordCount": 19292,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/7341",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. 卷第一 天瑞篇"
+    },
+    {
+      "file": "02.md",
+      "title": "2. 列子"
+    },
+    {
+      "file": "03.md",
+      "title": "3. 列子"
+    },
+    {
+      "file": "04.md",
+      "title": "4. 列子"
+    },
+    {
+      "file": "05.md",
+      "title": "5. 列子"
+    },
+    {
+      "file": "06.md",
+      "title": "6. 列子"
+    },
+    {
+      "file": "07.md",
+      "title": "7. 卷第五 汤问篇"
+    },
+    {
+      "file": "08.md",
+      "title": "8. 列子"
+    },
+    {
+      "file": "09.md",
+      "title": "9. 列子"
+    },
+    {
+      "file": "10.md",
+      "title": "10. 列子"
+    },
+    {
+      "file": "11.md",
+      "title": "11. 列子"
+    },
+    {
+      "file": "12.md",
+      "title": "12. 卷第八 说符篇"
+    },
+    {
+      "file": "13.md",
+      "title": "13. 列子"
+    }
+  ]
+}

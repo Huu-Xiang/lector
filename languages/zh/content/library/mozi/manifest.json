@@ -1,0 +1,145 @@
+{
+  "title": "墨子",
+  "author": "墨翟及其后学",
+  "level": "C2",
+  "wordCount": 58032,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/24240",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. 《卷一》"
+    },
+    {
+      "file": "02.md",
+      "title": "2. 墨子"
+    },
+    {
+      "file": "03.md",
+      "title": "3. 墨子"
+    },
+    {
+      "file": "04.md",
+      "title": "4. 《尚贤下》"
+    },
+    {
+      "file": "05.md",
+      "title": "5. 《尚同中》"
+    },
+    {
+      "file": "06.md",
+      "title": "6. 《尚同下》"
+    },
+    {
+      "file": "07.md",
+      "title": "7. 《兼爱中》"
+    },
+    {
+      "file": "08.md",
+      "title": "8. 《卷五》"
+    },
+    {
+      "file": "09.md",
+      "title": "9. 《卷六》"
+    },
+    {
+      "file": "10.md",
+      "title": "10. 墨子"
+    },
+    {
+      "file": "11.md",
+      "title": "11. 墨子"
+    },
+    {
+      "file": "12.md",
+      "title": "12. 墨子"
+    },
+    {
+      "file": "13.md",
+      "title": "13. 墨子"
+    },
+    {
+      "file": "14.md",
+      "title": "14. 《天志下》"
+    },
+    {
+      "file": "15.md",
+      "title": "15. 《卷八》"
+    },
+    {
+      "file": "16.md",
+      "title": "16. 《非乐上》"
+    },
+    {
+      "file": "17.md",
+      "title": "17. 《非命中》"
+    },
+    {
+      "file": "18.md",
+      "title": "18. 墨子"
+    },
+    {
+      "file": "19.md",
+      "title": "19. 墨子"
+    },
+    {
+      "file": "20.md",
+      "title": "20. 墨子"
+    },
+    {
+      "file": "21.md",
+      "title": "21. 墨子"
+    },
+    {
+      "file": "22.md",
+      "title": "22. 墨子"
+    },
+    {
+      "file": "23.md",
+      "title": "23. 墨子"
+    },
+    {
+      "file": "24.md",
+      "title": "24. 墨子"
+    },
+    {
+      "file": "25.md",
+      "title": "25. 墨子"
+    },
+    {
+      "file": "26.md",
+      "title": "26. 墨子"
+    },
+    {
+      "file": "27.md",
+      "title": "27. 墨子"
+    },
+    {
+      "file": "28.md",
+      "title": "28. 《公孟》"
+    },
+    {
+      "file": "29.md",
+      "title": "29. 《卷十三》"
+    },
+    {
+      "file": "30.md",
+      "title": "30. 《公输》"
+    },
+    {
+      "file": "31.md",
+      "title": "31. 《备高临》"
+    },
+    {
+      "file": "32.md",
+      "title": "32. 《备蛾傅》"
+    },
+    {
+      "file": "33.md",
+      "title": "33. 《杂守》"
+    }
+  ]
+}

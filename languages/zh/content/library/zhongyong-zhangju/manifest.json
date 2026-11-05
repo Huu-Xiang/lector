@@ -1,0 +1,33 @@
+{
+  "title": "中庸章句",
+  "author": "朱熹",
+  "level": "C2",
+  "wordCount": 8976,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/7376",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. 中庸章句"
+    },
+    {
+      "file": "02.md",
+      "title": "2. 中庸章句"
+    },
+    {
+      "file": "03.md",
+      "title": "3. 中庸章句"
+    },
+    {
+      "file": "04.md",
+      "title": "4. 中庸章句"
+    },
+    {
+      "file": "05.md",
+      "title": "5. 中庸章句"
+    }
+  ]
+}

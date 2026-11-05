@@ -1,0 +1,77 @@
+{
+  "title": "孟子",
+  "author": "孟子及其弟子",
+  "level": "C1",
+  "wordCount": 22520,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/24178",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. 卷之一梁惠王上"
+    },
+    {
+      "file": "02.md",
+      "title": "2. 卷之一梁惠王下"
+    },
+    {
+      "file": "03.md",
+      "title": "3. 十二"
+    },
+    {
+      "file": "04.md",
+      "title": "4. 三"
+    },
+    {
+      "file": "05.md",
+      "title": "5. 七"
+    },
+    {
+      "file": "06.md",
+      "title": "6. 四"
+    },
+    {
+      "file": "07.md",
+      "title": "7. 五"
+    },
+    {
+      "file": "08.md",
+      "title": "8. 五"
+    },
+    {
+      "file": "09.md",
+      "title": "9. 八"
+    },
+    {
+      "file": "10.md",
+      "title": "10. 二"
+    },
+    {
+      "file": "11.md",
+      "title": "11. 卷之五万章下"
+    },
+    {
+      "file": "12.md",
+      "title": "12. 八"
+    },
+    {
+      "file": "13.md",
+      "title": "13. 十三"
+    },
+    {
+      "file": "14.md",
+      "title": "14. 八"
+    },
+    {
+      "file": "15.md",
+      "title": "15. 二十四"
+    },
+    {
+      "file": "16.md",
+      "title": "16. 二十四"
+    }
+  ]
+}

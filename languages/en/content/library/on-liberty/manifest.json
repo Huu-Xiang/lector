@@ -1,0 +1,129 @@
+{
+  "title": "On Liberty",
+  "author": "John Stuart Mill",
+  "level": "C1",
+  "wordCount": 47149,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/34901",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Chapter I"
+    },
+    {
+      "file": "02.md",
+      "title": "2. On Liberty"
+    },
+    {
+      "file": "03.md",
+      "title": "3. On Liberty"
+    },
+    {
+      "file": "04.md",
+      "title": "4. On Liberty"
+    },
+    {
+      "file": "05.md",
+      "title": "5. On Liberty"
+    },
+    {
+      "file": "06.md",
+      "title": "6. On Liberty"
+    },
+    {
+      "file": "07.md",
+      "title": "7. On Liberty"
+    },
+    {
+      "file": "08.md",
+      "title": "8. On Liberty"
+    },
+    {
+      "file": "09.md",
+      "title": "9. On Liberty"
+    },
+    {
+      "file": "10.md",
+      "title": "10. On Liberty"
+    },
+    {
+      "file": "11.md",
+      "title": "11. On Liberty"
+    },
+    {
+      "file": "12.md",
+      "title": "12. On Liberty"
+    },
+    {
+      "file": "13.md",
+      "title": "13. On Liberty"
+    },
+    {
+      "file": "14.md",
+      "title": "14. On Liberty"
+    },
+    {
+      "file": "15.md",
+      "title": "15. On Liberty"
+    },
+    {
+      "file": "16.md",
+      "title": "16. On Liberty"
+    },
+    {
+      "file": "17.md",
+      "title": "17. On Liberty"
+    },
+    {
+      "file": "18.md",
+      "title": "18. On Liberty"
+    },
+    {
+      "file": "19.md",
+      "title": "19. On Liberty"
+    },
+    {
+      "file": "20.md",
+      "title": "20. On Liberty"
+    },
+    {
+      "file": "21.md",
+      "title": "21. On Liberty"
+    },
+    {
+      "file": "22.md",
+      "title": "22. On Liberty"
+    },
+    {
+      "file": "23.md",
+      "title": "23. On Liberty"
+    },
+    {
+      "file": "24.md",
+      "title": "24. On Liberty"
+    },
+    {
+      "file": "25.md",
+      "title": "25. On Liberty"
+    },
+    {
+      "file": "26.md",
+      "title": "26. On Liberty"
+    },
+    {
+      "file": "27.md",
+      "title": "27. On Liberty"
+    },
+    {
+      "file": "28.md",
+      "title": "28. On Liberty"
+    },
+    {
+      "file": "29.md",
+      "title": "29. On Liberty"
+    }
+  ]
+}

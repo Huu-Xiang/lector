@@ -1,0 +1,121 @@
+{
+  "title": "The Consolation of Philosophy",
+  "author": "Boethius, translated by H. R. James",
+  "level": "C1",
+  "wordCount": 40420,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/14328",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Book I"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Song IV"
+    },
+    {
+      "file": "03.md",
+      "title": "3. The Consolation of Philosophy"
+    },
+    {
+      "file": "04.md",
+      "title": "4. The Consolation of Philosophy"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Song I"
+    },
+    {
+      "file": "06.md",
+      "title": "6. IV"
+    },
+    {
+      "file": "07.md",
+      "title": "7. The Consolation of Philosophy"
+    },
+    {
+      "file": "08.md",
+      "title": "8. The Consolation of Philosophy"
+    },
+    {
+      "file": "09.md",
+      "title": "9. The Consolation of Philosophy"
+    },
+    {
+      "file": "10.md",
+      "title": "10. The Consolation of Philosophy"
+    },
+    {
+      "file": "11.md",
+      "title": "11. The Consolation of Philosophy"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Song V"
+    },
+    {
+      "file": "13.md",
+      "title": "13. The Consolation of Philosophy"
+    },
+    {
+      "file": "14.md",
+      "title": "14. The Consolation of Philosophy"
+    },
+    {
+      "file": "15.md",
+      "title": "15. XI"
+    },
+    {
+      "file": "16.md",
+      "title": "16. The Consolation of Philosophy"
+    },
+    {
+      "file": "17.md",
+      "title": "17. The Consolation of Philosophy"
+    },
+    {
+      "file": "18.md",
+      "title": "18. The Consolation of Philosophy"
+    },
+    {
+      "file": "19.md",
+      "title": "19. The Consolation of Philosophy"
+    },
+    {
+      "file": "20.md",
+      "title": "20. The Consolation of Philosophy"
+    },
+    {
+      "file": "21.md",
+      "title": "21. The Consolation of Philosophy"
+    },
+    {
+      "file": "22.md",
+      "title": "22. The Consolation of Philosophy"
+    },
+    {
+      "file": "23.md",
+      "title": "23. Song VII"
+    },
+    {
+      "file": "24.md",
+      "title": "24. The Consolation of Philosophy"
+    },
+    {
+      "file": "25.md",
+      "title": "25. The Consolation of Philosophy"
+    },
+    {
+      "file": "26.md",
+      "title": "26. Song IV"
+    },
+    {
+      "file": "27.md",
+      "title": "27. The Consolation of Philosophy"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "title": "Regrets sur ma vieille robe de chambre",
+  "author": "Denis Diderot",
+  "level": "B2",
+  "wordCount": 2390,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/13863",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Ma vieille robe de chambre"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Ma vieille robe de chambre"
+    }
+  ]
+}

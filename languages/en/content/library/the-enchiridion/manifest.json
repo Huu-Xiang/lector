@@ -1,0 +1,33 @@
+{
+  "title": "The Enchiridion",
+  "author": "Epictetus, translated by Thomas Wentworth Higginson",
+  "level": "B2",
+  "wordCount": 7224,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/45109",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Chapter I"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Chapter XIII"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Chapter XXVI"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Chapter XXXIII"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Chapter XLIV"
+    }
+  ]
+}

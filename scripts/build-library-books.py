@@ -27,7 +27,8 @@ def title_case(text: str) -> str:
     out = []
     for n, word in enumerate(text.split()):
         low = word.lower()
-        if n and low.strip(".,;:!?") in TITLE_SMALL_WORDS:
+        after_numeral = n and re.fullmatch(r"[IVXLC]+\.?", text.split()[n - 1]) is not None
+        if n and not after_numeral and low.strip(".,;:!?") in TITLE_SMALL_WORDS:
             out.append(low)
             continue
         m = re.match(r"^([dlqDLQ]['’])(.+)$", word)
@@ -821,6 +822,159 @@ BOOKS = [
          heading_re=r"^第[一二三四五六七八九十百零〇]+回"),
     dict(lang="zh", zh=True, slug="lunyu", id=23839, title="论语", author="孔子弟子及再传弟子", level="C2",
          start=r"^學而第一", short="论语", heading_re=r"^.{1,5}第[一二三四五六七八九十]+$"),
+    dict(lang="en", slug="apology", id=1656, title="Apology", author="Plato, translated by Benjamin Jowett",
+         level="B2", start=r"^How you, O Athenians, have been affected", short="Apology"),
+    dict(lang="en", slug="symposium", id=1600, title="Symposium", author="Plato, translated by Benjamin Jowett",
+         level="C1", start=r"^PERSONS OF THE DIALOGUE", short="Symposium"),
+    dict(lang="en", slug="phaedo", id=1658, title="Phaedo", author="Plato, translated by Benjamin Jowett",
+         level="C1", start=r"^PERSONS OF THE DIALOGUE", short="Phaedo", title_headings=True,
+         subs=[(r"^PERSONS OF THE DIALOGUE:[ \t]*$", "PERSONS OF THE DIALOGUE")]),
+    dict(lang="en", slug="the-republic", id=1497, title="The Republic", author="Plato, translated by Benjamin Jowett",
+         level="C1", start=r"^\s*PERSONS OF THE DIALOGUE\.\s*\n\s*\nSocrates, who is the narrator", short="The Republic",
+         title_headings=True),
+    dict(lang="en", slug="nicomachean-ethics", id=8438, title="The Nicomachean Ethics",
+         author="Aristotle, translated by F. H. Peters", level="C2", start=r"^BOOK I\s*\n\s*\nChapter I\.",
+         short="Nicomachean Ethics", title_headings=True, stop=r"^NOTES\s*$"),
+    dict(lang="en", slug="the-enchiridion", id=45109, title="The Enchiridion",
+         author="Epictetus, translated by Thomas Wentworth Higginson", level="B2",
+         start=r"^\s+THE ENCHIRIDION\s*$", stop=r"^\s+Footnotes\s*$", short="The Enchiridion",
+         subs=[(r"^[ \t]*THE ENCHIRIDION[ \t]*$", ""), (r"^[ \t]*([IVXLC]+)[ \t]*$", r"Chapter \1")]),
+    dict(lang="en", slug="the-consolation-of-philosophy", id=14328, title="The Consolation of Philosophy",
+         author="Boethius, translated by H. R. James", level="C1",
+         start=r"^BOOK I\.\s*\n\s*\n\s*SONG I\.", cut=r"^EPILOGUE\.",
+         short="The Consolation of Philosophy", title_headings=True, verse="auto",
+         subs=[(r"^BOOK ([IVX]+)\.\s*\n\s*\n[A-Z][^\n]*\n\s*\n(?=\s+SUMMARY)", ""),
+               (r"^[ ]{3,}SUMMARY\.[ \t]*\n\s*\n(?:[ ]{3,}[^\n]*\n)+", ""),
+               (r"^FOOTNOTES:[ \t]*\n(?:\s*\n)*(?:\[[A-Z]\][^\n]*(?:\n(?!\s*\n)[^\n]*)*(?:\n\s*\n)?)+", ""),
+               (r"\[[A-Z]\]", "")]),
+    dict(lang="en", slug="the-prince", id=1232, title="The Prince",
+         author="Niccolò Machiavelli, translated by W. K. Marriott", level="C1",
+         start=r"^CHAPTER I\.\s*\n(?:\s*\n)?HOW MANY KINDS", cut=r"^THE LIFE OF CASTRUCCIO", short="The Prince",
+         title_headings=True, heading_max=130, subs=[(r"^(?:THE END\s*\n+)?BY NICOLO MACHIAVELLI\s*$", "")]),
+    dict(lang="en", slug="meditations", id=55317, title="The Meditations",
+         author="Marcus Aurelius, translated by George W. Chrystal", level="B2",
+         start=r"^\s+BOOK I\.\s*$", stop=r"^\s+THE END\.\s*$", short="Meditations", title_headings=True,
+         subs=[(r"^\s*END OF THE \w+ BOOK\.\s*$", ""),
+               (r"^\s+(IN THE COUNTRY OF THE|QUADI, BY THE GRANUA\.|AT CARNUNTUM\.)\s*$", "")]),
+    dict(lang="en", slug="discourse-on-the-method", id=59, title="Discourse on the Method",
+         author="René Descartes, translated by John Veitch", level="C1",
+         start=r"^PART I\s*\n\s*\nGood sense is", short="Discourse on the Method", title_headings=True),
+    dict(lang="en", slug="the-social-contract", id=46333, title="The Social Contract",
+         author="Jean-Jacques Rousseau, translated by G. D. H. Cole", level="C1",
+         start=r"^FOREWORD\s*\n\s*\nThis little treatise", stop=r"^A DISCOURSE\s*$",
+         short="The Social Contract", title_headings=True),
+    dict(lang="en", slug="on-liberty", id=34901, title="On Liberty", author="John Stuart Mill", level="C1",
+         start=r"^CHAPTER I\.\s*\n\s*\nINTRODUCTORY\.", short="On Liberty", title_headings=True,
+         subs=[(r"^FOOTNOTES?:[ \t]*$", "")]),
+    dict(lang="en", slug="the-problems-of-philosophy", id=5827, title="The Problems of Philosophy",
+         author="Bertrand Russell", level="C1", start=r"^PREFACE\s*$", stop=r"^BIBLIOGRAPHICAL NOTE",
+         short="The Problems of Philosophy", title_headings=True),
+    dict(lang="en", slug="thus-spake-zarathustra", id=1998, title="Thus Spake Zarathustra",
+         author="Friedrich Nietzsche, translated by Thomas Common", level="C2",
+         start=r"^FIRST PART\. ZARATHUSTRA.S DISCOURSES\.", stop=r"^APPENDIX\.", short="Thus Spake Zarathustra",
+         title_headings=True),
+    dict(lang="en", slug="beyond-good-and-evil", id=4363, title="Beyond Good and Evil",
+         author="Friedrich Nietzsche, translated by Helen Zimmern", level="C2",
+         start=r"^PREFACE\s*\n\s*\nSUPPOSING that Truth", stop=r"^FROM THE HEIGHTS\s*$", short="Beyond Good and Evil",
+         title_headings=True, subs=[(r"[ \t]*\[FOOTNOTE:[^\]]*\]", ""), (r"[ \t]*\[Footnote:[^\]]*\]", "")]),
+    dict(lang="en", slug="fundamental-principles-of-the-metaphysic-of-morals", id=5682,
+         title="Fundamental Principles of the Metaphysic of Morals",
+         author="Immanuel Kant, translated by Thomas Kingsmill Abbott", level="C2",
+         start=r"^PREFACE\s*\n\s*\nAncient Greek philosophy", stop=r"^\s+THE END\s*$",
+         short="Metaphysic of Morals", title_headings=True,
+         subs=[(r"^SEC_\d\s*$", "")]),
+    dict(lang="en", slug="nature-emerson", id=29433, title="Nature", author="Ralph Waldo Emerson", level="C1",
+         start=r"^INTRODUCTION\.\s*\n\s*\nOUR age is retrospective", short="Nature", title_headings=True),
+    dict(lang="en", slug="pragmatism", id=5116, title="Pragmatism: A New Name for Some Old Ways of Thinking",
+         author="William James", level="C1", start=r"^Lecture I\s*\n\s*\nThe Present Dilemma in Philosophy\s*\n\s*\nIn the preface", short="Pragmatism",
+         title_headings=True,
+         subs=[(r"^Lecture ([IVX]+)\n\n([^\n]{3,70})\n\n", lambda m: f"LECTURE {m[1]}. {m[2].upper()}\n\n"),
+               (r"[ \t]*\[Footnote:[^\]]*\]", ""), (r"^The End\s*$", "")]),
+    dict(lang="en", slug="pascals-pensees", id=18269, title="Pascal's Pensées",
+         author="Blaise Pascal, translated by W. F. Trotter", level="C1",
+         start=r"^SECTION I\s*\n\s*\nTHOUGHTS ON MIND AND ON STYLE", stop=r"^NOTES\s*$", short="Pensées",
+         title_headings=True, subs=[(r"^\d{1,3}[ \t]*$", ""), (r"^Part I, 1, 2, c\. 1, section 4\.\[\d+\]\s*$", "")]),
+    dict(lang="en", slug="tao-te-ching", id=216, title="The Tao Teh King",
+         author="Laozi, translated by James Legge", level="C1", start=r"^PART 1\.\s*$", short="Tao Teh King",
+         title_headings=True),
+    dict(lang="en", slug="analects-of-confucius", id=3330, title="The Analects of Confucius",
+         author="Confucius, translated by James Legge", level="C1", start=r"^BOOK I\.\s+HSIO R\.",
+         short="Analects", title_headings=True,
+         subs=[(r"^[ \t]+(CHAP(?:TER|\.)?\s*[IVXL]+\.)", r"\n\1")]),
+    dict(lang="en", slug="chuang-tzu", id=59709, title="Chuang Tzu: Mystic, Moralist, and Social Reformer",
+         author="Zhuangzi, translated by Herbert A. Giles", level="C1", start=r"^CHAPTER I\.\s*$", stop=r"^_INDEX_\s*$",
+         short="Chuang Tzu", title_headings=True),
+    dict(lang="en", slug="discourse-on-the-arts-and-sciences", id=46333,
+         title="A Discourse on the Arts and Sciences",
+         author="Jean-Jacques Rousseau, translated by G. D. H. Cole", level="C1",
+         start=r"^A DISCOURSE\s*\n\s*\nWHICH WON THE PRIZE", stop=r"^A DISCOURSE\s*\n\s*\nON A SUBJECT PROPOSED",
+         short="Arts and Sciences", title_headings=True),
+    dict(lang="en", slug="discourse-on-inequality", id=46333, title="A Discourse on the Origin of Inequality",
+         author="Jean-Jacques Rousseau, translated by G. D. H. Cole", level="C2",
+         start=r"^A DISSERTATION\s*$", stop=r"^APPENDIX\[1\]", short="Origin of Inequality",
+         title_headings=True),
+    dict(lang="en", slug="the-art-of-war", id=17405, title="The Art of War",
+         author="Sun Tzu, translated by Lionel Giles", level="B2", start=r"^I\. LAYING PLANS",
+         short="The Art of War", title_headings=True),
+    dict(lang="fr", slug="traite-sur-la-tolerance", id=42131, title="Traité sur la tolérance", author="Voltaire",
+         level="C1", start=r"^CHAPITRE PREMIER\.\s*\n\s*\n_Histoire abrégée", stop=r"^_FIN\._", short="Traité sur la tolérance",
+         heading_names=[], subs=[(r"(?<![\w&])&(?![\w&])", "et")]),
+    dict(lang="fr", slug="supplement-au-voyage-de-bougainville", id=6501, title="Supplément au Voyage de Bougainville",
+         author="Denis Diderot", level="C1", start=r"^CHAPITRE I - JUGEMENT", short="Supplément au Voyage de Bougainville",
+         heading_names=["Bougainville", "Tahiti", "Orou", "A", "B"], heading_max=100,
+         subs=[(r"\u00ad", "-"), (r"^-{5,}\s*$", ""), (r"^CHAPITRE ([IVX]+) - ", r"CHAPITRE \1. ")]),
+    dict(lang="fr", slug="esprit-des-lois", id=27573, title="De l'esprit des lois (extraits)",
+         author="Montesquieu", level="C2", start=r"^PRÉFACE\s*\n\s*\nSi, dans le nombre infini",
+         stop=r"^NOTES EXPLICATIVES\s*$", short="De l'esprit des lois", heading_names=[],
+         subs=[(r"^[ ]{2,}\[[MC]\d+\][^\n]*(?:\n[ ]{2,}[^\n]*)*", ""), (r"\[[MC]\d+\]", ""),
+               (r"^APPENDICE\[\d+\]\s*$", "")]),
+    dict(lang="fr", slug="ainsi-parlait-zarathoustra", id=5258, title="Ainsi parlait Zarathoustra",
+         author="Friedrich Nietzsche, traduit par Henri Albert", level="C2",
+         start=r"^PREMIÈRE PARTIE\s*\n\s*\nLE PROLOGUE", stop=r"^APPENDICE\s*$", short="Ainsi parlait Zarathoustra",
+         heading_names=["Zarathoustra"]),
+    dict(lang="fr", slug="maximes-la-rochefoucauld", id=14913, title="Maximes", author="François de La Rochefoucauld",
+         level="C1", start=r"^Nos vertus ne sont, le plus souvent", stop=r"^Maximes supprimées\s*$", short="Maximes",
+         subs=[(r"^\d{1,3}[ \t]*$", "")]),
+    dict(lang="fr", slug="reflexions-diverses", id=14913, title="Réflexions diverses",
+         author="François de La Rochefoucauld", level="C1", start=r"^I\. Du vrai\s*\n\s*\nLe vrai, dans",
+         stop=r"^Appendice aux événements", short="Réflexions diverses", heading_names=[],
+         subs=[(r"^([IVXL]+)\. ([A-ZÉÈa-zé][^\n]{2,60})$", lambda m: f"{m[1]}. {m[2].upper()}")]),
+    dict(lang="fr", slug="aphorismes-sur-la-sagesse-dans-la-vie", id=35444,
+         title="Aphorismes sur la sagesse dans la vie", author="Arthur Schopenhauer, traduit par J.-A. Cantacuzène",
+         level="C1", start=r"^CHAPITRE PREMIER\s*$", stop=r"^NOTES\s*$", short="Aphorismes sur la sagesse dans la vie",
+         heading_names=[]),
+    dict(lang="fr", slug="le-neveu-de-rameau", id=13862, title="Le Neveu de Rameau", author="Denis Diderot",
+         level="C1", start=r"^Qu'il fasse beau, qu'il fasse laid", short="Le Neveu de Rameau"),
+    dict(lang="fr", slug="regrets-sur-ma-vieille-robe-de-chambre", id=13863, title="Regrets sur ma vieille robe de chambre",
+         author="Denis Diderot", level="B2", start=r"^Pourquoi ne l'avoir pas gardée", short="Ma vieille robe de chambre"),
+    dict(lang="zh", zh=True, slug="daodejing", id=7337, title="道德经", author="老子", level="C1",
+         start=r"^老子道經", short="道德经", heading_re=r"^(第[一二三四五六七八九十百]+章|老子[道德]經)$"),
+    dict(lang="zh", zh=True, slug="mengzi", id=24178, title="孟子", author="孟子及其弟子", level="C1",
+         start=r"^卷之一梁惠王上", short="孟子", heading_re=r"^(卷之.{2,8}[上下]|[一二三四五六七八九十百]+)$"),
+    dict(lang="zh", zh=True, slug="hanfeizi", id=24049, title="韩非子", author="韩非", level="C2",
+         start=r"^《初見秦》", short="韩非子", heading_re=r"^《.+》$",
+         subs=[(r"^\d+ [^:：\n]{1,14}[:：] ?", "　　")]),
+    dict(lang="zh", zh=True, slug="mozi", id=24240, title="墨子", author="墨翟及其后学", level="C2",
+         start=r"^《卷一》", short="墨子", heading_re=r"^《.+》$",
+         subs=[(r"^\d+\n[^\n:：]{1,14}[:：]\n", "　　")]),
+    dict(lang="zh", zh=True, slug="chuanxilu", id=25517, title="传习录", author="王守仁", level="C2",
+         start=r"^徐愛引言", short="传习录",
+         heading_re=r"^(徐爱引言|以下门人.+录|.{1,3}序|.{1,3}跋|答.{2,8}书?|卷下|门人.{1,3}录|此后门人.+录|右南大吉录|训蒙大意示教读刘伯颂等|教约)$",
+         subs=[(r"^【\d+】", "　　"), (r"(?<=[㐀-鿿]) +(?=[㐀-鿿])", "")]),
+    dict(lang="zh", zh=True, slug="jinsilu", id=25249, title="近思录", author="朱熹、吕祖谦", level="C2",
+         start=r"^卷一·道體", cut=r"^《近思錄》既成", short="近思录", heading_re=r"^卷[一二三四五六七八九十]+·.+$",
+         subs=[(r"^\d+\n", "　　")]),
+    dict(lang="zh", zh=True, slug="sunzi-bingfa", id=23864, title="孙子兵法", author="孙武", level="C1",
+         start=r"^始計第一", short="孙子兵法", heading_re=r"^.{2,4}第[一二三四五六七八九十]+$"),
+    dict(lang="zh", zh=True, slug="liezi", id=7341, title="列子", author="列御寇", level="C2",
+         start=r"^卷第一 天瑞篇", short="列子", heading_re=r"^卷第.+篇$", subs=[(r"．", "。")]),
+    dict(lang="zh", zh=True, slug="lunheng", id=25397, title="论衡", author="王充", level="C2",
+         start=r"^逢遇篇第一", short="论衡", heading_re=r"^.{1,6}篇第.{1,3}$",
+         subs=[(r"(?<=[㐀-鿿]) +(?=[㐀-鿿])", ""), (r"(?<=[。，；：？！」』”）]) +", "")]),
+    dict(lang="zh", zh=True, slug="daxue-zhangju", id=7375, title="大学章句", author="朱熹", level="C2",
+         start=r"^大學章句序", short="大学章句"),
+    dict(lang="zh", zh=True, slug="zhongyong-zhangju", id=7376, title="中庸章句", author="朱熹", level="C2",
+         start=r"^中庸章句序", short="中庸章句"),
 ]
 
 ROMAN = re.compile(r"^[IVXLC]+\.?$")
@@ -1037,12 +1191,13 @@ def clean_paragraph(par: str, verse: bool) -> str | None:
 
 
 ZH_HEADING: re.Pattern | None = None
+HEADING_MAX = 80
 
 
 def is_heading(par: str) -> bool:
     if ZH_HEADING is not None:
         return bool(ZH_HEADING.match(par.strip()))
-    if "\n" in par or len(par) > 80:
+    if "\n" in par or len(par) > HEADING_MAX:
         return False
     plain = par.strip(" _*.")
     if plain[:1] in "“\"‘'—«»" or plain.endswith(","):
@@ -1122,7 +1277,8 @@ def build(book: dict, raw_dir: Path, out_dir: Path) -> None:
         text = unicodedata.normalize("NFC", extract_lecturas_faciles(raw))
     else:
         text = unicodedata.normalize("NFC", body_of(raw, book["start"], book.get("cut"), book.get("stop")))
-    global ZH_HEADING
+    global ZH_HEADING, HEADING_MAX
+    HEADING_MAX = book.get("heading_max", 80)
     zh = book.get("zh", False)
     if zh:
         text = zh_simplify(text)

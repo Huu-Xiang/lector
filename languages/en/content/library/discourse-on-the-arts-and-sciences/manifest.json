@@ -1,0 +1,41 @@
+{
+  "title": "A Discourse on the Arts and Sciences",
+  "author": "Jean-Jacques Rousseau, translated by G. D. H. Cole",
+  "level": "C1",
+  "wordCount": 9761,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/46333",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. A Discourse"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Arts and Sciences"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Arts and Sciences"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Arts and Sciences"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Arts and Sciences"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Arts and Sciences"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Arts and Sciences"
+    }
+  ]
+}

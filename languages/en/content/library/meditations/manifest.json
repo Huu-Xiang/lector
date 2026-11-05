@@ -1,0 +1,125 @@
+{
+  "title": "The Meditations",
+  "author": "Marcus Aurelius, translated by George W. Chrystal",
+  "level": "B2",
+  "wordCount": 41485,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/55317",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Book I"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Meditations"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Meditations"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Meditations"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Meditations"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Meditations"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Meditations"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Meditations"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Meditations"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Meditations"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Meditations"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Meditations"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Meditations"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Meditations"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Meditations"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Meditations"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Meditations"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Meditations"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Meditations"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Meditations"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Meditations"
+    },
+    {
+      "file": "22.md",
+      "title": "22. Book X"
+    },
+    {
+      "file": "23.md",
+      "title": "23. Meditations"
+    },
+    {
+      "file": "24.md",
+      "title": "24. Meditations"
+    },
+    {
+      "file": "25.md",
+      "title": "25. Meditations"
+    },
+    {
+      "file": "26.md",
+      "title": "26. Meditations"
+    },
+    {
+      "file": "27.md",
+      "title": "27. Meditations"
+    },
+    {
+      "file": "28.md",
+      "title": "28. Meditations"
+    }
+  ]
+}

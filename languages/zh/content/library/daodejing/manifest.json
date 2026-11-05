@@ -1,0 +1,25 @@
+{
+  "title": "道德经",
+  "author": "老子",
+  "level": "C1",
+  "wordCount": 3532,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/7337",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. 道德经"
+    },
+    {
+      "file": "02.md",
+      "title": "2. 第三十三章"
+    },
+    {
+      "file": "03.md",
+      "title": "3. 第六十五章"
+    }
+  ]
+}

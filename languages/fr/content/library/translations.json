@@ -37,6 +37,44 @@
       "tr": "Jules Lemaître'in küçük çocuklar için yazdığı, alfabenin her harfi için bir tane olan kısa hikâyeler."
     }
   },
+  "ainsi-parlait-zarathoustra": {
+    "title": {
+      "en": "Thus Spake Zarathustra",
+      "zh-CN": "查拉图斯特拉如是说",
+      "zh-TW": "查拉圖斯特拉如是說",
+      "es": "Así habló Zaratustra",
+      "fr": "Ainsi parlait Zarathoustra",
+      "de": "Also sprach Zarathustra",
+      "it": "Così parlò Zarathustra",
+      "pt": "Assim Falou Zaratustra",
+      "ru": "Так говорил Заратустра",
+      "ja": "ツァラトゥストラはこう語った",
+      "ko": "차라투스트라는 이렇게 말했다",
+      "ar": "هكذا تكلم زرادشت",
+      "hi": "ज़रथुस्त्र ने यूँ कहा",
+      "id": "Demikianlah Sabda Zarathustra",
+      "vi": "Zarathustra đã nói như thế",
+      "tr": "Böyle Buyurdu Zerdüşt"
+    },
+    "blurb": {
+      "en": "Nietzsche's poetic book in which a wise man comes down from the mountains to teach the \"overman\" and the death of God, in a French translation.",
+      "zh-CN": "尼采的诗意之作：一位智者走下山来，宣讲“超人”和“上帝已死”，此为法语译本。",
+      "zh-TW": "尼采的詩意之作：一位智者走下山來，宣講「超人」和「上帝已死」，此為法語譯本。",
+      "es": "El libro poético de Nietzsche en el que un sabio baja de las montañas para enseñar el «superhombre» y la muerte de Dios, en traducción al francés.",
+      "fr": "Le livre poétique de Nietzsche où un sage descend de la montagne pour enseigner le « surhomme » et la mort de Dieu, dans une traduction française.",
+      "de": "Nietzsches poetisches Buch, in dem ein Weiser aus den Bergen herabsteigt, um den „Übermenschen“ und den Tod Gottes zu lehren, in französischer Übersetzung.",
+      "it": "Il libro poetico di Nietzsche in cui un saggio scende dalle montagne per insegnare il «superuomo» e la morte di Dio, in traduzione francese.",
+      "pt": "O livro poético de Nietzsche em que um sábio desce das montanhas para ensinar o «super-homem» e a morte de Deus, em tradução francesa.",
+      "ru": "Поэтическая книга Ницше: мудрец сходит с гор, чтобы возвестить «сверхчеловека» и смерть Бога, во французском переводе.",
+      "ja": "ニーチェの詩的な書。賢者が山を下り、「超人」と神の死を説きます。フランス語訳です。",
+      "ko": "니체의 시적인 책으로, 한 현자가 산에서 내려와 '위버멘슈'와 신의 죽음을 가르칩니다. 프랑스어 번역본입니다.",
+      "ar": "كتاب نيتشه الشعري الذي ينزل فيه حكيم من الجبال ليعلّم «الإنسان الأعلى» وموت الإله، بترجمة فرنسية.",
+      "hi": "नीत्शे की काव्यात्मक पुस्तक, जिसमें एक ज्ञानी पहाड़ से उतरकर “अतिमानव” और ईश्वर की मृत्यु की शिक्षा देता है; फ़्रेंच अनुवाद में।",
+      "id": "Buku puitis Nietzsche tentang seorang bijak yang turun dari gunung untuk mengajarkan \"manusia unggul\" dan matinya Tuhan, dalam terjemahan Prancis.",
+      "vi": "Cuốn sách đầy chất thơ của Nietzsche, trong đó một bậc hiền triết xuống núi để giảng về \"siêu nhân\" và cái chết của Thượng đế, bản dịch tiếng Pháp.",
+      "tr": "Nietzsche'nin şiirsel kitabı: bir bilge dağdan iner ve \"üstinsan\"ı ile Tanrı'nın ölümünü öğretir; Fransızca çeviriyle."
+    }
+  },
   "alice-au-pays-des-merveilles": {
     "title": {
       "en": "Alice's Adventures in Wonderland (French translation)",
@@ -73,6 +111,44 @@
       "id": "Terjemahan Prancis tahun 1869 oleh Henri Bué atas kisah Lewis Carroll tentang gadis yang jatuh ke lubang kelinci menuju dunia aneh.",
       "vi": "Bản dịch tiếng Pháp năm 1869 của Henri Bué cho truyện của Lewis Carroll về cô bé rơi xuống hang thỏ và lạc vào một thế giới kỳ lạ.",
       "tr": "Henri Bué'nin 1869 tarihli Fransızca çevirisi; Lewis Carroll'ın tavşan deliğinden garip bir dünyaya düşen kızın öyküsü."
+    }
+  },
+  "aphorismes-sur-la-sagesse-dans-la-vie": {
+    "title": {
+      "en": "Aphorisms on the Wisdom of Life",
+      "zh-CN": "人生智慧箴言",
+      "zh-TW": "人生智慧箴言",
+      "es": "Aforismos sobre la sabiduría de la vida",
+      "fr": "Aphorismes sur la sagesse dans la vie",
+      "de": "Aphorismen zur Lebensweisheit",
+      "it": "Aforismi sulla saggezza del vivere",
+      "pt": "Aforismos sobre a Sabedoria de Vida",
+      "ru": "Афоризмы житейской мудрости",
+      "ja": "幸福のための箴言",
+      "ko": "삶의 지혜에 관한 아포리즘",
+      "ar": "حِكَم في حكمة الحياة",
+      "hi": "जीवन-ज्ञान पर सूक्तियाँ",
+      "id": "Aforisme tentang Kebijaksanaan Hidup",
+      "vi": "Cách ngôn về sự khôn ngoan trong đời",
+      "tr": "Yaşam Bilgeliği Üzerine Aforizmalar"
+    },
+    "blurb": {
+      "en": "Schopenhauer's practical guide to a happier life: what we are, what we have and what we represent in the eyes of others.",
+      "zh-CN": "叔本华关于如何活得更幸福的实用指南：我们是什么、我们有什么，以及我们在他人眼中代表什么。",
+      "zh-TW": "叔本華關於如何活得更幸福的實用指南：我們是什麼、我們有什麼，以及我們在他人眼中代表什麼。",
+      "es": "La guía práctica de Schopenhauer para una vida más feliz: lo que somos, lo que tenemos y lo que representamos a los ojos de los demás.",
+      "fr": "Le guide pratique de Schopenhauer pour une vie plus heureuse : ce que l'on est, ce que l'on a et ce que l'on représente aux yeux des autres.",
+      "de": "Schopenhauers praktischer Ratgeber für ein glücklicheres Leben: was man ist, was man hat und was man in den Augen anderer vorstellt.",
+      "it": "La guida pratica di Schopenhauer per una vita più felice: ciò che si è, ciò che si ha e ciò che si rappresenta agli occhi degli altri.",
+      "pt": "O guia prático de Schopenhauer para uma vida mais feliz: o que somos, o que temos e o que representamos aos olhos dos outros.",
+      "ru": "Практическое руководство Шопенгауэра к более счастливой жизни: что мы есть, что мы имеем и чем кажемся в глазах других.",
+      "ja": "より幸せに生きるためのショーペンハウアーの実践的な手引き。人が何であるか、何を持つか、他人の目にどう映るかを論じます。",
+      "ko": "더 행복한 삶을 위한 쇼펜하우어의 실용 안내서로, 우리가 무엇인지, 무엇을 가졌는지, 남의 눈에 어떻게 비치는지를 다룹니다.",
+      "ar": "دليل شوبنهاور العملي لحياة أسعد: ما نحن عليه وما نملكه وما نمثّله في عيون الآخرين.",
+      "hi": "अधिक सुखी जीवन के लिए शोपेनहावर की व्यावहारिक मार्गदर्शिका: हम क्या हैं, हमारे पास क्या है और दूसरों की नज़र में हम क्या दिखते हैं।",
+      "id": "Panduan praktis Schopenhauer untuk hidup lebih bahagia: siapa kita, apa yang kita miliki, dan bagaimana kita tampak di mata orang lain.",
+      "vi": "Cẩm nang thực tế của Schopenhauer cho một cuộc sống hạnh phúc hơn: ta là gì, ta có gì và ta đại diện cho điều gì trong mắt người khác.",
+      "tr": "Schopenhauer'ın daha mutlu bir yaşam için pratik rehberi: ne olduğumuz, neye sahip olduğumuz ve başkalarının gözünde neyi temsil ettiğimiz."
     }
   },
   "arsene-lupin-gentleman-cambrioleur": {
@@ -757,6 +833,44 @@
       "id": "Buku bacaan sekolah tahun 1906 yang mengikuti kehidupan sehari-hari sebuah keluarga dalam bab-bab pendek dan lagu.",
       "vi": "Một cuốn sách tập đọc năm 1906 kể đời sống thường ngày của một gia đình qua những chương ngắn, dễ hiểu và bài hát.",
       "tr": "Bir ailenin gündelik yaşamını kısa, basit bölümler ve şarkılarla anlatan 1906 tarihli bir okul okuma kitabı."
+    }
+  },
+  "esprit-des-lois": {
+    "title": {
+      "en": "The Spirit of the Laws (selections)",
+      "zh-CN": "论法的精神（节选）",
+      "zh-TW": "論法的精神（節選）",
+      "es": "El espíritu de las leyes (extractos)",
+      "fr": "De l'esprit des lois (extraits)",
+      "de": "Vom Geist der Gesetze (Auszüge)",
+      "it": "Lo spirito delle leggi (estratti)",
+      "pt": "O Espírito das Leis (trechos)",
+      "ru": "О духе законов (отрывки)",
+      "ja": "法の精神（抜粋）",
+      "ko": "법의 정신 (발췌)",
+      "ar": "روح الشرائع (مقتطفات)",
+      "hi": "कानूनों की आत्मा (अंश)",
+      "id": "Semangat Hukum (kutipan)",
+      "vi": "Tinh thần pháp luật (trích)",
+      "tr": "Kanunların Ruhu (seçmeler)"
+    },
+    "blurb": {
+      "en": "Selected books of Montesquieu's masterpiece, explaining how laws relate to climate, customs and government, and why power must be divided.",
+      "zh-CN": "孟德斯鸠名著的选篇，阐述法律如何与气候、风俗和政体相关，以及为什么权力必须分立。",
+      "zh-TW": "孟德斯鳩名著的選篇，闡述法律如何與氣候、風俗和政體相關，以及為什麼權力必須分立。",
+      "es": "Libros seleccionados de la obra maestra de Montesquieu, que explica cómo se relacionan las leyes con el clima, las costumbres y el gobierno, y por qué hay que dividir el poder.",
+      "fr": "Livres choisis du chef-d'œuvre de Montesquieu, qui explique comment les lois dépendent du climat, des mœurs et du gouvernement, et pourquoi il faut diviser le pouvoir.",
+      "de": "Ausgewählte Bücher aus Montesquieus Hauptwerk: Es erklärt, wie Gesetze mit Klima, Sitten und Regierung zusammenhängen und warum die Macht geteilt werden muss.",
+      "it": "Libri scelti del capolavoro di Montesquieu, che spiega come le leggi si colleghino a clima, costumi e governo e perché il potere vada diviso.",
+      "pt": "Livros selecionados da obra-prima de Montesquieu, que explica como as leis se relacionam com o clima, os costumes e o governo, e por que o poder deve ser dividido.",
+      "ru": "Избранные книги главного труда Монтескьё: как законы связаны с климатом, нравами и правлением и почему власть нужно разделять.",
+      "ja": "モンテスキューの代表作から選んだ巻。法が気候・風習・政体とどう関わるか、なぜ権力を分けねばならないかを説明します。",
+      "ko": "몽테스키외의 대표작에서 가려 뽑은 부분으로, 법이 기후·풍습·정부와 어떻게 관련되는지, 그리고 왜 권력을 나누어야 하는지를 설명합니다.",
+      "ar": "كتب مختارة من تحفة مونتسكيو، تشرح علاقة القوانين بالمناخ والعادات والحكم، ولماذا يجب فصل السلطات.",
+      "hi": "मॉन्टेस्क्यू की इस कृति के चुने हुए अंश, जो बताते हैं कि कानून जलवायु, रीति-रिवाज और शासन से कैसे जुड़े हैं और सत्ता का बँटवारा क्यों ज़रूरी है।",
+      "id": "Bab-bab pilihan dari mahakarya Montesquieu yang menjelaskan hubungan hukum dengan iklim, adat, dan pemerintahan, serta alasan kekuasaan harus dibagi.",
+      "vi": "Các quyển chọn lọc từ kiệt tác của Montesquieu, giải thích luật pháp liên hệ với khí hậu, phong tục và chính thể ra sao, và vì sao quyền lực phải được phân chia.",
+      "tr": "Montesquieu'nun başyapıtından seçilmiş kitaplar: yasaların iklim, töre ve yönetimle ilişkisini ve gücün neden bölünmesi gerektiğini anlatır."
     }
   },
   "eugenie-grandet": {
@@ -1595,6 +1709,44 @@
       "tr": "Bir kadın içeriden kilitli bir odada saldırıya uğrar ve genç muhabir Rouletabille bu imkânsız suçu çözmeye girişir."
     }
   },
+  "le-neveu-de-rameau": {
+    "title": {
+      "en": "Rameau's Nephew",
+      "zh-CN": "拉摩的侄儿",
+      "zh-TW": "拉摩的姪兒",
+      "es": "El sobrino de Rameau",
+      "fr": "Le Neveu de Rameau",
+      "de": "Rameaus Neffe",
+      "it": "Il nipote di Rameau",
+      "pt": "O Sobrinho de Rameau",
+      "ru": "Племянник Рамо",
+      "ja": "ラモーの甥",
+      "ko": "라모의 조카",
+      "ar": "ابن أخ رامو",
+      "hi": "रामो का भतीजा",
+      "id": "Keponakan Rameau",
+      "vi": "Cháu trai của Rameau",
+      "tr": "Rameau'nun Yeğeni"
+    },
+    "blurb": {
+      "en": "In a Paris café, the narrator talks with the composer's eccentric nephew, a clever parasite who mocks every rule of society.",
+      "zh-CN": "在巴黎的一家咖啡馆里，叙述者与作曲家古怪的侄子交谈，这个聪明的食客嘲弄社会的一切规矩。",
+      "zh-TW": "在巴黎的一家咖啡館裡，敘述者與作曲家古怪的姪子交談，這個聰明的食客嘲弄社會的一切規矩。",
+      "es": "En un café de París, el narrador conversa con el excéntrico sobrino del compositor, un parásito astuto que se burla de todas las reglas de la sociedad.",
+      "fr": "Dans un café parisien, le narrateur converse avec l'excentrique neveu du compositeur, un parasite habile qui se moque de toutes les règles de la société.",
+      "de": "In einem Pariser Café unterhält sich der Erzähler mit dem exzentrischen Neffen des Komponisten, einem klugen Schmarotzer, der alle Regeln der Gesellschaft verspottet.",
+      "it": "In un caffè di Parigi, il narratore parla con l'eccentrico nipote del compositore, un astuto parassita che deride tutte le regole della società.",
+      "pt": "Num café de Paris, o narrador conversa com o excêntrico sobrinho do compositor, um parasita astuto que zomba de todas as regras da sociedade.",
+      "ru": "В парижском кафе рассказчик беседует с эксцентричным племянником композитора, умным паразитом, высмеивающим все правила общества.",
+      "ja": "パリのカフェで、語り手は作曲家の風変わりな甥と語り合います。彼は社会のあらゆる決まりを嘲る賢い居候です。",
+      "ko": "파리의 카페에서 화자는 작곡가의 괴짜 조카와 이야기를 나눕니다. 영리한 식객인 그는 사회의 모든 규칙을 조롱합니다.",
+      "ar": "في مقهى باريسي يتحدث الراوي مع ابن أخ الموسيقار الغريب الأطوار، وهو طفيلي ذكي يسخر من كل قواعد المجتمع.",
+      "hi": "पेरिस के एक कैफ़े में वक्ता संगीतकार के सनकी भतीजे से बात करता है, जो एक चतुर परजीवी है और समाज के हर नियम का मज़ाक उड़ाता है।",
+      "id": "Di sebuah kafe Paris, sang narator berbincang dengan keponakan eksentrik sang komposer, parasit cerdik yang mengejek semua aturan masyarakat.",
+      "vi": "Trong một quán cà phê ở Paris, người kể chuyện trò chuyện với cháu trai lập dị của nhà soạn nhạc, một kẻ ăn bám khôn khéo chế giễu mọi quy tắc xã hội.",
+      "tr": "Paris'te bir kafede anlatıcı, bestecinin eksantrik yeğeniyle konuşur; toplumun her kuralıyla alay eden zeki bir asalaktır bu."
+    }
+  },
   "le-pere-goriot": {
     "title": {
       "en": "Father Goriot",
@@ -2317,6 +2469,44 @@
       "tr": "Genç bir soylu, büyüleyici ama sadakatsiz Manon için ailesinden ve geleceğinden vazgeçer ve onu Amerika'ya kadar izler."
     }
   },
+  "maximes-la-rochefoucauld": {
+    "title": {
+      "en": "Maxims",
+      "zh-CN": "道德箴言录",
+      "zh-TW": "道德箴言錄",
+      "es": "Máximas",
+      "fr": "Maximes",
+      "de": "Maximen",
+      "it": "Massime",
+      "pt": "Máximas",
+      "ru": "Максимы",
+      "ja": "箴言集",
+      "ko": "도덕 잠언집",
+      "ar": "الحِكَم",
+      "hi": "सूक्तियाँ",
+      "id": "Maksim",
+      "vi": "Châm ngôn",
+      "tr": "Maksimler"
+    },
+    "blurb": {
+      "en": "Hundreds of sharp one- or two-line sayings in which La Rochefoucauld shows self-interest hiding behind our noblest virtues.",
+      "zh-CN": "数百条一两行的犀利箴言，拉罗什福科揭示自私如何藏在我们最高尚的美德背后。",
+      "zh-TW": "數百條一兩行的犀利箴言，拉羅什福科揭示自私如何藏在我們最高尚的美德背後。",
+      "es": "Cientos de sentencias agudas de una o dos líneas en las que La Rochefoucauld muestra el interés propio escondido tras nuestras virtudes más nobles.",
+      "fr": "Des centaines de sentences incisives d'une ou deux lignes où La Rochefoucauld montre l'intérêt personnel caché derrière nos plus nobles vertus.",
+      "de": "Hunderte scharfe Sprüche von ein bis zwei Zeilen, in denen La Rochefoucauld zeigt, wie sich Eigennutz hinter unseren edelsten Tugenden verbirgt.",
+      "it": "Centinaia di acute sentenze di una o due righe in cui La Rochefoucauld mostra l'interesse personale nascosto dietro le nostre virtù più nobili.",
+      "pt": "Centenas de sentenças afiadas de uma ou duas linhas em que La Rochefoucauld mostra o interesse próprio escondido atrás das nossas virtudes mais nobres.",
+      "ru": "Сотни острых изречений в одну-две строки, в которых Ларошфуко показывает корысть, скрытую за нашими благороднейшими добродетелями.",
+      "ja": "ラ・ロシュフーコーが、最も気高い美徳の陰に隠れた利己心を一、二行の鋭い警句で暴く数百の箴言集です。",
+      "ko": "라로슈푸코가 가장 고귀한 덕 뒤에 숨은 이기심을 한두 줄의 날카로운 문장으로 드러내는 수백 편의 잠언입니다.",
+      "ar": "مئات الحِكَم اللاذعة من سطر أو سطرين يكشف فيها لاروشفوكو المصلحة الذاتية المختبئة وراء أنبل فضائلنا.",
+      "hi": "एक-दो पंक्तियों की सैकड़ों तीखी सूक्तियाँ, जिनमें ला रोशफूको दिखाते हैं कि हमारे श्रेष्ठतम गुणों के पीछे स्वार्थ छिपा होता है।",
+      "id": "Ratusan ungkapan tajam satu-dua baris di mana La Rochefoucauld menunjukkan kepentingan diri yang tersembunyi di balik kebajikan terluhur kita.",
+      "vi": "Hàng trăm câu châm ngôn sắc sảo dài một hai dòng, trong đó La Rochefoucauld cho thấy lòng vị kỷ ẩn sau những đức hạnh cao quý nhất.",
+      "tr": "La Rochefoucauld'nun en soylu erdemlerimizin ardına gizlenen çıkarı gösterdiği, bir iki satırlık yüzlerce keskin söz."
+    }
+  },
   "michel-strogoff": {
     "title": {
       "en": "Michael Strogoff",
@@ -2621,6 +2811,82 @@
       "tr": "1793'teki Bretanya ayaklanması sırasında kralcı bir senyör, cumhuriyetçi yeğeni ve sert bir rahip, görev ile merhamet arasında zor seçimler yapar."
     }
   },
+  "reflexions-diverses": {
+    "title": {
+      "en": "Miscellaneous Reflections",
+      "zh-CN": "杂感集",
+      "zh-TW": "雜感集",
+      "es": "Reflexiones diversas",
+      "fr": "Réflexions diverses",
+      "de": "Verschiedene Betrachtungen",
+      "it": "Riflessioni diverse",
+      "pt": "Reflexões Diversas",
+      "ru": "Разные размышления",
+      "ja": "雑感",
+      "ko": "여러 성찰",
+      "ar": "تأملات متفرقة",
+      "hi": "विविध चिंतन",
+      "id": "Renungan Beragam",
+      "vi": "Những suy tư tạp luận",
+      "tr": "Çeşitli Düşünceler"
+    },
+    "blurb": {
+      "en": "Short essays by La Rochefoucauld on truth, conversation, manners, love and the art of living in society.",
+      "zh-CN": "拉罗什福科的短文，谈真实、交谈、举止、爱情和在社会中生活的艺术。",
+      "zh-TW": "拉羅什福科的短文，談真實、交談、舉止、愛情和在社會中生活的藝術。",
+      "es": "Ensayos breves de La Rochefoucauld sobre la verdad, la conversación, los modales, el amor y el arte de vivir en sociedad.",
+      "fr": "Courts essais de La Rochefoucauld sur le vrai, la conversation, les manières, l'amour et l'art de vivre en société.",
+      "de": "Kurze Essays von La Rochefoucauld über Wahrheit, Gespräch, Umgangsformen, Liebe und die Kunst, in der Gesellschaft zu leben.",
+      "it": "Brevi saggi di La Rochefoucauld sulla verità, la conversazione, i modi, l'amore e l'arte di vivere in società.",
+      "pt": "Ensaios curtos de La Rochefoucauld sobre a verdade, a conversa, as maneiras, o amor e a arte de viver em sociedade.",
+      "ru": "Короткие эссе Ларошфуко об истине, беседе, манерах, любви и искусстве жить в обществе.",
+      "ja": "ラ・ロシュフーコーの短いエッセイ集。真実、会話、作法、恋愛、社交生活の技術などを論じます。",
+      "ko": "라로슈푸코가 진실, 대화, 예절, 사랑, 사회 속에서 사는 기술을 다룬 짧은 글 모음입니다.",
+      "ar": "مقالات قصيرة للاروشفوكو عن الصدق والحديث والآداب والحب وفن العيش في المجتمع.",
+      "hi": "ला रोशफूको के छोटे निबंध: सच, बातचीत, तौर-तरीक़े, प्रेम और समाज में जीने की कला पर।",
+      "id": "Esai-esai pendek La Rochefoucauld tentang kebenaran, percakapan, tata krama, cinta, dan seni hidup bermasyarakat.",
+      "vi": "Những tiểu luận ngắn của La Rochefoucauld về sự thật, trò chuyện, cách cư xử, tình yêu và nghệ thuật sống giữa xã hội.",
+      "tr": "La Rochefoucauld'nun doğruluk, sohbet, görgü, aşk ve toplumda yaşama sanatı üzerine kısa denemeleri."
+    }
+  },
+  "regrets-sur-ma-vieille-robe-de-chambre": {
+    "title": {
+      "en": "Regrets on Parting with My Old Dressing Gown",
+      "zh-CN": "惜别旧睡袍",
+      "zh-TW": "惜別舊睡袍",
+      "es": "Lamento por mi vieja bata",
+      "fr": "Regrets sur ma vieille robe de chambre",
+      "de": "Bedauern über meinen alten Schlafrock",
+      "it": "Rimpianti per la mia vecchia vestaglia",
+      "pt": "Lamentos pela minha velha camisola de casa",
+      "ru": "Сожаления о моём старом халате",
+      "ja": "わが旧い部屋着への惜別",
+      "ko": "낡은 실내복을 두고 하는 탄식",
+      "ar": "حسرة على رداء منزلي القديم",
+      "hi": "अपने पुराने लबादे पर अफ़सोस",
+      "id": "Penyesalan atas Jubah Lamaku",
+      "vi": "Tiếc nuối chiếc áo choàng cũ",
+      "tr": "Eski Sabahlığıma Hasret"
+    },
+    "blurb": {
+      "en": "A humorous short essay in which Diderot mourns his old robe and shows how one new luxury leads to the next.",
+      "zh-CN": "一篇幽默的短文，狄德罗哀悼自己的旧睡袍，说明一件新奢侈品如何引来下一件。",
+      "zh-TW": "一篇幽默的短文，狄德羅哀悼自己的舊睡袍，說明一件新奢侈品如何引來下一件。",
+      "es": "Un breve ensayo humorístico en el que Diderot lamenta su vieja bata y muestra cómo un lujo nuevo lleva al siguiente.",
+      "fr": "Un court essai humoristique où Diderot pleure sa vieille robe de chambre et montre comment un luxe nouveau en entraîne un autre.",
+      "de": "Ein humorvoller kurzer Essay, in dem Diderot seinem alten Hausmantel nachtrauert und zeigt, wie ein neuer Luxus den nächsten nach sich zieht.",
+      "it": "Un breve saggio umoristico in cui Diderot rimpiange la sua vecchia vestaglia e mostra come un nuovo lusso ne trascini un altro.",
+      "pt": "Um breve ensaio bem-humorado em que Diderot lamenta o seu velho roupão e mostra como um novo luxo leva ao seguinte.",
+      "ru": "Юмористическое эссе, в котором Дидро оплакивает свой старый халат и показывает, как одна новая роскошь тянет за собой другую.",
+      "ja": "ディドロが古い部屋着を惜しみ、新しい贅沢が次の贅沢を呼ぶ様子をユーモラスに描く短いエッセイです。",
+      "ko": "디드로가 낡은 실내복을 그리워하며 새로운 사치가 또 다른 사치를 부르는 모습을 유머러스하게 그린 짧은 글입니다.",
+      "ar": "مقال قصير ساخر يرثي فيه ديدرو رداءه القديم ويبيّن كيف تجرّ رفاهية جديدة أخرى وراءها.",
+      "hi": "एक हास्यपूर्ण छोटा निबंध जिसमें दिदेरो अपने पुराने लबादे का शोक मनाते हैं और दिखाते हैं कि एक नई विलासिता दूसरी को कैसे खींच लाती है।",
+      "id": "Esai pendek yang jenaka ketika Diderot meratapi jubah lamanya dan menunjukkan bagaimana satu kemewahan baru menarik kemewahan berikutnya.",
+      "vi": "Bài tiểu luận ngắn hài hước, trong đó Diderot tiếc chiếc áo choàng cũ và cho thấy một thứ xa xỉ mới kéo theo thứ khác.",
+      "tr": "Diderot'nun eski sabahlığına yas tutarken yeni bir lüksün bir sonrakini nasıl getirdiğini gösterdiği esprili kısa bir deneme."
+    }
+  },
   "riquet-a-la-houppe": {
     "title": {
       "en": "Ricky of the Tuft",
@@ -2697,6 +2963,44 @@
       "tr": "Fabre bok böceklerini, eşek arılarını ve arıları sabır ve mizahla gözlemler, hayatlarını birer öykü gibi anlatır."
     }
   },
+  "supplement-au-voyage-de-bougainville": {
+    "title": {
+      "en": "Supplement to Bougainville's Voyage",
+      "zh-CN": "布干维尔游记补遗",
+      "zh-TW": "布干維爾遊記補遺",
+      "es": "Suplemento al viaje de Bougainville",
+      "fr": "Supplément au Voyage de Bougainville",
+      "de": "Nachtrag zu Bougainvilles Reise",
+      "it": "Supplemento al viaggio di Bougainville",
+      "pt": "Suplemento à Viagem de Bougainville",
+      "ru": "Дополнение к «Путешествию» Бугенвиля",
+      "ja": "ブーガンヴィル航海記補遺",
+      "ko": "부갱빌 여행기 보유",
+      "ar": "ملحق رحلة بوغانفيل",
+      "hi": "बूगेनविल की यात्रा का परिशिष्ट",
+      "id": "Suplemen Pelayaran Bougainville",
+      "vi": "Phụ lục Chuyến du hành của Bougainville",
+      "tr": "Bougainville Seyahati'ne Ek"
+    },
+    "blurb": {
+      "en": "In dialogues inspired by Tahiti, Diderot questions European morals, religion and the rules about love and marriage.",
+      "zh-CN": "狄德罗借以大溪地为灵感的对话，质疑欧洲的道德、宗教以及关于爱情和婚姻的规矩。",
+      "zh-TW": "狄德羅借以大溪地為靈感的對話，質疑歐洲的道德、宗教以及關於愛情和婚姻的規矩。",
+      "es": "En diálogos inspirados en Tahití, Diderot cuestiona la moral europea, la religión y las reglas sobre el amor y el matrimonio.",
+      "fr": "Dans des dialogues inspirés de Tahiti, Diderot interroge la morale européenne, la religion et les règles sur l'amour et le mariage.",
+      "de": "In von Tahiti inspirierten Dialogen stellt Diderot die europäische Moral, die Religion und die Regeln über Liebe und Ehe in Frage.",
+      "it": "In dialoghi ispirati a Tahiti, Diderot mette in discussione la morale europea, la religione e le regole su amore e matrimonio.",
+      "pt": "Em diálogos inspirados no Taiti, Diderot questiona a moral europeia, a religião e as regras sobre o amor e o casamento.",
+      "ru": "В диалогах, навеянных Таити, Дидро ставит под сомнение европейскую мораль, религию и правила о любви и браке.",
+      "ja": "タヒチに着想を得た対話で、ディドロはヨーロッパの道徳や宗教、恋愛と結婚の決まりを問い直します。",
+      "ko": "디드로는 타히티에서 영감을 얻은 대화를 통해 유럽의 도덕과 종교, 사랑과 결혼에 관한 규범을 되묻습니다.",
+      "ar": "في حوارات مستوحاة من تاهيتي يشكّك ديدرو في الأخلاق الأوروبية والدين وقواعد الحب والزواج.",
+      "hi": "ताहिती से प्रेरित संवादों में दिदेरो यूरोपीय नैतिकता, धर्म और प्रेम तथा विवाह के नियमों पर सवाल उठाते हैं।",
+      "id": "Dalam dialog yang terinspirasi Tahiti, Diderot mempertanyakan moral Eropa, agama, dan aturan tentang cinta serta pernikahan.",
+      "vi": "Trong những cuộc đối thoại lấy cảm hứng từ Tahiti, Diderot chất vấn đạo đức châu Âu, tôn giáo và các quy tắc về tình yêu, hôn nhân.",
+      "tr": "Diderot, Tahiti'den esinlenen diyaloglarda Avrupa ahlakını, dini ve aşk ile evlilik kurallarını sorgular."
+    }
+  },
   "tartarin-de-tarascon": {
     "title": {
       "en": "Tartarin of Tarascon",
@@ -2771,6 +3075,44 @@
       "id": "Seorang istri muda dan kekasihnya membunuh suaminya yang lemah, lalu rasa bersalah dan takut perlahan menghancurkan mereka berdua.",
       "vi": "Một người vợ trẻ cùng tình nhân giết chết người chồng yếu đuối, rồi tội lỗi và sợ hãi dần dần hủy hoại cả hai.",
       "tr": "Genç bir kadın ve sevgilisi, kadının zayıf kocasını öldürür; ardından suçluluk ve korku ikisini de yavaş yavaş yıkar."
+    }
+  },
+  "traite-sur-la-tolerance": {
+    "title": {
+      "en": "Treatise on Tolerance",
+      "zh-CN": "论宽容",
+      "zh-TW": "論寬容",
+      "es": "Tratado sobre la tolerancia",
+      "fr": "Traité sur la tolérance",
+      "de": "Abhandlung über die Toleranz",
+      "it": "Trattato sulla tolleranza",
+      "pt": "Tratado sobre a Tolerância",
+      "ru": "Трактат о терпимости",
+      "ja": "寛容論",
+      "ko": "관용론",
+      "ar": "رسالة في التسامح",
+      "hi": "सहिष्णुता पर ग्रंथ",
+      "id": "Risalah tentang Toleransi",
+      "vi": "Luận về sự khoan dung",
+      "tr": "Hoşgörü Üzerine İnceleme"
+    },
+    "blurb": {
+      "en": "After the unjust execution of Jean Calas in 1762, Voltaire argues against religious fanaticism and for tolerance.",
+      "zh-CN": "1762年让·卡拉斯遭冤杀后，伏尔泰撰文反对宗教狂热，倡导宽容。",
+      "zh-TW": "1762年讓·卡拉斯遭冤殺後，伏爾泰撰文反對宗教狂熱，倡導寬容。",
+      "es": "Tras la ejecución injusta de Jean Calas en 1762, Voltaire argumenta contra el fanatismo religioso y a favor de la tolerancia.",
+      "fr": "Après l'exécution injuste de Jean Calas en 1762, Voltaire plaide contre le fanatisme religieux et pour la tolérance.",
+      "de": "Nach der ungerechten Hinrichtung von Jean Calas 1762 argumentiert Voltaire gegen religiösen Fanatismus und für Toleranz.",
+      "it": "Dopo l'ingiusta esecuzione di Jean Calas nel 1762, Voltaire argomenta contro il fanatismo religioso e a favore della tolleranza.",
+      "pt": "Depois da execução injusta de Jean Calas em 1762, Voltaire argumenta contra o fanatismo religioso e a favor da tolerância.",
+      "ru": "После несправедливой казни Жана Каласа в 1762 году Вольтер выступает против религиозного фанатизма и за терпимость.",
+      "ja": "1762年のジャン・カラス処刑という冤罪事件を受け、ヴォルテールは宗教的狂信に反対し、寛容を訴えます。",
+      "ko": "1762년 장 칼라스가 부당하게 처형된 뒤, 볼테르는 종교적 광신에 맞서 관용을 주장합니다.",
+      "ar": "بعد إعدام جان كالاس ظلمًا عام 1762، يحتجّ فولتير ضد التعصب الديني ويدعو إلى التسامح.",
+      "hi": "1762 में जीन कैलास को अन्यायपूर्ण ढंग से फाँसी दिए जाने के बाद वॉल्टेयर धार्मिक कट्टरता के विरुद्ध और सहिष्णुता के पक्ष में तर्क देते हैं।",
+      "id": "Setelah eksekusi tidak adil terhadap Jean Calas pada 1762, Voltaire berargumen menentang fanatisme agama dan membela toleransi.",
+      "vi": "Sau vụ xử tử oan Jean Calas năm 1762, Voltaire lập luận chống lại sự cuồng tín tôn giáo và ủng hộ lòng khoan dung.",
+      "tr": "1762'de Jean Calas'ın haksız yere idam edilmesinin ardından Voltaire, dinî fanatizme karşı çıkar ve hoşgörüyü savunur."
     }
   },
   "trois-contes": {

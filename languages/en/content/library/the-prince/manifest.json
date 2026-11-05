@@ -1,0 +1,105 @@
+{
+  "title": "The Prince",
+  "author": "Niccolò Machiavelli, translated by W. K. Marriott",
+  "level": "C1",
+  "wordCount": 33215,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/1232",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Chapter I. How Many Kinds of Principalities There Are, and by What Means They Are Acquired"
+    },
+    {
+      "file": "02.md",
+      "title": "2. The Prince"
+    },
+    {
+      "file": "03.md",
+      "title": "3. The Prince"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Chapter V. Concerning the Way to Govern Cities or Principalities Which Lived Under Their Own Laws Before They Were Annexed"
+    },
+    {
+      "file": "05.md",
+      "title": "5. The Prince"
+    },
+    {
+      "file": "06.md",
+      "title": "6. The Prince"
+    },
+    {
+      "file": "07.md",
+      "title": "7. The Prince"
+    },
+    {
+      "file": "08.md",
+      "title": "8. The Prince"
+    },
+    {
+      "file": "09.md",
+      "title": "9. The Prince"
+    },
+    {
+      "file": "10.md",
+      "title": "10. The Prince"
+    },
+    {
+      "file": "11.md",
+      "title": "11. The Prince"
+    },
+    {
+      "file": "12.md",
+      "title": "12. The Prince"
+    },
+    {
+      "file": "13.md",
+      "title": "13. The Prince"
+    },
+    {
+      "file": "14.md",
+      "title": "14. The Prince"
+    },
+    {
+      "file": "15.md",
+      "title": "15. The Prince"
+    },
+    {
+      "file": "16.md",
+      "title": "16. The Prince"
+    },
+    {
+      "file": "17.md",
+      "title": "17. The Prince"
+    },
+    {
+      "file": "18.md",
+      "title": "18. The Prince"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Chapter XXIII. How Flatterers Should Be Avoided"
+    },
+    {
+      "file": "20.md",
+      "title": "20. The Prince"
+    },
+    {
+      "file": "21.md",
+      "title": "21. The Prince"
+    },
+    {
+      "file": "22.md",
+      "title": "22. The Prince"
+    },
+    {
+      "file": "23.md",
+      "title": "23. The Prince"
+    }
+  ]
+}

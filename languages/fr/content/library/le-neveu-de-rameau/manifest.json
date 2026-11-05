@@ -1,0 +1,101 @@
+{
+  "title": "Le Neveu de Rameau",
+  "author": "Denis Diderot",
+  "level": "C1",
+  "wordCount": 32911,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/13862",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Le Neveu de Rameau"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Le Neveu de Rameau"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Le Neveu de Rameau"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Le Neveu de Rameau"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Le Neveu de Rameau"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Le Neveu de Rameau"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Le Neveu de Rameau"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Le Neveu de Rameau"
+    },
+    {
+      "file": "09.md",
+      "title": "9. Le Neveu de Rameau"
+    },
+    {
+      "file": "10.md",
+      "title": "10. Le Neveu de Rameau"
+    },
+    {
+      "file": "11.md",
+      "title": "11. Le Neveu de Rameau"
+    },
+    {
+      "file": "12.md",
+      "title": "12. Le Neveu de Rameau"
+    },
+    {
+      "file": "13.md",
+      "title": "13. Le Neveu de Rameau"
+    },
+    {
+      "file": "14.md",
+      "title": "14. Le Neveu de Rameau"
+    },
+    {
+      "file": "15.md",
+      "title": "15. Le Neveu de Rameau"
+    },
+    {
+      "file": "16.md",
+      "title": "16. Le Neveu de Rameau"
+    },
+    {
+      "file": "17.md",
+      "title": "17. Le Neveu de Rameau"
+    },
+    {
+      "file": "18.md",
+      "title": "18. Le Neveu de Rameau"
+    },
+    {
+      "file": "19.md",
+      "title": "19. Le Neveu de Rameau"
+    },
+    {
+      "file": "20.md",
+      "title": "20. Le Neveu de Rameau"
+    },
+    {
+      "file": "21.md",
+      "title": "21. Le Neveu de Rameau"
+    },
+    {
+      "file": "22.md",
+      "title": "22. Le Neveu de Rameau"
+    }
+  ]
+}

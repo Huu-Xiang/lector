@@ -1,0 +1,45 @@
+{
+  "title": "The Tao Teh King",
+  "author": "Laozi, translated by James Legge",
+  "level": "C1",
+  "wordCount": 10735,
+  "source": {
+    "name": "Project Gutenberg",
+    "url": "https://www.gutenberg.org/ebooks/216",
+    "license": "Public domain in the United States"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. Part 1"
+    },
+    {
+      "file": "02.md",
+      "title": "2. Tao Teh King"
+    },
+    {
+      "file": "03.md",
+      "title": "3. Tao Teh King"
+    },
+    {
+      "file": "04.md",
+      "title": "4. Tao Teh King"
+    },
+    {
+      "file": "05.md",
+      "title": "5. Tao Teh King"
+    },
+    {
+      "file": "06.md",
+      "title": "6. Tao Teh King"
+    },
+    {
+      "file": "07.md",
+      "title": "7. Tao Teh King"
+    },
+    {
+      "file": "08.md",
+      "title": "8. Tao Teh King"
+    }
+  ]
+}
