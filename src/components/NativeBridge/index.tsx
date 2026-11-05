@@ -2,11 +2,21 @@
 
 import { useEffect } from 'react';
 import { useLocale } from 'next-intl';
-import { hideSplash, isNativeApp, saveNativeLocale, setStatusBarForTheme } from '@/lib/native-app';
+import {
+  hideSplash,
+  isNativeApp,
+  saveNativeLocale,
+  setStatusBarForTheme,
+  useIsNativeApp,
+} from '@/lib/native-app';
+import { useLectorMode } from '@/lib/use-env';
+import OfflineSync from './OfflineSync';
 
 /** Connects the web app to the iPhone shell. Renders nothing and does nothing on the web. */
 export default function NativeBridge() {
   const locale = useLocale();
+  const inApp = useIsNativeApp();
+  const mode = useLectorMode();
 
   useEffect(() => {
     if (!isNativeApp()) return;
@@ -29,5 +39,5 @@ export default function NativeBridge() {
     void saveNativeLocale(locale);
   }, [locale]);
 
-  return null;
+  return inApp && mode === 'cloud' ? <OfflineSync /> : null;
 }

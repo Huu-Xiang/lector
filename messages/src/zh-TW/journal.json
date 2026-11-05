@@ -211,6 +211,11 @@
       "subscription": "正在載入訂閱",
       "setup": "正在載入設定"
     },
+    "offline": {
+      "banner": "你目前沒有網路。",
+      "openList": "開啟離線課文",
+      "rejected": "有 {count} 個離線儲存的單字無法同步。"
+    },
     "lockedInApp": {
       "title": "此帳號沒有有效的方案",
       "body": "目前無法在此帳號下開啟 Readfox。",

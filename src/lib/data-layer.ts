@@ -591,6 +591,38 @@ export async function saveVocab(
   return id;
 }
 
+/** Sends one word saved while offline. 'retry' keeps it queued; 'rejected' drops it for good. */
+export async function postQueuedVocab(word: {
+  vocabId: string;
+  text: string;
+  type: VocabEntry['type'];
+  sentence: string;
+  language: string;
+  lessonId: string;
+}): Promise<'ok' | 'rejected' | 'retry'> {
+  const res = await apiFetch('/api/vocab', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      id: word.vocabId,
+      text: word.text,
+      type: word.type,
+      sentence: word.sentence,
+      translation: '',
+      state: 'new',
+      reviewCount: 0,
+      bookId: word.lessonId,
+      language: word.language,
+    }),
+  });
+  if (res.ok) {
+    invalidateVocab();
+    invalidateFluencyStats();
+    return 'ok';
+  }
+  return res.status >= 500 || res.status === 401 || res.status === 408 ? 'retry' : 'rejected';
+}
+
 export async function updateVocabState(id: string, state: WordState): Promise<boolean> {
   const res = await apiFetch(`/api/vocab/${id}`, {
     method: 'PUT',

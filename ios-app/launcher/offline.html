@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Readfox</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        background: #fbf8f1;
+        color: #2b2a26;
+        font:
+          17px/1.6 Georgia,
+          'Songti SC',
+          serif;
+      }
+      body {
+        padding: env(safe-area-inset-top) 16px calc(env(safe-area-inset-bottom) + 96px);
+      }
+      h1 {
+        margin: 20px 0 12px;
+        font:
+          600 22px -apple-system,
+          system-ui,
+          sans-serif;
+      }
+      p.note {
+        color: #6b6860;
+        font:
+          15px -apple-system,
+          system-ui,
+          sans-serif;
+      }
+      button {
+        font:
+          16px -apple-system,
+          system-ui,
+          sans-serif;
+      }
+      .row {
+        display: block;
+        width: 100%;
+        margin: 8px 0;
+        padding: 14px 16px;
+        border: 1px solid #e3ddcc;
+        border-radius: 12px;
+        background: #fffdf8;
+        color: inherit;
+        text-align: left;
+      }
+      .primary {
+        padding: 10px 18px;
+        border: 0;
+        border-radius: 10px;
+        background: #2f7d6b;
+        color: #fff;
+      }
+      .link {
+        border: 0;
+        background: none;
+        color: #2f7d6b;
+        padding: 8px 0;
+      }
+      .w {
+        border-radius: 3px;
+      }
+      .w.saved {
+        background: rgba(47, 125, 107, 0.2);
+      }
+      #sheet {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: none;
+        padding: 16px 16px calc(env(safe-area-inset-bottom) + 16px);
+        border-top: 1px solid #e3ddcc;
+        border-radius: 16px 16px 0 0;
+        background: #fffdf8;
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.12);
+        font-family: -apple-system, system-ui, sans-serif;
+      }
+      #sheet.show {
+        display: block;
+      }
+      #sheet h2 {
+        margin: 0 0 4px;
+        font-size: 20px;
+      }
+      #sheet .sentence {
+        margin: 0 0 8px;
+        color: #6b6860;
+        font-size: 15px;
+        line-height: 1.5;
+      }
+      #sheet .actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 12px;
+      }
+      @media (prefers-color-scheme: dark) {
+        html,
+        body {
+          background: #1c1b18;
+          color: #f1efe8;
+        }
+        .row,
+        #sheet {
+          background: #26241f;
+          border-color: #3a3730;
+        }
+        p.note,
+        #sheet .sentence {
+          color: #a9a69b;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <button id="home" class="link" type="button"></button>
+    <h1 id="title"></h1>
+    <div id="view"></div>
+    <div id="sheet" role="dialog">
+      <h2 id="sheetWord"></h2>
+      <p class="sentence" id="sheetSentence"></p>
+      <p class="note" id="sheetNote"></p>
+      <div class="actions">
+        <button id="saveBtn" class="primary" type="button"></button>
+        <button id="closeBtn" class="link" type="button"></button>
+      </div>
+    </div>
+    <script src="strings.js"></script>
+    <script src="logic.js"></script>
+    <script src="offline-reader.js"></script>
+  </body>
+</html>

@@ -31,3 +31,7 @@ npx cap open ios
 The shell opens a small bundled page (`launcher/`). It checks `https://readfox.app/health`, then loads the site. The user agent carries `ReadfoxApp/1`, which the web code reads (`src/lib/native-app.ts`). Links to other hosts open in Safari.
 
 Signing, the app icon, the launch screen, and the TestFlight upload are added with the release unit.
+
+## Offline reading
+
+The web app keeps the five lessons you opened last in `offline.json` (the app's Data folder, through the Filesystem plugin). If the health check fails and lessons are cached, the launcher opens `offline.html`: a plain reader where a tap saves a word. Saved words wait in the same file and are sent when the account is signed in and the phone is online. Reaching the sign-in page signed out clears the file. The file format is shared by `src/lib/offline/store.ts` and `launcher/logic.js`; `tests/launcher.test.ts` checks that they agree.

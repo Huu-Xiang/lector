@@ -54,12 +54,17 @@ function plugin(name: string): PluginMethods | null {
   return bridge?.Plugins?.[name] ?? null;
 }
 
-async function call(name: string, method: string, options?: unknown): Promise<void> {
+async function callWithResult(name: string, method: string, options?: unknown): Promise<unknown> {
   try {
-    await plugin(name)?.[method]?.(options);
+    return (await plugin(name)?.[method]?.(options)) ?? null;
   } catch {
     /* an older shell may lack the method; the feature then stays off */
+    return null;
   }
+}
+
+async function call(name: string, method: string, options?: unknown): Promise<void> {
+  await callWithResult(name, method, options);
 }
 
 export function hideSplash(): Promise<void> {
@@ -74,4 +79,18 @@ export function setStatusBarForTheme(dark: boolean): Promise<void> {
 /** The launcher reads this to show its error screen in the interface language. */
 export function saveNativeLocale(locale: string): Promise<void> {
   return call('Preferences', 'set', { key: 'readfox.locale', value: locale });
+}
+
+/** Reads a text file from the app's private data folder; null when absent or outside the app. */
+export async function readNativeFile(path: string): Promise<string | null> {
+  const result = (await callWithResult('Filesystem', 'readFile', {
+    path,
+    directory: 'DATA',
+    encoding: 'utf8',
+  })) as { data?: unknown } | null;
+  return typeof result?.data === 'string' ? result.data : null;
+}
+
+export async function writeNativeFile(path: string, data: string): Promise<void> {
+  await call('Filesystem', 'writeFile', { path, data, directory: 'DATA', encoding: 'utf8' });
 }

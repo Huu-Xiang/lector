@@ -210,6 +210,11 @@
       "subscription": "구독 정보 불러오는 중",
       "setup": "설정 불러오는 중"
     },
+    "offline": {
+      "banner": "오프라인 상태입니다.",
+      "openList": "오프라인 레슨 열기",
+      "rejected": "오프라인으로 저장한 단어 {count}개를 동기화하지 못했습니다."
+    },
     "lockedInApp": {
       "title": "이 계정에는 사용 중인 플랜이 없습니다",
       "body": "지금은 이 계정으로 Readfox를 열 수 없습니다.",

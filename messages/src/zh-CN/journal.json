@@ -210,6 +210,11 @@
       "subscription": "正在加载订阅",
       "setup": "正在加载设置"
     },
+    "offline": {
+      "banner": "你现在没有网络。",
+      "openList": "打开离线课文",
+      "rejected": "有 {count} 个离线保存的单词无法同步。"
+    },
     "lockedInApp": {
       "title": "此账号暂无有效套餐",
       "body": "目前无法在此账号下打开 Readfox。",

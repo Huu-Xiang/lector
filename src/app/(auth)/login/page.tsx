@@ -16,6 +16,7 @@ import { readPendingInvite } from '@/lib/pending-invite';
 import { useOAuthErrorToast } from '@/lib/use-oauth-error';
 import { useGithubLogin } from '@/lib/use-env';
 import { useIsNativeApp } from '@/lib/native-app';
+import { clearOfflineData } from '@/lib/offline/sync';
 
 export default function LoginPage() {
   return (
@@ -33,6 +34,10 @@ function LoginForm() {
   const inApp = useIsNativeApp();
   const githubEnabled = useGithubLogin();
   useOAuthErrorToast();
+  // Reaching sign-in signed out (sign-out, expiry, deleted account) ends offline access on the phone.
+  useEffect(() => {
+    if (!isPending && !session) void clearOfflineData();
+  }, [isPending, session]);
   const returnPath = sanitizeAuthReturnPath(params.get('next'));
   const destination = returnPath ?? '/';
 

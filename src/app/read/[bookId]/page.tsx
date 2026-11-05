@@ -1,5 +1,6 @@
 'use client';
 
+import { forgetLesson, rememberLesson } from '@/lib/offline/sync';
 import { useEffect, useState, useCallback, use, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
@@ -199,9 +200,11 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         ]);
 
         if (!loadedLesson) {
+          void forgetLesson(lessonId);
           setError(t('lessonNotFound'));
           return;
         }
+        void rememberLesson(loadedLesson);
 
         readerWordStatesRef.current = loadedWordStates;
         setReaderWordStates(loadedWordStates);

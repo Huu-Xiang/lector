@@ -10,6 +10,7 @@
   "dependencies": {
     "@capacitor/app": "^7.0.0",
     "@capacitor/core": "^7.0.0",
+    "@capacitor/filesystem": "^7.1.9",
     "@capacitor/ios": "^7.0.0",
     "@capacitor/network": "^7.0.0",
     "@capacitor/preferences": "^7.0.0",

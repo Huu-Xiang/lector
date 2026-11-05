@@ -210,6 +210,11 @@
       "subscription": "Loading subscription",
       "setup": "Loading setup"
     },
+    "offline": {
+      "banner": "You are offline.",
+      "openList": "Open offline lessons",
+      "rejected": "{count, plural, one {# saved word could not be synced.} other {# saved words could not be synced.}}"
+    },
     "lockedInApp": {
       "title": "This account has no active plan",
       "body": "Readfox cannot open on this account right now.",

@@ -24,6 +24,19 @@
     }
   }
 
+  async function countCachedLessons() {
+    try {
+      var res = await plugins.Filesystem.readFile({
+        path: 'offline.json',
+        directory: 'DATA',
+        encoding: 'utf8',
+      });
+      return Logic.parseState(res.data).lessons.length;
+    } catch (e) {
+      return 0;
+    }
+  }
+
   async function hideSplash() {
     try {
       await plugins.SplashScreen.hide();
@@ -34,9 +47,14 @@
 
   async function start() {
     var health = await checkHealth();
-    var step = Logic.nextStep(health, 0);
+    var cached = health.ok ? 0 : await countCachedLessons();
+    var step = Logic.nextStep(health, cached);
     if (step === 'open') {
       window.location.replace(Logic.SITE + '/');
+      return;
+    }
+    if (step === 'offline') {
+      window.location.replace('offline.html');
       return;
     }
     var strings = window.READFOX_STRINGS[await readLocale()];

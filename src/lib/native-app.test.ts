@@ -3,6 +3,8 @@ import {
   detectNativeApp,
   hideSplash,
   isNativeUserAgent,
+  readNativeFile,
+  writeNativeFile,
   saveNativeLocale,
   setStatusBarForTheme,
 } from './native-app';
@@ -84,5 +86,40 @@ describe('native bridge wrappers', () => {
     await setStatusBarForTheme(false);
     expect(setStyle).toHaveBeenNthCalledWith(1, { style: 'DARK' });
     expect(setStyle).toHaveBeenNthCalledWith(2, { style: 'LIGHT' });
+  });
+
+  it('read and write a file in the app data folder', async () => {
+    const readFile = vi.fn(async () => ({ data: '{"a":1}' }));
+    const writeFile = vi.fn(async () => {});
+    stubWindow({ Filesystem: { readFile, writeFile } }, () => true);
+    expect(await readNativeFile('offline.json')).toBe('{"a":1}');
+    await writeNativeFile('offline.json', '{}');
+    expect(readFile).toHaveBeenCalledWith({
+      path: 'offline.json',
+      directory: 'DATA',
+      encoding: 'utf8',
+    });
+    expect(writeFile).toHaveBeenCalledWith({
+      path: 'offline.json',
+      data: '{}',
+      directory: 'DATA',
+      encoding: 'utf8',
+    });
+  });
+
+  it('read nothing outside the app or when the file is missing', async () => {
+    (globalThis as { window?: unknown }).window = undefined;
+    expect(await readNativeFile('offline.json')).toBeNull();
+    stubWindow(
+      {
+        Filesystem: {
+          readFile: async () => {
+            throw new Error('File does not exist');
+          },
+        },
+      },
+      () => true,
+    );
+    expect(await readNativeFile('offline.json')).toBeNull();
   });
 });
