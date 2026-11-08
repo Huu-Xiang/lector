@@ -7,7 +7,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t('terms.metaTitle') };
 }
 
-const LAST_UPDATED = new Date(Date.UTC(2026, 10, 3));
+const LAST_UPDATED = new Date(Date.UTC(2026, 10, 8));
 
 export default async function TermsPage() {
   const t = await getTranslations('legalPages');
