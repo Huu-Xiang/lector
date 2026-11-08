@@ -589,7 +589,7 @@ export interface PaddleEvent {
     customer_id?: string;
     custom_data?: { lectorUserId?: unknown } | null;
     current_billing_period?: { ends_at?: string } | null;
-    items?: Array<{ price?: { id?: string } | null }> | null;
+    items?: Array<{ type?: string; price?: { id?: string } | null }> | null;
     // adjustment.* (refunds and chargebacks)
     action?: string;
     type?: string;
@@ -607,7 +607,9 @@ export function refundedSubscriptionId(evt: PaddleEvent): string | null {
   const data = evt.data;
   if (!evt.event_type?.startsWith('adjustment.') || !data) return null;
   if (data.status !== 'approved' || !data.subscription_id) return null;
-  const full = data.action === 'refund' && data.type === 'full';
+  // A dashboard refund of every item arrives with type 'partial' and each item 'full'.
+  const allItemsFull = !!data.items?.length && data.items.every((item) => item.type === 'full');
+  const full = data.action === 'refund' && (data.type === 'full' || allItemsFull);
   return full || data.action === 'chargeback' ? data.subscription_id : null;
 }
 

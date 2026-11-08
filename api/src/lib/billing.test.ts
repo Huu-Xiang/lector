@@ -963,6 +963,7 @@ describe('billing routes', () => {
     status?: string;
     subscriptionId?: string | null;
     occurredAt?: string;
+    items?: Array<{ type: string }>;
   }) {
     return {
       event_type: 'adjustment.updated',
@@ -974,9 +975,32 @@ describe('billing routes', () => {
         status: overrides.status ?? 'approved',
         subscription_id:
           overrides.subscriptionId === undefined ? 'sub_1' : overrides.subscriptionId,
+        ...(overrides.items ? { items: overrides.items } : {}),
       },
     };
   }
+
+  test('a dashboard refund of every item ends the plan even when typed partial', async () => {
+    applyPaddleEvent(subscriptionEvent({ id: 'sub_1', lectorUserId: 'local', status: 'active' }));
+    const canceled: string[] = [];
+    const app = buildApp(
+      enforcedCfg,
+      'local@example.com',
+      undefined,
+      operations({
+        cancelSubscriptionNow: async (id) => {
+          canceled.push(id);
+        },
+      }),
+    );
+    const evt = JSON.stringify(adjustmentEvent({ type: 'partial', items: [{ type: 'full' }] }));
+
+    const response = await postWebhook(app, evt, sign(evt, Math.floor(Date.now() / 1000)));
+
+    expect(await response.json()).toEqual({ ok: true, applied: 'refund' });
+    expect(canceled).toEqual(['sub_1']);
+    expect(resolveBillingStatus('local', null)).toBe('canceled');
+  });
 
   test('a full approved refund ends the plan and cancels the Paddle subscription', async () => {
     applyPaddleEvent(subscriptionEvent({ id: 'sub_1', lectorUserId: 'local', status: 'active' }));
@@ -1008,6 +1032,8 @@ describe('billing routes', () => {
     const realNow = Math.floor(Date.now() / 1000);
     for (const overrides of [
       { type: 'partial' },
+      { type: 'partial', items: [{ type: 'partial' }] },
+      { type: 'partial', items: [{ type: 'full' }, { type: 'partial' }] },
       { status: 'pending_approval' },
       { action: 'credit' },
     ]) {
