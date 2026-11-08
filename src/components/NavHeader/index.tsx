@@ -19,6 +19,7 @@ import NavLink from './components/NavLink';
 import AppName from './components/AppName';
 import AccountMenu from './components/AccountMenu';
 import AdminNavLink from './components/AdminNavLink';
+import UpgradeLink from './components/UpgradeLink';
 import FeedbackNavLink from './components/FeedbackNavLink';
 import SidebarCollapseButton from './components/SidebarCollapseButton';
 import PendingInvite from '@/components/PendingInvite';
@@ -67,6 +68,7 @@ export default function NavHeader() {
       <div className="flex h-[var(--mobile-topbar-h)] items-center justify-between border-b border-border bg-card/80 px-3 py-2 backdrop-blur-sm sm:hidden print:hidden">
         <AppName />
         <div className="flex items-center gap-1">
+          <UpgradeLink />
           <LanguageSelector compact />
           <WhatsNew variant="topbar" />
           <AccountMenu compact />
@@ -80,8 +82,14 @@ export default function NavHeader() {
           collapsed ? 'w-16' : 'w-56',
         )}
       >
-        <div className={clsx('flex h-16 items-center', collapsed ? 'justify-center px-0' : 'px-5')}>
+        <div
+          className={clsx(
+            'flex h-16 items-center',
+            collapsed ? 'flex-col justify-center gap-1 px-0' : 'justify-between gap-2 px-5',
+          )}
+        >
           <AppName hideName={collapsed} />
+          <UpgradeLink iconOnly={collapsed} />
         </div>
 
         <div className="border-b border-border pb-2">

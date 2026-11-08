@@ -471,4 +471,48 @@ test.describe.serial('billing gate lifecycle', () => {
     await select.selectOption('pri_e2e_plus_annual');
     await expect(panel.getByTestId('billing-change-review')).toBeEnabled();
   });
+  test('returning from checkout shows the welcome panel once the plan is active', async ({
+    page,
+  }) => {
+    await useBillingEnv(page);
+    let statusCalls = 0;
+    await page.route(`${CLOUD_API}/api/billing/status`, (route) => {
+      statusCalls += 1;
+      const active = statusCalls > 1;
+      return route.fulfill({
+        contentType: 'application/json',
+        body: JSON.stringify({
+          enforced: true,
+          accessAllowed: true,
+          subscriptionActive: active,
+          freeTierEnabled: false,
+          suspended: false,
+          exempt: false,
+          status: active ? 'active' : 'none',
+          checkout: { prices: [] },
+        }),
+      });
+    });
+    await page.route(`${CLOUD_API}/api/billing/entitlements`, (route) =>
+      route.fulfill({
+        contentType: 'application/json',
+        body: JSON.stringify({
+          plan: 'cloud',
+          byok: false,
+          limits: {},
+          usage: {},
+          periods: { day: '2026-08-07', month: '2026-08' },
+        }),
+      }),
+    );
+
+    await signIn(page);
+    await page.waitForURL((url) => url.pathname !== '/login');
+    statusCalls = 0;
+    await page.goto('/subscribe?checkout=success');
+    const welcome = page.getByTestId('subscribe-cn-paid');
+    await expect(welcome).toContainText('Welcome to Plus', { timeout: 15_000 });
+    await page.getByTestId('subscribe-cn-start').click();
+    await page.waitForURL((url) => url.pathname === '/');
+  });
 });

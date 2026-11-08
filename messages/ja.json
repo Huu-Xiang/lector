@@ -61,6 +61,7 @@
     "contact": "お問い合わせ"
   },
   "nav": {
+    "upgrade": "プラン",
     "library": "ライブラリ",
     "practice": "練習",
     "journal": "日記",
@@ -2218,7 +2219,7 @@
     "cnResume": "お支払いに進む",
     "cnRecheck": "支払い済み、もう一度確認",
     "cnCancel": "注文をキャンセル",
-    "cnPaidTitle": "お支払いを確認しました：{plan} が有効です",
+    "cnPaidTitle": "{plan} へようこそ！お支払いが完了しました",
     "cnPaidUntil": "{plan} は {date} まで有効です。",
     "cnPaidStart": "読み始める",
     "grantActive": "現在のプラン：{plan}（{date} まで有効）。",

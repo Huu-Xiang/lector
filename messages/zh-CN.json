@@ -61,6 +61,7 @@
     "contact": "联系我们"
   },
   "nav": {
+    "upgrade": "开会员",
     "library": "书库",
     "practice": "练习",
     "journal": "日记",
@@ -2218,7 +2219,7 @@
     "cnResume": "继续付款",
     "cnRecheck": "我已付款，再查一次",
     "cnCancel": "取消订单",
-    "cnPaidTitle": "付款成功，{plan} 已开通",
+    "cnPaidTitle": "欢迎加入 {plan}！付款成功",
     "cnPaidUntil": "{plan} 有效期到 {date}。",
     "cnPaidStart": "开始阅读",
     "grantActive": "当前套餐：{plan}，有效期至 {date}。",

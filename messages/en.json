@@ -61,6 +61,7 @@
     "contact": "Contact"
   },
   "nav": {
+    "upgrade": "Upgrade",
     "library": "Library",
     "practice": "Practice",
     "journal": "Journal",
@@ -2218,7 +2219,7 @@
     "cnResume": "Continue to payment",
     "cnRecheck": "I paid, check again",
     "cnCancel": "Cancel order",
-    "cnPaidTitle": "Payment received: {plan} is active",
+    "cnPaidTitle": "Welcome to {plan}! Your payment went through.",
     "cnPaidUntil": "{plan} is valid until {date}.",
     "cnPaidStart": "Start reading",
     "grantActive": "Current plan: {plan}, valid until {date}.",

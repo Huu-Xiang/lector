@@ -142,6 +142,23 @@ test.describe.serial('Free cloud learning loop', () => {
     await page.waitForURL((url) => url.pathname === '/');
   });
 
+  test('a compact upgrade link shows for Free accounts only', async ({ page }) => {
+    await signIn(page);
+    const link = page.locator('[data-testid="upgrade-link"]:visible');
+    await expect(link).toBeVisible();
+    await expect(link).toHaveAttribute('href', '/subscribe');
+
+    await page.route('**/api/billing/entitlements', async (route) => {
+      const response = await route.fetch();
+      await route.fulfill({ response, json: { ...(await response.json()), plan: 'cloud' } });
+    });
+    const entitlementsLoaded = page.waitForResponse('**/api/billing/entitlements');
+    await page.reload();
+    await entitlementsLoaded;
+    await expect(page.getByTestId('upgrade-link')).toHaveCount(0);
+    await page.unrouteAll({ behavior: 'ignoreErrors' });
+  });
+
   test('the sidebar opens Feedback and a message is emailed with a reply address', async ({
     page,
   }) => {

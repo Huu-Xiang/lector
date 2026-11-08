@@ -29,7 +29,11 @@ import {
   type CnPrice,
   type PendingCnOrder,
 } from '@/lib/cn-billing';
-import { getEntitlements, type ClientEntitlements } from '@/lib/data-layer';
+import {
+  getEntitlements,
+  invalidateEntitlementsCache,
+  type ClientEntitlements,
+} from '@/lib/data-layer';
 import { useCardPaymentsPending } from '@/lib/use-env';
 import {
   PAID_TIERS,
@@ -92,6 +96,19 @@ export default function SubscribePage() {
   const [paidPlan, setPaidPlan] = useState<PaidTier | null>(null);
   const pollTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  const showWelcome = useCallback(async () => {
+    invalidateEntitlementsCache();
+    const current = await getEntitlements().catch(() => null);
+    const plan = current?.plan;
+    if (plan !== 'cloud' && plan !== 'plus' && plan !== 'max') {
+      window.location.replace('/');
+      return;
+    }
+    setEntitlements(current);
+    setPaidPlan(plan);
+    setPhase('cnPaid');
+  }, []);
+
   // One-shot activation poll: the webhook usually lands within seconds of
   // checkout completing; give it 90 before suggesting patience.
   const pollUntilActive = useCallback(() => {
@@ -99,8 +116,7 @@ export default function SubscribePage() {
       pollTimer.current = setTimeout(async () => {
         const s = await fetchBillingStatus();
         if (s?.subscriptionActive) {
-          // Hard navigation on purpose — every guard and cache re-evaluates.
-          window.location.replace('/');
+          await showWelcome();
           return;
         }
         if (attempt >= 45) {
@@ -111,7 +127,7 @@ export default function SubscribePage() {
       }, 2000);
     }
     tick(0);
-  }, []);
+  }, [showWelcome]);
 
   // The cashier's return link and the browser's back button both land here,
   // paid or not. Only the platform's order state decides what to show.
@@ -214,17 +230,23 @@ export default function SubscribePage() {
           return;
         }
 
-        if (s.subscriptionActive || s.exempt) {
-          window.location.replace('/');
-          return;
-        }
-
         // Returning from the /checkout overlay (Paddle's successUrl bounces
         // here): the webhook may not have landed yet, so show activation and
         // poll rather than the tiles the user just used.
-        if (new URLSearchParams(window.location.search).get('checkout') === 'success') {
-          setPhase('activating');
-          pollUntilActive();
+        const returnedFromCheckout =
+          new URLSearchParams(window.location.search).get('checkout') === 'success';
+        if (returnedFromCheckout && !s.exempt) {
+          if (s.subscriptionActive) {
+            void showWelcome();
+          } else {
+            setPhase('activating');
+            pollUntilActive();
+          }
+          return;
+        }
+
+        if (s.subscriptionActive || s.exempt) {
+          window.location.replace('/');
           return;
         }
 
@@ -254,7 +276,7 @@ export default function SubscribePage() {
     return () => {
       cancelled = true;
     };
-  }, [pollUntilActive, checkCnOrder]);
+  }, [pollUntilActive, checkCnOrder, showWelcome]);
 
   async function openCnCheckout(plan: PaidTier, months: CnMonths) {
     if (opening !== null) return;

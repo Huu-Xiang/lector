@@ -409,7 +409,7 @@
     "cnResume": "결제 계속하기",
     "cnRecheck": "결제했어요, 다시 확인",
     "cnCancel": "주문 취소",
-    "cnPaidTitle": "결제가 확인되었어요: {plan} 활성화",
+    "cnPaidTitle": "{plan}에 오신 것을 환영해요! 결제가 완료되었어요",
     "cnPaidUntil": "{plan}은(는) {date}까지 유효해요.",
     "cnPaidStart": "읽기 시작",
     "grantActive": "현재 플랜: {plan}, {date}까지 유효",
