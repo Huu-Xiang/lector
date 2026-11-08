@@ -29,7 +29,7 @@
           "resend": "<strong>Resend</strong> – 인증 이메일과 비밀번호 재설정 이메일을 보내요. 제품 이메일이 켜져 있으면 환영 이메일, 처음 며칠 동안의 짧은 읽기 알림, 무료 한도에 도달했을 때의 안내도 보내요. 각 이메일에는 수신 거부 링크가 있어요.",
           "aiProvider": "<strong>내 AI 제공자(OpenRouter 또는 Anthropic)</strong> – 내 키를 추가하고 번역, 설명, 채팅을 사용하면 선택한 텍스트와 주변 문맥 일부가 <em>내</em> 키로 제공자에게 전송돼요. 그 데이터에는 제공자의 개인정보 약관이 적용되고, 사용 요금은 내게 청구돼요.",
           "aiBuiltIn": "<strong>Alibaba Cloud (Model Studio)</strong> – 내 키 대신 Readfox의 기본 AI 허용량을 사용하면, 선택한 텍스트와 주변 문맥 일부가 번역이나 설명을 만들기 위해 우리 워크스페이스를 통해 Alibaba Cloud의 Qwen 모델로 전송돼요. 단어 복습 중에는 공개 예문이나 복습 중인 단어가 전송될 수 있으며, 내가 저장한 문장은 전송하지 않아요. 그 데이터에는 Alibaba Cloud의 약관이 적용돼요. 허용량은 매달 제한돼요.",
-          "paddle": "<strong>Paddle</strong> – 카드와 PayPal 결제를 위한 재판매업체(Merchant of Record)예요. 해당 결제는 개발 중이에요. 결제가 열린 뒤 구독하면 Paddle이 자체 개인정보처리방침에 따라 결제 정보와 청구 주소를 수집해요. 우리는 이메일 주소, 플랜과 그 상태만 받고 카드 번호나 계좌 번호는 받지 않아요.",
+          "paddle": "<strong>Paddle</strong> – 카드와 PayPal 결제를 위한 재판매업체(Merchant of Record)예요. 이 방법으로 구독하면 Paddle이 자체 개인정보처리방침에 따라 결제 정보와 청구 주소를 수집해요. 우리는 이메일 주소, 플랜과 그 상태만 받고 카드 번호나 계좌 번호는 받지 않아요.",
           "xiaodou": "<strong>Xiaodou Pay (Yuzhi AI, Shenzhen)</strong> – Alipay와 WeChat Pay를 통한 1회성 RMB 결제를 처리해요. 주문 금액, 주문 번호, 기기의 공인 IP 주소를 받아요. Alipay나 WeChat 계정 정보는 Alipay나 WeChat에만 있고 우리는 받지 않아요."
         },
         "noTrackers": "광고나 분석 추적기를 사용하지 않으며 데이터를 판매하지 않아요."

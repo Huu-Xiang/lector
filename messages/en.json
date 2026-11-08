@@ -16,6 +16,10 @@
         "title": "Korean is now available",
         "body": "You can learn Korean now. It has 8 free books and meanings in your own language. Add it from the language menu."
       },
+      "cardPayments": {
+        "title": "Card payments are live",
+        "body": "You can now subscribe by card and the other methods shown at checkout, through Paddle. Alipay and WeChat Pay still work."
+      },
       "welcomeCode": {
         "title": "For every account: 15 days of Plus free with WELCOME123",
         "body": "Open Settings → Plan, choose \"Have a code?\" and enter WELCOME123. You get 15 days of Plus, free. Valid until 15 December, once per account."
@@ -1479,7 +1483,7 @@
           "resend": "<strong>Resend</strong> – delivers the verification and password-reset emails. When product emails are on, it also delivers a welcome email, short reading reminders in the first days, and a note when you reach a free limit. Each of those has an unsubscribe link.",
           "aiProvider": "<strong>Your AI provider (OpenRouter or Anthropic)</strong> – if you add your own key and use translation, explanations or chat, the text you select, with some surrounding context, is sent to the provider using <em>your</em> key. Their privacy terms apply to that data, and the usage is billed to you.",
           "aiBuiltIn": "<strong>Alibaba Cloud (Model Studio)</strong> – if you use Readfox's built-in AI allowance instead of your own key, the text you select, with some surrounding context, is sent to Alibaba Cloud's Qwen models through our workspace to produce the translation or explanation. During word review, a public example sentence or the word being reviewed may also be sent, never a sentence you saved. Alibaba Cloud's terms apply to that data. The allowance is limited each month.",
-          "paddle": "<strong>Paddle</strong> – our reseller (Merchant of Record) for card and PayPal payments, which are in development. Once they open, if you subscribe, Paddle collects your payment details and billing address under its own privacy policy. We receive your email address, your plan and its status, never your card or account numbers.",
+          "paddle": "<strong>Paddle</strong> – our reseller (Merchant of Record) for card and PayPal payments. If you subscribe this way, Paddle collects your payment details and billing address under its own privacy policy. We receive your email address, your plan and its status, never your card or account numbers.",
           "xiaodou": "<strong>Xiaodou Pay (Yuzhi AI, Shenzhen)</strong> – processes one-time RMB payments through Alipay and WeChat Pay. It receives the order amount, an order number and the public IP address of your device. Your Alipay or WeChat account details stay with Alipay or WeChat; we never receive them."
         },
         "noTrackers": "We do not run advertising or analytics trackers, and we do not sell your data."
