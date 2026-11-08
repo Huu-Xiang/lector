@@ -182,7 +182,12 @@
     "languagesSoon": "另有 {count} 种语言正在开发中",
     "languagesUi": "界面：{ui} · 释义和讲解：{count} 种语言（可在设置里改）",
     "createAccount": "免费注册",
-    "heroAlt": "Readfox 标志：一只趴在书上的小狐狸",
+    "preview": {
+      "alt": "示意图：在书里点一个词，马上看到释义",
+      "partOfSpeech": "形容词",
+      "meaning": "疲倦的；累的",
+      "save": "存入生词"
+    },
     "howTitle": "怎么用",
     "features": {
       "read": {

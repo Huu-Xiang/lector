@@ -182,7 +182,12 @@
     "languagesSoon": "{count} more languages in development",
     "languagesUi": "Interface: {ui} · Meanings and explanations: {count} languages (change it in Settings)",
     "createAccount": "Create a free account",
-    "heroAlt": "Readfox: a fox resting on an open book",
+    "preview": {
+      "alt": "Preview: tap a word in a book to see its meaning",
+      "partOfSpeech": "adjective",
+      "meaning": "needing rest; worn out",
+      "save": "Save word"
+    },
     "howTitle": "How it works",
     "features": {
       "read": {

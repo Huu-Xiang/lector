@@ -217,7 +217,12 @@
     "languagesSoon": "개발 중인 언어 {count}개 더",
     "languagesUi": "인터페이스: {ui} · 뜻풀이와 설명: {count}개 언어 (설정에서 변경)",
     "createAccount": "무료 계정 만들기",
-    "heroAlt": "Readfox: 펼친 책 위에서 쉬고 있는 여우",
+    "preview": {
+      "alt": "미리보기: 책의 단어를 탭하면 뜻이 표시돼요",
+      "partOfSpeech": "형용사",
+      "meaning": "피곤한; 지친",
+      "save": "단어 저장"
+    },
     "howTitle": "이용 방법",
     "features": {
       "read": {

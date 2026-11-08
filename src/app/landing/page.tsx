@@ -51,6 +51,37 @@ const features = [
   { key: 'write', icon: PenLine },
 ] as const;
 
+function ReaderPreview({ t }: { t: Awaited<ReturnType<typeof getTranslations<'landing'>>> }) {
+  return (
+    <figure
+      role="img"
+      aria-label={t('preview.alt')}
+      className="mx-auto w-full max-w-md rounded-2xl border border-border bg-card p-6 shadow-sm"
+    >
+      <p className="font-reading text-lg leading-relaxed text-foreground" lang="en">
+        Alice was beginning to get very{' '}
+        <span className="rounded bg-[var(--primary-soft)] px-1 font-medium text-primary">
+          tired
+        </span>{' '}
+        of sitting by her sister on the bank, and of having nothing to do.
+      </p>
+      <div className="mt-5 rounded-xl border border-border bg-background p-4">
+        <div className="flex items-baseline gap-2">
+          <span className="text-lg font-semibold text-foreground" lang="en">
+            tired
+          </span>
+          <span className="text-sm text-muted-foreground">/ˈtaɪəd/</span>
+          <span className="text-xs text-muted-foreground">{t('preview.partOfSpeech')}</span>
+        </div>
+        <p className="mt-1 text-sm text-foreground">{t('preview.meaning')}</p>
+        <span className="mt-3 inline-block rounded-lg bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground">
+          {t('preview.save')}
+        </span>
+      </div>
+    </figure>
+  );
+}
+
 export default async function LandingPage() {
   const t = await getTranslations('landing');
   const locale = await getLocale();
@@ -65,6 +96,7 @@ export default async function LandingPage() {
         // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: JSON.stringify(SOFTWARE_LD) }}
       />
+      <WelcomeOfferNote variant="bar" />
       <header className="mx-auto flex w-full max-w-5xl items-center justify-between px-4 py-5">
         <Link href="/" className="flex items-center gap-2" title="Readfox">
           <Image src="/logo.png" alt="" width={32} height={32} className="rounded" />
@@ -99,10 +131,30 @@ export default async function LandingPage() {
               {t('heroTitle')}
             </h1>
             <p className="mt-4 text-lg text-muted-foreground">{t('heroBody')}</p>
-            <div
-              className="mt-4 flex flex-wrap items-center gap-2 text-sm"
-              data-testid="landing-languages"
-            >
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link
+                href="/register"
+                className="rounded-lg bg-primary px-5 py-2.5 font-semibold text-primary-foreground hover:opacity-90"
+              >
+                {t('createAccount')}
+              </Link>
+              <Link
+                href="/books"
+                className="rounded-lg border border-border px-5 py-2.5 font-semibold text-foreground hover:bg-accent"
+              >
+                {t('freeBooks')}
+              </Link>
+            </div>
+          </div>
+          <ReaderPreview t={t} />
+        </section>
+
+        <section className="mx-auto w-full max-w-5xl px-4 pb-4">
+          <div
+            className="rounded-2xl border border-border bg-card px-5 py-4"
+            data-testid="landing-languages"
+          >
+            <div className="flex flex-wrap items-center gap-2 text-sm">
               <span className="font-medium text-foreground">{t('languagesNow')}</span>
               {ready.map((name) => (
                 <span
@@ -122,32 +174,7 @@ export default async function LandingPage() {
                 count: NATIVE_LANGUAGES.length,
               })}
             </p>
-            <div className="mt-5 max-w-md">
-              <WelcomeOfferNote />
-            </div>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Link
-                href="/register"
-                className="rounded-lg bg-primary px-5 py-2.5 font-semibold text-primary-foreground hover:opacity-90"
-              >
-                {t('createAccount')}
-              </Link>
-              <Link
-                href="/login"
-                className="rounded-lg border border-border px-5 py-2.5 font-semibold text-foreground hover:bg-accent"
-              >
-                {t('signIn')}
-              </Link>
-            </div>
           </div>
-          <Image
-            src="/readfox-logo-full.png"
-            alt={t('heroAlt')}
-            width={480}
-            height={480}
-            priority
-            className="mx-auto w-full max-w-sm rounded-3xl"
-          />
         </section>
 
         <section className="mx-auto w-full max-w-5xl px-4 py-8" aria-labelledby="features">

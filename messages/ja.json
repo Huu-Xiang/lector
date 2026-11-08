@@ -217,7 +217,12 @@
     "languagesSoon": "さらに {count} 言語を開発中",
     "languagesUi": "表示言語：{ui} · 意味と解説：{count} 言語（設定で変更できます）",
     "createAccount": "無料アカウントを作成",
-    "heroAlt": "Readfox：開いた本の上で休むキツネ",
+    "preview": {
+      "alt": "プレビュー：本の単語をタップすると意味が表示されます",
+      "partOfSpeech": "形容詞",
+      "meaning": "疲れた；くたびれた",
+      "save": "単語を保存"
+    },
     "howTitle": "使い方",
     "features": {
       "read": {
