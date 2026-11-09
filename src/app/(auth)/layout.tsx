@@ -25,32 +25,36 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
   const t = useTranslations('common');
   const tAuth = useTranslations('auth');
   const mode = useLectorMode();
-  const wide = usePathname() === '/subscribe';
+  const pathname = usePathname();
+  const wide = pathname === '/subscribe';
+  const width = wide ? 'max-w-6xl' : pathname === '/register' ? 'max-w-2xl' : 'max-w-sm';
 
   useEffect(() => {
     if (mode === 'selfhost') router.replace('/');
   }, [mode, router]);
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4 py-10">
-      <div className={`mb-4 w-full ${wide ? 'max-w-6xl' : 'max-w-sm'}`}>
+    <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4 py-10 md:py-6">
+      <div className={`mb-4 w-full md:mb-2 ${width}`}>
         <BackButton />
       </div>
-      <div className="mb-8 text-center">
+      <div className="mb-8 text-center md:mb-4 md:flex md:items-center md:justify-center md:gap-3 md:text-left">
         <Image
           src="/logo.png"
           alt=""
           width={64}
           height={64}
           priority
-          className="mx-auto mb-3 rounded-xl"
+          className="mx-auto mb-3 rounded-xl md:mx-0 md:mb-0 md:size-12"
         />
-        <h1 className="text-3xl font-bold tracking-tight text-foreground">{t('appName')}</h1>
-        <p className="mt-2 text-sm text-muted-foreground">{t('tagline')}</p>
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground md:text-xl">
+            {t('appName')}
+          </h1>
+          <p className="mt-2 text-sm text-muted-foreground md:mt-0">{t('tagline')}</p>
+        </div>
       </div>
-      <div
-        className={`w-full ${wide ? 'max-w-6xl' : 'max-w-sm'} rounded-2xl border border-border bg-card p-6 shadow-sm`}
-      >
+      <div className={`w-full ${width} rounded-2xl border border-border bg-card p-6 shadow-sm`}>
         {mode === 'cloud' ? (
           children
         ) : (
@@ -59,7 +63,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           </div>
         )}
       </div>
-      <LegalLinks className="mt-6" />
+      <LegalLinks className="mt-6 md:mt-3" />
     </div>
   );
 }

@@ -392,7 +392,7 @@
     },
     "languages": {
       "title": "Languages",
-      "description": "The language picker lists these languages. Remove a language to shorten the list. Your words, texts and cards in it stay on the server.",
+      "description": "These are the languages you are learning. Switch between them in the language menu. Pressing × only takes one off the menu: your words, texts and cards are kept, and come back when you add it again.",
       "inUse": "In use",
       "remove": "Remove {language}",
       "added": "{language} added",

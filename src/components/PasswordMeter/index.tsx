@@ -40,7 +40,7 @@ export default function PasswordMeter({ password }: { password: string }) {
           {strength === 'empty' ? '' : t(strength)}
         </span>
       </div>
-      <ul className="space-y-1 text-xs">
+      <ul className="space-y-1 text-xs md:flex md:flex-wrap md:space-y-0 md:gap-x-4">
         {RULES.map((rule) => (
           <li
             key={rule}

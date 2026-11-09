@@ -126,84 +126,93 @@ function RegisterForm() {
       <h2 className="text-lg font-semibold text-foreground">{t('title')}</h2>
       <WelcomeOfferNote />
 
-      <div className="space-y-2">
-        <Label htmlFor="name">{t('name')}</Label>
-        <Input
-          id="name"
-          autoComplete="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          data-testid="register-name"
-        />
+      <div className="grid gap-4 md:grid-cols-2">
+        <div className="space-y-2">
+          <Label htmlFor="name">{t('name')}</Label>
+          <Input
+            id="name"
+            autoComplete="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            data-testid="register-name"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="email">{t('email')}</Label>
+          <Input
+            id="email"
+            type="email"
+            required
+            autoComplete="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            data-testid="register-email"
+          />
+        </div>
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="email">{t('email')}</Label>
-        <Input
-          id="email"
-          type="email"
-          required
-          autoComplete="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          data-testid="register-email"
-        />
+      <div className="grid gap-4 md:grid-cols-2">
+        <div className="space-y-2">
+          <Label htmlFor="password">{t('password')}</Label>
+          <Input
+            id="password"
+            type="password"
+            required
+            minLength={8}
+            autoComplete="new-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            data-testid="register-password"
+          />
+        </div>
+
+        <div className="md:order-last md:col-span-2">
+          <PasswordMeter password={password} />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="confirm-password">{t('confirmPassword')}</Label>
+          <Input
+            id="confirm-password"
+            type="password"
+            required
+            autoComplete="new-password"
+            value={confirm}
+            onChange={(e) => setConfirm(e.target.value)}
+            aria-invalid={confirm.length > 0 && confirm !== password}
+            data-testid="register-confirm-password"
+          />
+          {confirm.length > 0 && (
+            <p
+              className={`text-xs ${confirm === password ? 'text-primary' : 'text-destructive'}`}
+              data-testid="register-confirm-hint"
+            >
+              {confirm === password ? t('matches') : t('errMismatch')}
+            </p>
+          )}
+        </div>
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="password">{t('password')}</Label>
-        <Input
-          id="password"
-          type="password"
-          required
-          minLength={8}
-          autoComplete="new-password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          data-testid="register-password"
-        />
-        <PasswordMeter password={password} />
-      </div>
+      <div className="grid items-start gap-4 md:grid-cols-2">
+        <div className="space-y-2">
+          <Label htmlFor="invite">
+            {t('invite')} {inviteRequired ? t('inviteRequired') : t('inviteOptional')}
+          </Label>
+          <Input
+            id="invite"
+            autoComplete="off"
+            required={inviteRequired}
+            maxLength={64}
+            value={invite}
+            onChange={(e) => setInvite(e.target.value)}
+            data-testid="register-invite"
+          />
+          <p className="text-xs text-muted-foreground">{t('inviteHint')}</p>
+        </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="confirm-password">{t('confirmPassword')}</Label>
-        <Input
-          id="confirm-password"
-          type="password"
-          required
-          autoComplete="new-password"
-          value={confirm}
-          onChange={(e) => setConfirm(e.target.value)}
-          aria-invalid={confirm.length > 0 && confirm !== password}
-          data-testid="register-confirm-password"
-        />
-        {confirm.length > 0 && (
-          <p
-            className={`text-xs ${confirm === password ? 'text-primary' : 'text-destructive'}`}
-            data-testid="register-confirm-hint"
-          >
-            {confirm === password ? t('matches') : t('errMismatch')}
-          </p>
-        )}
+        <TurnstileWidget key={captchaRound} onToken={setCaptchaToken} />
       </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="invite">
-          {t('invite')} {inviteRequired ? t('inviteRequired') : t('inviteOptional')}
-        </Label>
-        <Input
-          id="invite"
-          autoComplete="off"
-          required={inviteRequired}
-          maxLength={64}
-          value={invite}
-          onChange={(e) => setInvite(e.target.value)}
-          data-testid="register-invite"
-        />
-        <p className="text-xs text-muted-foreground">{t('inviteHint')}</p>
-      </div>
-
-      <TurnstileWidget key={captchaRound} onToken={setCaptchaToken} />
 
       <Button
         type="submit"
