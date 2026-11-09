@@ -11,6 +11,7 @@ import { languageDisplayName } from '@/lib/language-names';
 import { isComposing } from '@/lib/keyboard';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { EXAMPLE_PROMPTS } from './constants';
+import ChatMessageContent from './ChatMessageContent';
 
 interface ChatMessage {
   id: string;
@@ -286,18 +287,13 @@ export default function ChatWidget() {
                 className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 <div
-                  className={`max-w-[85%] rounded-lg px-3 py-2 text-sm ${
+                  className={`max-w-[85%] min-w-0 rounded-lg px-3 py-2 text-sm ${
                     msg.role === 'user'
                       ? 'bg-primary text-primary-foreground'
                       : 'bg-muted text-foreground'
                   }`}
                 >
-                  <div className="break-words whitespace-pre-wrap">{msg.content}</div>
-                  {msg.role === 'assistant' && msg.provider && (
-                    <div className="mt-1 text-[10px] opacity-50" data-testid="chat-provider-label">
-                      {t('via', { provider: msg.provider })}
-                    </div>
-                  )}
+                  <ChatMessageContent role={msg.role} content={msg.content} />
                 </div>
               </div>
             ))}

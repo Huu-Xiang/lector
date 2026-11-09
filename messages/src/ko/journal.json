@@ -183,7 +183,6 @@
     "clear": "지우기",
     "loadingOlder": "이전 메시지 불러오는 중...",
     "emptyPrompt": "{language}에 대해 질문해 보세요",
-    "via": "{provider} 사용",
     "placeholder": "{language}에 대해 물어보세요..."
   },
   "chrome": {

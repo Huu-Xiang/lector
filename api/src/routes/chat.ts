@@ -6,14 +6,10 @@ import { resolveLanguage } from '../lib/active-language';
 import { getNativeLanguageName } from '../lib/native-language';
 import { getLanguageConfig } from '../lib/languages';
 import { entitlements, planLimitResponse, type UsageReservation } from '../lib/entitlements';
+import { getSystemPrompt, withSystemPrompt } from '../lib/chat-prompt';
 import { randomUUID } from 'crypto';
 
 const app = new Hono();
-
-// TODO: add per-language system prompt configuration in Settings
-function getSystemPrompt(langName: string, nativeName: string): string {
-  return `You are a friendly ${langName} language tutor helping a ${nativeName} speaker learn ${langName}. Answer questions about grammar, vocabulary, usage, idioms, and differences between similar words or phrases. Keep answers concise and educational. Use examples where helpful. Reply in ${nativeName} unless the student writes in ${langName}, in which case reply in ${langName} with a ${nativeName} explanation.`;
-}
 
 const MAX_CONTEXT_MESSAGES = 20;
 const TTL_DAYS = 7;
@@ -110,17 +106,7 @@ app.post('/', async (c) => {
 
     const history = [...recentMessages.reverse(), userMsg];
 
-    // Prepend the system prompt to the first user message so it works
-    // across all providers (Anthropic API doesn't accept role: 'system')
-    const chatHistory = history.map((m, i) => {
-      if (i === 0 && m.role === 'user') {
-        return {
-          role: 'user' as const,
-          content: `${SYSTEM_PROMPT}\n\nStudent's question: ${m.content}`,
-        };
-      }
-      return { role: m.role as 'user' | 'assistant', content: m.content };
-    });
+    const chatHistory = withSystemPrompt(history, SYSTEM_PROMPT);
 
     const responseText = await provider.complete({
       messages: chatHistory,

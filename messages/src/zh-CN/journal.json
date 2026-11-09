@@ -183,7 +183,6 @@
     "clear": "清空",
     "loadingOlder": "正在加载更早的消息……",
     "emptyPrompt": "问一个关于{language}的问题",
-    "via": "来自 {provider}",
     "placeholder": "询问{language}……"
   },
   "chrome": {

@@ -183,7 +183,6 @@
     "clear": "Clear",
     "loadingOlder": "Loading older messages...",
     "emptyPrompt": "Ask a question about {language}",
-    "via": "via {provider}",
     "placeholder": "Ask about {language}..."
   },
   "chrome": {

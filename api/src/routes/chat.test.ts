@@ -209,6 +209,28 @@ describe('chat route — per-language scoping', () => {
     expect(joined).not.toContain('AF REPLY');
   });
 
+  test('POST sends the system prompt once when the history window starts with an assistant turn', async () => {
+    seed({
+      id: 'old_asst',
+      role: 'assistant',
+      language: 'af',
+      content: 'OLD REPLY',
+      minutesAgo: 1,
+    });
+
+    await app.request('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: '哈基米是什么意思', language: 'af' }),
+    });
+
+    const sent = captured.messages ?? [];
+    expect(sent.map((m) => m.role)).toEqual(['assistant', 'user']);
+    expect(sent[1].content).toContain('language tutor');
+    expect(sent[1].content).toContain('哈基米是什么意思');
+    expect(sent.filter((m) => m.content.includes('language tutor')).length).toBe(1);
+  });
+
   test('POST falls back to the active language when language is omitted', async () => {
     setActiveLanguage('es');
     await app.request('/', {

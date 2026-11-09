@@ -95,7 +95,7 @@ test.describe('Chat Widget', () => {
             assistantMessage: {
               id: 'asst-1',
               role: 'assistant',
-              content: "'Hond' means 'dog' in Afrikaans.",
+              content: "'Hond' means **dog** in Afrikaans.",
               provider: 'claude',
               createdAt: new Date().toISOString(),
             },
@@ -114,11 +114,15 @@ test.describe('Chat Widget', () => {
     await expect(page.getByText("What does 'hond' mean?")).toBeVisible({ timeout: 5000 });
 
     // Should show assistant response
-    await expect(page.getByText("'Hond' means 'dog' in Afrikaans.")).toBeVisible({ timeout: 5000 });
+    await expect(page.getByTestId('chat-markdown')).toContainText(
+      "'Hond' means dog in Afrikaans.",
+      {
+        timeout: 5000,
+      },
+    );
+    await expect(page.getByTestId('chat-markdown').locator('strong')).toHaveText('dog');
 
-    // Should show provider attribution
-    await expect(page.getByTestId('chat-provider-label')).toBeVisible();
-    await expect(page.getByTestId('chat-provider-label')).toHaveText('via claude');
+    await expect(page.getByTestId('chat-provider-label')).toHaveCount(0);
   });
 
   test('should send message via Enter key', async ({ page }) => {

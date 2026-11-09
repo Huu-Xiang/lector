@@ -183,7 +183,6 @@
     "clear": "消去",
     "loadingOlder": "以前のメッセージを読み込み中...",
     "emptyPrompt": "{language}について質問してみましょう",
-    "via": "{provider} 経由",
     "placeholder": "{language}について質問する..."
   },
   "chrome": {
