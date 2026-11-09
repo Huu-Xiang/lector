@@ -23,6 +23,14 @@
       "reviewGoalHint": {
         "recognize": "Know a word when you see it. Choose meanings and recognize words.",
         "recognize_spell": "Also write the word. Familiar and Mastered words ask you to type it or take dictation."
+      },
+      "emails": {
+        "heading": "Emails",
+        "label": "Product emails",
+        "hint": "Welcome mail, reading reminders, a notice before your plan ends, and word review reminders. Account mail is not affected: verification, password reset and account deletion mails are always sent.",
+        "on": "On",
+        "off": "Off",
+        "failed": "Could not save this setting. Try again."
       }
     },
     "prose": {

@@ -101,6 +101,13 @@ export function recordUnsubscribe(database: Database, email: string, at: string)
     .run(unsubscribeEmailKey(email), at);
 }
 
+/** Removes the hashed row and any legacy row that holds the plain address. */
+export function removeUnsubscribe(database: Database, email: string): void {
+  database
+    .prepare('DELETE FROM email_unsubscribes WHERE email = ? OR email = ?')
+    .run(unsubscribeEmailKey(email), normalizeEmail(email));
+}
+
 export function listUnsubscribeHeaders(url: string): Record<string, string> {
   return {
     'List-Unsubscribe': `<${url}>`,

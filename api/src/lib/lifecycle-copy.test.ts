@@ -22,10 +22,9 @@ describe('lifecycle copy', () => {
       expect(r.subject.length).toBeGreaterThan(5);
       expect(r.text).toContain('Ada');
       expect(r.html).toContain('https://readfox.app/');
-      if (alias !== LIFECYCLE_TEMPLATES.welcome) {
-        expect(r.text).toContain(vars.STOP_URL);
-        expect(r.html).toContain('Unsubscribe');
-      }
+      expect(r.text).toContain(vars.STOP_URL);
+      expect(r.html).toContain(vars.STOP_URL);
+      expect(r.html).toContain('Unsubscribe');
       const body = resendPayload('Readfox <support@readfox.app>', {
         to: 'a@b.c',
         ...r,

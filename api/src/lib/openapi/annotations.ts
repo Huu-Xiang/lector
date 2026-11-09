@@ -3054,6 +3054,14 @@ const internalOps: Record<string, OperationDoc> = {
     tag: 'Service',
     auth: 'none',
   },
+  'GET /api/email/preferences': {
+    summary: 'Read whether product emails are on for the signed-in user',
+    tag: 'Service',
+  },
+  'PUT /api/email/preferences': {
+    summary: 'Turn product emails on or off for the signed-in user',
+    tag: 'Service',
+  },
   'POST /api/source-count': {
     summary: 'Count one anonymous visit by traffic source',
     tag: 'Service',

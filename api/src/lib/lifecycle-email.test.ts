@@ -215,7 +215,11 @@ describe('sendWelcomeEmail', () => {
       APP_URL: 'https://app.lector.dev',
     });
     expect(String(inbox[0].meta?.variables?.STOP_URL)).toContain('/api/email/unsubscribe?token=');
-    expect(inbox[0].headers).toBeUndefined();
+    expect(inbox[0].headers?.['List-Unsubscribe']).toMatch(
+      /^<https?:\/\/.+\/api\/email\/unsubscribe\?token=.+>$/,
+    );
+    expect(inbox[0].headers?.['List-Unsubscribe-Post']).toBe('List-Unsubscribe=One-Click');
+    expect(inbox[0].text).toContain('/api/email/unsubscribe?token=');
     expect(sentAliases(database, userId)).toEqual([LIFECYCLE_TEMPLATES.welcome]);
   });
 

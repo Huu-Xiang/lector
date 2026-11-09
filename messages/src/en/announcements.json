@@ -8,6 +8,10 @@
     "dismiss": "Dismiss",
     "learnMore": "Learn more",
     "items": {
+      "emailReminders": {
+        "title": "About email reminders",
+        "body": "We may email you when your plan is about to end and when you have words to review. You can turn these emails off in Settings, or with the link at the bottom of any of them."
+      },
       "installApp": {
         "title": "Use Readfox like an app on your phone",
         "body": "Add Readfox to your home screen and read full screen from its icon. Settings shows the steps."

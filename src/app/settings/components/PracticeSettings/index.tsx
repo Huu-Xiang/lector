@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import { getReviewGoal, getSetting, setReviewGoal, setSetting } from '@/lib/data-layer';
 import type { ReviewGoal } from '@/types';
 import { SETTINGS_KEYS } from '../../constants';
+import ProductEmails from './ProductEmails';
 
 const REVIEW_GOALS: ReviewGoal[] = ['recognize', 'recognize_spell'];
 
@@ -136,6 +137,8 @@ export default function PracticeSettings() {
           </Button>
         </div>
       </div>
+
+      <ProductEmails />
     </section>
   );
 }

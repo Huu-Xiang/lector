@@ -43,7 +43,7 @@ const COPY: Record<string, Copy> = {
     cta: 'Start reading',
     ctaPath: '/books',
     zh: '欢迎加入 Readfox！打开一本适合你水平的免费书，点任意生词即可看到解释，并自动存进生词本。',
-    stop: false,
+    stop: true,
   },
   'day-1-registered-no-word-saved': {
     subject: 'Try tapping one word',
