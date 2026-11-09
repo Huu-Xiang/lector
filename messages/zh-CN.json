@@ -230,11 +230,22 @@
     "languagesSoon": "另有 {count} 种语言正在开发中",
     "languagesUi": "界面：{ui} · 释义和讲解：{count} 种语言（可在设置里改）",
     "createAccount": "免费注册",
-    "preview": {
-      "alt": "示意图：在书里点一个词，马上看到释义",
-      "partOfSpeech": "形容词",
-      "meaning": "疲倦的；累的",
-      "save": "存入生词"
+    "demo": {
+      "label": "可以动手试的阅读演示",
+      "panelLabel": "释义",
+      "hintFine": "点一个词，或按住鼠标划过一句话。",
+      "hintCoarse": "点一个词，或长按后划过一句话。",
+      "stepWord": "轮到你了：点一下发亮的词。",
+      "stepContext": "再点“结合语境”，看这个词在这句里的意思。",
+      "stepDragFine": "最后，按住鼠标划过这句话。",
+      "stepDragCoarse": "最后，长按后划过这句话。",
+      "done": "读书时就这样用。其他词也可以点。",
+      "pause": "暂停",
+      "replay": "重播",
+      "startFree": "免费开始",
+      "inContext": "结合语境",
+      "usage": "用法",
+      "idiom": "惯用含义"
     },
     "howTitle": "怎么用",
     "features": {

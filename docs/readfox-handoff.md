@@ -26,6 +26,7 @@ A public, multi-user language-reading app at https://readfox.app. It is a self-m
 | Word review | `api/src/lib/review/` (FSRS scheduler, queue, answers, `sync-word-state.ts`, backfill, reconcile), `api/src/routes/review.ts`, the sentence finder (`sentence-index.ts`, `sentence-sources.ts`) and AI sentences (`sentence-ai.ts`), `src/app/practice/word-review/`. Tables `wordCards`, `wordReviewLog`, `reviewRounds`, and the shared caches `shared_sentence_translation` and `shared_example_sentence` (no user id, 180 days). Flow notes: `docs/flows/practice.md#word-review`. |
 | Admin | `api/src/routes/admin.ts`, `src/app/admin/page.tsx` |
 | Public pages | `src/app/{landing,privacy,terms,about}`, text in `messages/src/*/legal.json` |
+| Landing demo | `src/components/landing-demo/` (data, language choice, step logic, UI); prewritten explanations, no API; `e2e/landing-demo.spec.ts` |
 | Search and AI discovery | `src/app/sitemap.ts`, `src/app/robots.ts`, `/llms.txt` (`src/lib/llms-txt.ts`: site facts and every free book, in English). Book, level and author pages carry schema.org data (`Book`, `BreadcrumbList`, `ItemList`) through `src/components/JsonLd`. Keep the facts in `llms-txt.ts` true when plans or the library change. |
 | Deploy files | `deploy/readfox/` |
 

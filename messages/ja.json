@@ -230,11 +230,22 @@
     "languagesSoon": "さらに {count} 言語を開発中",
     "languagesUi": "表示言語：{ui} · 意味と解説：{count} 言語（設定で変更できます）",
     "createAccount": "無料アカウントを作成",
-    "preview": {
-      "alt": "プレビュー：本の単語をタップすると意味が表示されます",
-      "partOfSpeech": "形容詞",
-      "meaning": "疲れた；くたびれた",
-      "save": "単語を保存"
+    "demo": {
+      "label": "試せる読書デモ",
+      "panelLabel": "解説",
+      "hintFine": "単語をクリックするか、文をなぞって選べます。",
+      "hintCoarse": "単語をタップするか、長押ししてから文をなぞります。",
+      "stepWord": "あなたの番です。光っている単語をタップしてください。",
+      "stepContext": "次に「文脈で見る」をタップして、この文での意味を見ましょう。",
+      "stepDragFine": "最後に、文の上をなぞってください。",
+      "stepDragCoarse": "最後に、長押ししてから文をなぞってください。",
+      "done": "読むときはこのように使います。ほかの単語もタップできます。",
+      "pause": "一時停止",
+      "replay": "もう一度",
+      "startFree": "無料で始める",
+      "inContext": "文脈で見る",
+      "usage": "用法",
+      "idiom": "慣用的な意味"
     },
     "howTitle": "使い方",
     "features": {

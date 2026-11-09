@@ -230,11 +230,22 @@
     "languagesSoon": "개발 중인 언어 {count}개 더",
     "languagesUi": "인터페이스: {ui} · 뜻풀이와 설명: {count}개 언어 (설정에서 변경)",
     "createAccount": "무료 계정 만들기",
-    "preview": {
-      "alt": "미리보기: 책의 단어를 탭하면 뜻이 표시돼요",
-      "partOfSpeech": "형용사",
-      "meaning": "피곤한; 지친",
-      "save": "단어 저장"
+    "demo": {
+      "label": "직접 해 볼 수 있는 읽기 데모",
+      "panelLabel": "설명",
+      "hintFine": "단어를 클릭하거나, 문장 위를 끌어서 선택해 보세요.",
+      "hintCoarse": "단어를 탭하거나, 길게 누른 뒤 문장 위를 끌어 보세요.",
+      "stepWord": "이제 직접 해 보세요. 빛나는 단어를 탭하세요.",
+      "stepContext": "이어서 '문맥으로 보기'를 눌러 이 문장에서의 뜻을 확인하세요.",
+      "stepDragFine": "마지막으로, 문장 위를 끌어서 선택하세요.",
+      "stepDragCoarse": "마지막으로, 길게 누른 뒤 문장 위를 끌어 보세요.",
+      "done": "책을 읽을 때 이렇게 쓰면 돼요. 다른 단어도 탭할 수 있어요.",
+      "pause": "일시정지",
+      "replay": "다시 보기",
+      "startFree": "무료로 시작",
+      "inContext": "문맥으로 보기",
+      "usage": "용법",
+      "idiom": "관용적 의미"
     },
     "howTitle": "이용 방법",
     "features": {

@@ -38,13 +38,9 @@ export function matchLocale(tag: string): string | null {
   return UI_LOCALES.find((l) => l.code.toLowerCase().split('-')[0] === base)?.code ?? null;
 }
 
-/** Cookie first, then the `Accept-Language` header in q order, then English. */
-export function resolveLocale(
-  cookie: string | null | undefined,
-  acceptLanguage: string | null | undefined,
-): string {
-  if (isUiLocale(cookie)) return cookie;
-  const tags = (acceptLanguage ?? '')
+/** Language tags of an `Accept-Language` header, highest q first. */
+export function acceptLanguageTags(header: string | null | undefined): string[] {
+  return (header ?? '')
     .split(',')
     .map((part) => {
       const [tag, ...params] = part.trim().split(';');
@@ -52,8 +48,17 @@ export function resolveLocale(
       return { tag, q: q ? Number.parseFloat(q.trim().slice(2)) : 1 };
     })
     .filter((entry) => entry.tag && Number.isFinite(entry.q) && entry.q > 0)
-    .sort((a, b) => b.q - a.q);
-  for (const { tag } of tags) {
+    .sort((a, b) => b.q - a.q)
+    .map((entry) => entry.tag);
+}
+
+/** Cookie first, then the `Accept-Language` header in q order, then English. */
+export function resolveLocale(
+  cookie: string | null | undefined,
+  acceptLanguage: string | null | undefined,
+): string {
+  if (isUiLocale(cookie)) return cookie;
+  for (const tag of acceptLanguageTags(acceptLanguage)) {
     const match = matchLocale(tag);
     if (match) return match;
   }

@@ -543,6 +543,38 @@
   }
 }
 
+/* Landing demo prompts: a soft ring on the word or button to press, a wash on the sentence to drag. */
+@keyframes demo-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--primary) 55%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 6px transparent;
+  }
+}
+@keyframes demo-wash {
+  0%,
+  100% {
+    background-color: transparent;
+  }
+  50% {
+    background-color: color-mix(in srgb, var(--clay) 18%, transparent);
+  }
+}
+.demo-pulse {
+  animation: demo-pulse 1.2s ease-in-out infinite;
+}
+.demo-wash {
+  animation: demo-wash 1.2s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .demo-pulse,
+  .demo-wash {
+    animation: none !important;
+  }
+}
+
 html {
   overflow-x: hidden;
 }

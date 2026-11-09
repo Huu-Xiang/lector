@@ -1,13 +1,16 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
+import { cookies, headers } from 'next/headers';
 import Link from 'next/link';
 import { getLocale, getTranslations } from 'next-intl/server';
 import { BookOpen, Languages, Repeat, PenLine, Layers } from 'lucide-react';
+import LandingDemo from '@/components/landing-demo/LandingDemo';
+import { demoSetForRequest } from '@/components/landing-demo/demo-language';
 import LegalLinks from '@/components/LegalLinks';
 import WelcomeOfferNote from '@/components/WelcomeOfferNote';
 import { LANGUAGES, NATIVE_LANGUAGES } from '@/lib/languages';
 import { PUBLIC_BOOK_LANGUAGES } from '@/lib/public-books';
-import { UI_LOCALES } from '@/i18n/locales';
+import { LOCALE_COOKIE, UI_LOCALES } from '@/i18n/locales';
 import { LANDING_ROOT_ID } from '@/lib/api-base';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -51,40 +54,14 @@ const features = [
   { key: 'write', icon: PenLine },
 ] as const;
 
-function ReaderPreview({ t }: { t: Awaited<ReturnType<typeof getTranslations<'landing'>>> }) {
-  return (
-    <figure
-      role="img"
-      aria-label={t('preview.alt')}
-      className="mx-auto w-full max-w-md rounded-2xl border border-border bg-card p-6 shadow-sm"
-    >
-      <p className="font-reading text-lg leading-relaxed text-foreground" lang="en">
-        Alice was beginning to get very{' '}
-        <span className="rounded bg-[var(--primary-soft)] px-1 font-medium text-primary">
-          tired
-        </span>{' '}
-        of sitting by her sister on the bank, and of having nothing to do.
-      </p>
-      <div className="mt-5 rounded-xl border border-border bg-background p-4">
-        <div className="flex items-baseline gap-2">
-          <span className="text-lg font-semibold text-foreground" lang="en">
-            tired
-          </span>
-          <span className="text-sm text-muted-foreground">/ˈtaɪəd/</span>
-          <span className="text-xs text-muted-foreground">{t('preview.partOfSpeech')}</span>
-        </div>
-        <p className="mt-1 text-sm text-foreground">{t('preview.meaning')}</p>
-        <span className="mt-3 inline-block rounded-lg bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground">
-          {t('preview.save')}
-        </span>
-      </div>
-    </figure>
-  );
-}
-
 export default async function LandingPage() {
   const t = await getTranslations('landing');
   const locale = await getLocale();
+  const [store, requestHeaders] = await Promise.all([cookies(), headers()]);
+  const demo = demoSetForRequest(
+    store.get(LOCALE_COOKIE)?.value,
+    requestHeaders.get('accept-language'),
+  );
   const names = new Intl.DisplayNames([locale], { type: 'language' });
   // The free-library languages are the ones production opens in setup (SETUP_READY_LANGUAGES).
   const ready = PUBLIC_BOOK_LANGUAGES.map((code) => names.of(code) ?? code);
@@ -146,7 +123,7 @@ export default async function LandingPage() {
               </Link>
             </div>
           </div>
-          <ReaderPreview t={t} />
+          <LandingDemo initialSet={demo.id} fromCookie={demo.fromCookie} />
         </section>
 
         <section className="mx-auto w-full max-w-5xl px-4 pb-4">

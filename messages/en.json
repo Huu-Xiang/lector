@@ -230,11 +230,22 @@
     "languagesSoon": "{count} more languages in development",
     "languagesUi": "Interface: {ui} · Meanings and explanations: {count} languages (change it in Settings)",
     "createAccount": "Create a free account",
-    "preview": {
-      "alt": "Preview: tap a word in a book to see its meaning",
-      "partOfSpeech": "adjective",
-      "meaning": "needing rest; worn out",
-      "save": "Save word"
+    "demo": {
+      "label": "Interactive reading demo",
+      "panelLabel": "Explanation",
+      "hintFine": "Click a word, or hold and drag across a sentence.",
+      "hintCoarse": "Tap a word, or long-press and drag across a sentence.",
+      "stepWord": "Your turn: tap the glowing word.",
+      "stepContext": "Now tap “In context” to see the meaning in this sentence.",
+      "stepDragFine": "Last step: hold and drag across the sentence.",
+      "stepDragCoarse": "Last step: long-press, then drag across the sentence.",
+      "done": "That is how reading works. Other words can be tapped too.",
+      "pause": "Pause",
+      "replay": "Replay",
+      "startFree": "Start free",
+      "inContext": "In context",
+      "usage": "Usage",
+      "idiom": "Idiom"
     },
     "howTitle": "How it works",
     "features": {
