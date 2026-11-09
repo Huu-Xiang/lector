@@ -20,6 +20,7 @@ import { purgeTenantData } from './account-deletion';
 import { getDatabaseInstance } from '../db';
 import { attachInvite, inviteRequired, isAcceptableSignupCode } from './invites';
 import { redeemSignupCode, rememberSignupCode } from './redeem';
+import { shortenIp } from './ip-privacy';
 
 /** One account per mailbox: refuse throwaway domains and +tag / Gmail-dot variants of a taken address. */
 function checkSignupEmail(raw: unknown, database: Database): void {
@@ -228,6 +229,21 @@ export function createAuthEngine(opts: AuthEngineOptions) {
       },
     },
     databaseHooks: {
+      // Login records keep a shortened address (lib/ip-privacy.ts). Rate limiting
+      // reads the live request address, never this column.
+      session: {
+        create: {
+          before: async (session) => ({
+            data: { ipAddress: shortenIp((session as { ipAddress?: string | null }).ipAddress) },
+          }),
+        },
+        update: {
+          before: async (session) =>
+            typeof session.ipAddress === 'string'
+              ? { data: { ipAddress: shortenIp(session.ipAddress) } }
+              : undefined,
+        },
+      },
       user: {
         create: {
           after: async (user) => {
