@@ -21,6 +21,8 @@ import { getDatabaseInstance } from '../db';
 import { attachInvite, inviteRequired, isAcceptableSignupCode } from './invites';
 import { redeemSignupCode, rememberSignupCode } from './redeem';
 import { shortenIp } from './ip-privacy';
+import { parseSourceCookie } from './source-list';
+import { recordSourceEvent } from './source-counts';
 
 /** Grants the sign-up plan and sends the welcome mail. Neither step may fail the verification. */
 export async function runAfterEmailVerification(
@@ -183,6 +185,15 @@ export function createAuthEngine(opts: AuthEngineOptions) {
       after: createAuthMiddleware(async (ctx) => {
         const code = ctx.headers?.get('x-invite-code');
         const user = (ctx.context.returned as { user?: { id?: string } } | undefined)?.user;
+        if (ctx.path === '/sign-up/email' && user?.id) {
+          // The count has no link to the new account: only the cookie's source and language.
+          try {
+            const first = parseSourceCookie(ctx.headers?.get('cookie'));
+            if (first) recordSourceEvent('signup', first[0], first[1]);
+          } catch (err) {
+            console.error('[accounts] failed to count the sign-up source:', err);
+          }
+        }
         if (ctx.path !== '/sign-up/email' || !code || !user?.id) return;
         try {
           attachInvite({ inviteeId: user.id, rawCode: code });

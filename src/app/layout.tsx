@@ -8,6 +8,8 @@ import AuthGuard from '@/components/AuthGuard';
 import BillingGuard from '@/components/BillingGuard';
 import ChatWidget from '@/components/ChatWidget';
 import SetupGuard from '@/components/SetupGuard';
+import TimezoneSync from '@/components/TimezoneSync';
+import SourceBeacon from '@/components/SourceBeacon';
 import './globals.css';
 import NavHeader from '@/components/NavHeader';
 import PlanLimitPrompt from '@/components/PlanLimitPrompt';
@@ -95,11 +97,13 @@ export default async function RootLayout({
               API calls. */}
             <AuthGuard>
               <BillingGuard>
+                <TimezoneSync />
                 <SetupGuard>{children}</SetupGuard>
               </BillingGuard>
             </AuthGuard>
           </div>
           <ChatWidget />
+          <SourceBeacon />
           <PlanLimitPrompt />
           {/* Spacer for mobile bottom nav — invisible on sm+ */}
           <div className="h-16 sm:hidden print:hidden" aria-hidden="true" />

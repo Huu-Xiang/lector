@@ -355,6 +355,10 @@ export interface AdminTrends {
     afterWeek: { eligible: number; returned: number };
   };
   rmb: { orders: number; fen: number; refundedOrders: number; refundedFen: number };
+  sources: {
+    sources: { source: string; visits: number; signups: number }[];
+    langs: Record<'zh' | 'other', { visits: number; signups: number }>;
+  };
 }
 
 export async function getAdminTrends(days: AdminTrendRange): Promise<AdminTrends> {

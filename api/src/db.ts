@@ -532,6 +532,17 @@ function getDb(): Database {
       unsubscribedAt TEXT NOT NULL
     );
 
+    -- Anonymous daily counts of visits and sign-ups per traffic source
+    -- (lib/source-counts.ts). No userId, no IP, no referrer URL. date is UTC.
+    CREATE TABLE IF NOT EXISTS source_counts (
+      date TEXT NOT NULL,
+      source TEXT NOT NULL,
+      lang TEXT NOT NULL,
+      event TEXT NOT NULL,
+      count INTEGER NOT NULL DEFAULT 0,
+      PRIMARY KEY (date, source, lang, event)
+    );
+
     -- Guided onboarding + learner activity (#331). The profile is deliberately
     -- small but durable: it is the first slice of the shared learner model
     -- planned in #125. Progress is one non-restartable v1 journey per account;

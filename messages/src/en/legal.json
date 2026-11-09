@@ -12,31 +12,36 @@
           "account": "Your email address, optional name, and a salted hash of your password.",
           "text": "The <strong>text</strong> extracted from books and articles you import (titles and chapters). We do not keep the original EPUB file.",
           "learning": "Your vocabulary, reading progress, practice history, journal entries and settings.",
+          "readingStats": "Your reading time and the number of words you read, stored in your learning statistics.",
+          "autoSave": "The words you look up are saved to your word list automatically. You can turn this off in Settings.",
+          "timezone": "Your browser's time zone. It is saved to your account to calculate your learning day, which sets your daily statistics and streaks.",
           "reviewHistory": "Your word review history: each answer, the time you gave it, and the card's schedule. It is part of your data export. Free accounts keep the most recent 5,000 entries.",
-          "aiKey": "If you add your own AI key, it is stored encrypted (AES-256-GCM). It is never sent back to your browser.",
           "usage": "Monthly counters of how many AI lookups and requests you used, so we can apply the monthly allowance.",
+          "aiKey": "If you add your own AI key, it is stored encrypted (AES-256-GCM). It is never sent back to your browser.",
           "session": "A session cookie that keeps you signed in, and server logs used to keep the service secure and working. Web access logs keep the page address, time and status, with the IP address cut to its first three parts (for example 203.0.113.x). They hold no cookies or passwords and are deleted after 30 days.",
+          "loginRecords": "Sign-in records: the time, your browser's user-agent text and a shortened IP address. We keep only the first three parts of an IPv4 address (for example 203.0.113.0) and the first 48 bits of an IPv6 address.",
+          "sourceCounts": "Anonymous daily counts of visits and sign-ups. Each count notes which channel a visit came from (for example a search engine or a social site) and whether the browser language is Chinese. A count has no link to an account, no IP address and no full referrer address. A first-party cookie named rf_src holds the channel and the language for up to 30 days, so one browser counts once. When you sign up, the count for that channel goes up by one, still with no link to your account.",
           "feedback": "If you send feedback, we store the message text and email it to the operator with your account email address, so we can reply, and with any images you attach. The images are not stored. We delete the stored messages when you delete your account.",
-          "sharedWords": "A shared cache of single-word translations, dictionary meanings translated into a learner's language, translations of public example sentences (free-library books and Tatoeba), and AI-written example sentences for a word (the language pair, the word or public sentence, and its translation), reused for every account. It holds no account information and none of your sentences.",
           "invites": "Your invite code, who invited you or whom you invited (as an internal account link), and any reward cards you hold.",
-          "inviteFingerprint": "If you earn an invite reward, we keep a keyed one-way hash of your email address for 24 months, even after you delete your account. It cannot be turned back into your address. It only stops the same address from earning the reward twice."
+          "inviteFingerprint": "If you earn an invite reward, we keep a keyed one-way hash of your email address for 24 months, even after you delete your account. It cannot be turned back into your address. It only stops the same address from earning the reward twice.",
+          "sharedWords": "A shared cache of single-word translations, dictionary meanings translated into a learner's language, translations of public example sentences (free-library books and Tatoeba), and AI-written example sentences for a word (the language pair, the word or public sentence, and its translation), reused for every account. It holds no account information and none of your sentences."
         }
       },
       "others": {
         "heading": "Who else is involved",
         "items": {
           "cloudflare": "<strong>Cloudflare</strong> – DNS, the Turnstile bot check on sign-up, and R2 storage for backups.",
-          "resend": "<strong>Resend</strong> – delivers the verification and password-reset emails. When product emails are on, it also delivers a welcome email, short reading reminders in the first days, and a note when you reach a free limit. Each of those has an unsubscribe link.",
+          "resend": "<strong>Resend</strong> – delivers the verification and password-reset emails. When product emails are on, it also delivers a welcome email, short reading reminders in the first days, and a note when you reach a free limit. It may also deliver a reminder that a paid plan is about to end and a reminder about words due for review. Each of those has an unsubscribe link in the email.",
           "aiProvider": "<strong>Your AI provider (OpenRouter or Anthropic)</strong> – if you add your own key and use translation, explanations or chat, the text you select, with some surrounding context, is sent to the provider using <em>your</em> key. Their privacy terms apply to that data, and the usage is billed to you.",
           "aiBuiltIn": "<strong>Alibaba Cloud (Model Studio)</strong> – if you use Readfox's built-in AI allowance instead of your own key, the text you select, with some surrounding context, is sent to Alibaba Cloud's Qwen models through our workspace to produce the translation or explanation. During word review, a public example sentence or the word being reviewed may also be sent, never a sentence you saved. Alibaba Cloud's terms apply to that data. The allowance is limited each month.",
           "paddle": "<strong>Paddle</strong> – our reseller (Merchant of Record) for card and PayPal payments. If you subscribe this way, Paddle collects your payment details and billing address under its own privacy policy. We receive your email address, your plan and its status, never your card or account numbers.",
           "xiaodou": "<strong>Xiaodou Pay (Yuzhi AI, Shenzhen)</strong> – processes one-time RMB payments through Alipay and WeChat Pay. It receives the order amount, an order number and the public IP address of your device. Your Alipay or WeChat account details stay with Alipay or WeChat; we never receive them."
         },
-        "noTrackers": "We do not run advertising or analytics trackers, and we do not sell your data."
+        "noTrackers": "We do not use advertising or third-party analytics trackers, and we do not sell your data."
       },
       "operator": {
         "heading": "What the operator can and cannot see",
-        "dashboard": "The admin dashboard shows account-level numbers (sign-up date, last activity, counts of lessons and words, storage used) and a masked email address such as xi***@gmail.com. It also shows service-wide daily totals, such as sign-ups, active learners, lookups and payments, which do not name any account. It does not show your name. It has no screen that displays your book text, and it has no “view as user” or per-user export feature. The operator can reveal a full email address to give you support, handle a deletion request or stop abuse. Each reveal is written to an audit log.",
+        "dashboard": "The admin dashboard shows account-level numbers (sign-up date, last activity, counts of lessons and words, storage used) and a masked email address such as xi***@gmail.com. It also shows service-wide daily totals, such as sign-ups, active learners, lookups, payments and visits by channel, which do not name any account. It does not show your name. It has no screen that displays your book text, and it has no “view as user” or per-user export feature. The operator can reveal a full email address to give you support, handle a deletion request or stop abuse. Each reveal is written to an audit log.",
         "access": "Be aware that the operator still has technical access to the server and its database, so we cannot promise that viewing is technically impossible. We do not look at your content. If you ask for support and send us an export, we use it only to fix your problem and then delete it. Please do not upload material you would not want a server to process."
       },
       "backups": {

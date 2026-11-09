@@ -3054,6 +3054,11 @@ const internalOps: Record<string, OperationDoc> = {
     tag: 'Service',
     auth: 'none',
   },
+  'POST /api/source-count': {
+    summary: 'Count one anonymous visit by traffic source',
+    tag: 'Service',
+    auth: 'none',
+  },
 
   'POST /api/tokens': { summary: 'Create a personal access token', tag: 'Settings' },
   'GET /api/tokens': { summary: 'List personal access tokens', tag: 'Settings' },

@@ -1,4 +1,5 @@
 import { db } from '../db';
+import { sourceReport, type SourceReport } from './source-counts';
 
 export const TREND_RANGES = [7, 30, 90] as const;
 export type TrendRange = (typeof TREND_RANGES)[number];
@@ -40,6 +41,8 @@ export interface AdminTrends {
     afterWeek: { eligible: number; returned: number };
   };
   rmb: { orders: number; fen: number; refundedOrders: number; refundedFen: number };
+  /** Anonymous traffic-source totals for from..to; operator accounts cannot be left out. */
+  sources: SourceReport;
 }
 
 const DAY_MS = 86_400_000;
@@ -304,5 +307,6 @@ export function buildAdminTrends(
     funnel,
     retention,
     rmb,
+    sources: sourceReport(from, to),
   };
 }

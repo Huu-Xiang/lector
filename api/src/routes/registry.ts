@@ -39,6 +39,7 @@ import onboarding from './onboarding';
 import learnerEvents from './learner-events';
 import emailUnsubscribe from './email-unsubscribe';
 import feedback from './feedback';
+import sourceCount from './source-count';
 
 export type RouteMount = {
   /** Mount prefix, exactly as `app.route()` receives it. */
@@ -107,4 +108,5 @@ export const routeMounts: readonly RouteMount[] = [
   { prefix: '/api/learner-events', app: learnerEvents },
   { prefix: '/api/email/unsubscribe', app: emailUnsubscribe },
   { prefix: '/api/feedback', app: feedback },
+  { prefix: '/api/source-count', app: sourceCount },
 ];

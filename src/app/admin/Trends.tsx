@@ -121,6 +121,9 @@ export default function Trends() {
       ]
     : [];
 
+  const sourceRows = data?.sources.sources ?? [];
+  const langSplit = data?.sources.langs;
+
   return (
     <section className="mb-8">
       <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
@@ -278,6 +281,50 @@ export default function Trends() {
               ))}
             </ul>
           </ChartCard>
+
+          <div className="mt-3">
+            <ChartCard
+              title={`Traffic sources (${range}d)`}
+              note="anonymous daily counts; no account link, no IP"
+            >
+              {sourceRows.length === 0 ? (
+                <p className="text-sm text-muted-foreground">No visits counted yet.</p>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm tabular-nums">
+                    <thead>
+                      <tr className="text-left text-xs text-muted-foreground">
+                        <th className="py-1 pr-3 font-medium">Source</th>
+                        <th className="px-3 py-1 text-right font-medium">Visits</th>
+                        <th className="px-3 py-1 text-right font-medium">Sign-ups</th>
+                        <th className="py-1 pl-3 text-right font-medium">Sign-up rate</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {sourceRows.map((row) => (
+                        <tr key={row.source} className="border-t border-border">
+                          <td className="py-1 pr-3 text-foreground">{row.source}</td>
+                          <td className="px-3 py-1 text-right">{row.visits}</td>
+                          <td className="px-3 py-1 text-right">{row.signups}</td>
+                          <td className="py-1 pl-3 text-right">
+                            {percent(row.signups, row.visits)}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  {langSplit && (
+                    <p className="mt-2 text-xs text-muted-foreground">
+                      Browser language: Chinese {langSplit.zh.visits} visits, {langSplit.zh.signups}{' '}
+                      sign-ups ({percent(langSplit.zh.signups, langSplit.zh.visits)}) · other{' '}
+                      {langSplit.other.visits} visits, {langSplit.other.signups} sign-ups (
+                      {percent(langSplit.other.signups, langSplit.other.visits)})
+                    </p>
+                  )}
+                </div>
+              )}
+            </ChartCard>
+          </div>
         </>
       )}
     </section>
