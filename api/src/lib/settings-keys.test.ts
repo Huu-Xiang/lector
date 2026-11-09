@@ -42,3 +42,12 @@ describe('reviewGoal setting', () => {
     expect(validateSettingWrite('reviewGoal', 1)).not.toBeNull();
   });
 });
+
+describe('autoSaveLookups setting', () => {
+  test('accepts a boolean only', () => {
+    expect(validateSettingWrite('autoSaveLookups', true)).toBeNull();
+    expect(validateSettingWrite('autoSaveLookups', false)).toBeNull();
+    expect(validateSettingWrite('autoSaveLookups', 'false')).not.toBeNull();
+    expect(validateSettingWrite('autoSaveLookups', 0)).not.toBeNull();
+  });
+});

@@ -173,4 +173,46 @@ describe('apiFetch', () => {
     const body = await res.json();
     expect(body.error).toMatch(/unavailable/i);
   });
+
+  describe('429 plan_limit', () => {
+    const limitBody = JSON.stringify({
+      error: 'plan_limit',
+      metric: 'maxVocabEntries',
+      limit: 1,
+      used: 1,
+      requested: 1,
+      plan: 'free',
+      upgrade: 'cloud',
+    });
+
+    function stubLimitedFetch() {
+      setWindowEnv('http://localhost:3457');
+      const dispatchEvent = vi.fn();
+      (globalThis as unknown as { window: { dispatchEvent: unknown } }).window.dispatchEvent =
+        dispatchEvent;
+      vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(limitBody, { status: 429 }));
+      return dispatchEvent;
+    }
+
+    it('shows no upsell prompt when the caller asks for silence', async () => {
+      vi.spyOn(Date, 'now').mockReturnValue(1e12);
+      const dispatchEvent = stubLimitedFetch();
+
+      const res = await apiFetch('/api/vocab', { method: 'POST', silentPlanLimit: true });
+      await new Promise((resolve) => setTimeout(resolve, 0));
+
+      expect(res.status).toBe(429);
+      expect(dispatchEvent).not.toHaveBeenCalled();
+    });
+
+    it('shows the upsell prompt by default', async () => {
+      vi.spyOn(Date, 'now').mockReturnValue(2e12);
+      const dispatchEvent = stubLimitedFetch();
+
+      await apiFetch('/api/vocab', { method: 'POST' });
+      await new Promise((resolve) => setTimeout(resolve, 0));
+
+      expect(dispatchEvent).toHaveBeenCalledTimes(1);
+    });
+  });
 });

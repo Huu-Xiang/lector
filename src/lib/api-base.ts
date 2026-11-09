@@ -179,6 +179,11 @@ export function apiUrl(path: string): string {
   return `${apiBase()}${suffix}`;
 }
 
+export type ApiFetchInit = RequestInit & {
+  /** Background writes the user did not ask for: a 429 plan_limit shows no upsell prompt. */
+  silentPlanLimit?: boolean;
+};
+
 /**
  * `fetch` against the Hono API — prepends the base URL.
  *
@@ -195,7 +200,8 @@ export function apiUrl(path: string): string {
  * cross-origin selfhost deployment. A 401 in cloud means no/expired session:
  * bounce to /login (hard navigation, so all in-flight state resets).
  */
-export async function apiFetch(path: string, init?: RequestInit): Promise<Response> {
+export async function apiFetch(path: string, apiInit?: ApiFetchInit): Promise<Response> {
+  const { silentPlanLimit, ...init } = apiInit ?? {};
   const cloud = lectorMode() === 'cloud';
   try {
     // Cloud sessions are cookies (#218/#220). Same-origin (the prod path-split
@@ -203,7 +209,7 @@ export async function apiFetch(path: string, init?: RequestInit): Promise<Respon
     // only sends them with explicit credentials, paired with the API's
     // pinned-origin CORS. Selfhost keeps fetch defaults — its wide-open CORS
     // is credential-less by design.
-    const credentials = init?.credentials ?? (cloud ? 'include' : undefined);
+    const credentials = init.credentials ?? (cloud ? 'include' : undefined);
     const res = await fetch(apiUrl(path), { ...init, credentials });
     if (cloud && res.status === 401) {
       bounceToLogin();
@@ -217,7 +223,7 @@ export async function apiFetch(path: string, init?: RequestInit): Promise<Respon
     // upsell prompt, never a redirect. Centralized here so every surface
     // (reader, journal, practice, imports) gets the graceful UX for free;
     // the response still flows to the caller.
-    if (res.status === 429) {
+    if (res.status === 429 && !silentPlanLimit) {
       interceptPlanLimit(res);
     }
     return res;

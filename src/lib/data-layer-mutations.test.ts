@@ -13,6 +13,8 @@ import {
   createGroup,
   deleteCollection,
   deleteJournalEntry,
+  incrementDailyStat,
+  saveVocab,
   seedSentenceBank,
   setSetting,
   syncAnkiReviews,
@@ -64,5 +66,32 @@ describe('best-effort background mutations', () => {
 
     await expect(seedSentenceBank()).resolves.toEqual({ seeded: 0, total: 0 });
     await expect(syncAnkiReviews()).resolves.toEqual({ connected: false, synced: 0 });
+  });
+});
+
+describe('silent plan-limit writes', () => {
+  it('passes the silent flag on a vocab save and a stat increment', async () => {
+    apiFetch.mockResolvedValue(jsonResponse({ id: 'v1' }));
+    await saveVocab({ id: 'v1' } as never, { silentPlanLimit: true });
+    await incrementDailyStat('minutesRead', 2, { silentPlanLimit: true });
+
+    expect(apiFetch.mock.calls[0][1].silentPlanLimit).toBe(true);
+    expect(apiFetch.mock.calls[1][1].silentPlanLimit).toBe(true);
+    expect(JSON.parse(apiFetch.mock.calls[1][1].body)).toEqual({ field: 'minutesRead', amount: 2 });
+  });
+
+  it('keeps the upsell prompt for a save the user asked for', async () => {
+    apiFetch.mockResolvedValue(jsonResponse({ id: 'v1' }));
+    await saveVocab({ id: 'v1' } as never);
+    await incrementDailyStat('newWordsSaved');
+
+    expect(apiFetch.mock.calls[0][1].silentPlanLimit).toBeUndefined();
+    expect(apiFetch.mock.calls[1][1].silentPlanLimit).toBeUndefined();
+  });
+
+  it('reports a rejected save as not persisted', async () => {
+    apiFetch.mockResolvedValue(jsonResponse({ error: 'plan_limit' }, 429));
+    expect(await saveVocab({ id: 'v1' } as never, { silentPlanLimit: true })).toBeNull();
+    expect(await incrementDailyStat('wordsRead', 5, { silentPlanLimit: true })).toBe(false);
   });
 });

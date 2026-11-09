@@ -570,11 +570,15 @@ export async function getVocabByText(text: string): Promise<VocabEntry | undefin
   });
 }
 
-export async function saveVocab(entry: VocabEntry): Promise<string | null> {
+export async function saveVocab(
+  entry: VocabEntry,
+  options: { silentPlanLimit?: boolean } = {},
+): Promise<string | null> {
   const res = await apiFetch('/api/vocab', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ ...entry, language: getActiveLanguage() }),
+    silentPlanLimit: options.silentPlanLimit,
   });
   // null = not persisted (#232) — the reader's word-save handlers gate their
   // optimistic UI on this.
@@ -1149,11 +1153,13 @@ export async function getTodayStats(): Promise<DailyStats> {
 export async function incrementDailyStat(
   field: keyof Omit<DailyStats, 'date'>,
   amount: number = 1,
+  options: { silentPlanLimit?: boolean } = {},
 ): Promise<boolean> {
   const res = await apiFetch(`/api/stats/today${langParam()}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ field, amount }),
+    silentPlanLimit: options.silentPlanLimit,
   });
   if (res.ok) invalidateDailyStats();
   return res.ok;

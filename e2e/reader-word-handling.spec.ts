@@ -234,18 +234,19 @@ test.describe('Reader word handling', () => {
 
     await page.evaluate(() => {
       window.dispatchEvent(
-        new KeyboardEvent('keydown', { key: '1', metaKey: true, bubbles: true }),
+        new KeyboardEvent('keydown', { key: '2', metaKey: true, bubbles: true }),
       );
     });
     await page.waitForTimeout(300);
 
-    // Level buttons render as their digit ("1", "2", "3", "4"). title="Level 1"
-    // is non-accessible, so the role-name lookup needs the visible text.
-    const levelButton = drawer.locator('button[title="Level 1"]');
+    // Level 1 is already set by the auto-save of a looked-up word, so the test
+    // uses level 2. Level buttons render as their digit ("1", "2", "3", "4").
+    // title="Level 2" is non-accessible, so the role-name lookup needs the visible text.
+    const levelButton = drawer.locator('button[title="Level 2"]');
     const classes = await levelButton.getAttribute('class');
     expect(classes).not.toContain('ring-2');
 
-    await page.keyboard.press('1');
+    await page.keyboard.press('2');
     await expect(levelButton).toHaveClass(/ring-2/, { timeout: 3000 });
   });
 });

@@ -68,7 +68,7 @@ If you do not want to run a server, use the hosted app at [app.lector.dev](https
 
 ## Features
 
-- **Reader.** Import a file or a stream. Each word has a state: new, learning, or known. Tap a word for a translation. The reader accepts:
+- **Reader.** Import a file or a stream. Each word has a state: new, learning, or known. Tap a word for a translation. The reader saves the word to your list. You can turn this off in Settings. The reader accepts:
 
   - an EPUB file
   - a Markdown file

@@ -146,8 +146,11 @@ test.describe('Nested dictionary definitions (reader)', () => {
     expect(entries).toHaveLength(1);
     expect(entries[0].state).toBe('known');
 
-    // ...and the surface form the user clicked first was not saved as a side effect
-    expect(await vocabByText(page, 'vrugte')).toHaveLength(0);
+    // ...the surface form the user clicked first was saved at level 1 by the
+    // auto-save, and the nested lookup of "vrug" was not saved on its own
+    await expect
+      .poll(async () => (await vocabByText(page, 'vrugte')).map((v) => v.state))
+      .toEqual(['level1']);
   });
 
   test('nested word falls back to AI translate when the dict misses it', async ({ page }) => {

@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Kbd, KbdGroup } from '@/components/ui/kbd';
 import { toast } from 'sonner';
-import { getReviewGoal, setReviewGoal } from '@/lib/data-layer';
+import { getReviewGoal, getSetting, setReviewGoal, setSetting } from '@/lib/data-layer';
 import type { ReviewGoal } from '@/types';
 import { SETTINGS_KEYS } from '../../constants';
 
@@ -15,6 +15,7 @@ export default function PracticeSettings() {
   const t = useTranslations('settings.practice');
   const [hideTranslation, setHideTranslation] = useState(false);
   const [goal, setGoal] = useState<ReviewGoal>('recognize');
+  const [autoSave, setAutoSave] = useState(true);
 
   useEffect(() => {
     const load = () =>
@@ -23,7 +24,21 @@ export default function PracticeSettings() {
     getReviewGoal()
       .then(setGoal)
       .catch(() => undefined);
+    getSetting<boolean | null>('autoSaveLookups')
+      .then((value) => setAutoSave(value !== false))
+      .catch(() => undefined);
   }, []);
+
+  const handleAutoSaveChanged = async (next: boolean) => {
+    const previous = autoSave;
+    setAutoSave(next);
+    try {
+      await setSetting('autoSaveLookups', next);
+    } catch {
+      setAutoSave(previous);
+      toast.error(t('autoSaveFailed'));
+    }
+  };
 
   const handleGoalChanged = async (next: ReviewGoal) => {
     const previous = goal;
@@ -96,6 +111,29 @@ export default function PracticeSettings() {
               <p className="mt-1.5 text-xs text-muted-foreground">{t(`reviewGoalHint.${value}`)}</p>
             </div>
           ))}
+        </div>
+
+        <label className="mt-6 block text-sm font-medium text-foreground">
+          {t('autoSaveLabel')}
+        </label>
+        <p className="mb-2 text-xs text-muted-foreground">{t('autoSaveHint')}</p>
+        <div className="flex gap-2" role="group" aria-label={t('autoSaveLabel')}>
+          <Button
+            aria-pressed={autoSave}
+            data-testid="auto-save-lookups-on"
+            onClick={() => void handleAutoSaveChanged(true)}
+            variant={autoSave ? 'default' : 'secondary'}
+          >
+            {t('autoSaveOn')}
+          </Button>
+          <Button
+            aria-pressed={!autoSave}
+            data-testid="auto-save-lookups-off"
+            onClick={() => void handleAutoSaveChanged(false)}
+            variant={autoSave ? 'secondary' : 'default'}
+          >
+            {t('autoSaveOff')}
+          </Button>
         </div>
       </div>
     </section>

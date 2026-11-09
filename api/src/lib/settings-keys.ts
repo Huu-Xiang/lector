@@ -43,6 +43,8 @@ const SETTING_VALUE_BYTE_LIMITS: Record<string, number> = {
   // Up to 4 interest ids, e.g. ["news","travel","science","literature"].
   readingInterests: 64,
   reviewGoal: 24,
+  // true or false.
+  autoSaveLookups: 8,
 };
 
 export function settingValueByteLimit(key: string): number {
@@ -63,6 +65,8 @@ export const KNOWN_SETTING_KEYS = new Set([
   'readingInterests',
   // Word review: 'recognize' (default) or 'recognize_spell'.
   'reviewGoal',
+  // Reader: save a looked-up word at once. Unset means on.
+  'autoSaveLookups',
   // LLM provider config (Settings → AI, setup)
   'llmProvider',
   'openaiPreset',
@@ -138,6 +142,9 @@ export function validateSettingWrite(key: string, value: unknown): string | null
   }
   if (key === 'reviewGoal' && (typeof value !== 'string' || !REVIEW_GOALS.has(value))) {
     return "reviewGoal must be 'recognize' or 'recognize_spell'";
+  }
+  if (key === 'autoSaveLookups' && typeof value !== 'boolean') {
+    return 'autoSaveLookups must be true or false';
   }
   if (key === 'enabledLanguages') {
     if (!Array.isArray(value)) return 'enabledLanguages must be an array of language codes';

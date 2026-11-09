@@ -25,6 +25,7 @@ import {
   getKnownWordsMap,
   saveVocab,
   updateVocabEntry,
+  getSetting,
   getVocabByText,
   updateVocabState,
   updateLesson,
@@ -36,6 +37,7 @@ import { addWordCard, addClozeCard, buildSourceLinkHtml } from '@/lib/anki';
 import { queueForAnki } from '@/lib/anki-queue';
 import { useAnkiTransport } from '@/lib/anki-transport';
 import { useLectorMode } from '@/lib/use-env';
+import { useReadingActivity } from '@/lib/use-reading-activity';
 import { useRefreshOnReturn } from '@/lib/use-refresh-on-return';
 import {
   CONTENT_FILTERED,
@@ -122,6 +124,10 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
   } | null>(null);
   const translationRequestId = useRef(0);
   const existingEntryLookup = useRef<Promise<VocabEntry | undefined> | null>(null);
+  // The one lookup whose word may be saved on its own: set for a single word
+  // opened from the reader, cleared once it is used.
+  const autoSaveRequestId = useRef(0);
+  const nestedLookupRef = useRef(false);
   // For transcript lessons (#334): the segment source of the word currently in
   // the drawer, so a mined card can carry its timestamped YouTube link.
   const currentWordSourceRef = useRef<WordSource | null>(null);
@@ -216,6 +222,18 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     loadLesson();
   }, [activeLang.code, lessonId, t]);
 
+  // Unset means on; null until the setting has loaded, so a lookup never saves early.
+  const [autoSaveLookups, setAutoSaveLookups] = useState<boolean | null>(null);
+  const loadAutoSaveSetting = useCallback(() => {
+    getSetting<boolean | null>('autoSaveLookups')
+      .then((value) => setAutoSaveLookups(value !== false))
+      .catch(() => {});
+  }, []);
+  useEffect(() => {
+    loadAutoSaveSetting();
+  }, [loadAutoSaveSetting]);
+  useRefreshOnReturn(loadAutoSaveSetting);
+
   useRefreshOnReturn(() => {
     getKnownWordsMap()
       .then((map) => {
@@ -228,6 +246,9 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
   // Audio lesson (#185): fetch segments once transcription is done, and poll
   // the lesson while it's still transcribing so the reader unlocks by itself.
   const transcriptionStatus = lesson?.transcriptionStatus ?? null;
+  const reportReadingProgress = useReadingActivity(
+    lesson && (!transcriptionStatus || transcriptionStatus === 'done') ? lesson : null,
+  );
   useEffect(() => {
     if (transcriptionStatus === 'done') {
       let cancelled = false;
@@ -392,6 +413,8 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       // subsequent Anki mine can attach the timestamped source link.
       currentWordSourceRef.current = source ?? null;
       const isPhrase = word.includes(' ');
+      const nested = nestedLookupRef.current;
+      nestedLookupRef.current = false;
 
       // Reflect the plan's phrase-selection cap before calling the API (#222).
       // The server enforces it regardless; this just turns the over-cap case
@@ -407,6 +430,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       }
 
       const requestId = ++translationRequestId.current;
+      autoSaveRequestId.current = isPhrase || nested ? 0 : requestId;
 
       const wordsToSpeak = word.split(/\s+/).slice(0, 15).join(' ');
       speak(wordsToSpeak);
@@ -597,6 +621,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
   // on the underlying word records where it was encountered.
   const handleNestedLookup = useCallback(
     (nestedWord: string) => {
+      nestedLookupRef.current = true;
       void handleWordClick(nestedWord, wordPanel.sentence);
     },
     [handleWordClick, wordPanel.sentence],
@@ -730,52 +755,85 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     wordPanel.partOfSpeech,
   ]);
 
-  const saveWordToVocab = useCallback(async () => {
-    if (!wordPanel.translation) return;
+  // `auto` is a save the user did not ask for: it never touches a word that
+  // already has a state, and a failure shows nothing.
+  const saveWordToVocab = useCallback(
+    async (auto = false) => {
+      if (!wordPanel.translation) return;
 
-    const existing = await resolveExistingEntry();
-    const isPhrase = wordPanel.word.includes(' ');
-    const entry: VocabEntry = {
-      id: existing?.id || uuidv4(),
-      text: vocabTextOf(wordPanel.word),
-      type: isPhrase ? 'phrase' : 'word',
-      sentence: wordPanel.sentence,
-      translation: wordPanel.translation,
-      translationLang: wordPanel.translationLang,
-      state: existing?.state || 'level1',
-      stateUpdatedAt: new Date(),
-      reviewCount: existing?.reviewCount || 0,
-      bookId: lessonId,
-      createdAt: existing?.createdAt || new Date(),
-      pushedToAnki: existing?.pushedToAnki || false,
-      ankiNoteId: existing?.ankiNoteId,
-    };
-    const rollbackReaderState = applyReaderWordState(wordPanel.word, entry.state);
+      const requestId = translationRequestId.current;
+      const existing = await resolveExistingEntry();
+      if (auto) {
+        const readerState = lookupByVocabKeys(
+          readerWordStatesRef.current,
+          wordPanel.word,
+          activeLang,
+        );
+        const hasState = !!readerState && readerState !== 'new';
+        if (existing || hasState || requestId !== translationRequestId.current) return;
+      }
+      const isPhrase = wordPanel.word.includes(' ');
+      const entry: VocabEntry = {
+        id: existing?.id || uuidv4(),
+        text: vocabTextOf(wordPanel.word),
+        type: isPhrase ? 'phrase' : 'word',
+        sentence: wordPanel.sentence,
+        translation: wordPanel.translation,
+        translationLang: wordPanel.translationLang,
+        state: existing?.state || 'level1',
+        stateUpdatedAt: new Date(),
+        reviewCount: existing?.reviewCount || 0,
+        bookId: lessonId,
+        createdAt: existing?.createdAt || new Date(),
+        pushedToAnki: existing?.pushedToAnki || false,
+        ankiNoteId: existing?.ankiNoteId,
+      };
+      const rollbackReaderState = applyReaderWordState(wordPanel.word, entry.state);
 
-    // A failed save must not paint the word as saved (#232).
-    if (!(await saveVocab(entry))) {
-      rollbackReaderState();
-      toast.error(t('saveFailed'));
-      return;
-    }
-    await incrementDailyStat('newWordsSaved');
-    persistAcceptedTranslation();
-    void trackOnboardingVocab(entry, entry.state);
+      // A failed save must not paint the word as saved (#232).
+      const saving = saveVocab(entry, { silentPlanLimit: auto });
+      // A K or X pressed while this save runs waits for it instead of adding a second row.
+      if (auto) existingEntryLookup.current = saving.then((id) => (id ? entry : undefined));
+      if (!(await saving)) {
+        rollbackReaderState();
+        if (!auto) toast.error(t('saveFailed'));
+        return;
+      }
+      await incrementDailyStat('newWordsSaved', 1, { silentPlanLimit: auto });
+      // The shared dictionary only takes meanings a reader chose to keep.
+      if (!auto) persistAcceptedTranslation();
+      void trackOnboardingVocab(entry, entry.state);
 
-    setWordPanel((prev) => ({
-      ...prev,
-      existingEntry: entry,
-    }));
-  }, [
-    wordPanel,
-    lessonId,
-    resolveExistingEntry,
-    applyReaderWordState,
-    vocabTextOf,
-    persistAcceptedTranslation,
-    trackOnboardingVocab,
-    t,
-  ]);
+      if (auto && requestId !== translationRequestId.current) return;
+      setWordPanel((prev) => ({
+        ...prev,
+        existingEntry: entry,
+      }));
+    },
+    [
+      wordPanel,
+      lessonId,
+      activeLang,
+      resolveExistingEntry,
+      applyReaderWordState,
+      vocabTextOf,
+      persistAcceptedTranslation,
+      trackOnboardingVocab,
+      t,
+    ],
+  );
+
+  // Save a looked-up single word once its meaning has arrived (the lookup
+  // that opened the drawer, not a nested one, and not during the guide).
+  useEffect(() => {
+    if (autoSaveLookups !== true || onboarding === null || onboardingActive) return;
+    if (!wordPanel.isOpen || wordPanel.word.includes(' ')) return;
+    if (autoSaveRequestId.current !== translationRequestId.current) return;
+    if (!wordPanel.translation || wordPanel.isLoading || wordPanel.isStreamingGloss) return;
+    if (wordPanel.error || wordPanel.existingEntry) return;
+    autoSaveRequestId.current = 0;
+    void saveWordToVocab(true);
+  }, [autoSaveLookups, onboarding, onboardingActive, wordPanel, saveWordToVocab]);
 
   const markAsKnown = useCallback(async () => {
     const rollbackReaderState = applyReaderWordState(wordPanel.word, 'known');
@@ -1420,6 +1478,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
             onClearSelection={closeWordPanel}
             onSaveText={handleSaveText}
             onEditingChange={handleEditingChange}
+            onProgress={reportReadingProgress}
             knownWordsMap={readerWordStates}
             prevLesson={prevLesson}
             nextLesson={nextLesson}

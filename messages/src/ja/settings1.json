@@ -11,6 +11,11 @@
       "wordReviewHeading": "単語の復習",
       "reviewGoalLabel": "復習の目標",
       "reviewGoalFailed": "復習の目標を保存できませんでした。もう一度お試しください。",
+      "autoSaveLabel": "調べた単語を自動で保存",
+      "autoSaveHint": "調べた単語を、レベル 1 で単語リストに自動で追加します。単語カードで変更や取り消しができます。",
+      "autoSaveOn": "オン",
+      "autoSaveOff": "オフ",
+      "autoSaveFailed": "この設定を保存できませんでした。もう一度お試しください。",
       "reviewGoal": {
         "recognize": "見て分かる",
         "recognize_spell": "見て分かり、書ける"

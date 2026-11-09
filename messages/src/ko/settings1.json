@@ -11,6 +11,11 @@
       "wordReviewHeading": "단어 복습",
       "reviewGoalLabel": "복습 목표",
       "reviewGoalFailed": "복습 목표를 저장하지 못했어요. 다시 시도해 주세요.",
+      "autoSaveLabel": "찾아본 단어 자동 저장",
+      "autoSaveHint": "찾아본 단어를 레벨 1로 단어장에 자동으로 추가해요. 단어 카드에서 바꾸거나 취소할 수 있어요.",
+      "autoSaveOn": "켜기",
+      "autoSaveOff": "끄기",
+      "autoSaveFailed": "이 설정을 저장하지 못했어요. 다시 시도해 주세요.",
       "reviewGoal": {
         "recognize": "알아보기",
         "recognize_spell": "알아보고 철자 쓰기"

@@ -43,6 +43,7 @@ export default function MarkdownReader({
   onClearSelection,
   onSaveText,
   onEditingChange,
+  onProgress,
   knownWordsMap,
   prevLesson,
   nextLesson,
@@ -254,7 +255,8 @@ export default function MarkdownReader({
     const percentage = Math.round((scrollTop / (scrollHeight - clientHeight)) * 100) || 0;
     setScrollPercentage(percentage);
     progressWriter(scrollTop, percentage);
-  }, [progressWriter]);
+    if (!isEditing) onProgress?.(percentage);
+  }, [progressWriter, onProgress, isEditing]);
 
   const findSentence = useCallback(
     (element: HTMLElement): string => {
