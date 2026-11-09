@@ -42,7 +42,10 @@ sequenceDiagram
 
 - Selfhost never mounts `useSession`. The API has no `/api/auth/*` route.
 - Auth pages render even with no session. They send a signed-in user to `/`.
-- When `window.__ENV__` enables them, GitHub and OIDC buttons show.
+- When `window.__ENV__` enables them, GitHub and OIDC buttons show on `/login`. The OIDC button also shows on `/register`.
+- A Google login (`OIDC_ISSUER=https://accounts.google.com`) joins the account with the same email. If that account never verified its email, the API deletes its password and sessions first.
+- A new provider account counts as verified. It gets the welcome plan, the welcome mail and one anonymous `signup` count. Invite-only mode and the alias rules apply to it.
+- A cancelled or refused provider login returns to `/login?error=<code>`. The page shows a message for the code.
 - Turnstile is a one-use token. A failed submit remounts the widget.
 - An unverified email stays on the login page. The user can ask for a new mail.
 

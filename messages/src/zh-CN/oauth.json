@@ -1,0 +1,14 @@
+{
+  "auth": {
+    "oauth": {
+      "continue": "使用 {provider} 继续",
+      "errCancelled": "已取消登录，你可以重试。",
+      "errNotLinked": "这个邮箱已经有账号，而且登录服务没有确认该邮箱属于你。请用邮箱和密码登录。",
+      "errInviteRequired": "注册需要有效的邀请码。请先在注册页填写，再重试。",
+      "errEmailAlias": "这个邮箱的另一种写法已经注册过账号，请用那个地址登录。",
+      "errEmailDisposable": "不能使用临时邮箱，请使用你常用的邮箱。",
+      "errTwoFactor": "这个账号开启了两步验证，请用邮箱和密码登录。",
+      "errFailed": "登录失败，请重试。"
+    }
+  }
+}

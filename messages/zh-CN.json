@@ -8,6 +8,10 @@
     "dismiss": "关闭提示",
     "learnMore": "了解更多",
     "items": {
+      "emailReminders": {
+        "title": "关于邮件提醒",
+        "body": "我们可能会发邮件提醒你套餐即将到期，或有单词需要复习。你可以在“设置”中关闭，也可以点任意一封邮件底部的退订链接。"
+      },
       "installApp": {
         "title": "手机上也能像 App 一样用",
         "body": "把 Readfox 加到手机主屏幕，点图标就能全屏阅读。设置页里有添加步骤。"
@@ -82,7 +86,6 @@
       "submit": "登录",
       "submitting": "登录中…",
       "github": "使用 GitHub 继续",
-      "oidc": "使用 {provider} 继续",
       "noAccount": "还没有账号?",
       "create": "去注册",
       "errInvalid": "邮箱或密码不正确。",
@@ -167,6 +170,16 @@
         "letter": "包含字母",
         "digit": "包含数字"
       }
+    },
+    "oauth": {
+      "continue": "使用 {provider} 继续",
+      "errCancelled": "已取消登录，你可以重试。",
+      "errNotLinked": "这个邮箱已经有账号，而且登录服务没有确认该邮箱属于你。请用邮箱和密码登录。",
+      "errInviteRequired": "注册需要有效的邀请码。请先在注册页填写，再重试。",
+      "errEmailAlias": "这个邮箱的另一种写法已经注册过账号，请用那个地址登录。",
+      "errEmailDisposable": "不能使用临时邮箱，请使用你常用的邮箱。",
+      "errTwoFactor": "这个账号开启了两步验证，请用邮箱和密码登录。",
+      "errFailed": "登录失败，请重试。"
     }
   },
   "setup": {
@@ -286,6 +299,14 @@
       "reviewGoalHint": {
         "recognize": "见到单词能认出词义。选择词义，识别单词。",
         "recognize_spell": "还要会写单词。熟悉和已掌握的词会要求你输入或听写。"
+      },
+      "emails": {
+        "heading": "邮件",
+        "label": "产品邮件",
+        "hint": "包括欢迎邮件、阅读提醒、套餐到期提醒和单词复习提醒。账号邮件不受影响：验证、重置密码和删除账号的邮件始终会发送。",
+        "on": "开",
+        "off": "关",
+        "failed": "无法保存此设置。请重试。"
       }
     },
     "prose": {
@@ -1403,7 +1424,6 @@
     "clear": "清空",
     "loadingOlder": "正在加载更早的消息……",
     "emptyPrompt": "问一个关于{language}的问题",
-    "via": "来自 {provider}",
     "placeholder": "询问{language}……"
   },
   "chrome": {
@@ -1495,6 +1515,7 @@
         "heading": "还有谁参与其中",
         "items": {
           "cloudflare": "<strong>Cloudflare</strong> – 提供 DNS、注册时的 Turnstile 机器人验证，以及用于备份的 R2 存储。",
+          "google": "<strong>Google</strong> – 如果你选择使用 Google 登录，Google 会告诉我们你的邮箱地址、姓名和头像，并告诉我们它已确认该邮箱。我们用这些信息创建你的账号或让你登录。如果已有使用同一邮箱的账号，我们会把两者合并，你的数据会保留。我们还会保存你的 Google 账号 ID 和 Google 发出的登录令牌。我们不会收到你的 Google 密码。",
           "resend": "<strong>Resend</strong> – 发送验证邮件和重置密码邮件。开启产品邮件时，它还会发送欢迎邮件、注册头几天的简短阅读提醒，以及达到免费额度时的提示。它还可能发送付费套餐即将到期的提醒，以及有单词该复习的提醒。每封邮件里都有退订链接。",
           "aiProvider": "<strong>你的 AI 服务商（OpenRouter 或 Anthropic）</strong> – 如果你添加了自己的密钥并使用翻译、解释或聊天功能，你选中的文本及部分上下文会通过<em>你自己的</em>密钥发送给该服务商。该数据适用其隐私条款，相关用量由你承担费用。",
           "aiBuiltIn": "<strong>阿里云（Model Studio）</strong> – 如果你使用 Readfox 内置的 AI 额度而不是自己的密钥，你选中的文本及部分上下文会通过我们的工作空间发送给阿里云的通义千问（Qwen）模型，用来生成翻译或解释。单词复习时，也可能发送一条公开例句或正在复习的单词，但不会发送你保存的句子。该数据适用阿里云的条款。内置额度每月有限。",

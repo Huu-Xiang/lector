@@ -1,0 +1,14 @@
+{
+  "auth": {
+    "oauth": {
+      "continue": "Continue with {provider}",
+      "errCancelled": "Sign-in was cancelled. You can try again.",
+      "errNotLinked": "An account with this email already exists, and the provider did not confirm the address. Sign in with your email and password.",
+      "errInviteRequired": "A valid invite code is required to sign up. Enter it on the register page, then try again.",
+      "errEmailAlias": "An account already uses this email address in another form. Sign in with that address instead.",
+      "errEmailDisposable": "Temporary email addresses can't be used. Please use your usual email.",
+      "errTwoFactor": "This account has two-step verification on. Sign in with your email and password.",
+      "errFailed": "Sign-in failed. Please try again."
+    }
+  }
+}

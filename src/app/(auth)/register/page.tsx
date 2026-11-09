@@ -16,6 +16,8 @@ import { meetsRules } from '@/lib/password-strength';
 import { readPendingInvite, writePendingInvite } from '@/lib/pending-invite';
 import { useInviteRequired } from '@/lib/use-env';
 import WelcomeOfferNote from '@/components/WelcomeOfferNote';
+import OidcSignInButton from '@/components/OidcSignInButton';
+import { useOAuthErrorToast } from '@/lib/use-oauth-error';
 
 export default function RegisterPage() {
   return (
@@ -32,6 +34,7 @@ function RegisterForm() {
   const { data: session, isPending } = authClient.useSession();
   const returnPath = sanitizeAuthReturnPath(params.get('next'));
   const destination = returnPath ?? '/';
+  useOAuthErrorToast();
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -215,6 +218,13 @@ function RegisterForm() {
       >
         {submitting ? t('submitting') : t('submit')}
       </Button>
+
+      <OidcSignInButton
+        destination={destination}
+        errorPath="/register"
+        inviteCode={invite.trim()}
+        testId="register-oidc"
+      />
 
       <p className="text-center text-sm text-muted-foreground">
         {t('haveAccount')}{' '}

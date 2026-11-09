@@ -14,6 +14,7 @@ import { randomBytes, randomUUID } from 'crypto';
 import { db } from '../db';
 import {
   createAuthEngine,
+  isGoogleIssuer,
   oidcDiscoveryUrl,
   runAfterEmailVerification,
   runAuthMigrations,
@@ -624,5 +625,390 @@ describe('the welcome plan on email verification', () => {
       },
     );
     expect(calls).toEqual(['u-throw']);
+  });
+});
+
+describe('Google sign-in through the OIDC path', () => {
+  const GOOGLE = 'https://accounts.google.com';
+  const OTHER = 'https://idp.example.com';
+  const PASSWORD = 'correct-horse-battery-9';
+
+  interface Profile {
+    sub: string;
+    email: string;
+    email_verified: boolean;
+    name: string;
+  }
+
+  let profile: Profile;
+  let realFetch: typeof fetch;
+  let googleDb: Database;
+  let googleApp: Hono;
+  let otherDb: Database;
+  let otherApp: Hono;
+
+  const b64 = (value: unknown) => Buffer.from(JSON.stringify(value)).toString('base64url');
+
+  function fakeIssuer(origin: string) {
+    return {
+      issuer: origin,
+      authorization_endpoint: `${origin}/auth`,
+      token_endpoint: `${origin}/token`,
+      userinfo_endpoint: `${origin}/userinfo`,
+    };
+  }
+
+  function makeApp(database: Database, issuer: string) {
+    const oidcEngine = createAuthEngine({
+      database,
+      baseURL: BASE,
+      secret: 'test-secret-000000000000000000000000',
+      trustedOrigins: [BASE],
+      oidc: { issuer, clientId: 'client', clientSecret: 'secret' },
+    });
+    const honoApp = new Hono();
+    honoApp.on(['POST', 'GET'], '/api/auth/*', (c) => oidcEngine.handler(c.req.raw));
+    return { oidcEngine, honoApp };
+  }
+
+  beforeAll(async () => {
+    realFetch = globalThis.fetch;
+    globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input instanceof Request ? input.url : input);
+      for (const origin of [GOOGLE, OTHER]) {
+        if (url === `${origin}/.well-known/openid-configuration`) {
+          return Response.json(fakeIssuer(origin));
+        }
+        if (url === `${origin}/token`) {
+          const idToken = `${b64({ alg: 'none' })}.${b64({ iss: origin, aud: 'client', ...profile })}.sig`;
+          return Response.json({ access_token: 'at', token_type: 'Bearer', id_token: idToken });
+        }
+      }
+      return realFetch(input, init);
+    }) as typeof fetch;
+
+    googleDb = new Database(':memory:');
+    const google = makeApp(googleDb, GOOGLE);
+    googleApp = google.honoApp;
+    await runAuthMigrations(google.oidcEngine);
+
+    otherDb = new Database(':memory:');
+    const other = makeApp(otherDb, OTHER);
+    otherApp = other.honoApp;
+    await runAuthMigrations(other.oidcEngine);
+  });
+
+  afterAll(() => {
+    globalThis.fetch = realFetch;
+  });
+
+  afterEach(() => {
+    delete process.env.INVITE_REQUIRED;
+    db.prepare('DELETE FROM redeem_uses WHERE code = ?').run(WELCOME_CODE);
+    db.prepare('DELETE FROM redeem_codes WHERE code = ?').run(WELCOME_CODE);
+    db.prepare("DELETE FROM redeem_campaigns WHERE name = 'welcome-google-test'").run();
+    db.prepare("DELETE FROM source_counts WHERE source = 'baidu'").run();
+  });
+
+  function seedWelcome() {
+    createCampaign({
+      name: 'welcome-google-test',
+      plan: 'cloud',
+      days: 15,
+      perUserLimit: 1,
+      totalLimit: 1000,
+      expiresAt: '2999-01-01T00:00:00.000Z',
+      codes: { mode: 'shared', code: WELCOME_CODE },
+    });
+  }
+
+  function grantCount(userId: string): number {
+    return (
+      db.prepare('SELECT COUNT(*) AS c FROM redeem_uses WHERE userId = ?').get(userId) as {
+        c: number;
+      }
+    ).c;
+  }
+
+  function signupRows(): number {
+    const row = db
+      .prepare(
+        "SELECT COALESCE(SUM(count), 0) AS c FROM source_counts WHERE event = 'signup' AND source = 'baidu'",
+      )
+      .get() as { c: number };
+    return row.c;
+  }
+
+  /** Runs the redirect dance: start at the app, come back from the provider with a code. */
+  async function login(
+    target: Hono,
+    who: Profile,
+    extra: { cookie?: string; additionalData?: Record<string, unknown> } = {},
+  ): Promise<Response> {
+    profile = who;
+    const start = await target.request(`${BASE}/api/auth/sign-in/oauth2`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        providerId: 'oidc',
+        callbackURL: `${BASE}/dash`,
+        additionalData: extra.additionalData,
+      }),
+    });
+    expect(start.status).toBe(200);
+    const { url } = (await start.json()) as { url: string };
+    const state = new URL(url).searchParams.get('state');
+    const cookie = [cookiesFrom(start), extra.cookie].filter(Boolean).join('; ');
+    return target.request(`${BASE}/api/auth/oauth2/callback/oidc?code=abc&state=${state}`, {
+      headers: { cookie },
+    });
+  }
+
+  function cameBackOk(res: Response): void {
+    expect(res.status).toBe(302);
+    expect(res.headers.get('location')).toBe(`${BASE}/dash`);
+    expect(cookiesFrom(res)).toContain('session_token');
+  }
+
+  function row<T>(database: Database, sql: string, ...args: string[]): T | undefined {
+    return (database.prepare(sql).get(...args) as T | null) ?? undefined;
+  }
+
+  async function signUpLocal(target: Hono, email: string): Promise<string> {
+    const res = await target.request(`${BASE}/api/auth/sign-up/email`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password: PASSWORD, name: 'Local' }),
+    });
+    expect(res.status).toBe(200);
+    return ((await res.json()) as { user: { id: string } }).user.id;
+  }
+
+  const credentialRows = (database: Database, userId: string) =>
+    (
+      database
+        .prepare("SELECT COUNT(*) AS c FROM account WHERE userId = ? AND providerId = 'credential'")
+        .get(userId) as { c: number }
+    ).c;
+
+  const sessionRows = (database: Database, userId: string) =>
+    (
+      database.prepare('SELECT COUNT(*) AS c FROM session WHERE userId = ?').get(userId) as {
+        c: number;
+      }
+    ).c;
+
+  test('isGoogleIssuer accepts the origin and its discovery URL and nothing else', () => {
+    expect(isGoogleIssuer('https://accounts.google.com')).toBe(true);
+    expect(isGoogleIssuer('https://accounts.google.com/')).toBe(true);
+    expect(isGoogleIssuer(`${GOOGLE}/.well-known/openid-configuration`)).toBe(true);
+    expect(isGoogleIssuer('https://accounts.google.com.evil.example')).toBe(false);
+    expect(isGoogleIssuer('https://idp.example.com')).toBe(false);
+  });
+
+  test('a new Google account is verified, counted once, and gets the welcome plan once', async () => {
+    seedWelcome();
+    const who = { sub: 'g-new', email: 'new.reader@gmail.com', email_verified: true, name: 'New' };
+    const before = signupRows();
+    const first = await login(googleApp, who, { cookie: 'rf_src=baidu.zh' });
+    cameBackOk(first);
+    const user = row<{ id: string; emailVerified: number }>(
+      googleDb,
+      'SELECT id, emailVerified FROM user WHERE email = ?',
+      who.email,
+    )!;
+    expect(user.emailVerified).toBe(1);
+    expect(grantCount(user.id)).toBe(1);
+    expect(activeGrant(user.id)?.plan).toBe('cloud');
+    expect(signupRows()).toBe(before + 1);
+
+    cameBackOk(await login(googleApp, who, { cookie: 'rf_src=baidu.zh' }));
+    expect(grantCount(user.id)).toBe(1);
+    expect(signupRows()).toBe(before + 1);
+    db.prepare('DELETE FROM plan_grants WHERE userId = ?').run(user.id);
+  });
+
+  test('a verified email account is joined and keeps its password and data', async () => {
+    const email = 'verified.owner@gmail.com';
+    const id = await signUpLocal(googleApp, email);
+    googleDb.prepare('UPDATE user SET emailVerified = 1 WHERE id = ?').run(id);
+    const before = signupRows();
+
+    cameBackOk(
+      await login(
+        googleApp,
+        { sub: 'g-verified', email, email_verified: true, name: 'V' },
+        {
+          cookie: 'rf_src=baidu.zh',
+        },
+      ),
+    );
+    expect(googleDb.prepare('SELECT COUNT(*) AS c FROM user WHERE email = ?').get(email)).toEqual({
+      c: 1,
+    });
+    const linked = row<{ userId: string }>(
+      googleDb,
+      "SELECT userId FROM account WHERE providerId = 'oidc' AND accountId = 'g-verified'",
+    );
+    expect(linked?.userId).toBe(id);
+    expect(credentialRows(googleDb, id)).toBe(1);
+    expect((await signInOn(googleApp, email)).status).toBe(200);
+    expect(signupRows()).toBe(before);
+  });
+
+  async function signInOn(target: Hono, email: string): Promise<Response> {
+    return target.request(`${BASE}/api/auth/sign-in/email`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password: PASSWORD }),
+    });
+  }
+
+  test('an unverified account is joined, loses its password and sessions, and gets the welcome plan', async () => {
+    seedWelcome();
+    const email = 'planted@gmail.com';
+    const id = await signUpLocal(googleApp, email);
+    googleDb
+      .prepare(
+        `INSERT INTO session (id, token, userId, expiresAt, createdAt, updatedAt)
+         VALUES ('planted-session', 'planted-token', ?, ?, ?, ?)`,
+      )
+      .run(id, '2999-01-01T00:00:00.000Z', new Date().toISOString(), new Date().toISOString());
+    expect(credentialRows(googleDb, id)).toBe(1);
+
+    cameBackOk(
+      await login(googleApp, { sub: 'g-planted', email, email_verified: true, name: 'P' }),
+    );
+    const user = row<{ id: string; emailVerified: number }>(
+      googleDb,
+      'SELECT id, emailVerified FROM user WHERE email = ?',
+      email,
+    )!;
+    expect(user.id).toBe(id);
+    expect(user.emailVerified).toBe(1);
+    expect(credentialRows(googleDb, id)).toBe(0);
+    expect(
+      row(googleDb, "SELECT 1 AS x FROM session WHERE id = 'planted-session'"),
+    ).toBeUndefined();
+    expect(sessionRows(googleDb, id)).toBe(1);
+    expect((await signInOn(googleApp, email)).status).not.toBe(200);
+    expect(grantCount(id)).toBe(1);
+    db.prepare('DELETE FROM plan_grants WHERE userId = ?').run(id);
+  });
+
+  test('an email that Google does not call verified joins nothing', async () => {
+    const email = 'unconfirmed@gmail.com';
+    const id = await signUpLocal(googleApp, email);
+    const res = await login(googleApp, {
+      sub: 'g-unconfirmed',
+      email,
+      email_verified: false,
+      name: 'U',
+    });
+    expect(res.status).toBe(302);
+    expect(res.headers.get('location')).toBe(`${BASE}/login?error=account_not_linked`);
+    expect(credentialRows(googleDb, id)).toBe(1);
+    expect(
+      row(googleDb, "SELECT 1 AS x FROM account WHERE providerId = 'oidc' AND userId = ?", id),
+    ).toBeUndefined();
+  });
+
+  test('a Google login gets no session on an account with two-factor on', async () => {
+    const email = 'two.factor@gmail.com';
+    const id = await signUpLocal(googleApp, email);
+    googleDb
+      .prepare('UPDATE user SET emailVerified = 1, twoFactorEnabled = 1 WHERE id = ?')
+      .run(id);
+    const res = await login(googleApp, {
+      sub: 'g-two-factor',
+      email,
+      email_verified: true,
+      name: 'T',
+    });
+    expect(res.status).toBe(302);
+    expect(res.headers.get('location')).toBe(`${BASE}/login?error=unable_to_create_session`);
+    expect(googleDb.prepare('SELECT COUNT(*) AS c FROM session WHERE userId = ?').get(id)).toEqual({
+      c: 0,
+    });
+  });
+
+  test('another issuer never joins an unverified account, even with email_verified true', async () => {
+    const email = 'other.issuer@example.test';
+    const id = await signUpLocal(otherApp, email);
+    const res = await login(otherApp, {
+      sub: 'o-1',
+      email,
+      email_verified: true,
+      name: 'O',
+    });
+    expect(res.headers.get('location')).toBe(`${BASE}/login?error=account_not_linked`);
+    expect(credentialRows(otherDb, id)).toBe(1);
+  });
+
+  test('a cancelled Google login lands on /login with the provider error', async () => {
+    const res = await googleApp.request(
+      `${BASE}/api/auth/oauth2/callback/oidc?error=access_denied`,
+    );
+    expect(res.status).toBe(302);
+    expect(res.headers.get('location')).toBe(`${BASE}/login?error=access_denied`);
+  });
+
+  test('one account per mailbox also holds for a new Google account', async () => {
+    const id = await signUpLocal(googleApp, 'alias.owner@gmail.com');
+    googleDb.prepare('UPDATE user SET emailVerified = 1 WHERE id = ?').run(id);
+    const res = await login(googleApp, {
+      sub: 'g-alias',
+      email: 'aliasowner@gmail.com',
+      email_verified: true,
+      name: 'A',
+    });
+    expect(res.headers.get('location')).toBe(`${BASE}/login?error=email_alias_taken`);
+    expect(
+      row(googleDb, 'SELECT 1 AS x FROM user WHERE email = ?', 'aliasowner@gmail.com'),
+    ).toBeUndefined();
+  });
+
+  test('with the invite gate on, a new Google account needs a code and keeps the invite link', async () => {
+    process.env.INVITE_REQUIRED = '1';
+    const who = { sub: 'g-invite', email: 'invited@gmail.com', email_verified: true, name: 'I' };
+    const refused = await login(googleApp, who);
+    expect(refused.headers.get('location')).toBe(`${BASE}/login?error=invite_required`);
+    expect(row(googleDb, 'SELECT 1 AS x FROM user WHERE email = ?', who.email)).toBeUndefined();
+
+    const code = getOrCreateInviteCode('iv-google-inviter');
+    cameBackOk(await login(googleApp, who, { additionalData: { inviteCode: code } }));
+    const invitee = row<{ id: string }>(
+      googleDb,
+      'SELECT id FROM user WHERE email = ?',
+      who.email,
+    )!;
+    expect(
+      db.prepare('SELECT inviterId, status FROM invites WHERE inviteeId = ?').get(invitee.id),
+    ).toEqual({ inviterId: 'iv-google-inviter', status: 'pending' });
+    db.prepare("DELETE FROM invites WHERE inviterId = 'iv-google-inviter'").run();
+    db.prepare("DELETE FROM invite_codes WHERE userId = 'iv-google-inviter'").run();
+  });
+
+  test('the captcha does not guard the provider login', async () => {
+    const guardedDb = new Database(':memory:');
+    const guarded = createAuthEngine({
+      database: guardedDb,
+      baseURL: BASE,
+      secret: 'test-secret-000000000000000000000000',
+      trustedOrigins: [BASE],
+      turnstileSecretKey: 'turnstile-test-secret',
+      oidc: { issuer: GOOGLE, clientId: 'client', clientSecret: 'secret' },
+    });
+    await runAuthMigrations(guarded);
+    const guardedApp = new Hono();
+    guardedApp.on(['POST', 'GET'], '/api/auth/*', (c) => guarded.handler(c.req.raw));
+    cameBackOk(
+      await login(guardedApp, {
+        sub: 'g-bot',
+        email: 'human@gmail.com',
+        email_verified: true,
+        name: 'H',
+      }),
+    );
   });
 });

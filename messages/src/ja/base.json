@@ -47,7 +47,6 @@
       "submit": "ログイン",
       "submitting": "ログイン中…",
       "github": "GitHub で続ける",
-      "oidc": "{provider} で続ける",
       "noAccount": "アカウントをお持ちでないですか？",
       "create": "新規登録",
       "errInvalid": "メールアドレスまたはパスワードが正しくありません。",

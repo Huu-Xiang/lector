@@ -8,6 +8,10 @@
     "dismiss": "Dismiss",
     "learnMore": "Learn more",
     "items": {
+      "emailReminders": {
+        "title": "About email reminders",
+        "body": "We may email you when your plan is about to end and when you have words to review. You can turn these emails off in Settings, or with the link at the bottom of any of them."
+      },
       "installApp": {
         "title": "Use Readfox like an app on your phone",
         "body": "Add Readfox to your home screen and read full screen from its icon. Settings shows the steps."
@@ -82,7 +86,6 @@
       "submit": "Sign in",
       "submitting": "Signing in…",
       "github": "Continue with GitHub",
-      "oidc": "Continue with {provider}",
       "noAccount": "No account yet?",
       "create": "Create one",
       "errInvalid": "Invalid email or password.",
@@ -167,6 +170,16 @@
         "letter": "Contains a letter",
         "digit": "Contains a digit"
       }
+    },
+    "oauth": {
+      "continue": "Continue with {provider}",
+      "errCancelled": "Sign-in was cancelled. You can try again.",
+      "errNotLinked": "An account with this email already exists, and the provider did not confirm the address. Sign in with your email and password.",
+      "errInviteRequired": "A valid invite code is required to sign up. Enter it on the register page, then try again.",
+      "errEmailAlias": "An account already uses this email address in another form. Sign in with that address instead.",
+      "errEmailDisposable": "Temporary email addresses can't be used. Please use your usual email.",
+      "errTwoFactor": "This account has two-step verification on. Sign in with your email and password.",
+      "errFailed": "Sign-in failed. Please try again."
     }
   },
   "setup": {
@@ -286,6 +299,14 @@
       "reviewGoalHint": {
         "recognize": "Know a word when you see it. Choose meanings and recognize words.",
         "recognize_spell": "Also write the word. Familiar and Mastered words ask you to type it or take dictation."
+      },
+      "emails": {
+        "heading": "Emails",
+        "label": "Product emails",
+        "hint": "Welcome mail, reading reminders, a notice before your plan ends, and word review reminders. Account mail is not affected: verification, password reset and account deletion mails are always sent.",
+        "on": "On",
+        "off": "Off",
+        "failed": "Could not save this setting. Try again."
       }
     },
     "prose": {
@@ -1403,7 +1424,6 @@
     "clear": "Clear",
     "loadingOlder": "Loading older messages...",
     "emptyPrompt": "Ask a question about {language}",
-    "via": "via {provider}",
     "placeholder": "Ask about {language}..."
   },
   "chrome": {
@@ -1495,6 +1515,7 @@
         "heading": "Who else is involved",
         "items": {
           "cloudflare": "<strong>Cloudflare</strong> – DNS, the Turnstile bot check on sign-up, and R2 storage for backups.",
+          "google": "<strong>Google</strong> – if you choose Google sign-in, Google tells us your email address, your name and your profile picture, and that it has confirmed the email address. We use them to create your account or to sign you in. If an account with the same email address already exists, we merge the two, so you keep your data. We also store your Google account ID and the sign-in tokens Google issues. We never receive your Google password.",
           "resend": "<strong>Resend</strong> – delivers the verification and password-reset emails. When product emails are on, it also delivers a welcome email, short reading reminders in the first days, and a note when you reach a free limit. It may also deliver a reminder that a paid plan is about to end and a reminder about words due for review. Each of those has an unsubscribe link in the email.",
           "aiProvider": "<strong>Your AI provider (OpenRouter or Anthropic)</strong> – if you add your own key and use translation, explanations or chat, the text you select, with some surrounding context, is sent to the provider using <em>your</em> key. Their privacy terms apply to that data, and the usage is billed to you.",
           "aiBuiltIn": "<strong>Alibaba Cloud (Model Studio)</strong> – if you use Readfox's built-in AI allowance instead of your own key, the text you select, with some surrounding context, is sent to Alibaba Cloud's Qwen models through our workspace to produce the translation or explanation. During word review, a public example sentence or the word being reviewed may also be sent, never a sentence you saved. Alibaba Cloud's terms apply to that data. The allowance is limited each month.",

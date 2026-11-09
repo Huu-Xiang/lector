@@ -47,7 +47,6 @@
       "submit": "登录",
       "submitting": "登录中…",
       "github": "使用 GitHub 继续",
-      "oidc": "使用 {provider} 继续",
       "noAccount": "还没有账号?",
       "create": "去注册",
       "errInvalid": "邮箱或密码不正确。",

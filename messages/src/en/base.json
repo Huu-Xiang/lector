@@ -47,7 +47,6 @@
       "submit": "Sign in",
       "submitting": "Signing in…",
       "github": "Continue with GitHub",
-      "oidc": "Continue with {provider}",
       "noAccount": "No account yet?",
       "create": "Create one",
       "errInvalid": "Invalid email or password.",

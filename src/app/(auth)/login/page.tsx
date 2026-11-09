@@ -11,7 +11,10 @@ import { Label } from '@/components/ui/label';
 import TurnstileWidget, { turnstileSiteKey } from '@/components/TurnstileWidget';
 import { authClient } from '@/lib/auth-client';
 import { authHref, sanitizeAuthReturnPath } from '@/lib/auth-return';
-import { useGithubLogin, useOidcLogin, useOidcProviderName } from '@/lib/use-env';
+import OidcSignInButton from '@/components/OidcSignInButton';
+import { readPendingInvite } from '@/lib/pending-invite';
+import { useOAuthErrorToast } from '@/lib/use-oauth-error';
+import { useGithubLogin } from '@/lib/use-env';
 
 export default function LoginPage() {
   return (
@@ -27,8 +30,7 @@ function LoginForm() {
   const params = useSearchParams();
   const { data: session, isPending } = authClient.useSession();
   const githubEnabled = useGithubLogin();
-  const oidcEnabled = useOidcLogin();
-  const oidcName = useOidcProviderName();
+  useOAuthErrorToast();
   const returnPath = sanitizeAuthReturnPath(params.get('next'));
   const destination = returnPath ?? '/';
 
@@ -99,14 +101,6 @@ function LoginForm() {
   async function handleGithub() {
     await authClient.signIn.social({
       provider: 'github',
-      callbackURL: `${window.location.origin}${destination}`,
-    });
-  }
-
-  async function handleOidc() {
-    // BYO OIDC (#218) — providerId 'oidc' is fixed server-side (accounts.ts).
-    await authClient.signIn.oauth2({
-      providerId: 'oidc',
       callbackURL: `${window.location.origin}${destination}`,
     });
   }
@@ -203,17 +197,12 @@ function LoginForm() {
         </Button>
       )}
 
-      {oidcEnabled && (
-        <Button
-          type="button"
-          variant="outline"
-          className="w-full"
-          onClick={handleOidc}
-          data-testid="login-oidc"
-        >
-          {t('oidc', { provider: oidcName })}
-        </Button>
-      )}
+      <OidcSignInButton
+        destination={destination}
+        errorPath="/login"
+        inviteCode={readPendingInvite()}
+        testId="login-oidc"
+      />
 
       <p className="text-center text-sm text-muted-foreground">
         {t('noAccount')}{' '}

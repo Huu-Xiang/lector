@@ -176,7 +176,8 @@ Required:
 Optional:
 
 - `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET`: Sign in with GitHub.
-- To sign in with an identity provider, set the OpenID Connect (OIDC) values `OIDC_ISSUER`, `OIDC_CLIENT_ID`, and `OIDC_CLIENT_SECRET`.
+- To sign in with an identity provider, set the OpenID Connect (OIDC) values `OIDC_ISSUER`, `OIDC_CLIENT_ID`, and `OIDC_CLIENT_SECRET`. `OIDC_PROVIDER_NAME` sets the button label, for example `Google`. The redirect URI is `<BETTER_AUTH_URL>/api/auth/oauth2/callback/oidc`.
+- With `OIDC_ISSUER=https://accounts.google.com`, a Google login joins the account that has the same email address, when Google confirms the address. No other issuer joins accounts by email.
 - `RESEND_API_KEY`: verification mail. Without it, mail lands in the server log.
 - `TURNSTILE_SITE_KEY` and `TURNSTILE_SECRET_KEY`: bot protection on sign-up.
 

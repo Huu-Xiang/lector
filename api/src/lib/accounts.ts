@@ -7,7 +7,7 @@
  * touches it. Session → userId: lib/session.ts; route-side reads: lib/user.ts.
  */
 import { betterAuth, type BetterAuthPlugin } from 'better-auth';
-import { APIError, createAuthMiddleware } from 'better-auth/api';
+import { APIError, createAuthMiddleware, getOAuthState } from 'better-auth/api';
 import { captcha, genericOAuth, twoFactor } from 'better-auth/plugins';
 import { getMigrations } from 'better-auth/db/migration';
 import type { Database } from 'bun:sqlite';
@@ -41,29 +41,74 @@ export async function runAfterEmailVerification(
   }
 }
 
-/** One account per mailbox: refuse throwaway domains and +tag / Gmail-dot variants of a taken address. */
-function checkSignupEmail(raw: unknown, database: Database): void {
-  if (typeof raw !== 'string') return;
+const SIGNUP_EMAIL_MESSAGES = {
+  EMAIL_DISPOSABLE: 'Temporary email addresses cannot be used.',
+  EMAIL_ALIAS_TAKEN: 'An account already uses this email address in another form.',
+} as const;
+
+type SignupEmailProblem = keyof typeof SIGNUP_EMAIL_MESSAGES;
+
+/** One account per mailbox: flags throwaway domains and +tag / Gmail-dot variants of a taken address. */
+function signupEmailProblem(raw: unknown, database: Database): SignupEmailProblem | null {
+  if (typeof raw !== 'string') return null;
   const email = raw.trim().toLowerCase();
-  if (isDisposableEmail(email)) {
-    throw new APIError('BAD_REQUEST', {
-      code: 'EMAIL_DISPOSABLE',
-      message: 'Temporary email addresses cannot be used.',
-    });
-  }
+  if (isDisposableEmail(email)) return 'EMAIL_DISPOSABLE';
   const canonical = canonicalEmail(email);
   const lookup = database.prepare('SELECT email FROM user WHERE email LIKE ?');
   for (const domain of aliasDomains(email)) {
     for (const row of lookup.all(`%@${domain}`) as { email: string }[]) {
       const existing = row.email.toLowerCase();
-      if (existing !== email && canonicalEmail(existing) === canonical) {
-        throw new APIError('BAD_REQUEST', {
-          code: 'EMAIL_ALIAS_TAKEN',
-          message: 'An account already uses this email address in another form.',
-        });
-      }
+      if (existing !== email && canonicalEmail(existing) === canonical) return 'EMAIL_ALIAS_TAKEN';
     }
   }
+  return null;
+}
+
+function checkSignupEmail(raw: unknown, database: Database): void {
+  const code = signupEmailProblem(raw, database);
+  if (code) throw new APIError('BAD_REQUEST', { code, message: SIGNUP_EMAIL_MESSAGES[code] });
+}
+
+const GOOGLE_ISSUER = 'https://accounts.google.com';
+
+/** True for Google's issuer origin or its pasted discovery URL. */
+export function isGoogleIssuer(issuer: string): boolean {
+  const value = issuer.trim().replace(/\/+$/, '').toLowerCase();
+  return value === GOOGLE_ISSUER || value === `${GOOGLE_ISSUER}/.well-known/openid-configuration`;
+}
+
+/**
+ * Removes the password of an account whose email was never verified, and ends its sessions.
+ * Runs when a provider login links to that account, so a password planted earlier by someone
+ * else stops working.
+ */
+function dropUnverifiedPassword(database: Database, userId: string): void {
+  const row = database.prepare('SELECT emailVerified FROM user WHERE id = ?').get(userId) as
+    | { emailVerified: number }
+    | undefined;
+  if (!row || row.emailVerified) return;
+  database
+    .prepare("DELETE FROM account WHERE userId = ? AND providerId = 'credential'")
+    .run(userId);
+  database.prepare('DELETE FROM session WHERE userId = ?').run(userId);
+}
+
+/** The social and generic OAuth callbacks are the only paths that create or verify a user without a password form. */
+function isOAuthCallback(ctx: { path?: string } | null | undefined): boolean {
+  return Boolean(ctx?.path?.includes('/callback/'));
+}
+
+function hasTwoFactor(database: Database, userId: string): boolean {
+  const row = database.prepare('SELECT twoFactorEnabled FROM user WHERE id = ?').get(userId) as
+    | { twoFactorEnabled: number | null }
+    | undefined;
+  return Boolean(row?.twoFactorEnabled);
+}
+
+/** Invite code that the login button stored in the OAuth state (`additionalData.inviteCode`). */
+async function oauthInviteCode(): Promise<string> {
+  const state = (await getOAuthState().catch(() => null)) as { inviteCode?: unknown } | null;
+  return typeof state?.inviteCode === 'string' ? state.inviteCode.trim() : '';
 }
 
 export interface OidcOptions {
@@ -159,12 +204,18 @@ export function createAuthEngine(opts: AuthEngineOptions) {
       }),
     );
   }
+  const mergesSameEmail = opts.oidc ? isGoogleIssuer(opts.oidc.issuer) : false;
   return betterAuth({
     database: opts.database,
     baseURL: opts.baseURL,
     basePath: '/api/auth',
     secret: opts.secret,
     trustedOrigins: opts.trustedOrigins,
+    // The default error page lives on the API; a cancelled or refused provider login lands on /login.
+    ...(opts.oidc ? { onAPIError: { errorURL: `${new URL(opts.baseURL).origin}/login` } } : {}),
+    // A Google login with a verified email joins the account that has the same address, also
+    // when that account never verified it; dropUnverifiedPassword then cuts the old password.
+    account: { accountLinking: { requireLocalEmailVerified: !mergesSameEmail } },
     hooks: {
       before: createAuthMiddleware(async (ctx) => {
         if (ctx.path === '/sign-up/email') {
@@ -250,9 +301,13 @@ export function createAuthEngine(opts: AuthEngineOptions) {
       // reads the live request address, never this column.
       session: {
         create: {
-          before: async (session) => ({
-            data: { ipAddress: shortenIp((session as { ipAddress?: string | null }).ipAddress) },
-          }),
+          before: async (session, ctx) => {
+            // The two-factor plugin challenges password sign-in only.
+            if (isOAuthCallback(ctx) && hasTwoFactor(opts.database, session.userId)) return false;
+            return {
+              data: { ipAddress: shortenIp((session as { ipAddress?: string | null }).ipAddress) },
+            };
+          },
         },
         update: {
           before: async (session) =>
@@ -261,15 +316,50 @@ export function createAuthEngine(opts: AuthEngineOptions) {
               : undefined,
         },
       },
+      account: {
+        create: {
+          before: async (account) => {
+            if (account.providerId !== 'credential') {
+              dropUnverifiedPassword(opts.database, account.userId);
+            }
+          },
+        },
+      },
       user: {
         create: {
-          after: async (user) => {
-            if (!user.emailVerified) return;
-            try {
-              await sendWelcomeEmail(user.id);
-            } catch (err) {
-              console.error(`[accounts] failed to send welcome email to ${user.email}:`, err);
+          before: async (user, ctx) => {
+            if (!isOAuthCallback(ctx)) return;
+            if (inviteRequired() && !isAcceptableSignupCode(await oauthInviteCode())) {
+              throw new APIError('FORBIDDEN', { message: 'invite_required' });
             }
+            const problem = signupEmailProblem(user.email, opts.database);
+            if (problem) {
+              throw new APIError('BAD_REQUEST', { code: problem, message: problem.toLowerCase() });
+            }
+          },
+          after: async (user, ctx) => {
+            if (isOAuthCallback(ctx)) {
+              try {
+                const first = parseSourceCookie(
+                  ctx?.headers?.get('cookie') ?? ctx?.request?.headers.get('cookie'),
+                );
+                if (first) recordSourceEvent('signup', first[0], first[1]);
+                const code = await oauthInviteCode();
+                if (code) {
+                  attachInvite({ inviteeId: user.id, rawCode: code });
+                  rememberSignupCode(user.id, code);
+                }
+              } catch (err) {
+                console.error('[accounts] failed to record the provider sign-up:', err);
+              }
+            }
+            if (user.emailVerified) await runAfterEmailVerification(user);
+          },
+        },
+        update: {
+          // Inside a provider callback, a verified flag set on an existing account is the first verification.
+          after: async (user, ctx) => {
+            if (user?.emailVerified && isOAuthCallback(ctx)) await runAfterEmailVerification(user);
           },
         },
       },

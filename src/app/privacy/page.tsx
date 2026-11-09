@@ -28,6 +28,7 @@ const STORE_ITEMS = [
 ] as const;
 const OTHERS_ITEMS = [
   'cloudflare',
+  'google',
   'resend',
   'paddle',
   'xiaodou',

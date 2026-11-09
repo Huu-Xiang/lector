@@ -47,7 +47,6 @@
       "submit": "로그인",
       "submitting": "로그인 중…",
       "github": "GitHub로 계속하기",
-      "oidc": "{provider}(으)로 계속하기",
       "noAccount": "아직 계정이 없나요?",
       "create": "계정 만들기",
       "errInvalid": "이메일 또는 비밀번호가 올바르지 않아요.",
