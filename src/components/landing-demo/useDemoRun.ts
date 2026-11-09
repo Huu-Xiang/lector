@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
-import { SENTENCES, type DemoSet } from './demo-data';
+import { resolveSpan, SENTENCES, type DemoSet } from './demo-data';
 import {
   judge,
   judgePress,
@@ -18,7 +18,8 @@ import {
 export type PanelView =
   | { kind: 'empty' }
   | { kind: 'word'; sentence: number; index: number; ctxChars: number | null }
-  | { kind: 'sentence'; sentence: number };
+  | { kind: 'sentence'; sentence: number }
+  | { kind: 'phrase'; sentence: number; from: number; to: number };
 
 export interface Selection {
   sentence: number;
@@ -81,6 +82,7 @@ export function useDemoRun(set: DemoSet) {
   const targetsRef = useRef(targets);
   const [view, setView] = useState<DemoView>(INITIAL);
   const viewRef = useRef(view);
+  const visitorPanel = useRef<PanelView | null>(null);
   const runRef = useRef<Run | null>(null);
   const hasStarted = useRef(false);
   const cardRef = useRef<HTMLElement | null>(null);
@@ -249,7 +251,11 @@ export function useDemoRun(set: DemoSet) {
       run,
       'step-sentence',
       async () => {
-        patch({ panel: { kind: 'sentence', sentence: 1 }, hit: null, byVisitor: true });
+        patch({
+          panel: visitorPanel.current ?? { kind: 'sentence', sentence: 1 },
+          hit: null,
+          byVisitor: true,
+        });
         await run.sleep(TIMING.afterUserDragMs);
       },
       async () => {
@@ -257,7 +263,7 @@ export function useDemoRun(set: DemoSet) {
         await run.sleep(TIMING.afterUserDragMs);
       },
     );
-    patch({ phase: 'done', acting: false, hit: null, selection: null });
+    patch({ phase: 'done', acting: false, hit: null });
   };
 
   const startPoint = () => {
@@ -273,7 +279,8 @@ export function useDemoRun(set: DemoSet) {
       phase: 'free',
       acting: false,
       cursor: { ...current.cursor, visible: false, pressed: false },
-      selection: current.panel.kind === 'sentence' ? current.selection : null,
+      selection:
+        current.panel.kind === 'word' || current.panel.kind === 'empty' ? null : current.selection,
     });
   }, [patch]);
 
@@ -290,7 +297,8 @@ export function useDemoRun(set: DemoSet) {
   }, []);
 
   const interact = useCallback(
-    (action: Interaction) => {
+    (action: Interaction, panel?: PanelView) => {
+      visitorPanel.current = panel ?? null;
       const phase = viewRef.current.phase;
       const verdict = judge(phase, action, targetsRef.current[1]);
       if (verdict === 'advance') {
@@ -307,7 +315,7 @@ export function useDemoRun(set: DemoSet) {
         }
       } else {
         patch({
-          panel: { kind: 'sentence', sentence: action.sentence },
+          panel: panel ?? { kind: 'sentence', sentence: action.sentence },
           hit: null,
           byVisitor: true,
         });
@@ -326,6 +334,20 @@ export function useDemoRun(set: DemoSet) {
   );
 
   const setSelection = useCallback((selection: Selection | null) => patch({ selection }), [patch]);
+
+  const selectSpan = useCallback(
+    (sentence: number, from: number, to: number) => {
+      const spanned = resolveSpan(set.learn, sentence, from, to);
+      interact(
+        { kind: 'sentence', sentence },
+        spanned.kind === 'phrase'
+          ? { kind: 'phrase', sentence, from: spanned.from, to: spanned.to }
+          : { kind: 'sentence', sentence },
+      );
+      patch({ selection: { sentence, from: spanned.from, to: spanned.to } });
+    },
+    [interact, patch, set.learn],
+  );
 
   useEffect(() => {
     const card = cardRef.current;
@@ -381,5 +403,6 @@ export function useDemoRun(set: DemoSet) {
     interact,
     pressWord,
     setSelection,
+    selectSpan,
   };
 }

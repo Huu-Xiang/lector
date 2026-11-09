@@ -15,6 +15,18 @@ async function dragAcross(page: Page, sentence: number, last: number) {
   await page.mouse.up();
 }
 
+async function dragRange(page: Page, sentence: number, first: number, last: number) {
+  const from = (await word(page, sentence, first).boundingBox())!;
+  const to = (await word(page, sentence, last).boundingBox())!;
+  await page.mouse.move(from.x + from.width / 2, from.y + from.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(to.x + to.width / 2, to.y + to.height / 2, { steps: 12 });
+  await page.mouse.up();
+}
+
+const selectedWords = (page: Page, sentence: number) =>
+  page.locator(`[data-testid="demo-word"][data-sentence="${sentence}"][data-selected]`);
+
 test.describe('landing demo with a Chinese browser', () => {
   test.use({ locale: 'zh-CN' });
 
@@ -68,6 +80,21 @@ test.describe('landing demo with a Chinese browser', () => {
     );
     await expect(panel(page)).toContainText('train platform');
     await expect(page.getByTestId('demo-start-free')).toHaveText('Start free');
+
+    await dragRange(page, 1, 0, 1);
+    await expect(panel(page)).toContainText('Marie commençait');
+    await expect(panel(page)).toContainText('Marie was beginning');
+    await expect(panel(page)).not.toContainText('Marie was beginning to get tired');
+    await expect(panel(page)).not.toContainText('Idiom');
+    await expect(selectedWords(page, 1)).toHaveCount(2);
+
+    await dragRange(page, 1, 8, 10);
+    await expect(panel(page)).toContainText('on the platform');
+    await expect(selectedWords(page, 1)).toHaveCount(3);
+
+    await dragRange(page, 1, 0, 10);
+    await expect(panel(page)).toContainText('Marie was beginning to get tired of waiting');
+    await expect(panel(page)).toContainText('Idiom');
   });
 
   test('the guided path reaches Start free', async ({ page }) => {
@@ -89,6 +116,62 @@ test.describe('landing demo with a Chinese browser', () => {
     await expect(panel(page)).toContainText('惯用含义');
     await expect(page.getByTestId('demo-prompt')).toContainText('其他词也可以点');
     await expect(page.getByTestId('demo-start-free')).toHaveAttribute('href', '/register');
+  });
+
+  test('the guided drag step accepts a partial drag and shows its phrase', async ({ page }) => {
+    await page.goto('/landing');
+    await expect(card(page)).toHaveAttribute('data-phase', 'step-word', { timeout: 45_000 });
+    await word(page, 1, 14).click();
+    await expect(card(page)).toHaveAttribute('data-phase', 'step-context');
+    await page.getByTestId('demo-context').click();
+    await expect(card(page)).toHaveAttribute('data-phase', 'step-sentence');
+
+    await dragRange(page, 1, 7, 9);
+    await expect(card(page)).toHaveAttribute('data-phase', 'done');
+    await expect(panel(page)).toContainText('tired of sitting by her sister on the bank');
+    await expect(panel(page)).toContainText('厌烦坐在河岸上她姐姐的旁边');
+    await expect(panel(page)).not.toContainText('惯用含义');
+    await expect(selectedWords(page, 1)).toHaveCount(9);
+  });
+
+  test('a partial drag shows the phrase translation and no note', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto('/landing');
+    await expect(card(page)).toHaveAttribute('data-phase', 'done');
+
+    await dragRange(page, 1, 0, 2);
+    await expect(panel(page)).toContainText('Alice was beginning');
+    await expect(panel(page)).toContainText('爱丽丝开始');
+    await expect(panel(page)).not.toContainText('爱丽丝靠着姐姐');
+    await expect(panel(page)).not.toContainText('惯用含义');
+    await expect(selectedWords(page, 1)).toHaveCount(3);
+
+    await dragRange(page, 1, 12, 14);
+    await expect(panel(page)).toContainText('在河岸上');
+    await expect(selectedWords(page, 1)).toHaveCount(3);
+
+    // No phrase holds "of sitting by", so the highlight grows to the smallest one that does.
+    await dragRange(page, 1, 7, 9);
+    await expect(panel(page)).toContainText('厌烦坐在河岸上她姐姐的旁边');
+    await expect(selectedWords(page, 1)).toHaveCount(9);
+    await expect(selectedWords(page, 1).first()).toHaveAttribute('data-index', '6');
+
+    await dragRange(page, 1, 0, 14);
+    await expect(panel(page)).toContainText('爱丽丝靠着姐姐坐在河岸上');
+    await expect(panel(page)).toContainText('惯用含义');
+    await expect(selectedWords(page, 1)).toHaveCount(15);
+
+    await dragRange(page, 1, 1, 14);
+    await expect(panel(page)).toContainText('爱丽丝靠着姐姐坐在河岸上');
+    await expect(selectedWords(page, 1)).toHaveCount(15);
+  });
+
+  test('a drag across one word stays a word lookup', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto('/landing');
+    await dragRange(page, 1, 6, 6);
+    await expect(panel(page)).toContainText('厌倦的');
+    await expect(selectedWords(page, 1)).toHaveCount(0);
   });
 
   test('a visitor who does nothing sees the run finish by itself', async ({ page }) => {
@@ -209,6 +292,26 @@ test.describe('landing demo language sets', () => {
             await dragAcross(page, index, Number(lastWord ?? last));
             const fits = await panel(page).evaluate((el) => el.scrollHeight <= el.clientHeight);
             expect(fits).toBe(true);
+          }
+
+          const longest =
+            set === 'en'
+              ? ([
+                  [0, 4, 8],
+                  [0, 5, 8],
+                  [1, 0, 5],
+                  [1, 5, 10],
+                ] as const)
+              : ([
+                  [0, 4, 9],
+                  [1, 0, 7],
+                  [1, 6, 14],
+                ] as const);
+          for (const [index, first, last] of longest) {
+            await dragRange(page, index, first, last);
+            await expect(selectedWords(page, index)).not.toHaveCount(0);
+            const fits = await panel(page).evaluate((el) => el.scrollHeight <= el.clientHeight);
+            expect(fits, `${index}:${first}-${last}`).toBe(true);
           }
 
           expect((await card(page).boundingBox())!.height).toBe(before);

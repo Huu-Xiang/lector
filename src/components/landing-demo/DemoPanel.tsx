@@ -2,7 +2,13 @@
 
 import type { Ref } from 'react';
 import { useTranslations } from 'next-intl';
-import { lookupWord, SENTENCES, type DemoSentence, type DemoSet } from './demo-data';
+import {
+  lookupWord,
+  phraseTranslation,
+  SENTENCES,
+  type DemoSentence,
+  type DemoSet,
+} from './demo-data';
 import type { PanelView } from './useDemoRun';
 
 export function usePanelText(set: DemoSet, panel: PanelView): string {
@@ -16,6 +22,10 @@ export function usePanelText(set: DemoSet, panel: PanelView): string {
       parts.push(`${t('inContext')}: ${set.sentences[panel.sentence].context}`);
     }
     return parts.join('. ');
+  }
+  if (panel.kind === 'phrase') {
+    const { text, translation } = phraseTranslation(set, panel.sentence, panel.from, panel.to);
+    return `${text}. ${translation}`;
   }
   if (panel.kind === 'sentence') {
     const { translation, note } = set.sentences[panel.sentence];
@@ -54,6 +64,9 @@ export default function DemoPanel({ set, panel, hint, ctxRef, pulseContext, onCo
           onContext={onContext}
         />
       )}
+      {panel.kind === 'phrase' && (
+        <PhraseBody set={set} panel={panel} sentence={sentences[panel.sentence]} />
+      )}
       {panel.kind === 'sentence' && (
         <div>
           <p lang={set.meaningLang} className="text-[0.9375rem] leading-snug">
@@ -67,6 +80,28 @@ export default function DemoPanel({ set, panel, hint, ctxRef, pulseContext, onCo
           </p>
         </div>
       )}
+    </div>
+  );
+}
+
+function PhraseBody({
+  set,
+  panel,
+  sentence,
+}: {
+  set: DemoSet;
+  panel: Extract<PanelView, { kind: 'phrase' }>;
+  sentence: DemoSentence;
+}) {
+  const { text, translation } = phraseTranslation(set, panel.sentence, panel.from, panel.to);
+  return (
+    <div>
+      <span lang={sentence.lang} className="block text-base leading-snug font-semibold">
+        {text}
+      </span>
+      <p lang={set.meaningLang} className="mt-0.5 text-[0.9375rem] leading-snug">
+        {translation}
+      </p>
     </div>
   );
 }

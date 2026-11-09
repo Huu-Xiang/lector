@@ -1,8 +1,11 @@
 import { describe, expect, it } from 'vitest';
+import { PHRASE_SPANS } from './demo-phrases';
 import {
   DEMO_SETS,
   isWordToken,
   lookupWord,
+  phraseTranslation,
+  resolveSpan,
   SENTENCES,
   sentenceText,
   type DemoSetId,
@@ -84,5 +87,103 @@ describe('demo data', () => {
   it('looks words up without case', () => {
     expect(lookupWord(DEMO_SETS.es, 'She')?.head).toBe('she');
     expect(lookupWord(DEMO_SETS.es, 'Alice')?.head).toBe('Alice');
+  });
+});
+
+describe('phrases', () => {
+  const learns = ['en', 'fr'] as const;
+
+  for (const learn of learns) {
+    for (const sentence of [0, 1]) {
+      const { tokens } = SENTENCES[learn][sentence];
+      const spans = PHRASE_SPANS[learn][sentence];
+      const words = tokens.map((token, i) => (isWordToken(token) ? i : -1)).filter((i) => i >= 0);
+
+      describe(`${learn} sentence ${sentence + 1}`, () => {
+        it('declares each range once, with the text of its tokens', () => {
+          for (const span of spans) {
+            expect(sentenceText(tokens.slice(span.from, span.to + 1))).toBe(span.text);
+            expect(span.to).toBeGreaterThan(span.from);
+          }
+          expect(new Set(spans.map((span) => `${span.from}-${span.to}`)).size).toBe(spans.length);
+          expect(new Set(spans.map((span) => span.text)).size).toBe(spans.length);
+        });
+
+        it('resolves every span of two or more tokens to a phrase or the whole sentence', () => {
+          for (let from = 0; from < tokens.length; from++) {
+            for (let to = from + 1; to < tokens.length; to++) {
+              const selected = words.filter((i) => i >= from && i <= to);
+              const result = resolveSpan(learn, sentence, from, to);
+              const label = `${from}-${to}`;
+              expect(result.from, label).toBeLessThanOrEqual(selected[0]);
+              expect(result.to, label).toBeGreaterThanOrEqual(selected[selected.length - 1]);
+              if (result.kind === 'sentence') {
+                expect([result.from, result.to], label).toEqual([
+                  words[0],
+                  words[words.length - 1],
+                ]);
+              } else {
+                expect(
+                  spans.map((s) => s.text),
+                  label,
+                ).toContain(result.text);
+                expect(selected.length, label).toBeLessThan(words.length);
+              }
+            }
+          }
+        });
+
+        it('picks the smallest phrase that holds the words', () => {
+          for (const span of spans) {
+            const result = resolveSpan(learn, sentence, span.from, span.to);
+            expect(result).toMatchObject({ kind: 'phrase', from: span.from, to: span.to });
+          }
+        });
+      });
+    }
+  }
+
+  for (const id of IDS) {
+    it(`set ${id} translates every phrase of its language and nothing else`, () => {
+      const set = DEMO_SETS[id];
+      for (const sentence of [0, 1]) {
+        const expected = PHRASE_SPANS[set.learn][sentence].map((span) => span.text).sort();
+        expect(Object.keys(set.phrases[sentence]).sort()).toEqual(expected);
+        expect(Object.values(set.phrases[sentence]).every((text) => text.trim() !== '')).toBe(true);
+      }
+    });
+  }
+
+  it('counts the phrases', () => {
+    expect(PHRASE_SPANS.en.map((spans) => spans.length)).toEqual([13, 33]);
+    expect(PHRASE_SPANS.fr.map((spans) => spans.length)).toEqual([12, 24]);
+  });
+
+  it('shows only the phrase for "Marie commençait"', () => {
+    expect(resolveSpan('fr', 1, 0, 1)).toMatchObject({ kind: 'phrase', from: 0, to: 1 });
+    expect(phraseTranslation(DEMO_SETS.en, 1, 0, 1)).toEqual({
+      text: 'Marie commençait',
+      translation: 'Marie was beginning',
+    });
+    expect(phraseTranslation(DEMO_SETS.en, 1, 3, 5).translation).toBe('to get tired of waiting');
+    expect(phraseTranslation(DEMO_SETS.en, 1, 8, 10).translation).toBe('on the platform');
+  });
+
+  it('translates in the sense of the sentence', () => {
+    expect(phraseTranslation(DEMO_SETS.zh, 1, 12, 14).translation).toBe('在河岸上');
+    expect(phraseTranslation(DEMO_SETS.zh, 1, 0, 2).translation).toBe('爱丽丝开始');
+    expect(phraseTranslation(DEMO_SETS.zh, 1, 4, 7).translation).toBe('变得很厌烦');
+  });
+
+  it('treats a span with no phrase, or all the words, as the whole sentence', () => {
+    expect(resolveSpan('en', 0, 2, 4)).toEqual({ kind: 'sentence', from: 0, to: 9 });
+    expect(resolveSpan('en', 0, 0, 10)).toEqual({ kind: 'sentence', from: 0, to: 9 });
+    expect(resolveSpan('en', 1, 0, 14)).toEqual({ kind: 'sentence', from: 0, to: 14 });
+    expect(resolveSpan('en', 1, 1, 14)).toEqual({ kind: 'sentence', from: 0, to: 14 });
+  });
+
+  it('ignores punctuation at the edges of a span', () => {
+    expect(resolveSpan('en', 0, 2, 3)).toMatchObject({ kind: 'phrase', text: 'was tired' });
+    expect(resolveSpan('en', 0, 9, 10)).toMatchObject({ kind: 'phrase', text: 'bed early' });
   });
 });

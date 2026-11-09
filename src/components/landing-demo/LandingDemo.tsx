@@ -48,6 +48,7 @@ function DemoCard({ setId }: { setId: DemoSetId }) {
     interact,
     pressWord,
     setSelection,
+    selectSpan,
   } = useDemoRun(set);
   const sentencesRef = useRef<HTMLDivElement>(null);
   const drag = useRef<{ sentence: number; anchor: number; last: number } | null>(null);
@@ -66,8 +67,7 @@ function DemoCard({ setId }: { setId: DemoSetId }) {
     const sentence = Number(first.dataset.sentence);
     const a = Number(first.dataset.index);
     const b = Number(last.dataset.index);
-    interact({ kind: 'sentence', sentence });
-    setSelection({ sentence, from: Math.min(a, b), to: Math.max(a, b) });
+    selectSpan(sentence, Math.min(a, b), Math.max(a, b));
   });
 
   useEffect(() => {
@@ -95,13 +95,11 @@ function DemoCard({ setId }: { setId: DemoSetId }) {
       const current = drag.current;
       drag.current = null;
       if (!current || current.last === current.anchor) return;
-      const selection = {
-        sentence: current.sentence,
-        from: Math.min(current.last, current.anchor),
-        to: Math.max(current.last, current.anchor),
-      };
-      interact({ kind: 'sentence', sentence: current.sentence });
-      setSelection(selection);
+      selectSpan(
+        current.sentence,
+        Math.min(current.last, current.anchor),
+        Math.max(current.last, current.anchor),
+      );
     };
     window.addEventListener('pointermove', move);
     window.addEventListener('pointerup', up);
@@ -109,7 +107,7 @@ function DemoCard({ setId }: { setId: DemoSetId }) {
       window.removeEventListener('pointermove', move);
       window.removeEventListener('pointerup', up);
     };
-  }, [interact, setSelection]);
+  }, [selectSpan, setSelection]);
 
   const onWordPointerDown = (event: PointerEvent, sentence: number, index: number) => {
     pressWord(sentence, index, event.pointerType);
@@ -172,6 +170,7 @@ function DemoCard({ setId }: { setId: DemoSetId }) {
                     data-sentence={si}
                     data-index={i}
                     data-testid="demo-word"
+                    data-selected={selected ? '' : undefined}
                     onPointerDown={(event) => onWordPointerDown(event, si, i)}
                     onClick={() => interact({ kind: 'word', sentence: si, index: i })}
                     className={`-mx-0.5 cursor-pointer rounded px-0.5 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring ${

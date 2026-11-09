@@ -1,3 +1,5 @@
+import { PHRASE_SPANS, PHRASE_TEXTS, type PhraseTexts } from './demo-phrases';
+
 export type DemoSetId = 'zh' | 'ja' | 'ko' | 'ru' | 'es' | 'fr' | 'en';
 export type LearnLang = 'en' | 'fr';
 export type Pos =
@@ -40,6 +42,8 @@ export interface DemoSet {
   /** Meaning of each lexicon key, written in `meaningLang`. */
   glosses: Record<string, string>;
   sentences: readonly [SetSentence, SetSentence];
+  /** Translation of each phrase of `PHRASE_SPANS`, in `meaningLang`. */
+  phrases: PhraseTexts;
 }
 
 export interface WordEntry {
@@ -202,6 +206,7 @@ export const DEMO_SETS: Record<DemoSetId, DemoSet> = {
         context: 'on the bank 在这里是“在河岸上”，不是“银行”。',
       },
     ],
+    phrases: PHRASE_TEXTS.zh,
   },
   ja: {
     id: 'ja',
@@ -259,6 +264,7 @@ export const DEMO_SETS: Record<DemoSetId, DemoSet> = {
         context: 'on the bank は「土手で」という意味で、「銀行」ではありません。',
       },
     ],
+    phrases: PHRASE_TEXTS.ja,
   },
   ko: {
     id: 'ko',
@@ -316,6 +322,7 @@ export const DEMO_SETS: Record<DemoSetId, DemoSet> = {
         context: "on the bank는 '강둑에서'라는 뜻이며 '은행'이 아닙니다.",
       },
     ],
+    phrases: PHRASE_TEXTS.ko,
   },
   ru: {
     id: 'ru',
@@ -373,6 +380,7 @@ export const DEMO_SETS: Record<DemoSetId, DemoSet> = {
         context: 'on the bank значит «на берегу», а не «в банке».',
       },
     ],
+    phrases: PHRASE_TEXTS.ru,
   },
   es: {
     id: 'es',
@@ -430,6 +438,7 @@ export const DEMO_SETS: Record<DemoSetId, DemoSet> = {
         context: 'on the bank significa «en la orilla», no «en el banco».',
       },
     ],
+    phrases: PHRASE_TEXTS.es,
   },
   fr: {
     id: 'fr',
@@ -487,6 +496,7 @@ export const DEMO_SETS: Record<DemoSetId, DemoSet> = {
         context: 'on the bank veut dire « sur la berge », pas « à la banque ».',
       },
     ],
+    phrases: PHRASE_TEXTS.fr,
   },
   en: {
     id: 'en',
@@ -539,6 +549,7 @@ export const DEMO_SETS: Record<DemoSetId, DemoSet> = {
         context: 'She is waiting for someone here, so this is a train platform.',
       },
     ],
+    phrases: PHRASE_TEXTS.en,
   },
 };
 
@@ -564,4 +575,49 @@ export function lookupWord(set: DemoSet, token: string): WordEntry | undefined {
   if (!lex || !meaning) return undefined;
   const head = lex.pos === 'propn' ? key.charAt(0).toUpperCase() + key.slice(1) : key;
   return { head, ipa: lex.ipa, pos: set.pos[lex.pos], meaning };
+}
+
+export type SpanResolution =
+  | { kind: 'sentence'; from: number; to: number }
+  | { kind: 'phrase'; from: number; to: number; text: string };
+
+/** The smallest phrase that holds the words of a drag, else the whole sentence. The result's range is the highlight. */
+export function resolveSpan(
+  learn: LearnLang,
+  sentence: number,
+  from: number,
+  to: number,
+): SpanResolution {
+  const { tokens } = SENTENCES[learn][sentence];
+  const words: number[] = [];
+  tokens.forEach((token, i) => {
+    if (isWordToken(token)) words.push(i);
+  });
+  const whole: SpanResolution = {
+    kind: 'sentence',
+    from: words[0],
+    to: words[words.length - 1],
+  };
+  const selected = words.filter((i) => i >= Math.min(from, to) && i <= Math.max(from, to));
+  if (selected.length === 0 || selected.length === words.length) return whole;
+  const first = selected[0];
+  const last = selected[selected.length - 1];
+  let best: SpanResolution | null = null;
+  for (const span of PHRASE_SPANS[learn][sentence]) {
+    if (span.from > first || span.to < last) continue;
+    if (best === null || span.to - span.from < best.to - best.from) {
+      best = { kind: 'phrase', from: span.from, to: span.to, text: span.text };
+    }
+  }
+  return best ?? whole;
+}
+
+export function phraseTranslation(
+  set: DemoSet,
+  sentence: number,
+  from: number,
+  to: number,
+): { text: string; translation: string } {
+  const text = sentenceText(SENTENCES[set.learn][sentence].tokens.slice(from, to + 1));
+  return { text, translation: set.phrases[sentence][text] ?? '' };
 }
