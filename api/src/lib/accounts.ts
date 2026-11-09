@@ -22,6 +22,23 @@ import { attachInvite, inviteRequired, isAcceptableSignupCode } from './invites'
 import { redeemSignupCode, rememberSignupCode } from './redeem';
 import { shortenIp } from './ip-privacy';
 
+/** Grants the sign-up plan and sends the welcome mail. Neither step may fail the verification. */
+export async function runAfterEmailVerification(
+  user: { id: string; email: string },
+  steps = { redeem: redeemSignupCode, welcome: sendWelcomeEmail },
+): Promise<void> {
+  try {
+    steps.redeem(user.id);
+  } catch (err) {
+    console.error('[accounts] failed to redeem sign-up code:', err);
+  }
+  try {
+    await steps.welcome(user.id);
+  } catch (err) {
+    console.error(`[accounts] failed to send welcome email to ${user.email}:`, err);
+  }
+}
+
 /** One account per mailbox: refuse throwaway domains and +tag / Gmail-dot variants of a taken address. */
 function checkSignupEmail(raw: unknown, database: Database): void {
   if (typeof raw !== 'string') return;
@@ -215,18 +232,7 @@ export function createAuthEngine(opts: AuthEngineOptions) {
           console.error(`[accounts] failed to send verification email to ${user.email}:`, err);
         }
       },
-      afterEmailVerification: async (user) => {
-        try {
-          redeemSignupCode(user.id);
-        } catch (err) {
-          console.error('[accounts] failed to redeem sign-up code:', err);
-        }
-        try {
-          await sendWelcomeEmail(user.id);
-        } catch (err) {
-          console.error(`[accounts] failed to send welcome email to ${user.email}:`, err);
-        }
-      },
+      afterEmailVerification: (user) => runAfterEmailVerification(user),
     },
     databaseHooks: {
       // Login records keep a shortened address (lib/ip-privacy.ts). Rate limiting

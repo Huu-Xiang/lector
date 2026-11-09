@@ -1,5 +1,5 @@
 import '../test-guard';
-import { beforeEach, describe, expect, test } from 'bun:test';
+import { afterAll, beforeEach, describe, expect, test } from 'bun:test';
 import { db } from '../db';
 import { activateCard, listCards } from './invites';
 import { activeGrant, grantPlan } from './plan-grants';
@@ -10,6 +10,7 @@ import {
   redeemSignupCode,
   rememberSignupCode,
 } from './redeem';
+import { WELCOME_CODE } from './welcome-offer';
 
 const NOW = new Date('2026-10-15T00:00:00Z');
 
@@ -43,7 +44,25 @@ function redeem(
   });
 }
 
+function welcomeCampaign(over: Partial<Parameters<typeof createCampaign>[0]> = {}) {
+  return campaign({
+    name: 'welcome-test',
+    days: 15,
+    totalLimit: 1000,
+    expiresAt: '2026-12-15T15:59:59.000Z',
+    codes: { mode: 'shared', code: WELCOME_CODE },
+    ...over,
+  });
+}
+
+function dropWelcomeCampaign() {
+  db.prepare('DELETE FROM redeem_uses WHERE code = ?').run(WELCOME_CODE);
+  db.prepare('DELETE FROM redeem_codes WHERE code = ?').run(WELCOME_CODE);
+  db.prepare("DELETE FROM redeem_campaigns WHERE name = 'welcome-test'").run();
+}
+
 beforeEach(() => {
+  dropWelcomeCampaign();
   db.prepare("DELETE FROM plan_grants WHERE userId LIKE 'rd-%'").run();
   db.prepare("DELETE FROM redeem_uses WHERE userId LIKE 'rd-%'").run();
   db.prepare("DELETE FROM reward_cards WHERE userId LIKE 'rd-%'").run();
@@ -137,15 +156,54 @@ describe('redeem codes', () => {
     expect(activeGrant('rd-s', NOW)).toBeFalsy();
     expect(redeemSignupCode('rd-s', NOW)).toMatchObject({ ok: true, grant: { plan: 'cloud' } });
     expect(activeGrant('rd-s', NOW)?.endsAt).toBe('2026-10-30T00:00:00.000Z');
-    expect(redeemSignupCode('rd-s', NOW)).toBeNull();
+    expect(redeemSignupCode('rd-s', NOW)).toEqual({ ok: false, error: 'invalid_code' });
   });
 
   test('sign-up keeps only redeem codes, and an expired one grants nothing', () => {
     rememberSignupCode('rd-t', 'NOTACODE', NOW);
-    expect(redeemSignupCode('rd-t', NOW)).toBeNull();
+    expect(db.prepare("SELECT 1 FROM signup_redeem_codes WHERE userId = 'rd-t'").get()).toBeNull();
     const { codes } = campaign({ expiresAt: '2026-10-16T00:00:00.000Z' });
     rememberSignupCode('rd-t', codes[0], NOW);
     const later = new Date('2026-10-17T00:00:00Z');
     expect(redeemSignupCode('rd-t', later)).toEqual({ ok: false, error: 'expired' });
+  });
+});
+
+describe('the welcome code on verification', () => {
+  afterAll(dropWelcomeCampaign);
+
+  test('an account with no remembered code gets the welcome plan, once', () => {
+    welcomeCampaign();
+    expect(redeemSignupCode('rd-w1', NOW)).toMatchObject({ ok: true, grant: { plan: 'cloud' } });
+    expect(activeGrant('rd-w1', NOW)?.endsAt).toBe('2026-10-30T00:00:00.000Z');
+    expect(redeemSignupCode('rd-w1', NOW)).toEqual({ ok: false, error: 'already_redeemed' });
+    expect(activeGrant('rd-w1', NOW)?.endsAt).toBe('2026-10-30T00:00:00.000Z');
+  });
+
+  test('a remembered code is used and the welcome code is not added', () => {
+    welcomeCampaign();
+    const { codes } = campaign({ days: 7 });
+    rememberSignupCode('rd-w2', codes[0], NOW);
+    expect(redeemSignupCode('rd-w2', NOW)).toMatchObject({ ok: true });
+    expect(activeGrant('rd-w2', NOW)?.endsAt).toBe('2026-10-22T00:00:00.000Z');
+    expect(
+      db
+        .prepare("SELECT COUNT(*) AS n FROM redeem_uses WHERE userId = 'rd-w2' AND code = ?")
+        .get(WELCOME_CODE),
+    ).toEqual({ n: 0 });
+  });
+
+  test('after the end date nothing is granted', () => {
+    welcomeCampaign();
+    const late = new Date('2026-12-15T16:00:00Z');
+    expect(redeemSignupCode('rd-w3', late)).toEqual({ ok: false, error: 'expired' });
+    expect(activeGrant('rd-w3', late)).toBeFalsy();
+  });
+
+  test('the total limit still applies', () => {
+    welcomeCampaign({ totalLimit: 1 });
+    expect(redeemSignupCode('rd-w4', NOW).ok).toBe(true);
+    expect(redeemSignupCode('rd-w5', NOW)).toEqual({ ok: false, error: 'used_up' });
+    expect(activeGrant('rd-w5', NOW)).toBeFalsy();
   });
 });

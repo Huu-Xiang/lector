@@ -12,13 +12,22 @@ import { HTTPException } from 'hono/http-exception';
 import { Database } from 'bun:sqlite';
 import { randomBytes, randomUUID } from 'crypto';
 import { db } from '../db';
-import { createAuthEngine, oidcDiscoveryUrl, runAuthMigrations, type AuthEngine } from './accounts';
+import {
+  createAuthEngine,
+  oidcDiscoveryUrl,
+  runAfterEmailVerification,
+  runAuthMigrations,
+  type AuthEngine,
+} from './accounts';
 import { makePatMiddleware } from './auth';
 import { hashToken } from './crypto';
 import { makeSessionMiddleware } from './session';
 import { resolveUserId, LOCAL_USER_ID } from './user';
 import { setEmailTransport, type EmailMessage } from './email';
 import { getOrCreateInviteCode } from './invites';
+import { activeGrant } from './plan-grants';
+import { createCampaign } from './redeem';
+import { WELCOME_CODE } from './welcome-offer';
 
 const BASE = 'http://localhost:9999';
 
@@ -545,5 +554,75 @@ describe('invite codes at sign-up', () => {
   test('with the gate off, no code is needed and a bad code does not block', async () => {
     expect((await signUpWith('open-none@example.test')).status).toBe(200);
     expect((await signUpWith('open-bad@example.test', 'WRONGCODE')).status).toBe(200);
+  });
+});
+
+describe('the welcome plan on email verification', () => {
+  function clearWelcome() {
+    db.prepare('DELETE FROM redeem_uses WHERE code = ?').run(WELCOME_CODE);
+    db.prepare('DELETE FROM redeem_codes WHERE code = ?').run(WELCOME_CODE);
+    db.prepare("DELETE FROM redeem_campaigns WHERE name = 'welcome-accounts-test'").run();
+  }
+
+  afterEach(clearWelcome);
+
+  async function signUpAndVerify(email: string): Promise<string> {
+    const res = await app.request(`${BASE}/api/auth/sign-up/email`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password: 'correct-horse-battery-9', name: 'Welcome' }),
+    });
+    expect(res.status).toBe(200);
+    const { user } = (await res.json()) as { user: { id: string } };
+    await verifyLatestEmail();
+    return user.id;
+  }
+
+  function seedWelcome(expiresAt: string) {
+    createCampaign({
+      name: 'welcome-accounts-test',
+      plan: 'cloud',
+      days: 15,
+      perUserLimit: 1,
+      totalLimit: 1000,
+      expiresAt,
+      codes: { mode: 'shared', code: WELCOME_CODE },
+    });
+  }
+
+  test('verifying the email grants 15 days of Plus with no code typed', async () => {
+    seedWelcome('2999-01-01T00:00:00.000Z');
+    const userId = await signUpAndVerify('welcome-auto@example.test');
+    const grant = activeGrant(userId);
+    expect(grant?.plan).toBe('cloud');
+    const days = (Date.parse(grant!.endsAt) - Date.now()) / 86_400_000;
+    expect(days).toBeGreaterThan(14.9);
+    expect(days).toBeLessThan(15.1);
+    db.prepare('DELETE FROM plan_grants WHERE userId = ?').run(userId);
+  });
+
+  test('after the end date verification works and grants nothing', async () => {
+    seedWelcome('2000-01-01T00:00:00.000Z');
+    const userId = await signUpAndVerify('welcome-late@example.test');
+    expect(activeGrant(userId)).toBeNull();
+    const session = await signIn('welcome-late@example.test', 'correct-horse-battery-9');
+    expect(session.status).toBe(200);
+  });
+
+  test('a redeem step that throws does not fail the verification, and the welcome mail still goes', async () => {
+    const calls: string[] = [];
+    await runAfterEmailVerification(
+      { id: 'u-throw', email: 'throw@example.test' },
+      {
+        redeem: () => {
+          throw new Error('db locked');
+        },
+        welcome: async (id) => {
+          calls.push(id);
+          return 'sent';
+        },
+      },
+    );
+    expect(calls).toEqual(['u-throw']);
   });
 });

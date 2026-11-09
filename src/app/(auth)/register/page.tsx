@@ -121,7 +121,7 @@ function RegisterForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <h2 className="text-lg font-semibold text-foreground">{t('title')}</h2>
-      <WelcomeOfferNote onUse={setInvite} />
+      <WelcomeOfferNote />
 
       <div className="space-y-2">
         <Label htmlFor="name">{t('name')}</Label>

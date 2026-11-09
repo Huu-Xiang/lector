@@ -78,7 +78,7 @@
       "invite": "Invite or redeem code",
       "inviteOptional": "(optional)",
       "inviteRequired": "(required)",
-      "inviteHint": "A friend's invite code, or a redeem code such as WELCOME123.",
+      "inviteHint": "A friend's invite code, or a redeem code you were given.",
       "errInviteRequired": "A valid invite code is required to sign up."
     },
     "reset": {
@@ -230,8 +230,7 @@
     }
   },
   "welcomeOffer": {
-    "body": "New here? Use the code <b>{code}</b> for 15 days of Plus, free. Valid until 15 December, once per account.",
-    "use": "Use it",
+    "body": "New here? Verify your email and get <b>15 days of Plus free</b>, until 15 December. No code needed.",
     "signUp": "Sign up"
   }
 }

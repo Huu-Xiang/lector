@@ -68,6 +68,39 @@ function createSchema(): Database {
       progress_scrollPosition INTEGER NOT NULL DEFAULT 0,
       lastReadAt TEXT
     );
+    CREATE TABLE plan_grants (
+      id TEXT PRIMARY KEY,
+      userId TEXT NOT NULL,
+      plan TEXT NOT NULL,
+      startsAt TEXT NOT NULL,
+      endsAt TEXT NOT NULL
+    );
+    CREATE TABLE billing_subscriptions (
+      paddleSubscriptionId TEXT PRIMARY KEY,
+      paddleCustomerId TEXT NOT NULL,
+      userId TEXT,
+      status TEXT NOT NULL
+    );
+    CREATE TABLE billing_customers (
+      paddleCustomerId TEXT PRIMARY KEY,
+      email TEXT NOT NULL
+    );
+    CREATE TABLE admin_account_flags (
+      userId TEXT PRIMARY KEY,
+      compedPlan TEXT
+    );
+    CREATE TABLE dailyStats (
+      userId TEXT NOT NULL,
+      date TEXT NOT NULL,
+      language TEXT NOT NULL DEFAULT 'fr',
+      wordsRead INTEGER DEFAULT 0,
+      newWordsSaved INTEGER DEFAULT 0,
+      minutesRead INTEGER DEFAULT 0,
+      clozePracticed INTEGER DEFAULT 0,
+      dictionaryLookups INTEGER DEFAULT 0,
+      ankiReviews INTEGER DEFAULT 0,
+      PRIMARY KEY (userId, date, language)
+    );
   `);
   return database;
 }
@@ -133,6 +166,7 @@ function deps(
     hasResendKey: true,
     enabled: true,
     appUrl: 'https://app.lector.dev',
+    reviewCount: () => 0,
     ...extra,
   };
 }
@@ -496,5 +530,405 @@ describe('starterLine', () => {
 describe('startLifecycleEmailWorker', () => {
   test('does not boot in the selfhost test env', () => {
     expect(startLifecycleEmailWorker()).toBe(false);
+  });
+});
+
+const DAY = 24 * HOUR;
+
+function insertGrant(
+  database: Database,
+  userId: string,
+  endsInMs: number,
+  opts: { id?: string; plan?: string; startedAgoMs?: number; now?: Date } = {},
+): string {
+  const now = opts.now ?? NOW;
+  const id = opts.id ?? `grant-${userId}-${endsInMs}`;
+  database
+    .prepare('INSERT INTO plan_grants (id, userId, plan, startsAt, endsAt) VALUES (?, ?, ?, ?, ?)')
+    .run(
+      id,
+      userId,
+      opts.plan ?? 'cloud',
+      new Date(now.getTime() - (opts.startedAgoMs ?? 12 * DAY)).toISOString(),
+      new Date(now.getTime() + endsInMs).toISOString(),
+    );
+  return id;
+}
+
+describe('sweepLifecycleEmails: plan ending', () => {
+  test('mails a grant that ends in 2 days once, with the shown plan name', async () => {
+    withUnsubSecret();
+    const database = createSchema();
+    const inbox: EmailMessage[] = [];
+    const userId = insertUser(database, { createdAt: '2025-01-01T00:00:00.000Z' });
+    const grantId = insertGrant(database, userId, 2 * DAY);
+
+    expect((await sweepLifecycleEmails(deps(database, inbox))).sent).toBe(1);
+    expect(inbox).toHaveLength(1);
+    expect(inbox[0].meta?.alias).toBe(LIFECYCLE_TEMPLATES.planEnding);
+    expect(inbox[0].subject).toBe('Your Plus plan ends on 27 August 2026');
+    expect(inbox[0].text).toContain('https://app.lector.dev/subscribe');
+    expect(inbox[0].text).not.toContain('cloud');
+    expect(inbox[0].headers?.['List-Unsubscribe']).toBeDefined();
+    expect(sentAliases(database, userId)).toEqual([`plan-ending-3d:${grantId}`]);
+
+    expect((await sweepLifecycleEmails(deps(database, inbox))).sent).toBe(0);
+    expect(inbox).toHaveLength(1);
+  });
+
+  test('says Pro for plus and Max for max', async () => {
+    const database = createSchema();
+    const inbox: EmailMessage[] = [];
+    const a = insertUser(database, { id: 'u-pro', email: 'pro@example.com' });
+    insertGrant(database, a, DAY, { plan: 'plus' });
+    const b = insertUser(database, { id: 'u-max', email: 'max@example.com' });
+    insertGrant(database, b, DAY, { plan: 'max' });
+    await sweepLifecycleEmails(deps(database, inbox));
+    expect(inbox.map((m) => m.subject).sort()).toEqual([
+      expect.stringContaining('Your Max plan'),
+      expect.stringContaining('Your Pro plan'),
+    ]);
+  });
+
+  test('mails only inside the 72-hour window and never a grant that already ended', async () => {
+    const database = createSchema();
+    const inbox: EmailMessage[] = [];
+    const cases: Array<[string, number]> = [
+      ['u-ended-1h', -HOUR],
+      ['u-ended-10d', -10 * DAY],
+      ['u-ended-now', 0],
+      ['u-in-4d', 4 * DAY],
+      ['u-in-73h', 73 * HOUR],
+    ];
+    for (const [id, endsInMs] of cases) {
+      insertUser(database, { id, email: `${id}@example.com` });
+      insertGrant(database, id, endsInMs, { startedAgoMs: 20 * DAY });
+    }
+    insertUser(database, { id: 'u-in-71h', email: 'u-in-71h@example.com' });
+    insertGrant(database, 'u-in-71h', 71 * HOUR);
+
+    await sweepLifecycleEmails(deps(database, inbox));
+    expect(inbox.map((m) => m.to)).toEqual(['u-in-71h@example.com']);
+  });
+
+  test('skips a grant that has not started', async () => {
+    const database = createSchema();
+    const inbox: EmailMessage[] = [];
+    const userId = insertUser(database);
+    insertGrant(database, userId, 2 * DAY, { startedAgoMs: -DAY });
+    await sweepLifecycleEmails(deps(database, inbox));
+    expect(inbox).toHaveLength(0);
+  });
+
+  test('skips a grant when another grant of the user ends later', async () => {
+    const database = createSchema();
+    const inbox: EmailMessage[] = [];
+    const userId = insertUser(database);
+    insertGrant(database, userId, 2 * DAY, { id: 'g-soon' });
+    insertGrant(database, userId, 30 * DAY, { id: 'g-later', plan: 'max' });
+    await sweepLifecycleEmails(deps(database, inbox));
+    expect(inbox).toHaveLength(0);
+  });
+
+  test('sends one mail per user when two grants end at once', async () => {
+    const database = createSchema();
+    const inbox: EmailMessage[] = [];
+    const userId = insertUser(database);
+    insertGrant(database, userId, 2 * DAY, { id: 'g-a' });
+    insertGrant(database, userId, 2 * DAY, { id: 'g-b' });
+    await sweepLifecycleEmails(deps(database, inbox));
+    expect(inbox).toHaveLength(1);
+  });
+
+  test('skips an active, trialing or past-due Paddle subscriber, by user id or customer email', async () => {
+    const database = createSchema();
+    const inbox: EmailMessage[] = [];
+    const rows: Array<[string, string]> = [
+      ['u-active', 'active'],
+      ['u-trial', 'trialing'],
+      ['u-due', 'past_due'],
+    ];
+    for (const [id, status] of rows) {
+      insertUser(database, { id, email: `${id}@example.com` });
+      insertGrant(database, id, DAY);
+      database
+        .prepare(
+          'INSERT INTO billing_subscriptions (paddleSubscriptionId, paddleCustomerId, userId, status) VALUES (?, ?, ?, ?)',
+        )
+        .run(`sub-${id}`, `ctm-${id}`, id, status);
+    }
+    insertUser(database, { id: 'u-email', email: 'Paying@Example.com' });
+    insertGrant(database, 'u-email', DAY);
+    database
+      .prepare('INSERT INTO billing_customers (paddleCustomerId, email) VALUES (?, ?)')
+      .run('ctm-email', 'paying@example.com');
+    database
+      .prepare(
+        'INSERT INTO billing_subscriptions (paddleSubscriptionId, paddleCustomerId, userId, status) VALUES (?, ?, NULL, ?)',
+      )
+      .run('sub-email', 'ctm-email', 'active');
+
+    await sweepLifecycleEmails(deps(database, inbox));
+    expect(inbox).toHaveLength(0);
+  });
+
+  test('a canceled subscription does not block the mail', async () => {
+    const database = createSchema();
+    const inbox: EmailMessage[] = [];
+    const userId = insertUser(database);
+    insertGrant(database, userId, DAY);
+    database
+      .prepare(
+        'INSERT INTO billing_subscriptions (paddleSubscriptionId, paddleCustomerId, userId, status) VALUES (?, ?, ?, ?)',
+      )
+      .run('sub-old', 'ctm-old', userId, 'canceled');
+    await sweepLifecycleEmails(deps(database, inbox));
+    expect(inbox).toHaveLength(1);
+  });
+
+  test('skips an unsubscribed address, an unverified user and a comped account', async () => {
+    withUnsubSecret();
+    const database = createSchema();
+    const inbox: EmailMessage[] = [];
+    insertUser(database, { id: 'u-stop', email: 'stop@example.com' });
+    insertGrant(database, 'u-stop', DAY);
+    recordUnsubscribe(database, 'stop@example.com', NOW.toISOString());
+    insertUser(database, { id: 'u-raw', email: 'raw@example.com', verified: false });
+    insertGrant(database, 'u-raw', DAY);
+    insertUser(database, { id: 'u-comp', email: 'comp@example.com' });
+    insertGrant(database, 'u-comp', DAY);
+    database
+      .prepare('INSERT INTO admin_account_flags (userId, compedPlan) VALUES (?, ?)')
+      .run('u-comp', 'plus');
+    await sweepLifecycleEmails(deps(database, inbox));
+    expect(inbox).toHaveLength(0);
+  });
+
+  test('sends nothing while the switch is off or the app is not cloud', async () => {
+    const database = createSchema();
+    const inbox: EmailMessage[] = [];
+    const userId = insertUser(database);
+    insertGrant(database, userId, DAY);
+    await sweepLifecycleEmails(deps(database, inbox, { enabled: false }));
+    await sweepLifecycleEmails(deps(database, inbox, { cloud: false }));
+    expect(inbox).toHaveLength(0);
+    expect(sentAliases(database, userId)).toEqual([]);
+  });
+
+  test('a later grant gets its own mail', async () => {
+    const database = createSchema();
+    const inbox: EmailMessage[] = [];
+    const userId = insertUser(database);
+    insertGrant(database, userId, 2 * DAY, { id: 'g-1' });
+    await sweepLifecycleEmails(deps(database, inbox));
+    const later = new Date(NOW.getTime() + 30 * DAY);
+    insertGrant(database, userId, 2 * DAY, { id: 'g-2', now: later, startedAgoMs: 5 * DAY });
+    await sweepLifecycleEmails(deps(database, inbox, { now: () => later }));
+    expect(inbox).toHaveLength(2);
+    expect(sentAliases(database, userId)).toEqual(['plan-ending-3d:g-1', 'plan-ending-3d:g-2']);
+  });
+
+  test('a send failure releases the key so the next sweep retries', async () => {
+    const database = createSchema();
+    const userId = insertUser(database);
+    insertGrant(database, userId, DAY);
+    const failing = deps(database, [], {
+      send: async () => {
+        throw new Error('resend down');
+      },
+    });
+    expect((await sweepLifecycleEmails(failing)).sent).toBe(0);
+    expect(sentAliases(database, userId)).toEqual([]);
+  });
+});
+
+// 18:00 UTC: after the evening gate for users on UTC.
+const EVENING = new Date('2026-08-25T18:00:00.000Z');
+
+function dayString(daysAgo: number, now = EVENING): string {
+  return new Date(now.getTime() - daysAgo * DAY).toISOString().slice(0, 10);
+}
+
+function addStats(
+  database: Database,
+  userId: string,
+  daysAgo: number,
+  over: { clozePracticed?: number; dictionaryLookups?: number; minutesRead?: number } = {},
+): void {
+  database
+    .prepare(
+      'INSERT INTO dailyStats (userId, date, minutesRead, clozePracticed, dictionaryLookups) VALUES (?, ?, ?, ?, ?)',
+    )
+    .run(
+      userId,
+      dayString(daysAgo),
+      over.minutesRead ?? 0,
+      over.clozePracticed ?? 0,
+      over.dictionaryLookups ?? 0,
+    );
+}
+
+function reviewUser(
+  database: Database,
+  opts: { id?: string; email?: string; activeDaysAgo?: number; zone?: string } = {},
+): string {
+  const id = insertUser(database, {
+    id: opts.id ?? 'user-review',
+    email: opts.email ?? 'review@example.com',
+    createdAt: '2025-01-01T00:00:00.000Z',
+  });
+  database
+    .prepare('INSERT INTO settings (userId, key, value) VALUES (?, ?, ?)')
+    .run(id, 'targetLanguage', '"fr"');
+  database
+    .prepare('INSERT INTO settings (userId, key, value) VALUES (?, ?, ?)')
+    .run(id, 'timezone', JSON.stringify(opts.zone ?? 'UTC'));
+  addStats(database, id, opts.activeDaysAgo ?? 1, { clozePracticed: 3 });
+  return id;
+}
+
+function reviewDeps(database: Database, inbox: EmailMessage[], words = 7, now = EVENING) {
+  return deps(database, inbox, { now: () => now, reviewCount: () => words });
+}
+
+function addReviewSend(database: Database, userId: string, daysAgo: number): void {
+  database
+    .prepare('INSERT INTO email_sends (userId, templateAlias, sentAt) VALUES (?, ?, ?)')
+    .run(
+      userId,
+      `review-due:${dayString(daysAgo)}`,
+      new Date(EVENING.getTime() - daysAgo * DAY).toISOString(),
+    );
+}
+
+describe('sweepLifecycleEmails: review due', () => {
+  test('mails a lapsed learner with 5 or more words, with no account age limit', async () => {
+    withUnsubSecret();
+    const database = createSchema();
+    const inbox: EmailMessage[] = [];
+    const userId = reviewUser(database);
+
+    expect((await sweepLifecycleEmails(reviewDeps(database, inbox))).sent).toBe(1);
+    expect(inbox[0].subject).toBe('You have 7 words to review');
+    expect(inbox[0].meta?.alias).toBe(LIFECYCLE_TEMPLATES.reviewDue);
+    expect(inbox[0].text).toContain('https://app.lector.dev/practice');
+    expect(inbox[0].headers?.['List-Unsubscribe']).toBeDefined();
+    expect(sentAliases(database, userId)).toEqual(['review-due:2026-08-25']);
+
+    expect((await sweepLifecycleEmails(reviewDeps(database, inbox))).sent).toBe(0);
+    expect(inbox).toHaveLength(1);
+  });
+
+  test('needs at least 5 words', async () => {
+    const database = createSchema();
+    const inbox: EmailMessage[] = [];
+    reviewUser(database);
+    await sweepLifecycleEmails(reviewDeps(database, inbox, 4));
+    expect(inbox).toHaveLength(0);
+    await sweepLifecycleEmails(reviewDeps(database, inbox, 5));
+    expect(inbox).toHaveLength(1);
+  });
+
+  test('skips a user who reviewed or looked up a word today', async () => {
+    const database = createSchema();
+    const inbox: EmailMessage[] = [];
+    const a = reviewUser(database, { id: 'u-rev', email: 'rev@example.com' });
+    addStats(database, a, 0, { clozePracticed: 1 });
+    const b = reviewUser(database, { id: 'u-look', email: 'look@example.com' });
+    addStats(database, b, 0, { dictionaryLookups: 2 });
+    await sweepLifecycleEmails(reviewDeps(database, inbox));
+    expect(inbox).toHaveLength(0);
+  });
+
+  test('reading alone today does not block the mail', async () => {
+    const database = createSchema();
+    const inbox: EmailMessage[] = [];
+    const userId = reviewUser(database);
+    addStats(database, userId, 0, { minutesRead: 12 });
+    await sweepLifecycleEmails(reviewDeps(database, inbox));
+    expect(inbox).toHaveLength(1);
+  });
+
+  test('needs activity inside the last 30 days', async () => {
+    const database = createSchema();
+    const inbox: EmailMessage[] = [];
+    reviewUser(database, { id: 'u-old', email: 'old@example.com', activeDaysAgo: 31 });
+    reviewUser(database, { id: 'u-edge', email: 'edge@example.com', activeDaysAgo: 30 });
+    await sweepLifecycleEmails(reviewDeps(database, inbox));
+    expect(inbox.map((m) => m.to)).toEqual(['edge@example.com']);
+  });
+
+  test('waits 3 days between mails', async () => {
+    const database = createSchema();
+    const inbox: EmailMessage[] = [];
+    const userId = reviewUser(database);
+    addReviewSend(database, userId, 2);
+    await sweepLifecycleEmails(reviewDeps(database, inbox));
+    expect(inbox).toHaveLength(0);
+
+    database.prepare('DELETE FROM email_sends WHERE userId = ?').run(userId);
+    addReviewSend(database, userId, 3);
+    await sweepLifecycleEmails(reviewDeps(database, inbox));
+    expect(inbox).toHaveLength(1);
+    expect(sentAliases(database, userId)).toEqual([
+      'review-due:2026-08-22',
+      'review-due:2026-08-25',
+    ]);
+  });
+
+  test('stops after 3 mails in a row with no activity since, and restarts after activity', async () => {
+    const database = createSchema();
+    const inbox: EmailMessage[] = [];
+    const userId = reviewUser(database, { activeDaysAgo: 12 });
+    addReviewSend(database, userId, 10);
+    addReviewSend(database, userId, 7);
+    addReviewSend(database, userId, 4);
+    await sweepLifecycleEmails(reviewDeps(database, inbox));
+    expect(inbox).toHaveLength(0);
+
+    addStats(database, userId, 3, { dictionaryLookups: 1 });
+    await sweepLifecycleEmails(reviewDeps(database, inbox));
+    expect(inbox).toHaveLength(1);
+  });
+
+  test('two mails with no activity do not stop the third', async () => {
+    const database = createSchema();
+    const inbox: EmailMessage[] = [];
+    const userId = reviewUser(database, { activeDaysAgo: 9 });
+    addReviewSend(database, userId, 7);
+    addReviewSend(database, userId, 4);
+    await sweepLifecycleEmails(reviewDeps(database, inbox));
+    expect(inbox).toHaveLength(1);
+  });
+
+  test('waits for the evening in the user zone', async () => {
+    const database = createSchema();
+    const inbox: EmailMessage[] = [];
+    reviewUser(database, { id: 'u-sh', email: 'sh@example.com', zone: 'Asia/Shanghai' });
+    reviewUser(database, { id: 'u-la', email: 'la@example.com', zone: 'America/Los_Angeles' });
+    await sweepLifecycleEmails(reviewDeps(database, inbox));
+    // 18:00 UTC is 02:00 in Shanghai and 11:00 in Los Angeles.
+    expect(inbox).toHaveLength(0);
+    const late = new Date('2026-08-26T02:00:00.000Z');
+    await sweepLifecycleEmails(reviewDeps(database, inbox, 7, late));
+    expect(inbox.map((m) => m.to)).toEqual(['la@example.com']);
+  });
+
+  test('sends nothing to an unsubscribed address, with the switch off, or without a language', async () => {
+    withUnsubSecret();
+    const database = createSchema();
+    const inbox: EmailMessage[] = [];
+    reviewUser(database, { id: 'u-stop', email: 'stop@example.com' });
+    recordUnsubscribe(database, 'stop@example.com', NOW.toISOString());
+    reviewUser(database, { id: 'u-nolang', email: 'nolang@example.com' });
+    database
+      .prepare("DELETE FROM settings WHERE userId = 'u-nolang' AND key = 'targetLanguage'")
+      .run();
+    await sweepLifecycleEmails(reviewDeps(database, inbox));
+    expect(inbox).toHaveLength(0);
+
+    reviewUser(database, { id: 'u-ok', email: 'ok@example.com' });
+    await sweepLifecycleEmails({ ...reviewDeps(database, inbox), enabled: false });
+    expect(inbox).toHaveLength(0);
   });
 });

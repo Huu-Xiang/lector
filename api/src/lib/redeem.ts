@@ -8,6 +8,7 @@ import {
   type GrantPlan,
   type PlanGrant,
 } from './plan-grants';
+import { WELCOME_CODE } from './welcome-offer';
 
 /** A card saved from a code stays usable this long after the plan that blocked it ends. */
 export const STORED_CARD_MONTHS = 6;
@@ -252,15 +253,18 @@ export function rememberSignupCode(userId: string, rawCode: string, now = new Da
   ).run(userId, code, now.toISOString());
 }
 
-export function redeemSignupCode(userId: string, now = new Date()): RedeemResult | null {
+/**
+ * Redeem the code the account remembered at sign-up. An account with none gets
+ * the welcome code instead, so the campaign's limits and end date decide.
+ */
+export function redeemSignupCode(userId: string, now = new Date()): RedeemResult {
   const row = db.prepare('SELECT code FROM signup_redeem_codes WHERE userId = ?').get(userId) as
     | { code: string }
     | undefined;
-  if (!row) return null;
-  db.prepare('DELETE FROM signup_redeem_codes WHERE userId = ?').run(userId);
+  if (row) db.prepare('DELETE FROM signup_redeem_codes WHERE userId = ?').run(userId);
   return redeemCode({
     userId,
-    rawCode: row.code,
+    rawCode: row?.code ?? WELCOME_CODE,
     currentPlan: 'free',
     hasSubscription: false,
     emailVerified: true,

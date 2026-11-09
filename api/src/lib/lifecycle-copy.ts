@@ -9,6 +9,12 @@ export interface LifecycleVars {
   STOP_URL: string;
   STARTER_LINE: string;
   WORD_COUNT: string;
+  /** Shown tier name of the plan that ends (Plus, Pro or Max). */
+  PLAN_NAME: string;
+  /** Plan end date, for example `12 November 2026`. */
+  END_DATE: string;
+  /** Words in the review round: due now plus new. */
+  REVIEW_COUNT: string;
 }
 
 export interface RenderedEmail {
@@ -18,11 +24,11 @@ export interface RenderedEmail {
 }
 
 interface Copy {
-  subject: string;
+  subject: string | ((v: LifecycleVars) => string);
   paragraphs: (v: LifecycleVars) => string[];
   cta: string;
   ctaPath: string;
-  zh: string;
+  zh: string | ((v: LifecycleVars) => string);
   stop: boolean;
 }
 
@@ -64,7 +70,7 @@ const COPY: Record<string, Copy> = {
     stop: true,
   },
   'anki-after-10-saved-words': {
-    subject: (`You have saved 10+ words`),
+    subject: `You have saved 10+ words`,
     paragraphs: (v) => [
       `Hi ${v.USER_NAME},`,
       `You have saved ${v.WORD_COUNT} words so far. Review them with spaced repetition in Readfox, or send them to Anki if you already use it.`,
@@ -85,10 +91,39 @@ const COPY: Record<string, Copy> = {
     zh: '本月免费 AI 查词额度已用完。额度下月重置；需要更多可升级套餐。',
     stop: true,
   },
+  'plan-ending-3d': {
+    subject: (v) => `Your ${v.PLAN_NAME} plan ends on ${v.END_DATE}`,
+    paragraphs: (v) => [
+      `Hi ${v.USER_NAME},`,
+      `Your ${v.PLAN_NAME} plan ends on ${v.END_DATE}. It does not renew on its own, so nothing will be charged.`,
+      `After that date your account moves to the Free plan. You keep your saved words, your lessons and your review history. Free still has the free books, word lookups and word review, with a smaller monthly AI allowance and without the ${v.PLAN_NAME} extras.`,
+      `If you want to keep ${v.PLAN_NAME}, you can subscribe at any time. If you do not, you do not need to do anything.`,
+    ],
+    cta: 'See plans',
+    ctaPath: '/subscribe',
+    zh: (v) =>
+      `你的 ${v.PLAN_NAME} 套餐将于 ${v.END_DATE} 结束，不会自动续费，也不会扣款。之后账号转为免费版，生词、课文和复习记录都会保留。想继续使用可随时订阅。`,
+    stop: true,
+  },
+  'review-due': {
+    subject: (v) => `You have ${v.REVIEW_COUNT} words to review`,
+    paragraphs: (v) => [
+      `Hi ${v.USER_NAME},`,
+      `You have ${v.REVIEW_COUNT} words ready to review in Readfox. A short round takes a few minutes, and spaced review is what makes new words stay.`,
+    ],
+    cta: 'Review your words',
+    ctaPath: '/practice',
+    zh: (v) => `你有 ${v.REVIEW_COUNT} 个生词可以复习了。花几分钟过一遍，记得更牢。`,
+    stop: true,
+  },
 };
 
 function esc(s: string): string {
-  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 }
 
 export function hasLifecycleCopy(alias: string): boolean {
@@ -100,9 +135,11 @@ export function renderLifecycleEmail(alias: string, v: LifecycleVars): RenderedE
   if (!c) throw new Error(`no lifecycle copy for ${alias}`);
   const base = v.APP_URL.replace(/\/$/, '');
   const url = `${base}${c.ctaPath}`;
+  const subject = typeof c.subject === 'function' ? c.subject(v) : c.subject;
+  const zh = typeof c.zh === 'function' ? c.zh(v) : c.zh;
   const paras = c.paragraphs(v).filter((p) => p && p.trim());
   const stopText = c.stop ? `\n\nDon't want these emails? / 不想再收到：${v.STOP_URL}` : '';
-  const text = `${paras.join('\n\n')}\n\n${c.cta}: ${url}\n\n${c.zh}\n\n— Readfox${stopText}\n`;
+  const text = `${paras.join('\n\n')}\n\n${c.cta}: ${url}\n\n${zh}\n\n— Readfox${stopText}\n`;
   const stopHtml = c.stop
     ? `<p style="font-size:12px;color:#6b6356">Don't want these emails? / 不想再收到？<a href="${esc(v.STOP_URL)}" style="color:#6b6356">Unsubscribe / 退订</a></p>`
     : '';
@@ -112,9 +149,9 @@ export function renderLifecycleEmail(alias: string, v: LifecycleVars): RenderedE
 <p style="font-weight:800;font-size:18px;margin:0 0 16px">Readfox</p>
 ${paras.map((p) => `<p style="line-height:1.6">${esc(p)}</p>`).join('\n')}
 <p style="margin:24px 0"><a href="${esc(url)}" style="background:#2f8a76;color:#fff;text-decoration:none;padding:10px 18px;border-radius:8px;font-weight:600">${esc(c.cta)}</a></p>
-<p style="line-height:1.6;color:#6b6356">${esc(c.zh)}</p>
+<p style="line-height:1.6;color:#6b6356">${esc(zh)}</p>
 </div>
 ${stopHtml}
 </div></body></html>`;
-  return { subject: c.subject, text, html };
+  return { subject, text, html };
 }

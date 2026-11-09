@@ -78,7 +78,7 @@
       "invite": "邀请码 / 兑换码",
       "inviteOptional": "（选填）",
       "inviteRequired": "（必填）",
-      "inviteHint": "好友的邀请码，或 WELCOME123 这样的兑换码。",
+      "inviteHint": "好友的邀请码，或别人发给你的兑换码。",
       "errInviteRequired": "注册需要有效的邀请码。"
     },
     "reset": {
@@ -230,8 +230,7 @@
     }
   },
   "welcomeOffer": {
-    "body": "新用户福利：用兑换码 <b>{code}</b> 免费领 15 天 Plus。12 月 15 日前有效，每个账号一次。",
-    "use": "填入",
+    "body": "新用户福利：验证邮箱，免费领 <b>15 天 Plus</b>，12 月 15 日前有效，无需兑换码。",
     "signUp": "去注册"
   }
 }

@@ -29,7 +29,7 @@ export function buildLlmsTxt(): string {
     `- Free library: ${books.length} public-domain or openly licensed books, ${PUBLIC_BOOK_LANGUAGES.map((code) => `${name(code)} ${books.filter((b) => b.language === code).length}`).join(', ')}. Every book has a CEFR level (A1 to C2).`,
     ...(welcomeOfferOpen()
       ? [
-          `- Welcome offer: every account, new or existing, can get 15 days of Plus free with the redeem code ${WELCOME_CODE}, entered at sign-up or in Settings → Plan. Valid until ${WELCOME_OFFER_ENDS.slice(0, 10)} (end of 15 December, Beijing time), once per account. 新老用户都可以用兑换码 ${WELCOME_CODE} 可免费领 15 天 Plus，12 月 15 日前有效。`,
+          `- Welcome offer: a new account that verifies its email gets 15 days of Plus free, with no code needed. Valid until ${WELCOME_OFFER_ENDS.slice(0, 10)} (end of 15 December, Beijing time), once per account. Accounts made earlier can enter the redeem code ${WELCOME_CODE} in Settings → Plan. 新账号验证邮箱即可免费领 15 天 Plus，无需兑换码，12 月 15 日前有效；老账号可在设置 → 套餐输入兑换码 ${WELCOME_CODE}。`,
         ]
       : []),
     '- Reading a free-library book does not use the Free plan lesson allowance.',

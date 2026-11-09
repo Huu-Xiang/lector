@@ -23,6 +23,7 @@ describe('llms.txt', () => {
   it('names the welcome code only while the offer runs', () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date('2026-12-15T15:59:00Z'));
+    expect(buildLlmsTxt()).toContain('no code needed');
     expect(buildLlmsTxt()).toContain('redeem code WELCOME123');
     vi.setSystemTime(new Date('2026-12-15T16:00:00Z'));
     expect(buildLlmsTxt()).not.toContain('WELCOME123');
