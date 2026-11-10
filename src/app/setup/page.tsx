@@ -5,7 +5,10 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { ArrowLeft, ArrowRight, Sparkles } from 'lucide-react';
-import { getSetting, seedStarterContent, setSetting } from '@/lib/data-layer';
+import { addLibraryBook, getSetting, seedStarterContent, setSetting } from '@/lib/data-layer';
+import { loadCatalog } from '@/lib/catalog-cache';
+import { displayLanguage } from '@/lib/display-language';
+import { readPendingBook, writePendingBook, type BookRef } from '@/lib/pending-book';
 import {
   LANGUAGES,
   NATIVE_LANGUAGES,
@@ -79,6 +82,15 @@ export default function SetupPage() {
   const mainland = showMainlandExams(native, locale);
   const [error, setError] = useState<string | null>(null);
   const [showAllLanguages, setShowAllLanguages] = useState(false);
+  const [pendingBook, setPendingBook] = useState<BookRef | null>(null);
+  const [pendingTitle, setPendingTitle] = useState<string | null>(null);
+  const bookLanguage =
+    pendingBook &&
+    pendingBook.language !== learnCodeOfNative(native) &&
+    isLanguageReady(pendingBook.language, ready)
+      ? (pendingBook.language as LanguageCode)
+      : null;
+  const bookSlug = pendingBook?.slug ?? null;
   function toggleInterest(id: string) {
     setInterests((prev) => (prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]));
   }
@@ -114,6 +126,37 @@ export default function SetupPage() {
       cancelled = true;
     };
   }, [router, locale]);
+
+  /* eslint-disable react-hooks/set-state-in-effect -- the book a visitor chose is in localStorage */
+  useEffect(() => {
+    setPendingBook(readPendingBook());
+  }, []);
+
+  useEffect(() => {
+    if (bookLanguage) setSelectedLanguage((current) => current ?? bookLanguage);
+  }, [bookLanguage]);
+
+  useEffect(() => {
+    setPendingTitle(null);
+    if (!bookLanguage || !bookSlug) return;
+    let cancelled = false;
+    const shown = displayLanguage(native, locale);
+    loadCatalog(bookLanguage)
+      .then((catalog) => {
+        if (cancelled) return;
+        const book = catalog.find((entry) => entry.slug === bookSlug);
+        if (book) setPendingTitle(book.titles[shown] || book.title);
+        else {
+          writePendingBook(null);
+          setPendingBook(null);
+        }
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [bookLanguage, bookSlug, native, locale]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   function chooseNative(code: string) {
     setNative(code);
@@ -151,6 +194,15 @@ export default function SetupPage() {
         interests: [],
         dailyMinutes: 10,
       };
+
+      if (guided && pendingBook && pendingBook.language === code) {
+        const collectionId = await addLibraryBook(code, pendingBook.slug).catch(() => null);
+        writePendingBook(null);
+        if (collectionId) {
+          await startWith(collectionId);
+          return;
+        }
+      }
 
       if (guided && starter.recommendedLessonId) {
         await startOnboarding({
@@ -470,7 +522,13 @@ export default function SetupPage() {
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <p className="text-sm font-semibold text-foreground">{t('ready')}</p>
-                  <p className="mt-0.5 text-xs text-muted-foreground">{t('readyHint')}</p>
+                  {pendingTitle && selectedLanguage === bookLanguage ? (
+                    <p className="mt-0.5 text-xs text-foreground" data-testid="setup-pending-book">
+                      {t('pendingBook', { title: pendingTitle })}
+                    </p>
+                  ) : (
+                    <p className="mt-0.5 text-xs text-muted-foreground">{t('readyHint')}</p>
+                  )}
                 </div>
                 <div className="flex flex-col-reverse gap-2 sm:flex-row">
                   <Button

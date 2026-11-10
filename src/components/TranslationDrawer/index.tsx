@@ -598,7 +598,7 @@ export default function TranslationDrawer({
                     <span className="font-semibold text-foreground">
                       {onboardingSaveProgress.currentWordSaved
                         ? t('onboardingAdded')
-                        : t('onboardingChoose')}
+                        : !onboardingSaveProgress.autoSave && t('onboardingChoose')}
                     </span>
                     <span className="shrink-0 font-bold text-[var(--gold-strong)]">
                       {t('onboardingReady', {

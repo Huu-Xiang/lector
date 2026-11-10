@@ -26,7 +26,7 @@ sequenceDiagram
   DL->>Onb: POST /api/starter/seed
   Setup->>Onb: startOnboarding
   Setup->>Read: /read/:id?onboarding=1
-  Note over Read: Save three words at level 1 to 4
+  Note over Read: A lookup saves the word. With auto-save off, pick level 1 to 4
   Read->>DL: createOnboardingCloze
   Read->>Practice: /practice?onboarding=1
   Practice->>DL: getOnboardingCloze
@@ -42,6 +42,7 @@ sequenceDiagram
 | Client | `src/lib/onboarding.ts` | `getOnboardingSnapshot`, `startOnboarding`, `skipOnboarding`, `completeOnboarding`, `recordLearnerEvent` |
 | Starter client | `src/lib/data-layer.ts` | `seedStarterContent`, `getStarterStatus`, `createOnboardingCloze`, `getOnboardingCloze` |
 | Coach | `src/components/OnboardingCoach/index.tsx` | `OnboardingCoach` |
+| Chosen book | `src/lib/pending-book.ts` | `readPendingBook`, `writePendingBook`, `registerHrefForBook` |
 | API | `api/src/routes/onboarding.ts` | `GET /`, `POST /start`, `POST /skip`, `PATCH /`, `POST /complete` |
 | Starter API | `api/src/routes/starter.ts` | `GET /status`, `POST /seed` |
 | Cloze | `api/src/routes/cloze.ts` | `POST /onboarding`, `GET /onboarding` |
@@ -51,6 +52,7 @@ sequenceDiagram
 ### Branches
 
 - Skip to library records `skipped` and does not run the guided lesson.
+- A public `/books` page links to `/register?book=<language>/<slug>`. The register page stores the book in `localStorage`. Setup then starts the guided lesson with that book and does not show the recommendations. After a skip, `PendingBookOpener` opens the book on the library page.
 - Seed is once per user and language (`settings` key `starterSeeded:{lang}`). Delete of starter does not re-seed.
 - Other collections in that language return `library-not-empty`.
 - Phrase saves do not create cloze cards for Onboarding.

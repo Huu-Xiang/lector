@@ -6,9 +6,14 @@ import { Button } from '@/components/ui/button';
 import { IOnboardingCoachProps } from './types';
 import { getContent } from './utils';
 
-export default function OnboardingCoach({ stage, onStartPractice, onSkip }: IOnboardingCoachProps) {
+export default function OnboardingCoach({
+  stage,
+  autoSave,
+  onStartPractice,
+  onSkip,
+}: IOnboardingCoachProps) {
   const t = useTranslations('reader.coach');
-  const content = getContent({ stage, t });
+  const content = getContent({ stage, autoSave, t });
   const Icon = content.icon;
 
   useEffect(() => {

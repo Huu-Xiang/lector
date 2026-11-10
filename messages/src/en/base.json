@@ -146,6 +146,7 @@
     "level": "Reading level",
     "ready": "Ready for your first text?",
     "readyHint": "The guide stays inside a real starter lesson and can be left at any time.",
+    "pendingBook": "You will start with “{title}”, the book you picked.",
     "skip": "Skip to library",
     "preparing": "Preparing lesson…",
     "start": "Start guided lesson",

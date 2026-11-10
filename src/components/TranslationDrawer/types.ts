@@ -73,6 +73,8 @@ export interface TranslationDrawerProps {
     savedCount: number;
     target: number;
     currentWordSaved: boolean;
+    /** The reader saves the word by itself, so no level has to be chosen. */
+    autoSave: boolean;
   };
 
   onClose: () => void;

@@ -14,6 +14,7 @@ import { authClient } from '@/lib/auth-client';
 import { authHref, sanitizeAuthReturnPath } from '@/lib/auth-return';
 import { meetsRules } from '@/lib/password-strength';
 import { readPendingInvite, writePendingInvite } from '@/lib/pending-invite';
+import { parseBookRef, writePendingBook } from '@/lib/pending-book';
 import { useInviteRequired } from '@/lib/use-env';
 import WelcomeOfferNote from '@/components/WelcomeOfferNote';
 import OidcSignInButton from '@/components/OidcSignInButton';
@@ -52,6 +53,11 @@ function RegisterForm() {
     if (!params.get('invite')) setInvite((current) => current || readPendingInvite());
   }, [params]);
   /* eslint-enable react-hooks/set-state-in-effect */
+
+  useEffect(() => {
+    const book = parseBookRef(params.get('book'));
+    if (book) writePendingBook(book);
+  }, [params]);
 
   useEffect(() => {
     if (!isPending && session) router.replace(destination);

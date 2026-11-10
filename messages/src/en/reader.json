@@ -192,7 +192,8 @@
       "startPractice": "Start a quick practice",
       "lookup": {
         "title": "Tap a word you don't know",
-        "body": "Every word in the lesson can be looked up. Tap or click one to see its meaning here."
+        "body": "Every word in the lesson can be looked up. Tap or click one to see its meaning here.",
+        "bodyAutoSave": "Every word in the lesson can be looked up. Tap or click one to see its meaning. Readfox saves it for review."
       },
       "save": {
         "title": "Save this word for review",

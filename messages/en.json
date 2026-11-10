@@ -195,6 +195,7 @@
     "level": "Reading level",
     "ready": "Ready for your first text?",
     "readyHint": "The guide stays inside a real starter lesson and can be left at any time.",
+    "pendingBook": "You will start with “{title}”, the book you picked.",
     "skip": "Skip to library",
     "preparing": "Preparing lesson…",
     "start": "Start guided lesson",
@@ -2167,7 +2168,8 @@
       "startPractice": "Start a quick practice",
       "lookup": {
         "title": "Tap a word you don't know",
-        "body": "Every word in the lesson can be looked up. Tap or click one to see its meaning here."
+        "body": "Every word in the lesson can be looked up. Tap or click one to see its meaning here.",
+        "bodyAutoSave": "Every word in the lesson can be looked up. Tap or click one to see its meaning. Readfox saves it for review."
       },
       "save": {
         "title": "Save this word for review",

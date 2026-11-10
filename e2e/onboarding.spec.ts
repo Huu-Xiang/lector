@@ -109,6 +109,7 @@ function waitForSavedEvent(page: Page) {
 async function saveGuidedWord(page: Page, onboardingUrl: string) {
   const trigger = page.getByRole('button', { name: `Look up ${GUIDED_WORD}`, exact: true }).first();
   await expect(trigger).toBeVisible();
+  const savedEvent = waitForSavedEvent(page);
   await trigger.click();
 
   const drawer = page.getByTestId('translation-drawer');
@@ -116,18 +117,13 @@ async function saveGuidedWord(page: Page, onboardingUrl: string) {
   await expect(drawer.getByText(`meaning of ${GUIDED_WORD}`, { exact: false })).toBeVisible({
     timeout: 5_000,
   });
-  await expect(page.getByTestId('onboarding-coach-save')).toContainText('Step 2 of 3');
-  await expect(drawer.getByTestId('onboarding-drawer-progress')).toContainText('0/1 ready');
-  const savedEvent = waitForSavedEvent(page);
-  await drawer.getByTestId('word-level-1').click();
   const savedResponse = await savedEvent;
   expect(savedResponse.status(), await savedResponse.text()).toBeLessThan(300);
+  await expect(drawer.getByTestId('onboarding-drawer-progress')).toContainText('1/1 ready');
+  await expect(page.getByTestId('onboarding-coach-save')).toHaveCount(0);
 
   const current = await snapshot(page, onboardingUrl);
   expect(current.events.filter((event) => event.eventType === 'vocab.saved')).toHaveLength(1);
-  await expect(
-    page.getByText(`“${GUIDED_WORD}” added. Your practice is ready.`, { exact: true }),
-  ).toBeVisible();
   await page.keyboard.press('Escape');
 }
 
@@ -135,10 +131,10 @@ async function completeGuidedRound(
   page: Page,
   onboardingUrl = apiUrl('/api/onboarding'),
 ): Promise<void> {
-  await expect(page.getByTestId('onboarding-coach-lookup')).toContainText('Step 1 of 3');
+  await expect(page.getByTestId('onboarding-coach-lookup')).toContainText('Step 1 of 2');
   await saveGuidedWord(page, onboardingUrl);
 
-  await expect(page.getByTestId('onboarding-coach-practice')).toContainText('Step 3 of 3', {
+  await expect(page.getByTestId('onboarding-coach-practice')).toContainText('Step 2 of 2', {
     timeout: 10_000,
   });
   await page.getByTestId('start-onboarding-practice').click();
@@ -209,6 +205,63 @@ test.describe('guided onboarding — selfhost', () => {
     await page.getByTestId('recommend-start-book-alices-adventures-in-wonderland').click();
     await expect(page).toHaveURL(/\/read\/[^/?]+\?onboarding=1$/, { timeout: 30_000 });
     await expect(page.getByTestId('onboarding-coach-lookup')).toBeVisible({ timeout: 15_000 });
+    await context.close();
+  });
+
+  test('a visitor who chose a book on a public page starts with that book', async ({ browser }) => {
+    const context = await browser.newContext({ storageState: { cookies: [], origins: [] } });
+    const page = await context.newPage();
+
+    await page.goto('/books/fr/candide');
+    await expect(page.getByTestId('book-register')).toHaveAttribute(
+      'href',
+      '/register?book=fr%2Fcandide',
+    );
+    await page.evaluate(() =>
+      localStorage.setItem(
+        'readfox-pending-book',
+        JSON.stringify({ ref: 'fr/candide', savedAt: Date.now() }),
+      ),
+    );
+
+    await page.goto('/');
+    await expect(page).toHaveURL(/\/setup/, { timeout: 15_000 });
+    await expect(page.getByTestId('setup-language-fr')).toHaveAttribute('aria-pressed', 'true');
+    await expect(page.getByTestId('setup-pending-book')).toContainText('Candide');
+    await page.getByTestId('start-guided-onboarding').click();
+
+    await expect(page).toHaveURL(/\/read\/[^/?]+\?onboarding=1$/, { timeout: 30_000 });
+    await expect(page.getByTestId('onboarding-coach-lookup')).toBeVisible({ timeout: 15_000 });
+    expect((await snapshot(page)).progress?.language).toBe('fr');
+    expect(await page.evaluate(() => localStorage.getItem('readfox-pending-book'))).toBeNull();
+    const collections = (await (
+      await page.request.get(apiUrl('/api/collections?language=fr'))
+    ).json()) as Array<{ title: string }>;
+    expect(collections.map((collection) => collection.title)).toEqual(["Candide, ou l'optimisme"]);
+    await context.close();
+  });
+
+  test('a chosen book that is not in the library falls back to the recommendations', async ({
+    browser,
+  }) => {
+    const context = await browser.newContext({ storageState: { cookies: [], origins: [] } });
+    const page = await context.newPage();
+
+    await page.goto('/setup');
+    await page.evaluate(() =>
+      localStorage.setItem(
+        'readfox-pending-book',
+        JSON.stringify({ ref: 'fr/no-such-book', savedAt: Date.now() }),
+      ),
+    );
+    await page.reload();
+    await expect(page.getByTestId('setup-language-fr')).toHaveAttribute('aria-pressed', 'true');
+    await expect(page.getByTestId('setup-pending-book')).toHaveCount(0);
+    await expect
+      .poll(() => page.evaluate(() => localStorage.getItem('readfox-pending-book')))
+      .toBeNull();
+    await page.getByTestId('start-guided-onboarding').click();
+    await expect(page.getByTestId('setup-recommend')).toBeVisible({ timeout: 15_000 });
     await context.close();
   });
 
@@ -358,6 +411,45 @@ test.describe('guided onboarding — selfhost', () => {
     await context.close();
   });
 
+  test('with auto-save off the guide keeps its save step', async ({ browser }) => {
+    test.setTimeout(120_000);
+    const context = await browser.newContext({ storageState: { cookies: [], origins: [] } });
+    const page = await context.newPage();
+    await mockReaderDefinitions(page);
+    await startSpanishGuide(page);
+    const autoSave = apiUrl('/api/settings/autoSaveLookups');
+    await page.request.put(autoSave, { data: { value: false } });
+    try {
+      await page.reload();
+      await expect(page.getByTestId('onboarding-coach-lookup')).toContainText('Step 1 of 3');
+
+      await page
+        .getByRole('button', { name: `Look up ${GUIDED_WORD}`, exact: true })
+        .first()
+        .click();
+      const drawer = page.getByTestId('translation-drawer');
+      await expect(drawer.getByText(`meaning of ${GUIDED_WORD}`, { exact: false })).toBeVisible({
+        timeout: 5_000,
+      });
+      await expect(page.getByTestId('onboarding-coach-save')).toContainText('Step 2 of 3');
+      await expect(drawer.getByTestId('onboarding-drawer-progress')).toContainText(
+        'Choose level 1–4 to add this word',
+      );
+
+      const savedEvent = waitForSavedEvent(page);
+      await drawer.getByTestId('word-level-1').click();
+      expect((await savedEvent).status()).toBeLessThan(300);
+      await expect(
+        page.getByText(`“${GUIDED_WORD}” added. Your practice is ready.`, { exact: true }),
+      ).toBeVisible();
+      await expect(page.getByTestId('onboarding-coach-practice')).toContainText('Step 3 of 3');
+    } finally {
+      // The selfhost reset keeps settings, so later tests would run with auto-save off.
+      await page.request.put(autoSave, { data: { value: true } });
+      await context.close();
+    }
+  });
+
   test('coaching landmarks and actions work without a pointer', async ({ browser }) => {
     test.setTimeout(120_000);
     const context = await browser.newContext({ storageState: { cookies: [], origins: [] } });
@@ -373,17 +465,12 @@ test.describe('guided onboarding — selfhost', () => {
       .first();
     await trigger.focus();
     await expect(trigger).toBeFocused();
+    const savedEvent = waitForSavedEvent(page);
     await trigger.press('Enter');
     await expect(page.getByRole('dialog', { name: `Definition of ${GUIDED_WORD}` })).toBeVisible();
     await expect(page.getByText(`meaning of ${GUIDED_WORD}`, { exact: false })).toBeVisible({
       timeout: 5_000,
     });
-
-    const level = page.getByTestId('word-level-1');
-    await level.focus();
-    await expect(level).toBeFocused();
-    const savedEvent = waitForSavedEvent(page);
-    await level.press('Enter');
     const savedResponse = await savedEvent;
     expect(savedResponse.status(), await savedResponse.text()).toBeLessThan(300);
     const current = await snapshot(page);

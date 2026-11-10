@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getLocale, getTranslations } from 'next-intl/server';
 import { LegalShell } from '@/components/LegalLinks/shell';
+import { registerHrefForBook } from '@/lib/pending-book';
 import { findPublicBook, firstChapter, listPublicBooks, pickLocalized } from '@/lib/public-books';
 
 interface Props {
@@ -75,7 +76,7 @@ export default async function ChapterPage({ params }: Props) {
           {t('continueBody', { count: book.lessonCount })}
         </p>
         <Link
-          href="/register"
+          href={registerHrefForBook({ language, slug })}
           className="mt-3 inline-block rounded-lg bg-primary px-4 py-2 font-semibold text-primary-foreground hover:opacity-90"
           data-testid="book-chapter-register"
         >

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getLocale, getTranslations } from 'next-intl/server';
 import JsonLd from '@/components/JsonLd';
+import { registerHrefForBook } from '@/lib/pending-book';
 import { LegalShell, H2 } from '@/components/LegalLinks/shell';
 import {
   AUTHOR_PAGE_MIN_BOOKS,
@@ -156,8 +157,9 @@ export default async function BookPage({ params }: Props) {
             {t('tryRead')}
           </Link>
           <Link
-            href="/register"
+            href={registerHrefForBook({ language, slug })}
             className="inline-block rounded-lg border border-border bg-card px-4 py-2 font-semibold text-foreground hover:bg-muted"
+            data-testid="book-register"
           >
             {t('readFree')}
           </Link>

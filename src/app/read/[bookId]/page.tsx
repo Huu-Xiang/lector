@@ -838,16 +838,16 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
   );
 
   // Save a looked-up single word once its meaning has arrived (the lookup
-  // that opened the drawer, not a nested one, and not during the guide).
+  // that opened the drawer, not a nested one).
   useEffect(() => {
-    if (autoSaveLookups !== true || onboarding === null || onboardingActive) return;
+    if (autoSaveLookups !== true || onboarding === null) return;
     if (!wordPanel.isOpen || wordPanel.word.includes(' ')) return;
     if (autoSaveRequestId.current !== translationRequestId.current) return;
     if (!wordPanel.translation || wordPanel.isLoading || wordPanel.isStreamingGloss) return;
     if (wordPanel.error || wordPanel.existingEntry) return;
     autoSaveRequestId.current = 0;
     void saveWordToVocab(true);
-  }, [autoSaveLookups, onboarding, onboardingActive, wordPanel, saveWordToVocab]);
+  }, [autoSaveLookups, onboarding, wordPanel, saveWordToVocab]);
 
   const markAsKnown = useCallback(async () => {
     const rollbackReaderState = applyReaderWordState(wordPanel.word, 'known');
@@ -1456,10 +1456,11 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
   const onboardingSavedWords = savedOnboardingWords(onboarding);
   const onboardingSavedCount = onboardingSavedWords.length;
   const onboardingEncounteredCount = encounteredOnboardingTerms(onboarding).length;
+  const guideAutoSaves = autoSaveLookups !== false;
   const onboardingCoachStage =
     onboardingSavedCount >= ONBOARDING_SAVE_TARGET
       ? 'practice'
-      : onboardingEncounteredCount > 0
+      : onboardingEncounteredCount > 0 && !guideAutoSaves
         ? 'save'
         : 'lookup';
   const onboardingCurrentWordSaved = onboardingSavedWords.some(
@@ -1540,6 +1541,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
                   savedCount: onboardingSavedCount,
                   target: ONBOARDING_SAVE_TARGET,
                   currentWordSaved: onboardingCurrentWordSaved,
+                  autoSave: guideAutoSaves,
                 }
               : undefined
           }
@@ -1559,6 +1561,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       {onboardingActive && (
         <OnboardingCoach
           stage={onboardingCoachStage}
+          autoSave={guideAutoSaves}
           onStartPractice={
             onboardingCoachStage === 'practice' ? startOnboardingPractice : undefined
           }

@@ -19,6 +19,7 @@ import WebImportModal from '@/components/WebImportModal';
 import YouTubeImportModal from '@/components/YouTubeImportModal';
 import PasteImportModal from '@/components/PasteImportModal';
 import FreeBooksModal from '@/components/FreeBooksModal';
+import PendingBookOpener from '@/components/PendingBookOpener';
 import {
   DndContext,
   closestCenter,
@@ -415,6 +416,7 @@ export default function Home() {
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+      <PendingBookOpener />
       <PageHeader title={t('page.title')}>
         <div className="flex flex-wrap items-center gap-2">
           {isCreatingGroup ? (

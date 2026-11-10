@@ -9,7 +9,16 @@ test.describe('public book pages', () => {
     await expect(page).toHaveURL(/\/books\/en\/walden$/);
     await expect(page.getByText('by Henry David Thoreau', { exact: true })).toBeVisible();
     await expect(page.getByText(/When I wrote the following pages/)).toBeVisible();
-    await expect(page.locator('a[href="/register"]').first()).toBeVisible();
+    await expect(page.getByTestId('book-register')).toHaveAttribute(
+      'href',
+      '/register?book=en%2Fwalden',
+    );
+
+    await page.getByTestId('book-try-read').click();
+    await expect(page.getByTestId('book-chapter-register')).toHaveAttribute(
+      'href',
+      '/register?book=en%2Fwalden',
+    );
   });
 
   test('an unknown book is not found', async ({ page }) => {
