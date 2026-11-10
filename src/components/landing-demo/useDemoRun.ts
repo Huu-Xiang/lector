@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from '
 import { resolveSpan, SENTENCES, type DemoSet } from './demo-data';
 import {
   judge,
+  clearFinishedRun,
   judgePress,
   Run,
   RunCancelled,
@@ -264,6 +265,7 @@ export function useDemoRun(set: DemoSet) {
       },
     );
     patch({ phase: 'done', acting: false, hit: null });
+    runRef.current = clearFinishedRun(runRef.current, run);
   };
 
   const startPoint = () => {

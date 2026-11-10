@@ -27,6 +27,7 @@ export function useReadingActivity(lesson: ReadingLesson | null) {
     activityRef.current = activity;
     const unsubscribe = subscribeToReadingActivity(activity, document, window);
     return () => {
+      activity.tick(document.visibilityState === 'visible');
       unsubscribe();
       activityRef.current = null;
     };

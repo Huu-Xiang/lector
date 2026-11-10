@@ -68,6 +68,11 @@ export function stepOfPhase(phase: Phase): Step | null {
 
 export class RunCancelled extends Error {}
 
+/** The ref that holds the active run drops a run that has ended, so `stop` cannot reset `done`. */
+export function clearFinishedRun(active: Run | null, finished: Run): Run | null {
+  return active === finished ? null : active;
+}
+
 /** One timeline. `cancel` rejects every pending wait, so a stopped run never moves again. */
 export class Run {
   private cancelled = false;

@@ -6,11 +6,7 @@ import { authClient } from '@/lib/auth-client';
 import { writePendingInvite } from '@/lib/pending-invite';
 import { useOidcLogin, useOidcProviderName } from '@/lib/use-env';
 
-/**
- * Starts the provider login (providerId 'oidc', fixed in api/src/lib/accounts.ts).
- * A cancelled or refused login returns to `errorPath`, where `useOAuthErrorToast` shows it.
- * `inviteCode` travels in the OAuth state; the API needs it only when invites are required.
- */
+/** Starts the login with providerId 'oidc'; a refused login returns to `errorPath`. */
 export default function OidcSignInButton({
   destination,
   errorPath,

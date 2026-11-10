@@ -101,9 +101,16 @@ function DemoCard({ setId }: { setId: DemoSetId }) {
         Math.max(current.last, current.anchor),
       );
     };
+    const cancel = () => {
+      if (!drag.current) return;
+      drag.current = null;
+      setSelection(null);
+    };
     window.addEventListener('pointermove', move);
     window.addEventListener('pointerup', up);
+    window.addEventListener('pointercancel', cancel);
     return () => {
+      window.removeEventListener('pointercancel', cancel);
       window.removeEventListener('pointermove', move);
       window.removeEventListener('pointerup', up);
     };

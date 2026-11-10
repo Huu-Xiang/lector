@@ -12,11 +12,7 @@ interface ReadingActivityOptions {
   now?: () => number;
 }
 
-/**
- * Counts one minute for each 60 s with the tab visible and an interaction in the
- * last ACTIVE_WINDOW_MS. Counts the words above the furthest scroll point once,
- * so scrolling back and forth adds nothing. `send` runs only from `tick`.
- */
+/** Counts a minute per 60 s of visible, active reading, and the words above the furthest scroll point once. */
 export function createReadingActivity({ wordCount, send, now = Date.now }: ReadingActivityOptions) {
   let lastActivityAt = -Infinity;
   let lastTickAt = now();

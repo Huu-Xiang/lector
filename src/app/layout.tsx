@@ -7,6 +7,7 @@ import { Toaster } from 'sonner';
 import AuthGuard from '@/components/AuthGuard';
 import BillingGuard from '@/components/BillingGuard';
 import ChatWidget from '@/components/ChatWidget';
+import SessionOnly from '@/components/SessionOnly';
 import SetupGuard from '@/components/SetupGuard';
 import TimezoneSync from '@/components/TimezoneSync';
 import SourceBeacon from '@/components/SourceBeacon';
@@ -86,7 +87,9 @@ export default async function RootLayout({
         className={`${nunito.variable} ${literata.variable} flex min-h-screen flex-col bg-background font-sans text-foreground antialiased sm:flex-row`}
       >
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <NavHeader />
+          <SessionOnly>
+            <NavHeader />
+          </SessionOnly>
 
           <div className="flex-1">
             {/* AuthGuard outside SetupGuard: in cloud mode the session must
@@ -102,7 +105,9 @@ export default async function RootLayout({
               </BillingGuard>
             </AuthGuard>
           </div>
-          <ChatWidget />
+          <SessionOnly>
+            <ChatWidget />
+          </SessionOnly>
           <SourceBeacon />
           <PlanLimitPrompt />
           {/* Spacer for mobile bottom nav — invisible on sm+ */}

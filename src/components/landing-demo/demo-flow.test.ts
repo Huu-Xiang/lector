@@ -1,5 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { judge, judgePress, Run, RunCancelled, stepOfPhase, type Phase } from './demo-flow';
+import {
+  clearFinishedRun,
+  judge,
+  judgePress,
+  Run,
+  RunCancelled,
+  stepOfPhase,
+  type Phase,
+} from './demo-flow';
 
 const target = { sentence: 1, index: 14 };
 const word = (sentence: number, index: number) => ({ kind: 'word', sentence, index }) as const;
@@ -95,5 +103,18 @@ describe('Run', () => {
     await outcome;
     run.cancel();
     await vi.advanceTimersByTimeAsync(10000);
+  });
+});
+
+describe('clearFinishedRun', () => {
+  it('drops the run that ended', () => {
+    const run = new Run();
+    expect(clearFinishedRun(run, run)).toBeNull();
+  });
+
+  it('keeps a newer run that replaced the ended one', () => {
+    const ended = new Run();
+    const newer = new Run();
+    expect(clearFinishedRun(newer, ended)).toBe(newer);
   });
 });

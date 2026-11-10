@@ -138,6 +138,13 @@ test.describe('Nested dictionary definitions (reader)', () => {
     // "Die vrugte is baie lekker." — the sentence belongs to the parent word.
     await expect(drawer.getByRole('button', { name: 'In context' })).not.toBeVisible();
 
+    // The auto-save has no row for the nested word before the reader acts
+    await expect
+      .poll(async () => (await vocabByText(page, 'vrugte')).map((v) => v.state))
+      .toEqual(['level1']);
+    await page.waitForLoadState('networkidle');
+    expect(await vocabByText(page, 'vrug')).toHaveLength(0);
+
     // The underlying word can be marked known directly
     await drawer.getByRole('button', { name: '✓ Known' }).click();
     await expect(drawer).toHaveClass(/translate-x-full/, { timeout: 5000 });

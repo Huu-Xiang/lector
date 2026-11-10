@@ -37,6 +37,7 @@ import { addWordCard, addClozeCard, buildSourceLinkHtml } from '@/lib/anki';
 import { queueForAnki } from '@/lib/anki-queue';
 import { useAnkiTransport } from '@/lib/anki-transport';
 import { useLectorMode } from '@/lib/use-env';
+import { createKeyedGuard, resolveAutoSave } from '@/lib/auto-save-lookups';
 import { useReadingActivity } from '@/lib/use-reading-activity';
 import { useRefreshOnReturn } from '@/lib/use-refresh-on-return';
 import {
@@ -222,11 +223,14 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     loadLesson();
   }, [activeLang.code, lessonId, t]);
 
-  // Unset means on; null until the setting has loaded, so a lookup never saves early.
+  // Null until the setting has loaded, and after a failed read: a lookup never saves then.
   const [autoSaveLookups, setAutoSaveLookups] = useState<boolean | null>(null);
   const loadAutoSaveSetting = useCallback(() => {
     getSetting<boolean | null>('autoSaveLookups')
-      .then((value) => setAutoSaveLookups(value !== false))
+      .then((value) => {
+        const next = resolveAutoSave(value);
+        if (next !== null) setAutoSaveLookups(next);
+      })
       .catch(() => {});
   }, []);
   useEffect(() => {
@@ -757,8 +761,8 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
 
   // `auto` is a save the user did not ask for: it never touches a word that
   // already has a state, and a failure shows nothing.
-  const saveWordToVocab = useCallback(
-    async (auto = false) => {
+  const saveWordNow = useCallback(
+    async (auto: boolean) => {
       if (!wordPanel.translation) return;
 
       const requestId = translationRequestId.current;
@@ -821,6 +825,16 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       trackOnboardingVocab,
       t,
     ],
+  );
+
+  // One save per word at a time: an S pressed during an auto-save does not post again.
+  const saveGuard = useRef(createKeyedGuard()).current;
+  const saveWordToVocab = useCallback(
+    async (auto = false) => {
+      if (!wordPanel.translation) return;
+      await saveGuard(vocabTextOf(wordPanel.word), () => saveWordNow(auto));
+    },
+    [wordPanel.translation, wordPanel.word, vocabTextOf, saveWordNow, saveGuard],
   );
 
   // Save a looked-up single word once its meaning has arrived (the lookup

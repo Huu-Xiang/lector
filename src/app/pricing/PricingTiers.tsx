@@ -3,7 +3,9 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
+import { authClient } from '@/lib/auth-client';
 import { getEntitlements } from '@/lib/data-layer';
+import { useLectorMode } from '@/lib/use-env';
 import { planName } from '@/lib/plan-names';
 import {
   PAID_TIERS,
@@ -21,6 +23,16 @@ import {
 type Tier = 'free' | PaidTier;
 type Cycle = 'year' | 'month';
 
+/** Cloud only: reads the plan after a session exists, so a signed-out visitor sends no 401 call. */
+function CloudPlanProbe({ onPlan }: { onPlan: (plan: string | null) => void }) {
+  const { data: session } = authClient.useSession();
+  const userId = session?.user.id;
+  useEffect(() => {
+    if (userId) getEntitlements().then((ent) => onPlan(ent?.plan ?? null));
+  }, [userId, onPlan]);
+  return null;
+}
+
 /** `initialPrices` comes from the server render, so the amounts are in the HTML. */
 export default function PricingTiers({ initialPrices }: { initialPrices: PlanPrice[] | null }) {
   const t = useTranslations('plans');
@@ -31,9 +43,12 @@ export default function PricingTiers({ initialPrices }: { initialPrices: PlanPri
 
   useEffect(() => {
     if (!initialPrices) fetchPlanPrices().then(setPrices);
-    // Signed out on this public page: no plan to highlight.
-    getEntitlements().then((ent) => setCurrent(ent?.plan ?? null));
   }, [initialPrices]);
+
+  const mode = useLectorMode();
+  useEffect(() => {
+    if (mode === 'selfhost') getEntitlements().then((ent) => setCurrent(ent?.plan ?? null));
+  }, [mode]);
 
   const bestSaving = Math.max(
     0,
@@ -107,6 +122,7 @@ export default function PricingTiers({ initialPrices }: { initialPrices: PlanPri
 
   return (
     <div className="space-y-4">
+      {mode === 'cloud' && <CloudPlanProbe onPlan={setCurrent} />}
       <div
         role="group"
         aria-label={t('cycleLabel')}
