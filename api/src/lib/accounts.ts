@@ -174,6 +174,11 @@ export function oidcDiscoveryUrl(issuer: string): string {
 }
 
 /** Factory shared by the prod singleton and tests (in-memory DB aside). */
+/** Seconds. The sign-up screen and the verification mail both say 3 days. */
+export const VERIFICATION_LINK_SECONDS = 3 * 24 * 60 * 60;
+/** Seconds without a visit before a sign-in ends. */
+export const SESSION_SECONDS = 90 * 24 * 60 * 60;
+
 export function createAuthEngine(opts: AuthEngineOptions) {
   const plugins: BetterAuthPlugin[] = [
     // TOTP two-factor auth (Google Authenticator et al), per-user opt-in from
@@ -286,9 +291,11 @@ export function createAuthEngine(opts: AuthEngineOptions) {
         }
       },
     },
+    session: { expiresIn: SESSION_SECONDS },
     emailVerification: {
       sendOnSignUp: true,
       autoSignInAfterVerification: true,
+      expiresIn: VERIFICATION_LINK_SECONDS,
       sendVerificationEmail: async ({ user, url }) => {
         try {
           await sendEmail({
@@ -297,7 +304,7 @@ export function createAuthEngine(opts: AuthEngineOptions) {
             text:
               `Welcome to Readfox. Confirm your email address to activate your account:\n\n` +
               `${url}\n\n` +
-              `If you didn't sign up, ignore this email.`,
+              `The link works for 3 days. If you didn't sign up, ignore this email.`,
           });
         } catch (err) {
           console.error(`[accounts] failed to send verification email to ${user.email}:`, err);

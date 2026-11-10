@@ -32,6 +32,9 @@ interface Copy {
   stop: boolean;
 }
 
+/** /login sends a signed-in reader on to the library; / shows the landing page without a session. */
+const APP_ENTRY_PATH = '/login';
+
 const COPY: Record<string, Copy> = {
   'welcome-on-account-create': {
     subject: 'Welcome to Readfox',
@@ -41,7 +44,7 @@ const COPY: Record<string, Copy> = {
       v.STARTER_LINE,
     ],
     cta: 'Start reading',
-    ctaPath: '/books',
+    ctaPath: APP_ENTRY_PATH,
     zh: '欢迎加入 Readfox！打开一本适合你水平的免费书，点任意生词即可看到解释，并自动存进生词本。',
     stop: true,
   },
@@ -53,7 +56,7 @@ const COPY: Record<string, Copy> = {
       v.STARTER_LINE,
     ],
     cta: 'Open a book',
-    ctaPath: '/books',
+    ctaPath: APP_ENTRY_PATH,
     zh: '还没存过生词？打开任意一页，点一个不认识的词试试，Readfox 会结合上下文解释并保存。',
     stop: true,
   },
@@ -65,7 +68,7 @@ const COPY: Record<string, Copy> = {
       v.STARTER_LINE,
     ],
     cta: 'Read for 10 minutes',
-    ctaPath: '/books',
+    ctaPath: APP_ENTRY_PATH,
     zh: '每天读十分钟，比一周读一次长时间更有效。挑一本短书，遇到生词点一下就好。',
     stop: true,
   },

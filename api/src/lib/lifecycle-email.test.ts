@@ -518,19 +518,32 @@ describe('starterLine', () => {
     }
   });
 
-  test('asks for a text when the language seeds nothing', () => {
+  test('names the free books of a language that has a library', () => {
+    const database = createSchema();
+    const userId = insertUser(database);
+    database
+      .prepare('INSERT INTO settings (userId, key, value) VALUES (?, ?, ?)')
+      .run(userId, 'targetLanguage', '"fr"');
+    const line = starterLine(database, userId);
+    expect(line).toMatch(/^Readfox has \d+ free French books, sorted by level\./);
+    expect(line).not.toContain('empty');
+  });
+
+  test('asks for a text when the language has no lessons and no free books', () => {
     const database = createSchema();
     const userId = insertUser(database);
     database
       .prepare('INSERT INTO settings (userId, key, value) VALUES (?, ?, ?)')
       .run(userId, 'targetLanguage', '"af"');
-    expect(starterLine(database, userId)).toContain('empty until you add something');
+    expect(starterLine(database, userId)).toBe(
+      'To start, paste an article or import a book in Afrikaans that you want to read.',
+    );
   });
 
-  test('asks for a text when no language is set', () => {
+  test('is empty when no language is set, so the mail leaves the paragraph out', () => {
     const database = createSchema();
     const userId = insertUser(database);
-    expect(starterLine(database, userId)).toContain('empty until you add something');
+    expect(starterLine(database, userId)).toBe('');
   });
 });
 

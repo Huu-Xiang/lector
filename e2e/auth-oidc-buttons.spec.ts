@@ -32,6 +32,31 @@ test.describe('provider button on the sign-in and register pages', () => {
     }
   });
 
+  test('the register page puts the provider button above the email form', async ({ page }) => {
+    await useCloudEnv(page, { OIDC_LOGIN: '1', OIDC_PROVIDER_NAME: 'Google' });
+    await page.goto('/register');
+    await expect(page.getByTestId('register-or-email')).toHaveText('or sign up with email');
+    const button = await page.getByTestId('register-oidc').boundingBox();
+    const firstField = await page.getByTestId('register-name').boundingBox();
+    expect(button!.y).toBeLessThan(firstField!.y);
+  });
+
+  test('with required invites the provider button stays under the invite field', async ({
+    page,
+  }) => {
+    await useCloudEnv(page, {
+      OIDC_LOGIN: '1',
+      OIDC_PROVIDER_NAME: 'Google',
+      INVITE_REQUIRED: '1',
+    });
+    await page.goto('/register');
+    await expect(page.getByTestId('register-oidc')).toBeVisible();
+    await expect(page.getByTestId('register-or-email')).toHaveCount(0);
+    const button = await page.getByTestId('register-oidc').boundingBox();
+    const invite = await page.getByTestId('register-invite').boundingBox();
+    expect(button!.y).toBeGreaterThan(invite!.y);
+  });
+
   test('neither page shows the button without the flag', async ({ page }) => {
     await useCloudEnv(page);
     await page.goto('/login');

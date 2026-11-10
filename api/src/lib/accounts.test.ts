@@ -13,6 +13,8 @@ import { Database } from 'bun:sqlite';
 import { randomBytes, randomUUID } from 'crypto';
 import { db } from '../db';
 import {
+  SESSION_SECONDS,
+  VERIFICATION_LINK_SECONDS,
   createAuthEngine,
   isGoogleIssuer,
   oidcDiscoveryUrl,
@@ -246,6 +248,17 @@ describe('signup → verify → sign in → session resolves the tenant', () => 
     expect(extractUrl(mail)).toContain('/api/auth/verify-email');
   });
 
+  test('the verification link works for 3 days', () => {
+    const token = new URL(extractUrl(lastEmailMatching(/verify/i))).searchParams.get('token')!;
+    const claims = JSON.parse(Buffer.from(token.split('.')[1], 'base64url').toString()) as {
+      iat: number;
+      exp: number;
+    };
+    expect(claims.exp - claims.iat).toBe(VERIFICATION_LINK_SECONDS);
+    expect(VERIFICATION_LINK_SECONDS).toBe(259_200);
+    expect(lastEmailMatching(/verify/i).text).toContain('The link works for 3 days.');
+  });
+
   test('sign-in before verification is refused', async () => {
     const res = await signIn(EMAIL, PASSWORD);
     expect(res.status).toBe(403);
@@ -258,6 +271,13 @@ describe('signup → verify → sign in → session resolves the tenant', () => 
     const res = await signIn(EMAIL, PASSWORD);
     expect(res.status).toBe(200);
     expect(cookiesFrom(res)).toContain('session_token');
+  });
+
+  test('a sign-in lasts 90 days without a visit', async () => {
+    const res = await signIn(EMAIL, PASSWORD);
+    const cookie = res.headers.getSetCookie().find((entry) => entry.includes('session_token'));
+    expect(cookie).toContain(`Max-Age=${SESSION_SECONDS}`);
+    expect(SESSION_SECONDS).toBe(7_776_000);
   });
 
   test('the session cookie authenticates API requests and resolves a stable userId', async () => {

@@ -14,6 +14,7 @@ import { isUnsubscribed, listUnsubscribeHeaders, unsubscribeUrl } from './email-
 import { LANGUAGES, isValidLanguageCode, type LanguageCode } from './languages';
 import { Sentry } from './sentry';
 import { hasStarterContent } from './starter-content';
+import { listLibraryBooks } from './library-content';
 import { isEntitledStatus } from './billing';
 import { addDaysToDateString, dateStringInTimeZone, isValidTimeZone } from './dates';
 import { planName } from './plan-names';
@@ -171,22 +172,21 @@ export function languageLabel(database: Database, userId: string): string {
 }
 
 /**
- * One sentence about the state of the user's library.
- *
- * A Resend template cannot branch, and the truthful sentence differs per
- * language: #315 seeds a starter series into the library on first language
- * selection, and only the packs that ship `content/starter/manifest.json` have
- * one. So the library of a German or Spanish learner is NOT empty, and telling
- * them it is sends them hunting for an EPUB while twenty-two graded lessons sit
- * there unopened. The sender knows the language, so it composes the sentence
- * and the template just prints it.
+ * One sentence about what the reader can open first. Empty when no language is set;
+ * the mail then leaves the paragraph out.
  */
 export function starterLine(database: Database, userId: string): string {
   const code = languageCodeFor(database, userId);
-  if (code && hasStarterContent(code)) {
-    return `Your first ${LANGUAGES[code].name} lessons are already in your library, graded from the most common words up.`;
+  if (!code) return '';
+  const name = LANGUAGES[code].name;
+  if (hasStarterContent(code)) {
+    return `Your first ${name} lessons are already in your library, graded from the most common words up.`;
   }
-  return 'Your library is empty until you add something, so start with a text you actually want to read.';
+  const books = listLibraryBooks(code).length;
+  if (books > 0) {
+    return `Readfox has ${books} free ${name} books, sorted by level. You can start one without importing anything.`;
+  }
+  return `To start, paste an article or import a book in ${name} that you want to read.`;
 }
 
 /** `email_sends.templateAlias` holds the send key: the alias, or `<alias>:<suffix>` for a repeatable mail. */

@@ -84,6 +84,14 @@ test.describe.serial('cloud auth lifecycle', () => {
     await page.getByTestId('register-submit').click();
     await expect(page.getByTestId('register-check-email')).toBeVisible();
 
+    // The check-inbox screen sends the link again, then waits before another send.
+    await page.getByTestId('register-resend').click();
+    await expect(page.getByText('Verification email sent', { exact: false })).toBeVisible();
+    await expect
+      .poll(() => emailsTo(EMAIL).filter((mail) => /verify/i.test(mail.subject)).length)
+      .toBe(2);
+    await expect(page.getByTestId('register-resend')).toBeDisabled();
+
     // Signing in before verifying is refused with the resend affordance.
     await page.goto('/login');
     await page.getByTestId('login-email').fill(EMAIL);

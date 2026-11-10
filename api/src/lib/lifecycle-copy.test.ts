@@ -35,4 +35,23 @@ describe('lifecycle copy', () => {
       expect(body.html).toBe(r.html);
     });
   }
+
+  test('the first-week mails open the app, not the public book list', () => {
+    for (const alias of [
+      LIFECYCLE_TEMPLATES.welcome,
+      LIFECYCLE_TEMPLATES.day1,
+      LIFECYCLE_TEMPLATES.day3,
+    ]) {
+      const r = renderLifecycleEmail(alias, vars);
+      expect(r.text).toContain('https://readfox.app/login');
+      expect(r.html).toContain('href="https://readfox.app/login"');
+      expect(r.text).not.toContain('https://readfox.app/books');
+    }
+  });
+
+  test('an empty starter line leaves no empty paragraph', () => {
+    const r = renderLifecycleEmail(LIFECYCLE_TEMPLATES.welcome, { ...vars, STARTER_LINE: '' });
+    expect(r.text).not.toContain('\n\n\n');
+    expect(r.html).not.toContain('<p style="line-height:1.6"></p>');
+  });
 });

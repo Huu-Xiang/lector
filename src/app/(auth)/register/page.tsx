@@ -15,10 +15,12 @@ import { authHref, sanitizeAuthReturnPath } from '@/lib/auth-return';
 import { meetsRules } from '@/lib/password-strength';
 import { readPendingInvite, writePendingInvite } from '@/lib/pending-invite';
 import { parseBookRef, writePendingBook } from '@/lib/pending-book';
-import { useInviteRequired } from '@/lib/use-env';
+import { useInviteRequired, useOidcLogin } from '@/lib/use-env';
 import WelcomeOfferNote from '@/components/WelcomeOfferNote';
 import OidcSignInButton from '@/components/OidcSignInButton';
 import { useOAuthErrorToast } from '@/lib/use-oauth-error';
+
+const RESEND_WAIT_MS = 60_000;
 
 export default function RegisterPage() {
   return (
@@ -47,6 +49,11 @@ function RegisterForm() {
   const [captchaRound, setCaptchaRound] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [sentTo, setSentTo] = useState<string | null>(null);
+  const [resending, setResending] = useState(false);
+  const [resendWait, setResendWait] = useState(false);
+  const oidcLogin = useOidcLogin();
+  // With required invites the provider button stays under the invite field it reads.
+  const oidcFirst = oidcLogin && !inviteRequired;
 
   /* eslint-disable react-hooks/set-state-in-effect -- restore a code saved before a reload */
   useEffect(() => {
@@ -107,7 +114,29 @@ function RegisterForm() {
       return;
     }
     writePendingInvite(invite.trim());
+    setCaptchaToken('');
+    setCaptchaRound((r) => r + 1);
     setSentTo(email);
+  }
+
+  async function resendVerification() {
+    if (!sentTo || resending) return;
+    setResending(true);
+    const { error } = await authClient.sendVerificationEmail({
+      email: sentTo,
+      callbackURL: `${window.location.origin}${destination}`,
+      fetchOptions: { headers: captchaToken ? { 'x-captcha-response': captchaToken } : {} },
+    });
+    setResending(false);
+    setCaptchaToken('');
+    setCaptchaRound((r) => r + 1);
+    if (error) {
+      toast.error(error.message ?? t('errResend'));
+      return;
+    }
+    toast.success(t('resent'));
+    setResendWait(true);
+    window.setTimeout(() => setResendWait(false), RESEND_WAIT_MS);
   }
 
   if (sentTo) {
@@ -123,6 +152,18 @@ function RegisterForm() {
         <Button className="w-full" onClick={() => router.push(authHref('/login', returnPath))}>
           {t('goSignIn')}
         </Button>
+        <p className="text-sm text-muted-foreground">{t('checkHint')}</p>
+        <TurnstileWidget key={captchaRound} onToken={setCaptchaToken} />
+        <Button
+          type="button"
+          variant="outline"
+          className="w-full"
+          onClick={() => void resendVerification()}
+          disabled={resending || resendWait || (!!turnstileSiteKey() && !captchaToken)}
+          data-testid="register-resend"
+        >
+          {t('resend')}
+        </Button>
       </div>
     );
   }
@@ -131,6 +172,25 @@ function RegisterForm() {
     <form onSubmit={handleSubmit} className="space-y-4">
       <h2 className="text-lg font-semibold text-foreground">{t('title')}</h2>
       <WelcomeOfferNote />
+
+      {oidcFirst && (
+        <>
+          <OidcSignInButton
+            destination={destination}
+            errorPath="/register"
+            inviteCode={invite.trim()}
+            testId="register-oidc"
+          />
+          <div
+            className="flex items-center gap-3 text-xs text-muted-foreground"
+            data-testid="register-or-email"
+          >
+            <span className="h-px flex-1 bg-border" />
+            {t('orEmail')}
+            <span className="h-px flex-1 bg-border" />
+          </div>
+        </>
+      )}
 
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-2">
@@ -234,12 +294,14 @@ function RegisterForm() {
         {submitting ? t('submitting') : t('submit')}
       </Button>
 
-      <OidcSignInButton
-        destination={destination}
-        errorPath="/register"
-        inviteCode={invite.trim()}
-        testId="register-oidc"
-      />
+      {!oidcFirst && (
+        <OidcSignInButton
+          destination={destination}
+          errorPath="/register"
+          inviteCode={invite.trim()}
+          testId="register-oidc"
+        />
+      )}
 
       <p className="text-center text-sm text-muted-foreground">
         {t('haveAccount')}{' '}
