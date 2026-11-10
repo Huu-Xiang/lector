@@ -266,6 +266,7 @@ export default function SetupPage() {
     }
   }
 
+  const chosenTitle = selectedLanguage === bookLanguage ? pendingTitle : null;
   const ownCode = ownLanguage(native);
   const offeredCards = languageCards.filter((lang) => lang.code !== ownCode);
   const readyCards = ready
@@ -522,9 +523,9 @@ export default function SetupPage() {
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <p className="text-sm font-semibold text-foreground">{t('ready')}</p>
-                  {pendingTitle && selectedLanguage === bookLanguage ? (
-                    <p className="mt-0.5 text-xs text-foreground" data-testid="setup-pending-book">
-                      {t('pendingBook', { title: pendingTitle })}
+                  {chosenTitle ? (
+                    <p className="mt-0.5 text-sm text-foreground" data-testid="setup-pending-book">
+                      {t('pendingBook', { title: chosenTitle })}
                     </p>
                   ) : (
                     <p className="mt-0.5 text-xs text-muted-foreground">{t('readyHint')}</p>
@@ -546,7 +547,15 @@ export default function SetupPage() {
                     disabled={!selectedLanguage || pending !== null}
                     data-testid="start-guided-onboarding"
                   >
-                    {pending ? t('preparing') : t('start')}
+                    {pending ? (
+                      t('preparing')
+                    ) : chosenTitle ? (
+                      <span className="max-w-[15rem] truncate sm:max-w-[20rem]">
+                        {t('startBook', { title: chosenTitle })}
+                      </span>
+                    ) : (
+                      t('start')
+                    )}
                     {!pending && <ArrowRight className="h-4 w-4" aria-hidden="true" />}
                   </Button>
                 </div>

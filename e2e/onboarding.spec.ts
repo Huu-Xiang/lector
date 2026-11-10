@@ -228,7 +228,16 @@ test.describe('guided onboarding — selfhost', () => {
     await expect(page).toHaveURL(/\/setup/, { timeout: 15_000 });
     await expect(page.getByTestId('setup-language-fr')).toHaveAttribute('aria-pressed', 'true');
     await expect(page.getByTestId('setup-pending-book')).toContainText('Candide');
-    await page.getByTestId('start-guided-onboarding').click();
+    const start = page.getByTestId('start-guided-onboarding');
+    await expect(start).toContainText('Start reading “Candide');
+
+    // Another language has no chosen book, so the button names the guided lesson again.
+    await page.getByTestId('setup-language-es').click();
+    await expect(start).toHaveText('Start guided lesson');
+    await expect(page.getByTestId('setup-pending-book')).toHaveCount(0);
+    await page.getByTestId('setup-language-fr').click();
+    await expect(start).toContainText('Start reading “Candide');
+    await start.click();
 
     await expect(page).toHaveURL(/\/read\/[^/?]+\?onboarding=1$/, { timeout: 30_000 });
     await expect(page.getByTestId('onboarding-coach-lookup')).toBeVisible({ timeout: 15_000 });

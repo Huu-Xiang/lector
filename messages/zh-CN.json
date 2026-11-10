@@ -201,6 +201,7 @@
     "ready": "准备好读第一篇了吗?",
     "readyHint": "引导在一篇真实的入门课文里进行,可以随时退出。",
     "pendingBook": "设置完成后，直接开始读你选的《{title}》。",
+    "startBook": "开始读《{title}》",
     "skip": "直接进入书库",
     "preparing": "正在准备课文…",
     "start": "开始引导课",
