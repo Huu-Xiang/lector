@@ -193,6 +193,22 @@ describe('the welcome code on verification', () => {
     ).toEqual({ n: 0 });
   });
 
+  test('a remembered code that fails falls back to the welcome plan and logs the failure', () => {
+    welcomeCampaign();
+    const { codes } = campaign({ expiresAt: '2026-10-01T00:00:00.000Z' });
+    rememberSignupCode('rd-w6', codes[0], NOW);
+    const logged: unknown[][] = [];
+    const original = console.error;
+    console.error = (...args: unknown[]) => void logged.push(args);
+    try {
+      expect(redeemSignupCode('rd-w6', NOW)).toMatchObject({ ok: true, grant: { plan: 'cloud' } });
+    } finally {
+      console.error = original;
+    }
+    expect(activeGrant('rd-w6', NOW)?.endsAt).toBe('2026-10-30T00:00:00.000Z');
+    expect(String(logged[0]?.[0])).toContain('expired');
+  });
+
   test('after the end date nothing is granted', () => {
     welcomeCampaign();
     const late = new Date('2026-12-15T16:00:00Z');

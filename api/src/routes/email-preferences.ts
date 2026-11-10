@@ -10,11 +10,7 @@ interface EmailPreferencesDeps {
   userEmail: (userId: string) => string | null;
 }
 
-/**
- * The signed-in switch for product mail. It reads and writes the same
- * suppression list as the link in a mail. The address always comes from the
- * session user, never from the request.
- */
+/** The signed-in switch for product mail. It shares the unsubscribe list and takes the address from the session only. */
 export function createEmailPreferencesApp(deps: EmailPreferencesDeps) {
   const app = new Hono();
 

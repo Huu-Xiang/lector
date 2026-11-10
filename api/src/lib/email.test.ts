@@ -154,3 +154,24 @@ describe('resendPayload reply_to and attachments', () => {
     expect(line.attachments[0].filename).toBe('a.png');
   });
 });
+
+describe('Resend transport', () => {
+  test('the request carries an abort signal so a stalled call ends', async () => {
+    const realFetch = globalThis.fetch;
+    let signal: AbortSignal | null | undefined;
+    globalThis.fetch = (async (_url: unknown, init?: RequestInit) => {
+      signal = init?.signal;
+      return new Response('{}', { status: 200 });
+    }) as unknown as typeof fetch;
+    process.env.RESEND_API_KEY = 're_test';
+    setEmailTransport(null);
+    try {
+      await sendEmail({ to: 'a@b.c', subject: 's', text: 't' });
+    } finally {
+      globalThis.fetch = realFetch;
+      delete process.env.RESEND_API_KEY;
+    }
+    expect(signal).toBeInstanceOf(AbortSignal);
+    expect(signal?.aborted).toBe(false);
+  });
+});

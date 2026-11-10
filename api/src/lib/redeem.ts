@@ -254,20 +254,27 @@ export function rememberSignupCode(userId: string, rawCode: string, now = new Da
 }
 
 /**
- * Redeem the code the account remembered at sign-up. An account with none gets
- * the welcome code instead, so the campaign's limits and end date decide.
+ * Redeem the code the account remembered at sign-up. When there is none, or it
+ * fails, the welcome code is tried instead, so its limits and end date decide.
  */
 export function redeemSignupCode(userId: string, now = new Date()): RedeemResult {
   const row = db.prepare('SELECT code FROM signup_redeem_codes WHERE userId = ?').get(userId) as
     | { code: string }
     | undefined;
   if (row) db.prepare('DELETE FROM signup_redeem_codes WHERE userId = ?').run(userId);
-  return redeemCode({
-    userId,
-    rawCode: row?.code ?? WELCOME_CODE,
-    currentPlan: 'free',
-    hasSubscription: false,
-    emailVerified: true,
-    now,
-  });
+  const attempt = (rawCode: string) =>
+    redeemCode({
+      userId,
+      rawCode,
+      currentPlan: 'free',
+      hasSubscription: false,
+      emailVerified: true,
+      now,
+    });
+  if (!row) return attempt(WELCOME_CODE);
+  const result = attempt(row.code);
+  if (result.ok) return result;
+  console.error(`[redeem] sign-up code ${row.code} failed for ${userId}: ${result.error}`);
+  const fallback = attempt(WELCOME_CODE);
+  return fallback.ok ? fallback : result;
 }

@@ -1,7 +1,6 @@
 /**
- * Anonymous daily counts of visits and sign-ups per traffic source. A row is
- * (UTC date, source, lang, event) and a count. No user id, IP, referrer URL or
- * user agent is stored, so the operator cannot see one person's path.
+ * Anonymous daily counts of visits and sign-ups per source: one row per (UTC date, source, lang, event).
+ * No user id, IP, referrer URL or user agent is stored.
  */
 import { db } from '../db';
 import {

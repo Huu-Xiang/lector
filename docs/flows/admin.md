@@ -38,6 +38,37 @@ It counts only totals. Admin and billing-exempt accounts are left out.
 - Signups, Free AI translations (`usage_counters`) and RMB orders (`cn_orders`) use UTC days.
 - Paid AI calls are counted per month only, so the chart leaves them out.
 
+## Product email switch
+
+**App domain:** Admin
+
+One switch turns every lifecycle mail on or off. Auth mail ignores it.
+
+| Role | Path | Function |
+| --- | --- | --- |
+| API | `api/src/routes/admin.ts` | `GET /email-switch`, `PUT /email-switch` |
+| Setting | `api/src/lib/app-settings.ts` | `productEmailsSetting`, `setProductEmails` |
+| Sender | `api/src/lib/lifecycle-email.ts` | `sweepLifecycleEmails` |
+
+The value lives in `app_settings`. Until an admin sets it, `LIFECYCLE_EMAILS=1` turns the mail on. Each change writes a `product_emails` row to the audit log. The send rules are in [Auth](auth.md#lifecycle-email).
+
+## Anonymous source counts
+
+**App domain:** Admin
+
+The Trends page lists visits and sign-ups per traffic source. The counts hold no user id, IP, referrer URL or user agent.
+
+| Role | Path | Function |
+| --- | --- | --- |
+| Visit | `api/src/routes/source-count.ts` | `POST /api/source-count` |
+| Store | `api/src/lib/source-counts.ts` | `recordSourceEvent`, `sourceReport` |
+| Report | `api/src/lib/admin-trends.ts` | `buildAdminTrends` (`sources`) |
+
+- The visit route is public. The session and billing gates skip it.
+- It skips bots and requests that carry a session cookie. The limiter allows 20 per minute for each visitor address (`X-Forwarded-For`) and 600 per minute for the whole route.
+- A sign-up count (`signup`) is written by the sign-up hooks from the first-visit cookie.
+- A row is one count per UTC date, source, language group and event, in `source_counts`.
+
 ## Admin support action
 
 **App domain:** Admin

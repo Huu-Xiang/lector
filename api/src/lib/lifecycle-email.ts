@@ -15,9 +15,11 @@ import { LANGUAGES, isValidLanguageCode, type LanguageCode } from './languages';
 import { Sentry } from './sentry';
 import { hasStarterContent } from './starter-content';
 import { isEntitledStatus } from './billing';
-import { dateStringInTimeZone, isValidTimeZone } from './dates';
+import { addDaysToDateString, dateStringInTimeZone, isValidTimeZone } from './dates';
 import { planName } from './plan-names';
 import { getCounts } from './review/queue';
+import { backfillWordCards } from './review/backfill';
+import { reconcileWordCards } from './review/reconcile';
 
 export const LIFECYCLE_TEMPLATES = {
   welcome: 'welcome-on-account-create',
@@ -48,6 +50,12 @@ export const REVIEW_DUE_MAX_UNANSWERED = 3;
 export const REVIEW_DUE_ACTIVE_DAYS = 30;
 /** Earliest local hour for review-due mail, so the sweep does not mail at midnight. */
 export const REVIEW_DUE_FROM_HOUR = 17;
+/** One review-due sweep sends at most this many mails. */
+export const REVIEW_DUE_MAX_MAILS_PER_SWEEP = 200;
+/** The review-due loop gives the event loop a turn after this many users. */
+export const REVIEW_DUE_YIELD_EVERY = 25;
+/** A failed send of one template to one user is not tried again inside this time. */
+export const SEND_RETRY_BACKOFF_MS = 6 * HOUR_MS;
 
 const UNSUBSCRIBE_ALIASES = new Set<LifecycleAlias>([
   LIFECYCLE_TEMPLATES.welcome,
@@ -98,11 +106,16 @@ export function defaultLifecycleDeps(): LifecycleDeps {
     hasResendKey: Boolean(process.env.RESEND_API_KEY),
     enabled: productEmailsEnabled(),
     appUrl: process.env.BETTER_AUTH_URL || process.env.APP_URL || 'https://readfox.app',
-    reviewCount: (userId, language, nowMs) => {
-      const counts = getCounts(userId, language, nowMs);
-      return counts.dueNow + counts.newAvailable;
-    },
+    reviewCount: reviewWordCount,
   };
+}
+
+/** The review page's count (routes/review.ts): cards are filled in first, so a legacy word counts. */
+export function reviewWordCount(userId: string, language: string, nowMs: number): number {
+  backfillWordCards(userId, language, nowMs);
+  reconcileWordCards(userId, language, nowMs);
+  const counts = getCounts(userId, language, nowMs);
+  return counts.dueNow + counts.newAvailable;
 }
 
 function mergeDeps(overrides?: Partial<LifecycleDeps>): LifecycleDeps {
@@ -185,21 +198,36 @@ function alreadySent(database: Database, userId: string, sendKey: string): boole
   );
 }
 
-/** True when a key `<alias>:*` was sent after `sinceIso`. The range keeps the primary-key index in use. */
-function sentSince(
-  database: Database,
-  userId: string,
-  alias: LifecycleAlias,
-  sinceIso: string,
-): boolean {
-  return Boolean(
-    database
-      .prepare(
-        `SELECT 1 FROM email_sends
-          WHERE userId = ? AND templateAlias >= ? AND templateAlias < ? AND sentAt > ? LIMIT 1`,
-      )
-      .get(userId, `${alias}:`, `${alias};`, sinceIso),
-  );
+function isSuspendedAccount(database: Database, userId: string): boolean {
+  const row = database
+    .prepare('SELECT suspended FROM admin_account_flags WHERE userId = ?')
+    .get(userId) as { suspended: number } | undefined;
+  return row?.suspended === 1;
+}
+
+const SUSPENDED_FILTER = `NOT EXISTS (
+  SELECT 1 FROM admin_account_flags f WHERE f.userId = u.id AND f.suspended = 1)`;
+
+/** Failed sends, by database, then `<userId>|<alias>`. Lost on restart, which only allows one early retry. */
+const failedSends = new WeakMap<Database, Map<string, number>>();
+
+function failureKey(userId: string, alias: LifecycleAlias): string {
+  return `${userId}|${alias}`;
+}
+
+function recordFailedSend(deps: LifecycleDeps, userId: string, alias: LifecycleAlias): void {
+  const failures = failedSends.get(deps.database) ?? new Map<string, number>();
+  failures.set(failureKey(userId, alias), deps.now().getTime());
+  failedSends.set(deps.database, failures);
+}
+
+function inBackoff(deps: LifecycleDeps, userId: string, alias: LifecycleAlias): boolean {
+  const failures = failedSends.get(deps.database);
+  const failedAt = failures?.get(failureKey(userId, alias));
+  if (failedAt === undefined) return false;
+  if (deps.now().getTime() - failedAt < SEND_RETRY_BACKOFF_MS) return true;
+  failures?.delete(failureKey(userId, alias));
+  return false;
 }
 
 /** Insert the send row. Returns false when this user already has the key. */
@@ -228,7 +256,10 @@ function loadUser(database: Database, userId: string): LifecycleUser | null {
 function loadVerifiedUsers(database: Database): LifecycleUser[] {
   if (!userTableExists(database)) return [];
   return database
-    .prepare('SELECT id, email, name, emailVerified, createdAt FROM user WHERE emailVerified = 1')
+    .prepare(
+      `SELECT u.id, u.email, u.name, u.emailVerified, u.createdAt FROM user u
+        WHERE u.emailVerified = 1 AND ${SUSPENDED_FILTER}`,
+    )
     .all() as LifecycleUser[];
 }
 
@@ -263,6 +294,8 @@ interface SendOptions {
   /** Dedupe key, `<alias>:<suffix>`. Lets one template go out again; the rendered template stays the alias. */
   key?: string;
   vars?: Partial<LifecycleVars>;
+  /** Sweeps set this so a failed send waits SEND_RETRY_BACKOFF_MS before the next try. */
+  backoff?: boolean;
 }
 
 async function sendOnce(
@@ -276,6 +309,8 @@ async function sendOnce(
   if (!isVerified(user.emailVerified) || !user.email) return 'skipped';
   if (alreadySent(deps.database, user.id, sendKey)) return 'skipped';
   if (isUnsubscribed(deps.database, user.email)) return 'skipped';
+  if (isSuspendedAccount(deps.database, user.id)) return 'skipped';
+  if (options.backoff && inBackoff(deps, user.id, alias)) return 'skipped';
 
   const sentAt = deps.now().toISOString();
   if (!claimSend(deps.database, user.id, sendKey, sentAt)) return 'skipped';
@@ -309,6 +344,7 @@ async function sendOnce(
     return 'sent';
   } catch (err) {
     releaseSend(deps.database, user.id, sendKey);
+    recordFailedSend(deps, user.id, alias);
     console.error(`[lifecycle-email] failed to send ${sendKey} to ${user.email}:`, err);
     Sentry.captureException(err);
     return 'skipped';
@@ -370,6 +406,53 @@ export async function notifyGlossCapHit(
   }
 }
 
+/** Runs `work` for each item. One item that throws is logged and does not stop the rest. */
+async function eachUser<T>(
+  label: string,
+  items: T[],
+  userIdOf: (item: T) => string,
+  work: (item: T) => Promise<LifecycleSendResult[]>,
+): Promise<LifecycleSendResult[]> {
+  const results: LifecycleSendResult[] = [];
+  for (const item of items) {
+    try {
+      results.push(...(await work(item)));
+    } catch (err) {
+      console.error(`[lifecycle-email] ${label} failed for ${userIdOf(item)}:`, err);
+      Sentry.captureException(err);
+    }
+  }
+  return results;
+}
+
+/** Day-1 and day-3 product mail. Welcome is hook-only, so account age bounds both. */
+async function sweepNewAccounts(deps: LifecycleDeps): Promise<LifecycleSendResult[]> {
+  const nowMs = deps.now().getTime();
+  return eachUser(
+    'new-account mail',
+    loadVerifiedUsers(deps.database),
+    (user) => user.id,
+    async (user) => {
+      const createdMs = createdAtMs(user.createdAt);
+      if (createdMs == null) return [];
+      const ageMs = nowMs - createdMs;
+      if (ageMs < 0 || ageMs >= DAY3_UNTIL_MS) return [];
+      const results: LifecycleSendResult[] = [];
+      if (
+        ageMs >= DAY1_AFTER_MS &&
+        ageMs < DAY1_UNTIL_MS &&
+        savedWordCount(deps.database, user.id) === 0
+      ) {
+        results.push(await sendOnce(user, LIFECYCLE_TEMPLATES.day1, deps, { backoff: true }));
+      }
+      if (ageMs >= DAY3_AFTER_MS && ageMs < DAY3_UNTIL_MS && !hasRealUse(deps.database, user.id)) {
+        results.push(await sendOnce(user, LIFECYCLE_TEMPLATES.day3, deps, { backoff: true }));
+      }
+      return results;
+    },
+  );
+}
+
 export async function sweepLifecycleEmails(
   overrides?: Partial<LifecycleDeps>,
 ): Promise<{ sent: number; skipped: number }> {
@@ -379,32 +462,8 @@ export async function sweepLifecycleEmails(
     let skipped = 0;
     if (!deps.cloud || !deps.hasResendKey || !deps.enabled) return { sent, skipped };
 
-    const nowMs = deps.now().getTime();
-    for (const user of loadVerifiedUsers(deps.database)) {
-      const createdMs = createdAtMs(user.createdAt);
-      if (createdMs == null) continue;
-      const ageMs = nowMs - createdMs;
-      if (ageMs < 0 || ageMs >= DAY3_UNTIL_MS) continue;
-      const results: LifecycleSendResult[] = [];
-      // Welcome is hook-only. The first sweep sent every template to every
-      // verified user because it had no upper age bound.
-      if (
-        ageMs >= DAY1_AFTER_MS &&
-        ageMs < DAY1_UNTIL_MS &&
-        savedWordCount(deps.database, user.id) === 0
-      ) {
-        results.push(await sendOnce(user, LIFECYCLE_TEMPLATES.day1, deps));
-      }
-      if (ageMs >= DAY3_AFTER_MS && ageMs < DAY3_UNTIL_MS && !hasRealUse(deps.database, user.id)) {
-        results.push(await sendOnce(user, LIFECYCLE_TEMPLATES.day3, deps));
-      }
-      for (const result of results) {
-        if (result === 'sent') sent += 1;
-        else skipped += 1;
-      }
-    }
-    // Not limited by account age. Each loop fails on its own.
-    for (const loop of [sweepPlanEnding, sweepReviewDue]) {
+    // Each loop fails on its own.
+    for (const loop of [sweepNewAccounts, sweepPlanEnding, sweepReviewDue]) {
       try {
         for (const result of await loop(deps)) {
           if (result === 'sent') sent += 1;
@@ -423,20 +482,19 @@ export async function sweepLifecycleEmails(
   }
 }
 
-function userTimeZone(database: Database, userId: string): string {
+/** The user's valid `timezone` setting, or null when none is stored. */
+function storedTimeZone(database: Database, userId: string): string | null {
   const row = database
     .prepare('SELECT value FROM settings WHERE userId = ? AND key = ?')
     .get(userId, 'timezone') as { value: string } | undefined;
-  if (row) {
-    let value: unknown = row.value;
-    try {
-      value = JSON.parse(row.value);
-    } catch {
-      // legacy raw-string value
-    }
-    if (typeof value === 'string' && isValidTimeZone(value)) return value;
+  if (!row) return null;
+  let value: unknown = row.value;
+  try {
+    value = JSON.parse(row.value);
+  } catch {
+    // legacy raw-string value
   }
-  return Intl.DateTimeFormat().resolvedOptions().timeZone;
+  return typeof value === 'string' && isValidTimeZone(value) ? value : null;
 }
 
 function localHour(date: Date, timeZone: string): number {
@@ -463,11 +521,7 @@ function isComped(database: Database, userId: string): boolean {
   return Boolean(row?.compedPlan);
 }
 
-/**
- * One mail per grant that ends inside the next 72 hours, is the user's
- * latest-ending grant, and has no Paddle subscription behind it. A grant that
- * already ended never matches, so turning the switch on sends no backlog.
- */
+/** One mail per user whose latest grant ends in the next 72 hours with no Paddle subscription behind it. */
 async function sweepPlanEnding(deps: LifecycleDeps): Promise<LifecycleSendResult[]> {
   const now = deps.now();
   const nowIso = now.toISOString();
@@ -482,28 +536,37 @@ async function sweepPlanEnding(deps: LifecycleDeps): Promise<LifecycleSendResult
     )
     .all(nowIso, untilIso) as Array<{ id: string; userId: string; plan: string; endsAt: string }>;
 
-  const results: LifecycleSendResult[] = [];
   const seen = new Set<string>();
-  for (const grant of grants) {
-    if (seen.has(grant.userId)) continue;
+  const latest = grants.filter((grant) => {
+    if (seen.has(grant.userId)) return false;
     seen.add(grant.userId);
-    const user = loadUser(deps.database, grant.userId);
-    if (!user || !isVerified(user.emailVerified)) continue;
-    if (hasEntitledSubscription(deps.database, user) || isComped(deps.database, user.id)) continue;
-    const endDate = new Intl.DateTimeFormat('en-GB', {
-      timeZone: userTimeZone(deps.database, user.id),
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-    }).format(new Date(grant.endsAt));
-    results.push(
-      await sendOnce(user, LIFECYCLE_TEMPLATES.planEnding, deps, {
-        key: `${LIFECYCLE_TEMPLATES.planEnding}:${grant.id}`,
-        vars: { PLAN_NAME: planName(grant.plan), END_DATE: endDate },
-      }),
-    );
-  }
-  return results;
+    return true;
+  });
+  return eachUser(
+    'plan-ending mail',
+    latest,
+    (grant) => grant.userId,
+    async (grant) => {
+      const user = loadUser(deps.database, grant.userId);
+      if (!user || !isVerified(user.emailVerified)) return [];
+      if (hasEntitledSubscription(deps.database, user) || isComped(deps.database, user.id)) {
+        return [];
+      }
+      const endDate = new Intl.DateTimeFormat('en-GB', {
+        timeZone: storedTimeZone(deps.database, user.id) ?? undefined,
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      }).format(new Date(grant.endsAt));
+      return [
+        await sendOnce(user, LIFECYCLE_TEMPLATES.planEnding, deps, {
+          key: `${LIFECYCLE_TEMPLATES.planEnding}:${grant.id}`,
+          vars: { PLAN_NAME: planName(grant.plan), END_DATE: endDate },
+          backoff: true,
+        }),
+      ];
+    },
+  );
 }
 
 const ACTIVE_DAY = `(wordsRead > 0 OR newWordsSaved > 0 OR minutesRead > 0
@@ -551,28 +614,22 @@ function unansweredReviewMails(database: Database, userId: string): number {
   return keys.filter((row) => !last.date || sentDay(row.templateAlias) >= last.date).length;
 }
 
-function shiftDate(date: string, days: number): string {
-  const d = new Date(`${date}T12:00:00Z`);
-  d.setUTCDate(d.getUTCDate() + days);
-  return d.toISOString().slice(0, 10);
-}
-
-/**
- * Words due for review. Needs 5 or more words, no review or lookup today, some
- * activity in the last 30 days, 3 days since the last one, and fewer than 3
- * sent mails with no activity after them. Only evenings in the user's zone.
- */
+/** Review-due mail: the rules are the REVIEW_DUE_* constants; sends only in the evening of the user's stored zone. */
 async function sweepReviewDue(deps: LifecycleDeps): Promise<LifecycleSendResult[]> {
   const now = deps.now();
   const nowMs = now.getTime();
   const gapIso = new Date(nowMs - REVIEW_DUE_GAP_MS).toISOString();
-  const wideFrom = shiftDate(now.toISOString().slice(0, 10), -(REVIEW_DUE_ACTIVE_DAYS + 1));
+  const wideFrom = addDaysToDateString(
+    now.toISOString().slice(0, 10),
+    -(REVIEW_DUE_ACTIVE_DAYS + 1),
+  );
   if (!userTableExists(deps.database)) return [];
   // Cheap SQL first: the per-user checks below only run for these candidates.
   const candidates = deps.database
     .prepare(
       `SELECT u.id, u.email, u.name, u.emailVerified, u.createdAt FROM user u
         WHERE u.emailVerified = 1
+          AND ${SUSPENDED_FILTER}
           AND EXISTS (SELECT 1 FROM dailyStats d WHERE d.userId = u.id AND d.date >= ?)
           AND NOT EXISTS (
             SELECT 1 FROM email_sends e
@@ -586,26 +643,53 @@ async function sweepReviewDue(deps: LifecycleDeps): Promise<LifecycleSendResult[
     ) as LifecycleUser[];
 
   const results: LifecycleSendResult[] = [];
+  let visited = 0;
+  let mails = 0;
   for (const user of candidates) {
-    if (!user.email || isUnsubscribed(deps.database, user.email)) continue;
-    const zone = userTimeZone(deps.database, user.id);
-    if (localHour(now, zone) < REVIEW_DUE_FROM_HOUR) continue;
-    const today = dateStringInTimeZone(now, zone);
-    if (reviewedOrLookedUp(deps.database, user.id, today)) continue;
-    if (!activeSince(deps.database, user.id, shiftDate(today, -REVIEW_DUE_ACTIVE_DAYS))) continue;
-    if (unansweredReviewMails(deps.database, user.id) >= REVIEW_DUE_MAX_UNANSWERED) continue;
-    const language = languageCodeFor(deps.database, user.id);
-    if (!language) continue;
-    const words = deps.reviewCount(user.id, language, nowMs);
-    if (words < REVIEW_DUE_MIN_WORDS) continue;
-    results.push(
-      await sendOnce(user, LIFECYCLE_TEMPLATES.reviewDue, deps, {
-        key: `${LIFECYCLE_TEMPLATES.reviewDue}:${today}`,
-        vars: { REVIEW_COUNT: String(words) },
-      }),
-    );
+    if (mails >= REVIEW_DUE_MAX_MAILS_PER_SWEEP) break;
+    if (visited > 0 && visited % REVIEW_DUE_YIELD_EVERY === 0) {
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    }
+    visited += 1;
+    try {
+      const result = await reviewDueFor(user, deps, now);
+      if (!result) continue;
+      results.push(result);
+      if (result === 'sent') mails += 1;
+    } catch (err) {
+      console.error(`[lifecycle-email] review-due mail failed for ${user.id}:`, err);
+      Sentry.captureException(err);
+    }
   }
   return results;
+}
+
+async function reviewDueFor(
+  user: LifecycleUser,
+  deps: LifecycleDeps,
+  now: Date,
+): Promise<LifecycleSendResult | null> {
+  if (!user.email || isUnsubscribed(deps.database, user.email)) return null;
+  // Without a stored zone the local hour is unknown, and the mail could land at night.
+  const zone = storedTimeZone(deps.database, user.id);
+  if (!zone) return null;
+  if (localHour(now, zone) < REVIEW_DUE_FROM_HOUR) return null;
+  if (inBackoff(deps, user.id, LIFECYCLE_TEMPLATES.reviewDue)) return null;
+  const today = dateStringInTimeZone(now, zone);
+  if (reviewedOrLookedUp(deps.database, user.id, today)) return null;
+  if (!activeSince(deps.database, user.id, addDaysToDateString(today, -REVIEW_DUE_ACTIVE_DAYS))) {
+    return null;
+  }
+  if (unansweredReviewMails(deps.database, user.id) >= REVIEW_DUE_MAX_UNANSWERED) return null;
+  const language = languageCodeFor(deps.database, user.id);
+  if (!language) return null;
+  const words = deps.reviewCount(user.id, language, now.getTime());
+  if (words < REVIEW_DUE_MIN_WORDS) return null;
+  return sendOnce(user, LIFECYCLE_TEMPLATES.reviewDue, deps, {
+    key: `${LIFECYCLE_TEMPLATES.reviewDue}:${today}`,
+    vars: { REVIEW_COUNT: String(words) },
+    backoff: true,
+  });
 }
 
 /** The worker runs in cloud mode; each sweep checks the admin switch itself. */

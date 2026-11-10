@@ -18,6 +18,7 @@ import {
   oidcDiscoveryUrl,
   runAfterEmailVerification,
   runAuthMigrations,
+  signupEmailProblem,
   type AuthEngine,
 } from './accounts';
 import { makePatMiddleware } from './auth';
@@ -103,6 +104,32 @@ describe('one account per mailbox', () => {
       expect(((await res.json()) as { code?: string }).code).toBe('EMAIL_ALIAS_TAKEN');
     }
     expect((await post('other.owner@gmail.com')).status).toBe(200);
+  });
+});
+
+describe('alias check on a provider sign-up', () => {
+  function usersDb(rows: Array<[string, number]>): Database {
+    const database = new Database(':memory:');
+    database.exec('CREATE TABLE user (email TEXT NOT NULL, emailVerified INTEGER NOT NULL)');
+    for (const [email, verified] of rows) {
+      database
+        .prepare('INSERT INTO user (email, emailVerified) VALUES (?, ?)')
+        .run(email, verified);
+    }
+    return database;
+  }
+
+  test('an unverified alias does not block the real mailbox owner', () => {
+    const database = usersDb([['boxowner+2@gmail.com', 0]]);
+    expect(signupEmailProblem('box.owner@gmail.com', database)).toBe('EMAIL_ALIAS_TAKEN');
+    expect(signupEmailProblem('box.owner@gmail.com', database, { verifiedOnly: true })).toBeNull();
+  });
+
+  test('a verified alias still blocks a provider sign-up', () => {
+    const database = usersDb([['boxowner+2@gmail.com', 1]]);
+    expect(signupEmailProblem('box.owner@gmail.com', database, { verifiedOnly: true })).toBe(
+      'EMAIL_ALIAS_TAKEN',
+    );
   });
 });
 
@@ -625,6 +652,60 @@ describe('the welcome plan on email verification', () => {
       },
     );
     expect(calls).toEqual(['u-throw']);
+  });
+});
+
+describe('runAfterEmailVerification does not wait for the mail', () => {
+  const quiet = (run: () => void) => {
+    const original = console.error;
+    const logged: unknown[][] = [];
+    console.error = (...args: unknown[]) => void logged.push(args);
+    try {
+      run();
+    } finally {
+      console.error = original;
+    }
+    return logged;
+  };
+
+  test('returns at once while the welcome mail is still pending', () => {
+    let started = false;
+    runAfterEmailVerification(
+      { id: 'u-slow', email: 'slow@example.test' },
+      {
+        redeem: () => ({ ok: false, error: 'invalid_code' }),
+        welcome: () => {
+          started = true;
+          return new Promise(() => {});
+        },
+      },
+    );
+    expect(started).toBe(true);
+  });
+
+  test('a rejected or throwing welcome mail is logged and does not escape', async () => {
+    const logged = quiet(() => {
+      runAfterEmailVerification(
+        { id: 'u-rej', email: 'rej@example.test' },
+        {
+          redeem: () => ({ ok: false, error: 'invalid_code' }),
+          welcome: async () => {
+            throw new Error('resend timeout');
+          },
+        },
+      );
+      runAfterEmailVerification(
+        { id: 'u-thr', email: 'thr@example.test' },
+        {
+          redeem: () => ({ ok: false, error: 'invalid_code' }),
+          welcome: () => {
+            throw new Error('sync failure');
+          },
+        },
+      );
+    });
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(logged.length).toBeGreaterThanOrEqual(1);
   });
 });
 

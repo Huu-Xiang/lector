@@ -14,7 +14,7 @@ export interface SourceCountRouteDeps {
 
 export function makeSourceCountRoutes(
   deps: SourceCountRouteDeps = {
-    limiter: new InMemoryExtractionBurstLimiter({ userPerWindow: 20 }),
+    limiter: new InMemoryExtractionBurstLimiter({ userPerWindow: 600, ipPerWindow: 20 }),
     now: () => new Date(),
   },
 ) {
@@ -26,7 +26,8 @@ export function makeSourceCountRoutes(
     bodyLimit({ maxSize: MAX_BODY_BYTES, onError: (c) => c.json({ error: 'too_large' }, 413) }),
     async (c) => {
       const key = c.req.header('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
-      if (!deps.limiter.tryConsume(`visit:${key}`, null)) {
+      // The limiter's user key is one shared site-wide bucket; the visitor address gets its own.
+      if (!deps.limiter.tryConsume('visit', key)) {
         return c.json({ error: 'rate_limited' }, 429);
       }
 

@@ -98,6 +98,8 @@ function senderFor(message: EmailMessage): string {
   return message.template ? 'Support <support@readfox.app>' : 'Readfox <no-reply@readfox.app>';
 }
 
+const RESEND_TIMEOUT_MS = 15_000;
+
 function resendTransport(apiKey: string): EmailTransport {
   return async (message) => {
     const res = await fetch('https://api.resend.com/emails', {
@@ -107,6 +109,7 @@ function resendTransport(apiKey: string): EmailTransport {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(resendPayload(senderFor(message), message)),
+      signal: AbortSignal.timeout(RESEND_TIMEOUT_MS),
     });
     if (!res.ok) {
       throw new Error(`Resend rejected email to ${message.to}: ${res.status} ${await res.text()}`);

@@ -23,21 +23,27 @@ import { redeemSignupCode, rememberSignupCode } from './redeem';
 import { shortenIp } from './ip-privacy';
 import { parseSourceCookie } from './source-list';
 import { recordSourceEvent } from './source-counts';
+import { Sentry } from './sentry';
 
-/** Grants the sign-up plan and sends the welcome mail. Neither step may fail the verification. */
-export async function runAfterEmailVerification(
+/** Grants the sign-up plan, then starts the welcome mail without waiting for it. Neither step may fail the verification. */
+export function runAfterEmailVerification(
   user: { id: string; email: string },
   steps = { redeem: redeemSignupCode, welcome: sendWelcomeEmail },
-): Promise<void> {
+): void {
   try {
     steps.redeem(user.id);
   } catch (err) {
     console.error('[accounts] failed to redeem sign-up code:', err);
+    Sentry.captureException(err);
   }
-  try {
-    await steps.welcome(user.id);
-  } catch (err) {
+  const reportWelcome = (err: unknown) => {
     console.error(`[accounts] failed to send welcome email to ${user.email}:`, err);
+    Sentry.captureException(err);
+  };
+  try {
+    steps.welcome(user.id).catch(reportWelcome);
+  } catch (err) {
+    reportWelcome(err);
   }
 }
 
@@ -48,13 +54,19 @@ const SIGNUP_EMAIL_MESSAGES = {
 
 type SignupEmailProblem = keyof typeof SIGNUP_EMAIL_MESSAGES;
 
-/** One account per mailbox: flags throwaway domains and +tag / Gmail-dot variants of a taken address. */
-function signupEmailProblem(raw: unknown, database: Database): SignupEmailProblem | null {
+/** One account per mailbox. A provider sign-up has a verified address, so only verified accounts hold an alias against it. */
+export function signupEmailProblem(
+  raw: unknown,
+  database: Database,
+  options: { verifiedOnly?: boolean } = {},
+): SignupEmailProblem | null {
   if (typeof raw !== 'string') return null;
   const email = raw.trim().toLowerCase();
   if (isDisposableEmail(email)) return 'EMAIL_DISPOSABLE';
   const canonical = canonicalEmail(email);
-  const lookup = database.prepare('SELECT email FROM user WHERE email LIKE ?');
+  const lookup = database.prepare(
+    `SELECT email FROM user WHERE email LIKE ?${options.verifiedOnly ? ' AND emailVerified = 1' : ''}`,
+  );
   for (const domain of aliasDomains(email)) {
     for (const row of lookup.all(`%@${domain}`) as { email: string }[]) {
       const existing = row.email.toLowerCase();
@@ -77,11 +89,7 @@ export function isGoogleIssuer(issuer: string): boolean {
   return value === GOOGLE_ISSUER || value === `${GOOGLE_ISSUER}/.well-known/openid-configuration`;
 }
 
-/**
- * Removes the password of an account whose email was never verified, and ends its sessions.
- * Runs when a provider login links to that account, so a password planted earlier by someone
- * else stops working.
- */
+/** Drops the password and sessions of an unverified account when a provider login links to it. */
 function dropUnverifiedPassword(database: Database, userId: string): void {
   const row = database.prepare('SELECT emailVerified FROM user WHERE id = ?').get(userId) as
     | { emailVerified: number }
@@ -294,7 +302,7 @@ export function createAuthEngine(opts: AuthEngineOptions) {
           console.error(`[accounts] failed to send verification email to ${user.email}:`, err);
         }
       },
-      afterEmailVerification: (user) => runAfterEmailVerification(user),
+      afterEmailVerification: async (user) => runAfterEmailVerification(user),
     },
     databaseHooks: {
       // Login records keep a shortened address (lib/ip-privacy.ts). Rate limiting
@@ -332,7 +340,7 @@ export function createAuthEngine(opts: AuthEngineOptions) {
             if (inviteRequired() && !isAcceptableSignupCode(await oauthInviteCode())) {
               throw new APIError('FORBIDDEN', { message: 'invite_required' });
             }
-            const problem = signupEmailProblem(user.email, opts.database);
+            const problem = signupEmailProblem(user.email, opts.database, { verifiedOnly: true });
             if (problem) {
               throw new APIError('BAD_REQUEST', { code: problem, message: problem.toLowerCase() });
             }
@@ -353,13 +361,13 @@ export function createAuthEngine(opts: AuthEngineOptions) {
                 console.error('[accounts] failed to record the provider sign-up:', err);
               }
             }
-            if (user.emailVerified) await runAfterEmailVerification(user);
+            if (user.emailVerified) runAfterEmailVerification(user);
           },
         },
         update: {
           // Inside a provider callback, a verified flag set on an existing account is the first verification.
           after: async (user, ctx) => {
-            if (user?.emailVerified && isOAuthCallback(ctx)) await runAfterEmailVerification(user);
+            if (user?.emailVerified && isOAuthCallback(ctx)) runAfterEmailVerification(user);
           },
         },
       },

@@ -5,6 +5,8 @@ import path from 'node:path';
 import {
   ANKI_WORD_THRESHOLD,
   LIFECYCLE_TEMPLATES,
+  REVIEW_DUE_MAX_MAILS_PER_SWEEP,
+  SEND_RETRY_BACKOFF_MS,
   createdAtMs,
   hasRealUse,
   languageLabel,
@@ -87,7 +89,8 @@ function createSchema(): Database {
     );
     CREATE TABLE admin_account_flags (
       userId TEXT PRIMARY KEY,
-      compedPlan TEXT
+      compedPlan TEXT,
+      suspended INTEGER NOT NULL DEFAULT 0
     );
     CREATE TABLE dailyStats (
       userId TEXT NOT NULL,
@@ -934,5 +937,128 @@ describe('sweepLifecycleEmails: review due', () => {
     reviewUser(database, { id: 'u-ok', email: 'ok@example.com' });
     await sweepLifecycleEmails({ ...reviewDeps(database, inbox), enabled: false });
     expect(inbox).toHaveLength(0);
+  });
+});
+
+describe('sweepLifecycleEmails: failures and limits', () => {
+  test('one user that throws does not stop the review-due mail to later users', async () => {
+    const database = createSchema();
+    const inbox: EmailMessage[] = [];
+    reviewUser(database, { id: 'u-bad', email: 'bad@example.com' });
+    reviewUser(database, { id: 'u-good', email: 'good@example.com' });
+    const quiet = console.error;
+    console.error = () => {};
+    try {
+      await sweepLifecycleEmails(
+        deps(database, inbox, {
+          now: () => EVENING,
+          reviewCount: (userId) => {
+            if (userId === 'u-bad') throw new Error('broken vocab');
+            return 7;
+          },
+        }),
+      );
+    } finally {
+      console.error = quiet;
+    }
+    expect(inbox.map((m) => m.to)).toEqual(['good@example.com']);
+  });
+
+  test('one failing sweep does not stop the other sweeps', async () => {
+    const database = createSchema();
+    const inbox: EmailMessage[] = [];
+    reviewUser(database);
+    database.exec('DROP TABLE plan_grants');
+    const quiet = console.error;
+    console.error = () => {};
+    try {
+      expect((await sweepLifecycleEmails(reviewDeps(database, inbox))).sent).toBe(1);
+    } finally {
+      console.error = quiet;
+    }
+    expect(inbox[0].meta?.alias).toBe(LIFECYCLE_TEMPLATES.reviewDue);
+  });
+
+  test('a failed send is not tried again for 6 hours', async () => {
+    const database = createSchema();
+    const userId = insertUser(database);
+    insertGrant(database, userId, DAY);
+    let attempts = 0;
+    const at = (ms: number) =>
+      deps(database, [], {
+        now: () => new Date(NOW.getTime() + ms),
+        send: async () => {
+          attempts += 1;
+          throw new Error('resend down');
+        },
+      });
+    const quiet = console.error;
+    console.error = () => {};
+    try {
+      await sweepLifecycleEmails(at(0));
+      await sweepLifecycleEmails(at(15 * 60_000));
+      await sweepLifecycleEmails(at(SEND_RETRY_BACKOFF_MS - 1));
+      expect(attempts).toBe(1);
+      await sweepLifecycleEmails(at(SEND_RETRY_BACKOFF_MS));
+      expect(attempts).toBe(2);
+    } finally {
+      console.error = quiet;
+    }
+    expect(sentAliases(database, userId)).toEqual([]);
+  });
+
+  test('a suspended account gets no day-1, plan-ending or review-due mail', async () => {
+    const database = createSchema();
+    const inbox: EmailMessage[] = [];
+    const day1 = insertUser(database, {
+      id: 'u-day1',
+      email: 'day1@example.com',
+      createdAt: new Date(NOW.getTime() - 30 * HOUR).toISOString(),
+    });
+    const ending = insertUser(database, { id: 'u-end', email: 'end@example.com' });
+    insertGrant(database, ending, DAY);
+    const review = reviewUser(database, { id: 'u-rev', email: 'rev@example.com' });
+    for (const id of [day1, ending, review]) {
+      database.prepare('INSERT INTO admin_account_flags (userId, suspended) VALUES (?, 1)').run(id);
+    }
+    await sweepLifecycleEmails(deps(database, inbox));
+    await sweepLifecycleEmails(reviewDeps(database, inbox));
+    expect(inbox).toHaveLength(0);
+
+    database.prepare('UPDATE admin_account_flags SET suspended = 0').run();
+    await sweepLifecycleEmails(deps(database, inbox));
+    expect(inbox.map((m) => m.to).sort()).toEqual(['day1@example.com', 'end@example.com']);
+  });
+
+  test('review-due skips a user with no valid stored time zone', async () => {
+    const database = createSchema();
+    const inbox: EmailMessage[] = [];
+    reviewUser(database, { id: 'u-none', email: 'none@example.com' });
+    database.prepare("DELETE FROM settings WHERE userId = 'u-none' AND key = 'timezone'").run();
+    reviewUser(database, { id: 'u-bad', email: 'badzone@example.com', zone: 'Not/AZone' });
+    await sweepLifecycleEmails(reviewDeps(database, inbox));
+    expect(inbox).toHaveLength(0);
+  });
+
+  test('plan-ending still sends when the user has no stored time zone', async () => {
+    const database = createSchema();
+    const inbox: EmailMessage[] = [];
+    const userId = insertUser(database);
+    insertGrant(database, userId, DAY);
+    expect((await sweepLifecycleEmails(deps(database, inbox))).sent).toBe(1);
+  });
+
+  test('one review-due sweep sends at most the cap and the next sweep goes on', async () => {
+    const database = createSchema();
+    const inbox: EmailMessage[] = [];
+    const total = REVIEW_DUE_MAX_MAILS_PER_SWEEP + 5;
+    for (let i = 0; i < total; i++) {
+      reviewUser(database, { id: `u-${i}`, email: `u${i}@example.com` });
+    }
+    expect((await sweepLifecycleEmails(reviewDeps(database, inbox))).sent).toBe(
+      REVIEW_DUE_MAX_MAILS_PER_SWEEP,
+    );
+    expect((await sweepLifecycleEmails(reviewDeps(database, inbox))).sent).toBe(5);
+    expect(inbox).toHaveLength(total);
   });
 });

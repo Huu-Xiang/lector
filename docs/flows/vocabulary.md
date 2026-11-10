@@ -21,6 +21,19 @@ flowchart TD
   cache -.-> translation.md
 ```
 
+### Auto-save of looked-up words
+
+When the setting `autoSaveLookups` is not `false`, the reader saves a looked-up single word once its meaning arrives. The setting loads first. A failed read or an unloaded setting means no auto-save.
+
+- The save is silent. It never changes a word that already has a state, and a failure shows nothing.
+- One save runs per word at a time (`createKeyedGuard`). Key `S` pressed during an auto-save does not post a second row.
+- The guide lesson and nested lookups do not auto-save.
+
+| Role | Path | Function |
+| --- | --- | --- |
+| Reader | `src/app/read/[bookId]/page.tsx` | `saveWordToVocab`, `saveWordNow` |
+| Rules | `src/lib/auto-save-lookups.ts` | `resolveAutoSave`, `createKeyedGuard` |
+
 Keyboard: `K` marks Known. Keys `1` to `4` set levels. `X` marks Ignore. IME compose skips these keys.
 
 ### Key files

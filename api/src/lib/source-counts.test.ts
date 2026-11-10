@@ -85,7 +85,7 @@ describe('POST /api/source-count', () => {
     app.route(
       '/api/source-count',
       makeSourceCountRoutes({
-        limiter: new InMemoryExtractionBurstLimiter({ userPerWindow: limit }),
+        limiter: new InMemoryExtractionBurstLimiter({ ipPerWindow: limit }),
         now: () => NOW,
       }),
     );

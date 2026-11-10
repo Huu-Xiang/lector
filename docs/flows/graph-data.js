@@ -226,7 +226,7 @@
   N("flow:save-vocab", "flow", "Save vocab and set word state", {
     domain: "vocabulary",
     md: "vocabulary.md#save-vocab-and-set-word-state",
-    summary: "No Save button. Level, Known, Ignore, key S, or Anki creates or updates vocab and knownWords.",
+    summary: "No Save button. Level, Known, Ignore, key S, Anki, or reader auto-save of a looked-up word creates or updates vocab and knownWords.",
     steps: ["fn:applyReaderWordState", "fn:patchWordState", "fn:saveVocab", "route:vocab-post", "table:vocab"],
   });
   N("flow:vocab-list", "flow", "Vocab list", {
@@ -305,7 +305,7 @@
   N("flow:tutor-chat", "flow", "Tutor chat", {
     domain: "tutor",
     md: "tutor.md#tutor-chat",
-    summary: "Chat widget. POST /api/chat. Free plan does not persist history.",
+    summary: "Chat widget. POST /api/chat. Replies in the asker's language and render as Markdown. Free plan does not persist history.",
     steps: ["fn:sendMessage", "route:chat-post", "fn:getProvider", "table:chat_messages"],
   });
   N("flow:cloze-explain", "flow", "Cloze Explain", {
@@ -390,7 +390,7 @@
   N("flow:lifecycle-email", "flow", "Lifecycle email", {
     domain: "auth",
     md: "auth.md#lifecycle-email",
-    summary: "Cloud only. The API sends each Resend template once after signup or idle return.",
+    summary: "Cloud only. Welcome, day-1, day-3, plan-ending and review-due mail. Each fails on its own and backs off 6 hours.",
     steps: ["file:accounts", "file:lifecycle-email", "file:email", "table:email_sends"],
   });
   N("flow:session-gate", "flow", "Session gate", {
@@ -477,6 +477,18 @@
     summary: "Suspend, restore, comp, export, reset MFA, or revoke sessions. Each write hits the audit log.",
     steps: ["file:admin-page", "fn:suspendUser", "route:admin-suspend", "table:admin_audit_log"],
   });
+  N("flow:admin-email-switch", "flow", "Product email switch", {
+    domain: "admin",
+    md: "admin.md#product-email-switch",
+    summary: "One admin switch for every lifecycle mail. Auth mail ignores it. Each change hits the audit log.",
+    steps: ["file:admin-page", "file:route-admin", "file:app-settings", "file:lifecycle-email"],
+  });
+  N("flow:source-counts", "flow", "Anonymous source counts", {
+    domain: "admin",
+    md: "admin.md#anonymous-source-counts",
+    summary: "A public visit route and the sign-up hooks count traffic sources per day. No user id or IP is stored.",
+    steps: ["file:route-source-count", "file:source-counts", "file:admin-trends-lib"],
+  });
 
   // ── Shared files ──────────────────────────────────────────────────────────
 
@@ -551,6 +563,9 @@
   N("file:enabled-languages", "file", "enabled-languages.ts", { path: "api/src/lib/enabled-languages.ts", domain: "onboarding" });
   N("file:route-data", "file", "data.ts", { path: "api/src/routes/data.ts", domain: "data" });
   N("file:route-billing", "file", "billing.ts (API)", { path: "api/src/routes/billing.ts", domain: "billing" });
+  N("file:app-settings", "file", "app-settings.ts", { path: "api/src/lib/app-settings.ts", domain: "admin" });
+  N("file:source-counts", "file", "source-counts.ts", { path: "api/src/lib/source-counts.ts", domain: "admin" });
+  N("file:route-source-count", "file", "source-count.ts", { path: "api/src/routes/source-count.ts", domain: "admin" });
   N("file:route-admin", "file", "admin.ts (API)", { path: "api/src/routes/admin.ts", domain: "admin" });
   N("file:route-tokens", "file", "tokens.ts", { path: "api/src/routes/tokens.ts", domain: "settings" });
   N("file:route-byok", "file", "byok.ts (API)", { path: "api/src/routes/byok.ts", domain: "settings" });
@@ -880,7 +895,7 @@
   domainFlows("settings", ["flow:save-settings", "flow:configure-llm", "flow:api-tokens", "flow:delete-account"]);
   domainFlows("data", ["flow:export-data", "flow:restore-data"]);
   domainFlows("billing", ["flow:subscribe", "flow:entitlements", "flow:plan-change"]);
-  domainFlows("admin", ["flow:admin-list", "flow:admin-trends", "flow:admin-support"]);
+  domainFlows("admin", ["flow:admin-list", "flow:admin-trends", "flow:admin-support", "flow:admin-email-switch", "flow:source-counts"]);
 
   // Cross-flow walks
   edge("flow:load-library-item", "flow:translate-word", "then");
@@ -1436,6 +1451,12 @@
 
   edge("flow:admin-list", "file:admin-page", "starts");
   edge("flow:admin-trends", "file:admin-trends-ui", "starts");
+  edge("flow:admin-email-switch", "file:route-admin", "starts");
+  edge("file:route-admin", "file:app-settings", "calls");
+  edge("file:app-settings", "file:lifecycle-email", "then");
+  edge("flow:source-counts", "file:route-source-count", "starts");
+  edge("file:route-source-count", "file:source-counts", "calls");
+  edge("file:source-counts", "file:admin-trends-lib", "then");
   edge("file:admin-page", "fn:getAdminUsers", "calls");
   edge("fn:getAdminUsers", "file:admin-client", "in");
   edge("fn:getAdminUsers", "route:admin-users", "http");

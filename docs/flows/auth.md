@@ -43,8 +43,10 @@ sequenceDiagram
 - Selfhost never mounts `useSession`. The API has no `/api/auth/*` route.
 - Auth pages render even with no session. They send a signed-in user to `/`.
 - When `window.__ENV__` enables them, GitHub and OIDC buttons show on `/login`. The OIDC button also shows on `/register`.
-- A Google login (`OIDC_ISSUER=https://accounts.google.com`) joins the account with the same email. If that account never verified its email, the API deletes its password and sessions first.
-- A new provider account counts as verified. It gets the welcome plan, the welcome mail and one anonymous `signup` count. Invite-only mode and the alias rules apply to it.
+- A Google login (`OIDC_ISSUER=https://accounts.google.com`) joins the account with the same email. If that account never verified its email, the API deletes its password and sessions first (`dropUnverifiedPassword`).
+- A new provider account counts as verified. It gets the welcome plan, the welcome mail and one anonymous `signup` count. Invite-only mode applies to it.
+- The alias rule (Gmail dots, `+tag`) blocks an email sign-up when any account holds an alias of the address. A provider sign-up is blocked only by a verified account (`signupEmailProblem`, `verifiedOnly`), so an unverified alias cannot lock out the real mailbox owner.
+- The welcome mail starts after the plan step and the callback does not wait for it. A mail error is logged and sent to Sentry.
 - A cancelled or refused provider login returns to `/login?error=<code>`. The page shows a message for the code.
 - Turnstile is a one-use token. A failed submit remounts the widget.
 - An unverified email stays on the login page. The user can ask for a new mail.
@@ -91,6 +93,8 @@ Cloud sends each Resend template once. Self-host does not send these templates.
 - The sweep skips an account older than 7 days. The sweep does not send welcome, Anki, or gloss-cap.
 - Anki: the user has 10 saved words. Ignored words do not count.
 - Gloss cap: a free-plan user reaches the monthly gloss limit.
+- Plan ending: a user's latest paid grant (`plan_grants`) ends in the next 72 hours. The user has no Paddle subscription and no comp. One mail per grant. The end date uses the user's stored `timezone`, or the server zone when none is stored.
+- Review due: the user has 5 or more words to review (the count of the review page), no review or lookup today, and activity in the last 30 days. The last mail is 3 or more days old, and fewer than 3 mails went unanswered. The mail goes out from 17:00 in the user's stored `timezone`. A user with no valid stored zone gets none. One sweep sends at most 200 review-due mails and gives the event loop a turn every 25 users.
 
 Real use is a saved word, a learner event, or progress on a lesson above zero. A starter lesson with `lastReadAt` is not real use.
 
@@ -103,10 +107,14 @@ The send does not run when:
 - The user did not confirm the email.
 - The user already has that template.
 - The user asked to stop product emails.
+- The account is suspended (`admin_account_flags.suspended`).
+- The product email switch is off. See [Admin](admin.md#product-email-switch).
+
+The sweep runs every 15 minutes. Each loop (new accounts, plan ending, review due) and each user fails on its own. A failed send frees its send row. The same template is not tried again for the same user inside 6 hours (kept in memory, so a restart allows one early retry).
 
 If `EMAIL_UNSUB_SECRET` is set, stop-mail tokens use that secret. If it is absent, the tokens use `BETTER_AUTH_SECRET`. A check accepts both secrets.
 
-The app sends `verify`, `reset`, and `delete` mails as plain text. A transport error does not fail signup or login.
+The app sends `verify`, `reset`, and `delete` mails as plain text. A transport error does not fail signup or login. The Resend call stops after 15 seconds.
 
 `api/src/lib/lifecycle-email.test.ts` and `api/src/lib/email.test.ts` cover the rules.
 

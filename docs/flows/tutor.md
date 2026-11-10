@@ -39,6 +39,8 @@ sequenceDiagram
 | Prompts | `src/components/ChatWidget/constants.ts` | `EXAMPLE_PROMPTS` |
 | API | `api/src/routes/chat.ts` | `GET /`, `POST /`, `DELETE /` |
 | Provider | `api/src/lib/llm/index.ts` | `getProvider` |
+| Prompt | `api/src/lib/chat-prompt.ts` | `getSystemPrompt`, `withSystemPrompt` |
+| Render | `src/components/ChatWidget/ChatMessageContent.tsx` | `ChatMessageContent` |
 
 The widget calls `apiFetch` itself. The widget does not use `getChatMessages` or `sendChatMessage` in `data-layer.ts`.
 
@@ -50,6 +52,8 @@ The widget calls `apiFetch` itself. The widget does not use `getChatMessages` or
 - Paid history has a 7-day time to live.
 - Context is 19 prior rows plus the new message. The route prepends the system prompt into the first user turn so Anthropic works.
 - Chat is not in data takeout.
+- The prompt asks for the language of the student's message. A Chinese question gets a Chinese answer. A question in the target language gets an answer in that language with a short note in the native language (`api/src/lib/chat-prompt.ts`).
+- The widget renders replies as Markdown (`ChatMessageContent`, `react-markdown`). The prompt allows short paragraphs, lists and bold text.
 
 ### Tables
 
