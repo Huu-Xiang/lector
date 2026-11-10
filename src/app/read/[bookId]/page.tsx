@@ -225,13 +225,15 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
 
   // Null until the setting has loaded, and after a failed read: a lookup never saves then.
   const [autoSaveLookups, setAutoSaveLookups] = useState<boolean | null>(null);
+  const [autoSaveChecked, setAutoSaveChecked] = useState(false);
   const loadAutoSaveSetting = useCallback(() => {
     getSetting<boolean | null>('autoSaveLookups')
       .then((value) => {
         const next = resolveAutoSave(value);
         if (next !== null) setAutoSaveLookups(next);
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setAutoSaveChecked(true));
   }, []);
   useEffect(() => {
     loadAutoSaveSetting();
@@ -1456,7 +1458,8 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
   const onboardingSavedWords = savedOnboardingWords(onboarding);
   const onboardingSavedCount = onboardingSavedWords.length;
   const onboardingEncounteredCount = encounteredOnboardingTerms(onboarding).length;
-  const guideAutoSaves = autoSaveLookups !== false;
+  // After a failed read nothing is saved by itself, so the guide keeps its save step.
+  const guideAutoSaves = autoSaveLookups === true;
   const onboardingCoachStage =
     onboardingSavedCount >= ONBOARDING_SAVE_TARGET
       ? 'practice'
@@ -1558,7 +1561,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
           onAddCloze={!ankiHidden && wordPanel.word.includes(' ') ? addClozeToAnki : undefined}
         />
       </TranslationDrawerSlot>
-      {onboardingActive && (
+      {onboardingActive && autoSaveChecked && (
         <OnboardingCoach
           stage={onboardingCoachStage}
           autoSave={guideAutoSaves}
