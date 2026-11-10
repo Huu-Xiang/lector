@@ -24,6 +24,7 @@ const STORE_ITEMS = [
   'feedback',
   'invites',
   'inviteFingerprint',
+  'welcomeClaim',
   'sharedWords',
 ] as const;
 const OTHERS_ITEMS = [

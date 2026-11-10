@@ -30,6 +30,7 @@ import { getOrCreateInviteCode } from './invites';
 import { activeGrant } from './plan-grants';
 import { createCampaign } from './redeem';
 import { WELCOME_CODE } from './welcome-offer';
+import { recordWelcomeClaim } from './welcome-claims';
 
 const BASE = 'http://localhost:9999';
 
@@ -590,6 +591,7 @@ describe('the welcome plan on email verification', () => {
     db.prepare('DELETE FROM redeem_uses WHERE code = ?').run(WELCOME_CODE);
     db.prepare('DELETE FROM redeem_codes WHERE code = ?').run(WELCOME_CODE);
     db.prepare("DELETE FROM redeem_campaigns WHERE name = 'welcome-accounts-test'").run();
+    db.prepare('DELETE FROM welcome_claims').run();
   }
 
   afterEach(clearWelcome);
@@ -627,6 +629,15 @@ describe('the welcome plan on email verification', () => {
     expect(days).toBeGreaterThan(14.9);
     expect(days).toBeLessThan(15.1);
     db.prepare('DELETE FROM plan_grants WHERE userId = ?').run(userId);
+  });
+
+  test('a mailbox that already claimed the offer verifies and stays free', async () => {
+    seedWelcome('2999-01-01T00:00:00.000Z');
+    recordWelcomeClaim(db, 'welcome-again@example.test', new Date());
+    const userId = await signUpAndVerify('welcome-again@example.test');
+    expect(activeGrant(userId)).toBeNull();
+    const session = await signIn('welcome-again@example.test', 'correct-horse-battery-9');
+    expect(session.status).toBe(200);
   });
 
   test('after the end date verification works and grants nothing', async () => {

@@ -9,6 +9,7 @@ import {
   type PlanGrant,
 } from './plan-grants';
 import { WELCOME_CODE } from './welcome-offer';
+import { recordWelcomeClaim, userEmail, welcomeClaimProblem } from './welcome-claims';
 
 /** A card saved from a code stays usable this long after the plan that blocked it ends. */
 export const STORED_CARD_MONTHS = 6;
@@ -152,6 +153,8 @@ export function redeemCode(args: {
   currentPlan: string;
   hasSubscription: boolean;
   emailVerified: boolean;
+  /** The account address; read from the user table when absent. */
+  email?: string;
   now?: Date;
 }): RedeemResult {
   const now = args.now ?? new Date();
@@ -189,6 +192,14 @@ export function redeemCode(args: {
         .get(row.campaignId) as { n: number };
       if (total.n >= row.totalLimit) return { ok: false, error: 'used_up' };
     }
+    const welcomeEmail = code === WELCOME_CODE ? (args.email ?? userEmail(db, args.userId)) : null;
+    if (welcomeEmail) {
+      const refusal = welcomeClaimProblem(db, welcomeEmail, now);
+      if (refusal) {
+        console.error(`[redeem] welcome offer refused for ${args.userId}: ${refusal}`);
+        return { ok: false, error: 'used_up' };
+      }
+    }
     const mine = db
       .prepare('SELECT COUNT(*) AS n FROM redeem_uses WHERE campaignId = ? AND userId = ?')
       .get(row.campaignId, args.userId) as { n: number };
@@ -199,6 +210,7 @@ export function redeemCode(args: {
       'INSERT INTO redeem_uses (id, code, campaignId, userId, at) VALUES (?, ?, ?, ?, ?)',
     ).run(useId, code, row.campaignId, args.userId, now.toISOString());
     db.prepare('UPDATE redeem_codes SET uses = uses + 1 WHERE code = ?').run(code);
+    if (welcomeEmail) recordWelcomeClaim(db, welcomeEmail, now);
 
     const current = args.currentPlan;
     const higherPlanActive =
@@ -257,7 +269,7 @@ export function rememberSignupCode(userId: string, rawCode: string, now = new Da
  * Redeem the code the account remembered at sign-up. When there is none, or it
  * fails, the welcome code is tried instead, so its limits and end date decide.
  */
-export function redeemSignupCode(userId: string, now = new Date()): RedeemResult {
+export function redeemSignupCode(userId: string, now = new Date(), email?: string): RedeemResult {
   const row = db.prepare('SELECT code FROM signup_redeem_codes WHERE userId = ?').get(userId) as
     | { code: string }
     | undefined;
@@ -269,6 +281,7 @@ export function redeemSignupCode(userId: string, now = new Date()): RedeemResult
       currentPlan: 'free',
       hasSubscription: false,
       emailVerified: true,
+      email,
       now,
     });
   if (!row) return attempt(WELCOME_CODE);

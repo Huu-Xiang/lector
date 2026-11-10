@@ -34,6 +34,8 @@
  *   - email_unsubscribes — product-mail opt-out keyed on a hash of the
  *     address, not userId. A later account on the same address must stay
  *     quiet. The ratchet cannot see this table. It has no userId column.
+ *   - welcome_claims — hashes of the address and its domain, kept so the
+ *     welcome offer is given once per mailbox. It has no userId column.
  *
  * A ratchet test (account-deletion.test.ts) asserts every userId-carrying table
  * in a freshly migrated DB is covered here, so a future tenant table cannot

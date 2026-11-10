@@ -19,6 +19,7 @@ import { sendWelcomeEmail } from './lifecycle-email';
 import { purgeTenantData } from './account-deletion';
 import { getDatabaseInstance } from '../db';
 import { attachInvite, inviteRequired, isAcceptableSignupCode } from './invites';
+import { backfillWelcomeClaims } from './welcome-claims';
 import { redeemSignupCode, rememberSignupCode } from './redeem';
 import { shortenIp } from './ip-privacy';
 import { parseSourceCookie } from './source-list';
@@ -31,7 +32,7 @@ export function runAfterEmailVerification(
   steps = { redeem: redeemSignupCode, welcome: sendWelcomeEmail },
 ): void {
   try {
-    steps.redeem(user.id);
+    steps.redeem(user.id, new Date(), user.email);
   } catch (err) {
     console.error('[accounts] failed to redeem sign-up code:', err);
     Sentry.captureException(err);
@@ -419,6 +420,7 @@ export type AuthEngine = ReturnType<typeof createAuthEngine>;
 export async function runAuthMigrations(engine: AuthEngine): Promise<void> {
   const { runMigrations } = await getMigrations(engine.options);
   await runMigrations();
+  backfillWelcomeClaims(getDatabaseInstance());
 }
 
 /**

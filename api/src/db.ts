@@ -527,6 +527,15 @@ function getDb(): Database {
       updatedAt TEXT NOT NULL
     );
 
+    -- Welcome offer given once per mailbox (lib/welcome-claims.ts). Hashes
+    -- only, no userId, so erasure keeps it. domainHash drives the per-domain limit.
+    CREATE TABLE IF NOT EXISTS welcome_claims (
+      emailHash TEXT PRIMARY KEY,
+      domainHash TEXT NOT NULL,
+      claimedAt TEXT NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS idx_welcome_claims_domain ON welcome_claims(domainHash, claimedAt);
+
     CREATE TABLE IF NOT EXISTS email_unsubscribes (
       email TEXT PRIMARY KEY,
       unsubscribedAt TEXT NOT NULL
