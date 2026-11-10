@@ -63,7 +63,9 @@ test.describe('Print stylesheet — monochrome reading copy', () => {
 
     // Reader chrome: the edit/% cluster goes, the title stays as a document heading
     await expect(page.getByTestId('edit-text-button')).toBeHidden();
-    await expect(page.getByRole('heading', { name: 'Hoofstuk 1' })).toBeVisible();
+    const title = page.getByRole('banner').getByRole('heading', { level: 1 });
+    await expect(title).toHaveText(/Hoofstuk\s*1/);
+    await expect(title).toBeVisible();
   });
 
   test('renders black-on-white with word-state chips collapsed to plain text', async ({ page }) => {

@@ -113,7 +113,7 @@ test.describe.serial('Free cloud learning loop', () => {
     const plan = page.getByTestId('cloud-plan-settings');
     await expect(plan.getByText('Free is active for this account.')).toBeVisible();
     await expect(plan.getByText(/starter and imported texts/i)).toBeVisible();
-    await expect(plan.getByRole('link', { name: /bring your own AI key/i })).toBeVisible();
+    await expect(plan.getByText(/Monthly AI allowance/i)).toBeVisible();
 
     const byok = page.locator('#byok');
     await expect(byok.getByText(/Free includes a small monthly AI allowance/i)).toBeVisible();
@@ -122,7 +122,7 @@ test.describe.serial('Free cloud learning loop', () => {
     const tts = page.getByTestId('tts-settings');
     await expect(tts.getByText('Browser voice · Free')).toBeVisible();
     await expect(tts.getByRole('button', { name: 'Managed voice' })).toBeDisabled();
-    await expect(tts.getByRole('link', { name: 'Upgrade to Cloud' })).toBeVisible();
+    await expect(tts.getByRole('link', { name: 'See plans' })).toBeVisible();
     await tts.getByRole('button', { name: 'Test Voice' }).click();
     await page.waitForTimeout(100);
   });

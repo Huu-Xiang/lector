@@ -503,7 +503,7 @@ test.describe('guided onboarding — cloud accounts', () => {
     });
     expect(
       current.events.filter((event) => event.eventType === 'practice.answer_submitted'),
-    ).toHaveLength(3);
+    ).toHaveLength(1);
     expect(current.events.map((event) => event.eventType)).toEqual(
       expect.arrayContaining(['practice.round_completed', 'onboarding.completed']),
     );

@@ -21,6 +21,16 @@ async function saveWord(page: Page, text: string, translation: string) {
   expect(res.ok()).toBeTruthy();
 }
 
+async function clearNewBacklog(page: Page) {
+  const res = await page.request.get(apiUrl('/api/vocab'));
+  const rows = (await res.json()) as Array<{ id: string; state: string }>;
+  for (const row of rows) {
+    if (row.state === 'level1') {
+      await page.request.delete(apiUrl(`/api/vocab/${row.id}`));
+    }
+  }
+}
+
 test.describe.serial('Word review', () => {
   const words = [0, 1, 2, 3].map((i) => ({
     text: randomWord(),
@@ -28,6 +38,7 @@ test.describe.serial('Word review', () => {
   }));
 
   test('saved words reach Practice and change stage after an answer', async ({ page }) => {
+    await clearNewBacklog(page);
     for (const w of words) await saveWord(page, w.text, w.meaning);
 
     await page.goto('/practice');

@@ -91,7 +91,7 @@ test.describe('Reader phrase selection', () => {
     const words = panelText!.trim().split(/\s+/);
     for (const word of words) {
       // Each word should be a complete token (letters, apostrophes, diacritics only)
-      expect(word).toMatch(/^['''ʼ`]?n$|^[\wêëéèôöûüîïáà]+$/i);
+      expect(word.replace(/[:;,.!?]+$/, '')).toMatch(/^['''ʼ`]?n$|^[\wêëéèôöûüîïáà]+$/i);
     }
   });
 

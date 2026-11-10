@@ -7,12 +7,20 @@ test.describe('Library descriptions', () => {
       data: { language: 'en', slug: 'black-beauty' },
     });
     expect(res.ok()).toBe(true);
-    await page.request.put(apiUrl('/api/settings/targetLanguage'), { data: { value: 'en' } });
     await page.request.put(apiUrl('/api/settings/nativeLanguage'), { data: { value: 'fr' } });
-    await page.addInitScript(() => localStorage.removeItem('readfox-show-descriptions'));
+    await page.request.put(apiUrl('/api/settings/targetLanguage'), { data: { value: 'en' } });
+    await page.addInitScript(() => {
+      if (!sessionStorage.getItem('descriptions-reset')) {
+        sessionStorage.setItem('descriptions-reset', '1');
+        localStorage.removeItem('readfox-show-descriptions');
+      }
+      localStorage.setItem('lector-target-language', 'en');
+    });
   });
 
   test.afterEach(async ({ page }) => {
+    await page.request.put(apiUrl('/api/settings/targetLanguage'), { data: { value: 'af' } });
+    await page.request.delete(apiUrl('/api/settings/nativeLanguage'));
     await page.request.delete(apiUrl('/api/collections/library-en-black-beauty'));
   });
 

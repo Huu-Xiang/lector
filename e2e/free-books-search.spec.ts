@@ -11,7 +11,12 @@ async function openEnglishFreeBooks(page: Page) {
 }
 
 test.describe('Free books dialog search and sort', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.request.put(apiUrl('/api/settings/nativeLanguage'), { data: { value: 'fr' } });
+  });
+
   test.afterEach(async ({ page }) => {
+    await page.request.delete(apiUrl('/api/settings/nativeLanguage'));
     await page.request.put(apiUrl('/api/settings/targetLanguage'), { data: { value: 'af' } });
   });
 

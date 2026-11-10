@@ -98,12 +98,17 @@ test.describe('Reader markdown rendering', () => {
     await expect(italicWord).toBeVisible();
   });
 
-  test('headings are styled but not word-wrapped (click-to-translate stays in the body)', async ({
-    page,
-  }) => {
-    // Headings render as plain styled text — no clickable word chips — so the
-    // reader's word spans live only in the body (p/li), as other specs assume.
-    expect(await page.locator('article h2 span.cursor-pointer').count()).toBe(0);
+  test('heading words are clickable and the heading keeps its styling', async ({ page }) => {
+    const heading = page.locator('article h2');
+    await expect(heading).toHaveClass(/font-bold/);
+    await expect(heading).toHaveClass(/text-2xl/);
+    const headingWord = heading.locator('span.cursor-pointer', { hasText: 'Hoofstuk' });
+    await expect(headingWord).toBeVisible();
+
+    await headingWord.click();
+    const drawer = page.getByTestId('translation-drawer');
+    await expect(drawer).toHaveClass(/translate-x-0/, { timeout: 5000 });
+    await expect(drawer.getByRole('heading', { name: 'hoofstuk' })).toBeVisible();
     await expect(page.locator('article p span.cursor-pointer').first()).toBeVisible();
   });
 

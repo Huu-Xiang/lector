@@ -112,7 +112,7 @@ test.describe('landing demo with a Chinese browser', () => {
 
     await dragAcross(page, 1, 14);
     await expect(card(page)).toHaveAttribute('data-phase', 'done');
-    await expect(panel(page)).toContainText('爱丽丝靠着姐姐坐在河岸上');
+    await expect(panel(page)).toContainText('爱丽丝坐在河岸上，挨着姐姐，渐渐觉得很厌烦了。');
     await expect(panel(page)).toContainText('惯用含义');
     await expect(page.getByTestId('demo-prompt')).toContainText('其他词也可以点');
     await expect(page.getByTestId('demo-start-free')).toHaveAttribute('href', '/register');
@@ -129,7 +129,7 @@ test.describe('landing demo with a Chinese browser', () => {
     await dragRange(page, 1, 7, 9);
     await expect(card(page)).toHaveAttribute('data-phase', 'done');
     await expect(panel(page)).toContainText('tired of sitting by her sister on the bank');
-    await expect(panel(page)).toContainText('厌烦坐在河岸上她姐姐的旁边');
+    await expect(panel(page)).toContainText('厌烦坐在河岸上，挨着她姐姐');
     await expect(panel(page)).not.toContainText('惯用含义');
     await expect(selectedWords(page, 1)).toHaveCount(9);
   });
@@ -152,17 +152,17 @@ test.describe('landing demo with a Chinese browser', () => {
 
     // No phrase holds "of sitting by", so the highlight grows to the smallest one that does.
     await dragRange(page, 1, 7, 9);
-    await expect(panel(page)).toContainText('厌烦坐在河岸上她姐姐的旁边');
+    await expect(panel(page)).toContainText('厌烦坐在河岸上，挨着她姐姐');
     await expect(selectedWords(page, 1)).toHaveCount(9);
     await expect(selectedWords(page, 1).first()).toHaveAttribute('data-index', '6');
 
     await dragRange(page, 1, 0, 14);
-    await expect(panel(page)).toContainText('爱丽丝靠着姐姐坐在河岸上');
+    await expect(panel(page)).toContainText('爱丽丝坐在河岸上，挨着姐姐，渐渐觉得很厌烦了。');
     await expect(panel(page)).toContainText('惯用含义');
     await expect(selectedWords(page, 1)).toHaveCount(15);
 
     await dragRange(page, 1, 1, 14);
-    await expect(panel(page)).toContainText('爱丽丝靠着姐姐坐在河岸上');
+    await expect(panel(page)).toContainText('爱丽丝坐在河岸上，挨着姐姐，渐渐觉得很厌烦了。');
     await expect(selectedWords(page, 1)).toHaveCount(15);
   });
 
@@ -178,7 +178,7 @@ test.describe('landing demo with a Chinese browser', () => {
     test.setTimeout(120_000);
     await page.goto('/landing');
     await expect(card(page)).toHaveAttribute('data-phase', 'done', { timeout: 100_000 });
-    await expect(panel(page)).toContainText('爱丽丝靠着姐姐坐在河岸上');
+    await expect(panel(page)).toContainText('爱丽丝坐在河岸上，挨着姐姐，渐渐觉得很厌烦了。');
     await expect(page.getByTestId('demo-start-free')).toBeVisible();
   });
 
@@ -225,7 +225,7 @@ test.describe('landing demo with a Chinese browser', () => {
     await word(page, 1, 6).click();
     await expect(panel(page)).toContainText('厌倦的');
     await dragAcross(page, 1, 14);
-    await expect(panel(page)).toContainText('爱丽丝靠着姐姐坐在河岸上');
+    await expect(panel(page)).toContainText('爱丽丝坐在河岸上，挨着姐姐，渐渐觉得很厌烦了。');
   });
 });
 

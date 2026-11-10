@@ -167,7 +167,7 @@ test.describe.serial('TOTP two-factor lifecycle', () => {
     await page.waitForURL('**/two-factor');
     await page.getByTestId('twofactor-code').fill('000000');
     await page.getByTestId('twofactor-submit').click();
-    await expect(page.getByText('That code didn’t work', { exact: false })).toBeVisible();
+    await expect(page.getByText("That code didn't work", { exact: false })).toBeVisible();
     expect(new URL(page.url()).pathname).toBe('/two-factor');
   });
 

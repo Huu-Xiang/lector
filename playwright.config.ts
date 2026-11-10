@@ -131,6 +131,7 @@ export default defineConfig({
             // that opts into a language with no local copy starts a real
             // download from GitHub, mid-suite.
             DICT_FETCH: '0',
+            STARTER_CONTENT_ROOT: '../e2e/fixtures/starter-content',
             PORT: authApiPort,
             LECTOR_MODE: 'cloud',
             BETTER_AUTH_SECRET: 'e2e-only-secret-0123456789abcdef',

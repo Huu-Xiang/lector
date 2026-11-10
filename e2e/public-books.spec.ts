@@ -7,7 +7,7 @@ test.describe('public book pages', () => {
 
     await page.locator('a[href="/books/en/walden"]').first().click();
     await expect(page).toHaveURL(/\/books\/en\/walden$/);
-    await expect(page.getByText('Henry David Thoreau')).toBeVisible();
+    await expect(page.getByText('by Henry David Thoreau', { exact: true })).toBeVisible();
     await expect(page.getByText(/When I wrote the following pages/)).toBeVisible();
     await expect(page.locator('a[href="/register"]').first()).toBeVisible();
   });

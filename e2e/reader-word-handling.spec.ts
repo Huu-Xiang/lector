@@ -85,6 +85,7 @@ test.describe('Reader word handling', () => {
   });
 
   test.afterEach(async ({ page }) => {
+    await page.request.delete(apiUrl('/api/settings/autoSaveLookups'));
     if (collectionId) {
       await page.request.delete(apiUrl(`/api/collections/${collectionId}`));
     }
@@ -179,7 +180,7 @@ test.describe('Reader word handling', () => {
     await started;
 
     await expect(drawer.getByTestId('mark-word-known')).toHaveClass(/ring-2/);
-    await expect(word).not.toHaveClass(/w-new-bg/);
+    await expect(word).toHaveAttribute('data-word-state', 'known');
 
     releaseWrite();
     await expect(drawer).toHaveClass(/translate-x-full/);
@@ -187,6 +188,10 @@ test.describe('Reader word handling', () => {
   });
 
   test('rolls back only the optimistic word when persistence fails', async ({ page }) => {
+    await page.request.put(apiUrl('/api/settings/autoSaveLookups'), { data: { value: false } });
+    knownWordsFetches = 0;
+    await page.reload();
+    await expect(page.getByText('Perdekraal-fees')).toBeVisible({ timeout: 10000 });
     let releaseWrite!: () => void;
     let writeStarted!: () => void;
     const writeGate = new Promise<void>((resolve) => {
@@ -210,11 +215,11 @@ test.describe('Reader word handling', () => {
     await started;
 
     await expect(drawer.getByTestId('mark-word-known')).toHaveClass(/ring-2/);
-    await expect(word).not.toHaveClass(/w-new-bg/);
+    await expect(word).toHaveAttribute('data-word-state', 'known');
 
     releaseWrite();
     await expect(page.getByText('Could not mark the word as known')).toBeVisible();
-    await expect(word).toHaveClass(/w-new-bg/);
+    await expect(word).toHaveAttribute('data-word-state', 'new');
     await expect(drawer.getByTestId('mark-word-known')).not.toHaveClass(/ring-2/);
     await expect.poll(() => knownWordsFetches).toBe(1);
   });

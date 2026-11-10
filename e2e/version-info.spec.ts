@@ -16,12 +16,12 @@ test.describe('Settings → About', () => {
     await expect(about).toBeVisible();
 
     // Labels that always render.
-    await expect(about.getByText('Build', { exact: true })).toBeVisible();
+    await expect(about.getByText('Version', { exact: true })).toBeVisible();
     await expect(about.getByText('Built', { exact: true })).toBeVisible();
 
-    // The Build value is always present (at minimum the "unknown" fallback).
-    const build = about.locator('div:has(dt:text-is("Build")) dd');
-    await expect(build).toBeVisible();
-    await expect(build).not.toBeEmpty();
+    // The Version value is always present (at minimum the "unknown" fallback).
+    const version = about.locator('div:has(dt:text-is("Version")) dd');
+    await expect(version).toBeVisible();
+    await expect(version).not.toBeEmpty();
   });
 });

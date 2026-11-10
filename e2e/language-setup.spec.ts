@@ -36,7 +36,6 @@ test.describe('Language Setup & Switching', () => {
     // Selecting a language now keeps setup open so the learner can choose
     // whether to take the contextual guide or go straight to the library.
     await mockSetupSkipPersistence(page);
-    await page.getByTestId('setup-language-show-all').click();
     await page.getByTestId('setup-language-af').click();
     await expect(page.getByTestId('setup-language-af')).toHaveAttribute('aria-pressed', 'true');
     await page.getByTestId('skip-guided-onboarding').click();
