@@ -519,9 +519,12 @@ export default function SetupPage() {
               </fieldset>
             </section>
 
-            <div className="rounded-2xl border border-border bg-card px-5 py-4">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <div>
+            <div
+              className="sticky bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-10 rounded-2xl border border-border bg-card px-4 py-3 shadow-lg sm:px-5 sm:py-4"
+              data-testid="setup-start-bar"
+            >
+              <div className="flex items-center justify-between gap-3">
+                <div className="hidden sm:block">
                   <p className="text-sm font-semibold text-foreground">{t('ready')}</p>
                   {chosenTitle ? (
                     <p className="mt-0.5 text-sm text-foreground" data-testid="setup-pending-book">
@@ -531,12 +534,13 @@ export default function SetupPage() {
                     <p className="mt-0.5 text-xs text-muted-foreground">{t('readyHint')}</p>
                   )}
                 </div>
-                <div className="flex flex-col-reverse gap-2 sm:flex-row">
+                <div className="flex min-w-0 flex-1 gap-2 sm:flex-none">
                   <Button
                     type="button"
                     variant="ghost"
                     onClick={() => handleContinue(false)}
                     disabled={!selectedLanguage || pending !== null}
+                    className="shrink-0"
                     data-testid="skip-guided-onboarding"
                   >
                     {t('skip')}
@@ -545,12 +549,13 @@ export default function SetupPage() {
                     type="button"
                     onClick={() => handleContinue(true)}
                     disabled={!selectedLanguage || pending !== null}
+                    className="min-w-0 flex-1 sm:flex-none"
                     data-testid="start-guided-onboarding"
                   >
                     {pending ? (
                       t('preparing')
                     ) : chosenTitle ? (
-                      <span className="max-w-[15rem] truncate sm:max-w-[20rem]">
+                      <span className="min-w-0 truncate sm:max-w-[20rem]">
                         {t('startBook', { title: chosenTitle })}
                       </span>
                     ) : (

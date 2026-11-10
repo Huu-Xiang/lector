@@ -91,7 +91,7 @@ export default async function RootLayout({
             <NavHeader />
           </SessionOnly>
 
-          <div className="flex-1">
+          <div className="min-w-0 flex-1">
             {/* AuthGuard outside SetupGuard: in cloud mode the session must
               resolve before SetupGuard's settings probe (which would 401
               unauthenticated). Selfhost passes straight through (#218).

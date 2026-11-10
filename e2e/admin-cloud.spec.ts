@@ -145,6 +145,23 @@ test.describe.serial('admin dashboard (#221)', () => {
     expect((await summary.json()).users).toBeGreaterThanOrEqual(2);
   });
 
+  test('the dashboard stays inside a narrow window', async ({ browser }) => {
+    const page = await signIn(browser, ADMIN_EMAIL);
+    await page.setViewportSize({ width: 1000, height: 700 });
+    await page.goto('/admin');
+    await expect(page.locator('table').first()).toBeVisible();
+    // The account table is wider than the window; only its own box may scroll.
+    await expect
+      .poll(() =>
+        page.evaluate(
+          () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+        ),
+      )
+      .toBe(0);
+    const main = await page.locator('main').boundingBox();
+    expect(main!.x + main!.width).toBeLessThanOrEqual(1000);
+  });
+
   test('password-reset drives the real Better Auth flow and is audit-logged', async ({
     browser,
   }) => {

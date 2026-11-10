@@ -230,6 +230,9 @@ test.describe('guided onboarding — selfhost', () => {
     await expect(page.getByTestId('setup-pending-book')).toContainText('Candide');
     const start = page.getByTestId('start-guided-onboarding');
     await expect(start).toContainText('Start reading “Candide');
+    // The start bar stays on screen, so the long form needs no scroll to begin.
+    expect(await page.evaluate(() => window.scrollY)).toBe(0);
+    await expect(start).toBeInViewport({ ratio: 1 });
 
     // Another language has no chosen book, so the button names the guided lesson again.
     await page.getByTestId('setup-language-es').click();
@@ -264,12 +267,15 @@ test.describe('guided onboarding — selfhost', () => {
       ),
     );
     await page.reload();
-    await expect(page.getByTestId('setup-language-fr')).toHaveAttribute('aria-pressed', 'true');
-    await expect(page.getByTestId('setup-pending-book')).toHaveCount(0);
     await expect
       .poll(() => page.evaluate(() => localStorage.getItem('readfox-pending-book')))
       .toBeNull();
-    await page.getByTestId('start-guided-onboarding').click();
+    await expect(page.getByTestId('setup-pending-book')).toHaveCount(0);
+    // The stored book is gone after one look, so a dev-server reload here shows a plain form.
+    await page.getByTestId('setup-language-fr').click();
+    const start = page.getByTestId('start-guided-onboarding');
+    await expect(start).toHaveText('Start guided lesson');
+    await start.click();
     await expect(page.getByTestId('setup-recommend')).toBeVisible({ timeout: 15_000 });
     await context.close();
   });
