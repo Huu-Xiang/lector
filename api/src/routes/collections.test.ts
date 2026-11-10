@@ -34,11 +34,11 @@ function insertCollection(
   );
 }
 
-function insertLesson(id: string, collectionId: string, sortOrder: number) {
+function insertLesson(id: string, collectionId: string, sortOrder: number, textContent = '') {
   db.prepare(
     `INSERT INTO lessons (id, collectionId, title, sortOrder, language, textContent, createdAt, lastReadAt)
-     VALUES (?, ?, ?, ?, 'af', '', '2026-01-01T00:00:00Z', '2026-01-01T00:00:00Z')`,
-  ).run(id, collectionId, `Lesson ${id}`, sortOrder);
+     VALUES (?, ?, ?, ?, 'af', ?, '2026-01-01T00:00:00Z', '2026-01-01T00:00:00Z')`,
+  ).run(id, collectionId, `Lesson ${id}`, sortOrder, textContent);
 }
 
 function sortOrderOf(table: 'collections' | 'lessons', id: string): number {
@@ -53,6 +53,42 @@ describe('collections route', () => {
     setLang('af');
   });
   afterEach(reset);
+
+  test('GET / names the lesson of a collection that holds exactly one', async () => {
+    insertCollection('article');
+    insertLesson('only', 'article', 0);
+    insertCollection('book', { sortOrder: 1 });
+    insertLesson('ch-1', 'book', 0);
+    insertLesson('ch-2', 'book', 1);
+    insertCollection('empty', { sortOrder: 2 });
+
+    const list = (await (await app.request('/')).json()) as {
+      id: string;
+      onlyLessonId: string | null;
+    }[];
+    expect(Object.fromEntries(list.map((row) => [row.id, row.onlyLessonId]))).toEqual({
+      article: 'only',
+      book: null,
+      empty: null,
+    });
+  });
+
+  test('GET /:id/lessons returns an excerpt and never the text', async () => {
+    insertCollection('book');
+    insertLesson('ch-1', 'book', 0, '# 1. Book\n\nIt was a _bright_ morning in the village.');
+    insertLesson('ch-2', 'book', 1, `# 2. Book\n\n${'long '.repeat(400)}`);
+
+    const lessons = (await (await app.request('/book/lessons')).json()) as Record<
+      string,
+      unknown
+    >[];
+    expect(lessons[0].excerpt).toBe('It was a bright morning in the village.');
+    expect((lessons[1].excerpt as string).length).toBeLessThanOrEqual(141);
+    for (const lesson of lessons) {
+      expect(lesson).not.toHaveProperty('textContent');
+      expect(lesson).not.toHaveProperty('opening');
+    }
+  });
 
   test('PUT /reorder assigns sortOrder by array index', async () => {
     insertCollection('a');

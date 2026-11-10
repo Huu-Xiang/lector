@@ -67,7 +67,7 @@ export default function Home() {
   const listClass =
     libraryView === 'list'
       ? 'flex flex-col gap-3'
-      : 'grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4';
+      : 'grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5';
   const [collections, setCollections] = useState<Collection[]>([]);
   const [groups, setGroups] = useState<CollectionGroup[]>([]);
   const [isLoading, setIsLoading] = useState(true);

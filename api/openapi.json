@@ -12268,6 +12268,13 @@
               "avgProgress": {
                 "type": "number",
                 "description": "Mean reading progress over its lessons, from 0 to 100."
+              },
+              "onlyLessonId": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "The lesson of a collection that holds exactly one; null otherwise."
               }
             }
           }
@@ -12448,6 +12455,10 @@
           },
           "title": {
             "type": "string"
+          },
+          "excerpt": {
+            "type": "string",
+            "description": "The opening words of the text, at most about 140 characters."
           },
           "sortOrder": {
             "type": "integer"

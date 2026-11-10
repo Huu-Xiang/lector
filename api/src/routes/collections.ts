@@ -17,6 +17,7 @@ import {
 } from '../lib/storage-limits';
 import { validateOptionalLanguage, validateOwnedReference } from '../lib/persisted-input';
 import { deleteAudioFile } from '../lib/audio-files';
+import { EXCERPT_SOURCE_CHARS, lessonExcerpt } from '../lib/lesson-excerpt';
 
 const app = new Hono();
 
@@ -29,7 +30,8 @@ app.get('/', (c) => {
     .prepare(
       `
     SELECT c.*, g.name as groupName, COUNT(l.id) as lessonCount,
-      COALESCE(AVG(l.progress_percentComplete), 0) as avgProgress
+      COALESCE(AVG(l.progress_percentComplete), 0) as avgProgress,
+      CASE WHEN COUNT(l.id) = 1 THEN MIN(l.id) END as onlyLessonId
     FROM collections c
     LEFT JOIN collection_groups g ON g.id = c.groupId AND g.userId = c.userId
     LEFT JOIN lessons l ON l.collectionId = c.id AND l.language = c.language AND l.userId = c.userId
@@ -42,6 +44,7 @@ app.get('/', (c) => {
     groupName: string | null;
     lessonCount: number;
     avgProgress: number;
+    onlyLessonId: string | null;
   })[];
 
   return c.json(collections);
@@ -299,15 +302,18 @@ app.get('/:id/lessons', (c) => {
       `
     SELECT id, collectionId, title, sortOrder, progress_scrollPosition,
       progress_percentComplete, wordCount, createdAt, lastReadAt,
-      audioDurationMs, transcriptionStatus, transcriptionError
+      audioDurationMs, transcriptionStatus, transcriptionError,
+      substr(textContent, 1, ${EXCERPT_SOURCE_CHARS}) as opening
     FROM lessons
     WHERE collectionId = ? AND userId = ?
     ORDER BY sortOrder ASC
   `,
     )
-    .all(id, userId) as Omit<LessonRow, 'textContent'>[];
+    .all(id, userId) as (Omit<LessonRow, 'textContent'> & { opening: string | null })[];
 
-  return c.json(lessons);
+  return c.json(
+    lessons.map(({ opening, ...lesson }) => ({ ...lesson, excerpt: lessonExcerpt(opening ?? '') })),
+  );
 });
 
 // POST /api/collections/:id/lessons

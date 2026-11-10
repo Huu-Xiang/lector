@@ -14,16 +14,22 @@ import { LessonSummary } from '@/types';
 import Link from 'next/link';
 import { useMemo } from 'react';
 import { useTranslations } from 'next-intl';
+import { lessonHeading } from '@/lib/lesson-heading';
 
 export default function SortableLessonRow({
   lesson,
   index,
+  bookTitles,
+  lessonCount,
   onEdit,
   onDelete,
   onRetryTranscription,
 }: {
   lesson: LessonSummary;
   index: number;
+  /** Titles of the collection, used to spot a lesson title that only repeats them. */
+  bookTitles: readonly string[];
+  lessonCount: number;
   onEdit: (id: string) => void;
   onDelete: (id: string, title: string) => void;
   onRetryTranscription?: (id: string) => void;
@@ -46,6 +52,7 @@ export default function SortableLessonRow({
   };
   const progress = Math.round(lesson.progress_percentComplete);
   const isComplete = progress >= 95;
+  const heading = lessonHeading(lesson, bookTitles, lessonCount);
   const transcribing =
     lesson.transcriptionStatus === 'pending' || lesson.transcriptionStatus === 'processing';
   const transcriptionFailed = lesson.transcriptionStatus === 'error';
@@ -81,7 +88,7 @@ export default function SortableLessonRow({
 
       <Link
         href={`/read/${lesson.id}`}
-        title={lesson.title}
+        title={heading}
         className="group flex min-w-0 flex-1 items-center gap-2 pr-2 md:gap-4 md:pr-0"
       >
         {/* Lesson number */}
@@ -96,7 +103,12 @@ export default function SortableLessonRow({
         <div className="min-w-0 flex-1">
           {/* Lesson info */}
           <div className="">
-            <h3 className="truncate text-sm font-medium text-foreground">{lesson.title}</h3>
+            <h3
+              className="truncate text-sm font-medium text-foreground"
+              data-testid="lesson-heading"
+            >
+              {heading}
+            </h3>
             {transcribing ? (
               <p
                 className="flex items-center gap-1 text-xs text-muted-foreground"

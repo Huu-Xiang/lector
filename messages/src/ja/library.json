@@ -69,6 +69,7 @@
     },
     "card": {
       "coverAlt": "{title}の表紙",
+      "details": "「{title}」の詳細",
       "complete": "{percent}% 完了",
       "notStarted": "未読",
       "lessons": "{count} レッスン",

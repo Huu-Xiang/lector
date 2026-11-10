@@ -21,6 +21,8 @@ export interface Collection {
   language?: string;
   lessonCount: number;
   avgProgress: number;
+  /** The lesson of a collection that holds exactly one; the library list sets it. */
+  onlyLessonId?: string | null;
   createdAt: string;
   lastReadAt: string;
 }
@@ -99,6 +101,8 @@ export interface LessonSummary {
   id: string;
   collectionId: string | null;
   title: string;
+  /** The opening words of the text; the collection listing sets it. */
+  excerpt?: string;
   sortOrder: number;
   progress_scrollPosition: number;
   progress_percentComplete: number;

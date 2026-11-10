@@ -62,6 +62,9 @@ sequenceDiagram
 
 ### Branches
 
+- A collection that holds one lesson links from the library to `/read/:id` (`onlyLessonId` in the collection list). The card's details link opens its page, and Back in the reader returns to the library.
+- A lesson row shows the opening words (`excerpt` in the lesson list) when the lesson title only repeats the collection title.
+- A collection without `coverUrl` gets a drawn cover (`src/components/CollectionCover`).
 - If `transcriptionStatus` is `pending` or `processing`, the page polls `getLesson` every 4 seconds.
 - If `transcriptionStatus` is `error`, the user can retry with `POST /api/lessons/:id/retry-transcription`.
 - If `sourceType` is `youtube`, the reader uses `YouTubePlayer` and `TranscriptReader`.

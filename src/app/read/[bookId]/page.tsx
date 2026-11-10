@@ -1059,13 +1059,14 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     }
   }, [router, t]);
 
+  // The library opens the one lesson of a collection directly, so Back returns to the library.
   const handleClose = useCallback(() => {
-    if (lesson?.collectionId) {
+    if (lesson?.collectionId && siblings.length !== 1) {
       router.push(`/collection/${lesson.collectionId}`);
     } else {
       router.push('/');
     }
-  }, [router, lesson]);
+  }, [router, lesson, siblings.length]);
 
   // Read Anki deck names from localStorage — same keys the Settings page writes.
   const getAnkiDecks = useCallback(() => {

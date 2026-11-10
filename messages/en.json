@@ -1045,6 +1045,7 @@
     },
     "card": {
       "coverAlt": "Cover of {title}",
+      "details": "Details of “{title}”",
       "complete": "{percent}% complete",
       "notStarted": "Not started",
       "lessons": "{count, plural, one {# lesson} other {# lessons}}",

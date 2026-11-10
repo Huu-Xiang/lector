@@ -245,6 +245,7 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
   if (!collection) return null;
 
   const continueLesson = getContinueLesson();
+  const bookTitles = [collection.title, shownTitle].filter(Boolean);
   const completedCount = lessons.filter((l) => l.progress_percentComplete >= 95).length;
 
   return (
@@ -330,6 +331,8 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
                 key={lesson.id}
                 lesson={lesson}
                 index={i}
+                bookTitles={bookTitles}
+                lessonCount={lessons.length}
                 onEdit={openEditLesson}
                 onDelete={handleDeleteLesson}
                 onRetryTranscription={handleRetryTranscription}

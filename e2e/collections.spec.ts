@@ -164,6 +164,69 @@ test.describe('Collections & Lessons', () => {
     await expect(card.first()).toBeVisible({ timeout: 10000 });
   });
 
+  test('a collection of one lesson opens that lesson, and Back returns to the library', async ({
+    page,
+  }) => {
+    const created = await page.request.post(apiUrl('/api/collections'), {
+      data: { title: 'Toets Enkel', author: 'Toets Skrywer' },
+    });
+    const { id } = await created.json();
+    const added = await page.request.post(apiUrl(`/api/collections/${id}/lessons`), {
+      data: { title: 'Toets Enkel', textContent: '# Toets Enkel\n\nDit is die enigste les.' },
+    });
+    const lessonId = (await added.json()).id;
+
+    await page.goto('/');
+    const card = page.getByTestId('collection-card').filter({ hasText: 'Toets Enkel' });
+    await expect(card).toHaveAttribute('href', `/read/${lessonId}`);
+    // No cover image is stored, so the card draws one.
+    await expect(card.getByTestId('collection-cover')).toBeVisible();
+    await card.click();
+    await expect(page).toHaveURL(new RegExp(`/read/${lessonId}$`));
+
+    await page.getByRole('button', { name: 'Back' }).click();
+    await expect(page).toHaveURL(/\/$/);
+
+    // The collection page stays one tap away for rename, delete and grouping.
+    await page.getByRole('link', { name: 'Details of “Toets Enkel”' }).click();
+    await expect(page).toHaveURL(new RegExp(`/collection/${id}$`));
+    await expect(page.getByTestId('add-lesson')).toBeVisible();
+  });
+
+  test('a collection of several lessons still opens its lesson list', async ({ page }) => {
+    const created = await page.request.post(apiUrl('/api/collections'), {
+      data: { title: 'Toets Reeks', author: 'Toets Skrywer' },
+    });
+    const { id } = await created.json();
+    for (const [title, textContent] of [
+      ['1. Deel Een', '# 1. Deel Een\n\nDie eerste deel begin hier.'],
+      ['2. Toets Reeks', '# 2. Toets Reeks\n\nDie tweede deel begin hier.'],
+    ]) {
+      await page.request.post(apiUrl(`/api/collections/${id}/lessons`), {
+        data: { title, textContent },
+      });
+    }
+
+    await page.goto('/');
+    const card = page.getByTestId('collection-card').filter({ hasText: 'Toets Reeks' });
+    await expect(card).toHaveAttribute('href', `/collection/${id}`);
+    await expect(page.getByRole('link', { name: 'Details of “Toets Reeks”' })).toHaveCount(0);
+    await card.click();
+    await expect(page).toHaveURL(new RegExp(`/collection/${id}$`));
+
+    // A title that only repeats the book title gives way to the opening words.
+    await expect(page.getByTestId('lesson-heading')).toHaveText([
+      '1. Deel Een',
+      'Die tweede deel begin hier.',
+    ]);
+
+    // From a lesson of a longer collection, Back returns to the lesson list.
+    await page.getByTestId('lesson-heading').first().click();
+    await expect(page).toHaveURL(/\/read\//);
+    await page.getByRole('button', { name: 'Back' }).click();
+    await expect(page).toHaveURL(new RegExp(`/collection/${id}$`));
+  });
+
   test('should add a lesson to an existing collection', async ({ page }) => {
     // Seed a collection via API
     const epubPath = path.join(__dirname, 'fixtures/test-book.epub');

@@ -1045,6 +1045,7 @@
     },
     "card": {
       "coverAlt": "{title} 표지",
+      "details": "“{title}” 상세 보기",
       "complete": "{percent}% 완료",
       "notStarted": "시작 전",
       "lessons": "레슨 {count}개",

@@ -194,6 +194,10 @@ export const schemas: Record<string, JsonSchema> = {
             type: 'number',
             description: 'Mean reading progress over its lessons, from 0 to 100.',
           },
+          onlyLessonId: {
+            ...NULLABLE_STRING,
+            description: 'The lesson of a collection that holds exactly one; null otherwise.',
+          },
         },
       },
     ],
@@ -278,6 +282,10 @@ export const schemas: Record<string, JsonSchema> = {
       id: { type: 'string' },
       collectionId: NULLABLE_STRING,
       title: { type: 'string' },
+      excerpt: {
+        type: 'string',
+        description: 'The opening words of the text, at most about 140 characters.',
+      },
       sortOrder: { type: 'integer' },
       wordCount: { type: 'integer' },
       progress_scrollPosition: { type: 'number' },

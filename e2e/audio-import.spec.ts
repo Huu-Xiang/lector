@@ -131,9 +131,14 @@ test.describe('Audio import (#185)', () => {
     // Upload returns fast with a background-transcription notice.
     await expect(page.getByText(/transcription started/)).toBeVisible({ timeout: 15000 });
 
-    // The new collection appears; its lesson row shows the transcribing state
-    // (the worker is off under e2e, so it stays pending).
+    // The new collection holds one lesson, so its card opens the reader, which waits for
+    // the transcript (the worker is off under e2e, so it stays pending).
     await page.getByText('E2E Oudio Episode').first().click();
+    await expect(page.getByTestId('transcription-pending')).toBeVisible({ timeout: 10000 });
+
+    // The lesson list, one tap from the card, shows the same state.
+    await page.goto('/');
+    await page.getByRole('link', { name: /Details of “E2E Oudio Episode/ }).click();
     await expect(page.getByText('Transcribing…').first()).toBeVisible({ timeout: 10000 });
   });
 
