@@ -10,7 +10,7 @@
     "items": {
       "emailReminders": {
         "title": "About email reminders",
-        "body": "We may email you when your plan is about to end and when you have words to review. You can turn these emails off in Settings, or with the link at the bottom of any of them."
+        "body": "We may email you when a plan that does not renew on its own is about to end, and when you have words to review. You can turn these emails off in Settings, or with the link at the bottom of any of them."
       },
       "installApp": {
         "title": "Use Readfox like an app on your phone",

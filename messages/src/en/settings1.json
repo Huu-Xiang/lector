@@ -27,7 +27,7 @@
       "emails": {
         "heading": "Emails",
         "label": "Product emails",
-        "hint": "Welcome mail, reading reminders, a notice before your plan ends, and word review reminders. Account mail is not affected: verification, password reset and account deletion mails are always sent.",
+        "hint": "Welcome mail, reading reminders, a tip after you save 10 words, a note when you reach the free AI limit, a notice before a fixed-period plan ends, and word review reminders. Account mail is not affected: verification, password reset and account deletion mails are always sent.",
         "on": "On",
         "off": "Off",
         "failed": "Could not save this setting. Try again."

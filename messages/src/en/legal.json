@@ -14,7 +14,7 @@
           "learning": "Your vocabulary, reading progress, practice history, journal entries and settings.",
           "readingStats": "Your reading time and the number of words you read, stored in your learning statistics.",
           "autoSave": "The words you look up are saved to your word list automatically. You can turn this off in Settings.",
-          "timezone": "Your browser's time zone. It is saved to your account to calculate your learning day, which sets your daily statistics and streaks.",
+          "timezone": "Your browser's time zone. It is saved to your account to calculate your learning day, which sets your daily statistics and streaks. The same time zone sets when we send reminder emails.",
           "reviewHistory": "Your word review history: each answer, the time you gave it, and the card's schedule. It is part of your data export. Free accounts keep the most recent 5,000 entries.",
           "usage": "Monthly counters of how many AI lookups and requests you used, so we can apply the monthly allowance.",
           "aiKey": "If you add your own AI key, it is stored encrypted (AES-256-GCM). It is never sent back to your browser.",
@@ -31,8 +31,8 @@
         "heading": "Who else is involved",
         "items": {
           "cloudflare": "<strong>Cloudflare</strong> – DNS, the Turnstile bot check on sign-up, and R2 storage for backups.",
-          "google": "<strong>Google</strong> – if you choose Google sign-in, Google tells us your email address, your name and your profile picture, and that it has confirmed the email address. We use them to create your account or to sign you in. If an account with the same email address already exists, we merge the two, so you keep your data. We also store your Google account ID and the sign-in tokens Google issues. We never receive your Google password.",
-          "resend": "<strong>Resend</strong> – delivers the verification and password-reset emails. When product emails are on, it also delivers a welcome email, short reading reminders in the first days, and a note when you reach a free limit. It may also deliver a reminder that a paid plan is about to end and a reminder about words due for review. Each of those has an unsubscribe link in the email.",
+          "google": "<strong>Google</strong> – if you choose Google sign-in, Google tells us your email address, your name and your profile picture, and that it has confirmed the email address. We use them to create your account or to sign you in. If an account with the same email address already exists, we merge the two, so you keep your data. If that account never verified its email address, we also remove its password and end its sessions. We also store your Google account ID and the sign-in tokens Google issues. We never receive your Google password.",
+          "resend": "<strong>Resend</strong> – delivers the verification and password-reset emails. When product emails are on, it also delivers these emails: a welcome email; short reading reminders in the first days; a tip about word review and Anki after you save 10 words; a note when you reach the free monthly AI limit; and a reminder about words due for review. It also delivers a reminder 3 days before a plan with a fixed end date ends, such as a one-time RMB payment or a code. A plan that renews on its own gets no such reminder. Each of these emails has an unsubscribe link.",
           "aiProvider": "<strong>Your AI provider (OpenRouter or Anthropic)</strong> – if you add your own key and use translation, explanations or chat, the text you select, with some surrounding context, is sent to the provider using <em>your</em> key. Their privacy terms apply to that data, and the usage is billed to you.",
           "aiBuiltIn": "<strong>Alibaba Cloud (Model Studio)</strong> – if you use Readfox's built-in AI allowance instead of your own key, the text you select, with some surrounding context, is sent to Alibaba Cloud's Qwen models through our workspace to produce the translation or explanation. During word review, a public example sentence or the word being reviewed may also be sent, never a sentence you saved. Alibaba Cloud's terms apply to that data. The allowance is limited each month.",
           "paddle": "<strong>Paddle</strong> – our reseller (Merchant of Record) for card and PayPal payments. If you subscribe this way, Paddle collects your payment details and billing address under its own privacy policy. We receive your email address, your plan and its status, never your card or account numbers.",
@@ -53,7 +53,7 @@
         "heading": "Your controls",
         "items": {
           "export": "<strong>Export:</strong> Settings → Learning data → Export all learning data downloads everything you have stored.",
-          "delete": "<strong>Delete:</strong> Settings → Delete account removes your account and data from the live service. Copies in backups disappear as the daily snapshots expire (up to 30 days).",
+          "delete": "<strong>Delete:</strong> Settings → Delete account removes your account and data from the live service. One record stays: if you turned off product emails or used an unsubscribe link, we keep a one-way hash of your email address, so we never email that address again. It cannot be turned back into your address. Copies in backups disappear as the daily snapshots expire (up to 30 days).",
           "aiKey": "You can remove your AI key at any time in Settings."
         }
       },

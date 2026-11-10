@@ -185,7 +185,7 @@ export const DEMO_SETS: Record<DemoSetId, DemoSet> = {
       beginning: '开始（begin 的 -ing 形式）',
       get: '① 得到 ② 变得',
       very: '很，非常',
-      of: '……的；tired of 里表示“厌倦”',
+      of: '……的；tired of 里表示“厌烦”',
       sitting: '坐着（sit 的 -ing 形式）',
       by: '在……旁边',
       her: '她的',
@@ -201,7 +201,7 @@ export const DEMO_SETS: Record<DemoSetId, DemoSet> = {
         context: '这里指身体累了、想睡觉，不是“厌倦”。',
       },
       {
-        translation: '爱丽丝靠着姐姐坐在河岸上，渐渐觉得厌烦了。',
+        translation: '爱丽丝坐在河岸上，挨着姐姐，渐渐觉得很厌烦了。',
         note: { kind: 'idiom', text: 'get tired of doing：对做某事感到厌烦，不是身体累。' },
         context: 'on the bank 在这里是“在河岸上”，不是“银行”。',
       },
@@ -237,7 +237,7 @@ export const DEMO_SETS: Record<DemoSetId, DemoSet> = {
       beginning: '始める（begin の -ing 形）',
       get: '① 得る ② 〜になる',
       very: 'とても',
-      of: '〜の。tired of では「〜に飽きた」',
+      of: '〜の。tired of では「〜にうんざり」',
       sitting: '座っている（sit の -ing 形）',
       by: '〜のそばに',
       her: '彼女の',
@@ -256,10 +256,10 @@ export const DEMO_SETS: Record<DemoSetId, DemoSet> = {
         context: 'ここでは「体が疲れて眠い」という意味で、「うんざり」ではありません。',
       },
       {
-        translation: 'アリスは土手で姉のそばに座っていることに、だんだん飽きてきました。',
+        translation: 'アリスは土手で姉のそばに座っていることに、とてもうんざりし始めていました。',
         note: {
           kind: 'idiom',
-          text: 'get tired of doing：「〜することに飽きる」。体の疲れではありません。',
+          text: 'get tired of doing：「〜することにうんざりする」。体の疲れではありません。',
         },
         context: 'on the bank は「土手で」という意味で、「銀行」ではありません。',
       },
@@ -314,7 +314,7 @@ export const DEMO_SETS: Record<DemoSetId, DemoSet> = {
         context: "여기서는 몸이 피곤해서 자고 싶다는 뜻이며, '싫증 난'이 아닙니다.",
       },
       {
-        translation: '앨리스는 강둑에서 언니 곁에 앉아 있는 것이 점점 지루해지기 시작했습니다.',
+        translation: '앨리스는 강둑에서 언니 곁에 앉아 있는 것에 아주 싫증이 나기 시작했습니다.',
         note: {
           kind: 'idiom',
           text: "get tired of doing: '~하는 것에 싫증이 나다'. 몸이 피곤하다는 뜻이 아닙니다.",
@@ -345,7 +345,7 @@ export const DEMO_SETS: Record<DemoSetId, DemoSet> = {
       was: 'был, была, было (be в прошедшем времени)',
       tired: '① уставший ② которому надоело',
       so: '① поэтому ② так, очень',
-      went: 'шёл, пошла (go в прошедшем времени)',
+      went: 'пошёл, пошла, ушёл (go в прошедшем времени)',
       to: '① к, в ② стоит перед глаголом (to get)',
       bed: 'кровать, постель',
       early: 'рано, ранний',
@@ -353,7 +353,7 @@ export const DEMO_SETS: Record<DemoSetId, DemoSet> = {
       beginning: 'начинать (форма begin на -ing)',
       get: '① получать ② становиться',
       very: 'очень',
-      of: 'из, о; в tired of значит «надоело»',
+      of: 'предлог: «из», «от», «о»; в tired of значит «надоело»',
       sitting: 'сидеть (форма sit на -ing)',
       by: 'рядом с, у',
       her: 'её',
@@ -372,7 +372,7 @@ export const DEMO_SETS: Record<DemoSetId, DemoSet> = {
         context: 'Здесь значит «устала физически и хочет спать», а не «надоело».',
       },
       {
-        translation: 'Алисе начинало надоедать сидеть рядом с сестрой на берегу.',
+        translation: 'Алисе начинало очень надоедать сидеть рядом с сестрой на берегу.',
         note: {
           kind: 'idiom',
           text: 'get tired of doing — когда что-то надоедает; речь не о физической усталости.',
@@ -430,7 +430,8 @@ export const DEMO_SETS: Record<DemoSetId, DemoSet> = {
         context: 'Aquí significa cansada físicamente, con sueño; no «harta».',
       },
       {
-        translation: 'Alicia empezaba a cansarse de estar sentada junto a su hermana en la orilla.',
+        translation:
+          'Alicia empezaba a cansarse mucho de estar sentada junto a su hermana en la orilla.',
         note: {
           kind: 'idiom',
           text: 'get tired of doing: cansarse o aburrirse de hacer algo; no es cansancio físico.',
@@ -461,7 +462,7 @@ export const DEMO_SETS: Record<DemoSetId, DemoSet> = {
       was: 'était (passé de be)',
       tired: '① fatigué ② lassé',
       so: '① alors, donc ② si, tellement',
-      went: 'alla (passé de go)',
+      went: 'est allé, allait (passé de go)',
       to: '① à, vers ② se place devant un verbe (to get)',
       bed: 'lit',
       early: 'tôt',
@@ -488,7 +489,8 @@ export const DEMO_SETS: Record<DemoSetId, DemoSet> = {
         context: 'Ici, cela veut dire fatiguée physiquement, pas « lassée ».',
       },
       {
-        translation: "Alice commençait à se lasser d'être assise près de sa sœur sur la berge.",
+        translation:
+          "Alice commençait à se lasser beaucoup d'être assise près de sa sœur sur la berge.",
         note: {
           kind: 'idiom',
           text: "get tired of doing : se lasser de faire quelque chose ; ce n'est pas une fatigue physique.",
@@ -546,7 +548,8 @@ export const DEMO_SETS: Record<DemoSetId, DemoSet> = {
       {
         translation: 'Marie was beginning to get tired of waiting for her brother on the platform.',
         note: { kind: 'idiom', text: 'se lasser de + verb: to get tired of doing something.' },
-        context: 'She is waiting for someone here, so this is a train platform.',
+        context:
+          'Waiting for someone to arrive suggests a train platform here; quai can also mean a quay.',
       },
     ],
     phrases: PHRASE_TEXTS.en,
