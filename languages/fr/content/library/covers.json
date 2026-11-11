@@ -5,11 +5,23 @@
     "credit": "Cover of the Project Gutenberg edition",
     "source": "https://www.gutenberg.org/ebooks/30117"
   },
+  "ainsi-parlait-zarathoustra": {
+    "file": "ainsi-parlait-zarathoustra.webp",
+    "kind": "art",
+    "credit": "Wanderer above the Sea of Fog, a painting completed about 1818 by Caspar David Friedrich",
+    "source": "https://commons.wikimedia.org/wiki/File:Caspar_David_Friedrich_-_Wanderer_above_the_sea_of_fog.jpg"
+  },
   "alice-au-pays-des-merveilles": {
     "file": "alice-au-pays-des-merveilles.webp",
     "kind": "art",
     "credit": "Amanita, a painting completed in 1879 by Ivan Shishkin",
     "source": "https://github.com/standardebooks/lewis-carroll_alices-adventures-in-wonderland_john-tenniel"
+  },
+  "aphorismes-sur-la-sagesse-dans-la-vie": {
+    "file": "aphorismes-sur-la-sagesse-dans-la-vie.webp",
+    "kind": "art",
+    "credit": "Portrait of Arthur Schopenhauer, a painting completed in 1855 by Jules Lunteschütz",
+    "source": "https://commons.wikimedia.org/wiki/File:Schopenhauer_by_Jules_Luntesch%C3%BCtz.jpg"
   },
   "arsene-lupin-gentleman-cambrioleur": {
     "file": "arsene-lupin-gentleman-cambrioleur.webp",
@@ -118,6 +130,12 @@
     "kind": "art",
     "credit": "L'Après-midi des enfants à Wargemont, Pierre-Auguste Renoir, 1884",
     "source": "https://commons.wikimedia.org/wiki/File:Auguste_Renoir_-_L%27apr%C3%A8s-midi_des_enfants_%C3%A0_Wargemont_-_Google_Art_Project.jpg"
+  },
+  "esprit-des-lois": {
+    "file": "esprit-des-lois.webp",
+    "kind": "art",
+    "credit": "Portrait of Montesquieu, after Jacques-Antoine Dassier (Château de Versailles)",
+    "source": "https://commons.wikimedia.org/wiki/File:Montesquieu_-_Versailles_MV_2976.png"
   },
   "eugenie-grandet": {
     "file": "eugenie-grandet.webp",
@@ -251,6 +269,12 @@
     "credit": "The Coin Collector, a painting completed in 1904 by Vilhelm Hammershøi",
     "source": "https://github.com/standardebooks/gaston-leroux_the-mystery-of-the-yellow-room_brentanos"
   },
+  "le-neveu-de-rameau": {
+    "file": "le-neveu-de-rameau.webp",
+    "kind": "art",
+    "credit": "Portrait of Denis Diderot, a painting completed in 1767 by Louis-Michel van Loo",
+    "source": "https://commons.wikimedia.org/wiki/File:Louis-Michel_van_Loo_-_Portrait_of_Denis_Diderot_-_WGA13440.jpg"
+  },
   "le-pere-goriot": {
     "file": "le-pere-goriot.webp",
     "kind": "art",
@@ -365,6 +389,12 @@
     "credit": "\"Elle m'appela son cousin\", Jacques-Jean Pasquier, engraved by Jacques-Philippe Le Bas, Manon Lescaut, 1753 edition",
     "source": "https://commons.wikimedia.org/wiki/File:Manon_Lescaut_%E2%80%94_Elle_m%27appela_son_cousin_(cropped).png"
   },
+  "maximes-la-rochefoucauld": {
+    "file": "maximes-la-rochefoucauld.webp",
+    "kind": "art",
+    "credit": "Portrait of François VI de La Rochefoucauld, a painting completed in 1836 by Théodore Chassériau",
+    "source": "https://commons.wikimedia.org/wiki/File:Chasseriau_-_Fran%C3%A7ois_VI_de_La_Rochefoucauld_(1613-1680).jpg"
+  },
   "michel-strogoff": {
     "file": "michel-strogoff.webp",
     "kind": "book",
@@ -413,6 +443,18 @@
     "credit": "La Tourgue en 1835, Victor Hugo, pen and wash, 1876",
     "source": "https://commons.wikimedia.org/wiki/File:Victor_Hugo_La_Tourgue.jpg"
   },
+  "reflexions-diverses": {
+    "file": "reflexions-diverses.webp",
+    "kind": "art",
+    "credit": "De La Rochefoucauld, engraving by Augustin de Saint-Aubin after Nicolas Monsiau",
+    "source": "https://commons.wikimedia.org/wiki/File:De_La_Rochefoucauld,_PA08404.jpg"
+  },
+  "regrets-sur-ma-vieille-robe-de-chambre": {
+    "file": "regrets-sur-ma-vieille-robe-de-chambre.webp",
+    "kind": "art",
+    "credit": "Diderot, colour engraving by Pierre-Michel Alix after Louis-Michel van Loo, about 1793",
+    "source": "https://commons.wikimedia.org/wiki/File:Portrait_de_Denis_Diderot,_Collection_des_Grands_Hommes,_(1713-1784),_philiosophe,_%C3%A9crivain,_encyclop%C3%A9diste,_G.4188.jpg"
+  },
   "riquet-a-la-houppe": {
     "file": "riquet-a-la-houppe.webp",
     "kind": "art",
@@ -425,6 +467,12 @@
     "credit": "Sacred scarab and other dung beetles (plate 10), James Duncan, engraved by W. H. Lizars, The Naturalist's Library: Beetles, 1835",
     "source": "https://commons.wikimedia.org/wiki/File:Beetles_(Plate_10)_BHL22015734.jpg"
   },
+  "supplement-au-voyage-de-bougainville": {
+    "file": "supplement-au-voyage-de-bougainville.webp",
+    "kind": "art",
+    "credit": "Portrait of Louis-Antoine de Bougainville, a painting by Jean-Pierre Franque, circa 1839-1842",
+    "source": "https://commons.wikimedia.org/wiki/File:Louis-Antoine_de_Bougainville.jpg"
+  },
   "tartarin-de-tarascon": {
     "file": "tartarin-de-tarascon.webp",
     "kind": "art",
@@ -436,6 +484,12 @@
     "kind": "art",
     "credit": "Portrait d'Émile Zola, Édouard Manet, 1868 (Musée d'Orsay)",
     "source": "https://commons.wikimedia.org/wiki/File:Manet%2C_Edouard_-_Portrait_of_Emile_Zola.jpg"
+  },
+  "traite-sur-la-tolerance": {
+    "file": "traite-sur-la-tolerance.webp",
+    "kind": "art",
+    "credit": "Portrait of Voltaire, a pastel completed in 1735 by Maurice Quentin de La Tour",
+    "source": "https://commons.wikimedia.org/wiki/File:Maurice_Quentin_de_La_Tour,_portrait_de_Voltaire_(1735)_avec_agrandissement.jpg"
   },
   "trois-contes": {
     "file": "trois-contes.webp",

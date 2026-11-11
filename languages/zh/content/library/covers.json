@@ -1,9 +1,33 @@
 {
+  "chuanxilu": {
+    "file": "chuanxilu.webp",
+    "kind": "art",
+    "credit": "王守仁像 (Portrait of Wang Shouren), Shen Junhui, Ming dynasty",
+    "source": "https://commons.wikimedia.org/wiki/File:%E7%8E%8B%E5%AE%88%E4%BB%81.jpg"
+  },
+  "daodejing": {
+    "file": "daodejing.webp",
+    "kind": "art",
+    "credit": "Laozi Riding an Ox, Zhang Lu, Ming dynasty (National Palace Museum, Taipei)",
+    "source": "https://commons.wikimedia.org/wiki/File:Zhang_Lu-Laozi_Riding_an_Ox_(cropped).jpg"
+  },
+  "daxue-zhangju": {
+    "file": "daxue-zhangju.webp",
+    "kind": "art",
+    "credit": "Portrait of Zhu Xi, from Portraits of Famous Men, unknown Chinese artist, 19th to early 20th century",
+    "source": "https://commons.wikimedia.org/wiki/File:Portraits_of_Famous_Men_-_Zhu_Xi.jpg"
+  },
   "gushi-xin-dubo": {
     "file": "gushi-xin-dubo.webp",
     "kind": "book",
     "credit": "Cover of the Project Gutenberg edition",
     "source": "https://www.gutenberg.org/ebooks/67976"
+  },
+  "hanfeizi": {
+    "file": "hanfeizi.webp",
+    "kind": "art",
+    "credit": "The Hanfeizi, Guangxu-period Qing edition of Hongwen Book Company (Hunan Provincial Museum), photograph by Huangdan2060, CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Hanfeizi_or_Han_Feizi,_Qing_dynasty,_Hunan_Museum_(cropped).jpg"
   },
   "honglou-meng": {
     "file": "honglou-meng.webp",
@@ -17,11 +41,41 @@
     "credit": "高山流水 (Lofty Mountains and Flowing Water), from the Figures and Stories album, Qiu Ying, c. 1540",
     "source": "https://commons.wikimedia.org/wiki/File:%E4%BB%87%E8%8B%B1%E4%BA%BA%E7%89%A9%E6%95%85%E4%BA%8B%E5%9B%BE%E5%86%8C-4_(cropped).jpg"
   },
+  "jinsilu": {
+    "file": "jinsilu.webp",
+    "kind": "art",
+    "credit": "Travelers Among Mountains and Streams (溪山行旅图), Fan Kuan, about 1000",
+    "source": "https://commons.wikimedia.org/wiki/File:Fan_Kuan_-_Travelers_Among_Mountains_and_Streams_-_Google_Art_Project.jpg"
+  },
+  "liezi": {
+    "file": "liezi.webp",
+    "kind": "art",
+    "credit": "列子御风图 (Liezi Riding the Wind), Hua Yan, Qing dynasty",
+    "source": "https://commons.wikimedia.org/wiki/File:%E5%8D%8E%E5%96%A6%E5%88%97%E5%AD%90%E5%BE%A1%E9%A3%8E%E8%BD%B4.png"
+  },
+  "lunheng": {
+    "file": "lunheng.webp",
+    "kind": "art",
+    "credit": "Jin Midi story, Eastern Han stone relief rubbing, 2nd century (Han dynasty, the era of Wang Chong)",
+    "source": "https://commons.wikimedia.org/wiki/File:Story_of_Jin_Midi.JPG"
+  },
   "lunyu": {
     "file": "lunyu.webp",
     "kind": "art",
     "credit": "至聖孔子 (Confucius, the Most Holy Sage), gouache on paper, anonymous, c. 1770",
     "source": "https://commons.wikimedia.org/wiki/File:Konfuzius-1770.jpg"
+  },
+  "mengzi": {
+    "file": "mengzi.webp",
+    "kind": "art",
+    "credit": "孟轲 (Meng Ke, Mencius), from Half Portraits of the Great Sage and Virtuous Men of Old, Yuan dynasty",
+    "source": "https://commons.wikimedia.org/wiki/File:Half_Portraits_of_the_Great_Sage_and_Virtuous_Men_of_Old_-_Meng_Ke_(%E5%AD%9F%E8%BB%BB).jpg"
+  },
+  "mozi": {
+    "file": "mozi.webp",
+    "kind": "art",
+    "credit": "Page of a woodblock edition of the Mozi (墨子卷之七)",
+    "source": "https://commons.wikimedia.org/wiki/File:Mozi.jpg"
   },
   "rulin-waishi": {
     "file": "rulin-waishi.webp",
@@ -41,10 +95,22 @@
     "credit": "The Tattooed Priest Lu Zhishen (花和尚魯智深), Utagawa Kuniyoshi, c. 1843-1847",
     "source": "https://commons.wikimedia.org/wiki/File:Utagawa_Kuniyoshi_Lu_Zhishen_el_monje_tatuado.jpg"
   },
+  "sunzi-bingfa": {
+    "file": "sunzi-bingfa.webp",
+    "kind": "art",
+    "credit": "吴司马孙武 (Sun Wu), Qing dynasty portrait",
+    "source": "https://commons.wikimedia.org/wiki/File:%E5%90%B4%E5%8F%B8%E9%A9%AC%E5%AD%99%E6%AD%A6.jpg"
+  },
   "xiyouji": {
     "file": "xiyouji.webp",
     "kind": "art",
     "credit": "Sun Wukong (孙行者), from 西游原旨图像 (Illustrations for the Original Intent of the Journey to the West), anonymous, 19th century",
     "source": "https://commons.wikimedia.org/wiki/File:Xiyou.PNG"
+  },
+  "zhongyong-zhangju": {
+    "file": "zhongyong-zhangju.webp",
+    "kind": "art",
+    "credit": "子思像 (Portrait of Zisi), from the album of half portraits of the Great Sage and virtuous men of old, Ming-Qing period",
+    "source": "https://commons.wikimedia.org/wiki/File:%E8%87%B3%E8%81%96%E5%85%88%E8%B3%A2%E5%8D%8A%E8%BA%AB%E5%83%8F_%E5%86%8A-004-%E5%AD%94%E4%BC%8B.jpg"
   }
 }

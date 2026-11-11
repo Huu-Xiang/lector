@@ -53,6 +53,12 @@
     "credit": "Cover of the Project Gutenberg edition",
     "source": "https://www.gutenberg.org/ebooks/11"
   },
+  "analects-of-confucius": {
+    "file": "analects-of-confucius.webp",
+    "kind": "art",
+    "credit": "Confucius the Just, a painting completed in 1925 by Nicholas Roerich",
+    "source": "https://github.com/standardebooks/confucius_analects_james-legge"
+  },
   "andersens-fairy-tales": {
     "file": "andersens-fairy-tales.webp",
     "kind": "art",
@@ -71,6 +77,12 @@
     "credit": "Cover of the Project Gutenberg edition",
     "source": "https://www.gutenberg.org/ebooks/45"
   },
+  "apology": {
+    "file": "apology.webp",
+    "kind": "art",
+    "credit": "L'Ecole de Platon, a painting completed in 1898 by Jean Delville",
+    "source": "https://github.com/standardebooks/plato_dialogues_benjamin-jowett"
+  },
   "around-the-world-in-eighty-days": {
     "file": "around-the-world-in-eighty-days.webp",
     "kind": "book",
@@ -83,11 +95,23 @@
     "credit": "Cover of the Project Gutenberg edition",
     "source": "https://www.gutenberg.org/ebooks/20203"
   },
+  "beyond-good-and-evil": {
+    "file": "beyond-good-and-evil.webp",
+    "kind": "art",
+    "credit": "The Garden of Earthly Delights, a painting completed between 1490 and 1510 by Hieronymus Bosch",
+    "source": "https://github.com/standardebooks/friedrich-nietzsche_beyond-good-and-evil_helen-zimmern"
+  },
   "black-beauty": {
     "file": "black-beauty.webp",
     "kind": "art",
     "credit": "Adriaan van der Hoop’s Trotter “De Vlugge” (The Fast One) in a Meadow, a painting completed in 1828 by Anthony Oberman",
     "source": "https://github.com/standardebooks/anna-sewell_black-beauty"
+  },
+  "chuang-tzu": {
+    "file": "chuang-tzu.webp",
+    "kind": "art",
+    "credit": "Zhuangzi Dreaming of a Butterfly, ink on silk, Lu Zhi, mid-16th century",
+    "source": "https://commons.wikimedia.org/wiki/File:Dschuang-Dsi-Schmetterlingstraum-Zhuangzi-Butterfly-Dream.jpg"
   },
   "crime-and-punishment": {
     "file": "crime-and-punishment.webp",
@@ -106,6 +130,24 @@
     "kind": "art",
     "credit": "The Writer, a painting completed circa 1850 by Carl Spitzweg",
     "source": "https://github.com/standardebooks/charles-dickens_david-copperfield"
+  },
+  "discourse-on-inequality": {
+    "file": "discourse-on-inequality.webp",
+    "kind": "art",
+    "credit": "Portrait of Jean-Jacques Rousseau, a pastel by Maurice Quentin de La Tour (Musée Carnavalet)",
+    "source": "https://commons.wikimedia.org/wiki/File:Maurice_Quentin_de_La_Tour_-_Portrait_de_Jean-Jacques_Rousseau_(1712-1778),_%C3%A9crivain_et_philosophe_-_P210_-_Mus%C3%A9e_Carnavalet.jpg"
+  },
+  "discourse-on-the-arts-and-sciences": {
+    "file": "discourse-on-the-arts-and-sciences.webp",
+    "kind": "art",
+    "credit": "Portrait of Jean-Jacques Rousseau, a pastel completed in 1753 by Maurice Quentin de La Tour",
+    "source": "https://commons.wikimedia.org/wiki/File:Maurice_Quentin_de_La_Tour_-_Portrait_of_Jean-Jacques_Rousseau_-_WGA12360.jpg"
+  },
+  "discourse-on-the-method": {
+    "file": "discourse-on-the-method.webp",
+    "kind": "art",
+    "credit": "Portrait of René Descartes, a painting completed circa 1655 by Frans Hals",
+    "source": "https://github.com/standardebooks/rene-descartes_philosophical-works_john-veitch"
   },
   "dr-jekyll-and-mr-hyde": {
     "file": "dr-jekyll-and-mr-hyde.webp",
@@ -148,6 +190,12 @@
     "kind": "art",
     "credit": "Portrait of Adam, a painting completed in 1578 by Giuseppe Arcimboldo",
     "source": "https://github.com/standardebooks/mary-shelley_frankenstein"
+  },
+  "fundamental-principles-of-the-metaphysic-of-morals": {
+    "file": "fundamental-principles-of-the-metaphysic-of-morals.webp",
+    "kind": "art",
+    "credit": "Portrait of Immanuel Kant, a painting completed in 1791 by Gottlieb Doebler",
+    "source": "https://commons.wikimedia.org/wiki/File:Kant_gemaelde_1.jpg"
   },
   "gitanjali": {
     "file": "gitanjali.webp",
@@ -251,6 +299,12 @@
     "credit": "The Country School, Winslow Homer, 1871",
     "source": "https://commons.wikimedia.org/wiki/File:Winslow_Homer_-_The_Country_School_(1871).jpg"
   },
+  "meditations": {
+    "file": "meditations.webp",
+    "kind": "art",
+    "credit": "After the Audience, a painting completed in 1879 by Lawrence Alma-Tadema",
+    "source": "https://github.com/standardebooks/marcus-aurelius_meditations_george-long"
+  },
   "middlemarch": {
     "file": "middlemarch.webp",
     "kind": "book",
@@ -262,6 +316,18 @@
     "kind": "art",
     "credit": "The Flying Dutchman, a painting completed in 1887 by Albert Pinkham Ryder",
     "source": "https://github.com/standardebooks/herman-melville_moby-dick"
+  },
+  "nature-emerson": {
+    "file": "nature-emerson.webp",
+    "kind": "art",
+    "credit": "New England Scenery, a painting completed in 1839 by Thomas Cole",
+    "source": "https://github.com/standardebooks/ralph-waldo-emerson_essays"
+  },
+  "nicomachean-ethics": {
+    "file": "nicomachean-ethics.webp",
+    "kind": "art",
+    "credit": "The School of Athens, a painting completed in 1511 by Raphael",
+    "source": "https://github.com/standardebooks/aristotle_nicomachean-ethics_f-h-peters"
   },
   "of-human-bondage": {
     "file": "of-human-bondage.webp",
@@ -275,6 +341,18 @@
     "credit": "His First Offence, a painting completed in 1896 by Dorothy Stanley",
     "source": "https://github.com/standardebooks/charles-dickens_oliver-twist"
   },
+  "on-liberty": {
+    "file": "on-liberty.webp",
+    "kind": "art",
+    "credit": "Liberty Leading the People, a painting completed in 1830 by Eugène Delacroix",
+    "source": "https://github.com/standardebooks/john-stuart-mill_on-liberty"
+  },
+  "pascals-pensees": {
+    "file": "pascals-pensees.webp",
+    "kind": "art",
+    "credit": "Portrait of Blaise Pascal, a painting of about 1690 after François II Quesnel (Château de Versailles)",
+    "source": "https://commons.wikimedia.org/wiki/File:Blaise_Pascal_Versailles.JPG"
+  },
   "persuasion": {
     "file": "persuasion.webp",
     "kind": "art",
@@ -286,6 +364,18 @@
     "kind": "art",
     "credit": "The Never Never Land, plate for Peter and Wendy, F. D. Bedford, 1911",
     "source": "https://commons.wikimedia.org/wiki/File:Peter_pan_1911_pipes.jpg"
+  },
+  "phaedo": {
+    "file": "phaedo.webp",
+    "kind": "art",
+    "credit": "The Death of Socrates, a painting completed in 1787 by Jacques-Louis David",
+    "source": "https://commons.wikimedia.org/wiki/File:David_-_The_Death_of_Socrates.jpg"
+  },
+  "pragmatism": {
+    "file": "pragmatism.webp",
+    "kind": "art",
+    "credit": "Woman Holding a Balance, a painting completed in 1664 by Johannes Vermeer",
+    "source": "https://github.com/standardebooks/william-james_pragmatism"
   },
   "pride-and-prejudice": {
     "file": "pride-and-prejudice.webp",
@@ -317,11 +407,23 @@
     "credit": "Bird on a Tree, Abanindranath Tagore, undated (before 1951)",
     "source": "https://commons.wikimedia.org/wiki/File:Abanindranath_Tagore_-_Bird_On_A_Tree_16-3x9-5_cm_-_Watercolour_-_Birds_And_Trees_-_ACCN_R_9201_-_Victoria_Memorial_Hall_-_Kolkata_2023-05-31_0304.jpg"
   },
+  "symposium": {
+    "file": "symposium.webp",
+    "kind": "art",
+    "credit": "Plato's Symposium (Das Gastmahl des Plato), a painting completed in 1869 by Anselm Feuerbach",
+    "source": "https://commons.wikimedia.org/wiki/File:Anselm_Feuerbach_-_Das_Gastmahl_des_Plato_-_813_-_Staatliche_Kunsthalle_Karlsruhe.jpg"
+  },
   "tales-from-shakespeare": {
     "file": "tales-from-shakespeare.webp",
     "kind": "art",
     "credit": "Where is Pease-blossom? (A Midsummer Night's Dream), plate for Tales from Shakespeare, Arthur Rackham, 1909",
     "source": "https://commons.wikimedia.org/wiki/File:Lamb-p117.png"
+  },
+  "tao-te-ching": {
+    "file": "tao-te-ching.webp",
+    "kind": "art",
+    "credit": "The Kangxi Emperor's Southern Inspection Tour, Scroll Three: Ji'nan to Mount Tai, a painting completed in 1698 by Wang Hui",
+    "source": "https://github.com/standardebooks/laozi_tao-te-ching_james-legge"
   },
   "tess-of-the-durbervilles": {
     "file": "tess-of-the-durbervilles.webp",
@@ -347,11 +449,29 @@
     "credit": "The Prince on the enchanted horse, from Stories from the Arabian Nights, Edmund Dulac, 1907",
     "source": "https://commons.wikimedia.org/wiki/File:Stories_from_the_Arabian_nights_-_London_1907_-_plate_27.jpg"
   },
+  "the-art-of-war": {
+    "file": "the-art-of-war.webp",
+    "kind": "art",
+    "credit": "Portrait of the Imperial Bodyguard Zhanyinbao, a painting completed in 1760 by an unknown artist",
+    "source": "https://github.com/standardebooks/sun-tzu_the-art-of-war_lionel-giles"
+  },
   "the-call-of-the-wild": {
     "file": "the-call-of-the-wild.webp",
     "kind": "book",
     "credit": "Cover of the Project Gutenberg edition",
     "source": "https://www.gutenberg.org/ebooks/215"
+  },
+  "the-consolation-of-philosophy": {
+    "file": "the-consolation-of-philosophy.webp",
+    "kind": "art",
+    "credit": "The Prisoner, a painting completed between 1787 and 1790 by Joseph Wright of Derby",
+    "source": "https://github.com/standardebooks/boethius_the-consolation-of-philosophy_h-r-james"
+  },
+  "the-enchiridion": {
+    "file": "the-enchiridion.webp",
+    "kind": "art",
+    "credit": "A Reading from Homer, a painting completed in 1885 by Lawrence Alma-Tadema",
+    "source": "https://github.com/standardebooks/epictetus_short-works_george-long"
   },
   "the-essays-of-francis-bacon": {
     "file": "the-essays-of-francis-bacon.webp",
@@ -419,11 +539,23 @@
     "credit": "The Garden, a painting completed in 1899 by John Collier",
     "source": "https://github.com/standardebooks/oscar-wilde_the-picture-of-dorian-gray"
   },
+  "the-prince": {
+    "file": "the-prince.webp",
+    "kind": "art",
+    "credit": "Niccolò Machiavelli, a painting completed circa 1550 by Santi di Tito",
+    "source": "https://github.com/standardebooks/niccolo-machiavelli_the-prince_w-k-marriott"
+  },
   "the-prince-and-the-pauper": {
     "file": "the-prince-and-the-pauper.webp",
     "kind": "book",
     "credit": "Cover of the Project Gutenberg edition",
     "source": "https://www.gutenberg.org/ebooks/1837"
+  },
+  "the-problems-of-philosophy": {
+    "file": "the-problems-of-philosophy.webp",
+    "kind": "art",
+    "credit": "Still Life with Cheese, a painting completed in 1615 by Floris Claesz. van Dijck",
+    "source": "https://github.com/standardebooks/bertrand-russell_the-problems-of-philosophy"
   },
   "the-prophet": {
     "file": "the-prophet.webp",
@@ -436,6 +568,12 @@
     "kind": "art",
     "credit": "La Gare de Saint-Lazare, a painting completed in 1877 by Claude Monet",
     "source": "https://github.com/standardebooks/e-nesbit_the-railway-children"
+  },
+  "the-republic": {
+    "file": "the-republic.webp",
+    "kind": "art",
+    "credit": "Plato's Academy, Roman mosaic of the 1st century BCE from Pompeii (Museo Archeologico Nazionale, Naples)",
+    "source": "https://commons.wikimedia.org/wiki/File:MANNapoli_124545_plato's_academy_mosaic_(cropped).jpg"
   },
   "the-return-of-sherlock-holmes": {
     "file": "the-return-of-sherlock-holmes.webp",
@@ -460,6 +598,12 @@
     "kind": "book",
     "credit": "Cover of the Project Gutenberg edition",
     "source": "https://www.gutenberg.org/ebooks/2097"
+  },
+  "the-social-contract": {
+    "file": "the-social-contract.webp",
+    "kind": "art",
+    "credit": "Jean-Jacques Rousseau, a painting completed in 1766 by Allan Ramsay",
+    "source": "https://github.com/standardebooks/jean-jacques-rousseau_the-social-contract_g-d-h-cole"
   },
   "the-story-of-my-life": {
     "file": "the-story-of-my-life.webp",
@@ -562,6 +706,12 @@
     "kind": "book",
     "credit": "Cover of the Project Gutenberg edition",
     "source": "https://www.gutenberg.org/ebooks/55"
+  },
+  "thus-spake-zarathustra": {
+    "file": "thus-spake-zarathustra.webp",
+    "kind": "art",
+    "credit": "Sunrise on the Matterhorn, a painting completed after 1875 by Albert Bierstadt",
+    "source": "https://github.com/standardebooks/friedrich-nietzsche_thus-spake-zarathustra_thomas-common"
   },
   "treasure-island": {
     "file": "treasure-island.webp",
