@@ -32,6 +32,7 @@ import RedeemCampaigns from './RedeemCampaigns';
 import RefundRequests from './RefundRequests';
 import StatCard from './StatCard';
 import Trends from './Trends';
+import AiTiming from './AiTiming';
 
 function formatBytes(n: number): string {
   if (n < 1024) return `${n} B`;
@@ -395,6 +396,7 @@ export default function AdminPage() {
       )}
 
       <Trends />
+      <AiTiming />
       <EmailSwitch />
 
       {summary && (summary.languages ?? []).length > 0 && (

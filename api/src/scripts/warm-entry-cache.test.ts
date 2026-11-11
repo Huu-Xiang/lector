@@ -2,10 +2,12 @@ import '../test-guard';
 import { describe, expect, test } from 'bun:test';
 import {
   checkAnswer,
+  englishToChineseProblemWith,
   frenchProblemWith,
   koreanProblemWith,
   latinProblemWith,
   problemWith,
+  userPrompt,
 } from './warm-entry-cache';
 
 const item = {
@@ -107,5 +109,50 @@ describe('Korean pair answer checks', () => {
       koreanProblemWith('보조 용언 (Classifier: 个)', 'classifier: (Classifier: 个)'),
     ).toBeNull();
     expect(koreanProblemWith('x'.repeat(101), sense)).toBe('gloss too long');
+  });
+});
+
+describe('English to Chinese answer checks', () => {
+  const queen = {
+    word: 'queen',
+    senses: ['noun: the wife or widow of a king', 'noun: chess piece'],
+  };
+
+  test('en-zh accepts Simplified equivalents', () => {
+    expect(checkAnswer(queen, ['王后、女王', '后（国际象棋）'], 'en-zh')).toBeNull();
+  });
+
+  test('en-zh rejects Traditional characters, English words and a wrong count', () => {
+    expect(checkAnswer(queen, ['王后、女王', '后（國際象棋）'], 'en-zh')).toContain('Traditional');
+    expect(checkAnswer(queen, ['the queen', '后'], 'en-zh')).toContain('no Chinese');
+    expect(checkAnswer(queen, ['王后'], 'en-zh')).toContain('expected 2');
+  });
+
+  test('en-zh-tw accepts Traditional equivalents and rejects Simplified ones', () => {
+    expect(checkAnswer(queen, ['王后、女王', '后（西洋棋）'], 'en-zh-tw')).toBeNull();
+    expect(checkAnswer(queen, ['王后', '后（国际象棋）'], 'en-zh-tw')).toContain('Simplified');
+  });
+
+  test('the headword and the base word of a form stay in a grammar gloss', () => {
+    const present = { word: 'present', senses: ['noun: plural of present'] };
+    expect(checkAnswer(present, ['present 的复数'], 'en-zh')).toBeNull();
+    expect(checkAnswer(present, ['present 的複數'], 'en-zh-tw')).toBeNull();
+    const forms = { word: 'children', senses: ['noun: plural of child'] };
+    expect(checkAnswer(forms, ['child 的复数'], 'en-zh')).toBeNull();
+    expect(
+      englishToChineseProblemWith(
+        'used to 的复数',
+        'noun: plural of child',
+        'children',
+        'simplified',
+      ),
+    ).toBe('English words in gloss');
+  });
+
+  test('en-zh-tw prompt asks for Taiwan wording and passes the ECDICT hint', () => {
+    const prompt = userPrompt({ ...queen, zh: ['女王'] }, null, 'en-zh-tw');
+    expect(prompt).toContain('Taiwan');
+    expect(prompt).toContain('"chinese_meanings"');
+    expect(userPrompt(queen, 'bad', 'en-zh')).toContain('Simplified Chinese');
   });
 });

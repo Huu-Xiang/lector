@@ -3,6 +3,7 @@ import { grantPlan } from '../lib/plan-grants';
 import { describe, test, expect, beforeEach, afterAll } from 'bun:test';
 import { Hono } from 'hono';
 import { db } from '../db';
+import { recordAiCall } from '../lib/ai-timing';
 import { makeAdminRoutes } from './admin';
 import { makeAccountStatusMiddleware, setSuspended, type AdminGateOptions } from '../lib/admin';
 
@@ -1202,5 +1203,27 @@ describe('POST /api/admin/redeem/campaigns', () => {
     expect((await create({ code: 'LONGENOUGH1' })).status).toBe(400);
     const ok = await create({ code: `OK${Date.now()}`, totalLimit: 5 });
     expect(ok.status).toBe(201);
+  });
+});
+
+describe('GET /api/admin/ai-timing', () => {
+  test('non-admin → 403', async () => {
+    const res = await buildApp(gate, { now: () => new Date('2026-07-20T12:00:00Z') }).request(
+      '/api/admin/ai-timing',
+      asUser(ALICE),
+    );
+    expect(res.status).toBe(403);
+  });
+
+  test('admin reads the aggregate for the day', async () => {
+    db.prepare('DELETE FROM ai_timing_daily').run();
+    recordAiCall({ task: 'chat', totalMs: 400, success: true }, new Date('2026-07-20T12:00:00Z'));
+    const res = await buildApp(gate, { now: () => new Date('2026-07-20T12:00:00Z') }).request(
+      '/api/admin/ai-timing?days=1',
+      asUser(ADMIN),
+    );
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body.total[0]).toMatchObject({ label: 'chat', calls: 1, p50: 400 });
   });
 });

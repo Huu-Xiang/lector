@@ -14,6 +14,7 @@ import {
   storedAcceptedCacheContentBytes,
   validateCacheAcceptedInput,
 } from '../lib/dictionary-db';
+import { recordLookupOutcome } from '../lib/ai-timing';
 import { entitlements, planLimitResponse, type AtomicLimitCheck } from '../lib/entitlements';
 import { aggregateGrowthCheck, batchGrowthCheck } from '../lib/storage-limits';
 
@@ -53,6 +54,7 @@ export function makeDictionaryRoutes(
       const userId = resolveUser(c);
       const lang = resolveLanguage(c.req.query('language'), userId);
       const entry = lookupWord(userId, word.trim(), lang);
+      recordLookupOutcome('lookup', entry ? 'hit' : 'miss');
       if (entry) recordDictionaryLookup(userId, lang);
 
       // Meanings are English unless the dictionary already holds the reader's language.

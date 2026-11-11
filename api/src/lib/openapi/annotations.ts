@@ -1832,6 +1832,11 @@ const languageHelpOps: Record<string, OperationDoc> = {
           type: { type: 'string', enum: ['word', 'phrase'] },
           sentence: { type: 'string', description: 'The sentence around it. Improves the result.' },
           language: { type: 'string' },
+          stream: {
+            type: 'boolean',
+            description:
+              'Answer as NDJSON lines: {"delta"} with the text so far, then {"result"} or {"error"}.',
+          },
         },
         required: ['word', 'type'],
       },
@@ -1907,6 +1912,43 @@ const languageHelpOps: Record<string, OperationDoc> = {
               items: {
                 type: 'object',
                 properties: { partOfSpeech: { type: 'string' }, gloss: { type: 'string' } },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  'POST /api/translate/prefetch': {
+    summary: 'Translate likely lookups ahead of a tap',
+    description:
+      'Takes words from the lesson you opened. The server keeps up to 12 that are above your level and returns their dictionary senses in your own language. It reads the shared cache first and starts at most 4 new AI translations per call and 40 per day. It does not use your monthly allowance or your own AI key. Returns an empty map when your language is English or LOOKUP_PREFETCH=0.',
+    tag: 'Language help',
+    requestBody: {
+      required: true,
+      schema: {
+        type: 'object',
+        properties: {
+          words: { type: 'array', items: { type: 'string' }, description: 'Up to 40 tokens.' },
+          language: { type: 'string' },
+        },
+        required: ['words'],
+      },
+    },
+    responses: {
+      '200': {
+        description: 'The translated senses by word.',
+        schema: {
+          type: 'object',
+          properties: {
+            senses: {
+              type: 'object',
+              additionalProperties: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: { partOfSpeech: { type: 'string' }, gloss: { type: 'string' } },
+                },
               },
             },
           },
@@ -3286,6 +3328,7 @@ const internalOps: Record<string, OperationDoc> = {
   },
   'GET /api/admin/summary': { summary: 'Read the service-wide aggregates', tag: 'Service' },
   'GET /api/admin/trends': { summary: 'Read the daily service totals', tag: 'Service' },
+  'GET /api/admin/ai-timing': { summary: 'Read AI speed and cache hit totals', tag: 'Service' },
   'GET /api/admin/users': { summary: 'List every account', tag: 'Service' },
   'GET /api/admin/users/find': {
     summary: 'Find an account by its full email address',

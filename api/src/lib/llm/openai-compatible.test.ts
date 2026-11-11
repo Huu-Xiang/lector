@@ -1,7 +1,11 @@
-import { describe, test, expect, afterEach, mock } from 'bun:test';
+import { describe, test, expect, afterEach, beforeEach, mock } from 'bun:test';
+import { createServer } from 'node:http';
+import type { AddressInfo } from 'node:net';
+import { db } from '../../db';
 import { OpenAICompatibleProvider } from './openai-compatible';
 import { LLMContentFilterError, LLMTruncatedError } from './errors';
 import { completeJson } from './complete-json';
+import { withTimingLabel } from '../ai-timing';
 
 describe('OpenAICompatibleProvider', () => {
   const originalFetch = globalThis.fetch;
@@ -648,5 +652,144 @@ describe('extraBody', () => {
     } finally {
       globalThis.fetch = realFetch;
     }
+  });
+});
+
+describe('AI timing rows', () => {
+  const realFetch = globalThis.fetch;
+  const encoder = new TextEncoder();
+  const gloss = { messages: [{ role: 'user' as const, content: 'hi' }], maxTokens: 8 };
+
+  function timingCounts(): Record<string, number> {
+    const rows = db
+      .prepare('SELECT key, SUM(count) AS n FROM ai_timing_daily GROUP BY key')
+      .all() as { key: string; n: number }[];
+    return Object.fromEntries(rows.map((row) => [row.key, row.n]));
+  }
+
+  function sse(...frames: string[]): Response {
+    const body = new ReadableStream<Uint8Array>({
+      start(controller) {
+        for (const frame of frames) controller.enqueue(encoder.encode(`${frame}\n\n`));
+        controller.close();
+      },
+    });
+    return new Response(body, { status: 200 });
+  }
+
+  beforeEach(() => {
+    db.prepare('DELETE FROM ai_timing_daily').run();
+  });
+  afterEach(() => {
+    globalThis.fetch = realFetch;
+  });
+
+  test('complete writes one total row per successful attempt', async () => {
+    globalThis.fetch = mock(
+      async () => new Response(JSON.stringify({ choices: [{ message: { content: 'ok' } }] })),
+    ) as unknown as typeof fetch;
+    await new OpenAICompatibleProvider().complete({ ...gloss, task: 'word-gloss' });
+    expect(timingCounts()).toEqual({ 'gloss.total': 1 });
+  });
+
+  test('stream writes total and first-token rows once the first delta arrives', async () => {
+    globalThis.fetch = mock(async () =>
+      sse(
+        'data: {"choices":[{"delta":{"content":"a"}}]}',
+        'data: {"choices":[{"delta":{"content":"b"}}]}',
+        'data: [DONE]',
+      ),
+    ) as unknown as typeof fetch;
+    const deltas: string[] = [];
+    for await (const delta of new OpenAICompatibleProvider().stream({
+      ...gloss,
+      task: 'word-gloss',
+    })) {
+      deltas.push(delta);
+    }
+    expect(deltas).toEqual(['a', 'b']);
+    expect(timingCounts()).toEqual({ 'gloss.total': 1, 'gloss.first': 1 });
+  });
+
+  test('a stream without a delta writes no first-token row', async () => {
+    globalThis.fetch = mock(async () => sse('data: [DONE]')) as unknown as typeof fetch;
+    for await (const _ of new OpenAICompatibleProvider().stream({ ...gloss, task: 'chat' })) {
+      // no deltas
+    }
+    expect(timingCounts()).toEqual({ 'chat.total': 1 });
+  });
+
+  test('a failed call writes an error row and no total row', async () => {
+    globalThis.fetch = mock(
+      async () => new Response('boom', { status: 500 }),
+    ) as unknown as typeof fetch;
+    await expect(
+      new OpenAICompatibleProvider().complete({ ...gloss, task: 'phrase-rich' }),
+    ).rejects.toThrow();
+    expect(timingCounts()).toEqual({ 'phrase.error': 1 });
+  });
+
+  test('an aborted call writes a timeout row, not an error row', async () => {
+    globalThis.fetch = mock(async (_url: string, init?: RequestInit) => {
+      return await new Promise<Response>((_resolve, reject) => {
+        init?.signal?.addEventListener('abort', () => {
+          const err = new Error('aborted');
+          err.name = 'AbortError';
+          reject(err);
+        });
+      });
+    }) as unknown as typeof fetch;
+    await expect(
+      new OpenAICompatibleProvider({ timeoutMs: 20 }).complete({ ...gloss, task: 'word-gloss' }),
+    ).rejects.toThrow();
+    expect(timingCounts()).toEqual({ 'gloss.timeout': 1 });
+  });
+
+  test('a call inside a timing scope uses the scope label', async () => {
+    globalThis.fetch = mock(
+      async () => new Response(JSON.stringify({ choices: [{ message: { content: 'ok' } }] })),
+    ) as unknown as typeof fetch;
+    await withTimingLabel('localize', () =>
+      new OpenAICompatibleProvider().complete({ ...gloss, task: 'word-gloss' }),
+    );
+    expect(timingCounts()).toEqual({ 'localize.total': 1 });
+  });
+});
+
+describe('connection reuse on a plain-HTTP local server', () => {
+  async function run(gapMs: number): Promise<number> {
+    let connections = 0;
+    const server = createServer((_req, res) => {
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify({ choices: [{ message: { content: 'ok' } }] }));
+    });
+    server.on('connection', () => connections++);
+    await new Promise<void>((r) => server.listen(0, '127.0.0.1', r));
+    try {
+      const provider = new OpenAICompatibleProvider({
+        baseUrl: `http://127.0.0.1:${(server.address() as AddressInfo).port}`,
+        model: 'm',
+      });
+      for (let i = 0; i < 3; i++) {
+        if (i > 0 && gapMs) await new Promise((r) => setTimeout(r, gapMs));
+        await provider.complete({
+          messages: [{ role: 'user', content: 'hi' }],
+          maxTokens: 8,
+          task: 'word-gloss',
+        });
+      }
+      return connections;
+    } finally {
+      server.closeAllConnections();
+      server.close();
+    }
+  }
+
+  test('three sequential provider calls use one connection', async () => {
+    expect(await run(0)).toBe(1);
+  });
+
+  test('calls spaced by an idle gap still use one connection', async () => {
+    expect(await run(300)).toBe(1);
   });
 });

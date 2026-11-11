@@ -1,6 +1,7 @@
 import { getActiveLanguage } from './data-layer';
 import { apiFetch } from './api-base';
 import { AI_USAGE_EVENT } from '@/constants/storage';
+import { readTranslateStream } from './translate-stream';
 
 function noteAiUsage(): void {
   if (typeof window !== 'undefined') window.dispatchEvent(new Event(AI_USAGE_EVENT));
@@ -31,26 +32,61 @@ export interface PhraseTranslation {
 /** Error message thrown when the AI provider's moderation refused the passage. */
 export const CONTENT_FILTERED = 'content_filtered';
 
+async function failureMessage(response: Response): Promise<string> {
+  const error = await response.json().catch(() => ({}));
+  return error.error || 'Translation failed';
+}
+
+/**
+ * POST /api/translate. With `onText` the answer streams: the callback gets the visible text
+ * so far and the promise resolves with the final result. A plain JSON reply is read as before.
+ */
+async function postTranslate<T>(
+  body: Record<string, unknown>,
+  onText?: (cumulative: string) => void,
+): Promise<T> {
+  const init = { method: 'POST', headers: { 'Content-Type': 'application/json' } };
+  let response: Response;
+  if (onText) {
+    try {
+      response = await apiFetch('/api/translate', {
+        ...init,
+        body: JSON.stringify({ ...body, stream: true }),
+      });
+    } catch (error) {
+      if (error instanceof TypeError) return postTranslate<T>(body);
+      throw error;
+    }
+  } else {
+    response = await apiFetch('/api/translate', { ...init, body: JSON.stringify(body) });
+  }
+
+  if (!response.ok) throw new Error(await failureMessage(response));
+
+  const streamed = response.headers.get('content-type')?.includes('application/x-ndjson');
+  const result =
+    onText && streamed && response.body
+      ? await readTranslateStream<T>(response.body, onText)
+      : ((await response.json()) as T);
+  noteAiUsage();
+  return result;
+}
+
 /**
  * Translate a single word with surrounding sentence context
  * @param word - The word to translate
  * @param sentence - The full sentence containing the word (for context)
  * @returns Translation with optional part of speech
  */
-export async function translateWord(word: string, sentence: string): Promise<WordTranslation> {
-  const response = await apiFetch('/api/translate', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ word, sentence, type: 'word', language: getActiveLanguage() }),
-  });
-
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || 'Translation failed');
-  }
-
-  noteAiUsage();
-  return response.json();
+export async function translateWord(
+  word: string,
+  sentence: string,
+  onText?: (cumulative: string) => void,
+): Promise<WordTranslation> {
+  return postTranslate<WordTranslation>(
+    { word, sentence, type: 'word', language: getActiveLanguage() },
+    onText,
+  );
 }
 
 /**
@@ -141,18 +177,10 @@ export async function enrichWord(word: string, sentence: string): Promise<WordTr
 export async function translatePhrase(
   phrase: string,
   sentence: string,
+  onText?: (cumulative: string) => void,
 ): Promise<PhraseTranslation> {
-  const response = await apiFetch('/api/translate', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ word: phrase, sentence, type: 'phrase', language: getActiveLanguage() }),
-  });
-
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || 'Translation failed');
-  }
-
-  noteAiUsage();
-  return response.json();
+  return postTranslate<PhraseTranslation>(
+    { word: phrase, sentence, type: 'phrase', language: getActiveLanguage() },
+    onText,
+  );
 }

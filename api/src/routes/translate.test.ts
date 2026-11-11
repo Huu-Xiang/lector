@@ -19,7 +19,15 @@ import { getSpelreelsContext } from '../lib/spelreels';
 import type { GlossCache } from '../lib/gloss-cache';
 import type { EntryCache } from '../lib/entry-cache';
 import type { ExpandedDictionaryEntry } from '../lib/dictionary-db';
+import { OpenAICompatibleProvider } from '../lib/llm/openai-compatible';
 import { makeTranslateRoutes } from './translate';
+
+function timingCounts(): Record<string, number> {
+  const rows = db
+    .prepare('SELECT key, SUM(count) AS n FROM ai_timing_daily GROUP BY key')
+    .all() as { key: string; n: number }[];
+  return Object.fromEntries(rows.map((row) => [row.key, row.n]));
+}
 
 const FREE: PlanLimits = {
   ...NO_STORAGE_LIMITS,
@@ -136,6 +144,7 @@ function makeApp(options: {
   provider?: FakeProvider;
   limiter?: InMemoryTranslationBurstLimiter;
   dailyLimiter?: InMemoryTranslationBurstLimiter;
+  prefetchLimiter?: InMemoryTranslationBurstLimiter;
   providerForUser?: (userId: string, access: ProviderAccessOptions) => LLMProvider;
   glossCache?: GlossCache | null;
   entryCache?: EntryCache | null;
@@ -156,6 +165,8 @@ function makeApp(options: {
       new InMemoryTranslationBurstLimiter({ glossPerWindow: 10_000, detailPerWindow: 10_000 }),
     dailyLocalizeLimiter:
       options.dailyLimiter ?? new InMemoryTranslationBurstLimiter({ localizePerWindow: 10_000 }),
+    prefetchDailyLimiter:
+      options.prefetchLimiter ?? new InMemoryTranslationBurstLimiter({ prefetchPerWindow: 10_000 }),
     glossCache: options.glossCache ?? null,
     entryCache: options.entryCache ?? null,
     lookupEntry: options.lookupEntry ?? (() => null),
@@ -183,7 +194,10 @@ function resetTranslationRows() {
   db.prepare("DELETE FROM settings WHERE userId = 'local' AND key = 'targetLanguage'").run();
 }
 
-beforeEach(resetTranslationRows);
+beforeEach(() => {
+  resetTranslationRows();
+  db.prepare('DELETE FROM ai_timing_daily').run();
+});
 afterEach(resetTranslationRows);
 
 describe('translation input boundaries', () => {
@@ -646,6 +660,22 @@ describe('shared gloss cache', () => {
     expect(provider.calls).toHaveLength(1);
   });
 
+  test('counts a cache hit and a miss, and not a request refused before the AI', async () => {
+    const cache = new MemoryGlossCache();
+    const { app } = makeApp({ engine: makeEngine({ now }), glossCache: cache });
+    await (await post(app, '/gloss', { word: 'huis' })).text();
+    await (await post(app, '/gloss', { word: 'huis' })).text();
+    expect(timingCounts()).toEqual({ 'gloss.miss': 1, 'gloss.hit': 1 });
+
+    db.prepare('DELETE FROM ai_timing_daily').run();
+    const refused = makeApp({
+      engine: makeEngine({ now, limits: { free: { wordGlossesPerMonth: 0 } } }),
+    });
+    expect((await post(refused.app, '/gloss', { word: 'kat' })).status).toBe(429);
+    expect(refused.provider.calls).toHaveLength(0);
+    expect(timingCounts()).toEqual({});
+  });
+
   test('a user own-key answer is never written to the shared cache', async () => {
     const cache = new MemoryGlossCache();
     const engine = makeEngine({ now, byok: true });
@@ -722,6 +752,37 @@ describe('dictionary entry localization', () => {
     const second = await (await post(app, '/localize', { word: 'fois', language: 'fr' })).json();
     expect(second.senses).toEqual(first.senses);
     expect(provider.calls).toHaveLength(1);
+  });
+
+  test('labels its provider call localize and counts hit, miss and limited correctly', async () => {
+    setNative('zh-CN');
+    const realFetch = globalThis.fetch;
+    globalThis.fetch = (async () =>
+      new Response(
+        JSON.stringify({
+          choices: [{ message: { content: JSON.stringify({ glosses: ['次', 'foi 的复数'] }) } }],
+        }),
+      )) as unknown as typeof fetch;
+    try {
+      const limiter = new InMemoryTranslationBurstLimiter({ localizePerWindow: 1 });
+      const { app } = makeApp({
+        engine: makeEngine({ now }),
+        entryCache: new MemoryEntryCache(),
+        limiter,
+        lookupEntry: (_user, word) => ({ ...entry, word, lemmaInfo: { stem: word, label: '' } }),
+        providerForUser: () => new OpenAICompatibleProvider(),
+      });
+      expect((await post(app, '/localize', { word: 'fois', language: 'fr' })).status).toBe(200);
+      expect((await post(app, '/localize', { word: 'fois', language: 'fr' })).status).toBe(200);
+      expect((await post(app, '/localize', { word: 'autre', language: 'fr' })).status).toBe(429);
+      expect(timingCounts()).toEqual({
+        'localize.total': 1,
+        'localize.miss': 1,
+        'localize.hit': 1,
+      });
+    } finally {
+      globalThis.fetch = realFetch;
+    }
   });
 
   test('an inflected form reads and writes the base word cache row', async () => {
@@ -828,5 +889,312 @@ describe('dictionary entry localization', () => {
     });
     expect((await post(app, '/localize', { word: 'fois', language: 'fr' })).status).toBe(200);
     expect(cache.rows.size).toBe(0);
+  });
+});
+
+describe('lesson prefetch', () => {
+  const now = () => new Date('2026-07-15T12:00:00Z');
+  const ranks: Record<string, number | undefined> = {
+    the: 2,
+    gamin: 9000,
+    fois: 8000,
+    autre: 7000,
+    jamais: 6000,
+    rien: 5000,
+    quokka: undefined,
+  };
+  const lookupEntry = (_user: string, word: string): ExpandedDictionaryEntry | null =>
+    word in ranks
+      ? {
+          word,
+          rank: ranks[word],
+          source: 'dict',
+          senses: [{ partOfSpeech: 'noun', gloss: `${word} gloss` }],
+        }
+      : null;
+
+  function setNative(code: string | null) {
+    db.prepare("DELETE FROM settings WHERE userId = 'local' AND key = 'nativeLanguage'").run();
+    if (code) {
+      db.prepare(
+        "INSERT INTO settings (userId, key, value) VALUES ('local', 'nativeLanguage', ?)",
+      ).run(JSON.stringify(code));
+    }
+  }
+
+  function provider() {
+    const fake = new FakeProvider();
+    fake.completeImpl = async () => JSON.stringify({ glosses: ['译'] });
+    return fake;
+  }
+
+  async function prefetch(app: ReturnType<typeof makeTranslateRoutes>, words: string[]) {
+    const res = await post(app, '/prefetch', { words, language: 'fr' });
+    expect(res.status).toBe(200);
+    return (await res.json()) as { senses: Record<string, unknown[]> };
+  }
+
+  beforeEach(() => setNative('zh-CN'));
+  afterEach(() => {
+    setNative(null);
+    delete process.env.LOOKUP_PREFETCH;
+  });
+
+  test('skips words inside the learner band and translates the rest once', async () => {
+    const fake = provider();
+    const cache = new MemoryEntryCache();
+    const engine = makeEngine({ now });
+    const { app } = makeApp({ engine, provider: fake, entryCache: cache, lookupEntry });
+    const body = await prefetch(app, ['the', 'gamin', 'quokka', 'unknown']);
+    expect(Object.keys(body.senses)).toEqual(['gamin', 'quokka']);
+    expect(fake.calls).toHaveLength(2);
+    expect(engine.getUsage('local', 'wordGlossesPerMonth')).toBe(0);
+
+    const again = await prefetch(app, ['gamin', 'quokka']);
+    expect(Object.keys(again.senses)).toEqual(['gamin', 'quokka']);
+    expect(fake.calls).toHaveLength(2);
+  });
+
+  test('starts at most four new AI translations per request', async () => {
+    const fake = provider();
+    const { app } = makeApp({ engine: makeEngine({ now }), provider: fake, lookupEntry });
+    const body = await prefetch(app, ['gamin', 'fois', 'autre', 'jamais', 'rien', 'quokka']);
+    expect(fake.calls).toHaveLength(4);
+    expect(Object.keys(body.senses)).toHaveLength(4);
+  });
+
+  test('counts prefetch calls under their own label, apart from localize', async () => {
+    const realFetch = globalThis.fetch;
+    globalThis.fetch = (async () =>
+      new Response(
+        JSON.stringify({
+          choices: [{ message: { content: JSON.stringify({ glosses: ['译'] }) } }],
+        }),
+      )) as unknown as typeof fetch;
+    try {
+      const { app } = makeApp({
+        engine: makeEngine({ now }),
+        entryCache: new MemoryEntryCache(),
+        lookupEntry,
+        providerForUser: () => new OpenAICompatibleProvider(),
+      });
+      await prefetch(app, ['gamin', 'fois']);
+      expect(timingCounts()).toEqual({ 'prefetch.total': 2, 'prefetch.miss': 2 });
+      const tap = await post(app, '/localize', { word: 'gamin', language: 'fr' });
+      expect(tap.status).toBe(200);
+      expect(timingCounts()['localize.hit']).toBe(1);
+      expect(timingCounts()['prefetch.hit']).toBeUndefined();
+    } finally {
+      globalThis.fetch = realFetch;
+    }
+  });
+
+  test('starts one AI translation for inflected forms of one headword', async () => {
+    const fake = provider();
+    const lookupWithStem = (user: string, word: string): ExpandedDictionaryEntry | null => {
+      const entry = lookupEntry(user, word);
+      if (!entry || (word !== 'fois' && word !== 'autre')) return entry;
+      return { ...entry, lemmaInfo: { stem: 'fois', label: 'form of' } };
+    };
+    const { app } = makeApp({
+      engine: makeEngine({ now }),
+      provider: fake,
+      lookupEntry: lookupWithStem,
+    });
+    const body = await prefetch(app, ['fois', 'autre', 'gamin']);
+    expect(fake.calls).toHaveLength(2);
+    expect(Object.keys(body.senses)).toEqual(['fois', 'gamin']);
+  });
+
+  test('stops starting AI translations when the daily cap is used up', async () => {
+    const fake = provider();
+    const prefetchLimiter = new InMemoryTranslationBurstLimiter({ prefetchPerWindow: 1 });
+    const { app } = makeApp({
+      engine: makeEngine({ now }),
+      provider: fake,
+      prefetchLimiter,
+      lookupEntry,
+    });
+    const body = await prefetch(app, ['gamin', 'fois']);
+    expect(fake.calls).toHaveLength(1);
+    expect(Object.keys(body.senses)).toEqual(['gamin']);
+  });
+
+  test('serves cached answers without any AI call even when the daily cap is zero', async () => {
+    const fake = provider();
+    const cache = new MemoryEntryCache();
+    cache.put('fr', 'zh-CN', 'gamin', ['孩子']);
+    const { app } = makeApp({
+      engine: makeEngine({ now }),
+      provider: fake,
+      entryCache: cache,
+      prefetchLimiter: new InMemoryTranslationBurstLimiter({ prefetchPerWindow: 0 }),
+      lookupEntry,
+    });
+    const body = await prefetch(app, ['gamin', 'fois']);
+    expect(Object.keys(body.senses)).toEqual(['gamin']);
+    expect(fake.calls).toHaveLength(0);
+  });
+
+  test('never uses the user own key for a prefetch', async () => {
+    const fake = provider();
+    const cache = new MemoryEntryCache();
+    cache.put('fr', 'zh-CN', 'gamin', ['孩子']);
+    const { app } = makeApp({
+      engine: makeEngine({ now, byok: true }),
+      provider: fake,
+      entryCache: cache,
+      lookupEntry,
+    });
+    const body = await prefetch(app, ['gamin', 'fois']);
+    expect(Object.keys(body.senses)).toEqual(['gamin']);
+    expect(fake.calls).toHaveLength(0);
+  });
+
+  test('returns nothing for an English reader or when switched off', async () => {
+    const fake = provider();
+    const { app } = makeApp({ engine: makeEngine({ now }), provider: fake, lookupEntry });
+    setNative('en');
+    expect((await prefetch(app, ['gamin'])).senses).toEqual({});
+    setNative('zh-CN');
+    process.env.LOOKUP_PREFETCH = '0';
+    expect((await prefetch(app, ['gamin'])).senses).toEqual({});
+    expect(fake.calls).toHaveLength(0);
+  });
+
+  test('rejects a malformed word list', async () => {
+    const { app } = makeApp({ engine: makeEngine({ now }), lookupEntry });
+    expect((await post(app, '/prefetch', { words: 'gamin' })).status).toBe(400);
+    expect((await post(app, '/prefetch', { words: ['two words'] })).status).toBe(400);
+  });
+});
+
+describe('streamed translation (stream: true)', () => {
+  async function lines(res: Response): Promise<Array<Record<string, unknown>>> {
+    return (await res.text())
+      .split('\n')
+      .filter(Boolean)
+      .map((line) => JSON.parse(line) as Record<string, unknown>);
+  }
+
+  function streamingProvider(chunks: string[]): FakeProvider {
+    const provider = new FakeProvider();
+    provider.streamImpl = async function* () {
+      yield* chunks;
+    };
+    return provider;
+  }
+
+  test('rich phrase streams the translation text, then the parsed result', async () => {
+    const engine = makeEngine({
+      now: () => new Date('2026-07-15T12:00:00Z'),
+      compedPlan: 'cloud',
+    });
+    const provider = streamingProvider([
+      '{"translation": "good ',
+      'day", "usageNotes": "polite"',
+      ', "literalBreakdown": "good day"}',
+    ]);
+    const { app } = makeApp({ engine, provider });
+
+    const res = await post(app, '/', { word: 'goeie dag', type: 'phrase', stream: true });
+    expect(res.headers.get('content-type')).toContain('application/x-ndjson');
+    const out = await lines(res);
+    expect(out.filter((line) => 'delta' in line).map((line) => line.delta)).toEqual([
+      'good ',
+      'day',
+    ]);
+    expect(out[out.length - 1]).toEqual({
+      result: { translation: 'good day', usageNotes: 'polite', literalBreakdown: 'good day' },
+    });
+    expect(provider.calls.map((call) => call.task)).toEqual(['phrase-rich']);
+    expect(engine.getUsage('local', 'llmRequestsPerMonth')).toBe(1);
+  });
+
+  test('rich context streams the sense glosses and keeps the stitched shape', async () => {
+    const engine = makeEngine({
+      now: () => new Date('2026-07-15T12:00:00Z'),
+      compedPlan: 'cloud',
+    });
+    const provider = streamingProvider([
+      '{"word":"trek","senses":[{"partOfSpeech":"verb","gloss":"pull"},',
+      '{"partOfSpeech":"verb","gloss":"move"}],"etymology":"an origin"}',
+    ]);
+    const { app } = makeApp({ engine, provider });
+
+    const out = await lines(await post(app, '/', { word: 'trek', type: 'word', stream: true }));
+    expect(out.filter((line) => 'delta' in line).map((line) => line.delta)).toEqual([
+      'pull',
+      '; move',
+    ]);
+    expect(out[out.length - 1]).toMatchObject({
+      result: { translation: 'pull; move', partOfSpeech: 'verb', etymology: 'an origin' },
+    });
+    expect(provider.calls.map((call) => call.task)).toEqual(['context-rich']);
+  });
+
+  test('managed Free streams plain text and keeps the daily metric', async () => {
+    const engine = makeEngine({ now: () => new Date('2026-07-15T12:00:00Z') });
+    const provider = streamingProvider(['natural ', 'phrase']);
+    const { app } = makeApp({ engine, provider });
+
+    const out = await lines(
+      await post(app, '/', { word: 'goeie dag', type: 'phrase', stream: true }),
+    );
+    expect(out).toEqual([
+      { delta: 'natural ' },
+      { delta: 'phrase' },
+      { result: { translation: 'natural phrase' } },
+    ]);
+    expect(provider.calls[0].task).toBe('phrase-simple');
+    expect(engine.getUsage('local', 'phraseTranslationsPerDay')).toBe(1);
+  });
+
+  test('cut-off JSON falls back to one complete call without a second reservation', async () => {
+    const engine = makeEngine({
+      now: () => new Date('2026-07-15T12:00:00Z'),
+      compedPlan: 'cloud',
+    });
+    const provider = streamingProvider(['{"translation": "good da']);
+    const { app } = makeApp({ engine, provider });
+
+    const out = await lines(
+      await post(app, '/', { word: 'goeie dag', type: 'phrase', stream: true }),
+    );
+    expect(out[out.length - 1]).toMatchObject({ result: { translation: 'rich phrase' } });
+    expect(engine.getUsage('local', 'llmRequestsPerMonth')).toBe(1);
+  });
+
+  test('an empty stream refunds, and a refusal before output answers 422', async () => {
+    const engine = makeEngine({
+      now: () => new Date('2026-07-15T12:00:00Z'),
+      compedPlan: 'cloud',
+    });
+    const provider = streamingProvider([]);
+    const { app } = makeApp({ engine, provider });
+
+    const empty = await lines(
+      await post(app, '/', { word: 'goeie dag', type: 'phrase', stream: true }),
+    );
+    expect(empty).toEqual([{ error: 'Translation failed' }]);
+    expect(engine.getUsage('local', 'llmRequestsPerMonth')).toBe(0);
+
+    provider.streamImpl = async function* () {
+      throw new LLMContentFilterError();
+    };
+    const refused = await post(app, '/', { word: 'goeie dag', type: 'phrase', stream: true });
+    expect(refused.status).toBe(422);
+    expect(await refused.json()).toEqual({ error: 'content_filtered' });
+    expect(engine.getUsage('local', 'llmRequestsPerMonth')).toBe(0);
+  });
+
+  test('without stream the answer stays plain JSON', async () => {
+    const engine = makeEngine({
+      now: () => new Date('2026-07-15T12:00:00Z'),
+      compedPlan: 'cloud',
+    });
+    const { app } = makeApp({ engine });
+    const res = await post(app, '/', { word: 'goeie dag', type: 'phrase' });
+    expect(res.headers.get('content-type')).toContain('application/json');
   });
 });

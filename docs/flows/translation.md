@@ -208,6 +208,73 @@ Tests: `e2e/reader-phrase-selection.spec.ts`, `e2e/reader-phrase-touch.spec.ts`.
 
 Tests: `e2e/nested-definitions.spec.ts`.
 
+## Lesson prefetch
+
+**App domain:** Translation
+
+When a learner opens a lesson, the reader sends single dictionary words from that lesson to `POST /api/translate/prefetch`. The server translates the meanings of the hardest ones into the learner's language before any tap.
+
+```mermaid
+flowchart TD
+  open[Lesson opens] --> pick[pickPrefetchCandidates]
+  pick --> client[prefetchLocalizedSenses]
+  client --> post["POST /api/translate/prefetch"]
+  post --> select[selectPrefetchWords: rank above learner band]
+  select --> cache{Shared cache hit?}
+  cache -->|yes| reply[Senses in reply]
+  cache -->|no| ai[localizeEntry, label prefetch]
+  ai --> reply
+  reply --> map[Client map, 500 words]
+  tap[User taps word] --> hit{In map?}
+  hit -->|yes| drawer[Drawer fills at once]
+  hit -->|in flight| wait[Await the same request]
+  wait --> drawer
+  hit -->|no| localize["POST /api/translate/localize"]
+```
+
+| Role | Path | Function |
+| --- | --- | --- |
+| Word pick | `src/lib/prefetch-words.ts` | `pickPrefetchCandidates` |
+| Client | `src/lib/dictionary-client.ts` | `prefetchLocalizedSenses`, `localizeEntrySenses` |
+| API | `api/src/routes/translate.ts` | `POST /prefetch` |
+| Server logic | `api/src/lib/localize-prefetch.ts` | `prefetchLocalizations`, `selectPrefetchWords` |
+| Shared path | `api/src/lib/localize-entry.ts` | `localizeEntry` |
+
+- The server keeps at most 12 words and starts at most 4 new AI calls per request. A daily cap per user also applies.
+- A prefetch never uses the monthly allowance or the learner's own key (BYOK).
+- It does nothing for English readers. `LOOKUP_PREFETCH=0` turns it off.
+- The client map holds 500 words and drops the oldest. A word already cached or in flight is not sent again.
+- The privacy text names this send. Change both together.
+
+Tests: `src/lib/dictionary-client.test.ts`, `src/lib/prefetch-words.test.ts`, `e2e/reader-lookup-prefetch.spec.ts`.
+
+## Streamed phrase and context translation
+
+**App domain:** Translation
+
+A phrase or In-context request can ask for a stream (`stream: true` on `POST /api/translate`). The server answers with lines of JSON: `{"delta": text}` while the model writes, then `{"result": ...}`. The drawer shows the translation text as it grows.
+
+| Role | Path | Function |
+| --- | --- | --- |
+| Client | `src/lib/translate-stream.ts` | `readTranslateStream` |
+| Client | `src/lib/claude.ts` | `translatePhrase`, `translateWord` |
+| Server | `api/src/lib/json-text-stream.ts` | `JsonTextExtractor` |
+| API | `api/src/routes/translate.ts` | `POST /` |
+
+Tests: `src/lib/translate-stream.test.ts`, `api/src/lib/json-text-stream.test.ts`, `e2e/reader-streaming-translation.spec.ts`.
+
+## AI timing
+
+**App domain:** Translation
+
+Every AI call and every cache or dictionary hit adds to anonymous daily counters in `ai_timing_daily` (`api/src/lib/ai-timing.ts`). A row has a UTC date, a key such as `gloss.total`, a latency bucket and a count. It holds no user id, text or IP. Rows older than 90 days are deleted.
+
+- The label comes from the task: `gloss`, `phrase`, `context`, `enrich`, `chat`, `lookup`, `other`.
+- `withTimingLabel` overrides the label for a code path. `localize` covers the tap path. `prefetch` covers lesson prefetch, so its calls and hits do not mix into `localize`.
+- The admin page shows the table (see [Admin AI timing](admin.md#ai-timing)).
+
+Tests: `api/src/lib/ai-timing.test.ts`, `api/src/routes/translate.test.ts`.
+
 ## Cache accepted translation
 
 **App domain:** Translation

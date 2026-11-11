@@ -367,6 +367,34 @@ export async function getAdminTrends(days: AdminTrendRange): Promise<AdminTrends
   return res.json();
 }
 
+export type AiTimingRange = 1 | 7 | 30 | 90;
+
+export interface AiTaskTiming {
+  label: string;
+  calls: number;
+  p50: number | null;
+  p95: number | null;
+  max: number | null;
+  firstP50: number | null;
+  firstP95: number | null;
+  firstMax: number | null;
+  hits: number;
+  misses: number;
+  errors: number;
+  timeouts: number;
+}
+
+export interface AiTiming {
+  days: { date: string; tasks: AiTaskTiming[] }[];
+  total: AiTaskTiming[];
+}
+
+export async function getAiTiming(days: AiTimingRange): Promise<AiTiming> {
+  const res = await apiFetch(`/api/admin/ai-timing?days=${days}`);
+  if (!res.ok) throw new Error(`admin ai timing failed (${res.status})`);
+  return res.json();
+}
+
 export interface EmailSwitch {
   enabled: boolean;
   source: 'admin' | 'env';

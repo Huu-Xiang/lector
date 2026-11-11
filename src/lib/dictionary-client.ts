@@ -8,7 +8,7 @@
  */
 import { getActiveLanguage, getActivePack } from './data-layer';
 import { foldWord } from './languages';
-import { apiFetch } from './api-base';
+import { apiFetch, hasAiRequestGuard } from './api-base';
 import { AI_USAGE_EVENT } from '@/constants/storage';
 
 export interface ExpandedDictionaryEntry {
@@ -71,10 +71,96 @@ function apiFetchWithTimeout(url: string, ms: number, init: RequestInit): Promis
   ]);
 }
 
+type LocalizedSenses = Array<{ partOfSpeech: string; gloss: string }>;
+
+const PREFETCH_CACHE_MAX = 500;
+const LOCALIZE_TIMEOUT_MS = 8000;
+
+/** Prefetched translations by `${language}:${native}:${folded word}`, oldest dropped first. */
+const prefetchedSenses = new Map<string, LocalizedSenses>();
+/** Words in a running prefetch request; each settles to the senses, or null on a miss. */
+const inflightPrefetch = new Map<string, Promise<LocalizedSenses | null>>();
+
+function prefetchKey(word: string, native: string): string {
+  return `${getActiveLanguage()}:${native}:${foldWord(word, getActivePack())}`;
+}
+
+function rememberPrefetched(key: string, senses: LocalizedSenses): void {
+  prefetchedSenses.delete(key);
+  prefetchedSenses.set(key, senses);
+  while (prefetchedSenses.size > PREFETCH_CACHE_MAX) {
+    const oldest = prefetchedSenses.keys().next().value;
+    if (oldest === undefined) break;
+    prefetchedSenses.delete(oldest);
+  }
+}
+
+/** Test hook: forget every prefetched and in-flight word. */
+export function resetPrefetchState(): void {
+  prefetchedSenses.clear();
+  inflightPrefetch.clear();
+}
+
+/** Asks the server to translate likely lookups ahead of a tap; failures are silent. */
+export async function prefetchLocalizedSenses(words: string[], native: string): Promise<void> {
+  if (words.length === 0 || hasAiRequestGuard()) return;
+  const pending = new Map<string, (senses: LocalizedSenses | null) => void>();
+  const sent: string[] = [];
+  for (const word of words) {
+    const key = prefetchKey(word, native);
+    if (prefetchedSenses.has(key) || inflightPrefetch.has(key)) continue;
+    inflightPrefetch.set(
+      key,
+      new Promise((resolve) => {
+        pending.set(key, resolve);
+      }),
+    );
+    sent.push(word);
+  }
+  if (sent.length === 0) return;
+  try {
+    const res = await apiFetch('/api/translate/prefetch', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ words: sent, language: getActiveLanguage() }),
+      silentPlanLimit: true,
+    });
+    if (!res.ok) return;
+    const data = (await res.json()) as { senses?: Record<string, LocalizedSenses> };
+    for (const [word, senses] of Object.entries(data.senses ?? {})) {
+      if (Array.isArray(senses) && senses.length > 0) {
+        rememberPrefetched(prefetchKey(word, native), senses);
+      }
+    }
+  } catch {
+    /* a missed prefetch only costs the normal wait */
+  } finally {
+    for (const [key, resolve] of pending) {
+      inflightPrefetch.delete(key);
+      resolve(prefetchedSenses.get(key) ?? null);
+    }
+  }
+}
+
 export async function localizeEntrySenses(
   word: string,
-): Promise<Array<{ partOfSpeech: string; gloss: string }> | null> {
-  const LOCALIZE_TIMEOUT_MS = 8000;
+  native = '',
+): Promise<LocalizedSenses | null> {
+  const key = prefetchKey(word, native);
+  const prefetched = prefetchedSenses.get(key);
+  if (prefetched) return prefetched;
+  const inflight = inflightPrefetch.get(key);
+  if (inflight) {
+    const timedOut = Symbol('timeout');
+    const settled = await Promise.race([
+      inflight,
+      new Promise<typeof timedOut>((resolve) =>
+        setTimeout(() => resolve(timedOut), LOCALIZE_TIMEOUT_MS),
+      ),
+    ]);
+    if (settled === timedOut) return null;
+    if (settled) return settled;
+  }
   try {
     const res = await apiFetchWithTimeout('/api/translate/localize', LOCALIZE_TIMEOUT_MS, {
       method: 'POST',
@@ -82,9 +168,7 @@ export async function localizeEntrySenses(
       body: JSON.stringify({ word, language: getActiveLanguage() }),
     });
     if (!res.ok) return null;
-    const data = (await res.json()) as {
-      senses: Array<{ partOfSpeech: string; gloss: string }> | null;
-    };
+    const data = (await res.json()) as { senses: LocalizedSenses | null };
     if (data.senses && typeof window !== 'undefined') {
       window.dispatchEvent(new Event(AI_USAGE_EVENT));
     }

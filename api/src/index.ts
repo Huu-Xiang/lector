@@ -15,6 +15,7 @@ import { startTranscribeWorker } from './lib/transcribe-worker';
 import { startDictWorker } from './lib/dict-worker';
 import { startLifecycleEmailWorker } from './lib/lifecycle-email';
 import { startReminderWorker } from './lib/reminder-worker';
+import { startLlmPrewarm } from './lib/llm/prewarm';
 import { startReadingFeedRefresher } from './lib/reading-feed/refresh';
 import { isByokAvailable } from './lib/byok';
 import { defaultRequestBodyLimit } from './lib/request-body-limit';
@@ -197,6 +198,9 @@ startLifecycleEmailWorker();
 
 // Daily review reminders through APNs. No-op in selfhost and without APNS_* settings.
 startReminderWorker();
+
+// Keeps the LLM TLS connection warm. Off unless LLM_PREWARM=1.
+startLlmPrewarm();
 
 // Reading feed (interests beyond the free library). Off under tests and
 // when READING_FEED=0; otherwise fetches each source once after a startup

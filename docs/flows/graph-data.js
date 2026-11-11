@@ -217,6 +217,12 @@
     summary: "Enrich upgrades a bare gloss. Nested lookup follows a form-of link and keeps the original sentence.",
     steps: ["fn:enrichWord", "route:translate-enrich", "fn:findNestedWordRef", "fn:read-handleNestedLookup", "fn:read-handleWordClick"],
   });
+  N("flow:lesson-prefetch", "flow", "Lesson prefetch", {
+    domain: "translation",
+    md: "translation.md#lesson-prefetch",
+    summary: "Opening a lesson asks the server to translate a few hard words ahead of a tap. A tap on a word still in flight waits for that request.",
+    steps: ["fn:prefetchLocalizedSenses", "route:translate-prefetch", "file:localize-prefetch", "file:ai-timing"],
+  });
   N("flow:cache-translation", "flow", "Cache accepted translation", {
     domain: "translation",
     md: "translation.md#cache-accepted-translation",
@@ -465,6 +471,12 @@
     summary: "Admin page loads summary and users. requireAdmin gates every /api/admin route.",
     steps: ["file:admin-page", "fn:getAdminUsers", "route:admin-users", "file:admin-lib"],
   });
+  N("flow:admin-ai-timing", "flow", "Admin AI timing", {
+    domain: "admin",
+    md: "admin.md#ai-timing",
+    summary: "Anonymous daily AI latency and cache-hit counts per task label, shown as a table on the admin page.",
+    steps: ["file:admin-ai-timing-ui", "route:admin-ai-timing", "file:ai-timing"],
+  });
   N("flow:admin-trends", "flow", "Admin trends", {
     domain: "admin",
     md: "admin.md#admin-trends",
@@ -559,6 +571,8 @@
   N("file:billing-client", "file", "billing.ts (client)", { path: "src/lib/billing.ts", domain: "billing" });
   N("file:admin-page", "file", "Admin page", { path: "src/app/admin/page.tsx", domain: "admin" });
   N("file:admin-client", "file", "admin-client.ts", { path: "src/lib/admin-client.ts", domain: "admin" });
+  N("file:admin-ai-timing-ui", "file", "AiTiming.tsx", { path: "src/app/admin/AiTiming.tsx", domain: "admin" });
+  N("file:ai-timing", "file", "ai-timing.ts", { path: "api/src/lib/ai-timing.ts", domain: "admin" });
   N("file:admin-trends-ui", "file", "Trends.tsx", { path: "src/app/admin/Trends.tsx", domain: "admin" });
   N("file:admin-trends-lib", "file", "admin-trends.ts", { path: "api/src/lib/admin-trends.ts", domain: "admin" });
   N("file:admin-lib", "file", "admin.ts", { path: "api/src/lib/admin.ts", domain: "admin" });
@@ -583,6 +597,7 @@
   N("file:route-youtube", "file", "youtube-import.ts", { path: "api/src/routes/youtube-import.ts", domain: "library" });
   N("file:route-extract", "file", "extract-url.ts", { path: "api/src/routes/extract-url.ts", domain: "library" });
   N("file:route-dictionary", "file", "dictionary.ts", { path: "api/src/routes/dictionary.ts", domain: "translation" });
+  N("file:localize-prefetch", "file", "localize-prefetch.ts", { path: "api/src/lib/localize-prefetch.ts", domain: "translation" });
   N("file:route-translate", "file", "translate.ts", { path: "api/src/routes/translate.ts", domain: "translation" });
   N("file:route-vocab", "file", "vocab.ts", { path: "api/src/routes/vocab.ts", domain: "vocabulary" });
   N("file:route-known-words", "file", "known-words.ts", { path: "api/src/routes/known-words.ts", domain: "vocabulary" });
@@ -640,6 +655,7 @@
   N("fn:lookupWord", "fn", "lookupWord", { path: "api/src/lib/dictionary-db.ts" });
   N("fn:resolveWord", "fn", "resolveWord", { path: "api/src/lib/dictionary-db.ts" });
   N("fn:cacheAcceptedEntry", "fn", "cacheAcceptedEntry", { path: "api/src/lib/dictionary-db.ts" });
+  N("fn:prefetchLocalizedSenses", "fn", "prefetchLocalizedSenses", { path: "src/lib/dictionary-client.ts" });
   N("fn:cacheAcceptedTranslation", "fn", "cacheAcceptedTranslation", { path: "src/lib/dictionary-client.ts" });
   N("fn:read-requestContextTranslation", "fn", "requestContextTranslation", { path: "src/app/read/[bookId]/page.tsx" });
   N("fn:read-handleNestedLookup", "fn", "handleNestedLookup", { path: "src/app/read/[bookId]/page.tsx" });
@@ -737,6 +753,8 @@
   N("route:youtube-import", "route", "POST /api/import/youtube", { path: "api/src/routes/youtube-import.ts" });
   N("route:dict-lookup", "route", "GET /api/dictionary/lookup", { path: "api/src/routes/dictionary.ts" });
   N("route:dict-cache", "route", "POST /api/dictionary/cache", { path: "api/src/routes/dictionary.ts" });
+  N("route:translate-prefetch", "route", "POST /api/translate/prefetch", { path: "api/src/routes/translate.ts" });
+  N("route:admin-ai-timing", "route", "GET /api/admin/ai-timing", { path: "api/src/routes/admin.ts" });
   N("route:translate-gloss", "route", "POST /api/translate/gloss", { path: "api/src/routes/translate.ts" });
   N("route:translate-enrich", "route", "POST /api/translate/enrich", { path: "api/src/routes/translate.ts" });
   N("route:translate-post", "route", "POST /api/translate", { path: "api/src/routes/translate.ts" });
@@ -886,6 +904,7 @@
     "flow:in-context",
     "flow:phrase-selection",
     "flow:enrich-nested",
+    "flow:lesson-prefetch",
     "flow:cache-translation",
   ]);
   domainFlows("vocabulary", ["flow:save-vocab", "flow:vocab-list", "flow:known-word-import"]);
@@ -900,7 +919,7 @@
   domainFlows("settings", ["flow:save-settings", "flow:configure-llm", "flow:api-tokens", "flow:delete-account"]);
   domainFlows("data", ["flow:export-data", "flow:restore-data"]);
   domainFlows("billing", ["flow:subscribe", "flow:entitlements", "flow:plan-change"]);
-  domainFlows("admin", ["flow:admin-list", "flow:admin-trends", "flow:admin-support", "flow:admin-email-switch", "flow:source-counts"]);
+  domainFlows("admin", ["flow:admin-list", "flow:admin-trends", "flow:admin-ai-timing", "flow:admin-support", "flow:admin-email-switch", "flow:source-counts"]);
 
   // Cross-flow walks
   edge("flow:load-library-item", "flow:translate-word", "then");
@@ -1086,6 +1105,19 @@
   edge("fn:read-handleNestedLookup", "file:read-page", "in");
   edge("fn:read-handleNestedLookup", "fn:read-handleWordClick", "calls");
 
+  edge("flow:lesson-prefetch", "fn:prefetchLocalizedSenses", "starts");
+  edge("fn:prefetchLocalizedSenses", "file:dictionary-client", "in");
+  edge("fn:prefetchLocalizedSenses", "route:translate-prefetch", "http");
+  edge("route:translate-prefetch", "file:route-translate", "in");
+  edge("route:translate-prefetch", "file:localize-prefetch", "calls");
+  edge("file:localize-prefetch", "file:ai-timing", "calls");
+  edge("flow:lesson-prefetch", "flow:translate-word", "then");
+  edge("flow:admin-ai-timing", "file:admin-ai-timing-ui", "starts");
+  edge("file:admin-page", "file:admin-ai-timing-ui", "calls");
+  edge("file:admin-ai-timing-ui", "route:admin-ai-timing", "http");
+  edge("route:admin-ai-timing", "file:route-admin", "in");
+  edge("route:admin-ai-timing", "fn:requireAdmin", "calls");
+  edge("route:admin-ai-timing", "file:ai-timing", "calls");
   edge("flow:cache-translation", "fn:cacheAcceptedTranslation", "starts");
   edge("fn:cacheAcceptedTranslation", "file:dictionary-client", "in");
   edge("fn:cacheAcceptedTranslation", "route:dict-cache", "http");

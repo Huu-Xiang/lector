@@ -5,7 +5,7 @@
  * translation entitlements remain the authoritative API-spend ceiling.
  */
 
-export type TranslationBurstKind = 'gloss' | 'detail' | 'localize';
+export type TranslationBurstKind = 'gloss' | 'detail' | 'localize' | 'prefetch';
 
 export interface TranslationBurstLimiter {
   tryConsume(userId: string, kind: TranslationBurstKind): boolean;
@@ -23,6 +23,7 @@ export interface TranslationBurstLimiterOptions {
   glossPerWindow?: number;
   detailPerWindow?: number;
   localizePerWindow?: number;
+  prefetchPerWindow?: number;
 }
 
 export interface ExtractionBurstLimiter {
@@ -116,6 +117,7 @@ export class InMemoryTranslationBurstLimiter implements TranslationBurstLimiter 
       gloss: options.glossPerWindow ?? 30,
       detail: options.detailPerWindow ?? 10,
       localize: options.localizePerWindow ?? 30,
+      prefetch: options.prefetchPerWindow ?? 6,
     };
   }
 
@@ -156,5 +158,11 @@ export const translationBurstLimiter = new InMemoryTranslationBurstLimiter();
 export const localizeDailyLimiter = new InMemoryTranslationBurstLimiter({
   windowMs: 24 * 60 * 60 * 1000,
   localizePerWindow: 500,
+});
+/** AI-backed lesson prefetches per user per day; shared-cache hits do not count. */
+export const PREFETCH_DAILY_AI_LIMIT = 40;
+export const prefetchDailyLimiter = new InMemoryTranslationBurstLimiter({
+  windowMs: 24 * 60 * 60 * 1000,
+  prefetchPerWindow: PREFETCH_DAILY_AI_LIMIT,
 });
 export const extractionBurstLimiter = new InMemoryExtractionBurstLimiter();

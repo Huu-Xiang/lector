@@ -574,6 +574,16 @@ function getDb(): Database {
       PRIMARY KEY (date, source, lang, event)
     );
 
+    -- Anonymous daily AI timing histograms (lib/ai-timing.ts). No userId, text or IP. date is UTC.
+    CREATE TABLE IF NOT EXISTS ai_timing_daily (
+      date TEXT NOT NULL,
+      key TEXT NOT NULL,
+      bucket INTEGER NOT NULL DEFAULT 0,
+      count INTEGER NOT NULL DEFAULT 0,
+      maxMs INTEGER NOT NULL DEFAULT 0,
+      PRIMARY KEY (date, key, bucket)
+    );
+
     -- Guided onboarding + learner activity (#331). The profile is deliberately
     -- small but durable: it is the first slice of the shared learner model
     -- planned in #125. Progress is one non-restartable v1 journey per account;

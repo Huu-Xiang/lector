@@ -38,6 +38,21 @@ It counts only totals. Admin and billing-exempt accounts are left out.
 - Signups, Free AI translations (`usage_counters`) and RMB orders (`cn_orders`) use UTC days.
 - Paid AI calls are counted per month only, so the chart leaves them out.
 
+## AI timing
+
+**App domain:** Admin
+
+The AI timing table shows, for each task label, the AI call count, p50, p95, max, first-token time, cache or dictionary hit rate, errors and timeouts. The range is today, 7, 30 or 90 days.
+
+| Role | Path | Function |
+| --- | --- | --- |
+| Page | `src/app/admin/AiTiming.tsx` | AI timing table |
+| Client | `src/lib/admin-client.ts` | `getAiTiming` |
+| API | `api/src/routes/admin.ts` | `GET /ai-timing?days=1\|7\|30\|90` |
+| Logic | `api/src/lib/ai-timing.ts` | `aiTimingReport` |
+
+The counts are anonymous. Labels are described in [Translation](translation.md#ai-timing). The `prefetch` label counts lesson prefetch apart from taps.
+
 ## Product email switch
 
 **App domain:** Admin

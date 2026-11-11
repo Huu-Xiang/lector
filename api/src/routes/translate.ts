@@ -1,6 +1,6 @@
 import { Hono, type Context } from 'hono';
 import { bodyLimit } from 'hono/body-limit';
-import { streamText } from 'hono/streaming';
+import { stream, streamText } from 'hono/streaming';
 import {
   completeJson,
   LLMContentFilterError,
@@ -11,6 +11,8 @@ import {
   type LLMTask,
   type ProviderAccessOptions,
 } from '../lib/llm';
+import { parseLooseJsonResult } from '../lib/llm/parse-json';
+import { JsonTextExtractor } from '../lib/json-text-stream';
 import { getSpelreelsContext } from '../lib/spelreels';
 import { resolveLanguage } from '../lib/active-language';
 import { getCurrentUserId } from '../lib/user';
@@ -28,7 +30,9 @@ import {
   phraseFieldsInWrongScript,
   phraseLanguageReminder,
 } from '../lib/translate-prompts';
+import { recordLookupOutcome } from '../lib/ai-timing';
 import { localizeEntry } from '../lib/localize-entry';
+import { PREFETCH_MAX_CANDIDATES, prefetchLocalizations } from '../lib/localize-prefetch';
 import { recordStudySessionPing } from '../lib/study-session';
 import { notifyGlossCapHit } from '../lib/lifecycle-email';
 import {
@@ -42,6 +46,7 @@ import {
 } from '../lib/entitlements';
 import {
   localizeDailyLimiter,
+  prefetchDailyLimiter,
   translationBurstLimiter,
   type TranslationBurstKind,
   type TranslationBurstLimiter,
@@ -59,6 +64,8 @@ interface TranslateRouteDeps {
   rateLimiter: TranslationBurstLimiter;
   /** Daily ceiling on new localizations, on top of the per-minute burst limit. */
   dailyLocalizeLimiter?: TranslationBurstLimiter;
+  /** Daily ceiling on AI translations started by lesson prefetch. */
+  prefetchDailyLimiter?: TranslationBurstLimiter;
   /** Shared word-gloss cache; `null` turns it off. */
   glossCache?: GlossCache | null;
   /** Shared cache of dictionary senses translated into the learner's language; `null` turns it off. */
@@ -79,6 +86,26 @@ interface CommonInput {
 
 interface TranslationInput extends CommonInput {
   type: 'word' | 'phrase';
+}
+
+/** One NDJSON line of a streamed `POST /api/translate` answer. */
+type StreamLine = { delta: string } | { result: unknown } | { error: string };
+
+interface StreamPlan {
+  prompt: string;
+  task: LLMTask;
+  maxTokens: number;
+  /** JSON keys whose string values are shown while streaming; `null` when the raw text is the answer. */
+  visibleKeys: ReadonlySet<string> | null;
+  finish: (provider: LLMProvider, text: string) => Promise<unknown>;
+}
+
+function parseCompleteObject(text: string): Record<string, unknown> {
+  const { value, rootComplete } = parseLooseJsonResult<unknown>(text);
+  if (!rootComplete || typeof value !== 'object' || value === null || Array.isArray(value)) {
+    throw new Error('Model returned incomplete JSON');
+  }
+  return value as Record<string, unknown>;
 }
 
 type Parsed<T> = { ok: true; value: T } | { ok: false; error: string };
@@ -267,6 +294,7 @@ export function makeTranslateRoutes({
   engine,
   rateLimiter,
   dailyLocalizeLimiter = localizeDailyLimiter,
+  prefetchDailyLimiter: prefetchLimiter = prefetchDailyLimiter,
   glossCache = sharedGlossCache,
   entryCache = sharedEntryCache,
   lookupEntry = lookupWord,
@@ -306,10 +334,14 @@ export function makeTranslateRoutes({
     // A shared hit costs nothing, so it is served before any quota is reserved.
     const nativeCode = getNativeLanguageCode(userId);
     const cachedGloss = glossCache?.get(lang, nativeCode, parsed.value.word) ?? null;
-    if (cachedGloss) return c.text(cachedGloss);
+    if (cachedGloss) {
+      recordLookupOutcome('gloss', 'hit');
+      return c.text(cachedGloss);
+    }
 
     const reservation = reserve(c, engine, userId, metricForGloss(resolved));
     if (reservation instanceof Response) return reservation;
+    recordLookupOutcome('gloss', 'miss');
 
     let provider: LLMProvider;
     try {
@@ -380,12 +412,51 @@ export function makeTranslateRoutes({
         parsed.value.word,
         parsed.value.language,
       );
-      if (outcome.status === 'none') return c.json({ senses: null });
+      if (outcome.status === 'none' || outcome.status === 'miss') return c.json({ senses: null });
       if (outcome.status === 'limited') return burstResponse(c);
       return c.json({ senses: outcome.senses });
     } catch (error) {
       console.error('Localize error:', error);
       return c.json({ error: 'Translation failed' }, 502);
+    }
+  });
+
+  // Warms the localize cache for words the reader may tap. The server picks the words from
+  // the on-device dictionary, so a caller cannot send text of its own to the model.
+  app.post('/prefetch', async (c) => {
+    const parsedBody = await readObject(c);
+    if (!parsedBody.ok) return c.json({ error: parsedBody.error }, 400);
+    const body = parsedBody.value;
+    if (!Array.isArray(body.words) || body.words.length > PREFETCH_MAX_CANDIDATES * 2) {
+      return c.json({ error: 'Words must be a short list' }, 400);
+    }
+    const words: string[] = [];
+    for (const item of body.words) {
+      const parsed = parseSingleWord({ word: item });
+      if (!parsed.ok) return c.json({ error: parsed.error }, 400);
+      words.push(parsed.value.word);
+    }
+    const language = typeof body.language === 'string' ? body.language : undefined;
+
+    try {
+      const result = await prefetchLocalizations(
+        {
+          providerForUser,
+          engine,
+          rateLimiter,
+          dailyLocalizeLimiter,
+          prefetchDailyLimiter: prefetchLimiter,
+          entryCache,
+          lookupEntry,
+        },
+        getCurrentUserId(c),
+        words,
+        language,
+      );
+      return c.json({ senses: Object.fromEntries(result.senses) });
+    } catch (error) {
+      console.error('Prefetch error:', error);
+      return c.json({ error: 'Prefetch failed' }, 502);
     }
   });
 
@@ -456,82 +527,186 @@ export function makeTranslateRoutes({
     const reservation = reserve(c, engine, userId, metric);
     if (reservation instanceof Response) return reservation;
 
-    try {
-      const provider = providerForUser(userId, { byok: reservation.byok });
-      if (managedFree && type === 'phrase') {
-        const translation = simpleTranslation(
-          await provider.complete({
-            messages: [
-              {
-                role: 'user',
-                content: buildSimplePhrasePrompt(langName, word, sentence, nativeName),
-              },
-            ],
-            maxTokens: 96,
-            task: 'phrase-simple',
-          }),
-        );
-        return c.json({ translation });
-      }
+    const richPhrasePrompt = (cheapModel: boolean) => {
+      const spelreels = lang === 'af' ? getSpelreelsContext() : '';
+      const spelreelsSection = spelreels
+        ? `Use the following official spelling rules to inform your understanding of the ${langName} input:\n\n${spelreels}\n\n---\n\n`
+        : '';
+      return buildPhrasePrompt(langName, spelreelsSection, word, sentence, nativeName, cheapModel);
+    };
+    const phraseCheapModel =
+      !reservation.byok && (managedPhraseUsesCheapModel() || freeOnSmallModel);
 
+    // Small models sometimes drift into English for the long fields.
+    const fixPhraseScript = async (
+      provider: LLMProvider,
+      prompt: string,
+      result: Record<string, unknown>,
+    ) => {
+      const wrong = phraseFieldsInWrongScript(result, getNativeLanguageCode(userId));
+      if (wrong.length === 0) return result;
+      const retried = await completeJson<Record<string, unknown>>(provider, {
+        messages: [{ role: 'user', content: prompt + phraseLanguageReminder(wrong, nativeName) }],
+        maxTokens: 1500,
+        task: 'phrase-rich',
+      }).catch(() => null);
+      return retried ?? result;
+    };
+
+    const finishContextEntry = (entry: ReturnType<typeof stitchWordEntry>) => {
+      // The small model invents etymologies; leave the field out.
+      if (freeOnSmallModel && !reservation.byok) delete entry.etymology;
+      return entry;
+    };
+
+    const answerOnce = async (provider: LLMProvider): Promise<unknown> => {
       if (managedFree) {
+        const isPhrase = type === 'phrase';
         const translation = simpleTranslation(
           await provider.complete({
             messages: [
               {
                 role: 'user',
-                content: buildSimpleContextPrompt(langName, word, sentence, nativeName),
+                content: isPhrase
+                  ? buildSimplePhrasePrompt(langName, word, sentence, nativeName)
+                  : buildSimpleContextPrompt(langName, word, sentence, nativeName),
               },
             ],
             maxTokens: 96,
-            task: 'context-simple',
+            task: isPhrase ? 'phrase-simple' : 'context-simple',
           }),
         );
-        return c.json({ translation });
+        return { translation };
       }
 
       if (type === 'phrase') {
-        const spelreels = lang === 'af' ? getSpelreelsContext() : '';
-        const spelreelsSection = spelreels
-          ? `Use the following official spelling rules to inform your understanding of the ${langName} input:\n\n${spelreels}\n\n---\n\n`
-          : '';
-        const prompt = buildPhrasePrompt(
+        const prompt = richPhrasePrompt(phraseCheapModel);
+        const result = await completeJson<Record<string, unknown>>(provider, {
+          messages: [{ role: 'user', content: prompt }],
+          maxTokens: 1500,
+          task: 'phrase-rich',
+        });
+        return fixPhraseScript(provider, prompt, result);
+      }
+
+      return finishContextEntry(
+        await buildWordEntryResponse(
+          provider,
+          'context-rich',
           langName,
-          spelreelsSection,
           word,
           sentence,
           nativeName,
-          !reservation.byok && (managedPhraseUsesCheapModel() || freeOnSmallModel),
-        );
-        const askPhrase = (content: string) =>
-          completeJson<Record<string, unknown>>(provider, {
-            messages: [{ role: 'user', content }],
-            maxTokens: 1500,
-            task: 'phrase-rich',
-          });
-        const result = await askPhrase(prompt);
-        // Small models sometimes drift into English for the long fields.
-        const wrong = phraseFieldsInWrongScript(result, getNativeLanguageCode(userId));
-        if (wrong.length > 0) {
-          const retried = await askPhrase(prompt + phraseLanguageReminder(wrong, nativeName)).catch(
-            () => null,
-          );
-          if (retried) return c.json(retried);
-        }
-        return c.json(result);
+        ),
+      );
+    };
+
+    const streamPlan = (): StreamPlan => {
+      if (managedFree) {
+        const isPhrase = type === 'phrase';
+        return {
+          prompt: isPhrase
+            ? buildSimplePhrasePrompt(langName, word, sentence, nativeName)
+            : buildSimpleContextPrompt(langName, word, sentence, nativeName),
+          task: isPhrase ? 'phrase-simple' : 'context-simple',
+          maxTokens: 96,
+          visibleKeys: null,
+          finish: async (_provider, text) => ({ translation: simpleTranslation(text) }),
+        };
+      }
+      if (type === 'phrase') {
+        const prompt = richPhrasePrompt(phraseCheapModel);
+        return {
+          prompt,
+          task: 'phrase-rich',
+          maxTokens: 1500,
+          visibleKeys: new Set(['translation']),
+          finish: async (provider, text) =>
+            fixPhraseScript(provider, prompt, parseCompleteObject(text)),
+        };
+      }
+      return {
+        prompt: buildWordEntryPrompt(langName, word, sentence, nativeName),
+        task: 'context-rich',
+        maxTokens: 1500,
+        visibleKeys: new Set(['gloss']),
+        finish: async (_provider, text) =>
+          finishContextEntry(stitchWordEntry(parseCompleteObject(text), word)),
+      };
+    };
+
+    // Reads the first chunk before answering so a refusal can still set the status.
+    const answerStream = async (provider: LLMProvider, plan: StreamPlan) => {
+      const deltas = provider
+        .stream({
+          messages: [{ role: 'user', content: plan.prompt }],
+          maxTokens: plan.maxTokens,
+          task: plan.task,
+        })
+        [Symbol.asyncIterator]();
+      let first: IteratorResult<string>;
+      try {
+        first = await deltas.next();
+      } catch (error) {
+        engine.refund(reservation);
+        if (error instanceof LLMContentFilterError) return contentFiltered(c);
+        console.error('Translation stream error:', error);
+        return c.json({ error: 'Translation failed' }, 502);
       }
 
-      const entry = await buildWordEntryResponse(
-        provider,
-        'context-rich',
-        langName,
-        word,
-        sentence,
-        nativeName,
-      );
-      // The small model invents etymologies; leave the field out.
-      if (freeOnSmallModel && !reservation.byok) delete entry.etymology;
-      return c.json(entry);
+      c.header('Content-Type', 'application/x-ndjson; charset=UTF-8');
+      c.header('Cache-Control', 'no-cache, no-transform');
+      return stream(c, async (out) => {
+        const send = (line: StreamLine) => out.write(`${JSON.stringify(line)}\n`);
+        const extractor = plan.visibleKeys ? new JsonTextExtractor(plan.visibleKeys) : null;
+        let output = '';
+        try {
+          for (let next = first; !next.done; next = await deltas.next()) {
+            output += next.value;
+            const visible = extractor ? extractor.push(next.value) : next.value;
+            if (visible) await send({ delta: visible });
+          }
+        } catch (error) {
+          if (!output.trim()) engine.refund(reservation);
+          console.error('Translation stream error:', error);
+          await send({ error: 'Translation failed' });
+          return;
+        }
+        if (!output.trim()) {
+          engine.refund(reservation);
+          await send({ error: 'Translation failed' });
+          return;
+        }
+        try {
+          // Malformed or cut-off output falls back to one complete call; the stream already billed.
+          const result = await plan.finish(provider, output).catch(() => answerOnce(provider));
+          await send({ result });
+        } catch (error) {
+          console.error('Translation error:', error);
+          await send({
+            error:
+              error instanceof LLMContentFilterError ? 'content_filtered' : 'Translation failed',
+          });
+        }
+      });
+    };
+
+    if (parsedBody.value.stream === true) {
+      const plan = streamPlan();
+      let provider: LLMProvider;
+      try {
+        provider = providerForUser(userId, { byok: reservation.byok });
+      } catch (error) {
+        engine.refund(reservation);
+        console.error('Translation provider error:', error);
+        return c.json({ error: 'Translation failed' }, 500);
+      }
+      return answerStream(provider, plan);
+    }
+
+    try {
+      const provider = providerForUser(userId, { byok: reservation.byok });
+      return c.json(await answerOnce(provider));
     } catch (error) {
       if (!providerAnswered(error)) engine.refund(reservation);
       if (error instanceof LLMContentFilterError) return contentFiltered(c);

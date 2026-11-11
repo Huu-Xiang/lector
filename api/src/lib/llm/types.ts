@@ -27,6 +27,8 @@ export interface LLMUsageEvent {
   model: string;
   attempt: number;
   latencyMs: number;
+  /** Streaming only: ms from request start to the first text delta. */
+  firstTokenMs?: number;
   success: boolean;
   usageAvailable: boolean;
   promptTokens?: number;

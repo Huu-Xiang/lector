@@ -1,4 +1,5 @@
 import type { LLMProvider, CompletionOptions, LLMTask, LLMUsageEvent } from './types';
+import { recordAiCall } from '../ai-timing';
 import { LLMContentFilterError, LLMTruncatedError, providerError } from './errors';
 
 const DEFAULT_URL = 'http://localhost:11434';
@@ -104,6 +105,7 @@ export class OpenAICompatibleProvider implements LLMProvider {
     startedAt: number,
     success: boolean,
     usage?: ProviderUsage,
+    extra: { firstTokenMs?: number; error?: unknown } = {},
   ): void {
     const usageAvailable =
       usage !== undefined && Object.values(usage).some((value) => value !== undefined);
@@ -114,8 +116,16 @@ export class OpenAICompatibleProvider implements LLMProvider {
       latencyMs: Math.max(0, Date.now() - startedAt),
       success,
       usageAvailable,
+      ...(extra.firstTokenMs !== undefined ? { firstTokenMs: extra.firstTokenMs } : {}),
       ...(usageAvailable ? usage : {}),
     };
+    recordAiCall({
+      task: options.task,
+      totalMs: event.latencyMs,
+      firstTokenMs: extra.firstTokenMs,
+      success,
+      timedOut: extra.error instanceof Error && extra.error.name === 'AbortError',
+    });
     try {
       options.onUsage?.(event);
     } catch {
@@ -204,7 +214,7 @@ export class OpenAICompatibleProvider implements LLMProvider {
       this.emitAttempt(options, actualModel, startedAt, true, usage);
       return choice?.message?.content || '';
     } catch (error) {
-      this.emitAttempt(options, actualModel, startedAt, false, usage);
+      this.emitAttempt(options, actualModel, startedAt, false, usage, { error });
       throw error;
     }
   }
@@ -238,6 +248,7 @@ export class OpenAICompatibleProvider implements LLMProvider {
     let actualModel = selectedModel;
     let usage: ProviderUsage | undefined;
     let reader: ReadableStreamDefaultReader<Uint8Array> | undefined;
+    let firstTokenMs: number | undefined;
     try {
       const response = await this.fetchWithTimeout(`${this.baseUrl}/v1/chat/completions`, {
         method: 'POST',
@@ -268,7 +279,7 @@ export class OpenAICompatibleProvider implements LLMProvider {
           if (!line.startsWith('data:')) continue; // skip blank lines / comments
           const data = line.slice(5).trim();
           if (data === '[DONE]') {
-            this.emitAttempt(options, actualModel, startedAt, true, usage);
+            this.emitAttempt(options, actualModel, startedAt, true, usage, { firstTokenMs });
             return;
           }
           try {
@@ -281,7 +292,10 @@ export class OpenAICompatibleProvider implements LLMProvider {
               throw providerError(detail);
             }
             const delta = json.choices?.[0]?.delta?.content;
-            if (delta) yield delta as string;
+            if (delta) {
+              firstTokenMs ??= Date.now() - startedAt;
+              yield delta as string;
+            }
           } catch (error) {
             if (
               error instanceof LLMContentFilterError ||
@@ -293,9 +307,9 @@ export class OpenAICompatibleProvider implements LLMProvider {
           }
         }
       }
-      this.emitAttempt(options, actualModel, startedAt, true, usage);
+      this.emitAttempt(options, actualModel, startedAt, true, usage, { firstTokenMs });
     } catch (error) {
-      this.emitAttempt(options, actualModel, startedAt, false, usage);
+      this.emitAttempt(options, actualModel, startedAt, false, usage, { error });
       throw error;
     } finally {
       reader?.releaseLock();

@@ -43,6 +43,7 @@ import {
   setCampaignActive,
 } from '../lib/redeem';
 import { maskEmail } from '../lib/mask-email';
+import { aiTimingReport, parseTimingDays, timingRangeEnds } from '../lib/ai-timing';
 import { buildAdminTrends, parseTrendRange } from '../lib/admin-trends';
 import { productEmailsSetting, setProductEmails } from '../lib/app-settings';
 import { entitlements } from '../lib/entitlements';
@@ -662,6 +663,13 @@ export function makeAdminRoutes(
   });
 
   // GET/PUT /api/admin/email-switch — the one switch for every lifecycle mail.
+  // GET /api/admin/ai-timing?days=1|7|30|90 — anonymous AI latency and cache hit counts.
+  app.get('/ai-timing', (c) => {
+    const days = parseTimingDays(c.req.query('days'));
+    const { from, to } = timingRangeEnds(days, now());
+    return c.json(aiTimingReport(from, to));
+  });
+
   app.get('/email-switch', (c) => c.json(productEmailsSetting()));
 
   app.put('/email-switch', async (c) => {

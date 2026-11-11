@@ -187,6 +187,11 @@ export function registerAiRequestGuard(guard: AiRequestGuard | null): void {
   aiRequestGuard = guard;
 }
 
+/** True where a consent notice gates AI calls, so background AI calls must not start. */
+export function hasAiRequestGuard(): boolean {
+  return aiRequestGuard !== null;
+}
+
 /** Absolute URL for an API path (e.g. `apiUrl('/api/vocab')`). */
 export function apiUrl(path: string): string {
   const suffix = path.startsWith('/') ? path : `/${path}`;

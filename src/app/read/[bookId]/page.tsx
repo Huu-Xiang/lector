@@ -56,9 +56,11 @@ import {
 import {
   lookupWordRemote,
   localizeEntrySenses,
+  prefetchLocalizedSenses,
   cacheAcceptedTranslation,
   type ExpandedDictionaryEntry,
 } from '@/lib/dictionary-client';
+import { pickPrefetchCandidates } from '@/lib/prefetch-words';
 import { speak } from '@/lib/tts';
 import { isComposing } from '@/lib/keyboard';
 import {
@@ -279,6 +281,35 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       })
       .catch(() => undefined);
   });
+
+  // Warm likely lookups once per lesson, after the page is idle.
+  const prefetchedLessonRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!lesson || isLoading || prefetchedLessonRef.current === lesson.id) return;
+    if (lesson.language && lesson.language !== activeLang.code) return;
+    const lessonKey = lesson.id;
+    const words = pickPrefetchCandidates(
+      lesson.textContent,
+      lessonPack,
+      readerWordStatesRef.current,
+    );
+    if (words.length === 0) return;
+    let cancelled = false;
+    const run = async () => {
+      const native = (await loadNative()) ?? 'en';
+      if (cancelled || native === 'en' || native === activeLang.code) return;
+      prefetchedLessonRef.current = lessonKey;
+      await prefetchLocalizedSenses(words, native);
+    };
+    const idle = (window as { requestIdleCallback?: (cb: () => void) => number })
+      .requestIdleCallback;
+    const handle = idle ? idle(() => void run()) : window.setTimeout(() => void run(), 1500);
+    return () => {
+      cancelled = true;
+      if (idle) window.cancelIdleCallback?.(handle);
+      else window.clearTimeout(handle);
+    };
+  }, [lesson, isLoading, activeLang.code, lessonPack]);
 
   // Null until the setting has loaded, and after a failed read: a lookup never saves then.
   const [autoSaveLookups, setAutoSaveLookups] = useState<boolean | null>(null);
@@ -566,7 +597,17 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       if (isPhrase) {
         if (!hasTranslation) {
           try {
-            const result = await translatePhrase(word, sentence);
+            const result = await translatePhrase(word, sentence, (cumulative) => {
+              if (requestId !== translationRequestId.current) return;
+              setWordPanel((prev) => ({
+                ...prev,
+                translation: cumulative,
+                translationLang: native,
+                partOfSpeech: 'phrase',
+                isLoading: false,
+                isStreamingGloss: true,
+              }));
+            });
             if (requestId !== translationRequestId.current) return;
             replaceSavedMeaning(result.translation);
             setWordPanel((prev) => ({
@@ -581,13 +622,17 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
                 register: result.register,
               },
               isLoading: false,
+              isStreamingGloss: false,
             }));
           } catch (err) {
             if (requestId !== translationRequestId.current) return;
             console.error('Phrase translation error:', err);
             setWordPanel((prev) => ({
               ...prev,
+              translation: null,
+              translationLang: null,
               isLoading: false,
+              isStreamingGloss: false,
               error: isContentFiltered(err) ? t('aiDeclined') : t('phraseFailed'),
             }));
           }
@@ -612,7 +657,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         const needsLocalization = !!dictEntry?.needsLocalization;
         let wasLocalized = false;
         if (dictEntry?.needsLocalization) {
-          const localized = await localizeEntrySenses(word);
+          const localized = await localizeEntrySenses(word, native);
           if (requestId !== translationRequestId.current) return;
           wasLocalized = !!localized;
           dictEntry = localized
@@ -666,6 +711,8 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
             console.error('Gloss stream error:', err);
             setWordPanel((prev) => ({
               ...prev,
+              translation: null,
+              translationLang: null,
               isLoading: false,
               isStreamingGloss: false,
               error: isContentFiltered(err) ? t('aiDeclined') : t('wordFailed'),
@@ -698,10 +745,23 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
   );
 
   const requestContextTranslation = useCallback(async () => {
+    const requestId = translationRequestId.current;
+    const before = {
+      translation: wordPanel.translation,
+      aiContextTranslation: wordPanel.aiContextTranslation,
+    };
     setWordPanel((prev) => ({ ...prev, isContextLoading: true }));
     try {
-      const result = await translateWord(wordPanel.word, wordPanel.sentence);
+      const result = await translateWord(wordPanel.word, wordPanel.sentence, (cumulative) => {
+        if (requestId !== translationRequestId.current) return;
+        setWordPanel((prev) =>
+          prev.dictEntry
+            ? { ...prev, aiContextTranslation: cumulative }
+            : { ...prev, translation: cumulative, isStreamingGloss: true },
+        );
+      });
       const native = (await loadNative()) ?? 'en';
+      if (requestId !== translationRequestId.current) return;
       const structured =
         result.senses && result.senses.length > 0
           ? {
@@ -723,6 +783,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
             aiContextTranslation: result.translation,
             aiContextPartOfSpeech: result.partOfSpeech || null,
             isContextLoading: false,
+            isStreamingGloss: false,
           };
         }
         return {
@@ -732,18 +793,28 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
           partOfSpeech: result.partOfSpeech || prev.partOfSpeech,
           aiStructured: structured ?? prev.aiStructured,
           isContextLoading: false,
+          isStreamingGloss: false,
           isDictionaryResult: false,
         };
       });
     } catch (err) {
+      if (requestId !== translationRequestId.current) return;
       console.error('Context translation error:', err);
       setWordPanel((prev) => ({
         ...prev,
+        ...before,
         isContextLoading: false,
+        isStreamingGloss: false,
         error: isContentFiltered(err) ? t('aiDeclined') : t('contextFailed'),
       }));
     }
-  }, [wordPanel.word, wordPanel.sentence, t]);
+  }, [
+    wordPanel.word,
+    wordPanel.sentence,
+    wordPanel.translation,
+    wordPanel.aiContextTranslation,
+    t,
+  ]);
 
   // Enrich — upgrade the fast streamed gloss to the full dictionary entry
   // (senses / IPA / etymology / related forms). Off the critical path: the user
@@ -1300,11 +1371,25 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
   );
 
   const retranslateWithAi = useCallback(async () => {
+    const requestId = translationRequestId.current;
+    const before = {
+      translation: wordPanel.translation,
+      aiContextTranslation: wordPanel.aiContextTranslation,
+    };
     setWordPanel((prev) => ({ ...prev, isLoading: true, error: null }));
     const isPhrase = wordPanel.word.includes(' ');
     try {
       if (isPhrase) {
-        const result = await translatePhrase(wordPanel.word, wordPanel.sentence);
+        const result = await translatePhrase(wordPanel.word, wordPanel.sentence, (cumulative) => {
+          if (requestId !== translationRequestId.current) return;
+          setWordPanel((prev) => ({
+            ...prev,
+            translation: cumulative,
+            isLoading: false,
+            isStreamingGloss: true,
+          }));
+        });
+        if (requestId !== translationRequestId.current) return;
         setWordPanel((prev) => ({
           ...prev,
           translation: result.translation,
@@ -1317,10 +1402,20 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
             register: result.register,
           },
           isLoading: false,
+          isStreamingGloss: false,
           isDictionaryResult: false,
         }));
       } else {
-        const result = await translateWord(wordPanel.word, wordPanel.sentence);
+        const result = await translateWord(wordPanel.word, wordPanel.sentence, (cumulative) => {
+          if (requestId !== translationRequestId.current) return;
+          setWordPanel((prev) => ({
+            ...prev,
+            translation: cumulative,
+            isLoading: false,
+            isStreamingGloss: true,
+          }));
+        });
+        if (requestId !== translationRequestId.current) return;
         const structured =
           result.senses && result.senses.length > 0
             ? {
@@ -1338,13 +1433,27 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
           aiStructured: structured,
           phraseDetails: null,
           isLoading: false,
+          isStreamingGloss: false,
           isDictionaryResult: false,
         }));
       }
     } catch {
-      setWordPanel((prev) => ({ ...prev, isLoading: false, error: t('retranslateFailed') }));
+      if (requestId !== translationRequestId.current) return;
+      setWordPanel((prev) => ({
+        ...prev,
+        ...before,
+        isLoading: false,
+        isStreamingGloss: false,
+        error: t('retranslateFailed'),
+      }));
     }
-  }, [wordPanel.word, wordPanel.sentence, t]);
+  }, [
+    wordPanel.word,
+    wordPanel.sentence,
+    wordPanel.translation,
+    wordPanel.aiContextTranslation,
+    t,
+  ]);
 
   const handleSaveText = useCallback(
     async (newContent: string) => {

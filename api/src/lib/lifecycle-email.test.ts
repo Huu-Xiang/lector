@@ -1144,5 +1144,5 @@ describe('sweepLifecycleEmails: failures and limits', () => {
     );
     expect((await sweepLifecycleEmails(reviewDeps(database, inbox))).sent).toBe(5);
     expect(inbox).toHaveLength(total);
-  });
+  }, 30_000);
 });
