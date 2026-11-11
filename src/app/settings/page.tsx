@@ -10,6 +10,7 @@ import ThemeSettings from './components/ThemeSettings';
 import AnkiSettings from './components/AnkiSettings';
 import TTSSettings from './components/TTSSettings';
 import LLMSettings from './components/LLMSettings';
+import DailyGoalSettings from './components/DailyGoalSettings';
 import PracticeSettings from './components/PracticeSettings';
 import ProseSettings from './components/ProseSettings';
 import LanguagesSettings from './components/LanguagesSettings';
@@ -37,6 +38,7 @@ export default function SettingsPage() {
         {lectorMode() === 'cloud' && <InviteCard />}
         <InstallAppCard />
         <LanguagesSettings />
+        <DailyGoalSettings />
         <section className="panel space-y-6 p-6" data-testid="language-preferences">
           <div>
             <h2 className="mb-1 text-lg font-semibold text-foreground">

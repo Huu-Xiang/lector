@@ -303,7 +303,7 @@
       "shown": "表示",
       "hidden": "非表示",
       "wordReviewHeading": "単語の復習",
-      "reviewGoalLabel": "復習の目標",
+      "reviewGoalLabel": "復習の方法",
       "reviewGoalFailed": "復習の目標を保存できませんでした。もう一度お試しください。",
       "autoSaveLabel": "調べた単語を自動で保存",
       "autoSaveHint": "調べた単語を、レベル 1 で単語帳に自動で追加します。「単語の意味」パネルで変更や取り消しができます。",

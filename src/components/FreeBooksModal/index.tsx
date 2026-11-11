@@ -265,21 +265,21 @@ export default function FreeBooksModal({
               </p>
             )}
             {(books?.length ?? 0) > 0 && (
-              <div className="mb-3 flex flex-wrap gap-2">
+              <div className="mb-3 flex gap-2">
                 <Input
                   type="search"
                   value={query}
                   onChange={(event) => setQuery(event.target.value)}
                   placeholder={t('search')}
                   aria-label={t('search')}
-                  className="min-w-0 flex-1 basis-48"
+                  className="min-w-0 flex-1"
                   data-testid="free-books-search"
                 />
                 <Select
                   value={sort}
                   onChange={(event) => setSort(event.target.value as BookSort)}
                   aria-label={t('sortLabel')}
-                  wrapperClassName="w-40"
+                  wrapperClassName="w-32 shrink-0 sm:w-40"
                   data-testid="free-books-sort"
                 >
                   <option value="default">{t('sortDefault')}</option>
@@ -294,7 +294,10 @@ export default function FreeBooksModal({
               </p>
             )}
             {levels.length > 0 && !searching && (
-              <div className="mb-4 flex flex-wrap gap-2" data-testid="free-books-levels">
+              <div
+                className="-mx-6 mb-4 flex gap-2 overflow-x-auto px-6 pb-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0"
+                data-testid="free-books-levels"
+              >
                 {(['all', ...levels] as const).map((level) => (
                   <button
                     key={level}
@@ -302,7 +305,7 @@ export default function FreeBooksModal({
                     aria-pressed={current === level}
                     onClick={() => pickLevel(level)}
                     data-testid={`free-books-level-${level}`}
-                    className={`rounded-xl border px-3 py-1.5 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
+                    className={`shrink-0 rounded-xl border px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
                       current === level
                         ? 'border-primary bg-[var(--primary-soft)] text-[var(--primary-text)]'
                         : 'border-border bg-background text-foreground hover:bg-accent'
@@ -337,7 +340,7 @@ export default function FreeBooksModal({
                         return (
                           <li
                             key={book.slug}
-                            className="flex items-start justify-between gap-4 rounded-xl border border-border bg-card p-4"
+                            className="flex flex-wrap items-start gap-x-4 gap-y-3 rounded-xl border border-border bg-card p-4 sm:flex-nowrap"
                             data-testid={`free-book-${book.slug}`}
                           >
                             {book.cover && (
@@ -349,7 +352,7 @@ export default function FreeBooksModal({
                                 className="aspect-[3/4] w-12 shrink-0 rounded-md bg-muted object-cover sm:w-14"
                               />
                             )}
-                            <div className="min-w-0 flex-1">
+                            <div className="min-w-0 flex-1 basis-[calc(100%-4.75rem)] sm:basis-0">
                               <h4 className="font-semibold text-foreground">{shownTitle}</h4>
                               {shownTitle !== book.title && (
                                 <p className="text-xs text-muted-foreground">
@@ -387,6 +390,7 @@ export default function FreeBooksModal({
                             </div>
                             <Button
                               size="sm"
+                              className="ml-16 sm:ml-0"
                               variant={book.added ? 'outline' : 'default'}
                               disabled={book.added || adding !== null}
                               onClick={() => add(book)}

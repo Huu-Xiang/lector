@@ -9,7 +9,7 @@
       "shown": "표시",
       "hidden": "숨김",
       "wordReviewHeading": "단어 복습",
-      "reviewGoalLabel": "복습 목표",
+      "reviewGoalLabel": "복습 방식",
       "reviewGoalFailed": "복습 목표를 저장하지 못했어요. 다시 시도해 주세요.",
       "autoSaveLabel": "찾아본 단어 자동 저장",
       "autoSaveHint": "찾아본 단어를 레벨 1로 단어장에 자동으로 추가해요. 단어 뜻 패널에서 바꾸거나 취소할 수 있어요.",

@@ -21,7 +21,7 @@
   --card-foreground: #2c2a23;
   --popover: #fffdf7; /* translation drawer / sheet surface */
   --popover-foreground: #2c2a23;
-  --primary: #2f8a76; /* sage / teal */
+  --primary: #287866; /* sage / teal; white on it and it on --background stay above 4.5:1 */
   --primary-foreground: #ffffff;
   --secondary: #f1ebda; /* warm chip/pill bg */
   --secondary-foreground: #6b6356;
@@ -33,7 +33,7 @@
   --destructive-foreground: #ffffff;
   --border: #e9e1d0;
   --input: #e9e1d0;
-  --ring: #2f8a76;
+  --ring: #287866;
 
   /* charts — retinted into the sage/clay/gold/sand family */
   --chart-1: #2f8a76;
@@ -47,12 +47,12 @@
   /* sidebar (shadcn primitive) — kept in family */
   --sidebar: #fffdf7;
   --sidebar-foreground: #2c2a23;
-  --sidebar-primary: #2f8a76;
+  --sidebar-primary: #287866;
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #efe9dc;
   --sidebar-accent-foreground: #2c2a23;
   --sidebar-border: #e9e1d0;
-  --sidebar-ring: #2f8a76;
+  --sidebar-ring: #287866;
 
   /* custom: elevation + brand accents */
   --lip: #dbceb8; /* shallow 3D bottom edge on cards/buttons */
@@ -618,6 +618,9 @@ html {
   }
   html {
     @apply font-sans;
+  }
+  input[type='range'] {
+    accent-color: var(--primary);
   }
 }
 

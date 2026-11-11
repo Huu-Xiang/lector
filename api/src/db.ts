@@ -6,6 +6,7 @@ import { parseEpub } from './lib/epub-parser';
 import { countWords } from './lib/html-to-markdown';
 import { ensureGoalStreakSince } from './lib/daily-goal';
 import { firstMarkdownImage } from './lib/markdown-image';
+import { SOURCE_NAMES } from './lib/reading-feed/source-names';
 import {
   DEFAULT_LANGUAGE,
   foldWord,
@@ -1027,6 +1028,11 @@ export function backfillReadingFeedCovers(database: Database) {
     const cover = firstMarkdownImage(row.textContent ?? '');
     if (cover) update.run(cover, row.id, row.userId);
   }
+  // Saved articles once stored the source id as their author.
+  const rename = database.prepare(
+    "UPDATE collections SET author = ? WHERE id LIKE 'reading-feed-%' AND author = ?",
+  );
+  for (const [id, name] of Object.entries(SOURCE_NAMES)) rename.run(name, id);
 }
 
 // Tables whose rows carry the language they belong to. The backfill below reads

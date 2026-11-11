@@ -58,6 +58,7 @@ export default function DailyGoalBadge({ compact = false }: { compact?: boolean 
   const t = useTranslations('dailyGoal');
   const [status, setStatus] = useState<StreakStatus | null>(null);
   const [celebrating, setCelebrating] = useState(false);
+  const [failed, setFailed] = useState(false);
   const metBefore = useRef<boolean | null>(null);
 
   const load = useCallback(() => {
@@ -71,7 +72,7 @@ export default function DailyGoalBadge({ compact = false }: { compact?: boolean 
         metBefore.current = next.goalMetToday;
         setStatus(next);
       })
-      .catch(() => undefined);
+      .catch(() => setFailed(true));
   }, [t]);
 
   useEffect(() => {
@@ -80,7 +81,17 @@ export default function DailyGoalBadge({ compact = false }: { compact?: boolean 
     return () => window.removeEventListener(DAILY_STATS_EVENT, load);
   }, [load]);
 
-  if (!status?.goal) return null;
+  // Same box as the badge while loading, so the header does not jump when it arrives.
+  if (!status?.goal) {
+    if (failed) return null;
+    return (
+      <span
+        aria-hidden="true"
+        data-testid="daily-goal-placeholder"
+        className={`block h-9 shrink-0 rounded-full border border-border bg-card ${compact ? 'w-[4.75rem]' : 'w-36'}`}
+      />
+    );
+  }
   const { goal, goalProgress, goalMetToday, streak, longest } = status;
   const shown = Math.min(goalProgress, goal.target);
   const amount = t(`amount.${goal.kind}`, { done: shown, target: goal.target });
@@ -106,8 +117,8 @@ export default function DailyGoalBadge({ compact = false }: { compact?: boolean 
         data-testid="daily-goal-badge"
         data-goal-met={goalMetToday ? 'true' : 'false'}
         aria-label={t('label', { count: streak, amount })}
-        className={`flex shrink-0 items-center gap-1.5 rounded-full border border-border bg-card px-2.5 py-1 text-sm font-semibold text-foreground transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
-          celebrating ? 'animate-bounce' : ''
+        className={`relative flex h-9 shrink-0 items-center gap-1.5 rounded-full border border-border bg-card px-3 text-sm font-semibold text-foreground transition-colors before:absolute before:-inset-1 hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
+          celebrating ? 'motion-safe:animate-bounce' : ''
         }`}
       >
         <Flame
@@ -117,7 +128,7 @@ export default function DailyGoalBadge({ compact = false }: { compact?: boolean 
         <span data-testid="daily-goal-streak">{streak}</span>
         <ProgressRing fraction={shown / goal.target} met={goalMetToday} />
         {!compact && (
-          <span className="hidden text-xs font-medium text-muted-foreground sm:inline">
+          <span className="text-xs font-medium whitespace-nowrap text-muted-foreground">
             {amount}
           </span>
         )}

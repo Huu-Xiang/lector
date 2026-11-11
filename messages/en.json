@@ -303,7 +303,7 @@
       "shown": "Shown",
       "hidden": "Hidden",
       "wordReviewHeading": "Word review",
-      "reviewGoalLabel": "Review goal",
+      "reviewGoalLabel": "Review style",
       "reviewGoalFailed": "Could not save the review goal. Try again.",
       "autoSaveLabel": "Save looked-up words",
       "autoSaveHint": "Add each word you look up to your word list at Level 1. You can change or remove it in the drawer.",

@@ -11,6 +11,8 @@ export interface ActiveReaderWord {
 
 export interface ReaderArticleProps {
   content: string;
+  /** The lesson title in the reader bar; a first heading with the same text is not repeated. */
+  title?: string;
   pack: LanguageConfig;
   /** Resolved reader typography (#570). */
   prose: ProseStyle;

@@ -9,7 +9,7 @@
       "shown": "显示",
       "hidden": "隐藏",
       "wordReviewHeading": "单词复习",
-      "reviewGoalLabel": "复习目标",
+      "reviewGoalLabel": "复习方式",
       "reviewGoalFailed": "无法保存复习目标。请重试。",
       "autoSaveLabel": "查词后自动存入生词本",
       "autoSaveHint": "查过的单词会自动以 1 级存入生词本。你可以在“单词释义”面板里修改或取消。",

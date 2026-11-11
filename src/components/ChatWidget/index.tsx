@@ -196,6 +196,23 @@ export default function ChatWidget() {
     setIsOpen(!isOpen);
   };
 
+  // On phones the button covers text, so it slides away while the reader scrolls down.
+  const [tucked, setTucked] = useState(false);
+  useEffect(() => {
+    const last = new WeakMap<object, number>();
+    const onScroll = (event: Event) => {
+      const target = event.target === document ? document.scrollingElement : event.target;
+      if (!(target instanceof Element)) return;
+      const top = target.scrollTop;
+      const before = last.get(target) ?? 0;
+      last.set(target, top);
+      if (Math.abs(top - before) < 6) return;
+      setTucked(top > before && top > 80);
+    };
+    document.addEventListener('scroll', onScroll, { capture: true, passive: true });
+    return () => document.removeEventListener('scroll', onScroll, { capture: true });
+  }, []);
+
   // Chrome-free routes (#218/#224): the widget sits outside the layout
   // guards, so hide it itself — chat could only 401/402 there.
   if (isBareRoute(pathname)) return null;
@@ -210,6 +227,7 @@ export default function ChatWidget() {
         className={clsx(
           'fixed right-4 bottom-20 z-50 flex h-12 w-12 rounded-full shadow-lg transition-all hover:shadow-xl sm:right-6 sm:bottom-6 print:hidden',
           pathname.includes('/read') && '2xl:right-[406px]',
+          tucked && !isOpen && 'max-sm:pointer-events-none max-sm:translate-y-24 max-sm:opacity-0',
         )}
         aria-label={isOpen ? t('close') : t('open')}
         data-testid="chat-toggle"

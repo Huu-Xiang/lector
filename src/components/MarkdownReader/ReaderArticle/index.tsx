@@ -24,6 +24,14 @@ import type { ActiveReaderWord, ReaderArticleProps } from './types';
 
 export type { ActiveReaderWord } from './types';
 
+interface TextNode {
+  value?: string;
+  children?: TextNode[];
+}
+
+const nodeText = (node: TextNode): string =>
+  (node.value ?? '') + (node.children ?? []).map(nodeText).join('');
+
 /**
  * A link in lesson text stays readable: its words still open the word drawer,
  * and only the small icon after it opens the address in a new tab.
@@ -45,9 +53,9 @@ function LessonLink({ href, children }: { href?: string; children: ReactNode }) 
           aria-label={t('openLink')}
           title={external}
           data-testid="lesson-link-open"
-          className="ml-0.5 inline-flex translate-y-[-0.1em] items-center align-middle text-muted-foreground no-underline select-none hover:text-primary"
+          className="relative ml-0.5 inline-flex translate-y-[-0.1em] items-center align-middle text-muted-foreground no-underline select-none before:absolute before:-inset-x-2.5 before:-inset-y-3 hover:text-primary"
         >
-          <ExternalLink className="size-[0.7em]" aria-hidden="true" />
+          <ExternalLink className="size-[0.8em]" aria-hidden="true" />
         </a>
       )}
     </span>
@@ -237,6 +245,7 @@ const ReaderBlock = memo(function ReaderBlock({
 
 function ReaderArticle({
   content,
+  title,
   pack,
   prose,
   segmentation,
@@ -288,16 +297,19 @@ function ReaderArticle({
       <ReactMarkdown
         remarkPlugins={[remarkBreaks]}
         components={{
-          h1: ({ node, children }) => (
-            <ReaderBlock
-              as="h1"
-              className="mt-8 mb-4 font-sans text-3xl font-extrabold first:mt-0"
-              blockId={node?.position?.start?.offset ?? 0}
-              {...blockProps}
-            >
-              {children}
-            </ReaderBlock>
-          ),
+          h1: ({ node, children }) =>
+            node?.position?.start?.offset === 0 &&
+            title &&
+            nodeText(node) === title.trim() ? null : (
+              <ReaderBlock
+                as="h1"
+                className="mt-8 mb-4 font-sans text-3xl font-extrabold first:mt-0"
+                blockId={node?.position?.start?.offset ?? 0}
+                {...blockProps}
+              >
+                {children}
+              </ReaderBlock>
+            ),
           h2: ({ node, children }) => (
             <ReaderBlock
               as="h2"

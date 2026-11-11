@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-import { ArrowLeft, Pencil, Plus } from 'lucide-react';
+import { ArrowLeft, Pencil, Plus, Trash2 } from 'lucide-react';
 import LessonFormModal from '@/components/LessonFormModal';
 import { ReadingSweep } from '@/components/Loaders';
 import {
@@ -311,8 +311,10 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
           )}
           <button
             onClick={handleDelete}
-            className="rounded-lg px-4 py-2.5 text-sm text-destructive hover:bg-accent"
+            data-testid="collection-delete"
+            className="ml-auto inline-flex items-center gap-1.5 rounded-lg px-3 py-2.5 text-sm text-destructive hover:bg-accent"
           >
+            <Trash2 className="size-4" aria-hidden="true" />
             {t('common.delete')}
           </button>
         </div>

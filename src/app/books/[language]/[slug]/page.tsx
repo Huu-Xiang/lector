@@ -188,7 +188,7 @@ export default async function BookPage({ params }: Props) {
           </p>
           <ul lang={language} className="flex flex-wrap gap-1.5">
             {book.hardWords.map((word) => (
-              <li key={word} className="rounded-md border border-border bg-card px-2 py-0.5">
+              <li key={word} className="rounded bg-muted px-1.5 py-0.5 text-sm text-foreground">
                 {word}
               </li>
             ))}

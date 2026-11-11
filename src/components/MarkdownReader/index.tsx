@@ -550,6 +550,7 @@ export default function MarkdownReader({
         ) : (
           <ReaderArticle
             content={lesson.textContent}
+            title={lesson.title}
             pack={pack}
             prose={prose}
             segmentation={segmentation}

@@ -141,6 +141,23 @@ describe('reading-feed route', () => {
     expect(row.coverUrl).toBe('https://example.com/old.jpg');
   });
 
+  test('a saved article names its source, and the backfill renames old source ids', async () => {
+    const { id } = seedArticle();
+    await addArticle({ id });
+    const collectionId = `reading-feed-${id}`;
+    const author = () =>
+      (
+        db.prepare('SELECT author FROM collections WHERE id = ?').get(collectionId) as {
+          author: string;
+        }
+      ).author;
+    expect(author()).toBe('Global Voices');
+
+    db.prepare("UPDATE collections SET author = 'global-voices' WHERE id = ?").run(collectionId);
+    backfillReadingFeedCovers(db);
+    expect(author()).toBe('Global Voices');
+  });
+
   test('rejects a bad body and an unknown article', async () => {
     expect((await addArticle('not json')).status).toBe(400);
     expect((await addArticle({ id: 'no-such-id' })).status).toBe(404);

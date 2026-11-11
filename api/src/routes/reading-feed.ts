@@ -9,6 +9,7 @@ import { getReadingFeedArticle, listReadingFeed } from '../lib/reading-feed/stor
 import { cachedDescriptions, describeArticles } from '../lib/reading-feed/describe';
 import { getLanguageConfig, isNativeLanguageCode } from '../lib/languages';
 import { firstMarkdownImage } from '../lib/markdown-image';
+import { sourceName } from '../lib/reading-feed/source-names';
 import type { FeedLanguage, ReadingInterest } from '../lib/reading-feed/types';
 
 const FEED_LANGUAGES = new Set<FeedLanguage>(['en', 'fr', 'zh']);
@@ -142,7 +143,7 @@ app.post('/add', async (c) => {
       ).run(
         collectionId,
         article.title,
-        article.author ?? article.source,
+        article.author ?? sourceName(article.source),
         firstMarkdownImage(article.text),
         article.language,
         now,
