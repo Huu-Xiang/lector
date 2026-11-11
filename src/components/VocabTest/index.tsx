@@ -1,25 +1,29 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
-import { Check } from 'lucide-react';
 import { buttonVariants, Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { registerHrefForBook } from '@/lib/pending-book';
 import {
+  MIN_ANSWERS,
+  estimateFromAnswers,
   missedWords,
+  nextItem,
   recommendBooks,
-  sampleTest,
-  scoreTest,
   seededRng,
+  type Answer,
+  type LiveEstimate,
+  type Rng,
   type TestItem,
   type VocabTestData,
 } from '@/lib/vocab-test';
 import { readVocabResult, writeVocabResult } from '@/lib/vocab-result';
 import type { VocabTestBook } from '@/lib/vocab-test-data';
 
-const PAGE_SIZE = 13;
+/** The live bar spans this many words; the test's hardest band ends at 14,000. */
+const SCALE_MAX = 14000;
 
 function shownTitle(book: VocabTestBook, locale: string): string {
   return book.titles[locale] ?? book.titles.en ?? book.title;
@@ -45,9 +49,9 @@ export default function VocabTest({
   const t = useTranslations('vocabTest');
   const locale = useLocale();
   const [step, setStep] = useState<Step>('intro');
-  const [items, setItems] = useState<TestItem[]>([]);
-  const [known, setKnown] = useState<ReadonlySet<string>>(new Set());
-  const [page, setPage] = useState(0);
+  const [answers, setAnswers] = useState<Answer[]>([]);
+  const [current, setCurrent] = useState<TestItem | null>(null);
+  const rngRef = useRef<Rng>(seededRng(1));
   const [lastResult, setLastResult] = useState<ReturnType<typeof readVocabResult>>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
 
@@ -56,44 +60,67 @@ export default function VocabTest({
     setLastResult(readVocabResult());
   }, []);
 
-  const pageCount = Math.max(1, Math.ceil(items.length / PAGE_SIZE));
-
   useEffect(() => {
     if (step !== 'intro') headingRef.current?.focus();
-  }, [step, page]);
+  }, [step]);
+
+  const live = useMemo(() => estimateFromAnswers(answers, data.bands), [answers, data.bands]);
 
   function begin() {
-    setItems(sampleTest(data, seededRng(randomSeed())));
-    setKnown(new Set());
-    setPage(0);
+    rngRef.current = seededRng(randomSeed());
+    setAnswers([]);
+    setCurrent(nextItem([], data, rngRef.current));
     setStep('test');
     window.scrollTo({ top: 0 });
   }
 
-  function toggle(id: string) {
-    setKnown((prev) => {
-      const next = new Set(prev);
-      if (!next.delete(id)) next.add(id);
-      return next;
-    });
-  }
-
-  function go(next: number) {
-    setPage(next);
-    window.scrollTo({ top: 0 });
-  }
-
-  const score = useMemo(
-    () => (step === 'result' ? scoreTest(items, known, data.bands) : null),
-    [step, items, known, data.bands],
+  const finish = useCallback(
+    (all: readonly Answer[]) => {
+      const result = estimateFromAnswers(all, data.bands);
+      if (result && !result.unreliable) writeVocabResult(result.estimate, result.level);
+      setStep('result');
+      window.scrollTo({ top: 0 });
+    },
+    [data.bands],
   );
 
-  function finish() {
-    const result = scoreTest(items, known, data.bands);
-    if (!result.unreliable) writeVocabResult(result.estimate, result.level);
-    setStep('result');
+  const answer = useCallback(
+    (known: boolean) => {
+      if (!current) return;
+      const next = [...answers, { item: current, known }];
+      setAnswers(next);
+      const following = nextItem(next, data, rngRef.current);
+      setCurrent(following);
+      if (!following) finish(next);
+    },
+    [answers, current, data, finish],
+  );
+
+  function undo() {
+    const last = answers[answers.length - 1];
+    if (!last) return;
+    setAnswers(answers.slice(0, -1));
+    setCurrent(last.item);
+  }
+
+  function keepGoing() {
+    setCurrent(nextItem(answers, data, rngRef.current));
+    setStep('test');
     window.scrollTo({ top: 0 });
   }
+
+  useEffect(() => {
+    if (step !== 'test') return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.altKey || event.ctrlKey || event.metaKey) return;
+      if (event.key === 'ArrowRight') answer(true);
+      else if (event.key === 'ArrowLeft') answer(false);
+      else return;
+      event.preventDefault();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [step, answer]);
 
   if (step === 'intro') {
     return (
@@ -115,97 +142,88 @@ export default function VocabTest({
   }
 
   if (step === 'test') {
-    const pageItems = items.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
-    const last = page === pageCount - 1;
+    const bandsSeen = new Set(
+      answers.filter((entry) => entry.item.kind === 'real').map((entry) => entry.item.band),
+    ).size;
+    const canFinish = answers.length >= MIN_ANSWERS && live !== null;
     return (
-      <section className="space-y-4" data-testid="vocab-test">
-        <div>
-          <h2
-            ref={headingRef}
-            tabIndex={-1}
-            className="text-sm font-semibold outline-none"
-            data-testid="vocab-progress"
-          >
-            {t('progress', { page: page + 1, total: pageCount })}
-          </h2>
-          <div
-            role="progressbar"
-            aria-valuemin={1}
-            aria-valuemax={pageCount}
-            aria-valuenow={page + 1}
-            aria-label={t('progress', { page: page + 1, total: pageCount })}
-            className="mt-2 h-2 overflow-hidden rounded-full bg-muted"
-          >
-            <div
-              className="h-full bg-primary transition-all"
-              style={{ width: `${((page + 1) / pageCount) * 100}%` }}
-            />
-          </div>
-          <p className="mt-2 text-muted-foreground">
-            {t('tickHint')}{' '}
-            <span data-testid="vocab-ticked">{t('ticked', { count: known.size })}</span>
-          </p>
-        </div>
-        <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-          {pageItems.map((item) => {
-            const on = known.has(item.id);
-            return (
-              <li key={item.id}>
-                <button
-                  type="button"
-                  aria-pressed={on}
-                  onClick={() => toggle(item.id)}
-                  data-testid="vocab-word"
-                  className={cn(
-                    'flex min-h-11 w-full items-center justify-between gap-2 rounded-xl border px-3 py-2 text-left text-base font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none',
-                    on
-                      ? 'border-primary bg-[var(--primary-soft)] text-[var(--primary-text)]'
-                      : 'border-border bg-card text-foreground hover:bg-accent',
-                  )}
-                >
-                  <span lang="en" className="min-w-0 break-words">
-                    {item.word}
-                  </span>
-                  {on && <Check className="h-4 w-4 shrink-0" aria-hidden="true" />}
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-        <div className="flex items-center justify-between gap-3 pt-2">
-          <Button
-            variant="outline"
-            size="lg"
-            className="min-h-11"
-            disabled={page === 0}
-            onClick={() => go(page - 1)}
-            data-testid="vocab-back"
-          >
-            {t('back')}
-          </Button>
-          {last ? (
-            <Button size="lg" className="min-h-11" onClick={finish} data-testid="vocab-finish">
-              {t('finish')}
-            </Button>
-          ) : (
-            <Button
-              size="lg"
-              className="min-h-11"
-              onClick={() => go(page + 1)}
-              data-testid="vocab-next"
+      <section className="space-y-5" data-testid="vocab-test">
+        <h2 ref={headingRef} tabIndex={-1} className="sr-only">
+          {t('testHeading')}
+        </h2>
+        <LivePanel live={live} waiting={data.bands.length - bandsSeen} answered={answers.length} />
+
+        {current && (
+          <div className="rounded-2xl border border-border bg-card p-6 text-center">
+            <p
+              lang="en"
+              aria-live="polite"
+              className="text-4xl font-bold tracking-tight break-words"
+              data-testid="vocab-word"
             >
-              {t('next')}
-            </Button>
-          )}
+              {current.word}
+            </p>
+            <div className="mt-6 grid grid-cols-2 gap-3">
+              <Button
+                variant="outline"
+                size="lg"
+                className="min-h-12 text-base"
+                onClick={() => answer(false)}
+                data-testid="vocab-unknown"
+              >
+                {t('dontKnow')}
+              </Button>
+              <Button
+                size="lg"
+                className="min-h-12 text-base"
+                onClick={() => answer(true)}
+                data-testid="vocab-known"
+              >
+                {t('know')}
+              </Button>
+            </div>
+            <p className="mt-4 text-sm text-muted-foreground">{t('dontKnowHint')}</p>
+            <p className="mt-1 hidden text-xs text-muted-foreground sm:block">{t('keysHint')}</p>
+          </div>
+        )}
+
+        <div className="flex items-center justify-between gap-3">
+          <Button
+            variant="ghost"
+            className="min-h-11"
+            disabled={answers.length === 0}
+            onClick={undo}
+            data-testid="vocab-undo"
+          >
+            {t('undo')}
+          </Button>
+          <Button
+            size="lg"
+            variant={live?.precision === 'high' ? 'default' : 'outline'}
+            className="min-h-11"
+            disabled={!canFinish}
+            onClick={() => finish(answers)}
+            data-testid="vocab-finish"
+          >
+            {canFinish
+              ? t('seeResult')
+              : t('seeResultAfter', { count: Math.max(1, MIN_ANSWERS - answers.length) })}
+          </Button>
         </div>
       </section>
     );
   }
 
+  const score = live;
   if (!score) return null;
   const fromSetup = new URLSearchParams(window.location.search).get('from') === 'setup';
   const recommended = recommendBooks(books, score.estimate, score.level);
-  const missed = missedWords(items, known, score.estimate, data.bands);
+  const missed = missedWords(
+    answers.map((entry) => entry.item),
+    new Set(answers.filter((entry) => entry.known).map((entry) => entry.item.id)),
+    score.estimate,
+    data.bands,
+  );
   const top = recommended[0];
   const topTitle = top ? shownTitle(top, locale) : '';
 
@@ -224,11 +242,19 @@ export default function VocabTest({
         >
           {t('resultHeading')}
         </h2>
-        <p className="mt-2 text-4xl font-bold tracking-tight" data-testid="vocab-estimate">
-          {t('estimate', { count: score.estimate })}
+        <p
+          className="mt-2 text-3xl font-bold tracking-tight text-balance sm:text-4xl"
+          data-testid="vocab-estimate"
+        >
+          {score.capped
+            ? t('estimateCapped')
+            : t('estimate', { count: score.estimate, margin: score.margin })}
         </p>
-        <p className="mt-1 text-muted-foreground" data-testid="vocab-range">
-          {t('range', { low: score.low, high: score.high })}
+        <p className="mt-1 text-muted-foreground" data-testid="vocab-precision">
+          {t('precisionResult', {
+            level: t(`precisionLevel.${score.precision}`),
+            count: score.answered,
+          })}
         </p>
         <p className="mt-3 text-xl font-semibold" data-testid="vocab-level">
           {t('level', { level: score.level })}
@@ -336,6 +362,17 @@ export default function VocabTest({
             {t('cta', { title: topTitle })}
           </Link>
         )}
+        {score.precision !== 'high' && current !== null && (
+          <Button
+            variant="outline"
+            size="lg"
+            className="min-h-11"
+            onClick={keepGoing}
+            data-testid="vocab-continue"
+          >
+            {t('continue')}
+          </Button>
+        )}
         <Button
           variant="outline"
           size="lg"
@@ -355,5 +392,68 @@ export default function VocabTest({
         <p className="text-xs text-muted-foreground">{t('credit', { source: data.source })}</p>
       )}
     </section>
+  );
+}
+
+function LivePanel({
+  live,
+  waiting,
+  answered,
+}: {
+  live: LiveEstimate | null;
+  waiting: number;
+  answered: number;
+}) {
+  const t = useTranslations('vocabTest');
+  const at = (n: number) => `${(Math.min(n, SCALE_MAX) / SCALE_MAX) * 100}%`;
+  return (
+    <div className="rounded-2xl border border-border bg-card p-4" data-testid="vocab-live">
+      <div className="flex items-baseline justify-between gap-3">
+        <p className="font-semibold" aria-live="polite" data-testid="vocab-live-estimate">
+          {live === null
+            ? t('liveWaiting', { count: Math.max(1, waiting) })
+            : live.capped
+              ? t('liveCapped')
+              : t('liveEstimate', { count: live.estimate, margin: live.margin })}
+        </p>
+        <p className="shrink-0 text-sm text-muted-foreground" data-testid="vocab-answered">
+          {t('answered', { count: answered })}
+        </p>
+      </div>
+      <div
+        className="relative mt-3 h-3 rounded-full bg-muted"
+        role="img"
+        aria-label={
+          live === null
+            ? t('liveWaiting', { count: Math.max(1, waiting) })
+            : t('liveEstimate', { count: live.estimate, margin: live.margin })
+        }
+      >
+        {live !== null && (
+          <>
+            <div
+              className="absolute inset-y-0 rounded-full bg-primary/30 transition-all duration-300 motion-reduce:transition-none"
+              style={{ left: at(live.low), width: `calc(${at(live.high)} - ${at(live.low)})` }}
+            />
+            <div
+              className="absolute -top-1 -bottom-1 w-1 -translate-x-1/2 rounded-full bg-primary transition-all duration-300 motion-reduce:transition-none"
+              style={{ left: at(live.estimate) }}
+            />
+          </>
+        )}
+      </div>
+      <div className="mt-1 flex justify-between text-xs text-muted-foreground" aria-hidden="true">
+        <span>0</span>
+        <span>7,000</span>
+        <span>14,000</span>
+      </div>
+      {live !== null && (
+        <p className="mt-2 text-sm text-muted-foreground" data-testid="vocab-live-precision">
+          {t('precision', { level: t(`precisionLevel.${live.precision}`) })}
+          {' · '}
+          {live.precision === 'high' ? t('enough') : t('precisionHint')}
+        </p>
+      )}
+    </div>
   );
 }

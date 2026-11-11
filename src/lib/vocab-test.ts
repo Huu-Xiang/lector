@@ -34,11 +34,13 @@ export interface TestScore {
 
 export type Rng = () => number;
 
-export const WORDS_PER_BAND = 4;
-export const WORDS_IN_LAST_BAND = 5;
-/** The 10,001-14,000 band is wider than the rest, so it gets one more word. */
-const LAST_BAND_INDEX = 10;
-export const FAKE_COUNT = 20;
+/** Made-up words make up about this share of the questions, to measure guessing. */
+export const FAKE_SHARE = 0.25;
+/** The result can be shown after this many answers; the test stops at the maximum. */
+export const MIN_ANSWERS = 20;
+export const MAX_ANSWERS = 120;
+/** z for a 90% interval: the shown range is estimate ± margin. */
+const Z90 = 1.645;
 export const UNRELIABLE_FALSE_ALARM_RATE = 0.25;
 export const READABLE_COVERAGE = 0.95;
 
@@ -54,33 +56,114 @@ export function seededRng(seed: number): Rng {
   };
 }
 
-function shuffle<T>(list: readonly T[], rng: Rng): T[] {
-  const out = [...list];
-  for (let i = out.length - 1; i > 0; i--) {
-    const j = Math.floor(rng() * (i + 1));
-    [out[i], out[j]] = [out[j], out[i]];
-  }
-  return out;
+export interface Answer {
+  item: TestItem;
+  known: boolean;
 }
 
-export function sampleTest(data: VocabTestData, rng: Rng): TestItem[] {
-  const items: TestItem[] = [];
-  data.bands.forEach((band, index) => {
-    const count = index === LAST_BAND_INDEX ? WORDS_IN_LAST_BAND : WORDS_PER_BAND;
-    for (const entry of shuffle(band.words, rng).slice(0, count)) {
-      items.push({
-        id: `r${index}:${entry.w}`,
-        word: entry.w,
-        kind: 'real',
-        band: index,
-        zh: entry.zh,
-      });
-    }
-  });
-  for (const word of shuffle(data.pseudowords, rng).slice(0, FAKE_COUNT)) {
-    items.push({ id: `f:${word}`, word, kind: 'fake', band: -1 });
+function realItem(data: VocabTestData, band: number, index: number): TestItem {
+  const entry = data.bands[band].words[index];
+  return { id: `r${band}:${entry.w}`, word: entry.w, kind: 'real', band, zh: entry.zh };
+}
+
+/**
+ * The next question, or null when the test is over. Every band is asked once first; after that
+ * the band whose estimate is least certain gets the next word. About a quarter are made-up words.
+ */
+export function nextItem(
+  answers: readonly Answer[],
+  data: VocabTestData,
+  rng: Rng,
+): TestItem | null {
+  if (answers.length >= MAX_ANSWERS) return null;
+  const asked = new Set(answers.map((answer) => answer.item.id));
+  const fakesAsked = answers.filter((answer) => answer.item.kind === 'fake').length;
+  const freshFakes = data.pseudowords.filter((word) => !asked.has(`f:${word}`));
+  if (
+    answers.length > 0 &&
+    freshFakes.length > 0 &&
+    fakesAsked < Math.round(FAKE_SHARE * (answers.length + 1))
+  ) {
+    const word = freshFakes[Math.floor(rng() * freshFakes.length)];
+    return { id: `f:${word}`, word, kind: 'fake', band: -1 };
   }
-  return shuffle(items, rng);
+
+  const stats = bandStats(answers, data.bands.length);
+  const candidates = data.bands
+    .map((band, index) => {
+      const fresh = band.words
+        .map((_, i) => i)
+        .filter((i) => !asked.has(`r${index}:${band.words[i].w}`));
+      const { n, p } = stats[index];
+      const size = band.to - band.from + 1;
+      // A band never asked comes first; otherwise the drop in variance one more answer brings.
+      const gain = n === 0 ? Infinity : (size * size * p * (1 - p)) / (n * (n + 1));
+      return { index, fresh, gain };
+    })
+    .filter((band) => band.fresh.length > 0);
+  if (candidates.length === 0) return null;
+  const best = Math.max(...candidates.map((band) => band.gain));
+  const top = candidates.filter((band) => band.gain === best);
+  const pick = top[Math.floor(rng() * top.length)];
+  return realItem(data, pick.index, pick.fresh[Math.floor(rng() * pick.fresh.length)]);
+}
+
+/** Answers and a smoothed known-rate per band. Prior 0.15 keeps 0/n and n/n from reading as certain; simulation put the 90% range around 90% coverage from 1,000 to 8,000 words. */
+function bandStats(answers: readonly Answer[], bandCount: number) {
+  const stats = Array.from({ length: bandCount }, () => ({ n: 0, k: 0, p: 0.5 }));
+  for (const { item, known } of answers) {
+    if (item.kind !== 'real' || !stats[item.band]) continue;
+    stats[item.band].n += 1;
+    if (known) stats[item.band].k += 1;
+  }
+  for (const band of stats) band.p = (band.k + 0.15) / (band.n + 0.3);
+  return stats;
+}
+
+export type Precision = 'low' | 'medium' | 'high';
+
+export interface LiveEstimate extends TestScore {
+  /** Half-width of a 90% interval, in words. */
+  margin: number;
+  precision: Precision;
+  answered: number;
+  /** Above this the test runs out of hard words, so the number reads as "at least". */
+  capped: boolean;
+}
+
+export const CAP_ESTIMATE = 10000;
+
+/** The estimate so far, or null until every band has at least one answer. */
+export function estimateFromAnswers(
+  answers: readonly Answer[],
+  bands: ReadonlyArray<Pick<VocabBand, 'from' | 'to'>>,
+): LiveEstimate | null {
+  const stats = bandStats(answers, bands.length);
+  if (stats.some((band) => band.n === 0)) return null;
+  const items = answers.map((answer) => answer.item);
+  const knownIds = new Set(
+    answers.filter((answer) => answer.known).map((answer) => answer.item.id),
+  );
+  const score = scoreTest(items, knownIds, bands);
+  const scale = score.falseAlarmRate >= 1 ? 0 : 1 / (1 - score.falseAlarmRate);
+  let variance = 0;
+  bands.forEach((band, index) => {
+    const size = band.to - band.from + 1;
+    const { n, p } = stats[index];
+    variance += size * size * ((p * (1 - p)) / n) * scale * scale;
+  });
+  const margin = Math.max(100, round100(Z90 * Math.sqrt(variance)));
+  const relative = margin / Math.max(score.estimate, 1000);
+  const precision: Precision = relative < 0.15 ? 'high' : relative < 0.3 ? 'medium' : 'low';
+  return {
+    ...score,
+    low: Math.max(0, score.estimate - margin),
+    high: score.estimate + margin,
+    margin,
+    precision,
+    answered: answers.length,
+    capped: score.estimate >= CAP_ESTIMATE,
+  };
 }
 
 export function levelForEstimate(n: number): CefrLevel {

@@ -4,9 +4,12 @@ import {
   levelForEstimate,
   missedWords,
   recommendBooks,
-  sampleTest,
+  estimateFromAnswers,
+  MAX_ANSWERS,
+  nextItem,
   scoreTest,
   seededRng,
+  type Answer,
   type TestItem,
   type VocabTestData,
 } from './vocab-test';
@@ -27,7 +30,21 @@ function makeData(): VocabTestData {
 }
 
 const data = makeData();
-const items = sampleTest(data, seededRng(7));
+// 4 words from each band (5 from the last) and 20 made-up words.
+const items: TestItem[] = [
+  ...data.bands.flatMap((band, b) =>
+    band.words.slice(0, b === 10 ? 5 : 4).map((entry) => ({
+      id: `r${b}:${entry.w}`,
+      word: entry.w,
+      kind: 'real' as const,
+      band: b,
+      zh: entry.zh,
+    })),
+  ),
+  ...data.pseudowords
+    .slice(0, 20)
+    .map((word) => ({ id: `f:${word}`, word, kind: 'fake' as const, band: -1 })),
+];
 const ids = (list: TestItem[]) => new Set(list.map((i) => i.id));
 
 describe('seededRng', () => {
@@ -44,22 +61,70 @@ describe('seededRng', () => {
   });
 });
 
-describe('sampleTest', () => {
-  it('picks 45 real and 20 made-up words with unique ids', () => {
-    expect(items).toHaveLength(65);
-    expect(items.filter((i) => i.kind === 'real')).toHaveLength(45);
-    expect(items.filter((i) => i.kind === 'fake')).toHaveLength(20);
-    expect(new Set(items.map((i) => i.id)).size).toBe(65);
-    for (let b = 0; b < 10; b++) {
-      expect(items.filter((i) => i.band === b)).toHaveLength(4);
-    }
-    expect(items.filter((i) => i.band === 10)).toHaveLength(5);
+/** Runs the adaptive test for a learner who knows every word up to `size` and ticks no made-up word. */
+function run(size: number, count: number, seed = 3): Answer[] {
+  const rng = seededRng(seed);
+  const answers: Answer[] = [];
+  while (answers.length < count) {
+    const item = nextItem(answers, data, rng);
+    if (!item) break;
+    const known = item.kind === 'real' && data.bands[item.band].to <= size;
+    answers.push({ item, known });
+  }
+  return answers;
+}
+
+describe('nextItem', () => {
+  it('asks every band once before repeating one, and never repeats a word', () => {
+    const answers = run(3000, 60);
+    const real = answers.filter((a) => a.item.kind === 'real');
+    expect(new Set(real.slice(0, 11).map((a) => a.item.band)).size).toBe(11);
+    expect(new Set(answers.map((a) => a.item.id)).size).toBe(answers.length);
   });
 
-  it('differs between seeds and keeps the gloss on real words', () => {
-    const other = sampleTest(data, seededRng(8));
-    expect(other.map((i) => i.id)).not.toEqual(items.map((i) => i.id));
-    expect(items.find((i) => i.kind === 'real')?.zh).toMatch(/^z/);
+  it('keeps about a quarter of the questions made up', () => {
+    const fakes = run(3000, 80).filter((a) => a.item.kind === 'fake').length;
+    expect(fakes).toBeGreaterThanOrEqual(16);
+    expect(fakes).toBeLessThanOrEqual(24);
+  });
+
+  it('asks more in the band where the learner is unsure', () => {
+    const rng = seededRng(5);
+    const answers: Answer[] = [];
+    while (answers.length < 50) {
+      const item = nextItem(answers, data, rng)!;
+      // Band 4 is a coin flip; every other band is all known or all unknown.
+      const known = item.kind === 'real' && (item.band < 4 || (item.band === 4 && rng() < 0.5));
+      answers.push({ item, known });
+    }
+    const perBand = (b: number) => answers.filter((a) => a.item.band === b).length;
+    expect(perBand(4)).toBeGreaterThan(perBand(1));
+  });
+
+  it('stops at the maximum', () => {
+    expect(run(3000, MAX_ANSWERS + 10)).toHaveLength(MAX_ANSWERS);
+  });
+});
+
+describe('estimateFromAnswers', () => {
+  it('waits until every band has an answer', () => {
+    expect(estimateFromAnswers([], data.bands)).toBeNull();
+    expect(estimateFromAnswers(run(3000, 5), data.bands)).toBeNull();
+  });
+
+  it('lands on the true size, and the margin shrinks with more answers', () => {
+    const short = estimateFromAnswers(run(3000, 20), data.bands)!;
+    const long = estimateFromAnswers(run(3000, 100), data.bands)!;
+    expect(long.estimate).toBe(3000);
+    expect(long.margin).toBeLessThan(short.margin);
+    expect(long.low).toBeLessThanOrEqual(3000);
+    expect(long.high).toBeGreaterThanOrEqual(3000);
+    expect(long.answered).toBe(100);
+  });
+
+  it('marks results above 10,000 words as capped', () => {
+    expect(estimateFromAnswers(run(14000, 40), data.bands)!.capped).toBe(true);
+    expect(estimateFromAnswers(run(3000, 40), data.bands)!.capped).toBe(false);
   });
 });
 
