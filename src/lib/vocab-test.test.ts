@@ -1,51 +1,56 @@
 import { describe, expect, it } from 'vitest';
 import {
+  CAP_ESTIMATE,
+  MAX_ANSWERS,
+  MIN_ANSWERS,
+  OPTION_COUNT,
   coverageAt,
+  estimateFromAnswers,
   levelForEstimate,
   missedWords,
-  recommendBooks,
-  estimateFromAnswers,
-  MAX_ANSWERS,
   nextItem,
-  scoreTest,
+  recommendBooks,
   seededRng,
   type Answer,
-  type TestItem,
   type VocabTestData,
 } from './vocab-test';
 
+/** Bands like the real data: 1,000 wide up to 10,000, then wider up to 40,000; 30 words each. */
 function makeData(): VocabTestData {
-  const sizes = [...Array(10).fill(1000), 4000];
-  let from = 1;
-  const bands = sizes.map((size, b) => {
-    const band = {
+  const edges = [
+    0, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000, 12500, 15000, 20000, 25000,
+    30000, 40000,
+  ];
+  const forms = ['', '的', '地'];
+  const bands = edges.slice(1).map((to, b) => {
+    const from = edges[b] + 1;
+    return {
       from,
-      to: from + size - 1,
-      words: Array.from({ length: 30 }, (_, i) => ({ w: `w${b}_${i}`, zh: `z${b}_${i}` })),
+      to,
+      words: Array.from({ length: 30 }, (_, i) => ({
+        w: `w${b}x${i}`,
+        // One distinct character per word, so no two meanings share a character.
+        zh: `${String.fromCharCode(0x4e00 + b * 30 + i)}${forms[i % 3]}`,
+        r: Math.round(from + ((to - from) * (i + 0.5)) / 30),
+      })),
     };
-    from += size;
-    return band;
   });
-  return { bands, pseudowords: Array.from({ length: 120 }, (_, i) => `fake${i}`) };
+  return { bands };
 }
 
 const data = makeData();
-// 4 words from each band (5 from the last) and 20 made-up words.
-const items: TestItem[] = [
-  ...data.bands.flatMap((band, b) =>
-    band.words.slice(0, b === 10 ? 5 : 4).map((entry) => ({
-      id: `r${b}:${entry.w}`,
-      word: entry.w,
-      kind: 'real' as const,
-      band: b,
-      zh: entry.zh,
-    })),
-  ),
-  ...data.pseudowords
-    .slice(0, 20)
-    .map((word) => ({ id: `f:${word}`, word, kind: 'fake' as const, band: -1 })),
-];
-const ids = (list: TestItem[]) => new Set(list.map((i) => i.id));
+
+/** A learner who knows every word ranked up to `size` and says "not sure" otherwise. */
+function honest(size: number, count: number, seed = 3): Answer[] {
+  const rng = seededRng(seed);
+  const answers: Answer[] = [];
+  while (answers.length < count) {
+    const item = nextItem(answers, data, rng);
+    if (!item) break;
+    answers.push({ item, choice: item.rank <= size ? item.answer : null });
+  }
+  return answers;
+}
 
 describe('seededRng', () => {
   it('is repeatable and stays in [0, 1)', () => {
@@ -61,70 +66,70 @@ describe('seededRng', () => {
   });
 });
 
-/** Runs the adaptive test for a learner who knows every word up to `size` and ticks no made-up word. */
-function run(size: number, count: number, seed = 3): Answer[] {
-  const rng = seededRng(seed);
-  const answers: Answer[] = [];
-  while (answers.length < count) {
-    const item = nextItem(answers, data, rng);
-    if (!item) break;
-    const known = item.kind === 'real' && data.bands[item.band].to <= size;
-    answers.push({ item, known });
-  }
-  return answers;
-}
+describe('nextItem', { timeout: 60_000 }, () => {
+  it('builds four different meanings with the right one among them, in the same form', () => {
+    const rng = seededRng(9);
+    for (let i = 0; i < 40; i++) {
+      const item = nextItem([], data, rng)!;
+      expect(item.options).toHaveLength(OPTION_COUNT);
+      expect(new Set(item.options).size).toBe(OPTION_COUNT);
+      expect(item.options[item.answer]).toBe(item.zh);
+      const form = (g: string) => (g.endsWith('的') ? 'adj' : g.endsWith('地') ? 'adv' : 'other');
+      expect(item.options.every((o) => form(o) === form(item.zh))).toBe(true);
+    }
+  });
 
-describe('nextItem', () => {
-  it('asks every band once before repeating one, and never repeats a word', () => {
-    const answers = run(3000, 60);
-    const real = answers.filter((a) => a.item.kind === 'real');
-    expect(new Set(real.slice(0, 11).map((a) => a.item.band)).size).toBe(11);
+  it('asks every band once first, and never repeats a word', () => {
+    const answers = honest(3000, 60);
+    expect(new Set(answers.slice(0, 16).map((a) => a.item.band)).size).toBe(16);
     expect(new Set(answers.map((a) => a.item.id)).size).toBe(answers.length);
   });
 
-  it('keeps about a quarter of the questions made up', () => {
-    const fakes = run(3000, 80).filter((a) => a.item.kind === 'fake').length;
-    expect(fakes).toBeGreaterThanOrEqual(16);
-    expect(fakes).toBeLessThanOrEqual(24);
-  });
-
-  it('asks more in the band where the learner is unsure', () => {
-    const rng = seededRng(5);
-    const answers: Answer[] = [];
-    while (answers.length < 50) {
-      const item = nextItem(answers, data, rng)!;
-      // Band 4 is a coin flip; every other band is all known or all unknown.
-      const known = item.kind === 'real' && (item.band < 4 || (item.band === 4 && rng() < 0.5));
-      answers.push({ item, known });
-    }
-    const perBand = (b: number) => answers.filter((a) => a.item.band === b).length;
-    expect(perBand(4)).toBeGreaterThan(perBand(1));
+  it('then asks mostly near the estimate', () => {
+    const later = honest(3000, 80).slice(16);
+    const near = later.filter((a) => a.item.rank > 700 && a.item.rank < 13000).length;
+    expect(near / later.length).toBeGreaterThan(0.7);
   });
 
   it('stops at the maximum', () => {
-    expect(run(3000, MAX_ANSWERS + 10)).toHaveLength(MAX_ANSWERS);
+    expect(honest(3000, MAX_ANSWERS + 10)).toHaveLength(MAX_ANSWERS);
   });
 });
 
-describe('estimateFromAnswers', () => {
-  it('waits until every band has an answer', () => {
+// Each answer refits the learner model, so long simulated runs need more than the default 5 s.
+describe('estimateFromAnswers', { timeout: 60_000 }, () => {
+  it('waits for the first few answers', () => {
     expect(estimateFromAnswers([], data.bands)).toBeNull();
-    expect(estimateFromAnswers(run(3000, 5), data.bands)).toBeNull();
+    expect(estimateFromAnswers(honest(3000, 5), data.bands)).toBeNull();
   });
 
-  it('lands on the true size, and the margin shrinks with more answers', () => {
-    const short = estimateFromAnswers(run(3000, 20), data.bands)!;
-    const long = estimateFromAnswers(run(3000, 100), data.bands)!;
-    expect(long.estimate).toBe(3000);
-    expect(long.margin).toBeLessThan(short.margin);
-    expect(long.low).toBeLessThanOrEqual(3000);
-    expect(long.high).toBeGreaterThanOrEqual(3000);
-    expect(long.answered).toBe(100);
+  it('lands near the true size, inside its range, and narrows with more answers', () => {
+    for (const size of [800, 3000, 12000]) {
+      const short = estimateFromAnswers(honest(size, MIN_ANSWERS), data.bands)!;
+      const long = estimateFromAnswers(honest(size, 100), data.bands)!;
+      expect(Math.abs(long.estimate - size) / size).toBeLessThan(0.15);
+      expect(long.low).toBeLessThanOrEqual(size);
+      expect(long.high).toBeGreaterThanOrEqual(size);
+      expect(long.margin).toBeLessThan(short.margin);
+    }
   });
 
-  it('marks results above 10,000 words as capped', () => {
-    expect(estimateFromAnswers(run(14000, 40), data.bands)!.capped).toBe(true);
-    expect(estimateFromAnswers(run(3000, 40), data.bands)!.capped).toBe(false);
+  it('gives a low estimate and the guessing tip to someone who only guesses', () => {
+    const rng = seededRng(4);
+    const answers: Answer[] = [];
+    while (answers.length < 60) {
+      const item = nextItem(answers, data, rng)!;
+      answers.push({ item, choice: Math.floor(rng() * OPTION_COUNT) });
+    }
+    const result = estimateFromAnswers(answers, data.bands)!;
+    expect(result.estimate).toBeLessThan(2000);
+    expect(result.guessing).toBe(true);
+    expect(estimateFromAnswers(honest(3000, 60), data.bands)!.guessing).toBe(false);
+  });
+
+  it('marks very large results as capped', () => {
+    expect(estimateFromAnswers(honest(39000, 60), data.bands)!.capped).toBe(true);
+    expect(CAP_ESTIMATE).toBeGreaterThan(20000);
   });
 });
 
@@ -137,45 +142,6 @@ describe('levelForEstimate', () => {
     expect(levelForEstimate(3500)).toBe('B2');
     expect(levelForEstimate(5000)).toBe('C1');
     expect(levelForEstimate(6500)).toBe('C2');
-  });
-});
-
-describe('scoreTest', () => {
-  it('gives zero and A1 when nothing is ticked', () => {
-    const score = scoreTest(items, new Set(), data.bands);
-    expect(score).toMatchObject({ estimate: 0, low: 0, high: 0, level: 'A1', unreliable: false });
-  });
-
-  it('gives about 14000 and C2 when every real word is ticked', () => {
-    const score = scoreTest(items, ids(items.filter((i) => i.kind === 'real')), data.bands);
-    expect(score.estimate).toBe(14000);
-    expect(score.level).toBe('C2');
-    expect(score.high).toBe(16100);
-    expect(score.falseAlarmRate).toBe(0);
-  });
-
-  it('lowers the estimate and flags unreliable when made-up words are ticked', () => {
-    const real = items.filter((i) => i.kind === 'real');
-    const fakes = items.filter((i) => i.kind === 'fake');
-    const half = real.filter((_, i) => i % 2 === 0);
-    const clean = scoreTest(items, ids(half), data.bands);
-    const some = scoreTest(items, ids([...half, ...fakes.slice(0, 2)]), data.bands);
-    expect(some.estimate).toBeLessThan(clean.estimate);
-    expect(some.unreliable).toBe(false);
-    const many = scoreTest(items, ids([...half, ...fakes.slice(0, 8)]), data.bands);
-    expect(many.falseAlarmRate).toBe(0.4);
-    expect(many.unreliable).toBe(true);
-  });
-
-  it('gives zero when every made-up word is ticked', () => {
-    const score = scoreTest(items, ids(items), data.bands);
-    expect(score.estimate).toBe(0);
-    expect(score.unreliable).toBe(true);
-  });
-
-  it('counts only the bands that were hit', () => {
-    const first = items.filter((i) => i.kind === 'real' && i.band === 0);
-    expect(scoreTest(items, ids(first), data.bands).estimate).toBe(1000);
   });
 });
 
@@ -246,19 +212,14 @@ describe('recommendBooks', () => {
   });
 });
 
-describe('missedWords', () => {
-  it('lists unknown real words within the estimate plus 1000, easiest first, capped', () => {
-    const real = items.filter((i) => i.kind === 'real');
-    const missed = missedWords(items, new Set(), 3000, data.bands);
+describe('missedWords', { timeout: 60_000 }, () => {
+  it('lists words answered wrong or "not sure" up to the estimate plus 1000, easiest first', () => {
+    const answers = honest(3000, 60);
+    const missed = missedWords(answers, 3000, data.bands);
+    expect(missed.length).toBeGreaterThan(0);
     expect(missed.length).toBeLessThanOrEqual(8);
-    expect(missed.every((i) => i.kind === 'real' && data.bands[i.band].to <= 4000)).toBe(true);
+    expect(missed.every((i) => i.rank > 3000 && data.bands[i.band].to <= 4000)).toBe(true);
     expect(missed.map((i) => i.band)).toEqual([...missed.map((i) => i.band)].sort((a, b) => a - b));
-    const known = missedWords(items, ids(real), 14000, data.bands);
-    expect(known).toEqual([]);
-  });
-  it('skips made-up words', () => {
-    expect(
-      missedWords(items, new Set(), 14000, data.bands, 100).every((i) => i.kind === 'real'),
-    ).toBe(true);
+    expect(missedWords(honest(40000, 40), 40000, data.bands)).toEqual([]);
   });
 });

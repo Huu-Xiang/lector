@@ -3,8 +3,9 @@
 
 Outputs (both committed):
   languages/en/content/vocab-test.json
-      Frequency bands of English lemmas (1-1000 ... 9001-10000, 10001-14000), each with a
-      pool of 30 words that have a short Chinese gloss, plus 120 pseudowords.
+      Frequency bands of English lemmas (1,000 wide up to 10,000, then wider up to 40,000), each
+      with a pool of 30 words that have a short Chinese gloss and their frequency rank (r). The test shows
+      a word with four glosses from its band, so glosses are unique within a band.
   languages/en/content/library/vocab-needs.json
       For every English library book: {"n95": R, "n98": R, "cov": [c1 .. c14]}. R is the lemma
       rank that covers 95% / 98% of the running words (null if not reached by rank 20000;
@@ -35,12 +36,11 @@ import math
 import random
 import re
 import sqlite3
-import string
 from bisect import bisect_right
 from collections import Counter, defaultdict
 from pathlib import Path
 
-from wordfreq import top_n_list, word_frequency, zipf_frequency
+from wordfreq import word_frequency, zipf_frequency
 
 ROOT = Path(__file__).resolve().parent.parent
 CONTENT = ROOT / "languages" / "en" / "content"
@@ -50,9 +50,9 @@ OUT_NEEDS = LIBRARY / "vocab-needs.json"
 
 SEED = 20261111
 POOL_SIZE = 30
-N_PSEUDO = 120
 MIN_FREQ = 1e-8  # zipf 1.0
-BANDS = [(i * 1000 + 1, (i + 1) * 1000) for i in range(10)] + [(10001, 14000)]
+BANDS = [(i * 1000 + 1, (i + 1) * 1000) for i in range(10)] + [
+    (10001, 12500), (12501, 15000), (15001, 20000), (20001, 25000), (25001, 30000), (30001, 40000)]
 SOURCE = "Word ranking: wordfreq (CC BY-SA 4.0), meanings: ECDICT (MIT)"
 
 FIRST_NAMES = set("""
@@ -92,16 +92,6 @@ NAME_MARKERS = ("人名", "姓氏", "地名", "城市名", "音译", "男子名"
 ABBR_MARKERS = ("缩写", "abbr", "的简称", "首字母缩")
 VULGAR_TAG = re.compile(r"[\[\(（〈<【][^\]\)）〉>】]*(粗|俚|下流|脏话)[^\]\)）〉>】]*[\]\)）〉>】]")
 VULGAR_PLAIN = ("性交", "脏话", "下流")
-PSEUDO_BAD_SUBSTR = ("fuck", "shit", "cunt", "dick", "cock", "piss", "sex", "tit", "ass", "arse",
-                     "nig", "fag", "kill", "poo", "wank", "damn", "hell", "nazi", "porn", "anal",
-                     "anus", "gay", "slut", "bitch", "boob", "crap", "vag", "butt", "fart",
-                     "turd", "dyke", "homo", "sperm", "gook", "kike", "spic", "coon", "jew",
-                     "isis", "god", "jesus", "cum", "rape", "pimp", "whor")
-BRANDS = set("""nokia nike adidas google yahoo gmail amazon samsung toyota honda nissan mazda pepsi
-cola sprite fanta lego sony canon nikon fuji kodak xerox tesla uber lyft airbnb paypal
-netflix spotify tiktok twitter whatsapp skype zoom oreo doritos cheerios kleenex velcro teflon
-lexus audi volvo fiat ferrari porsche rolex gucci prada zara ikea walmart costco subway
-nutella skittles tylenol advil viagra prozac xanax zantac""".split())
 EXTRA_NONWORDS = {"ok", "oh", "ah", "um", "uh", "eh", "hmm", "hey", "hi", "yeah", "wow", "ha",
                   "aa", "bb", "cc", "dd", "mr", "mrs", "ms", "dr", "vs", "etc", "pm", "am",
                   "ve", "ll", "re", "bye", "abc", "jew", "jews", "fbi", "itv", "cia", "bbc", "dunno",
@@ -291,6 +281,8 @@ def build_ranking(entries, form_to_lemmas, lemma_to_forms, senses):
 # A pool word must be its own lemma: no -ed/-ing form, no plural. These words stay in the
 # ranking (they count in the book scores) but never appear in the test.
 POOL_EXCLUDE = set("""
+postdate externalize budgerigar
+tee tandem veg furlong imbecile sop bimbo canto inasmuch foetus leukaemia ravel cornucopia telex cloture seventieth lapidary heliotrope nucleate photosphere plaice unbend
 married beginning located teeth injured retired photographs breathing sustained archives clothes
 labour harbour kilometre aluminium diaper
 virgin shooter stab holocaust gore suicidal intimate
@@ -423,6 +415,135 @@ GLOSS_OVERRIDES = {
     "unlike": "不同于", "mind": "头脑", "tan": "棕褐色", "classy": "高档的", "garrison": "驻军",
     "cerebral": "大脑的", "hurl": "猛掷", "cyst": "囊肿", "simplistic": "过于简单的",
     "bale": "大包", "bearer": "持有人", "dominion": "统治权", "examination": "考试",
+    # Second review (multiple-choice keys must be the main modern sense)
+    "particular": "特别的",
+    "cost": "成本",
+    "volume": "体积",
+    "liberal": "自由的",
+    "associate": "联系",
+    "scream": "尖叫",
+    "remarkable": "非凡的",
+    "transit": "运输",
+    "stack": "一堆",
+    "tan": "晒黑",
+    "mere": "仅仅的",
+    "subtle": "微妙的",
+    "treasurer": "财务主管",
+    "caption": "图片说明",
+    "abide": "遵守",
+    "lunar": "月球的",
+    "bale": "大捆",
+    "weaver": "织工",
+    "illuminate": "照亮",
+    "competence": "能力",
+    "pebble": "鹅卵石",
+    "jackpot": "头奖",
+    "keynote": "基调",
+    "brood": "一窝",
+    "squid": "鱿鱼",
+    "plumber": "水管工",
+    "quantify": "量化",
+    "spew": "喷出",
+    "hindsight": "事后的认识",
+    "scarcely": "几乎不",
+    "assortment": "各种各样",
+    "centenary": "一百周年",
+    "nectar": "花蜜",
+    "observance": "遵守",
+    "whitewash": "粉饰",
+    "stampede": "蜂拥",
+    "stiffness": "僵硬",
+    "debacle": "惨败",
+    "finalize": "最终确定",
+    "pout": "噘嘴",
+    "householder": "户主",
+    "patriarchy": "父权制",
+    "informer": "告密者",
+    "appetizer": "开胃菜",
+    "contiguous": "相邻的",
+    "sleazy": "低俗的",
+    "garb": "服装",
+    "geyser": "间歇泉",
+    "caustic": "刻薄的",
+    "clench": "握紧",
+    "calibrate": "校准",
+    "titular": "名义上的",
+    "boisterous": "喧闹的",
+    "feverish": "发烧的",
+    "unruly": "难管束的",
+    "granule": "颗粒",
+    "pungent": "刺鼻的",
+    "humanistic": "人文主义的",
+    "rancid": "腐臭的",
+    "preeminent": "杰出的",
+    "gape": "目瞪口呆地看",
+    "icicle": "冰柱",
+    "vicarage": "牧师住宅",
+    "amble": "漫步",
+    "bauble": "小玩意",
+    "infirm": "体弱的",
+    "tactful": "得体的",
+    "symbiosis": "共生",
+    "emolument": "报酬",
+    "acquaint": "使熟悉",
+    "jubilation": "欢腾",
+    "assail": "抨击",
+    "warplane": "战机",
+    "oversize": "特大的",
+    "apprise": "告知",
+    "larder": "食品储藏室",
+    "unpalatable": "难吃的",
+    "cavalcade": "游行队伍",
+    "incredulity": "怀疑",
+    "herculean": "艰巨的",
+    "upturn": "好转",
+    "numismatic": "钱币的",
+    "fop": "花花公子",
+    "forbearance": "克制",
+    "overwrought": "过度紧张的",
+    "dietetics": "营养学",
+    "cantankerous": "脾气坏的",
+    "sunbathe": "晒日光浴",
+    "superintend": "监督",
+    "hoary": "白发苍苍的",
+    "compunction": "内疚",
+    "dawdle": "磨蹭",
+    "egoism": "利己主义",
+    "impartially": "公正地",
+    "intermingle": "混合",
+    "deforest": "砍伐森林",
+    "subdivide": "细分",
+    "exculpate": "开脱罪责",
+    "derogate": "贬低",
+    "effulgent": "灿烂的",
+    "glutinous": "黏稠的",
+    "braggart": "吹牛的人",
+    "greengrocer": "果蔬商",
+    "arrhythmic": "心律不齐的",
+    "defoliate": "使落叶",
+    "pyromania": "纵火癖",
+    "quaver": "颤抖",
+    "garrulous": "话多的",
+    "hemostat": "止血钳",
+    "seminar": "研讨会",
+    "vanguard": "先锋",
+    "discreet": "谨慎的",
+    "ramification": "后果",
+    "chasm": "鸿沟",
+    "inalienable": "不可剥夺的",
+    "panache": "派头",
+    "dismember": "肢解",
+    "consecrate": "奉为神圣",
+    "entrap": "诱骗",
+    "overeat": "吃得过多",
+    "vitiate": "损害",
+    "intoxicate": "使喝醉",
+    "seemly": "得体的",
+    "carcinogen": "致癌物",
+    "convoke": "召集",
+    "unctuous": "油腔滑调的",
+    "conviviality": "欢乐气氛",
+    "manumit": "释放奴隶",
 }
 
 
@@ -476,6 +597,9 @@ def build_bands(ranking, senses, meta, entries):
         glossed = [(w, GLOSS_OVERRIDES.get(w) or short_gloss(senses[w]))
                    for w in by_rank[lo - 1:hi] if pool_ok(w, ranking, entries)]
         glossed = [(w, g) for w, g in glossed if g and any(meta.get(w, (0, 0, "")))]
+        # Two words with the same gloss in one band would make a question with two right answers.
+        seen_gloss = set()
+        glossed = [x for x in glossed if not (x[1] in seen_gloss or seen_gloss.add(x[1]))]
         glossed = [x for x in glossed if len(x[1]) <= 12] if sum(len(x[1]) <= 12 for x in glossed) >= 100 else glossed
         pref = [x for x in glossed if 3 <= len(x[0]) <= 12]
         src = pref if len(pref) >= POOL_SIZE * 2 else glossed
@@ -486,209 +610,9 @@ def build_bands(ranking, senses, meta, entries):
             part = src[k * len(src) // POOL_SIZE:(k + 1) * len(src) // POOL_SIZE]
             chosen.append(min(part, key=lambda x: hashlib.sha1(f"{SEED}:{x[0]}".encode()).hexdigest()))
         chosen.sort(key=lambda x: ranking[x[0]])
-        bands.append({"from": lo, "to": hi, "words": [{"w": w, "zh": g} for w, g in chosen]})
+        bands.append({"from": lo, "to": hi,
+                      "words": [{"w": w, "zh": g, "r": ranking[w]} for w, g in chosen]})
     return bands
-
-
-# ---------- pseudowords ----------
-
-VOWELS = set("aeiou")
-START_CLUSTERS = {"bl", "br", "ch", "cl", "cr", "dr", "fl", "fr", "gl", "gr", "pl", "pr", "sc",
-                  "sh", "sk", "sl", "sm", "sn", "sp", "st", "str", "sw", "th", "tr", "tw", "wh",
-                  "thr", "spr", "spl", "scr", "shr", "squ", "kn", "wr", "qu", "ph", "gn"}
-MID_END_CLUSTERS = {"ck", "ng", "nd", "nt", "nk", "mp", "ld", "lt", "lk", "lm", "lp", "rd", "rk",
-                    "rm", "rn", "rt", "rs", "rl", "ft", "pt", "ct", "ss", "ll", "tt", "nn", "rr",
-                    "mm", "ff", "pp", "dd", "gg", "bb", "zz", "ns", "ls", "ts", "ds", "ms", "ps",
-                    "ks", "nc", "xt", "gh", "ght", "tch", "nch", "nst", "lth", "rth", "rst",
-                    "rch", "lch", "rb", "rg", "rp", "lf", "lb", "lv", "rv", "mb", "dg", "sh",
-                    "ch", "th", "st", "sp", "sk", "ngs", "nds", "nts", "rds", "lds", "sts",
-                    "str", "ntr", "mpl", "ndl", "ngl", "tr", "pr", "br", "bl", "cl", "dr", "fl",
-                    "fr", "gl", "gr", "pl", "cr", "tl", "dl", "ntl", "rtl"}
-
-
-VOWEL_PAIRS = {"ea", "ee", "oo", "ai", "ay", "oa", "ou", "ie", "io", "ia", "ue", "ei", "au",
-               "oi", "ey", "ui", "eu", "ua"}
-CONSONANTS = "bcdfghklmnprstvwy"
-
-
-def pronounceable(w):
-    if not (5 <= len(w) <= 10) or not w.isalpha():
-        return False
-    runs = re.findall(r"[^aeiou]+|[aeiou]+", w)
-    for i, r in enumerate(runs):
-        if r[0] in VOWELS:
-            if len(r) > 2 or (len(r) == 2 and r not in VOWEL_PAIRS):
-                return False
-        elif len(r) > 1:
-            ok = START_CLUSTERS if i == 0 else MID_END_CLUSTERS
-            if len(r) > 3 or r not in ok:
-                return False
-    if len(runs) < 3 or w[-1] not in "bcdfgklmnprstxye" or w[0] in "xy":
-        return False
-    if w[-1] == "e" and (len(runs) < 3 or w[-2] in VOWELS):
-        return False
-    if "q" in w.replace("qu", "") or "v" == w[-1]:
-        return False
-    return not re.search(r"(.)\1\1", w)
-
-
-def mutate(word, rng):
-    """Change one or two consonants, or one single vowel, so the sound pattern stays English."""
-    w = list(word)
-    slots = [i for i, c in enumerate(w) if c not in VOWELS]
-    slots += [i for i, c in enumerate(w) if c in VOWELS and (i == 0 or w[i - 1] not in VOWELS)
-              and (i + 1 == len(w) or w[i + 1] not in VOWELS)]
-    for i in rng.sample(slots, min(rng.choice((2, 2, 3)), len(slots))):
-        pool = "aeiou" if w[i] in VOWELS else CONSONANTS
-        w[i] = rng.choice([c for c in pool if c != w[i]])
-    return "".join(w)
-
-
-def recombine(a, b, rng):
-    """Front of one word (cut after a vowel) joined to the back of another (cut before a consonant)."""
-    cuts_a = [i + 1 for i in range(1, len(a) - 1) if a[i] in VOWELS and a[i + 1] not in VOWELS]
-    cuts_b = [i for i in range(1, len(b) - 1) if b[i - 1] in VOWELS and b[i] not in VOWELS]
-    if not cuts_a or not cuts_b:
-        return a
-    return a[:rng.choice(cuts_a)] + b[rng.choice(cuts_b):]
-
-
-def near_real(cand, real):
-    """True if cand is one letter added to, dropped from or changed in a real word."""
-    for i in range(len(cand)):
-        for c in string.ascii_lowercase:
-            if c != cand[i] and cand[:i] + c + cand[i + 1:] in real:
-                return True
-    for i in range(len(cand)):
-        if cand[:i] + cand[i + 1:] in real:
-            return True
-    for i in range(len(cand) + 1):
-        for c in string.ascii_lowercase:
-            if cand[:i] + c + cand[i:] in real:
-                return True
-    return False
-
-
-class TrigramModel:
-    """Letter trigram model of real words; scores how English a letter string looks."""
-
-    def __init__(self, words):
-        self.tri, self.bi = Counter(), Counter()
-        for w in words:
-            w = "^^" + w + "$"
-            for i in range(2, len(w)):
-                self.tri[w[i - 2:i + 1]] += 1
-                self.bi[w[i - 2:i]] += 1
-
-    def score(self, word):
-        w = "^^" + word + "$"
-        total = sum(math.log((self.tri[w[i - 2:i + 1]] + 0.1) / (self.bi[w[i - 2:i]] + 2.6))
-                    for i in range(2, len(w)))
-        return total / (len(w) - 2)
-
-
-PSEUDO_EXCLUDE = {"vinic", "trenger", "torkar"}
-# Languages whose words must not match a pseudoword (a Spanish or Norwegian word is not a fair "fake").
-OTHER_LANGS = ("es", "fr", "de", "it", "pt", "nl", "sv", "nb", "da", "cs", "sl", "pl", "ro")
-
-
-def zipf(word, lang="en"):
-    return zipf_frequency(word, lang)
-
-
-def edit_distance(a, b):
-    prev = list(range(len(b) + 1))
-    for i, ca in enumerate(a, 1):
-        cur = [i]
-        for j, cb in enumerate(b, 1):
-            cur.append(min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (ca != cb)))
-        prev = cur
-    return prev[-1]
-
-
-def deletions(word, depth=2):
-    """The word and every string made by deleting up to `depth` letters (for near-match lookup)."""
-    out, level = {word}, {word}
-    for _ in range(depth):
-        level = {w[:i] + w[i + 1:] for w in level for i in range(len(w))}
-        out |= level
-    return out
-
-
-class RealWordIndex:
-    """English words by zipf score, for the pseudoword checks."""
-
-    def __init__(self):
-        words = [w for w in top_n_list("en", 200000) if w.isascii() and w.isalpha() and len(w) >= 4]
-        scored = {w: zipf(w) for w in words}
-        self.common = {w for w, z in scored.items() if z >= 3}      # may not sit inside a pseudoword
-        self.near1 = {w for w, z in scored.items() if z >= 2.5}     # edit distance 1 is too close
-        self.near2 = defaultdict(set)                               # edit distance 2 to z >= 4
-        for w, z in scored.items():
-            if z >= 4:
-                for d in deletions(w):
-                    self.near2[d].add(w)
-
-    def contains_word(self, cand):
-        n = len(cand)
-        return any(cand[i:j] in self.common for i in range(n) for j in range(i + 4, n + 1))
-
-    def within(self, cand, words, dist):
-        return any(edit_distance(cand, w) <= dist for w in words)
-
-    def too_close(self, cand):
-        for i in range(len(cand)):
-            for c in string.ascii_lowercase:
-                if c != cand[i] and cand[:i] + c + cand[i + 1:] in self.near1:
-                    return True
-        for i in range(len(cand)):
-            if cand[:i] + cand[i + 1:] in self.near1:
-                return True
-        for i in range(len(cand) + 1):
-            for c in string.ascii_lowercase:
-                if cand[:i] + c + cand[i:] in self.near1:
-                    return True
-        found = set()
-        for d in deletions(cand):
-            found |= self.near2.get(d, set())
-        return self.within(cand, found, 2)
-
-
-def build_pseudowords(ranking, entries, form_to_lemmas):
-    by_rank = sorted(ranking, key=ranking.get)
-    seeds = [w for w in by_rank[999:8000] if 5 <= len(w) <= 8]
-    real = set(entries) | set(form_to_lemmas) | set(ranking)
-    close = {w for w in real if len(w) >= 4}
-    index = RealWordIndex()
-    rng = random.Random(SEED + 1)
-    model = TrigramModel(by_rank[:20000])
-    scores = sorted(model.score(w) for w in seeds)
-    threshold = scores[len(scores) // 2]
-    taken, out = set(), []
-    for _ in range(2000000):
-        if len(out) >= N_PSEUDO:
-            break
-        a = rng.choice(seeds)
-        cand = mutate(a, rng) if rng.random() < 0.7 else recombine(a, rng.choice(seeds), rng)
-        if cand in taken or cand in real or cand in BRANDS or cand in FIRST_NAMES or cand in PSEUDO_EXCLUDE:
-            continue
-        if not 5 <= len(cand) <= 8 or not pronounceable(cand) or any(s in cand for s in PSEUDO_BAD_SUBSTR):
-            continue
-        if model.score(cand) < threshold:
-            continue
-        if index.contains_word(cand):
-            continue
-        if freq(cand) > 0 or any(word_frequency(cand, l) > 0 for l in OTHER_LANGS):
-            continue
-        if near_real(cand, close) or index.too_close(cand):
-            continue
-        stem = re.sub(r"(s|ed|ing|er|ly)$", "", cand)
-        if stem in real or stem + "e" in real:
-            continue
-        taken.add(cand)
-        out.append(cand)
-    rng.shuffle(out)
-    return out
 
 
 # ---------- books ----------
@@ -823,9 +747,8 @@ def main():
     print("excluded:", {k: len(v) for k, v in excluded.items()})
 
     bands = build_bands(ranking, senses, meta, set(entries))
-    pseudo = build_pseudowords(ranking, entries, form_to_lemmas)
     OUT_TEST.write_text(json.dumps(
-        {"version": 1, "bands": bands, "pseudowords": pseudo, "source": SOURCE},
+        {"version": 2, "bands": bands, "source": SOURCE},
         indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
     print("\nSample words per band")
@@ -833,7 +756,6 @@ def main():
     for b in bands:
         ws = srng.sample(b["words"], min(15, len(b["words"])))
         print(f"  {b['from']}-{b['to']}: " + ", ".join(f"{x['w']} {x['zh']}" for x in ws))
-    print(f"\nPseudowords ({len(pseudo)}), first 40:\n  " + ", ".join(pseudo[:40]))
 
     known_extra = KNOWN_ALWAYS | excluded["name"] | excluded["offensive"] | excluded["abbr"] | excluded["interjection"]
     levels = {"A1": 1, "A2": 2, "B1": 3, "B2": 4, "C1": 5, "C2": 6}

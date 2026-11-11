@@ -29,7 +29,7 @@ function readJson<T>(file: string): T | null {
 
 export function loadVocabTestData(): VocabTestData | null {
   const data = readJson<VocabTestData>(path.join(contentDir(), 'vocab-test.json'));
-  return data && Array.isArray(data.bands) && Array.isArray(data.pseudowords) ? data : null;
+  return data && Array.isArray(data.bands) && data.bands.length > 0 ? data : null;
 }
 
 export function loadVocabTestBooks(): VocabTestBook[] {

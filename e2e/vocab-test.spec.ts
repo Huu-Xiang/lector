@@ -10,7 +10,7 @@ async function answerAll(page: import('@playwright/test').Page, testId: string, 
   for (let i = 0; i < count; i++) {
     const word = page.getByTestId('vocab-word');
     const before = await word.textContent();
-    await page.getByTestId(testId).click();
+    await page.getByTestId(testId).first().click();
     if (i < count - 1) await expect(word).not.toHaveText(before ?? '');
   }
 }
@@ -18,15 +18,16 @@ async function answerAll(page: import('@playwright/test').Page, testId: string, 
 async function finishKnowingNothing(page: import('@playwright/test').Page) {
   await page.getByTestId('vocab-start').click();
   await expect(page.getByTestId('vocab-word')).toBeVisible();
+  await expect(page.getByTestId('vocab-option')).toHaveCount(4);
   await expect(page.getByTestId('vocab-finish')).toBeDisabled();
-  await answerAll(page, 'vocab-unknown', 20);
+  await answerAll(page, 'vocab-not-sure', 20);
   await expect(page.getByTestId('vocab-finish')).toBeEnabled();
   await page.getByTestId('vocab-finish').click();
   await expect(page.getByTestId('vocab-result')).toBeVisible();
 }
 
 test.describe('vocabulary test', () => {
-  test('works logged out, shows A1 for no ticks, recommends books, and retakes', async ({
+  test('works logged out, shows A1 when every answer is not sure, recommends books, and retakes', async ({
     browser,
   }) => {
     const { context, page } = await loggedOutPage(browser);
@@ -56,17 +57,17 @@ test.describe('vocabulary test', () => {
     await page.getByTestId('vocab-start').click();
     await expect(page.getByTestId('vocab-live-estimate')).toContainText('until the first estimate');
 
-    await answerAll(page, 'vocab-known', 16);
+    await answerAll(page, 'vocab-not-sure', 16);
     await expect(page.getByTestId('vocab-answered')).toHaveText('16 answered');
     await expect(page.getByTestId('vocab-live-estimate')).toContainText('±');
     const word = await page.getByTestId('vocab-word').textContent();
-    await page.getByTestId('vocab-known').click();
+    await page.getByTestId('vocab-option').first().click();
     await expect(page.getByTestId('vocab-answered')).toHaveText('17 answered');
     await page.getByTestId('vocab-undo').click();
     await expect(page.getByTestId('vocab-answered')).toHaveText('16 answered');
     await expect(page.getByTestId('vocab-word')).toHaveText(word ?? '');
 
-    await page.keyboard.press('ArrowLeft');
+    await page.keyboard.press('0');
     await expect(page.getByTestId('vocab-answered')).toHaveText('17 answered');
     await context.close();
   });
@@ -76,11 +77,13 @@ test.describe('vocabulary test', () => {
     await page.goto('/vocab-test');
     await finishKnowingNothing(page);
     const saved = await page.evaluate(() => localStorage.getItem('readfox-vocab-result'));
-    expect(JSON.parse(saved ?? 'null')).toMatchObject({ estimate: 0, level: 'A1' });
+    const result = JSON.parse(saved ?? 'null') as { estimate: number; level: string };
+    expect(result.level).toBe('A1');
+    expect(result.estimate).toBeLessThan(500);
 
     await page.getByTestId('vocab-continue').click();
     await expect(page.getByTestId('vocab-answered')).toHaveText('20 answered');
-    await answerAll(page, 'vocab-unknown', 1);
+    await answerAll(page, 'vocab-not-sure', 1);
     await expect(page.getByTestId('vocab-answered')).toHaveText('21 answered');
     await context.close();
   });
