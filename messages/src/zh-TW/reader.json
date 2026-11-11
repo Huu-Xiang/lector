@@ -51,7 +51,8 @@
       "captionsCreator": "作者提供的字幕",
       "openOnYouTube": "在 YouTube 上開啟",
       "playFromHere": "從這裡播放",
-      "playFrom": "從 {time} 開始播放"
+      "playFrom": "從 {time} 開始播放",
+      "openLink": "在新分頁開啟原始連結"
     },
     "drawer": {
       "wordDefinition": "單字釋義",
@@ -198,7 +199,8 @@
       "startPractice": "開始快速練習",
       "lookup": {
         "title": "點一個你不認識的詞",
-        "body": "課文裡的每個詞都能查。點按或點擊一個，就能在這裡看到釋義。"
+        "body": "課文裡的每個詞都能查。點按或點擊一個，就能在這裡看到釋義。",
+        "bodyAutoSave": "課文裡的每個詞都能查。點一下，就能看到釋義，Readfox 會自動把它加入複習。"
       },
       "save": {
         "title": "把這個詞加入複習",

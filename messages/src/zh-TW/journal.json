@@ -183,7 +183,6 @@
     "clear": "清空",
     "loadingOlder": "正在載入更早的訊息……",
     "emptyPrompt": "問一個關於{language}的問題",
-    "via": "來自 {provider}",
     "placeholder": "詢問{language}……"
   },
   "chrome": {

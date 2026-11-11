@@ -1,0 +1,24 @@
+{
+  "dailyGoal": {
+    "label": "連續 {count} 天。今天：{amount}",
+    "amount": {
+      "minutes": "{done}/{target} 分鐘",
+      "reviews": "{done}/{target} 個詞"
+    },
+    "metToast": "今日目標達成！已連續 {count} 天",
+    "doneToday": "今天的目標已達成",
+    "todayProgress": "今天：{amount}",
+    "streakLine": "連續 {count} 天",
+    "longestLine": "最長 {count} 天",
+    "changeGoal": "每日目標",
+    "preset": {
+      "minutes": "每天讀 {count} 分鐘",
+      "reviews": "每天複習 {count} 個詞"
+    },
+    "saveFailed": "目標沒有儲存成功",
+    "setupTitle": "每日目標",
+    "setupHint": "每天達成目標，連續天數就會增加。之後隨時可以修改。",
+    "settingsLabel": "每日目標",
+    "settingsHint": "達成這個目標的那天才計入連續天數。"
+  }
+}

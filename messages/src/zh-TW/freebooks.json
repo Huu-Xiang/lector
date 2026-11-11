@@ -145,6 +145,8 @@
     "readFree": "在 Readfox 免費閱讀",
     "ctaNote": "點任何詞都能看到中文釋義。生詞可以儲存，以後複習。",
     "source": "來源：<link>{source}</link>。{license}。",
+    "coverAlt": "《{title}》的封面",
+    "coverCredit": "封面：<link>{credit}</link>。",
     "moreAtLevel": "更多 {level} 級{language}書",
     "allBooks": "全部免費書",
     "metaTitle": "{title}（{author}）{language}原版免費線上閱讀 | Readfox",

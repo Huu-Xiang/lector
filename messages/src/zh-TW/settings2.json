@@ -420,7 +420,7 @@
     "cnResume": "繼續付款",
     "cnRecheck": "我已付款，再查一次",
     "cnCancel": "取消訂單",
-    "cnPaidTitle": "付款成功，{plan} 已開通",
+    "cnPaidTitle": "歡迎加入 {plan}！付款成功",
     "cnPaidUntil": "{plan} 有效期到 {date}。",
     "cnPaidStart": "開始閱讀",
     "grantActive": "目前方案：{plan}，有效期至 {date}。",

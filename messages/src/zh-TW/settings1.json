@@ -9,8 +9,13 @@
       "shown": "顯示",
       "hidden": "隱藏",
       "wordReviewHeading": "單字複習",
-      "reviewGoalLabel": "複習目標",
+      "reviewGoalLabel": "複習方式",
       "reviewGoalFailed": "無法儲存複習目標。請重試。",
+      "autoSaveLabel": "查詞後自動存入生詞本",
+      "autoSaveHint": "查過的單字會自動以 1 級存入生詞本。你可以在「單字釋義」面板裡修改或取消。",
+      "autoSaveOn": "開",
+      "autoSaveOff": "關",
+      "autoSaveFailed": "無法儲存此設定。請再試一次。",
       "reviewGoal": {
         "recognize": "認識",
         "recognize_spell": "認識並拼寫"
@@ -18,6 +23,14 @@
       "reviewGoalHint": {
         "recognize": "見到單字能認出詞義。選擇詞義，辨識單字。",
         "recognize_spell": "還要會寫單字。熟悉和已掌握的詞會要求你輸入或聽寫。"
+      },
+      "emails": {
+        "heading": "郵件",
+        "label": "產品郵件",
+        "hint": "包括歡迎郵件、閱讀提醒、存滿 10 個單字後的小提示、達到免費 AI 額度的提示、固定期限方案到期前的提醒和單字複習提醒。帳號郵件不受影響：驗證、重設密碼和刪除帳號的郵件一律會寄送。",
+        "on": "開",
+        "off": "關",
+        "failed": "無法儲存此設定。請再試一次。"
       }
     },
     "prose": {
@@ -92,7 +105,7 @@
     },
     "languages": {
       "title": "語言",
-      "description": "語言選擇器會列出這些語言。移除某種語言可縮短清單。你在該語言下的詞彙、課文和卡片仍保留在伺服器上。",
+      "description": "這些是你正在學的語言，可以在語言選單裡切換。點 × 只是把它從選單裡移除：你的生詞、課文和卡片都不會刪除，重新加入就能接著學。",
       "inUse": "使用中",
       "remove": "移除{language}",
       "added": "已新增{language}",

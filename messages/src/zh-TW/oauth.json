@@ -1,0 +1,14 @@
+{
+  "auth": {
+    "oauth": {
+      "continue": "使用 {provider} 繼續",
+      "errCancelled": "已取消登入，你可以再試一次。",
+      "errNotLinked": "這個信箱已經有帳號，而且登入服務沒有確認該信箱屬於你。請用電子郵件和密碼登入。",
+      "errInviteRequired": "註冊需要有效的邀請碼。請先在註冊頁填寫，再試一次。",
+      "errEmailAlias": "這個信箱的另一種寫法已經註冊過帳號，請用那個地址登入。",
+      "errEmailDisposable": "不能使用臨時信箱，請使用你常用的信箱。",
+      "errTwoFactor": "這個帳號開啟了兩步驟驗證，請用電子郵件和密碼登入。",
+      "errFailed": "登入失敗，請再試一次。"
+    }
+  }
+}

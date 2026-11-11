@@ -29,9 +29,11 @@
     "source": "原始碼",
     "refunds": "退款",
     "freeBooks": "免費書",
-    "back": "返回"
+    "back": "返回",
+    "contact": "聯絡我們"
   },
   "nav": {
+    "upgrade": "升級方案",
     "library": "書庫",
     "practice": "練習",
     "journal": "日記",
@@ -53,7 +55,6 @@
       "submit": "登入",
       "submitting": "登入中…",
       "github": "使用 GitHub 繼續",
-      "oidc": "使用 {provider} 繼續",
       "noAccount": "還沒有帳號?",
       "create": "去註冊",
       "errInvalid": "電子郵件或密碼不正確。",
@@ -75,6 +76,11 @@
       "checkTitle": "請查看收件匣",
       "checkBody": "我們已向 <b>{email}</b> 傳送了驗證連結。點擊連結啟用帳號,然後登入。",
       "goSignIn": "前往登入",
+      "checkHint": "一分鐘後還沒收到？請看看垃圾郵件資料夾，或重新傳送。連結 3 天內有效。",
+      "resend": "重新傳送驗證郵件",
+      "resent": "驗證郵件已寄出，請查看收件匣。",
+      "errResend": "無法重新傳送郵件。",
+      "orEmail": "或用電子郵件註冊",
       "confirmPassword": "確認密碼",
       "errMismatch": "兩次輸入的密碼不一致。",
       "errWeak": "密碼太弱：至少 8 個字元，並包含字母和數字。",
@@ -84,7 +90,7 @@
       "invite": "邀請碼 / 兌換碼",
       "inviteOptional": "（選填）",
       "inviteRequired": "（必填）",
-      "inviteHint": "好友的邀請碼，或 WELCOME123 這樣的兌換碼。",
+      "inviteHint": "好友的邀請碼，或別人傳給你的兌換碼。",
       "errInviteRequired": "註冊需要有效的邀請碼。"
     },
     "reset": {
@@ -153,6 +159,8 @@
     "level": "閱讀程度",
     "ready": "準備好讀第一篇了嗎?",
     "readyHint": "引導在一篇真實的入門課文裡進行,可以隨時退出。",
+    "pendingBook": "設定完成後，直接開始讀你選的《{title}》。",
+    "startBook": "開始讀《{title}》",
     "skip": "直接進入書庫",
     "preparing": "正在準備課文…",
     "start": "開始引導課",
@@ -188,7 +196,23 @@
     "languagesSoon": "另有 {count} 種語言正在開發中",
     "languagesUi": "介面：{ui} · 釋義和講解：{count} 種語言（可在設定裡更改）",
     "createAccount": "免費註冊",
-    "heroAlt": "Readfox 標誌：一隻趴在書上的小狐狸",
+    "demo": {
+      "label": "可以動手試的閱讀示範",
+      "panelLabel": "釋義",
+      "hintFine": "點一個詞，或按住滑鼠拖過一句話。",
+      "hintCoarse": "點一個詞，或長按後拖過一句話。",
+      "stepWord": "換你試試：點一下發亮的詞。",
+      "stepContext": "再點「結合語境」，看這個詞在這句裡的意思。",
+      "stepDragFine": "最後，按住滑鼠拖過這句話。",
+      "stepDragCoarse": "最後，長按後拖過這句話。",
+      "done": "讀書時就這樣用。其他詞也可以點。",
+      "pause": "暫停",
+      "replay": "重播",
+      "startFree": "免費開始",
+      "inContext": "結合語境",
+      "usage": "用法",
+      "idiom": "慣用含義"
+    },
     "howTitle": "怎麼用",
     "features": {
       "read": {
@@ -231,8 +255,7 @@
     }
   },
   "welcomeOffer": {
-    "body": "新用戶福利：用兌換碼 <b>{code}</b> 免費領 15 天 Plus。12 月 15 日前有效，每個帳號限一次。",
-    "use": "填入",
+    "body": "新用戶福利：驗證電子郵件，免費領 <b>15 天 Plus</b>，12 月 15 日前有效，不需要兌換碼。",
     "signUp": "去註冊"
   }
 }

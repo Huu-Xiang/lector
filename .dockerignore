@@ -47,3 +47,6 @@ backups/
 # of the image and shrinks the build context.
 data/
 tmp/
+
+# iPhone app shell: built in Xcode, not part of the web image
+ios-app

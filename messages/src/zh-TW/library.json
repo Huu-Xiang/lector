@@ -69,6 +69,7 @@
     },
     "card": {
       "coverAlt": "{title} 的封面",
+      "details": "《{title}》的詳細資訊",
       "complete": "已完成 {percent}%",
       "notStarted": "未開始",
       "lessons": "{count} 篇課文",
