@@ -10,12 +10,19 @@ vi.mock('./language-cache', () => ({
 
 import {
   deleteLesson,
+  getAllCollections,
   getKnownWordsMap,
   getLesson,
   getLessonsForCollection,
+  incrementDailyStat,
+  peekAllCollections,
   peekKnownWordsMap,
   peekLesson,
+  saveVocab,
+  updateLessonProgress,
+  updateVocabState,
 } from './data-layer';
+import type { VocabEntry } from '@/types';
 import { clearQueryCache, wipePersistedQueries } from './query-cache';
 
 function jsonResponse(body: unknown, status = 200) {
@@ -104,6 +111,31 @@ describe('recently read lessons', () => {
     await getLesson('t', { fresh: true });
     await getLesson('t', { fresh: true });
     expect(apiFetch).toHaveBeenCalledTimes(3);
+  });
+
+  it('saves made while reading keep the remembered library, lesson and word states', async () => {
+    apiFetch
+      .mockResolvedValueOnce(jsonResponse(lesson('a')))
+      .mockResolvedValueOnce(jsonResponse([{ id: 'c', title: 'Book' }]))
+      .mockResolvedValueOnce(jsonResponse({ haus: 'known' }))
+      .mockResolvedValue(jsonResponse({ ok: true, id: 'v1' }));
+    await getLesson('a');
+    await getAllCollections();
+    await getKnownWordsMap();
+
+    await updateLessonProgress('a', { scrollPosition: 640, percentComplete: 40 });
+    await saveVocab({ text: 'baum' } as unknown as VocabEntry);
+    await updateVocabState('v1', 'known');
+    await incrementDailyStat('dictionaryLookups');
+    clearQueryCache();
+
+    expect(peekLesson('a')).toMatchObject({
+      textContent: 'Text a',
+      progress_scrollPosition: 640,
+      progress_percentComplete: 40,
+    });
+    expect(peekAllCollections()).toEqual([{ id: 'c', title: 'Book' }]);
+    expect(peekKnownWordsMap()?.get('haus')).toBe('known');
   });
 
   it('the known-words map survives a restart with its entries', async () => {

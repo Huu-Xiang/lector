@@ -8,6 +8,7 @@ import { getSetting } from '@/lib/data-layer';
 import { readLanguageCache, writeLanguageCache } from '@/lib/language-cache';
 import { isBareRoute } from '@/lib/auth-client';
 import { Spinner } from '@/components/ui/spinner';
+import TabPreloader from '@/components/TabPreloader';
 
 /**
  * The first render must be identical on the server and the client, so we must not use any clientside APIs
@@ -87,5 +88,10 @@ export default function SetupGuard({ children }: { children: React.ReactNode }) 
     );
   }
 
-  return <>{children}</>;
+  return (
+    <>
+      {children}
+      {pathname !== '/setup' && !isBareRoute(pathname) && <TabPreloader />}
+    </>
+  );
 }

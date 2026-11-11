@@ -30,14 +30,16 @@ function LoginForm() {
   const t = useTranslations('auth.login');
   const router = useRouter();
   const params = useSearchParams();
-  const { data: session, isPending } = authClient.useSession();
+  const { data: session, isPending, error: sessionError } = authClient.useSession();
   const inApp = useIsNativeApp();
   const githubEnabled = useGithubLogin();
   useOAuthErrorToast();
   // Backstop for signOutAndForget: expiry and account deletion also end here signed out.
+  // A failed session check (offline, server restart) is not a sign-out.
+  const signedOut = !isPending && !session && (!sessionError || sessionError.status === 401);
   useEffect(() => {
-    if (!isPending && !session) void forgetLocalData();
-  }, [isPending, session]);
+    if (signedOut) void forgetLocalData();
+  }, [signedOut]);
   const returnPath = sanitizeAuthReturnPath(params.get('next'));
   const destination = returnPath ?? '/';
 

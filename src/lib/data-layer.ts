@@ -22,6 +22,8 @@ import {
   clearTenantQueries,
   invalidateQueries,
   keepNewestQueries,
+  markQueriesStale,
+  patchQuery,
   peekQuery,
   type QueryKey,
 } from './query-cache';
@@ -63,6 +65,12 @@ function invalidateActiveScope(scope: string): void {
   if (tenant !== null) invalidateQueries({ tenant, scope });
 }
 
+/** For saves made while reading: the remembered pages stay and refresh in the background. */
+function markActiveScopeStale(scope: string): void {
+  const tenant = activeTenantId();
+  if (tenant !== null) markQueriesStale({ tenant, scope });
+}
+
 const COLLECTIONS_QUERY_SCOPE = 'collections';
 const VOCAB_QUERY_SCOPE = 'vocab';
 const DAILY_STATS_QUERY_SCOPE = 'stats:daily';
@@ -102,6 +110,12 @@ function invalidateCollections(): void {
 function invalidateVocab(): void {
   invalidateActiveScope(VOCAB_QUERY_SCOPE);
   invalidateActiveScope(REVIEW_QUERY_SCOPE);
+}
+
+function markVocabStale(): void {
+  markActiveScopeStale(VOCAB_QUERY_SCOPE);
+  markActiveScopeStale(REVIEW_QUERY_SCOPE);
+  markActiveScopeStale(FLUENCY_STATS_QUERY_SCOPE);
 }
 
 function invalidateGroups(): void {
@@ -462,9 +476,17 @@ export async function updateLessonProgress(
   // Reader scroll persistence is intentionally best-effort. A transient
   // failure must not interrupt reading or create an unhandled rejection.
   if (res.ok) {
-    invalidateCollections();
-    invalidateLessons();
-    invalidateReadingStats();
+    patchQuery<Lesson | undefined>(
+      activeTenantQueryKey(LESSONS_QUERY_SCOPE, ['lesson', id]),
+      (lesson) =>
+        lesson && {
+          ...lesson,
+          progress_scrollPosition: progress.scrollPosition ?? lesson.progress_scrollPosition,
+          progress_percentComplete: progress.percentComplete ?? lesson.progress_percentComplete,
+        },
+    );
+    markActiveScopeStale(COLLECTIONS_QUERY_SCOPE);
+    markActiveScopeStale(READING_STATS_QUERY_SCOPE);
   }
   return res.ok;
 }
@@ -757,8 +779,7 @@ export async function saveVocab(
   // null = not persisted (#232) — the reader's word-save handlers gate their
   // optimistic UI on this.
   if (!res.ok) return null;
-  invalidateVocab();
-  invalidateFluencyStats();
+  markVocabStale();
   if (typeof window !== 'undefined') window.dispatchEvent(new Event(VOCAB_SAVED_EVENT));
   const { id } = await res.json();
   return id;
@@ -789,8 +810,7 @@ export async function postQueuedVocab(word: {
     }),
   });
   if (res.ok) {
-    invalidateVocab();
-    invalidateFluencyStats();
+    markVocabStale();
     return 'ok';
   }
   return res.status >= 500 || res.status === 401 || res.status === 408 ? 'retry' : 'rejected';
@@ -802,10 +822,7 @@ export async function updateVocabState(id: string, state: WordState): Promise<bo
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ state }),
   });
-  if (res.ok) {
-    invalidateVocab();
-    invalidateFluencyStats();
-  }
+  if (res.ok) markVocabStale();
   return res.ok;
 }
 
@@ -924,10 +941,7 @@ export async function updateWordState(word: string, state: WordState): Promise<b
       language: getActiveLanguage(),
     }),
   });
-  if (res.ok) {
-    invalidateFluencyStats();
-    invalidateActiveScope(VOCAB_QUERY_SCOPE);
-  }
+  if (res.ok) markVocabStale();
   return res.ok;
 }
 
@@ -1478,7 +1492,10 @@ export async function incrementDailyStat(
     body: JSON.stringify({ field, amount }),
     silentPlanLimit: options.silentPlanLimit,
   });
-  if (res.ok) invalidateDailyStats();
+  if (res.ok) {
+    markActiveScopeStale(DAILY_STATS_QUERY_SCOPE);
+    if (typeof window !== 'undefined') window.dispatchEvent(new Event(DAILY_STATS_EVENT));
+  }
   return res.ok;
 }
 

@@ -165,6 +165,34 @@ describe('cloud — per-account namespaces', () => {
     await queries.cachedQuery(key, loader);
     expect(loader).toHaveBeenCalledTimes(2);
   });
+
+  it("removes the previous account's remembered pages from storage when the account changes", async () => {
+    const stored: Stored = new Map();
+    fakeWindow('cloud', stored);
+    const win = (globalThis as unknown as { window: { localStorage: Record<string, unknown> } })
+      .window;
+    Object.defineProperty(win.localStorage, 'length', { get: () => stored.size });
+    win.localStorage.key = (i: number) => [...stored.keys()][i] ?? null;
+    const cache = await freshModule();
+    const queries = await import('./query-cache');
+    const persisted = (tenant: string) =>
+      queries.cachedQuery({ tenant, language: 'de', scope: 'collections' }, async () => tenant, {
+        persist: true,
+      });
+    const rememberedTenants = () =>
+      [...stored.keys()]
+        .filter((k) => k.startsWith('lector-qc:'))
+        .map((k) => JSON.parse(k.slice(10))[0]);
+
+    cache.setActiveTenant('user-a');
+    await persisted('user-a');
+    expect(rememberedTenants()).toEqual(['user-a']);
+
+    cache.setActiveTenant('user-b');
+    expect(rememberedTenants()).toEqual([]);
+    await persisted('user-b');
+    expect(rememberedTenants()).toEqual(['user-b']);
+  });
 });
 
 describe('SSR', () => {

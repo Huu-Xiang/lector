@@ -2,6 +2,28 @@
 
 This domain holds collections, groups, lessons, and import. Word colour in the reader comes from the Vocabulary domain. A tap of a word is the Translation domain.
 
+## Remembered pages
+
+**App domain:** Library
+
+Tab pages (library, practice, journal, vocab, stats) and the 5 most recently read lessons draw the last content they had at once, then refresh in the background.
+
+| Role | Path | Function |
+| --- | --- | --- |
+| Cache | `src/lib/query-cache.ts` | `cachedQuery`, `peekQuery`, `invalidateQueries`, `markQueriesStale`, `patchQuery` |
+| Storage | `src/lib/query-cache-store.ts` | `readRecord`, `writeRecord`, `keepNewestRecords` |
+| Getters | `src/lib/data-layer.ts` | `get*` with `PERSIST`, one `peek*` per getter |
+| Refresh | `src/lib/use-query-refresh.ts` | `useQueryRefresh` |
+| Preload | `src/lib/tab-preload.ts` | `preloadTabs`, mounted by SetupGuard |
+| Scroll | `src/lib/tab-scroll.ts` | `useTabScroll` |
+
+- Records live in `localStorage` under `lector-qc:`, keyed by user, language and query. They expire after 14 days.
+- An edit (create, delete, rename) calls `invalidateQueries`: the records go, and the next read waits for the server.
+- A save made while reading (progress, a saved word, a lookup count) calls `markQueriesStale`: the records stay, and the next read shows them, then refreshes. `updateLessonProgress` also writes the new position into the remembered lesson.
+- A refreshed value that differs fires `lector-query-updated`. Pages listen with `useQueryRefresh`.
+- Review sessions and cloze rounds always load fresh cards.
+- Sign-out and a signed-out login page call `forgetLocalData` (`src/lib/sign-out.ts`). A switch of account drops the other user's records.
+
 ## Load library item
 
 **App domain:** Library

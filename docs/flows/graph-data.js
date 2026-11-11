@@ -536,6 +536,11 @@
   N("file:auth-guard", "file", "AuthGuard", { path: "src/components/AuthGuard/index.tsx", domain: "auth" });
   N("file:billing-guard", "file", "BillingGuard", { path: "src/components/BillingGuard/index.tsx", domain: "billing" });
   N("file:login-page", "file", "Login page", { path: "src/app/(auth)/login/page.tsx", domain: "auth" });
+  N("file:query-cache", "file", "query-cache.ts", { path: "src/lib/query-cache.ts", domain: "library" });
+  N("file:query-cache-store", "file", "query-cache-store.ts", { path: "src/lib/query-cache-store.ts", domain: "library" });
+  N("file:tab-preloader", "file", "TabPreloader", { path: "src/components/TabPreloader/index.tsx", domain: "library" });
+  N("file:tab-preload", "file", "tab-preload.ts", { path: "src/lib/tab-preload.ts", domain: "library" });
+  N("file:sign-out", "file", "sign-out.ts", { path: "src/lib/sign-out.ts", domain: "auth" });
   N("file:register-page", "file", "Register page", { path: "src/app/(auth)/register/page.tsx", domain: "auth" });
   N("file:subscribe-page", "file", "Subscribe page", { path: "src/app/(auth)/subscribe/page.tsx", domain: "billing" });
   N("file:auth-client", "file", "auth-client.ts", { path: "src/lib/auth-client.ts", domain: "auth" });
@@ -1335,6 +1340,13 @@
   edge("file:layout", "file:setup-guard", "opens");
   edge("flow:sign-in", "file:auth-guard", "starts");
   edge("file:auth-guard", "fn:bounceToLogin", "calls");
+  edge("file:setup-guard", "file:tab-preloader", "opens");
+  edge("file:tab-preloader", "file:tab-preload", "calls");
+  edge("file:tab-preload", "file:data-layer", "calls");
+  edge("file:data-layer", "file:query-cache", "uses");
+  edge("file:query-cache", "file:query-cache-store", "uses");
+  edge("file:login-page", "file:sign-out", "calls");
+  edge("file:sign-out", "file:query-cache", "calls");
   edge("fn:bounceToLogin", "file:api-base", "in");
   edge("fn:bounceToLogin", "file:login-page", "then");
   edge("file:login-page", "fn:sign-in-email", "calls");
@@ -1483,6 +1495,10 @@
   edge("file:home-page", "layer:ui", "in");
   edge("file:read-page", "layer:ui", "in");
   edge("file:data-layer", "layer:client", "in");
+  edge("file:query-cache", "layer:client", "in");
+  edge("file:query-cache-store", "layer:client", "in");
+  edge("file:tab-preload", "layer:client", "in");
+  edge("file:sign-out", "layer:client", "in");
   edge("file:claude", "layer:client", "in");
   edge("file:route-translate", "layer:routes", "in");
   edge("file:dictionary-db", "layer:lib", "in");

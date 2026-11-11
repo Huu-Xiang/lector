@@ -137,3 +137,5 @@ flowchart TD
 - Selfhost: AuthGuard and BillingGuard pass through. SetupGuard still runs.
 - `apiFetch` treats 401 as `bounceToLogin` and 402 as `bounceToSubscribe`.
 - Public pages (`AUTH_ROUTES`) render at once, also during server rendering, so their text is in the HTML.
+- SetupGuard mounts `TabPreloader` once the language is known, so other tabs preload in the right language after the gates pass.
+- Sign-out goes through `signOutAndForget` (`src/lib/sign-out.ts`), which removes remembered pages first. The login page removes them again when the server says there is no session; a failed session check does not remove them.

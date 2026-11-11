@@ -210,14 +210,31 @@ function dropMemory(match: QueryMatch): void {
   }
 }
 
-export function invalidateQueries(match: QueryMatch): void {
+/** Keeps remembered records: the next read shows them and refreshes in the background. */
+export function markQueriesStale(match: QueryMatch): void {
   for (const [serialized, registration] of registrations) {
     if (!matches(registration.key, match)) continue;
     if (entries.has(serialized) || hasRecord(serialized)) pendingRefresh.add(serialized);
   }
   dropMemory(match);
-  removeRecords(match);
   if (pendingRefresh.size > 0) scheduleRefresh();
+}
+
+export function invalidateQueries(match: QueryMatch): void {
+  markQueriesStale(match);
+  removeRecords(match);
+}
+
+/** Changes a remembered value in place; a key with nothing remembered stays empty. */
+export function patchQuery<T>(key: QueryKey | null, update: (value: T) => T): void {
+  if (key === null) return;
+  const serialized = serializeKey(key);
+  const entry = entries.get(serialized);
+  if (entry?.hasValue && entry.value !== undefined) entry.value = update(entry.value as T);
+  const record = readRecord(serialized);
+  if (record && record.value !== undefined) {
+    writeRecord(serialized, key, update(record.value as T));
+  }
 }
 
 /** Memory only: a language switch must not erase remembered pages. */

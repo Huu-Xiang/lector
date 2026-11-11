@@ -14,7 +14,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { getStreak, peekStreak, setDailyGoal } from '@/lib/data-layer';
+import { getStreak, peekStreak, QUERY_SCOPES, setDailyGoal } from '@/lib/data-layer';
+import { useQueryRefresh } from '@/lib/use-query-refresh';
 import {
   DAILY_GOAL_PRESETS,
   DAILY_STATS_EVENT,
@@ -80,6 +81,7 @@ export default function DailyGoalBadge({ compact = false }: { compact?: boolean 
     window.addEventListener(DAILY_STATS_EVENT, load);
     return () => window.removeEventListener(DAILY_STATS_EVENT, load);
   }, [load]);
+  useQueryRefresh([QUERY_SCOPES.dailyStats], load);
 
   // Same box as the badge while loading, so the header does not jump when it arrives.
   if (!status?.goal) {

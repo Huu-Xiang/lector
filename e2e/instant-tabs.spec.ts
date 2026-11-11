@@ -77,6 +77,26 @@ test.describe('Instant tabs and books', () => {
     release();
   });
 
+  test('a lesson still reopens at once after reading saved its progress', async ({ page }) => {
+    const paragraph = 'Die kat sit op die mat in die son. '.repeat(40);
+    const lessonId = await createLesson(page, Array(30).fill(paragraph).join('\n\n'));
+    await page.goto(`/read/${lessonId}`);
+    await expect(page.getByText('Die kat sit op die mat').first()).toBeVisible({ timeout: 15000 });
+
+    const saved = page.waitForResponse(
+      (res) => res.url().includes(`/api/lessons/${lessonId}/progress`) && res.ok(),
+    );
+    await page.getByText('Die kat sit op die mat').first().hover();
+    await page.mouse.wheel(0, 2000);
+    await saved;
+
+    const release = hold(page, `**/api/lessons/${lessonId}`);
+    await page.reload({ waitUntil: 'commit' });
+    await expect(page.getByText('Die kat sit op die mat').first()).toBeVisible({ timeout: 10000 });
+    await expect(page.locator('[data-testid="page-outline"]')).toHaveCount(0);
+    release();
+  });
+
   test('a lesson never opened shows the outline while its text loads', async ({ page }) => {
     const lessonId = await createLesson(page, 'Die hond blaf vir die posman.');
     const release = hold(page, `**/api/lessons/${lessonId}`);

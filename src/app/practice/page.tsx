@@ -206,8 +206,9 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
       void getCollectionCounts()
         .then(setCollectionCounts)
         .catch(() => undefined);
-      const stats = await getTodayStats();
-      setPoints(stats.points);
+      void getTodayStats()
+        .then((stats) => setPoints(stats.points))
+        .catch(() => undefined);
 
       const guided = new URLSearchParams(window.location.search).get('onboarding') === '1';
       if (!guided) {
