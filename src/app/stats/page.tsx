@@ -28,6 +28,7 @@ import {
   syncAnkiReviews,
 } from '@/lib/data-layer';
 import { useQueryRefresh } from '@/lib/use-query-refresh';
+import { useTabScroll } from '@/lib/tab-scroll';
 import { lectorMode } from '@/lib/api-base';
 import { dateStringInTimeZone, isValidTimeZone } from '@/lib/dates';
 import { compositeActivityCount, deriveVocabGrowth, sliceSeriesByDays } from '@/lib/stats-derive';
@@ -199,6 +200,7 @@ export default function StatsPage() {
   const format = useFormatter();
   const [stats, setStats] = useState<StatsData | null>(rememberedStats);
   const [loading, setLoading] = useState(() => stats === null);
+  useTabScroll(!loading);
   const [reloads, setReloads] = useState(0);
   useQueryRefresh(
     [

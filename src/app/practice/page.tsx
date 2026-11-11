@@ -70,6 +70,7 @@ import DictationCard from './components/Dictation/DictationCard';
 import DictationFeedback from './components/Dictation/DictationFeedback';
 import WordReviewEntry from './word-review/WordReviewEntry';
 import { useQueryRefresh } from '@/lib/use-query-refresh';
+import { useTabScroll } from '@/lib/tab-scroll';
 import WordReviewRound from './word-review/WordReviewRound';
 import {
   completeOnboarding,
@@ -149,6 +150,7 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
     ClozeCollection,
     { total: number; due: number; mastered: number }
   > | null>(() => peekCollectionCounts() ?? null);
+  useTabScroll(collectionCounts !== null);
 
   // Feedback state
   const [feedbackData, setFeedbackData] = useState<IFeedbackData | null>(null);

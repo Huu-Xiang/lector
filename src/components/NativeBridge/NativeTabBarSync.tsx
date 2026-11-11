@@ -27,7 +27,7 @@ export default function NativeTabBarSync() {
   useEffect(() => {
     if (!ready) return;
     document.documentElement.dataset.nativeTabbar = '';
-    return onNativeTabSelected((id) => router.replace(id));
+    return onNativeTabSelected((id) => router.replace(id, { scroll: false }));
   }, [ready, router]);
 
   useEffect(() => {

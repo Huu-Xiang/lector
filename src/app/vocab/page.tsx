@@ -21,6 +21,7 @@ import {
   QUERY_SCOPES,
 } from '@/lib/data-layer';
 import { useQueryRefresh } from '@/lib/use-query-refresh';
+import { useTabScroll } from '@/lib/tab-scroll';
 import PageOutline from '@/components/PageOutline';
 import {
   addBasicCard,
@@ -75,6 +76,7 @@ export default function VocabPage() {
     return remembered ? vocabStats(remembered) : null;
   });
   const [isLoading, setIsLoading] = useState(() => peekAllVocab() === undefined);
+  useTabScroll(!isLoading);
   const [selectedEntry, setSelectedEntry] = useState<VocabEntry | null>(null);
   const [ankiConnected, setAnkiConnected] = useState<boolean | null>(null);
   const [ankiDeck, setAnkiDeck] = useState(activeLang.native);

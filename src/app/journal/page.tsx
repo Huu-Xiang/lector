@@ -15,6 +15,7 @@ import {
 } from '@/lib/data-layer';
 import PageOutline from '@/components/PageOutline';
 import { useQueryRefresh } from '@/lib/use-query-refresh';
+import { useTabScroll } from '@/lib/tab-scroll';
 import EntryModal from './components/EntryModal';
 import HistoryCard from './components/HistoryCard';
 import { formatDate } from './utils';
@@ -35,6 +36,7 @@ export default function JournalPage() {
   const [entries, setEntries] = useState<JournalEntry[] | null>(
     () => peekJournalEntries(50) ?? null,
   );
+  useTabScroll(entries !== null);
   const [selectedEntry, setSelectedEntry] = useState<JournalEntry | null>(null);
   const [showEditor, setShowEditor] = useState(false);
   const [error, setError] = useState<string | null>(null);

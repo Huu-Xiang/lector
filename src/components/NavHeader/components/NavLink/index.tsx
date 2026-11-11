@@ -6,6 +6,7 @@ import OnboardingTip from '@/components/OnboardingTip';
 import { iconMap } from '../../constants';
 import { reviewBadgeText } from '@/lib/review-badge';
 import { getNavLinkClassname } from '../utils';
+import { isTabPath } from '@/lib/tab-scroll';
 
 export interface NavTourTip {
   title: string;
@@ -43,6 +44,7 @@ export default function NavLink({
       <Link
         key={link.href}
         href={link.href}
+        scroll={!isTabPath(link.href)}
         className={clsx(
           linkClasses,
           tourTip

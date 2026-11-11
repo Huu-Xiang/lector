@@ -65,6 +65,7 @@ import {
   type OnboardingSnapshot,
 } from '@/lib/onboarding';
 import { useQueryRefresh } from '@/lib/use-query-refresh';
+import { useTabScroll } from '@/lib/tab-scroll';
 import { toast } from 'sonner';
 import { useActiveLanguage } from '@/utils/hooks';
 import { useIsNativeApp } from '@/lib/native-app';
@@ -83,6 +84,7 @@ export default function Home() {
   const [collections, setCollections] = useState<Collection[]>(() => peekAllCollections() ?? []);
   const [groups, setGroups] = useState<CollectionGroup[]>(() => peekAllGroups() ?? []);
   const [isLoading, setIsLoading] = useState(() => peekAllCollections() === undefined);
+  useTabScroll(!isLoading);
   const [isImporting, setIsImporting] = useState(false);
   const [isWebImportOpen, setIsWebImportOpen] = useState(false);
   const [isYouTubeImportOpen, setIsYouTubeImportOpen] = useState(false);
