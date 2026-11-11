@@ -34,6 +34,15 @@ describe('readingInterests setting', () => {
   });
 });
 
+describe('dailyGoal setting', () => {
+  test('accepts a minutes or reviews goal and rejects anything else', () => {
+    expect(validateSettingWrite('dailyGoal', { kind: 'minutes', target: 10 })).toBeNull();
+    expect(validateSettingWrite('dailyGoal', { kind: 'reviews', target: 20 })).toBeNull();
+    expect(validateSettingWrite('dailyGoal', { kind: 'minutes', target: 500 })).not.toBeNull();
+    expect(validateSettingWrite('dailyGoal', 'minutes')).not.toBeNull();
+  });
+});
+
 describe('reviewGoal setting', () => {
   test('accepts the two goals only', () => {
     expect(validateSettingWrite('reviewGoal', 'recognize')).toBeNull();

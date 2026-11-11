@@ -92,6 +92,7 @@ function createSchema(): Database {
       compedPlan TEXT,
       suspended INTEGER NOT NULL DEFAULT 0
     );
+    CREATE TABLE app_settings (key TEXT PRIMARY KEY, value TEXT NOT NULL, updatedAt TEXT NOT NULL);
     CREATE TABLE dailyStats (
       userId TEXT NOT NULL,
       date TEXT NOT NULL,
@@ -949,6 +950,76 @@ describe('sweepLifecycleEmails: review due', () => {
 
     reviewUser(database, { id: 'u-ok', email: 'ok@example.com' });
     await sweepLifecycleEmails({ ...reviewDeps(database, inbox), enabled: false });
+    expect(inbox).toHaveLength(0);
+  });
+});
+
+// 19:30 UTC: after the streak reminder gate for users on UTC.
+const STREAK_EVENING = new Date('2026-08-25T19:30:00.000Z');
+
+function streakUser(database: Database, minutesByDaysAgo: Record<number, number>): string {
+  const id = insertUser(database, {
+    id: 'user-streak',
+    email: 'streak@example.com',
+    createdAt: '2025-01-01T00:00:00.000Z',
+  });
+  database
+    .prepare('INSERT INTO settings (userId, key, value) VALUES (?, ?, ?)')
+    .run(id, 'timezone', JSON.stringify('UTC'));
+  database
+    .prepare('INSERT INTO settings (userId, key, value) VALUES (?, ?, ?)')
+    .run(id, 'dailyGoal', JSON.stringify({ kind: 'minutes', target: 10 }));
+  for (const [daysAgo, minutes] of Object.entries(minutesByDaysAgo)) {
+    addStats(database, id, Number(daysAgo), { minutesRead: minutes });
+  }
+  return id;
+}
+
+const streakDeps = (database: Database, inbox: EmailMessage[], now = STREAK_EVENING) =>
+  deps(database, inbox, { now: () => now, reviewCount: () => 0 });
+
+describe('sweepLifecycleEmails: streak at risk', () => {
+  test('mails once in the evening when a streak of 2+ days misses today', async () => {
+    withUnsubSecret();
+    const database = createSchema();
+    const inbox: EmailMessage[] = [];
+    const userId = streakUser(database, { 1: 10, 2: 12, 0: 3 });
+
+    expect((await sweepLifecycleEmails(streakDeps(database, inbox))).sent).toBe(1);
+    expect(inbox[0].subject).toBe('Keep your 2-day streak');
+    expect(inbox[0].text).toContain('10 minutes of reading');
+    expect(inbox[0].text).toContain('读 10 分钟');
+    expect(sentAliases(database, userId)).toEqual(['streak-at-risk:2026-08-25']);
+
+    expect((await sweepLifecycleEmails(streakDeps(database, inbox))).sent).toBe(0);
+  });
+
+  test('stays quiet before 19:00, for a one-day streak, and once today is done', async () => {
+    withUnsubSecret();
+    const inbox: EmailMessage[] = [];
+
+    const early = createSchema();
+    streakUser(early, { 1: 10, 2: 10 });
+    await sweepLifecycleEmails(streakDeps(early, inbox, EVENING));
+
+    const short = createSchema();
+    streakUser(short, { 1: 10, 3: 10 });
+    await sweepLifecycleEmails(streakDeps(short, inbox));
+
+    const done = createSchema();
+    streakUser(done, { 0: 10, 1: 10, 2: 10 });
+    await sweepLifecycleEmails(streakDeps(done, inbox));
+
+    expect(inbox).toHaveLength(0);
+  });
+
+  test('a review mail already sent today stops the streak mail', async () => {
+    withUnsubSecret();
+    const database = createSchema();
+    const inbox: EmailMessage[] = [];
+    const userId = streakUser(database, { 1: 10, 2: 10 });
+    addReviewSend(database, userId, 0);
+    await sweepLifecycleEmails(streakDeps(database, inbox));
     expect(inbox).toHaveLength(0);
   });
 });

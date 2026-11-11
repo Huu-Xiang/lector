@@ -4,6 +4,7 @@ import fs from 'fs';
 import { randomUUID } from 'crypto';
 import { parseEpub } from './lib/epub-parser';
 import { countWords } from './lib/html-to-markdown';
+import { ensureGoalStreakSince } from './lib/daily-goal';
 import { firstMarkdownImage } from './lib/markdown-image';
 import {
   DEFAULT_LANGUAGE,
@@ -1005,6 +1006,7 @@ function getDb(): Database {
   migrateEnabledLanguages(_db);
 
   backfillReadingFeedCovers(_db);
+  ensureGoalStreakSince(_db, new Date().toISOString().slice(0, 10));
 
   return _db;
 }

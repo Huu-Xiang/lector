@@ -10010,13 +10010,13 @@
       "get": {
         "operationId": "getApiStatsStreak",
         "summary": "Get the study streak",
-        "description": "One value for the whole account. A day counts as active after any lookup, practice, reading time or Anki review, in any language.",
+        "description": "One value for the whole account. A day counts when the daily goal is met, summed over every language: reading minutes, or words answered in review and practice. Days before the goal existed count after any lookup, practice, reading time or Anki review.",
         "tags": [
           "Statistics"
         ],
         "responses": {
           "200": {
-            "description": "The streak.",
+            "description": "The streak and today's progress toward the goal.",
             "content": {
               "application/json": {
                 "schema": {
@@ -10030,6 +10030,29 @@
                       "type": "integer"
                     },
                     "practicedToday": {
+                      "type": "boolean",
+                      "description": "Any study activity today."
+                    },
+                    "goal": {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "enum": [
+                            "minutes",
+                            "reviews"
+                          ]
+                        },
+                        "target": {
+                          "type": "integer"
+                        }
+                      }
+                    },
+                    "goalProgress": {
+                      "type": "integer",
+                      "description": "Today's amount toward the goal."
+                    },
+                    "goalMetToday": {
                       "type": "boolean"
                     }
                   }

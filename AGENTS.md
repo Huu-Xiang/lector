@@ -95,7 +95,7 @@ Maps of every app domain are in `docs/flows/`. Open `docs/flows/index.html` to w
 ## Dates, Streaks & Time Zone
 
 - Day rollover (daily stats, streaks, review days) uses the `timezone` setting (Settings → Time Zone), falling back to the server's zone — never raw UTC. Server helper: `api/src/lib/dates.ts` (`getTodayDate()`); pure client-side math in `src/lib/dates.ts`.
-- One streak definition app-wide: a day is active if it has any dictionary lookups, cloze practice, or reading minutes. Computed by `computeStreaks` (`src/lib/streak.ts`, mirrored in `api/src/lib/streak.ts`), served by `/api/stats/streak` (current + longest). Pages must not compute their own streaks.
+- One streak definition app-wide: a day counts when the account's daily goal is met, summed over all languages (setting `dailyGoal`: `minutes` of reading or `reviews` = words answered in review and practice; default 5 minutes). Days before `goalStreakSince` (in `app_settings`, written at the first boot of this rule) count with any lookup, practice, reading minute or Anki review. Computed by `goalDateSet` and `computeStreaks` (`src/lib/streak.ts`, mirrored in `api/src/lib/streak.ts`), served by `/api/stats/streak` (current, longest, goal, today's progress). `DailyGoalBadge` shows it in the library and the reader. Pages must not compute their own streaks.
 - Pure helpers used on both sides (e.g. `dates`, `streak`, `stats-derive`) are mirrored between the client `src/lib/` copy and the Hono `api/src/lib/` copy — keep them in sync when editing. The Hono API owns the DB; the client copies are for rendering only.
 
 # Repository instructions for coding agents

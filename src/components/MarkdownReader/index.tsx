@@ -29,6 +29,7 @@ import { SETTINGS_KEYS } from '@/app/settings/constants';
 import TranscriptReader from './TranscriptReader';
 import YouTubePlayer, { type SeekTarget } from '@/components/YouTubePlayer';
 import type { TranscriptSegment, YouTubeSourceMeta } from '@/types';
+import DailyGoalBadge from '@/components/DailyGoalBadge';
 
 // Lesson block ids are markdown source offsets (>= 0) or transcript segment
 // indices (>= 0); -1 marks the title, which sits outside both and can never
@@ -453,6 +454,7 @@ export default function MarkdownReader({
           </div>
         ) : (
           <div className="flex items-center gap-2 print:hidden">
+            <DailyGoalBadge compact />
             <div className="text-sm text-muted-foreground">{scrollPercentage}%</div>
             {supportsAnnotation && (
               <button

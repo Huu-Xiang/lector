@@ -5,7 +5,14 @@ import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Kbd, KbdGroup } from '@/components/ui/kbd';
 import { toast } from 'sonner';
-import { getReviewGoal, getSetting, setReviewGoal, setSetting } from '@/lib/data-layer';
+import {
+  getReviewGoal,
+  getSetting,
+  setDailyGoal,
+  setReviewGoal,
+  setSetting,
+} from '@/lib/data-layer';
+import { DAILY_GOAL_PRESETS, DEFAULT_DAILY_GOAL, goalFromKey, goalKey } from '@/lib/daily-goal';
 import type { ReviewGoal } from '@/types';
 import { SETTINGS_KEYS } from '../../constants';
 import ProductEmails from './ProductEmails';
@@ -14,6 +21,8 @@ const REVIEW_GOALS: ReviewGoal[] = ['recognize', 'recognize_spell'];
 
 export default function PracticeSettings() {
   const t = useTranslations('settings.practice');
+  const goalT = useTranslations('dailyGoal');
+  const [dailyGoal, setDailyGoalState] = useState(DEFAULT_DAILY_GOAL);
   const [hideTranslation, setHideTranslation] = useState(false);
   const [goal, setGoal] = useState<ReviewGoal>('recognize');
   const [autoSave, setAutoSave] = useState(true);
@@ -24,6 +33,13 @@ export default function PracticeSettings() {
     load();
     getReviewGoal()
       .then(setGoal)
+      .catch(() => undefined);
+    getSetting<unknown>('dailyGoal')
+      .then((value) => {
+        const stored = value as { kind?: string; target?: number } | null;
+        const known = stored && goalFromKey(`${stored.kind}:${stored.target}`);
+        if (known) setDailyGoalState(known);
+      })
       .catch(() => undefined);
     getSetting<boolean | null>('autoSaveLookups')
       .then((value) => setAutoSave(value !== false))
@@ -52,6 +68,19 @@ export default function PracticeSettings() {
     }
   };
 
+  const handleDailyGoalChanged = async (key: string) => {
+    const next = goalFromKey(key);
+    if (!next) return;
+    const previous = dailyGoal;
+    setDailyGoalState(next);
+    try {
+      await setDailyGoal(next);
+    } catch {
+      setDailyGoalState(previous);
+      toast.error(goalT('saveFailed'));
+    }
+  };
+
   const handleHideTranslationChanged = (hide: boolean) => {
     setHideTranslation(hide);
     localStorage.setItem(SETTINGS_KEYS.HIDE_TRANSLATION, String(hide));
@@ -60,6 +89,26 @@ export default function PracticeSettings() {
   return (
     <section className="panel p-6">
       <h2 className="mb-4 text-lg font-semibold text-foreground">{t('title')}</h2>
+
+      <div id="daily-goal" className="mb-8 scroll-mt-20">
+        <label htmlFor="daily-goal-select" className="block text-sm font-medium text-foreground">
+          {goalT('settingsLabel')}
+        </label>
+        <p className="mb-2 text-xs text-muted-foreground">{goalT('settingsHint')}</p>
+        <select
+          id="daily-goal-select"
+          data-testid="settings-daily-goal"
+          value={goalKey(dailyGoal)}
+          onChange={(event) => void handleDailyGoalChanged(event.target.value)}
+          className="rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none"
+        >
+          {DAILY_GOAL_PRESETS.map((goal) => (
+            <option key={goalKey(goal)} value={goalKey(goal)}>
+              {goalT(`preset.${goal.kind}`, { count: goal.target })}
+            </option>
+          ))}
+        </select>
+      </div>
 
       {/* Cloze settings sub-section */}
       <h3 className="mb-3 text-xs font-semibold tracking-wide text-muted-foreground uppercase">

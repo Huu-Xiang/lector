@@ -68,3 +68,40 @@ export function computeStreaks(activeDates: Set<string>, today: string): StreakR
 
   return { current, longest, activeToday };
 }
+
+export type GoalKind = 'minutes' | 'reviews';
+
+/** Today's amount toward the goal: reading minutes, or words answered in review and practice. */
+export function goalAmount(rows: DailyActivityRow[], kind: GoalKind): number {
+  let total = 0;
+  for (const row of rows) {
+    total += (kind === 'minutes' ? row.minutesRead : row.clozePracticed) ?? 0;
+  }
+  return total;
+}
+
+/**
+ * Streak days under a daily goal. Rows may hold one day several times (one row per
+ * language); their amounts add up. A day before `since` counts with any activity.
+ */
+export function goalDateSet(
+  rows: DailyActivityRow[],
+  goal: { kind: GoalKind; target: number },
+  since: string | null,
+): Set<string> {
+  const byDate = new Map<string, DailyActivityRow[]>();
+  for (const row of rows) {
+    const list = byDate.get(row.date);
+    if (list) list.push(row);
+    else byDate.set(row.date, [row]);
+  }
+  const days = new Set<string>();
+  for (const [date, dayRows] of byDate) {
+    const met =
+      since !== null && date < since
+        ? dayRows.some(isActiveDay)
+        : goalAmount(dayRows, goal.kind) >= goal.target;
+    if (met) days.add(date);
+  }
+  return days;
+}

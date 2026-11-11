@@ -71,6 +71,7 @@ function invalidateVocab(): void {
 
 function invalidateDailyStats(): void {
   invalidateActiveScope(DAILY_STATS_QUERY_SCOPE);
+  if (typeof window !== 'undefined') window.dispatchEvent(new Event(DAILY_STATS_EVENT));
 }
 
 function invalidateFluencyStats(): void {
@@ -116,6 +117,7 @@ export type {
 
 export type { ReadingStats } from './stats-derive';
 
+import { DAILY_STATS_EVENT, type DailyGoal, type StreakStatus } from './daily-goal';
 import type {
   WordState,
   Collection,
@@ -982,15 +984,17 @@ export async function getCollectionCounts(): Promise<
   return res.json();
 }
 
-export async function getStreak(): Promise<{
-  streak: number;
-  longest: number;
-  practicedToday: boolean;
-}> {
+export async function getStreak(): Promise<StreakStatus> {
   return cachedQuery(activeLanguageQueryKey(DAILY_STATS_QUERY_SCOPE, ['streak']), async () => {
     const res = await apiFetch(`/api/stats/streak${langParam()}`);
+    await requireOk(res, 'Could not load the streak');
     return res.json();
   });
+}
+
+export async function setDailyGoal(goal: DailyGoal): Promise<void> {
+  await setSetting('dailyGoal', goal);
+  invalidateDailyStats();
 }
 
 /** One fluency-radar axis — a topic domain's strength, from the /fluency route. */

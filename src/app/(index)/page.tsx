@@ -55,6 +55,7 @@ import {
 import { Button } from '@/components/ui/button';
 import AnnouncementBanner from '@/components/AnnouncementBanner';
 import PageHeader from '@/components/PageHeader';
+import DailyGoalBadge from '@/components/DailyGoalBadge';
 import { getOnboardingSnapshot, type OnboardingSnapshot } from '@/lib/onboarding';
 import { toast } from 'sonner';
 import { useActiveLanguage } from '@/utils/hooks';
@@ -417,7 +418,7 @@ export default function Home() {
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
       <PendingBookOpener />
-      <PageHeader title={t('page.title')}>
+      <PageHeader title={t('page.title')} titleAside={<DailyGoalBadge />}>
         <div className="flex flex-wrap items-center gap-2">
           {isCreatingGroup ? (
             <form

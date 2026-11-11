@@ -3,7 +3,8 @@ import { db, DailyStatsRow } from '../db';
 import { resolveLanguage } from '../lib/active-language';
 import { getCurrentUserId } from '../lib/user';
 import { getTodayDate, addDaysToDateString } from '../lib/dates';
-import { activeDateSet, computeStreaks } from '../lib/streak';
+import { activeDateSet, computeStreaks, goalAmount, goalDateSet } from '../lib/streak';
+import { goalStreakSince, readDailyGoal } from '../lib/daily-goal';
 import { deriveReadingStats } from '../lib/stats-derive';
 import { deriveCefrProgress } from '../lib/cefr';
 import { deriveDomainFluency, type DomainStateRow } from '../lib/domains';
@@ -204,9 +205,9 @@ app.get('/fluency', (c) => {
 });
 
 // GET /api/stats/streak
-// Unified streak definition (issue #108): a day is active when it has any
-// study activity (lookups, practice, reading time, or Anki reviews), with day
-// rollover in the configured time zone. Keep in sync with src/app/api/stats/streak.
+// A day counts toward the streak when the daily goal (setting `dailyGoal`) is met;
+// days before `goalStreakSince` count with any study activity. Day rollover uses
+// the configured time zone.
 //
 // Deliberately NOT language-scoped: the streak is one app-wide value (see
 // CLAUDE.md "One streak definition app-wide"). A day you studied only language X
@@ -228,9 +229,21 @@ app.get('/streak', (c) => {
     'date' | 'dictionaryLookups' | 'clozePracticed' | 'minutesRead' | 'ankiReviews'
   >[];
 
-  const { current, longest, activeToday } = computeStreaks(activeDateSet(rows), today);
+  const goal = readDailyGoal(db, userId);
+  const { current, longest, activeToday } = computeStreaks(
+    goalDateSet(rows, goal, goalStreakSince(db)),
+    today,
+  );
+  const todayRows = rows.filter((row) => row.date === today);
 
-  return c.json({ streak: current, longest, practicedToday: activeToday });
+  return c.json({
+    streak: current,
+    longest,
+    practicedToday: activeDateSet(todayRows).has(today),
+    goal,
+    goalProgress: goalAmount(todayRows, goal.kind),
+    goalMetToday: activeToday,
+  });
 });
 
 // GET /api/stats/activity

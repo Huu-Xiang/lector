@@ -16,6 +16,7 @@
  * `Authorization: Bearer` header to openaiUrl), so a poisoned URL exfiltrates
  * the key on the next LLM call.
  */
+import { parseDailyGoal } from './daily-goal';
 import { isNativeLanguageCode, isValidLanguageCode, LANGUAGES } from './languages';
 
 export const SENSITIVE_KEYS = new Set([
@@ -45,6 +46,7 @@ const SETTING_VALUE_BYTE_LIMITS: Record<string, number> = {
   reviewGoal: 24,
   // true or false.
   autoSaveLookups: 8,
+  dailyGoal: 48,
 };
 
 export function settingValueByteLimit(key: string): number {
@@ -67,6 +69,8 @@ export const KNOWN_SETTING_KEYS = new Set([
   'reviewGoal',
   // Reader: save a looked-up word at once. Unset means on.
   'autoSaveLookups',
+  // Daily goal for the streak: { kind: 'minutes' | 'reviews', target }.
+  'dailyGoal',
   // LLM provider config (Settings → AI, setup)
   'llmProvider',
   'openaiPreset',
@@ -139,6 +143,9 @@ export function validateSettingWrite(key: string, value: unknown): string | null
     if (new Set(value).size !== value.length) {
       return 'readingInterests must not repeat an interest';
     }
+  }
+  if (key === 'dailyGoal' && !parseDailyGoal(value)) {
+    return "dailyGoal must be { kind: 'minutes' (1-120) or 'reviews' (1-200), target }";
   }
   if (key === 'reviewGoal' && (typeof value !== 'string' || !REVIEW_GOALS.has(value))) {
     return "reviewGoal must be 'recognize' or 'recognize_spell'";

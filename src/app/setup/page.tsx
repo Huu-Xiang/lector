@@ -5,7 +5,14 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { ArrowLeft, ArrowRight, Sparkles } from 'lucide-react';
-import { addLibraryBook, getSetting, seedStarterContent, setSetting } from '@/lib/data-layer';
+import {
+  addLibraryBook,
+  getSetting,
+  seedStarterContent,
+  setDailyGoal,
+  setSetting,
+} from '@/lib/data-layer';
+import { DAILY_GOAL_PRESETS, DEFAULT_DAILY_GOAL, goalKey, type DailyGoal } from '@/lib/daily-goal';
 import { loadCatalog } from '@/lib/catalog-cache';
 import { displayLanguage } from '@/lib/display-language';
 import { readPendingBook, writePendingBook, type BookRef } from '@/lib/pending-book';
@@ -35,6 +42,8 @@ import { setLanguageInStorage } from '@/utils/storage';
 import { Button } from '@/components/ui/button';
 import { Select } from '@/components/ui/select';
 import RecommendedForYou from '@/components/RecommendedForYou';
+
+const SETUP_GOALS = DAILY_GOAL_PRESETS.filter((goal) => goal.target <= 20);
 
 // Registry-derived (#307): every language in LANGUAGES gets a setup card —
 // no hand-kept mirror to forget when a pack lands.
@@ -74,6 +83,10 @@ export default function SetupPage() {
   const [pending, setPending] = useState<LanguageCode | null>(null);
   const [level, setLevel] = useState<CefrLevel | null>(null);
   const [interests, setInterests] = useState<string[]>([]);
+  const [dailyGoal, setDailyGoalChoice] = useState<DailyGoal>(DEFAULT_DAILY_GOAL);
+  const goalT = useTranslations('dailyGoal');
+  // The onboarding profile keeps minutes (5-120); a review goal leaves the old default.
+  const profileMinutes = dailyGoal.kind === 'minutes' ? Math.max(5, dailyGoal.target) : 10;
   const [native, setNative] = useState<string>(() => nativeLanguageFromLocale(locale));
   const [stage, setStage] = useState<'form' | 'recommend'>('form');
   const tl = useTranslations('readingLevel');
@@ -187,12 +200,13 @@ export default function SetupPage() {
       if (interests.length > 0) {
         await setSetting('readingInterests', interests).catch(() => {});
       }
+      await setDailyGoal(dailyGoal).catch(() => {});
       const starter = await seedStarterContent(code);
       const profile = {
         language: code,
         approximateLevel: approximateLevelFor(level),
         interests: [],
-        dailyMinutes: 10,
+        dailyMinutes: profileMinutes,
       };
 
       if (guided && pendingBook && pendingBook.language === code) {
@@ -240,7 +254,7 @@ export default function SetupPage() {
       language: selectedLanguage,
       approximateLevel: approximateLevelFor(level),
       interests: [],
-      dailyMinutes: 10,
+      dailyMinutes: profileMinutes,
       starterCollectionId: collectionId,
     });
     setLanguageInStorage(selectedLanguage);
@@ -256,7 +270,7 @@ export default function SetupPage() {
         language: selectedLanguage,
         approximateLevel: approximateLevelFor(level),
         interests: [],
-        dailyMinutes: 10,
+        dailyMinutes: profileMinutes,
       });
       setLanguageInStorage(selectedLanguage);
       router.replace('/');
@@ -516,6 +530,34 @@ export default function SetupPage() {
                   ))}
                 </div>
                 <p className="mt-2 text-xs text-muted-foreground">{t('interestsHint')}</p>
+              </fieldset>
+
+              <fieldset className="mt-5">
+                <legend className="mb-2 text-xs font-semibold text-muted-foreground">
+                  {goalT('setupTitle')}
+                </legend>
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                  {SETUP_GOALS.map((goal) => {
+                    const chosen = goalKey(goal) === goalKey(dailyGoal);
+                    return (
+                      <button
+                        key={goalKey(goal)}
+                        type="button"
+                        aria-pressed={chosen}
+                        onClick={() => setDailyGoalChoice(goal)}
+                        data-testid={`setup-goal-${goal.kind}-${goal.target}`}
+                        className={`rounded-xl border px-3 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
+                          chosen
+                            ? 'border-primary bg-[var(--primary-soft)] text-[var(--primary-text)]'
+                            : 'border-border bg-background text-foreground hover:bg-accent'
+                        }`}
+                      >
+                        {goalT(`preset.${goal.kind}`, { count: goal.target })}
+                      </button>
+                    );
+                  })}
+                </div>
+                <p className="mt-2 text-xs text-muted-foreground">{goalT('setupHint')}</p>
               </fieldset>
             </section>
 

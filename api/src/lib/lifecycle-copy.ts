@@ -15,6 +15,11 @@ export interface LifecycleVars {
   END_DATE: string;
   /** Words in the review round: due now plus new. */
   REVIEW_COUNT: string;
+  /** Days in the streak that today's goal would extend. */
+  STREAK_DAYS: string;
+  /** The daily goal in words, for example `5 minutes of reading`. */
+  GOAL_EN: string;
+  GOAL_ZH: string;
 }
 
 export interface RenderedEmail {
@@ -117,6 +122,18 @@ const COPY: Record<string, Copy> = {
     cta: 'Review your words',
     ctaPath: '/practice',
     zh: (v) => `你有 ${v.REVIEW_COUNT} 个生词可以复习了。花几分钟过一遍，记得更牢。`,
+    stop: true,
+  },
+  'streak-at-risk': {
+    subject: (v) => `Keep your ${v.STREAK_DAYS}-day streak`,
+    paragraphs: (v) => [
+      `Hi ${v.USER_NAME},`,
+      `You have met your Readfox goal ${v.STREAK_DAYS} days in a row. Today's goal is ${v.GOAL_EN}, and there is still time today to keep the streak.`,
+    ],
+    cta: 'Keep the streak',
+    ctaPath: APP_ENTRY_PATH,
+    zh: (v) =>
+      `你已经连续 ${v.STREAK_DAYS} 天完成每日目标。今天的目标是${v.GOAL_ZH}，现在完成还来得及保住连胜。`,
     stop: true,
   },
 };

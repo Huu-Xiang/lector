@@ -21,6 +21,8 @@ import { planName } from './plan-names';
 import { getCounts } from './review/queue';
 import { backfillWordCards } from './review/backfill';
 import { reconcileWordCards } from './review/reconcile';
+import { goalStreakSince, readDailyGoal, type DailyGoal } from './daily-goal';
+import { computeStreaks, goalDateSet, type DailyActivityRow } from './streak';
 
 export const LIFECYCLE_TEMPLATES = {
   welcome: 'welcome-on-account-create',
@@ -30,6 +32,7 @@ export const LIFECYCLE_TEMPLATES = {
   glossCap: 'gloss-cap-free-tier-limit-hit',
   planEnding: 'plan-ending-3d',
   reviewDue: 'review-due',
+  streakRisk: 'streak-at-risk',
 } as const;
 
 export type LifecycleAlias = (typeof LIFECYCLE_TEMPLATES)[keyof typeof LIFECYCLE_TEMPLATES];
@@ -66,6 +69,7 @@ const UNSUBSCRIBE_ALIASES = new Set<LifecycleAlias>([
   LIFECYCLE_TEMPLATES.glossCap,
   LIFECYCLE_TEMPLATES.planEnding,
   LIFECYCLE_TEMPLATES.reviewDue,
+  LIFECYCLE_TEMPLATES.streakRisk,
 ]);
 
 const REAL_USE_EVENTS = [
@@ -329,6 +333,9 @@ async function sendOnce(
       PLAN_NAME: '',
       END_DATE: '',
       REVIEW_COUNT: '',
+      STREAK_DAYS: '',
+      GOAL_EN: '',
+      GOAL_ZH: '',
       ...options.vars,
     };
     // Inline copy; Resend hosted templates were never published (404).
@@ -463,7 +470,7 @@ export async function sweepLifecycleEmails(
     if (!deps.cloud || !deps.hasResendKey || !deps.enabled) return { sent, skipped };
 
     // Each loop fails on its own.
-    for (const loop of [sweepNewAccounts, sweepPlanEnding, sweepReviewDue]) {
+    for (const loop of [sweepNewAccounts, sweepPlanEnding, sweepStreakRisk, sweepReviewDue]) {
       try {
         for (const result of await loop(deps)) {
           if (result === 'sent') sent += 1;
@@ -677,6 +684,9 @@ async function reviewDueFor(
   if (inBackoff(deps, user.id, LIFECYCLE_TEMPLATES.reviewDue)) return null;
   const today = dateStringInTimeZone(now, zone);
   if (reviewedOrLookedUp(deps.database, user.id, today)) return null;
+  if (alreadySent(deps.database, user.id, `${LIFECYCLE_TEMPLATES.streakRisk}:${today}`)) {
+    return null;
+  }
   if (!activeSince(deps.database, user.id, addDaysToDateString(today, -REVIEW_DUE_ACTIVE_DAYS))) {
     return null;
   }
@@ -690,6 +700,72 @@ async function reviewDueFor(
     vars: { REVIEW_COUNT: String(words) },
     backoff: true,
   });
+}
+
+/** Streak reminder: a streak of at least this many days, with today's goal not met yet. */
+export const STREAK_RISK_MIN_DAYS = 2;
+/** Sent from this local hour, so a reader still has the evening to keep the streak. */
+export const STREAK_RISK_FROM_HOUR = 19;
+
+function goalWords(goal: DailyGoal): { en: string; zh: string } {
+  return goal.kind === 'minutes'
+    ? { en: `${goal.target} minutes of reading`, zh: `读 ${goal.target} 分钟` }
+    : { en: `${goal.target} words of review`, zh: `复习 ${goal.target} 个词` };
+}
+
+/** Streak reminder: one a day at most, in the evening of the user's stored zone. */
+async function sweepStreakRisk(deps: LifecycleDeps): Promise<LifecycleSendResult[]> {
+  const now = deps.now();
+  if (!userTableExists(deps.database)) return [];
+  const recent = addDaysToDateString(now.toISOString().slice(0, 10), -3);
+  const candidates = deps.database
+    .prepare(
+      `SELECT u.id, u.email, u.name, u.emailVerified, u.createdAt FROM user u
+        WHERE u.emailVerified = 1
+          AND ${SUSPENDED_FILTER}
+          AND EXISTS (SELECT 1 FROM dailyStats d WHERE d.userId = u.id AND d.date >= ?)`,
+    )
+    .all(recent) as LifecycleUser[];
+  const since = goalStreakSince(deps.database);
+  const results: LifecycleSendResult[] = [];
+  let visited = 0;
+  for (const user of candidates) {
+    if (visited > 0 && visited % REVIEW_DUE_YIELD_EVERY === 0) {
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    }
+    visited += 1;
+    try {
+      if (!user.email || isUnsubscribed(deps.database, user.email)) continue;
+      const zone = storedTimeZone(deps.database, user.id);
+      if (!zone || localHour(now, zone) < STREAK_RISK_FROM_HOUR) continue;
+      if (inBackoff(deps, user.id, LIFECYCLE_TEMPLATES.streakRisk)) continue;
+      const today = dateStringInTimeZone(now, zone);
+      if (alreadySent(deps.database, user.id, `${LIFECYCLE_TEMPLATES.reviewDue}:${today}`))
+        continue;
+      const rows = deps.database
+        .prepare(
+          'SELECT date, dictionaryLookups, clozePracticed, minutesRead, ankiReviews FROM dailyStats WHERE userId = ?',
+        )
+        .all(user.id) as DailyActivityRow[];
+      const goal = readDailyGoal(deps.database, user.id);
+      const days = goalDateSet(rows, goal, since);
+      if (days.has(today)) continue;
+      const { current } = computeStreaks(days, today);
+      if (current < STREAK_RISK_MIN_DAYS) continue;
+      const words = goalWords(goal);
+      results.push(
+        await sendOnce(user, LIFECYCLE_TEMPLATES.streakRisk, deps, {
+          key: `${LIFECYCLE_TEMPLATES.streakRisk}:${today}`,
+          vars: { STREAK_DAYS: String(current), GOAL_EN: words.en, GOAL_ZH: words.zh },
+          backoff: true,
+        }),
+      );
+    } catch (err) {
+      console.error(`[lifecycle-email] streak mail failed for ${user.id}:`, err);
+      Sentry.captureException(err);
+    }
+  }
+  return results;
 }
 
 /** The worker runs in cloud mode; each sweep checks the admin switch itself. */

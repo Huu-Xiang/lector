@@ -1261,6 +1261,28 @@
     "browseLevels": "수준별",
     "browseAuthors": "저자별"
   },
+  "dailyGoal": {
+    "label": "연속 {count}일. 오늘: {amount}",
+    "amount": {
+      "minutes": "{done}/{target}분",
+      "reviews": "{done}/{target}단어"
+    },
+    "metToast": "오늘 목표 달성! 연속 {count}일",
+    "doneToday": "오늘 목표를 달성했어요",
+    "todayProgress": "오늘: {amount}",
+    "streakLine": "연속 {count}일",
+    "longestLine": "최장 {count}일",
+    "changeGoal": "하루 목표",
+    "preset": {
+      "minutes": "매일 {count}분 읽기",
+      "reviews": "매일 {count}단어 복습"
+    },
+    "saveFailed": "목표를 저장하지 못했어요",
+    "setupTitle": "하루 목표",
+    "setupHint": "매일 목표를 달성하면 연속 일수가 늘어나요. 나중에 바꿀 수 있어요.",
+    "settingsLabel": "하루 목표",
+    "settingsHint": "이 목표를 달성한 날만 연속 일수에 들어가요."
+  },
   "journal": {
     "title": "일기",
     "newEntry": "새 일기",

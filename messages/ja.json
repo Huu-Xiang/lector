@@ -1261,6 +1261,28 @@
     "browseLevels": "レベル別",
     "browseAuthors": "著者別"
   },
+  "dailyGoal": {
+    "label": "連続 {count} 日。今日：{amount}",
+    "amount": {
+      "minutes": "{done}/{target} 分",
+      "reviews": "{done}/{target} 語"
+    },
+    "metToast": "今日の目標を達成！連続 {count} 日",
+    "doneToday": "今日の目標は達成済み",
+    "todayProgress": "今日：{amount}",
+    "streakLine": "連続 {count} 日",
+    "longestLine": "最長 {count} 日",
+    "changeGoal": "毎日の目標",
+    "preset": {
+      "minutes": "毎日 {count} 分読む",
+      "reviews": "毎日 {count} 語を復習"
+    },
+    "saveFailed": "目標を保存できませんでした",
+    "setupTitle": "毎日の目標",
+    "setupHint": "毎日達成すると連続日数が伸びます。あとで変更できます。",
+    "settingsLabel": "毎日の目標",
+    "settingsHint": "この目標を達成した日が連続日数に数えられます。"
+  },
   "journal": {
     "title": "日記",
     "newEntry": "新しい日記",

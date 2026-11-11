@@ -52,7 +52,7 @@ export function resetSelfhostOnboarding(): void {
       db.run("DELETE FROM knownWords WHERE userId = 'local' AND language = 'es'");
       db.run("DELETE FROM lessons WHERE userId = 'local' AND collectionId = 'starter-es'");
       db.run("DELETE FROM collections WHERE userId = 'local' AND id = 'starter-es'");
-      db.run("DELETE FROM settings WHERE userId = 'local' AND key IN ('targetLanguage', 'nativeLanguage', 'readingLevels', 'starterSeeded:es')");
+      db.run("DELETE FROM settings WHERE userId = 'local' AND key IN ('targetLanguage', 'nativeLanguage', 'readingLevels', 'dailyGoal', 'starterSeeded:es')");
     })();
     db.close();
   `;

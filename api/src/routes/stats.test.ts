@@ -1,6 +1,7 @@
 import '../test-guard';
 import { describe, test, expect, beforeEach, afterEach } from 'bun:test';
 import { db } from '../db';
+import { getTodayDate } from '../lib/dates';
 
 const { default: app } = await import('../routes/stats');
 
@@ -44,6 +45,67 @@ describe('stats /streak', () => {
     // and report 1, silently breaking multi-language streaks. Guards the
     // CLAUDE.md "One streak definition app-wide" invariant.
     expect(longest).toBe(3);
+  });
+
+  describe('with a daily goal', () => {
+    let since: string | undefined;
+    beforeEach(() => {
+      since = (
+        db.prepare("SELECT value FROM app_settings WHERE key = 'goalStreakSince'").get() as
+          | { value: string }
+          | undefined
+      )?.value;
+      db.prepare(
+        "INSERT OR REPLACE INTO app_settings (key, value, updatedAt) VALUES ('goalStreakSince', '2026-01-01', '')",
+      ).run();
+    });
+    afterEach(() => {
+      db.prepare("DELETE FROM settings WHERE key = 'dailyGoal'").run();
+      if (since) {
+        db.prepare("UPDATE app_settings SET value = ? WHERE key = 'goalStreakSince'").run(since);
+      }
+    });
+
+    function addMinutes(date: string, language: string, minutes: number) {
+      db.prepare('INSERT INTO dailyStats (date, language, minutesRead) VALUES (?, ?, ?)').run(
+        date,
+        language,
+        minutes,
+      );
+    }
+
+    test('counts only days that reach the goal, and reports today against it', async () => {
+      db.prepare('INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)').run(
+        'dailyGoal',
+        JSON.stringify({ kind: 'minutes', target: 10 }),
+      );
+      addMinutes('2026-01-01', 'af', 10);
+      addMinutes('2026-01-02', 'af', 6);
+      addMinutes('2026-01-02', 'de', 4);
+      addMinutes('2026-01-03', 'af', 3);
+      addMinutes(getTodayDate(), 'af', 4);
+
+      const body = (await (await app.request('/streak')).json()) as Record<string, unknown>;
+      expect(body).toMatchObject({
+        longest: 2,
+        streak: 0,
+        practicedToday: true,
+        goal: { kind: 'minutes', target: 10 },
+        goalProgress: 4,
+        goalMetToday: false,
+      });
+    });
+
+    test('uses five minutes of reading when no goal is set', async () => {
+      addMinutes(getTodayDate(), 'af', 5);
+      const body = (await (await app.request('/streak')).json()) as Record<string, unknown>;
+      expect(body).toMatchObject({
+        streak: 1,
+        goal: { kind: 'minutes', target: 5 },
+        goalProgress: 5,
+        goalMetToday: true,
+      });
+    });
   });
 });
 
@@ -115,14 +177,19 @@ describe('GET /api/stats/activity — app-wide heatmap series (#238)', () => {
       'INSERT INTO dailyStats (date, language, dictionaryLookups, clozePracticed) VALUES (?, ?, ?, ?)',
     ).run('2026-06-01', 'de', 0, 7);
     // A de-only day — the language-scoped af series would render this empty.
-    db.prepare(
-      'INSERT INTO dailyStats (date, language, minutesRead) VALUES (?, ?, ?)',
-    ).run('2026-06-02', 'de', 12);
+    db.prepare('INSERT INTO dailyStats (date, language, minutesRead) VALUES (?, ?, ?)').run(
+      '2026-06-02',
+      'de',
+      12,
+    );
 
     const res = await app.request('/activity');
     expect(res.status).toBe(200);
     const rows = (await res.json()) as {
-      date: string; dictionaryLookups: number; clozePracticed: number; minutesRead: number;
+      date: string;
+      dictionaryLookups: number;
+      clozePracticed: number;
+      minutesRead: number;
     }[];
 
     expect(rows.length).toBe(2);

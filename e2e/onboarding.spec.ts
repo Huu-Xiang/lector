@@ -306,6 +306,8 @@ test.describe('guided onboarding — selfhost', () => {
     await page.getByTestId('setup-language-es').click();
     await page.getByTestId('setup-level-B1').click();
     await page.getByTestId('setup-native-language').selectOption('ja');
+    await expect(page.getByTestId('setup-goal-minutes-5')).toHaveAttribute('aria-pressed', 'true');
+    await page.getByTestId('setup-goal-minutes-15').click();
     await page.getByTestId('skip-guided-onboarding').click();
     await expect(page).toHaveURL('/', { timeout: 15_000 });
 
@@ -316,8 +318,10 @@ test.describe('guided onboarding — selfhost', () => {
       language: 'es',
       approximateLevel: 'intermediate',
       interests: [],
-      dailyMinutes: 10,
+      dailyMinutes: 15,
     });
+    const goal = await page.request.get(apiUrl('/api/settings/dailyGoal'));
+    expect(await goal.json()).toEqual({ kind: 'minutes', target: 15 });
     const levels = await page.request.get(apiUrl('/api/settings/readingLevels'));
     expect(await levels.json()).toEqual({ es: 'B1' });
     const nativeLanguage = await page.request.get(apiUrl('/api/settings/nativeLanguage'));
@@ -601,7 +605,7 @@ test.describe('guided onboarding — cloud accounts', () => {
     expect(current.profile).toMatchObject({
       approximateLevel: 'beginner',
       interests: [],
-      dailyMinutes: 10,
+      dailyMinutes: 5,
     });
     expect(
       current.events.filter((event) => event.eventType === 'practice.answer_submitted'),

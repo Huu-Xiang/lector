@@ -1261,6 +1261,28 @@
     "browseLevels": "By level",
     "browseAuthors": "By author"
   },
+  "dailyGoal": {
+    "label": "Streak {count, plural, one {# day} other {# days}}. Today: {amount}",
+    "amount": {
+      "minutes": "{done}/{target} min",
+      "reviews": "{done}/{target} words"
+    },
+    "metToast": "Daily goal done! Streak: {count, plural, one {# day} other {# days}}",
+    "doneToday": "Today's goal is done",
+    "todayProgress": "Today: {amount}",
+    "streakLine": "Streak: {count, plural, one {# day} other {# days}}",
+    "longestLine": "Best: {count, plural, one {# day} other {# days}}",
+    "changeGoal": "Daily goal",
+    "preset": {
+      "minutes": "Read {count} minutes",
+      "reviews": "Review {count} words"
+    },
+    "saveFailed": "Could not save the goal",
+    "setupTitle": "Daily goal",
+    "setupHint": "Meet it each day to grow your streak. You can change it later.",
+    "settingsLabel": "Daily goal",
+    "settingsHint": "A day counts toward your streak when you reach this goal."
+  },
   "journal": {
     "title": "Journal",
     "newEntry": "New Entry",

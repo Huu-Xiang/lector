@@ -2280,17 +2280,26 @@ const statsOps: Record<string, OperationDoc> = {
   'GET /api/stats/streak': {
     summary: 'Get the study streak',
     description:
-      'One value for the whole account. A day counts as active after any lookup, practice, reading time or Anki review, in any language.',
+      'One value for the whole account. A day counts when the daily goal is met, summed over every language: reading minutes, or words answered in review and practice. Days before the goal existed count after any lookup, practice, reading time or Anki review.',
     tag: 'Statistics',
     responses: {
       '200': {
-        description: 'The streak.',
+        description: "The streak and today's progress toward the goal.",
         schema: {
           type: 'object',
           properties: {
             streak: { type: 'integer', description: 'Days in the current streak.' },
             longest: { type: 'integer' },
-            practicedToday: { type: 'boolean' },
+            practicedToday: { type: 'boolean', description: 'Any study activity today.' },
+            goal: {
+              type: 'object',
+              properties: {
+                kind: { type: 'string', enum: ['minutes', 'reviews'] },
+                target: { type: 'integer' },
+              },
+            },
+            goalProgress: { type: 'integer', description: "Today's amount toward the goal." },
+            goalMetToday: { type: 'boolean' },
           },
         },
       },

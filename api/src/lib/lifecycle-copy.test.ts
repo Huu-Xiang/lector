@@ -13,6 +13,9 @@ const vars = {
   PLAN_NAME: 'Plus',
   END_DATE: '12 November 2026',
   REVIEW_COUNT: '8',
+  STREAK_DAYS: '4',
+  GOAL_EN: '10 minutes of reading',
+  GOAL_ZH: '读 10 分钟',
 };
 
 describe('lifecycle copy', () => {

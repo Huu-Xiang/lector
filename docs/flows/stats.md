@@ -20,12 +20,12 @@ flowchart TD
 | --- | --- | --- |
 | Client | `src/lib/data-layer.ts` | `incrementDailyStat`, `getTodayStats`, `getStreak`, `getFluencyStats` |
 | Dates | `src/lib/dates.ts` and `api/src/lib/dates.ts` | `getTodayDate` |
-| Streak | `src/lib/streak.ts` and `api/src/lib/streak.ts` | `computeStreaks` |
+| Streak | `src/lib/streak.ts` and `api/src/lib/streak.ts`, `api/src/lib/daily-goal.ts` | `computeStreaks`, `goalDateSet`, `readDailyGoal` |
 | API | `api/src/routes/stats.ts` | `GET /today`, `PUT /today`, `GET /streak`, `GET /fluency` |
 | Ping | `api/src/lib/study-session.ts` | `recordStudySessionPing` |
 | Ping route | `api/src/routes/study-ping.ts` | `GET /`, `POST /` |
 
-If a day has dictionary lookups, cloze practice, or read minutes, the day is active. Do not compute a streak on a page.
+A day counts toward the streak when the daily goal is met (`dailyGoal`: reading minutes or words reviewed; default 5 minutes). Days before `goalStreakSince` count with any lookup, practice or reading minute. Do not compute a streak on a page.
 
 The web client does not write `minutesRead`. `api/src/lib/stats-derive.ts` estimates read minutes from lesson progress.
 
