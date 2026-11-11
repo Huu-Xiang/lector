@@ -288,7 +288,8 @@
     },
     "openTitle": "开源透明，数据归你",
     "openBody": "Readfox 是开源软件（AGPL-3.0），基于开源阅读器 Lector 开发。AI 功能每月有一定额度。网站不放广告，也不装任何追踪统计工具。详见<privacy>隐私政策</privacy>。",
-    "pricing": "价格"
+    "pricing": "价格",
+    "vocabTest": "不确定自己的英语水平？免费做 2 分钟词汇量测试 →"
   },
   "settings": {
     "nativeLanguage": {
@@ -462,6 +463,13 @@
       "commit": "提交",
       "built": "构建时间",
       "version": "版本"
+    },
+    "readingLevel": {
+      "title": "阅读等级",
+      "hint": "书库里的推荐书按这个等级来选，随时可以修改。",
+      "saved": "{language}：等级 {level}",
+      "saveFailed": "等级没有保存成功，请重试。",
+      "pickerLabel": "{language}的阅读等级"
     },
     "plan": {
       "labels": {
@@ -1231,7 +1239,11 @@
     "homeHintLevel": "根据你的水平（{level}）挑选。",
     "more": "更多免费书籍",
     "collapse": "收起",
-    "expand": "展开"
+    "expand": "展开",
+    "changeLevel": "修改等级",
+    "setLevel": "设置我的等级",
+    "levelPickerLabel": "你的阅读等级",
+    "levelSaveFailed": "等级没有保存成功，请重试。"
   },
   "bookLink": {
     "view": "在{site}查看",
@@ -2456,6 +2468,26 @@
     "announceUnsure": "{word} 的意思是 {meaning}。",
     "loading": "正在加载词表…",
     "retryStart": "重试",
-    "loadError": "词表没有加载成功。请检查网络后重试。"
+    "loadError": "词表没有加载成功。请检查网络后重试。",
+    "takeTest": "测一测词汇量（2 分钟）",
+    "navLink": "词汇量测试",
+    "currentLevel": "你现在的英语等级：{level}",
+    "noLevelYet": "你还没有设置英语等级。",
+    "saveLevel": "把 {level} 设为我的等级",
+    "levelSaved": "你的等级是 {level}，推荐书会按它来选。",
+    "saveLevelFailed": "等级没有保存成功，请重试。",
+    "backToLibrary": "看适合我等级的书",
+    "signupPitch": "注册一个免费账号：保存你的等级，按等级推荐书，读书时点任何词都有讲解。",
+    "faq": {
+      "title": "关于测试的常见问题",
+      "howQ": "词汇量测试怎么做？",
+      "howA": "每次显示一个英语单词，从 3 个意思和「以上都不是」中选出正确的那个。测试从简单词开始，再根据你的回答调整难度。答满 20 题就能看结果。",
+      "accuracyQ": "结果准吗？",
+      "accuracyA": "结果是一个范围，不是一个精确数字。答得越多，范围越小。同一词族算一个词，例如 help、helps、helped 算一个。不认识就选「不确定/不认识」，不要猜，结果才准。",
+      "freeQ": "测试免费吗？需要注册吗？",
+      "freeA": "测试免费，不用注册。注册一个免费 Readfox 账号后可以保存你的等级，书库会按这个等级推荐书。",
+      "levelQ": "我的等级对阅读意味着什么？",
+      "levelA": "词汇量对应 A1 到 C2 的欧标（CEFR）等级。测试会推荐你已经认识约 95% 单词的免费书，读起来比较轻松。"
+    }
   }
 }

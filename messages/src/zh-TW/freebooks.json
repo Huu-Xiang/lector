@@ -108,7 +108,11 @@
     "homeHintLevel": "根據你的程度（{level}）挑選。",
     "more": "更多免費書籍",
     "collapse": "收起",
-    "expand": "展開"
+    "expand": "展開",
+    "changeLevel": "修改程度",
+    "setLevel": "設定我的程度",
+    "levelPickerLabel": "你的閱讀程度",
+    "levelSaveFailed": "程度沒有儲存成功，請重試。"
   },
   "bookLink": {
     "view": "在{site}查看",

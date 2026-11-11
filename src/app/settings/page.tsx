@@ -14,6 +14,7 @@ import DailyGoalSettings from './components/DailyGoalSettings';
 import PracticeSettings from './components/PracticeSettings';
 import ProseSettings from './components/ProseSettings';
 import LanguagesSettings from './components/LanguagesSettings';
+import ReadingLevelSettings from './components/ReadingLevelSettings';
 import CnRefund from './components/CnRefund';
 import NativeLanguage from './components/NativeLanguage';
 import InterfaceLanguage from './components/InterfaceLanguage';
@@ -40,6 +41,7 @@ export default function SettingsPage() {
         <InstallAppCard />
         {lectorMode() === 'cloud' && <ReminderSettings />}
         <LanguagesSettings />
+        <ReadingLevelSettings />
         <DailyGoalSettings />
         <section className="panel space-y-6 p-6" data-testid="language-preferences">
           <div>

@@ -159,6 +159,13 @@
       "commit": "커밋",
       "built": "빌드",
       "version": "버전"
+    },
+    "readingLevel": {
+      "title": "읽기 레벨",
+      "hint": "서재의 추천 도서는 이 레벨에 맞춰 고릅니다. 언제든지 바꿀 수 있습니다.",
+      "saved": "{language}: 레벨 {level}",
+      "saveFailed": "레벨을 저장하지 못했습니다. 다시 시도하세요.",
+      "pickerLabel": "{language} 읽기 레벨"
     }
   }
 }

@@ -159,6 +159,13 @@
       "commit": "コミット",
       "built": "ビルド日時",
       "version": "バージョン"
+    },
+    "readingLevel": {
+      "title": "読書レベル",
+      "hint": "ライブラリのおすすめの本はこのレベルで選ばれます。いつでも変更できます。",
+      "saved": "{language}：レベル {level}",
+      "saveFailed": "レベルを保存できませんでした。もう一度お試しください。",
+      "pickerLabel": "{language}の読書レベル"
     }
   }
 }

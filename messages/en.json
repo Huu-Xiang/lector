@@ -288,7 +288,8 @@
     },
     "openTitle": "Open source, and your reading stays yours",
     "openBody": "Readfox is open-source software (AGPL-3.0), built on the open-source reader Lector. AI features include a limited monthly allowance. We do not run advertising or analytics trackers. Read the <privacy>privacy policy</privacy>.",
-    "pricing": "Pricing"
+    "pricing": "Pricing",
+    "vocabTest": "Not sure of your English level? Take the free 2-minute vocabulary test →"
   },
   "settings": {
     "nativeLanguage": {
@@ -462,6 +463,13 @@
       "commit": "Commit",
       "built": "Built",
       "version": "Version"
+    },
+    "readingLevel": {
+      "title": "Reading level",
+      "hint": "Book picks in the library follow this level. Change it any time.",
+      "saved": "{language}: level {level}",
+      "saveFailed": "The level was not saved. Try again.",
+      "pickerLabel": "Reading level for {language}"
     },
     "plan": {
       "labels": {
@@ -1231,7 +1239,11 @@
     "homeHintLevel": "Matched to your level, {level}.",
     "more": "More free books",
     "collapse": "Fold this section",
-    "expand": "Show this section"
+    "expand": "Show this section",
+    "changeLevel": "Change level",
+    "setLevel": "Set my level",
+    "levelPickerLabel": "Your reading level",
+    "levelSaveFailed": "The level was not saved. Try again."
   },
   "bookLink": {
     "view": "View on {site}",
@@ -2456,6 +2468,26 @@
     "announceUnsure": "{word} means {meaning}.",
     "loading": "Loading words…",
     "retryStart": "Try again",
-    "loadError": "The word list did not load. Check your connection and try again."
+    "loadError": "The word list did not load. Check your connection and try again.",
+    "takeTest": "Test my vocabulary (2 min)",
+    "navLink": "Vocabulary test",
+    "currentLevel": "Your English level now: {level}",
+    "noLevelYet": "You have not set an English level yet.",
+    "saveLevel": "Set {level} as my level",
+    "levelSaved": "Your level is {level}. Book picks follow it.",
+    "saveLevelFailed": "The level was not saved. Try again.",
+    "backToLibrary": "See books for my level",
+    "signupPitch": "A free account saves your level, picks books at that level, and explains any word you tap while you read.",
+    "faq": {
+      "title": "Questions about the test",
+      "howQ": "How does the vocabulary test work?",
+      "howA": "You see one English word at a time and pick its meaning from three options or “None of these”. The test starts with easy words and adapts to your answers. You can see your result after 20 words.",
+      "accuracyQ": "How accurate is the result?",
+      "accuracyA": "The result is a range, not a single number. The more words you answer, the narrower the range. Word families count as one word, so “help”, “helps” and “helped” are one word. Choosing “Not sure” instead of guessing keeps the result accurate.",
+      "freeQ": "Is the test free? Do I need an account?",
+      "freeA": "The test is free and needs no account. With a free Readfox account you can save your level, and the library then picks books at that level.",
+      "levelQ": "What does my level mean for reading?",
+      "levelA": "Your vocabulary size maps to a CEFR level from A1 to C2. The test suggests free books where you already know about 95% of the words, which is the point where reading becomes comfortable."
+    }
   }
 }

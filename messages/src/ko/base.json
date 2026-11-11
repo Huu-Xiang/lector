@@ -239,7 +239,8 @@
     },
     "openTitle": "오픈소스, 그리고 내 독서는 내 것",
     "openBody": "Readfox는 오픈소스 소프트웨어(AGPL-3.0)이며, 오픈소스 리더 Lector를 기반으로 만들었어요. AI 기능에는 월 사용량 제한이 있어요. 광고나 분석 추적기는 사용하지 않아요. <privacy>개인정보처리방침</privacy>을 읽어 보세요.",
-    "pricing": "요금"
+    "pricing": "요금",
+    "vocabTest": "영어 레벨을 잘 모르겠나요? 무료 2분 어휘력 테스트를 해 보세요 →"
   },
   "settings": {
     "nativeLanguage": {

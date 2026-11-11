@@ -16,6 +16,10 @@ describe('llms.txt', () => {
     }
   });
 
+  it('links the free vocabulary test', () => {
+    expect(text).toContain('(https://readfox.app/vocab-test)');
+  });
+
   it('counts the library in the facts', () => {
     expect(text).toContain(`Free library: ${listPublicBooks().length} public-domain`);
   });

@@ -159,6 +159,13 @@
       "commit": "提交",
       "built": "建置時間",
       "version": "版本"
+    },
+    "readingLevel": {
+      "title": "閱讀程度",
+      "hint": "書庫裡的推薦書依這個程度來選，隨時可以修改。",
+      "saved": "{language}：程度 {level}",
+      "saveFailed": "程度沒有儲存成功，請重試。",
+      "pickerLabel": "{language}的閱讀程度"
     }
   }
 }

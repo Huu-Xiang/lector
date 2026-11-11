@@ -124,6 +124,15 @@ export default async function LandingPage() {
                 {t('freeBooks')}
               </Link>
             </div>
+            <p className="mt-4 text-sm text-muted-foreground">
+              <Link
+                href="/vocab-test"
+                data-testid="landing-vocab-test-link"
+                className="font-medium text-primary underline-offset-4 hover:underline"
+              >
+                {t('vocabTest')}
+              </Link>
+            </p>
           </div>
           <LandingDemo initialSet={demo.id} fromCookie={demo.fromCookie} />
         </section>

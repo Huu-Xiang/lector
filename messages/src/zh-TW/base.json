@@ -239,7 +239,8 @@
     },
     "openTitle": "開源透明，資料歸你",
     "openBody": "Readfox 是開源軟體（AGPL-3.0），基於開源閱讀器 Lector 開發。AI 功能每月有一定額度。網站不放廣告，也不安裝任何追蹤統計工具。詳見<privacy>隱私權政策</privacy>。",
-    "pricing": "價格"
+    "pricing": "價格",
+    "vocabTest": "不確定自己的英文程度？免費做 2 分鐘單字量測驗 →"
   },
   "settings": {
     "nativeLanguage": {

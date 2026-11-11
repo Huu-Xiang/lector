@@ -108,7 +108,11 @@
     "homeHintLevel": "根据你的水平（{level}）挑选。",
     "more": "更多免费书籍",
     "collapse": "收起",
-    "expand": "展开"
+    "expand": "展开",
+    "changeLevel": "修改等级",
+    "setLevel": "设置我的等级",
+    "levelPickerLabel": "你的阅读等级",
+    "levelSaveFailed": "等级没有保存成功，请重试。"
   },
   "bookLink": {
     "view": "在{site}查看",

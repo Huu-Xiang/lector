@@ -108,7 +108,11 @@
     "homeHintLevel": "내 수준({level})에 맞춰 골랐어요.",
     "more": "무료 도서 더 보기",
     "collapse": "이 섹션 접기",
-    "expand": "이 섹션 펼치기"
+    "expand": "이 섹션 펼치기",
+    "changeLevel": "레벨 변경",
+    "setLevel": "내 레벨 설정",
+    "levelPickerLabel": "읽기 레벨",
+    "levelSaveFailed": "레벨을 저장하지 못했습니다. 다시 시도하세요."
   },
   "bookLink": {
     "view": "{site}에서 보기",

@@ -23,6 +23,7 @@ import NativeTopBar from './components/NativeTopBar';
 import AdminNavLink from './components/AdminNavLink';
 import UpgradeLink from './components/UpgradeLink';
 import FeedbackNavLink from './components/FeedbackNavLink';
+import VocabTestNavLink from './components/VocabTestNavLink';
 import SidebarCollapseButton from './components/SidebarCollapseButton';
 import PendingInvite from '@/components/PendingInvite';
 import WhatsNew from '@/components/WhatsNew';
@@ -118,6 +119,7 @@ export default function NavHeader() {
               />
             );
           })}
+          <VocabTestNavLink collapsed={collapsed} />
           <AdminNavLink isMobile={false} collapsed={collapsed} />
           <FeedbackNavLink collapsed={collapsed} />
         </nav>

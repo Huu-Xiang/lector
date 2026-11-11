@@ -159,6 +159,13 @@
       "commit": "提交",
       "built": "构建时间",
       "version": "版本"
+    },
+    "readingLevel": {
+      "title": "阅读等级",
+      "hint": "书库里的推荐书按这个等级来选，随时可以修改。",
+      "saved": "{language}：等级 {level}",
+      "saveFailed": "等级没有保存成功，请重试。",
+      "pickerLabel": "{language}的阅读等级"
     }
   }
 }

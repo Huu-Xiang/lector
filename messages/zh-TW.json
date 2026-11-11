@@ -288,7 +288,8 @@
     },
     "openTitle": "開源透明，資料歸你",
     "openBody": "Readfox 是開源軟體（AGPL-3.0），基於開源閱讀器 Lector 開發。AI 功能每月有一定額度。網站不放廣告，也不安裝任何追蹤統計工具。詳見<privacy>隱私權政策</privacy>。",
-    "pricing": "價格"
+    "pricing": "價格",
+    "vocabTest": "不確定自己的英文程度？免費做 2 分鐘單字量測驗 →"
   },
   "settings": {
     "nativeLanguage": {
@@ -462,6 +463,13 @@
       "commit": "提交",
       "built": "建置時間",
       "version": "版本"
+    },
+    "readingLevel": {
+      "title": "閱讀程度",
+      "hint": "書庫裡的推薦書依這個程度來選，隨時可以修改。",
+      "saved": "{language}：程度 {level}",
+      "saveFailed": "程度沒有儲存成功，請重試。",
+      "pickerLabel": "{language}的閱讀程度"
     },
     "plan": {
       "labels": {
@@ -1231,7 +1239,11 @@
     "homeHintLevel": "根據你的程度（{level}）挑選。",
     "more": "更多免費書籍",
     "collapse": "收起",
-    "expand": "展開"
+    "expand": "展開",
+    "changeLevel": "修改程度",
+    "setLevel": "設定我的程度",
+    "levelPickerLabel": "你的閱讀程度",
+    "levelSaveFailed": "程度沒有儲存成功，請重試。"
   },
   "bookLink": {
     "view": "在{site}查看",
@@ -2456,6 +2468,26 @@
     "announceUnsure": "{word} 的意思是 {meaning}。",
     "loading": "正在載入單字表…",
     "retryStart": "重試",
-    "loadError": "單字表沒有載入成功。請檢查網路後重試。"
+    "loadError": "單字表沒有載入成功。請檢查網路後重試。",
+    "takeTest": "測一測單字量（2 分鐘）",
+    "navLink": "單字量測驗",
+    "currentLevel": "你現在的英文程度：{level}",
+    "noLevelYet": "你還沒有設定英文程度。",
+    "saveLevel": "把 {level} 設為我的程度",
+    "levelSaved": "你的程度是 {level}，推薦書會依它來選。",
+    "saveLevelFailed": "程度沒有儲存成功，請重試。",
+    "backToLibrary": "看適合我程度的書",
+    "signupPitch": "註冊一個免費帳號：儲存你的程度，依程度推薦書，讀書時點任何字都有講解。",
+    "faq": {
+      "title": "關於測驗的常見問題",
+      "howQ": "單字量測驗怎麼做？",
+      "howA": "每次顯示一個英文單字，從 3 個意思和「以上皆非」中選出正確的那個。測驗從簡單的字開始，再依你的回答調整難度。答滿 20 題就能看結果。",
+      "accuracyQ": "結果準嗎？",
+      "accuracyA": "結果是一個範圍，不是一個精確數字。答得越多，範圍越小。同一字族算一個字，例如 help、helps、helped 算一個。不認識就選「不確定/不認識」，不要猜，結果才準。",
+      "freeQ": "測驗免費嗎？需要註冊嗎？",
+      "freeA": "測驗免費，不用註冊。註冊一個免費 Readfox 帳號後可以儲存你的程度，書庫會依這個程度推薦書。",
+      "levelQ": "我的程度對閱讀代表什麼？",
+      "levelA": "單字量對應 A1 到 C2 的歐洲語言共同參考架構（CEFR）等級。測驗會推薦你已經認識約 95% 單字的免費書，讀起來比較輕鬆。"
+    }
   }
 }

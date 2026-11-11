@@ -239,7 +239,8 @@
     },
     "openTitle": "オープンソース。読書の記録はあなただけのもの",
     "openBody": "Readfox はオープンソースソフトウェア（AGPL-3.0）で、オープンソースのリーダー Lector をもとに作られています。AI 機能には毎月の利用枠があります。広告や分析用のトラッカーは使っていません。<privacy>プライバシーポリシー</privacy>をご覧ください。",
-    "pricing": "料金"
+    "pricing": "料金",
+    "vocabTest": "英語のレベルがわからない？無料の 2 分語彙テストを受ける →"
   },
   "settings": {
     "nativeLanguage": {

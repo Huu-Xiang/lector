@@ -108,7 +108,11 @@
     "homeHintLevel": "あなたのレベル（{level}）に合わせています。",
     "more": "無料の本をもっと見る",
     "collapse": "このセクションを閉じる",
-    "expand": "このセクションを開く"
+    "expand": "このセクションを開く",
+    "changeLevel": "レベルを変更",
+    "setLevel": "レベルを設定",
+    "levelPickerLabel": "読書レベル",
+    "levelSaveFailed": "レベルを保存できませんでした。もう一度お試しください。"
   },
   "bookLink": {
     "view": "{site}で見る",

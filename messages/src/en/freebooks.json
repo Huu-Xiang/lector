@@ -108,7 +108,11 @@
     "homeHintLevel": "Matched to your level, {level}.",
     "more": "More free books",
     "collapse": "Fold this section",
-    "expand": "Show this section"
+    "expand": "Show this section",
+    "changeLevel": "Change level",
+    "setLevel": "Set my level",
+    "levelPickerLabel": "Your reading level",
+    "levelSaveFailed": "The level was not saved. Try again."
   },
   "bookLink": {
     "view": "View on {site}",

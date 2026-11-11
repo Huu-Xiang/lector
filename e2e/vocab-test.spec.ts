@@ -1,8 +1,22 @@
 import { test, expect, type Browser } from '@playwright/test';
 import { apiUrl } from './api';
 
+const CLOUD_API = `http://localhost:${process.env.E2E_AUTH_API_PORT || '3462'}`;
+
 async function loggedOutPage(browser: Browser) {
   const context = await browser.newContext({ storageState: { cookies: [], origins: [] } });
+  return { context, page: await context.newPage() };
+}
+
+/** A cloud visitor with no session, so the result page offers sign-up instead of saving a level. */
+async function cloudVisitorPage(browser: Browser) {
+  const context = await browser.newContext({ storageState: { cookies: [], origins: [] } });
+  await context.route('**/__env.js', (route) =>
+    route.fulfill({
+      contentType: 'application/javascript',
+      body: `window.__ENV__ = ${JSON.stringify({ API_URL: CLOUD_API, LECTOR_MODE: 'cloud' })};`,
+    }),
+  );
   return { context, page: await context.newPage() };
 }
 
@@ -48,7 +62,6 @@ test.describe('vocabulary test', () => {
     await expect(page.getByTestId('vocab-level')).toContainText('A1');
     await expect(page.getByTestId('vocab-estimate')).toContainText('0');
     await expect(page.getByTestId('vocab-book').first()).toHaveAttribute('href', /^\/books\/en\//);
-    await expect(page.getByTestId('vocab-register')).toHaveAttribute('href', /book=en%2F/);
     await expect(page.getByTestId('vocab-continue-setup')).toHaveCount(0);
     await expect(page.getByTestId('vocab-precision')).toContainText('20 words answered');
     await expect(page.getByTestId('vocab-missed')).toBeVisible();
@@ -230,6 +243,84 @@ test.describe('vocabulary test', () => {
     await finishKnowingNothing(page);
     await expect(page.getByTestId('vocab-continue-setup')).toHaveText('Use A1 and continue setup');
     await expect(page.getByTestId('vocab-continue-setup')).toHaveAttribute('href', '/setup');
+    await context.close();
+  });
+
+  test('a cloud visitor without an account is offered sign-up, not a level save', async ({
+    browser,
+  }) => {
+    const { context, page } = await cloudVisitorPage(browser);
+    await page.goto('/vocab-test');
+    await expect(page.getByTestId('vocab-start')).toBeEnabled();
+    await finishKnowingNothing(page);
+    await expect(page.getByTestId('vocab-register')).toHaveAttribute('href', /book=en%2F/);
+    await expect(page.getByTestId('vocab-signup-pitch')).toBeVisible();
+    await expect(page.getByTestId('vocab-save-level')).toHaveCount(0);
+    await context.close();
+  });
+
+  test('a learner with an account saves the test level and can change it in settings', async ({
+    page,
+  }) => {
+    const levelsUrl = apiUrl('/api/settings/readingLevels');
+    const languagesUrl = apiUrl('/api/settings/enabledLanguages');
+    const read = async (url: string) => {
+      const response = await page.request.get(url);
+      return response.ok() ? ((await response.json()) as unknown) : null;
+    };
+    const restore = async (url: string, value: unknown) => {
+      if (value === null) await page.request.delete(url);
+      else await page.request.put(url, { data: { value } });
+    };
+    const levelsBefore = await read(levelsUrl);
+    const languagesBefore = await read(languagesUrl);
+    try {
+      await page.request.put(levelsUrl, { data: { value: { en: 'C1' } } });
+      await page.goto('/vocab-test');
+      await finishKnowingNothing(page);
+      await expect(page.getByTestId('vocab-register')).toHaveCount(0);
+      await expect(page.getByTestId('vocab-current-level')).toContainText('C1');
+      await page.getByTestId('vocab-save-level-button').click();
+      await expect(page.getByTestId('vocab-level-saved')).toContainText('A1');
+      expect(await read(levelsUrl)).toEqual({ en: 'A1' });
+      await expect(page.getByTestId('vocab-back-library')).toHaveAttribute('href', '/');
+
+      await page.request.put(languagesUrl, { data: { value: ['en'] } });
+      await page.goto('/settings');
+      const english = page.getByTestId('reading-level-en');
+      await expect(english.getByTestId('reading-level-en-A1')).toHaveAttribute(
+        'aria-pressed',
+        'true',
+      );
+      await expect(english.getByTestId('settings-vocab-test-link')).toHaveAttribute(
+        'href',
+        '/vocab-test?from=settings',
+      );
+      await english.getByTestId('reading-level-en-B2').click();
+      await expect(english.getByTestId('reading-level-en-B2')).toHaveAttribute(
+        'aria-pressed',
+        'true',
+      );
+      await expect.poll(() => read(levelsUrl)).toEqual({ en: 'B2' });
+    } finally {
+      await restore(levelsUrl, levelsBefore);
+      await restore(languagesUrl, languagesBefore);
+    }
+  });
+
+  test('search and AI entry points: landing link, FAQ and structured data', async ({ browser }) => {
+    const { context, page } = await loggedOutPage(browser);
+    await page.goto('/landing');
+    await expect(page.getByTestId('landing-vocab-test-link')).toHaveAttribute(
+      'href',
+      '/vocab-test',
+    );
+    await page.goto('/vocab-test');
+    await expect(page.getByTestId('vocab-faq').locator('h3')).toHaveCount(4);
+    const structured = await page.locator('script[type="application/ld+json"]').allTextContents();
+    expect(structured.join('')).toContain('"FAQPage"');
+    expect(structured.join('')).toContain('"WebApplication"');
+    expect(await (await page.request.get('/llms.txt')).text()).toContain('/vocab-test');
     await context.close();
   });
 

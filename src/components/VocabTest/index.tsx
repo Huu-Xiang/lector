@@ -26,6 +26,9 @@ import {
 } from '@/lib/vocab-test';
 import { readVocabResult, writeVocabResult } from '@/lib/vocab-result';
 import { addSeenWord, readSeenWords } from '@/lib/vocab-seen';
+import { authClient } from '@/lib/auth-client';
+import { useLectorMode } from '@/lib/use-env';
+import SaveLevel from './SaveLevel';
 import type { VocabTestBook } from '@/lib/vocab-test-data';
 
 /** The live bar runs to the end of the hardest band on a square-root scale, so small counts stay readable. */
@@ -141,6 +144,9 @@ export default function VocabTest({
 }) {
   const t = useTranslations('vocabTest');
   const locale = useLocale();
+  const { data: session } = authClient.useSession();
+  // Without cloud accounts every visitor is the one local user, whose settings always save.
+  const hasAccount = useLectorMode() !== 'cloud' || Boolean(session);
   const [step, setStep] = useState<Step>('intro');
   const [answers, setAnswers] = useState<Answer[]>([]);
   const [current, setCurrent] = useState<TestItem | null>(null);
@@ -569,6 +575,8 @@ export default function VocabTest({
         <p className="mt-3 text-muted-foreground">{t('explain')}</p>
       </div>
 
+      {hasAccount && !fromSetup && <SaveLevel level={score.level} />}
+
       {score.guessing && (
         <div
           role="note"
@@ -593,7 +601,7 @@ export default function VocabTest({
                 {item.senses.map((row) => (
                   <span key={row.p} className="ml-2 text-muted-foreground">
                     {row.p}{' '}
-                    {locale === 'zh-CN' ? (
+                    {locale.startsWith('zh') ? (
                       <span lang="zh-CN">{row.zh.join('；')}</span>
                     ) : (
                       <span lang="en">{row.en}</span>
@@ -648,6 +656,11 @@ export default function VocabTest({
         </div>
       )}
 
+      {!hasAccount && !fromSetup && top && (
+        <p className="text-base" data-testid="vocab-signup-pitch">
+          {t('signupPitch')}
+        </p>
+      )}
       <div className="flex flex-col gap-2 sm:flex-row">
         {fromSetup && (
           <Link
@@ -659,7 +672,7 @@ export default function VocabTest({
             {t('useLevel', { level: score.level })}
           </Link>
         )}
-        {top && (
+        {top && !hasAccount && (
           <Link
             href={registerHrefForBook({ language: 'en', slug: top.slug })}
             data-testid="vocab-register"

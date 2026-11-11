@@ -3,11 +3,13 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { toast } from 'sonner';
 import { ChevronDown, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import RecommendedForYou from '@/components/RecommendedForYou';
+import ReadingLevelPicker, { VocabTestLink } from '@/components/ReadingLevelPicker';
 import { getLessonsForCollection, getSettingCached, peekSettingCached } from '@/lib/data-layer';
-import { levelFor, type CefrLevel } from '@/lib/reading-level';
+import { levelFor, setReadingLevel, type CefrLevel } from '@/lib/reading-level';
 
 const COLLAPSED_KEY = 'readfox-home-recommend-collapsed';
 
@@ -52,7 +54,23 @@ export default function HomeRecommendations({
   const [profile, setProfile] = useState<Profile | null>(() => rememberedProfile(language));
   const [chosen, setChosen] = useState<boolean | null>(null);
   const [empty, setEmpty] = useState(false);
+  const [picking, setPicking] = useState(false);
+  const [saving, setSaving] = useState(false);
   const markEmpty = useCallback(() => setEmpty(true), []);
+
+  async function pickLevel(level: CefrLevel) {
+    setSaving(true);
+    try {
+      await setReadingLevel(language, level);
+      setProfile((current) => (current ? { ...current, level } : current));
+      setPicking(false);
+      setChosen(true);
+    } catch {
+      toast.error(t('levelSaveFailed'));
+    } finally {
+      setSaving(false);
+    }
+  }
 
   useEffect(() => {
     let cancelled = false;
@@ -102,6 +120,18 @@ export default function HomeRecommendations({
           <p className={`mt-1 text-sm text-muted-foreground ${expanded ? '' : 'max-sm:hidden'}`}>
             {profile.level ? t('homeHintLevel', { level: profile.level }) : t('homeHint')}
           </p>
+          <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1">
+            <button
+              type="button"
+              onClick={() => setPicking(!picking)}
+              aria-expanded={picking}
+              data-testid="home-recommend-level"
+              className="min-h-11 text-sm font-medium text-primary underline-offset-4 hover:underline sm:min-h-0"
+            >
+              {profile.level ? t('changeLevel') : t('setLevel')}
+            </button>
+            {language === 'en' && <VocabTestLink from="library" testId="home-vocab-test-link" />}
+          </div>
         </div>
         <div className="flex shrink-0 items-center gap-1">
           {expanded && (
@@ -124,6 +154,17 @@ export default function HomeRecommendations({
           </Button>
         </div>
       </div>
+      {picking && (
+        <div className={expanded ? 'mb-4' : 'mt-3'}>
+          <ReadingLevelPicker
+            level={profile.level}
+            onPick={pickLevel}
+            disabled={saving}
+            label={t('levelPickerLabel')}
+            testIdPrefix="home-level"
+          />
+        </div>
+      )}
       {expanded && (
         <RecommendedForYou
           language={language}

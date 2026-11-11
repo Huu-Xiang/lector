@@ -159,6 +159,13 @@
       "commit": "Commit",
       "built": "Built",
       "version": "Version"
+    },
+    "readingLevel": {
+      "title": "Reading level",
+      "hint": "Book picks in the library follow this level. Change it any time.",
+      "saved": "{language}: level {level}",
+      "saveFailed": "The level was not saved. Try again.",
+      "pickerLabel": "Reading level for {language}"
     }
   }
 }
