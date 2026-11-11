@@ -3,11 +3,12 @@
 import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { bounceToLogin } from '@/lib/api-base';
+import { bounceToLogin, isBareRoute } from '@/lib/api-base';
 import { setActiveTenant } from '@/lib/language-cache';
 import { useLectorMode } from '@/lib/use-env';
 import { authClient, isAuthRoute } from '@/lib/auth-client';
 import { Spinner } from '@/components/ui/spinner';
+import TabPreloader from '@/components/TabPreloader';
 
 /**
  * Cloud-mode session gate (#218). Wraps SetupGuard in the root layout:
@@ -37,7 +38,14 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     );
   }
 
-  if (mode === 'selfhost') return <>{children}</>;
+  if (mode === 'selfhost') {
+    return (
+      <>
+        {children}
+        {!isBareRoute(pathname) && <TabPreloader />}
+      </>
+    );
+  }
 
   return <CloudSessionGate>{children}</CloudSessionGate>;
 }
@@ -70,5 +78,10 @@ function CloudSessionGate({ children }: { children: React.ReactNode }) {
     );
   }
 
-  return <>{children}</>;
+  return (
+    <>
+      {children}
+      {!isBareRoute(pathname) && <TabPreloader />}
+    </>
+  );
 }
