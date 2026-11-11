@@ -1636,7 +1636,8 @@ export async function getAllSettings(): Promise<Record<string, unknown>> {
 
 const REVIEW_GOAL_SETTING_KEY = 'reviewGoal';
 
-export async function getReviewCounts(): Promise<ReviewCounts> {
+/** `fresh` skips the remembered value, for a count that must reflect a save just made. */
+export async function getReviewCounts(options: { fresh?: boolean } = {}): Promise<ReviewCounts> {
   return cachedQuery(
     activeLanguageQueryKey(REVIEW_QUERY_SCOPE, ['counts']),
     async () => {
@@ -1644,7 +1645,7 @@ export async function getReviewCounts(): Promise<ReviewCounts> {
       await requireOk(res, 'Could not load your review');
       return res.json();
     },
-    PERSIST,
+    { ...PERSIST, forceFresh: options.fresh === true },
   );
 }
 

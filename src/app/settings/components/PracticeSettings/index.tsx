@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Kbd, KbdGroup } from '@/components/ui/kbd';
@@ -17,6 +17,7 @@ export default function PracticeSettings() {
   const [hideTranslation, setHideTranslation] = useState(false);
   const [goal, setGoal] = useState<ReviewGoal>('recognize');
   const [autoSave, setAutoSave] = useState(true);
+  const autoSaveTouched = useRef(false);
 
   useEffect(() => {
     const load = () =>
@@ -26,11 +27,15 @@ export default function PracticeSettings() {
       .then(setGoal)
       .catch(() => undefined);
     getSetting<boolean | null>('autoSaveLookups')
-      .then((value) => setAutoSave(value !== false))
+      .then((value) => {
+        // A failed read is undefined; a tap made before the read wins.
+        if (value !== undefined && !autoSaveTouched.current) setAutoSave(value !== false);
+      })
       .catch(() => undefined);
   }, []);
 
   const handleAutoSaveChanged = async (next: boolean) => {
+    autoSaveTouched.current = true;
     const previous = autoSave;
     setAutoSave(next);
     try {

@@ -51,8 +51,11 @@ test.describe.serial('Practice nav badge', () => {
     await expect(page.getByTestId('nav-badge-desktop')).toHaveText('2');
     await expect(page.getByRole('link', { name: 'Practice', exact: true }).first()).toBeVisible();
 
-    await page.getByRole('link', { name: 'Practice', exact: true }).first().click();
-    await expect(page).toHaveURL(/\/practice$/);
+    // A click while the nav re-renders after hydration can be dropped; retry until it navigates.
+    await expect(async () => {
+      await page.getByRole('link', { name: 'Practice', exact: true }).first().click();
+      await expect(page).toHaveURL(/\/practice$/, { timeout: 2_000 });
+    }).toPass({ timeout: 15_000 });
     await expect(page.getByTestId('word-review-entry')).toBeVisible({ timeout: 15_000 });
     await expect(page.getByTestId('nav-badge-desktop')).toHaveCount(0);
   });
