@@ -81,4 +81,4 @@ The app draws some of its interface natively, on top of the web page.
 
 `scripts/add-native-ui.rb` added these files and the ReviewWidget target to the Xcode project; it does nothing when they are there. Run it with CocoaPods' Ruby, as for the share extension script.
 
-To try web changes in the simulator, copy the built `App.app`, set `server.url` to `http://localhost:3456` (with `cleartext: true`) in its `capacitor.config.json`, sign it again with `codesign -f -s - --entitlements ios/App/App/App.entitlements`, and install it with `xcrun simctl install`. Never commit that setting.
+To try web changes in the simulator, copy the built `App.app`, set `server.url` to `http://localhost:3456` (with `cleartext: true`) in its `capacitor.config.json`, sign it again with `codesign -f -s -` and an entitlements file that holds only the App Group, and install it with `xcrun simctl install`. The push and associated-domain entitlements need a provisioning profile: with them, an ad hoc signed build does not launch in the simulator. Never commit that setting.
