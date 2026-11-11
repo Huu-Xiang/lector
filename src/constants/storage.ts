@@ -9,3 +9,6 @@ export const SIDEBAR_COLLAPSE_EVENT = 'lector-sidebar-collapse-change';
 
 /** Fired after a request that spends AI allowance, so the quota meter can refresh. */
 export const AI_USAGE_EVENT = 'lector-ai-usage';
+
+/** Fired after a word is saved, so the Practice nav badge can refresh. */
+export const VOCAB_SAVED_EVENT = 'readfox-vocab-saved';

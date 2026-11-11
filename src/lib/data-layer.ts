@@ -14,6 +14,7 @@ import {
   lookupByVocabKeys,
 } from './languages';
 import { apiFetch, apiUrl } from './api-base';
+import { VOCAB_SAVED_EVENT } from '@/constants/storage';
 import { activeTenantId, readLanguageCache } from './language-cache';
 import { cachedQuery, clearTenantQueries, invalidateQueries, type QueryKey } from './query-cache';
 
@@ -587,6 +588,7 @@ export async function saveVocab(
   if (!res.ok) return null;
   invalidateVocab();
   invalidateFluencyStats();
+  if (typeof window !== 'undefined') window.dispatchEvent(new Event(VOCAB_SAVED_EVENT));
   const { id } = await res.json();
   return id;
 }

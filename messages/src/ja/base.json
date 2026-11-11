@@ -40,7 +40,8 @@
     "vocab": "単語帳",
     "stats": "統計",
     "settings": "設定",
-    "back": "戻る"
+    "back": "戻る",
+    "reviewReady": "復習できる単語 {count} 語"
   },
   "auth": {
     "loadingAuth": "認証を読み込んでいます",

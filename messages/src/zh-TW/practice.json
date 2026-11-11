@@ -76,7 +76,8 @@
         "saveError": "本輪成績已儲存，但無法將引導標記為完成。",
         "trySavingAgain": "重新儲存",
         "openLibrary": "開啟書庫",
-        "readNext": "閱讀下一課"
+        "readNext": "閱讀下一課",
+        "reviewHint": "讀書時遇到不認識的詞，隨時點一下查看。詞會自動儲存，可以隨時在「練習」裡複習。"
       },
       "recovery": {
         "title": "你的練習詞還沒準備好",

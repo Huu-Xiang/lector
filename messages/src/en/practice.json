@@ -72,6 +72,7 @@
         "upNext": "Up next",
         "tomorrow": "Tomorrow",
         "comeBack": "Come back for another short reading and review.",
+        "reviewHint": "Look up any word you do not know while you read. Readfox saves it. Review your saved words any time in Practice.",
         "saving": "Saving your progress…",
         "saveError": "Your round is safe, but we could not mark onboarding complete.",
         "trySavingAgain": "Try saving again",

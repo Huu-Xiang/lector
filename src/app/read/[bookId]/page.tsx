@@ -156,9 +156,12 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
 
   const [onboarding, setOnboarding] = useState<OnboardingSnapshot | null>(null);
   const onboardingLessonOpenRef = useRef<string | null>(null);
+  const onboardingInProgress = onboarding?.progress?.status === 'in_progress';
+  const onboardingLessonIsRecommended =
+    onboardingInProgress && onboarding?.progress?.recommendedLessonId === lessonId;
   const onboardingActive =
-    onboarding?.progress?.status === 'in_progress' &&
-    onboarding.progress.recommendedLessonId === lessonId;
+    onboardingInProgress &&
+    (onboardingLessonIsRecommended || onboarding?.progress?.language === activeLang.code);
 
   const refreshOnboarding = useCallback(async () => {
     try {
@@ -325,7 +328,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
   // and remember tomorrow's next lesson. Both writes are idempotent so a
   // reload or second device resumes rather than inflating the funnel.
   useEffect(() => {
-    if (!onboardingActive || !lesson) return;
+    if (!onboardingLessonIsRecommended || !lesson) return;
     if (lesson.collectionId && siblings.length === 0) return;
     if (onboardingLessonOpenRef.current === lessonId) return;
     onboardingLessonOpenRef.current = lessonId;
@@ -347,7 +350,14 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         nextLessonTitle: next?.title ?? null,
       }),
     ]).then(refreshOnboarding, () => {});
-  }, [activeLang.code, lesson, lessonId, onboardingActive, refreshOnboarding, siblings]);
+  }, [
+    activeLang.code,
+    lesson,
+    lessonId,
+    onboardingLessonIsRecommended,
+    refreshOnboarding,
+    siblings,
+  ]);
 
   const trackOnboardingLookup = useCallback(
     (term: string) => {

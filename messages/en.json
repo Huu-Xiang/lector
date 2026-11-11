@@ -79,7 +79,8 @@
     "vocab": "Vocab",
     "stats": "Statistics",
     "settings": "Settings",
-    "back": "Back"
+    "back": "Back",
+    "reviewReady": "{count, plural, one {# word} other {# words}} ready to review"
   },
   "auth": {
     "loadingAuth": "Loading authentication",
@@ -1271,7 +1272,6 @@
     "coverCredit": "Cover: <link>{credit}</link>.",
     "moreAtLevel": "More {language} books at level {level}",
     "allBooks": "All free books",
-    "metaTitle": "{title} by {author}: read it free in {language} | Readfox",
     "readWholeChapter": "Read all of chapter 1",
     "tryRead": "Read chapter 1 free, no sign-up",
     "hardWordsTitle": "Hard words in this book",
@@ -1292,7 +1292,28 @@
     "authorIntro": "{count} books by {author}, free to read on Readfox. Each one is a full public-domain text.",
     "authorMetaDescription": "Read {count} books by {author} free in {language}: {titles}.",
     "browseLevels": "By level",
-    "browseAuthors": "By author"
+    "browseAuthors": "By author",
+    "bookMetaTitle": "Read {title} free online – {level} {language} with word lookup | Readfox",
+    "bookMetaTitleShort": "Read {title} free – {level} {language} | Readfox",
+    "bookMetaDescription": "Read {title} by {author} free online. {level} {language}: tap any word for its meaning.",
+    "levelMetaTitle": "Free {language} {level} books to read online | Readfox",
+    "levelAbout": {
+      "A1": "A1 is the first step of the CEFR scale. {language} texts at this level use short sentences and everyday words. Expect to look up many words at first, so read a few pages at a time.",
+      "A2": "A2 is the elementary level. You know the basics of {language} and can follow simple stories. Texts here use common words and clear sentences, with some new words on each page.",
+      "B1": "B1 is the intermediate level. You can follow the main story in {language} without help. Expect longer sentences and a wider range of words, and look up only the words you need.",
+      "B2": "B2 is the upper intermediate level. You can read most {language} stories and articles with ease. Expect rich vocabulary and long sentences. Tap a word for its meaning when a page slows you down.",
+      "C1": "C1 is the advanced level. You can read long {language} texts and follow ideas that are not stated in plain words. Expect literary style, rare words and long, complex sentences.",
+      "C2": "C2 is the top of the CEFR scale. These {language} books are the hardest on Readfox: classic literary and philosophical texts. Expect old words, dense prose and long chapters."
+    },
+    "easierLevel": "Easier",
+    "harderLevel": "Harder",
+    "otherLevels": "Other levels",
+    "bookDetail": "{author} · {lessons, plural, one {# lesson} other {# lessons}}",
+    "languageBooks": "{language} books",
+    "languageTitle": "Free {language} books by level",
+    "languageIntro": "{count, plural, one {# free {language} book} other {# free {language} books}} for learners, from level {first} to level {last}. Each one is a full public-domain text. Open a book to see how it begins, then read it free on Readfox and tap any word for its meaning.",
+    "languageMetaTitle": "Free {language} books for learners, {first}–{last} | Readfox",
+    "languageMetaDescription": "Read {count} free {language} books online at levels {first} to {last}, including {titles}. Tap any word for its meaning in your language."
   },
   "dailyGoal": {
     "label": "Streak {count, plural, one {# day} other {# days}}. Today: {amount}",
@@ -1590,7 +1611,7 @@
           "aiKey": "If you add your own AI key, it is stored encrypted (AES-256-GCM). It is never sent back to your browser.",
           "session": "A session cookie that keeps you signed in, and server logs used to keep the service secure and working. Web access logs keep the page address, time and status, with the IP address cut to its first three parts (for example 203.0.113.x). They hold no cookies or passwords and are deleted after 30 days.",
           "loginRecords": "Sign-in records: the time, your browser's user-agent text and a shortened IP address. We keep only the first three parts of an IPv4 address (for example 203.0.113.0) and the first 48 bits of an IPv6 address.",
-          "sourceCounts": "Anonymous daily counts of visits and sign-ups. Each count notes which channel a visit came from (for example a search engine or a social site) and whether the browser language is Chinese. A count has no link to an account, no IP address and no full referrer address. A first-party cookie named rf_src holds the channel and the language for up to 30 days, so one browser counts once. When you sign up, the count for that channel goes up by one, still with no link to your account.",
+          "sourceCounts": "Anonymous daily counts of visits and sign-ups. Each count notes the kind of site that sent you (a named search engine, AI assistant or social site, from a fixed list) and your browser language group. A count has no link to an account, no IP address and no full referrer address. A first-party cookie named rf_src holds the channel and the language group for up to 30 days, so one browser counts once. When you sign up, the count for that channel goes up by one, still with no link to your account.",
           "feedback": "If you send feedback, we store the message text and email it to the operator with your account email address, so we can reply, and with any images you attach. The images are not stored. We delete the stored messages when you delete your account.",
           "invites": "Your invite code, who invited you or whom you invited (as an internal account link), and any reward cards you hold.",
           "inviteFingerprint": "If you earn an invite reward, we keep a keyed one-way hash of your email address for 24 months, even after you delete your account. It cannot be turned back into your address. It only stops the same address from earning the reward twice.",
@@ -1786,6 +1807,7 @@
         "upNext": "Up next",
         "tomorrow": "Tomorrow",
         "comeBack": "Come back for another short reading and review.",
+        "reviewHint": "Look up any word you do not know while you read. Readfox saves it. Review your saved words any time in Practice.",
         "saving": "Saving your progress…",
         "saveError": "Your round is safe, but we could not mark onboarding complete.",
         "trySavingAgain": "Try saving again",

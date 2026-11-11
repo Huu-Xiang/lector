@@ -15,6 +15,7 @@ import {
   usePostOnboardingTour,
 } from '@/lib/post-onboarding-tour';
 import { navLinks } from './constants';
+import { useReviewReady } from './useReviewReady';
 import NavLink from './components/NavLink';
 import AppName from './components/AppName';
 import AccountMenu from './components/AccountMenu';
@@ -33,6 +34,12 @@ export default function NavHeader() {
   const tTour = useTranslations('chrome.tour');
   const postOnboardingTour = usePostOnboardingTour();
   const { collapsed, setCollapsed } = useSidebarCollapsed();
+  const reviewReady = useReviewReady();
+
+  const badgeFor = (href: string) =>
+    href === '/practice' && reviewReady > 0
+      ? { count: reviewReady, description: tNav('reviewReady', { count: reviewReady }) }
+      : undefined;
 
   const tourTipFor = (href: string): NavTourTip | undefined => {
     if (postOnboardingTour?.stage === 'practice' && href === '/practice') {
@@ -107,6 +114,7 @@ export default function NavHeader() {
                 isMobile={false}
                 collapsed={collapsed}
                 tourTip={tourTipFor(link.href)}
+                badge={badgeFor(link.href)}
               />
             );
           })}
@@ -147,6 +155,7 @@ export default function NavHeader() {
                 link={{ href: link.href, label: tNav(link.labelKey) }}
                 isMobile
                 tourTip={tourTipFor(link.href)}
+                badge={badgeFor(link.href)}
               />
             );
           })}

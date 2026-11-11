@@ -154,6 +154,7 @@ async function completeGuidedRound(
     summary.getByRole('heading', { name: 'First learning loop complete' }),
   ).toBeVisible();
   await expect(summary.getByText('1/1', { exact: true })).toBeVisible();
+  await expect(summary.getByTestId('onboarding-review-hint')).toContainText('Practice');
   await expect(page.getByTestId('onboarding-library')).toBeEnabled({ timeout: 10_000 });
 }
 
@@ -373,6 +374,25 @@ test.describe('guided onboarding — selfhost', () => {
       timeout: 15_000,
     });
     await expect(page.getByTestId('onboarding-coach-lookup')).toHaveCount(0);
+    await context.close();
+  });
+
+  test('the guide follows the learner to the next lesson until a word is looked up', async ({
+    browser,
+  }) => {
+    const context = await browser.newContext({ storageState: { cookies: [], origins: [] } });
+    const page = await context.newPage();
+    await mockReaderDefinitions(page);
+    await startSpanishGuide(page);
+
+    await expect.poll(async () => (await snapshot(page)).progress?.nextLessonId).toBeTruthy();
+    const nextLessonId = (await snapshot(page)).progress!.nextLessonId!;
+    await page.goto(`/read/${nextLessonId}`);
+    await expect(page.getByRole('button', { name: /^Look up / }).first()).toBeVisible({
+      timeout: 15_000,
+    });
+    await expect(page.getByTestId('onboarding-coach-lookup')).toBeVisible({ timeout: 10_000 });
+    expect((await snapshot(page)).progress?.recommendedLessonId).not.toBe(nextLessonId);
     await context.close();
   });
 

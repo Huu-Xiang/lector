@@ -40,7 +40,8 @@
     "vocab": "단어장",
     "stats": "통계",
     "settings": "설정",
-    "back": "뒤로"
+    "back": "뒤로",
+    "reviewReady": "복습할 단어 {count}개"
   },
   "auth": {
     "loadingAuth": "인증 불러오는 중",

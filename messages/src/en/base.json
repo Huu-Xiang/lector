@@ -40,7 +40,8 @@
     "vocab": "Vocab",
     "stats": "Statistics",
     "settings": "Settings",
-    "back": "Back"
+    "back": "Back",
+    "reviewReady": "{count, plural, one {# word} other {# words}} ready to review"
   },
   "auth": {
     "loadingAuth": "Loading authentication",

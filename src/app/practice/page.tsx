@@ -1507,6 +1507,13 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
                   </p>
                 </div>
 
+                <p
+                  className="mx-auto mt-4 max-w-md text-sm text-muted-foreground"
+                  data-testid="onboarding-review-hint"
+                >
+                  {t('onboarding.complete.reviewHint')}
+                </p>
+
                 {onboardingCompletionStatus === 'saving' && (
                   <p className="mt-4 text-sm text-muted-foreground" role="status">
                     {t('onboarding.complete.saving')}

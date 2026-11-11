@@ -68,6 +68,7 @@ sequenceDiagram
 - Every `counts` and `queue` request runs `backfillWordCards` and then `reconcileWordCards`. Backfill makes cards for words saved before launch, at their current level, with at most 20 seeded reviews due per day. Reconcile repairs cards after a write that skipped the sync function, such as an older app version on the same database.
 - The question type follows the stage and the `reviewGoal` setting (`recognize` or `recognize_spell`). Phrases, Chinese and Korean never get a fill-in.
 - A round holds at most 20 new cards per language per learner-local day. Words saved today come first.
+- The Practice nav item shows a badge with due plus new cards (`useReviewReady` in `src/components/NavHeader/`, `reviewReadyCount` in `src/lib/review-badge.ts`). It reloads on route change, on tab focus and 800 ms after `VOCAB_SAVED_EVENT`, and is hidden on /practice.
 - Wrong and Don't know cards come back once per round. "I was wrong" calls `/undo`.
 - Choose-the-meaning shows four meanings: the word's own and three from the learner's other saved words. With fewer than three usable distractors, the card becomes a recognition card for that round.
 - Stages by stability: New, Learning, Familiar, Mastered. Retention is 0.9. Intervals cap at 365 days.

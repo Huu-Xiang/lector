@@ -40,7 +40,8 @@
     "vocab": "詞彙",
     "stats": "統計",
     "settings": "設定",
-    "back": "返回"
+    "back": "返回",
+    "reviewReady": "{count} 個詞可以複習"
   },
   "auth": {
     "loadingAuth": "載入中",
