@@ -15,6 +15,8 @@ export interface Collection {
   title: string;
   author: string;
   coverUrl?: string;
+  /** `art` is a painting without a title, so the card adds one; `book` is a cover with its title. */
+  coverKind?: 'book' | 'art' | null;
   groupId?: string | null;
   groupName?: string | null;
   sortOrder?: number;

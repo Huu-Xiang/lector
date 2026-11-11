@@ -1569,6 +1569,8 @@ export interface LibraryBook {
   /** Keyed by native-language code. */
   titles: Record<string, string>;
   blurbs: Record<string, string>;
+  /** `art` is a painting with no title on it. */
+  cover?: { url: string; kind: 'book' | 'art'; credit: string } | null;
   added: boolean;
 }
 

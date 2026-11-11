@@ -1,0 +1,98 @@
+{
+  "a-first-spanish-reader": {
+    "file": "a-first-spanish-reader.webp",
+    "kind": "art",
+    "credit": "Pen drawing for A First Spanish Reader, Clarence Rowe, 1916",
+    "source": "https://www.gutenberg.org/cache/epub/15353/images/17.png"
+  },
+  "an-elementary-spanish-reader": {
+    "file": "an-elementary-spanish-reader.webp",
+    "kind": "art",
+    "credit": "Illustration for An Elementary Spanish Reader, Charles Copeland, 1912",
+    "source": "https://www.gutenberg.org/cache/epub/22065/images/025.png"
+  },
+  "becquer-leyendas": {
+    "file": "becquer-leyendas.webp",
+    "kind": "book",
+    "credit": "Cover of the Project Gutenberg edition",
+    "source": "https://www.gutenberg.org/ebooks/53552"
+  },
+  "corazon": {
+    "file": "corazon.webp",
+    "kind": "art",
+    "credit": "The Village School of 1848, Albert Anker, 1896",
+    "source": "https://commons.wikimedia.org/wiki/File:Anker_Die_Dorfschule_von_1848_1896.jpg"
+  },
+  "cuando-la-tierra-era-nina": {
+    "file": "cuando-la-tierra-era-nina.webp",
+    "kind": "book",
+    "credit": "Cover of the Project Gutenberg edition",
+    "source": "https://www.gutenberg.org/ebooks/55215"
+  },
+  "cuentos-de-la-alhambra": {
+    "file": "cuentos-de-la-alhambra.webp",
+    "kind": "book",
+    "credit": "Cover of the Project Gutenberg edition",
+    "source": "https://www.gutenberg.org/ebooks/52262"
+  },
+  "don-quijote": {
+    "file": "don-quijote.webp",
+    "kind": "art",
+    "credit": "Don Quixote and the Dead Mule, a painting completed circa 1864 by Honoré Daumier",
+    "source": "https://github.com/standardebooks/miguel-de-cervantes-saavedra_don-quixote_john-ormsby"
+  },
+  "lazarillo-de-tormes": {
+    "file": "lazarillo-de-tormes.webp",
+    "kind": "art",
+    "credit": "Lazarillo de Tormes and His Blind Master, Théodule Ribot, c. 1870",
+    "source": "https://commons.wikimedia.org/wiki/File:Th%C3%A9odule_Ribot_-_Lazarillo_de_Tormes_and_His_Blind_Master_-_1980.282_-_Cleveland_Museum_of_Art.tif"
+  },
+  "lecturas-faciles": {
+    "file": "lecturas-faciles.webp",
+    "kind": "art",
+    "credit": "La Giralda, José Domínguez Bécquer, 1836",
+    "source": "https://commons.wikimedia.org/wiki/File:Jos%C3%A9_Dom%C3%ADnguez_B%C3%A9cquer_The_Giralda.jpg"
+  },
+  "libro-segundo-de-lectura": {
+    "file": "libro-segundo-de-lectura.webp",
+    "kind": "art",
+    "credit": "Saltando a la comba, La Granja, Joaquín Sorolla, 1907",
+    "source": "https://commons.wikimedia.org/wiki/File:Joaqu%C3%ADn_Sorolla_y_Bastida_-_The_Skipping_Rope_-_Google_Art_Project.jpg"
+  },
+  "marianela": {
+    "file": "marianela.webp",
+    "kind": "art",
+    "credit": "Marianela (Creaciones femeninas XIII, Blanco y Negro), Cecilio Pla, 1901",
+    "source": "https://commons.wikimedia.org/wiki/File:1901-09-21%2C_Blanco_y_Negro%2C_Creaciones_femeninas_XIII._Marianela%2C_Cecilio_Pla_(cropped).jpg"
+  },
+  "meditaciones-del-quijote": {
+    "file": "meditaciones-del-quijote.webp",
+    "kind": "art",
+    "credit": "Don Quixote and Sancho Panza, Honoré Daumier, about 1868",
+    "source": "https://commons.wikimedia.org/wiki/File:Honor%C3%A9_Daumier_-_Don_Quichotte_et_Sancho_Pansa_-_Google_Art_Project.jpg"
+  },
+  "platero-y-yo": {
+    "file": "platero-y-yo.webp",
+    "kind": "art",
+    "credit": "La Fuente de Reding, Guillermo Gómez Gil, c. 1880-1885",
+    "source": "https://commons.wikimedia.org/wiki/File:La_fuente_de_reding.jpg"
+  },
+  "raton-perez": {
+    "file": "raton-perez.webp",
+    "kind": "book",
+    "credit": "Cover of the Project Gutenberg edition",
+    "source": "https://www.gutenberg.org/ebooks/36558"
+  },
+  "spanish-tales-for-beginners": {
+    "file": "spanish-tales-for-beginners.webp",
+    "kind": "art",
+    "credit": "Strolling along the Seashore, Joaquín Sorolla, 1909",
+    "source": "https://commons.wikimedia.org/wiki/File:Joaqu%C3%ADn_Sorolla_y_Bastida_-_Strolling_along_the_Seashore_-_Google_Art_Project.jpg"
+  },
+  "vida-de-don-quijote-y-sancho": {
+    "file": "vida-de-don-quijote-y-sancho.webp",
+    "kind": "art",
+    "credit": "The Vigil of Don Quixote, Honoré Daumier, 1855",
+    "source": "https://commons.wikimedia.org/wiki/File:Daumier_-_La_veille_de_Don_Quichotte%2C_1855-56.jpg"
+  }
+}

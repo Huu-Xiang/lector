@@ -1234,6 +1234,8 @@
     "readFree": "Readfox에서 무료로 읽기",
     "ctaNote": "단어를 누르면 내 언어로 뜻을 볼 수 있어요. 새 단어를 저장하고 나중에 복습하세요.",
     "source": "출처: <link>{source}</link>. {license}.",
+    "coverAlt": "{title} 표지",
+    "coverCredit": "표지: <link>{credit}</link>.",
     "moreAtLevel": "{level} 수준의 {language} 도서 더 보기",
     "allBooks": "모든 무료 도서",
     "metaTitle": "{author}의 {title}: {language}로 무료로 읽기 | Readfox",

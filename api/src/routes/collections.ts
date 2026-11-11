@@ -18,6 +18,7 @@ import {
 import { validateOptionalLanguage, validateOwnedReference } from '../lib/persisted-input';
 import { deleteAudioFile } from '../lib/audio-files';
 import { EXCERPT_SOURCE_CHARS, lessonExcerpt } from '../lib/lesson-excerpt';
+import { withLibraryCover } from '../lib/library-content';
 
 const app = new Hono();
 
@@ -47,7 +48,7 @@ app.get('/', (c) => {
     onlyLessonId: string | null;
   })[];
 
-  return c.json(collections);
+  return c.json(collections.map(withLibraryCover));
 });
 
 // POST /api/collections
@@ -149,7 +150,7 @@ app.get('/:id', (c) => {
     return c.json({ error: 'Collection not found' }, 404);
   }
 
-  return c.json(collection);
+  return c.json(withLibraryCover(collection));
 });
 
 // PUT /api/collections/:id

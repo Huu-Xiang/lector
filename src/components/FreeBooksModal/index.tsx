@@ -340,7 +340,16 @@ export default function FreeBooksModal({
                             className="flex items-start justify-between gap-4 rounded-xl border border-border bg-card p-4"
                             data-testid={`free-book-${book.slug}`}
                           >
-                            <div className="min-w-0">
+                            {book.cover && (
+                              <img
+                                src={book.cover.url}
+                                alt=""
+                                loading="lazy"
+                                data-testid="free-book-cover"
+                                className="aspect-[3/4] w-12 shrink-0 rounded-md bg-muted object-cover sm:w-14"
+                              />
+                            )}
+                            <div className="min-w-0 flex-1">
                               <h4 className="font-semibold text-foreground">{shownTitle}</h4>
                               {shownTitle !== book.title && (
                                 <p className="text-xs text-muted-foreground">

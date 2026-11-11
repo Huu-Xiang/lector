@@ -1,0 +1,482 @@
+{
+  "abc-petits-contes": {
+    "file": "abc-petits-contes.webp",
+    "kind": "book",
+    "credit": "Cover of the Project Gutenberg edition",
+    "source": "https://www.gutenberg.org/ebooks/30117"
+  },
+  "alice-au-pays-des-merveilles": {
+    "file": "alice-au-pays-des-merveilles.webp",
+    "kind": "art",
+    "credit": "Amanita, a painting completed in 1879 by Ivan Shishkin",
+    "source": "https://github.com/standardebooks/lewis-carroll_alices-adventures-in-wonderland_john-tenniel"
+  },
+  "arsene-lupin-gentleman-cambrioleur": {
+    "file": "arsene-lupin-gentleman-cambrioleur.webp",
+    "kind": "art",
+    "credit": "Chez Tortoni, a painting completed in 1880 by Édouard Manet",
+    "source": "https://github.com/standardebooks/maurice-leblanc_the-extraordinary-adventures-of-arsene-lupin-gentleman-burglar_george-morehead"
+  },
+  "au-bonheur-des-dames": {
+    "file": "au-bonheur-des-dames.webp",
+    "kind": "art",
+    "credit": "Le Bon Marché, woodcut, Félix Vallotton, 1893",
+    "source": "https://commons.wikimedia.org/wiki/File:Le_Bon_March%C3%A9_-_estampe_-_F%C3%A9lix_Vallotton_-_btv1b69516708.jpg"
+  },
+  "autour-de-la-lune": {
+    "file": "autour-de-la-lune.webp",
+    "kind": "art",
+    "credit": "Illustration for Autour de la Lune (Hetzel edition), Émile Bayard and Alphonse de Neuville, engraved by Hildibrand, 1872",
+    "source": "https://commons.wikimedia.org/wiki/File:Verne_-_Autour_de_la_Lune_(page_148_crop).jpg"
+  },
+  "bel-ami": {
+    "file": "bel-ami.webp",
+    "kind": "art",
+    "credit": "Self-Portrait, a painting completed in 1906 by George Washington Lambert",
+    "source": "https://github.com/standardebooks/guy-de-maupassant_bel-ami_vizetelly-and-company"
+  },
+  "boule-de-suif": {
+    "file": "boule-de-suif.webp",
+    "kind": "art",
+    "credit": "Boule de Suif, watercolour illustration, Georges Scott, published 1947",
+    "source": "https://commons.wikimedia.org/wiki/File:Boule_de_Suif_-_aquarelle_de_Georges_Scott%2C_1947.jpg"
+  },
+  "candide": {
+    "file": "candide.webp",
+    "kind": "art",
+    "credit": "Voltaire à son lever à Ferney, dictant à son secrétaire Collini, a painting completed circa 1772 by Jean Huber",
+    "source": "https://github.com/standardebooks/voltaire_candide_the-modern-library"
+  },
+  "cinq-semaines-en-ballon": {
+    "file": "cinq-semaines-en-ballon.webp",
+    "kind": "art",
+    "credit": "The Lost Balloon, a painting completed in 1882 by William Holbrook Beard",
+    "source": "https://github.com/standardebooks/jules-verne_five-weeks-in-a-balloon_william-lackland"
+  },
+  "colomba": {
+    "file": "colomba.webp",
+    "kind": "art",
+    "credit": "The Forest of Valdoniello, Corsica, Edward Lear, 1869",
+    "source": "https://commons.wikimedia.org/wiki/File:Edward_Lear_-_The_Forest_of_Valdoniello%2C_Corsica_-_Google_Art_Project.jpg"
+  },
+  "contes-choisis-grimm": {
+    "file": "contes-choisis-grimm.webp",
+    "kind": "art",
+    "credit": "Die Brüder Grimm bei der Märchenerzählerin (The Brothers Grimm with the storyteller Dorothea Viehmann), wood engraving after the painting by Louis Katzenstein, Die Gartenlaube, 1892",
+    "source": "https://commons.wikimedia.org/wiki/File:Die_Gartenlaube_(1892)_b_505.jpg"
+  },
+  "contes-de-la-becasse": {
+    "file": "contes-de-la-becasse.webp",
+    "kind": "art",
+    "credit": "Illustration for Contes de la Bécasse (story \"Farce normande\"), Lucien Barbut, engraved by G. Lemoine, Ollendorff edition of 1906",
+    "source": "https://commons.wikimedia.org/wiki/File:Maupassant_-_Conte_de_la_b%C3%A9casse%2C_1906_page_115.jpg"
+  },
+  "contes-du-jour-et-de-la-nuit": {
+    "file": "contes-du-jour-et-de-la-nuit.webp",
+    "kind": "art",
+    "credit": "Evening (Le Bal), James Tissot, 1878",
+    "source": "https://commons.wikimedia.org/wiki/File:James_Tissot_-_The_Ball.jpg"
+  },
+  "contes-du-lundi": {
+    "file": "contes-du-lundi.webp",
+    "kind": "art",
+    "credit": "The Black Spot (The Geography Lesson), Albert Bettannier, 1887",
+    "source": "https://commons.wikimedia.org/wiki/File:1887_Bettannier_Der_Schwarze_Fleck_anagoria.jpg"
+  },
+  "contes-et-legendes": {
+    "file": "contes-et-legendes.webp",
+    "kind": "art",
+    "credit": "The Story of the Three Bears, L. Leslie Brooke, 1900",
+    "source": "https://commons.wikimedia.org/wiki/File:The_Story_of_the_Three_Bears_pg_26.jpg"
+  },
+  "de-la-terre-a-la-lune": {
+    "file": "de-la-terre-a-la-lune.webp",
+    "kind": "art",
+    "credit": "Keelmen Heaving in Coals by Moonlight, a painting completed in 1835 by J. M. W. Turner",
+    "source": "https://github.com/standardebooks/jules-verne_from-the-earth-to-the-moon_ward-lock-co"
+  },
+  "discours-de-la-methode": {
+    "file": "discours-de-la-methode.webp",
+    "kind": "art",
+    "credit": "Portrait of René Descartes, after Frans Hals, c. 1649",
+    "source": "https://commons.wikimedia.org/wiki/File:Frans_Hals_-_Portret_van_Ren%C3%A9_Descartes.jpg"
+  },
+  "du-cote-de-chez-swann": {
+    "file": "du-cote-de-chez-swann.webp",
+    "kind": "art",
+    "credit": "Woman with a Parasol - Madame Monet and Her Son, Claude Monet, 1875",
+    "source": "https://commons.wikimedia.org/wiki/File:Claude_Monet%2C_Woman_with_a_Parasol_-_Madame_Monet_and_Her_Son%2C_1875%2C_NGA_61379.jpg"
+  },
+  "en-famille": {
+    "file": "en-famille.webp",
+    "kind": "art",
+    "credit": "\"On te dit qu'on n'a ici besoin de personne\", illustration for En famille, Henri Lanos, 1893",
+    "source": "https://commons.wikimedia.org/wiki/File:Malot_En_famille_123.jpg"
+  },
+  "entre-nous": {
+    "file": "entre-nous.webp",
+    "kind": "art",
+    "credit": "L'Après-midi des enfants à Wargemont, Pierre-Auguste Renoir, 1884",
+    "source": "https://commons.wikimedia.org/wiki/File:Auguste_Renoir_-_L%27apr%C3%A8s-midi_des_enfants_%C3%A0_Wargemont_-_Google_Art_Project.jpg"
+  },
+  "eugenie-grandet": {
+    "file": "eugenie-grandet.webp",
+    "kind": "art",
+    "credit": "Portrait of a Woman, a painting completed in 1886 by Marie Wandscheer",
+    "source": "https://github.com/standardebooks/honore-de-balzac_eugenie-grandet_clara-bell"
+  },
+  "fables-de-la-fontaine": {
+    "file": "fables-de-la-fontaine.webp",
+    "kind": "book",
+    "credit": "Frontispiece of Fables de La Fontaine, J. J. Grandville (engraved by Brévière), 1838; Garnier edition of 1868",
+    "source": "https://www.gutenberg.org/cache/epub/56327/images/x-frontispice.jpg"
+  },
+  "francois-le-bossu": {
+    "file": "francois-le-bossu.webp",
+    "kind": "art",
+    "credit": "\"Ils prirent plus de cent écrevisses\", illustration for François le Bossu, Émile Bayard, 1864",
+    "source": "https://commons.wikimedia.org/wiki/File:Fran%C3%A7ois_le_Bossu_005.jpg"
+  },
+  "germinal": {
+    "file": "germinal.webp",
+    "kind": "art",
+    "credit": "Return of the Miners, a painting completed in 1905 by Constantin Meunier",
+    "source": "https://github.com/standardebooks/emile-zola_germinal_havelock-ellis"
+  },
+  "histoires-naturelles": {
+    "file": "histoires-naturelles.webp",
+    "kind": "book",
+    "credit": "Cover lithograph for Histoires naturelles by Jules Renard, Henri de Toulouse-Lautrec, 1897-1899",
+    "source": "https://commons.wikimedia.org/wiki/File:Couverture_des_%22Histoires_Naturelles%22_de_Jules_Renard_-_(estampe)_(1er_%C3%A9tat)_-_HTL_(monogramme_de_Henri_de_Toulouse-Lautrec)_-_btv1b53233608k.jpg"
+  },
+  "jean-qui-grogne-et-jean-qui-rit": {
+    "file": "jean-qui-grogne-et-jean-qui-rit.webp",
+    "kind": "art",
+    "credit": "Title vignette for Jean qui grogne et Jean qui rit, Horace Castelli, 1865 (Hachette printing of 1895)",
+    "source": "https://commons.wikimedia.org/wiki/File:S%C3%A9gur_-_Jean_qui_grogne_et_Jean_qui_rit_page_005.jpg"
+  },
+  "l-assommoir": {
+    "file": "l-assommoir.webp",
+    "kind": "art",
+    "credit": "L'Absinthe (Dans un café), Edgar Degas, 1875-1876",
+    "source": "https://commons.wikimedia.org/wiki/File:Edgar_Degas_-_In_a_Caf%C3%A9_-_Google_Art_Project_2.jpg"
+  },
+  "l-ile-mysterieuse": {
+    "file": "l-ile-mysterieuse.webp",
+    "kind": "book",
+    "credit": "Cover of the Project Gutenberg edition",
+    "source": "https://www.gutenberg.org/ebooks/14287"
+  },
+  "la-bete-humaine": {
+    "file": "la-bete-humaine.webp",
+    "kind": "art",
+    "credit": "Arrival of the Normandy Train, Gare Saint-Lazare, Claude Monet, 1877",
+    "source": "https://commons.wikimedia.org/wiki/File:Claude_Monet_-_Arrival_of_the_Normandy_Train%2C_Gare_Saint-Lazare_-_Google_Art_Project.jpg"
+  },
+  "la-chartreuse-de-parme": {
+    "file": "la-chartreuse-de-parme.webp",
+    "kind": "art",
+    "credit": "The Battle of Waterloo, a painting completed in 1824 by Jan Willem Pieneman",
+    "source": "https://github.com/standardebooks/stendhal_the-charterhouse-of-parma_c-k-scott-moncrieff"
+  },
+  "la-dame-aux-camelias": {
+    "file": "la-dame-aux-camelias.webp",
+    "kind": "art",
+    "credit": "La Dame aux Camélias, poster for Sarah Bernhardt at the Théâtre de la Renaissance, Alphonse Mucha, 1896",
+    "source": "https://commons.wikimedia.org/wiki/File:Alfons_Mucha_-_1896_-_La_Dame_aux_Cam%C3%A9lias_-_Sarah_Bernhardt.jpg"
+  },
+  "la-mare-au-diable": {
+    "file": "la-mare-au-diable.webp",
+    "kind": "art",
+    "credit": "Ploughing in the Nivernais, a painting completed in 1849 by Rosa Bonheur",
+    "source": "https://github.com/standardebooks/george-sand_the-devils-pool_jane-minot-sedgwick_ellery-sedgwick"
+  },
+  "la-petite-fadette": {
+    "file": "la-petite-fadette.webp",
+    "kind": "art",
+    "credit": "Le Chant de l'alouette (The Song of the Lark), Jules Breton, 1884",
+    "source": "https://commons.wikimedia.org/wiki/File:Jules_Breton%2C_le_chant_de_l%27alouette.1884.jpg"
+  },
+  "la-reine-margot": {
+    "file": "la-reine-margot.webp",
+    "kind": "art",
+    "credit": "Portrait of Marguerite de Valois, French school (after Étienne Dumonstier, formerly attributed to François Clouet), c. 1572",
+    "source": "https://commons.wikimedia.org/wiki/File:Marguerite_de_Valois_(1553-1615).jpg"
+  },
+  "la-tulipe-noire": {
+    "file": "la-tulipe-noire.webp",
+    "kind": "art",
+    "credit": "Floral Still Life (Stilleven met bloemen), Hans Bollongier, 1639",
+    "source": "https://commons.wikimedia.org/wiki/File:Hans_Bollongier_-_Stilleven_met_bloemen_-_Google_Art_Project.jpg"
+  },
+  "le-comte-de-monte-cristo": {
+    "file": "le-comte-de-monte-cristo.webp",
+    "kind": "art",
+    "credit": "Château d'If, Marseille, photochrom colour print, anonymous, c. 1890-1905",
+    "source": "https://commons.wikimedia.org/wiki/File:ChateaudIf1900.jpg"
+  },
+  "le-dernier-jour-d-un-condamne": {
+    "file": "le-dernier-jour-d-un-condamne.webp",
+    "kind": "art",
+    "credit": "Prisoners Exercising (La Ronde des prisonniers), Vincent van Gogh, 1890",
+    "source": "https://commons.wikimedia.org/wiki/File:Vincent_van_Gogh_-_The_Prison_Courtyard_(1890).jpg"
+  },
+  "le-fantome-de-l-opera": {
+    "file": "le-fantome-de-l-opera.webp",
+    "kind": "book",
+    "credit": "Cover of the Project Gutenberg edition",
+    "source": "https://www.gutenberg.org/ebooks/62215"
+  },
+  "le-general-dourakine": {
+    "file": "le-general-dourakine.webp",
+    "kind": "art",
+    "credit": "Illustration for Le Général Dourakine, Émile Bayard, 1863",
+    "source": "https://commons.wikimedia.org/wiki/File:S%C3%A9gur_-_Le_g%C3%A9n%C3%A9ral_Dourakine_p157.jpg"
+  },
+  "le-grand-meaulnes": {
+    "file": "le-grand-meaulnes.webp",
+    "kind": "art",
+    "credit": "La Table, Henri Le Sidaner, 1901",
+    "source": "https://commons.wikimedia.org/wiki/File:Henri_Le_Sidaner_-_La_Table_02.jpg"
+  },
+  "le-horla": {
+    "file": "le-horla.webp",
+    "kind": "art",
+    "credit": "Le Horla: the invisible being picks the rose, William Julian-Damazy (engraved by Georges Lemoine), 1908",
+    "source": "https://commons.wikimedia.org/wiki/File:Damazy-horla-rose.jpg"
+  },
+  "le-mystere-de-la-chambre-jaune": {
+    "file": "le-mystere-de-la-chambre-jaune.webp",
+    "kind": "art",
+    "credit": "The Coin Collector, a painting completed in 1904 by Vilhelm Hammershøi",
+    "source": "https://github.com/standardebooks/gaston-leroux_the-mystery-of-the-yellow-room_brentanos"
+  },
+  "le-pere-goriot": {
+    "file": "le-pere-goriot.webp",
+    "kind": "art",
+    "credit": "Young Man at the Window, a painting completed in 1875 by Gustave Caillebotte",
+    "source": "https://github.com/standardebooks/honore-de-balzac_father-goriot_ellen-marriage"
+  },
+  "le-petit-chose": {
+    "file": "le-petit-chose.webp",
+    "kind": "art",
+    "credit": "En classe, le travail des petits, Henri Jules Jean Geoffroy, 1889",
+    "source": "https://commons.wikimedia.org/wiki/File:Jean_Geoffroy_-_En_classe%2C_le_travail_des_petits.jpg"
+  },
+  "le-premier-livre": {
+    "file": "le-premier-livre.webp",
+    "kind": "art",
+    "credit": "Vitalis leads Remi away, with the dogs, Émile Bayard (wood engraving by Clément Bellenger), Sans famille, 1880",
+    "source": "https://commons.wikimedia.org/wiki/File:Malot_Sans_famille%2C_57.png"
+  },
+  "le-rouge-et-le-noir": {
+    "file": "le-rouge-et-le-noir.webp",
+    "kind": "art",
+    "credit": "Julien Sorel and Madame de Rênal in the garden, Henri-Joseph Dubouchet, etching for Le Rouge et le Noir (Conquet edition), 1884",
+    "source": "https://commons.wikimedia.org/wiki/File:StendhalRedandBlack18.png"
+  },
+  "le-tour-du-monde-en-80-jours": {
+    "file": "le-tour-du-monde-en-80-jours.webp",
+    "kind": "art",
+    "credit": "Train on the Way, a painting completed circa 1895 by Isaac Ilyich Levitan",
+    "source": "https://github.com/standardebooks/jules-verne_around-the-world-in-eighty-days_george-makepeace-towle"
+  },
+  "les-enfants-du-capitaine-grant": {
+    "file": "les-enfants-du-capitaine-grant.webp",
+    "kind": "art",
+    "credit": "Ship on the Touques, a painting completed between 1888 and 1895 by Eugène Boudin",
+    "source": "https://github.com/standardebooks/jules-verne_in-search-of-the-castaways_j-b-lippincott-co"
+  },
+  "les-fleurs-du-mal": {
+    "file": "les-fleurs-du-mal.webp",
+    "kind": "book",
+    "credit": "Illustrated title for Les Fleurs du mal, Carlos Schwabe, 1900",
+    "source": "https://commons.wikimedia.org/wiki/File:Fleurs-du-mal_titel.jpg"
+  },
+  "les-liaisons-dangereuses": {
+    "file": "les-liaisons-dangereuses.webp",
+    "kind": "art",
+    "credit": "L’Indiscret, a painting completed in 1795 by Louis-Léopold Boilly",
+    "source": "https://github.com/standardebooks/pierre-choderlos-de-laclos_dangerous-liaisons_thomas-moore"
+  },
+  "les-malheurs-de-sophie": {
+    "file": "les-malheurs-de-sophie.webp",
+    "kind": "art",
+    "credit": "Sophie puts her head under the gutter, Horace Castelli, Les Malheurs de Sophie, 1859",
+    "source": "https://commons.wikimedia.org/wiki/File:S%C3%A9gur_-_Les_Malheurs_de_Sophie_0065.jpg"
+  },
+  "les-memoires-d-un-ane": {
+    "file": "les-memoires-d-un-ane.webp",
+    "kind": "art",
+    "credit": "Cadichon and the clown at the fair, Horace Castelli, Mémoires d'un âne, 1860",
+    "source": "https://commons.wikimedia.org/wiki/File:S%C3%A9gur_-_M%C3%A9moires_d%E2%80%99un_%C3%A2ne_p223.jpg"
+  },
+  "les-miserables": {
+    "file": "les-miserables.webp",
+    "kind": "art",
+    "credit": "The Defense of Paris, a painting completed in 1871 by Jean-Louis Ernest Meissonier",
+    "source": "https://github.com/standardebooks/victor-hugo_les-miserables_isabel-f-hapgood"
+  },
+  "les-petites-filles-modeles": {
+    "file": "les-petites-filles-modeles.webp",
+    "kind": "book",
+    "credit": "Cover of the Project Gutenberg edition",
+    "source": "https://www.gutenberg.org/ebooks/35404"
+  },
+  "les-reveries-du-promeneur-solitaire": {
+    "file": "les-reveries-du-promeneur-solitaire.webp",
+    "kind": "art",
+    "credit": "J. J. Rousseau gathering plants, Laurent Guyot, 1787",
+    "source": "https://commons.wikimedia.org/wiki/File:J._J._Rousseau_herborisant_-_estampe_-_Laurent_Guyot_-_btv1b104624821.jpg"
+  },
+  "les-travailleurs-de-la-mer": {
+    "file": "les-travailleurs-de-la-mer.webp",
+    "kind": "art",
+    "credit": "Sunset on the Beach at Sark, a painting completed circa 1850 by An Unknown Artist",
+    "source": "https://github.com/standardebooks/victor-hugo_toilers-of-the-sea_william-moy-thomas"
+  },
+  "les-trois-mousquetaires": {
+    "file": "les-trois-mousquetaires.webp",
+    "kind": "art",
+    "credit": "D'Artagnan, Athos, Aramis and Porthos, Maurice Leloir (engraved by Jules Huyot), Les Trois Mousquetaires, 1894",
+    "source": "https://commons.wikimedia.org/wiki/File:Dartagnan-musketeers.jpg"
+  },
+  "les-vacances": {
+    "file": "les-vacances.webp",
+    "kind": "art",
+    "credit": "The girls bring flowers for the cousins' arrival, Bertall, Les Vacances (1859; 1884 printing)",
+    "source": "https://commons.wikimedia.org/wiki/File:S%C3%A9gur_-_Les_vacances_(page_9_crop).jpg"
+  },
+  "lettres-de-mon-moulin": {
+    "file": "lettres-de-mon-moulin.webp",
+    "kind": "art",
+    "credit": "The Mill of Alphonse Daudet at Fontvieille, Vincent van Gogh, 1888",
+    "source": "https://commons.wikimedia.org/wiki/File:Van_Gogh_-_Die_M%C3%BChle_von_Alphonse_Daudet_in_Fontevieille.jpeg"
+  },
+  "madame-bovary": {
+    "file": "madame-bovary.webp",
+    "kind": "art",
+    "credit": "Portrait of Lady Agnew of Lochnaw, a painting completed in 1892 by John Singer Sargent",
+    "source": "https://github.com/standardebooks/gustave-flaubert_madame-bovary_eleanor-marx-aveling"
+  },
+  "manon-lescaut": {
+    "file": "manon-lescaut.webp",
+    "kind": "art",
+    "credit": "\"Elle m'appela son cousin\", Jacques-Jean Pasquier, engraved by Jacques-Philippe Le Bas, Manon Lescaut, 1753 edition",
+    "source": "https://commons.wikimedia.org/wiki/File:Manon_Lescaut_%E2%80%94_Elle_m%27appela_son_cousin_(cropped).png"
+  },
+  "michel-strogoff": {
+    "file": "michel-strogoff.webp",
+    "kind": "book",
+    "credit": "Cover of the 1876 Hetzel edition, illustrated by Jules Férat",
+    "source": "https://commons.wikimedia.org/wiki/File:Jules_Verne_Michel_Strogoff_1876_cover.jpg"
+  },
+  "micromegas": {
+    "file": "micromegas.webp",
+    "kind": "art",
+    "credit": "Systema solare et planetarium, Johann Baptist Homann after Johann Gabriel Doppelmayr, c. 1716–1742 (Rijksmuseum)",
+    "source": "https://commons.wikimedia.org/wiki/File:Hemelkaart_van_het_stelsel_van_Copernicus_Systema_solare_et_planetarium_ex_hypothesi_Copernicana_secundum_(..)_(titel_op_object)%2C_RP-P-AO-29-9.jpg"
+  },
+  "nana": {
+    "file": "nana.webp",
+    "kind": "art",
+    "credit": "Nana, Édouard Manet, 1877 (Hamburger Kunsthalle)",
+    "source": "https://commons.wikimedia.org/wiki/File:1877_Manet_Nana_anagoria.jpg"
+  },
+  "notre-dame-de-paris": {
+    "file": "notre-dame-de-paris.webp",
+    "kind": "art",
+    "credit": "Notre Dame Seen from the Quai de la Tournelle, a painting completed in 1902 by Jean-François Raffaëlli",
+    "source": "https://github.com/standardebooks/victor-hugo_notre-dame-de-paris_isabel-f-hapgood"
+  },
+  "nouveaux-contes-de-fees": {
+    "file": "nouveaux-contes-de-fees.webp",
+    "kind": "art",
+    "credit": "Blondine follows Beau-Minon into the forest, Gustave Doré and Jules Didier (illustrators of the book), Nouveaux contes de fées (1857; 1896 printing)",
+    "source": "https://commons.wikimedia.org/wiki/File:S%C3%A9gur%2C_Nouveaux_contes_de_f%C3%A9es%2C_p23.jpg"
+  },
+  "pierre-et-jean": {
+    "file": "pierre-et-jean.webp",
+    "kind": "art",
+    "credit": "The Beach at Sainte-Adresse, a painting completed in 1867 by Claude Monet",
+    "source": "https://github.com/standardebooks/guy-de-maupassant_pierre-and-jean_clara-bell"
+  },
+  "poil-de-carotte": {
+    "file": "poil-de-carotte.webp",
+    "kind": "art",
+    "credit": "Poil de Carotte, coloured vignette by Félix Vallotton, Flammarion edition, 1902",
+    "source": "https://commons.wikimedia.org/wiki/File:Renard_-_Poil_de_Carotte%2C_1902-009.jpg"
+  },
+  "quatrevingt-treize": {
+    "file": "quatrevingt-treize.webp",
+    "kind": "art",
+    "credit": "La Tourgue en 1835, Victor Hugo, pen and wash, 1876",
+    "source": "https://commons.wikimedia.org/wiki/File:Victor_Hugo_La_Tourgue.jpg"
+  },
+  "riquet-a-la-houppe": {
+    "file": "riquet-a-la-houppe.webp",
+    "kind": "art",
+    "credit": "Riquet with the Tuft, W. Heath Robinson, Old-Time Stories told by Master Charles Perrault, 1921",
+    "source": "https://commons.wikimedia.org/wiki/File:Page_071_of_Old_time_stories_(Perrault%2C_Robinson).png"
+  },
+  "souvenirs-entomologiques": {
+    "file": "souvenirs-entomologiques.webp",
+    "kind": "art",
+    "credit": "Sacred scarab and other dung beetles (plate 10), James Duncan, engraved by W. H. Lizars, The Naturalist's Library: Beetles, 1835",
+    "source": "https://commons.wikimedia.org/wiki/File:Beetles_(Plate_10)_BHL22015734.jpg"
+  },
+  "tartarin-de-tarascon": {
+    "file": "tartarin-de-tarascon.webp",
+    "kind": "art",
+    "credit": "\"Descendons… descendons…\": Tartarin and Prince Grégory on a camel, Émile Bayard, Aventures prodigieuses de Tartarin de Tarascon, 1884",
+    "source": "https://commons.wikimedia.org/wiki/File:Tartarin_et_Gr%C3%A9gory.jpg"
+  },
+  "therese-raquin": {
+    "file": "therese-raquin.webp",
+    "kind": "art",
+    "credit": "Portrait d'Émile Zola, Édouard Manet, 1868 (Musée d'Orsay)",
+    "source": "https://commons.wikimedia.org/wiki/File:Manet%2C_Edouard_-_Portrait_of_Emile_Zola.jpg"
+  },
+  "trois-contes": {
+    "file": "trois-contes.webp",
+    "kind": "art",
+    "credit": "Antipas observant une jeune fille et sa suivante sur une terrasse, Georges-Antoine Rochegrosse, watercolour for Flaubert's Hérodias, 1892",
+    "source": "https://commons.wikimedia.org/wiki/File:Georges-Antoine_Rochegrosse_-_Antipas_observant_une_jeune_fille_et_sa_suivante_sur_une_terrasse.jpg"
+  },
+  "un-bon-petit-diable": {
+    "file": "un-bon-petit-diable.webp",
+    "kind": "book",
+    "credit": "Frontispiece of Un bon petit diable, Horace Castelli, 1865",
+    "source": "https://commons.wikimedia.org/wiki/File:Un_bon_petit_diable_Castelli.jpg"
+  },
+  "une-vie": {
+    "file": "une-vie.webp",
+    "kind": "art",
+    "credit": "Étretat: The Beach and the Falaise d'Amont, Claude Monet, 1885 (Art Institute of Chicago)",
+    "source": "https://commons.wikimedia.org/wiki/File:Claude_Monet_-_%C3%89tretat%2C_The_Beach_and_the_Falaise_d%27Amont_-_1964.204_-_Art_Institute_of_Chicago.jpg"
+  },
+  "vingt-ans-apres": {
+    "file": "vingt-ans-apres.webp",
+    "kind": "art",
+    "credit": "Mounted musketeer, plate by Émile Wattier, engraved by Gustave Lesestre, Vingt ans après, 1846 illustrated edition",
+    "source": "https://commons.wikimedia.org/wiki/File:Dumas_-_Vingt_ans_apr%C3%A8s%2C_1846%2C_figure_page_0134.png"
+  },
+  "vingt-mille-lieues-sous-les-mers": {
+    "file": "vingt-mille-lieues-sous-les-mers.webp",
+    "kind": "art",
+    "credit": "The giant squid seen through the window of the Nautilus, Alphonse de Neuville (engraved by Hildibrand), Hetzel edition, 1870",
+    "source": "https://commons.wikimedia.org/wiki/File:20000_squid_Nautilus_viewbay.jpg"
+  },
+  "voyage-au-centre-de-la-terre": {
+    "file": "voyage-au-centre-de-la-terre.webp",
+    "kind": "art",
+    "credit": "Eruption of the Volcano Vesuvius, a painting completed in 1821 by Johan Christian Dahl",
+    "source": "https://github.com/standardebooks/jules-verne_journey-to-the-center-of-the-earth_f-a-malleson"
+  },
+  "zadig": {
+    "file": "zadig.webp",
+    "kind": "art",
+    "credit": "\"Le projet de me couper le nez…\", Jean-Michel Moreau le Jeune, engraved by Philippe Trière, Zadig (Kehl edition of Voltaire), 1784",
+    "source": "https://commons.wikimedia.org/wiki/File:Voltaire_-_Zadig_-_Tri%C3%A8re_-_Moreau.jpg"
+  }
+}

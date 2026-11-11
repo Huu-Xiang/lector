@@ -2,6 +2,9 @@ import '../test-guard';
 import { describe, test, expect, beforeEach, afterEach } from 'bun:test';
 import { db } from '../db';
 import app from '../routes/collections';
+import fs from 'fs';
+import os from 'os';
+import path from 'path';
 
 function setLang(code: string) {
   db.prepare('INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)').run(
@@ -71,6 +74,51 @@ describe('collections route', () => {
       book: null,
       empty: null,
     });
+  });
+
+  test('a free-library collection without a stored cover gets the cover of its book', async () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'library-covers-'));
+    fs.mkdirSync(path.join(root, 'af', 'content', 'library'), { recursive: true });
+    fs.writeFileSync(
+      path.join(root, 'af', 'content', 'library', 'covers.json'),
+      JSON.stringify({
+        'die-boek': { file: 'die-boek.jpg', kind: 'art', credit: 'A painting' },
+        'bad-file': { file: '../escape.jpg', kind: 'book' },
+      }),
+    );
+    process.env.LIBRARY_CONTENT_ROOT = root;
+    try {
+      insertCollection('library-af-die-boek');
+      insertCollection('library-af-bad-file', { sortOrder: 1 });
+      insertCollection('own', { sortOrder: 2 });
+      db.prepare("UPDATE collections SET coverUrl = '/covers/own.jpg' WHERE id = 'own'").run();
+      insertCollection('plain', { sortOrder: 3 });
+
+      const list = (await (await app.request('/')).json()) as {
+        id: string;
+        coverUrl: string | null;
+        coverKind: string | null;
+      }[];
+      const byId = Object.fromEntries(list.map((row) => [row.id, [row.coverUrl, row.coverKind]]));
+      expect(byId).toEqual({
+        'library-af-die-boek': ['/library-covers/af/die-boek.jpg', 'art'],
+        'library-af-bad-file': [null, null],
+        own: ['/covers/own.jpg', 'book'],
+        plain: [null, null],
+      });
+
+      const detail = (await (await app.request('/library-af-die-boek')).json()) as {
+        coverUrl: string;
+        coverKind: string;
+      };
+      expect([detail.coverUrl, detail.coverKind]).toEqual([
+        '/library-covers/af/die-boek.jpg',
+        'art',
+      ]);
+    } finally {
+      delete process.env.LIBRARY_CONTENT_ROOT;
+      fs.rmSync(root, { recursive: true, force: true });
+    }
   });
 
   test('GET /:id/lessons returns an excerpt and never the text', async () => {

@@ -1234,6 +1234,8 @@
     "readFree": "在 Readfox 免费阅读",
     "ctaNote": "点任何词都能看到中文释义。生词可以保存，以后复习。",
     "source": "来源：<link>{source}</link>。{license}。",
+    "coverAlt": "《{title}》的封面",
+    "coverCredit": "封面：<link>{credit}</link>。",
     "moreAtLevel": "更多 {level} 级{language}书",
     "allBooks": "全部免费书",
     "metaTitle": "{title}（{author}）{language}原版免费在线阅读 | Readfox",

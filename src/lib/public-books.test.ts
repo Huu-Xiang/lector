@@ -1,3 +1,5 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
   authorSlug,
@@ -24,6 +26,17 @@ describe('public books', () => {
       expect(book.level).toMatch(/^[ABC][12]$/);
       expect(book.lessonCount).toBeGreaterThan(0);
       expect(book.blurbs.en, `${book.language}/${book.slug}`).toBeTruthy();
+    }
+  });
+
+  it('gives every shipped book a cover image that exists, with a credit and a source', () => {
+    for (const book of listPublicBooks()) {
+      const name = `${book.language}/${book.slug}`;
+      expect(book.cover, name).not.toBeNull();
+      expect(book.cover!.url, name).toMatch(/^\/library-covers\/[a-z]+\/[a-z0-9-]+\.webp$/);
+      expect(fs.existsSync(path.join(process.cwd(), 'public', book.cover!.url)), name).toBe(true);
+      expect(book.cover!.credit, name).toBeTruthy();
+      expect(book.cover!.source, name).toMatch(/^https:\/\//);
     }
   });
 

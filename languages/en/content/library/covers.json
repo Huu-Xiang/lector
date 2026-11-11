@@ -1,0 +1,602 @@
+{
+  "a-christmas-carol": {
+    "file": "a-christmas-carol.webp",
+    "kind": "art",
+    "credit": "The New Bonnet, a painting completed in 1876 by Eastman Johnson",
+    "source": "https://github.com/standardebooks/charles-dickens_a-christmas-carol"
+  },
+  "a-little-princess": {
+    "file": "a-little-princess.webp",
+    "kind": "art",
+    "credit": "Sara Crewe and Becky, illustration by Harold Piffard for A Little Princess (Frederick Warne & Co., 1905)",
+    "source": "https://commons.wikimedia.org/wiki/File:Illustration_of_Sara_Crewe_(right)_and_Becky_(left)_in_A_Little_Princess_(Frederick_Warne_%26_Co.%2C_1905).jpg"
+  },
+  "a-study-in-scarlet": {
+    "file": "a-study-in-scarlet.webp",
+    "kind": "art",
+    "credit": "Lost or Strayed?, a painting completed in 1905 by Briton Rivière",
+    "source": "https://github.com/standardebooks/arthur-conan-doyle_a-study-in-scarlet"
+  },
+  "a-tale-of-two-cities": {
+    "file": "a-tale-of-two-cities.webp",
+    "kind": "art",
+    "credit": "Camille Desmoulins au Palais-Royal, a painting completed in 1888 by Félix-Joseph Barrias",
+    "source": "https://github.com/standardebooks/charles-dickens_a-tale-of-two-cities"
+  },
+  "adventures-of-sherlock-holmes": {
+    "file": "adventures-of-sherlock-holmes.webp",
+    "kind": "book",
+    "credit": "Cover of the Project Gutenberg edition",
+    "source": "https://www.gutenberg.org/ebooks/1661"
+  },
+  "aesops-fables": {
+    "file": "aesops-fables.webp",
+    "kind": "art",
+    "credit": "The Fox Visiting the Heron, a painting completed between 1630 and 1640 by Frans Snyders",
+    "source": "https://github.com/standardebooks/aesop_fables_v-s-vernon-jones"
+  },
+  "aldine-first-reader": {
+    "file": "aldine-first-reader.webp",
+    "kind": "art",
+    "credit": "Nurse Reading to a Little Girl, Mary Cassatt, 1895",
+    "source": "https://commons.wikimedia.org/wiki/File:Nurse_Reading_to_a_Little_Girl_MET_DT7250.jpg"
+  },
+  "aldine-second-reader": {
+    "file": "aldine-second-reader.webp",
+    "kind": "art",
+    "credit": "The Cat and the Birds, from Aesop's Fables, Arthur Rackham, 1912",
+    "source": "https://commons.wikimedia.org/wiki/File:Aesops_Fables-Rackham-049.jpg"
+  },
+  "alices-adventures-in-wonderland": {
+    "file": "alices-adventures-in-wonderland.webp",
+    "kind": "book",
+    "credit": "Cover of the Project Gutenberg edition",
+    "source": "https://www.gutenberg.org/ebooks/11"
+  },
+  "andersens-fairy-tales": {
+    "file": "andersens-fairy-tales.webp",
+    "kind": "art",
+    "credit": "The Snow Queen, from Stories from Hans Andersen, Edmund Dulac, 1911",
+    "source": "https://commons.wikimedia.org/wiki/File:Edmund_Dulac_-_The_Snow_Queen.jpg"
+  },
+  "anna-karenina": {
+    "file": "anna-karenina.webp",
+    "kind": "art",
+    "credit": "Elizabeth Winthrop Chanler (Mrs. John Jay Chapman), a painting completed in 1893 by John Singer Sargent",
+    "source": "https://github.com/standardebooks/leo-tolstoy_anna-karenina_constance-garnett"
+  },
+  "anne-of-green-gables": {
+    "file": "anne-of-green-gables.webp",
+    "kind": "book",
+    "credit": "Cover of the Project Gutenberg edition",
+    "source": "https://www.gutenberg.org/ebooks/45"
+  },
+  "around-the-world-in-eighty-days": {
+    "file": "around-the-world-in-eighty-days.webp",
+    "kind": "book",
+    "credit": "Cover of the Project Gutenberg edition",
+    "source": "https://www.gutenberg.org/ebooks/103"
+  },
+  "autobiography-of-benjamin-franklin": {
+    "file": "autobiography-of-benjamin-franklin.webp",
+    "kind": "book",
+    "credit": "Cover of the Project Gutenberg edition",
+    "source": "https://www.gutenberg.org/ebooks/20203"
+  },
+  "black-beauty": {
+    "file": "black-beauty.webp",
+    "kind": "art",
+    "credit": "Adriaan van der Hoop’s Trotter “De Vlugge” (The Fast One) in a Meadow, a painting completed in 1828 by Anthony Oberman",
+    "source": "https://github.com/standardebooks/anna-sewell_black-beauty"
+  },
+  "crime-and-punishment": {
+    "file": "crime-and-punishment.webp",
+    "kind": "art",
+    "credit": "Self-Portrait with Burning Cigarette, a painting completed in 1895 by Edvard Munch",
+    "source": "https://github.com/standardebooks/fyodor-dostoevsky_crime-and-punishment_constance-garnett"
+  },
+  "daddy-long-legs": {
+    "file": "daddy-long-legs.webp",
+    "kind": "art",
+    "credit": "The Letter, Mary Cassatt, 1890-1891",
+    "source": "https://commons.wikimedia.org/wiki/File:Mary_Cassatt%2C_The_Letter%2C_1890-1891%2C_NGA_168826.jpg"
+  },
+  "david-copperfield": {
+    "file": "david-copperfield.webp",
+    "kind": "art",
+    "credit": "The Writer, a painting completed circa 1850 by Carl Spitzweg",
+    "source": "https://github.com/standardebooks/charles-dickens_david-copperfield"
+  },
+  "dr-jekyll-and-mr-hyde": {
+    "file": "dr-jekyll-and-mr-hyde.webp",
+    "kind": "book",
+    "credit": "Cover of the Project Gutenberg edition",
+    "source": "https://www.gutenberg.org/ebooks/43"
+  },
+  "dracula": {
+    "file": "dracula.webp",
+    "kind": "book",
+    "credit": "Cover of the Project Gutenberg edition",
+    "source": "https://www.gutenberg.org/ebooks/345"
+  },
+  "emma": {
+    "file": "emma.webp",
+    "kind": "art",
+    "credit": "Rica, a painting completed in 1894 by Frederick Goodall",
+    "source": "https://github.com/standardebooks/jane-austen_emma"
+  },
+  "english-fairy-tales": {
+    "file": "english-fairy-tales.webp",
+    "kind": "art",
+    "credit": "The Well of the World's End, plate for English Fairy Tales, John D. Batten, 1890",
+    "source": "https://commons.wikimedia.org/wiki/File:Page_227_illustration_in_English_Fairy_Tales.png"
+  },
+  "fifty-famous-stories-retold": {
+    "file": "fifty-famous-stories-retold.webp",
+    "kind": "art",
+    "credit": "King Canute on the Seashore, plate from Fifty Famous Stories Retold, artist not named, 1896",
+    "source": "https://www.gutenberg.org/cache/epub/18442/images/image_013.jpg"
+  },
+  "five-children-and-it": {
+    "file": "five-children-and-it.webp",
+    "kind": "art",
+    "credit": "Zandafgraving, a painting completed in 1839 by Johannes Tavenraat",
+    "source": "https://github.com/standardebooks/e-nesbit_five-children-and-it"
+  },
+  "frankenstein": {
+    "file": "frankenstein.webp",
+    "kind": "art",
+    "credit": "Portrait of Adam, a painting completed in 1578 by Giuseppe Arcimboldo",
+    "source": "https://github.com/standardebooks/mary-shelley_frankenstein"
+  },
+  "gitanjali": {
+    "file": "gitanjali.webp",
+    "kind": "art",
+    "credit": "Bharat Mata, a painting completed in 1905 by Abanindranath Tagore",
+    "source": "https://github.com/standardebooks/rabindranath-tagore_gitanjali"
+  },
+  "great-expectations": {
+    "file": "great-expectations.webp",
+    "kind": "book",
+    "credit": "Cover of the Project Gutenberg edition",
+    "source": "https://www.gutenberg.org/ebooks/1400"
+  },
+  "grimms-fairy-tales": {
+    "file": "grimms-fairy-tales.webp",
+    "kind": "art",
+    "credit": "Hansel and Gretel, from The Fairy Tales of the Brothers Grimm, Arthur Rackham, 1909",
+    "source": "https://commons.wikimedia.org/wiki/File:Hansel-and-gretel-rackham.jpg"
+  },
+  "gullivers-travels": {
+    "file": "gullivers-travels.webp",
+    "kind": "book",
+    "credit": "Cover of the Project Gutenberg edition",
+    "source": "https://www.gutenberg.org/ebooks/829"
+  },
+  "heart-of-darkness": {
+    "file": "heart-of-darkness.webp",
+    "kind": "art",
+    "credit": "The Banks of the Upper Congo, engraving from H. M. Stanley, The Congo and the Founding of Its Free State, artist not named, 1885",
+    "source": "https://commons.wikimedia.org/wiki/File:Stanley_Founding_of_Congo_Free_State_95_The_Banks_of_the_Upper_Congo.jpg"
+  },
+  "heidi": {
+    "file": "heidi.webp",
+    "kind": "art",
+    "credit": "Spring in the Alps, a painting completed in 1897 by Giovanni Segantini",
+    "source": "https://github.com/standardebooks/johanna-spyri_heidi_elisabeth-p-stork"
+  },
+  "jane-eyre": {
+    "file": "jane-eyre.webp",
+    "kind": "art",
+    "credit": "Portrait of a Young Girl, a painting completed between 1903 and 1904 by Vilhelm Hammershøi",
+    "source": "https://github.com/standardebooks/charlotte-bronte_jane-eyre"
+  },
+  "just-so-stories": {
+    "file": "just-so-stories.webp",
+    "kind": "art",
+    "credit": "How the Camel Got His Hump, a painting completed in 1912 by Joseph M. Gleeson",
+    "source": "https://github.com/standardebooks/rudyard-kipling_just-so-stories"
+  },
+  "kittens-and-cats": {
+    "file": "kittens-and-cats.webp",
+    "kind": "book",
+    "credit": "Cover of the Project Gutenberg edition",
+    "source": "https://www.gutenberg.org/ebooks/61852"
+  },
+  "les-miserables": {
+    "file": "les-miserables.webp",
+    "kind": "art",
+    "credit": "The Defense of Paris, a painting completed in 1871 by Jean-Louis Ernest Meissonier",
+    "source": "https://github.com/standardebooks/victor-hugo_les-miserables_isabel-f-hapgood"
+  },
+  "little-lord-fauntleroy": {
+    "file": "little-lord-fauntleroy.webp",
+    "kind": "art",
+    "credit": "The Blue Boy, a painting completed in 1770 by Thomas Gainsborough",
+    "source": "https://github.com/standardebooks/frances-hodgson-burnett_little-lord-fauntleroy"
+  },
+  "little-women": {
+    "file": "little-women.webp",
+    "kind": "art",
+    "credit": "They All Drew to the Fire, a painting completed in 1915 by Jessie Willcox Smith",
+    "source": "https://github.com/standardebooks/louisa-may-alcott_little-women"
+  },
+  "martin-eden": {
+    "file": "martin-eden.webp",
+    "kind": "book",
+    "credit": "Cover of the Project Gutenberg edition",
+    "source": "https://www.gutenberg.org/ebooks/1056"
+  },
+  "mcguffeys-eclectic-primer": {
+    "file": "mcguffeys-eclectic-primer.webp",
+    "kind": "art",
+    "credit": "Blackboard, Winslow Homer, 1877",
+    "source": "https://commons.wikimedia.org/wiki/File:Winslow_Homer_-_Blackboard_(1877).jpg"
+  },
+  "mcguffeys-first-reader": {
+    "file": "mcguffeys-first-reader.webp",
+    "kind": "art",
+    "credit": "Snap the Whip, Winslow Homer, 1872",
+    "source": "https://commons.wikimedia.org/wiki/File:Snap_the_Whip_1872_Winslow_Homer.jpg"
+  },
+  "mcguffeys-second-reader": {
+    "file": "mcguffeys-second-reader.webp",
+    "kind": "art",
+    "credit": "Illustration from the Project Gutenberg edition",
+    "source": "https://www.gutenberg.org/ebooks/14668"
+  },
+  "mcguffeys-third-reader": {
+    "file": "mcguffeys-third-reader.webp",
+    "kind": "art",
+    "credit": "The Country School, Winslow Homer, 1871",
+    "source": "https://commons.wikimedia.org/wiki/File:Winslow_Homer_-_The_Country_School_(1871).jpg"
+  },
+  "middlemarch": {
+    "file": "middlemarch.webp",
+    "kind": "book",
+    "credit": "Cover of the Project Gutenberg edition",
+    "source": "https://www.gutenberg.org/ebooks/145"
+  },
+  "moby-dick": {
+    "file": "moby-dick.webp",
+    "kind": "art",
+    "credit": "The Flying Dutchman, a painting completed in 1887 by Albert Pinkham Ryder",
+    "source": "https://github.com/standardebooks/herman-melville_moby-dick"
+  },
+  "of-human-bondage": {
+    "file": "of-human-bondage.webp",
+    "kind": "art",
+    "credit": "Portrait of Fyodor Shalyapin, a painting completed in 1905 by Konstantin Korovin",
+    "source": "https://github.com/standardebooks/w-somerset-maugham_of-human-bondage"
+  },
+  "oliver-twist": {
+    "file": "oliver-twist.webp",
+    "kind": "art",
+    "credit": "His First Offence, a painting completed in 1896 by Dorothy Stanley",
+    "source": "https://github.com/standardebooks/charles-dickens_oliver-twist"
+  },
+  "persuasion": {
+    "file": "persuasion.webp",
+    "kind": "art",
+    "credit": "Woman at a Window, a painting completed in 1822 by Caspar David Friedrich",
+    "source": "https://github.com/standardebooks/jane-austen_persuasion"
+  },
+  "peter-pan": {
+    "file": "peter-pan.webp",
+    "kind": "art",
+    "credit": "The Never Never Land, plate for Peter and Wendy, F. D. Bedford, 1911",
+    "source": "https://commons.wikimedia.org/wiki/File:Peter_pan_1911_pipes.jpg"
+  },
+  "pride-and-prejudice": {
+    "file": "pride-and-prejudice.webp",
+    "kind": "book",
+    "credit": "Cover of the Project Gutenberg edition",
+    "source": "https://www.gutenberg.org/ebooks/1342"
+  },
+  "robinson-crusoe": {
+    "file": "robinson-crusoe.webp",
+    "kind": "art",
+    "credit": "Crusoe, a painting completed in 1899 by John Charles Dollman",
+    "source": "https://github.com/standardebooks/daniel-defoe_the-life-and-adventures-of-robinson-crusoe"
+  },
+  "sense-and-sensibility": {
+    "file": "sense-and-sensibility.webp",
+    "kind": "art",
+    "credit": "At the Mirror, a painting completed in 1827 by Georg Friedrich Kersting",
+    "source": "https://github.com/standardebooks/jane-austen_sense-and-sensibility"
+  },
+  "stories-from-hans-andersen": {
+    "file": "stories-from-hans-andersen.webp",
+    "kind": "art",
+    "credit": "The Princess and the Pea, Edmund Dulac, plate from Stories from Hans Andersen (Hodder & Stoughton, 1911)",
+    "source": "https://commons.wikimedia.org/wiki/File:Edmund_Dulac_-_Princess_and_pea.jpg"
+  },
+  "stray-birds": {
+    "file": "stray-birds.webp",
+    "kind": "art",
+    "credit": "Bird on a Tree, Abanindranath Tagore, undated (before 1951)",
+    "source": "https://commons.wikimedia.org/wiki/File:Abanindranath_Tagore_-_Bird_On_A_Tree_16-3x9-5_cm_-_Watercolour_-_Birds_And_Trees_-_ACCN_R_9201_-_Victoria_Memorial_Hall_-_Kolkata_2023-05-31_0304.jpg"
+  },
+  "tales-from-shakespeare": {
+    "file": "tales-from-shakespeare.webp",
+    "kind": "art",
+    "credit": "Where is Pease-blossom? (A Midsummer Night's Dream), plate for Tales from Shakespeare, Arthur Rackham, 1909",
+    "source": "https://commons.wikimedia.org/wiki/File:Lamb-p117.png"
+  },
+  "tess-of-the-durbervilles": {
+    "file": "tess-of-the-durbervilles.webp",
+    "kind": "art",
+    "credit": "The Milkmaid of Bordeaux, a painting completed in 1827 by Francisco Goya",
+    "source": "https://github.com/standardebooks/thomas-hardy_tess-of-the-durbervilles"
+  },
+  "the-adventures-of-pinocchio": {
+    "file": "the-adventures-of-pinocchio.webp",
+    "kind": "art",
+    "credit": "Little Girl with a Doll, a painting completed in 1863 by Gyula Benczúr",
+    "source": "https://github.com/standardebooks/carlo-collodi_the-adventures-of-pinocchio"
+  },
+  "the-adventures-of-tom-sawyer": {
+    "file": "the-adventures-of-tom-sawyer.webp",
+    "kind": "art",
+    "credit": "Boy Fishing, a painting completed in the 1860s by Eastman Johnson",
+    "source": "https://github.com/standardebooks/mark-twain_the-adventures-of-tom-sawyer"
+  },
+  "the-arabian-nights": {
+    "file": "the-arabian-nights.webp",
+    "kind": "art",
+    "credit": "The Prince on the enchanted horse, from Stories from the Arabian Nights, Edmund Dulac, 1907",
+    "source": "https://commons.wikimedia.org/wiki/File:Stories_from_the_Arabian_nights_-_London_1907_-_plate_27.jpg"
+  },
+  "the-call-of-the-wild": {
+    "file": "the-call-of-the-wild.webp",
+    "kind": "book",
+    "credit": "Cover of the Project Gutenberg edition",
+    "source": "https://www.gutenberg.org/ebooks/215"
+  },
+  "the-essays-of-francis-bacon": {
+    "file": "the-essays-of-francis-bacon.webp",
+    "kind": "art",
+    "credit": "Portrait of Francis Bacon, Paul van Somer (attributed), 1617",
+    "source": "https://commons.wikimedia.org/wiki/File:Somer_Francis_Bacon.jpg"
+  },
+  "the-four-million": {
+    "file": "the-four-million.webp",
+    "kind": "book",
+    "credit": "Cover of the Project Gutenberg edition",
+    "source": "https://www.gutenberg.org/ebooks/2776"
+  },
+  "the-great-gatsby": {
+    "file": "the-great-gatsby.webp",
+    "kind": "art",
+    "credit": "Joie de vivre, George Barbier, 1922",
+    "source": "https://commons.wikimedia.org/wiki/File:Joie_de_vivre_Falbalas_et_Fanfreluches_Falbalas_et_Fanfreluches_almanach_des_modes_pr%C3%A9sentes%2C_pass%C3%A9es_%26_futures_pour_1923%2C_2e_ann%C3%A9e_Le_gout_des_chales._France_XXe_si%C3%A8cle%2C_RP-P-2009-1932-5.jpg"
+  },
+  "the-happy-prince": {
+    "file": "the-happy-prince.webp",
+    "kind": "book",
+    "credit": "Cover of the Project Gutenberg edition",
+    "source": "https://www.gutenberg.org/ebooks/30120"
+  },
+  "the-hound-of-the-baskervilles": {
+    "file": "the-hound-of-the-baskervilles.webp",
+    "kind": "book",
+    "credit": "Cover of the Project Gutenberg edition",
+    "source": "https://www.gutenberg.org/ebooks/2852"
+  },
+  "the-invisible-man": {
+    "file": "the-invisible-man.webp",
+    "kind": "art",
+    "credit": "Village in the Snow, a painting completed in 1894 by Paul Gauguin",
+    "source": "https://github.com/standardebooks/h-g-wells_the-invisible-man"
+  },
+  "the-jungle-book": {
+    "file": "the-jungle-book.webp",
+    "kind": "art",
+    "credit": "The Day of Reckoning, a painting completed circa 1900 by Cuthbert Edmund Swan",
+    "source": "https://github.com/standardebooks/rudyard-kipling_the-jungle-book"
+  },
+  "the-little-red-hen": {
+    "file": "the-little-red-hen.webp",
+    "kind": "book",
+    "credit": "Cover of the Project Gutenberg edition",
+    "source": "https://www.gutenberg.org/ebooks/18735"
+  },
+  "the-memoirs-of-sherlock-holmes": {
+    "file": "the-memoirs-of-sherlock-holmes.webp",
+    "kind": "book",
+    "credit": "Cover of the Project Gutenberg edition",
+    "source": "https://www.gutenberg.org/ebooks/834"
+  },
+  "the-moon-and-sixpence": {
+    "file": "the-moon-and-sixpence.webp",
+    "kind": "book",
+    "credit": "Cover of the Project Gutenberg edition",
+    "source": "https://www.gutenberg.org/ebooks/222"
+  },
+  "the-picture-of-dorian-gray": {
+    "file": "the-picture-of-dorian-gray.webp",
+    "kind": "art",
+    "credit": "The Garden, a painting completed in 1899 by John Collier",
+    "source": "https://github.com/standardebooks/oscar-wilde_the-picture-of-dorian-gray"
+  },
+  "the-prince-and-the-pauper": {
+    "file": "the-prince-and-the-pauper.webp",
+    "kind": "book",
+    "credit": "Cover of the Project Gutenberg edition",
+    "source": "https://www.gutenberg.org/ebooks/1837"
+  },
+  "the-prophet": {
+    "file": "the-prophet.webp",
+    "kind": "art",
+    "credit": "The Arab Sage, a painting completed in the 19th century by An Unknown Artist",
+    "source": "https://github.com/standardebooks/kahlil-gibran_the-prophet"
+  },
+  "the-railway-children": {
+    "file": "the-railway-children.webp",
+    "kind": "art",
+    "credit": "La Gare de Saint-Lazare, a painting completed in 1877 by Claude Monet",
+    "source": "https://github.com/standardebooks/e-nesbit_the-railway-children"
+  },
+  "the-return-of-sherlock-holmes": {
+    "file": "the-return-of-sherlock-holmes.webp",
+    "kind": "book",
+    "credit": "Cover of the Project Gutenberg edition",
+    "source": "https://www.gutenberg.org/ebooks/108"
+  },
+  "the-scarlet-letter": {
+    "file": "the-scarlet-letter.webp",
+    "kind": "art",
+    "credit": "The Scarlet Letter, a painting completed in 1861 by Hugues Merle",
+    "source": "https://github.com/standardebooks/nathaniel-hawthorne_the-scarlet-letter"
+  },
+  "the-secret-garden": {
+    "file": "the-secret-garden.webp",
+    "kind": "art",
+    "credit": "Daubigny’s Garden, a painting completed in 1890 by Vincent van Gogh",
+    "source": "https://github.com/standardebooks/frances-hodgson-burnett_the-secret-garden"
+  },
+  "the-sign-of-the-four": {
+    "file": "the-sign-of-the-four.webp",
+    "kind": "book",
+    "credit": "Cover of the Project Gutenberg edition",
+    "source": "https://www.gutenberg.org/ebooks/2097"
+  },
+  "the-story-of-my-life": {
+    "file": "the-story-of-my-life.webp",
+    "kind": "art",
+    "credit": "Hope, a painting completed in 1886 by George Frederic Watts",
+    "source": "https://github.com/standardebooks/helen-keller_the-story-of-my-life"
+  },
+  "the-summers-first-reader": {
+    "file": "the-summers-first-reader.webp",
+    "kind": "book",
+    "credit": "Cover of the Project Gutenberg edition",
+    "source": "https://www.gutenberg.org/ebooks/67302"
+  },
+  "the-summers-primer": {
+    "file": "the-summers-primer.webp",
+    "kind": "art",
+    "credit": "Frontispiece of The Summers Readers: Primer, Lucy Fitch Perkins, 1908",
+    "source": "https://www.gutenberg.org/cache/epub/68453/images/illus01.jpg"
+  },
+  "the-tale-of-benjamin-bunny": {
+    "file": "the-tale-of-benjamin-bunny.webp",
+    "kind": "art",
+    "credit": "Illustration for The Tale of Benjamin Bunny, Beatrix Potter, 1904",
+    "source": "https://www.gutenberg.org/cache/epub/14407/images/28.jpg"
+  },
+  "the-tale-of-jemima-puddle-duck": {
+    "file": "the-tale-of-jemima-puddle-duck.webp",
+    "kind": "art",
+    "credit": "Frontispiece of The Tale of Jemima Puddle-Duck, Beatrix Potter, 1908",
+    "source": "https://commons.wikimedia.org/wiki/File:Jemima1.jpg"
+  },
+  "the-tale-of-mr-jeremy-fisher": {
+    "file": "the-tale-of-mr-jeremy-fisher.webp",
+    "kind": "book",
+    "credit": "Cover of the Project Gutenberg edition",
+    "source": "https://www.gutenberg.org/ebooks/15077"
+  },
+  "the-tale-of-mrs-tiggy-winkle": {
+    "file": "the-tale-of-mrs-tiggy-winkle.webp",
+    "kind": "art",
+    "credit": "Illustration from the Project Gutenberg edition",
+    "source": "https://www.gutenberg.org/ebooks/15137"
+  },
+  "the-tale-of-peter-rabbit": {
+    "file": "the-tale-of-peter-rabbit.webp",
+    "kind": "art",
+    "credit": "Illustration for The Tale of Peter Rabbit, Beatrix Potter, 1902",
+    "source": "https://www.gutenberg.org/cache/epub/14838/images/peter20.jpg"
+  },
+  "the-tale-of-squirrel-nutkin": {
+    "file": "the-tale-of-squirrel-nutkin.webp",
+    "kind": "art",
+    "credit": "Frontispiece of The Tale of Squirrel Nutkin, Beatrix Potter, 1903",
+    "source": "https://commons.wikimedia.org/wiki/File:Beatrix_Potter_Squirrel_Nutkin.jpg"
+  },
+  "the-tale-of-the-flopsy-bunnies": {
+    "file": "the-tale-of-the-flopsy-bunnies.webp",
+    "kind": "art",
+    "credit": "Illustration for The Tale of the Flopsy Bunnies, Beatrix Potter, 1909",
+    "source": "https://commons.wikimedia.org/wiki/File:Flopsy-bunnies-image005.jpg"
+  },
+  "the-tale-of-tom-kitten": {
+    "file": "the-tale-of-tom-kitten.webp",
+    "kind": "art",
+    "credit": "Illustration for The Tale of Tom Kitten, Beatrix Potter, 1907",
+    "source": "https://www.gutenberg.org/cache/epub/14837/images/tom20.jpg"
+  },
+  "the-tale-of-two-bad-mice": {
+    "file": "the-tale-of-two-bad-mice.webp",
+    "kind": "book",
+    "credit": "Cover of the Project Gutenberg edition",
+    "source": "https://www.gutenberg.org/ebooks/45264"
+  },
+  "the-time-machine": {
+    "file": "the-time-machine.webp",
+    "kind": "art",
+    "credit": "The Black Marble Clock, a painting completed circa 1870 by Paul Cézanne",
+    "source": "https://github.com/standardebooks/h-g-wells_the-time-machine"
+  },
+  "the-velveteen-rabbit": {
+    "file": "the-velveteen-rabbit.webp",
+    "kind": "art",
+    "credit": "Illustration for The Velveteen Rabbit, William Nicholson, 1922",
+    "source": "https://commons.wikimedia.org/wiki/File:The_Velveteen_Rabbit_pg_25.jpg"
+  },
+  "the-war-of-the-worlds": {
+    "file": "the-war-of-the-worlds.webp",
+    "kind": "book",
+    "credit": "Cover of the Project Gutenberg edition",
+    "source": "https://www.gutenberg.org/ebooks/36"
+  },
+  "the-wind-in-the-willows": {
+    "file": "the-wind-in-the-willows.webp",
+    "kind": "book",
+    "credit": "Cover of the Project Gutenberg edition",
+    "source": "https://www.gutenberg.org/ebooks/289"
+  },
+  "the-wonderful-wizard-of-oz": {
+    "file": "the-wonderful-wizard-of-oz.webp",
+    "kind": "book",
+    "credit": "Cover of the Project Gutenberg edition",
+    "source": "https://www.gutenberg.org/ebooks/55"
+  },
+  "treasure-island": {
+    "file": "treasure-island.webp",
+    "kind": "book",
+    "credit": "Cover of the Project Gutenberg edition",
+    "source": "https://www.gutenberg.org/ebooks/120"
+  },
+  "vanity-fair": {
+    "file": "vanity-fair.webp",
+    "kind": "art",
+    "credit": "A Woman of Ambition, a painting completed in 1885 by James Tissot",
+    "source": "https://github.com/standardebooks/william-makepeace-thackeray_vanity-fair"
+  },
+  "walden": {
+    "file": "walden.webp",
+    "kind": "book",
+    "credit": "Cover of the Project Gutenberg edition",
+    "source": "https://www.gutenberg.org/ebooks/205"
+  },
+  "war-and-peace": {
+    "file": "war-and-peace.webp",
+    "kind": "art",
+    "credit": "1807, Friedland, a painting completed between 1861 and 1875 by Ernest Meissonier",
+    "source": "https://github.com/standardebooks/leo-tolstoy_war-and-peace_louise-maude_aylmer-maude"
+  },
+  "white-fang": {
+    "file": "white-fang.webp",
+    "kind": "book",
+    "credit": "Cover of the Project Gutenberg edition",
+    "source": "https://www.gutenberg.org/ebooks/910"
+  },
+  "wuthering-heights": {
+    "file": "wuthering-heights.webp",
+    "kind": "art",
+    "credit": "Edith Villiers, a painting completed in 1862 by George Frederic Watts",
+    "source": "https://github.com/standardebooks/emily-bronte_wuthering-heights"
+  }
+}

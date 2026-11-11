@@ -131,6 +131,8 @@
     "readFree": "Readfox で無料で読む",
     "ctaNote": "単語をタップすると、あなたの言語で意味が表示されます。新しい単語を保存して、あとで復習できます。",
     "source": "出典：<link>{source}</link>。{license}。",
+    "coverAlt": "『{title}』の表紙",
+    "coverCredit": "表紙：<link>{credit}</link>。",
     "moreAtLevel": "レベル {level} の{language}の本をもっと見る",
     "allBooks": "すべての無料の本",
     "metaTitle": "{author}『{title}』を{language}で無料で読む | Readfox",

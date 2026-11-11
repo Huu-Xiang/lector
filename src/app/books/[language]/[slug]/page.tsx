@@ -44,6 +44,7 @@ function bookJsonLd(book: NonNullable<ReturnType<typeof findPublicBook>>) {
       : 'https://creativecommons.org/publicdomain/mark/1.0/',
     copyrightNotice: book.source.license,
     ...(book.source.url ? { isBasedOn: book.source.url } : {}),
+    ...(book.cover ? { image: `${SITE_ORIGIN}${book.cover.url}` } : {}),
   };
 }
 
@@ -114,35 +115,47 @@ export default async function BookPage({ params }: Props) {
     <LegalShell title={shown}>
       <JsonLd data={jsonLd} />
       <JsonLd data={breadcrumb} />
-      <div className="-mt-3 space-y-1 text-muted-foreground">
-        {shown !== book.title && <p className="text-base text-foreground">{book.title}</p>}
-        <p>
-          {authorBooks >= AUTHOR_PAGE_MIN_BOOKS ? (
+      <div className="-mt-3 flex items-start gap-4">
+        <div className="min-w-0 flex-1 space-y-1 text-muted-foreground">
+          {shown !== book.title && <p className="text-base text-foreground">{book.title}</p>}
+          <p>
+            {authorBooks >= AUTHOR_PAGE_MIN_BOOKS ? (
+              <Link
+                href={`/books/${language}/author/${authorSlug(book.author)}`}
+                className="hover:underline"
+              >
+                {t('byAuthor', { author: book.author })}
+              </Link>
+            ) : (
+              t('byAuthor', { author: book.author })
+            )}
+          </p>
+          <p className="flex flex-wrap gap-x-3">
             <Link
-              href={`/books/${language}/author/${authorSlug(book.author)}`}
-              className="hover:underline"
+              href={levelPath}
+              className="rounded bg-muted px-1.5 font-medium text-foreground hover:underline"
             >
-              {t('byAuthor', { author: book.author })}
+              {t('level', { level: book.level })}
             </Link>
-          ) : (
-            t('byAuthor', { author: book.author })
-          )}
-        </p>
-        <p className="flex flex-wrap gap-x-3">
-          <Link
-            href={levelPath}
-            className="rounded bg-muted px-1.5 font-medium text-foreground hover:underline"
-          >
-            {t('level', { level: book.level })}
-          </Link>
-          <span>{languageName}</span>
-          <span>{t('lessons', { count: book.lessonCount })}</span>
-          <span>
-            {hours >= 1
-              ? t('readingHours', { hours: Math.round(hours) })
-              : t('readingMinutes', { minutes: Math.max(5, Math.round(hours * 60)) })}
-          </span>
-        </p>
+            <span>{languageName}</span>
+            <span>{t('lessons', { count: book.lessonCount })}</span>
+            <span>
+              {hours >= 1
+                ? t('readingHours', { hours: Math.round(hours) })
+                : t('readingMinutes', { minutes: Math.max(5, Math.round(hours * 60)) })}
+            </span>
+          </p>
+        </div>
+        {book.cover && (
+          <img
+            src={book.cover.url}
+            alt={t('coverAlt', { title: book.title })}
+            width={480}
+            height={640}
+            data-testid="book-cover"
+            className="aspect-[3/4] h-auto w-24 shrink-0 rounded-md border object-cover shadow-sm sm:w-32"
+          />
+        )}
       </div>
 
       {blurb && <p className="text-base">{blurb}</p>}
@@ -210,6 +223,27 @@ export default async function BookPage({ params }: Props) {
           ),
           license: book.source.license,
         })}
+        {book.cover?.credit && (
+          <>
+            {' '}
+            {t.rich('coverCredit', {
+              credit: book.cover.credit,
+              link: (chunks) =>
+                book.cover?.source ? (
+                  <a
+                    className="underline"
+                    href={book.cover.source}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {chunks}
+                  </a>
+                ) : (
+                  chunks
+                ),
+            })}
+          </>
+        )}
       </p>
 
       {related.length > 0 && (

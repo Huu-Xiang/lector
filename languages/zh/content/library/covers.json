@@ -1,0 +1,50 @@
+{
+  "gushi-xin-dubo": {
+    "file": "gushi-xin-dubo.webp",
+    "kind": "book",
+    "credit": "Cover of the Project Gutenberg edition",
+    "source": "https://www.gutenberg.org/ebooks/67976"
+  },
+  "honglou-meng": {
+    "file": "honglou-meng.webp",
+    "kind": "art",
+    "credit": "Lin Daiyu, from 红楼梦图咏 (Portraits from Dream of the Red Chamber), Gai Qi, woodblock edition of 1879",
+    "source": "https://commons.wikimedia.org/wiki/File:Lin_Daiyu_Hongloumeng_Tuyong.jpg"
+  },
+  "jingshi-tongyan": {
+    "file": "jingshi-tongyan.webp",
+    "kind": "art",
+    "credit": "高山流水 (Lofty Mountains and Flowing Water), from the Figures and Stories album, Qiu Ying, c. 1540",
+    "source": "https://commons.wikimedia.org/wiki/File:%E4%BB%87%E8%8B%B1%E4%BA%BA%E7%89%A9%E6%95%85%E4%BA%8B%E5%9B%BE%E5%86%8C-4_(cropped).jpg"
+  },
+  "lunyu": {
+    "file": "lunyu.webp",
+    "kind": "art",
+    "credit": "至聖孔子 (Confucius, the Most Holy Sage), gouache on paper, anonymous, c. 1770",
+    "source": "https://commons.wikimedia.org/wiki/File:Konfuzius-1770.jpg"
+  },
+  "rulin-waishi": {
+    "file": "rulin-waishi.webp",
+    "kind": "art",
+    "credit": "观榜图 (Viewing the Pass List), detail, attributed to Qiu Ying, c. 1540",
+    "source": "https://commons.wikimedia.org/wiki/File:Civilserviceexam1.jpg"
+  },
+  "sanguo-yanyi": {
+    "file": "sanguo-yanyi.webp",
+    "kind": "art",
+    "credit": "桃园三结义 (The Oath of the Peach Garden), woodblock illustration from the Yu Xiangdou edition of the novel, anonymous, 1592",
+    "source": "https://commons.wikimedia.org/wiki/File:%E6%A1%83%E5%9B%AD%E4%B8%89%E7%BB%93%E4%B9%89%EF%BC%88%E4%BD%99%E8%B1%A1%E6%96%97%E8%AF%84%E6%9C%AC%EF%BC%89.png"
+  },
+  "shuihu-zhuan": {
+    "file": "shuihu-zhuan.webp",
+    "kind": "art",
+    "credit": "The Tattooed Priest Lu Zhishen (花和尚魯智深), Utagawa Kuniyoshi, c. 1843-1847",
+    "source": "https://commons.wikimedia.org/wiki/File:Utagawa_Kuniyoshi_Lu_Zhishen_el_monje_tatuado.jpg"
+  },
+  "xiyouji": {
+    "file": "xiyouji.webp",
+    "kind": "art",
+    "credit": "Sun Wukong (孙行者), from 西游原旨图像 (Illustrations for the Original Intent of the Journey to the West), anonymous, 19th century",
+    "source": "https://commons.wikimedia.org/wiki/File:Xiyou.PNG"
+  }
+}

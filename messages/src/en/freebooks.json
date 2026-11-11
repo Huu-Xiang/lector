@@ -131,6 +131,8 @@
     "readFree": "Read it free on Readfox",
     "ctaNote": "Tap any word for its meaning in your language. Save new words and review them later.",
     "source": "Source: <link>{source}</link>. {license}.",
+    "coverAlt": "Cover of {title}",
+    "coverCredit": "Cover: <link>{credit}</link>.",
     "moreAtLevel": "More {language} books at level {level}",
     "allBooks": "All free books",
     "metaTitle": "{title} by {author}: read it free in {language} | Readfox",

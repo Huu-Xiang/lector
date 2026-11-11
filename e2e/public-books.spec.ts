@@ -9,6 +9,11 @@ test.describe('public book pages', () => {
     await expect(page).toHaveURL(/\/books\/en\/walden$/);
     await expect(page.getByText('by Henry David Thoreau', { exact: true })).toBeVisible();
     await expect(page.getByText(/When I wrote the following pages/)).toBeVisible();
+    const cover = page.getByTestId('book-cover');
+    await expect(cover).toBeVisible();
+    await expect
+      .poll(() => cover.evaluate((img: HTMLImageElement) => img.naturalWidth))
+      .toBeGreaterThan(0);
     await expect(page.getByTestId('book-register')).toHaveAttribute(
       'href',
       '/register?book=en%2Fwalden',

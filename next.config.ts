@@ -46,6 +46,16 @@ const nextConfig: NextConfig = {
           { key: 'Permissions-Policy', value: 'camera=(), geolocation=(), payment=(self)' },
         ],
       },
+      {
+        // Free-library covers change rarely; a week saves 200 image requests per visit.
+        source: '/library-covers/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=604800, stale-while-revalidate=2592000',
+          },
+        ],
+      },
     ];
   },
   // Turbopack is the default in Next.js 16. Empty config silences the

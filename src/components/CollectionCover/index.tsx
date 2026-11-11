@@ -7,19 +7,46 @@ interface CollectionCoverProps {
   author?: string;
   /** A collection of one lesson is drawn as a page, not as a bound book. */
   article?: boolean;
+  /** A painting that carries no title; the cover sets the title over it. */
+  artUrl?: string;
   variant?: 'card' | 'thumb';
 }
 
-/** A drawn cover for a collection that has no cover image. The card repeats the title as text. */
+/**
+ * The cover of a collection that has no cover image of its own: a painting with the title set
+ * over it, or a drawn cover. The card repeats the title as text.
+ */
 export default function CollectionCover({
   seed,
   title,
   author,
   article = false,
+  artUrl,
   variant = 'card',
 }: CollectionCoverProps) {
   const theme = coverTheme(seed);
   const cloth = { backgroundColor: theme.background, color: theme.foreground };
+
+  if (artUrl) {
+    return (
+      <div
+        aria-hidden="true"
+        data-testid="collection-cover"
+        className="relative h-full w-full"
+        style={{ backgroundColor: theme.background }}
+      >
+        <img src={artUrl} alt="" loading="lazy" className="h-full w-full object-cover" />
+        {variant === 'card' && (
+          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/45 to-transparent px-3 pt-10 pb-3 text-[#fffdf7]">
+            <p className="line-clamp-3 font-serif text-base leading-snug font-bold text-balance">
+              {title}
+            </p>
+            {author && <p className="mt-1 line-clamp-1 text-xs opacity-90">{author}</p>}
+          </div>
+        )}
+      </div>
+    );
+  }
 
   if (variant === 'thumb') {
     return (

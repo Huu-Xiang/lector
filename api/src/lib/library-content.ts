@@ -1,7 +1,7 @@
 import { createHash } from 'crypto';
 import fs from 'fs';
 import path from 'path';
-import type { LanguageCode } from './languages';
+import { isValidLanguageCode, type LanguageCode } from './languages';
 import { lessonTextBytes } from './storage-limits';
 
 /**
@@ -28,6 +28,7 @@ export interface LibraryBookSummary {
   /** Title and one-line blurb keyed by native-language code; may be empty. */
   titles: Record<string, string>;
   blurbs: Record<string, string>;
+  cover: LibraryCover | null;
 }
 
 export interface LibraryBook extends LibraryBookSummary {
@@ -53,6 +54,59 @@ function libraryDir(language: LanguageCode): string {
 
 export const libraryCollectionIdFor = (language: string, slug: string) =>
   `library-${language}-${slug}`;
+
+export interface LibraryCover {
+  /** Site path of the image; the web app serves it from `public/library-covers`. */
+  url: string;
+  /** `book` is the edition's own cover. `art` is a painting, so the card adds the title. */
+  kind: 'book' | 'art';
+  credit: string;
+}
+
+type CoverEntry = { file?: unknown; kind?: unknown; credit?: unknown };
+
+/** One parsed `covers.json` per file; the library list asks for it once per collection. */
+const coverCache = new Map<string, { mtimeMs: number; covers: Record<string, LibraryCover> }>();
+
+/** Covers by slug, from `covers.json` beside the book folders. A book may have none. */
+export function libraryCovers(language: LanguageCode): Record<string, LibraryCover> {
+  const file = path.join(libraryDir(language), 'covers.json');
+  const stat = fs.statSync(file, { throwIfNoEntry: false });
+  if (!stat) return {};
+  const cached = coverCache.get(file);
+  if (cached && cached.mtimeMs === stat.mtimeMs) return cached.covers;
+  const covers: Record<string, LibraryCover> = {};
+  const entries = JSON.parse(fs.readFileSync(file, 'utf8')) as Record<string, CoverEntry>;
+  for (const [slug, entry] of Object.entries(entries)) {
+    if (!isLibrarySlug(slug) || typeof entry.file !== 'string') continue;
+    if (!/^[a-z0-9][a-z0-9-]*\.(jpg|webp|png)$/.test(entry.file)) continue;
+    covers[slug] = {
+      url: `/library-covers/${language}/${entry.file}`,
+      kind: entry.kind === 'art' ? 'art' : 'book',
+      credit: typeof entry.credit === 'string' ? entry.credit : '',
+    };
+  }
+  coverCache.set(file, { mtimeMs: stat.mtimeMs, covers });
+  return covers;
+}
+
+/** The cover of a collection that was added from the free library, by its id. */
+export function libraryCoverForCollection(id: string): LibraryCover | null {
+  const match = /^library-([a-z]{2,3})-(.+)$/.exec(id);
+  if (!match || !isValidLanguageCode(match[1])) return null;
+  return libraryCovers(match[1])[match[2]] ?? null;
+}
+
+/** Adds the library cover to a collection that stores none of its own. */
+export function withLibraryCover<T extends { id: string; coverUrl?: string | null }>(
+  collection: T,
+): T & { coverKind: LibraryCover['kind'] | null } {
+  if (collection.coverUrl) return { ...collection, coverKind: 'book' };
+  const cover = libraryCoverForCollection(collection.id);
+  return cover
+    ? { ...collection, coverUrl: cover.url, coverKind: cover.kind }
+    : { ...collection, coverKind: null };
+}
 
 export function libraryLessonIdFor(language: string, slug: string, sourceFile: string): string {
   const digest = createHash('sha256').update(`${slug}/${sourceFile}`).digest('hex');
@@ -135,6 +189,7 @@ function summarise(
   slug: string,
   manifest: Manifest,
   translations: Translations,
+  covers: Record<string, LibraryCover>,
 ): LibraryBookSummary {
   if (!Array.isArray(manifest.lessons) || manifest.lessons.length === 0) {
     throw new Error(`Library book '${slug}' has no lessons`);
@@ -151,6 +206,7 @@ function summarise(
     license: str(manifest.source?.license, 'license', slug),
     titles: translations[slug]?.title ?? {},
     blurbs: translations[slug]?.blurb ?? {},
+    cover: covers[slug] ?? null,
   };
 }
 
@@ -161,12 +217,18 @@ export function listLibraryBooks(language: LanguageCode): LibraryBookSummary[] {
   const dir = libraryDir(language);
   if (!fs.existsSync(dir)) return [];
   const translations = readTranslations(language);
+  const covers = libraryCovers(language);
   return fs
     .readdirSync(dir, { withFileTypes: true })
     .filter((entry) => entry.isDirectory() && isLibrarySlug(entry.name))
     .filter((entry) => fs.existsSync(path.join(dir, entry.name, 'manifest.json')))
     .map((entry) =>
-      summarise(entry.name, readManifest(path.join(dir, entry.name), entry.name), translations),
+      summarise(
+        entry.name,
+        readManifest(path.join(dir, entry.name), entry.name),
+        translations,
+        covers,
+      ),
     )
     .sort(
       (a, b) =>
@@ -180,7 +242,7 @@ export function loadLibraryBook(language: LanguageCode, slug: string): LibraryBo
   const bookDir = path.join(libraryDir(language), slug);
   if (!fs.existsSync(path.join(bookDir, 'manifest.json'))) return null;
   const manifest = readManifest(bookDir, slug);
-  const summary = summarise(slug, manifest, readTranslations(language));
+  const summary = summarise(slug, manifest, readTranslations(language), libraryCovers(language));
   const seen = new Set<string>();
   const lessons = manifest.lessons!.map((lesson) => {
     const file = str(lesson.file, 'lesson file', slug);

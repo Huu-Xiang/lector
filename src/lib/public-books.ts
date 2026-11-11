@@ -23,6 +23,14 @@ export interface PublicBook {
   blurbs: Record<string, string>;
   /** Built by scripts/build-hard-words.py; empty for Chinese and Korean. */
   hardWords: string[];
+  /** From `covers.json`. `credit` names the edition or the painting; `source` is where it is from. */
+  cover: { url: string; credit: string; source: string } | null;
+}
+
+interface CoverEntry {
+  file?: string;
+  credit?: string;
+  source?: string;
 }
 
 interface Manifest {
@@ -73,6 +81,7 @@ export function listPublicBooks(): PublicBook[] {
     if (!fs.existsSync(dir)) continue;
     const translations = readJson<Translations>(path.join(dir, 'translations.json')) ?? {};
     const hardWords = readJson<Record<string, string[]>>(path.join(dir, 'hard-words.json')) ?? {};
+    const covers = readJson<Record<string, CoverEntry>>(path.join(dir, 'covers.json')) ?? {};
     for (const slug of fs.readdirSync(dir).sort()) {
       const manifest = readJson<Manifest>(path.join(dir, slug, 'manifest.json'));
       if (!manifest || manifest.lessons.length === 0) continue;
@@ -89,6 +98,13 @@ export function listPublicBooks(): PublicBook[] {
         titles: translations[slug]?.title ?? {},
         blurbs: translations[slug]?.blurb ?? {},
         hardWords: hardWords[slug] ?? [],
+        cover: covers[slug]?.file
+          ? {
+              url: `/library-covers/${language}/${covers[slug].file}`,
+              credit: covers[slug].credit ?? '',
+              source: covers[slug].source ?? '',
+            }
+          : null,
       });
     }
   }

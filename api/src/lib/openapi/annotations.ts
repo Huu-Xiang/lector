@@ -194,6 +194,12 @@ export const schemas: Record<string, JsonSchema> = {
             type: 'number',
             description: 'Mean reading progress over its lessons, from 0 to 100.',
           },
+          coverKind: {
+            type: ['string', 'null'],
+            enum: ['book', 'art', null],
+            description:
+              'What `coverUrl` shows. `book` is a cover with its title; `art` is a painting, so the client adds the title. A free-library collection without a stored cover gets the cover of its book.',
+          },
           onlyLessonId: {
             ...NULLABLE_STRING,
             description: 'The lesson of a collection that holds exactly one; null otherwise.',
@@ -214,6 +220,12 @@ export const schemas: Record<string, JsonSchema> = {
           avgProgress: {
             type: 'number',
             description: 'Mean reading progress over its lessons, from 0 to 100.',
+          },
+          coverKind: {
+            type: ['string', 'null'],
+            enum: ['book', 'art', null],
+            description:
+              'What `coverUrl` shows. `book` is a cover with its title; `art` is a painting, so the client adds the title. A free-library collection without a stored cover gets the cover of its book.',
           },
         },
       },

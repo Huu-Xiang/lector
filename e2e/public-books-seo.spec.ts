@@ -10,7 +10,10 @@ test.describe('public book landing pages', () => {
     await expect(page.getByTestId('book-chapter')).toContainText(
       'When I wrote the following pages',
     );
-    await expect(page.getByTestId('book-chapter-register')).toHaveAttribute('href', '/register');
+    await expect(page.getByTestId('book-chapter-register')).toHaveAttribute(
+      'href',
+      '/register?book=en%2Fwalden',
+    );
   });
 
   test('the level chip opens the list of books at that level', async ({ page }) => {

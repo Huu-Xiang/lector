@@ -27,8 +27,9 @@ export default function CollectionCard({ collection }: CollectionCardProps) {
     ? formatLastRead(collection.lastReadAt, t)
     : t('notStarted');
 
+  const ownCover = collection.coverUrl && collection.coverKind !== 'art';
   const cover = (variant: 'card' | 'thumb') =>
-    collection.coverUrl ? (
+    ownCover ? (
       <img
         src={collection.coverUrl}
         alt={t('coverAlt', { title })}
@@ -41,6 +42,7 @@ export default function CollectionCard({ collection }: CollectionCardProps) {
         title={original ?? title}
         author={collection.author}
         article={article}
+        artUrl={collection.coverKind === 'art' ? collection.coverUrl : undefined}
         variant={variant}
       />
     );
@@ -125,7 +127,7 @@ export default function CollectionCard({ collection }: CollectionCardProps) {
 
         <div className="flex flex-1 flex-col p-3">
           <h3 className="line-clamp-2 text-sm font-semibold text-foreground">{title}</h3>
-          {collection.coverUrl && original && (
+          {ownCover && original && (
             <p className="line-clamp-1 text-xs text-muted-foreground">{original}</p>
           )}
           {collection.author && (
