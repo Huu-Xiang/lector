@@ -91,13 +91,17 @@ const OPTION_STYLES: Record<OptionState, string> = {
 
 function MeaningRows({ rows }: { rows: readonly SenseRow[] }) {
   return (
-    <span className="block min-w-0 space-y-1">
+    <span className="grid min-w-0 flex-1 grid-cols-[2.75rem_1fr] gap-x-1 gap-y-1.5">
       {rows.map((row) => (
-        <span key={row.p} className="block">
-          <span className="mr-1.5 text-sm font-medium text-muted-foreground">{row.p}</span>
-          <span lang="zh-CN">{row.zh.join('；')}</span>
-          <span lang="en" className="block text-sm leading-snug text-muted-foreground">
-            {row.en}
+        <span key={row.p} className="contents">
+          <span className="pt-0.5 text-sm text-muted-foreground">{row.p}</span>
+          <span className="min-w-0">
+            <span lang="zh-CN" className="block font-medium">
+              {row.zh.join('；')}
+            </span>
+            <span lang="en" className="block text-sm leading-snug text-muted-foreground">
+              {row.en}
+            </span>
           </span>
         </span>
       ))}
@@ -319,7 +323,7 @@ export default function VocabTest({
     const options = current ? [...current.meanings.map((rows) => ({ rows })), { rows: null }] : [];
     return (
       <section
-        className="space-y-4"
+        className="mx-auto max-w-2xl space-y-3"
         data-testid="vocab-test"
         // While feedback shows, a tap anywhere goes on to the next word and never answers it.
         onClickCapture={(event) => {
@@ -359,7 +363,7 @@ export default function VocabTest({
               {current.word}
             </p>
             <p className="mt-1 text-center text-sm text-muted-foreground">{t('chooseMeaning')}</p>
-            <ul className="mt-4 grid gap-2 text-left sm:grid-cols-2">
+            <ul className="mt-4 grid gap-2 text-left">
               {options.map((option, index) => {
                 const state = optionState(index, current, chosen);
                 return (
@@ -369,7 +373,7 @@ export default function VocabTest({
                       size="lg"
                       aria-disabled={phase !== 'asking'}
                       className={cn(
-                        'h-auto min-h-12 w-full items-start justify-start gap-2 py-2.5 text-left text-base font-normal whitespace-normal transition-colors motion-reduce:transition-none',
+                        'h-auto min-h-12 w-full items-start justify-start gap-3 px-3 py-3 text-left text-base font-normal whitespace-normal transition-colors motion-reduce:transition-none sm:px-4',
                         option.rows === null && 'items-center',
                         OPTION_STYLES[state],
                       )}
@@ -377,12 +381,12 @@ export default function VocabTest({
                       data-testid="vocab-option"
                       data-state={state}
                     >
-                      <span
-                        className="w-4 shrink-0 pt-0.5 text-sm text-muted-foreground"
+                      <kbd
+                        className="flex size-6 shrink-0 items-center justify-center rounded-md border border-border bg-background font-sans text-xs font-semibold text-muted-foreground"
                         aria-hidden="true"
                       >
                         {index + 1}
-                      </span>
+                      </kbd>
                       {option.rows ? (
                         <MeaningRows rows={option.rows} />
                       ) : (
@@ -397,11 +401,11 @@ export default function VocabTest({
               })}
             </ul>
             <Button
-              variant="secondary"
+              variant="outline"
               size="lg"
               aria-disabled={phase !== 'asking'}
               className={cn(
-                'mt-2 min-h-12 w-full gap-2 text-base transition-colors motion-reduce:transition-none',
+                'mt-2 min-h-12 w-full gap-2 border-dashed text-base text-muted-foreground transition-colors motion-reduce:transition-none',
                 answered &&
                   chosen === null &&
                   'border-2 border-answer-unsure-border! bg-answer-unsure!',
@@ -415,7 +419,7 @@ export default function VocabTest({
               {t('notSure')}
             </Button>
             {/* One fixed slot for the hint before an answer and the feedback after it. */}
-            <div className="mt-3 min-h-[4.5rem] text-sm" data-testid="vocab-feedback">
+            <div className="mt-3 min-h-12 text-center text-sm" data-testid="vocab-feedback">
               {answered ? (
                 <>
                   <p className="font-semibold">
@@ -423,8 +427,13 @@ export default function VocabTest({
                     <span className="ml-2 font-normal text-muted-foreground">{t('skipHint')}</span>
                   </p>
                   {current.answer === NONE_OF_ABOVE && (
-                    <div className="mt-1.5 flex gap-2" data-testid="vocab-true-meaning">
-                      <span className="shrink-0 text-muted-foreground">{t('trueMeaning')}</span>
+                    <div
+                      className="mx-auto mt-2 flex max-w-md gap-2 text-left"
+                      data-testid="vocab-true-meaning"
+                    >
+                      <span className="shrink-0 pt-0.5 text-muted-foreground">
+                        {t('trueMeaning')}
+                      </span>
                       <MeaningRows rows={current.senses} />
                     </div>
                   )}
@@ -646,7 +655,7 @@ function LivePanel({
 }) {
   const t = useTranslations('vocabTest');
   return (
-    <div className="rounded-2xl border border-border bg-card p-4" data-testid="vocab-live">
+    <div className="rounded-2xl border border-border bg-card p-3 sm:p-4" data-testid="vocab-live">
       <div className="flex items-baseline justify-between gap-3">
         <p className="font-semibold" aria-live="polite" data-testid="vocab-live-estimate">
           {live === null
