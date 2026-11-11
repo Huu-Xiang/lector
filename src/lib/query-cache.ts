@@ -15,6 +15,7 @@
 
 import {
   dropOtherTenantRecords,
+  keepNewestRecords,
   readRecord,
   removeRecords,
   wipeRecords,
@@ -245,6 +246,10 @@ export function clearQueryCache(): void {
   pendingRefresh.clear();
   if (refreshTimer !== null) clearTimeout(refreshTimer);
   refreshTimer = null;
+}
+
+export function keepNewestQueries(match: QueryMatch, head: string, keep: number): void {
+  keepNewestRecords(match, head, keep);
 }
 
 export function dropOtherUsersRecords(tenant: string): void {

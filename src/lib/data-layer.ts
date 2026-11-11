@@ -20,6 +20,7 @@ import {
   cachedQuery,
   clearTenantQueries,
   invalidateQueries,
+  keepNewestQueries,
   peekQuery,
   type QueryKey,
 } from './query-cache';
@@ -73,6 +74,8 @@ const JOURNAL_QUERY_SCOPE = 'journal';
 const REVIEW_QUERY_SCOPE = 'review';
 const SETTINGS_QUERY_SCOPE = 'settings';
 const FEED_QUERY_SCOPE = 'feed';
+const LESSONS_QUERY_SCOPE = 'lessons';
+const REMEMBERED_LESSONS = 5;
 const PERSIST = { persist: true } as const;
 
 /** Cache scopes a page subscribes to with `useQueryRefresh`. */
@@ -88,6 +91,7 @@ export const QUERY_SCOPES = {
   review: REVIEW_QUERY_SCOPE,
   settings: SETTINGS_QUERY_SCOPE,
   feed: FEED_QUERY_SCOPE,
+  lessons: LESSONS_QUERY_SCOPE,
   onboarding: 'onboarding',
 } as const;
 
@@ -118,6 +122,19 @@ function invalidateReview(): void {
 
 function invalidateSettings(): void {
   invalidateActiveScope(SETTINGS_QUERY_SCOPE);
+}
+
+function invalidateLessons(): void {
+  invalidateActiveScope(LESSONS_QUERY_SCOPE);
+}
+
+/** Pass `fresh` where a stale value would mislead, e.g. a transcription poll. */
+export interface ReadOptions {
+  fresh?: boolean;
+}
+
+function persisted(options?: ReadOptions) {
+  return { persist: true, forceFresh: options?.fresh ?? false } as const;
 }
 
 function invalidateDailyStats(): void {
@@ -212,10 +229,24 @@ export function peekAllCollections(): Collection[] | undefined {
   return peekQuery(activeLanguageQueryKey(COLLECTIONS_QUERY_SCOPE));
 }
 
-export async function getCollection(id: string): Promise<Collection | undefined> {
-  const res = await apiFetch(`/api/collections/${id}`);
-  if (!res.ok) return undefined;
-  return res.json();
+export async function getCollection(
+  id: string,
+  options?: ReadOptions,
+): Promise<Collection | undefined> {
+  return cachedQuery(
+    activeTenantQueryKey(COLLECTIONS_QUERY_SCOPE, ['one', id]),
+    async () => {
+      const res = await apiFetch(`/api/collections/${id}`);
+      if (res.status === 404) return undefined;
+      await requireOk(res, 'Could not load the book');
+      return (await res.json()) as Collection;
+    },
+    persisted(options),
+  );
+}
+
+export function peekCollection(id: string): Collection | undefined {
+  return peekQuery(activeTenantQueryKey(COLLECTIONS_QUERY_SCOPE, ['one', id]));
 }
 
 export async function createCollection(data: {
@@ -323,15 +354,45 @@ export async function deleteGroup(id: string): Promise<void> {
 // Helper Functions - Lessons
 // ============================================================================
 
-export async function getLessonsForCollection(collectionId: string): Promise<LessonSummary[]> {
-  const res = await apiFetch(`/api/collections/${collectionId}/lessons`);
-  return res.json();
+export async function getLessonsForCollection(
+  collectionId: string,
+  options?: ReadOptions,
+): Promise<LessonSummary[]> {
+  return cachedQuery(
+    activeTenantQueryKey(LESSONS_QUERY_SCOPE, ['list', collectionId]),
+    async () => {
+      const res = await apiFetch(`/api/collections/${collectionId}/lessons`);
+      await requireOk(res, 'Could not load the chapters');
+      return (await res.json()) as LessonSummary[];
+    },
+    persisted(options),
+  );
 }
 
-export async function getLesson(id: string): Promise<Lesson | undefined> {
-  const res = await apiFetch(`/api/lessons/${id}`);
-  if (!res.ok) return undefined;
-  return res.json();
+export function peekLessonsForCollection(collectionId: string): LessonSummary[] | undefined {
+  return peekQuery(activeTenantQueryKey(LESSONS_QUERY_SCOPE, ['list', collectionId]));
+}
+
+export async function getLesson(id: string, options?: ReadOptions): Promise<Lesson | undefined> {
+  const lesson = await cachedQuery(
+    activeTenantQueryKey(LESSONS_QUERY_SCOPE, ['lesson', id]),
+    async () => {
+      const res = await apiFetch(`/api/lessons/${id}`);
+      if (res.status === 404) return undefined;
+      await requireOk(res, 'Could not load the lesson');
+      return (await res.json()) as Lesson;
+    },
+    persisted(options),
+  );
+  const tenant = activeTenantId();
+  if (tenant !== null) {
+    keepNewestQueries({ tenant, scope: LESSONS_QUERY_SCOPE }, 'lesson', REMEMBERED_LESSONS);
+  }
+  return lesson;
+}
+
+export function peekLesson(id: string): Lesson | undefined {
+  return peekQuery(activeTenantQueryKey(LESSONS_QUERY_SCOPE, ['lesson', id]));
 }
 
 export async function addLessonToCollection(
@@ -346,6 +407,7 @@ export async function addLessonToCollection(
   if (!res.ok) throw await apiError(res, 'Could not create lesson');
   const { id } = await res.json();
   invalidateCollections();
+  invalidateLessons();
   invalidateReadingStats();
   return id;
 }
@@ -360,6 +422,7 @@ export async function updateLesson(
     body: JSON.stringify(data),
   });
   await requireOk(res, 'Could not update lesson');
+  invalidateLessons();
   invalidateReadingStats();
   // An edit can add words the cached readings have no entry for, so drop them
   // and let the reader fetch the set for the new text (#289 4.4).
@@ -370,6 +433,7 @@ export async function deleteLesson(id: string): Promise<void> {
   const res = await apiFetch(`/api/lessons/${id}`, { method: 'DELETE' });
   await requireOk(res, 'Could not delete lesson');
   invalidateCollections();
+  invalidateLessons();
   invalidateReadingStats();
 }
 
@@ -380,6 +444,7 @@ export async function reorderLessons(collectionId: string, ids: string[]): Promi
     body: JSON.stringify({ ids }),
   });
   await requireOk(res, 'Could not reorder lessons');
+  invalidateLessons();
 }
 
 export async function updateLessonProgress(
@@ -395,6 +460,7 @@ export async function updateLessonProgress(
   // failure must not interrupt reading or create an unhandled rejection.
   if (res.ok) {
     invalidateCollections();
+    invalidateLessons();
     invalidateReadingStats();
   }
   return res.ok;
@@ -423,6 +489,7 @@ export async function importEpub(
   }
   const imported = await res.json();
   invalidateCollections();
+  invalidateLessons();
   invalidateReadingStats();
   return imported;
 }
@@ -453,6 +520,7 @@ export async function importAudio(
   }
   const imported = await res.json();
   invalidateCollections();
+  invalidateLessons();
   invalidateReadingStats();
   return imported;
 }
@@ -473,6 +541,7 @@ export async function retryTranscription(lessonId: string): Promise<void> {
   const res = await apiFetch(`/api/lessons/${lessonId}/retry-transcription`, { method: 'POST' });
   await requireOk(res, 'Could not retry transcription');
   invalidateCollections();
+  invalidateLessons();
 }
 
 export async function createStandaloneLesson(data: {
@@ -562,6 +631,7 @@ export async function importYouTubeTranscript(input: {
   if (!res.ok) throw await apiError(res, 'Could not import the transcript');
   const imported = await res.json();
   invalidateCollections();
+  invalidateLessons();
   invalidateReadingStats();
   return imported;
 }
@@ -845,14 +915,31 @@ export async function updateWordState(word: string, state: WordState): Promise<b
       language: getActiveLanguage(),
     }),
   });
-  if (res.ok) invalidateFluencyStats();
+  if (res.ok) {
+    invalidateFluencyStats();
+    invalidateActiveScope(VOCAB_QUERY_SCOPE);
+  }
   return res.ok;
 }
 
 export async function getKnownWordsMap(): Promise<Map<string, WordState>> {
-  const res = await apiFetch(`/api/known-words${langParam()}`);
-  const data = await res.json();
-  return new Map(Object.entries(data) as [string, WordState][]);
+  const data = await cachedQuery(
+    activeLanguageQueryKey(VOCAB_QUERY_SCOPE, ['known']),
+    async () => {
+      const res = await apiFetch(`/api/known-words${langParam()}`);
+      await requireOk(res, 'Could not load word states');
+      return (await res.json()) as Record<string, WordState>;
+    },
+    PERSIST,
+  );
+  return new Map(Object.entries(data ?? {}));
+}
+
+export function peekKnownWordsMap(): Map<string, WordState> | undefined {
+  const data = peekQuery<Record<string, WordState>>(
+    activeLanguageQueryKey(VOCAB_QUERY_SCOPE, ['known']),
+  );
+  return data ? new Map(Object.entries(data)) : undefined;
 }
 
 // ============================================================================
@@ -921,6 +1008,7 @@ export async function bulkUpdateWordStates(
   });
   await requireOk(res, 'Could not update known words');
   invalidateFluencyStats();
+  invalidateActiveScope(VOCAB_QUERY_SCOPE);
 }
 
 // ============================================================================

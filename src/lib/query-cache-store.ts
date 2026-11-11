@@ -108,6 +108,22 @@ export function removeRecords(match: QueryMatch): void {
   });
 }
 
+/** Keep only the `keep` most recently saved records whose key params start with `head`. */
+export function keepNewestRecords(match: QueryMatch, head: string, keep: number): void {
+  const found: { storageKey: string; savedAt: number }[] = [];
+  forEachRecord((storageKey, record) => {
+    if (!record || record.k.params?.[0] !== head) return false;
+    if (match.scope !== undefined && record.k.scope !== match.scope) return false;
+    if (match.tenant !== undefined && record.k.tenant !== match.tenant) return false;
+    found.push({ storageKey, savedAt: record.s });
+    return false;
+  });
+  const store = storage();
+  if (!store) return;
+  found.sort((a, b) => b.savedAt - a.savedAt);
+  for (const { storageKey } of found.slice(keep)) remove(store, storageKey);
+}
+
 export function dropOtherTenantRecords(tenant: string): void {
   forEachRecord((_, record) => !record || record.k.tenant !== tenant);
 }

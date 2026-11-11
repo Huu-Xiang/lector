@@ -7,7 +7,8 @@ import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { ArrowLeft, Pencil, Plus, Trash2 } from 'lucide-react';
 import LessonFormModal from '@/components/LessonFormModal';
-import { ReadingSweep } from '@/components/Loaders';
+import PageOutline from '@/components/PageOutline';
+import { useQueryRefresh } from '@/lib/use-query-refresh';
 import {
   DndContext,
   closestCenter,
@@ -36,6 +37,11 @@ import {
   getAllGroups,
   createGroup,
   retryTranscription,
+  peekAllCollections,
+  peekAllGroups,
+  peekCollection,
+  peekLessonsForCollection,
+  QUERY_SCOPES,
   type Collection,
   type CollectionGroup,
   type LessonSummary,
@@ -50,15 +56,19 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
   const t = useTranslations('library');
   const { id } = use(params);
   const router = useRouter();
-  const [collection, setCollection] = useState<Collection | null>(null);
+  const [collection, setCollection] = useState<Collection | null>(
+    () => peekCollection(id) ?? peekAllCollections()?.find((c) => c.id === id) ?? null,
+  );
   const shownTitle = useCollectionDisplay({
     id: collection?.id ?? '',
     title: collection?.title ?? '',
     language: collection?.language,
   }).title;
-  const [lessons, setLessons] = useState<LessonSummary[]>([]);
-  const [groups, setGroups] = useState<CollectionGroup[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [lessons, setLessons] = useState<LessonSummary[]>(() => peekLessonsForCollection(id) ?? []);
+  const [groups, setGroups] = useState<CollectionGroup[]>(() => peekAllGroups() ?? []);
+  const [isLoading, setIsLoading] = useState(
+    () => peekCollection(id) === undefined || peekLessonsForCollection(id) === undefined,
+  );
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editingLessonId, setEditingLessonId] = useState<string | null>(null);
@@ -77,6 +87,11 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
   const editInitial = useMemo(
     () => (collection ? { title: collection.title, author: collection.author } : null),
     [collection],
+  );
+
+  const [reloads, setReloads] = useState(0);
+  useQueryRefresh([QUERY_SCOPES.collections, QUERY_SCOPES.lessons, QUERY_SCOPES.groups], () =>
+    setReloads((n) => n + 1),
   );
 
   useEffect(() => {
@@ -101,7 +116,7 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
       }
     }
     load();
-  }, [id, router]);
+  }, [id, router, reloads]);
 
   async function handleDelete() {
     if (!confirm(t('collection.deleteConfirm'))) return;
@@ -148,7 +163,7 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
     if (!hasTranscribing) return;
     const timer = setInterval(async () => {
       try {
-        setLessons(await getLessonsForCollection(id));
+        setLessons(await getLessonsForCollection(id, { fresh: true }));
       } catch {
         /* transient — next tick retries */
       }
@@ -171,7 +186,7 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
   }
 
   async function openEditLesson(lessonId: string) {
-    const lesson = await getLesson(lessonId);
+    const lesson = await getLesson(lessonId, { fresh: true });
     if (!lesson) return;
     setEditingInitial({ title: lesson.title, textContent: lesson.textContent ?? '' });
     setEditingLessonId(lessonId);
@@ -235,9 +250,8 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
   if (isLoading) {
     return (
       <main className="mx-auto max-w-4xl px-4 py-8 sm:px-6">
-        <div className="flex h-64 items-center justify-center">
-          <ReadingSweep label={t('collection.loading')} />
-        </div>
+        {collection && <h1 className="mb-8 text-3xl font-bold text-foreground">{shownTitle}</h1>}
+        <PageOutline variant="list" />
       </main>
     );
   }

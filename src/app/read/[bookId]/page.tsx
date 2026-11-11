@@ -4,7 +4,8 @@ import { forgetLesson, rememberLesson } from '@/lib/offline/sync';
 import { useEffect, useState, useCallback, use, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { PageTurn } from '@/components/Loaders';
+import PageOutline from '@/components/PageOutline';
+import { useQueryRefresh } from '@/lib/use-query-refresh';
 import MarkdownReader from '@/components/MarkdownReader';
 import OnboardingCoach from '@/components/OnboardingCoach';
 import TranslationDrawer, { TranslationDrawerSlot } from '@/components/TranslationDrawer';
@@ -24,6 +25,10 @@ import {
   lessonAudioUrl,
   retryTranscription,
   getKnownWordsMap,
+  peekKnownWordsMap,
+  peekLesson,
+  peekLessonsForCollection,
+  QUERY_SCOPES,
   saveVocab,
   updateVocabEntry,
   getSetting,
@@ -96,6 +101,22 @@ function isContentFiltered(err: unknown): boolean {
   return err instanceof Error && err.message === CONTENT_FILTERED;
 }
 
+/** A remembered lesson, shown at once only when its word states are remembered too. */
+function rememberedLesson(lessonId: string): Lesson | null {
+  const lesson = peekLesson(lessonId);
+  return lesson && peekKnownWordsMap() ? lesson : null;
+}
+
+/** A refreshed copy of the open lesson keeps its reading position, so the page never jumps. */
+function keepProgress(current: Lesson | null, next: Lesson): Lesson {
+  if (!current || current.id !== next.id) return next;
+  return {
+    ...next,
+    progress_scrollPosition: current.progress_scrollPosition,
+    progress_percentComplete: current.progress_percentComplete,
+  };
+}
+
 export default function ReadPage({ params }: { params: Promise<{ bookId: string }> }) {
   const { bookId: lessonId } = use(params);
   const t = useTranslations('reader.page');
@@ -104,7 +125,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
   const ankiTransport = useAnkiTransport();
   const ankiHidden = useLectorMode() === 'cloud';
 
-  const [lesson, setLesson] = useState<Lesson | null>(null);
+  const [lesson, setLesson] = useState<Lesson | null>(() => rememberedLesson(lessonId));
   // The LESSON's pack, not the active one — same precedent as MarkdownReader.
   // An Anki export needs it (#289 4.7): a Chinese lesson read while the client
   // thinks the active language is spaced would take the regex path and throw.
@@ -112,13 +133,18 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     lesson?.language && isValidLanguageCode(lesson.language)
       ? getLanguageConfig(lesson.language)
       : activeLang;
-  const [siblings, setSiblings] = useState<LessonSummary[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [siblings, setSiblings] = useState<LessonSummary[]>(() => {
+    const collectionId = rememberedLesson(lessonId)?.collectionId;
+    return (collectionId && peekLessonsForCollection(collectionId)) || [];
+  });
+  const [isLoading, setIsLoading] = useState(() => rememberedLesson(lessonId) === null);
   const [error, setError] = useState<string | null>(null);
   // Listen-along (#185): the audio lesson's transcript segments + mode toggle.
   const [segments, setSegments] = useState<AudioTranscriptSegment[]>([]);
   const [listenMode, setListenMode] = useState(false);
-  const [readerWordStates, setReaderWordStates] = useState<Map<string, WordState>>(new Map());
+  const [readerWordStates, setReaderWordStates] = useState<Map<string, WordState>>(
+    () => peekKnownWordsMap() ?? new Map(),
+  );
   const readerWordStatesRef = useRef(readerWordStates);
   const readerWordStateLoadRef = useRef<{
     key: string;
@@ -189,7 +215,16 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
   useEffect(() => {
     async function loadLesson() {
       try {
-        setIsLoading(true);
+        const remembered = rememberedLesson(lessonId);
+        const rememberedStates = peekKnownWordsMap();
+        if (remembered && rememberedStates) {
+          readerWordStatesRef.current = rememberedStates;
+          setReaderWordStates(rememberedStates);
+          setLesson((current) => keepProgress(current, remembered));
+          setIsLoading(false);
+        } else {
+          setIsLoading(true);
+        }
         const wordStateKey = `${lessonId}:${activeLang.code}`;
         if (readerWordStateLoadRef.current?.key !== wordStateKey) {
           readerWordStateLoadRef.current = {
@@ -211,7 +246,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
 
         readerWordStatesRef.current = loadedWordStates;
         setReaderWordStates(loadedWordStates);
-        setLesson(loadedLesson);
+        setLesson((current) => keepProgress(current, loadedLesson));
 
         // Load sibling lessons for prev/next navigation
         if (loadedLesson.collectionId) {
@@ -228,6 +263,24 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
 
     loadLesson();
   }, [activeLang.code, lessonId, t]);
+  useQueryRefresh([QUERY_SCOPES.lessons, QUERY_SCOPES.vocab], () => {
+    getLesson(lessonId)
+      .then((updated) => {
+        if (updated) {
+          setLesson((current) => keepProgress(current, updated));
+          return;
+        }
+        void forgetLesson(lessonId);
+        setError(t('lessonNotFound'));
+      })
+      .catch(() => undefined);
+    getKnownWordsMap()
+      .then((map) => {
+        readerWordStatesRef.current = map;
+        setReaderWordStates(map);
+      })
+      .catch(() => undefined);
+  });
 
   // Null until the setting has loaded, and after a failed read: a lookup never saves then.
   const [autoSaveLookups, setAutoSaveLookups] = useState<boolean | null>(null);
@@ -274,7 +327,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     if (transcriptionStatus !== 'pending' && transcriptionStatus !== 'processing') return;
     const timer = setInterval(async () => {
       try {
-        const updated = await getLesson(lessonId);
+        const updated = await getLesson(lessonId, { fresh: true });
         if (updated && updated.transcriptionStatus !== transcriptionStatus) setLesson(updated);
       } catch {
         /* transient — next tick retries */
@@ -286,7 +339,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
   async function handleRetryTranscription() {
     try {
       await retryTranscription(lessonId);
-      const updated = await getLesson(lessonId);
+      const updated = await getLesson(lessonId, { fresh: true });
       if (updated) setLesson(updated);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : t('retryFailed'));
@@ -1381,11 +1434,8 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-card">
-        <div className="flex flex-col items-center gap-4">
-          <PageTurn />
-          <p className="text-muted-foreground">{t('loading')}</p>
-        </div>
+      <div className="min-h-screen bg-card px-4 py-10 sm:px-6">
+        <PageOutline variant="text" />
       </div>
     );
   }
