@@ -1,6 +1,6 @@
 import '../test-guard';
 import { afterEach, beforeEach, describe, expect, test } from 'bun:test';
-import { db } from '../db';
+import { backfillReadingFeedCovers, db } from '../db';
 import app from './reading-feed';
 import { pruneReadingFeed, upsertReadingFeedArticle } from '../lib/reading-feed/store';
 import {
@@ -39,7 +39,7 @@ function reset() {
   db.prepare('DELETE FROM reading_feed').run();
 }
 
-function seedArticle() {
+function seedArticle(text = 'word '.repeat(300)) {
   upsertReadingFeedArticle({
     language: 'en',
     interest: 'news',
@@ -50,7 +50,7 @@ function seedArticle() {
     license: 'CC BY 3.0',
     licenseUrl: 'https://creativecommons.org/licenses/by/3.0/',
     publishedAt: '2026-01-01T00:00:00.000Z',
-    text: 'word '.repeat(300),
+    text,
     wordCount: 300,
     level: 'B1',
     fetchedAt: '2026-01-01T00:00:00.000Z',
@@ -105,6 +105,40 @@ describe('reading-feed route', () => {
     const again = await addArticle({ id });
     expect(await again.json()).toMatchObject({ added: false, reason: 'already-added' });
     expect((db.prepare('SELECT COUNT(*) AS n FROM lessons').get() as { n: number }).n).toBe(1);
+  });
+
+  test('the first picture of the article becomes the cover of the saved copy', async () => {
+    const { id } = seedArticle(
+      `![A kite](https://example.com/kite.jpg)\n\n${'word '.repeat(300)}\n\n![](https://example.com/b.jpg)`,
+    );
+    await addArticle({ id });
+    const row = db
+      .prepare('SELECT coverUrl FROM collections WHERE id = ?')
+      .get(`reading-feed-${id}`) as { coverUrl: string | null };
+    expect(row.coverUrl).toBe('https://example.com/kite.jpg');
+  });
+
+  test('an article without a picture is saved without a cover', async () => {
+    const { id } = seedArticle();
+    await addArticle({ id });
+    const row = db
+      .prepare('SELECT coverUrl FROM collections WHERE id = ?')
+      .get(`reading-feed-${id}`) as { coverUrl: string | null };
+    expect(row.coverUrl).toBeNull();
+  });
+
+  test('the backfill gives an article saved before covers the picture in its text', async () => {
+    const { id } = seedArticle(`![](https://example.com/old.jpg)\n\n${'word '.repeat(300)}`);
+    await addArticle({ id });
+    const collectionId = `reading-feed-${id}`;
+    db.prepare('UPDATE collections SET coverUrl = NULL WHERE id = ?').run(collectionId);
+
+    backfillReadingFeedCovers(db);
+    backfillReadingFeedCovers(db);
+    const row = db.prepare('SELECT coverUrl FROM collections WHERE id = ?').get(collectionId) as {
+      coverUrl: string | null;
+    };
+    expect(row.coverUrl).toBe('https://example.com/old.jpg');
   });
 
   test('rejects a bad body and an unknown article', async () => {

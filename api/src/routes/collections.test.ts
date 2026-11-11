@@ -93,6 +93,10 @@ describe('collections route', () => {
       insertCollection('own', { sortOrder: 2 });
       db.prepare("UPDATE collections SET coverUrl = '/covers/own.jpg' WHERE id = 'own'").run();
       insertCollection('plain', { sortOrder: 3 });
+      insertCollection('reading-feed-abc', { sortOrder: 4 });
+      db.prepare(
+        "UPDATE collections SET coverUrl = 'https://example.com/kite.jpg' WHERE id = 'reading-feed-abc'",
+      ).run();
 
       const list = (await (await app.request('/')).json()) as {
         id: string;
@@ -105,6 +109,7 @@ describe('collections route', () => {
         'library-af-bad-file': [null, null],
         own: ['/covers/own.jpg', 'book'],
         plain: [null, null],
+        'reading-feed-abc': ['https://example.com/kite.jpg', 'art'],
       });
 
       const detail = (await (await app.request('/library-af-die-boek')).json()) as {

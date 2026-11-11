@@ -2030,7 +2030,8 @@
       "captionsCreator": "제작자 자막",
       "openOnYouTube": "YouTube에서 열기",
       "playFromHere": "여기서부터 재생",
-      "playFrom": "{time}부터 재생"
+      "playFrom": "{time}부터 재생",
+      "openLink": "새 탭에서 원래 링크 열기"
     },
     "drawer": {
       "wordDefinition": "단어 뜻",

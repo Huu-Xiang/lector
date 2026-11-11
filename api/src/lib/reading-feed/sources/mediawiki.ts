@@ -22,6 +22,7 @@ interface ExtractPage {
   extract?: string;
   fullurl?: string;
   missing?: string;
+  thumbnail?: { source?: string };
 }
 
 // Random main-namespace pages, not a search query, so the sample rotates with
@@ -48,7 +49,7 @@ async function fetchExtractOne(
   variant?: string,
 ): Promise<ExtractPage | null> {
   const variantParam = variant ? `&variant=${variant}` : '';
-  const url = `https://${host}/w/api.php?action=query&prop=extracts|info&explaintext=1&inprop=url&pageids=${pageId}&format=json${variantParam}`;
+  const url = `https://${host}/w/api.php?action=query&prop=extracts|info|pageimages&explaintext=1&inprop=url&piprop=thumbnail&pithumbsize=640&pageids=${pageId}&format=json${variantParam}`;
   const data = (await fetchJson(fetchImpl, url)) as {
     query?: { pages?: Record<string, ExtractPage> };
   };
@@ -94,7 +95,10 @@ function makeMediaWikiSource(wiki: MediaWikiWikiConfig): ReadingFeedSource {
           license: wiki.license,
           licenseUrl: wiki.licenseUrl,
           publishedAt: now,
-          text: page.extract!,
+          // The page image leads the text, so the reader shows it and a saved copy uses it as cover.
+          text: page.thumbnail?.source?.startsWith('https://')
+            ? `![](${page.thumbnail.source})\n\n${page.extract!}`
+            : page.extract!,
         }));
     },
   };

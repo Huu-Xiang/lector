@@ -45,7 +45,8 @@
       "captionsCreator": "作者提供的字幕",
       "openOnYouTube": "在 YouTube 上打开",
       "playFromHere": "从这里播放",
-      "playFrom": "从 {time} 开始播放"
+      "playFrom": "从 {time} 开始播放",
+      "openLink": "在新标签页打开原链接"
     },
     "drawer": {
       "wordDefinition": "单词释义",

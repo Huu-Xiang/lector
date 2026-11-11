@@ -4,6 +4,7 @@ import fs from 'fs';
 import { randomUUID } from 'crypto';
 import { parseEpub } from './lib/epub-parser';
 import { countWords } from './lib/html-to-markdown';
+import { firstMarkdownImage } from './lib/markdown-image';
 import {
   DEFAULT_LANGUAGE,
   foldWord,
@@ -1003,7 +1004,27 @@ function getDb(): Database {
   // migrateAddLanguageColumn (needs the language columns it reads).
   migrateEnabledLanguages(_db);
 
+  backfillReadingFeedCovers(_db);
+
   return _db;
+}
+
+/** Saved feed articles from before covers were stored take the first picture of their text. */
+export function backfillReadingFeedCovers(database: Database) {
+  const rows = database
+    .prepare(
+      `SELECT c.id, c.userId, l.textContent FROM collections c
+         JOIN lessons l ON l.collectionId = c.id AND l.userId = c.userId
+        WHERE c.id LIKE 'reading-feed-%' AND c.coverUrl IS NULL`,
+    )
+    .all() as Array<{ id: string; userId: string; textContent: string }>;
+  const update = database.prepare(
+    'UPDATE collections SET coverUrl = ? WHERE id = ? AND userId = ?',
+  );
+  for (const row of rows) {
+    const cover = firstMarkdownImage(row.textContent ?? '');
+    if (cover) update.run(cover, row.id, row.userId);
+  }
 }
 
 // Tables whose rows carry the language they belong to. The backfill below reads

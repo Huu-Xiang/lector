@@ -101,7 +101,10 @@ export function libraryCoverForCollection(id: string): LibraryCover | null {
 export function withLibraryCover<T extends { id: string; coverUrl?: string | null }>(
   collection: T,
 ): T & { coverKind: LibraryCover['kind'] | null } {
-  if (collection.coverUrl) return { ...collection, coverKind: 'book' };
+  if (collection.coverUrl) {
+    const article = collection.id.startsWith('reading-feed-');
+    return { ...collection, coverKind: article ? 'art' : 'book' };
+  }
   const cover = libraryCoverForCollection(collection.id);
   return cover
     ? { ...collection, coverUrl: cover.url, coverKind: cover.kind }

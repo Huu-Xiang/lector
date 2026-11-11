@@ -2030,7 +2030,8 @@
       "captionsCreator": "投稿者の字幕",
       "openOnYouTube": "YouTube で開く",
       "playFromHere": "ここから再生",
-      "playFrom": "{time} から再生"
+      "playFrom": "{time} から再生",
+      "openLink": "元のリンクを新しいタブで開く"
     },
     "drawer": {
       "wordDefinition": "単語の意味",

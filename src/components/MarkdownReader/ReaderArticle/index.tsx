@@ -8,6 +8,8 @@ import {
   type ReactElement,
   type ReactNode,
 } from 'react';
+import { ExternalLink } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import ReactMarkdown from 'react-markdown';
 import remarkBreaks from 'remark-breaks';
 import type { LanguageConfig, WordSegmentation } from '@/lib/languages';
@@ -21,6 +23,36 @@ import WordCell from '@/components/WordCell';
 import type { ActiveReaderWord, ReaderArticleProps } from './types';
 
 export type { ActiveReaderWord } from './types';
+
+/**
+ * A link in lesson text stays readable: its words still open the word drawer,
+ * and only the small icon after it opens the address in a new tab.
+ */
+function LessonLink({ href, children }: { href?: string; children: ReactNode }) {
+  const t = useTranslations('reader.markdown');
+  const external = href && /^https?:\/\//i.test(href) ? href : null;
+  return (
+    <span
+      data-testid="lesson-link"
+      className="underline decoration-primary/50 decoration-dotted underline-offset-4"
+    >
+      {children}
+      {external && (
+        <a
+          href={external}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={t('openLink')}
+          title={external}
+          data-testid="lesson-link-open"
+          className="ml-0.5 inline-flex translate-y-[-0.1em] items-center align-middle text-muted-foreground no-underline select-none hover:text-primary"
+        >
+          <ExternalLink className="size-[0.7em]" aria-hidden="true" />
+        </a>
+      )}
+    </span>
+  );
+}
 
 export interface ReaderBlockProps {
   as: 'p' | 'li' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
@@ -340,16 +372,7 @@ function ReaderArticle({
           ),
           strong: ({ children }) => <strong className="font-bold">{children}</strong>,
           em: ({ children }) => <em className="italic">{children}</em>,
-          a: ({ href, children }) => (
-            <a
-              href={href ?? undefined}
-              target="_blank"
-              rel="noreferrer"
-              className="text-primary underline underline-offset-2"
-            >
-              {children}
-            </a>
-          ),
+          a: ({ href, children }) => <LessonLink href={href}>{children}</LessonLink>,
           hr: () => <hr className="my-8 border-border" />,
         }}
       >

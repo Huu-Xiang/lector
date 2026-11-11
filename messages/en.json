@@ -2030,7 +2030,8 @@
       "captionsCreator": "Creator captions",
       "openOnYouTube": "Open on YouTube",
       "playFromHere": "Play from here",
-      "playFrom": "Play from {time}"
+      "playFrom": "Play from {time}",
+      "openLink": "Open the original link in a new tab"
     },
     "drawer": {
       "wordDefinition": "Word definition",

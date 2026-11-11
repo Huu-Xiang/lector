@@ -8,6 +8,7 @@ import { collectionMetadataBytes, lessonTextBytes } from '../lib/storage-limits'
 import { getReadingFeedArticle, listReadingFeed } from '../lib/reading-feed/store';
 import { cachedDescriptions, describeArticles } from '../lib/reading-feed/describe';
 import { getLanguageConfig, isNativeLanguageCode } from '../lib/languages';
+import { firstMarkdownImage } from '../lib/markdown-image';
 import type { FeedLanguage, ReadingInterest } from '../lib/reading-feed/types';
 
 const FEED_LANGUAGES = new Set<FeedLanguage>(['en', 'fr', 'zh']);
@@ -142,7 +143,7 @@ app.post('/add', async (c) => {
         collectionId,
         article.title,
         article.author ?? article.source,
-        null,
+        firstMarkdownImage(article.text),
         article.language,
         now,
         now,
