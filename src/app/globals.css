@@ -60,6 +60,15 @@
   --destructive-lip: #8f3422;
   --primary-soft: #e2efe9; /* sage-tinted fill (active nav, "known") */
   --primary-text: #226a5a; /* sage text on light surfaces */
+  /* vocabulary test answer feedback: right = light green, wrong = yellow, not sure = very light green */
+  --answer-right-bg: #d9eee2;
+  --answer-right-bd: #2f8a66;
+  --answer-wrong-bg: #fbedbf;
+  --answer-wrong-bd: #a8800f;
+  --answer-unsure-bg: #edf6f0;
+  --answer-unsure-bd: #4a9473;
+  --answer-icon-right: #1f6e4f;
+  --answer-icon-wrong: #8a6400;
   --clay: #c0744f;
   --clay-foreground: #ffffff;
   --clay-lip: #a35a37;
@@ -131,6 +140,14 @@
   --color-clay-foreground: var(--clay-foreground);
   --color-gold: var(--gold);
   --color-gold-soft: var(--gold-soft);
+  --color-answer-right: var(--answer-right-bg);
+  --color-answer-right-border: var(--answer-right-bd);
+  --color-answer-wrong: var(--answer-wrong-bg);
+  --color-answer-wrong-border: var(--answer-wrong-bd);
+  --color-answer-unsure: var(--answer-unsure-bg);
+  --color-answer-unsure-border: var(--answer-unsure-bd);
+  --color-answer-icon-right: var(--answer-icon-right);
+  --color-answer-icon-wrong: var(--answer-icon-wrong);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -181,6 +198,14 @@
   --destructive-lip: #7a3322;
   --primary-soft: #1c2e28; /* sage-tinted fill (active nav, "known") */
   --primary-text: #7fc9b3; /* brighter sage for text on dark surfaces */
+  --answer-right-bg: rgba(84, 171, 146, 0.24);
+  --answer-right-bd: #54ab92;
+  --answer-wrong-bg: rgba(215, 166, 76, 0.22);
+  --answer-wrong-bd: #d7a64c;
+  --answer-unsure-bg: rgba(84, 171, 146, 0.11);
+  --answer-unsure-bd: #3f8a74;
+  --answer-icon-right: #8fd6bf;
+  --answer-icon-wrong: #ecc77c;
   --clay: #d18c63;
   --clay-foreground: #241009;
   --clay-lip: #6a3d27;

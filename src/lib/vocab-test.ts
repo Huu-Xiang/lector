@@ -1,11 +1,25 @@
 import { pickNearLevel } from './recommend';
 import type { CefrLevel } from './reading-level';
 
+/** One part of speech of a word: its label, up to three Chinese meanings and a short English line. */
+export interface SenseRow {
+  p: string;
+  zh: string[];
+  en: string;
+}
+
+export interface VocabWord {
+  w: string;
+  /** Frequency rank among English lemmas. */
+  r: number;
+  /** One or two rows, most common part of speech first. */
+  s: SenseRow[];
+}
+
 export interface VocabBand {
   from: number;
   to: number;
-  /** `r` is the word's frequency rank among English lemmas. */
-  words: Array<{ w: string; zh: string; r: number }>;
+  words: VocabWord[];
 }
 
 export interface VocabTestData {
@@ -14,33 +28,36 @@ export interface VocabTestData {
   source?: string;
 }
 
-/** One question: an English word and four Chinese meanings, one of them right. */
+/**
+ * One question: an English word, three meanings and "none of the above". `answer` is the index of
+ * the right meaning, or NONE_OF_ABOVE when none of the three meanings is the word's.
+ */
 export interface TestItem {
   id: string;
   word: string;
   /** Index into `bands`. */
   band: number;
   rank: number;
-  /** The right meaning. */
-  zh: string;
-  options: string[];
+  senses: SenseRow[];
+  meanings: SenseRow[][];
   answer: number;
 }
 
 export interface Answer {
   item: TestItem;
-  /** Index of the chosen option, or null for "not sure". */
+  /** Index of the chosen option (NONE_OF_ABOVE included), or null for "not sure". */
   choice: number | null;
 }
 
 export type Rng = () => number;
 
 export const OPTION_COUNT = 4;
+export const NONE_OF_ABOVE = 3;
+/** How often "none of the above" is the right answer: as often as each other option. */
+const NONE_SHARE = 1 / OPTION_COUNT;
 /** The result can be shown after this many answers; the test stops at the maximum. */
 export const MIN_ANSWERS = 20;
 export const MAX_ANSWERS = 120;
-/** z for a 90% interval: the shown range is estimate ± margin. */
-const Z90 = 1.645;
 /** A fitted guess rate this high means the learner guesses where "not sure" would be truer. */
 const GUESSING_LEVEL = 0.75;
 export const READABLE_COVERAGE = 0.95;
@@ -68,47 +85,70 @@ function shuffle<T>(list: readonly T[], rng: Rng): T[] {
   return out;
 }
 
-/** 的 marks an adjective and 地 an adverb in a gloss; a mismatched option gives the answer away. */
-function glossForm(gloss: string): 'adj' | 'adv' | 'other' {
-  if (gloss.endsWith('的')) return 'adj';
-  if (gloss.endsWith('地')) return 'adv';
-  return 'other';
-}
-
-/** Characters too common in glosses to make two meanings look alike. */
-const FILLER = new Set('的地得使之者人性化物一.…');
-
-function sharesMeaning(a: string, b: string): boolean {
-  const chars = new Set([...a].filter((c) => !FILLER.has(c)));
-  return [...b].some((c) => chars.has(c));
-}
-
 /**
- * Three wrong meanings for a word: same form (的 / 地 / other) and no shared characters,
- * from its own band first and then from the nearest bands.
+ * Characters too common in meanings to make two meanings look alike. Keep in step with FILLER in
+ * scripts/build-vocab-test.py, which drops words that cannot get three wrong options.
  */
-function distractors(data: VocabTestData, band: number, word: string, gloss: string, rng: Rng) {
+const FILLER = new Set('的地得使之者人性化物一.…了');
+
+function meaningChars(rows: readonly SenseRow[]): Set<string> {
+  const out = new Set<string>();
+  for (const row of rows) for (const m of row.zh) for (const c of m) if (!FILLER.has(c)) out.add(c);
+  return out;
+}
+
+function overlaps(a: Set<string>, b: Set<string>): boolean {
+  for (const c of a) if (b.has(c)) return true;
+  return false;
+}
+
+/** Rough rendered width; keep in step with option_width in scripts/build-vocab-test.py. */
+export function optionWidth(rows: readonly SenseRow[]): number {
+  return rows.reduce(
+    (sum, row) => sum + row.zh.reduce((n, m) => n + m.length, 0) + 0.45 * row.en.length,
+    0,
+  );
+}
+
+function signature(rows: readonly SenseRow[]): string {
+  return rows.map((row) => row.p).join('+');
+}
+
+function wordForms(w: string): Set<string> {
+  return new Set([w, `${w}s`, `${w}es`, `${w}ed`, `${w}d`, `${w}ing`, `${w}er`, `${w}ly`]);
+}
+
+function englishWords(rows: readonly SenseRow[]): string[] {
+  return rows.flatMap((row) => row.en.toLowerCase().match(/[a-z']+/g) ?? []);
+}
+
+function distractors(data: VocabTestData, band: number, target: VocabWord, count: number, rng: Rng) {
   const order = data.bands
     .map((_, index) => index)
     .sort((a, b) => Math.abs(a - band) - Math.abs(b - band) || a - b);
-  const picked: string[] = [];
-  for (const strict of [true, false]) {
+  const targetChars = meaningChars(target.s);
+  const width = optionWidth(target.s);
+  const forms = wordForms(target.w);
+  const picked: VocabWord[] = [];
+  const pickedChars: Set<string>[] = [];
+  const passes: Array<{ match: (other: VocabWord) => boolean; similarWidth: boolean }> = [
+    { match: (other) => signature(other.s) === signature(target.s), similarWidth: true },
+    { match: (other) => other.s[0].p === target.s[0].p, similarWidth: true },
+    // Last resort so an item always has its options; the build makes this pass unnecessary.
+    { match: () => true, similarWidth: false },
+  ];
+  for (const { match, similarWidth } of passes) {
     for (const index of order) {
-      const pool = shuffle(
-        data.bands[index].words.filter(
-          (entry) =>
-            entry.w !== word &&
-            entry.zh !== gloss &&
-            !picked.includes(entry.zh) &&
-            !sharesMeaning(gloss, entry.zh) &&
-            !picked.some((other) => sharesMeaning(other, entry.zh)) &&
-            (!strict || glossForm(entry.zh) === glossForm(gloss)),
-        ),
-        rng,
-      );
-      for (const entry of pool) {
-        if (picked.length === OPTION_COUNT - 1) return picked;
-        picked.push(entry.zh);
+      for (const other of shuffle(data.bands[index].words, rng)) {
+        if (picked.length === count) return picked;
+        if (other.w === target.w || picked.includes(other) || !match(other)) continue;
+        const chars = meaningChars(other.s);
+        if (overlaps(chars, targetChars) || pickedChars.some((c) => overlaps(c, chars))) continue;
+        const ratio = optionWidth(other.s) / width;
+        if (similarWidth && (ratio < 0.6 || ratio > 1.4)) continue;
+        if (englishWords(other.s).some((word) => forms.has(word))) continue;
+        picked.push(other);
+        pickedChars.push(chars);
       }
     }
   }
@@ -117,55 +157,115 @@ function distractors(data: VocabTestData, band: number, word: string, gloss: str
 
 function makeItem(data: VocabTestData, band: number, index: number, rng: Rng): TestItem {
   const entry = data.bands[band].words[index];
-  const options = shuffle([entry.zh, ...distractors(data, band, entry.w, entry.zh, rng)], rng);
+  const noneIsRight = rng() < NONE_SHARE;
+  const wrong = distractors(data, band, entry, noneIsRight ? 3 : 2, rng).map((word) => word.s);
+  const meanings = noneIsRight ? wrong : shuffle([entry.s, ...wrong], rng);
   return {
     id: `r${band}:${entry.w}`,
     word: entry.w,
     band,
     rank: entry.r,
-    zh: entry.zh,
-    options,
-    answer: options.indexOf(entry.zh),
+    senses: entry.s,
+    meanings,
+    answer: noneIsRight ? NONE_OF_ABOVE : meanings.indexOf(entry.s),
   };
 }
 
 /** Shown before this many answers is not an estimate yet. */
 export const FIRST_ESTIMATE_AFTER = 8;
 
-/**
- * The next question, or null when the test is over. The first round asks each band once in a
- * random order; after that, words near the current estimate tell the most.
+/*
+ * Question order, in three stages:
+ *  1. EASY_COUNT words from the first band, which nearly everyone knows.
+ *  2. A staircase on log rank: the target rises after a right answer and falls after a wrong or
+ *     "not sure" one, by a step that shrinks each time.
+ *  3. From STAIRCASE_END on, the target is the fitted knee of the learner curve, moved up after a
+ *     right answer and down otherwise, with a log-normal spread so the fit also sees words well
+ *     above and below it.
+ * The numbers come from scripts/simulate-vocab-test.ts.
  */
+const EASY_COUNT = 4;
+const STAIRCASE_END = 16;
+const STAIRCASE_START = Math.log(800);
+const STEP_FIRST = 0.9;
+const STEP_DECAY = 0.85;
+const STEP_MIN = 0.25;
+const FIT_SHIFT = 0.1;
+const FIT_SPREAD = 0.6;
+
+function staircaseTarget(answers: readonly Answer[], maxRank: number): number {
+  let target = STAIRCASE_START;
+  answers.forEach((answer, i) => {
+    if (i < EASY_COUNT) return;
+    const step = Math.max(STEP_MIN, STEP_FIRST * Math.pow(STEP_DECAY, i - EASY_COUNT));
+    target += answer.choice === answer.item.answer ? step : -step;
+    target = Math.min(Math.log(maxRank), Math.max(Math.log(40), target));
+  });
+  return target;
+}
+
+/** A standard normal sample (Box-Muller). */
+export function gaussian(rng: Rng): number {
+  return Math.sqrt(-2 * Math.log(1 - rng())) * Math.cos(2 * Math.PI * rng());
+}
+
+/** Where the next word should sit, as a log rank. */
+export function nextTarget(answers: readonly Answer[], data: VocabTestData, rng: Rng): number {
+  const maxRank = data.bands[data.bands.length - 1].to;
+  if (answers.length < STAIRCASE_END) return staircaseTarget(answers, maxRank);
+  const fit = fitAnswers(answers, data.bands);
+  const last = answers[answers.length - 1];
+  const shift = last.choice === last.item.answer ? FIT_SHIFT : -FIT_SHIFT;
+  return Math.log(Math.max(fit.knee, 300)) + shift + FIT_SPREAD * gaussian(rng);
+}
+
+/** One generator per question number, so the same answers always lead to the same next word. */
+function stepRng(seed: number, answered: number): Rng {
+  return seededRng(Math.imul(seed ^ 0x9e3779b9, 0x85ebca6b) + answered * 0x27d4eb2f);
+}
+
 export function nextItem(
   answers: readonly Answer[],
   data: VocabTestData,
-  rng: Rng,
+  seed: number,
 ): TestItem | null {
   if (answers.length >= MAX_ANSWERS) return null;
+  const rng = stepRng(seed, answers.length);
   const asked = new Set(answers.map((answer) => answer.item.id));
   const fresh = data.bands.map((band, index) =>
     band.words.map((_, i) => i).filter((i) => !asked.has(`r${index}:${band.words[i].w}`)),
   );
-  const seen = new Set(answers.map((answer) => answer.item.band));
-  const unseen = data.bands.map((_, index) => index).filter((i) => !seen.has(i) && fresh[i].length);
-  if (unseen.length > 0) {
-    const band = unseen[Math.floor(rng() * unseen.length)];
-    return makeItem(data, band, fresh[band][Math.floor(rng() * fresh[band].length)], rng);
+  if (answers.length < EASY_COUNT && fresh[0].length > 0) {
+    return makeItem(data, 0, fresh[0][Math.floor(rng() * fresh[0].length)], rng);
   }
-  const fit = fitAnswers(answers, data.bands);
-  // A log-normal spread around the estimate: mostly near it, sometimes well above or below.
-  const z = Math.sqrt(-2 * Math.log(1 - rng())) * Math.cos(2 * Math.PI * rng());
-  const target = Math.log(Math.max(fit.knee, 300)) + 0.6 * z;
+  const target = nextTarget(answers, data, rng);
   let best: { band: number; index: number; distance: number } | null = null;
   data.bands.forEach((band, b) => {
     for (const i of fresh[b]) {
-      const distance = Math.abs(Math.log(band.words[i].r) - target);
+      // A tiny random tie-break so equal distances do not always pick the same word.
+      const distance = Math.abs(Math.log(band.words[i].r) - target) + rng() * 1e-3;
       if (!best || distance < best.distance) best = { band: b, index: i, distance };
     }
   });
   if (!best) return null;
   const pick = best as { band: number; index: number };
   return makeItem(data, pick.band, pick.index, rng);
+}
+
+/**
+ * The next question for each outcome of the current one, prepared while the learner reads it. A
+ * wrong answer and "not sure" share a branch, built as if the learner said "not sure".
+ */
+export function prepareNext(
+  answers: readonly Answer[],
+  item: TestItem,
+  data: VocabTestData,
+  seed: number,
+): { right: TestItem | null; notRight: TestItem | null } {
+  return {
+    right: nextItem([...answers, { item, choice: item.answer }], data, seed),
+    notRight: nextItem([...answers, { item, choice: null }], data, seed),
+  };
 }
 
 /*

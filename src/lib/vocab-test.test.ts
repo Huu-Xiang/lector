@@ -1,27 +1,40 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
   CAP_ESTIMATE,
   MAX_ANSWERS,
   MIN_ANSWERS,
+  NONE_OF_ABOVE,
   OPTION_COUNT,
   coverageAt,
   estimateFromAnswers,
   levelForEstimate,
   missedWords,
   nextItem,
+  nextTarget,
+  optionWidth,
+  prepareNext,
   recommendBooks,
   seededRng,
   type Answer,
+  type SenseRow,
+  type TestItem,
   type VocabTestData,
 } from './vocab-test';
 
-/** Bands like the real data: 1,000 wide up to 10,000, then wider up to 40,000; 30 words each. */
+const POS = ['n.', 'v.', 'adj.'];
+
+/**
+ * Bands like the real data: 1,000 wide up to 10,000, then wider up to 40,000; 30 words each.
+ * Every word has one distinct meaning character; its English line names the next word in the
+ * band, so the "no English line contains the tested word" rule has something to reject.
+ */
 function makeData(): VocabTestData {
   const edges = [
     0, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000, 12500, 15000, 20000, 25000,
     30000, 40000,
   ];
-  const forms = ['', '的', '地'];
   const bands = edges.slice(1).map((to, b) => {
     const from = edges[b] + 1;
     return {
@@ -29,9 +42,14 @@ function makeData(): VocabTestData {
       to,
       words: Array.from({ length: 30 }, (_, i) => ({
         w: `w${b}x${i}`,
-        // One distinct character per word, so no two meanings share a character.
-        zh: `${String.fromCharCode(0x4e00 + b * 30 + i)}${forms[i % 3]}`,
         r: Math.round(from + ((to - from) * (i + 0.5)) / 30),
+        s: [
+          {
+            p: POS[i % 3],
+            zh: [String.fromCharCode(0x4e00 + b * 30 + i)],
+            en: `close to w${b}x${(i + 1) % 30}`,
+          },
+        ],
       })),
     };
   });
@@ -40,16 +58,29 @@ function makeData(): VocabTestData {
 
 const data = makeData();
 
+function realData(): VocabTestData {
+  const file = path.join(process.cwd(), 'languages', 'en', 'content', 'vocab-test.json');
+  return JSON.parse(fs.readFileSync(file, 'utf8')) as VocabTestData;
+}
+
 /** A learner who knows every word ranked up to `size` and says "not sure" otherwise. */
-function honest(size: number, count: number, seed = 3): Answer[] {
-  const rng = seededRng(seed);
+function honest(size: number, count: number, seed = 3, source = data): Answer[] {
   const answers: Answer[] = [];
   while (answers.length < count) {
-    const item = nextItem(answers, data, rng);
+    const item = nextItem(answers, source, seed);
     if (!item) break;
     answers.push({ item, choice: item.rank <= size ? item.answer : null });
   }
   return answers;
+}
+
+function sameRows(a: readonly SenseRow[], b: readonly SenseRow[]): boolean {
+  return JSON.stringify(a) === JSON.stringify(b);
+}
+
+/** Collect the first item of many seeds, so option rules are checked across many words. */
+function firstItems(count: number, answers: Answer[] = []): TestItem[] {
+  return Array.from({ length: count }, (_, seed) => nextItem(answers, data, seed + 1)!);
 }
 
 describe('seededRng', () => {
@@ -66,33 +97,125 @@ describe('seededRng', () => {
   });
 });
 
-describe('nextItem', { timeout: 60_000 }, () => {
-  it('builds four different meanings with the right one among them, in the same form', () => {
-    const rng = seededRng(9);
-    for (let i = 0; i < 40; i++) {
-      const item = nextItem([], data, rng)!;
-      expect(item.options).toHaveLength(OPTION_COUNT);
-      expect(new Set(item.options).size).toBe(OPTION_COUNT);
-      expect(item.options[item.answer]).toBe(item.zh);
-      const form = (g: string) => (g.endsWith('的') ? 'adj' : g.endsWith('地') ? 'adv' : 'other');
-      expect(item.options.every((o) => form(o) === form(item.zh))).toBe(true);
+describe('item options', { timeout: 60_000 }, () => {
+  // Items deep in the test come from every band, not only the easy one.
+  const items = [
+    ...firstItems(300),
+    ...Array.from({ length: 40 }, (_, seed) => honest(8000, 40, seed + 1).map((a) => a.item)).flat(),
+  ];
+
+  it('has three different meanings plus "none of the above", with a valid answer', () => {
+    for (const item of items) {
+      expect(item.meanings).toHaveLength(OPTION_COUNT - 1);
+      expect(new Set(item.meanings.map((m) => JSON.stringify(m))).size).toBe(OPTION_COUNT - 1);
+      if (item.answer === NONE_OF_ABOVE) {
+        expect(item.meanings.some((m) => sameRows(m, item.senses))).toBe(false);
+      } else {
+        expect(sameRows(item.meanings[item.answer], item.senses)).toBe(true);
+      }
     }
   });
 
-  it('asks every band once first, and never repeats a word', () => {
+  it('makes "none of the above" right about one time in four', () => {
+    const share = items.filter((item) => item.answer === NONE_OF_ABOVE).length / items.length;
+    expect(share).toBeGreaterThan(0.2);
+    expect(share).toBeLessThan(0.3);
+  });
+
+  it('gives wrong options the same part of speech, a similar width and no tell-tale English', () => {
+    for (const item of items) {
+      for (const meaning of item.meanings) {
+        if (sameRows(meaning, item.senses)) continue;
+        expect(meaning.map((row) => row.p)).toEqual(item.senses.map((row) => row.p));
+        const ratio = optionWidth(meaning) / optionWidth(item.senses);
+        expect(ratio).toBeGreaterThanOrEqual(0.6);
+        expect(ratio).toBeLessThanOrEqual(1.4);
+        expect(meaning.some((row) => row.en.split(' ').includes(item.word))).toBe(false);
+      }
+    }
+  });
+});
+
+describe('question order', { timeout: 60_000 }, () => {
+  it('starts with easy words and never repeats a word', () => {
     const answers = honest(3000, 60);
-    expect(new Set(answers.slice(0, 16).map((a) => a.item.band)).size).toBe(16);
+    expect(answers.slice(0, 4).every((a) => a.item.band === 0)).toBe(true);
     expect(new Set(answers.map((a) => a.item.id)).size).toBe(answers.length);
   });
 
-  it('then asks mostly near the estimate', () => {
+  it('Covers AE4: a learner who knows the top 2,000 words gets later words near rank 2,000', () => {
+    const later = honest(2000, 60).slice(16);
+    const ranks = later.map((a) => a.item.rank).sort((a, b) => a - b);
+    const median = ranks[Math.floor(ranks.length / 2)];
+    expect(median).toBeGreaterThan(1000);
+    expect(median).toBeLessThan(4000);
+  });
+
+  it('asks a 3,000-word learner mostly about words between ranks 700 and 13,000', () => {
     const later = honest(3000, 80).slice(16);
     const near = later.filter((a) => a.item.rank > 700 && a.item.rank < 13000).length;
     expect(near / later.length).toBeGreaterThan(0.7);
   });
 
+  // Provisional count; the simulation script tunes the stages.
+  it('takes a learner who knows everything past band 10 within 25 words', () => {
+    const bands = honest(40000, 25).map((a) => a.item.band);
+    expect(Math.max(...bands)).toBeGreaterThanOrEqual(10);
+  });
+
+  it('moves the target up after a right answer and down after "not sure", in every stage', () => {
+    for (const count of [6, 30]) {
+      const before = honest(3000, count);
+      const item = nextItem(before, data, 3)!;
+      const up = nextTarget([...before, { item, choice: item.answer }], data, seededRng(5));
+      const down = nextTarget([...before, { item, choice: null }], data, seededRng(5));
+      expect(up).toBeGreaterThan(down);
+    }
+  });
+
+  it('prepares the next word for both outcomes, matching what the test then asks', () => {
+    const before = honest(3000, 30);
+    const item = nextItem(before, data, 3)!;
+    const prepared = prepareNext(before, item, data, 3);
+    expect(prepared.right).toEqual(nextItem([...before, { item, choice: item.answer }], data, 3));
+    expect(prepared.notRight).toEqual(nextItem([...before, { item, choice: null }], data, 3));
+  });
+
   it('stops at the maximum', () => {
     expect(honest(3000, MAX_ANSWERS + 10)).toHaveLength(MAX_ANSWERS);
+  });
+});
+
+describe('the real test data', { timeout: 120_000 }, () => {
+  const real = realData();
+
+  it('has 16 bands of 30 words with one or two meaning rows each', () => {
+    expect(real.version).toBe(3);
+    expect(real.bands).toHaveLength(16);
+    for (const band of real.bands) {
+      expect(band.words).toHaveLength(30);
+      for (const word of band.words) {
+        expect(word.s.length).toBeGreaterThanOrEqual(1);
+        expect(word.s.length).toBeLessThanOrEqual(2);
+      }
+    }
+  });
+
+  it('gives every item three wrong-or-right meanings that follow the option rules', () => {
+    for (const size of [500, 2000, 5000, 12000, 30000]) {
+      for (let seed = 1; seed <= 6; seed++) {
+        for (const { item } of honest(size, MAX_ANSWERS, seed, real)) {
+          expect(new Set(item.meanings.map((m) => JSON.stringify(m))).size).toBe(3);
+          for (const meaning of item.meanings) {
+            if (sameRows(meaning, item.senses)) continue;
+            expect(meaning[0].p).toBe(item.senses[0].p);
+            const ratio = optionWidth(meaning) / optionWidth(item.senses);
+            expect(ratio).toBeGreaterThanOrEqual(0.6);
+            expect(ratio).toBeLessThanOrEqual(1.4);
+          }
+        }
+      }
+    }
   });
 });
 
@@ -118,7 +241,7 @@ describe('estimateFromAnswers', { timeout: 60_000 }, () => {
     const rng = seededRng(4);
     const answers: Answer[] = [];
     while (answers.length < 60) {
-      const item = nextItem(answers, data, rng)!;
+      const item = nextItem(answers, data, 4)!;
       answers.push({ item, choice: Math.floor(rng() * OPTION_COUNT) });
     }
     const result = estimateFromAnswers(answers, data.bands)!;

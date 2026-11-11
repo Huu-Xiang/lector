@@ -3,20 +3,23 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
+import { Check, CircleHelp, X } from 'lucide-react';
 import { buttonVariants, Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { registerHrefForBook } from '@/lib/pending-book';
 import {
   FIRST_ESTIMATE_AFTER,
+  MAX_ANSWERS,
   MIN_ANSWERS,
+  NONE_OF_ABOVE,
   estimateFromAnswers,
   missedWords,
   nextItem,
+  prepareNext,
   recommendBooks,
-  seededRng,
   type Answer,
   type LiveEstimate,
-  type Rng,
+  type SenseRow,
   type TestItem,
   type VocabTestData,
 } from '@/lib/vocab-test';
@@ -28,6 +31,11 @@ const SCALE_MAX = 40000;
 const SCALE_MARKS = [0, 2500, 10000, 22500, 40000];
 const scalePosition = (n: number) =>
   `${Math.sqrt(Math.min(Math.max(n, 0), SCALE_MAX) / SCALE_MAX) * 100}%`;
+
+/** How long feedback stays before the next word, and how long a new word ignores input. */
+const RIGHT_PAUSE_MS = 600;
+const OTHER_PAUSE_MS = 1500;
+const INPUT_LOCK_MS = 250;
 
 function shownTitle(book: VocabTestBook, locale: string): string {
   return book.titles[locale] ?? book.titles.en ?? book.title;
@@ -41,7 +49,65 @@ function randomSeed(): number {
   }
 }
 
+/** "n. 银行；河岸" for screen-reader announcements. */
+function meaningText(rows: readonly SenseRow[]): string {
+  return rows.map((row) => `${row.p} ${row.zh.join('；')}`).join(' / ');
+}
+
 type Step = 'intro' | 'test' | 'result';
+/** locked: a new word ignores input; asking: waiting for an answer; feedback: showing right or wrong. */
+type Phase = 'locked' | 'asking' | 'feedback';
+type OptionState = 'idle' | 'right' | 'answer' | 'unsure' | 'wrong' | 'other';
+type Outcome = 'Right' | 'Unsure' | 'Wrong';
+
+function outcome(choice: number | null, item: TestItem): Outcome {
+  if (choice === item.answer) return 'Right';
+  return choice === null ? 'Unsure' : 'Wrong';
+}
+
+function optionState(index: number, item: TestItem, choice: number | null | undefined): OptionState {
+  if (choice === undefined) return 'idle';
+  if (index === item.answer) {
+    if (choice === item.answer) return 'right';
+    return choice === null ? 'unsure' : 'answer';
+  }
+  return index === choice ? 'wrong' : 'other';
+}
+
+// `!` because the outline button sets its own background and border, also in dark mode.
+const RIGHT_STYLE = 'border-2 border-answer-right-border! bg-answer-right!';
+const OPTION_STYLES: Record<OptionState, string> = {
+  idle: '',
+  right: RIGHT_STYLE,
+  answer: RIGHT_STYLE,
+  unsure: 'border-2 border-answer-unsure-border! bg-answer-unsure!',
+  wrong: 'border-2 border-answer-wrong-border! bg-answer-wrong!',
+  other: 'opacity-60',
+};
+
+function MeaningRows({ rows }: { rows: readonly SenseRow[] }) {
+  return (
+    <span className="block min-w-0 space-y-1">
+      {rows.map((row) => (
+        <span key={row.p} className="block">
+          <span className="mr-1.5 text-sm font-medium text-muted-foreground">{row.p}</span>
+          <span lang="zh-CN">{row.zh.join('；')}</span>
+          <span lang="en" className="block text-sm leading-snug text-muted-foreground">
+            {row.en}
+          </span>
+        </span>
+      ))}
+    </span>
+  );
+}
+
+function OptionIcon({ state }: { state: OptionState }) {
+  if (state === 'right' || state === 'answer' || state === 'unsure') {
+    return <Check className="size-5 text-answer-icon-right" aria-hidden="true" />;
+  }
+  if (state === 'wrong') return <X className="size-5 text-answer-icon-wrong" aria-hidden="true" />;
+  return null;
+}
 
 export default function VocabTest({
   data,
@@ -55,9 +121,21 @@ export default function VocabTest({
   const [step, setStep] = useState<Step>('intro');
   const [answers, setAnswers] = useState<Answer[]>([]);
   const [current, setCurrent] = useState<TestItem | null>(null);
-  const rngRef = useRef<Rng>(seededRng(1));
+  const [phase, setPhase] = useState<Phase>('locked');
+  /** The choice for the current word once answered; undefined while asking. */
+  const [chosen, setChosen] = useState<number | null | undefined>(undefined);
+  const [announcement, setAnnouncement] = useState('');
+  const seedRef = useRef(1);
+  const answersRef = useRef<Answer[]>([]);
+  const preparedRef = useRef<{
+    id: string;
+    right: TestItem | null;
+    notRight: TestItem | null;
+  } | null>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [lastResult, setLastResult] = useState<ReturnType<typeof readVocabResult>>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- the saved result is in localStorage
@@ -68,18 +146,58 @@ export default function VocabTest({
     if (step !== 'intro') headingRef.current?.focus();
   }, [step]);
 
+  useEffect(() => {
+    answersRef.current = answers;
+  }, [answers]);
+
+  const clearTimer = () => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = null;
+  };
+  useEffect(() => clearTimer, []);
+
+  // A new word: ignore input for a moment, focus the card, and prepare both possible next words
+  // after it has painted.
+  useEffect(() => {
+    if (step !== 'test' || !current) return;
+    cardRef.current?.focus();
+    const item = current;
+    const lock = setTimeout(() => setPhase('asking'), INPUT_LOCK_MS);
+    const prepare = setTimeout(() => {
+      preparedRef.current = {
+        id: item.id,
+        ...prepareNext(answersRef.current, item, data, seedRef.current),
+      };
+    }, 0);
+    return () => {
+      clearTimeout(lock);
+      clearTimeout(prepare);
+    };
+  }, [current, step, data]);
+
   const live = useMemo(() => estimateFromAnswers(answers, data.bands), [answers, data.bands]);
 
+  function showItem(item: TestItem | null) {
+    setChosen(undefined);
+    setPhase('locked');
+    setCurrent(item);
+  }
+
   function begin() {
-    rngRef.current = seededRng(randomSeed());
+    clearTimer();
+    seedRef.current = randomSeed();
+    preparedRef.current = null;
     setAnswers([]);
-    setCurrent(nextItem([], data, rngRef.current));
+    answersRef.current = [];
+    setAnnouncement('');
+    showItem(nextItem([], data, seedRef.current));
     setStep('test');
     window.scrollTo({ top: 0 });
   }
 
   const finish = useCallback(
     (all: readonly Answer[]) => {
+      clearTimer();
       const result = estimateFromAnswers(all, data.bands);
       if (result) writeVocabResult(result.estimate, result.level);
       setStep('result');
@@ -88,27 +206,54 @@ export default function VocabTest({
     [data.bands],
   );
 
+  const advance = useCallback(() => {
+    clearTimer();
+    if (phase !== 'feedback' || !current) return;
+    const all = answersRef.current;
+    const right = chosen === current.answer;
+    const prepared =
+      preparedRef.current?.id === current.id
+        ? preparedRef.current
+        : { id: current.id, ...prepareNext(all.slice(0, -1), current, data, seedRef.current) };
+    const next = all.length >= MAX_ANSWERS ? null : right ? prepared.right : prepared.notRight;
+    if (!next) {
+      setCurrent(null);
+      finish(all);
+      return;
+    }
+    showItem(next);
+  }, [phase, current, chosen, data, finish]);
+  // The feedback timer fires after a re-render, so it calls the latest `advance` through a ref.
+  const advanceRef = useRef(advance);
+  useEffect(() => {
+    advanceRef.current = advance;
+  }, [advance]);
+
   const answer = useCallback(
     (choice: number | null) => {
-      if (!current) return;
-      const next = [...answers, { item: current, choice }];
-      setAnswers(next);
-      const following = nextItem(next, data, rngRef.current);
-      setCurrent(following);
-      if (!following) finish(next);
+      if (phase !== 'asking' || !current) return;
+      const all = [...answersRef.current, { item: current, choice }];
+      answersRef.current = all;
+      setAnswers(all);
+      setChosen(choice);
+      setPhase('feedback');
+      setAnnouncement(
+        t(`announce${outcome(choice, current)}`, {
+          word: current.word,
+          meaning: meaningText(current.senses),
+        }),
+      );
+      clearTimer();
+      timerRef.current = setTimeout(
+        () => advanceRef.current(),
+        choice === current.answer ? RIGHT_PAUSE_MS : OTHER_PAUSE_MS,
+      );
     },
-    [answers, current, data, finish],
+    [phase, current, t],
   );
 
-  function undo() {
-    const last = answers[answers.length - 1];
-    if (!last) return;
-    setAnswers(answers.slice(0, -1));
-    setCurrent(last.item);
-  }
-
   function keepGoing() {
-    setCurrent(nextItem(answers, data, rngRef.current));
+    showItem(nextItem(answersRef.current, data, seedRef.current));
     setStep('test');
     window.scrollTo({ top: 0 });
   }
@@ -117,6 +262,18 @@ export default function VocabTest({
     if (step !== 'test') return;
     const onKey = (event: KeyboardEvent) => {
       if (event.altKey || event.ctrlKey || event.metaKey) return;
+      if (['Tab', 'Shift', 'Control', 'Alt', 'Meta', 'CapsLock'].includes(event.key)) return;
+      if (phase === 'feedback') {
+        event.preventDefault();
+        advance();
+        return;
+      }
+      if (phase !== 'asking') {
+        if (/^[0-5]$/.test(event.key) || event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+        }
+        return;
+      }
       if (['1', '2', '3', '4'].includes(event.key)) answer(Number(event.key) - 1);
       else if (event.key === '0' || event.key === '5') answer(null);
       else return;
@@ -124,7 +281,7 @@ export default function VocabTest({
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [step, answer]);
+  }, [step, phase, answer, advance]);
 
   if (step === 'intro') {
     return (
@@ -147,8 +304,25 @@ export default function VocabTest({
 
   if (step === 'test') {
     const canFinish = answers.length >= MIN_ANSWERS && live !== null;
+    const answered = chosen !== undefined;
+    const feedbackText =
+      current && chosen !== undefined ? t(`feedback${outcome(chosen, current)}`) : '';
+    const options = current
+      ? [...current.meanings.map((rows) => ({ rows })), { rows: null }]
+      : [];
     return (
-      <section className="space-y-5" data-testid="vocab-test">
+      <section
+        className="space-y-4"
+        data-testid="vocab-test"
+        // While feedback shows, a tap anywhere goes on to the next word and never answers it.
+        onClickCapture={(event) => {
+          if (phase !== 'feedback') return;
+          if ((event.target as HTMLElement).closest('[data-feedback-pass]')) return;
+          event.preventDefault();
+          event.stopPropagation();
+          advance();
+        }}
+      >
         <h2 ref={headingRef} tabIndex={-1} className="sr-only">
           {t('testHeading')}
         </h2>
@@ -157,67 +331,116 @@ export default function VocabTest({
           waiting={FIRST_ESTIMATE_AFTER - answers.length}
           answered={answers.length}
         />
+        <p className="sr-only" aria-live="polite" data-testid="vocab-announcement">
+          {announcement}
+        </p>
 
         {current && (
-          <div className="rounded-2xl border border-border bg-card p-6 text-center">
+          <div
+            ref={cardRef}
+            tabIndex={-1}
+            data-testid="vocab-card"
+            data-state={phase}
+            data-answer={answered ? String(current.answer) : undefined}
+            className="rounded-2xl border border-border bg-card p-4 outline-none sm:p-6"
+          >
             <p
               lang="en"
-              aria-live="polite"
-              className="text-4xl font-bold tracking-tight break-words"
+              className="text-center text-3xl font-bold tracking-tight break-words sm:text-4xl"
               data-testid="vocab-word"
             >
               {current.word}
             </p>
-            <p className="mt-1 text-sm text-muted-foreground">{t('chooseMeaning')}</p>
-            <ul className="mt-5 grid gap-2 text-left sm:grid-cols-2" lang="zh-CN">
-              {current.options.map((option, index) => (
-                <li key={`${current.id}:${option}`}>
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="h-auto min-h-12 w-full justify-start py-2 text-left text-base whitespace-normal"
-                    onClick={() => answer(index)}
-                    data-testid="vocab-option"
-                  >
-                    <span className="mr-2 text-sm text-muted-foreground" aria-hidden="true">
-                      {index + 1}
-                    </span>
-                    {option}
-                  </Button>
-                </li>
-              ))}
+            <p className="mt-1 text-center text-sm text-muted-foreground">{t('chooseMeaning')}</p>
+            <ul className="mt-4 grid gap-2 text-left sm:grid-cols-2">
+              {options.map((option, index) => {
+                const state = optionState(index, current, chosen);
+                return (
+                  <li key={`${current.id}:${index}`}>
+                    <Button
+                      variant="outline"
+                      size="lg"
+                      aria-disabled={phase !== 'asking'}
+                      className={cn(
+                        'h-auto min-h-12 w-full items-start justify-start gap-2 py-2.5 text-left text-base font-normal whitespace-normal transition-colors motion-reduce:transition-none',
+                        option.rows === null && 'items-center',
+                        OPTION_STYLES[state],
+                      )}
+                      onClick={() => answer(index)}
+                      data-testid="vocab-option"
+                      data-state={state}
+                    >
+                      <span
+                        className="w-4 shrink-0 pt-0.5 text-sm text-muted-foreground"
+                        aria-hidden="true"
+                      >
+                        {index + 1}
+                      </span>
+                      {option.rows ? (
+                        <MeaningRows rows={option.rows} />
+                      ) : (
+                        <span className="flex-1 font-medium">{t('noneOfAbove')}</span>
+                      )}
+                      <span className="ml-auto flex size-5 shrink-0 items-center">
+                        <OptionIcon state={state} />
+                      </span>
+                    </Button>
+                  </li>
+                );
+              })}
             </ul>
             <Button
               variant="secondary"
               size="lg"
-              className="mt-3 min-h-12 w-full text-base"
+              aria-disabled={phase !== 'asking'}
+              className={cn(
+                'mt-2 min-h-12 w-full gap-2 text-base transition-colors motion-reduce:transition-none',
+                answered && chosen === null && 'border-2 border-answer-unsure-border! bg-answer-unsure!',
+              )}
               onClick={() => answer(null)}
               data-testid="vocab-not-sure"
             >
+              {answered && chosen === null && (
+                <CircleHelp className="size-5 text-answer-icon-right" aria-hidden="true" />
+              )}
               {t('notSure')}
             </Button>
-            <p className="mt-4 text-sm text-muted-foreground">{t('dontKnowHint')}</p>
-            <p className="mt-1 hidden text-xs text-muted-foreground sm:block">{t('keysHint')}</p>
+            {/* One fixed slot for the hint before an answer and the feedback after it. */}
+            <div className="mt-3 min-h-[4.5rem] text-sm" data-testid="vocab-feedback">
+              {answered ? (
+                <>
+                  <p className="font-semibold">
+                    {feedbackText}
+                    <span className="ml-2 font-normal text-muted-foreground">{t('skipHint')}</span>
+                  </p>
+                  {current.answer === NONE_OF_ABOVE && (
+                    <div className="mt-1.5 flex gap-2" data-testid="vocab-true-meaning">
+                      <span className="shrink-0 text-muted-foreground">{t('trueMeaning')}</span>
+                      <MeaningRows rows={current.senses} />
+                    </div>
+                  )}
+                </>
+              ) : (
+                <>
+                  <p className="text-muted-foreground">{t('dontKnowHint')}</p>
+                  <p className="mt-1 hidden text-xs text-muted-foreground sm:block">
+                    {t('keysHint')}
+                  </p>
+                </>
+              )}
+            </div>
           </div>
         )}
 
-        <div className="flex items-center justify-between gap-3">
-          <Button
-            variant="ghost"
-            className="min-h-11"
-            disabled={answers.length === 0}
-            onClick={undo}
-            data-testid="vocab-undo"
-          >
-            {t('undo')}
-          </Button>
+        <div className="flex justify-end">
           <Button
             size="lg"
             variant={live?.precision === 'high' ? 'default' : 'outline'}
             className="min-h-11"
             disabled={!canFinish}
-            onClick={() => finish(answers)}
+            onClick={() => finish(answersRef.current)}
             data-testid="vocab-finish"
+            data-feedback-pass=""
           >
             {canFinish
               ? t('seeResult')
@@ -289,11 +512,16 @@ export default function VocabTest({
                 <span lang="en" className="font-medium">
                   {item.word}
                 </span>
-                {locale === 'zh-CN' && item.zh && (
-                  <span lang="zh-CN" className="ml-2 text-muted-foreground">
-                    {item.zh}
+                {item.senses.map((row) => (
+                  <span key={row.p} className="ml-2 text-muted-foreground">
+                    {row.p}{' '}
+                    {locale === 'zh-CN' ? (
+                      <span lang="zh-CN">{row.zh.join('；')}</span>
+                    ) : (
+                      <span lang="en">{row.en}</span>
+                    )}
                   </span>
-                )}
+                ))}
               </li>
             ))}
           </ul>

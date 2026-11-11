@@ -1,0 +1,6989 @@
+{
+ "just": [
+  {
+   "p": "adv.",
+   "zh": [
+    "刚刚",
+    "仅仅",
+    "正好"
+   ],
+   "en": "a very short time ago"
+  },
+  {
+   "p": "adj.",
+   "zh": [
+    "公正的",
+    "合理的"
+   ],
+   "en": "fair and right"
+  }
+ ],
+ "out": [
+  {
+   "p": "adv.",
+   "zh": [
+    "在外面",
+    "向外",
+    "熄灭"
+   ],
+   "en": "away from the inside of a place"
+  },
+  {
+   "p": "adj.",
+   "zh": [
+    "外面的",
+    "熄灭的"
+   ],
+   "en": "not inside; not burning"
+  }
+ ],
+ "say": [
+  {
+   "p": "v.",
+   "zh": [
+    "说",
+    "讲",
+    "说明"
+   ],
+   "en": "to speak words out loud"
+  }
+ ],
+ "before": [
+  {
+   "p": "prep.",
+   "zh": [
+    "在…之前"
+   ],
+   "en": "earlier than a time or event"
+  },
+  {
+   "p": "conj.",
+   "zh": [
+    "在…之前"
+   ],
+   "en": "earlier than the time when"
+  }
+ ],
+ "down": [
+  {
+   "p": "adv.",
+   "zh": [
+    "向下",
+    "下去"
+   ],
+   "en": "toward a lower place"
+  },
+  {
+   "p": "prep.",
+   "zh": [
+    "沿着",
+    "往下"
+   ],
+   "en": "from a high place to a low place"
+  }
+ ],
+ "help": [
+  {
+   "p": "v.",
+   "zh": [
+    "帮助",
+    "帮忙"
+   ],
+   "en": "to make something easier for someone"
+  },
+  {
+   "p": "n.",
+   "zh": [
+    "帮助",
+    "援助"
+   ],
+   "en": "aid or support given to someone"
+  }
+ ],
+ "under": [
+  {
+   "p": "prep.",
+   "zh": [
+    "在…之下",
+    "低于"
+   ],
+   "en": "below or lower than something"
+  }
+ ],
+ "support": [
+  {
+   "p": "v.",
+   "zh": [
+    "支持",
+    "支撑",
+    "帮助"
+   ],
+   "en": "to agree with and help someone or something"
+  },
+  {
+   "p": "n.",
+   "zh": [
+    "支持",
+    "援助"
+   ],
+   "en": "help or encouragement given to someone"
+  }
+ ],
+ "business": [
+  {
+   "p": "n.",
+   "zh": [
+    "生意",
+    "商业",
+    "公司"
+   ],
+   "en": "work of buying and selling things"
+  }
+ ],
+ "god": [
+  {
+   "p": "n.",
+   "zh": [
+    "上帝",
+    "神"
+   ],
+   "en": "a being that people worship"
+  }
+ ],
+ "once": [
+  {
+   "p": "adv.",
+   "zh": [
+    "一次",
+    "曾经"
+   ],
+   "en": "one time only; at a past time"
+  },
+  {
+   "p": "conj.",
+   "zh": [
+    "一旦"
+   ],
+   "en": "as soon as; from the time that"
+  }
+ ],
+ "war": [
+  {
+   "p": "n.",
+   "zh": [
+    "战争"
+   ],
+   "en": "fighting between countries or groups"
+  }
+ ],
+ "record": [
+  {
+   "p": "n.",
+   "zh": [
+    "记录",
+    "唱片",
+    "纪录"
+   ],
+   "en": "written account of facts or events"
+  },
+  {
+   "p": "v.",
+   "zh": [
+    "记录",
+    "录音"
+   ],
+   "en": "write or store information to keep it"
+  }
+ ],
+ "mind": [
+  {
+   "p": "n.",
+   "zh": [
+    "头脑",
+    "思想",
+    "心智"
+   ],
+   "en": "the part of you that thinks"
+  },
+  {
+   "p": "v.",
+   "zh": [
+    "介意",
+    "注意"
+   ],
+   "en": "to feel upset or annoyed about something"
+  }
+ ],
+ "room": [
+  {
+   "p": "n.",
+   "zh": [
+    "房间",
+    "空间"
+   ],
+   "en": "a part of a building with walls"
+  }
+ ],
+ "cost": [
+  {
+   "p": "n.",
+   "zh": [
+    "成本",
+    "费用",
+    "代价"
+   ],
+   "en": "the money you pay for something"
+  },
+  {
+   "p": "v.",
+   "zh": [
+    "花费",
+    "值"
+   ],
+   "en": "to have a price of"
+  }
+ ],
+ "south": [
+  {
+   "p": "n.",
+   "zh": [
+    "南方",
+    "南"
+   ],
+   "en": "direction opposite to north"
+  },
+  {
+   "p": "adj.",
+   "zh": [
+    "南方的",
+    "向南的"
+   ],
+   "en": "in or toward the direction opposite north"
+  }
+ ],
+ "due": [
+  {
+   "p": "adj.",
+   "zh": [
+    "到期的",
+    "应付的",
+    "预定的"
+   ],
+   "en": "expected or required at a set time"
+  }
+ ],
+ "sit": [
+  {
+   "p": "v.",
+   "zh": [
+    "坐",
+    "就座"
+   ],
+   "en": "to rest on your bottom on a seat"
+  }
+ ],
+ "soon": [
+  {
+   "p": "adv.",
+   "zh": [
+    "不久",
+    "很快"
+   ],
+   "en": "in a short time from now"
+  }
+ ],
+ "model": [
+  {
+   "p": "n.",
+   "zh": [
+    "模型",
+    "模特",
+    "典范"
+   ],
+   "en": "small copy or example of something"
+  }
+ ],
+ "current": [
+  {
+   "p": "adj.",
+   "zh": [
+    "当前的",
+    "现在的"
+   ],
+   "en": "happening or in use now"
+  },
+  {
+   "p": "n.",
+   "zh": [
+    "水流",
+    "电流"
+   ],
+   "en": "steady flow of water, air, or electricity"
+  }
+ ],
+ "official": [
+  {
+   "p": "n.",
+   "zh": [
+    "官员",
+    "公务员"
+   ],
+   "en": "a person with a public job"
+  },
+  {
+   "p": "adj.",
+   "zh": [
+    "官方的",
+    "正式的"
+   ],
+   "en": "approved by those in authority"
+  }
+ ],
+ "wife": [
+  {
+   "p": "n.",
+   "zh": [
+    "妻子",
+    "太太"
+   ],
+   "en": "the woman a man is married to"
+  }
+ ],
+ "director": [
+  {
+   "p": "n.",
+   "zh": [
+    "导演",
+    "主管",
+    "总监"
+   ],
+   "en": "person who leads a film or company"
+  }
+ ],
+ "amount": [
+  {
+   "p": "n.",
+   "zh": [
+    "数量",
+    "总额"
+   ],
+   "en": "how much of something there is"
+  },
+  {
+   "p": "v.",
+   "zh": [
+    "总计",
+    "等于"
+   ],
+   "en": "to add up to a total"
+  }
+ ],
+ "cross": [
+  {
+   "p": "v.",
+   "zh": [
+    "穿过",
+    "越过",
+    "交叉"
+   ],
+   "en": "to go from one side to the other"
+  },
+  {
+   "p": "adj.",
+   "zh": [
+    "生气的",
+    "交叉的"
+   ],
+   "en": "angry or annoyed"
+  }
+ ],
+ "finally": [
+  {
+   "p": "adv.",
+   "zh": [
+    "最后",
+    "终于"
+   ],
+   "en": "after a long time or at the end"
+  }
+ ],
+ "accept": [
+  {
+   "p": "v.",
+   "zh": [
+    "接受",
+    "同意",
+    "承认"
+   ],
+   "en": "take something that is offered"
+  }
+ ],
+ "rock": [
+  {
+   "p": "n.",
+   "zh": [
+    "岩石",
+    "石头"
+   ],
+   "en": "hard natural material that makes up mountains"
+  },
+  {
+   "p": "v.",
+   "zh": [
+    "摇动",
+    "摇晃"
+   ],
+   "en": "to move gently back and forth"
+  }
+ ],
+ "travel": [
+  {
+   "p": "v.",
+   "zh": [
+    "旅行",
+    "行进"
+   ],
+   "en": "to go from one place to another"
+  },
+  {
+   "p": "n.",
+   "zh": [
+    "旅行"
+   ],
+   "en": "the act of going on trips"
+  }
+ ],
+ "career": [
+  {
+   "p": "n.",
+   "zh": [
+    "事业",
+    "职业生涯"
+   ],
+   "en": "the work a person does in life"
+  }
+ ],
+ "culture": [
+  {
+   "p": "n.",
+   "zh": [
+    "文化",
+    "文明"
+   ],
+   "en": "the customs and arts of a people"
+  }
+ ],
+ "legal": [
+  {
+   "p": "adj.",
+   "zh": [
+    "法律的",
+    "合法的"
+   ],
+   "en": "allowed by law"
+  }
+ ],
+ "tree": [
+  {
+   "p": "n.",
+   "zh": [
+    "树",
+    "树木"
+   ],
+   "en": "a tall plant with a trunk and branches"
+  }
+ ],
+ "spot": [
+  {
+   "p": "n.",
+   "zh": [
+    "地点",
+    "斑点"
+   ],
+   "en": "a particular place or small mark"
+  },
+  {
+   "p": "v.",
+   "zh": [
+    "发现",
+    "看见"
+   ],
+   "en": "to see or notice something"
+  }
+ ],
+ "user": [
+  {
+   "p": "n.",
+   "zh": [
+    "使用者",
+    "用户"
+   ],
+   "en": "person who uses a thing or service"
+  }
+ ],
+ "update": [
+  {
+   "p": "v.",
+   "zh": [
+    "更新"
+   ],
+   "en": "to make newer with the latest information"
+  },
+  {
+   "p": "n.",
+   "zh": [
+    "更新",
+    "最新消息"
+   ],
+   "en": "new information or a newer version"
+  }
+ ],
+ "concern": [
+  {
+   "p": "n.",
+   "zh": [
+    "担忧",
+    "关心"
+   ],
+   "en": "a feeling of worry"
+  },
+  {
+   "p": "v.",
+   "zh": [
+    "涉及",
+    "使担心"
+   ],
+   "en": "to involve or worry someone"
+  }
+ ],
+ "particular": [
+  {
+   "p": "adj.",
+   "zh": [
+    "特别的",
+    "特定的",
+    "挑剔的"
+   ],
+   "en": "special, or one single thing, not others"
+  }
+ ],
+ "agent": [
+  {
+   "p": "n.",
+   "zh": [
+    "代理商",
+    "经纪人",
+    "特工"
+   ],
+   "en": "person who acts for another person"
+  }
+ ],
+ "extra": [
+  {
+   "p": "adj.",
+   "zh": [
+    "额外的",
+    "附加的"
+   ],
+   "en": "more than what is usual or needed"
+  },
+  {
+   "p": "adv.",
+   "zh": [
+    "额外地",
+    "格外"
+   ],
+   "en": "more than usual"
+  }
+ ],
+ "raise": [
+  {
+   "p": "v.",
+   "zh": [
+    "提高",
+    "举起",
+    "抚养"
+   ],
+   "en": "to lift up or make higher"
+  }
+ ],
+ "secretary": [
+  {
+   "p": "n.",
+   "zh": [
+    "秘书"
+   ],
+   "en": "someone who does office work for a boss"
+  }
+ ],
+ "product": [
+  {
+   "p": "n.",
+   "zh": [
+    "产品",
+    "结果",
+    "乘积"
+   ],
+   "en": "thing that people make or sell"
+  }
+ ],
+ "anymore": [
+  {
+   "p": "adv.",
+   "zh": [
+    "再也不",
+    "不再"
+   ],
+   "en": "not now, though it was true before"
+  }
+ ],
+ "generation": [
+  {
+   "p": "n.",
+   "zh": [
+    "世代",
+    "一代",
+    "产生"
+   ],
+   "en": "all people born at about the same time"
+  }
+ ],
+ "loan": [
+  {
+   "p": "n.",
+   "zh": [
+    "贷款",
+    "借款"
+   ],
+   "en": "money that you borrow and must pay back"
+  },
+  {
+   "p": "v.",
+   "zh": [
+    "借给",
+    "借出"
+   ],
+   "en": "to lend something to someone"
+  }
+ ],
+ "achieve": [
+  {
+   "p": "v.",
+   "zh": [
+    "实现",
+    "达到",
+    "完成"
+   ],
+   "en": "succeed in reaching a goal"
+  }
+ ],
+ "distance": [
+  {
+   "p": "n.",
+   "zh": [
+    "距离",
+    "远处"
+   ],
+   "en": "the space between two places"
+  }
+ ],
+ "holy": [
+  {
+   "p": "adj.",
+   "zh": [
+    "神圣的",
+    "圣洁的"
+   ],
+   "en": "connected with a god or a religion"
+  }
+ ],
+ "budget": [
+  {
+   "p": "n.",
+   "zh": [
+    "预算"
+   ],
+   "en": "a plan for how to spend money"
+  }
+ ],
+ "volume": [
+  {
+   "p": "n.",
+   "zh": [
+    "体积",
+    "音量",
+    "册"
+   ],
+   "en": "amount of space that a thing fills"
+  }
+ ],
+ "ban": [
+  {
+   "p": "v.",
+   "zh": [
+    "禁止",
+    "取缔"
+   ],
+   "en": "to say officially that something is not allowed"
+  },
+  {
+   "p": "n.",
+   "zh": [
+    "禁令"
+   ],
+   "en": "an official order that stops something"
+  }
+ ],
+ "zone": [
+  {
+   "p": "n.",
+   "zh": [
+    "区域",
+    "地带"
+   ],
+   "en": "an area with a special use"
+  }
+ ],
+ "corner": [
+  {
+   "p": "n.",
+   "zh": [
+    "角落",
+    "拐角"
+   ],
+   "en": "the place where two lines or walls meet"
+  },
+  {
+   "p": "v.",
+   "zh": [
+    "使陷入困境",
+    "垄断"
+   ],
+   "en": "to trap a person so they cannot escape"
+  }
+ ],
+ "mental": [
+  {
+   "p": "adj.",
+   "zh": [
+    "精神的",
+    "心理的",
+    "脑力的"
+   ],
+   "en": "of the mind"
+  }
+ ],
+ "silver": [
+  {
+   "p": "n.",
+   "zh": [
+    "银",
+    "银器"
+   ],
+   "en": "a shiny grey-white metal"
+  },
+  {
+   "p": "adj.",
+   "zh": [
+    "银制的",
+    "银色的"
+   ],
+   "en": "made of a shiny grey-white metal"
+  }
+ ],
+ "fellow": [
+  {
+   "p": "n.",
+   "zh": [
+    "同伴",
+    "家伙",
+    "同事"
+   ],
+   "en": "a man or boy; a companion"
+  },
+  {
+   "p": "adj.",
+   "zh": [
+    "同类的",
+    "同伴的"
+   ],
+   "en": "sharing the same group or situation"
+  }
+ ],
+ "contribute": [
+  {
+   "p": "v.",
+   "zh": [
+    "有助于",
+    "捐助",
+    "投稿"
+   ],
+   "en": "to give help, money, or ideas"
+  }
+ ],
+ "prepare": [
+  {
+   "p": "v.",
+   "zh": [
+    "准备",
+    "预备"
+   ],
+   "en": "make ready for later use"
+  }
+ ],
+ "sky": [
+  {
+   "p": "n.",
+   "zh": [
+    "天空",
+    "天"
+   ],
+   "en": "space above the earth with clouds and sun"
+  }
+ ],
+ "liberal": [
+  {
+   "p": "adj.",
+   "zh": [
+    "自由的",
+    "开明的",
+    "慷慨的"
+   ],
+   "en": "open to new ideas, not strict"
+  }
+ ],
+ "museum": [
+  {
+   "p": "n.",
+   "zh": [
+    "博物馆"
+   ],
+   "en": "a building with old or important objects"
+  }
+ ],
+ "plate": [
+  {
+   "p": "n.",
+   "zh": [
+    "盘子",
+    "碟",
+    "金属板"
+   ],
+   "en": "flat dish for food"
+  }
+ ],
+ "grab": [
+  {
+   "p": "v.",
+   "zh": [
+    "抓住",
+    "抢夺"
+   ],
+   "en": "to take hold of something fast"
+  }
+ ],
+ "democratic": [
+  {
+   "p": "adj.",
+   "zh": [
+    "民主的"
+   ],
+   "en": "ruled by the free vote of the people"
+  }
+ ],
+ "asset": [
+  {
+   "p": "n.",
+   "zh": [
+    "资产",
+    "优点"
+   ],
+   "en": "something of value that a person owns"
+  }
+ ],
+ "senator": [
+  {
+   "p": "n.",
+   "zh": [
+    "参议员"
+   ],
+   "en": "member of a national upper house of government"
+  }
+ ],
+ "territory": [
+  {
+   "p": "n.",
+   "zh": [
+    "领土",
+    "领地",
+    "地区"
+   ],
+   "en": "land controlled by a country or ruler"
+  }
+ ],
+ "supreme": [
+  {
+   "p": "adj.",
+   "zh": [
+    "最高的",
+    "至上的"
+   ],
+   "en": "highest in power or rank"
+  }
+ ],
+ "spell": [
+  {
+   "p": "v.",
+   "zh": [
+    "拼写"
+   ],
+   "en": "to say the letters of a word"
+  },
+  {
+   "p": "n.",
+   "zh": [
+    "咒语",
+    "一段时间"
+   ],
+   "en": "magic words, or a short period of time"
+  }
+ ],
+ "distribution": [
+  {
+   "p": "n.",
+   "zh": [
+    "分发",
+    "分配",
+    "分布"
+   ],
+   "en": "act of giving out among many"
+  }
+ ],
+ "minor": [
+  {
+   "p": "adj.",
+   "zh": [
+    "较小的",
+    "次要的"
+   ],
+   "en": "small or not very important"
+  },
+  {
+   "p": "n.",
+   "zh": [
+    "未成年人"
+   ],
+   "en": "a person under the legal adult age"
+  }
+ ],
+ "angel": [
+  {
+   "p": "n.",
+   "zh": [
+    "天使",
+    "善人"
+   ],
+   "en": "a spirit that serves a god, with wings"
+  }
+ ],
+ "bike": [
+  {
+   "p": "n.",
+   "zh": [
+    "自行车"
+   ],
+   "en": "a two-wheeled vehicle that you pedal"
+  }
+ ],
+ "perspective": [
+  {
+   "p": "n.",
+   "zh": [
+    "视角",
+    "看法",
+    "透视"
+   ],
+   "en": "way of thinking about something"
+  }
+ ],
+ "empty": [
+  {
+   "p": "adj.",
+   "zh": [
+    "空的",
+    "空虚的"
+   ],
+   "en": "with nothing inside"
+  },
+  {
+   "p": "v.",
+   "zh": [
+    "倒空",
+    "清空"
+   ],
+   "en": "to take everything out of a place"
+  }
+ ],
+ "cable": [
+  {
+   "p": "n.",
+   "zh": [
+    "电缆",
+    "缆绳"
+   ],
+   "en": "a thick wire or strong rope"
+  }
+ ],
+ "recall": [
+  {
+   "p": "v.",
+   "zh": [
+    "回想",
+    "回忆",
+    "召回"
+   ],
+   "en": "to remember something from the past"
+  }
+ ],
+ "creative": [
+  {
+   "p": "adj.",
+   "zh": [
+    "有创造力的",
+    "创造性的"
+   ],
+   "en": "good at making new ideas"
+  }
+ ],
+ "associate": [
+  {
+   "p": "v.",
+   "zh": [
+    "联系",
+    "交往"
+   ],
+   "en": "to connect things in your mind"
+  },
+  {
+   "p": "n.",
+   "zh": [
+    "同事",
+    "伙伴"
+   ],
+   "en": "a person you work or spend time with"
+  }
+ ],
+ "premier": [
+  {
+   "p": "n.",
+   "zh": [
+    "总理",
+    "首相"
+   ],
+   "en": "the head of a government"
+  },
+  {
+   "p": "adj.",
+   "zh": [
+    "首要的",
+    "最好的"
+   ],
+   "en": "first in rank or importance"
+  }
+ ],
+ "pump": [
+  {
+   "p": "n.",
+   "zh": [
+    "泵",
+    "打气筒"
+   ],
+   "en": "a machine that moves liquid or air"
+  },
+  {
+   "p": "v.",
+   "zh": [
+    "抽",
+    "打气"
+   ],
+   "en": "to move liquid or air with a machine"
+  }
+ ],
+ "opposition": [
+  {
+   "p": "n.",
+   "zh": [
+    "反对",
+    "对抗",
+    "反对党"
+   ],
+   "en": "strong disagreement with a plan or idea"
+  }
+ ],
+ "unlike": [
+  {
+   "p": "prep.",
+   "zh": [
+    "不像",
+    "和…不同"
+   ],
+   "en": "different from another person or thing"
+  },
+  {
+   "p": "adj.",
+   "zh": [
+    "不同的",
+    "不相似的"
+   ],
+   "en": "not similar to each other"
+  }
+ ],
+ "retain": [
+  {
+   "p": "v.",
+   "zh": [
+    "保持",
+    "保留",
+    "记住"
+   ],
+   "en": "to keep something and not lose it"
+  }
+ ],
+ "expansion": [
+  {
+   "p": "n.",
+   "zh": [
+    "扩张",
+    "扩大",
+    "膨胀"
+   ],
+   "en": "the act of becoming larger"
+  }
+ ],
+ "principal": [
+  {
+   "p": "adj.",
+   "zh": [
+    "主要的",
+    "首要的"
+   ],
+   "en": "most important"
+  },
+  {
+   "p": "n.",
+   "zh": [
+    "校长",
+    "本金"
+   ],
+   "en": "head of a school"
+  }
+ ],
+ "existence": [
+  {
+   "p": "n.",
+   "zh": [
+    "存在",
+    "生存"
+   ],
+   "en": "the state of being real or alive"
+  }
+ ],
+ "baseball": [
+  {
+   "p": "n.",
+   "zh": [
+    "棒球"
+   ],
+   "en": "a team game with a bat and ball"
+  }
+ ],
+ "athlete": [
+  {
+   "p": "n.",
+   "zh": [
+    "运动员"
+   ],
+   "en": "a person who is good at sports"
+  }
+ ],
+ "sum": [
+  {
+   "p": "n.",
+   "zh": [
+    "总和",
+    "金额",
+    "总数"
+   ],
+   "en": "result of adding numbers together"
+  },
+  {
+   "p": "v.",
+   "zh": [
+    "总结",
+    "合计"
+   ],
+   "en": "give the main points in a short form"
+  }
+ ],
+ "tube": [
+  {
+   "p": "n.",
+   "zh": [
+    "管",
+    "管子",
+    "软管"
+   ],
+   "en": "long hollow pipe for liquid or air"
+  }
+ ],
+ "mystery": [
+  {
+   "p": "n.",
+   "zh": [
+    "神秘",
+    "谜",
+    "奥秘"
+   ],
+   "en": "something strange that nobody can explain"
+  }
+ ],
+ "bread": [
+  {
+   "p": "n.",
+   "zh": [
+    "面包",
+    "食物"
+   ],
+   "en": "a common food made from flour and baked"
+  }
+ ],
+ "rough": [
+  {
+   "p": "adj.",
+   "zh": [
+    "粗糙的",
+    "粗暴的",
+    "大致的"
+   ],
+   "en": "not smooth or even"
+  }
+ ],
+ "bite": [
+  {
+   "p": "v.",
+   "zh": [
+    "咬",
+    "叮"
+   ],
+   "en": "to cut something with the teeth"
+  },
+  {
+   "p": "n.",
+   "zh": [
+    "咬",
+    "一口"
+   ],
+   "en": "an act of cutting with the teeth"
+  }
+ ],
+ "employee": [
+  {
+   "p": "n.",
+   "zh": [
+    "员工",
+    "职员",
+    "雇员"
+   ],
+   "en": "a person paid to work for a company"
+  }
+ ],
+ "pace": [
+  {
+   "p": "n.",
+   "zh": [
+    "步伐",
+    "速度"
+   ],
+   "en": "the speed of walking, running, or doing"
+  }
+ ],
+ "illness": [
+  {
+   "p": "n.",
+   "zh": [
+    "疾病",
+    "病"
+   ],
+   "en": "state of poor health in body or mind"
+  }
+ ],
+ "alien": [
+  {
+   "p": "n.",
+   "zh": [
+    "外星人",
+    "外国人"
+   ],
+   "en": "a creature from another planet"
+  },
+  {
+   "p": "adj.",
+   "zh": [
+    "外国的",
+    "陌生的"
+   ],
+   "en": "strange and not familiar to you"
+  }
+ ],
+ "necessarily": [
+  {
+   "p": "adv.",
+   "zh": [
+    "必然地",
+    "必定"
+   ],
+   "en": "in a way that must happen"
+  }
+ ],
+ "anxiety": [
+  {
+   "p": "n.",
+   "zh": [
+    "焦虑",
+    "忧虑"
+   ],
+   "en": "a strong feeling of worry or fear"
+  }
+ ],
+ "curve": [
+  {
+   "p": "n.",
+   "zh": [
+    "曲线",
+    "弯曲"
+   ],
+   "en": "line that bends smoothly"
+  },
+  {
+   "p": "v.",
+   "zh": [
+    "弯",
+    "使弯曲"
+   ],
+   "en": "bend in a smooth line"
+  }
+ ],
+ "telephone": [
+  {
+   "p": "n.",
+   "zh": [
+    "电话",
+    "电话机"
+   ],
+   "en": "a device for talking to people far away"
+  },
+  {
+   "p": "v.",
+   "zh": [
+    "打电话"
+   ],
+   "en": "to call someone with a device for speaking"
+  }
+ ],
+ "yield": [
+  {
+   "p": "v.",
+   "zh": [
+    "产出",
+    "屈服",
+    "让步"
+   ],
+   "en": "to produce; to give way"
+  },
+  {
+   "p": "n.",
+   "zh": [
+    "产量",
+    "收益"
+   ],
+   "en": "the amount that something produces"
+  }
+ ],
+ "lean": [
+  {
+   "p": "v.",
+   "zh": [
+    "倾斜",
+    "倚靠"
+   ],
+   "en": "to bend or rest against something"
+  },
+  {
+   "p": "adj.",
+   "zh": [
+    "瘦的",
+    "精瘦的"
+   ],
+   "en": "thin and without extra fat"
+  }
+ ],
+ "awareness": [
+  {
+   "p": "n.",
+   "zh": [
+    "意识",
+    "认识"
+   ],
+   "en": "knowledge that something exists or is true"
+  }
+ ],
+ "alter": [
+  {
+   "p": "v.",
+   "zh": [
+    "改变",
+    "修改"
+   ],
+   "en": "to make or become different"
+  }
+ ],
+ "routine": [
+  {
+   "p": "n.",
+   "zh": [
+    "常规",
+    "例行公事"
+   ],
+   "en": "the usual way of doing things"
+  },
+  {
+   "p": "adj.",
+   "zh": [
+    "日常的",
+    "常规的"
+   ],
+   "en": "done as part of the normal way"
+  }
+ ],
+ "hockey": [
+  {
+   "p": "n.",
+   "zh": [
+    "曲棍球",
+    "冰球"
+   ],
+   "en": "a team game with sticks and a ball"
+  }
+ ],
+ "scream": [
+  {
+   "p": "v.",
+   "zh": [
+    "尖叫",
+    "大叫"
+   ],
+   "en": "cry out loudly in fear or pain"
+  },
+  {
+   "p": "n.",
+   "zh": [
+    "尖叫声"
+   ],
+   "en": "loud high cry of fear or pain"
+  }
+ ],
+ "efficiency": [
+  {
+   "p": "n.",
+   "zh": [
+    "效率",
+    "效能"
+   ],
+   "en": "doing work well without wasting time or energy"
+  }
+ ],
+ "smash": [
+  {
+   "p": "v.",
+   "zh": [
+    "打碎",
+    "粉碎",
+    "猛撞"
+   ],
+   "en": "to break into many pieces with force"
+  }
+ ],
+ "pole": [
+  {
+   "p": "n.",
+   "zh": [
+    "杆",
+    "极"
+   ],
+   "en": "a long thin round piece of wood"
+  }
+ ],
+ "radical": [
+  {
+   "p": "adj.",
+   "zh": [
+    "激进的",
+    "根本的"
+   ],
+   "en": "very new or extreme; causing big change"
+  },
+  {
+   "p": "n.",
+   "zh": [
+    "激进分子",
+    "部首"
+   ],
+   "en": "person who wants big political change"
+  }
+ ],
+ "melt": [
+  {
+   "p": "v.",
+   "zh": [
+    "融化",
+    "熔化"
+   ],
+   "en": "to change from solid to liquid with heat"
+  }
+ ],
+ "charter": [
+  {
+   "p": "n.",
+   "zh": [
+    "特许状",
+    "宪章"
+   ],
+   "en": "a written paper that gives rights or aims"
+  },
+  {
+   "p": "v.",
+   "zh": [
+    "包租"
+   ],
+   "en": "to hire a plane or boat"
+  }
+ ],
+ "honey": [
+  {
+   "p": "n.",
+   "zh": [
+    "蜂蜜",
+    "亲爱的"
+   ],
+   "en": "a sweet, sticky food made by bees"
+  }
+ ],
+ "heritage": [
+  {
+   "p": "n.",
+   "zh": [
+    "遗产",
+    "传统"
+   ],
+   "en": "traditions passed down from the past"
+  }
+ ],
+ "declare": [
+  {
+   "p": "v.",
+   "zh": [
+    "宣布",
+    "声明",
+    "申报"
+   ],
+   "en": "to say something in a clear, official way"
+  }
+ ],
+ "resume": [
+  {
+   "p": "v.",
+   "zh": [
+    "重新开始",
+    "恢复"
+   ],
+   "en": "to start again after a stop"
+  },
+  {
+   "p": "n.",
+   "zh": [
+    "简历",
+    "摘要"
+   ],
+   "en": "a short written account of your work history"
+  }
+ ],
+ "cow": [
+  {
+   "p": "n.",
+   "zh": [
+    "奶牛",
+    "母牛"
+   ],
+   "en": "a large farm animal that gives milk"
+  }
+ ],
+ "examination": [
+  {
+   "p": "n.",
+   "zh": [
+    "考试",
+    "检查",
+    "审查"
+   ],
+   "en": "formal test of what a person knows"
+  }
+ ],
+ "breathe": [
+  {
+   "p": "v.",
+   "zh": [
+    "呼吸"
+   ],
+   "en": "to take air in and send it out"
+  }
+ ],
+ "barrel": [
+  {
+   "p": "n.",
+   "zh": [
+    "桶",
+    "枪管"
+   ],
+   "en": "a round container with flat ends"
+  }
+ ],
+ "ethnic": [
+  {
+   "p": "adj.",
+   "zh": [
+    "种族的",
+    "民族的"
+   ],
+   "en": "of a group with the same culture"
+  }
+ ],
+ "cape": [
+  {
+   "p": "n.",
+   "zh": [
+    "海角",
+    "岬",
+    "披肩"
+   ],
+   "en": "land that sticks out into the sea"
+  }
+ ],
+ "sufficient": [
+  {
+   "p": "adj.",
+   "zh": [
+    "足够的",
+    "充分的"
+   ],
+   "en": "as much as you need"
+  }
+ ],
+ "cheer": [
+  {
+   "p": "v.",
+   "zh": [
+    "欢呼",
+    "喝彩"
+   ],
+   "en": "to shout in support or joy"
+  },
+  {
+   "p": "n.",
+   "zh": [
+    "欢呼声",
+    "喝彩"
+   ],
+   "en": "a shout of support or joy"
+  }
+ ],
+ "stack": [
+  {
+   "p": "n.",
+   "zh": [
+    "一堆",
+    "大量"
+   ],
+   "en": "a pile of things, one on another"
+  },
+  {
+   "p": "v.",
+   "zh": [
+    "堆积",
+    "堆叠"
+   ],
+   "en": "to put things in a pile"
+  }
+ ],
+ "prompt": [
+  {
+   "p": "adj.",
+   "zh": [
+    "迅速的",
+    "及时的"
+   ],
+   "en": "done at once, without delay"
+  },
+  {
+   "p": "v.",
+   "zh": [
+    "促使",
+    "提示"
+   ],
+   "en": "cause someone to do something"
+  }
+ ],
+ "protocol": [
+  {
+   "p": "n.",
+   "zh": [
+    "协议",
+    "礼仪",
+    "规程"
+   ],
+   "en": "an agreed set of rules for acting"
+  }
+ ],
+ "echo": [
+  {
+   "p": "n.",
+   "zh": [
+    "回声",
+    "回音"
+   ],
+   "en": "a sound that comes back from a wall"
+  },
+  {
+   "p": "v.",
+   "zh": [
+    "重复",
+    "发回声"
+   ],
+   "en": "to repeat what someone said"
+  }
+ ],
+ "remarkable": [
+  {
+   "p": "adj.",
+   "zh": [
+    "非凡的",
+    "显著的",
+    "值得注意的"
+   ],
+   "en": "unusual and worth noticing, often very good"
+  }
+ ],
+ "competitor": [
+  {
+   "p": "n.",
+   "zh": [
+    "竞争者",
+    "对手"
+   ],
+   "en": "person trying to win against others"
+  }
+ ],
+ "peaceful": [
+  {
+   "p": "adj.",
+   "zh": [
+    "平静的",
+    "和平的"
+   ],
+   "en": "quiet and calm, without trouble or war"
+  }
+ ],
+ "dam": [
+  {
+   "p": "n.",
+   "zh": [
+    "水坝",
+    "堤坝"
+   ],
+   "en": "a wall built to hold back water"
+  }
+ ],
+ "occupation": [
+  {
+   "p": "n.",
+   "zh": [
+    "职业",
+    "占领"
+   ],
+   "en": "a person's job or work"
+  }
+ ],
+ "accent": [
+  {
+   "p": "n.",
+   "zh": [
+    "口音",
+    "重音"
+   ],
+   "en": "speech that shows where you come from"
+  }
+ ],
+ "container": [
+  {
+   "p": "n.",
+   "zh": [
+    "容器",
+    "集装箱"
+   ],
+   "en": "a box or bottle that holds things"
+  }
+ ],
+ "seventh": [
+  {
+   "p": "num.",
+   "zh": [
+    "第七",
+    "七分之一"
+   ],
+   "en": "number seven in a list"
+  }
+ ],
+ "racism": [
+  {
+   "p": "n.",
+   "zh": [
+    "种族主义",
+    "种族歧视"
+   ],
+   "en": "unfair treatment of people because of their race"
+  }
+ ],
+ "casino": [
+  {
+   "p": "n.",
+   "zh": [
+    "赌场"
+   ],
+   "en": "place where people play games for money"
+  }
+ ],
+ "enhance": [
+  {
+   "p": "v.",
+   "zh": [
+    "提高",
+    "增强"
+   ],
+   "en": "to make something better or stronger"
+  }
+ ],
+ "facilitate": [
+  {
+   "p": "v.",
+   "zh": [
+    "促进",
+    "使便利"
+   ],
+   "en": "to make an action easier"
+  }
+ ],
+ "cherry": [
+  {
+   "p": "n.",
+   "zh": [
+    "樱桃"
+   ],
+   "en": "a small round red fruit with a stone"
+  }
+ ],
+ "unity": [
+  {
+   "p": "n.",
+   "zh": [
+    "团结",
+    "统一"
+   ],
+   "en": "state of people working together as one"
+  }
+ ],
+ "useless": [
+  {
+   "p": "adj.",
+   "zh": [
+    "无用的",
+    "无效的"
+   ],
+   "en": "not good for any purpose"
+  }
+ ],
+ "transit": [
+  {
+   "p": "n.",
+   "zh": [
+    "运输",
+    "通行"
+   ],
+   "en": "the carrying of people or goods"
+  }
+ ],
+ "ballot": [
+  {
+   "p": "n.",
+   "zh": [
+    "选票",
+    "投票"
+   ],
+   "en": "a paper or vote used to choose someone"
+  }
+ ],
+ "couch": [
+  {
+   "p": "n.",
+   "zh": [
+    "沙发",
+    "长沙发"
+   ],
+   "en": "long soft seat for several people"
+  }
+ ],
+ "mentally": [
+  {
+   "p": "adv.",
+   "zh": [
+    "心理上",
+    "精神上"
+   ],
+   "en": "in the mind"
+  }
+ ],
+ "tender": [
+  {
+   "p": "adj.",
+   "zh": [
+    "温柔的",
+    "嫩的",
+    "疼痛的"
+   ],
+   "en": "gentle and kind; soft and easy to cut"
+  },
+  {
+   "p": "v.",
+   "zh": [
+    "提出",
+    "投标"
+   ],
+   "en": "to offer formally"
+  }
+ ],
+ "marathon": [
+  {
+   "p": "n.",
+   "zh": [
+    "马拉松"
+   ],
+   "en": "a very long race run on foot"
+  }
+ ],
+ "ethics": [
+  {
+   "p": "n.",
+   "zh": [
+    "伦理",
+    "道德规范"
+   ],
+   "en": "rules about what is right and wrong"
+  }
+ ],
+ "comply": [
+  {
+   "p": "v.",
+   "zh": [
+    "遵守",
+    "服从"
+   ],
+   "en": "to obey a rule or an order"
+  }
+ ],
+ "conscious": [
+  {
+   "p": "adj.",
+   "zh": [
+    "有意识的",
+    "意识到的",
+    "清醒的"
+   ],
+   "en": "awake and able to think"
+  }
+ ],
+ "garbage": [
+  {
+   "p": "n.",
+   "zh": [
+    "垃圾",
+    "废物"
+   ],
+   "en": "things that you throw away"
+  }
+ ],
+ "clash": [
+  {
+   "p": "n.",
+   "zh": [
+    "冲突",
+    "碰撞声"
+   ],
+   "en": "fight or strong disagreement"
+  },
+  {
+   "p": "v.",
+   "zh": [
+    "冲突",
+    "抵触"
+   ],
+   "en": "fight or disagree strongly"
+  }
+ ],
+ "deficit": [
+  {
+   "p": "n.",
+   "zh": [
+    "赤字",
+    "不足"
+   ],
+   "en": "the amount by which money is too little"
+  }
+ ],
+ "infinite": [
+  {
+   "p": "adj.",
+   "zh": [
+    "无限的",
+    "无穷的"
+   ],
+   "en": "without any end or limit"
+  }
+ ],
+ "dash": [
+  {
+   "p": "v.",
+   "zh": [
+    "猛冲",
+    "飞奔"
+   ],
+   "en": "to run or go somewhere very fast"
+  },
+  {
+   "p": "n.",
+   "zh": [
+    "短跑",
+    "破折号"
+   ],
+   "en": "a short fast run or a long line"
+  }
+ ],
+ "vertical": [
+  {
+   "p": "adj.",
+   "zh": [
+    "垂直的",
+    "竖直的"
+   ],
+   "en": "straight up and down"
+  }
+ ],
+ "bacon": [
+  {
+   "p": "n.",
+   "zh": [
+    "培根",
+    "熏猪肉"
+   ],
+   "en": "thin salted slices of pig meat"
+  }
+ ],
+ "productivity": [
+  {
+   "p": "n.",
+   "zh": [
+    "生产力",
+    "生产率"
+   ],
+   "en": "how much work is done in time"
+  }
+ ],
+ "tan": [
+  {
+   "p": "n.",
+   "zh": [
+    "棕褐色",
+    "晒黑的肤色"
+   ],
+   "en": "a light brown colour, or sun-browned skin"
+  },
+  {
+   "p": "v.",
+   "zh": [
+    "晒黑",
+    "鞣制"
+   ],
+   "en": "to turn brown from the sun"
+  }
+ ],
+ "correction": [
+  {
+   "p": "n.",
+   "zh": [
+    "纠正",
+    "改正",
+    "修正"
+   ],
+   "en": "change that fixes a mistake"
+  }
+ ],
+ "mere": [
+  {
+   "p": "adj.",
+   "zh": [
+    "仅仅的",
+    "不过的"
+   ],
+   "en": "only; nothing more than that"
+  }
+ ],
+ "goodness": [
+  {
+   "p": "n.",
+   "zh": [
+    "善良",
+    "美德"
+   ],
+   "en": "the quality of being kind and good"
+  }
+ ],
+ "scroll": [
+  {
+   "p": "n.",
+   "zh": [
+    "卷轴"
+   ],
+   "en": "a long roll of paper with writing"
+  },
+  {
+   "p": "v.",
+   "zh": [
+    "滚动"
+   ],
+   "en": "to move text up or down"
+  }
+ ],
+ "unfortunate": [
+  {
+   "p": "adj.",
+   "zh": [
+    "不幸的",
+    "遗憾的"
+   ],
+   "en": "having or causing bad luck"
+  }
+ ],
+ "cannon": [
+  {
+   "p": "n.",
+   "zh": [
+    "大炮",
+    "火炮"
+   ],
+   "en": "a big gun that fires heavy shells"
+  }
+ ],
+ "applicant": [
+  {
+   "p": "n.",
+   "zh": [
+    "申请人",
+    "申请者"
+   ],
+   "en": "a person who asks for a job"
+  }
+ ],
+ "eternal": [
+  {
+   "p": "adj.",
+   "zh": [
+    "永恒的",
+    "永远的"
+   ],
+   "en": "continuing forever, without end"
+  }
+ ],
+ "notification": [
+  {
+   "p": "n.",
+   "zh": [
+    "通知",
+    "通告"
+   ],
+   "en": "formal notice of something"
+  }
+ ],
+ "cylinder": [
+  {
+   "p": "n.",
+   "zh": [
+    "圆柱体",
+    "圆筒",
+    "汽缸"
+   ],
+   "en": "a tube shape with round ends"
+  }
+ ],
+ "nutrition": [
+  {
+   "p": "n.",
+   "zh": [
+    "营养"
+   ],
+   "en": "the food that the body needs to grow"
+  }
+ ],
+ "severely": [
+  {
+   "p": "adv.",
+   "zh": [
+    "严重地",
+    "严厉地"
+   ],
+   "en": "in a very bad or very strict way"
+  }
+ ],
+ "hull": [
+  {
+   "p": "n.",
+   "zh": [
+    "船体",
+    "外壳"
+   ],
+   "en": "main body of a ship"
+  }
+ ],
+ "anxious": [
+  {
+   "p": "adj.",
+   "zh": [
+    "焦虑的",
+    "担心的",
+    "渴望的"
+   ],
+   "en": "worried and nervous about something"
+  }
+ ],
+ "plea": [
+  {
+   "p": "n.",
+   "zh": [
+    "恳求",
+    "请求"
+   ],
+   "en": "a strong request for help"
+  }
+ ],
+ "painter": [
+  {
+   "p": "n.",
+   "zh": [
+    "画家",
+    "油漆工"
+   ],
+   "en": "a person who makes pictures with paint"
+  }
+ ],
+ "testament": [
+  {
+   "p": "n.",
+   "zh": [
+    "遗嘱",
+    "证明"
+   ],
+   "en": "legal paper about who gets your property"
+  }
+ ],
+ "orientation": [
+  {
+   "p": "n.",
+   "zh": [
+    "方向",
+    "定位",
+    "适应"
+   ],
+   "en": "the direction something faces or is aimed"
+  }
+ ],
+ "subtle": [
+  {
+   "p": "adj.",
+   "zh": [
+    "微妙的",
+    "不明显的"
+   ],
+   "en": "small and difficult to notice"
+  }
+ ],
+ "optical": [
+  {
+   "p": "adj.",
+   "zh": [
+    "光学的",
+    "视觉的"
+   ],
+   "en": "related to light, sight, or the eyes"
+  }
+ ],
+ "nicely": [
+  {
+   "p": "adv.",
+   "zh": [
+    "好好地",
+    "漂亮地",
+    "令人满意地"
+   ],
+   "en": "in a pleasant or good way"
+  }
+ ],
+ "shrink": [
+  {
+   "p": "v.",
+   "zh": [
+    "缩小",
+    "收缩",
+    "萎缩"
+   ],
+   "en": "to become smaller in size or amount"
+  }
+ ],
+ "illustrate": [
+  {
+   "p": "v.",
+   "zh": [
+    "举例说明",
+    "说明",
+    "给…配图"
+   ],
+   "en": "to show or explain with examples"
+  }
+ ],
+ "revive": [
+  {
+   "p": "v.",
+   "zh": [
+    "复苏",
+    "使苏醒",
+    "使复兴"
+   ],
+   "en": "to bring back to life or strength"
+  }
+ ],
+ "panther": [
+  {
+   "p": "n.",
+   "zh": [
+    "黑豹",
+    "豹"
+   ],
+   "en": "large wild cat with black fur"
+  }
+ ],
+ "medieval": [
+  {
+   "p": "adj.",
+   "zh": [
+    "中世纪的",
+    "中古的"
+   ],
+   "en": "from the period between about 500 and 1500"
+  }
+ ],
+ "magnificent": [
+  {
+   "p": "adj.",
+   "zh": [
+    "壮丽的",
+    "宏伟的"
+   ],
+   "en": "very beautiful and grand"
+  }
+ ],
+ "fridge": [
+  {
+   "p": "n.",
+   "zh": [
+    "冰箱"
+   ],
+   "en": "a cold box in a kitchen for food"
+  }
+ ],
+ "metric": [
+  {
+   "p": "adj.",
+   "zh": [
+    "公制的",
+    "米制的"
+   ],
+   "en": "of the system that uses meters and grams"
+  }
+ ],
+ "penguin": [
+  {
+   "p": "n.",
+   "zh": [
+    "企鹅"
+   ],
+   "en": "black and white sea bird that cannot fly"
+  }
+ ],
+ "thereby": [
+  {
+   "p": "adv.",
+   "zh": [
+    "因此",
+    "从而"
+   ],
+   "en": "by that means"
+  }
+ ],
+ "admiral": [
+  {
+   "p": "n.",
+   "zh": [
+    "海军上将"
+   ],
+   "en": "a very high officer in a navy"
+  }
+ ],
+ "textbook": [
+  {
+   "p": "n.",
+   "zh": [
+    "教科书",
+    "课本"
+   ],
+   "en": "book used for study in school"
+  }
+ ],
+ "corridor": [
+  {
+   "p": "n.",
+   "zh": [
+    "走廊",
+    "通道"
+   ],
+   "en": "a long narrow passage inside a building"
+  }
+ ],
+ "impress": [
+  {
+   "p": "v.",
+   "zh": [
+    "使印象深刻",
+    "给…好印象"
+   ],
+   "en": "to make people feel admiration"
+  }
+ ],
+ "tease": [
+  {
+   "p": "v.",
+   "zh": [
+    "取笑",
+    "戏弄"
+   ],
+   "en": "to make fun of someone kindly"
+  }
+ ],
+ "minimize": [
+  {
+   "p": "v.",
+   "zh": [
+    "最小化",
+    "使减到最少"
+   ],
+   "en": "make as small as possible"
+  }
+ ],
+ "prosecute": [
+  {
+   "p": "v.",
+   "zh": [
+    "起诉",
+    "检控"
+   ],
+   "en": "to take someone to court for a crime"
+  }
+ ],
+ "geography": [
+  {
+   "p": "n.",
+   "zh": [
+    "地理学",
+    "地理"
+   ],
+   "en": "the study of the earth and its land"
+  }
+ ],
+ "composer": [
+  {
+   "p": "n.",
+   "zh": [
+    "作曲家"
+   ],
+   "en": "a person who writes music"
+  }
+ ],
+ "slate": [
+  {
+   "p": "n.",
+   "zh": [
+    "石板",
+    "板岩"
+   ],
+   "en": "gray stone used on roofs"
+  }
+ ],
+ "hydrogen": [
+  {
+   "p": "n.",
+   "zh": [
+    "氢"
+   ],
+   "en": "the lightest gas, found in water"
+  }
+ ],
+ "portable": [
+  {
+   "p": "adj.",
+   "zh": [
+    "便携的",
+    "手提的"
+   ],
+   "en": "easy to carry from place to place"
+  }
+ ],
+ "intersection": [
+  {
+   "p": "n.",
+   "zh": [
+    "十字路口",
+    "交叉点"
+   ],
+   "en": "a place where two roads cross"
+  }
+ ],
+ "detention": [
+  {
+   "p": "n.",
+   "zh": [
+    "拘留",
+    "留校"
+   ],
+   "en": "being kept in a place by force"
+  }
+ ],
+ "cone": [
+  {
+   "p": "n.",
+   "zh": [
+    "圆锥体",
+    "锥形物",
+    "球果"
+   ],
+   "en": "solid shape with a round base and point"
+  }
+ ],
+ "submarine": [
+  {
+   "p": "n.",
+   "zh": [
+    "潜水艇",
+    "潜艇"
+   ],
+   "en": "a ship that can travel under water"
+  }
+ ],
+ "specify": [
+  {
+   "p": "v.",
+   "zh": [
+    "指定",
+    "详细说明"
+   ],
+   "en": "to say clearly and exactly what is needed"
+  }
+ ],
+ "countless": [
+  {
+   "p": "adj.",
+   "zh": [
+    "数不尽的",
+    "无数的"
+   ],
+   "en": "too many to number"
+  }
+ ],
+ "seminar": [
+  {
+   "p": "n.",
+   "zh": [
+    "研讨会",
+    "研讨班"
+   ],
+   "en": "a small class where people discuss a subject"
+  }
+ ],
+ "rhetoric": [
+  {
+   "p": "n.",
+   "zh": [
+    "修辞",
+    "雄辩",
+    "华丽辞藻"
+   ],
+   "en": "the art of speaking to persuade people"
+  }
+ ],
+ "stereotype": [
+  {
+   "p": "n.",
+   "zh": [
+    "刻板印象",
+    "陈规"
+   ],
+   "en": "a fixed idea about a type of person"
+  }
+ ],
+ "treasurer": [
+  {
+   "p": "n.",
+   "zh": [
+    "财务主管",
+    "司库"
+   ],
+   "en": "person who takes care of a group's money"
+  }
+ ],
+ "nursery": [
+  {
+   "p": "n.",
+   "zh": [
+    "托儿所",
+    "苗圃",
+    "育婴室"
+   ],
+   "en": "a place where small children are looked after"
+  }
+ ],
+ "optimal": [
+  {
+   "p": "adj.",
+   "zh": [
+    "最佳的",
+    "最理想的"
+   ],
+   "en": "best possible"
+  }
+ ],
+ "wander": [
+  {
+   "p": "v.",
+   "zh": [
+    "漫步",
+    "闲逛",
+    "徘徊"
+   ],
+   "en": "to walk around with no clear aim"
+  }
+ ],
+ "abolish": [
+  {
+   "p": "v.",
+   "zh": [
+    "废除",
+    "废止"
+   ],
+   "en": "end officially"
+  }
+ ],
+ "pinch": [
+  {
+   "p": "v.",
+   "zh": [
+    "捏",
+    "掐",
+    "夹痛"
+   ],
+   "en": "to squeeze skin between finger and thumb"
+  },
+  {
+   "p": "n.",
+   "zh": [
+    "一撮",
+    "捏"
+   ],
+   "en": "a small amount you hold between two fingers"
+  }
+ ],
+ "orthodox": [
+  {
+   "p": "adj.",
+   "zh": [
+    "正统的",
+    "传统的"
+   ],
+   "en": "following the accepted old beliefs or rules"
+  }
+ ],
+ "coral": [
+  {
+   "p": "n.",
+   "zh": [
+    "珊瑚"
+   ],
+   "en": "a hard sea material made by small animals"
+  }
+ ],
+ "lag": [
+  {
+   "p": "v.",
+   "zh": [
+    "落后",
+    "滞后"
+   ],
+   "en": "move or grow more slowly than others"
+  },
+  {
+   "p": "n.",
+   "zh": [
+    "延迟",
+    "滞后"
+   ],
+   "en": "delay between two events"
+  }
+ ],
+ "quiz": [
+  {
+   "p": "n.",
+   "zh": [
+    "测验",
+    "问答比赛"
+   ],
+   "en": "a short test or game of questions"
+  },
+  {
+   "p": "v.",
+   "zh": [
+    "盘问",
+    "测验"
+   ],
+   "en": "to ask someone many questions"
+  }
+ ],
+ "enjoyable": [
+  {
+   "p": "adj.",
+   "zh": [
+    "愉快的",
+    "有趣的"
+   ],
+   "en": "giving you pleasure"
+  }
+ ],
+ "lone": [
+  {
+   "p": "adj.",
+   "zh": [
+    "孤单的",
+    "唯一的"
+   ],
+   "en": "being the only one in a place"
+  }
+ ],
+ "caption": [
+  {
+   "p": "n.",
+   "zh": [
+    "图片说明",
+    "字幕",
+    "标题"
+   ],
+   "en": "words under a picture"
+  }
+ ],
+ "organizer": [
+  {
+   "p": "n.",
+   "zh": [
+    "组织者",
+    "主办者"
+   ],
+   "en": "a person who plans and arranges an event"
+  }
+ ],
+ "torch": [
+  {
+   "p": "n.",
+   "zh": [
+    "火炬",
+    "手电筒"
+   ],
+   "en": "a stick with a flame at one end"
+  }
+ ],
+ "intern": [
+  {
+   "p": "n.",
+   "zh": [
+    "实习生"
+   ],
+   "en": "a student who works to learn job skills"
+  }
+ ],
+ "magnet": [
+  {
+   "p": "n.",
+   "zh": [
+    "磁铁",
+    "吸引物"
+   ],
+   "en": "piece of metal that pulls iron toward it"
+  }
+ ],
+ "positively": [
+  {
+   "p": "adv.",
+   "zh": [
+    "积极地",
+    "肯定地",
+    "确实地"
+   ],
+   "en": "in a good, hopeful, or certain way"
+  }
+ ],
+ "holly": [
+  {
+   "p": "n.",
+   "zh": [
+    "冬青树",
+    "冬青"
+   ],
+   "en": "a green bush with red berries"
+  }
+ ],
+ "porch": [
+  {
+   "p": "n.",
+   "zh": [
+    "门廊",
+    "走廊"
+   ],
+   "en": "a covered area at a house door"
+  }
+ ],
+ "fourteen": [
+  {
+   "p": "num.",
+   "zh": [
+    "十四"
+   ],
+   "en": "the number 14"
+  }
+ ],
+ "chant": [
+  {
+   "p": "v.",
+   "zh": [
+    "反复呼喊",
+    "吟唱"
+   ],
+   "en": "to say or sing words again and again"
+  },
+  {
+   "p": "n.",
+   "zh": [
+    "口号",
+    "圣歌"
+   ],
+   "en": "words said or sung again and again"
+  }
+ ],
+ "nun": [
+  {
+   "p": "n.",
+   "zh": [
+    "修女"
+   ],
+   "en": "a woman who lives in a religious community"
+  }
+ ],
+ "prospective": [
+  {
+   "p": "adj.",
+   "zh": [
+    "未来的",
+    "预期的"
+   ],
+   "en": "likely to be or to happen in future"
+  }
+ ],
+ "brit": null,
+ "artery": [
+  {
+   "p": "n.",
+   "zh": [
+    "动脉",
+    "干道"
+   ],
+   "en": "a tube that carries blood from the heart"
+  }
+ ],
+ "rehearsal": [
+  {
+   "p": "n.",
+   "zh": [
+    "排练",
+    "彩排"
+   ],
+   "en": "a practice before a show"
+  }
+ ],
+ "abide": [
+  {
+   "p": "v.",
+   "zh": [
+    "忍受",
+    "遵守"
+   ],
+   "en": "to accept or bear something unpleasant"
+  }
+ ],
+ "descendant": [
+  {
+   "p": "n.",
+   "zh": [
+    "后代",
+    "子孙"
+   ],
+   "en": "person from a later generation of a family"
+  }
+ ],
+ "arbitrary": [
+  {
+   "p": "adj.",
+   "zh": [
+    "任意的",
+    "武断的"
+   ],
+   "en": "decided by chance, not by reason or plan"
+  }
+ ],
+ "reproduction": [
+  {
+   "p": "n.",
+   "zh": [
+    "繁殖",
+    "复制品",
+    "复制"
+   ],
+   "en": "the process of making young or copies"
+  }
+ ],
+ "rite": [
+  {
+   "p": "n.",
+   "zh": [
+    "仪式",
+    "典礼"
+   ],
+   "en": "a formal act done for a religious reason"
+  }
+ ],
+ "precedent": [
+  {
+   "p": "n.",
+   "zh": [
+    "先例",
+    "前例"
+   ],
+   "en": "earlier case used as a guide later"
+  }
+ ],
+ "crunch": [
+  {
+   "p": "v.",
+   "zh": [
+    "嘎吱嚼碎",
+    "嘎吱作响"
+   ],
+   "en": "to crush food with a loud noise"
+  },
+  {
+   "p": "n.",
+   "zh": [
+    "嘎吱声",
+    "危机时刻"
+   ],
+   "en": "a loud sound of something being crushed"
+  }
+ ],
+ "hierarchy": [
+  {
+   "p": "n.",
+   "zh": [
+    "等级制度",
+    "层级"
+   ],
+   "en": "a system with people at different ranks"
+  }
+ ],
+ "daisy": [
+  {
+   "p": "n.",
+   "zh": [
+    "雏菊"
+   ],
+   "en": "a small flower with white petals"
+  }
+ ],
+ "economically": [
+  {
+   "p": "adv.",
+   "zh": [
+    "经济上",
+    "节约地"
+   ],
+   "en": "in a way about money and trade"
+  }
+ ],
+ "innocence": [
+  {
+   "p": "n.",
+   "zh": [
+    "清白",
+    "无罪",
+    "天真"
+   ],
+   "en": "the state of not being guilty"
+  }
+ ],
+ "prohibition": [
+  {
+   "p": "n.",
+   "zh": [
+    "禁令",
+    "禁止"
+   ],
+   "en": "a rule against doing something"
+  }
+ ],
+ "lecturer": [
+  {
+   "p": "n.",
+   "zh": [
+    "讲师"
+   ],
+   "en": "someone who teaches at a university"
+  }
+ ],
+ "duplicate": [
+  {
+   "p": "n.",
+   "zh": [
+    "副本",
+    "复制品"
+   ],
+   "en": "exact copy of something"
+  },
+  {
+   "p": "v.",
+   "zh": [
+    "复制",
+    "重复"
+   ],
+   "en": "make an exact copy of something"
+  }
+ ],
+ "deficiency": [
+  {
+   "p": "n.",
+   "zh": [
+    "缺乏",
+    "不足",
+    "缺陷"
+   ],
+   "en": "a lack of something that you need"
+  }
+ ],
+ "grandpa": [
+  {
+   "p": "n.",
+   "zh": [
+    "爷爷",
+    "外公"
+   ],
+   "en": "the father of your mother or father"
+  }
+ ],
+ "hairy": [
+  {
+   "p": "adj.",
+   "zh": [
+    "多毛的",
+    "毛茸茸的"
+   ],
+   "en": "covered with a lot of hair"
+  }
+ ],
+ "parasite": [
+  {
+   "p": "n.",
+   "zh": [
+    "寄生虫",
+    "寄生生物"
+   ],
+   "en": "living thing that feeds on another"
+  }
+ ],
+ "automation": [
+  {
+   "p": "n.",
+   "zh": [
+    "自动化"
+   ],
+   "en": "use of machines to do work without people"
+  }
+ ],
+ "strait": [
+  {
+   "p": "n.",
+   "zh": [
+    "海峡"
+   ],
+   "en": "a narrow sea passage between two lands"
+  }
+ ],
+ "rainy": [
+  {
+   "p": "adj.",
+   "zh": [
+    "下雨的",
+    "多雨的"
+   ],
+   "en": "with a lot of water falling from clouds"
+  }
+ ],
+ "probation": [
+  {
+   "p": "n.",
+   "zh": [
+    "试用期",
+    "缓刑"
+   ],
+   "en": "a time to test if someone is suitable"
+  }
+ ],
+ "haircut": [
+  {
+   "p": "n.",
+   "zh": [
+    "理发",
+    "发型"
+   ],
+   "en": "the act of cutting someone's hair"
+  }
+ ],
+ "polo": [
+  {
+   "p": "n.",
+   "zh": [
+    "马球"
+   ],
+   "en": "a game played on horses with long sticks"
+  }
+ ],
+ "align": [
+  {
+   "p": "v.",
+   "zh": [
+    "使成一直线",
+    "对齐",
+    "结盟"
+   ],
+   "en": "to put things in a straight line"
+  }
+ ],
+ "flint": [
+  {
+   "p": "n.",
+   "zh": [
+    "燧石",
+    "打火石"
+   ],
+   "en": "hard gray stone that makes sparks"
+  }
+ ],
+ "swipe": [
+  {
+   "p": "v.",
+   "zh": [
+    "滑动",
+    "刷卡",
+    "偷"
+   ],
+   "en": "to pass a card across a reader"
+  },
+  {
+   "p": "n.",
+   "zh": [
+    "挥击",
+    "滑动"
+   ],
+   "en": "a hard sweeping hit or movement"
+  }
+ ],
+ "mattress": [
+  {
+   "p": "n.",
+   "zh": [
+    "床垫"
+   ],
+   "en": "the soft thick part of a bed"
+  }
+ ],
+ "lunar": [
+  {
+   "p": "adj.",
+   "zh": [
+    "月球的",
+    "阴历的"
+   ],
+   "en": "related to the moon"
+  }
+ ],
+ "jeep": [
+  {
+   "p": "n.",
+   "zh": [
+    "吉普车"
+   ],
+   "en": "strong small car for rough ground"
+  }
+ ],
+ "serum": [
+  {
+   "p": "n.",
+   "zh": [
+    "血清",
+    "精华液"
+   ],
+   "en": "clear liquid part of blood"
+  }
+ ],
+ "hardship": [
+  {
+   "p": "n.",
+   "zh": [
+    "艰难",
+    "困苦",
+    "苦难"
+   ],
+   "en": "a hard life with little money or comfort"
+  }
+ ],
+ "lateral": [
+  {
+   "p": "adj.",
+   "zh": [
+    "侧面的",
+    "横向的"
+   ],
+   "en": "at, from, or toward the side"
+  }
+ ],
+ "withstand": [
+  {
+   "p": "v.",
+   "zh": [
+    "经受",
+    "抵住",
+    "承受"
+   ],
+   "en": "resist without being damaged"
+  }
+ ],
+ "classy": [
+  {
+   "p": "adj.",
+   "zh": [
+    "高档的",
+    "有格调的"
+   ],
+   "en": "stylish and of high quality"
+  }
+ ],
+ "infamous": [
+  {
+   "p": "adj.",
+   "zh": [
+    "臭名昭著的",
+    "声名狼藉的"
+   ],
+   "en": "well known for something bad"
+  }
+ ],
+ "beetle": [
+  {
+   "p": "n.",
+   "zh": [
+    "甲虫"
+   ],
+   "en": "an insect with hard wing covers"
+  }
+ ],
+ "thirsty": [
+  {
+   "p": "adj.",
+   "zh": [
+    "口渴的",
+    "渴望的"
+   ],
+   "en": "needing or wanting to drink"
+  }
+ ],
+ "singular": [
+  {
+   "p": "adj.",
+   "zh": [
+    "单数的",
+    "非凡的",
+    "奇特的"
+   ],
+   "en": "showing only one person or thing"
+  },
+  {
+   "p": "n.",
+   "zh": [
+    "单数"
+   ],
+   "en": "the form of a word that means one"
+  }
+ ],
+ "potent": [
+  {
+   "p": "adj.",
+   "zh": [
+    "强效的",
+    "有力的"
+   ],
+   "en": "very strong in effect"
+  }
+ ],
+ "garrison": [
+  {
+   "p": "n.",
+   "zh": [
+    "驻军",
+    "要塞"
+   ],
+   "en": "soldiers who stay in a town"
+  }
+ ],
+ "residency": [
+  {
+   "p": "n.",
+   "zh": [
+    "居住",
+    "居留权"
+   ],
+   "en": "state of living in a place"
+  }
+ ],
+ "analytical": [
+  {
+   "p": "adj.",
+   "zh": [
+    "分析的",
+    "善于分析的"
+   ],
+   "en": "using careful study to understand something"
+  }
+ ],
+ "childish": [
+  {
+   "p": "adj.",
+   "zh": [
+    "幼稚的",
+    "孩子气的"
+   ],
+   "en": "like a child, in a silly way"
+  }
+ ],
+ "announcer": [
+  {
+   "p": "n.",
+   "zh": [
+    "播音员"
+   ],
+   "en": "someone who reads news on radio"
+  }
+ ],
+ "sew": [
+  {
+   "p": "v.",
+   "zh": [
+    "缝",
+    "缝纫",
+    "缝合"
+   ],
+   "en": "join cloth with a needle and thread"
+  }
+ ],
+ "presently": [
+  {
+   "p": "adv.",
+   "zh": [
+    "目前",
+    "不久"
+   ],
+   "en": "at this time, or after a short time"
+  }
+ ],
+ "bale": [
+  {
+   "p": "n.",
+   "zh": [
+    "大捆",
+    "草捆"
+   ],
+   "en": "a large tied bundle of hay or cloth"
+  }
+ ],
+ "gravel": [
+  {
+   "p": "n.",
+   "zh": [
+    "砂砾",
+    "碎石"
+   ],
+   "en": "small stones used on roads and paths"
+  }
+ ],
+ "vogue": [
+  {
+   "p": "n.",
+   "zh": [
+    "时尚",
+    "流行"
+   ],
+   "en": "current popular style"
+  }
+ ],
+ "dominion": [
+  {
+   "p": "n.",
+   "zh": [
+    "统治权",
+    "领土"
+   ],
+   "en": "the power to rule a land"
+  }
+ ],
+ "respectful": [
+  {
+   "p": "adj.",
+   "zh": [
+    "恭敬的",
+    "有礼貌的"
+   ],
+   "en": "showing honor and good manners to others"
+  }
+ ],
+ "novelist": [
+  {
+   "p": "n.",
+   "zh": [
+    "小说家"
+   ],
+   "en": "a person who writes long made-up stories"
+  }
+ ],
+ "akin": [
+  {
+   "p": "adj.",
+   "zh": [
+    "类似的",
+    "同类的"
+   ],
+   "en": "similar to something else"
+  }
+ ],
+ "tar": [
+  {
+   "p": "n.",
+   "zh": [
+    "焦油",
+    "柏油"
+   ],
+   "en": "thick black sticky liquid used on roads"
+  }
+ ],
+ "compile": [
+  {
+   "p": "v.",
+   "zh": [
+    "编纂",
+    "编译",
+    "汇编"
+   ],
+   "en": "to put together information from many places"
+  }
+ ],
+ "weaver": [
+  {
+   "p": "n.",
+   "zh": [
+    "织工",
+    "编织者"
+   ],
+   "en": "a person who makes cloth on a loom"
+  }
+ ],
+ "countdown": [
+  {
+   "p": "n.",
+   "zh": [
+    "倒计时"
+   ],
+   "en": "counting backward to zero before a start"
+  }
+ ],
+ "cultivate": [
+  {
+   "p": "v.",
+   "zh": [
+    "培养",
+    "耕种"
+   ],
+   "en": "to grow crops or build a skill"
+  }
+ ],
+ "sect": [
+  {
+   "p": "n.",
+   "zh": [
+    "教派",
+    "宗派"
+   ],
+   "en": "a small group with its own religious beliefs"
+  }
+ ],
+ "yarn": [
+  {
+   "p": "n.",
+   "zh": [
+    "纱线",
+    "毛线"
+   ],
+   "en": "thick thread used to knit or weave"
+  }
+ ],
+ "hale": [
+  {
+   "p": "adj.",
+   "zh": [
+    "强壮的",
+    "健壮的"
+   ],
+   "en": "strong and healthy, especially when old"
+  }
+ ],
+ "skeptical": [
+  {
+   "p": "adj.",
+   "zh": [
+    "怀疑的",
+    "不相信的"
+   ],
+   "en": "not sure that something is true or good"
+  }
+ ],
+ "shear": [
+  {
+   "p": "v.",
+   "zh": [
+    "剪",
+    "修剪",
+    "剪羊毛"
+   ],
+   "en": "to cut wool off a sheep"
+  }
+ ],
+ "pavilion": [
+  {
+   "p": "n.",
+   "zh": [
+    "亭子",
+    "大帐篷",
+    "展馆"
+   ],
+   "en": "a light building or large tent for events"
+  }
+ ],
+ "focal": [
+  {
+   "p": "adj.",
+   "zh": [
+    "焦点的",
+    "核心的"
+   ],
+   "en": "central and most important"
+  }
+ ],
+ "slab": [
+  {
+   "p": "n.",
+   "zh": [
+    "厚板",
+    "厚片"
+   ],
+   "en": "a thick flat piece of stone"
+  }
+ ],
+ "distortion": [
+  {
+   "p": "n.",
+   "zh": [
+    "扭曲",
+    "失真",
+    "歪曲"
+   ],
+   "en": "a change that makes something look wrong"
+  }
+ ],
+ "dependence": [
+  {
+   "p": "n.",
+   "zh": [
+    "依赖",
+    "依靠"
+   ],
+   "en": "needing someone or something to survive"
+  }
+ ],
+ "safari": [
+  {
+   "p": "n.",
+   "zh": [
+    "野生动物之旅",
+    "狩猎旅行"
+   ],
+   "en": "a trip to watch wild animals"
+  }
+ ],
+ "alleviate": [
+  {
+   "p": "v.",
+   "zh": [
+    "减轻",
+    "缓和"
+   ],
+   "en": "to make pain or trouble less bad"
+  }
+ ],
+ "scramble": [
+  {
+   "p": "v.",
+   "zh": [
+    "争抢",
+    "攀爬",
+    "匆忙行动"
+   ],
+   "en": "to move fast using hands and feet"
+  },
+  {
+   "p": "n.",
+   "zh": [
+    "争夺",
+    "混乱"
+   ],
+   "en": "a hurried struggle to get something"
+  }
+ ],
+ "attic": [
+  {
+   "p": "n.",
+   "zh": [
+    "阁楼",
+    "顶楼"
+   ],
+   "en": "a room under the roof of a house"
+  }
+ ],
+ "nexus": [
+  {
+   "p": "n.",
+   "zh": [
+    "联系",
+    "纽带",
+    "中心"
+   ],
+   "en": "connection between things"
+  }
+ ],
+ "mural": [
+  {
+   "p": "n.",
+   "zh": [
+    "壁画"
+   ],
+   "en": "a large picture painted on a wall"
+  }
+ ],
+ "stool": [
+  {
+   "p": "n.",
+   "zh": [
+    "凳子",
+    "矮凳"
+   ],
+   "en": "a seat with no back or arms"
+  }
+ ],
+ "pear": [
+  {
+   "p": "n.",
+   "zh": [
+    "梨"
+   ],
+   "en": "a sweet fruit, narrow at the top"
+  }
+ ],
+ "cashier": [
+  {
+   "p": "n.",
+   "zh": [
+    "收银员",
+    "出纳员"
+   ],
+   "en": "person who takes payments in a shop"
+  }
+ ],
+ "raft": [
+  {
+   "p": "n.",
+   "zh": [
+    "筏",
+    "救生筏"
+   ],
+   "en": "a flat boat made of logs tied together"
+  }
+ ],
+ "sock": [
+  {
+   "p": "n.",
+   "zh": [
+    "短袜",
+    "袜子"
+   ],
+   "en": "a soft cover worn on the foot"
+  }
+ ],
+ "steward": [
+  {
+   "p": "n.",
+   "zh": [
+    "乘务员",
+    "管家"
+   ],
+   "en": "a person who serves passengers on a plane"
+  }
+ ],
+ "lyric": [
+  {
+   "p": "n.",
+   "zh": [
+    "歌词",
+    "抒情诗"
+   ],
+   "en": "words of a song"
+  }
+ ],
+ "savannah": [
+  {
+   "p": "n.",
+   "zh": [
+    "热带草原",
+    "稀树草原"
+   ],
+   "en": "a flat grass land with few trees"
+  }
+ ],
+ "illuminate": [
+  {
+   "p": "v.",
+   "zh": [
+    "照亮",
+    "阐明"
+   ],
+   "en": "to fill a place with light"
+  }
+ ],
+ "beforehand": [
+  {
+   "p": "adv.",
+   "zh": [
+    "预先",
+    "事先"
+   ],
+   "en": "earlier than a certain time or event"
+  }
+ ],
+ "fertile": [
+  {
+   "p": "adj.",
+   "zh": [
+    "肥沃的",
+    "能生育的"
+   ],
+   "en": "good for growing plants; able to have young"
+  }
+ ],
+ "competence": [
+  {
+   "p": "n.",
+   "zh": [
+    "能力",
+    "胜任"
+   ],
+   "en": "the skill to do something well"
+  }
+ ],
+ "moose": [
+  {
+   "p": "n.",
+   "zh": [
+    "驼鹿",
+    "麋鹿"
+   ],
+   "en": "a very large deer with wide flat horns"
+  }
+ ],
+ "perpetual": [
+  {
+   "p": "adj.",
+   "zh": [
+    "永久的",
+    "不断的"
+   ],
+   "en": "continuing all the time without stopping"
+  }
+ ],
+ "helper": [
+  {
+   "p": "n.",
+   "zh": [
+    "帮手",
+    "助手"
+   ],
+   "en": "person who assists others"
+  }
+ ],
+ "axle": [
+  {
+   "p": "n.",
+   "zh": [
+    "车轴",
+    "轴"
+   ],
+   "en": "a rod that a wheel turns on"
+  }
+ ],
+ "bearer": [
+  {
+   "p": "n.",
+   "zh": [
+    "持有人",
+    "送信人",
+    "搬运工"
+   ],
+   "en": "a person who carries or holds something"
+  }
+ ],
+ "wager": [
+  {
+   "p": "n.",
+   "zh": [
+    "赌注"
+   ],
+   "en": "money that you risk on an uncertain result"
+  },
+  {
+   "p": "v.",
+   "zh": [
+    "打赌",
+    "下赌注"
+   ],
+   "en": "to risk money on an uncertain result"
+  }
+ ],
+ "cerebral": [
+  {
+   "p": "adj.",
+   "zh": [
+    "大脑的",
+    "脑的",
+    "理智的"
+   ],
+   "en": "of the brain; using thought more than feeling"
+  }
+ ],
+ "seminary": [
+  {
+   "p": "n.",
+   "zh": [
+    "神学院"
+   ],
+   "en": "a school that trains priests or religious leaders"
+  }
+ ],
+ "imbalance": [
+  {
+   "p": "n.",
+   "zh": [
+    "不平衡",
+    "失衡"
+   ],
+   "en": "a lack of equal amounts or weight"
+  }
+ ],
+ "solvent": [
+  {
+   "p": "n.",
+   "zh": [
+    "溶剂"
+   ],
+   "en": "a liquid that can dissolve other substances"
+  },
+  {
+   "p": "adj.",
+   "zh": [
+    "有偿付能力的"
+   ],
+   "en": "having enough money to pay all debts"
+  }
+ ],
+ "bravery": [
+  {
+   "p": "n.",
+   "zh": [
+    "勇敢",
+    "勇气"
+   ],
+   "en": "courage when facing danger"
+  }
+ ],
+ "patriotism": [
+  {
+   "p": "n.",
+   "zh": [
+    "爱国主义",
+    "爱国心"
+   ],
+   "en": "strong love for your own country"
+  }
+ ],
+ "oasis": [
+  {
+   "p": "n.",
+   "zh": [
+    "绿洲"
+   ],
+   "en": "a green place with water in a desert"
+  }
+ ],
+ "attest": [
+  {
+   "p": "v.",
+   "zh": [
+    "证明",
+    "证实"
+   ],
+   "en": "to show or say that something is true"
+  }
+ ],
+ "hydrate": [
+  {
+   "p": "v.",
+   "zh": [
+    "补水",
+    "使水合"
+   ],
+   "en": "give water to a body or thing"
+  }
+ ],
+ "humiliation": [
+  {
+   "p": "n.",
+   "zh": [
+    "耻辱",
+    "羞辱",
+    "丢脸"
+   ],
+   "en": "a feeling of shame before other people"
+  }
+ ],
+ "vowel": [
+  {
+   "p": "n.",
+   "zh": [
+    "元音"
+   ],
+   "en": "a speech sound made with open mouth"
+  }
+ ],
+ "abort": [
+  {
+   "p": "v.",
+   "zh": [
+    "中止",
+    "流产",
+    "终止"
+   ],
+   "en": "to stop something before it is finished"
+  }
+ ],
+ "inexpensive": [
+  {
+   "p": "adj.",
+   "zh": [
+    "便宜的",
+    "廉价的"
+   ],
+   "en": "low in price"
+  }
+ ],
+ "secrecy": [
+  {
+   "p": "n.",
+   "zh": [
+    "保密",
+    "秘密"
+   ],
+   "en": "the act of keeping things hidden from others"
+  }
+ ],
+ "porcelain": [
+  {
+   "p": "n.",
+   "zh": [
+    "瓷器",
+    "瓷"
+   ],
+   "en": "a hard white material for cups"
+  }
+ ],
+ "pebble": [
+  {
+   "p": "n.",
+   "zh": [
+    "鹅卵石",
+    "小圆石"
+   ],
+   "en": "a small smooth stone"
+  }
+ ],
+ "hurl": [
+  {
+   "p": "v.",
+   "zh": [
+    "猛掷",
+    "投掷"
+   ],
+   "en": "throw something with great force"
+  }
+ ],
+ "superficial": [
+  {
+   "p": "adj.",
+   "zh": [
+    "肤浅的",
+    "表面的"
+   ],
+   "en": "not deep or complete; only on the surface"
+  }
+ ],
+ "latch": [
+  {
+   "p": "n.",
+   "zh": [
+    "门闩",
+    "插销"
+   ],
+   "en": "a catch that holds a door shut"
+  }
+ ],
+ "redirect": [
+  {
+   "p": "v.",
+   "zh": [
+    "使改道",
+    "重新寄送",
+    "重新定向"
+   ],
+   "en": "to send something to a new place"
+  }
+ ],
+ "memorize": [
+  {
+   "p": "v.",
+   "zh": [
+    "记住",
+    "背熟"
+   ],
+   "en": "learn so that you can recall it"
+  }
+ ],
+ "impatient": [
+  {
+   "p": "adj.",
+   "zh": [
+    "不耐烦的",
+    "急切的"
+   ],
+   "en": "not willing to wait; easily annoyed by delay"
+  }
+ ],
+ "oneself": [
+  {
+   "p": "pron.",
+   "zh": [
+    "自己",
+    "自身"
+   ],
+   "en": "the same person as the one who acts"
+  }
+ ],
+ "quilt": [
+  {
+   "p": "n.",
+   "zh": [
+    "被子",
+    "棉被"
+   ],
+   "en": "a warm bed cover made of sewn layers"
+  }
+ ],
+ "skim": [
+  {
+   "p": "v.",
+   "zh": [
+    "浏览",
+    "略读",
+    "掠过"
+   ],
+   "en": "read quickly to get the main idea"
+  }
+ ],
+ "chaplain": [
+  {
+   "p": "n.",
+   "zh": [
+    "牧师",
+    "随军牧师"
+   ],
+   "en": "a priest who serves in the army"
+  }
+ ],
+ "unrealistic": [
+  {
+   "p": "adj.",
+   "zh": [
+    "不切实际的",
+    "不现实的"
+   ],
+   "en": "not based on what is real"
+  }
+ ],
+ "vanguard": [
+  {
+   "p": "n.",
+   "zh": [
+    "先锋",
+    "前锋"
+   ],
+   "en": "the leading group in an army or movement"
+  }
+ ],
+ "leaflet": [
+  {
+   "p": "n.",
+   "zh": [
+    "传单",
+    "小册子"
+   ],
+   "en": "small printed paper given out free"
+  }
+ ],
+ "bilingual": [
+  {
+   "p": "adj.",
+   "zh": [
+    "双语的",
+    "会两种语言的"
+   ],
+   "en": "able to use two languages well"
+  }
+ ],
+ "brood": [
+  {
+   "p": "n.",
+   "zh": [
+    "一窝",
+    "一窝幼鸟"
+   ],
+   "en": "a group of young birds born together"
+  },
+  {
+   "p": "v.",
+   "zh": [
+    "沉思",
+    "忧虑",
+    "孵蛋"
+   ],
+   "en": "to think sadly for a long time"
+  }
+ ],
+ "doorstep": [
+  {
+   "p": "n.",
+   "zh": [
+    "门阶"
+   ],
+   "en": "a step just outside the front door"
+  }
+ ],
+ "plumber": [
+  {
+   "p": "n.",
+   "zh": [
+    "水管工"
+   ],
+   "en": "person who fixes water pipes"
+  }
+ ],
+ "hone": [
+  {
+   "p": "v.",
+   "zh": [
+    "磨练",
+    "磨快"
+   ],
+   "en": "to make a skill or a blade sharper"
+  }
+ ],
+ "turmoil": [
+  {
+   "p": "n.",
+   "zh": [
+    "骚动",
+    "混乱",
+    "动荡"
+   ],
+   "en": "a state of great trouble and confusion"
+  }
+ ],
+ "convent": [
+  {
+   "p": "n.",
+   "zh": [
+    "女修道院"
+   ],
+   "en": "a building where nuns live together"
+  }
+ ],
+ "jackpot": [
+  {
+   "p": "n.",
+   "zh": [
+    "头奖",
+    "大奖"
+   ],
+   "en": "biggest prize in a game"
+  }
+ ],
+ "piracy": [
+  {
+   "p": "n.",
+   "zh": [
+    "盗版",
+    "海盗行为"
+   ],
+   "en": "illegal copying of books, films, or software"
+  }
+ ],
+ "incarnation": [
+  {
+   "p": "n.",
+   "zh": [
+    "化身",
+    "体现"
+   ],
+   "en": "a person who shows an idea fully"
+  }
+ ],
+ "quantify": [
+  {
+   "p": "v.",
+   "zh": [
+    "量化"
+   ],
+   "en": "to measure or show as a number"
+  }
+ ],
+ "peacock": [
+  {
+   "p": "n.",
+   "zh": [
+    "孔雀"
+   ],
+   "en": "a big bird with bright tail feathers"
+  }
+ ],
+ "vortex": [
+  {
+   "p": "n.",
+   "zh": [
+    "旋涡",
+    "涡流"
+   ],
+   "en": "a fast spinning mass of water or air"
+  }
+ ],
+ "payer": [
+  {
+   "p": "n.",
+   "zh": [
+    "支付者",
+    "付款人"
+   ],
+   "en": "a person who gives money for something"
+  }
+ ],
+ "profoundly": [
+  {
+   "p": "adv.",
+   "zh": [
+    "深刻地",
+    "深深地"
+   ],
+   "en": "in a very strong and deep way"
+  }
+ ],
+ "keynote": [
+  {
+   "p": "n.",
+   "zh": [
+    "主旨",
+    "基调"
+   ],
+   "en": "main idea of a speech or event"
+  }
+ ],
+ "discern": [
+  {
+   "p": "v.",
+   "zh": [
+    "辨别",
+    "看出"
+   ],
+   "en": "to see something that is hard to notice"
+  }
+ ],
+ "crumb": [
+  {
+   "p": "n.",
+   "zh": [
+    "碎屑",
+    "面包屑"
+   ],
+   "en": "a very small piece of bread or cake"
+  }
+ ],
+ "socialize": [
+  {
+   "p": "v.",
+   "zh": [
+    "交际",
+    "参加社交活动"
+   ],
+   "en": "to spend time with other people for fun"
+  }
+ ],
+ "pivotal": [
+  {
+   "p": "adj.",
+   "zh": [
+    "关键的",
+    "核心的"
+   ],
+   "en": "very important to the result of something"
+  }
+ ],
+ "stylist": [
+  {
+   "p": "n.",
+   "zh": [
+    "造型师",
+    "发型师"
+   ],
+   "en": "a person who designs hair, clothes, or looks"
+  }
+ ],
+ "trendy": [
+  {
+   "p": "adj.",
+   "zh": [
+    "时髦的",
+    "流行的"
+   ],
+   "en": "following the newest style"
+  }
+ ],
+ "concurrent": [
+  {
+   "p": "adj.",
+   "zh": [
+    "同时发生的",
+    "并发的"
+   ],
+   "en": "happening at the same time"
+  }
+ ],
+ "radiant": [
+  {
+   "p": "adj.",
+   "zh": [
+    "发光的",
+    "容光焕发的"
+   ],
+   "en": "shining brightly"
+  }
+ ],
+ "squid": [
+  {
+   "p": "n.",
+   "zh": [
+    "鱿鱼",
+    "乌贼"
+   ],
+   "en": "a sea animal with a soft body"
+  }
+ ],
+ "sturdy": [
+  {
+   "p": "adj.",
+   "zh": [
+    "结实的",
+    "强壮的"
+   ],
+   "en": "strong and not easy to break"
+  }
+ ],
+ "consultancy": [
+  {
+   "p": "n.",
+   "zh": [
+    "咨询公司",
+    "咨询"
+   ],
+   "en": "a company that gives expert advice for money"
+  }
+ ],
+ "incompatible": [
+  {
+   "p": "adj.",
+   "zh": [
+    "不相容的",
+    "不兼容的"
+   ],
+   "en": "not able to work or exist together"
+  }
+ ],
+ "stifle": [
+  {
+   "p": "v.",
+   "zh": [
+    "抑制",
+    "使窒息",
+    "扼杀"
+   ],
+   "en": "to stop something from growing or being shown"
+  }
+ ],
+ "cricketer": [
+  {
+   "p": "n.",
+   "zh": [
+    "板球队员"
+   ],
+   "en": "someone who plays a bat and ball game"
+  }
+ ],
+ "confine": [
+  {
+   "p": "v.",
+   "zh": [
+    "限制",
+    "禁闭"
+   ],
+   "en": "to keep within a limit or small space"
+  }
+ ],
+ "abound": [
+  {
+   "p": "v.",
+   "zh": [
+    "大量存在",
+    "充满"
+   ],
+   "en": "exist in very large numbers"
+  }
+ ],
+ "manpower": [
+  {
+   "p": "n.",
+   "zh": [
+    "人力",
+    "劳动力"
+   ],
+   "en": "the number of people available to do work"
+  }
+ ],
+ "landfill": [
+  {
+   "p": "n.",
+   "zh": [
+    "垃圾填埋场",
+    "垃圾场"
+   ],
+   "en": "a place where waste is buried"
+  }
+ ],
+ "bleak": [
+  {
+   "p": "adj.",
+   "zh": [
+    "荒凉的",
+    "暗淡的"
+   ],
+   "en": "cold, empty, and without hope or comfort"
+  }
+ ],
+ "topical": [
+  {
+   "p": "adj.",
+   "zh": [
+    "时事的",
+    "热门的"
+   ],
+   "en": "of interest now; about current events"
+  }
+ ],
+ "irritation": [
+  {
+   "p": "n.",
+   "zh": [
+    "恼怒",
+    "刺激",
+    "发炎"
+   ],
+   "en": "a feeling of being annoyed"
+  }
+ ],
+ "disperse": [
+  {
+   "p": "v.",
+   "zh": [
+    "分散",
+    "驱散",
+    "散开"
+   ],
+   "en": "to spread out in many directions"
+  }
+ ],
+ "scatter": [
+  {
+   "p": "v.",
+   "zh": [
+    "散开",
+    "撒",
+    "驱散"
+   ],
+   "en": "to throw or spread things in many directions"
+  }
+ ],
+ "discreet": [
+  {
+   "p": "adj.",
+   "zh": [
+    "谨慎的",
+    "慎重的"
+   ],
+   "en": "careful not to cause trouble or share secrets"
+  }
+ ],
+ "helium": [
+  {
+   "p": "n.",
+   "zh": [
+    "氦"
+   ],
+   "en": "a very light gas that makes balloons float"
+  }
+ ],
+ "repercussion": [
+  {
+   "p": "n.",
+   "zh": [
+    "反响",
+    "不良后果"
+   ],
+   "en": "a bad result that comes later"
+  }
+ ],
+ "arson": [
+  {
+   "p": "n.",
+   "zh": [
+    "纵火",
+    "纵火罪"
+   ],
+   "en": "the crime of burning a building on purpose"
+  }
+ ],
+ "reliant": [
+  {
+   "p": "adj.",
+   "zh": [
+    "依赖的",
+    "依靠的"
+   ],
+   "en": "needing someone or something for support"
+  }
+ ],
+ "broth": [
+  {
+   "p": "n.",
+   "zh": [
+    "肉汤",
+    "清汤"
+   ],
+   "en": "thin soup made by boiling meat or vegetables"
+  }
+ ],
+ "emigrate": [
+  {
+   "p": "v.",
+   "zh": [
+    "移居",
+    "移民"
+   ],
+   "en": "to leave your country to live in another"
+  }
+ ],
+ "centenary": [
+  {
+   "p": "n.",
+   "zh": [
+    "百年纪念",
+    "一百周年"
+   ],
+   "en": "the day one hundred years after an event"
+  }
+ ],
+ "annoyance": [
+  {
+   "p": "n.",
+   "zh": [
+    "烦恼",
+    "恼怒"
+   ],
+   "en": "feeling of being slightly angry"
+  }
+ ],
+ "clog": [
+  {
+   "p": "v.",
+   "zh": [
+    "堵塞",
+    "阻塞"
+   ],
+   "en": "to block a pipe so nothing flows"
+  },
+  {
+   "p": "n.",
+   "zh": [
+    "木底鞋"
+   ],
+   "en": "a shoe with a thick wooden sole"
+  }
+ ],
+ "abrupt": [
+  {
+   "p": "adj.",
+   "zh": [
+    "突然的",
+    "唐突的"
+   ],
+   "en": "sudden and not expected"
+  }
+ ],
+ "chandelier": [
+  {
+   "p": "n.",
+   "zh": [
+    "枝形吊灯"
+   ],
+   "en": "a big light hung from a ceiling"
+  }
+ ],
+ "antitrust": [
+  {
+   "p": "adj.",
+   "zh": [
+    "反垄断的",
+    "反托拉斯的"
+   ],
+   "en": "against big firms that control a market"
+  }
+ ],
+ "lurk": [
+  {
+   "p": "v.",
+   "zh": [
+    "潜伏",
+    "埋伏"
+   ],
+   "en": "to wait out of sight, often to harm"
+  }
+ ],
+ "retaliate": [
+  {
+   "p": "v.",
+   "zh": [
+    "报复",
+    "回击"
+   ],
+   "en": "to hurt someone who hurt you"
+  }
+ ],
+ "pluck": [
+  {
+   "p": "v.",
+   "zh": [
+    "摘",
+    "拔",
+    "拨弦"
+   ],
+   "en": "to pull something off with your fingers"
+  },
+  {
+   "p": "n.",
+   "zh": [
+    "勇气"
+   ],
+   "en": "courage and strong spirit"
+  }
+ ],
+ "tenet": [
+  {
+   "p": "n.",
+   "zh": [
+    "信条",
+    "原则",
+    "宗旨"
+   ],
+   "en": "basic belief or principle"
+  }
+ ],
+ "labyrinth": [
+  {
+   "p": "n.",
+   "zh": [
+    "迷宫",
+    "错综复杂的事物"
+   ],
+   "en": "a place with many paths, easy to lose"
+  }
+ ],
+ "hindsight": [
+  {
+   "p": "n.",
+   "zh": [
+    "事后聪明",
+    "后见之明"
+   ],
+   "en": "understanding an event only after it has happened"
+  }
+ ],
+ "exhale": [
+  {
+   "p": "v.",
+   "zh": [
+    "呼气"
+   ],
+   "en": "to send air out of your lungs"
+  }
+ ],
+ "scarcely": [
+  {
+   "p": "adv.",
+   "zh": [
+    "几乎不",
+    "勉强"
+   ],
+   "en": "almost not; only just"
+  }
+ ],
+ "cyst": [
+  {
+   "p": "n.",
+   "zh": [
+    "囊肿"
+   ],
+   "en": "a closed lump of liquid in the body"
+  }
+ ],
+ "simplistic": [
+  {
+   "p": "adj.",
+   "zh": [
+    "过于简单的",
+    "过分简化的"
+   ],
+   "en": "too simple to show the real problem"
+  }
+ ],
+ "falter": [
+  {
+   "p": "v.",
+   "zh": [
+    "蹒跚",
+    "支吾",
+    "动摇"
+   ],
+   "en": "to lose strength or move unsteadily"
+  }
+ ],
+ "ramification": [
+  {
+   "p": "n.",
+   "zh": [
+    "后果",
+    "分支"
+   ],
+   "en": "result that makes things more complicated"
+  }
+ ],
+ "deflection": [
+  {
+   "p": "n.",
+   "zh": [
+    "偏转",
+    "偏离"
+   ],
+   "en": "a change in direction after hitting something"
+  }
+ ],
+ "misrepresent": [
+  {
+   "p": "v.",
+   "zh": [
+    "歪曲",
+    "曲解"
+   ],
+   "en": "to give a false picture of something"
+  }
+ ],
+ "medley": [
+  {
+   "p": "n.",
+   "zh": [
+    "混合",
+    "杂烩"
+   ],
+   "en": "a mix of different things or songs"
+  }
+ ],
+ "markedly": [
+  {
+   "p": "adv.",
+   "zh": [
+    "显著地",
+    "明显地"
+   ],
+   "en": "in a way that is easy to see"
+  }
+ ],
+ "antidote": [
+  {
+   "p": "n.",
+   "zh": [
+    "解毒剂",
+    "解药"
+   ],
+   "en": "a medicine that stops the effect of poison"
+  }
+ ],
+ "maestro": [
+  {
+   "p": "n.",
+   "zh": [
+    "大师",
+    "音乐大师"
+   ],
+   "en": "a very skilled music teacher or leader"
+  }
+ ],
+ "assortment": [
+  {
+   "p": "n.",
+   "zh": [
+    "各种各样",
+    "什锦"
+   ],
+   "en": "a group of different things of one kind"
+  }
+ ],
+ "aversion": [
+  {
+   "p": "n.",
+   "zh": [
+    "厌恶",
+    "反感"
+   ],
+   "en": "strong dislike"
+  }
+ ],
+ "silica": [
+  {
+   "p": "n.",
+   "zh": [
+    "二氧化硅",
+    "硅石"
+   ],
+   "en": "a hard material found in sand and glass"
+  }
+ ],
+ "modernist": [
+  {
+   "p": "n.",
+   "zh": [
+    "现代主义者"
+   ],
+   "en": "a person who supports new styles and ideas"
+  }
+ ],
+ "submissive": [
+  {
+   "p": "adj.",
+   "zh": [
+    "服从的",
+    "顺从的"
+   ],
+   "en": "ready to obey other people without argument"
+  }
+ ],
+ "nectar": [
+  {
+   "p": "n.",
+   "zh": [
+    "花蜜",
+    "甘露"
+   ],
+   "en": "sweet liquid that bees take from flowers"
+  }
+ ],
+ "normalize": [
+  {
+   "p": "v.",
+   "zh": [
+    "使正常化",
+    "使标准化"
+   ],
+   "en": "to make something usual or standard"
+  }
+ ],
+ "storyteller": [
+  {
+   "p": "n.",
+   "zh": [
+    "讲故事的人",
+    "说书人"
+   ],
+   "en": "a person who tells stories"
+  }
+ ],
+ "hemorrhage": [
+  {
+   "p": "n.",
+   "zh": [
+    "出血"
+   ],
+   "en": "a large loss of blood from the body"
+  }
+ ],
+ "observance": [
+  {
+   "p": "n.",
+   "zh": [
+    "遵守",
+    "仪式"
+   ],
+   "en": "act of following a rule or custom"
+  }
+ ],
+ "mishap": [
+  {
+   "p": "n.",
+   "zh": [
+    "小事故",
+    "不幸之事"
+   ],
+   "en": "a small unlucky event that causes trouble"
+  }
+ ],
+ "derail": [
+  {
+   "p": "v.",
+   "zh": [
+    "使脱轨",
+    "使偏离正轨"
+   ],
+   "en": "to make a train leave its track"
+  }
+ ],
+ "comical": [
+  {
+   "p": "adj.",
+   "zh": [
+    "好笑的",
+    "滑稽的"
+   ],
+   "en": "funny and making people laugh"
+  }
+ ],
+ "debacle": [
+  {
+   "p": "n.",
+   "zh": [
+    "惨败",
+    "崩溃"
+   ],
+   "en": "complete and shameful failure"
+  }
+ ],
+ "catalytic": [
+  {
+   "p": "adj.",
+   "zh": [
+    "催化的"
+   ],
+   "en": "causing a chemical change to happen faster"
+  }
+ ],
+ "whitewash": [
+  {
+   "p": "v.",
+   "zh": [
+    "粉饰",
+    "掩饰",
+    "刷白"
+   ],
+   "en": "to hide bad facts to look good"
+  }
+ ],
+ "glossary": [
+  {
+   "p": "n.",
+   "zh": [
+    "词汇表",
+    "术语表"
+   ],
+   "en": "a list of hard words with their meanings"
+  }
+ ],
+ "spasm": [
+  {
+   "p": "n.",
+   "zh": [
+    "痉挛",
+    "抽搐"
+   ],
+   "en": "sudden muscle movement you cannot control"
+  }
+ ],
+ "stampede": [
+  {
+   "p": "n.",
+   "zh": [
+    "惊逃",
+    "蜂拥"
+   ],
+   "en": "a sudden rush of frightened animals"
+  },
+  {
+   "p": "v.",
+   "zh": [
+    "惊跑",
+    "蜂拥而至"
+   ],
+   "en": "to run away fast in a frightened group"
+  }
+ ],
+ "newsroom": [
+  {
+   "p": "n.",
+   "zh": [
+    "新闻编辑部",
+    "编辑室"
+   ],
+   "en": "the office where news reports are prepared"
+  }
+ ],
+ "stiffness": [
+  {
+   "p": "n.",
+   "zh": [
+    "僵硬",
+    "硬度"
+   ],
+   "en": "being hard to bend or move"
+  }
+ ],
+ "fabricate": [
+  {
+   "p": "v.",
+   "zh": [
+    "编造",
+    "伪造",
+    "制造"
+   ],
+   "en": "invent false information to trick people"
+  }
+ ],
+ "postmaster": [
+  {
+   "p": "n.",
+   "zh": [
+    "邮政局长",
+    "邮局局长"
+   ],
+   "en": "the person in charge of a post office"
+  }
+ ],
+ "quail": [
+  {
+   "p": "n.",
+   "zh": [
+    "鹌鹑"
+   ],
+   "en": "a small round bird that people hunt"
+  },
+  {
+   "p": "v.",
+   "zh": [
+    "畏缩",
+    "胆怯"
+   ],
+   "en": "to feel and show fear"
+  }
+ ],
+ "flurry": [
+  {
+   "p": "n.",
+   "zh": [
+    "一阵骚动",
+    "阵雪",
+    "一阵"
+   ],
+   "en": "a short burst of activity or light snow"
+  }
+ ],
+ "cordon": [
+  {
+   "p": "n.",
+   "zh": [
+    "警戒线",
+    "封锁线"
+   ],
+   "en": "line of guards that blocks an area"
+  }
+ ],
+ "contiguous": [
+  {
+   "p": "adj.",
+   "zh": [
+    "相邻的",
+    "毗连的"
+   ],
+   "en": "touching or next to something else"
+  }
+ ],
+ "hardness": [
+  {
+   "p": "n.",
+   "zh": [
+    "硬度",
+    "坚硬",
+    "艰难"
+   ],
+   "en": "the quality of being firm and not soft"
+  }
+ ],
+ "provost": [
+  {
+   "p": "n.",
+   "zh": [
+    "教务长"
+   ],
+   "en": "a senior manager at a university"
+  }
+ ],
+ "opus": [
+  {
+   "p": "n.",
+   "zh": [
+    "作品",
+    "作品号"
+   ],
+   "en": "piece of music or other creative work"
+  }
+ ],
+ "pout": [
+  {
+   "p": "v.",
+   "zh": [
+    "撅嘴",
+    "噘嘴"
+   ],
+   "en": "to push out your lips when upset"
+  }
+ ],
+ "informer": [
+  {
+   "p": "n.",
+   "zh": [
+    "告密者",
+    "线人"
+   ],
+   "en": "a person who secretly tells police about crimes"
+  }
+ ],
+ "succulent": [
+  {
+   "p": "adj.",
+   "zh": [
+    "多汁的",
+    "肉质的"
+   ],
+   "en": "full of juice and good to eat"
+  }
+ ],
+ "asymmetric": [
+  {
+   "p": "adj.",
+   "zh": [
+    "不对称的"
+   ],
+   "en": "not the same on both sides"
+  }
+ ],
+ "finalize": [
+  {
+   "p": "v.",
+   "zh": [
+    "最终确定",
+    "定稿"
+   ],
+   "en": "to make a plan complete and fixed"
+  }
+ ],
+ "sentient": [
+  {
+   "p": "adj.",
+   "zh": [
+    "有感知的",
+    "有知觉的"
+   ],
+   "en": "able to see, hear, and feel things"
+  }
+ ],
+ "householder": [
+  {
+   "p": "n.",
+   "zh": [
+    "户主",
+    "房主"
+   ],
+   "en": "a person who owns or rents a home"
+  }
+ ],
+ "appetizer": [
+  {
+   "p": "n.",
+   "zh": [
+    "开胃菜"
+   ],
+   "en": "small dish eaten before the main meal"
+  }
+ ],
+ "patriarchy": [
+  {
+   "p": "n.",
+   "zh": [
+    "父权制",
+    "男权社会"
+   ],
+   "en": "a society where men hold most power"
+  }
+ ],
+ "annul": [
+  {
+   "p": "v.",
+   "zh": [
+    "废除",
+    "宣告无效",
+    "取消"
+   ],
+   "en": "to say a law is no longer valid"
+  }
+ ],
+ "occupier": [
+  {
+   "p": "n.",
+   "zh": [
+    "占用者",
+    "居住者"
+   ],
+   "en": "a person who lives in a place"
+  }
+ ],
+ "crucifixion": [
+  {
+   "p": "n.",
+   "zh": [
+    "钉十字架",
+    "酷刑"
+   ],
+   "en": "killing by nailing a person to a cross"
+  }
+ ],
+ "coy": [
+  {
+   "p": "adj.",
+   "zh": [
+    "腼腆的",
+    "羞怯的"
+   ],
+   "en": "shy, or pretending to be shy"
+  }
+ ],
+ "scone": [
+  {
+   "p": "n.",
+   "zh": [
+    "司康饼",
+    "烤饼"
+   ],
+   "en": "a small soft cake eaten with jam"
+  }
+ ],
+ "cleaver": [
+  {
+   "p": "n.",
+   "zh": [
+    "切肉刀",
+    "菜刀"
+   ],
+   "en": "a heavy knife for cutting meat"
+  }
+ ],
+ "unruly": [
+  {
+   "p": "adj.",
+   "zh": [
+    "难管束的",
+    "不守规矩的"
+   ],
+   "en": "hard to control; not obeying rules"
+  }
+ ],
+ "cellulose": [
+  {
+   "p": "n.",
+   "zh": [
+    "纤维素"
+   ],
+   "en": "the main solid material in plant walls"
+  }
+ ],
+ "ghastly": [
+  {
+   "p": "adj.",
+   "zh": [
+    "可怕的",
+    "惨白的",
+    "糟透的"
+   ],
+   "en": "very bad or frightening"
+  }
+ ],
+ "sleazy": [
+  {
+   "p": "adj.",
+   "zh": [
+    "低俗的",
+    "肮脏的"
+   ],
+   "en": "dirty, cheap, and morally bad"
+  }
+ ],
+ "garb": [
+  {
+   "p": "n.",
+   "zh": [
+    "服装",
+    "装束"
+   ],
+   "en": "clothes of a particular kind"
+  }
+ ],
+ "huntsman": [
+  {
+   "p": "n.",
+   "zh": [
+    "猎人"
+   ],
+   "en": "a man who hunts wild animals"
+  }
+ ],
+ "airship": [
+  {
+   "p": "n.",
+   "zh": [
+    "飞艇"
+   ],
+   "en": "a large aircraft filled with light gas"
+  }
+ ],
+ "incandescent": [
+  {
+   "p": "adj.",
+   "zh": [
+    "白热的",
+    "炽热发光的"
+   ],
+   "en": "giving out bright light because of great heat"
+  }
+ ],
+ "thud": [
+  {
+   "p": "n.",
+   "zh": [
+    "砰的一声",
+    "重击声"
+   ],
+   "en": "low dull sound of a heavy fall"
+  }
+ ],
+ "chasm": [
+  {
+   "p": "n.",
+   "zh": [
+    "深渊",
+    "裂口",
+    "鸿沟"
+   ],
+   "en": "a very deep crack in the ground"
+  }
+ ],
+ "progenitor": [
+  {
+   "p": "n.",
+   "zh": [
+    "祖先",
+    "先驱"
+   ],
+   "en": "a person or thing from which others come"
+  }
+ ],
+ "baritone": [
+  {
+   "p": "n.",
+   "zh": [
+    "男中音"
+   ],
+   "en": "a man singer with a medium low voice"
+  }
+ ],
+ "rayon": [
+  {
+   "p": "n.",
+   "zh": [
+    "人造丝",
+    "人造纤维"
+   ],
+   "en": "soft cloth made from plant fibre"
+  }
+ ],
+ "geyser": [
+  {
+   "p": "n.",
+   "zh": [
+    "间歇泉"
+   ],
+   "en": "a hot spring that shoots water up"
+  }
+ ],
+ "faraway": [
+  {
+   "p": "adj.",
+   "zh": [
+    "遥远的",
+    "出神的"
+   ],
+   "en": "a long distance from here"
+  }
+ ],
+ "caustic": [
+  {
+   "p": "adj.",
+   "zh": [
+    "腐蚀性的",
+    "刻薄的"
+   ],
+   "en": "able to burn things by chemical action"
+  }
+ ],
+ "sideshow": [
+  {
+   "p": "n.",
+   "zh": [
+    "杂耍",
+    "次要活动"
+   ],
+   "en": "small extra show at a fair or circus"
+  }
+ ],
+ "clench": [
+  {
+   "p": "v.",
+   "zh": [
+    "握紧",
+    "咬紧"
+   ],
+   "en": "to close your teeth or hand tightly"
+  }
+ ],
+ "calibrate": [
+  {
+   "p": "v.",
+   "zh": [
+    "校准",
+    "标定",
+    "调整"
+   ],
+   "en": "to adjust a tool so it measures correctly"
+  }
+ ],
+ "dogmatic": [
+  {
+   "p": "adj.",
+   "zh": [
+    "教条的",
+    "武断的"
+   ],
+   "en": "sure you are right and closed to others"
+  }
+ ],
+ "seashore": [
+  {
+   "p": "n.",
+   "zh": [
+    "海岸",
+    "海滨"
+   ],
+   "en": "land beside the sea"
+  }
+ ],
+ "sortie": [
+  {
+   "p": "n.",
+   "zh": [
+    "出击",
+    "突围"
+   ],
+   "en": "a short attack by soldiers or a plane"
+  }
+ ],
+ "bookkeeper": [
+  {
+   "p": "n.",
+   "zh": [
+    "簿记员",
+    "记账员"
+   ],
+   "en": "someone who records the money of a firm"
+  }
+ ],
+ "carcinogen": [
+  {
+   "p": "n.",
+   "zh": [
+    "致癌物"
+   ],
+   "en": "a substance that can cause cancer"
+  }
+ ],
+ "granule": [
+  {
+   "p": "n.",
+   "zh": [
+    "颗粒",
+    "细粒"
+   ],
+   "en": "very small hard piece of a substance"
+  }
+ ],
+ "opulent": [
+  {
+   "p": "adj.",
+   "zh": [
+    "奢华的",
+    "富丽堂皇的"
+   ],
+   "en": "looking very rich and expensive"
+  }
+ ],
+ "pungent": [
+  {
+   "p": "adj.",
+   "zh": [
+    "刺鼻的",
+    "辛辣的"
+   ],
+   "en": "having a strong sharp smell or taste"
+  }
+ ],
+ "titular": [
+  {
+   "p": "adj.",
+   "zh": [
+    "名义上的",
+    "有名无实的"
+   ],
+   "en": "having a title but no real power"
+  }
+ ],
+ "humanistic": [
+  {
+   "p": "adj.",
+   "zh": [
+    "人文主义的",
+    "人本主义的"
+   ],
+   "en": "focused on human values and needs"
+  }
+ ],
+ "depravity": [
+  {
+   "p": "n.",
+   "zh": [
+    "堕落",
+    "邪恶"
+   ],
+   "en": "very bad and immoral behavior"
+  }
+ ],
+ "boisterous": [
+  {
+   "p": "adj.",
+   "zh": [
+    "喧闹的",
+    "吵闹的"
+   ],
+   "en": "noisy, lively, and full of energy"
+  }
+ ],
+ "commentate": [
+  {
+   "p": "v.",
+   "zh": [
+    "解说",
+    "评论"
+   ],
+   "en": "to describe an event on radio or television"
+  }
+ ],
+ "lumberjack": [
+  {
+   "p": "n.",
+   "zh": [
+    "伐木工"
+   ],
+   "en": "person whose job is to cut down trees"
+  }
+ ],
+ "amiable": [
+  {
+   "p": "adj.",
+   "zh": [
+    "和蔼的",
+    "友善的",
+    "亲切的"
+   ],
+   "en": "friendly and pleasant to other people"
+  }
+ ],
+ "squall": [
+  {
+   "p": "n.",
+   "zh": [
+    "阵风",
+    "暴风"
+   ],
+   "en": "a sudden strong wind with rain or snow"
+  }
+ ],
+ "feverish": [
+  {
+   "p": "adj.",
+   "zh": [
+    "发烧的",
+    "狂热的"
+   ],
+   "en": "having a high body temperature, or very excited"
+  }
+ ],
+ "auger": [
+  {
+   "p": "n.",
+   "zh": [
+    "螺旋钻",
+    "钻孔器"
+   ],
+   "en": "tool for drilling holes"
+  }
+ ],
+ "menthol": [
+  {
+   "p": "n.",
+   "zh": [
+    "薄荷醇"
+   ],
+   "en": "a cool-tasting substance from the mint plant"
+  }
+ ],
+ "rancid": [
+  {
+   "p": "adj.",
+   "zh": [
+    "腐臭的",
+    "变质的"
+   ],
+   "en": "smelling or tasting bad because it is old"
+  }
+ ],
+ "storehouse": [
+  {
+   "p": "n.",
+   "zh": [
+    "仓库",
+    "宝库"
+   ],
+   "en": "a building where goods are kept"
+  }
+ ],
+ "preeminent": [
+  {
+   "p": "adj.",
+   "zh": [
+    "杰出的",
+    "卓越的"
+   ],
+   "en": "better than all others in a field"
+  }
+ ],
+ "patrician": [
+  {
+   "p": "n.",
+   "zh": [
+    "贵族"
+   ],
+   "en": "a person from an old noble family"
+  },
+  {
+   "p": "adj.",
+   "zh": [
+    "贵族的",
+    "高贵的"
+   ],
+   "en": "belonging to a high social class"
+  }
+ ],
+ "assail": [
+  {
+   "p": "v.",
+   "zh": [
+    "抨击",
+    "攻击"
+   ],
+   "en": "to attack with blows or hard words"
+  }
+ ],
+ "decimate": [
+  {
+   "p": "v.",
+   "zh": [
+    "大批杀死",
+    "大量毁灭"
+   ],
+   "en": "to destroy a large part of a group"
+  }
+ ],
+ "voracious": [
+  {
+   "p": "adj.",
+   "zh": [
+    "贪婪的",
+    "贪吃的"
+   ],
+   "en": "eating or wanting very large amounts"
+  }
+ ],
+ "creak": [
+  {
+   "p": "v.",
+   "zh": [
+    "发出嘎吱声"
+   ],
+   "en": "to make a rough sound like old wood"
+  },
+  {
+   "p": "n.",
+   "zh": [
+    "嘎吱声"
+   ],
+   "en": "a long, high sound like old wood makes"
+  }
+ ],
+ "gape": [
+  {
+   "p": "v.",
+   "zh": [
+    "目瞪口呆地看",
+    "张大嘴",
+    "裂开"
+   ],
+   "en": "to look with the mouth wide open"
+  }
+ ],
+ "amenity": [
+  {
+   "p": "n.",
+   "zh": [
+    "便利设施"
+   ],
+   "en": "a useful or pleasant feature of a place"
+  }
+ ],
+ "warplane": [
+  {
+   "p": "n.",
+   "zh": [
+    "战机",
+    "军用飞机"
+   ],
+   "en": "aircraft built for use in war"
+  }
+ ],
+ "symbiosis": [
+  {
+   "p": "n.",
+   "zh": [
+    "共生",
+    "共生关系"
+   ],
+   "en": "a close relationship in which both sides gain"
+  }
+ ],
+ "intricately": [
+  {
+   "p": "adv.",
+   "zh": [
+    "复杂地",
+    "精巧地"
+   ],
+   "en": "with many small and detailed parts"
+  }
+ ],
+ "icicle": [
+  {
+   "p": "n.",
+   "zh": [
+    "冰柱"
+   ],
+   "en": "a pointed piece of ice hanging down"
+  }
+ ],
+ "vicarage": [
+  {
+   "p": "n.",
+   "zh": [
+    "牧师住宅"
+   ],
+   "en": "house of a church priest"
+  }
+ ],
+ "modicum": [
+  {
+   "p": "n.",
+   "zh": [
+    "少量",
+    "一点"
+   ],
+   "en": "a small amount of something good"
+  }
+ ],
+ "amble": [
+  {
+   "p": "v.",
+   "zh": [
+    "漫步",
+    "缓行"
+   ],
+   "en": "to walk in a slow, relaxed way"
+  }
+ ],
+ "forebear": [
+  {
+   "p": "n.",
+   "zh": [
+    "祖先",
+    "先人"
+   ],
+   "en": "a family member who lived long ago"
+  }
+ ],
+ "inalienable": [
+  {
+   "p": "adj.",
+   "zh": [
+    "不可剥夺的",
+    "不可让与的"
+   ],
+   "en": "that cannot be taken away"
+  }
+ ],
+ "oversize": [
+  {
+   "p": "adj.",
+   "zh": [
+    "特大的",
+    "超大的"
+   ],
+   "en": "bigger than the usual size"
+  }
+ ],
+ "resplendent": [
+  {
+   "p": "adj.",
+   "zh": [
+    "辉煌的",
+    "灿烂的"
+   ],
+   "en": "bright and beautiful to see"
+  }
+ ],
+ "terse": [
+  {
+   "p": "adj.",
+   "zh": [
+    "简短的",
+    "简洁的"
+   ],
+   "en": "using few words, often in an unfriendly way"
+  }
+ ],
+ "reportage": [
+  {
+   "p": "n.",
+   "zh": [
+    "新闻报道",
+    "报告文学"
+   ],
+   "en": "news reporting"
+  }
+ ],
+ "hoarse": [
+  {
+   "p": "adj.",
+   "zh": [
+    "沙哑的",
+    "嘶哑的"
+   ],
+   "en": "having a rough, weak voice"
+  }
+ ],
+ "panache": [
+  {
+   "p": "n.",
+   "zh": [
+    "派头",
+    "气派",
+    "神气"
+   ],
+   "en": "a stylish and confident way of doing things"
+  }
+ ],
+ "emolument": [
+  {
+   "p": "n.",
+   "zh": [
+    "报酬",
+    "薪酬"
+   ],
+   "en": "money paid to a person for work"
+  }
+ ],
+ "bauble": [
+  {
+   "p": "n.",
+   "zh": [
+    "小玩意",
+    "装饰球"
+   ],
+   "en": "cheap bright object used as decoration"
+  }
+ ],
+ "apprise": [
+  {
+   "p": "v.",
+   "zh": [
+    "通知",
+    "告知"
+   ],
+   "en": "to tell someone about new facts"
+  }
+ ],
+ "gradation": [
+  {
+   "p": "n.",
+   "zh": [
+    "渐变",
+    "层次",
+    "等级"
+   ],
+   "en": "a slow change by small steps"
+  }
+ ],
+ "acquaint": [
+  {
+   "p": "v.",
+   "zh": [
+    "使熟悉",
+    "使认识"
+   ],
+   "en": "to make someone know about something or someone"
+  }
+ ],
+ "infirm": [
+  {
+   "p": "adj.",
+   "zh": [
+    "体弱的",
+    "虚弱的"
+   ],
+   "en": "weak because of age or illness"
+  }
+ ],
+ "dismember": [
+  {
+   "p": "v.",
+   "zh": [
+    "肢解",
+    "分割"
+   ],
+   "en": "to cut the arms and legs off"
+  }
+ ],
+ "tactful": [
+  {
+   "p": "adj.",
+   "zh": [
+    "得体的",
+    "机智的"
+   ],
+   "en": "careful not to hurt other people's feelings"
+  }
+ ],
+ "consecrate": [
+  {
+   "p": "v.",
+   "zh": [
+    "使神圣",
+    "奉献"
+   ],
+   "en": "to make something holy in a religious ceremony"
+  }
+ ],
+ "writhe": [
+  {
+   "p": "v.",
+   "zh": [
+    "扭动",
+    "翻滚"
+   ],
+   "en": "twist the body, often from pain"
+  }
+ ],
+ "larder": [
+  {
+   "p": "n.",
+   "zh": [
+    "食品储藏室",
+    "食橱"
+   ],
+   "en": "a small room or cupboard for storing food"
+  }
+ ],
+ "unpalatable": [
+  {
+   "p": "adj.",
+   "zh": [
+    "难吃的",
+    "令人不快的"
+   ],
+   "en": "having a bad taste"
+  }
+ ],
+ "jubilation": [
+  {
+   "p": "n.",
+   "zh": [
+    "欢欣",
+    "欢腾"
+   ],
+   "en": "a feeling of great joy after a success"
+  }
+ ],
+ "cavalcade": [
+  {
+   "p": "n.",
+   "zh": [
+    "游行队伍",
+    "车队"
+   ],
+   "en": "line of people on horses or in cars"
+  }
+ ],
+ "incredulity": [
+  {
+   "p": "n.",
+   "zh": [
+    "怀疑",
+    "难以置信"
+   ],
+   "en": "the state of being unable to believe something"
+  }
+ ],
+ "frugality": [
+  {
+   "p": "n.",
+   "zh": [
+    "节俭",
+    "节约"
+   ],
+   "en": "careful use of money and food"
+  }
+ ],
+ "herculean": [
+  {
+   "p": "adj.",
+   "zh": [
+    "艰巨的",
+    "力大无比的"
+   ],
+   "en": "needing very great strength or effort"
+  }
+ ],
+ "subdivide": [
+  {
+   "p": "v.",
+   "zh": [
+    "细分",
+    "再分"
+   ],
+   "en": "divide a part into smaller parts"
+  }
+ ],
+ "upturn": [
+  {
+   "p": "n.",
+   "zh": [
+    "好转",
+    "上升"
+   ],
+   "en": "a change to a better or higher level"
+  }
+ ],
+ "numismatic": [
+  {
+   "p": "adj.",
+   "zh": [
+    "钱币的",
+    "钱币学的"
+   ],
+   "en": "about the study or collecting of coins"
+  }
+ ],
+ "truant": [
+  {
+   "p": "n.",
+   "zh": [
+    "逃学者",
+    "旷课者"
+   ],
+   "en": "a child who stays away from school"
+  }
+ ],
+ "fop": [
+  {
+   "p": "n.",
+   "zh": [
+    "花花公子",
+    "纨绔子弟"
+   ],
+   "en": "man who is too proud of his clothes"
+  }
+ ],
+ "forbearance": [
+  {
+   "p": "n.",
+   "zh": [
+    "忍耐",
+    "克制"
+   ],
+   "en": "calm patience when you could be angry"
+  }
+ ],
+ "odorless": [
+  {
+   "p": "adj.",
+   "zh": [
+    "无味的",
+    "无气味的"
+   ],
+   "en": "having no smell"
+  }
+ ],
+ "lampshade": [
+  {
+   "p": "n.",
+   "zh": [
+    "灯罩"
+   ],
+   "en": "a cover that goes over an electric light"
+  }
+ ],
+ "overwrought": [
+  {
+   "p": "adj.",
+   "zh": [
+    "过度紧张的",
+    "心烦意乱的"
+   ],
+   "en": "very nervous and upset"
+  }
+ ],
+ "dietetics": [
+  {
+   "p": "n.",
+   "zh": [
+    "营养学",
+    "饮食学"
+   ],
+   "en": "the study of food and health"
+  }
+ ],
+ "convulse": [
+  {
+   "p": "v.",
+   "zh": [
+    "使抽搐",
+    "使震动"
+   ],
+   "en": "to shake the body suddenly and hard"
+  }
+ ],
+ "intermingle": [
+  {
+   "p": "v.",
+   "zh": [
+    "混合",
+    "掺杂"
+   ],
+   "en": "to mix together"
+  }
+ ],
+ "gruel": [
+  {
+   "p": "n.",
+   "zh": [
+    "稀粥"
+   ],
+   "en": "thin soup of boiled oats"
+  }
+ ],
+ "impartially": [
+  {
+   "p": "adv.",
+   "zh": [
+    "公正地",
+    "公平地"
+   ],
+   "en": "in a fair way, favoring no side"
+  }
+ ],
+ "besiege": [
+  {
+   "p": "v.",
+   "zh": [
+    "围攻",
+    "包围"
+   ],
+   "en": "to surround a place with an army"
+  }
+ ],
+ "defeatist": [
+  {
+   "p": "n.",
+   "zh": [
+    "失败主义者"
+   ],
+   "en": "someone who expects to fail and gives up"
+  }
+ ],
+ "ennui": [
+  {
+   "p": "n.",
+   "zh": [
+    "倦怠",
+    "厌倦"
+   ],
+   "en": "feeling of being tired and bored"
+  }
+ ],
+ "moralistic": [
+  {
+   "p": "adj.",
+   "zh": [
+    "说教的",
+    "道学的"
+   ],
+   "en": "telling others what is right and wrong"
+  }
+ ],
+ "deforest": [
+  {
+   "p": "v.",
+   "zh": [
+    "砍伐森林"
+   ],
+   "en": "to cut down the trees of an area"
+  }
+ ],
+ "laconic": [
+  {
+   "p": "adj.",
+   "zh": [
+    "简洁的",
+    "言简意赅的"
+   ],
+   "en": "using very few words"
+  }
+ ],
+ "egoism": [
+  {
+   "p": "n.",
+   "zh": [
+    "利己主义",
+    "自我中心"
+   ],
+   "en": "habit of caring only about yourself"
+  }
+ ],
+ "dawdle": [
+  {
+   "p": "v.",
+   "zh": [
+    "磨蹭",
+    "闲荡"
+   ],
+   "en": "to move or work more slowly than needed"
+  }
+ ],
+ "ablution": [
+  {
+   "p": "n.",
+   "zh": [
+    "沐浴",
+    "洗礼"
+   ],
+   "en": "washing the body, often for religion"
+  }
+ ],
+ "torpor": [
+  {
+   "p": "n.",
+   "zh": [
+    "麻木",
+    "迟钝"
+   ],
+   "en": "a state of being slow and without energy"
+  }
+ ],
+ "overeat": [
+  {
+   "p": "v.",
+   "zh": [
+    "吃得过多",
+    "暴食"
+   ],
+   "en": "eat more food than is good for you"
+  }
+ ],
+ "reprobate": [
+  {
+   "p": "n.",
+   "zh": [
+    "堕落者",
+    "恶棍"
+   ],
+   "en": "a person with bad morals"
+  }
+ ],
+ "cantankerous": [
+  {
+   "p": "adj.",
+   "zh": [
+    "脾气坏的",
+    "爱吵架的"
+   ],
+   "en": "bad-tempered and always ready to argue"
+  }
+ ],
+ "sunbathe": [
+  {
+   "p": "v.",
+   "zh": [
+    "晒日光浴"
+   ],
+   "en": "to lie in the sun to get brown"
+  }
+ ],
+ "sulky": [
+  {
+   "p": "adj.",
+   "zh": [
+    "生闷气的",
+    "阴沉的"
+   ],
+   "en": "quietly angry and unwilling to talk"
+  }
+ ],
+ "superintend": [
+  {
+   "p": "v.",
+   "zh": [
+    "监督",
+    "管理"
+   ],
+   "en": "to watch and direct work or people"
+  }
+ ],
+ "backache": [
+  {
+   "p": "n.",
+   "zh": [
+    "背痛",
+    "腰痛"
+   ],
+   "en": "a pain in the lower spine area"
+  }
+ ],
+ "extrude": [
+  {
+   "p": "v.",
+   "zh": [
+    "挤出",
+    "压出"
+   ],
+   "en": "to push something out through a small opening"
+  }
+ ],
+ "hoary": [
+  {
+   "p": "adj.",
+   "zh": [
+    "灰白的",
+    "陈旧的"
+   ],
+   "en": "gray or white with age; very old"
+  }
+ ],
+ "profuse": [
+  {
+   "p": "adj.",
+   "zh": [
+    "大量的",
+    "丰富的"
+   ],
+   "en": "given or produced in very large amounts"
+  }
+ ],
+ "compunction": [
+  {
+   "p": "n.",
+   "zh": [
+    "内疚",
+    "悔恨"
+   ],
+   "en": "a guilty feeling about a bad act"
+  }
+ ],
+ "mimetic": [
+  {
+   "p": "adj.",
+   "zh": [
+    "模仿的",
+    "拟态的"
+   ],
+   "en": "copying the way something looks or acts"
+  }
+ ],
+ "apoplectic": [
+  {
+   "p": "adj.",
+   "zh": [
+    "暴怒的",
+    "中风的"
+   ],
+   "en": "extremely angry"
+  }
+ ],
+ "glutinous": [
+  {
+   "p": "adj.",
+   "zh": [
+    "黏稠的",
+    "黏性的"
+   ],
+   "en": "thick and sticky like glue"
+  }
+ ],
+ "braggart": [
+  {
+   "p": "n.",
+   "zh": [
+    "吹牛者",
+    "自夸者"
+   ],
+   "en": "a person who talks too proudly about themselves"
+  }
+ ],
+ "fortuitously": [
+  {
+   "p": "adv.",
+   "zh": [
+    "偶然地",
+    "碰巧地"
+   ],
+   "en": "by chance, often with a good result"
+  }
+ ],
+ "ingrate": [
+  {
+   "p": "n.",
+   "zh": [
+    "忘恩负义的人"
+   ],
+   "en": "person who shows no thanks for help"
+  }
+ ],
+ "greengrocer": [
+  {
+   "p": "n.",
+   "zh": [
+    "蔬果商",
+    "菜贩"
+   ],
+   "en": "a person who sells fruit and vegetables"
+  }
+ ],
+ "cohabit": [
+  {
+   "p": "v.",
+   "zh": [
+    "同居"
+   ],
+   "en": "to live together without being married"
+  }
+ ],
+ "vitiate": [
+  {
+   "p": "v.",
+   "zh": [
+    "损害",
+    "使无效",
+    "败坏"
+   ],
+   "en": "to spoil or weaken the quality of something"
+  }
+ ],
+ "quaver": [
+  {
+   "p": "v.",
+   "zh": [
+    "颤抖",
+    "发颤音"
+   ],
+   "en": "shake when you speak or sing"
+  },
+  {
+   "p": "n.",
+   "zh": [
+    "颤声",
+    "颤抖"
+   ],
+   "en": "shaking sound in a voice"
+  }
+ ],
+ "spoor": [
+  {
+   "p": "n.",
+   "zh": [
+    "足迹",
+    "踪迹"
+   ],
+   "en": "the marks or smell an animal leaves behind"
+  }
+ ],
+ "twaddle": [
+  {
+   "p": "n.",
+   "zh": [
+    "废话",
+    "胡说"
+   ],
+   "en": "silly talk that has no meaning"
+  }
+ ],
+ "vexation": [
+  {
+   "p": "n.",
+   "zh": [
+    "恼怒",
+    "烦恼"
+   ],
+   "en": "the feeling of being annoyed or worried"
+  }
+ ],
+ "covetous": [
+  {
+   "p": "adj.",
+   "zh": [
+    "贪婪的",
+    "垂涎的"
+   ],
+   "en": "wanting what another person has"
+  }
+ ],
+ "garrulous": [
+  {
+   "p": "adj.",
+   "zh": [
+    "话多的",
+    "喋喋不休的"
+   ],
+   "en": "talking a lot, especially about small things"
+  }
+ ],
+ "convoke": [
+  {
+   "p": "v.",
+   "zh": [
+    "召集",
+    "召开"
+   ],
+   "en": "to call people together for a meeting"
+  }
+ ],
+ "pendent": [
+  {
+   "p": "adj.",
+   "zh": [
+    "下垂的",
+    "悬垂的"
+   ],
+   "en": "hanging down from something"
+  }
+ ],
+ "beatific": [
+  {
+   "p": "adj.",
+   "zh": [
+    "幸福的",
+    "极乐的"
+   ],
+   "en": "showing great joy and peace"
+  }
+ ],
+ "seemly": [
+  {
+   "p": "adj.",
+   "zh": [
+    "得体的",
+    "适当的"
+   ],
+   "en": "polite and right for the situation"
+  }
+ ],
+ "unctuous": [
+  {
+   "p": "adj.",
+   "zh": [
+    "油腔滑调的",
+    "假殷勤的"
+   ],
+   "en": "too polite and friendly in a false way"
+  }
+ ],
+ "conviviality": [
+  {
+   "p": "n.",
+   "zh": [
+    "欢乐气氛",
+    "欢宴"
+   ],
+   "en": "a friendly and happy feeling among people"
+  }
+ ],
+ "interstice": [
+  {
+   "p": "n.",
+   "zh": [
+    "空隙",
+    "缝隙"
+   ],
+   "en": "small gap between things"
+  }
+ ],
+ "defoliate": [
+  {
+   "p": "v.",
+   "zh": [
+    "使落叶",
+    "除去叶子"
+   ],
+   "en": "to make the leaves fall off a plant"
+  }
+ ],
+ "languor": [
+  {
+   "p": "n.",
+   "zh": [
+    "倦怠",
+    "怠惰"
+   ],
+   "en": "a pleasant feeling of being tired and slow"
+  }
+ ],
+ "abase": [
+  {
+   "p": "v.",
+   "zh": [
+    "贬低",
+    "降低地位"
+   ],
+   "en": "to make someone feel less proud or important"
+  }
+ ],
+ "solicitude": [
+  {
+   "p": "n.",
+   "zh": [
+    "关心",
+    "挂念"
+   ],
+   "en": "care and concern for someone"
+  }
+ ],
+ "exculpate": [
+  {
+   "p": "v.",
+   "zh": [
+    "开脱",
+    "使无罪"
+   ],
+   "en": "to show that someone is not guilty"
+  }
+ ],
+ "derogate": [
+  {
+   "p": "v.",
+   "zh": [
+    "贬低",
+    "诋毁"
+   ],
+   "en": "to say that something has little value"
+  }
+ ],
+ "dilatory": [
+  {
+   "p": "adj.",
+   "zh": [
+    "拖拉的",
+    "磨蹭的"
+   ],
+   "en": "slow to act and wasting time"
+  }
+ ],
+ "touchable": [
+  {
+   "p": "adj.",
+   "zh": [
+    "可触摸的",
+    "可触的"
+   ],
+   "en": "able to be felt with the hand"
+  }
+ ],
+ "arrhythmic": [
+  {
+   "p": "adj.",
+   "zh": [
+    "无节奏的",
+    "心律不齐的"
+   ],
+   "en": "without a regular beat or pattern"
+  }
+ ],
+ "manumit": [
+  {
+   "p": "v.",
+   "zh": [
+    "释放奴隶",
+    "解放"
+   ],
+   "en": "to free a slave"
+  }
+ ],
+ "dyspeptic": [
+  {
+   "p": "adj.",
+   "zh": [
+    "消化不良的",
+    "爱发牢骚的"
+   ],
+   "en": "having trouble with the stomach after eating"
+  }
+ ],
+ "hemostat": [
+  {
+   "p": "n.",
+   "zh": [
+    "止血钳",
+    "止血剂"
+   ],
+   "en": "tool that stops bleeding"
+  }
+ ],
+ "acrophobia": [
+  {
+   "p": "n.",
+   "zh": [
+    "恐高症"
+   ],
+   "en": "a strong fear of high places"
+  }
+ ],
+ "valediction": [
+  {
+   "p": "n.",
+   "zh": [
+    "告别",
+    "告别辞"
+   ],
+   "en": "words said when you leave or say goodbye"
+  }
+ ],
+ "pyromania": [
+  {
+   "p": "n.",
+   "zh": [
+    "纵火癖"
+   ],
+   "en": "a strong need to start fires"
+  }
+ ],
+ "clannish": [
+  {
+   "p": "adj.",
+   "zh": [
+    "排外的",
+    "小团体的"
+   ],
+   "en": "staying close to your own group only"
+  }
+ ],
+ "presentiment": [
+  {
+   "p": "n.",
+   "zh": [
+    "预感"
+   ],
+   "en": "a feeling that something bad will happen"
+  }
+ ],
+ "effulgent": [
+  {
+   "p": "adj.",
+   "zh": [
+    "灿烂的",
+    "光辉的"
+   ],
+   "en": "shining with a bright light"
+  }
+ ],
+ "impenitent": [
+  {
+   "p": "adj.",
+   "zh": [
+    "不知悔改的"
+   ],
+   "en": "not sorry for doing something wrong"
+  }
+ ]
+}

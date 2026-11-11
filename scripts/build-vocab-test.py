@@ -50,6 +50,8 @@ OUT_NEEDS = LIBRARY / "vocab-needs.json"
 
 SEED = 20261111
 POOL_SIZE = 30
+SPARE_SIZE = 10
+GLOSSES = ROOT / "scripts" / "vocab-test-glosses.json"
 MIN_FREQ = 1e-8  # zipf 1.0
 BANDS = [(i * 1000 + 1, (i + 1) * 1000) for i in range(10)] + [
     (10001, 12500), (12501, 15000), (15001, 20000), (20001, 25000), (25001, 30000), (30001, 40000)]
@@ -588,6 +590,15 @@ def pool_ok(w, ranking, entries):
 
 # ---------- bands ----------
 
+def spread(items, n):
+    """One item from each of n equal slices, picked by a seeded hash."""
+    out = []
+    for k in range(n):
+        part = items[k * len(items) // n:(k + 1) * len(items) // n]
+        out.append(min(part, key=lambda x: hashlib.sha1(f"{SEED}:{x[0]}".encode()).hexdigest()))
+    return out
+
+
 def build_bands(ranking, senses, meta, entries):
     """Pools use only words that a learner list marks (Collins, Oxford or an exam tag). Without
     that mark about half of the rare entries are names, places or abbreviations."""
@@ -605,14 +616,161 @@ def build_bands(ranking, senses, meta, entries):
         src = pref if len(pref) >= POOL_SIZE * 2 else glossed
         # One word from each of POOL_SIZE equal slices of the band, picked by a seeded hash, so the
         # pool spreads over the band and stays stable when a word is added to POOL_EXCLUDE.
-        chosen = []
-        for k in range(POOL_SIZE):
-            part = src[k * len(src) // POOL_SIZE:(k + 1) * len(src) // POOL_SIZE]
-            chosen.append(min(part, key=lambda x: hashlib.sha1(f"{SEED}:{x[0]}".encode()).hexdigest()))
+        chosen = spread(src, POOL_SIZE)
+        taken = {w for w, _ in chosen}
+        # Spares replace pool words whose curated meanings fail the checks below.
+        spares = spread([x for x in src if x[0] not in taken], SPARE_SIZE)
         chosen.sort(key=lambda x: ranking[x[0]])
+        spares.sort(key=lambda x: ranking[x[0]])
         bands.append({"from": lo, "to": hi,
-                      "words": [{"w": w, "zh": g, "r": ranking[w]} for w, g in chosen]})
+                      "words": [{"w": w, "zh": g, "r": ranking[w]} for w, g in chosen],
+                      "spares": [{"w": w, "zh": g, "r": ranking[w]} for w, g in spares]})
     return bands
+
+
+# ---------- curated meanings ----------
+# scripts/vocab-test-glosses.json maps each pool and spare word to one or two rows:
+# {"p": part of speech, "zh": up to three Chinese meanings, "en": a short English definition}.
+# Every answer option shows these rows, so they are written and checked by hand (the dictionary's
+# first English sense is often rare: "bank" starts with "sloping land").
+
+POS_LABELS = {"noun": "n.", "verb": "v.", "adj": "adj.", "adv": "adv.", "prep": "prep.",
+              "conj": "conj.", "pron": "pron.", "num": "num.", "intj": "int.", "aux": "aux.",
+              "det": "det."}
+ALLOWED_POS = set(POS_LABELS.values())
+# Characters too common in meanings to make two meanings look alike; keep in step with
+# FILLER in src/lib/vocab-test.ts.
+FILLER = set("的地得使之者人性化物一.…了")
+MAX_EN_WORDS = 8
+
+
+def draft_rows(sense_list):
+    rows = {}
+    for _, pos, gloss in sorted(sense_list):
+        label = POS_LABELS.get(pos, "?")
+        rows.setdefault(label, [])
+        for seg in gloss_segments(gloss):
+            if seg not in rows[label]:
+                rows[label].append(seg)
+    return [{"p": p, "zh": zh[:6]} for p, zh in rows.items() if zh][:3]
+
+
+def word_forms(w, lemma_to_forms):
+    return {w, w + "s", w + "es", w + "ed", w + "d", w + "ing", w + "er", w + "ly"} | set(lemma_to_forms.get(w, ()))
+
+
+def gloss_problem(rows, forms):
+    if not isinstance(rows, list) or not 1 <= len(rows) <= 2:
+        return "needs one or two rows"
+    seen = set()
+    for row in rows:
+        p, zh, en = row.get("p"), row.get("zh"), row.get("en")
+        if p not in ALLOWED_POS or p in seen:
+            return f"bad part of speech {p!r}"
+        seen.add(p)
+        if not isinstance(zh, list) or not 1 <= len(zh) <= 3:
+            return "needs one to three Chinese meanings"
+        for m in zh:
+            if not isinstance(m, str) or not 1 <= len(m) <= 8 or re.search(r"[A-Za-z]", m) or not CJK.search(m):
+                return f"bad Chinese meaning {m!r}"
+        if not isinstance(en, str) or not en.strip():
+            return "missing English line"
+        words = re.findall(r"[A-Za-z']+", en)
+        if not 1 <= len(words) <= MAX_EN_WORDS or len(en.split()) > MAX_EN_WORDS:
+            return f"English line too long: {en!r}"
+        if re.search(r"[A-Z]", en[1:]):
+            return f"English line has a name or capital: {en!r}"
+        lowered = {x.lower() for x in words}
+        if lowered & forms:
+            return f"English line uses the word itself: {en!r}"
+    return None
+
+
+def signature(rows):
+    return tuple(r["p"] for r in rows)
+
+
+def option_width(rows):
+    """Rough rendered width: a Chinese character is about twice a Latin letter, and the English
+    line is in a smaller font. Keep in step with optionWidth in src/lib/vocab-test.ts."""
+    return sum(sum(len(m) for m in r["zh"]) + 0.45 * len(r["en"]) for r in rows)
+
+
+def meaning_chars(rows):
+    return {c for r in rows for m in r["zh"] for c in m if c not in FILLER}
+
+
+def can_distract(target, other, forms):
+    """Whether `other` may be a wrong option for `target` (both {w, s} entries)."""
+    if other["w"] == target["w"]:
+        return False
+    if meaning_chars(target["s"]) & meaning_chars(other["s"]):
+        return False
+    tw, ow = option_width(target["s"]), option_width(other["s"])
+    if not 0.6 * tw <= ow <= 1.4 * tw:
+        return False
+    en = {x.lower() for r in other["s"] for x in re.findall(r"[A-Za-z']+", r["en"])}
+    return not (en & forms)
+
+
+def distractor_count(target, pool, forms):
+    """How many mutually compatible wrong options exist for `target`, up to three."""
+    for match in (lambda o: signature(o["s"]) == signature(target["s"]),
+                  lambda o: o["s"][0]["p"] == target["s"][0]["p"]):
+        picked = []
+        for o in sorted(pool, key=lambda o: abs(o["r"] - target["r"])):
+            if match(o) and can_distract(target, o, forms) and all(
+                    not (meaning_chars(o["s"]) & meaning_chars(p["s"])) for p in picked):
+                picked.append(o)
+                if len(picked) == 3:
+                    return 3
+    return len(picked)
+
+
+def apply_glosses(bands, glosses, lemma_to_forms):
+    """Attach curated rows, drop words that fail, refill from spares, and fail loudly if a band
+    cannot reach POOL_SIZE."""
+    problems = []
+
+    def add_spare(b, x):
+        """Put the usable spare nearest in rank to the dropped word x into the pool."""
+        if not b["spares"]:
+            raise SystemExit(f"band {b['from']}-{b['to']} has no spare left for {x['w']}")
+        spare = min(b["spares"], key=lambda s: abs(s["r"] - x["r"]))
+        b["spares"].remove(spare)
+        b["words"].append(spare)
+        b["words"].sort(key=lambda s: s["r"])
+
+    def curated(x):
+        rows = glosses.get(x["w"])
+        why = "no curated meanings" if rows is None else gloss_problem(
+            rows, word_forms(x["w"], lemma_to_forms))
+        if why:
+            problems.append((x["w"], why))
+            return None
+        return {"w": x["w"], "r": x["r"], "s": rows}
+
+    for b in bands:
+        b["spares"] = [y for y in map(curated, b["spares"]) if y]
+        words = [(x, curated(x)) for x in b["words"]]
+        b["words"] = [y for _, y in words if y]
+        for x in [x for x, y in words if not y]:
+            add_spare(b, x)
+    while True:
+        pool = [x for b in bands for x in b["words"]]
+        weak = [x for x in pool if distractor_count(x, pool, word_forms(x["w"], lemma_to_forms)) < 3]
+        if not weak:
+            break
+        for x in weak:
+            problems.append((x["w"], "fewer than three possible wrong options"))
+            b = next(b for b in bands if x in b["words"])
+            b["words"].remove(x)
+            add_spare(b, x)
+    for b in bands:
+        if len(b["words"]) != POOL_SIZE:
+            raise SystemExit(f"band {b['from']}-{b['to']} has {len(b['words'])} words")
+        del b["spares"]
+    return problems
 
 
 # ---------- books ----------
@@ -737,6 +895,8 @@ def spearman(xs, ys):
 def main():
     ap = argparse.ArgumentParser(description="Build vocab-test.json and vocab-needs.json")
     ap.add_argument("--dict", required=True, help="path to dictionary-en.db")
+    ap.add_argument("--draft", help="write pool and spare words with dictionary meanings to this "
+                    "file for curation, then stop")
     args = ap.parse_args()
 
     entries, form_to_lemmas, lemma_to_forms, senses, meta = load_dictionary(args.dict)
@@ -747,15 +907,32 @@ def main():
     print("excluded:", {k: len(v) for k, v in excluded.items()})
 
     bands = build_bands(ranking, senses, meta, set(entries))
+    if args.draft:
+        draft = {}
+        for i, b in enumerate(bands):
+            for role in ("words", "spares"):
+                for x in b[role]:
+                    draft[x["w"]] = {"band": i, "rank": x["r"], "role": "pool" if role == "words" else "spare",
+                                     "hint": x["zh"], "rows": draft_rows(senses[x["w"]])}
+        Path(args.draft).write_text(json.dumps(draft, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+        print(f"draft: {len(draft)} words -> {args.draft}")
+        return
+
+    glosses = json.loads(GLOSSES.read_text(encoding="utf-8"))
+    problems = apply_glosses(bands, glosses, lemma_to_forms)
+    print(f"\nReplaced or skipped {len(problems)} words:")
+    for w, why in problems:
+        print(f"  {w}: {why}")
     OUT_TEST.write_text(json.dumps(
-        {"version": 2, "bands": bands, "source": SOURCE},
-        indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        {"version": 3, "bands": bands, "source": SOURCE},
+        indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
 
     print("\nSample words per band")
     srng = random.Random(7)
     for b in bands:
-        ws = srng.sample(b["words"], min(15, len(b["words"])))
-        print(f"  {b['from']}-{b['to']}: " + ", ".join(f"{x['w']} {x['zh']}" for x in ws))
+        ws = srng.sample(b["words"], min(8, len(b["words"])))
+        print(f"  {b['from']}-{b['to']}: " + ", ".join(
+            f"{x['w']} " + "/".join(r["p"] + "".join(r["zh"][:1]) for r in x["s"]) for x in ws))
 
     known_extra = KNOWN_ALWAYS | excluded["name"] | excluded["offensive"] | excluded["abbr"] | excluded["interjection"]
     levels = {"A1": 1, "A2": 2, "B1": 3, "B2": 4, "C1": 5, "C2": 6}

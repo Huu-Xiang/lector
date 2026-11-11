@@ -2398,7 +2398,7 @@
     "title": "Free English vocabulary test",
     "metaTitle": "Free English vocabulary test: how many words do you know?",
     "metaDescription": "Take a free 2-minute English vocabulary size test. See about how many words you know, your level from A1 to C2, and books you can read.",
-    "intro": "You see one English word at a time with four meanings. Pick the right one, or tap “Not sure” if you do not know it: guessing makes the result less accurate. After 20 words you can see your result; the more you answer, the narrower the range. The test covers words up to the 40,000 most common. We do not store your answers on our server. Your last result stays in this browser for 30 days.",
+    "intro": "You see one English word at a time with three meanings and “None of these”. Pick the right one, or tap “Not sure” if you do not know the word: guessing makes the result less accurate. After each answer you see whether it was right, and the next word appears by itself. The test starts with easy words and adjusts to your answers. After 20 words you can see your result; the more you answer, the narrower the range. The test covers words up to the 40,000 most common. We do not store your answers on our server. Your last result stays in this browser for 30 days.",
     "start": "Start the test",
     "resultHeading": "Your result",
     "estimate": "About {count, number} ± {margin, number} words",
@@ -2421,8 +2421,7 @@
     "lastResult": "Your last result: about {count, number} words",
     "testHeading": "Vocabulary test",
     "dontKnowHint": "Don't guess. If you are not sure, tap “Not sure”; the result stays accurate.",
-    "keysHint": "Keyboard: 1-4 to choose, 0 for not sure",
-    "undo": "Undo last",
+    "keysHint": "Keyboard: 1-4 to choose (4 is “None of these”), 0 for not sure, any key to go on",
     "seeResult": "See my result",
     "seeResultAfter": "Result after {count, plural, one {# more word} other {# more words}}",
     "answered": "{count, plural, one {# answered} other {# answered}}",
@@ -2445,6 +2444,15 @@
     "guessingTitle": "Tip: fewer guesses, better result",
     "guessingBody": "Many of your answers were wrong, which usually means guessing. The score already corrects for luck, but choosing “Not sure” when you do not know a word makes the range narrower.",
     "liveRange": "Now: 0 to {high, number} words",
-    "estimateRange": "0 to {high, number} words"
+    "estimateRange": "0 to {high, number} words",
+    "noneOfAbove": "None of these",
+    "feedbackRight": "Right",
+    "feedbackWrong": "Not quite. The right answer is marked.",
+    "feedbackUnsure": "The right answer is marked.",
+    "trueMeaning": "The word means",
+    "skipHint": "Tap anywhere to go on",
+    "announceRight": "Right.",
+    "announceWrong": "Wrong. {word} means {meaning}.",
+    "announceUnsure": "{word} means {meaning}."
   }
 }
