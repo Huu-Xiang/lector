@@ -20,10 +20,6 @@ export function forgetTabScroll(): void {
   offsets.clear();
 }
 
-/**
- * Keeps a tab's window scroll for the session: records it while the tab is shown,
- * and restores it once `ready` says the content has drawn.
- */
 export function useTabScroll(ready: boolean): void {
   const pathname = usePathname();
   const restored = useRef(false);

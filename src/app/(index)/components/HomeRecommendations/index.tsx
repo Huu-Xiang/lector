@@ -7,7 +7,7 @@ import { ChevronDown, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import RecommendedForYou from '@/components/RecommendedForYou';
 import { getLessonsForCollection, getSettingCached, peekSettingCached } from '@/lib/data-layer';
-import { isCefrLevel, type CefrLevel } from '@/lib/reading-level';
+import { levelFor, type CefrLevel } from '@/lib/reading-level';
 
 const COLLAPSED_KEY = 'readfox-home-recommend-collapsed';
 
@@ -27,8 +27,7 @@ function profileFrom(
   levels: Record<string, string> | undefined,
   interests: string[] | undefined,
 ): Profile {
-  const level = levels?.[language];
-  return { level: isCefrLevel(level) ? level : null, interests: interests ?? [] };
+  return { level: levelFor(levels, language), interests: interests ?? [] };
 }
 
 function rememberedProfile(language: string): Profile | null {

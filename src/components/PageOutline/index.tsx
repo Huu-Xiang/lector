@@ -2,7 +2,6 @@ function Block({ className }: { className: string }) {
   return <div className={`animate-pulse rounded bg-muted ${className}`} />;
 }
 
-/** Placeholder shapes for a page whose data has not arrived; no text, no spinner. */
 export default function PageOutline({ variant }: { variant: 'cards' | 'list' | 'text' }) {
   return (
     <div aria-busy="true" data-testid="page-outline" className="w-full">

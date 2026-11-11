@@ -44,7 +44,6 @@ const TAB_LOADERS: Record<string, () => Promise<unknown>[]> = {
 const visited = new Set<string>();
 const preloadedUsers = new Set<string>();
 
-/** Records a tab the user opened this session, so it is not preloaded. */
 export function markVisited(path: string): void {
   if (path in TAB_LOADERS) visited.add(path);
 }
@@ -54,10 +53,6 @@ export function resetTabPreload(): void {
   preloadedUsers.clear();
 }
 
-/**
- * Warms the cache for tabs not yet visited, one tab at a time. It runs once per
- * user per session and never throws.
- */
 export async function preloadTabs(
   userId: string,
   currentPath: string,

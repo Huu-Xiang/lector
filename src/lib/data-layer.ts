@@ -16,6 +16,7 @@ import {
 import { apiFetch, apiUrl } from './api-base';
 import { VOCAB_SAVED_EVENT } from '@/constants/storage';
 import { activeTenantId, readLanguageCache } from './language-cache';
+import { ONBOARDING_QUERY_SCOPE } from './onboarding';
 import {
   cachedQuery,
   clearTenantQueries,
@@ -78,7 +79,6 @@ const LESSONS_QUERY_SCOPE = 'lessons';
 const REMEMBERED_LESSONS = 5;
 const PERSIST = { persist: true } as const;
 
-/** Cache scopes a page subscribes to with `useQueryRefresh`. */
 export const QUERY_SCOPES = {
   collections: COLLECTIONS_QUERY_SCOPE,
   groups: GROUPS_QUERY_SCOPE,
@@ -92,7 +92,7 @@ export const QUERY_SCOPES = {
   settings: SETTINGS_QUERY_SCOPE,
   feed: FEED_QUERY_SCOPE,
   lessons: LESSONS_QUERY_SCOPE,
-  onboarding: 'onboarding',
+  onboarding: ONBOARDING_QUERY_SCOPE,
 } as const;
 
 function invalidateCollections(): void {
@@ -380,14 +380,17 @@ export async function getLesson(id: string, options?: ReadOptions): Promise<Less
       const res = await apiFetch(`/api/lessons/${id}`);
       if (res.status === 404) return undefined;
       await requireOk(res, 'Could not load the lesson');
-      return (await res.json()) as Lesson;
+      const fetched = (await res.json()) as Lesson;
+      const tenant = activeTenantId();
+      if (tenant !== null) {
+        setTimeout(() =>
+          keepNewestQueries({ tenant, scope: LESSONS_QUERY_SCOPE }, 'lesson', REMEMBERED_LESSONS),
+        );
+      }
+      return fetched;
     },
     persisted(options),
   );
-  const tenant = activeTenantId();
-  if (tenant !== null) {
-    keepNewestQueries({ tenant, scope: LESSONS_QUERY_SCOPE }, 'lesson', REMEMBERED_LESSONS);
-  }
   return lesson;
 }
 
@@ -640,8 +643,12 @@ export async function importYouTubeTranscript(input: {
 // Helper Functions - Vocabulary
 // ============================================================================
 
+const mappedVocab = new WeakMap<Record<string, unknown>[], VocabEntry[]>();
+
 function vocabFromRows(rows: Record<string, unknown>[]): VocabEntry[] {
-  return rows.map(
+  const known = mappedVocab.get(rows);
+  if (known) return known;
+  const entries = rows.map(
     (v) =>
       ({
         ...v,
@@ -649,6 +656,8 @@ function vocabFromRows(rows: Record<string, unknown>[]): VocabEntry[] {
         createdAt: new Date(v.createdAt as string),
       }) as unknown as VocabEntry,
   );
+  mappedVocab.set(rows, entries);
+  return entries;
 }
 
 export async function getAllVocab(): Promise<VocabEntry[]> {
@@ -1564,10 +1573,7 @@ export async function getSetting<T>(key: string): Promise<T | undefined> {
   return res.json();
 }
 
-/**
- * `getSetting` remembered on the device for first paint; use it only where a
- * briefly stale value is harmless (page chrome, recommendations, time zone).
- */
+/** Use only where a briefly stale value is harmless, such as page chrome. */
 export async function getSettingCached<T>(key: string): Promise<T | undefined> {
   return cachedQuery(
     activeTenantQueryKey(SETTINGS_QUERY_SCOPE, [key]),

@@ -101,13 +101,11 @@ function isContentFiltered(err: unknown): boolean {
   return err instanceof Error && err.message === CONTENT_FILTERED;
 }
 
-/** A remembered lesson, shown at once only when its word states are remembered too. */
 function rememberedLesson(lessonId: string): Lesson | null {
   const lesson = peekLesson(lessonId);
   return lesson && peekKnownWordsMap() ? lesson : null;
 }
 
-/** A refreshed copy of the open lesson keeps its reading position, so the page never jumps. */
 function keepProgress(current: Lesson | null, next: Lesson): Lesson {
   if (!current || current.id !== next.id) return next;
   return {

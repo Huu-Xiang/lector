@@ -7,15 +7,13 @@
  * entry. Values stay fresh in memory for 30 seconds, concurrent reads share
  * one promise, and invalidation also prevents an already-running request from
  * repopulating a key after a successful mutation.
- *
- * A `persist` read also keeps its value in localStorage, returns a remembered
- * value at once and refreshes it in the background, then announces a changed
- * value with `QUERY_UPDATED_EVENT`.
  */
 
 import {
   dropOtherTenantRecords,
+  hasRecord,
   keepNewestRecords,
+  matches,
   readRecord,
   removeRecords,
   wipeRecords,
@@ -34,7 +32,6 @@ export type QueryMatch = Partial<Pick<QueryKey, 'scope' | 'tenant' | 'language'>
 export interface QueryOptions {
   ttlMs?: number;
   persist?: boolean;
-  /** Skip remembered values and wait for the network. */
   forceFresh?: boolean;
 }
 
@@ -72,13 +69,6 @@ function serializeKey(key: QueryKey): string {
   return JSON.stringify([key.tenant, key.language ?? null, key.scope, key.params ?? []]);
 }
 
-function matches(key: QueryKey, match: QueryMatch): boolean {
-  if (match.scope !== undefined && key.scope !== match.scope) return false;
-  if (match.tenant !== undefined && key.tenant !== match.tenant) return false;
-  if (match.language !== undefined && key.language !== match.language) return false;
-  return true;
-}
-
 function remembered(serialized: string): Remembered {
   const entry = entries.get(serialized);
   if (entry?.hasValue) return { has: true, value: entry.value };
@@ -104,7 +94,6 @@ function announce(key: QueryKey): void {
   window.dispatchEvent(new CustomEvent(QUERY_UPDATED_EVENT, { detail }));
 }
 
-/** The remembered value for a key, from memory or storage, without a request. */
 export function peekQuery<T>(key: QueryKey | null): T | undefined {
   if (key === null) return undefined;
   const found = remembered(serializeKey(key));
@@ -221,16 +210,13 @@ function dropMemory(match: QueryMatch): void {
   }
 }
 
-/**
- * After a mutation: forget matching values in memory and storage, then
- * refresh the matching persisted keys once edits settle.
- */
 export function invalidateQueries(match: QueryMatch): void {
+  for (const [serialized, registration] of registrations) {
+    if (!matches(registration.key, match)) continue;
+    if (entries.has(serialized) || hasRecord(serialized)) pendingRefresh.add(serialized);
+  }
   dropMemory(match);
   removeRecords(match);
-  for (const [serialized, registration] of registrations) {
-    if (matches(registration.key, match)) pendingRefresh.add(serialized);
-  }
   if (pendingRefresh.size > 0) scheduleRefresh();
 }
 
@@ -256,7 +242,6 @@ export function dropOtherUsersRecords(tenant: string): void {
   dropOtherTenantRecords(tenant);
 }
 
-/** Sign-out: forget every value in memory and on the device. */
 export function wipePersistedQueries(): void {
   clearQueryCache();
   wipeRecords();

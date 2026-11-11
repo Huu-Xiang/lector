@@ -16,8 +16,7 @@ import { readPendingInvite } from '@/lib/pending-invite';
 import { useOAuthErrorToast } from '@/lib/use-oauth-error';
 import { useGithubLogin } from '@/lib/use-env';
 import { useIsNativeApp } from '@/lib/native-app';
-import { wipePersistedQueries } from '@/lib/query-cache';
-import { clearOfflineData } from '@/lib/offline/sync';
+import { forgetLocalData } from '@/lib/sign-out';
 
 export default function LoginPage() {
   return (
@@ -35,11 +34,9 @@ function LoginForm() {
   const inApp = useIsNativeApp();
   const githubEnabled = useGithubLogin();
   useOAuthErrorToast();
-  // Reaching sign-in signed out (sign-out, expiry, deleted account) removes all remembered content from the device.
+  // Backstop for signOutAndForget: expiry and account deletion also end here signed out.
   useEffect(() => {
-    if (isPending || session) return;
-    wipePersistedQueries();
-    void clearOfflineData();
+    if (!isPending && !session) void forgetLocalData();
   }, [isPending, session]);
   const returnPath = sanitizeAuthReturnPath(params.get('next'));
   const destination = returnPath ?? '/';

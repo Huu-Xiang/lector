@@ -98,7 +98,7 @@ export async function getOnboardingSnapshot(): Promise<OnboardingSnapshot> {
   return jsonOrThrow<OnboardingSnapshot>(response, 'Could not load onboarding progress');
 }
 
-const ONBOARDING_QUERY_SCOPE = 'onboarding';
+export const ONBOARDING_QUERY_SCOPE = 'onboarding';
 
 function onboardingQueryKey(): QueryKey | null {
   const tenant = activeTenantId();
@@ -110,7 +110,6 @@ function invalidateOnboarding(): void {
   if (tenant !== null) invalidateQueries({ tenant, scope: ONBOARDING_QUERY_SCOPE });
 }
 
-/** Remembered on the device for the library's resume card; the guide itself reads fresh. */
 export async function getOnboardingSnapshotCached(): Promise<OnboardingSnapshot> {
   return cachedQuery(onboardingQueryKey(), getOnboardingSnapshot, { persist: true });
 }

@@ -42,7 +42,6 @@ import { useActiveLanguage } from '@/utils/hooks';
 import OnboardingTip from '@/components/OnboardingTip';
 import { finishPostOnboardingTour, usePostOnboardingTour } from '@/lib/post-onboarding-tour';
 
-// Derived from the list already fetched; a second full-list fetch was #240.
 function vocabStats(vocab: VocabEntry[]): { total: number; byState: Record<WordState, number> } {
   const byState: Record<WordState, number> = {
     new: 0,

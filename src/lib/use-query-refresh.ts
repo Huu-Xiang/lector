@@ -18,15 +18,31 @@ export function subscribeToQueryUpdates(
   return () => target.removeEventListener(QUERY_UPDATED_EVENT, listener);
 }
 
-/** Re-run a page's load when a background refresh changed one of its scopes. */
+const COALESCE_MS = 200;
+
 export function useQueryRefresh(scopes: readonly string[], onUpdate: () => void) {
   const ref = useRef(onUpdate);
   useEffect(() => {
     ref.current = onUpdate;
   });
   const key = scopes.join('|');
-  useEffect(
-    () => subscribeToQueryUpdates(key.split('|'), () => ref.current(), window, activeTenantId),
-    [key],
-  );
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    const stop = subscribeToQueryUpdates(
+      key.split('|'),
+      () => {
+        if (timer !== null) clearTimeout(timer);
+        timer = setTimeout(() => {
+          timer = null;
+          ref.current();
+        }, COALESCE_MS);
+      },
+      window,
+      activeTenantId,
+    );
+    return () => {
+      stop();
+      if (timer !== null) clearTimeout(timer);
+    };
+  }, [key]);
 }

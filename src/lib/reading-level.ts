@@ -114,11 +114,17 @@ export function approximateLevelFor(level: CefrLevel | null): ApproximateLevel {
   return 'advanced';
 }
 
+export function levelFor(
+  levels: Record<string, string> | undefined,
+  language: string,
+): CefrLevel | null {
+  const level = levels?.[language];
+  return isCefrLevel(level) ? level : null;
+}
+
 export async function getReadingLevel(language: string): Promise<CefrLevel | null> {
   try {
-    const levels = await getSetting<Record<string, string>>('readingLevels');
-    const level = levels?.[language];
-    return isCefrLevel(level) ? level : null;
+    return levelFor(await getSetting<Record<string, string>>('readingLevels'), language);
   } catch {
     return null;
   }

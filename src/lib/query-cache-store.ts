@@ -17,6 +17,15 @@ export interface QueryRecord {
   value: unknown;
 }
 
+const parsed = new Map<string, { raw: string; record: StoredRecord }>();
+
+export function matches(key: QueryKey, match: QueryMatch): boolean {
+  if (match.scope !== undefined && key.scope !== match.scope) return false;
+  if (match.tenant !== undefined && key.tenant !== match.tenant) return false;
+  if (match.language !== undefined && key.language !== match.language) return false;
+  return true;
+}
+
 function storage(): Storage | null {
   try {
     return typeof window === 'undefined' ? null : (window.localStorage ?? null);
@@ -25,16 +34,36 @@ function storage(): Storage | null {
   }
 }
 
-function parse(raw: string | null): StoredRecord | null {
+function parse(storageKey: string, raw: string | null): StoredRecord | null {
   if (raw === null) return null;
+  const memo = parsed.get(storageKey);
+  if (memo?.raw === raw) return memo.record;
   try {
-    return JSON.parse(raw) as StoredRecord;
+    const record = JSON.parse(raw) as StoredRecord;
+    parsed.set(storageKey, { raw, record });
+    return record;
   } catch {
     return null;
   }
 }
 
-function remove(store: Storage, storageKey: string): void {
+/** The storage key holds the serialized query key, so matching never parses a value. */
+function keyOf(storageKey: string): QueryKey | null {
+  try {
+    const [tenant, language, scope, params] = JSON.parse(storageKey.slice(PREFIX.length)) as [
+      string,
+      string | null,
+      string,
+      QueryKey['params'],
+    ];
+    return { tenant, language: language ?? undefined, scope, params };
+  } catch {
+    return null;
+  }
+}
+
+function removeBestEffort(store: Storage, storageKey: string): void {
+  parsed.delete(storageKey);
   try {
     store.removeItem(storageKey);
   } catch {
@@ -48,16 +77,24 @@ export function readRecord(id: string): QueryRecord | null {
   const storageKey = PREFIX + id;
   let record: StoredRecord | null;
   try {
-    record = parse(store.getItem(storageKey));
+    record = parse(storageKey, store.getItem(storageKey));
   } catch {
     return null;
   }
   if (!record) return null;
   if (Date.now() - record.s > MAX_RECORD_AGE_MS) {
-    remove(store, storageKey);
+    removeBestEffort(store, storageKey);
     return null;
   }
   return { key: record.k, savedAt: record.s, value: record.v };
+}
+
+export function hasRecord(id: string): boolean {
+  try {
+    return storage()?.getItem(PREFIX + id) != null;
+  } catch {
+    return false;
+  }
 }
 
 export function writeRecord(id: string, key: QueryKey, value: unknown): void {
@@ -68,21 +105,21 @@ export function writeRecord(id: string, key: QueryKey, value: unknown): void {
   try {
     raw = JSON.stringify({ k: key, s: Date.now(), v: value } satisfies StoredRecord);
   } catch {
-    remove(store, storageKey);
+    removeBestEffort(store, storageKey);
     return;
   }
   if (raw.length > MAX_RECORD_CHARS) {
-    remove(store, storageKey);
+    removeBestEffort(store, storageKey);
     return;
   }
   try {
     store.setItem(storageKey, raw);
   } catch {
-    remove(store, storageKey);
+    removeBestEffort(store, storageKey);
   }
 }
 
-function forEachRecord(visit: (storageKey: string, record: StoredRecord | null) => boolean): void {
+function forEachRecord(visit: (storageKey: string, key: QueryKey | null) => boolean): void {
   const store = storage();
   if (!store) return;
   const doomed: string[] = [];
@@ -90,42 +127,34 @@ function forEachRecord(visit: (storageKey: string, record: StoredRecord | null) 
     for (let i = 0; i < store.length; i += 1) {
       const storageKey = store.key(i);
       if (!storageKey?.startsWith(PREFIX)) continue;
-      if (visit(storageKey, parse(store.getItem(storageKey)))) doomed.push(storageKey);
+      if (visit(storageKey, keyOf(storageKey))) doomed.push(storageKey);
     }
   } catch {
     return;
   }
-  for (const storageKey of doomed) remove(store, storageKey);
+  for (const storageKey of doomed) removeBestEffort(store, storageKey);
 }
 
 export function removeRecords(match: QueryMatch): void {
-  forEachRecord((_, record) => {
-    if (!record) return true;
-    if (match.scope !== undefined && record.k.scope !== match.scope) return false;
-    if (match.tenant !== undefined && record.k.tenant !== match.tenant) return false;
-    if (match.language !== undefined && record.k.language !== match.language) return false;
-    return true;
-  });
+  forEachRecord((_, key) => !key || matches(key, match));
 }
 
-/** Keep only the `keep` most recently saved records whose key params start with `head`. */
 export function keepNewestRecords(match: QueryMatch, head: string, keep: number): void {
-  const found: { storageKey: string; savedAt: number }[] = [];
-  forEachRecord((storageKey, record) => {
-    if (!record || record.k.params?.[0] !== head) return false;
-    if (match.scope !== undefined && record.k.scope !== match.scope) return false;
-    if (match.tenant !== undefined && record.k.tenant !== match.tenant) return false;
-    found.push({ storageKey, savedAt: record.s });
-    return false;
-  });
   const store = storage();
   if (!store) return;
+  const found: { storageKey: string; savedAt: number }[] = [];
+  forEachRecord((storageKey, key) => {
+    if (!key || key.params?.[0] !== head || !matches(key, match)) return false;
+    const record = parse(storageKey, store.getItem(storageKey));
+    found.push({ storageKey, savedAt: record?.s ?? 0 });
+    return false;
+  });
   found.sort((a, b) => b.savedAt - a.savedAt);
-  for (const { storageKey } of found.slice(keep)) remove(store, storageKey);
+  for (const { storageKey } of found.slice(keep)) removeBestEffort(store, storageKey);
 }
 
 export function dropOtherTenantRecords(tenant: string): void {
-  forEachRecord((_, record) => !record || record.k.tenant !== tenant);
+  forEachRecord((_, key) => !key || key.tenant !== tenant);
 }
 
 export function wipeRecords(): void {

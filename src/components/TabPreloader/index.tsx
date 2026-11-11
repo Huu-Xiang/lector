@@ -7,7 +7,6 @@ import { markVisited, preloadTabs } from '@/lib/tab-preload';
 
 const FALLBACK_DELAY_MS = 1500;
 
-/** Warms the other tabs' data and routes once the browser is idle after sign-in. */
 export default function TabPreloader() {
   const pathname = usePathname();
   const router = useRouter();

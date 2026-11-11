@@ -48,16 +48,12 @@ export default function JournalPage() {
       .then(setEntries)
       .catch(() => setEntries((current) => current ?? []));
   }, []);
-  useQueryRefresh([QUERY_SCOPES.journal], () => {
-    getJournalEntries(50)
-      .then(setEntries)
-      .catch(() => undefined);
-  });
 
   const refreshEntries = async () => {
     const updated = await getJournalEntries(50);
     setEntries(updated);
   };
+  useQueryRefresh([QUERY_SCOPES.journal], () => void refreshEntries().catch(() => undefined));
 
   const handleNewEntry = () => {
     setBodyText('');
