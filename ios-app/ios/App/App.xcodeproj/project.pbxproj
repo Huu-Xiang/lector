@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		01D8CF94DEE920AB37FC93F9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D0B8E2F1DA60A79990E0CC2 /* Foundation.framework */; };
 		0C70AA0CA19CAD5077C66BF1 /* ReviewWidgetShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64CD55B24088C0AA5C50EF6D /* ReviewWidgetShared.swift */; };
-		186437DD8E1EF4DA0D8407BF /* ShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = E7A92DF41F5273A2A0CA5ECF /* ShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, CodeSignOnCopy, ); }; };
+		186437DD8E1EF4DA0D8407BF /* ShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = E7A92DF41F5273A2A0CA5ECF /* ShareExtension.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		25C1785F95ED3B01918ED04E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 24C3677F4B566275C69E40EA /* Assets.xcassets */; };
 		2FAD9763203C412B000D30F8 /* config.xml in Resources */ = {isa = PBXBuildFile; fileRef = 2FAD9762203C412B000D30F8 /* config.xml */; };
 		32B952286D5A13B7B639FD2D /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E792473B18E0248610E56E9E /* MainViewController.swift */; };
@@ -24,7 +24,7 @@
 		A084ECDBA7D38E1E42DFC39D /* Pods_App.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF277DCFFFF123FFC6DF26C7 /* Pods_App.framework */; };
 		AF3207FE1B83CA5E384D7094 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82B12723C2934C9EFADF24A1 /* ShareViewController.swift */; };
 		B213CC1543B39785E4E1339F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D0B8E2F1DA60A79990E0CC2 /* Foundation.framework */; };
-		D19D93B82C9676F45240C81A /* ReviewWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 3BE7C98317C9CD76D483977B /* ReviewWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, CodeSignOnCopy, ); }; };
+		D19D93B82C9676F45240C81A /* ReviewWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 3BE7C98317C9CD76D483977B /* ReviewWidget.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D4FA3FE0262B4BCF45522611 /* ReviewWidgetPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC5F9546B2101B8DA0E2148 /* ReviewWidgetPlugin.swift */; };
 		E53300CBE49856851CD17A58 /* ReviewWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35557A3DC742305800BAB5E9 /* ReviewWidget.swift */; };
 		FC6E160A795969E00A53AD3B /* NativeTabBarPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DCF40565712C38CEBE4CF0C /* NativeTabBarPlugin.swift */; };
@@ -181,7 +181,6 @@
 				82B12723C2934C9EFADF24A1 /* ShareViewController.swift */,
 				3BA64C4CA1FDBEF89C1D0F98 /* Info.plist */,
 			);
-			name = ShareExtension;
 			path = ShareExtension;
 			sourceTree = "<group>";
 		};
@@ -203,7 +202,6 @@
 				24C3677F4B566275C69E40EA /* Assets.xcassets */,
 				931DBD7C410ADB688FC78A0D /* Localizable.strings */,
 			);
-			name = ReviewWidget;
 			path = ReviewWidget;
 			sourceTree = "<group>";
 		};
@@ -283,6 +281,12 @@
 				LastSwiftUpdateCheck = 0920;
 				LastUpgradeCheck = 0920;
 				TargetAttributes = {
+					16E358ACE3C3249376C7C05C = {
+						ProvisioningStyle = Automatic;
+					};
+					3EECCB03F5528FAD917BE3C4 = {
+						ProvisioningStyle = Automatic;
+					};
 					504EC3031FED79650016851F = {
 						CreatedOnToolsVersion = 9.2;
 						LastSwiftMigration = 1100;
@@ -467,6 +471,7 @@
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = V4YL33PXX6;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = ShareExtension/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
@@ -489,6 +494,7 @@
 				CODE_SIGN_ENTITLEMENTS = ReviewWidget/ReviewWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = V4YL33PXX6;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = ReviewWidget/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -618,6 +624,7 @@
 				CODE_SIGN_ENTITLEMENTS = App/App.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = V4YL33PXX6;
 				INFOPLIST_FILE = App/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -639,6 +646,7 @@
 				CODE_SIGN_ENTITLEMENTS = App/App.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = V4YL33PXX6;
 				INFOPLIST_FILE = App/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -659,6 +667,7 @@
 				CODE_SIGN_ENTITLEMENTS = ReviewWidget/ReviewWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = V4YL33PXX6;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = ReviewWidget/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -680,6 +689,7 @@
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = V4YL33PXX6;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = ShareExtension/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;

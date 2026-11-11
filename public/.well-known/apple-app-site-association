@@ -2,7 +2,7 @@
   "applinks": {
     "details": [
       {
-        "appIDs": ["TEAMID.app.readfox.ios"],
+        "appIDs": ["V4YL33PXX6.app.readfox.ios"],
         "components": [
           { "/": "/api/auth/verify-email" },
           { "/": "/api/auth/reset-password/*" },
