@@ -7,7 +7,7 @@ import { buildAdminTrends } from './admin-trends';
 import { setEmailTransport } from './email';
 import { InMemoryExtractionBurstLimiter } from './rate-limit';
 import { makeSourceCountRoutes } from '../routes/source-count';
-import { SOURCES, parseSourceCookie } from './source-list';
+import { LANGS, SOURCES, parseSourceCookie } from './source-list';
 import { recordSourceEvent, sourceReport } from './source-counts';
 
 const NOW = new Date('2026-07-20T12:00:00Z');
@@ -48,9 +48,16 @@ describe('recordSourceEvent', () => {
     ]);
   });
 
+  test('counts every listed source and language', () => {
+    for (const source of SOURCES)
+      expect(recordSourceEvent('visit', source, 'other', NOW)).toBe(true);
+    for (const lang of LANGS) expect(recordSourceEvent('visit', 'direct', lang, NOW)).toBe(true);
+    expect(counts().reduce((n, row) => n + row.count, 0)).toBe(SOURCES.length + LANGS.length);
+  });
+
   test('rejects values outside the closed lists and writes nothing', () => {
     expect(recordSourceEvent('visit', 'https://evil.example/?q=1', 'zh', NOW)).toBe(false);
-    expect(recordSourceEvent('visit', 'google', 'fr', NOW)).toBe(false);
+    expect(recordSourceEvent('visit', 'google', 'pl', NOW)).toBe(false);
     expect(recordSourceEvent('visit', undefined, 'zh', NOW)).toBe(false);
     expect(recordSourceEvent('visit', 42, 'zh', NOW)).toBe(false);
     expect(counts()).toEqual([]);
@@ -67,7 +74,7 @@ describe('parseSourceCookie', () => {
     expect(parseSourceCookie(null)).toBeNull();
     expect(parseSourceCookie('a=1')).toBeNull();
     expect(parseSourceCookie('rf_src=evil.zh')).toBeNull();
-    expect(parseSourceCookie('rf_src=google.fr')).toBeNull();
+    expect(parseSourceCookie('rf_src=google.xx')).toBeNull();
     expect(parseSourceCookie('rf_src=google.zh.extra')).toBeNull();
     expect(parseSourceCookie('rf_src=google')).toBeNull();
   });
@@ -114,7 +121,12 @@ describe('POST /api/source-count', () => {
   test('rejects an unknown source or language', async () => {
     const app = build();
     expect((await post(app, { source: 'evil.example', lang: 'zh' })).status).toBe(400);
-    expect((await post(app, { source: 'google', lang: 'fr' })).status).toBe(400);
+    expect((await post(app, { source: 'google', lang: 'pl' })).status).toBe(400);
+    expect((await post(app, { source: 'google', lang: 'FR' })).status).toBe(400);
+    expect((await post(app, { source: 'Google', lang: 'zh' })).status).toBe(400);
+    expect((await post(app, { source: 'news.ycombinator.com', lang: 'en' })).status).toBe(400);
+    expect((await post(app, { source: ['google'], lang: 'zh' })).status).toBe(400);
+    expect((await post(app, { source: 'google' })).status).toBe(400);
     expect((await post(app, null, {}, 'not json')).status).toBe(400);
     expect(counts()).toEqual([]);
   });
@@ -233,10 +245,10 @@ describe('admin totals', () => {
       { source: 'baidu', visits: 3, signups: 0 },
       { source: 'google', visits: 2, signups: 1 },
     ]);
-    expect(report.langs).toEqual({
-      zh: { visits: 4, signups: 0 },
-      other: { visits: 1, signups: 1 },
-    });
+    expect(report.langs.zh).toEqual({ visits: 4, signups: 0 });
+    expect(report.langs.other).toEqual({ visits: 1, signups: 1 });
+    expect(report.langs.en).toEqual({ visits: 0, signups: 0 });
+    expect(Object.keys(report.langs)).toEqual([...LANGS]);
   });
 
   test('buildAdminTrends carries the totals for its range', () => {

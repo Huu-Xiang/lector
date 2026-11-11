@@ -68,6 +68,10 @@ The Trends page lists visits and sign-ups per traffic source. The counts hold no
 - It skips bots and requests that carry a session cookie. The limiter allows 20 per minute for each visitor address (`X-Forwarded-For`) and 600 per minute for the whole route.
 - A sign-up count (`signup`) is written by the sign-up hooks from the first-visit cookie.
 - A row is one count per UTC date, source, language group and event, in `source_counts`.
+- The browser maps the referrer host (or `utm_source`) to a name on a fixed list (`SOURCES` in `src/lib/traffic-source.ts`): search engines, AI assistants, social and community sites, `email`, `campaign` (an unmatched `utm_source`), `other` (an unknown host) and `direct`. No raw host is sent or stored.
+- The browser language maps to a fixed group (`LANGS`): 16 languages and `other`.
+- `api/src/lib/source-list.ts` mirrors both lists. The route answers 400 for any value off the list. A parity test keeps the two copies equal.
+- Rows written before the lists grew keep their old values (`zh` or `other`; `other` for sites now named). Nothing is migrated.
 
 ## Admin support action
 

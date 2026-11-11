@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { SOURCES as API_SOURCES } from '../../api/src/lib/source-list';
+import { LANGS as API_LANGS, SOURCES as API_SOURCES } from '../../api/src/lib/source-list';
 import {
+  LANGS,
   SOURCES,
   classifySource,
   hasSourceCookie,
@@ -16,6 +17,12 @@ const classify = (utmSource: string | null, referrer = '') =>
 describe('classifySource', () => {
   it('keeps the client list equal to the server list', () => {
     expect([...SOURCES]).toEqual([...API_SOURCES]);
+    expect([...LANGS]).toEqual([...API_LANGS]);
+  });
+
+  it('has no duplicate names', () => {
+    expect(new Set(SOURCES).size).toBe(SOURCES.length);
+    expect(new Set(LANGS).size).toBe(LANGS.length);
   });
 
   it('reads utm_source first, with aliases', () => {
@@ -25,9 +32,70 @@ describe('classifySource', () => {
     expect(classify('weixin')).toBe('wechat');
   });
 
-  it('maps an unknown utm_source to other', () => {
-    expect(classify('newsletter-42')).toBe('other');
-    expect(classify('<script>')).toBe('other');
+  it('maps an unmatched utm_source to campaign', () => {
+    expect(classify('newsletter-42')).toBe('campaign');
+    expect(classify('<script>')).toBe('campaign');
+    expect(classify('direct')).toBe('campaign');
+    expect(classify('other')).toBe('campaign');
+    expect(classify('  ')).toBe('direct');
+  });
+
+  it('maps utm_source names and aliases to channels', () => {
+    expect(classify('DeepSeek')).toBe('deepseek');
+    expect(classify('hn')).toBe('hackernews');
+    expect(classify('email')).toBe('email');
+    expect(classify('newsletter')).toBe('email');
+    expect(classify('zhihu', 'https://www.google.com/')).toBe('zhihu');
+  });
+
+  it.each([
+    ['https://www.google.co.jp/', 'google'],
+    ['https://www.google.com.hk/search', 'google'],
+    ['https://google.de/', 'google'],
+    ['https://cn.bing.com/search?q=x', 'bing'],
+    ['https://duckduckgo.com/', 'duckduckgo'],
+    ['https://yandex.ru/search', 'yandex'],
+    ['https://yandex.com.tr/', 'yandex'],
+    ['https://www.sogou.com/web', 'sogou'],
+    ['https://www.so.com/s?q=x', 'so360'],
+    ['https://search.yahoo.com/', 'yahoo'],
+    ['https://search.yahoo.co.jp/', 'yahoo'],
+    ['https://search.naver.com/', 'naver'],
+    ['https://www.ecosia.org/', 'ecosia'],
+    ['https://search.brave.com/', 'brave'],
+    ['https://chatgpt.com/', 'chatgpt'],
+    ['https://gemini.google.com/app', 'gemini'],
+    ['https://copilot.microsoft.com/', 'copilot'],
+    ['https://chat.deepseek.com/', 'deepseek'],
+    ['https://www.kimi.com/', 'kimi'],
+    ['https://www.doubao.com/chat', 'doubao'],
+    ['https://xhslink.com/abc', 'xiaohongshu'],
+    ['https://www.zhihu.com/question/1', 'zhihu'],
+    ['https://weibo.com/1', 'weibo'],
+    ['https://www.douban.com/group/1', 'douban'],
+    ['https://www.bilibili.com/video/BV1', 'bilibili'],
+    ['https://www.v2ex.com/t/1', 'v2ex'],
+    ['https://www.appinn.com/', 'appinn'],
+    ['https://sspai.com/post/1', 'sspai'],
+    ['https://juejin.cn/post/1', 'juejin'],
+    ['https://weixin.qq.com/', 'wechat'],
+    ['https://l.facebook.com/l.php', 'facebook'],
+    ['https://www.instagram.com/', 'instagram'],
+    ['https://www.linkedin.com/feed', 'linkedin'],
+    ['https://www.youtube.com/watch', 'youtube'],
+    ['https://github.com/Huu-Xiang/lector', 'github'],
+    ['https://news.ycombinator.com/item?id=1', 'hackernews'],
+    ['https://www.producthunt.com/posts/x', 'producthunt'],
+    ['https://t.me/channel', 'telegram'],
+    ['https://discord.com/channels/1', 'discord'],
+    ['https://twitter.com/x/status/1', 'x'],
+    ['https://mail.google.com/mail/u/0/', 'email'],
+    ['https://outlook.live.com/mail/', 'email'],
+    ['https://mail.qq.com/cgi-bin/frame_html', 'email'],
+    ['https://mail.163.com/', 'email'],
+    ['https://WWW.GOOGLE.COM/', 'google'],
+  ])('maps %s to %s', (referrer, expected) => {
+    expect(classify(null, referrer)).toBe(expected);
   });
 
   it('reads the referrer host', () => {
@@ -45,6 +113,9 @@ describe('classifySource', () => {
   it('does not match look-alike hosts', () => {
     expect(classify(null, 'https://notgoogle.com/')).toBe('other');
     expect(classify(null, 'https://google.com.evil.example/')).toBe('other');
+    expect(classify(null, 'https://notgemini.google.com.example/')).toBe('other');
+    expect(classify(null, 'https://evilmail.example.com/')).toBe('other');
+    expect(classify(null, 'https://mybing.com/')).toBe('other');
   });
 
   it('treats no referrer, a bad referrer and the own host as direct', () => {
@@ -59,11 +130,38 @@ describe('classifySource', () => {
 });
 
 describe('languageBucket', () => {
-  it('splits Chinese from the rest', () => {
-    expect(languageBucket('zh-CN')).toBe('zh');
-    expect(languageBucket('zh')).toBe('zh');
-    expect(languageBucket('en-US')).toBe('other');
+  it.each([
+    ['zh-CN', 'zh'],
+    ['zh', 'zh'],
+    ['zh-Hant-TW', 'zh'],
+    ['en-US', 'en'],
+    ['EN-gb', 'en'],
+    ['ja-JP', 'ja'],
+    ['ko', 'ko'],
+    ['ar-EG', 'ar'],
+    ['ru-RU', 'ru'],
+    ['fr-CA', 'fr'],
+    ['es-419', 'es'],
+    ['de-AT', 'de'],
+    ['pt-BR', 'pt'],
+    ['it', 'it'],
+    ['tr-TR', 'tr'],
+    ['vi-VN', 'vi'],
+    ['id-ID', 'id'],
+    ['in-ID', 'id'],
+    ['th-TH', 'th'],
+    ['hi-IN', 'hi'],
+    ['en_US', 'en'],
+  ])('maps %s to %s', (tag, expected) => {
+    expect(languageBucket(tag)).toBe(expected);
+  });
+
+  it('maps other, empty and unknown tags to other', () => {
+    expect(languageBucket('pl-PL')).toBe('other');
+    expect(languageBucket('other')).toBe('other');
+    expect(languageBucket('')).toBe('other');
     expect(languageBucket(undefined)).toBe('other');
+    expect(languageBucket('<script>')).toBe('other');
   });
 });
 

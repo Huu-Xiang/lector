@@ -122,7 +122,9 @@ export default function Trends() {
     : [];
 
   const sourceRows = data?.sources.sources ?? [];
-  const langSplit = data?.sources.langs;
+  const langRows = Object.entries(data?.sources.langs ?? {})
+    .filter(([, n]) => n.visits > 0 || n.signups > 0)
+    .sort(([, a], [, b]) => b.visits - a.visits || b.signups - a.signups);
 
   return (
     <section className="mb-8">
@@ -313,12 +315,15 @@ export default function Trends() {
                       ))}
                     </tbody>
                   </table>
-                  {langSplit && (
+                  {langRows.length > 0 && (
                     <p className="mt-2 text-xs text-muted-foreground">
-                      Browser language: Chinese {langSplit.zh.visits} visits, {langSplit.zh.signups}{' '}
-                      sign-ups ({percent(langSplit.zh.signups, langSplit.zh.visits)}) · other{' '}
-                      {langSplit.other.visits} visits, {langSplit.other.signups} sign-ups (
-                      {percent(langSplit.other.signups, langSplit.other.visits)})
+                      Browser language:{' '}
+                      {langRows
+                        .map(
+                          ([lang, n]) =>
+                            `${lang} ${n.visits} visits, ${n.signups} sign-ups (${percent(n.signups, n.visits)})`,
+                        )
+                        .join(' · ')}
                     </p>
                   )}
                 </div>
