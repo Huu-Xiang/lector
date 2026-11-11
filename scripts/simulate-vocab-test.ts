@@ -1,5 +1,6 @@
 // Accuracy check for src/lib/vocab-test.ts with simulated learners (shapes in knowShare).
 // Run: bun scripts/simulate-vocab-test.ts [shapes=A,B,C] [answers=40,80] [runs=150] [unsure=0.7]
+// Retakes on one device: bun scripts/simulate-vocab-test.ts repeat [answers=60] [devices=30]
 import fs from 'node:fs';
 import path from 'node:path';
 import {
@@ -49,13 +50,19 @@ function truth(shape: string, k: number): number {
   return total;
 }
 
-function runOnce(shape: string, k: number, stop: number, seed: number) {
+function runOnce(
+  shape: string,
+  k: number,
+  stop: number,
+  seed: number,
+  seen: ReadonlySet<string> = new Set(),
+) {
   const rng = seededRng(seed);
   const noise = new Map<string, number>();
   const answers: Answer[] = [];
-  let item: TestItem | null = nextItem(answers, data, seed);
+  let item: TestItem | null = nextItem(answers, data, seed, seen);
   while (item && answers.length < stop) {
-    const prepared = prepareNext(answers, item, data, seed);
+    const prepared = prepareNext(answers, item, data, seed, seen);
     let rank = item.rank;
     if (shape === 'B') {
       if (!noise.has(item.id)) noise.set(item.id, gaussian(rng));
@@ -66,13 +73,51 @@ function runOnce(shape: string, k: number, stop: number, seed: number) {
     answers.push({ item, choice });
     item = choice === item.answer ? prepared.right : prepared.notRight;
   }
-  return estimateFromAnswers(answers, data.bands)!;
+  return { ...estimateFromAnswers(answers, data.bands)!, words: answers.map((a) => a.item.word) };
 }
 
 const percentile = (values: number[], p: number) =>
   [...values].sort((a, b) => a - b)[Math.floor(p * (values.length - 1))];
 const mean = (values: number[]) => values.reduce((a, b) => a + b, 0) / values.length;
 const round100 = (n: number) => Math.round(n / 100) * 100;
+
+/** Five tests per device with a shared seen set: repeated words, and bias of the first and last test. */
+function repeatCheck(stop: number, devices: number) {
+  console.log(`\nretakes: shape C, 5 tests of ${stop} answers, ${devices} devices`);
+  console.log('  true | repeats per device (max) | bias test 1 | bias test 5');
+  for (const k of [1000, 2000, 3500, 5000, 8000, 12000, 20000]) {
+    const target = truth('C', k);
+    let repeats = 0;
+    let most = 0;
+    const first: number[] = [];
+    const last: number[] = [];
+    for (let device = 1; device <= devices; device++) {
+      const seen = new Set<string>();
+      let deviceRepeats = 0;
+      for (let test = 1; test <= 5; test++) {
+        const result = runOnce('C', k, stop, device * 104729 + test * 7919 + k, seen);
+        for (const word of result.words) {
+          if (seen.has(word)) deviceRepeats++;
+          seen.add(word);
+        }
+        if (test === 1) first.push(result.estimate);
+        if (test === 5) last.push(result.estimate);
+      }
+      repeats += deviceRepeats;
+      most = Math.max(most, deviceRepeats);
+    }
+    const bias = (values: number[]) => `${(((mean(values) - target) / target) * 100).toFixed(0)}%`;
+    console.log(
+      `${String(round100(target)).padStart(6)} | ${(repeats / devices).toFixed(1)} (${most}) | ` +
+        `${bias(first)} | ${bias(last)}`,
+    );
+  }
+}
+
+if (shapesArg === 'repeat') {
+  repeatCheck(Number(process.argv[3] ?? 60), Number(process.argv[4] ?? 30));
+  process.exit(0);
+}
 
 for (const shape of shapesArg.split(',')) {
   for (const stop of stopsArg.split(',').map(Number)) {

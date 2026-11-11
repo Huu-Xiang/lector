@@ -127,7 +127,7 @@ function distractors(
   band: number,
   target: VocabWord,
   count: number,
-  asked: ReadonlySet<string>,
+  avoid: ReadonlySet<string>,
   rng: Rng,
 ) {
   const order = data.bands
@@ -144,14 +144,15 @@ function distractors(
     // Last resort so an item always has its options; the build makes this pass unnecessary.
     { match: () => true, similarWidth: false },
   ];
-  // Meanings already shown in feedback come last, so a guesser cannot rule them out.
+  // Meanings already shown in feedback, in this test or an earlier one, come last, so a guesser
+  // cannot rule them out.
   for (const { match, similarWidth } of passes) {
-    for (const allowAsked of [false, true]) {
+    for (const allowAvoided of [false, true]) {
       for (const index of order) {
         for (const other of shuffle(data.bands[index].words, rng)) {
           if (picked.length === count) return picked;
           if (other.w === target.w || picked.includes(other) || !match(other)) continue;
-          if (!allowAsked && asked.has(`r${index}:${other.w}`)) continue;
+          if (!allowAvoided && avoid.has(other.w)) continue;
           const chars = meaningChars(other.s);
           if (overlaps(chars, targetChars) || pickedChars.some((c) => overlaps(c, chars))) continue;
           const ratio = optionWidth(other.s) / width;
@@ -170,12 +171,12 @@ function makeItem(
   data: VocabTestData,
   band: number,
   index: number,
-  asked: ReadonlySet<string>,
+  avoid: ReadonlySet<string>,
   rng: Rng,
 ): TestItem {
   const entry = data.bands[band].words[index];
   const noneIsRight = rng() < NONE_SHARE;
-  const wrong = distractors(data, band, entry, noneIsRight ? 3 : 2, asked, rng).map(
+  const wrong = distractors(data, band, entry, noneIsRight ? 3 : 2, avoid, rng).map(
     (word) => word.s,
   );
   const meanings = noneIsRight ? wrong : shuffle([entry.s, ...wrong], rng);
@@ -203,6 +204,9 @@ const STEP_DECAY = 0.85;
 const STEP_MIN = 0.25;
 const FIT_SHIFT = 0.1;
 const FIT_SPREAD = 0.6;
+/** Extra log-rank distance for a word asked in an earlier test on this device. */
+const SEEN_PENALTY = 0.5;
+const NOTHING_SEEN: ReadonlySet<string> = new Set();
 
 function staircaseTarget(answers: readonly Answer[], maxRank: number): number {
   let target = STAIRCASE_START;
@@ -235,32 +239,42 @@ function stepRng(seed: number, answered: number): Rng {
   return seededRng(Math.imul(seed ^ 0x9e3779b9, 0x85ebca6b) + answered * 0x27d4eb2f);
 }
 
+/**
+ * The next question. `seen` holds words asked in earlier tests on this device; they are picked only
+ * when no other word is near the target, and their meanings come last as wrong options.
+ */
 export function nextItem(
   answers: readonly Answer[],
   data: VocabTestData,
   seed: number,
+  seen: ReadonlySet<string> = NOTHING_SEEN,
 ): TestItem | null {
   if (answers.length >= MAX_ANSWERS) return null;
   const rng = stepRng(seed, answers.length);
-  const asked = new Set(answers.map((answer) => answer.item.id));
-  const fresh = data.bands.map((band, index) =>
-    band.words.map((_, i) => i).filter((i) => !asked.has(`r${index}:${band.words[i].w}`)),
+  const asked = new Set(answers.map((answer) => answer.item.word));
+  const avoid = new Set([...asked, ...seen]);
+  const fresh = data.bands.map((band) =>
+    band.words.map((_, i) => i).filter((i) => !asked.has(band.words[i].w)),
   );
   if (answers.length < EASY_COUNT && fresh[0].length > 0) {
-    return makeItem(data, 0, fresh[0][Math.floor(rng() * fresh[0].length)], asked, rng);
+    const unseen = fresh[0].filter((i) => !seen.has(data.bands[0].words[i].w));
+    const from = unseen.length > 0 ? unseen : fresh[0];
+    return makeItem(data, 0, from[Math.floor(rng() * from.length)], avoid, rng);
   }
   const target = nextTarget(answers, data, rng);
   let best: { band: number; index: number; distance: number } | null = null;
   data.bands.forEach((band, b) => {
     for (const i of fresh[b]) {
+      const word = band.words[i];
       // A tiny random tie-break so equal distances do not always pick the same word.
-      const distance = Math.abs(Math.log(band.words[i].r) - target) + rng() * 1e-3;
+      const distance =
+        Math.abs(Math.log(word.r) - target) + (seen.has(word.w) ? SEEN_PENALTY : 0) + rng() * 1e-3;
       if (!best || distance < best.distance) best = { band: b, index: i, distance };
     }
   });
   if (!best) return null;
   const pick = best as { band: number; index: number };
-  return makeItem(data, pick.band, pick.index, asked, rng);
+  return makeItem(data, pick.band, pick.index, avoid, rng);
 }
 
 /**
@@ -272,10 +286,11 @@ export function prepareNext(
   item: TestItem,
   data: VocabTestData,
   seed: number,
+  seen: ReadonlySet<string> = NOTHING_SEEN,
 ): { right: TestItem | null; notRight: TestItem | null } {
   return {
-    right: nextItem([...answers, { item, choice: item.answer }], data, seed),
-    notRight: nextItem([...answers, { item, choice: null }], data, seed),
+    right: nextItem([...answers, { item, choice: item.answer }], data, seed, seen),
+    notRight: nextItem([...answers, { item, choice: null }], data, seed, seen),
   };
 }
 

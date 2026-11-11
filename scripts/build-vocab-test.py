@@ -4,8 +4,7 @@
 Outputs (both committed):
   languages/en/content/vocab-test.json
       Frequency bands of English lemmas (1,000 wide up to 10,000, then wider up to 40,000), each
-      with a pool of 30 words that have a short Chinese gloss and their frequency rank (r). The test shows
-      a word with four glosses from its band, so glosses are unique within a band.
+      with a pool of 375 words, their frequency rank (r) and curated meaning rows (s).
   languages/en/content/library/vocab-needs.json
       For every English library book: {"n95": R, "n98": R, "cov": [c1 .. c14]}. R is the lemma
       rank that covers 95% / 98% of the running words (null if not reached by rank 20000;
@@ -49,8 +48,8 @@ OUT_TEST = CONTENT / "vocab-test.json"
 OUT_NEEDS = LIBRARY / "vocab-needs.json"
 
 SEED = 20261111
-POOL_SIZE = 30
-SPARE_SIZE = 10
+POOL_SIZE = 375
+SPARE_SIZE = 60
 GLOSSES = ROOT / "scripts" / "vocab-test-glosses.json"
 MIN_FREQ = 1e-8  # zipf 1.0
 BANDS = [(i * 1000 + 1, (i + 1) * 1000) for i in range(10)] + [
@@ -592,6 +591,8 @@ def pool_ok(w, ranking, entries):
 
 def spread(items, n):
     """One item from each of n equal slices, picked by a seeded hash."""
+    if n <= 0:
+        return []
     out = []
     for k in range(n):
         part = items[k * len(items) // n:(k + 1) * len(items) // n]
@@ -599,7 +600,7 @@ def spread(items, n):
     return out
 
 
-def build_bands(ranking, senses, meta, entries):
+def build_bands(ranking, senses, meta, entries, curated):
     """Pools use only words that a learner list marks (Collins, Oxford or an exam tag). Without
     that mark about half of the rare entries are names, places or abbreviations."""
     by_rank = sorted(ranking, key=ranking.get)
@@ -614,12 +615,18 @@ def build_bands(ranking, senses, meta, entries):
         glossed = [x for x in glossed if len(x[1]) <= 12] if sum(len(x[1]) <= 12 for x in glossed) >= 100 else glossed
         pref = [x for x in glossed if 3 <= len(x[0]) <= 12]
         src = pref if len(pref) >= POOL_SIZE * 2 else glossed
-        # One word from each of POOL_SIZE equal slices of the band, picked by a seeded hash, so the
-        # pool spreads over the band and stays stable when a word is added to POOL_EXCLUDE.
-        chosen = spread(src, POOL_SIZE)
-        taken = {w for w, _ in chosen}
-        # Spares replace pool words whose curated meanings fail the checks below.
-        spares = spread([x for x in src if x[0] not in taken], SPARE_SIZE)
+        # One word from each equal slice, picked by a seeded hash, so the pool spreads over the band
+        # and stays stable when POOL_EXCLUDE grows. Once a band has enough curated words, the pool
+        # comes from them and the other curated words are the spares that replace failing words.
+        ready = [x for x in src if curated.get(x[0])]
+        if len(ready) >= POOL_SIZE:
+            chosen = spread(ready, POOL_SIZE)
+            taken = {w for w, _ in chosen}
+            spares = [x for x in ready if x[0] not in taken]
+        else:
+            chosen = ready + spread([x for x in src if not curated.get(x[0])], POOL_SIZE - len(ready))
+            taken = {w for w, _ in chosen}
+            spares = spread([x for x in src if x[0] not in taken], SPARE_SIZE)
         chosen.sort(key=lambda x: ranking[x[0]])
         spares.sort(key=lambda x: ranking[x[0]])
         bands.append({"from": lo, "to": hi,
@@ -700,31 +707,51 @@ def meaning_chars(rows):
     return {c for r in rows for m in r["zh"] for c in m if c not in FILLER}
 
 
+class Option:
+    """Cached checks for one {w, r, s} entry."""
+
+    def __init__(self, x):
+        self.x = x
+        self.w, self.r = x["w"], x["r"]
+        self.sig = signature(x["s"])
+        self.chars = frozenset(meaning_chars(x["s"]))
+        self.width = option_width(x["s"])
+        self.en = frozenset(y.lower() for r in x["s"] for y in re.findall(r"[A-Za-z']+", r["en"]))
+
+
 def can_distract(target, other, forms):
-    """Whether `other` may be a wrong option for `target` (both {w, s} entries)."""
-    if other["w"] == target["w"]:
+    """Whether `other` may be a wrong option for `target` (both Option)."""
+    if other.w == target.w or target.chars & other.chars:
         return False
-    if meaning_chars(target["s"]) & meaning_chars(other["s"]):
+    if not 0.6 * target.width <= other.width <= 1.4 * target.width:
         return False
-    tw, ow = option_width(target["s"]), option_width(other["s"])
-    if not 0.6 * tw <= ow <= 1.4 * tw:
-        return False
-    en = {x.lower() for r in other["s"] for x in re.findall(r"[A-Za-z']+", r["en"])}
-    return not (en & forms)
+    return not (other.en & forms)
 
 
-def distractor_count(target, pool, forms):
-    """How many mutually compatible wrong options exist for `target`, up to three. A two-row
+def nearest(pool, i):
+    """Pool entries ordered by rank distance from pool[i]; pool is sorted by rank."""
+    lo, hi, r = i - 1, i + 1, pool[i].r
+    while lo >= 0 or hi < len(pool):
+        if hi >= len(pool) or (lo >= 0 and r - pool[lo].r <= pool[hi].r - r):
+            yield pool[lo]
+            lo -= 1
+        else:
+            yield pool[hi]
+            hi += 1
+
+
+def distractor_count(i, pool, forms):
+    """How many mutually compatible wrong options exist for pool[i], up to three. A two-row
     word needs two-row options, or its own option would be the only two-row one."""
-    matches = [lambda o: signature(o["s"]) == signature(target["s"])]
-    if len(target["s"]) == 1:
-        matches.append(lambda o: o["s"][0]["p"] == target["s"][0]["p"])
+    target = pool[i]
+    matches = [lambda o: o.sig == target.sig]
+    if len(target.sig) == 1:
+        matches.append(lambda o: o.sig[0] == target.sig[0])
     picked = []
     for match in matches:
         picked = []
-        for o in sorted(pool, key=lambda o: abs(o["r"] - target["r"])):
-            if match(o) and can_distract(target, o, forms) and all(
-                    not (meaning_chars(o["s"]) & meaning_chars(p["s"])) for p in picked):
+        for o in nearest(pool, i):
+            if match(o) and can_distract(target, o, forms) and all(not (o.chars & p.chars) for p in picked):
                 picked.append(o)
                 if len(picked) == 3:
                     return 3
@@ -761,8 +788,9 @@ def apply_glosses(bands, glosses, lemma_to_forms):
         for x in [x for x, y in words if not y]:
             add_spare(b, x)
     while True:
-        pool = [x for b in bands for x in b["words"]]
-        weak = [x for x in pool if distractor_count(x, pool, word_forms(x["w"], lemma_to_forms)) < 3]
+        pool = sorted((Option(x) for b in bands for x in b["words"]), key=lambda o: (o.r, o.w))
+        weak = [o.x for i, o in enumerate(pool)
+                if distractor_count(i, pool, word_forms(o.w, lemma_to_forms)) < 3]
         if not weak:
             break
         for x in weak:
@@ -896,6 +924,17 @@ def spearman(xs, ys):
     return cov / math.sqrt(sum((a - mx) ** 2 for a in rx) * sum((b - my) ** 2 for b in ry))
 
 
+def test_json(bands):
+    """vocab-test.json with one word per line, so it stays small and diffs stay readable."""
+    def compact(x):
+        return json.dumps(x, ensure_ascii=False, separators=(",", ":"))
+    parts = []
+    for b in bands:
+        words = ",\n".join("  " + compact(w) for w in b["words"])
+        parts.append(f' {{"from":{b["from"]},"to":{b["to"]},"words":[\n{words}\n ]}}')
+    return f'{{"version":3,"source":{compact(SOURCE)},"bands":[\n' + ",\n".join(parts) + "\n]}\n"
+
+
 def main():
     ap = argparse.ArgumentParser(description="Build vocab-test.json and vocab-needs.json")
     ap.add_argument("--dict", required=True, help="path to dictionary-en.db")
@@ -910,26 +949,26 @@ def main():
     print(f"lemmas ranked: {len(ranking)}")
     print("excluded:", {k: len(v) for k, v in excluded.items()})
 
-    bands = build_bands(ranking, senses, meta, set(entries))
+    glosses = json.loads(GLOSSES.read_text(encoding="utf-8"))
+    bands = build_bands(ranking, senses, meta, set(entries), glosses)
     if args.draft:
         draft = {}
         for i, b in enumerate(bands):
             for role in ("words", "spares"):
                 for x in b[role]:
+                    if x["w"] in glosses:
+                        continue
                     draft[x["w"]] = {"band": i, "rank": x["r"], "role": "pool" if role == "words" else "spare",
                                      "hint": x["zh"], "rows": draft_rows(senses[x["w"]])}
         Path(args.draft).write_text(json.dumps(draft, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
         print(f"draft: {len(draft)} words -> {args.draft}")
         return
 
-    glosses = json.loads(GLOSSES.read_text(encoding="utf-8"))
     problems = apply_glosses(bands, glosses, lemma_to_forms)
     print(f"\nReplaced or skipped {len(problems)} words:")
     for w, why in problems:
         print(f"  {w}: {why}")
-    OUT_TEST.write_text(json.dumps(
-        {"version": 3, "bands": bands, "source": SOURCE},
-        indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+    OUT_TEST.write_text(test_json(bands), encoding="utf-8")
 
     print("\nSample words per band")
     srng = random.Random(7)

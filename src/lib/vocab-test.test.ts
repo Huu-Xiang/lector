@@ -61,10 +61,16 @@ function realData(): VocabTestData {
 }
 
 /** A learner who knows every word ranked up to `size` and says "not sure" otherwise. */
-function honest(size: number, count: number, seed = 3, source = data): Answer[] {
+function honest(
+  size: number,
+  count: number,
+  seed = 3,
+  source = data,
+  seen: ReadonlySet<string> = new Set(),
+): Answer[] {
   const answers: Answer[] = [];
   while (answers.length < count) {
-    const item = nextItem(answers, source, seed);
+    const item = nextItem(answers, source, seed, seen);
     if (!item) break;
     answers.push({ item, choice: item.rank <= size ? item.answer : null });
   }
@@ -189,6 +195,38 @@ describe('question order', { timeout: 60_000 }, () => {
     expect(prepared.notRight).toEqual(nextItem([...before, { item, choice: null }], data, 3));
   });
 
+  it('prefers a word not asked in an earlier test when one is near the target', () => {
+    const before = honest(3000, 30);
+    const item = nextItem(before, data, 3)!;
+    const other = nextItem(before, data, 3, new Set([item.word]))!;
+    expect(other.word).not.toBe(item.word);
+    expect(Math.abs(Math.log(other.rank / item.rank))).toBeLessThan(0.5);
+  });
+
+  it('keeps earlier-test words out of the wrong options while others fit', () => {
+    const seen = new Set(data.bands[0].words.slice(0, 10).map((word) => word.w));
+    const seenRows = new Set(
+      data.bands[0].words.slice(0, 10).map((word) => JSON.stringify(word.s)),
+    );
+    for (let seed = 1; seed <= 100; seed++) {
+      const item = nextItem([], data, seed, seen)!;
+      expect(seen.has(item.word)).toBe(false);
+      for (const meaning of item.meanings)
+        expect(seenRows.has(JSON.stringify(meaning))).toBe(false);
+    }
+  });
+
+  it('prepares the next word with the earlier-test words too', () => {
+    const seen = new Set(honest(3000, 40, 9).map((a) => a.item.word));
+    const before = honest(3000, 20, 3, data, seen);
+    const item = nextItem(before, data, 3, seen)!;
+    const prepared = prepareNext(before, item, data, 3, seen);
+    expect(prepared.right).toEqual(
+      nextItem([...before, { item, choice: item.answer }], data, 3, seen),
+    );
+    expect(prepared.notRight).toEqual(nextItem([...before, { item, choice: null }], data, 3, seen));
+  });
+
   it('stops at the maximum', () => {
     expect(honest(3000, MAX_ANSWERS + 10)).toHaveLength(MAX_ANSWERS);
   });
@@ -197,11 +235,11 @@ describe('question order', { timeout: 60_000 }, () => {
 describe('the real test data', { timeout: 120_000 }, () => {
   const real = realData();
 
-  it('has 16 bands of 30 words with one or two meaning rows each', () => {
+  it('has 16 bands of 375 words with one or two meaning rows each', () => {
     expect(real.version).toBe(3);
     expect(real.bands).toHaveLength(16);
     for (const band of real.bands) {
-      expect(band.words).toHaveLength(30);
+      expect(band.words).toHaveLength(375);
       for (const word of band.words) {
         expect(word.s.length).toBeGreaterThanOrEqual(1);
         expect(word.s.length).toBeLessThanOrEqual(2);
@@ -221,6 +259,18 @@ describe('the real test data', { timeout: 120_000 }, () => {
             expect(ratio).toBeGreaterThanOrEqual(0.6);
             expect(ratio).toBeLessThanOrEqual(1.4);
           }
+        }
+      }
+    }
+  });
+
+  it('asks no word twice over five tests of 60 answers on one device', () => {
+    for (const size of [1000, 3000, 8000, 20000]) {
+      const seen = new Set<string>();
+      for (let test = 1; test <= 5; test++) {
+        for (const { item } of honest(size, 60, test * 7, real, seen)) {
+          expect(seen.has(item.word)).toBe(false);
+          seen.add(item.word);
         }
       }
     }

@@ -21,9 +21,11 @@ import {
   type LiveEstimate,
   type SenseRow,
   type TestItem,
+  type VocabBand,
   type VocabTestData,
 } from '@/lib/vocab-test';
 import { readVocabResult, writeVocabResult } from '@/lib/vocab-result';
+import { addSeenWord, readSeenWords } from '@/lib/vocab-seen';
 import type { VocabTestBook } from '@/lib/vocab-test-data';
 
 /** The live bar runs to the end of the hardest band on a square-root scale, so small counts stay readable. */
@@ -39,6 +41,19 @@ const INPUT_LOCK_MS = 250;
 
 function shownTitle(book: VocabTestBook, locale: string): string {
   return book.titles[locale] ?? book.titles.en ?? book.title;
+}
+
+export const WORDS_URL = '/vocab-test/words';
+
+function isTestData(value: unknown): value is VocabTestData {
+  const bands = (value as VocabTestData | null)?.bands;
+  return Array.isArray(bands) && bands.length > 0 && bands.every((b) => Array.isArray(b.words));
+}
+
+/** The band limits and data credit: all the page needs before the word list loads. */
+export interface VocabTestMeta {
+  bands: Array<Pick<VocabBand, 'from' | 'to'>>;
+  source?: string;
 }
 
 function randomSeed(): number {
@@ -118,10 +133,10 @@ function OptionIcon({ state }: { state: OptionState }) {
 }
 
 export default function VocabTest({
-  data,
+  meta,
   books,
 }: {
-  data: VocabTestData;
+  meta: VocabTestMeta;
   books: VocabTestBook[];
 }) {
   const t = useTranslations('vocabTest');
@@ -133,7 +148,11 @@ export default function VocabTest({
   /** The choice for the current word once answered; undefined while asking. */
   const [chosen, setChosen] = useState<number | null | undefined>(undefined);
   const [announcement, setAnnouncement] = useState('');
+  const [data, setData] = useState<VocabTestData | null>(null);
+  const [loading, setLoading] = useState<'idle' | 'loading' | 'error'>('idle');
   const seedRef = useRef(1);
+  /** Words asked in earlier tests in this browser, read when a test starts. */
+  const seenRef = useRef<ReadonlySet<string>>(new Set());
   const answersRef = useRef<Answer[]>([]);
   const preparedRef = useRef<{
     id: string;
@@ -167,14 +186,14 @@ export default function VocabTest({
   // A new word: ignore input for a moment, focus the card, and prepare both possible next words
   // after it has painted.
   useEffect(() => {
-    if (step !== 'test' || !current) return;
+    if (step !== 'test' || !current || !data) return;
     cardRef.current?.focus();
     const item = current;
     const lock = setTimeout(() => setPhase('asking'), INPUT_LOCK_MS);
     const prepare = setTimeout(() => {
       preparedRef.current = {
         id: item.id,
-        ...prepareNext(answersRef.current, item, data, seedRef.current),
+        ...prepareNext(answersRef.current, item, data, seedRef.current, seenRef.current),
       };
     }, 0);
     return () => {
@@ -183,7 +202,7 @@ export default function VocabTest({
     };
   }, [current, step, data]);
 
-  const live = useMemo(() => estimateFromAnswers(answers, data.bands), [answers, data.bands]);
+  const live = useMemo(() => estimateFromAnswers(answers, meta.bands), [answers, meta.bands]);
 
   function showItem(item: TestItem | null) {
     setChosen(undefined);
@@ -191,38 +210,61 @@ export default function VocabTest({
     setCurrent(item);
   }
 
-  function begin() {
+  function start(words: VocabTestData) {
     clearTimer();
     seedRef.current = randomSeed();
+    seenRef.current = new Set(readSeenWords());
     preparedRef.current = null;
     setAnswers([]);
     answersRef.current = [];
     setAnnouncement('');
-    showItem(nextItem([], data, seedRef.current));
+    showItem(nextItem([], words, seedRef.current, seenRef.current));
     setStep('test');
     window.scrollTo({ top: 0 });
+  }
+
+  async function begin() {
+    if (data) {
+      start(data);
+      return;
+    }
+    if (loading === 'loading') return;
+    setLoading('loading');
+    try {
+      const response = await fetch(WORDS_URL);
+      const words: unknown = response.ok ? await response.json() : null;
+      if (!isTestData(words)) throw new Error('bad word list');
+      setData(words);
+      setLoading('idle');
+      start(words);
+    } catch {
+      setLoading('error');
+    }
   }
 
   const finish = useCallback(
     (all: readonly Answer[]) => {
       clearTimer();
-      const result = estimateFromAnswers(all, data.bands);
+      const result = estimateFromAnswers(all, meta.bands);
       if (result) writeVocabResult(result.estimate, result.level);
       setStep('result');
       window.scrollTo({ top: 0 });
     },
-    [data.bands],
+    [meta.bands],
   );
 
   const advance = useCallback(() => {
     clearTimer();
-    if (phase !== 'feedback' || !current) return;
+    if (phase !== 'feedback' || !current || !data) return;
     const all = answersRef.current;
     const right = chosen === current.answer;
     const prepared =
       preparedRef.current?.id === current.id
         ? preparedRef.current
-        : { id: current.id, ...prepareNext(all.slice(0, -1), current, data, seedRef.current) };
+        : {
+            id: current.id,
+            ...prepareNext(all.slice(0, -1), current, data, seedRef.current, seenRef.current),
+          };
     const next = all.length >= MAX_ANSWERS ? null : right ? prepared.right : prepared.notRight;
     if (!next) {
       setCurrent(null);
@@ -243,6 +285,7 @@ export default function VocabTest({
       const all = [...answersRef.current, { item: current, choice }];
       answersRef.current = all;
       setAnswers(all);
+      addSeenWord(current.word);
       setChosen(choice);
       setPhase('feedback');
       setAnnouncement(
@@ -261,7 +304,8 @@ export default function VocabTest({
   );
 
   function keepGoing() {
-    showItem(nextItem(answersRef.current, data, seedRef.current));
+    if (!data) return;
+    showItem(nextItem(answersRef.current, data, seedRef.current, seenRef.current));
     setStep('test');
     window.scrollTo({ top: 0 });
   }
@@ -305,11 +349,27 @@ export default function VocabTest({
             {t('lastResult', { count: lastResult.estimate })}
           </p>
         )}
-        <Button size="lg" onClick={begin} data-testid="vocab-start" className="min-h-11">
-          {t('start')}
+        <Button
+          size="lg"
+          onClick={begin}
+          disabled={loading === 'loading'}
+          aria-busy={loading === 'loading'}
+          data-testid="vocab-start"
+          className="min-h-11"
+        >
+          {loading === 'loading'
+            ? t('loading')
+            : loading === 'error'
+              ? t('retryStart')
+              : t('start')}
         </Button>
-        {data.source && (
-          <p className="text-xs text-muted-foreground">{t('credit', { source: data.source })}</p>
+        {loading === 'error' && (
+          <p role="alert" className="text-sm text-destructive" data-testid="vocab-load-error">
+            {t('loadError')}
+          </p>
+        )}
+        {meta.source && (
+          <p className="text-xs text-muted-foreground">{t('credit', { source: meta.source })}</p>
         )}
       </section>
     );
@@ -473,7 +533,7 @@ export default function VocabTest({
   if (!score) return null;
   const fromSetup = new URLSearchParams(window.location.search).get('from') === 'setup';
   const recommended = recommendBooks(books, score.estimate, score.level);
-  const missed = missedWords(answers, score.estimate, data.bands);
+  const missed = missedWords(answers, score.estimate, meta.bands);
   const top = recommended[0];
   const topTitle = top ? shownTitle(top, locale) : '';
 
@@ -637,8 +697,8 @@ export default function VocabTest({
           {t('browse')}
         </Link>
       </p>
-      {data.source && (
-        <p className="text-xs text-muted-foreground">{t('credit', { source: data.source })}</p>
+      {meta.source && (
+        <p className="text-xs text-muted-foreground">{t('credit', { source: meta.source })}</p>
       )}
     </section>
   );

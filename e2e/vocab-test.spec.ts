@@ -139,6 +139,56 @@ test.describe('vocabulary test', () => {
     throw new Error('no "None of these" answer in 30 words');
   });
 
+  test('loads the word list only on Start and offers a retry when it fails', async ({
+    browser,
+  }) => {
+    const { context, page } = await loggedOutPage(browser);
+    const listRequests: string[] = [];
+    page.on('request', (request) => {
+      if (request.url().includes('/vocab-test/words')) listRequests.push(request.url());
+    });
+    await page.goto('/vocab-test');
+    await expect(page.getByTestId('vocab-start')).toBeEnabled();
+    expect(listRequests).toHaveLength(0);
+
+    await page.route('**/vocab-test/words', (route) => route.abort());
+    await page.getByTestId('vocab-start').click();
+    await expect(page.getByTestId('vocab-load-error')).toBeVisible();
+    await expect(page.getByTestId('vocab-start')).toHaveText('Try again');
+
+    await page.unroute('**/vocab-test/words');
+    await page.getByTestId('vocab-start').click();
+    await expect(page.getByTestId('vocab-word')).toBeVisible();
+    await context.close();
+  });
+
+  test('a retake asks words from the earlier test only when no new word fits', async ({
+    browser,
+  }) => {
+    const { context, page } = await loggedOutPage(browser);
+    await page.goto('/vocab-test');
+    const word = page.getByTestId('vocab-word');
+    const card = page.getByTestId('vocab-card');
+    const first = new Set<string>();
+    await page.getByTestId('vocab-start').click();
+    for (let i = 0; i < 20; i++) {
+      await expect(card).toHaveAttribute('data-state', 'asking');
+      first.add((await word.textContent()) ?? '');
+      await answerOne(page, 'vocab-not-sure');
+    }
+    const seen = await page.evaluate(() => localStorage.getItem('readfox-vocab-seen'));
+    expect(new Set(JSON.parse(seen ?? '[]') as string[])).toEqual(first);
+
+    await page.getByTestId('vocab-finish').click();
+    await page.getByTestId('vocab-retake').click();
+    for (let i = 0; i < 10; i++) {
+      await expect(card).toHaveAttribute('data-state', 'asking');
+      expect(first.has((await word.textContent()) ?? '')).toBe(false);
+      await answerOne(page, 'vocab-not-sure');
+    }
+    await context.close();
+  });
+
   test('the result is saved', async ({ browser }) => {
     const { context, page } = await loggedOutPage(browser);
     await page.goto('/vocab-test');

@@ -30,7 +30,10 @@ export default async function VocabTestPage() {
   if (!data) notFound();
   return (
     <LegalShell title={t('title')}>
-      <VocabTest data={data} books={loadVocabTestBooks()} />
+      <VocabTest
+        meta={{ bands: data.bands.map(({ from, to }) => ({ from, to })), source: data.source }}
+        books={loadVocabTestBooks()}
+      />
     </LegalShell>
   );
 }
