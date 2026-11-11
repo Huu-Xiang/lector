@@ -714,9 +714,13 @@ def can_distract(target, other, forms):
 
 
 def distractor_count(target, pool, forms):
-    """How many mutually compatible wrong options exist for `target`, up to three."""
-    for match in (lambda o: signature(o["s"]) == signature(target["s"]),
-                  lambda o: o["s"][0]["p"] == target["s"][0]["p"]):
+    """How many mutually compatible wrong options exist for `target`, up to three. A two-row
+    word needs two-row options, or its own option would be the only two-row one."""
+    matches = [lambda o: signature(o["s"]) == signature(target["s"])]
+    if len(target["s"]) == 1:
+        matches.append(lambda o: o["s"][0]["p"] == target["s"][0]["p"])
+    picked = []
+    for match in matches:
         picked = []
         for o in sorted(pool, key=lambda o: abs(o["r"] - target["r"])):
             if match(o) and can_distract(target, o, forms) and all(

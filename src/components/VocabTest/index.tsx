@@ -65,7 +65,11 @@ function outcome(choice: number | null, item: TestItem): Outcome {
   return choice === null ? 'Unsure' : 'Wrong';
 }
 
-function optionState(index: number, item: TestItem, choice: number | null | undefined): OptionState {
+function optionState(
+  index: number,
+  item: TestItem,
+  choice: number | null | undefined,
+): OptionState {
   if (choice === undefined) return 'idle';
   if (index === item.answer) {
     if (choice === item.answer) return 'right';
@@ -262,6 +266,11 @@ export default function VocabTest({
     if (step !== 'test') return;
     const onKey = (event: KeyboardEvent) => {
       if (event.altKey || event.ctrlKey || event.metaKey) return;
+      // A held key would otherwise answer the next word as soon as the input lock ends.
+      if (event.repeat) {
+        event.preventDefault();
+        return;
+      }
       if (['Tab', 'Shift', 'Control', 'Alt', 'Meta', 'CapsLock'].includes(event.key)) return;
       if (phase === 'feedback') {
         event.preventDefault();
@@ -307,9 +316,7 @@ export default function VocabTest({
     const answered = chosen !== undefined;
     const feedbackText =
       current && chosen !== undefined ? t(`feedback${outcome(chosen, current)}`) : '';
-    const options = current
-      ? [...current.meanings.map((rows) => ({ rows })), { rows: null }]
-      : [];
+    const options = current ? [...current.meanings.map((rows) => ({ rows })), { rows: null }] : [];
     return (
       <section
         className="space-y-4"
@@ -395,7 +402,9 @@ export default function VocabTest({
               aria-disabled={phase !== 'asking'}
               className={cn(
                 'mt-2 min-h-12 w-full gap-2 text-base transition-colors motion-reduce:transition-none',
-                answered && chosen === null && 'border-2 border-answer-unsure-border! bg-answer-unsure!',
+                answered &&
+                  chosen === null &&
+                  'border-2 border-answer-unsure-border! bg-answer-unsure!',
               )}
               onClick={() => answer(null)}
               data-testid="vocab-not-sure"

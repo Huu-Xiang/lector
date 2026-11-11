@@ -1,20 +1,5 @@
-/**
- * Accuracy check for the English vocabulary test (src/lib/vocab-test.ts).
- *
- * Simulates learners whose knowledge fades with word rank in three different shapes, runs the
- * real question order on the real word list (with the same prepared next questions the test
- * screen uses), and prints, per true size: the mean estimate, the 10th to 90th percentile, the
- * mean ± margin, how often the true size falls inside the shown range, and how often the
- * guessing tip shows.
- *
- * Learner shapes:
- *   A  logistic on rank:      knows rank r with 1 / (1 + e^((r - K) / 0.25K))
- *   B  linear ramp with word noise: some words are harder than their rank says
- *   C  logistic on log rank:  knows rank r with 1 / (1 + e^((ln r - ln K) / 0.35))
- * A learner who does not know a word says "not sure" with probability UNSURE, else guesses.
- *
- * Run: bun scripts/simulate-vocab-test.ts [shapes=A,B,C] [answers=40,80] [runs=150] [unsure=0.7]
- */
+// Accuracy check for src/lib/vocab-test.ts with simulated learners (shapes in knowShare).
+// Run: bun scripts/simulate-vocab-test.ts [shapes=A,B,C] [answers=40,80] [runs=150] [unsure=0.7]
 import fs from 'node:fs';
 import path from 'node:path';
 import {
@@ -57,7 +42,8 @@ function truth(shape: string, k: number): number {
     }
     // Average the ramp over the word noise used in the simulation below.
     let mean = 0;
-    for (let j = -2; j <= 2; j += 0.5) mean += ramp(r * Math.exp(0.4 * j), k) * Math.exp((-j * j) / 2);
+    for (let j = -2; j <= 2; j += 0.5)
+      mean += ramp(r * Math.exp(0.4 * j), k) * Math.exp((-j * j) / 2);
     total += (10 * mean) / 4.513;
   }
   return total;

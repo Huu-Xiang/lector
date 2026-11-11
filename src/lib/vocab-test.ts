@@ -122,7 +122,14 @@ function englishWords(rows: readonly SenseRow[]): string[] {
   return rows.flatMap((row) => row.en.toLowerCase().match(/[a-z']+/g) ?? []);
 }
 
-function distractors(data: VocabTestData, band: number, target: VocabWord, count: number, rng: Rng) {
+function distractors(
+  data: VocabTestData,
+  band: number,
+  target: VocabWord,
+  count: number,
+  asked: ReadonlySet<string>,
+  rng: Rng,
+) {
   const order = data.bands
     .map((_, index) => index)
     .sort((a, b) => Math.abs(a - band) - Math.abs(b - band) || a - b);
@@ -137,28 +144,40 @@ function distractors(data: VocabTestData, band: number, target: VocabWord, count
     // Last resort so an item always has its options; the build makes this pass unnecessary.
     { match: () => true, similarWidth: false },
   ];
+  // Meanings already shown in feedback come last, so a guesser cannot rule them out.
   for (const { match, similarWidth } of passes) {
-    for (const index of order) {
-      for (const other of shuffle(data.bands[index].words, rng)) {
-        if (picked.length === count) return picked;
-        if (other.w === target.w || picked.includes(other) || !match(other)) continue;
-        const chars = meaningChars(other.s);
-        if (overlaps(chars, targetChars) || pickedChars.some((c) => overlaps(c, chars))) continue;
-        const ratio = optionWidth(other.s) / width;
-        if (similarWidth && (ratio < 0.6 || ratio > 1.4)) continue;
-        if (englishWords(other.s).some((word) => forms.has(word))) continue;
-        picked.push(other);
-        pickedChars.push(chars);
+    for (const allowAsked of [false, true]) {
+      for (const index of order) {
+        for (const other of shuffle(data.bands[index].words, rng)) {
+          if (picked.length === count) return picked;
+          if (other.w === target.w || picked.includes(other) || !match(other)) continue;
+          if (!allowAsked && asked.has(`r${index}:${other.w}`)) continue;
+          const chars = meaningChars(other.s);
+          if (overlaps(chars, targetChars) || pickedChars.some((c) => overlaps(c, chars))) continue;
+          const ratio = optionWidth(other.s) / width;
+          if (similarWidth && (ratio < 0.6 || ratio > 1.4)) continue;
+          if (englishWords(other.s).some((word) => forms.has(word))) continue;
+          picked.push(other);
+          pickedChars.push(chars);
+        }
       }
     }
   }
   return picked;
 }
 
-function makeItem(data: VocabTestData, band: number, index: number, rng: Rng): TestItem {
+function makeItem(
+  data: VocabTestData,
+  band: number,
+  index: number,
+  asked: ReadonlySet<string>,
+  rng: Rng,
+): TestItem {
   const entry = data.bands[band].words[index];
   const noneIsRight = rng() < NONE_SHARE;
-  const wrong = distractors(data, band, entry, noneIsRight ? 3 : 2, rng).map((word) => word.s);
+  const wrong = distractors(data, band, entry, noneIsRight ? 3 : 2, asked, rng).map(
+    (word) => word.s,
+  );
   const meanings = noneIsRight ? wrong : shuffle([entry.s, ...wrong], rng);
   return {
     id: `r${band}:${entry.w}`,
@@ -174,16 +193,8 @@ function makeItem(data: VocabTestData, band: number, index: number, rng: Rng): T
 /** Shown before this many answers is not an estimate yet. */
 export const FIRST_ESTIMATE_AFTER = 8;
 
-/*
- * Question order, in three stages:
- *  1. EASY_COUNT words from the first band, which nearly everyone knows.
- *  2. A staircase on log rank: the target rises after a right answer and falls after a wrong or
- *     "not sure" one, by a step that shrinks each time.
- *  3. From STAIRCASE_END on, the target is the fitted knee of the learner curve, moved up after a
- *     right answer and down otherwise, with a log-normal spread so the fit also sees words well
- *     above and below it.
- * The numbers come from scripts/simulate-vocab-test.ts.
- */
+// Question order: EASY_COUNT first-band words, a log-rank staircase until STAIRCASE_END, then
+// the fitted knee moved by FIT_SHIFT toward the last answer, with a log-normal spread.
 const EASY_COUNT = 4;
 const STAIRCASE_END = 16;
 const STAIRCASE_START = Math.log(800);
@@ -236,7 +247,7 @@ export function nextItem(
     band.words.map((_, i) => i).filter((i) => !asked.has(`r${index}:${band.words[i].w}`)),
   );
   if (answers.length < EASY_COUNT && fresh[0].length > 0) {
-    return makeItem(data, 0, fresh[0][Math.floor(rng() * fresh[0].length)], rng);
+    return makeItem(data, 0, fresh[0][Math.floor(rng() * fresh[0].length)], asked, rng);
   }
   const target = nextTarget(answers, data, rng);
   let best: { band: number; index: number; distance: number } | null = null;
@@ -249,7 +260,7 @@ export function nextItem(
   });
   if (!best) return null;
   const pick = best as { band: number; index: number };
-  return makeItem(data, pick.band, pick.index, rng);
+  return makeItem(data, pick.band, pick.index, asked, rng);
 }
 
 /**
@@ -277,8 +288,8 @@ export function prepareNext(
 const KNEES = Array.from({ length: 108 }, (_, i) => Math.round(40 * Math.pow(1.068, i)));
 const WIDTHS = [0.15, 0.25, 0.4, 0.6, 0.85];
 const GUESS = [0.02, 0.15, 0.35, 0.55, 0.75, 0.95];
-/** The log-likelihood drop that bounds the range; 2.0 kept 90% coverage in simulation. */
-const DROP_90 = 2.0;
+/** The log-likelihood drop that bounds the shown range, meant as a 90% range. */
+const DROP_90 = 2.6;
 
 function knownShare(rank: number, knee: number, width: number): number {
   return 1 / (1 + Math.exp((Math.log(rank) - Math.log(knee)) / width));

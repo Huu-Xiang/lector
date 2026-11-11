@@ -6,29 +6,6 @@
    "to": 1000,
    "words": [
     {
-     "w": "just",
-     "r": 39,
-     "s": [
-      {
-       "p": "adv.",
-       "zh": [
-        "刚刚",
-        "仅仅",
-        "正好"
-       ],
-       "en": "a very short time ago"
-      },
-      {
-       "p": "adj.",
-       "zh": [
-        "公正的",
-        "合理的"
-       ],
-       "en": "fair and right"
-      }
-     ]
-    },
-    {
      "w": "say",
      "r": 79,
      "s": [
@@ -40,28 +17,6 @@
         "说明"
        ],
        "en": "to speak words out loud"
-      }
-     ]
-    },
-    {
-     "w": "down",
-     "r": 131,
-     "s": [
-      {
-       "p": "adv.",
-       "zh": [
-        "向下",
-        "下去"
-       ],
-       "en": "toward a lower place"
-      },
-      {
-       "p": "prep.",
-       "zh": [
-        "沿着",
-        "往下"
-       ],
-       "en": "from a high place to a low place"
       }
      ]
     },
@@ -140,27 +95,6 @@
      ]
     },
     {
-     "w": "once",
-     "r": 292,
-     "s": [
-      {
-       "p": "adv.",
-       "zh": [
-        "一次",
-        "曾经"
-       ],
-       "en": "one time only; at a past time"
-      },
-      {
-       "p": "conj.",
-       "zh": [
-        "一旦"
-       ],
-       "en": "as soon as; from the time that"
-      }
-     ]
-    },
-    {
      "w": "war",
      "r": 302,
      "s": [
@@ -170,6 +104,29 @@
         "战争"
        ],
        "en": "fighting between countries or groups"
+      }
+     ]
+    },
+    {
+     "w": "record",
+     "r": 303,
+     "s": [
+      {
+       "p": "n.",
+       "zh": [
+        "记录",
+        "唱片",
+        "纪录"
+       ],
+       "en": "written account of facts or events"
+      },
+      {
+       "p": "v.",
+       "zh": [
+        "记录",
+        "录音"
+       ],
+       "en": "write or store information to keep it"
       }
      ]
     },
@@ -271,6 +228,20 @@
      ]
     },
     {
+     "w": "sit",
+     "r": 482,
+     "s": [
+      {
+       "p": "v.",
+       "zh": [
+        "坐",
+        "就座"
+       ],
+       "en": "to rest on your bottom on a seat"
+      }
+     ]
+    },
+    {
      "w": "soon",
      "r": 487,
      "s": [
@@ -351,25 +322,24 @@
      ]
     },
     {
-     "w": "cross",
-     "r": 654,
+     "w": "amount",
+     "r": 613,
      "s": [
+      {
+       "p": "n.",
+       "zh": [
+        "数量",
+        "总额"
+       ],
+       "en": "how much of something there is"
+      },
       {
        "p": "v.",
        "zh": [
-        "穿过",
-        "越过",
-        "交叉"
+        "总计",
+        "等于"
        ],
-       "en": "to go from one side to the other"
-      },
-      {
-       "p": "adj.",
-       "zh": [
-        "生气的",
-        "交叉的"
-       ],
-       "en": "angry or annoyed"
+       "en": "to add up to a total"
       }
      ]
     },
@@ -399,6 +369,28 @@
         "承认"
        ],
        "en": "take something that is offered"
+      }
+     ]
+    },
+    {
+     "w": "rock",
+     "r": 713,
+     "s": [
+      {
+       "p": "n.",
+       "zh": [
+        "岩石",
+        "石头"
+       ],
+       "en": "hard natural material that makes up mountains"
+      },
+      {
+       "p": "v.",
+       "zh": [
+        "摇动",
+        "摇晃"
+       ],
+       "en": "to move gently back and forth"
       }
      ]
     },
@@ -552,24 +544,17 @@
    "to": 2000,
    "words": [
     {
-     "w": "extra",
-     "r": 1012,
+     "w": "agent",
+     "r": 1002,
      "s": [
       {
-       "p": "adj.",
+       "p": "n.",
        "zh": [
-        "额外的",
-        "附加的"
+        "代理商",
+        "经纪人",
+        "特工"
        ],
-       "en": "more than what is usual or needed"
-      },
-      {
-       "p": "adv.",
-       "zh": [
-        "额外地",
-        "格外"
-       ],
-       "en": "more than usual"
+       "en": "person who acts for another person"
       }
      ]
     },
@@ -1134,28 +1119,6 @@
      ]
     },
     {
-     "w": "principal",
-     "r": 2202,
-     "s": [
-      {
-       "p": "adj.",
-       "zh": [
-        "主要的",
-        "首要的"
-       ],
-       "en": "most important"
-      },
-      {
-       "p": "n.",
-       "zh": [
-        "校长",
-        "本金"
-       ],
-       "en": "head of a school"
-      }
-     ]
-    },
-    {
      "w": "existence",
      "r": 2221,
      "s": [
@@ -1166,6 +1129,19 @@
         "生存"
        ],
        "en": "the state of being real or alive"
+      }
+     ]
+    },
+    {
+     "w": "baseball",
+     "r": 2253,
+     "s": [
+      {
+       "p": "n.",
+       "zh": [
+        "棒球"
+       ],
+       "en": "a team game with a bat and ball"
       }
      ]
     },
@@ -1379,24 +1355,16 @@
      ]
     },
     {
-     "w": "lean",
-     "r": 2685,
+     "w": "awareness",
+     "r": 2695,
      "s": [
       {
-       "p": "v.",
+       "p": "n.",
        "zh": [
-        "倾斜",
-        "倚靠"
+        "意识",
+        "认识"
        ],
-       "en": "to bend or rest against something"
-      },
-      {
-       "p": "adj.",
-       "zh": [
-        "瘦的",
-        "精瘦的"
-       ],
-       "en": "thin and without extra fat"
+       "en": "knowledge that something exists or is true"
       }
      ]
     },
@@ -1501,24 +1469,16 @@
      ]
     },
     {
-     "w": "radical",
-     "r": 2904,
+     "w": "pole",
+     "r": 2894,
      "s": [
-      {
-       "p": "adj.",
-       "zh": [
-        "激进的",
-        "根本的"
-       ],
-       "en": "very new or extreme; causing big change"
-      },
       {
        "p": "n.",
        "zh": [
-        "激进分子",
-        "部首"
+        "杆",
+        "极"
        ],
-       "en": "person who wants big political change"
+       "en": "a long thin round piece of wood"
       }
      ]
     },
@@ -1702,28 +1662,6 @@
      ]
     },
     {
-     "w": "prompt",
-     "r": 3306,
-     "s": [
-      {
-       "p": "adj.",
-       "zh": [
-        "迅速的",
-        "及时的"
-       ],
-       "en": "done at once, without delay"
-      },
-      {
-       "p": "v.",
-       "zh": [
-        "促使",
-        "提示"
-       ],
-       "en": "cause someone to do something"
-      }
-     ]
-    },
-    {
      "w": "protocol",
      "r": 3337,
      "s": [
@@ -1735,6 +1673,28 @@
         "规程"
        ],
        "en": "an agreed set of rules for acting"
+      }
+     ]
+    },
+    {
+     "w": "echo",
+     "r": 3346,
+     "s": [
+      {
+       "p": "n.",
+       "zh": [
+        "回声",
+        "回音"
+       ],
+       "en": "a sound that comes back from a wall"
+      },
+      {
+       "p": "v.",
+       "zh": [
+        "重复",
+        "发回声"
+       ],
+       "en": "to repeat what someone said"
       }
      ]
     },
@@ -1935,29 +1895,6 @@
      ]
     },
     {
-     "w": "tender",
-     "r": 3865,
-     "s": [
-      {
-       "p": "adj.",
-       "zh": [
-        "温柔的",
-        "嫩的",
-        "疼痛的"
-       ],
-       "en": "gentle and kind; soft and easy to cut"
-      },
-      {
-       "p": "v.",
-       "zh": [
-        "提出",
-        "投标"
-       ],
-       "en": "to offer formally"
-      }
-     ]
-    },
-    {
      "w": "marathon",
      "r": 3873,
      "s": [
@@ -1995,6 +1932,21 @@
         "服从"
        ],
        "en": "to obey a rule or an order"
+      }
+     ]
+    },
+    {
+     "w": "conscious",
+     "r": 3974,
+     "s": [
+      {
+       "p": "adj.",
+       "zh": [
+        "有意识的",
+        "意识到的",
+        "清醒的"
+       ],
+       "en": "awake and able to think"
       }
      ]
     },
@@ -3404,24 +3356,16 @@
      ]
     },
     {
-     "w": "singular",
-     "r": 7125,
+     "w": "thirsty",
+     "r": 7101,
      "s": [
       {
        "p": "adj.",
        "zh": [
-        "单数的",
-        "非凡的",
-        "奇特的"
+        "口渴的",
+        "渴望的"
        ],
-       "en": "showing only one person or thing"
-      },
-      {
-       "p": "n.",
-       "zh": [
-        "单数"
-       ],
-       "en": "the form of a word that means one"
+       "en": "needing or wanting to drink"
       }
      ]
     },

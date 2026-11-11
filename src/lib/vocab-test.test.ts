@@ -25,11 +25,8 @@ import {
 
 const POS = ['n.', 'v.', 'adj.'];
 
-/**
- * Bands like the real data: 1,000 wide up to 10,000, then wider up to 40,000; 30 words each.
- * Every word has one distinct meaning character; its English line names the next word in the
- * band, so the "no English line contains the tested word" rule has something to reject.
- */
+// Bands like the real data, 30 words each, one distinct meaning character per word. Each English
+// line names the next word in the band, so the "no tested word in English" rule has work to do.
 function makeData(): VocabTestData {
   const edges = [
     0, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000, 12500, 15000, 20000, 25000,
@@ -101,7 +98,9 @@ describe('item options', { timeout: 60_000 }, () => {
   // Items deep in the test come from every band, not only the easy one.
   const items = [
     ...firstItems(300),
-    ...Array.from({ length: 40 }, (_, seed) => honest(8000, 40, seed + 1).map((a) => a.item)).flat(),
+    ...Array.from({ length: 40 }, (_, seed) =>
+      honest(8000, 40, seed + 1).map((a) => a.item),
+    ).flat(),
   ];
 
   it('has three different meanings plus "none of the above", with a valid answer', () => {
@@ -137,6 +136,16 @@ describe('item options', { timeout: 60_000 }, () => {
 });
 
 describe('question order', { timeout: 60_000 }, () => {
+  it('does not offer a meaning already shown for an earlier word as a wrong option', () => {
+    const answers = honest(3000, 60);
+    answers.forEach(({ item }, i) => {
+      const shown = new Set(answers.slice(0, i).map((a) => JSON.stringify(a.item.senses)));
+      for (const meaning of item.meanings) {
+        if (!sameRows(meaning, item.senses)) expect(shown.has(JSON.stringify(meaning))).toBe(false);
+      }
+    });
+  });
+
   it('starts with easy words and never repeats a word', () => {
     const answers = honest(3000, 60);
     expect(answers.slice(0, 4).every((a) => a.item.band === 0)).toBe(true);
@@ -157,7 +166,6 @@ describe('question order', { timeout: 60_000 }, () => {
     expect(near / later.length).toBeGreaterThan(0.7);
   });
 
-  // Provisional count; the simulation script tunes the stages.
   it('takes a learner who knows everything past band 10 within 25 words', () => {
     const bands = honest(40000, 25).map((a) => a.item.band);
     expect(Math.max(...bands)).toBeGreaterThanOrEqual(10);
@@ -208,7 +216,7 @@ describe('the real test data', { timeout: 120_000 }, () => {
           expect(new Set(item.meanings.map((m) => JSON.stringify(m))).size).toBe(3);
           for (const meaning of item.meanings) {
             if (sameRows(meaning, item.senses)) continue;
-            expect(meaning[0].p).toBe(item.senses[0].p);
+            expect(meaning.map((row) => row.p)).toEqual(item.senses.map((row) => row.p));
             const ratio = optionWidth(meaning) / optionWidth(item.senses);
             expect(ratio).toBeGreaterThanOrEqual(0.6);
             expect(ratio).toBeLessThanOrEqual(1.4);

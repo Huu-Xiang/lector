@@ -125,7 +125,10 @@ test.describe('vocabulary test', () => {
       await expect(card).toHaveAttribute('data-state', 'asking');
       await page.getByTestId('vocab-option').nth(1).click();
       if ((await card.getAttribute('data-answer')) === '3') {
-        await expect(page.getByTestId('vocab-option').nth(3)).toHaveAttribute('data-state', 'answer');
+        await expect(page.getByTestId('vocab-option').nth(3)).toHaveAttribute(
+          'data-state',
+          'answer',
+        );
         await expect(page.getByTestId('vocab-true-meaning')).toBeVisible();
         await context.close();
         return;
@@ -158,6 +161,12 @@ test.describe('vocabulary test', () => {
     // Always picking option 2 is a guess on most words, which leaves the range wide.
     await answerAll(page, 'vocab-option', 20, 1);
     await page.getByTestId('vocab-finish').click();
+    // A few random runs still end with a narrow range, and then the offer is rightly hidden.
+    if ((await page.getByTestId('vocab-continue').count()) === 0) {
+      await expect(page.getByTestId('vocab-precision')).toContainText('high');
+      await context.close();
+      return;
+    }
     await page.getByTestId('vocab-continue').click();
     await expect(page.getByTestId('vocab-answered')).toHaveText('20 answered');
     await answerAll(page, 'vocab-not-sure', 1);
