@@ -80,7 +80,7 @@ export default function Home() {
   const listClass =
     libraryView === 'list'
       ? 'flex flex-col gap-3'
-      : 'grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5';
+      : 'grid grid-cols-3 gap-x-3 gap-y-5 sm:gap-4 lg:grid-cols-4 xl:grid-cols-5';
   const [collections, setCollections] = useState<Collection[]>(() => peekAllCollections() ?? []);
   const [groups, setGroups] = useState<CollectionGroup[]>(() => peekAllGroups() ?? []);
   const [isLoading, setIsLoading] = useState(() => peekAllCollections() === undefined);
@@ -435,10 +435,10 @@ export default function Home() {
   const libraryImportHandlers = importHandlers(libraryDestination);
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+    <main className="mx-auto max-w-6xl px-4 py-4 sm:px-6 sm:py-8 lg:px-8">
       <PendingBookOpener />
-      <PageHeader title={t('page.title')} titleAside={<DailyGoalBadge />}>
-        <div className="flex flex-wrap items-center gap-2">
+      <PageHeader title={t('page.title')} titleAside={<DailyGoalBadge />} className="mb-3 sm:mb-6">
+        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
           {isCreatingGroup ? (
             <form
               onSubmit={(e) => {
@@ -477,13 +477,14 @@ export default function Home() {
               data-testid="new-group-btn"
             >
               <Folder size="16" />
-              {t('page.newGroup')}
+              <span className="max-sm:sr-only">{t('page.newGroup')}</span>
             </Button>
           )}
 
           <Button
             variant="outline"
             onClick={() => setIsFreeBooksOpen(true)}
+            className="max-sm:px-3"
             data-testid="free-books-btn"
           >
             <BookMarked size="16" />
@@ -500,6 +501,11 @@ export default function Home() {
             destinationId={libraryDestination}
             onDestinationChange={setLibraryDestinationId}
           />
+          {(collections.length > 0 || hasGroups) && (
+            <div className="ml-auto sm:ml-0">
+              <LibraryViewToggle />
+            </div>
+          )}
           <input
             ref={fileInputRef}
             type="file"
@@ -610,18 +616,23 @@ export default function Home() {
           />
 
           {collections.length > 0 || hasGroups ? (
-            <div className="space-y-10">
-              <div className="mb-3 flex items-center justify-end gap-4">
+            <div className="space-y-6 sm:space-y-10">
+              <div
+                className={`mb-3 flex items-center justify-end ${libraryView === 'grid' ? 'max-sm:hidden' : ''}`}
+              >
                 <DescriptionToggle />
-                <LibraryViewToggle />
               </div>
               {/* Grouped sections */}
               {visibleGroups.map((group) => {
                 const items = groupedCollections.get(group.id) || [];
                 const isCollapsed = collapsedGroups.has(group.id);
                 return (
-                  <div key={group.id} data-testid={`group-${group.id}`} className="panel p-5">
-                    <div className="mb-4 flex items-center gap-3">
+                  <div
+                    key={group.id}
+                    data-testid={`group-${group.id}`}
+                    className="panel p-3 sm:p-5"
+                  >
+                    <div className="mb-3 flex items-center gap-3 sm:mb-4">
                       <button
                         onClick={() => toggleGroup(group.id)}
                         aria-expanded={!isCollapsed}
@@ -689,7 +700,7 @@ export default function Home() {
                                 setNewCollectionTitle('');
                               }}
                               data-testid={`add-collection-${group.id}`}
-                              className={`group flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border text-muted-foreground transition-all hover:bg-accent hover:text-foreground ${libraryView === 'list' ? 'min-h-16' : 'min-h-[14rem]'}`}
+                              className={`group flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border text-muted-foreground transition-all hover:bg-accent hover:text-foreground ${libraryView === 'list' ? 'min-h-16' : 'min-h-36 sm:min-h-[14rem]'}`}
                             >
                               <Plus className="h-8 w-8" strokeWidth={1.5} />
                               <span className="text-sm font-medium">
@@ -706,7 +717,10 @@ export default function Home() {
 
               {/* Ungrouped */}
               {ungrouped.length > 0 && (
-                <div data-testid="ungrouped-section" className="panel p-5">
+                <div
+                  data-testid="ungrouped-section"
+                  className="panel p-5 max-sm:rounded-none max-sm:border-0 max-sm:bg-transparent max-sm:p-0"
+                >
                   {hasGroups && (
                     <h3 className="mb-4 text-lg font-semibold text-foreground">
                       {t('page.ungrouped')}

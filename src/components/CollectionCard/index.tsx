@@ -114,9 +114,9 @@ export default function CollectionCard({ collection }: CollectionCardProps) {
       <Link
         href={href}
         data-testid="collection-card"
-        className="flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card transition-shadow hover:shadow-lg"
+        className="flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card transition-shadow hover:shadow-lg max-sm:rounded-none max-sm:border-0 max-sm:bg-transparent max-sm:hover:shadow-none"
       >
-        <div className="relative aspect-[3/4] w-full overflow-hidden bg-muted">
+        <div className="relative aspect-[3/4] w-full overflow-hidden bg-muted max-sm:rounded-md max-sm:shadow-md max-sm:ring-1 max-sm:ring-border/60">
           {cover('card')}
           {progressPercent > 0 && (
             <div className="absolute inset-x-0 bottom-0 h-1 bg-black/20">
@@ -125,23 +125,27 @@ export default function CollectionCard({ collection }: CollectionCardProps) {
           )}
         </div>
 
-        <div className="flex flex-1 flex-col p-3">
-          <h3 className="line-clamp-2 text-sm font-semibold text-foreground">{title}</h3>
+        <div className="flex flex-1 flex-col px-0.5 pt-1.5 sm:p-3">
+          <h3 className="line-clamp-2 text-xs leading-snug font-semibold text-foreground sm:text-sm">
+            {title}
+          </h3>
           {ownCover && original && (
-            <p className="line-clamp-1 text-xs text-muted-foreground">{original}</p>
+            <p className="line-clamp-1 text-xs text-muted-foreground max-sm:hidden">{original}</p>
           )}
           {collection.author && (
-            <p className="mt-0.5 truncate text-xs text-muted-foreground">{collection.author}</p>
+            <p className="mt-0.5 truncate text-xs text-muted-foreground max-sm:hidden">
+              {collection.author}
+            </p>
           )}
           {showDescriptions && description && (
             <p
-              className="mt-1.5 line-clamp-3 text-xs text-muted-foreground"
+              className="mt-1.5 line-clamp-3 text-xs text-muted-foreground max-sm:hidden"
               data-testid="collection-description"
             >
               {description}
             </p>
           )}
-          <div className="mt-auto flex flex-wrap items-center justify-between gap-x-2 gap-y-0.5 pt-2 text-xs text-muted-foreground">
+          <div className="mt-auto flex flex-wrap items-center justify-between gap-x-2 gap-y-0.5 pt-2 text-xs text-muted-foreground max-sm:hidden">
             <span className="inline-flex items-center gap-1">
               <Clock className="h-3.5 w-3.5" aria-hidden="true" />
               {lastRead}

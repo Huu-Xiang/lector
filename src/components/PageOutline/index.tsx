@@ -16,12 +16,15 @@ export default function PageOutline({ variant }: { variant: 'cards' | 'list' | '
           ))}
         </div>
       ) : variant === 'cards' ? (
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-3 gap-x-3 gap-y-5 sm:gap-4 lg:grid-cols-4">
           {Array.from({ length: 6 }, (_, i) => (
-            <div key={i} className="panel p-3">
-              <Block className="mb-3 aspect-[3/4] w-full" />
-              <Block className="mb-2 h-4 w-3/4" />
-              <Block className="h-3 w-1/2" />
+            <div
+              key={i}
+              className="panel p-3 max-sm:space-y-1.5 max-sm:rounded-none max-sm:border-0 max-sm:bg-transparent max-sm:p-0"
+            >
+              <Block className="aspect-[3/4] w-full sm:mb-3" />
+              <Block className="h-3 w-3/4 sm:mb-2 sm:h-4" />
+              <Block className="h-3 w-1/2 max-sm:hidden" />
             </div>
           ))}
         </div>

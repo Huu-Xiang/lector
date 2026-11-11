@@ -37,8 +37,8 @@ export default function CollectionCover({
       >
         <img src={artUrl} alt="" loading="lazy" className="h-full w-full object-cover" />
         {variant === 'card' && (
-          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/45 to-transparent px-3 pt-10 pb-3 text-[#fffdf7]">
-            <p className="line-clamp-3 font-serif text-base leading-snug font-bold text-balance">
+          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/45 to-transparent px-2 pt-8 pb-2 text-[#fffdf7] sm:px-3 sm:pt-10 sm:pb-3">
+            <p className="line-clamp-3 font-serif text-sm leading-snug font-bold text-balance sm:text-base">
               {title}
             </p>
             {author && <p className="mt-1 line-clamp-1 text-xs opacity-90">{author}</p>}
@@ -69,13 +69,13 @@ export default function CollectionCover({
         className="flex h-full w-full flex-col bg-card"
       >
         <div className="h-2 w-full shrink-0" style={{ backgroundColor: theme.background }} />
-        <div className="flex min-h-0 flex-1 flex-col p-3">
+        <div className="flex min-h-0 flex-1 flex-col p-2 sm:p-3">
           {author && (
             <p className="truncate pr-8 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
               {author}
             </p>
           )}
-          <p className="mt-1 line-clamp-5 font-serif text-sm leading-snug font-semibold text-foreground">
+          <p className="mt-1 line-clamp-5 font-serif text-xs leading-snug font-semibold text-foreground sm:text-sm">
             {title}
           </p>
           <div className="mt-auto space-y-1.5 pt-3">
@@ -92,11 +92,11 @@ export default function CollectionCover({
     <div
       aria-hidden="true"
       data-testid="collection-cover"
-      className="relative flex h-full w-full flex-col justify-between py-4 pr-3 pl-5"
+      className="relative flex h-full w-full flex-col justify-between py-3 pr-2 pl-4 sm:py-4 sm:pr-3 sm:pl-5"
       style={cloth}
     >
-      <span className="absolute inset-y-0 left-0 w-2 bg-black/20" />
-      <p className="line-clamp-5 font-serif text-base leading-snug font-bold text-balance">
+      <span className="absolute inset-y-0 left-0 w-1.5 bg-black/20 sm:w-2" />
+      <p className="line-clamp-5 font-serif text-sm leading-snug font-bold text-balance break-words hyphens-auto sm:text-base">
         {title}
       </p>
       <div>

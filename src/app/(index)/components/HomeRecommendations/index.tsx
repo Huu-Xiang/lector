@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { ChevronDown, Sparkles } from 'lucide-react';
@@ -51,11 +51,14 @@ export default function HomeRecommendations({
   const router = useRouter();
   const [profile, setProfile] = useState<Profile | null>(() => rememberedProfile(language));
   const [chosen, setChosen] = useState<boolean | null>(null);
+  const [empty, setEmpty] = useState(false);
+  const markEmpty = useCallback(() => setEmpty(true), []);
 
   useEffect(() => {
     let cancelled = false;
     /* eslint-disable-next-line react-hooks/set-state-in-effect -- localStorage is client-only */
     setChosen(readCollapsed(language) === null ? null : !readCollapsed(language));
+    setEmpty(false);
     Promise.all([
       getSettingCached<Record<string, string>>('readingLevels').catch(() => undefined),
       getSettingCached<string[]>('readingInterests').catch(() => undefined),
@@ -84,17 +87,19 @@ export default function HomeRecommendations({
     router.push(lessons[0] ? `/read/${lessons[0].id}` : '/');
   }
 
-  if (profile === null) return null;
+  if (profile === null || empty) return null;
 
   return (
-    <section className="panel mb-8 p-5" data-testid="home-recommend">
-      <div className={`flex flex-wrap items-start justify-between gap-3 ${expanded ? 'mb-4' : ''}`}>
+    <section className="panel mb-4 p-3 sm:mb-8 sm:p-5" data-testid="home-recommend">
+      <div
+        className={`flex flex-wrap items-center justify-between gap-3 sm:items-start ${expanded ? 'mb-4' : ''}`}
+      >
         <div className="min-w-48 flex-1">
-          <h2 className="flex items-center gap-2 text-lg font-semibold text-foreground">
+          <h2 className="flex items-center gap-2 text-base font-semibold text-foreground sm:text-lg">
             <Sparkles className="h-4 w-4 text-primary" aria-hidden="true" />
             {t('homeTitle')}
           </h2>
-          <p className="mt-1 text-sm text-muted-foreground">
+          <p className={`mt-1 text-sm text-muted-foreground ${expanded ? '' : 'max-sm:hidden'}`}>
             {profile.level ? t('homeHintLevel', { level: profile.level }) : t('homeHint')}
           </p>
         </div>
@@ -125,6 +130,7 @@ export default function HomeRecommendations({
           level={profile.level}
           interests={profile.interests}
           onStart={open}
+          onEmpty={markEmpty}
         />
       )}
     </section>

@@ -97,6 +97,7 @@ export default function RecommendedForYou({
   onStart,
   actionLabel,
   className = '',
+  onEmpty,
 }: {
   language: string;
   level: CefrLevel | null;
@@ -105,6 +106,8 @@ export default function RecommendedForYou({
   onStart: (collectionId: string) => Promise<void> | void;
   actionLabel?: string;
   className?: string;
+  /** Called once books and articles have both loaded with nothing to suggest. */
+  onEmpty?: () => void;
 }) {
   const t = useTranslations('recommend');
   const format = useFormatter();
@@ -169,6 +172,11 @@ export default function RecommendedForYou({
       cancelled = true;
     };
   }, [language, level, interestKey, locale]);
+
+  const empty = books?.length === 0 && articles?.length === 0;
+  useEffect(() => {
+    if (empty) onEmpty?.();
+  }, [empty, onEmpty]);
 
   const described = useArticleDescriptions(
     (articles ?? []).flatMap((pick) => (pick.articleId ? [pick.articleId] : [])),

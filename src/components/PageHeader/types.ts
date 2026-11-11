@@ -5,4 +5,5 @@ export interface IPageHeaderProps {
   children?: ReactNode;
   /** Shown on the title's line, at its end on phones. */
   titleAside?: ReactNode;
+  className?: string;
 }
