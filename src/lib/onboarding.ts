@@ -1,4 +1,6 @@
 import { apiFetch } from './api-base';
+import { activeTenantId } from './language-cache';
+import { cachedQuery, invalidateQueries, peekQuery, type QueryKey } from './query-cache';
 
 export const APPROXIMATE_LEVELS = [
   'new',
@@ -96,13 +98,40 @@ export async function getOnboardingSnapshot(): Promise<OnboardingSnapshot> {
   return jsonOrThrow<OnboardingSnapshot>(response, 'Could not load onboarding progress');
 }
 
+const ONBOARDING_QUERY_SCOPE = 'onboarding';
+
+function onboardingQueryKey(): QueryKey | null {
+  const tenant = activeTenantId();
+  return tenant === null ? null : { tenant, scope: ONBOARDING_QUERY_SCOPE };
+}
+
+function invalidateOnboarding(): void {
+  const tenant = activeTenantId();
+  if (tenant !== null) invalidateQueries({ tenant, scope: ONBOARDING_QUERY_SCOPE });
+}
+
+/** Remembered on the device for the library's resume card; the guide itself reads fresh. */
+export async function getOnboardingSnapshotCached(): Promise<OnboardingSnapshot> {
+  return cachedQuery(onboardingQueryKey(), getOnboardingSnapshot, { persist: true });
+}
+
+export function peekOnboardingSnapshot(): OnboardingSnapshot | undefined {
+  return peekQuery(onboardingQueryKey());
+}
+
+async function changedSnapshot(response: Response, fallback: string): Promise<OnboardingSnapshot> {
+  const snapshot = await jsonOrThrow<OnboardingSnapshot>(response, fallback);
+  invalidateOnboarding();
+  return snapshot;
+}
+
 export async function startOnboarding(input: StartOnboardingInput): Promise<OnboardingSnapshot> {
   const response = await apiFetch('/api/onboarding/start', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(input),
   });
-  return jsonOrThrow<OnboardingSnapshot>(response, 'Could not start the guided session');
+  return changedSnapshot(response, 'Could not start the guided session');
 }
 
 export async function skipOnboarding(
@@ -113,13 +142,13 @@ export async function skipOnboarding(
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(input),
   });
-  return jsonOrThrow<OnboardingSnapshot>(response, 'Could not skip the guided session');
+  return changedSnapshot(response, 'Could not skip the guided session');
 }
 
 /** End the in-reader guide early. The server keeps the saved profile. */
 export async function dismissOnboarding(): Promise<OnboardingSnapshot> {
   const response = await apiFetch('/api/onboarding/dismiss', { method: 'POST' });
-  return jsonOrThrow<OnboardingSnapshot>(response, 'Could not skip the guide');
+  return changedSnapshot(response, 'Could not skip the guide');
 }
 
 export async function updateOnboardingProgress(input: {
@@ -132,12 +161,12 @@ export async function updateOnboardingProgress(input: {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(input),
   });
-  return jsonOrThrow<OnboardingSnapshot>(response, 'Could not update onboarding progress');
+  return changedSnapshot(response, 'Could not update onboarding progress');
 }
 
 export async function completeOnboarding(): Promise<OnboardingSnapshot> {
   const response = await apiFetch('/api/onboarding/complete', { method: 'POST' });
-  return jsonOrThrow<OnboardingSnapshot>(response, 'Could not complete onboarding');
+  return changedSnapshot(response, 'Could not complete onboarding');
 }
 
 export async function recordLearnerEvent(input: {
@@ -153,7 +182,12 @@ export async function recordLearnerEvent(input: {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(input),
   });
-  return jsonOrThrow(response, 'Could not record learning activity');
+  const result = await jsonOrThrow<{ recorded: boolean; event: LearnerEvent }>(
+    response,
+    'Could not record learning activity',
+  );
+  invalidateOnboarding();
+  return result;
 }
 
 export function onboardingEvents(snapshot: OnboardingSnapshot | null): LearnerEvent[] {

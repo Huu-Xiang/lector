@@ -16,7 +16,13 @@ import {
 import { apiFetch, apiUrl } from './api-base';
 import { VOCAB_SAVED_EVENT } from '@/constants/storage';
 import { activeTenantId, readLanguageCache } from './language-cache';
-import { cachedQuery, clearTenantQueries, invalidateQueries, type QueryKey } from './query-cache';
+import {
+  cachedQuery,
+  clearTenantQueries,
+  invalidateQueries,
+  peekQuery,
+  type QueryKey,
+} from './query-cache';
 
 // Active language helper — reads the tenant-keyed cache (#281), falls back
 // to the default (SSR, cloud pre-session, or simply nothing cached yet).
@@ -61,6 +67,13 @@ const DAILY_STATS_QUERY_SCOPE = 'stats:daily';
 const FLUENCY_STATS_QUERY_SCOPE = 'stats:fluency';
 const READING_STATS_QUERY_SCOPE = 'stats:reading';
 const READINGS_QUERY_SCOPE = 'readings';
+const GROUPS_QUERY_SCOPE = 'groups';
+const CLOZE_QUERY_SCOPE = 'cloze';
+const JOURNAL_QUERY_SCOPE = 'journal';
+const REVIEW_QUERY_SCOPE = 'review';
+const SETTINGS_QUERY_SCOPE = 'settings';
+const FEED_QUERY_SCOPE = 'feed';
+const PERSIST = { persist: true } as const;
 
 function invalidateCollections(): void {
   invalidateActiveScope(COLLECTIONS_QUERY_SCOPE);
@@ -68,6 +81,27 @@ function invalidateCollections(): void {
 
 function invalidateVocab(): void {
   invalidateActiveScope(VOCAB_QUERY_SCOPE);
+  invalidateActiveScope(REVIEW_QUERY_SCOPE);
+}
+
+function invalidateGroups(): void {
+  invalidateActiveScope(GROUPS_QUERY_SCOPE);
+}
+
+function invalidateCloze(): void {
+  invalidateActiveScope(CLOZE_QUERY_SCOPE);
+}
+
+function invalidateJournal(): void {
+  invalidateActiveScope(JOURNAL_QUERY_SCOPE);
+}
+
+function invalidateReview(): void {
+  invalidateActiveScope(REVIEW_QUERY_SCOPE);
+}
+
+function invalidateSettings(): void {
+  invalidateActiveScope(SETTINGS_QUERY_SCOPE);
 }
 
 function invalidateDailyStats(): void {
@@ -147,10 +181,19 @@ import type {
 // ============================================================================
 
 export async function getAllCollections(): Promise<Collection[]> {
-  return cachedQuery(activeLanguageQueryKey(COLLECTIONS_QUERY_SCOPE), async () => {
-    const res = await apiFetch(`/api/collections${langParam()}`);
-    return res.json();
-  });
+  return cachedQuery(
+    activeLanguageQueryKey(COLLECTIONS_QUERY_SCOPE),
+    async () => {
+      const res = await apiFetch(`/api/collections${langParam()}`);
+      await requireOk(res, 'Could not load your library');
+      return res.json();
+    },
+    PERSIST,
+  );
+}
+
+export function peekAllCollections(): Collection[] | undefined {
+  return peekQuery(activeLanguageQueryKey(COLLECTIONS_QUERY_SCOPE));
 }
 
 export async function getCollection(id: string): Promise<Collection | undefined> {
@@ -212,8 +255,19 @@ export async function updateCollection(
 // ============================================================================
 
 export async function getAllGroups(): Promise<CollectionGroup[]> {
-  const res = await apiFetch('/api/groups');
-  return res.json();
+  return cachedQuery(
+    activeTenantQueryKey(GROUPS_QUERY_SCOPE),
+    async () => {
+      const res = await apiFetch('/api/groups');
+      await requireOk(res, 'Could not load your groups');
+      return res.json();
+    },
+    PERSIST,
+  );
+}
+
+export function peekAllGroups(): CollectionGroup[] | undefined {
+  return peekQuery(activeTenantQueryKey(GROUPS_QUERY_SCOPE));
 }
 
 export async function createGroup(name: string): Promise<string> {
@@ -223,6 +277,7 @@ export async function createGroup(name: string): Promise<string> {
     body: JSON.stringify({ name }),
   });
   await requireOk(res, 'Could not create group');
+  invalidateGroups();
   const { id } = await res.json();
   return id;
 }
@@ -238,12 +293,14 @@ export async function updateGroup(
   });
   await requireOk(res, 'Could not update group');
   invalidateCollections();
+  invalidateGroups();
 }
 
 export async function deleteGroup(id: string): Promise<void> {
   const res = await apiFetch(`/api/groups/${id}`, { method: 'DELETE' });
   await requireOk(res, 'Could not delete group');
   invalidateCollections();
+  invalidateGroups();
 }
 
 // ============================================================================
@@ -497,16 +554,35 @@ export async function importYouTubeTranscript(input: {
 // Helper Functions - Vocabulary
 // ============================================================================
 
+function vocabFromRows(rows: Record<string, unknown>[]): VocabEntry[] {
+  return rows.map(
+    (v) =>
+      ({
+        ...v,
+        stateUpdatedAt: new Date(v.stateUpdatedAt as string),
+        createdAt: new Date(v.createdAt as string),
+      }) as unknown as VocabEntry,
+  );
+}
+
 export async function getAllVocab(): Promise<VocabEntry[]> {
-  return cachedQuery(activeLanguageQueryKey(VOCAB_QUERY_SCOPE, ['all']), async () => {
-    const res = await apiFetch(`/api/vocab${langParam()}`);
-    const vocab = await res.json();
-    return vocab.map((v: Record<string, unknown>) => ({
-      ...v,
-      stateUpdatedAt: new Date(v.stateUpdatedAt as string),
-      createdAt: new Date(v.createdAt as string),
-    }));
-  });
+  const rows = await cachedQuery(
+    activeLanguageQueryKey(VOCAB_QUERY_SCOPE, ['all']),
+    async () => {
+      const res = await apiFetch(`/api/vocab${langParam()}`);
+      await requireOk(res, 'Could not load your words');
+      return (await res.json()) as Record<string, unknown>[];
+    },
+    PERSIST,
+  );
+  return vocabFromRows(rows);
+}
+
+export function peekAllVocab(): VocabEntry[] | undefined {
+  const rows = peekQuery<Record<string, unknown>[]>(
+    activeLanguageQueryKey(VOCAB_QUERY_SCOPE, ['all']),
+  );
+  return rows ? vocabFromRows(rows) : undefined;
 }
 
 /**
@@ -858,6 +934,7 @@ export async function saveClozeSentence(sentence: ClozeSentence): Promise<string
     }),
   });
   await requireOk(res, 'Could not save practice sentence');
+  invalidateCloze();
   const { id } = await res.json();
   return id;
 }
@@ -887,6 +964,7 @@ export async function updateClozeAfterReview(
       nextReview: nextReview.toISOString(),
     }),
   });
+  if (res.ok) invalidateCloze();
   return res.ok ? 1 : 0;
 }
 
@@ -900,9 +978,22 @@ export async function getAllClozeSentences(): Promise<ClozeSentence[]> {
   }));
 }
 
-export async function getClozeTotals(): Promise<{ timesCorrect: number; timesIncorrect: number }> {
-  const res = await apiFetch(`/api/cloze/stats${langParam()}`);
-  return res.json();
+type ClozeTotals = { timesCorrect: number; timesIncorrect: number };
+
+export async function getClozeTotals(): Promise<ClozeTotals> {
+  return cachedQuery(
+    activeLanguageQueryKey(CLOZE_QUERY_SCOPE, ['totals']),
+    async () => {
+      const res = await apiFetch(`/api/cloze/stats${langParam()}`);
+      await requireOk(res, 'Could not load practice totals');
+      return res.json();
+    },
+    PERSIST,
+  );
+}
+
+export function peekClozeTotals(): ClozeTotals | undefined {
+  return peekQuery(activeLanguageQueryKey(CLOZE_QUERY_SCOPE, ['totals']));
 }
 
 export async function getClozeSentenceByTatoebaId(
@@ -936,13 +1027,16 @@ export async function bulkSaveClozeSentences(sentences: ClozeSentence[]): Promis
     ),
   });
   await requireOk(res, 'Could not save practice sentences');
+  invalidateCloze();
 }
 
 export async function seedSentenceBank(): Promise<{ seeded: number; total: number }> {
   const res = await apiFetch('/api/cloze/seed', { method: 'POST' });
   // Seed refresh runs during practice initialization and is best-effort.
   if (!res.ok) return { seeded: 0, total: 0 };
-  return res.json();
+  const result = (await res.json()) as { seeded: number; total: number };
+  if (result.seeded > 0) invalidateCloze();
+  return result;
 }
 
 export async function blacklistClozeSentence(id: string): Promise<void> {
@@ -952,6 +1046,7 @@ export async function blacklistClozeSentence(id: string): Promise<void> {
     body: JSON.stringify({ blacklisted: 1 }),
   });
   await requireOk(res, 'Could not hide practice sentence');
+  invalidateCloze();
 }
 
 export async function unblacklistClozeSentence(id: string): Promise<void> {
@@ -961,6 +1056,7 @@ export async function unblacklistClozeSentence(id: string): Promise<void> {
     body: JSON.stringify({ blacklisted: 0 }),
   });
   await requireOk(res, 'Could not restore practice sentence');
+  invalidateCloze();
 }
 
 export async function getClozeSentencesByCollection(
@@ -1011,19 +1107,38 @@ export async function getNewSentencesByCollection(
   }));
 }
 
-export async function getCollectionCounts(): Promise<
-  Record<ClozeCollection, { total: number; due: number; mastered: number }>
-> {
-  const res = await apiFetch(`/api/cloze/counts${langParam()}`);
-  return res.json();
+type CollectionCounts = Record<ClozeCollection, { total: number; due: number; mastered: number }>;
+
+export async function getCollectionCounts(): Promise<CollectionCounts> {
+  return cachedQuery(
+    activeLanguageQueryKey(CLOZE_QUERY_SCOPE, ['counts']),
+    async () => {
+      const res = await apiFetch(`/api/cloze/counts${langParam()}`);
+      await requireOk(res, 'Could not load practice counts');
+      return res.json();
+    },
+    PERSIST,
+  );
+}
+
+export function peekCollectionCounts(): CollectionCounts | undefined {
+  return peekQuery(activeLanguageQueryKey(CLOZE_QUERY_SCOPE, ['counts']));
 }
 
 export async function getStreak(): Promise<StreakStatus> {
-  return cachedQuery(activeLanguageQueryKey(DAILY_STATS_QUERY_SCOPE, ['streak']), async () => {
-    const res = await apiFetch(`/api/stats/streak${langParam()}`);
-    await requireOk(res, 'Could not load the streak');
-    return res.json();
-  });
+  return cachedQuery(
+    activeLanguageQueryKey(DAILY_STATS_QUERY_SCOPE, ['streak']),
+    async () => {
+      const res = await apiFetch(`/api/stats/streak${langParam()}`);
+      await requireOk(res, 'Could not load the streak');
+      return res.json();
+    },
+    PERSIST,
+  );
+}
+
+export function peekStreak(): StreakStatus | undefined {
+  return peekQuery(activeLanguageQueryKey(DAILY_STATS_QUERY_SCOPE, ['streak']));
 }
 
 export async function setDailyGoal(goal: DailyGoal): Promise<void> {
@@ -1076,16 +1191,31 @@ export async function getFluencyStats(
     async () => {
       const params = new URLSearchParams({ language });
       const res = await apiFetch(`/api/stats/fluency?${params}`);
+      await requireOk(res, 'Could not load fluency');
       return res.json();
     },
+    PERSIST,
   );
 }
 
+export function peekFluencyStats(language: string = getActiveLanguage()): FluencyStats | undefined {
+  return peekQuery(activeLanguageQueryKey(FLUENCY_STATS_QUERY_SCOPE, ['fluency'], language));
+}
+
 export async function getReadingStats(): Promise<import('./stats-derive').ReadingStats> {
-  return cachedQuery(activeLanguageQueryKey(READING_STATS_QUERY_SCOPE), async () => {
-    const res = await apiFetch(`/api/stats/reading${langParam()}`);
-    return res.json();
-  });
+  return cachedQuery(
+    activeLanguageQueryKey(READING_STATS_QUERY_SCOPE),
+    async () => {
+      const res = await apiFetch(`/api/stats/reading${langParam()}`);
+      await requireOk(res, 'Could not load reading stats');
+      return res.json();
+    },
+    PERSIST,
+  );
+}
+
+export function peekReadingStats(): import('./stats-derive').ReadingStats | undefined {
+  return peekQuery(activeLanguageQueryKey(READING_STATS_QUERY_SCOPE));
 }
 
 // Migration function - no-op for server storage
@@ -1120,8 +1250,29 @@ export async function getJournalEntries(
   limit: number = 20,
   offset: number = 0,
 ): Promise<JournalEntry[]> {
-  const res = await apiFetch(`/api/journal?limit=${limit}&offset=${offset}${langParam('&')}`);
-  return res.json();
+  return cachedQuery(
+    activeLanguageQueryKey(JOURNAL_QUERY_SCOPE, [limit, offset]),
+    async () => {
+      const res = await apiFetch(`/api/journal?limit=${limit}&offset=${offset}${langParam('&')}`);
+      await requireOk(res, 'Could not load your journal');
+      return res.json();
+    },
+    PERSIST,
+  );
+}
+
+export function peekJournalEntries(
+  limit: number = 20,
+  offset: number = 0,
+): JournalEntry[] | undefined {
+  return peekQuery(activeLanguageQueryKey(JOURNAL_QUERY_SCOPE, [limit, offset]));
+}
+
+function invalidatingJournal(response: Promise<Response>): Promise<Response> {
+  return response.then((res) => {
+    if (res.ok) invalidateJournal();
+    return res;
+  });
 }
 
 export async function getJournalEntriesByDate(date: string): Promise<JournalEntry[]> {
@@ -1138,19 +1289,23 @@ export async function getJournalEntry(id: string): Promise<JournalEntry | undefi
 export function createJournalEntry(body: string): Promise<Response> {
   const entryDate = new Date().toISOString().split('T')[0];
 
-  return apiFetch('/api/journal', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ body, entryDate, language: getActiveLanguage() }),
-  });
+  return invalidatingJournal(
+    apiFetch('/api/journal', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ body, entryDate, language: getActiveLanguage() }),
+    }),
+  );
 }
 
 export function updateJournalDraft(id: string, body: string): Promise<Response> {
-  return apiFetch(`/api/journal/${id}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ body }),
-  });
+  return invalidatingJournal(
+    apiFetch(`/api/journal/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ body }),
+    }),
+  );
 }
 
 export async function submitJournalForCorrection(
@@ -1161,12 +1316,14 @@ export async function submitJournalForCorrection(
     const err = await res.json();
     throw new Error(err.error || 'Correction failed');
   }
+  invalidateJournal();
   return res.json();
 }
 
 export async function deleteJournalEntry(id: string): Promise<void> {
   const res = await apiFetch(`/api/journal/${id}`, { method: 'DELETE' });
   await requireOk(res, 'Could not delete journal entry');
+  invalidateJournal();
 }
 
 // ============================================================================
@@ -1182,10 +1339,19 @@ export async function getDailyStats(date: string): Promise<DailyStats | undefine
 }
 
 export async function getTodayStats(): Promise<DailyStats> {
-  return cachedQuery(activeLanguageQueryKey(DAILY_STATS_QUERY_SCOPE, ['today']), async () => {
-    const res = await apiFetch(`/api/stats/today${langParam()}`);
-    return res.json();
-  });
+  return cachedQuery(
+    activeLanguageQueryKey(DAILY_STATS_QUERY_SCOPE, ['today']),
+    async () => {
+      const res = await apiFetch(`/api/stats/today${langParam()}`);
+      await requireOk(res, 'Could not load today');
+      return res.json();
+    },
+    PERSIST,
+  );
+}
+
+export function peekTodayStats(): DailyStats | undefined {
+  return peekQuery(activeLanguageQueryKey(DAILY_STATS_QUERY_SCOPE, ['today']));
 }
 
 export async function incrementDailyStat(
@@ -1221,24 +1387,42 @@ export async function getStatsForDateRange(
 // All daily-stats rows, oldest first — used by the stats page so the "All" range
 // and full-history cumulative series have everything to work with.
 export async function getAllDailyStats(): Promise<DailyStats[]> {
-  return cachedQuery(activeLanguageQueryKey(DAILY_STATS_QUERY_SCOPE, ['all']), async () => {
-    const res = await apiFetch(`/api/stats${langParam()}`);
-    return res.json();
-  });
+  return cachedQuery(
+    activeLanguageQueryKey(DAILY_STATS_QUERY_SCOPE, ['all']),
+    async () => {
+      const res = await apiFetch(`/api/stats${langParam()}`);
+      await requireOk(res, 'Could not load your stats');
+      return res.json();
+    },
+    PERSIST,
+  );
+}
+
+export function peekAllDailyStats(): DailyStats[] | undefined {
+  return peekQuery(activeLanguageQueryKey(DAILY_STATS_QUERY_SCOPE, ['all']));
 }
 
 // App-wide activity per date (no language param on purpose, #238) — feeds the
 // heatmap so it agrees with the equally app-wide streak.
-export async function getAppWideActivity(): Promise<
-  Pick<
-    DailyStats,
-    'date' | 'dictionaryLookups' | 'clozePracticed' | 'minutesRead' | 'ankiReviews'
-  >[]
-> {
-  return cachedQuery(activeTenantQueryKey(DAILY_STATS_QUERY_SCOPE, ['activity']), async () => {
-    const res = await apiFetch('/api/stats/activity');
-    return res.json();
-  });
+type AppWideActivity = Pick<
+  DailyStats,
+  'date' | 'dictionaryLookups' | 'clozePracticed' | 'minutesRead' | 'ankiReviews'
+>[];
+
+export async function getAppWideActivity(): Promise<AppWideActivity> {
+  return cachedQuery(
+    activeTenantQueryKey(DAILY_STATS_QUERY_SCOPE, ['activity']),
+    async () => {
+      const res = await apiFetch('/api/stats/activity');
+      await requireOk(res, 'Could not load activity');
+      return res.json();
+    },
+    PERSIST,
+  );
+}
+
+export function peekAppWideActivity(): AppWideActivity | undefined {
+  return peekQuery(activeTenantQueryKey(DAILY_STATS_QUERY_SCOPE, ['activity']));
 }
 
 export async function getRecentStats(days: number = 7): Promise<DailyStats[]> {
@@ -1276,6 +1460,27 @@ export async function getSetting<T>(key: string): Promise<T | undefined> {
   return res.json();
 }
 
+/**
+ * `getSetting` remembered on the device for first paint; use it only where a
+ * briefly stale value is harmless (page chrome, recommendations, time zone).
+ */
+export async function getSettingCached<T>(key: string): Promise<T | undefined> {
+  return cachedQuery(
+    activeTenantQueryKey(SETTINGS_QUERY_SCOPE, [key]),
+    async () => {
+      const res = await apiFetch(`/api/settings/${key}`);
+      if (res.status === 404) return undefined;
+      await requireOk(res, 'Could not load setting');
+      return (await res.json()) as T;
+    },
+    PERSIST,
+  );
+}
+
+export function peekSettingCached<T>(key: string): T | undefined {
+  return peekQuery(activeTenantQueryKey(SETTINGS_QUERY_SCOPE, [key]));
+}
+
 export async function setSetting<T>(key: string, value: T): Promise<string> {
   const res = await apiFetch(`/api/settings/${key}`, {
     method: 'PUT',
@@ -1283,12 +1488,14 @@ export async function setSetting<T>(key: string, value: T): Promise<string> {
     body: JSON.stringify({ value }),
   });
   await requireOk(res, 'Could not save setting');
+  invalidateSettings();
   return key;
 }
 
 export async function deleteSetting(key: string): Promise<void> {
   const res = await apiFetch(`/api/settings/${key}`, { method: 'DELETE' });
   await requireOk(res, 'Could not delete setting');
+  invalidateSettings();
 }
 
 export async function getAllSettings(): Promise<Record<string, unknown>> {
@@ -1303,9 +1510,19 @@ export async function getAllSettings(): Promise<Record<string, unknown>> {
 const REVIEW_GOAL_SETTING_KEY = 'reviewGoal';
 
 export async function getReviewCounts(): Promise<ReviewCounts> {
-  const res = await apiFetch(`/api/review/counts${langParam()}`);
-  await requireOk(res, 'Could not load your review');
-  return res.json();
+  return cachedQuery(
+    activeLanguageQueryKey(REVIEW_QUERY_SCOPE, ['counts']),
+    async () => {
+      const res = await apiFetch(`/api/review/counts${langParam()}`);
+      await requireOk(res, 'Could not load your review');
+      return res.json();
+    },
+    PERSIST,
+  );
+}
+
+export function peekReviewCounts(): ReviewCounts | undefined {
+  return peekQuery(activeLanguageQueryKey(REVIEW_QUERY_SCOPE, ['counts']));
 }
 
 export async function getReviewQueue(limit = 20): Promise<ReviewQueue> {
@@ -1328,6 +1545,7 @@ export async function submitReviewAnswer(input: {
   });
   await requireOk(res, 'Could not save your answer');
   invalidateDailyStats();
+  invalidateReview();
   return res.json();
 }
 
@@ -1343,6 +1561,7 @@ export async function undoReviewAnswer(input: {
   });
   await requireOk(res, 'Could not change your answer');
   invalidateDailyStats();
+  invalidateReview();
   return res.json();
 }
 
@@ -1449,6 +1668,7 @@ export async function createOnboardingCloze(input: {
     body: JSON.stringify({ ...input, language: getActiveLanguage() }),
   });
   if (!res.ok) return null;
+  invalidateCloze();
   const data = await res.json();
   return {
     ...data,
@@ -1652,6 +1872,24 @@ export async function getReadingFeed(
   );
   await requireOk(res, 'Could not load the reading feed');
   return ((await res.json()) as { articles: ReadingFeedArticle[] }).articles;
+}
+
+export async function getReadingFeedCached(
+  language: string,
+  interest: string,
+): Promise<ReadingFeedArticle[]> {
+  return cachedQuery(
+    activeTenantQueryKey(FEED_QUERY_SCOPE, [language, interest]),
+    () => getReadingFeed(language, interest),
+    PERSIST,
+  );
+}
+
+export function peekReadingFeed(
+  language: string,
+  interest: string,
+): ReadingFeedArticle[] | undefined {
+  return peekQuery(activeTenantQueryKey(FEED_QUERY_SCOPE, [language, interest]));
 }
 
 export interface ArticleDescription {
