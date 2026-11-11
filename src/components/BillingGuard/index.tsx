@@ -7,7 +7,7 @@ import { bounceToSubscribe, BILLING_ROUTE } from '@/lib/api-base';
 import { useLectorMode } from '@/lib/use-env';
 import { isAuthRoute } from '@/lib/auth-client';
 import { fetchBillingStatus } from '@/lib/billing';
-import { authClient } from '@/lib/auth-client';
+import { signOutAndForget } from '@/lib/sign-out';
 import { useIsNativeApp } from '@/lib/native-app';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
@@ -74,7 +74,7 @@ function CloudBillingGate({ children }: { children: React.ReactNode }) {
         <Button
           variant="outline"
           onClick={async () => {
-            await authClient.signOut();
+            await signOutAndForget();
             window.location.replace('/login');
           }}
         >

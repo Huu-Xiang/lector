@@ -5,6 +5,7 @@ import { Eye, EyeOff } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { maskEmail } from '@/lib/mask-email';
 import { authClient } from '@/lib/auth-client';
+import { signOutAndForget } from '@/lib/sign-out';
 import { updateReviewWidget } from '@/lib/native-app';
 import { useLectorMode } from '@/lib/use-env';
 import SignOutButton from './components/SignOutButton';
@@ -33,7 +34,7 @@ function CloudAccountMenu({ compact }: { compact: boolean }) {
     setIsSigningOut(true);
     try {
       await updateReviewWidget(null);
-      await authClient.signOut();
+      await signOutAndForget();
     } finally {
       // Hard navigation so every in-memory state and cache resets with the session.
       window.location.assign('/login');

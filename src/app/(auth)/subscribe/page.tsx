@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import { apiUrl, checkoutUrl } from '@/lib/api-base';
-import { authClient } from '@/lib/auth-client';
+import { signOutAndForget } from '@/lib/sign-out';
 import { paidPlanFromSearch, promoFromSearch, type PaidPlan } from '@/lib/auth-return';
 import {
   fetchBillingStatus,
@@ -340,7 +340,7 @@ export default function SubscribePage() {
   }
 
   async function signOut() {
-    await authClient.signOut();
+    await signOutAndForget();
     window.location.replace('/login');
   }
 
