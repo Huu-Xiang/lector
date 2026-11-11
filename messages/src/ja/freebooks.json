@@ -149,7 +149,6 @@
     "coverCredit": "表紙：<link>{credit}</link>。",
     "moreAtLevel": "レベル {level} の{language}の本をもっと見る",
     "allBooks": "すべての無料の本",
-    "metaTitle": "{author}『{title}』を{language}で無料で読む | Readfox",
     "readWholeChapter": "第 1 章を最後まで読む",
     "tryRead": "第 1 章を無料で読む（登録不要）",
     "hardWordsTitle": "この本の難しい単語",
@@ -170,6 +169,27 @@
     "authorIntro": "{author}の本 {count} 冊を、Readfox で無料で読めます。どれもパブリックドメインの全文です。",
     "authorMetaDescription": "{author}の本 {count} 冊を{language}で無料で読めます：{titles}。",
     "browseLevels": "レベル別",
-    "browseAuthors": "著者別"
+    "browseAuthors": "著者別",
+    "bookMetaTitle": "{title}を無料で読む：{level}の{language}、単語をタップで意味表示 | Readfox",
+    "bookMetaTitleShort": "{title}を無料で読む：{level}の{language} | Readfox",
+    "bookMetaDescription": "{author}の『{title}』を無料で読めます。{level}の{language}で、単語をタップすると意味が見られます。",
+    "levelMetaTitle": "{level}の無料{language}の本をオンラインで読む | Readfox",
+    "levelAbout": {
+      "A1": "A1 は CEFR の最初のレベルです。このレベルの{language}の文は短く、日常の言葉を使います。最初は調べる単語が多いので、一度に数ページずつ読みましょう。",
+      "A2": "A2 は初級です。{language}の基本が分かり、簡単な物語を追えます。よく使う言葉と分かりやすい文が中心で、各ページに少し新しい単語があります。",
+      "B1": "B1 は中級です。助けがなくても{language}の物語の筋を追えます。文は長くなり、語彙も広がります。必要な単語だけ調べましょう。",
+      "B2": "B2 は中上級です。たいていの{language}の物語や記事を楽に読めます。語彙は豊かで、文は長めです。読みにくいページでは単語をタップして意味を見ましょう。",
+      "C1": "C1 は上級です。長い{language}の文章を読み、はっきり書かれていない考えも追えます。文学的な文体、まれな単語、長くて複雑な文が出てきます。",
+      "C2": "C2 は CEFR の最上位です。これらの{language}の本は Readfox で最も難しく、古典文学や哲学の作品が中心です。古い言葉、濃い文章、長い章が出てきます。"
+    },
+    "easierLevel": "やさしい",
+    "harderLevel": "むずかしい",
+    "otherLevels": "ほかのレベル",
+    "bookDetail": "{author} · {lessons} レッスン",
+    "languageBooks": "{language}の本",
+    "languageTitle": "レベル別の無料{language}の本",
+    "languageIntro": "学習者向けの無料{language}の本が {count} 冊あります。レベルは {first} から {last} までです。どれもパブリックドメインの全文です。まず冒頭を開いて、Readfox で無料で読みましょう。単語をタップすると意味が見られます。",
+    "languageMetaTitle": "学習者向けの無料{language}の本（{first}–{last}） | Readfox",
+    "languageMetaDescription": "レベル {first} から {last} の無料{language}の本 {count} 冊をオンラインで読めます。{titles}など。単語をタップすると、あなたの言語で意味が見られます。"
   }
 }

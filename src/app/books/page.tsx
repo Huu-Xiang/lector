@@ -43,7 +43,9 @@ export default async function BooksPage() {
         return (
           <section key={language} id={language} className="space-y-3">
             <H2>
-              {languageName.of(language)}{' '}
+              <Link href={`/books/${language}`} className="hover:underline">
+                {languageName.of(language)}
+              </Link>{' '}
               <span className="text-sm font-normal text-muted-foreground">
                 {t('bookCount', { count: own.length })}
               </span>

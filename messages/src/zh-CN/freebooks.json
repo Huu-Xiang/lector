@@ -149,7 +149,6 @@
     "coverCredit": "封面：<link>{credit}</link>。",
     "moreAtLevel": "更多 {level} 级{language}书",
     "allBooks": "全部免费书",
-    "metaTitle": "{title}（{author}）{language}原版免费在线阅读 | Readfox",
     "readWholeChapter": "读完第一章",
     "tryRead": "免注册试读第一章",
     "hardWordsTitle": "这本书里的难词",
@@ -170,6 +169,27 @@
     "authorIntro": "{author}的 {count} 本书，都可以在 Readfox 免费阅读。每一本都是公版的完整原文。",
     "authorMetaDescription": "免费在线阅读{author}的 {count} 本{language}原著：{titles}。",
     "browseLevels": "按难度",
-    "browseAuthors": "按作者"
+    "browseAuthors": "按作者",
+    "bookMetaTitle": "免费在线阅读{title}：{level}{language}原版，点词即查 | Readfox",
+    "bookMetaTitleShort": "免费读{title}：{level}{language} | Readfox",
+    "bookMetaDescription": "免费在线阅读{author}的《{title}》。{level}{language}原文，点词即查释义。",
+    "levelMetaTitle": "{language}{level}免费书籍，在线阅读 | Readfox",
+    "levelAbout": {
+      "A1": "A1 是 CEFR 的第一级。这一级的{language}文本句子很短，用词日常。刚开始会查很多词，每次读几页就好。",
+      "A2": "A2 是初级。你已掌握{language}的基础，能读懂简单的故事。这一级的文本用词常见、句子清楚，每页有一些新词。",
+      "B1": "B1 是中级。你不用帮助也能读懂{language}故事的主线。句子会变长，词汇更广，只需查真正需要的词。",
+      "B2": "B2 是中高级。大多数{language}故事和文章你都能顺畅阅读。词汇丰富，句子较长。哪一页读得慢，就点词看释义。",
+      "C1": "C1 是高级。你能读长篇{language}文本，也能理解没有直说的意思。会遇到文学风格、生僻词和复杂的长句。",
+      "C2": "C2 是 CEFR 的最高级。这些{language}书是 Readfox 上最难的，多为经典文学和哲学作品。会遇到古旧词汇、密集的文字和很长的章节。"
+    },
+    "easierLevel": "更简单",
+    "harderLevel": "更难",
+    "otherLevels": "其他级别",
+    "bookDetail": "{author} · {lessons} 课",
+    "languageBooks": "{language}书籍",
+    "languageTitle": "按级别浏览{language}免费书籍",
+    "languageIntro": "{count} 本{language}免费书，适合学习者，级别从 {first} 到 {last}。每一本都是公版的完整原文。先打开一本看看开头，再到 Readfox 免费阅读，点任意单词即可查看释义。",
+    "languageMetaTitle": "{language}免费书籍（{first}–{last}）：在线阅读 | Readfox",
+    "languageMetaDescription": "在线免费阅读 {count} 本{language}书，级别 {first} 到 {last}，包括{titles}。点任意单词，查看你的语言的释义。"
   }
 }

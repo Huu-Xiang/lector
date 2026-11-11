@@ -245,3 +245,84 @@ export function bookListJsonLd(name: string, path: string, books: PublicBook[]) 
     })),
   };
 }
+
+/** Languages that have at least one book, in display order. */
+export function languagesWithBooks(): PublicBookLanguage[] {
+  const present = new Set(listPublicBooks().map((b) => b.language));
+  return PUBLIC_BOOK_LANGUAGES.filter((language) => present.has(language));
+}
+
+export function booksInLanguage(language: string): PublicBook[] {
+  return listPublicBooks().filter((b) => b.language === language);
+}
+
+/** Levels that have books in a language, easiest first. */
+export function levelsOf(language: string): string[] {
+  const present = new Set(booksInLanguage(language).map((b) => b.level));
+  return LEVELS.filter((level) => present.has(level));
+}
+
+/** The nearest easier and harder levels that have books in the same language. */
+export function neighbourLevels(
+  language: string,
+  level: string,
+): { easier: string | null; harder: string | null } {
+  const levels = levelsOf(language);
+  const i = levels.indexOf(level.toUpperCase());
+  if (i === -1) return { easier: null, harder: null };
+  return { easier: levels[i - 1] ?? null, harder: levels[i + 1] ?? null };
+}
+
+/** Cuts at a word boundary and adds an ellipsis when the text is longer than `max`. */
+export function fitText(text: string, max: number): string {
+  const clean = text.replace(/\s+/g, ' ').trim();
+  if (clean.length <= max) return clean;
+  const cut = clean.slice(0, max - 1);
+  const space = cut.lastIndexOf(' ');
+  return `${(space > max / 2 ? cut.slice(0, space) : cut).replace(/[\s,;:.–-]+$/, '')}…`;
+}
+
+const CEFR_URL = 'https://www.coe.int/en/web/common-european-framework-reference-languages';
+
+/** schema.org Book for one free book. `description` is added by the caller when a blurb exists. */
+export function bookJsonLd(book: PublicBook) {
+  const ccBySa = /CC BY-SA 4\.0/i.test(book.source.license);
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Book',
+    name: book.title,
+    author: { '@type': 'Person', name: book.author },
+    inLanguage: book.language,
+    ...(book.category ? { genre: book.category } : {}),
+    url: bookUrl(book),
+    isAccessibleForFree: true,
+    educationalLevel: {
+      '@type': 'DefinedTerm',
+      name: book.level,
+      termCode: book.level,
+      inDefinedTermSet: CEFR_URL,
+    },
+    wordCount: book.wordCount,
+    timeRequired: readingDuration(book),
+    license: ccBySa
+      ? 'https://creativecommons.org/licenses/by-sa/4.0/'
+      : 'https://creativecommons.org/publicdomain/mark/1.0/',
+    copyrightNotice: book.source.license,
+    ...(book.source.url ? { isBasedOn: book.source.url } : {}),
+    ...(book.cover ? { image: `${SITE_ORIGIN}${book.cover.url}` } : {}),
+  };
+}
+
+/** schema.org BreadcrumbList; `path` is the site path of each step. */
+export function breadcrumbJsonLd(steps: Array<{ name: string; path: string }>) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: steps.map((step, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: step.name,
+      item: `${SITE_ORIGIN}${step.path}`,
+    })),
+  };
+}

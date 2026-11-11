@@ -7,11 +7,13 @@ import { LegalShell } from '@/components/LegalLinks/shell';
 import {
   bookListJsonLd,
   booksAtLevel,
+  breadcrumbJsonLd,
   levelSlug,
   listPublicBooks,
+  neighbourLevels,
   pickLocalized,
 } from '@/lib/public-books';
-import BookList from '../../../BookList';
+import BookDetailList from '../../../BookDetailList';
 
 interface Props {
   params: Promise<{ language: string; level: string }>;
@@ -41,7 +43,7 @@ async function load(params: Props['params']) {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { language, level, books, locale, languageName } = await load(params);
   const t = await getTranslations('publicBooks');
-  const title = `${t('levelTitle', { language: languageName, level })} | Readfox`;
+  const title = t('levelMetaTitle', { language: languageName, level });
   const titles = books
     .slice(0, 5)
     .map((b) => pickLocalized(b.titles, locale, b.title))
@@ -60,18 +62,48 @@ export default async function LevelPage({ params }: Props) {
   const { language, level, books, locale, languageName } = await load(params);
   const t = await getTranslations('publicBooks');
   const title = t('levelTitle', { language: languageName, level });
+  const path = `/books/${language}/level/${levelSlug(level)}`;
+  const { easier, harder } = neighbourLevels(language, level);
+  const neighbours = [
+    { label: t('easierLevel'), level: easier },
+    { label: t('harderLevel'), level: harder },
+  ].filter((n): n is { label: string; level: string } => n.level !== null);
   return (
     <LegalShell title={title} wide>
-      <JsonLd data={bookListJsonLd(title, `/books/${language}/level/${levelSlug(level)}`, books)} />
+      <JsonLd data={bookListJsonLd(title, path, books)} />
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: t('allBooks'), path: '/books' },
+          { name: t('languageBooks', { language: languageName }), path: `/books/${language}` },
+          { name: title, path },
+        ])}
+      />
       <p className="text-muted-foreground">
         {t('levelIntro', { count: books.length, language: languageName, level })}
       </p>
-      <BookList books={books} locale={locale} />
+      <p>{t(`levelAbout.${level}` as 'levelAbout.A1', { language: languageName })}</p>
+      <BookDetailList books={books} locale={locale} />
+      {neighbours.length > 0 && (
+        <nav aria-label={t('otherLevels')} className="flex flex-wrap gap-x-4">
+          {neighbours.map((n) => (
+            <Link
+              key={n.level}
+              href={`/books/${language}/level/${levelSlug(n.level)}`}
+              className="underline"
+            >
+              {n.label}: {t('levelTitle', { language: languageName, level: n.level })}
+            </Link>
+          ))}
+        </nav>
+      )}
       <p className="flex flex-wrap gap-x-4">
+        <Link href={`/books/${language}`} className="underline">
+          {t('languageBooks', { language: languageName })}
+        </Link>
         <Link href={`/books/${language}/authors`} className="underline">
           {t('browseAuthors')}
         </Link>
-        <Link href={`/books#${language}`} className="underline">
+        <Link href="/books" className="underline">
           {t('allBooks')}
         </Link>
       </p>

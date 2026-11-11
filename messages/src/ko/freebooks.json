@@ -149,7 +149,6 @@
     "coverCredit": "표지: <link>{credit}</link>.",
     "moreAtLevel": "{level} 수준의 {language} 도서 더 보기",
     "allBooks": "모든 무료 도서",
-    "metaTitle": "{author}의 {title}: {language}로 무료로 읽기 | Readfox",
     "readWholeChapter": "1장 전체 읽기",
     "tryRead": "가입 없이 1장 무료로 읽기",
     "hardWordsTitle": "이 책의 어려운 단어",
@@ -170,6 +169,27 @@
     "authorIntro": "{author}의 도서 {count}권을 Readfox에서 무료로 읽을 수 있어요. 모두 퍼블릭 도메인 전문이에요.",
     "authorMetaDescription": "{author}의 도서 {count}권을 {language}로 무료로 읽어 보세요: {titles}.",
     "browseLevels": "수준별",
-    "browseAuthors": "저자별"
+    "browseAuthors": "저자별",
+    "bookMetaTitle": "{title} 무료로 읽기: {level} {language}, 단어를 누르면 뜻이 나와요 | Readfox",
+    "bookMetaTitleShort": "{title} 무료로 읽기: {level} {language} | Readfox",
+    "bookMetaDescription": "{author}의 {title}을(를) 무료로 읽어요. {level} {language}, 단어를 누르면 뜻이 나와요.",
+    "levelMetaTitle": "{language} {level} 무료 도서, 온라인으로 읽기 | Readfox",
+    "levelAbout": {
+      "A1": "A1은 CEFR의 첫 단계예요. 이 수준의 {language} 글은 문장이 짧고 일상적인 단어를 써요. 처음에는 찾아볼 단어가 많으니 한 번에 몇 쪽씩 읽어 보세요.",
+      "A2": "A2는 초급이에요. {language}의 기본을 알고 간단한 이야기를 따라갈 수 있어요. 흔한 단어와 쉬운 문장이 중심이고, 쪽마다 새 단어가 조금 나와요.",
+      "B1": "B1은 중급이에요. 도움 없이도 {language} 이야기의 줄거리를 따라갈 수 있어요. 문장이 길어지고 어휘가 넓어져요. 꼭 필요한 단어만 찾아보세요.",
+      "B2": "B2는 중고급이에요. 대부분의 {language} 이야기와 기사를 편하게 읽을 수 있어요. 어휘가 풍부하고 문장이 길어요. 막히는 쪽에서는 단어를 눌러 뜻을 보세요.",
+      "C1": "C1은 고급이에요. 긴 {language} 글을 읽고, 직접 말하지 않은 생각도 이해할 수 있어요. 문학적인 문체, 드문 단어, 길고 복잡한 문장이 나와요.",
+      "C2": "C2는 CEFR의 가장 높은 단계예요. 이 {language} 책들은 Readfox에서 가장 어렵고, 고전 문학과 철학 글이 많아요. 옛 단어, 빽빽한 글, 긴 장이 나와요."
+    },
+    "easierLevel": "더 쉬운",
+    "harderLevel": "더 어려운",
+    "otherLevels": "다른 수준",
+    "bookDetail": "{author} · {lessons}개 레슨",
+    "languageBooks": "{language} 도서",
+    "languageTitle": "수준별 {language} 무료 도서",
+    "languageIntro": "학습자를 위한 {language} 무료 도서 {count}권이에요. 수준은 {first}부터 {last}까지예요. 모두 퍼블릭 도메인 전문이에요. 먼저 시작 부분을 열어 보고, Readfox에서 무료로 읽어 보세요. 단어를 누르면 뜻이 나와요.",
+    "languageMetaTitle": "학습자를 위한 {language} 무료 도서 ({first}–{last}) | Readfox",
+    "languageMetaDescription": "{first}~{last} 수준의 {language} 무료 도서 {count}권을 온라인으로 읽어요. {titles} 등. 단어를 누르면 내 언어로 뜻이 나와요."
   }
 }

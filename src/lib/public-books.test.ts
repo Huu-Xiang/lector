@@ -4,14 +4,20 @@ import { describe, expect, it } from 'vitest';
 import {
   authorSlug,
   authorsOf,
+  bookJsonLd,
   bookListJsonLd,
   bookOpening,
   bookUrl,
   booksAtLevel,
   booksByAuthor,
+  breadcrumbJsonLd,
+  fitText,
   findPublicBook,
   firstChapter,
+  languagesWithBooks,
+  levelsOf,
   listPublicBooks,
+  neighbourLevels,
   pickLocalized,
   readingDuration,
   readingHours,
@@ -111,5 +117,65 @@ describe('public book structured data', () => {
     expect(ld.url).toBe('https://readfox.app/books/en/level/b1');
     expect(ld.numberOfItems).toBe(2);
     expect(ld.itemListElement[1]).toMatchObject({ position: 2, url: bookUrl(books[1]) });
+  });
+});
+
+describe('book schema.org data', () => {
+  it('describes every book as a free Book with language, level and author', () => {
+    for (const book of listPublicBooks()) {
+      const ld = bookJsonLd(book);
+      const name = `${book.language}/${book.slug}`;
+      expect(ld['@context'], name).toBe('https://schema.org');
+      expect(ld['@type'], name).toBe('Book');
+      expect(ld.name, name).toBe(book.title);
+      expect(ld.author, name).toEqual({ '@type': 'Person', name: book.author });
+      expect(ld.inLanguage, name).toBe(book.language);
+      expect(ld.isAccessibleForFree, name).toBe(true);
+      expect(ld.educationalLevel.termCode, name).toMatch(/^[ABC][12]$/);
+      expect(ld.url, name).toBe(`https://readfox.app/books/${book.language}/${book.slug}`);
+      expect(JSON.parse(JSON.stringify(ld)), name).toEqual(ld);
+    }
+  });
+
+  it('writes a breadcrumb list with absolute URLs in order', () => {
+    const ld = breadcrumbJsonLd([
+      { name: 'All', path: '/books' },
+      { name: 'English', path: '/books/en' },
+    ]);
+    expect(ld['@type']).toBe('BreadcrumbList');
+    expect(ld.itemListElement).toEqual([
+      { '@type': 'ListItem', position: 1, name: 'All', item: 'https://readfox.app/books' },
+      { '@type': 'ListItem', position: 2, name: 'English', item: 'https://readfox.app/books/en' },
+    ]);
+  });
+});
+
+describe('language and level hubs', () => {
+  it('lists the languages that have books, in display order', () => {
+    const languages = languagesWithBooks();
+    expect(languages).toContain('en');
+    expect(languages).toContain('fr');
+    expect(languages.indexOf('en')).toBeLessThan(languages.indexOf('fr'));
+  });
+
+  it('lists the levels of a language from easiest to hardest', () => {
+    const levels = levelsOf('en');
+    expect(levels).toEqual([...levels].sort());
+    expect(levelsOf('xx')).toEqual([]);
+  });
+
+  it('finds the neighbouring levels that have books', () => {
+    const levels = levelsOf('en');
+    expect(neighbourLevels('en', levels[0]).easier).toBeNull();
+    expect(neighbourLevels('en', levels[0]).harder).toBe(levels[1]);
+    expect(neighbourLevels('en', levels[levels.length - 1]).harder).toBeNull();
+    expect(neighbourLevels('en', 'z9')).toEqual({ easier: null, harder: null });
+  });
+
+  it('cuts text at a word boundary with an ellipsis', () => {
+    expect(fitText('short text', 20)).toBe('short text');
+    const cut = fitText('one two three four five six seven', 20);
+    expect(cut.length).toBeLessThanOrEqual(20);
+    expect(cut).toBe('one two three four…');
   });
 });

@@ -7,16 +7,16 @@ import { registerHrefForBook } from '@/lib/pending-book';
 import { LegalShell, H2 } from '@/components/LegalLinks/shell';
 import {
   AUTHOR_PAGE_MIN_BOOKS,
-  SITE_ORIGIN,
   authorSlug,
+  bookJsonLd,
   bookOpening,
-  bookUrl,
   booksByAuthor,
+  breadcrumbJsonLd,
+  fitText,
   findPublicBook,
   levelSlug,
   listPublicBooks,
   pickLocalized,
-  readingDuration,
   readingHours,
 } from '@/lib/public-books';
 
@@ -25,29 +25,8 @@ interface Props {
 }
 
 const RELATED = 8;
-
-function bookJsonLd(book: NonNullable<ReturnType<typeof findPublicBook>>) {
-  const ccBySa = /CC BY-SA 4\.0/i.test(book.source.license);
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'Book',
-    name: book.title,
-    author: { '@type': 'Person', name: book.author },
-    inLanguage: book.language,
-    ...(book.category ? { genre: book.category } : {}),
-    url: bookUrl(book),
-    isAccessibleForFree: true,
-    educationalLevel: book.level,
-    wordCount: book.wordCount,
-    timeRequired: readingDuration(book),
-    license: ccBySa
-      ? 'https://creativecommons.org/licenses/by-sa/4.0/'
-      : 'https://creativecommons.org/publicdomain/mark/1.0/',
-    copyrightNotice: book.source.license,
-    ...(book.source.url ? { isBasedOn: book.source.url } : {}),
-    ...(book.cover ? { image: `${SITE_ORIGIN}${book.cover.url}` } : {}),
-  };
-}
+const TITLE_MAX = 60;
+const DESCRIPTION_MAX = 155;
 
 export const dynamicParams = false;
 
@@ -62,12 +41,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const t = await getTranslations('publicBooks');
   const locale = await getLocale();
   const shown = pickLocalized(book.titles, locale, book.title);
-  const title = t('metaTitle', {
+  const values = {
     title: shown === book.title ? book.title : `${shown} · ${book.title}`,
     author: book.author,
+    level: book.level,
     language: new Intl.DisplayNames([locale], { type: 'language' }).of(language) ?? language,
-  });
-  const description = pickLocalized(book.blurbs, locale);
+  };
+  const full = t('bookMetaTitle', values);
+  const title = full.length <= TITLE_MAX ? full : t('bookMetaTitleShort', values);
+  const blurb = pickLocalized(book.blurbs, locale);
+  const description = fitText(`${t('bookMetaDescription', values)} ${blurb}`, DESCRIPTION_MAX);
   const url = `/books/${language}/${slug}`;
   return {
     title,
@@ -100,18 +83,12 @@ export default async function BookPage({ params }: Props) {
     ...(blurb ? { description: blurb } : {}),
   };
   const levelPath = `/books/${language}/level/${levelSlug(book.level)}`;
-  const breadcrumb = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      { name: t('allBooks'), item: `${SITE_ORIGIN}/books` },
-      {
-        name: t('levelTitle', { language: languageName, level: book.level }),
-        item: `${SITE_ORIGIN}${levelPath}`,
-      },
-      { name: shown, item: bookUrl(book) },
-    ].map((entry, i) => ({ '@type': 'ListItem', position: i + 1, ...entry })),
-  };
+  const breadcrumb = breadcrumbJsonLd([
+    { name: t('allBooks'), path: '/books' },
+    { name: t('languageBooks', { language: languageName }), path: `/books/${language}` },
+    { name: t('levelTitle', { language: languageName, level: book.level }), path: levelPath },
+    { name: shown, path: `/books/${language}/${slug}` },
+  ]);
 
   return (
     <LegalShell title={shown}>
@@ -263,8 +240,11 @@ export default async function BookPage({ params }: Props) {
           </ul>
         </>
       )}
-      <p>
-        <Link href={`/books#${language}`} className="underline">
+      <p className="flex flex-wrap gap-x-4">
+        <Link href={`/books/${language}`} className="underline">
+          {t('languageBooks', { language: languageName })}
+        </Link>
+        <Link href="/books" className="underline">
           {t('allBooks')}
         </Link>
       </p>

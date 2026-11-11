@@ -3,6 +3,7 @@ import {
   AUTHOR_PAGE_MIN_BOOKS,
   PUBLIC_BOOK_LANGUAGES,
   authorsOf,
+  languagesWithBooks,
   levelSlug,
   listPublicBooks,
 } from '@/lib/public-books';
@@ -15,6 +16,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
   const books = [
     { url: `${base}/books`, changeFrequency: 'weekly' as const },
+    ...languagesWithBooks().map((language) => ({
+      url: `${base}/books/${language}`,
+      changeFrequency: 'weekly' as const,
+    })),
     ...listPublicBooks().flatMap((book) => [
       { url: `${base}/books/${book.language}/${book.slug}`, changeFrequency: 'yearly' as const },
       {

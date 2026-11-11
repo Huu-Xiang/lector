@@ -58,7 +58,7 @@ test.describe('public book landing pages', () => {
       timeRequired: expect.stringMatching(/^PT/),
     });
     const crumbs = book.find((b) => b['@type'] === 'BreadcrumbList');
-    expect(crumbs?.itemListElement).toHaveLength(3);
+    expect(crumbs?.itemListElement).toHaveLength(4);
 
     await page.goto('/books/en/level/c2');
     const list = (await blocks()).find((b) => b['@type'] === 'ItemList');
@@ -72,5 +72,33 @@ test.describe('public book landing pages', () => {
     const body = await response.text();
     expect(body).toMatch(/^# Readfox\n/);
     expect(body).toContain('(https://readfox.app/books/en/walden)');
+  });
+
+  test('a language hub lists its levels and books, and an unknown language is not found', async ({
+    page,
+    request,
+  }) => {
+    const response = await page.goto('/books/fr');
+    expect(response?.status()).toBe(200);
+    await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1);
+    await expect(page.locator('a[href="/books/fr/level/b1"]').first()).toBeVisible();
+    await expect(page).toHaveTitle(/Readfox/);
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', /\/books\/fr$/);
+
+    await page.goto('/books');
+    await page.locator('a[href="/books/en"]').first().click();
+    await expect(page).toHaveURL(/\/books\/en$/);
+
+    expect((await request.get('/books/xx')).status()).toBe(404);
+    const sitemap = await (await request.get('/sitemap.xml')).text();
+    expect(sitemap).toContain('https://readfox.app/books/fr<');
+  });
+
+  test('book pages aim the title at search intent and link to the language hub', async ({
+    page,
+  }) => {
+    await page.goto('/books/en/walden');
+    await expect(page).toHaveTitle(/^Read Walden free.*C2 English.*\| Readfox$/);
+    await expect(page.locator('a[href="/books/en"]').first()).toBeVisible();
   });
 });
