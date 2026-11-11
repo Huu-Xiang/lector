@@ -14,8 +14,20 @@ import {
   getReadingStats,
   getStreak,
   getSetting,
+  getSettingCached,
+  peekAllDailyStats,
+  peekAllVocab,
+  peekAppWideActivity,
+  peekClozeTotals,
+  peekCollectionCounts,
+  peekFluencyStats,
+  peekReadingStats,
+  peekSettingCached,
+  peekStreak,
+  QUERY_SCOPES,
   syncAnkiReviews,
 } from '@/lib/data-layer';
+import { useQueryRefresh } from '@/lib/use-query-refresh';
 import { lectorMode } from '@/lib/api-base';
 import { dateStringInTimeZone, isValidTimeZone } from '@/lib/dates';
 import { compositeActivityCount, deriveVocabGrowth, sliceSeriesByDays } from '@/lib/stats-derive';
@@ -35,11 +47,169 @@ import {
 } from './components';
 import { StatsData } from './types';
 
+type StatsInputs = {
+  collectionCounts: Awaited<ReturnType<typeof getCollectionCounts>>;
+  fluency: Awaited<ReturnType<typeof getFluencyStats>>;
+  reading: Awaited<ReturnType<typeof getReadingStats>>;
+  streakData: Awaited<ReturnType<typeof getStreak>>;
+  tzSetting: string | undefined;
+  dailyStats: Awaited<ReturnType<typeof getAllDailyStats>>;
+  allVocab: Awaited<ReturnType<typeof getAllVocab>>;
+  appWideActivity: Awaited<ReturnType<typeof getAppWideActivity>>;
+  totalClozeCorrect: number;
+};
+
+function buildStats({
+  collectionCounts,
+  fluency,
+  reading,
+  streakData,
+  tzSetting,
+  dailyStats,
+  allVocab,
+  appWideActivity,
+  totalClozeCorrect,
+}: StatsInputs): StatsData {
+  // "Today" is a calendar date in the configured time zone (falling back
+  // to this device's zone), not UTC — otherwise the window misses today's
+  // row before 10:00 AEST (issue #108).
+  const timeZone =
+    tzSetting && isValidTimeZone(tzSetting)
+      ? tzSetting
+      : Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const endDate = dateStringInTimeZone(new Date(), timeZone);
+
+  const last365 = sliceSeriesByDays(dailyStats, 365, endDate);
+  const activityLast365 = sliceSeriesByDays(appWideActivity, 365, endDate);
+
+  const totalClozeAttempts = last365.reduce((sum, d) => sum + d.clozePracticed, 0);
+  const totalPoints = last365.reduce((sum, d) => sum + d.points, 0);
+
+  // Unified server-side streaks (issue #108) — one definition app-wide.
+  const currentStreak = streakData.streak;
+  const longestStreak = streakData.longest;
+
+  // Activity heatmap: composite study activity (lookups + cloze reviews +
+  // reading minutes + Anki) over the APP-WIDE series, so the heatmap
+  // agrees with the equally app-wide streak — a day studied only in
+  // another language must not render as an empty cell (#238). All other
+  // panels stay language-scoped. Limited to the last year it renders.
+  const activityData = activityLast365.map((d) => ({
+    date: d.date,
+    count: compositeActivityCount(d),
+    // Per-type breakdown so the heatmap tooltip can show what made up the day.
+    parts: {
+      dictionaryLookups: d.dictionaryLookups || 0,
+      clozePracticed: d.clozePracticed || 0,
+      minutesRead: d.minutesRead || 0,
+      ankiReviews: d.ankiReviews || 0,
+    },
+  }));
+
+  // Keep daily stats in date order for the Anki series below.
+  const sortedDailyStats = [...dailyStats].sort(
+    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
+  );
+
+  // Vocabulary growth over time, reconstructed from the per-word dated
+  // vocab log (createdAt / stateUpdatedAt) rather than the dailyStats
+  // deltas. Those deltas are only written by the reader UI, so word
+  // level-ups, practice, and imports never registered — the old
+  // cumulative-from-deltas curve sat flat at ~0 and a final-point pin to
+  // the live total then dumped every learning word onto today. The
+  // endpoint is still reconciled to the live fluency counts so the chart
+  // agrees with the cards; any dateless excess becomes a starting
+  // baseline rather than a spike. See deriveVocabGrowth.
+  const vocabGrowth = deriveVocabGrowth(allVocab, timeZone, {
+    liveTotals: {
+      known: fluency.totalKnownWords,
+      learning: fluency.totalLearning,
+      new: fluency.totalNew,
+    },
+    endDate,
+  });
+
+  // Anki reviews/day: chart the last 90 days, but decide the
+  // connected-vs-preview state from full history so a previously-synced
+  // user keeps their chart even after a quiet spell.
+  const ankiHasData = sortedDailyStats.some((d) => (d.ankiReviews ?? 0) > 0);
+  const ankiReviews = sliceSeriesByDays(
+    sortedDailyStats.map((d) => ({ date: d.date, reviews: d.ankiReviews ?? 0 })),
+    90,
+    endDate,
+  );
+
+  return {
+    totalKnown: fluency.totalKnownWords,
+    totalLearning: fluency.totalLearning,
+    byState: fluency.byState,
+    currentStreak,
+    longestStreak,
+    totalClozeAttempts,
+    totalClozeCorrect,
+    totalPoints,
+    reading,
+    dailyStats,
+    vocabGrowth,
+    activityData,
+    ankiReviews,
+    ankiHasData,
+    collectionCounts,
+    fluency,
+    endDate,
+  };
+}
+
+function rememberedStats(): StatsData | null {
+  const collectionCounts = peekCollectionCounts();
+  const fluency = peekFluencyStats();
+  const reading = peekReadingStats();
+  const streakData = peekStreak();
+  const dailyStats = peekAllDailyStats();
+  const allVocab = peekAllVocab();
+  const appWideActivity = peekAppWideActivity();
+  const totals = peekClozeTotals();
+  if (
+    !collectionCounts ||
+    !fluency ||
+    !reading ||
+    !streakData ||
+    !dailyStats ||
+    !allVocab ||
+    !appWideActivity ||
+    !totals
+  ) {
+    return null;
+  }
+  return buildStats({
+    collectionCounts,
+    fluency,
+    reading,
+    streakData,
+    tzSetting: peekSettingCached<string>('timezone'),
+    dailyStats,
+    allVocab,
+    appWideActivity,
+    totalClozeCorrect: totals.timesCorrect,
+  });
+}
+
 export default function StatsPage() {
   const t = useTranslations('stats');
   const format = useFormatter();
-  const [stats, setStats] = useState<StatsData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState<StatsData | null>(rememberedStats);
+  const [loading, setLoading] = useState(() => stats === null);
+  const [reloads, setReloads] = useState(0);
+  useQueryRefresh(
+    [
+      QUERY_SCOPES.cloze,
+      QUERY_SCOPES.fluencyStats,
+      QUERY_SCOPES.readingStats,
+      QUERY_SCOPES.dailyStats,
+      QUERY_SCOPES.vocab,
+    ],
+    () => setReloads((n) => n + 1),
+  );
   // Time window for the vocabulary-growth chart. Defaults to one year.
   const [range, setRange] = useState<number | null>(365);
 
@@ -67,18 +237,8 @@ export default function StatsPage() {
           getFluencyStats(),
           getReadingStats(),
           getStreak(),
-          getSetting<string>('timezone'),
+          getSettingCached<string>('timezone'),
         ]);
-
-        // "Today" is a calendar date in the configured time zone (falling back
-        // to this device's zone), not UTC — otherwise the window misses today's
-        // row before 10:00 AEST (issue #108).
-        const timeZone =
-          tzSetting && isValidTimeZone(tzSetting)
-            ? tzSetting
-            : Intl.DateTimeFormat().resolvedOptions().timeZone;
-        const endDate = dateStringInTimeZone(new Date(), timeZone);
-
         // Fetch all history so the "All" range and the cumulative growth series
         // have everything; panels that are scoped to "the last year" slice it.
         // The per-language series feeds the per-language panels; the app-wide
@@ -88,89 +248,23 @@ export default function StatsPage() {
           getAllVocab(),
           getAppWideActivity(),
         ]);
-        const last365 = sliceSeriesByDays(dailyStats, 365, endDate);
-        const activityLast365 = sliceSeriesByDays(appWideActivity, 365, endDate);
-
-        const totalClozeAttempts = last365.reduce((sum, d) => sum + d.clozePracticed, 0);
-        const totalPoints = last365.reduce((sum, d) => sum + d.points, 0);
-
         // Lifetime cloze-correct total — a server-side SUM, not the whole
         // table shipped over just to reduce it here (#240).
         const { timesCorrect: totalClozeCorrect } = await getClozeTotals();
 
-        // Unified server-side streaks (issue #108) — one definition app-wide.
-        const currentStreak = streakData.streak;
-        const longestStreak = streakData.longest;
-
-        // Activity heatmap: composite study activity (lookups + cloze reviews +
-        // reading minutes + Anki) over the APP-WIDE series, so the heatmap
-        // agrees with the equally app-wide streak — a day studied only in
-        // another language must not render as an empty cell (#238). All other
-        // panels stay language-scoped. Limited to the last year it renders.
-        const activityData = activityLast365.map((d) => ({
-          date: d.date,
-          count: compositeActivityCount(d),
-          // Per-type breakdown so the heatmap tooltip can show what made up the day.
-          parts: {
-            dictionaryLookups: d.dictionaryLookups || 0,
-            clozePracticed: d.clozePracticed || 0,
-            minutesRead: d.minutesRead || 0,
-            ankiReviews: d.ankiReviews || 0,
-          },
-        }));
-
-        // Keep daily stats in date order for the Anki series below.
-        const sortedDailyStats = [...dailyStats].sort(
-          (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
+        setStats(
+          buildStats({
+            collectionCounts,
+            fluency,
+            reading,
+            streakData,
+            tzSetting,
+            dailyStats,
+            allVocab,
+            appWideActivity,
+            totalClozeCorrect,
+          }),
         );
-
-        // Vocabulary growth over time, reconstructed from the per-word dated
-        // vocab log (createdAt / stateUpdatedAt) rather than the dailyStats
-        // deltas. Those deltas are only written by the reader UI, so word
-        // level-ups, practice, and imports never registered — the old
-        // cumulative-from-deltas curve sat flat at ~0 and a final-point pin to
-        // the live total then dumped every learning word onto today. The
-        // endpoint is still reconciled to the live fluency counts so the chart
-        // agrees with the cards; any dateless excess becomes a starting
-        // baseline rather than a spike. See deriveVocabGrowth.
-        const vocabGrowth = deriveVocabGrowth(allVocab, timeZone, {
-          liveTotals: {
-            known: fluency.totalKnownWords,
-            learning: fluency.totalLearning,
-            new: fluency.totalNew,
-          },
-          endDate,
-        });
-
-        // Anki reviews/day: chart the last 90 days, but decide the
-        // connected-vs-preview state from full history so a previously-synced
-        // user keeps their chart even after a quiet spell.
-        const ankiHasData = sortedDailyStats.some((d) => (d.ankiReviews ?? 0) > 0);
-        const ankiReviews = sliceSeriesByDays(
-          sortedDailyStats.map((d) => ({ date: d.date, reviews: d.ankiReviews ?? 0 })),
-          90,
-          endDate,
-        );
-
-        setStats({
-          totalKnown: fluency.totalKnownWords,
-          totalLearning: fluency.totalLearning,
-          byState: fluency.byState,
-          currentStreak,
-          longestStreak,
-          totalClozeAttempts,
-          totalClozeCorrect,
-          totalPoints,
-          reading,
-          dailyStats,
-          vocabGrowth,
-          activityData,
-          ankiReviews,
-          ankiHasData,
-          collectionCounts,
-          fluency,
-          endDate,
-        });
       } catch (error) {
         console.error('Failed to load stats:', error);
       } finally {
@@ -179,7 +273,7 @@ export default function StatsPage() {
     }
 
     loadStats();
-  }, []);
+  }, [reloads]);
 
   // Window the cumulative growth series for display. Cumulative values are kept
   // intact — only the x-window narrows.

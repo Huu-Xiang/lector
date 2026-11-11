@@ -4,13 +4,14 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useFormatter, useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
-import { getReviewCounts, getReviewGoal } from '@/lib/data-layer';
+import { getReviewCounts, getReviewGoal, peekReviewCounts, QUERY_SCOPES } from '@/lib/data-layer';
+import { useQueryRefresh } from '@/lib/use-query-refresh';
 import type { ReviewCounts, ReviewGoal } from '@/types';
 
 export default function WordReviewEntry({ onStart }: { onStart: () => void }) {
   const t = useTranslations('practice.words');
   const format = useFormatter();
-  const [counts, setCounts] = useState<ReviewCounts | null>(null);
+  const [counts, setCounts] = useState<ReviewCounts | null>(() => peekReviewCounts() ?? null);
   const [failed, setFailed] = useState(false);
   const [goal, setGoal] = useState<ReviewGoal>('recognize');
 
@@ -26,6 +27,11 @@ export default function WordReviewEntry({ onStart }: { onStart: () => void }) {
       live = false;
     };
   }, []);
+  useQueryRefresh([QUERY_SCOPES.review], () => {
+    getReviewCounts()
+      .then(setCounts)
+      .catch(() => undefined);
+  });
 
   const ready = counts !== null && counts.dueNow + counts.newAvailable > 0;
 

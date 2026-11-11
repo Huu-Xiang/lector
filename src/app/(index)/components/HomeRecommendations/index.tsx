@@ -6,8 +6,8 @@ import { useTranslations } from 'next-intl';
 import { ChevronDown, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import RecommendedForYou from '@/components/RecommendedForYou';
-import { getLessonsForCollection, getSetting } from '@/lib/data-layer';
-import { getReadingLevel, type CefrLevel } from '@/lib/reading-level';
+import { getLessonsForCollection, getSettingCached, peekSettingCached } from '@/lib/data-layer';
+import { isCefrLevel, type CefrLevel } from '@/lib/reading-level';
 
 const COLLAPSED_KEY = 'readfox-home-recommend-collapsed';
 
@@ -18,6 +18,24 @@ function readCollapsed(language: string): boolean | null {
   } catch {
     return null;
   }
+}
+
+type Profile = { level: CefrLevel | null; interests: string[] };
+
+function profileFrom(
+  language: string,
+  levels: Record<string, string> | undefined,
+  interests: string[] | undefined,
+): Profile {
+  const level = levels?.[language];
+  return { level: isCefrLevel(level) ? level : null, interests: interests ?? [] };
+}
+
+function rememberedProfile(language: string): Profile | null {
+  const levels = peekSettingCached<Record<string, string>>('readingLevels');
+  const interests = peekSettingCached<string[]>('readingInterests');
+  if (levels === undefined && interests === undefined) return null;
+  return profileFrom(language, levels, interests);
 }
 
 /** Always shown; the reader can fold it. It starts open for a small library. */
@@ -32,9 +50,7 @@ export default function HomeRecommendations({
 }) {
   const t = useTranslations('recommend');
   const router = useRouter();
-  const [profile, setProfile] = useState<{ level: CefrLevel | null; interests: string[] } | null>(
-    null,
-  );
+  const [profile, setProfile] = useState<Profile | null>(() => rememberedProfile(language));
   const [chosen, setChosen] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -42,10 +58,10 @@ export default function HomeRecommendations({
     /* eslint-disable-next-line react-hooks/set-state-in-effect -- localStorage is client-only */
     setChosen(readCollapsed(language) === null ? null : !readCollapsed(language));
     Promise.all([
-      getReadingLevel(language),
-      getSetting<string[]>('readingInterests').catch(() => undefined),
-    ]).then(([level, interests]) => {
-      if (!cancelled) setProfile({ level, interests: interests ?? [] });
+      getSettingCached<Record<string, string>>('readingLevels').catch(() => undefined),
+      getSettingCached<string[]>('readingInterests').catch(() => undefined),
+    ]).then(([levels, interests]) => {
+      if (!cancelled) setProfile(profileFrom(language, levels, interests));
     });
     return () => {
       cancelled = true;

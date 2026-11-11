@@ -14,6 +14,9 @@ import {
   getClozeSentencesByCollection,
   getNewSentencesByCollection,
   getCollectionCounts,
+  peekCollectionCounts,
+  peekTodayStats,
+  QUERY_SCOPES,
   getLesson,
   getOnboardingCloze,
   getTodayStats,
@@ -66,6 +69,7 @@ import Feedback from './components/Feedback';
 import DictationCard from './components/Dictation/DictationCard';
 import DictationFeedback from './components/Dictation/DictationFeedback';
 import WordReviewEntry from './word-review/WordReviewEntry';
+import { useQueryRefresh } from '@/lib/use-query-refresh';
 import WordReviewRound from './word-review/WordReviewRound';
 import {
   completeOnboarding,
@@ -114,7 +118,7 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
   // the round controller presents a new current sentence.
   const [userAnswer, setUserAnswer] = useState('');
   const [originalRoundSize, setOriginalRoundSize] = useState<number>(20);
-  const [seeded, setSeeded] = useState(false);
+  const [seeded, setSeeded] = useState(() => peekCollectionCounts() !== undefined);
 
   // Translation visibility. Initialised from the "Hide translation by default"
   // setting on mount; Alt+T toggles it live during a round.
@@ -144,7 +148,7 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
   const [collectionCounts, setCollectionCounts] = useState<Record<
     ClozeCollection,
     { total: number; due: number; mastered: number }
-  > | null>(null);
+  > | null>(() => peekCollectionCounts() ?? null);
 
   // Feedback state
   const [feedbackData, setFeedbackData] = useState<IFeedbackData | null>(null);
@@ -195,6 +199,11 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
   // Load collection counts and seed on mount
   useEffect(() => {
     const init = async () => {
+      const remembered = peekTodayStats();
+      if (remembered) setPoints(remembered.points);
+      void getCollectionCounts()
+        .then(setCollectionCounts)
+        .catch(() => undefined);
       const stats = await getTodayStats();
       setPoints(stats.points);
 
@@ -226,6 +235,11 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
     };
     init();
   }, [setPoints]);
+  useQueryRefresh([QUERY_SCOPES.cloze], () => {
+    getCollectionCounts()
+      .then(setCollectionCounts)
+      .catch(() => undefined);
+  });
 
   // Save practice mode to localStorage when it changes
   const handleSetPracticeMode = useCallback((mode: PracticeMode) => {

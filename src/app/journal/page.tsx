@@ -10,7 +10,11 @@ import {
   updateJournalDraft,
   submitJournalForCorrection,
   deleteJournalEntry,
+  peekJournalEntries,
+  QUERY_SCOPES,
 } from '@/lib/data-layer';
+import PageOutline from '@/components/PageOutline';
+import { useQueryRefresh } from '@/lib/use-query-refresh';
 import EntryModal from './components/EntryModal';
 import HistoryCard from './components/HistoryCard';
 import { formatDate } from './utils';
@@ -28,7 +32,9 @@ export default function JournalPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [saveStatus, setSaveStatus] = useState<string | null>(null);
-  const [entries, setEntries] = useState<JournalEntry[]>([]);
+  const [entries, setEntries] = useState<JournalEntry[] | null>(
+    () => peekJournalEntries(50) ?? null,
+  );
   const [selectedEntry, setSelectedEntry] = useState<JournalEntry | null>(null);
   const [showEditor, setShowEditor] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -36,8 +42,15 @@ export default function JournalPage() {
 
   // Load entries
   useEffect(() => {
-    getJournalEntries(50).then(setEntries);
+    getJournalEntries(50)
+      .then(setEntries)
+      .catch(() => setEntries((current) => current ?? []));
   }, []);
+  useQueryRefresh([QUERY_SCOPES.journal], () => {
+    getJournalEntries(50)
+      .then(setEntries)
+      .catch(() => undefined);
+  });
 
   const refreshEntries = async () => {
     const updated = await getJournalEntries(50);
@@ -141,7 +154,7 @@ export default function JournalPage() {
         setBodyText('');
         setEditingId(null);
       }
-      setEntries((prev) => prev.filter((e) => e.id !== id));
+      setEntries((prev) => (prev ?? []).filter((e) => e.id !== id));
     } catch (error) {
       setError(error instanceof Error ? error.message : t('deleteFailed'));
     }
@@ -224,7 +237,9 @@ export default function JournalPage() {
           )}
         </section>
       )}
-      {entries.length > 0 ? (
+      {entries === null ? (
+        <PageOutline variant="list" />
+      ) : entries.length > 0 ? (
         <section>
           <h2 className="mb-3 text-sm font-medium text-muted-foreground">
             {t('entries', { count: entries.length })}

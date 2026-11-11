@@ -13,13 +13,15 @@ import { useArticleDescriptions } from '@/lib/article-descriptions';
 import {
   addLibraryBook,
   addReadingFeedArticle,
-  getReadingFeed,
+  getReadingFeedCached,
+  getSettingCached,
+  peekReadingFeed,
+  peekSettingCached,
   type LibraryBook,
   type ReadingFeedArticle,
 } from '@/lib/data-layer';
 import { nativeLanguageFromLocale } from '@/lib/languages';
 import { displayLanguage, translationFor } from '@/lib/display-language';
-import { loadNative } from '@/lib/library-titles';
 import { levelGap, pickNearLevel } from '@/lib/recommend';
 import type { CefrLevel } from '@/lib/reading-level';
 
@@ -117,40 +119,50 @@ export default function RecommendedForYou({
 
   useEffect(() => {
     let cancelled = false;
-    /* eslint-disable-next-line react-hooks/set-state-in-effect -- reload for the new level or interests */
-    setBooks(null);
-    setArticles(null);
+    const wanted = FEED_INTERESTS.filter((id) => interestKey.split(',').includes(id));
+    const pickBooks = (catalog: LibraryBook[], native: string) =>
+      pickNearLevel(
+        catalog.filter((book) => !book.added),
+        level,
+        3,
+      ).map((book) => bookPick(book, native, level, language));
+    const pickArticles = (lists: { id: FeedInterest; list: ReadingFeedArticle[] }[]) =>
+      lists.flatMap(({ id, list }) =>
+        pickNearLevel(list, level, 1).map((article) => articlePick(article, id, level)),
+      );
+
+    const rememberedNative = displayLanguage(
+      peekSettingCached<string>('nativeLanguage') || nativeLanguageFromLocale(locale),
+      locale,
+    );
+    const stored = cachedCatalog(language);
+    const rememberedLists = wanted.map((id) => ({ id, list: peekReadingFeed(language, id) }));
+    /* eslint-disable-next-line react-hooks/set-state-in-effect -- start from what the device remembers */
+    setNative(rememberedNative);
+    setBooks(stored ? pickBooks(stored, rememberedNative) : null);
+    setArticles(
+      rememberedLists.every((entry) => entry.list)
+        ? pickArticles(rememberedLists as { id: FeedInterest; list: ReadingFeedArticle[] }[])
+        : null,
+    );
 
     (async () => {
-      const native = displayLanguage(
-        (await loadNative()) || nativeLanguageFromLocale(locale),
-        locale,
-      );
-      if (!cancelled) setNative(native);
+      const saved = await getSettingCached<string>('nativeLanguage').catch(() => undefined);
+      const native = displayLanguage(saved || nativeLanguageFromLocale(locale), locale);
+      if (cancelled) return;
+      setNative(native);
 
-      const pickBooks = (catalog: LibraryBook[]) =>
-        pickNearLevel(
-          catalog.filter((book) => !book.added),
-          level,
-          3,
-        ).map((book) => bookPick(book, native, level, language));
-      const stored = cachedCatalog(language);
-      if (stored && !cancelled) setBooks(pickBooks(stored));
       const catalog = await loadCatalog(language).catch(() => [] as LibraryBook[]);
-      if (!cancelled) setBooks(pickBooks(catalog));
+      if (!cancelled) setBooks(pickBooks(catalog, native));
 
-      const wanted = FEED_INTERESTS.filter((id) => interestKey.split(',').includes(id));
       const lists = await Promise.all(
         wanted.map((id) =>
-          getReadingFeed(language, id)
+          getReadingFeedCached(language, id)
             .then((list) => ({ id, list }))
             .catch(() => ({ id, list: [] as ReadingFeedArticle[] })),
         ),
       );
-      const best = lists.flatMap(({ id, list }) =>
-        pickNearLevel(list, level, 1).map((article) => articlePick(article, id, level)),
-      );
-      if (!cancelled) setArticles(best);
+      if (!cancelled) setArticles(pickArticles(lists));
     })();
 
     return () => {

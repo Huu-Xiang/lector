@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { ArrowRight, BookMarked, ChevronDown, Folder, Plus, Sparkles } from 'lucide-react';
-import { ReadingSweep } from '@/components/Loaders';
+import PageOutline from '@/components/PageOutline';
 import AddCollectionTile from './components/AddCollectionTile';
 import EmptyState from './components/EmptyState';
 import HomeRecommendations from './components/HomeRecommendations';
@@ -40,6 +40,9 @@ import {
   getAllCollections,
   getAllGroups,
   getStarterStatus,
+  peekAllCollections,
+  peekAllGroups,
+  QUERY_SCOPES,
   createCollection,
   createGroup,
   updateGroup,
@@ -56,7 +59,12 @@ import { Button } from '@/components/ui/button';
 import AnnouncementBanner from '@/components/AnnouncementBanner';
 import PageHeader from '@/components/PageHeader';
 import DailyGoalBadge from '@/components/DailyGoalBadge';
-import { getOnboardingSnapshot, type OnboardingSnapshot } from '@/lib/onboarding';
+import {
+  getOnboardingSnapshotCached,
+  peekOnboardingSnapshot,
+  type OnboardingSnapshot,
+} from '@/lib/onboarding';
+import { useQueryRefresh } from '@/lib/use-query-refresh';
 import { toast } from 'sonner';
 import { useActiveLanguage } from '@/utils/hooks';
 import { useIsNativeApp } from '@/lib/native-app';
@@ -72,9 +80,9 @@ export default function Home() {
     libraryView === 'list'
       ? 'flex flex-col gap-3'
       : 'grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5';
-  const [collections, setCollections] = useState<Collection[]>([]);
-  const [groups, setGroups] = useState<CollectionGroup[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [collections, setCollections] = useState<Collection[]>(() => peekAllCollections() ?? []);
+  const [groups, setGroups] = useState<CollectionGroup[]>(() => peekAllGroups() ?? []);
+  const [isLoading, setIsLoading] = useState(() => peekAllCollections() === undefined);
   const [isImporting, setIsImporting] = useState(false);
   const [isWebImportOpen, setIsWebImportOpen] = useState(false);
   const [isYouTubeImportOpen, setIsYouTubeImportOpen] = useState(false);
@@ -93,7 +101,9 @@ export default function Home() {
   const [starterAvailable, setStarterAvailable] = useState(false);
   const [isFreeBooksOpen, setIsFreeBooksOpen] = useState(false);
   const [isAddingStarter, setIsAddingStarter] = useState(false);
-  const [onboarding, setOnboarding] = useState<OnboardingSnapshot | null>(null);
+  const [onboarding, setOnboarding] = useState<OnboardingSnapshot | null>(
+    () => peekOnboardingSnapshot() ?? null,
+  );
   const fileInputRef = useRef<HTMLInputElement>(null);
   const audioInputRef = useRef<HTMLInputElement>(null);
 
@@ -105,6 +115,10 @@ export default function Home() {
   useEffect(() => {
     loadData();
   }, []);
+  useQueryRefresh(
+    [QUERY_SCOPES.collections, QUERY_SCOPES.groups, QUERY_SCOPES.onboarding],
+    () => void loadData(),
+  );
 
   // Restore collapsed-group state client-side (avoids SSR/hydration mismatch).
   useEffect(() => {
@@ -148,7 +162,7 @@ export default function Home() {
       const [collectionsData, groupsData, onboardingData] = await Promise.all([
         getAllCollections(),
         getAllGroups(),
-        getOnboardingSnapshot().catch(() => null),
+        getOnboardingSnapshotCached().catch(() => null),
       ]);
 
       setCollections(collectionsData);
@@ -549,9 +563,7 @@ export default function Home() {
         </section>
       )}
       {isLoading ? (
-        <div className="flex h-64 items-center justify-center">
-          <ReadingSweep label={t('page.loading')} />
-        </div>
+        <PageOutline variant={libraryView === 'list' ? 'list' : 'cards'} />
       ) : (
         <section>
           <WebImportModal

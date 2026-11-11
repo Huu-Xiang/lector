@@ -75,6 +75,22 @@ const SETTINGS_QUERY_SCOPE = 'settings';
 const FEED_QUERY_SCOPE = 'feed';
 const PERSIST = { persist: true } as const;
 
+/** Cache scopes a page subscribes to with `useQueryRefresh`. */
+export const QUERY_SCOPES = {
+  collections: COLLECTIONS_QUERY_SCOPE,
+  groups: GROUPS_QUERY_SCOPE,
+  vocab: VOCAB_QUERY_SCOPE,
+  dailyStats: DAILY_STATS_QUERY_SCOPE,
+  fluencyStats: FLUENCY_STATS_QUERY_SCOPE,
+  readingStats: READING_STATS_QUERY_SCOPE,
+  cloze: CLOZE_QUERY_SCOPE,
+  journal: JOURNAL_QUERY_SCOPE,
+  review: REVIEW_QUERY_SCOPE,
+  settings: SETTINGS_QUERY_SCOPE,
+  feed: FEED_QUERY_SCOPE,
+  onboarding: 'onboarding',
+} as const;
+
 function invalidateCollections(): void {
   invalidateActiveScope(COLLECTIONS_QUERY_SCOPE);
 }

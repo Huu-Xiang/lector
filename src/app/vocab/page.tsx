@@ -16,7 +16,12 @@ import {
   markVocabPushedToAnki,
   saveVocab,
   bulkDeleteVocabEntries,
+  peekAllCollections,
+  peekAllVocab,
+  QUERY_SCOPES,
 } from '@/lib/data-layer';
+import { useQueryRefresh } from '@/lib/use-query-refresh';
+import PageOutline from '@/components/PageOutline';
 import {
   addBasicCard,
   addClozeCard,
@@ -36,6 +41,23 @@ import { useActiveLanguage } from '@/utils/hooks';
 import OnboardingTip from '@/components/OnboardingTip';
 import { finishPostOnboardingTour, usePostOnboardingTour } from '@/lib/post-onboarding-tour';
 
+// Derived from the list already fetched; a second full-list fetch was #240.
+function vocabStats(vocab: VocabEntry[]): { total: number; byState: Record<WordState, number> } {
+  const byState: Record<WordState, number> = {
+    new: 0,
+    level1: 0,
+    level2: 0,
+    level3: 0,
+    level4: 0,
+    known: 0,
+    ignored: 0,
+  };
+  vocab.forEach((v) => {
+    byState[v.state]++;
+  });
+  return { total: vocab.length, byState };
+}
+
 export default function VocabPage() {
   const router = useRouter();
   const t = useTranslations('vocab.page');
@@ -43,13 +65,16 @@ export default function VocabPage() {
   const ankiTransport = useAnkiTransport();
   const postOnboardingTour = usePostOnboardingTour();
   const showAnkiOnboardingTip = postOnboardingTour?.stage === 'anki';
-  const [entries, setEntries] = useState<VocabEntry[]>([]);
-  const [collections, setCollections] = useState<Collection[]>([]);
+  const [entries, setEntries] = useState<VocabEntry[]>(() => peekAllVocab() ?? []);
+  const [collections, setCollections] = useState<Collection[]>(() => peekAllCollections() ?? []);
   const [stats, setStats] = useState<{
     total: number;
     byState: Record<WordState, number>;
-  } | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  } | null>(() => {
+    const remembered = peekAllVocab();
+    return remembered ? vocabStats(remembered) : null;
+  });
+  const [isLoading, setIsLoading] = useState(() => peekAllVocab() === undefined);
   const [selectedEntry, setSelectedEntry] = useState<VocabEntry | null>(null);
   const [ankiConnected, setAnkiConnected] = useState<boolean | null>(null);
   const [ankiDeck, setAnkiDeck] = useState(activeLang.native);
@@ -58,6 +83,7 @@ export default function VocabPage() {
   useEffect(() => {
     loadData();
   }, []);
+  useQueryRefresh([QUERY_SCOPES.vocab, QUERY_SCOPES.collections], () => void loadData());
 
   useEffect(() => {
     // Probe AnkiConnect only on the browser-direct transport (#241): on
@@ -79,26 +105,11 @@ export default function VocabPage() {
   }, [ankiTransport]);
 
   const loadData = async () => {
-    setIsLoading(true);
     try {
       const [vocabData, collectionsData] = await Promise.all([getAllVocab(), getAllCollections()]);
       setEntries(vocabData);
       setCollections(collectionsData);
-      // Derive the state breakdown from the list we already fetched — this was
-      // a second identical full-list fetch via getVocabStats (#240).
-      const byState: Record<WordState, number> = {
-        new: 0,
-        level1: 0,
-        level2: 0,
-        level3: 0,
-        level4: 0,
-        known: 0,
-        ignored: 0,
-      };
-      vocabData.forEach((v) => {
-        byState[v.state]++;
-      });
-      setStats({ total: vocabData.length, byState });
+      setStats(vocabStats(vocabData));
     } catch (error) {
       console.error('Failed to load data:', error);
       toast.error(t('loadFailed'), {
@@ -434,20 +445,23 @@ export default function VocabPage() {
           <VocabStats stats={stats} />
         </div>
       )}
-      <VocabList
-        entries={entries.filter((e) => e.state !== 'ignored')}
-        collections={collections}
-        onEntryClick={handleEntryClick}
-        onExportToAnki={handleExportToAnki}
-        onMarkAsKnown={handleMarkAsKnown}
-        onBulkDelete={handleBulkDelete}
-        // Pull-sync is the browser→AnkiConnect path; on the addon transport
-        // review state pushes itself, so the button would be a dead end.
-        onSyncWithAnki={ankiTransport === 'addon' ? undefined : handleSyncWithAnki}
-        showAnkiOnboardingTip={showAnkiOnboardingTip && ankiTransport !== 'addon'}
-        onAnkiOnboardingTipDone={finishPostOnboardingTour}
-        isLoading={isLoading}
-      />
+      {isLoading ? (
+        <PageOutline variant="list" />
+      ) : (
+        <VocabList
+          entries={entries.filter((e) => e.state !== 'ignored')}
+          collections={collections}
+          onEntryClick={handleEntryClick}
+          onExportToAnki={handleExportToAnki}
+          onMarkAsKnown={handleMarkAsKnown}
+          onBulkDelete={handleBulkDelete}
+          // Pull-sync is the browser→AnkiConnect path; on the addon transport
+          // review state pushes itself, so the button would be a dead end.
+          onSyncWithAnki={ankiTransport === 'addon' ? undefined : handleSyncWithAnki}
+          showAnkiOnboardingTip={showAnkiOnboardingTip && ankiTransport !== 'addon'}
+          onAnkiOnboardingTipDone={finishPostOnboardingTour}
+        />
+      )}
       {selectedEntry && (
         <VocabDetailModal
           entry={selectedEntry}

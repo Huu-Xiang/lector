@@ -14,7 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { getStreak, setDailyGoal } from '@/lib/data-layer';
+import { getStreak, peekStreak, setDailyGoal } from '@/lib/data-layer';
 import {
   DAILY_GOAL_PRESETS,
   DAILY_STATS_EVENT,
@@ -56,7 +56,7 @@ function ProgressRing({ fraction, met }: { fraction: number; met: boolean }) {
 /** Streak and today's goal progress; the menu shows the details and changes the goal. */
 export default function DailyGoalBadge({ compact = false }: { compact?: boolean }) {
   const t = useTranslations('dailyGoal');
-  const [status, setStatus] = useState<StreakStatus | null>(null);
+  const [status, setStatus] = useState<StreakStatus | null>(() => peekStreak() ?? null);
   const [celebrating, setCelebrating] = useState(false);
   const [failed, setFailed] = useState(false);
   const metBefore = useRef<boolean | null>(null);
