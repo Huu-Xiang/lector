@@ -10,10 +10,12 @@ import {
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = 'https://readfox.app';
-  const pages = ['/', '/pricing', '/privacy', '/terms', '/refunds', '/about'].map((path) => ({
-    url: `${base}${path}`,
-    changeFrequency: 'monthly' as const,
-  }));
+  const pages = ['/', '/pricing', '/privacy', '/terms', '/refunds', '/about', '/vocab-test'].map(
+    (path) => ({
+      url: `${base}${path}`,
+      changeFrequency: 'monthly' as const,
+    }),
+  );
   const books = [
     { url: `${base}/books`, changeFrequency: 'weekly' as const },
     ...languagesWithBooks().map((language) => ({

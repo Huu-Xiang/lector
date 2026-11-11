@@ -30,6 +30,7 @@ function groupByLevel(books: PublicBook[]): Array<[string, PublicBook[]]> {
 
 export default async function BooksPage() {
   const t = await getTranslations('publicBooks');
+  const tv = await getTranslations('vocabTest');
   const locale = await getLocale();
   const languageName = new Intl.DisplayNames([locale], { type: 'language' });
   const books = listPublicBooks();
@@ -37,6 +38,15 @@ export default async function BooksPage() {
   return (
     <LegalShell title={t('indexTitle')} wide>
       <p className="text-muted-foreground">{t('indexIntro')}</p>
+      <p>
+        <Link
+          href="/vocab-test"
+          data-testid="books-vocab-test-link"
+          className="underline hover:text-foreground"
+        >
+          {tv('booksLink')}
+        </Link>
+      </p>
       {PUBLIC_BOOK_LANGUAGES.map((language) => {
         const own = books.filter((b) => b.language === language);
         if (own.length === 0) return null;

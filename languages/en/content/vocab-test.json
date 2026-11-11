@@ -1,0 +1,1514 @@
+{
+  "version": 1,
+  "bands": [
+    {
+      "from": 1,
+      "to": 1000,
+      "words": [
+        {
+          "w": "just",
+          "zh": "刚刚"
+        },
+        {
+          "w": "say",
+          "zh": "说"
+        },
+        {
+          "w": "before",
+          "zh": "在...之前"
+        },
+        {
+          "w": "help",
+          "zh": "帮忙"
+        },
+        {
+          "w": "under",
+          "zh": "在...之下"
+        },
+        {
+          "w": "support",
+          "zh": "支持"
+        },
+        {
+          "w": "business",
+          "zh": "商业"
+        },
+        {
+          "w": "however",
+          "zh": "然而"
+        },
+        {
+          "w": "record",
+          "zh": "记录"
+        },
+        {
+          "w": "mind",
+          "zh": "头脑"
+        },
+        {
+          "w": "room",
+          "zh": "房间"
+        },
+        {
+          "w": "south",
+          "zh": "南方"
+        },
+        {
+          "w": "project",
+          "zh": "项目"
+        },
+        {
+          "w": "due",
+          "zh": "到期的"
+        },
+        {
+          "w": "serve",
+          "zh": "服务"
+        },
+        {
+          "w": "model",
+          "zh": "模型"
+        },
+        {
+          "w": "wife",
+          "zh": "妻子"
+        },
+        {
+          "w": "director",
+          "zh": "总监"
+        },
+        {
+          "w": "amount",
+          "zh": "数量"
+        },
+        {
+          "w": "cross",
+          "zh": "穿过"
+        },
+        {
+          "w": "finally",
+          "zh": "最后"
+        },
+        {
+          "w": "accept",
+          "zh": "接受"
+        },
+        {
+          "w": "travel",
+          "zh": "旅行"
+        },
+        {
+          "w": "career",
+          "zh": "事业"
+        },
+        {
+          "w": "culture",
+          "zh": "文化"
+        },
+        {
+          "w": "legal",
+          "zh": "法律的"
+        },
+        {
+          "w": "spot",
+          "zh": "地点"
+        },
+        {
+          "w": "update",
+          "zh": "更新"
+        },
+        {
+          "w": "concern",
+          "zh": "担忧"
+        },
+        {
+          "w": "trip",
+          "zh": "旅行"
+        }
+      ]
+    },
+    {
+      "from": 1001,
+      "to": 2000,
+      "words": [
+        {
+          "w": "extra",
+          "zh": "额外的"
+        },
+        {
+          "w": "raise",
+          "zh": "提高"
+        },
+        {
+          "w": "secretary",
+          "zh": "秘书"
+        },
+        {
+          "w": "product",
+          "zh": "产品"
+        },
+        {
+          "w": "generation",
+          "zh": "世代"
+        },
+        {
+          "w": "loan",
+          "zh": "贷款"
+        },
+        {
+          "w": "achieve",
+          "zh": "实现"
+        },
+        {
+          "w": "holy",
+          "zh": "神圣的"
+        },
+        {
+          "w": "budget",
+          "zh": "预算"
+        },
+        {
+          "w": "ban",
+          "zh": "禁止"
+        },
+        {
+          "w": "zone",
+          "zh": "区域"
+        },
+        {
+          "w": "corner",
+          "zh": "角落"
+        },
+        {
+          "w": "mental",
+          "zh": "精神的"
+        },
+        {
+          "w": "fellow",
+          "zh": "同伴"
+        },
+        {
+          "w": "description",
+          "zh": "描述"
+        },
+        {
+          "w": "prepare",
+          "zh": "准备"
+        },
+        {
+          "w": "museum",
+          "zh": "博物馆"
+        },
+        {
+          "w": "bottle",
+          "zh": "瓶子"
+        },
+        {
+          "w": "grab",
+          "zh": "抓住"
+        },
+        {
+          "w": "democratic",
+          "zh": "民主的"
+        },
+        {
+          "w": "asset",
+          "zh": "资产"
+        },
+        {
+          "w": "senator",
+          "zh": "参议员"
+        },
+        {
+          "w": "territory",
+          "zh": "领土"
+        },
+        {
+          "w": "supreme",
+          "zh": "最高的"
+        },
+        {
+          "w": "distribution",
+          "zh": "分发"
+        },
+        {
+          "w": "broad",
+          "zh": "宽的"
+        },
+        {
+          "w": "bike",
+          "zh": "自行车"
+        },
+        {
+          "w": "perspective",
+          "zh": "视角"
+        },
+        {
+          "w": "cable",
+          "zh": "电缆"
+        },
+        {
+          "w": "recall",
+          "zh": "回想"
+        }
+      ]
+    },
+    {
+      "from": 2001,
+      "to": 3000,
+      "words": [
+        {
+          "w": "creative",
+          "zh": "有创造力的"
+        },
+        {
+          "w": "cheese",
+          "zh": "奶酪"
+        },
+        {
+          "w": "pump",
+          "zh": "泵"
+        },
+        {
+          "w": "opposition",
+          "zh": "反对"
+        },
+        {
+          "w": "unlike",
+          "zh": "不同于"
+        },
+        {
+          "w": "expansion",
+          "zh": "扩充"
+        },
+        {
+          "w": "principal",
+          "zh": "主要的"
+        },
+        {
+          "w": "baseball",
+          "zh": "棒球"
+        },
+        {
+          "w": "athlete",
+          "zh": "运动员"
+        },
+        {
+          "w": "sum",
+          "zh": "总和"
+        },
+        {
+          "w": "mystery",
+          "zh": "神秘"
+        },
+        {
+          "w": "rough",
+          "zh": "粗糙的"
+        },
+        {
+          "w": "bite",
+          "zh": "咬"
+        },
+        {
+          "w": "employee",
+          "zh": "职员"
+        },
+        {
+          "w": "pace",
+          "zh": "步伐"
+        },
+        {
+          "w": "illness",
+          "zh": "疾病"
+        },
+        {
+          "w": "alien",
+          "zh": "外星人"
+        },
+        {
+          "w": "anxiety",
+          "zh": "焦虑"
+        },
+        {
+          "w": "curve",
+          "zh": "曲线"
+        },
+        {
+          "w": "telephone",
+          "zh": "电话"
+        },
+        {
+          "w": "lean",
+          "zh": "倾斜"
+        },
+        {
+          "w": "alter",
+          "zh": "改变"
+        },
+        {
+          "w": "pit",
+          "zh": "坑"
+        },
+        {
+          "w": "hockey",
+          "zh": "冰球"
+        },
+        {
+          "w": "domain",
+          "zh": "领域"
+        },
+        {
+          "w": "efficiency",
+          "zh": "效率"
+        },
+        {
+          "w": "smash",
+          "zh": "粉碎"
+        },
+        {
+          "w": "radical",
+          "zh": "激进的"
+        },
+        {
+          "w": "melt",
+          "zh": "熔化"
+        },
+        {
+          "w": "honey",
+          "zh": "蜂蜜"
+        }
+      ]
+    },
+    {
+      "from": 3001,
+      "to": 4000,
+      "words": [
+        {
+          "w": "heritage",
+          "zh": "遗产"
+        },
+        {
+          "w": "declare",
+          "zh": "宣布"
+        },
+        {
+          "w": "cow",
+          "zh": "奶牛"
+        },
+        {
+          "w": "examination",
+          "zh": "考试"
+        },
+        {
+          "w": "barrel",
+          "zh": "桶"
+        },
+        {
+          "w": "ethnic",
+          "zh": "种族的"
+        },
+        {
+          "w": "cape",
+          "zh": "海角"
+        },
+        {
+          "w": "cheer",
+          "zh": "欢呼"
+        },
+        {
+          "w": "midnight",
+          "zh": "午夜"
+        },
+        {
+          "w": "prompt",
+          "zh": "迅速的"
+        },
+        {
+          "w": "protocol",
+          "zh": "协议"
+        },
+        {
+          "w": "competitor",
+          "zh": "竞争者"
+        },
+        {
+          "w": "throne",
+          "zh": "王座"
+        },
+        {
+          "w": "peaceful",
+          "zh": "和平的"
+        },
+        {
+          "w": "dam",
+          "zh": "水坝"
+        },
+        {
+          "w": "accent",
+          "zh": "口音"
+        },
+        {
+          "w": "seventh",
+          "zh": "第七"
+        },
+        {
+          "w": "racism",
+          "zh": "种族歧视"
+        },
+        {
+          "w": "facilitate",
+          "zh": "促进"
+        },
+        {
+          "w": "merit",
+          "zh": "优点"
+        },
+        {
+          "w": "cherry",
+          "zh": "樱桃"
+        },
+        {
+          "w": "unity",
+          "zh": "团结"
+        },
+        {
+          "w": "ballot",
+          "zh": "选票"
+        },
+        {
+          "w": "testimony",
+          "zh": "证言"
+        },
+        {
+          "w": "couch",
+          "zh": "沙发"
+        },
+        {
+          "w": "tender",
+          "zh": "温柔的"
+        },
+        {
+          "w": "marathon",
+          "zh": "马拉松"
+        },
+        {
+          "w": "ethics",
+          "zh": "伦理"
+        },
+        {
+          "w": "comply",
+          "zh": "遵守"
+        },
+        {
+          "w": "garbage",
+          "zh": "垃圾"
+        }
+      ]
+    },
+    {
+      "from": 4001,
+      "to": 5000,
+      "words": [
+        {
+          "w": "clash",
+          "zh": "冲突"
+        },
+        {
+          "w": "deficit",
+          "zh": "赤字"
+        },
+        {
+          "w": "infinite",
+          "zh": "无限的"
+        },
+        {
+          "w": "vertical",
+          "zh": "垂直的"
+        },
+        {
+          "w": "bacon",
+          "zh": "培根"
+        },
+        {
+          "w": "tan",
+          "zh": "棕褐色"
+        },
+        {
+          "w": "correction",
+          "zh": "纠正"
+        },
+        {
+          "w": "migrant",
+          "zh": "移民"
+        },
+        {
+          "w": "scroll",
+          "zh": "卷轴"
+        },
+        {
+          "w": "grandma",
+          "zh": "祖母"
+        },
+        {
+          "w": "applicant",
+          "zh": "申请者"
+        },
+        {
+          "w": "eternal",
+          "zh": "永恒的"
+        },
+        {
+          "w": "notification",
+          "zh": "通知"
+        },
+        {
+          "w": "cylinder",
+          "zh": "圆柱体"
+        },
+        {
+          "w": "severely",
+          "zh": "严重地"
+        },
+        {
+          "w": "hull",
+          "zh": "船体"
+        },
+        {
+          "w": "anxious",
+          "zh": "忧虑的"
+        },
+        {
+          "w": "painter",
+          "zh": "画家"
+        },
+        {
+          "w": "orientation",
+          "zh": "方向"
+        },
+        {
+          "w": "stimulate",
+          "zh": "刺激"
+        },
+        {
+          "w": "nicely",
+          "zh": "好好地"
+        },
+        {
+          "w": "shrink",
+          "zh": "缩小"
+        },
+        {
+          "w": "illustrate",
+          "zh": "举例说明"
+        },
+        {
+          "w": "revive",
+          "zh": "复苏"
+        },
+        {
+          "w": "panther",
+          "zh": "黑豹"
+        },
+        {
+          "w": "flaw",
+          "zh": "缺点"
+        },
+        {
+          "w": "fridge",
+          "zh": "冰箱"
+        },
+        {
+          "w": "metric",
+          "zh": "公制的"
+        },
+        {
+          "w": "penguin",
+          "zh": "企鹅"
+        },
+        {
+          "w": "admiral",
+          "zh": "海军上将"
+        }
+      ]
+    },
+    {
+      "from": 5001,
+      "to": 6000,
+      "words": [
+        {
+          "w": "textbook",
+          "zh": "教科书"
+        },
+        {
+          "w": "corridor",
+          "zh": "走廊"
+        },
+        {
+          "w": "tease",
+          "zh": "取笑"
+        },
+        {
+          "w": "minimize",
+          "zh": "最小化"
+        },
+        {
+          "w": "prosecute",
+          "zh": "起诉"
+        },
+        {
+          "w": "geography",
+          "zh": "地理学"
+        },
+        {
+          "w": "slate",
+          "zh": "石板"
+        },
+        {
+          "w": "hydrogen",
+          "zh": "氢"
+        },
+        {
+          "w": "intersection",
+          "zh": "十字路口"
+        },
+        {
+          "w": "detention",
+          "zh": "拘留"
+        },
+        {
+          "w": "submarine",
+          "zh": "潜水艇"
+        },
+        {
+          "w": "specify",
+          "zh": "指定"
+        },
+        {
+          "w": "countless",
+          "zh": "数不尽的"
+        },
+        {
+          "w": "pardon",
+          "zh": "原谅"
+        },
+        {
+          "w": "rhetoric",
+          "zh": "修辞"
+        },
+        {
+          "w": "descent",
+          "zh": "下降"
+        },
+        {
+          "w": "nursery",
+          "zh": "托儿所"
+        },
+        {
+          "w": "optimal",
+          "zh": "最佳的"
+        },
+        {
+          "w": "pinch",
+          "zh": "捏"
+        },
+        {
+          "w": "orthodox",
+          "zh": "正统的"
+        },
+        {
+          "w": "coral",
+          "zh": "珊瑚"
+        },
+        {
+          "w": "lag",
+          "zh": "落后"
+        },
+        {
+          "w": "quiz",
+          "zh": "测验"
+        },
+        {
+          "w": "enjoyable",
+          "zh": "愉快的"
+        },
+        {
+          "w": "organizer",
+          "zh": "组织者"
+        },
+        {
+          "w": "torch",
+          "zh": "火炬"
+        },
+        {
+          "w": "intern",
+          "zh": "实习生"
+        },
+        {
+          "w": "magnet",
+          "zh": "磁铁"
+        },
+        {
+          "w": "positively",
+          "zh": "积极地"
+        },
+        {
+          "w": "porch",
+          "zh": "门廊"
+        }
+      ]
+    },
+    {
+      "from": 6001,
+      "to": 7000,
+      "words": [
+        {
+          "w": "fourteen",
+          "zh": "十四"
+        },
+        {
+          "w": "nun",
+          "zh": "修女"
+        },
+        {
+          "w": "prospective",
+          "zh": "未来的"
+        },
+        {
+          "w": "artery",
+          "zh": "动脉"
+        },
+        {
+          "w": "rehearsal",
+          "zh": "排练"
+        },
+        {
+          "w": "roam",
+          "zh": "漫游"
+        },
+        {
+          "w": "descendant",
+          "zh": "后裔"
+        },
+        {
+          "w": "arbitrary",
+          "zh": "随意的"
+        },
+        {
+          "w": "rite",
+          "zh": "仪式"
+        },
+        {
+          "w": "precedent",
+          "zh": "先例"
+        },
+        {
+          "w": "hierarchy",
+          "zh": "等级制度"
+        },
+        {
+          "w": "daisy",
+          "zh": "雏菊"
+        },
+        {
+          "w": "economically",
+          "zh": "经济上"
+        },
+        {
+          "w": "prohibition",
+          "zh": "禁止"
+        },
+        {
+          "w": "lecturer",
+          "zh": "讲师"
+        },
+        {
+          "w": "deficiency",
+          "zh": "缺乏"
+        },
+        {
+          "w": "grandpa",
+          "zh": "爷爷"
+        },
+        {
+          "w": "hairy",
+          "zh": "多毛的"
+        },
+        {
+          "w": "automation",
+          "zh": "自动化"
+        },
+        {
+          "w": "strait",
+          "zh": "海峡"
+        },
+        {
+          "w": "rainy",
+          "zh": "下雨的"
+        },
+        {
+          "w": "probation",
+          "zh": "试用期"
+        },
+        {
+          "w": "polo",
+          "zh": "马球"
+        },
+        {
+          "w": "align",
+          "zh": "对齐"
+        },
+        {
+          "w": "thickness",
+          "zh": "厚度"
+        },
+        {
+          "w": "swipe",
+          "zh": "划过"
+        },
+        {
+          "w": "remarkably",
+          "zh": "显著地"
+        },
+        {
+          "w": "jeep",
+          "zh": "吉普车"
+        },
+        {
+          "w": "serum",
+          "zh": "血清"
+        },
+        {
+          "w": "lateral",
+          "zh": "侧面的"
+        }
+      ]
+    },
+    {
+      "from": 7001,
+      "to": 8000,
+      "words": [
+        {
+          "w": "withstand",
+          "zh": "经受"
+        },
+        {
+          "w": "classy",
+          "zh": "高档的"
+        },
+        {
+          "w": "infamous",
+          "zh": "臭名昭著的"
+        },
+        {
+          "w": "singular",
+          "zh": "单数的"
+        },
+        {
+          "w": "potent",
+          "zh": "强效的"
+        },
+        {
+          "w": "garrison",
+          "zh": "驻军"
+        },
+        {
+          "w": "childish",
+          "zh": "幼稚的"
+        },
+        {
+          "w": "motto",
+          "zh": "箴言"
+        },
+        {
+          "w": "announcer",
+          "zh": "播音员"
+        },
+        {
+          "w": "presently",
+          "zh": "不久"
+        },
+        {
+          "w": "bale",
+          "zh": "大包"
+        },
+        {
+          "w": "gravel",
+          "zh": "砂砾"
+        },
+        {
+          "w": "dominion",
+          "zh": "统治权"
+        },
+        {
+          "w": "novelist",
+          "zh": "小说家"
+        },
+        {
+          "w": "inhibitor",
+          "zh": "抑制剂"
+        },
+        {
+          "w": "akin",
+          "zh": "类似的"
+        },
+        {
+          "w": "compile",
+          "zh": "编纂"
+        },
+        {
+          "w": "noisy",
+          "zh": "嘈杂的"
+        },
+        {
+          "w": "countdown",
+          "zh": "倒计时"
+        },
+        {
+          "w": "sect",
+          "zh": "教派"
+        },
+        {
+          "w": "cascade",
+          "zh": "瀑布"
+        },
+        {
+          "w": "skeptical",
+          "zh": "怀疑的"
+        },
+        {
+          "w": "shear",
+          "zh": "剪"
+        },
+        {
+          "w": "pavilion",
+          "zh": "亭子"
+        },
+        {
+          "w": "slab",
+          "zh": "厚板"
+        },
+        {
+          "w": "distortion",
+          "zh": "扭曲"
+        },
+        {
+          "w": "incompetent",
+          "zh": "无能力的"
+        },
+        {
+          "w": "alleviate",
+          "zh": "减轻"
+        },
+        {
+          "w": "scramble",
+          "zh": "争抢"
+        },
+        {
+          "w": "attic",
+          "zh": "阁楼"
+        }
+      ]
+    },
+    {
+      "from": 8001,
+      "to": 9000,
+      "words": [
+        {
+          "w": "mural",
+          "zh": "壁画"
+        },
+        {
+          "w": "stool",
+          "zh": "凳子"
+        },
+        {
+          "w": "pear",
+          "zh": "梨子"
+        },
+        {
+          "w": "cashier",
+          "zh": "出纳员"
+        },
+        {
+          "w": "sock",
+          "zh": "短袜"
+        },
+        {
+          "w": "steward",
+          "zh": "乘务员"
+        },
+        {
+          "w": "savannah",
+          "zh": "稀树草原"
+        },
+        {
+          "w": "loaf",
+          "zh": "一条面包"
+        },
+        {
+          "w": "beforehand",
+          "zh": "预先"
+        },
+        {
+          "w": "fertile",
+          "zh": "肥沃的"
+        },
+        {
+          "w": "competence",
+          "zh": "胜任"
+        },
+        {
+          "w": "moose",
+          "zh": "驼鹿"
+        },
+        {
+          "w": "axle",
+          "zh": "轴"
+        },
+        {
+          "w": "bearer",
+          "zh": "持有人"
+        },
+        {
+          "w": "wager",
+          "zh": "赌注"
+        },
+        {
+          "w": "cerebral",
+          "zh": "大脑的"
+        },
+        {
+          "w": "seminary",
+          "zh": "神学院"
+        },
+        {
+          "w": "solvent",
+          "zh": "溶剂"
+        },
+        {
+          "w": "bravery",
+          "zh": "勇敢"
+        },
+        {
+          "w": "oasis",
+          "zh": "绿洲"
+        },
+        {
+          "w": "attest",
+          "zh": "证明"
+        },
+        {
+          "w": "hydrate",
+          "zh": "补水"
+        },
+        {
+          "w": "humiliation",
+          "zh": "耻辱"
+        },
+        {
+          "w": "abort",
+          "zh": "中止"
+        },
+        {
+          "w": "secrecy",
+          "zh": "保密"
+        },
+        {
+          "w": "porcelain",
+          "zh": "瓷器"
+        },
+        {
+          "w": "pebble",
+          "zh": "小圆石"
+        },
+        {
+          "w": "hurl",
+          "zh": "猛掷"
+        },
+        {
+          "w": "superficial",
+          "zh": "肤浅的"
+        },
+        {
+          "w": "latch",
+          "zh": "门闩"
+        }
+      ]
+    },
+    {
+      "from": 9001,
+      "to": 10000,
+      "words": [
+        {
+          "w": "impatient",
+          "zh": "不耐烦的"
+        },
+        {
+          "w": "oneself",
+          "zh": "自己"
+        },
+        {
+          "w": "quilt",
+          "zh": "被子"
+        },
+        {
+          "w": "skim",
+          "zh": "略读"
+        },
+        {
+          "w": "chaplain",
+          "zh": "牧师"
+        },
+        {
+          "w": "tandem",
+          "zh": "串联"
+        },
+        {
+          "w": "bilingual",
+          "zh": "双语的"
+        },
+        {
+          "w": "brood",
+          "zh": "一窝雏鸟"
+        },
+        {
+          "w": "doorstep",
+          "zh": "门阶"
+        },
+        {
+          "w": "plumber",
+          "zh": "水管工人"
+        },
+        {
+          "w": "hone",
+          "zh": "磨砺"
+        },
+        {
+          "w": "convent",
+          "zh": "女修道院"
+        },
+        {
+          "w": "bouquet",
+          "zh": "花束"
+        },
+        {
+          "w": "incarnation",
+          "zh": "化身"
+        },
+        {
+          "w": "quantify",
+          "zh": "定量"
+        },
+        {
+          "w": "peacock",
+          "zh": "孔雀"
+        },
+        {
+          "w": "profoundly",
+          "zh": "深刻地"
+        },
+        {
+          "w": "beggar",
+          "zh": "乞丐"
+        },
+        {
+          "w": "discern",
+          "zh": "辨别"
+        },
+        {
+          "w": "crumb",
+          "zh": "碎屑"
+        },
+        {
+          "w": "pivotal",
+          "zh": "关键的"
+        },
+        {
+          "w": "disapprove",
+          "zh": "不赞成"
+        },
+        {
+          "w": "trendy",
+          "zh": "时髦的"
+        },
+        {
+          "w": "concurrent",
+          "zh": "同时发生的"
+        },
+        {
+          "w": "relish",
+          "zh": "享受"
+        },
+        {
+          "w": "squid",
+          "zh": "枪乌贼"
+        },
+        {
+          "w": "sturdy",
+          "zh": "结实的"
+        },
+        {
+          "w": "incompatible",
+          "zh": "不相容的"
+        },
+        {
+          "w": "stifle",
+          "zh": "使窒息"
+        },
+        {
+          "w": "confine",
+          "zh": "限制"
+        }
+      ]
+    },
+    {
+      "from": 10001,
+      "to": 14000,
+      "words": [
+        {
+          "w": "abound",
+          "zh": "大量存在"
+        },
+        {
+          "w": "bleak",
+          "zh": "荒凉的"
+        },
+        {
+          "w": "topical",
+          "zh": "时事的"
+        },
+        {
+          "w": "scatter",
+          "zh": "散开"
+        },
+        {
+          "w": "helium",
+          "zh": "氦"
+        },
+        {
+          "w": "repercussion",
+          "zh": "反响"
+        },
+        {
+          "w": "broth",
+          "zh": "肉汤"
+        },
+        {
+          "w": "centenary",
+          "zh": "百年纪念"
+        },
+        {
+          "w": "abrupt",
+          "zh": "突然的"
+        },
+        {
+          "w": "chandelier",
+          "zh": "枝形吊灯"
+        },
+        {
+          "w": "lurk",
+          "zh": "潜伏"
+        },
+        {
+          "w": "retaliate",
+          "zh": "报复"
+        },
+        {
+          "w": "labyrinth",
+          "zh": "迷宫"
+        },
+        {
+          "w": "hindsight",
+          "zh": "事后聪明"
+        },
+        {
+          "w": "cyst",
+          "zh": "囊肿"
+        },
+        {
+          "w": "simplistic",
+          "zh": "过于简单的"
+        },
+        {
+          "w": "deflection",
+          "zh": "偏转"
+        },
+        {
+          "w": "misrepresent",
+          "zh": "歪曲"
+        },
+        {
+          "w": "maestro",
+          "zh": "大师"
+        },
+        {
+          "w": "assortment",
+          "zh": "什锦"
+        },
+        {
+          "w": "silica",
+          "zh": "二氧化硅"
+        },
+        {
+          "w": "submissive",
+          "zh": "服从的"
+        },
+        {
+          "w": "normalize",
+          "zh": "使正常化"
+        },
+        {
+          "w": "mishap",
+          "zh": "不幸之事"
+        },
+        {
+          "w": "derail",
+          "zh": "使出轨"
+        },
+        {
+          "w": "catalytic",
+          "zh": "催化的"
+        },
+        {
+          "w": "stampede",
+          "zh": "惊逃"
+        },
+        {
+          "w": "fabricate",
+          "zh": "编造"
+        },
+        {
+          "w": "quail",
+          "zh": "鹌鹑"
+        },
+        {
+          "w": "cordon",
+          "zh": "警戒线"
+        }
+      ]
+    }
+  ],
+  "pseudowords": [
+    "whemous",
+    "reviedle",
+    "throlter",
+    "ingemp",
+    "broantal",
+    "uppetion",
+    "immerter",
+    "immemise",
+    "actirter",
+    "buturial",
+    "habiver",
+    "hisive",
+    "rebouner",
+    "grierial",
+    "spomper",
+    "brishion",
+    "bitilize",
+    "prairter",
+    "plarman",
+    "hurniss",
+    "snartal",
+    "equacial",
+    "sharrect",
+    "lotector",
+    "cutution",
+    "andursed",
+    "gensumed",
+    "graption",
+    "aptionol",
+    "wistic",
+    "ambital",
+    "empician",
+    "rogander",
+    "anisive",
+    "rendeff",
+    "cletial",
+    "asterval",
+    "blatican",
+    "resoctor",
+    "lediance",
+    "tioluted",
+    "trourter",
+    "shembine",
+    "tamution",
+    "rituatic",
+    "biddence",
+    "fetivate",
+    "plactur",
+    "volatist",
+    "coteral",
+    "perdific",
+    "notiogic",
+    "thitive",
+    "matuctor",
+    "cancepse",
+    "munilize",
+    "pronsult",
+    "imical",
+    "anesive",
+    "cinersed",
+    "guicific",
+    "whigral",
+    "suflught",
+    "frarbion",
+    "anceter",
+    "tropidge",
+    "clecuble",
+    "crosible",
+    "prevatur",
+    "spilieve",
+    "sundile",
+    "sterpar",
+    "fulfint",
+    "suptist",
+    "reshomp",
+    "andenian",
+    "rintic",
+    "jinstion",
+    "cocence",
+    "purtible",
+    "fectiser",
+    "surbounk",
+    "solagger",
+    "unconder",
+    "thirator",
+    "shogion",
+    "refrairt",
+    "rolowate",
+    "nolitant",
+    "somperal",
+    "proyout",
+    "grallage",
+    "affetor",
+    "modummer",
+    "pladdess",
+    "sticalus",
+    "tradator",
+    "uription",
+    "refurmal",
+    "fraculat",
+    "breatant",
+    "insenger",
+    "raistal",
+    "tacence",
+    "insolan",
+    "affanded",
+    "ragible",
+    "laxotion",
+    "craddess",
+    "ancermer",
+    "extector",
+    "claucket",
+    "horrolve",
+    "cruppeal",
+    "masibial",
+    "phemete",
+    "recammer",
+    "shollout",
+    "houtic",
+    "sompeled"
+  ],
+  "source": "Word ranking: wordfreq (CC BY-SA 4.0), meanings: ECDICT (MIT)"
+}

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { ArrowLeft, ArrowRight, Sparkles } from 'lucide-react';
@@ -42,6 +43,7 @@ import { setLanguageInStorage } from '@/utils/storage';
 import { Button } from '@/components/ui/button';
 import { Select } from '@/components/ui/select';
 import RecommendedForYou from '@/components/RecommendedForYou';
+import { readVocabResult, type VocabResult } from '@/lib/vocab-result';
 
 const SETUP_GOALS = DAILY_GOAL_PRESETS.filter((goal) => goal.target <= 20);
 
@@ -81,7 +83,9 @@ export default function SetupPage() {
   const router = useRouter();
   const [selectedLanguage, setSelectedLanguage] = useState<LanguageCode | null>(null);
   const [pending, setPending] = useState<LanguageCode | null>(null);
-  const [level, setLevel] = useState<CefrLevel | null>(null);
+  const [pickedLevel, setLevel] = useState<CefrLevel | null>(null);
+  const [levelPicked, setLevelPicked] = useState(false);
+  const [vocabResult, setVocabResult] = useState<VocabResult | null>(null);
   const [interests, setInterests] = useState<string[]>([]);
   const [dailyGoal, setDailyGoalChoice] = useState<DailyGoal>(DEFAULT_DAILY_GOAL);
   const goalT = useTranslations('dailyGoal');
@@ -90,6 +94,7 @@ export default function SetupPage() {
   const [native, setNative] = useState<string>(() => nativeLanguageFromLocale(locale));
   const [stage, setStage] = useState<'form' | 'recommend'>('form');
   const tl = useTranslations('readingLevel');
+  const vt = useTranslations('vocabTest');
   const tc = useTranslations('common');
   const ready = parseReadyLanguages(useReadyLanguagesSetting());
   const mainland = showMainlandExams(native, locale);
@@ -104,6 +109,12 @@ export default function SetupPage() {
       ? (pendingBook.language as LanguageCode)
       : null;
   const bookSlug = pendingBook?.slug ?? null;
+  const level: CefrLevel | null =
+    levelPicked || selectedLanguage !== 'en' ? pickedLevel : (vocabResult?.level ?? pickedLevel);
+  function pickLevel(next: CefrLevel | null) {
+    setLevelPicked(true);
+    setLevel(next);
+  }
   function toggleInterest(id: string) {
     setInterests((prev) => (prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]));
   }
@@ -143,6 +154,10 @@ export default function SetupPage() {
   /* eslint-disable react-hooks/set-state-in-effect -- the book a visitor chose is in localStorage */
   useEffect(() => {
     setPendingBook(readPendingBook());
+  }, []);
+
+  useEffect(() => {
+    setVocabResult(readVocabResult());
   }, []);
 
   useEffect(() => {
@@ -472,7 +487,7 @@ export default function SetupPage() {
                         key={option}
                         type="button"
                         aria-pressed={level === option}
-                        onClick={() => setLevel(option)}
+                        onClick={() => pickLevel(option)}
                         data-testid={`setup-level-${option}`}
                         className={`rounded-xl border px-3 py-2 text-left text-sm transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
                           level === option
@@ -493,7 +508,7 @@ export default function SetupPage() {
                   <button
                     type="button"
                     aria-pressed={level === null}
-                    onClick={() => setLevel(null)}
+                    onClick={() => pickLevel(null)}
                     data-testid="setup-level-unsure"
                     className={`rounded-xl border px-3 py-2 text-left text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
                       level === null
@@ -503,7 +518,21 @@ export default function SetupPage() {
                   >
                     {tl('notSure')}
                   </button>
+                  {(selectedLanguage === null || selectedLanguage === 'en') && (
+                    <Link
+                      href="/vocab-test?from=setup"
+                      data-testid="setup-vocab-test-link"
+                      className="flex min-h-11 items-center px-1 text-sm font-medium text-primary hover:underline focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none sm:col-span-2"
+                    >
+                      {vt('setupLink')}
+                    </Link>
+                  )}
                 </div>
+                {vocabResult && selectedLanguage === 'en' && (
+                  <p className="mt-2 text-xs text-muted-foreground" data-testid="setup-vocab-note">
+                    {vt('setupNote', { count: vocabResult.estimate })}
+                  </p>
+                )}
                 <p className="mt-2 text-xs text-muted-foreground">{t('levelHint')}</p>
               </fieldset>
 
