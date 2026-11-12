@@ -25,6 +25,8 @@ const NOW = '2026-07-14T00:00:00Z';
 // caches, learner data, admin flag). twoFactor is Better Auth's and absent from
 // the getDb schema, so it's covered by the ratchet + the runtime guard instead.
 const SEEDED_TABLES = [
+  'vocab_test_report_deliveries',
+  'vocab_test_reports',
   'collections',
   'lessons',
   'collection_groups',
@@ -189,6 +191,12 @@ function seed(userId: string, email: string, customerId: string) {
     userId,
     1,
   );
+  db.prepare(
+    'INSERT INTO vocab_test_reports (userId, attemptId, snapshotJson, booksJson, deliveryStatus) VALUES (?, ?, ?, ?, ?)',
+  ).run(userId, 'report-a', '{}', '[]', 'sending');
+  db.prepare(
+    'INSERT INTO vocab_test_report_deliveries (userId, attemptId, state, payloadJson) VALUES (?, ?, ?, ?)',
+  ).run(userId, 'report-a', 'sending', '{"test":"payload"}');
 }
 
 function customerCount(paddleCustomerId: string): number {

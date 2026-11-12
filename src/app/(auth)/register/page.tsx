@@ -12,6 +12,7 @@ import TurnstileWidget, { turnstileSiteKey } from '@/components/TurnstileWidget'
 import PasswordMeter from '@/components/PasswordMeter';
 import { authClient } from '@/lib/auth-client';
 import { authHref, sanitizeAuthReturnPath } from '@/lib/auth-return';
+import { bindVocabReportEmail } from '@/lib/vocab-report-draft';
 import { meetsRules } from '@/lib/password-strength';
 import { readPendingInvite, writePendingInvite } from '@/lib/pending-invite';
 import { parseBookRef, writePendingBook } from '@/lib/pending-book';
@@ -115,6 +116,7 @@ function RegisterForm() {
       );
       return;
     }
+    bindVocabReportEmail(returnPath, email);
     writePendingInvite(invite.trim());
     setCaptchaToken('');
     setCaptchaRound((r) => r + 1);

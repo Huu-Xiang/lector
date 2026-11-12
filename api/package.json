@@ -22,8 +22,10 @@
     "adm-zip": "^0.5.17",
     "better-auth": "^1.6.23",
     "hono": "^4.13.14",
+    "intl-messageformat": "11.2.15",
     "jsonrepair": "^3.14.0",
     "linkedom": "^0.18.12",
+    "pdfkit": "0.20.2",
     "ts-fsrs": "5.4.2",
     "uuid": "^14.0.0",
     "yaml": "^2.8.3"
@@ -31,6 +33,8 @@
   "devDependencies": {
     "@types/adm-zip": "^0.5.8",
     "@types/bun": "latest",
-    "typescript": "5.9.3"
+    "@types/pdfkit": "0.17.7",
+    "typescript": "5.9.3",
+    "unpdf": "2.1.0"
   }
 }

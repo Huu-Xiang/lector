@@ -75,6 +75,7 @@ export const TENANT_TABLES = [
   // with its lessons. (The audio files under DATA_DIR/audio stay on disk and
   // are keyed by lessonId, which adoption preserves.)
   'transcript_segments',
+  'vocab_test_reports',
 ] as const;
 
 export type TenantTable = (typeof TENANT_TABLES)[number];

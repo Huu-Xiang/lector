@@ -175,3 +175,87 @@ describe('Resend transport', () => {
     expect(signal?.aborted).toBe(false);
   });
 });
+
+describe('report email', () => {
+  const message: EmailMessage = {
+    to: 'learner@example.test',
+    subject: 'Vocabulary report',
+    text: 'Your report is attached.',
+    attachments: [{ filename: 'report.pdf', content: 'JVBERg==' }],
+  };
+
+  test('resends the exact prepared request with an idempotency key', async () => {
+    const { prepareReportEmail, sendPreparedReportEmail } = await import('./email');
+    const prepared = prepareReportEmail(message);
+    const originalFetch = globalThis.fetch;
+    const previousKey = process.env.RESEND_API_KEY;
+    process.env.RESEND_API_KEY = 'test-key';
+    const requests: RequestInit[] = [];
+    globalThis.fetch = (async (_url: unknown, init?: RequestInit) => {
+      requests.push(init!);
+      return Response.json({ id: 'message-id' });
+    }) as unknown as typeof fetch;
+    try {
+      expect(await sendPreparedReportEmail(prepared, 'report/test')).toBe('message-id');
+      expect(await sendPreparedReportEmail(prepared, 'report/test')).toBe('message-id');
+      expect(requests).toHaveLength(2);
+      expect(requests[0]?.body).toBe(prepared);
+      expect(requests[1]?.body).toBe(prepared);
+      expect(new Headers(requests[0]?.headers).get('Idempotency-Key')).toBe('report/test');
+    } finally {
+      globalThis.fetch = originalFetch;
+      if (previousKey === undefined) delete process.env.RESEND_API_KEY;
+      else process.env.RESEND_API_KEY = previousKey;
+    }
+  });
+
+  test('classifies deterministic rejects separately from requests with unknown outcomes', async () => {
+    const { prepareReportEmail, ReportEmailError, sendPreparedReportEmail } =
+      await import('./email');
+    const originalFetch = globalThis.fetch;
+    const previousKey = process.env.RESEND_API_KEY;
+    process.env.RESEND_API_KEY = 'test-key';
+    const statuses = new Map([
+      [400, false],
+      [408, true],
+      [409, true],
+      [429, false],
+      [503, true],
+    ]);
+    try {
+      const payload = prepareReportEmail(message);
+      for (const [status, uncertain] of statuses) {
+        globalThis.fetch = (async () =>
+          new Response('provider error', { status })) as unknown as typeof fetch;
+        try {
+          await sendPreparedReportEmail(payload, 'report/classification');
+          throw new Error('expected report send to reject');
+        } catch (error) {
+          expect(error).toBeInstanceOf(ReportEmailError);
+          expect((error as ReportEmailError).uncertain).toBe(uncertain);
+        }
+      }
+      globalThis.fetch = (async () => {
+        throw new TypeError('socket closed after write');
+      }) as unknown as typeof fetch;
+      await expect(sendPreparedReportEmail(payload, 'report/classification')).rejects.toMatchObject(
+        {
+          uncertain: true,
+        },
+      );
+    } finally {
+      globalThis.fetch = originalFetch;
+      if (previousKey === undefined) delete process.env.RESEND_API_KEY;
+      else process.env.RESEND_API_KEY = previousKey;
+    }
+  });
+
+  test('captures the PDF attachment in file mode', async () => {
+    const { prepareReportEmail, sendPreparedReportEmail } = await import('./email');
+    process.env.EMAIL_FILE = FILE;
+    await sendPreparedReportEmail(prepareReportEmail(message), 'report/file');
+    const captured = JSON.parse(readFileSync(FILE, 'utf8'));
+    expect(captured.to).toBe(message.to);
+    expect(captured.attachments).toEqual(message.attachments);
+  });
+});

@@ -6,6 +6,7 @@
  */
 import { db, SettingRow } from '../db';
 import { sanitizeLegacyCacheAcceptedInput, type CacheAcceptedInput } from './dictionary-db';
+import { exportVocabReports, type VocabReportBackup } from './vocab-test-report-store';
 
 export const USER_EXPORT_FORMAT = 'lector-learning-data';
 export const USER_EXPORT_VERSION = 1;
@@ -28,6 +29,7 @@ export interface UserExport {
   learnerEvents: unknown[];
   wordCards: unknown[];
   wordReviewLog: unknown[];
+  vocabTestReports: VocabReportBackup[];
   settings: Array<Omit<SettingRow, 'userId'>>;
 }
 
@@ -247,6 +249,7 @@ export function buildUserExport(userId: string): UserExport {
         )
         .all(userId),
     ),
+    vocabTestReports: exportVocabReports(userId),
     settings,
   };
 }

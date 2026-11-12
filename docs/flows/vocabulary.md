@@ -101,3 +101,20 @@ Settings, Import Known Words. A plain list writes `knownWords` only. A LingQ CSV
 | API | `api/src/routes/known-words.ts` | `POST /` |
 
 New rows have `domain IS NULL` until the classifier runs. See [stats.md](stats.md).
+
+## Vocabulary test reports
+
+**App domain:** Vocabulary
+
+The public test calculates the result in the browser. It sends a result summary only when a reader chooses to save it to an account. The summary contains the estimate, level, test date and book references. Answers stay in the browser. The report history is private and uses the account session.
+
+```mermaid
+flowchart TD
+  test[Public vocabulary test] -->|Save and get PDF| session[Verified account session]
+  session --> report[Save result in SQLite]
+  report --> pdf[Render one-page PDF]
+  pdf --> delivery[Send to the verified email address]
+  delivery -->|Failure| history[Keep saved result and show delivery state]
+```
+
+The API stores one report for each account and test attempt. The mail path uses a separate record and sends an attachment. An uncertain send uses the same request while the email service can deduplicate it. The reading level action remains separate.

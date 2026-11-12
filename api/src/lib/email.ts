@@ -56,11 +56,13 @@ const consoleTransport: EmailTransport = async (message) => {
   );
 };
 
+function appendEmail(path: string, payload: string): void {
+  mkdirSync(dirname(path), { recursive: true });
+  appendFileSync(path, `${payload}\n`);
+}
+
 function fileTransport(path: string): EmailTransport {
-  return async (message) => {
-    mkdirSync(dirname(path), { recursive: true });
-    appendFileSync(path, `${JSON.stringify(message)}\n`);
-  };
+  return async (message) => appendEmail(path, JSON.stringify(message));
 }
 
 /** Body for Resend. A template send must not include text or HTML. */
@@ -100,21 +102,74 @@ function senderFor(message: EmailMessage): string {
 
 const RESEND_TIMEOUT_MS = 15_000;
 
+function postResend(apiKey: string, payload: string, idempotencyKey?: string): Promise<Response> {
+  return fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+      ...(idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : {}),
+    },
+    body: payload,
+    signal: AbortSignal.timeout(RESEND_TIMEOUT_MS),
+  });
+}
+
 function resendTransport(apiKey: string): EmailTransport {
   return async (message) => {
-    const res = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(resendPayload(senderFor(message), message)),
-      signal: AbortSignal.timeout(RESEND_TIMEOUT_MS),
-    });
+    const res = await postResend(
+      apiKey,
+      JSON.stringify(resendPayload(senderFor(message), message)),
+    );
     if (!res.ok) {
       throw new Error(`Resend rejected email to ${message.to}: ${res.status} ${await res.text()}`);
     }
   };
+}
+
+export class ReportEmailError extends Error {
+  constructor(readonly uncertain: boolean) {
+    super(uncertain ? 'Report delivery could not be confirmed' : 'Report email was not sent');
+  }
+}
+
+export function prepareReportEmail(message: EmailMessage): string {
+  return JSON.stringify(resendPayload(senderFor(message), message));
+}
+
+/** Retries reuse the exact serialized request, including the sender and attachment. */
+export async function sendPreparedReportEmail(
+  payload: string,
+  idempotencyKey: string,
+): Promise<string | null> {
+  const file = process.env.EMAIL_FILE;
+  if (file) {
+    try {
+      appendEmail(file, payload);
+      return null;
+    } catch {
+      throw new ReportEmailError(false);
+    }
+  }
+
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) throw new ReportEmailError(false);
+
+  let response: Response;
+  try {
+    response = await postResend(apiKey, payload, idempotencyKey);
+  } catch {
+    throw new ReportEmailError(true);
+  }
+  if (!response.ok) {
+    throw new ReportEmailError(
+      response.status === 408 || response.status === 409 || response.status >= 500,
+    );
+  }
+
+  // A successful status is acceptance even if the response body is unavailable.
+  const result = (await response.json().catch(() => null)) as { id?: unknown } | null;
+  return typeof result?.id === 'string' ? result.id : null;
 }
 
 let transport: EmailTransport | null = null;

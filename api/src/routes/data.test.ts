@@ -20,6 +20,8 @@ const {
 } = await import('../routes/data');
 
 const TABLES = [
+  'vocab_test_report_deliveries',
+  'vocab_test_reports',
   'cached_senses',
   'cached_related_forms',
   'cached_entries',
@@ -51,6 +53,81 @@ function importData(payload: unknown) {
 }
 
 const TS = '2026-01-01T00:00:00Z';
+
+describe('portable vocabulary test reports', () => {
+  beforeEach(reset);
+  afterEach(reset);
+
+  const attemptId = '52fc27b5-c354-4f32-9873-be701eb87161';
+  const report = {
+    snapshot: {
+      attemptId,
+      takenAt: '2026-01-01T00:00:00.000Z',
+      locale: 'en',
+      estimate: 4000,
+      margin: 500,
+      low: 3500,
+      high: 4500,
+      capped: false,
+      level: 'B2',
+      bookSlugs: ['former-library-book'],
+    },
+    books: [{ slug: 'former-library-book', title: 'A saved recommendation' }],
+  };
+
+  test('exports display data only, and restores without requeueing delivery', async () => {
+    const exported = await importData({
+      vocabTestReports: [{ ...report, userId: 'another-account', deliveryStatus: 'pending' }],
+    });
+    expect(exported.status).toBe(200);
+    expect(buildUserExport('local').vocabTestReports).toEqual([report]);
+    expect(buildUserExport('another-account').vocabTestReports ?? []).toEqual([]);
+    const reportStatus = db.prepare(
+      'SELECT deliveryStatus FROM vocab_test_reports WHERE userId = ? AND attemptId = ?',
+    );
+    expect(reportStatus.get('local', attemptId)).toEqual({ deliveryStatus: 'restored' });
+    expect(db.prepare('SELECT COUNT(*) AS n FROM vocab_test_report_deliveries').get()).toEqual({
+      n: 0,
+    });
+
+    db.prepare('UPDATE vocab_test_reports SET deliveryStatus = ? WHERE userId = ?').run(
+      'sent',
+      'local',
+    );
+    const oldBackup = await importData({ vocabTestReports: [report] });
+    expect(oldBackup.status).toBe(200);
+    expect(reportStatus.get('local', attemptId)).toEqual({ deliveryStatus: 'sent' });
+  });
+
+  test('exports the full report history even though the account page is paginated', async () => {
+    const rows = Array.from({ length: 35 }, (_, index) => {
+      const suffix = (index + 1).toString(16).padStart(12, '0');
+      return {
+        snapshot: {
+          ...report.snapshot,
+          attemptId: `90000000-0000-4000-8000-${suffix}`,
+          bookSlugs: [],
+        },
+        books: [],
+      };
+    });
+    const response = await importData({ vocabTestReports: rows });
+    expect(response.status).toBe(200);
+    const exported = buildUserExport('local').vocabTestReports;
+    expect(exported).toHaveLength(rows.length);
+    expect(new Set(exported.map((item) => item.snapshot.attemptId))).toEqual(
+      new Set(rows.map((item) => item.snapshot.attemptId)),
+    );
+  });
+
+  test('rejects malformed report metadata before writing any backup rows', async () => {
+    const response = await importData({
+      vocabTestReports: [{ ...report, books: [{ slug: 'unrelated', title: 'Bad reference' }] }],
+    });
+    expect(response.status).toBe(400);
+    expect(buildUserExport('local').vocabTestReports ?? []).toEqual([]);
+  });
+});
 
 const LIMITED: PlanLimits = {
   ...NO_STORAGE_LIMITS,

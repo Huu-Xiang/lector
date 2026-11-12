@@ -11,6 +11,7 @@ import { Label } from '@/components/ui/label';
 import TurnstileWidget, { turnstileSiteKey } from '@/components/TurnstileWidget';
 import { authClient } from '@/lib/auth-client';
 import { authHref, sanitizeAuthReturnPath } from '@/lib/auth-return';
+import { bindVocabReportEmail } from '@/lib/vocab-report-draft';
 import OidcSignInButton from '@/components/OidcSignInButton';
 import { readPendingInvite } from '@/lib/pending-invite';
 import { useOAuthErrorToast } from '@/lib/use-oauth-error';
@@ -74,6 +75,7 @@ function LoginForm() {
     });
 
     if (!error) {
+      bindVocabReportEmail(returnPath, email);
       // A 2FA-enrolled account answers with a challenge instead of a session —
       // the TOTP code on /two-factor completes the sign-in.
       if (data && 'twoFactorRedirect' in data && data.twoFactorRedirect) {
@@ -104,7 +106,10 @@ function LoginForm() {
     setCaptchaToken('');
     setCaptchaRound((r) => r + 1);
     if (error) toast.error(error.message ?? t('errResend'));
-    else toast.success(t('resent'));
+    else {
+      bindVocabReportEmail(returnPath, unverifiedEmail);
+      toast.success(t('resent'));
+    }
   }
 
   async function handleGithub() {

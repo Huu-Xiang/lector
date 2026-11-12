@@ -1,4 +1,8 @@
 import { test, expect, type Browser } from '@playwright/test';
+import { randomUUID } from 'node:crypto';
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
+import type { VocabReport } from '../languages/en/vocab-report';
 import { apiUrl } from './api';
 
 const CLOUD_API = `http://localhost:${process.env.E2E_AUTH_API_PORT || '3462'}`;
@@ -8,7 +12,7 @@ async function loggedOutPage(browser: Browser) {
   return { context, page: await context.newPage() };
 }
 
-/** A cloud visitor with no session, so the result page offers sign-up instead of saving a level. */
+/** A visitor with no cloud session. The report email is captured by the test API. */
 async function cloudVisitorPage(browser: Browser) {
   const context = await browser.newContext({ storageState: { cookies: [], origins: [] } });
   await context.route('**/__env.js', (route) =>
@@ -246,17 +250,248 @@ test.describe('vocabulary test', () => {
     await context.close();
   });
 
-  test('a cloud visitor without an account is offered sign-up, not a level save', async ({
-    browser,
-  }) => {
+  test('the complete cloud result is visible before asking for an account', async ({ browser }) => {
     const { context, page } = await cloudVisitorPage(browser);
     await page.goto('/vocab-test');
-    await expect(page.getByTestId('vocab-start')).toBeEnabled();
     await finishKnowingNothing(page);
-    await expect(page.getByTestId('vocab-register')).toHaveAttribute('href', /book=en%2F/);
-    await expect(page.getByTestId('vocab-signup-pitch')).toBeVisible();
+    await expect(page.getByTestId('vocab-estimate')).toBeVisible();
+    await expect(page.getByTestId('vocab-book').first()).toBeVisible();
+    await expect(page.getByTestId('vocab-report-auth-prompt')).toHaveCount(0);
     await expect(page.getByTestId('vocab-save-level')).toHaveCount(0);
+    await page.getByTestId('vocab-save-report').click();
+    await expect(page.getByTestId('vocab-report-login')).toBeVisible();
+    await expect(page.getByTestId('vocab-report-register')).toBeVisible();
     await context.close();
+  });
+
+  test('an expired verification callback keeps its saved report sign-in path', async ({
+    browser,
+  }) => {
+    test.skip(!!process.env.E2E_EXTERNAL_SERVER, 'requires a cloud account session');
+    const { context, page } = await cloudVisitorPage(browser);
+    const attemptId = randomUUID();
+    const snapshot = {
+      attemptId,
+      takenAt: new Date().toISOString(),
+      locale: 'en',
+      estimate: 4000,
+      margin: 500,
+      low: 3500,
+      high: 4500,
+      capped: false,
+      level: 'B2',
+      bookSlugs: [],
+    };
+    await page.addInitScript(
+      (draft) =>
+        localStorage.setItem(
+          `readfox-vocab-report-draft:${draft.attemptId}`,
+          JSON.stringify(draft),
+        ),
+      { attemptId, snapshot, expiresAt: Date.now() + 60_000 },
+    );
+    try {
+      await page.goto(`/vocab-test?resume=report&draft=${attemptId}&error=invalid_token`);
+      await expect(page.getByTestId('vocab-report-resume-error')).toContainText(
+        /could not be verified/i,
+      );
+      const login = page.getByTestId('vocab-report-login');
+      await expect(login).toHaveAttribute(
+        'href',
+        `/login?next=%2Fvocab-test%3Fresume%3Dreport%26draft%3D${attemptId}`,
+      );
+    } finally {
+      await context.close();
+    }
+  });
+
+  test('registration resumes the same result and sends one PDF', async ({ browser }) => {
+    test.skip(!!process.env.E2E_EXTERNAL_SERVER, 'requires the cloud API and file outbox');
+    const { context, page } = await cloudVisitorPage(browser);
+    const email = `report+${randomUUID()}@e2e.test`;
+    const outbox = path.join(__dirname, '..', 'tmp', 'e2e-data-cloud', 'emails.jsonl');
+    type Mail = {
+      to: string;
+      subject: string;
+      text: string;
+      attachments?: { filename: string; content: string }[];
+    };
+    function mail(): Mail[] {
+      try {
+        return readFileSync(outbox, 'utf8')
+          .trim()
+          .split('\n')
+          .map((line) => JSON.parse(line) as Mail)
+          .filter((item) => item.to === email);
+      } catch {
+        return [];
+      }
+    }
+    const pdfMail = () => mail().filter((message) => message.attachments?.length);
+    try {
+      await page.goto('/vocab-test');
+      await finishKnowingNothing(page);
+      const estimate = await page.getByTestId('vocab-estimate').innerText();
+      await page.getByTestId('vocab-save-report').click();
+      await page.getByTestId('vocab-report-register').click();
+      await page.getByTestId('register-name').fill('Report Reader');
+      await page.getByTestId('register-email').fill(email);
+      await page.getByTestId('register-password').fill('report-password-123');
+      await page.getByTestId('register-confirm-password').fill('report-password-123');
+      await page.getByTestId('register-submit').click();
+      await expect(page.getByTestId('register-check-email')).toBeVisible();
+      await expect
+        .poll(() => mail().filter((message) => /verify/i.test(message.subject)).length)
+        .toBe(1);
+      const verify = mail().find((message) => /verify/i.test(message.subject));
+      const link = verify?.text.match(/https?:\/\/\S+/)?.[0];
+      expect(link).toBeTruthy();
+
+      // The email is opened in a second tab of the same browser.
+      const callback = await context.newPage();
+      await callback.goto(link!);
+      await expect.poll(() => pdfMail().length).toBe(1);
+      const attachment = pdfMail()[0]?.attachments?.[0];
+      expect(attachment?.filename).toMatch(/\.pdf$/);
+      expect(
+        Buffer.from(attachment?.content ?? '', 'base64')
+          .subarray(0, 5)
+          .toString(),
+      ).toBe('%PDF-');
+
+      const reportsUrl = `${CLOUD_API}/api/vocab-test-reports`;
+      const history = await context.request.get(reportsUrl);
+      expect(history.ok()).toBe(true);
+      const { reports } = (await history.json()) as { reports: VocabReport[] };
+      expect(reports).toHaveLength(1);
+      expect(reports[0]?.snapshot.level).toBe('A1');
+      expect(reports[0]?.deliveryStatus).toBe('sent');
+
+      const session = await (await context.request.get(`${CLOUD_API}/api/auth/get-session`)).json();
+      const duplicate = await context.request.post(reportsUrl, {
+        data: { expectedUserId: session.user.id, snapshot: reports[0]?.snapshot },
+      });
+      expect(duplicate.ok()).toBe(true);
+      expect(pdfMail()).toHaveLength(1);
+
+      const backupResponse = await context.request.get(`${CLOUD_API}/api/data`);
+      expect(backupResponse.ok()).toBe(true);
+      const backup = (await backupResponse.json()) as {
+        vocabTestReports?: Array<{
+          snapshot: VocabReport['snapshot'];
+          books: VocabReport['books'];
+        }>;
+      };
+      const savedAt = Date.parse(reports[0]!.snapshot.takenAt);
+      const historyRows = Array.from({ length: 30 }, (_, index) => ({
+        snapshot: {
+          attemptId: randomUUID(),
+          takenAt: new Date(savedAt - (index + 1) * 1000).toISOString(),
+          locale: 'en' as const,
+          estimate: 4000,
+          margin: 500,
+          low: 3500,
+          high: 4500,
+          capped: false,
+          level: 'B2' as const,
+          bookSlugs: [],
+        },
+        books: [],
+      }));
+      backup.vocabTestReports = [...(backup.vocabTestReports ?? []), ...historyRows];
+      const restoreResponse = await context.request.post(`${CLOUD_API}/api/data`, {
+        data: backup,
+      });
+      expect(restoreResponse.ok()).toBe(true);
+
+      // Simulate a stale client view after a successful send. The server should
+      // return the authoritative sent state without sending the same email again.
+      await callback.route('**/api/vocab-test-reports', async (route) => {
+        const response = await route.fetch();
+        const page = (await response.json()) as { reports: VocabReport[] };
+        if (page.reports[0]) page.reports[0] = { ...page.reports[0], deliveryStatus: 'failed' };
+        await route.fulfill({ response, json: page });
+      });
+      await callback.goto('/vocab-test/history');
+      await expect(callback.getByTestId('vocab-report-record')).toHaveCount(30);
+      await expect(callback.getByTestId('vocab-report-record').first()).toContainText(estimate);
+      await expect(callback.getByTestId('vocab-report-status').first()).toContainText(
+        /PDF email could not be sent/i,
+      );
+      const retry = callback.getByTestId('vocab-report-retry').first();
+      await expect(retry).toBeVisible();
+      await callback.unroute('**/api/vocab-test-reports');
+      await retry.click();
+      await expect(callback.getByTestId('vocab-report-status').first()).toHaveText(
+        'Email service accepted the PDF.',
+      );
+      await expect(callback.getByTestId('vocab-report-retry')).toHaveCount(0);
+      expect(pdfMail()).toHaveLength(1);
+
+      await callback.route('**/api/vocab-test-reports', async (route) => {
+        const response = await route.fetch();
+        const page = (await response.json()) as { reports: VocabReport[] };
+        if (page.reports[0]) {
+          page.reports[0] = {
+            ...page.reports[0],
+            deliveryStatus: 'unknown',
+            retryUntil: Date.now() - 1,
+          };
+        }
+        await route.fulfill({ response, json: page });
+      });
+      await callback.reload();
+      await expect(callback.getByTestId('vocab-report-status').first()).toHaveText(
+        'We could not confirm the email was sent. Check your inbox.',
+      );
+      await expect(callback.getByTestId('vocab-report-retry')).toHaveCount(0);
+      await callback.unroute('**/api/vocab-test-reports');
+
+      await callback.getByTestId('vocab-report-load-more').click();
+      await expect(callback.getByTestId('vocab-report-record')).toHaveCount(31);
+      await expect(callback.getByTestId('vocab-report-load-more')).toHaveCount(0);
+
+      const recovery = await cloudVisitorPage(browser);
+      try {
+        const attemptId = randomUUID();
+        const snapshot: VocabReport['snapshot'] = {
+          attemptId,
+          takenAt: new Date().toISOString(),
+          locale: 'en',
+          estimate: 0,
+          margin: 500,
+          low: 0,
+          high: 500,
+          capped: false,
+          level: 'A1',
+          bookSlugs: [],
+        };
+        await recovery.page.addInitScript(
+          ({ attemptId, snapshot }) => {
+            localStorage.setItem(
+              `readfox-vocab-report-draft:${attemptId}`,
+              JSON.stringify({ snapshot, expiresAt: Date.now() + 3 * 24 * 60 * 60 * 1000 }),
+            );
+          },
+          { attemptId, snapshot },
+        );
+        await recovery.page.goto(`/vocab-test?resume=report&draft=${attemptId}`);
+        await expect(recovery.page.getByTestId('vocab-report-auth-prompt')).toBeVisible();
+        await recovery.page.getByTestId('vocab-report-login').click();
+        await recovery.page.getByTestId('login-email').fill(`typo-${email}`);
+        await recovery.page.getByTestId('login-password').fill('report-password-123');
+        await recovery.page.getByTestId('login-submit').click();
+        await expect(recovery.page.getByText('Invalid email or password.')).toBeVisible();
+        await recovery.page.getByTestId('login-email').fill(email);
+        await recovery.page.getByTestId('login-submit').click();
+        await expect(recovery.page.getByTestId('vocab-report-saved')).toBeVisible();
+        await expect.poll(() => pdfMail().length).toBe(2);
+      } finally {
+        await recovery.context.close();
+      }
+    } finally {
+      await context.close();
+    }
   });
 
   test('a learner with an account saves the test level and can change it in settings', async ({
@@ -278,7 +513,7 @@ test.describe('vocabulary test', () => {
       await page.request.put(levelsUrl, { data: { value: { en: 'C1' } } });
       await page.goto('/vocab-test');
       await finishKnowingNothing(page);
-      await expect(page.getByTestId('vocab-register')).toHaveCount(0);
+      await expect(page.getByTestId('vocab-report-auth-prompt')).toHaveCount(0);
       await expect(page.getByTestId('vocab-current-level')).toContainText('C1');
       await page.getByTestId('vocab-save-level-button').click();
       await expect(page.getByTestId('vocab-level-saved')).toContainText('A1');

@@ -13552,6 +13552,104 @@
               "type": "object"
             }
           },
+          "vocabTestReports": {
+            "type": "array",
+            "description": "Saved vocabulary test snapshots and book titles. Restoring these never sends mail.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "snapshot": {
+                  "type": "object",
+                  "properties": {
+                    "attemptId": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "takenAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "locale": {
+                      "type": "string",
+                      "enum": [
+                        "en",
+                        "zh-CN",
+                        "zh-TW",
+                        "ja",
+                        "ko"
+                      ]
+                    },
+                    "estimate": {
+                      "type": "integer"
+                    },
+                    "margin": {
+                      "type": "integer"
+                    },
+                    "low": {
+                      "type": "integer"
+                    },
+                    "high": {
+                      "type": "integer"
+                    },
+                    "capped": {
+                      "type": "boolean"
+                    },
+                    "level": {
+                      "type": "string",
+                      "enum": [
+                        "A1",
+                        "A2",
+                        "B1",
+                        "B2",
+                        "C1",
+                        "C2"
+                      ]
+                    },
+                    "bookSlugs": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "required": [
+                    "attemptId",
+                    "takenAt",
+                    "locale",
+                    "estimate",
+                    "margin",
+                    "low",
+                    "high",
+                    "capped",
+                    "level",
+                    "bookSlugs"
+                  ]
+                },
+                "books": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "slug": {
+                        "type": "string"
+                      },
+                      "title": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "slug",
+                      "title"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "snapshot",
+                "books"
+              ]
+            }
+          },
           "settings": {
             "type": "array",
             "description": "Only the portable preferences: `enabledLanguages`, `targetLanguage` and `timezone`.",

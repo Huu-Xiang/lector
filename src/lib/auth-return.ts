@@ -1,18 +1,10 @@
-/**
- * The only pre-auth destination Lector preserves is the paid-plan picker.
- * Keeping this allowlist narrow means `next` can never become an open redirect,
- * while marketing links can still carry a Cloud or Cloud Plus choice — and a
- * campaign code word (#516) — through registration, verification, sign-in, and
- * two-factor authentication.
- *
- * Two parameters are allowed, `plan` and `promo`, and both are rebuilt from
- * validated values rather than passed through. The path stays pinned to
- * /subscribe, so widening the parameter allowlist adds no redirect surface.
- */
+import { isVocabReportAttemptId } from '../../languages/en/vocab-report';
 
 export type PaidPlan = 'cloud' | 'plus' | 'max';
 
 const SUBSCRIBE_PATH = '/subscribe';
+export const VOCAB_REPORT_HISTORY_PATH = '/vocab-test/history';
+const VOCAB_TEST_PATH = '/vocab-test';
 const SAFE_ORIGIN = 'https://app.lector.invalid';
 const ALLOWED_PARAMS = new Set(['plan', 'promo']);
 
@@ -35,7 +27,34 @@ function normalizePromo(value: string | null): string | null {
   return PROMO_PATTERN.test(promo) ? promo : null;
 }
 
-/** Return a canonical, internal subscribe path or reject the destination. */
+export function vocabReportReturnPath(attemptId: string): string {
+  return `${VOCAB_TEST_PATH}?resume=report&draft=${attemptId}`;
+}
+
+function reportDraftId(params: URLSearchParams): string | null {
+  const draft = params.get('draft');
+  return params.getAll('resume').length === 1 &&
+    params.get('resume') === 'report' &&
+    params.getAll('draft').length === 1 &&
+    Array.from(params.keys()).length === 2 &&
+    isVocabReportAttemptId(draft)
+    ? draft
+    : null;
+}
+
+/** Read a report resume, including an error appended by email verification. */
+export function vocabReportResumeFromSearch(search: string): {
+  attemptId: string | null;
+  callbackError: boolean;
+} | null {
+  const params = new URLSearchParams(search);
+  if (!params.has('resume') && !params.has('draft')) return null;
+  const callbackError = params.has('error');
+  params.delete('error');
+  return { attemptId: reportDraftId(params), callbackError };
+}
+
+/** Return a canonical allowlisted in-app destination after auth. */
 export function sanitizeAuthReturnPath(value: string | null | undefined): string | null {
   if (!value || !value.startsWith('/') || value.startsWith('//')) return null;
 
@@ -46,11 +65,17 @@ export function sanitizeAuthReturnPath(value: string | null | undefined): string
     return null;
   }
 
-  if (url.origin !== SAFE_ORIGIN || url.pathname !== SUBSCRIBE_PATH || url.hash !== '') {
-    return null;
-  }
+  if (url.origin !== SAFE_ORIGIN || url.hash !== '') return null;
 
   const params = url.searchParams;
+  if (url.pathname === VOCAB_TEST_PATH) {
+    const draft = reportDraftId(params);
+    return draft ? vocabReportReturnPath(draft) : null;
+  }
+  if (url.pathname === VOCAB_REPORT_HISTORY_PATH && url.search === '') {
+    return VOCAB_REPORT_HISTORY_PATH;
+  }
+  if (url.pathname !== SUBSCRIBE_PATH) return null;
   // An unrecognised parameter, or a repeated one, rejects the whole
   // destination. Silently dropping it would let a crafted link look preserved
   // while it quietly lost the reader's coupon.

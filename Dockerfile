@@ -177,6 +177,9 @@ COPY --from=api-builder /api ./api
 # (api/src/lib/languages.ts → ../../../languages → /app/languages).
 COPY languages ./languages
 
+# The PDF report uses the public test’s translated score labels.
+COPY messages/src ./messages/src
+
 # Copy entrypoint
 COPY docker-entrypoint.sh ./docker-entrypoint.sh
 

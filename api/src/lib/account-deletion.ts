@@ -47,6 +47,7 @@ import { deleteAudioFile } from './audio-files';
 import { detachInviteData } from './invites';
 
 export const ERASURE_TABLES = [
+  'vocab_test_report_deliveries',
   ...TENANT_TABLES,
   'billing_subscriptions',
   'plan_grants',

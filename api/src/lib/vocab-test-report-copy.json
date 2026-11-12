@@ -1,0 +1,32 @@
+{
+  "en": {
+    "title": "English vocabulary report",
+    "date": "Test date",
+    "levelNote": "Use the estimated level as a starting point for choosing books. It is an informal guide to reading.",
+    "emptyBooks": "No book recommendations for this result."
+  },
+  "zh-CN": {
+    "title": "英语词汇量报告",
+    "date": "测试日期",
+    "levelNote": "参考等级可用来挑选适合自己的读物，作为开始阅读的参考。",
+    "emptyBooks": "本次结果暂无推荐读物。"
+  },
+  "zh-TW": {
+    "title": "英語詞彙量報告",
+    "date": "測試日期",
+    "levelNote": "參考等級可用來挑選適合自己的讀物，作為開始閱讀的參考。",
+    "emptyBooks": "本次結果暫無推薦讀物。"
+  },
+  "ja": {
+    "title": "英語語彙力レポート",
+    "date": "受験日",
+    "levelNote": "推定レベルは、自分に合った本を選ぶときの目安にできます。",
+    "emptyBooks": "今回の結果に合うおすすめの本はありません。"
+  },
+  "ko": {
+    "title": "영어 어휘력 보고서",
+    "date": "시험 날짜",
+    "levelNote": "추정 수준을 참고해 자신의 읽기 실력에 맞는 책을 골라 보세요.",
+    "emptyBooks": "이번 결과에 맞는 추천 도서가 없습니다."
+  }
+}

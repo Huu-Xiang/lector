@@ -620,6 +620,52 @@ export const schemas: Record<string, JsonSchema> = {
       learnerProfiles: { type: 'array', items: { type: 'object' } },
       onboardingProgress: { type: 'array', items: { type: 'object' } },
       learnerEvents: { type: 'array', items: { type: 'object' } },
+      vocabTestReports: {
+        type: 'array',
+        description:
+          'Saved vocabulary test snapshots and book titles. Restoring these never sends mail.',
+        items: {
+          type: 'object',
+          properties: {
+            snapshot: {
+              type: 'object',
+              properties: {
+                attemptId: { type: 'string', format: 'uuid' },
+                takenAt: ISO_DATE_TIME,
+                locale: { type: 'string', enum: ['en', 'zh-CN', 'zh-TW', 'ja', 'ko'] },
+                estimate: { type: 'integer' },
+                margin: { type: 'integer' },
+                low: { type: 'integer' },
+                high: { type: 'integer' },
+                capped: { type: 'boolean' },
+                level: { type: 'string', enum: ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'] },
+                bookSlugs: { type: 'array', items: { type: 'string' } },
+              },
+              required: [
+                'attemptId',
+                'takenAt',
+                'locale',
+                'estimate',
+                'margin',
+                'low',
+                'high',
+                'capped',
+                'level',
+                'bookSlugs',
+              ],
+            },
+            books: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: { slug: { type: 'string' }, title: { type: 'string' } },
+                required: ['slug', 'title'],
+              },
+            },
+          },
+          required: ['snapshot', 'books'],
+        },
+      },
       settings: {
         type: 'array',
         description:
@@ -3115,6 +3161,19 @@ const serviceOps: Record<string, OperationDoc> = {
  * `--include-internal` produces a complete document for our own use.
  */
 const internalOps: Record<string, OperationDoc> = {
+  'GET /api/vocab-test-reports': {
+    summary: 'List saved vocabulary test reports for the signed-in account',
+    tag: 'Vocabulary',
+  },
+  'POST /api/vocab-test-reports': {
+    summary: 'Save a vocabulary test result and send its PDF',
+    tag: 'Vocabulary',
+  },
+  'POST /api/vocab-test-reports/{attemptId}/retry': {
+    summary: 'Retry email delivery of a saved vocabulary test report',
+    tag: 'Vocabulary',
+    notFound: true,
+  },
   'GET /api/email/unsubscribe': {
     summary: 'Show the stop-mail confirm page',
     tag: 'Service',

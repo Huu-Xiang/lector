@@ -42,6 +42,7 @@ import emailPreferences from './email-preferences';
 import feedback from './feedback';
 import sourceCount from './source-count';
 import push from './push';
+import vocabTestReports from './vocab-test-reports';
 
 export type RouteMount = {
   /** Mount prefix, exactly as `app.route()` receives it. */
@@ -85,6 +86,7 @@ export const routeMounts: readonly RouteMount[] = [
   { prefix: '/api/anki', app: anki },
   { prefix: '/api/lessons', app: lessons },
   { prefix: '/api/vocab', app: vocab },
+  { prefix: '/api/vocab-test-reports', app: vocabTestReports },
   { prefix: '/api/cloze', app: cloze },
   { prefix: '/api/review', app: review },
   { prefix: '/api/stats', app: stats },

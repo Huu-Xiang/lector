@@ -46,6 +46,7 @@ function createSchema(db: Database): void {
     CREATE TABLE anki_pending     (userId TEXT NOT NULL DEFAULT 'local', vocabId TEXT NOT NULL, cardType TEXT NOT NULL DEFAULT 'basic', queuedAt TEXT NOT NULL DEFAULT '', PRIMARY KEY (userId, vocabId, cardType));
     CREATE TABLE anki_collections (userId TEXT PRIMARY KEY, crt INTEGER NOT NULL DEFAULT 0, firstSeenAt TEXT NOT NULL DEFAULT '', lastSeenAt TEXT NOT NULL DEFAULT '');
     CREATE TABLE transcript_segments (userId TEXT NOT NULL DEFAULT 'local', lessonId TEXT NOT NULL, idx INTEGER NOT NULL, PRIMARY KEY (userId, lessonId, idx));
+    CREATE TABLE vocab_test_reports (userId TEXT NOT NULL, attemptId TEXT NOT NULL, PRIMARY KEY (userId, attemptId));
     CREATE TABLE user_provider_credentials (userId TEXT NOT NULL, provider TEXT NOT NULL, ciphertext TEXT NOT NULL, model TEXT NOT NULL, PRIMARY KEY (userId, provider));
     CREATE TABLE "user"           (id TEXT PRIMARY KEY, email TEXT NOT NULL, name TEXT);
   `);
@@ -134,9 +135,13 @@ function seedLocal(db: Database): void {
     LOCAL_USER_ID,
     1400000000,
   );
+  db.prepare('INSERT INTO vocab_test_reports (userId, attemptId) VALUES (?, ?)').run(
+    LOCAL_USER_ID,
+    'report-a',
+  );
 }
 
-const LOCAL_TOTAL = 42;
+const LOCAL_TOTAL = 43;
 
 describe('adoptLocalData', () => {
   let db: Database;
@@ -187,6 +192,7 @@ describe('adoptLocalData', () => {
     expect(target.cached_entries).toBe(1);
     expect(target.cached_senses).toBe(1);
     expect(target.cached_related_forms).toBe(1);
+    expect(target.vocab_test_reports).toBe(1);
     expect(Object.values(target).reduce((a, b) => a + b, 0)).toBe(LOCAL_TOTAL);
   });
 
@@ -267,6 +273,7 @@ describe('TENANT_TABLES ratchet', () => {
     'admin_account_flags',
     'twoFactor',
     'email_sends',
+    'vocab_test_report_deliveries',
     'plan_grants',
     'cn_orders',
     'redeem_uses',

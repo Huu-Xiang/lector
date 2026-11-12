@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 import { H2, LegalShell } from '@/components/LegalLinks/shell';
 import VocabTest from '@/components/VocabTest';
+import ReportResume from '@/components/VocabTest/ReportResume';
 import { SITE_ORIGIN } from '@/lib/public-books';
 import { loadVocabTestBooks, loadVocabTestData } from '@/lib/vocab-test-data';
 
@@ -60,6 +62,9 @@ export default async function VocabTestPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structured).replace(/</g, '\\u003c') }}
       />
+      <Suspense fallback={null}>
+        <ReportResume />
+      </Suspense>
       <VocabTest
         meta={{ bands: data.bands.map(({ from, to }) => ({ from, to })), source: data.source }}
         books={loadVocabTestBooks()}

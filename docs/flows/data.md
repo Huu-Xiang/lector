@@ -58,3 +58,7 @@ The user picks a JSON file. The client posts it to `POST /api/data`.
 ### Tables
 
 The restore writes the same study tables that export reads. It does not write Better Auth tables.
+
+## Saved vocabulary test reports
+
+Learning data exports include the saved report summary and recommended books. Imports restore the summary without sending email. An existing report keeps its live delivery state. Account deletion removes saved reports and pending delivery data.

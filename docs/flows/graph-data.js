@@ -235,6 +235,12 @@
     summary: "No Save button. Level, Known, Ignore, key S, Anki, or reader auto-save of a looked-up word creates or updates vocab and knownWords.",
     steps: ["fn:applyReaderWordState", "fn:patchWordState", "fn:saveVocab", "route:vocab-post", "table:vocab"],
   });
+  N("flow:vocab-test-report", "flow", "Save vocabulary test report", {
+    domain: "vocabulary",
+    md: "vocabulary.md#vocabulary-test-reports",
+    summary: "Visitors see the result. A verified account saves it and gets a PDF by email.",
+    steps: ["file:vocab-test-page", "file:route-vocab-test-reports", "file:vocab-test-delivery", "file:email"],
+  });
   N("flow:vocab-list", "flow", "Vocab list", {
     domain: "vocabulary",
     md: "vocabulary.md#vocab-list",
@@ -529,6 +535,9 @@
   N("file:correction-view", "file", "CorrectionView", { path: "src/app/journal/components/CorrectionView.tsx", domain: "journal" });
   N("file:chat-widget", "file", "ChatWidget", { path: "src/components/ChatWidget/index.tsx", domain: "tutor" });
   N("file:cloze-feedback", "file", "ClozeFeedback", { path: "src/components/ClozeFeedback/index.tsx", domain: "tutor" });
+  N("file:vocab-test-page", "file", "Vocabulary test", { path: "src/app/vocab-test/page.tsx", domain: "vocabulary" });
+  N("file:route-vocab-test-reports", "file", "Vocabulary test reports API", { path: "api/src/routes/vocab-test-reports.ts", domain: "vocabulary" });
+  N("file:vocab-test-delivery", "file", "Vocabulary report email", { path: "api/src/lib/vocab-test-report-delivery.ts", domain: "vocabulary" });
   N("file:vocab-page", "file", "Vocab page", { path: "src/app/vocab/page.tsx", domain: "vocabulary" });
   N("file:known-words-import", "file", "KnownWordsImport", { path: "src/app/settings/components/KnownWordsImport/index.tsx", domain: "vocabulary" });
   N("file:listen-along", "file", "ListenAlong", { path: "src/components/ListenAlong/index.tsx", domain: "listen" });
@@ -907,7 +916,7 @@
     "flow:lesson-prefetch",
     "flow:cache-translation",
   ]);
-  domainFlows("vocabulary", ["flow:save-vocab", "flow:vocab-list", "flow:known-word-import"]);
+  domainFlows("vocabulary", ["flow:save-vocab", "flow:vocab-list", "flow:known-word-import", "flow:vocab-test-report"]);
   domainFlows("practice", ["flow:practice-word", "flow:word-review", "flow:dictation", "flow:blacklist"]);
   domainFlows("journal", ["flow:journal-submit", "flow:journal-draft"]);
   domainFlows("tutor", ["flow:tutor-chat", "flow:cloze-explain"]);
@@ -1145,6 +1154,10 @@
   edge("route:vocab-put", "table:knownWords", "writes");
   edge("file:translation-drawer", "fn:applyReaderWordState", "calls");
 
+  edge("flow:vocab-test-report", "file:vocab-test-page", "starts");
+  edge("file:vocab-test-page", "file:route-vocab-test-reports", "calls");
+  edge("file:route-vocab-test-reports", "file:vocab-test-delivery", "calls");
+  edge("file:vocab-test-delivery", "file:email", "calls");
   edge("flow:vocab-list", "file:vocab-page", "starts");
   edge("file:vocab-page", "route:vocab-get", "http");
   edge("flow:known-word-import", "file:known-words-import", "starts");

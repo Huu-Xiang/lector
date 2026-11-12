@@ -5,6 +5,11 @@ import { db } from '../db';
 import { getCurrentUserId } from '../lib/user';
 import { REDACTION_SENTINEL, validateSettingWrite } from '../lib/settings-keys';
 import { buildUserExport, USER_EXPORT_FORMAT, USER_EXPORT_VERSION } from '../lib/user-export';
+import {
+  insertVocabReport,
+  parseVocabReportBackup,
+  type VocabReportBackup,
+} from '../lib/vocab-test-report-store';
 import { countWords } from '../lib/html-to-markdown';
 import { segmentWordsFor } from '../lib/segment-words';
 import {
@@ -142,6 +147,7 @@ const RESTORE_ARRAY_LIMITS = {
   learnerEvents: 100_000,
   wordCards: 100_000,
   wordReviewLog: 200_000,
+  vocabTestReports: 10_000,
   settings: 1_000,
 } as const;
 
@@ -480,6 +486,12 @@ app.post(
     // validateRestoreEnvelope established the finite array-of-object boundary;
     // individual legacy row fields intentionally retain their permissive shape.
     const data = rawData as RestorePayload;
+    const vocabTestReports: VocabReportBackup[] = [];
+    for (const row of data.vocabTestReports ?? []) {
+      const report = parseVocabReportBackup(row);
+      if (!report) return c.json({ error: 'Invalid vocabulary test report' }, 400);
+      vocabTestReports.push(report);
+    }
 
     for (const key of [
       'collections',
@@ -1354,6 +1366,7 @@ app.post(
       learnerEvents: 0,
       wordCards: 0,
       wordReviewLog: 0,
+      vocabTestReports: 0,
       settings: 0,
     };
 
@@ -1854,6 +1867,9 @@ app.post(
         if (restoreSettings.some((setting) => setting.key === 'targetLanguage')) {
           ensureLanguageEnabled(userId, getActiveLanguageCode(userId));
         }
+      }
+      for (const report of vocabTestReports) {
+        if (insertVocabReport(userId, report, 'restored')) results.vocabTestReports++;
       }
     });
 

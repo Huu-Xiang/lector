@@ -139,3 +139,7 @@ flowchart TD
 - Public pages (`AUTH_ROUTES`) render at once, also during server rendering, so their text is in the HTML.
 - SetupGuard mounts `TabPreloader` once the language is known, so other tabs preload in the right language after the gates pass.
 - Sign-out goes through `signOutAndForget` (`src/lib/sign-out.ts`), which removes remembered pages first. The login page removes them again when the server says there is no session; a failed session check does not remove them.
+
+## Return to a vocabulary report
+
+The test saves a short-lived draft in the browser before opening sign-in or registration. The return path contains an opaque draft ID. The same browser can recover the draft after email verification. A known intended address must match the verified session before submission. If the intended account is unknown, the reader can confirm the current verified account. The report API also checks that the submitted account matches the session.

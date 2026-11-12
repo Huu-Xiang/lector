@@ -5,6 +5,7 @@ import {
   paidPlanFromSearch,
   promoFromSearch,
   sanitizeAuthReturnPath,
+  vocabReportResumeFromSearch,
 } from './auth-return';
 
 describe('sanitizeAuthReturnPath', () => {
@@ -78,5 +79,37 @@ describe('auth return helpers', () => {
     expect(authReturnPathFromSearch(href.slice(href.indexOf('?')))).toBe(
       '/subscribe?plan=plus&promo=PRODUCTHUNT',
     );
+  });
+});
+
+describe('vocabulary report returns', () => {
+  const draft = '1f6cc45a-5294-4ca8-9c09-51706a31da2f';
+  const destination = `/vocab-test?resume=report&draft=${draft}`;
+
+  it('preserves only the report resume and private history destinations', () => {
+    expect(sanitizeAuthReturnPath(`/vocab-test?draft=${draft}&resume=report`)).toBe(destination);
+    expect(
+      authReturnPathFromSearch(authHref('/register', destination).slice('/register'.length)),
+    ).toBe(destination);
+    expect(sanitizeAuthReturnPath('/vocab-test/history')).toBe('/vocab-test/history');
+  });
+
+  it('rejects duplicate, missing, extra and unbounded report parameters', () => {
+    expect(sanitizeAuthReturnPath('/vocab-test?resume=report')).toBeNull();
+    expect(sanitizeAuthReturnPath('/vocab-test?resume=report&draft=../private')).toBeNull();
+    expect(sanitizeAuthReturnPath(`${destination}&draft=${draft}`)).toBeNull();
+    expect(sanitizeAuthReturnPath(`${destination}&email=user@example.com`)).toBeNull();
+    expect(sanitizeAuthReturnPath(`${destination}&error=TOKEN_EXPIRED`)).toBeNull();
+    expect(sanitizeAuthReturnPath('/vocab-test/history?account=elsewhere')).toBeNull();
+  });
+
+  it('preserves a valid report draft when the email callback returns an error', () => {
+    expect(vocabReportResumeFromSearch(`resume=report&draft=${draft}&error=invalid_token`)).toEqual(
+      { attemptId: draft, callbackError: true },
+    );
+    expect(vocabReportResumeFromSearch(`resume=other&draft=${draft}&error=invalid_token`)).toEqual({
+      attemptId: null,
+      callbackError: true,
+    });
   });
 });

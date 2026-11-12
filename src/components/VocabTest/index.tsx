@@ -6,7 +6,6 @@ import { useLocale, useTranslations } from 'next-intl';
 import { Check, CircleHelp, X } from 'lucide-react';
 import { buttonVariants, Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { registerHrefForBook } from '@/lib/pending-book';
 import {
   FIRST_ESTIMATE_AFTER,
   MAX_ANSWERS,
@@ -29,6 +28,9 @@ import { addSeenWord, readSeenWords } from '@/lib/vocab-seen';
 import { authClient } from '@/lib/auth-client';
 import { useLectorMode } from '@/lib/use-env';
 import SaveLevel from './SaveLevel';
+import SaveReport from './SaveReport';
+import { ReportEstimate, ReportHistoryLink } from './ReportRecord';
+import { VOCAB_REPORT_LOCALES, type VocabReportSnapshot } from '../../../languages/en/vocab-report';
 import type { VocabTestBook } from '@/lib/vocab-test-data';
 
 /** The live bar runs to the end of the hardest band on a square-root scale, so small counts stay readable. */
@@ -146,7 +148,8 @@ export default function VocabTest({
   const locale = useLocale();
   const { data: session } = authClient.useSession();
   // Without cloud accounts every visitor is the one local user, whose settings always save.
-  const hasAccount = useLectorMode() !== 'cloud' || Boolean(session);
+  const cloud = useLectorMode() === 'cloud';
+  const hasAccount = !cloud || Boolean(session);
   const [step, setStep] = useState<Step>('intro');
   const [answers, setAnswers] = useState<Answer[]>([]);
   const [current, setCurrent] = useState<TestItem | null>(null);
@@ -160,6 +163,11 @@ export default function VocabTest({
   /** Words asked in earlier tests in this browser, read when a test starts. */
   const seenRef = useRef<ReadonlySet<string>>(new Set());
   const answersRef = useRef<Answer[]>([]);
+  const resultVersion = useRef<{
+    answered: number;
+    takenAt: string;
+    snapshot?: VocabReportSnapshot;
+  } | null>(null);
   const preparedRef = useRef<{
     id: string;
     right: TestItem | null;
@@ -171,7 +179,6 @@ export default function VocabTest({
   const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- the saved result is in localStorage
     setLastResult(readVocabResult());
   }, []);
 
@@ -223,6 +230,7 @@ export default function VocabTest({
     preparedRef.current = null;
     setAnswers([]);
     answersRef.current = [];
+    resultVersion.current = null;
     setAnnouncement('');
     showItem(nextItem([], words, seedRef.current, seenRef.current));
     setStep('test');
@@ -252,7 +260,12 @@ export default function VocabTest({
     (all: readonly Answer[]) => {
       clearTimer();
       const result = estimateFromAnswers(all, meta.bands);
-      if (result) writeVocabResult(result.estimate, result.level);
+      if (result) {
+        writeVocabResult(result.estimate, result.level);
+        if (resultVersion.current?.answered !== all.length) {
+          resultVersion.current = { answered: all.length, takenAt: new Date().toISOString() };
+        }
+      }
       setStep('result');
       window.scrollTo({ top: 0 });
     },
@@ -369,6 +382,7 @@ export default function VocabTest({
               ? t('retryStart')
               : t('start')}
         </Button>
+        {cloud && session?.user.emailVerified && <ReportHistoryLink />}
         {loading === 'error' && (
           <p role="alert" className="text-sm text-destructive" data-testid="vocab-load-error">
             {t('loadError')}
@@ -540,8 +554,25 @@ export default function VocabTest({
   const fromSetup = new URLSearchParams(window.location.search).get('from') === 'setup';
   const recommended = recommendBooks(books, score.estimate, score.level);
   const missed = missedWords(answers, score.estimate, meta.bands);
-  const top = recommended[0];
-  const topTitle = top ? shownTitle(top, locale) : '';
+  const createSnapshot = (): VocabReportSnapshot => {
+    const version = resultVersion.current ?? {
+      answered: answers.length,
+      takenAt: new Date().toISOString(),
+    };
+    resultVersion.current = version;
+    return (version.snapshot ??= {
+      attemptId: crypto.randomUUID(),
+      takenAt: version.takenAt,
+      locale: VOCAB_REPORT_LOCALES.find((value) => value === locale) ?? 'en',
+      estimate: score.estimate,
+      margin: score.margin,
+      low: score.low,
+      high: score.high,
+      capped: score.capped,
+      level: score.level,
+      bookSlugs: recommended.map((book) => book.slug),
+    });
+  };
 
   return (
     <section className="space-y-6" data-testid="vocab-result">
@@ -557,11 +588,7 @@ export default function VocabTest({
           className="mt-2 text-3xl font-bold tracking-tight text-balance sm:text-4xl"
           data-testid="vocab-estimate"
         >
-          {score.capped
-            ? t('estimateCapped')
-            : score.low === 0
-              ? t('estimateRange', { high: score.high })
-              : t('estimate', { count: score.estimate, margin: score.margin })}
+          <ReportEstimate score={score} />
         </p>
         <p className="mt-1 text-muted-foreground" data-testid="vocab-precision">
           {t('precisionResult', {
@@ -575,6 +602,7 @@ export default function VocabTest({
         <p className="mt-3 text-muted-foreground">{t('explain')}</p>
       </div>
 
+      {cloud && <SaveReport key={answers.length} createSnapshot={createSnapshot} />}
       {hasAccount && !fromSetup && <SaveLevel level={score.level} />}
 
       {score.guessing && (
@@ -656,11 +684,6 @@ export default function VocabTest({
         </div>
       )}
 
-      {!hasAccount && !fromSetup && top && (
-        <p className="text-base" data-testid="vocab-signup-pitch">
-          {t('signupPitch')}
-        </p>
-      )}
       <div className="flex flex-col gap-2 sm:flex-row">
         {fromSetup && (
           <Link
@@ -670,18 +693,6 @@ export default function VocabTest({
             className={cn(buttonVariants({ size: 'lg' }), 'min-h-11')}
           >
             {t('useLevel', { level: score.level })}
-          </Link>
-        )}
-        {top && !hasAccount && (
-          <Link
-            href={registerHrefForBook({ language: 'en', slug: top.slug })}
-            data-testid="vocab-register"
-            className={cn(
-              buttonVariants({ size: 'lg', variant: fromSetup ? 'outline' : 'default' }),
-              'min-h-11',
-            )}
-          >
-            {t('cta', { title: topTitle })}
           </Link>
         )}
         {score.precision !== 'high' && current !== null && (

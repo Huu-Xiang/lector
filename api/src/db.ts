@@ -539,6 +539,31 @@ function getDb(): Database {
       PRIMARY KEY (userId, templateAlias)
     );
 
+    CREATE TABLE IF NOT EXISTS vocab_test_reports (
+      userId TEXT NOT NULL,
+      attemptId TEXT NOT NULL,
+      snapshotJson TEXT NOT NULL,
+      booksJson TEXT NOT NULL,
+      deliveryStatus TEXT NOT NULL,
+      PRIMARY KEY (userId, attemptId)
+    );
+    CREATE INDEX IF NOT EXISTS idx_vocab_test_reports_user_date_attempt
+      ON vocab_test_reports(userId, json_extract(snapshotJson, '$.takenAt') DESC, attemptId DESC);
+
+    CREATE TABLE IF NOT EXISTS vocab_test_report_deliveries (
+      userId TEXT NOT NULL,
+      attemptId TEXT NOT NULL,
+      state TEXT NOT NULL,
+      payloadJson TEXT,
+      firstAttemptAt INTEGER,
+      leaseUntil INTEGER,
+      leaseId TEXT,
+      providerId TEXT,
+      PRIMARY KEY (userId, attemptId),
+      FOREIGN KEY (userId, attemptId) REFERENCES vocab_test_reports(userId, attemptId)
+        ON DELETE CASCADE
+    );
+
     -- Product-mail opt-out (#558). Keyed on a hash of the address, not
     -- userId, so a later account on the same address stays quiet. Erasure
     -- does not drop it. The column is named email; the value is a hash.
