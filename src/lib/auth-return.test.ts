@@ -113,3 +113,20 @@ describe('vocabulary report returns', () => {
     });
   });
 });
+
+describe('Readfox Beta login continuation', () => {
+  it('preserves the signed authorization query across the normal login route', () => {
+    const query = new URLSearchParams({
+      client_id: 'readfox-beta',
+      redirect_uri: 'https://test.readfox.app/api/auth/oauth2/callback/oidc',
+      sig: 'example-signature',
+    });
+    const target = `/beta-login?${query}`;
+    expect(authReturnPathFromSearch(authHref('/login', target).split('?')[1])).toBe(target);
+    query.delete('sig');
+    expect(sanitizeAuthReturnPath(`/beta-login?${query}`)).toBeNull();
+    query.set('sig', 'example-signature');
+    query.set('redirect_uri', 'javascript:alert(1)');
+    expect(sanitizeAuthReturnPath(`/beta-login?${query}`)).toBeNull();
+  });
+});

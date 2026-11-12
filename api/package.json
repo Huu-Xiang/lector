@@ -16,6 +16,7 @@
   "dependencies": {
     "@anthropic-ai/claude-agent-sdk": "^0.2.114",
     "@anthropic-ai/sdk": "^0.78.0",
+    "@better-auth/oauth-provider": "1.6.23",
     "@mozilla/readability": "^0.6.0",
     "@sentry/bun": "^10.64.0",
     "@sglkc/kuromoji": "1.1.0",

@@ -10,6 +10,7 @@ export async function generateMetadata(): Promise<Metadata> {
 const LAST_UPDATED = new Date(Date.UTC(2026, 10, 12));
 const STORE_ITEMS = [
   'account',
+  'betaSignIn',
   'text',
   'learning',
   'vocabTestReports',

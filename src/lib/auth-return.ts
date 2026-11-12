@@ -54,6 +54,30 @@ export function vocabReportResumeFromSearch(search: string): {
   return { attemptId: reportDraftId(params), callbackError };
 }
 
+export function readfoxBetaLoginPath(query: string): string | null {
+  if (query.length > 4096) return null;
+  const params = new URLSearchParams(query);
+  if (params.getAll('sig').length !== 1 || !params.get('sig')) return null;
+  const uri = params.get('redirect_uri');
+  if (params.getAll('redirect_uri').length !== 1 || !uri) return null;
+  try {
+    const callback = new URL(uri);
+    const local = callback.hostname === 'localhost' || callback.hostname === '127.0.0.1';
+    if (
+      (callback.protocol !== 'https:' && !(local && callback.protocol === 'http:')) ||
+      callback.pathname !== '/api/auth/oauth2/callback/oidc' ||
+      callback.username ||
+      callback.password ||
+      callback.search ||
+      callback.hash
+    )
+      return null;
+  } catch {
+    return null;
+  }
+  return `/beta-login?${params.toString()}`;
+}
+
 /** Return a canonical allowlisted in-app destination after auth. */
 export function sanitizeAuthReturnPath(value: string | null | undefined): string | null {
   if (!value || !value.startsWith('/') || value.startsWith('//')) return null;
@@ -68,6 +92,7 @@ export function sanitizeAuthReturnPath(value: string | null | undefined): string
   if (url.origin !== SAFE_ORIGIN || url.hash !== '') return null;
 
   const params = url.searchParams;
+  if (url.pathname === '/beta-login') return readfoxBetaLoginPath(params.toString());
   if (url.pathname === VOCAB_TEST_PATH) {
     const draft = reportDraftId(params);
     return draft ? vocabReportReturnPath(draft) : null;

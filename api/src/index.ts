@@ -8,7 +8,12 @@ import { authMiddleware } from './lib/auth';
 import { sessionMiddleware } from './lib/session';
 import { assertBillingBootable, billingConfig, billingMiddleware } from './lib/billing';
 import { accountStatusMiddleware } from './lib/admin';
-import { getAuthEngine, runAuthMigrations, resolveTrustedOrigins } from './lib/accounts';
+import {
+  getAuthEngine,
+  runAuthMigrations,
+  resolveTrustedOrigins,
+  provisionReadfoxBetaClient,
+} from './lib/accounts';
 import { HTTPException } from 'hono/http-exception';
 import { startClassifyWorker } from './lib/classify-worker';
 import { startTranscribeWorker } from './lib/transcribe-worker';
@@ -141,7 +146,15 @@ app.use('/api/*', billingMiddleware);
 // opt-in: LECTOR_MODE=cloud + BETTER_AUTH_SECRET on your own box); the
 // external-gate canary keeps delegating to its gateway.
 if (deploymentConfig.authRequired) {
-  await runAuthMigrations(getAuthEngine());
+  const engine = getAuthEngine();
+  await runAuthMigrations(engine);
+  if (process.env.READFOX_BETA_ISSUER_LOGIN_ORIGIN) {
+    const betaOrigin = process.env.READFOX_BETA_ORIGIN;
+    const betaSecret = process.env.READFOX_BETA_CLIENT_SECRET;
+    if (!betaOrigin || !betaSecret)
+      throw new Error('Readfox beta issuer requires its origin and client secret');
+    await provisionReadfoxBetaClient(engine, betaOrigin, betaSecret);
+  }
   app.on(['POST', 'GET'], '/api/auth/*', (c) => getAuthEngine().handler(c.req.raw));
   console.log('[lector] cloud mode: built-in accounts & sessions active (Better Auth)');
 }

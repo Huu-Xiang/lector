@@ -10,6 +10,7 @@ import { betterAuth, type BetterAuthPlugin } from 'better-auth';
 import { APIError, createAuthMiddleware, getOAuthState } from 'better-auth/api';
 import { captcha, genericOAuth, twoFactor } from 'better-auth/plugins';
 import { getMigrations } from 'better-auth/db/migration';
+import { symmetricDecrypt, symmetricEncrypt } from 'better-auth/crypto';
 import type { Database } from 'bun:sqlite';
 import { config } from './config';
 import { sendEmail } from './email';
@@ -24,7 +25,13 @@ import { redeemSignupCode, rememberSignupCode } from './redeem';
 import { shortenIp } from './ip-privacy';
 import { parseSourceCookie } from './source-list';
 import { recordSourceEvent } from './source-counts';
+import { isSuspended } from './account-flags';
 import { Sentry } from './sentry';
+import {
+  readfoxBetaClient,
+  readfoxBetaProvider,
+  validateReadfoxAuthOrigin,
+} from './readfox-beta-auth';
 
 /** Grants the sign-up plan, then starts the welcome mail without waiting for it. Neither step may fail the verification. */
 export function runAfterEmailVerification(
@@ -147,6 +154,8 @@ export interface AuthEngineOptions {
    * `<baseURL>/api/auth/oauth2/callback/oidc`.
    */
   oidc?: OidcOptions;
+  betaIssuerLoginOrigin?: string;
+  betaConsumer?: boolean;
   /**
    * Cloudflare Turnstile secret. When set, sign-up, sign-in, and
    * password-reset requests must carry an `x-captcha-response` token
@@ -202,18 +211,40 @@ export function createAuthEngine(opts: AuthEngineOptions) {
       }),
     );
   }
+  if (opts.betaIssuerLoginOrigin) {
+    validateReadfoxAuthOrigin(opts.betaIssuerLoginOrigin);
+    if (opts.betaIssuerLoginOrigin !== new URL(opts.baseURL).origin || opts.betaConsumer) {
+      throw new Error('Readfox beta issuer must use its own site origin');
+    }
+    plugins.push(readfoxBetaProvider(opts.betaIssuerLoginOrigin, isSuspended));
+  }
+  if (
+    opts.betaConsumer &&
+    (opts.oidc?.clientId !== 'readfox-beta' || opts.oidc.clientSecret.length < 32)
+  ) {
+    throw new Error('Readfox beta consumer requires its own OAuth client configuration');
+  }
+  const isReadfoxBetaCallback = (
+    ctx: { path?: string; params?: Record<string, unknown> } | null | undefined,
+  ) =>
+    opts.betaConsumer &&
+    (ctx?.path === '/oauth2/callback/oidc' ||
+      (ctx?.path === '/oauth2/callback/:providerId' && ctx.params?.providerId === 'oidc'));
   if (opts.oidc) {
+    const { issuer, clientId, clientSecret } = opts.oidc;
     plugins.push(
       genericOAuth({
         config: [
-          {
-            providerId: 'oidc',
-            discoveryUrl: oidcDiscoveryUrl(opts.oidc.issuer),
-            clientId: opts.oidc.clientId,
-            clientSecret: opts.oidc.clientSecret,
-            scopes: opts.oidc.scopes ?? ['openid', 'profile', 'email'],
-            pkce: true,
-          },
+          opts.betaConsumer
+            ? readfoxBetaClient(issuer, clientId, clientSecret)
+            : {
+                providerId: 'oidc',
+                discoveryUrl: oidcDiscoveryUrl(opts.oidc.issuer),
+                clientId: opts.oidc.clientId,
+                clientSecret: opts.oidc.clientSecret,
+                scopes: opts.oidc.scopes ?? ['openid', 'profile', 'email'],
+                pkce: true,
+              },
         ],
       }),
     );
@@ -229,7 +260,13 @@ export function createAuthEngine(opts: AuthEngineOptions) {
     ...(opts.oidc ? { onAPIError: { errorURL: `${new URL(opts.baseURL).origin}/login` } } : {}),
     // A Google login with a verified email joins the account that has the same address, also
     // when that account never verified it; dropUnverifiedPassword then cuts the old password.
-    account: { accountLinking: { requireLocalEmailVerified: !mergesSameEmail } },
+    account: {
+      ...(opts.betaConsumer ? { updateAccountOnSignIn: false } : {}),
+      accountLinking: {
+        requireLocalEmailVerified: !mergesSameEmail,
+        disableImplicitLinking: opts.betaConsumer,
+      },
+    },
     hooks: {
       before: createAuthMiddleware(async (ctx) => {
         if (ctx.path === '/sign-up/email') {
@@ -338,6 +375,9 @@ export function createAuthEngine(opts: AuthEngineOptions) {
             if (account.providerId !== 'credential') {
               dropUnverifiedPassword(opts.database, account.userId);
             }
+            if (opts.betaConsumer && account.providerId === 'oidc') {
+              return { data: { accessToken: null, refreshToken: null, idToken: null } };
+            }
           },
         },
       },
@@ -345,7 +385,11 @@ export function createAuthEngine(opts: AuthEngineOptions) {
         create: {
           before: async (user, ctx) => {
             if (!isOAuthCallback(ctx)) return;
-            if (inviteRequired() && !isAcceptableSignupCode(await oauthInviteCode())) {
+            if (
+              !isReadfoxBetaCallback(ctx) &&
+              inviteRequired() &&
+              !isAcceptableSignupCode(await oauthInviteCode())
+            ) {
               throw new APIError('FORBIDDEN', { message: 'invite_required' });
             }
             const problem = signupEmailProblem(user.email, opts.database, { verifiedOnly: true });
@@ -420,6 +464,48 @@ export function createAuthEngine(opts: AuthEngineOptions) {
 
 export type AuthEngine = ReturnType<typeof createAuthEngine>;
 
+export async function provisionReadfoxBetaClient(
+  engine: AuthEngine,
+  betaOrigin: string,
+  secret: string,
+) {
+  const origin = validateReadfoxAuthOrigin(betaOrigin);
+  if (secret.length < 32) throw new Error('Readfox beta client secret is too short');
+
+  const { adapter, secretConfig } = await engine.$context;
+  const where = [{ field: 'clientId', value: 'readfox-beta' }];
+  const redirectUris = [new URL('/api/auth/oauth2/callback/oidc', origin).href];
+  const existing = await adapter.findOne<{ clientSecret: string; redirectUris: string[] }>({
+    model: 'oauthClient',
+    where,
+  });
+  if (
+    existing &&
+    existing.redirectUris.length === 1 &&
+    existing.redirectUris[0] === redirectUris[0] &&
+    (await symmetricDecrypt({ key: secretConfig, data: existing.clientSecret })) === secret
+  )
+    return;
+
+  const client = {
+    clientId: 'readfox-beta',
+    name: 'Readfox Beta',
+    clientSecret: await symmetricEncrypt({ key: secretConfig, data: secret }),
+    redirectUris,
+    scopes: ['openid', 'profile', 'email'],
+    grantTypes: ['authorization_code'],
+    responseTypes: ['code'],
+    tokenEndpointAuthMethod: 'client_secret_basic',
+    requirePKCE: true,
+    skipConsent: true,
+    public: false,
+    type: 'web',
+    updatedAt: new Date(),
+  };
+  if (existing) await adapter.update({ model: 'oauthClient', where, update: client });
+  else await adapter.create({ model: 'oauthClient', data: { ...client, createdAt: new Date() } });
+}
+
 /**
  * Create/extend Better Auth's tables, idempotently. Runs at boot in cloud
  * mode (index.ts) — same self-migrating posture as db.ts.
@@ -489,6 +575,8 @@ export function getAuthEngine(): AuthEngine {
     trustedOrigins: resolveTrustedOrigins(),
     github: githubFromEnv(),
     oidc: oidcFromEnv(),
+    betaIssuerLoginOrigin: process.env.READFOX_BETA_ISSUER_LOGIN_ORIGIN,
+    betaConsumer: process.env.READFOX_BETA_CONSUMER === '1',
     turnstileSecretKey: process.env.TURNSTILE_SECRET_KEY || undefined,
   });
   return _engine;
