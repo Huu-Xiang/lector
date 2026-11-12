@@ -135,6 +135,13 @@ export function parseStoredScopes(scopesJson: string): string[] | null {
  */
 export function makePatMiddleware(authRequired: boolean) {
   return createMiddleware(async (c, next) => {
+    if (
+      authRequired &&
+      process.env.READFOX_BETA_ISSUER_LOGIN_ORIGIN &&
+      ((c.req.method === 'POST' && c.req.path === '/api/auth/oauth2/token') ||
+        (c.req.method === 'GET' && c.req.path === '/api/auth/oauth2/userinfo'))
+    )
+      return next();
     const authHeader = c.req.header('Authorization');
 
     // No auth header = local access (selfhost) or an already-authenticated

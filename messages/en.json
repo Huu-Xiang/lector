@@ -1615,6 +1615,7 @@
           "account": "Your email address, optional name, and a salted hash of your password.",
           "text": "The <strong>text</strong> extracted from books and articles you import (titles and chapters). We do not keep the original EPUB file.",
           "learning": "Your vocabulary, reading progress, practice history, journal entries and settings.",
+          "betaSignIn": "If you sign in to Readfox Beta with your Readfox account, Beta receives your account identifier, verified email address and name. Beta keeps its own session and study data.",
           "vocabTestReports": "If you save a vocabulary test, we keep the estimated range, reference level, test date and suggested books in your account. Your answers stay in your browser.",
           "readingStats": "Your reading time and the number of words you read, stored in your learning statistics.",
           "autoSave": "The words you look up are saved to your word list automatically. You can turn this off in Settings.",

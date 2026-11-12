@@ -99,6 +99,7 @@ export function checkoutUrl(): string {
  * the session only exists once the code verifies. */
 export const AUTH_ROUTES = [
   '/login',
+  '/beta-login',
   '/register',
   '/reset-password',
   '/two-factor',

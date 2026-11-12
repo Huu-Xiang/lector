@@ -41,3 +41,15 @@ The step-by-step runbook is [warm-cache-en-zh.md](warm-cache-en-zh.md). It calls
 ## Lesson prefetch
 
 When a learner opens a lesson, the reader asks `POST /api/translate/prefetch` for the meanings of up to 12 words above the learner's level. It reads the shared cache first. It starts at most 4 new AI translations per lesson and 40 per user per day. It never uses the monthly allowance or the learner's own key. Set `LOOKUP_PREFETCH=0` in `/srv/lector/.env` to turn it off.
+
+## Readfox Beta sign-in
+
+The issuer and consumer run in cloud mode with separate databases, host-only cookies, and separate Better Auth session secrets. To enable the primary issuer, set:
+
+- `READFOX_BETA_ISSUER_LOGIN_ORIGIN=https://readfox.app`
+- `READFOX_BETA_ORIGIN=https://test.readfox.app`
+- `READFOX_BETA_CLIENT_SECRET` to a new random secret of at least 32 characters.
+
+On Beta, set `READFOX_BETA_CONSUMER=1`, `OIDC_ISSUER=https://readfox.app`, `OIDC_CLIENT_ID=readfox-beta`, `OIDC_CLIENT_SECRET` to the same OAuth client secret, and `OIDC_PROVIDER_NAME=Readfox`. The primary issuer registers one exact callback on startup. An existing Beta account with the same email needs explicit account linking before it can sign in this way.
+
+Test locally with `npm run build && npx playwright test -c playwright.beta-sso.config.ts`. The harness creates two temporary databases. The primary site's authorization remains off until its issuer environment is configured.

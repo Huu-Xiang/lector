@@ -556,6 +556,7 @@
   N("file:layout", "file", "Root layout", { path: "src/app/layout.tsx", domain: "auth" });
   N("file:auth-guard", "file", "AuthGuard", { path: "src/components/AuthGuard/index.tsx", domain: "auth" });
   N("file:billing-guard", "file", "BillingGuard", { path: "src/components/BillingGuard/index.tsx", domain: "billing" });
+  N("file:beta-login-page", "file", "Readfox beta login continuation", { path: "src/app/(auth)/beta-login/BetaLogin.tsx", domain: "auth" });
   N("file:login-page", "file", "Login page", { path: "src/app/(auth)/login/page.tsx", domain: "auth" });
   N("file:query-cache", "file", "query-cache.ts", { path: "src/lib/query-cache.ts", domain: "library" });
   N("file:query-cache-store", "file", "query-cache-store.ts", { path: "src/lib/query-cache-store.ts", domain: "library" });
@@ -1390,6 +1391,8 @@
   edge("file:tab-preload", "file:data-layer", "calls");
   edge("file:data-layer", "file:query-cache", "uses");
   edge("file:query-cache", "file:query-cache-store", "uses");
+  edge("file:beta-login-page", "file:login-page", "then");
+  edge("file:beta-login-page", "route:auth-handler", "http");
   edge("file:login-page", "file:sign-out", "calls");
   edge("file:sign-out", "file:query-cache", "calls");
   edge("fn:bounceToLogin", "file:api-base", "in");

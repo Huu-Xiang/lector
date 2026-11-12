@@ -143,3 +143,9 @@ flowchart TD
 ## Return to a vocabulary report
 
 The test saves a short-lived draft in the browser before opening sign-in or registration. The return path contains an opaque draft ID. The same browser can recover the draft after email verification. A known intended address must match the verified session before submission. If the intended account is unknown, the reader can confirm the current verified account. The report API also checks that the submitted account matches the session.
+
+## Sign in to Readfox Beta
+
+Beta starts OAuth on the primary site. A visitor without a primary session completes the usual sign-in and any two-factor challenge. The login continuation passes the signed request back to the primary authorization server. The server checks the signature and issues a short-lived code for the registered Beta callback.
+
+Beta exchanges the code and checks the primary account's verified identity. It creates or finds a local account by the primary account's stable ID. Beta writes its own session and keeps its own study data. Both sites keep separate cookies and databases.

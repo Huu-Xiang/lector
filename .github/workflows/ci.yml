@@ -135,6 +135,7 @@ jobs:
       - uses: ./.github/actions/fetch-dicts
       - uses: ./.github/actions/setup-playwright
       - run: npm run test:e2e
+      - run: npm run build && npx playwright test -c playwright.beta-sso.config.ts
       - uses: actions/upload-artifact@v7
         if: ${{ !cancelled() }}
         with:
