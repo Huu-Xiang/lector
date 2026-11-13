@@ -36,7 +36,7 @@ export default function CompactDisclosure({
         if (defer) setOpen(detail.open);
       }}
     >
-      <summary className="flex min-h-11 cursor-pointer list-none items-center gap-2.5 px-3 py-2 text-sm font-semibold focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring active:bg-accent [&::-webkit-details-marker]:hidden">
+      <summary className="flex min-h-11 cursor-pointer list-none items-center gap-2.5 px-3 py-2 text-base leading-snug font-semibold focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring active:bg-accent [&::-webkit-details-marker]:hidden">
         {Icon && <Icon className="size-4 shrink-0 text-primary" aria-hidden />}
         <span className="min-w-0 flex-1">{title}</span>
         <ChevronRight

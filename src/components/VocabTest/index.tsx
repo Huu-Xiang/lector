@@ -650,7 +650,7 @@ export default function VocabTest({
           <p className="font-semibold" data-testid="vocab-level">
             {t('level', { level: score.level })}
           </p>
-          <p className="text-muted-foreground" data-testid="vocab-precision">
+          <p className="native-subtitle text-muted-foreground" data-testid="vocab-precision">
             {t('precisionResult', {
               level: t(`precisionLevel.${score.precision}`),
               count: score.answered,
@@ -707,7 +707,7 @@ export default function VocabTest({
           className="rounded-xl border border-border bg-muted/50 p-4"
         >
           <p className="font-semibold">{t('guessingTitle')}</p>
-          <p className="mt-1">{t('guessingBody')}</p>
+          <p className="native-subtitle mt-1">{t('guessingBody')}</p>
         </div>
       )}
 
@@ -717,7 +717,7 @@ export default function VocabTest({
             {t('missedTitle')}{' '}
             <span className="font-normal text-muted-foreground">({missed.length})</span>
           </summary>
-          <p className="text-sm text-muted-foreground">{t('missedHint')}</p>
+          <p className="native-subtitle text-sm text-muted-foreground">{t('missedHint')}</p>
           <ul className="mt-2 mb-3 flex flex-wrap gap-2">
             {missed.map((item) => (
               <li key={item.id} className="rounded-lg border border-border bg-card px-3 py-1.5">
@@ -766,7 +766,9 @@ export default function VocabTest({
                     )}
                     <span className="min-w-0">
                       <span className="block font-semibold">{shown}</span>
-                      <span className="block text-muted-foreground">{book.author}</span>
+                      <span className="native-subtitle block text-muted-foreground">
+                        {book.author}
+                      </span>
                       <span className="block text-xs text-muted-foreground">
                         {t('bookLevel', { level: book.level })}
                         {book.coverage !== null &&

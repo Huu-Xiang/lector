@@ -107,12 +107,25 @@ test('iPhone settings show compact groups and expand a directly linked setting',
     .filter({ hasText: /^Languages$/ })
     .click();
   await expect(settings.getByTestId('native-language-select')).toBeVisible();
+  const readingLevel = settings.getByTestId('reading-level-settings');
+  await expect(readingLevel).toBeVisible();
+  await expect(readingLevel.getByRole('heading', { name: 'Reading level' })).toHaveCSS(
+    'font-size',
+    '15px',
+  );
+  await expect(
+    readingLevel.getByRole('heading', { name: 'Reading level' }).locator('+ p'),
+  ).toHaveCSS('font-size', '13px');
   await settings
     .locator('summary')
     .filter({ hasText: /^Reading and practice$/ })
     .click();
   await expect(settings.getByTestId('native-language-select')).toBeHidden({ timeout: 2000 });
   await expect(settings.getByTestId('review-goal')).toBeVisible();
+  await expect(settings.getByTestId('prose-settings').locator('h2 + p')).toHaveCSS(
+    'font-size',
+    '13px',
+  );
 
   await page.goto('/settings#review-goal');
   await expect(settings.getByTestId('review-goal')).toBeVisible();

@@ -38,7 +38,9 @@ export default function MePage() {
         </div>
         <div className="min-w-0">
           <h1 className="native-page-title text-2xl font-extrabold">{t('me')}</h1>
-          {name && <p className="text-sm break-words text-muted-foreground">{name}</p>}
+          {name && (
+            <p className="native-subtitle text-sm break-words text-muted-foreground">{name}</p>
+          )}
         </div>
       </header>
       <ul className="divide-y divide-border overflow-hidden rounded-2xl border border-border bg-card">

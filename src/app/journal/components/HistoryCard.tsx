@@ -48,7 +48,7 @@ export default function HistoryCard({
           </button>
         </div>
       </div>
-      <p className="line-clamp-2 text-sm text-muted-foreground">{preview}</p>
+      <p className="native-subtitle line-clamp-2 text-sm text-muted-foreground">{preview}</p>
       <p className="mt-1 text-xs text-muted-foreground">{t('words', { count: entry.wordCount })}</p>
     </div>
   );

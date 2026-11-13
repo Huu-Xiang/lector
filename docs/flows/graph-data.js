@@ -515,7 +515,7 @@
     domain: "library",
     summary: "Header actions and reading recommendations. Tap the recommendation header to expand it. On iOS, saved books appear first.",
   });
-  N("file:collection-page", "file", "Collection page", { path: "src/app/collection/[id]/page.tsx", domain: "library", summary: "On iPhone, each lesson row opens the reader or a menu of lesson actions." });
+  N("file:collection-page", "file", "Collection page", { path: "src/app/collection/[id]/page.tsx", domain: "library", summary: "On iPhone, author and lesson counts sit below the title in smaller text. Each lesson row opens the reader or a menu of lesson actions." });
   N("file:read-page", "file", "Read page", { path: "src/app/read/[bookId]/page.tsx", domain: "translation" });
   N("file:markdown-reader", "file", "MarkdownReader", { path: "src/components/MarkdownReader/index.tsx", domain: "library" });
   N("file:reader-article", "file", "ReaderArticle", { path: "src/components/MarkdownReader/ReaderArticle.tsx", domain: "library" });
@@ -540,7 +540,7 @@
   N("file:chat-widget", "file", "ChatWidget", { path: "src/components/ChatWidget/index.tsx", domain: "tutor" });
   N("file:cloze-feedback", "file", "ClozeFeedback", { path: "src/components/ClozeFeedback/index.tsx", domain: "tutor" });
   N("file:vocab-test-page", "file", "Vocabulary test", { path: "src/app/vocab-test/page.tsx", domain: "vocabulary", summary: "Standalone for visitors, within the workspace for signed-in users." });
-  N("file:vocab-test-quiz", "file", "Vocabulary quiz and progress", { path: "src/components/VocabTest/index.tsx", domain: "vocabulary" });
+  N("file:vocab-test-quiz", "file", "Vocabulary quiz and progress", { path: "src/components/VocabTest/index.tsx", domain: "vocabulary", summary: "On iPhone, result notes and precision use smaller text." });
   N("file:vocab-test-sampling", "file", "Adaptive vocabulary sampling", { path: "src/lib/vocab-test.ts", domain: "vocabulary" });
   N("file:route-vocab-test-reports", "file", "Vocabulary test reports API", { path: "api/src/routes/vocab-test-reports.ts", domain: "vocabulary" });
   N("file:vocab-test-delivery", "file", "Vocabulary report email", { path: "api/src/lib/vocab-test-report-delivery.ts", domain: "vocabulary" });
@@ -551,10 +551,10 @@
   N("file:anki-client", "file", "anki.ts", { path: "src/lib/anki.ts", domain: "anki" });
   N("file:anki-queue", "file", "anki-queue.ts", { path: "src/lib/anki-queue.ts", domain: "anki" });
   N("file:anki-transport", "file", "anki-transport.ts", { path: "src/lib/anki-transport.ts", domain: "anki" });
-  N("file:setup-page", "file", "Setup page", { path: "src/app/setup/page.tsx", domain: "onboarding" });
+  N("file:setup-page", "file", "Setup page", { path: "src/app/setup/page.tsx", domain: "onboarding", summary: "On iPhone, the setup fields use smaller help text below their titles." });
   N("file:setup-guard", "file", "SetupGuard", { path: "src/components/SetupGuard/index.tsx", domain: "onboarding" });
   N("file:onboarding-client", "file", "onboarding.ts", { path: "src/lib/onboarding.ts", domain: "onboarding" });
-  N("file:stats-page", "file", "Stats page", { path: "src/app/stats/page.tsx", domain: "stats", summary: "On iPhone, four totals and the vocabulary trend appear first. Activity, topics, and other charts expand one group at a time." });
+  N("file:stats-page", "file", "Stats page", { path: "src/app/stats/page.tsx", domain: "stats", summary: "On iPhone, four totals and the vocabulary trend appear first. Activity, topics, and other charts expand one group at a time with smaller text below the titles." });
   N("file:web-import", "file", "WebImportModal", { path: "src/components/WebImportModal/index.tsx", domain: "library" });
   N("file:youtube-import", "file", "YouTubeImportModal", { path: "src/components/YouTubeImportModal/index.tsx", domain: "library" });
   N("file:paste-import", "file", "PasteImportModal", { path: "src/components/PasteImportModal/index.tsx", domain: "library" });
@@ -575,7 +575,7 @@
   N("file:accounts", "file", "accounts.ts", { path: "api/src/lib/accounts.ts", domain: "auth" });
   N("file:lifecycle-email", "file", "lifecycle-email.ts", { path: "api/src/lib/lifecycle-email.ts", domain: "auth" });
   N("file:email", "file", "email.ts", { path: "api/src/lib/email.ts", domain: "auth" });
-  N("file:settings-page", "file", "Settings page", { path: "src/app/settings/page.tsx", domain: "settings", summary: "On iPhone, settings open one group at a time. An anchor link expands the group that contains the setting." });
+  N("file:settings-page", "file", "Settings page", { path: "src/app/settings/page.tsx", domain: "settings", summary: "On iPhone, settings open one group at a time and use smaller help text below titles. An anchor link opens the group that contains the setting." });
   N("file:language-selector", "file", "LanguageSelector", { path: "src/components/LanguageSelector/index.tsx", domain: "onboarding" });
   N("file:languages-settings", "file", "LanguagesSettings", { path: "src/app/settings/components/LanguagesSettings/index.tsx", domain: "settings" });
   N("file:llm-settings", "file", "LLMSettings", { path: "src/app/settings/components/LLMSettings/index.tsx", domain: "settings" });

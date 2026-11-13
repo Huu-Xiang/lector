@@ -1027,6 +1027,16 @@ html[data-native-app] body:has(.setup-page)::before {
   }
 }
 
+html[data-native-app]
+  :is(
+    .native-subtitle,
+    [data-slot='dialog-description'],
+    .compact-disclosure-body p.text-sm.text-muted-foreground
+  ) {
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+
 html[data-native-app] .compact-disclosure-body > :is(.panel, .compact-section) {
   margin: 0;
   padding: 0.75rem;

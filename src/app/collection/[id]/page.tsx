@@ -327,7 +327,7 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
             </Button>
           )}
         </div>
-        <p className="mt-1 text-sm text-muted-foreground">
+        <p className="native-subtitle mt-1 text-sm text-muted-foreground">
           {collection.author} &middot; {t('collection.lessonsCount', { count: lessons.length })}
           {completedCount > 0 && ` \u00b7 ${t('collection.completed', { count: completedCount })}`}
         </p>

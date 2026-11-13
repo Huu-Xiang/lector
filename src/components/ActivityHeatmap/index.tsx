@@ -133,7 +133,10 @@ export default function ActivityHeatmap({
       <div data-testid="activity-heatmap" className="panel p-6">
         <div className={compact ? 'mb-2' : 'mb-4 flex items-center justify-between'}>
           {!compact && <h3 className="text-lg font-semibold text-foreground">{t('title')}</h3>}
-          <div data-testid="activity-heatmap-total" className="text-sm text-muted-foreground">
+          <div
+            data-testid="activity-heatmap-total"
+            className="native-subtitle text-sm text-muted-foreground"
+          >
             {t(`total.${unit}`, { count: totalActivity })}
           </div>
         </div>

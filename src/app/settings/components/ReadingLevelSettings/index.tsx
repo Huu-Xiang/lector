@@ -58,13 +58,19 @@ export default function ReadingLevelSettings() {
         return (
           <div key={code} className="space-y-2" data-testid={`reading-level-${code}`}>
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <p className="font-medium">
+              <p className="native-subtitle font-medium">
                 <span className="language-emoji mr-2" aria-hidden="true">
                   {language.flag}
                 </span>
                 {language.native}
               </p>
-              {code === 'en' && <VocabTestLink from="settings" testId="settings-vocab-test-link" />}
+              {code === 'en' && (
+                <VocabTestLink
+                  from="settings"
+                  className="native-subtitle"
+                  testId="settings-vocab-test-link"
+                />
+              )}
             </div>
             <ReadingLevelPicker
               level={levelFor(levels, code)}

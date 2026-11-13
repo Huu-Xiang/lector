@@ -51,7 +51,7 @@ sequenceDiagram
 
 ### Branches
 
-- On phones, setup puts translation and learning languages in a compact grid with a sticky action row. The iPhone app uses text labels in the picker.
+- On phones, setup puts translation and learning languages in a compact grid with a sticky action row. The iPhone app uses text labels in the picker and smaller help text below section titles.
 
 - Skip to library records `skipped` and does not run the guided lesson.
 - While the guide is `in_progress`, the reader shows the coach on any lesson in the guide's language, so "Next lesson" does not drop it. Only the recommended lesson records `lesson.opened`.

@@ -74,7 +74,9 @@ export default function CollectionCard({ collection }: CollectionCardProps) {
             <h3 className="line-clamp-2 text-base font-semibold text-foreground">{title}</h3>
             {original && <p className="line-clamp-1 text-xs text-muted-foreground">{original}</p>}
             {collection.author && (
-              <p className="truncate text-sm text-muted-foreground">{collection.author}</p>
+              <p className="native-subtitle truncate text-sm text-muted-foreground">
+                {collection.author}
+              </p>
             )}
             {showDescriptions && description && (
               <p

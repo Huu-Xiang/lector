@@ -1,6 +1,6 @@
 # Stats domain
 
-On iPhone, four totals and the tracked vocabulary trend appear first. Open Activity, Areas of Fluency, or Details for the other charts. Only one group stays open at a time. The vocabulary test has separate results.
+On iPhone, four totals and the tracked vocabulary trend appear first. Open Activity, Areas of Fluency, or Details for the other charts. Only one group stays open at a time. Its summary and help text sit below the group title in smaller type. The vocabulary test has separate results.
 
 This domain counts activity for the day, streaks, and fluency. Topic domains on the radar are not app domains. See `api/src/lib/domains.ts`.
 

@@ -165,6 +165,7 @@ test.describe('iPhone statistics', () => {
       .filter({ hasText: /^Activity$/ })
       .click();
     await expect(page.getByTestId('domain-fluency-radar')).toBeHidden({ timeout: 2000 });
+    await expect(details.getByTestId('activity-heatmap-total')).toHaveCSS('font-size', '13px');
     const grid = details.getByRole('region', { name: 'Activity' });
     await expect(grid).toBeVisible();
     const dimensions = await grid.evaluate((node) => ({

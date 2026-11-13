@@ -89,7 +89,10 @@ export default function DomainFluencyRadar({
             ))}
           </ul>
         ) : (
-          <p className="text-sm text-foreground" data-testid="domain-radar-empty">
+          <p
+            className="native-subtitle text-sm text-muted-foreground"
+            data-testid="domain-radar-empty"
+          >
             {t('emptyTitle')}
           </p>
         )}

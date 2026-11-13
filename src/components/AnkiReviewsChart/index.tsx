@@ -145,7 +145,9 @@ export default function AnkiReviewsChart({
     <div data-testid="anki-reviews-card" className="panel p-6">
       <div className="mb-4 flex items-center justify-between gap-4">
         <h3 className="text-lg font-semibold text-foreground">{t('title')}</h3>
-        {hasData && <span className="text-sm text-muted-foreground">{t('last90')}</span>}
+        {hasData && (
+          <span className="native-subtitle text-sm text-muted-foreground">{t('last90')}</span>
+        )}
       </div>
 
       {hasData ? (

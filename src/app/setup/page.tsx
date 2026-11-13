@@ -391,7 +391,9 @@ export default function SetupPage() {
               <h2 id="native-heading" className="mb-1 text-sm font-bold text-foreground">
                 {t('nativeTitle')}
               </h2>
-              <p className="mb-2 text-sm text-muted-foreground sm:mb-3">{t('nativeHint')}</p>
+              <p className="native-subtitle mb-2 text-sm text-muted-foreground sm:mb-3">
+                {t('nativeHint')}
+              </p>
               <div className="sm:w-80">
                 <Select
                   value={native}
@@ -485,7 +487,9 @@ export default function SetupPage() {
                   <h2 id="preferences-heading" className="text-sm font-bold text-foreground">
                     {t('personalise')}
                   </h2>
-                  <p className="mt-1 text-sm text-muted-foreground">{t('personaliseHint')}</p>
+                  <p className="native-subtitle mt-1 text-sm text-muted-foreground">
+                    {t('personaliseHint')}
+                  </p>
                 </div>
                 <span className="rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground">
                   {t('optional')}

@@ -125,4 +125,4 @@ flowchart TD
 
 The API stores one report for each account and test attempt. The mail path uses a separate record and sends an attachment. An uncertain send uses the same request while the email service can deduplicate it. The reading level action remains separate.
 
-The public test opens with three mid-frequency words, then samples near the adaptive target. The answer bar tracks the 8 questions needed to view a result. The estimate and its precision are shown separately.
+The public test opens with three mid-frequency words, then samples near the adaptive target. The answer bar tracks the 8 questions needed to view a result. The estimate and its precision are shown separately. On iPhone, precision and review notes use smaller text.
