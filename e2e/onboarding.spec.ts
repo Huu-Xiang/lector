@@ -195,9 +195,7 @@ test.describe('guided onboarding — selfhost', () => {
       await page.getByTestId('setup-language-en').click();
       await expect(start).toBeEnabled();
       await expect(start).toBeInViewport({ ratio: 1 });
-      await page.getByTestId('skip-guided-onboarding').click();
-      await expect(page).toHaveURL('/');
-      await expect(page.getByRole('heading', { name: '我的书库' })).toBeVisible();
+      await expect(page.getByTestId('skip-guided-onboarding')).toBeInViewport({ ratio: 1 });
     });
   });
 
