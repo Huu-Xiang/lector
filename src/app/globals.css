@@ -100,7 +100,7 @@
 }
 
 @theme inline {
-  --font-sans: var(--font-nunito);
+  --font-sans: var(--font-ui, var(--font-nunito));
   --font-heading: var(--font-nunito);
   --font-reading: var(--font-literata); /* MarkdownReader body */
   --color-sidebar-ring: var(--sidebar-ring);
@@ -923,7 +923,7 @@ html[data-native-app] .app-bottom-spacer {
 
 html[data-native-app] body {
   --font-cjk: var(--font-cjk-sc), var(--font-cjk-jp), var(--font-cjk-kr), var(--font-cjk-tc);
-  --font-nunito: -apple-system, var(--font-cjk), sans-serif;
+  --font-ui: var(--font-nunito), var(--font-cjk), -apple-system, sans-serif;
   --font-reading: var(--font-literata), var(--font-cjk), serif;
 }
 
