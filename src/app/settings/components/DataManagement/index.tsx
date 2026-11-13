@@ -51,7 +51,7 @@ export default function DataManagement() {
   };
 
   return (
-    <section className="rounded-lg border border-destructive/30 bg-card p-6">
+    <section className="compact-section rounded-lg border border-destructive/30 bg-card p-6">
       <h2 className="text-lg font-semibold text-foreground">{t('title')}</h2>
       <p className="mt-1 mb-4 max-w-2xl text-sm text-muted-foreground">{t('description')}</p>
 

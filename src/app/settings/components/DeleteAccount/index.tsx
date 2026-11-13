@@ -51,7 +51,7 @@ function DeleteAccountCard() {
 
   return (
     <section
-      className="rounded-lg border border-destructive/40 bg-card p-6"
+      className="compact-section rounded-lg border border-destructive/40 bg-card p-6"
       data-testid="delete-account"
     >
       <h2 className="mb-2 text-lg font-semibold text-destructive">{t('heading')}</h2>

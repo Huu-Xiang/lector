@@ -1,5 +1,21 @@
 {
   "dailyGoal": {
+    "editor": {
+      "type": "Goal type",
+      "kind": {
+        "minutes": "Reading",
+        "reviews": "Review"
+      },
+      "target": {
+        "minutes": "Reading minutes",
+        "reviews": "Words to review"
+      },
+      "unit": {
+        "minutes": "min",
+        "reviews": "words"
+      },
+      "save": "Save"
+    },
     "label": "Streak {count, plural, one {# day} other {# days}}. Today: {amount}",
     "amount": {
       "minutes": "{done}/{target} min",

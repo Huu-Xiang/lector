@@ -2,7 +2,7 @@
 
 On iOS, the welcome screen links to sign-in and registration. Google sign-in uses the system authentication sheet. The sheet transfers the signed-in session back to Readfox with a short-lived, single-use code.
 
-On iOS, the default tabs are Library, Statistics, and Me. Me opens Vocabulary, the vocabulary test, Practice, Journal, and Settings. Bottom navigation adds a Practice or Journal shortcut on this device. The iPhone settings page shows collapsed groups. The Languages group holds the interface and translation language controls. Links such as `/settings#anki-integration` open the relevant group.
+On iOS, the default tabs are Library, Statistics, and Me. Me opens Vocabulary, the vocabulary test, Practice, Journal, and Settings. Bottom navigation adds a Practice or Journal shortcut on this device. The iPhone settings page opens one group at a time and uses dividers inside each group. The Languages group labels the app language, definition language, and languages you study. Links such as `/settings#anki-integration` open the relevant group.
 
 This domain holds user keys, the LLM provider, personal access tokens, and account delete. Plan tiles live in [Billing](billing.md). Known-word import lives in [Vocabulary](vocabulary.md).
 

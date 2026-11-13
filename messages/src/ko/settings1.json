@@ -1,5 +1,12 @@
 {
   "settings": {
+    "languageRoles": {
+      "app": "앱 언어",
+      "definition": "뜻풀이 언어",
+      "learning": "학습 언어",
+      "appHint": "메뉴와 버튼에 쓰는 언어.",
+      "definitionHint": "단어 뜻과 AI 설명에 쓰는 언어."
+    },
     "groups": {
       "languages": "언어",
       "reading": "읽기 및 연습",

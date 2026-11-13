@@ -15,6 +15,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { getStreak, peekStreak, QUERY_SCOPES, setDailyGoal } from '@/lib/data-layer';
+import { useIsNativeApp } from '@/lib/native-app';
+import DailyGoalEditor from '@/components/DailyGoalEditor';
 import { useQueryRefresh } from '@/lib/use-query-refresh';
 import {
   DAILY_GOAL_PRESETS,
@@ -57,6 +59,7 @@ function ProgressRing({ fraction, met }: { fraction: number; met: boolean }) {
 /** Streak and today's goal progress; the menu shows the details and changes the goal. */
 export default function DailyGoalBadge({ compact = false }: { compact?: boolean }) {
   const t = useTranslations('dailyGoal');
+  const nativeApp = useIsNativeApp();
   const [status, setStatus] = useState<StreakStatus | null>(() => peekStreak() ?? null);
   const [celebrating, setCelebrating] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -113,28 +116,47 @@ export default function DailyGoalBadge({ compact = false }: { compact?: boolean 
     }
   };
 
+  const badgeProps = {
+    'data-testid': 'daily-goal-badge',
+    'data-goal-met': goalMetToday ? 'true' : 'false',
+    'aria-label': t('label', { count: streak, amount }),
+    className: `relative flex h-9 shrink-0 items-center gap-1.5 rounded-full border border-border bg-card px-3 text-sm font-semibold text-foreground transition-colors before:absolute before:-inset-1 hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${celebrating ? 'motion-safe:animate-bounce' : ''}`,
+  };
+  const badgeContent = (
+    <>
+      <Flame
+        aria-hidden="true"
+        className={`size-4 ${goalMetToday ? 'fill-orange-400 text-orange-500' : 'text-muted-foreground'}`}
+      />
+      <span data-testid="daily-goal-streak">{streak}</span>
+      <ProgressRing fraction={shown / goal.target} met={goalMetToday} />
+      {!compact && (
+        <span className="text-xs font-medium whitespace-nowrap text-muted-foreground">
+          {amount}
+        </span>
+      )}
+    </>
+  );
+
+  if (nativeApp) {
+    return (
+      <DailyGoalEditor
+        showProgress
+        trigger={
+          <button type="button" {...badgeProps}>
+            {badgeContent}
+          </button>
+        }
+        onSaveStart={() => {
+          metBefore.current = null;
+        }}
+      />
+    );
+  }
+
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger
-        data-testid="daily-goal-badge"
-        data-goal-met={goalMetToday ? 'true' : 'false'}
-        aria-label={t('label', { count: streak, amount })}
-        className={`relative flex h-9 shrink-0 items-center gap-1.5 rounded-full border border-border bg-card px-3 text-sm font-semibold text-foreground transition-colors before:absolute before:-inset-1 hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
-          celebrating ? 'motion-safe:animate-bounce' : ''
-        }`}
-      >
-        <Flame
-          aria-hidden="true"
-          className={`size-4 ${goalMetToday ? 'fill-orange-400 text-orange-500' : 'text-muted-foreground'}`}
-        />
-        <span data-testid="daily-goal-streak">{streak}</span>
-        <ProgressRing fraction={shown / goal.target} met={goalMetToday} />
-        {!compact && (
-          <span className="text-xs font-medium whitespace-nowrap text-muted-foreground">
-            {amount}
-          </span>
-        )}
-      </DropdownMenuTrigger>
+      <DropdownMenuTrigger {...badgeProps}>{badgeContent}</DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-64" data-testid="daily-goal-menu">
         <DropdownMenuGroup>
           <DropdownMenuLabel className="text-sm text-foreground">

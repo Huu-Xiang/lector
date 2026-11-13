@@ -316,6 +316,13 @@
       "title": "介面語言和翻譯語言",
       "hint": "這是兩個獨立的選擇。比如學法語時，可以用中文介面，同時讓解釋用英文。"
     },
+    "languageRoles": {
+      "app": "介面語言",
+      "definition": "釋義語言",
+      "learning": "學習語言",
+      "appHint": "選單和按鈕使用的語言。",
+      "definitionHint": "查詞和 AI 解釋使用的語言。"
+    },
     "groups": {
       "languages": "語言",
       "reading": "閱讀與練習",
@@ -1388,6 +1395,22 @@
     }
   },
   "dailyGoal": {
+    "editor": {
+      "type": "目標類型",
+      "kind": {
+        "minutes": "閱讀",
+        "reviews": "複習"
+      },
+      "target": {
+        "minutes": "閱讀時間",
+        "reviews": "複習單字數"
+      },
+      "unit": {
+        "minutes": "分鐘",
+        "reviews": "個單字"
+      },
+      "save": "儲存"
+    },
     "label": "連續 {count} 天。今天：{amount}",
     "amount": {
       "minutes": "{done}/{target} 分鐘",

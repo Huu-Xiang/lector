@@ -1,5 +1,12 @@
 {
   "settings": {
+    "languageRoles": {
+      "app": "界面语言",
+      "definition": "释义语言",
+      "learning": "学习语言",
+      "appHint": "菜单和按钮用什么语言。",
+      "definitionHint": "查词和 AI 解释用什么语言。"
+    },
     "groups": {
       "languages": "语言",
       "reading": "阅读与练习",

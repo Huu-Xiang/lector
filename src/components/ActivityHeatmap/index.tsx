@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useLayoutEffect, useMemo, useRef } from 'react';
 import { useFormatter, useLocale, useTranslations } from 'next-intl';
 import { useIsDark } from '@/utils/hooks';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -92,12 +92,18 @@ function DayCell({
 export default function ActivityHeatmap({
   data,
   unit = 'lookups',
+  compact = false,
   endDate,
   colorScheme: colorSchemeProp,
 }: ActivityHeatmapProps) {
   const t = useTranslations('stats.heatmap');
   const format = useFormatter();
   const locale = useLocale();
+  const scroll = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    const node = scroll.current;
+    if (node) node.scrollLeft = node.scrollWidth;
+  }, []);
   const isDark = useIsDark();
   const colorScheme = colorSchemeProp || (isDark ? darkColorScheme : lightColorScheme);
   const dayNames = useMemo(() => {
@@ -125,67 +131,87 @@ export default function ActivityHeatmap({
   return (
     <TooltipProvider delay={120} closeDelay={0}>
       <div data-testid="activity-heatmap" className="panel p-6">
-        <div className="mb-4 flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-foreground">{t('title')}</h3>
+        <div className={compact ? 'mb-2' : 'mb-4 flex items-center justify-between'}>
+          {!compact && <h3 className="text-lg font-semibold text-foreground">{t('title')}</h3>}
           <div data-testid="activity-heatmap-total" className="text-sm text-muted-foreground">
             {t(`total.${unit}`, { count: totalActivity })}
           </div>
         </div>
 
-        {/* Month labels */}
-        <div className="mb-1 ml-8 grid grid-cols-53">
-          {monthLabels
-            .filter((month) => month.span > 0)
-            .map((month) => (
-              <div
-                key={`${month.label}-${month.weekIndex}`}
-                className="text-xs text-muted-foreground"
-                style={{ gridColumn: `span ${month.span}` }}
-              >
-                {month.label}
-              </div>
-            ))}
-        </div>
-
-        {/* Heatmap grid */}
-        <div className="flex">
-          {/* Day of week labels */}
-          <div className="mr-2 flex flex-col text-xs text-muted-foreground">
-            {dayNames.map((day, i) => (
-              <div
-                key={i}
-                className="flex h-[12px] items-center"
-                style={{ visibility: i % 2 === 1 ? 'visible' : 'hidden' }}
-              >
-                {day}
-              </div>
-            ))}
-          </div>
-
-          {/* Weeks */}
-          <div className="grid flex-1 grid-cols-53">
-            {weeks.map((week, weekIdx) => (
-              <div key={weekIdx} className="flex flex-col gap-[2px]">
-                {week.map((day) => (
-                  <DayCell
-                    key={day.date}
-                    day={day}
-                    unit={unit}
-                    color={getColor(day.count, maxCount, colorScheme)}
-                  />
+        <div
+          ref={compact ? scroll : undefined}
+          role={compact ? 'region' : undefined}
+          aria-label={compact ? t('title') : undefined}
+          tabIndex={compact ? 0 : undefined}
+          className={
+            compact
+              ? 'overflow-x-auto focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring'
+              : undefined
+          }
+        >
+          <div className={compact ? 'min-w-[50rem]' : undefined}>
+            {/* Month labels */}
+            <div
+              className={compact ? 'mb-1 ml-12 grid grid-cols-53' : 'mb-1 ml-8 grid grid-cols-53'}
+            >
+              {monthLabels
+                .filter((month) => month.span > 0)
+                .map((month) => (
+                  <div
+                    key={`${month.label}-${month.weekIndex}`}
+                    className="text-xs text-muted-foreground"
+                    style={{ gridColumn: `span ${month.span}` }}
+                  >
+                    {month.label}
+                  </div>
                 ))}
-                {/* Fill empty days for incomplete weeks */}
-                {week.length < 7 &&
-                  Array(7 - week.length)
-                    .fill(null)
-                    .map((_, i) => <div key={`empty-${i}`} className="h-[12px] w-[12px]" />)}
+            </div>
+
+            {/* Heatmap grid */}
+            <div className="flex">
+              {/* Day of week labels */}
+              <div
+                className={`flex flex-col text-xs text-muted-foreground ${compact ? 'w-12 shrink-0 gap-[2px]' : 'mr-2'}`}
+              >
+                {dayNames.map((day, i) => (
+                  <div
+                    key={i}
+                    className="flex h-[12px] items-center"
+                    style={{ visibility: i % 2 === 1 ? 'visible' : 'hidden' }}
+                  >
+                    {day}
+                  </div>
+                ))}
               </div>
-            ))}
+
+              {/* Weeks */}
+              <div className="grid flex-1 grid-cols-53">
+                {weeks.map((week, weekIdx) => (
+                  <div key={weekIdx} className="flex flex-col gap-[2px]">
+                    {week.map((day) => (
+                      <DayCell
+                        key={day.date}
+                        day={day}
+                        unit={unit}
+                        color={getColor(day.count, maxCount, colorScheme)}
+                      />
+                    ))}
+                    {/* Fill empty days for incomplete weeks */}
+                    {week.length < 7 &&
+                      Array(7 - week.length)
+                        .fill(null)
+                        .map((_, i) => <div key={`empty-${i}`} className="h-[12px] w-[12px]" />)}
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Legend */}
-        <div className="mt-4 flex items-center justify-end gap-2 text-xs text-muted-foreground">
+        <div
+          className={`flex items-center justify-end gap-2 text-xs text-muted-foreground ${compact ? 'mt-2' : 'mt-4'}`}
+        >
           <span>{t('less')}</span>
           <div className="flex gap-[2px]">
             <div
@@ -213,7 +239,9 @@ export default function ActivityHeatmap({
         </div>
 
         {/* Stats row */}
-        <div className="mt-4 flex gap-6 border-t border-border pt-4">
+        <div
+          className={`flex flex-wrap border-t border-border ${compact ? 'mt-2 gap-x-4 gap-y-1 pt-2' : 'mt-4 gap-6 pt-4'}`}
+        >
           <div className="text-sm">
             <span className="text-muted-foreground">{t('activeDays')} </span>
             <span className="font-medium text-foreground">{activeDays}</span>

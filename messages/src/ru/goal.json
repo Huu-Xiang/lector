@@ -1,5 +1,21 @@
 {
   "dailyGoal": {
+    "editor": {
+      "type": "Тип цели",
+      "kind": {
+        "minutes": "Чтение",
+        "reviews": "Повторение"
+      },
+      "target": {
+        "minutes": "Минуты чтения",
+        "reviews": "Слова для повторения"
+      },
+      "unit": {
+        "minutes": "мин",
+        "reviews": "слов"
+      },
+      "save": "Сохранить"
+    },
     "label": "Серия: {count, plural, one {# день} few {# дня} many {# дней} other {# дня}}. Сегодня: {amount}",
     "amount": {
       "minutes": "{done}/{target} мин",

@@ -1,5 +1,21 @@
 {
   "dailyGoal": {
+    "editor": {
+      "type": "目標の種類",
+      "kind": {
+        "minutes": "読書",
+        "reviews": "復習"
+      },
+      "target": {
+        "minutes": "読書時間",
+        "reviews": "復習する単語数"
+      },
+      "unit": {
+        "minutes": "分",
+        "reviews": "語"
+      },
+      "save": "保存"
+    },
     "label": "連続 {count} 日。今日：{amount}",
     "amount": {
       "minutes": "{done}/{target} 分",

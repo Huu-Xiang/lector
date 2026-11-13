@@ -1,8 +1,8 @@
 'use client';
 
 import { useIsNativeApp } from '@/lib/native-app';
-import { useEffect, useMemo, useState, type ReactNode } from 'react';
-import { Book, BookOpen, CheckCircle, ChevronRight, Flame } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
+import { Book, BookOpen, CheckCircle, Flame } from 'lucide-react';
 import Link from 'next/link';
 import { useFormatter, useTranslations } from 'next-intl';
 import {
@@ -36,6 +36,7 @@ import { compositeActivityCount, deriveVocabGrowth, sliceSeriesByDays } from '@/
 import ActivityHeatmap from '@/components/ActivityHeatmap';
 import AnkiReviewsChart from '@/components/AnkiReviewsChart';
 import PageHeader from '@/components/PageHeader';
+import CompactDisclosure from '@/components/CompactDisclosure';
 import VocabGrowthChart from '@/components/VocabGrowthChart';
 import DomainFluencyRadar from '@/components/DomainFluencyRadar';
 import {
@@ -384,17 +385,22 @@ export default function StatsPage() {
           className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card"
           data-testid="iphone-stats-details"
         >
-          <StatsDetail title={t('heatmap.title')}>
-            <ActivityHeatmap data={stats.activityData} unit="actions" endDate={stats.endDate} />
-          </StatsDetail>
-          <StatsDetail title={t('radar.title')}>
+          <CompactDisclosure name="stats-groups" defer title={t('heatmap.title')}>
+            <ActivityHeatmap
+              data={stats.activityData}
+              unit="actions"
+              endDate={stats.endDate}
+              compact
+            />
+          </CompactDisclosure>
+          <CompactDisclosure name="stats-groups" defer title={t('radar.title')}>
             <DomainFluencyRadar
               byDomain={stats.fluency.byDomain}
               pending={stats.fluency.pending}
               compact
             />
-          </StatsDetail>
-          <StatsDetail title={t('details')}>
+          </CompactDisclosure>
+          <CompactDisclosure name="stats-groups" defer title={t('details')}>
             <FluencyBadge fluency={stats.fluency} />
             <WordStateBreakdown byState={stats.byState} />
             <ClozeStats
@@ -404,7 +410,7 @@ export default function StatsPage() {
             />
             <SentenceMastery collectionCounts={stats.collectionCounts} />
             <AnkiReviewsChart data={stats.ankiReviews} hasData={stats.ankiHasData} />
-          </StatsDetail>
+          </CompactDisclosure>
         </div>
       ) : (
         <>
@@ -433,25 +439,5 @@ export default function StatsPage() {
         </>
       )}
     </main>
-  );
-}
-
-function StatsDetail({ title, children }: { title: string; children: ReactNode }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <details className="group" onToggle={(event) => setOpen(event.currentTarget.open)}>
-      <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 px-3 py-2 text-sm font-semibold focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring active:bg-accent [&::-webkit-details-marker]:hidden">
-        {title}
-        <ChevronRight
-          className="size-4 shrink-0 text-muted-foreground group-open:rotate-90"
-          aria-hidden
-        />
-      </summary>
-      {open && (
-        <div className="stats-detail-content space-y-2 border-t border-border bg-background/70 p-2">
-          {children}
-        </div>
-      )}
-    </details>
   );
 }

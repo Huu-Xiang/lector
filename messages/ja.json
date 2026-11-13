@@ -316,6 +316,13 @@
       "title": "表示言語と翻訳言語",
       "hint": "この 2 つは別々の設定です。たとえば、フランス語を学びながら、表示は中国語、解説は英語にできます。"
     },
+    "languageRoles": {
+      "app": "表示言語",
+      "definition": "解説の言語",
+      "learning": "学習する言語",
+      "appHint": "メニューやボタンの言語。",
+      "definitionHint": "単語の意味や AI 解説の言語。"
+    },
     "groups": {
       "languages": "言語",
       "reading": "読書と練習",
@@ -1388,6 +1395,22 @@
     }
   },
   "dailyGoal": {
+    "editor": {
+      "type": "目標の種類",
+      "kind": {
+        "minutes": "読書",
+        "reviews": "復習"
+      },
+      "target": {
+        "minutes": "読書時間",
+        "reviews": "復習する単語数"
+      },
+      "unit": {
+        "minutes": "分",
+        "reviews": "語"
+      },
+      "save": "保存"
+    },
     "label": "連続 {count} 日。今日：{amount}",
     "amount": {
       "minutes": "{done}/{target} 分",

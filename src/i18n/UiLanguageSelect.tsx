@@ -18,10 +18,12 @@ function writeLocaleCookie(code: string) {
 export default function UiLanguageSelect({
   className = '',
   showLabel = false,
+  accessibleLabel,
 }: {
   className?: string;
   /** Show a visible "Interface language" caption above the select. */
   showLabel?: boolean;
+  accessibleLabel?: string;
 }) {
   const router = useRouter();
   const locale = useLocale();
@@ -66,7 +68,7 @@ export default function UiLanguageSelect({
         <Select
           value={locale}
           onChange={(e) => change(e.target.value)}
-          aria-label={t('label')}
+          aria-label={accessibleLabel ?? t('label')}
           title={t('label')}
           data-testid="ui-language-select"
           className={`h-8 py-0 pl-8 text-xs md:text-xs ${className}`}

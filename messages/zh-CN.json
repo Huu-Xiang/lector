@@ -316,6 +316,13 @@
       "title": "界面语言和翻译语言",
       "hint": "这是两个独立的选择。比如学法语时，可以用中文界面，同时让解释用英文。"
     },
+    "languageRoles": {
+      "app": "界面语言",
+      "definition": "释义语言",
+      "learning": "学习语言",
+      "appHint": "菜单和按钮用什么语言。",
+      "definitionHint": "查词和 AI 解释用什么语言。"
+    },
     "groups": {
       "languages": "语言",
       "reading": "阅读与练习",
@@ -1388,6 +1395,22 @@
     }
   },
   "dailyGoal": {
+    "editor": {
+      "type": "目标类型",
+      "kind": {
+        "minutes": "阅读",
+        "reviews": "复习"
+      },
+      "target": {
+        "minutes": "阅读时长",
+        "reviews": "复习词数"
+      },
+      "unit": {
+        "minutes": "分钟",
+        "reviews": "个词"
+      },
+      "save": "保存"
+    },
     "label": "连续 {count} 天。今天：{amount}",
     "amount": {
       "minutes": "{done}/{target} 分钟",

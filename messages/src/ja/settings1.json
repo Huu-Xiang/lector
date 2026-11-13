@@ -1,5 +1,12 @@
 {
   "settings": {
+    "languageRoles": {
+      "app": "表示言語",
+      "definition": "解説の言語",
+      "learning": "学習する言語",
+      "appHint": "メニューやボタンの言語。",
+      "definitionHint": "単語の意味や AI 解説の言語。"
+    },
     "groups": {
       "languages": "言語",
       "reading": "読書と練習",

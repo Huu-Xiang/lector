@@ -1252,7 +1252,7 @@ export function peekCollectionCounts(): CollectionCounts | undefined {
   return peekQuery(activeLanguageQueryKey(CLOZE_QUERY_SCOPE, ['counts']));
 }
 
-export async function getStreak(): Promise<StreakStatus> {
+export async function getStreak(options?: ReadOptions): Promise<StreakStatus> {
   return cachedQuery(
     activeLanguageQueryKey(DAILY_STATS_QUERY_SCOPE, ['streak']),
     async () => {
@@ -1260,7 +1260,7 @@ export async function getStreak(): Promise<StreakStatus> {
       await requireOk(res, 'Could not load the streak');
       return res.json();
     },
-    PERSIST,
+    persisted(options),
   );
 }
 

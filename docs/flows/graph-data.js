@@ -554,7 +554,7 @@
   N("file:setup-page", "file", "Setup page", { path: "src/app/setup/page.tsx", domain: "onboarding" });
   N("file:setup-guard", "file", "SetupGuard", { path: "src/components/SetupGuard/index.tsx", domain: "onboarding" });
   N("file:onboarding-client", "file", "onboarding.ts", { path: "src/lib/onboarding.ts", domain: "onboarding" });
-  N("file:stats-page", "file", "Stats page", { path: "src/app/stats/page.tsx", domain: "stats", summary: "On iPhone, four totals and the vocabulary trend appear first. Activity, topics, and other charts expand on demand." });
+  N("file:stats-page", "file", "Stats page", { path: "src/app/stats/page.tsx", domain: "stats", summary: "On iPhone, four totals and the vocabulary trend appear first. Activity, topics, and other charts expand one group at a time." });
   N("file:web-import", "file", "WebImportModal", { path: "src/components/WebImportModal/index.tsx", domain: "library" });
   N("file:youtube-import", "file", "YouTubeImportModal", { path: "src/components/YouTubeImportModal/index.tsx", domain: "library" });
   N("file:paste-import", "file", "PasteImportModal", { path: "src/components/PasteImportModal/index.tsx", domain: "library" });
@@ -575,7 +575,7 @@
   N("file:accounts", "file", "accounts.ts", { path: "api/src/lib/accounts.ts", domain: "auth" });
   N("file:lifecycle-email", "file", "lifecycle-email.ts", { path: "api/src/lib/lifecycle-email.ts", domain: "auth" });
   N("file:email", "file", "email.ts", { path: "api/src/lib/email.ts", domain: "auth" });
-  N("file:settings-page", "file", "Settings page", { path: "src/app/settings/page.tsx", domain: "settings", summary: "On iPhone, settings open in groups. An anchor link expands the group that contains the setting." });
+  N("file:settings-page", "file", "Settings page", { path: "src/app/settings/page.tsx", domain: "settings", summary: "On iPhone, settings open one group at a time. An anchor link expands the group that contains the setting." });
   N("file:language-selector", "file", "LanguageSelector", { path: "src/components/LanguageSelector/index.tsx", domain: "onboarding" });
   N("file:languages-settings", "file", "LanguagesSettings", { path: "src/app/settings/components/LanguagesSettings/index.tsx", domain: "settings" });
   N("file:llm-settings", "file", "LLMSettings", { path: "src/app/settings/components/LLMSettings/index.tsx", domain: "settings" });

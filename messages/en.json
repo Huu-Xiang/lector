@@ -316,6 +316,13 @@
       "title": "Interface and translation languages",
       "hint": "These are two separate choices. For example, you can use a Chinese interface and read explanations in English while you learn French."
     },
+    "languageRoles": {
+      "app": "App language",
+      "definition": "Definition language",
+      "learning": "Languages you study",
+      "appHint": "App menus and buttons.",
+      "definitionHint": "Word meanings and AI explanations."
+    },
     "groups": {
       "languages": "Languages",
       "reading": "Reading and practice",
@@ -1388,6 +1395,22 @@
     }
   },
   "dailyGoal": {
+    "editor": {
+      "type": "Goal type",
+      "kind": {
+        "minutes": "Reading",
+        "reviews": "Review"
+      },
+      "target": {
+        "minutes": "Reading minutes",
+        "reviews": "Words to review"
+      },
+      "unit": {
+        "minutes": "min",
+        "reviews": "words"
+      },
+      "save": "Save"
+    },
     "label": "Streak {count, plural, one {# day} other {# days}}. Today: {amount}",
     "amount": {
       "minutes": "{done}/{target} min",

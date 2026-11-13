@@ -160,7 +160,19 @@ test.describe('iPhone statistics', () => {
     await expect(page.getByTestId('domain-fluency-radar')).toContainText(
       'Based on words you track by topic.',
     );
-    await topics.click();
-    await expect(page.getByTestId('domain-fluency-radar')).toBeHidden();
+    await details
+      .locator('summary')
+      .filter({ hasText: /^Activity$/ })
+      .click();
+    await expect(page.getByTestId('domain-fluency-radar')).toBeHidden({ timeout: 2000 });
+    const grid = details.getByRole('region', { name: 'Activity' });
+    await expect(grid).toBeVisible();
+    const dimensions = await grid.evaluate((node) => ({
+      viewport: node.clientWidth,
+      width: node.scrollWidth,
+      offset: node.scrollLeft,
+    }));
+    expect(dimensions.width).toBeGreaterThan(dimensions.viewport);
+    expect(dimensions.offset).toBeGreaterThan(0);
   });
 });

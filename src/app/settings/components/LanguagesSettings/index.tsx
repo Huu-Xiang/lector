@@ -24,6 +24,7 @@ import { Select } from '@/components/ui/select';
 
 export default function LanguagesSettings({ compact = false }: { compact?: boolean }) {
   const t = useTranslations('settings.languages');
+  const roles = useTranslations('settings.languageRoles');
   const tChrome = useTranslations('chrome.language');
   const ready = parseReadyLanguages(useReadyLanguagesSetting());
   const native = useNativeLanguage();
@@ -64,7 +65,9 @@ export default function LanguagesSettings({ compact = false }: { compact?: boole
 
   return (
     <section className="panel p-6" data-testid="languages-settings">
-      <h2 className="mb-1 text-lg font-semibold text-foreground">{t('title')}</h2>
+      <h2 className="mb-1 text-lg font-semibold text-foreground">
+        {compact ? roles('learning') : t('title')}
+      </h2>
       {(!compact || listed.length > 1) && (
         <p className="mb-4 text-sm text-muted-foreground">{t('description')}</p>
       )}
@@ -101,7 +104,9 @@ export default function LanguagesSettings({ compact = false }: { compact?: boole
       {addable.length > 0 && (
         <div className="flex gap-2">
           <Select
-            wrapperClassName="flex-1"
+            aria-label={t('addPlaceholder')}
+            className={compact ? 'min-h-11' : undefined}
+            wrapperClassName="min-w-0 flex-1"
             value={adding}
             data-testid="add-language-select"
             onChange={(event) => setAdding(event.target.value as LanguageCode | '')}

@@ -109,9 +109,10 @@ test('iPhone settings show compact groups and expand a directly linked setting',
   await expect(settings.getByTestId('native-language-select')).toBeVisible();
   await settings
     .locator('summary')
-    .filter({ hasText: /^Languages$/ })
+    .filter({ hasText: /^Reading and practice$/ })
     .click();
-  await expect(settings.getByTestId('native-language-select')).toBeHidden();
+  await expect(settings.getByTestId('native-language-select')).toBeHidden({ timeout: 2000 });
+  await expect(settings.getByTestId('review-goal')).toBeVisible();
 
   await page.goto('/settings#review-goal');
   await expect(settings.getByTestId('review-goal')).toBeVisible();

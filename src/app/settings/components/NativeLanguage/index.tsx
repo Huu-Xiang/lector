@@ -1,14 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { languageDisplayName } from '@/lib/language-names';
 import { toast } from 'sonner';
-import { getSetting } from '@/lib/data-layer';
-import { saveNativeLanguage } from '@/lib/library-titles';
+import { loadNative, saveNativeLanguage, useNativeLanguage } from '@/lib/library-titles';
 import { useActiveLanguage } from '@/utils/hooks';
 import {
-  DEFAULT_NATIVE_LANGUAGE,
   isNativeLanguageCode,
   learnCodeOfNative,
   NATIVE_LANGUAGES,
@@ -18,9 +16,11 @@ import { Select } from '@/components/ui/select';
 
 export default function NativeLanguage({ compact = false }: { compact?: boolean }) {
   const t = useTranslations('settings.nativeLanguage');
+  const roles = useTranslations('settings.languageRoles');
   const activeLang = useActiveLanguage();
   const locale = useLocale();
-  const [value, setValue] = useState<string>(DEFAULT_NATIVE_LANGUAGE);
+  const value = useNativeLanguage();
+  const hint = useId();
   const [saved, setSaved] = useState(true);
   const [pending, setPending] = useState(false);
   const detected = nativeLanguageFromLocale(
@@ -29,20 +29,18 @@ export default function NativeLanguage({ compact = false }: { compact?: boolean 
 
   useEffect(() => {
     let cancelled = false;
-    getSetting<string>('nativeLanguage')
+    loadNative()
       .then((stored) => {
         if (cancelled) return;
-        if (isNativeLanguageCode(stored)) setValue(stored);
-        else setSaved(false);
+        setSaved(isNativeLanguageCode(stored));
       })
       .catch(() => {});
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [value]);
 
   async function save(next: string) {
-    setValue(next);
     setPending(true);
     try {
       await saveNativeLanguage(next);
@@ -64,20 +62,30 @@ export default function NativeLanguage({ compact = false }: { compact?: boolean 
 
   return (
     <div data-testid="native-language-settings">
-      <h3 className="mb-1 text-sm font-semibold text-foreground">{t('title')}</h3>
-      {!compact && <p className="mb-3 text-sm text-muted-foreground">{t('description')}</p>}
+      <h3 className="mb-1 text-sm font-semibold text-foreground">
+        {compact ? roles('definition') : t('title')}
+      </h3>
+      <p
+        id={hint}
+        className={
+          compact ? 'mb-1 text-xs text-muted-foreground' : 'mb-3 text-sm text-muted-foreground'
+        }
+      >
+        {compact ? roles('definitionHint') : t('description')}
+      </p>
       <Select
         value={value}
         disabled={pending}
         onChange={(e) => save(e.target.value)}
-        aria-label={t('title')}
+        aria-label={compact ? roles('definition') : t('title')}
+        aria-describedby={hint}
         data-testid="native-language-select"
         className={compact ? 'min-h-11 w-full' : 'w-full'}
       >
         {NATIVE_LANGUAGES.map((lang) => (
           <option key={lang.code} value={lang.code}>
             {lang.native}
-            {lang.native !== lang.name ? ` (${lang.name})` : ''}
+            {!compact && lang.native !== lang.name ? ` (${lang.name})` : ''}
           </option>
         ))}
       </Select>

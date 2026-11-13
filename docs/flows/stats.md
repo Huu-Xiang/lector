@@ -1,6 +1,6 @@
 # Stats domain
 
-On iPhone, four totals and the tracked vocabulary trend appear first. Open Activity, Areas of Fluency, or Details for the other charts. The vocabulary test has separate results.
+On iPhone, four totals and the tracked vocabulary trend appear first. Open Activity, Areas of Fluency, or Details for the other charts. Only one group stays open at a time. The vocabulary test has separate results.
 
 This domain counts activity for the day, streaks, and fluency. Topic domains on the radar are not app domains. See `api/src/lib/domains.ts`.
 
@@ -27,7 +27,7 @@ flowchart TD
 | Ping | `api/src/lib/study-session.ts` | `recordStudySessionPing` |
 | Ping route | `api/src/routes/study-ping.ts` | `GET /`, `POST /` |
 
-A day counts toward the streak when the daily goal is met (`dailyGoal`: reading minutes or words reviewed; default 5 minutes). Days before `goalStreakSince` count with any lookup, practice or reading minute. Do not compute a streak on a page.
+A day counts toward the streak when the daily goal is met (`dailyGoal`: reading minutes or words reviewed; default 5 minutes). Days before `goalStreakSince` count with any lookup, practice or reading minute. The iPhone goal editor lets you choose Reading or Review, then scroll or tap to select minutes or words. Saving updates the same daily goal. Do not compute a streak on a page.
 
 The web client does not write `minutesRead`. `api/src/lib/stats-derive.ts` estimates read minutes from lesson progress.
 

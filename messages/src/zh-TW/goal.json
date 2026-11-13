@@ -1,5 +1,21 @@
 {
   "dailyGoal": {
+    "editor": {
+      "type": "目標類型",
+      "kind": {
+        "minutes": "閱讀",
+        "reviews": "複習"
+      },
+      "target": {
+        "minutes": "閱讀時間",
+        "reviews": "複習單字數"
+      },
+      "unit": {
+        "minutes": "分鐘",
+        "reviews": "個單字"
+      },
+      "save": "儲存"
+    },
     "label": "連續 {count} 天。今天：{amount}",
     "amount": {
       "minutes": "{done}/{target} 分鐘",

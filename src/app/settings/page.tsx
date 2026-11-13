@@ -3,7 +3,6 @@
 import { useEffect, type ReactNode } from 'react';
 import {
   BookOpen,
-  ChevronRight,
   Globe2,
   HardDrive,
   Info,
@@ -11,7 +10,6 @@ import {
   Shield,
   SlidersHorizontal,
   UserRound,
-  type LucideIcon,
 } from 'lucide-react';
 
 import DataManagement from './components/DataManagement';
@@ -35,6 +33,7 @@ import InterfaceLanguage from './components/InterfaceLanguage';
 import VersionInfo from './components/VersionInfo';
 import DeleteAccount from './components/DeleteAccount';
 import PageHeader from '@/components/PageHeader';
+import CompactDisclosure from '@/components/CompactDisclosure';
 import BYOKSettings from './components/BYOKSettings';
 import CloudPlanSettings from './components/CloudPlanSettings';
 import InviteCard from './components/InviteCard';
@@ -76,35 +75,46 @@ export default function SettingsPage() {
       >
         <PageHeader title={t('pageTitle')} />
         <SettingsGroups>
-          <SettingsGroup title={t('groups.languages')} icon={Globe2}>
+          <CompactDisclosure name="settings-groups" title={t('groups.languages')} icon={Globe2}>
             <section className="panel space-y-4 p-4" data-testid="language-preferences">
               <InterfaceLanguage compact />
               <NativeLanguage compact />
             </section>
             <LanguagesSettings compact />
             <ReadingLevelSettings />
-          </SettingsGroup>
-          <SettingsGroup
+          </CompactDisclosure>
+          <CompactDisclosure
+            name="settings-groups"
             title={t('groups.reading')}
             icon={BookOpen}
-            anchors="review-goal product-emails"
+            anchors="daily-goal review-goal product-emails"
           >
-            <DailyGoalSettings />
+            <DailyGoalSettings compact />
             <ProseSettings />
             <PracticeSettings />
             {cloud && <ReminderSettings />}
-          </SettingsGroup>
-          <SettingsGroup title={t('groups.appearance')} icon={LayoutGrid}>
+          </CompactDisclosure>
+          <CompactDisclosure
+            name="settings-groups"
+            title={t('groups.appearance')}
+            icon={LayoutGrid}
+          >
             {hasNativeTabBar() && <MobileTabs />}
             <ThemeSettings />
-          </SettingsGroup>
-          <SettingsGroup title={t('groups.account')} icon={UserRound} anchors="plan">
+          </CompactDisclosure>
+          <CompactDisclosure
+            name="settings-groups"
+            title={t('groups.account')}
+            icon={UserRound}
+            anchors="plan"
+          >
             {cloud && <CloudPlanSettings />}
             {cloud && <CnRefund />}
             {cloud && <InviteCard />}
             <Timezone />
-          </SettingsGroup>
-          <SettingsGroup
+          </CompactDisclosure>
+          <CompactDisclosure
+            name="settings-groups"
             title={t('groups.integrations')}
             icon={SlidersHorizontal}
             anchors="byok anki-integration"
@@ -112,20 +122,20 @@ export default function SettingsPage() {
             {cloud ? <BYOKSettings /> : <LLMSettings />}
             <AnkiSettings />
             <TTSSettings />
-          </SettingsGroup>
-          <SettingsGroup title={t('groups.data')} icon={HardDrive}>
+          </CompactDisclosure>
+          <CompactDisclosure name="settings-groups" title={t('groups.data')} icon={HardDrive}>
             <KnownWordsImport />
             <Export />
             <DataManagement />
-          </SettingsGroup>
-          <SettingsGroup title={t('groups.security')} icon={Shield}>
+          </CompactDisclosure>
+          <CompactDisclosure name="settings-groups" title={t('groups.security')} icon={Shield}>
             <TwoFactorSettings />
             <APITokens />
             <DeleteAccount />
-          </SettingsGroup>
-          <SettingsGroup title={t('about.title')} icon={Info}>
+          </CompactDisclosure>
+          <CompactDisclosure name="settings-groups" title={t('about.title')} icon={Info}>
             <VersionInfo hideTitle />
-          </SettingsGroup>
+          </CompactDisclosure>
         </SettingsGroups>
       </main>
     );
@@ -166,10 +176,10 @@ function SettingsGroups({ children }: { children: ReactNode }) {
       if (!anchor) return;
       const target = document.getElementById(anchor);
       const group =
-        target?.closest<HTMLDetailsElement>('details[data-settings-group]') ??
+        target?.closest<HTMLDetailsElement>('details[name="settings-groups"]') ??
         Array.from(
-          document.querySelectorAll<HTMLDetailsElement>('details[data-settings-group]'),
-        ).find((element) => element.dataset.settingsAnchors?.split(' ').includes(anchor));
+          document.querySelectorAll<HTMLDetailsElement>('details[name="settings-groups"]'),
+        ).find((element) => element.dataset.disclosureAnchors?.split(' ').includes(anchor));
       if (!group) return;
       group.open = true;
       (target ?? group).scrollIntoView({ block: 'start' });
@@ -183,33 +193,5 @@ function SettingsGroups({ children }: { children: ReactNode }) {
     <div className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
       {children}
     </div>
-  );
-}
-
-function SettingsGroup({
-  title,
-  icon: Icon,
-  anchors,
-  children,
-}: {
-  title: string;
-  icon: LucideIcon;
-  anchors?: string;
-  children: ReactNode;
-}) {
-  return (
-    <details className="group scroll-mt-20" data-settings-group="" data-settings-anchors={anchors}>
-      <summary className="flex min-h-12 cursor-pointer list-none items-center gap-3 px-3 py-2 text-sm font-semibold focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring active:bg-accent [&::-webkit-details-marker]:hidden">
-        <Icon className="size-5 shrink-0 text-primary" aria-hidden />
-        <span className="min-w-0 flex-1">{title}</span>
-        <ChevronRight
-          className="size-4 shrink-0 text-muted-foreground group-open:rotate-90"
-          aria-hidden
-        />
-      </summary>
-      <div className="settings-panels space-y-3 border-t border-border bg-background/70 p-2">
-        {children}
-      </div>
-    </details>
   );
 }

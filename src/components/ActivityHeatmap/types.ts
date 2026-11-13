@@ -14,6 +14,7 @@ export interface ActivityDay {
 }
 
 export interface ActivityHeatmapProps {
+  compact?: boolean;
   data: ActivityDay[];
   /** Counted unit. Defaults to "lookups". */
   unit?: 'actions' | 'lookups';

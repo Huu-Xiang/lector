@@ -1,5 +1,12 @@
 {
   "settings": {
+    "languageRoles": {
+      "app": "App language",
+      "definition": "Definition language",
+      "learning": "Languages you study",
+      "appHint": "App menus and buttons.",
+      "definitionHint": "Word meanings and AI explanations."
+    },
     "groups": {
       "languages": "Languages",
       "reading": "Reading and practice",

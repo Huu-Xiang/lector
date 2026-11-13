@@ -1,5 +1,12 @@
 {
   "settings": {
+    "languageRoles": {
+      "app": "Язык приложения",
+      "definition": "Язык объяснений",
+      "learning": "Языки обучения",
+      "appHint": "Язык меню и кнопок.",
+      "definitionHint": "Язык значений слов и объяснений ИИ."
+    },
     "groups": {
       "languages": "Языки",
       "reading": "Чтение и практика",

@@ -1,5 +1,21 @@
 {
   "dailyGoal": {
+    "editor": {
+      "type": "목표 유형",
+      "kind": {
+        "minutes": "읽기",
+        "reviews": "복습"
+      },
+      "target": {
+        "minutes": "읽기 시간",
+        "reviews": "복습할 단어 수"
+      },
+      "unit": {
+        "minutes": "분",
+        "reviews": "개"
+      },
+      "save": "저장"
+    },
     "label": "연속 {count}일. 오늘: {amount}",
     "amount": {
       "minutes": "{done}/{target}분",

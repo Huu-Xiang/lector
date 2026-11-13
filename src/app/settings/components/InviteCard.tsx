@@ -120,7 +120,7 @@ export default function InviteCard() {
 
   return (
     <section
-      className="mt-6 rounded-2xl border border-border bg-card p-5"
+      className="compact-section mt-6 rounded-2xl border border-border bg-card p-5"
       data-testid="invite-card"
     >
       <h2 className="text-lg font-semibold text-foreground">{t('title')}</h2>

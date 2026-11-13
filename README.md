@@ -87,6 +87,7 @@ If you do not want to run a server, use the hosted app at [app.lector.dev](https
 - **Tutor and journal.** Ask grammar questions in plain language. Write in the target language. The tutor returns corrections. Use the Claude API or a local model.
 - **Listen.** Optional text-to-speech (TTS). YouTube captions stay timestamped. A podcast upload can become a transcript and a listen-along lesson.
 - **iOS navigation.** The Me tab opens Vocabulary, the vocabulary test, Practice, Journal, and Settings. In Settings, add Practice or Journal to the bottom bar on this device.
+- **Daily goal on iOS.** Tap the streak badge or open Settings to change your goal. Choose Reading for minutes or Review for words, then scroll to the amount and save.
 - **Home screen app.** Lector is an installable web app. Settings shows the steps to add it to a phone's home screen. It then opens full screen from its icon.
 - **Data.** SQLite on your server. Export and restore from Settings. The self-host does not need a cloud account.
 
