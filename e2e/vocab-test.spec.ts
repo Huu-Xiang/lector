@@ -66,7 +66,7 @@ test.describe('vocabulary test', () => {
 
     await finishKnowingNothing(page);
     await expect(page.getByTestId('vocab-level')).toContainText('A1');
-    await expect(page.getByTestId('vocab-estimate')).toContainText('0');
+    await expect(page.getByTestId('vocab-estimate')).toHaveText(/^0 to [\d,]+ words$/);
     await expect(page.getByTestId('vocab-book').first()).toHaveAttribute('href', /^\/books\/en\//);
     await expect(page.getByTestId('vocab-continue-setup')).toHaveCount(0);
     await expect(page.getByTestId('vocab-precision')).toContainText('8 words answered');

@@ -12,6 +12,7 @@ type Estimate = Pick<VocabReportSnapshot, 'capped' | 'low' | 'high'>;
 export function ReportEstimate({ score }: { score: Estimate }) {
   const t = useTranslations('vocabTest');
   if (score.capped) return t('estimateCapped');
+  if (score.low === 0) return t('estimateRange', { high: score.high });
   return t('estimate', {
     count: (score.low + score.high) / 2,
     margin: (score.high - score.low) / 2,
