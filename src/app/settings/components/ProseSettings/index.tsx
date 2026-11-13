@@ -158,7 +158,9 @@ export default function ProseSettings() {
             data-testid={`prose-scope-${code}`}
             onClick={() => setScope(code)}
           >
-            <span aria-hidden="true">{LANGUAGES[code].flag}</span>
+            <span className="language-emoji" aria-hidden="true">
+              {LANGUAGES[code].flag}
+            </span>
             {LANGUAGES[code].native}
             {hasLanguageOverride(settings, code) && (
               <span

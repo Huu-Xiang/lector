@@ -81,7 +81,7 @@ export default function SettingsPage() {
               <InterfaceLanguage compact />
               <NativeLanguage compact />
             </section>
-            <LanguagesSettings />
+            <LanguagesSettings compact />
             <ReadingLevelSettings />
           </SettingsGroup>
           <SettingsGroup

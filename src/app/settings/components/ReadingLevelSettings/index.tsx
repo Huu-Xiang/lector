@@ -59,7 +59,7 @@ export default function ReadingLevelSettings() {
           <div key={code} className="space-y-2" data-testid={`reading-level-${code}`}>
             <div className="flex flex-wrap items-center justify-between gap-2">
               <p className="font-medium">
-                <span className="mr-2" aria-hidden="true">
+                <span className="language-emoji mr-2" aria-hidden="true">
                   {language.flag}
                 </span>
                 {language.native}

@@ -22,7 +22,7 @@ import { useActiveLanguage, useEnabledLanguages } from '@/utils/hooks';
 import { notifyLanguageListChanged } from '@/utils/storage';
 import { Select } from '@/components/ui/select';
 
-export default function LanguagesSettings() {
+export default function LanguagesSettings({ compact = false }: { compact?: boolean }) {
   const t = useTranslations('settings.languages');
   const tChrome = useTranslations('chrome.language');
   const ready = parseReadyLanguages(useReadyLanguagesSetting());
@@ -65,7 +65,9 @@ export default function LanguagesSettings() {
   return (
     <section className="panel p-6" data-testid="languages-settings">
       <h2 className="mb-1 text-lg font-semibold text-foreground">{t('title')}</h2>
-      <p className="mb-4 text-sm text-muted-foreground">{t('description')}</p>
+      {(!compact || listed.length > 1) && (
+        <p className="mb-4 text-sm text-muted-foreground">{t('description')}</p>
+      )}
 
       <ul className="mb-4 divide-y divide-border">
         {listed.map((code) => (
@@ -74,7 +76,9 @@ export default function LanguagesSettings() {
             data-testid={`enabled-language-${code}`}
             className="flex items-center gap-3 py-2"
           >
-            <span className="text-lg">{LANGUAGES[code].flag}</span>
+            <span className="language-emoji text-lg" aria-hidden>
+              {LANGUAGES[code].flag}
+            </span>
             <span className="flex-1 text-sm text-foreground">{LANGUAGES[code].native}</span>
             {code === activeLang.code ? (
               <span className="text-xs text-muted-foreground">{t('inUse')}</span>
