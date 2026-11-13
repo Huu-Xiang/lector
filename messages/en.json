@@ -1454,6 +1454,7 @@
     }
   },
   "stats": {
+    "details": "Details",
     "title": "Statistics",
     "loadFailed": "Failed to load statistics",
     "returnHome": "Return home",
@@ -1562,6 +1563,19 @@
       "pushed": "Pushed to Anki"
     },
     "radar": {
+      "fromTrackedWords": "Based on words you track by topic.",
+      "topics": {
+        "daily_life": "Daily life",
+        "food": "Food & cooking",
+        "health": "Health & medicine",
+        "travel": "Travel & places",
+        "work": "Work & business",
+        "science_tech": "Science & technology",
+        "nature": "Nature & environment",
+        "arts_culture": "Arts & culture",
+        "sport_leisure": "Sport & leisure",
+        "society": "Society & politics"
+      },
       "title": "Areas of Fluency",
       "subtitle": "Where your vocabulary is strongest",
       "pending": "{count, plural, one {# word pending classification} other {# words pending classification}}",
@@ -1572,6 +1586,8 @@
       "mastery": "Mastery"
     },
     "vocabGrowth": {
+      "trackedWords": "Based on your saved words and their learning states.",
+      "noTrackedWords": "Save or mark words as known to see a trend.",
       "title": "Vocabulary Growth",
       "knownWords": "Known Words",
       "learning": "Learning",

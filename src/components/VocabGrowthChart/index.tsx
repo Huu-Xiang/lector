@@ -24,6 +24,7 @@ export default function VocabGrowthChart({
   showLegend = true,
   height = 300,
   controls,
+  compact = false,
 }: VocabGrowthChartProps) {
   const t = useTranslations('stats.vocabGrowth');
   const format = useFormatter();
@@ -38,13 +39,34 @@ export default function VocabGrowthChart({
 
   const latest = data.length > 0 ? data[data.length - 1] : null;
 
+  if (compact && !data.some((point) => point.total > 0)) {
+    return (
+      <section className="panel p-3" data-testid="compact-vocab-growth">
+        <h3 className="text-sm font-semibold">{t('title')}</h3>
+        <p className="mt-1 text-xs text-muted-foreground">{t('noTrackedWords')}</p>
+      </section>
+    );
+  }
+
   return (
-    <div className="panel p-6">
-      <div className="mb-4 flex items-center justify-between gap-4">
-        <h3 className="text-lg font-semibold text-foreground">{t('title')}</h3>
+    <div
+      className={compact ? 'panel min-w-0 p-3' : 'panel p-6'}
+      data-testid={compact ? 'compact-vocab-growth' : undefined}
+    >
+      <div
+        className={
+          compact
+            ? 'mb-2 flex flex-wrap items-center justify-between gap-1'
+            : 'mb-4 flex items-center justify-between gap-4'
+        }
+      >
+        <h3 className={compact ? 'text-sm font-semibold' : 'text-lg font-semibold text-foreground'}>
+          {t('title')}
+        </h3>
         {controls}
       </div>
 
+      {compact && <p className="mb-1 text-xs text-muted-foreground">{t('trackedWords')}</p>}
       <ResponsiveContainer width="100%" height={height}>
         <AreaChart data={formattedData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
           <defs>
@@ -67,16 +89,17 @@ export default function VocabGrowthChart({
           <XAxis
             dataKey="displayDate"
             stroke={theme.axis}
-            fontSize={12}
+            fontSize={compact ? 10 : 12}
             tickLine={false}
             axisLine={{ stroke: theme.grid }}
           />
 
           <YAxis
             stroke={theme.axis}
-            fontSize={12}
+            fontSize={compact ? 10 : 12}
             tickLine={false}
             axisLine={{ stroke: theme.grid }}
+            width={compact ? 38 : 60}
             tickFormatter={(value) => format.number(value)}
           />
 
@@ -84,9 +107,12 @@ export default function VocabGrowthChart({
 
           {showLegend && (
             <Legend
-              wrapperStyle={{ paddingTop: '20px' }}
+              wrapperStyle={{ paddingTop: compact ? '3px' : '20px' }}
               formatter={(value: string) => (
-                <span style={{ color: theme.legend }} className="text-sm capitalize">
+                <span
+                  style={{ color: theme.legend }}
+                  className={compact ? 'text-xs capitalize' : 'text-sm capitalize'}
+                >
                   {t(`series.${value}`)}
                 </span>
               )}
@@ -123,7 +149,7 @@ export default function VocabGrowthChart({
         </AreaChart>
       </ResponsiveContainer>
 
-      {latest && (
+      {!compact && latest && (
         <div className="mt-4 grid grid-cols-3 gap-4 border-t border-border pt-4">
           <SummaryStat value={latest.known} label={t('knownWords')} colorClassName="text-primary" />
           <SummaryStat

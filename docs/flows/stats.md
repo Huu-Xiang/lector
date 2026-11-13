@@ -1,6 +1,6 @@
 # Stats domain
 
-On iOS, the four headline totals appear before the fluency charts.
+On iPhone, four totals and the tracked vocabulary trend appear first. Open Activity, Areas of Fluency, or Details for the other charts. The vocabulary test has separate results.
 
 This domain counts activity for the day, streaks, and fluency. Topic domains on the radar are not app domains. See `api/src/lib/domains.ts`.
 

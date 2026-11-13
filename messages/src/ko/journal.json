@@ -44,6 +44,7 @@
     }
   },
   "stats": {
+    "details": "더 많은 통계",
     "title": "통계",
     "loadFailed": "통계를 불러오지 못했어요",
     "returnHome": "홈으로 돌아가기",
@@ -152,6 +153,19 @@
       "pushed": "Anki로 보냄"
     },
     "radar": {
+      "fromTrackedWords": "단어장에 있는 단어를 주제별로 집계합니다.",
+      "topics": {
+        "daily_life": "일상생활",
+        "food": "음식과 요리",
+        "health": "건강과 의학",
+        "travel": "여행과 지리",
+        "work": "일과 비즈니스",
+        "science_tech": "과학과 기술",
+        "nature": "자연과 환경",
+        "arts_culture": "예술과 문화",
+        "sport_leisure": "운동과 여가",
+        "society": "사회와 정치"
+      },
       "title": "유창성 영역",
       "subtitle": "어휘가 가장 강한 분야",
       "pending": "분류 대기 중인 단어 {count}개",
@@ -162,6 +176,8 @@
       "mastery": "숙달도"
     },
     "vocabGrowth": {
+      "trackedWords": "저장한 단어와 학습 상태를 바탕으로 집계합니다.",
+      "noTrackedWords": "단어를 저장하거나 아는 단어로 표시하면 추이를 볼 수 있어요.",
       "title": "어휘 성장",
       "knownWords": "아는 단어",
       "learning": "학습 중",

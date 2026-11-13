@@ -17,25 +17,34 @@ export const RANGE_OPTIONS: { key: 'd30' | 'd90' | 'y1' | 'all'; days: number | 
 export function RangeSelector({
   value,
   onChange,
+  compact = false,
 }: {
   value: number | null;
   onChange: (days: number | null) => void;
+  compact?: boolean;
 }) {
   const t = useTranslations('stats.range');
   return (
     <div
       data-testid="stats-range-selector"
-      className="inline-flex gap-0.5 rounded-lg bg-muted p-0.5"
+      className={
+        compact
+          ? 'flex flex-wrap gap-1 rounded-lg bg-muted p-0.5'
+          : 'inline-flex gap-0.5 rounded-lg bg-muted p-0.5'
+      }
     >
       {RANGE_OPTIONS.map((opt) => {
         const active = value === opt.days;
         return (
           <Button
             key={opt.key}
-            size="xs"
+            size={compact ? 'default' : 'xs'}
             variant={active ? 'secondary' : 'ghost'}
             aria-pressed={active}
-            className={cn(!active && 'text-muted-foreground')}
+            className={cn(
+              compact && 'min-h-11 min-w-11 grow px-2 text-xs',
+              !active && 'text-muted-foreground',
+            )}
             onClick={() => onChange(opt.days)}
           >
             {t(opt.key)}
@@ -75,16 +84,20 @@ export function StatCard({
   return (
     <div
       className={
-        compact ? 'panel min-w-0 p-3' : 'panel p-6 transition-transform hover:scale-[1.02]'
+        compact ? 'min-w-0 px-3 py-2' : 'panel p-6 transition-transform hover:scale-[1.02]'
       }
     >
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-sm font-medium text-muted-foreground">{label}</p>
-          <p className={`mt-1 font-bold ${compact ? 'text-2xl' : 'text-4xl'} ${textColors[color]}`}>
+          <p className={cn('font-medium text-muted-foreground', compact ? 'text-xs' : 'text-sm')}>
+            {label}
+          </p>
+          <p
+            className={`mt-1 font-bold ${compact ? 'text-lg leading-tight tabular-nums' : 'text-4xl'} ${textColors[color]}`}
+          >
             {typeof value === 'number' ? format.number(value) : value}
           </p>
-          {sublabel && <p className="mt-1 text-sm text-muted-foreground">{sublabel}</p>}
+          {sublabel && !compact && <p className="mt-1 text-sm text-muted-foreground">{sublabel}</p>}
         </div>
         {icon && !compact && <div className={`${textColors[color]} opacity-60`}>{icon}</div>}
       </div>

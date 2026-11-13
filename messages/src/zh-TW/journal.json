@@ -44,6 +44,7 @@
     }
   },
   "stats": {
+    "details": "更多統計",
     "title": "統計",
     "loadFailed": "無法載入統計資料",
     "returnHome": "返回首頁",
@@ -152,6 +153,19 @@
       "pushed": "已推送到 Anki"
     },
     "radar": {
+      "fromTrackedWords": "依單字表中的單字按主題彙整。",
+      "topics": {
+        "daily_life": "日常生活",
+        "food": "飲食與烹飪",
+        "health": "健康與醫學",
+        "travel": "旅行與地理",
+        "work": "工作與商業",
+        "science_tech": "科學與技術",
+        "nature": "自然與環境",
+        "arts_culture": "藝術與文化",
+        "sport_leisure": "運動與休閒",
+        "society": "社會與政治"
+      },
       "title": "擅長領域",
       "subtitle": "你的詞彙最強的面向",
       "pending": "{count} 個詞等待分類",
@@ -162,6 +176,8 @@
       "mastery": "掌握度"
     },
     "vocabGrowth": {
+      "trackedWords": "依單字表中已掌握和學習中的單字統計。",
+      "noTrackedWords": "儲存單字或標記為已掌握後，就能看到變化。",
       "title": "詞彙成長",
       "knownWords": "已掌握的詞",
       "learning": "學習中",

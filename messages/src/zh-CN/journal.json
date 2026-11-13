@@ -44,6 +44,7 @@
     }
   },
   "stats": {
+    "details": "更多统计",
     "title": "统计",
     "loadFailed": "无法加载统计数据",
     "returnHome": "返回首页",
@@ -152,6 +153,19 @@
       "pushed": "已推送到 Anki"
     },
     "radar": {
+      "fromTrackedWords": "根据词表中的单词按主题汇总。",
+      "topics": {
+        "daily_life": "日常生活",
+        "food": "饮食与烹饪",
+        "health": "健康与医学",
+        "travel": "旅行与地理",
+        "work": "工作与商业",
+        "science_tech": "科学与技术",
+        "nature": "自然与环境",
+        "arts_culture": "艺术与文化",
+        "sport_leisure": "运动与休闲",
+        "society": "社会与政治"
+      },
       "title": "擅长领域",
       "subtitle": "你的词汇最强的方面",
       "pending": "{count} 个词等待分类",
@@ -162,6 +176,8 @@
       "mastery": "掌握度"
     },
     "vocabGrowth": {
+      "trackedWords": "根据词表里已掌握和学习中的词统计。",
+      "noTrackedWords": "保存单词或标记为已掌握后，就能看到变化。",
       "title": "词汇增长",
       "knownWords": "已掌握的词",
       "learning": "学习中",

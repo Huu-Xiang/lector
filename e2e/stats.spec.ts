@@ -141,3 +141,26 @@ test.describe('Stats Page', () => {
     await expect(oneYear).toHaveAttribute('aria-pressed', 'false');
   });
 });
+
+test.describe('iPhone statistics', () => {
+  test.use({
+    viewport: { width: 375, height: 667 },
+    userAgent: 'Mozilla/5.0 (iPhone) AppleWebKit/605.1.15 Mobile/15E148 ReadfoxApp/1',
+  });
+
+  test('shows totals and the trend first, with topic details on demand', async ({ page }) => {
+    await page.goto('/stats');
+    await expect(page.getByTestId('stats-top-cards')).toBeInViewport({ ratio: 1 });
+    await expect(page.getByTestId('compact-vocab-growth')).toBeInViewport();
+    await expect(page.getByTestId('domain-fluency-radar')).toBeHidden();
+
+    const details = page.getByTestId('iphone-stats-details');
+    const topics = details.locator('summary').filter({ hasText: /^Areas of Fluency$/ });
+    await topics.click();
+    await expect(page.getByTestId('domain-fluency-radar')).toContainText(
+      'Based on words you track by topic.',
+    );
+    await topics.click();
+    await expect(page.getByTestId('domain-fluency-radar')).toBeHidden();
+  });
+});

@@ -11,6 +11,7 @@ export interface VocabGrowthChartProps {
   data: VocabDataPoint[];
   showLegend?: boolean;
   height?: number;
+  compact?: boolean;
   /** Optional controls rendered in the card header, e.g. a time-range selector. */
   controls?: ReactNode;
 }

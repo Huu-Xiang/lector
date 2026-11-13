@@ -102,9 +102,15 @@ test('iPhone settings show compact groups and expand a directly linked setting',
   await page.goto('/settings');
   const settings = page.getByTestId('iphone-settings');
   await expect(settings.getByTestId('native-language-select')).toBeHidden();
-  await settings.getByText('Languages', { exact: true }).click();
+  await settings
+    .locator('summary')
+    .filter({ hasText: /^Languages$/ })
+    .click();
   await expect(settings.getByTestId('native-language-select')).toBeVisible();
-  await settings.getByText('Languages', { exact: true }).click();
+  await settings
+    .locator('summary')
+    .filter({ hasText: /^Languages$/ })
+    .click();
   await expect(settings.getByTestId('native-language-select')).toBeHidden();
 
   await page.goto('/settings#review-goal');

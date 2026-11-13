@@ -1454,6 +1454,7 @@
     }
   },
   "stats": {
+    "details": "その他の統計",
     "title": "統計",
     "loadFailed": "統計を読み込めませんでした",
     "returnHome": "ホームに戻る",
@@ -1562,6 +1563,19 @@
       "pushed": "Anki に送信済み"
     },
     "radar": {
+      "fromTrackedWords": "単語リストの単語をテーマ別に集計します。",
+      "topics": {
+        "daily_life": "日常生活",
+        "food": "食と料理",
+        "health": "健康と医療",
+        "travel": "旅行と地理",
+        "work": "仕事とビジネス",
+        "science_tech": "科学と技術",
+        "nature": "自然と環境",
+        "arts_culture": "芸術と文化",
+        "sport_leisure": "スポーツと余暇",
+        "society": "社会と政治"
+      },
       "title": "得意な分野",
       "subtitle": "語彙が最も充実している分野",
       "pending": "分類待ちの単語 {count} 語",
@@ -1572,6 +1586,8 @@
       "mastery": "習得度"
     },
     "vocabGrowth": {
+      "trackedWords": "保存した単語と学習状況から集計します。",
+      "noTrackedWords": "単語を保存するか、習得済みにすると推移を確認できます。",
       "title": "語彙の成長",
       "knownWords": "覚えた単語",
       "learning": "学習中",

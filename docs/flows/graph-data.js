@@ -554,7 +554,7 @@
   N("file:setup-page", "file", "Setup page", { path: "src/app/setup/page.tsx", domain: "onboarding" });
   N("file:setup-guard", "file", "SetupGuard", { path: "src/components/SetupGuard/index.tsx", domain: "onboarding" });
   N("file:onboarding-client", "file", "onboarding.ts", { path: "src/lib/onboarding.ts", domain: "onboarding" });
-  N("file:stats-page", "file", "Stats page", { path: "src/app/stats/page.tsx", domain: "stats", summary: "On iOS, the four totals appear before fluency charts." });
+  N("file:stats-page", "file", "Stats page", { path: "src/app/stats/page.tsx", domain: "stats", summary: "On iPhone, four totals and the vocabulary trend appear first. Activity, topics, and other charts expand on demand." });
   N("file:web-import", "file", "WebImportModal", { path: "src/components/WebImportModal/index.tsx", domain: "library" });
   N("file:youtube-import", "file", "YouTubeImportModal", { path: "src/components/YouTubeImportModal/index.tsx", domain: "library" });
   N("file:paste-import", "file", "PasteImportModal", { path: "src/components/PasteImportModal/index.tsx", domain: "library" });

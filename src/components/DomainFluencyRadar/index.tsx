@@ -16,6 +16,7 @@ import type { DomainAxis } from '@/lib/data-layer';
 interface DomainFluencyRadarProps {
   byDomain?: DomainAxis[];
   pending?: number;
+  compact?: boolean;
 }
 
 // Recharts SVG props don't reliably resolve CSS vars, so use concrete hex
@@ -55,6 +56,7 @@ function RadarTooltip({ active, payload }: RadarTooltipProps) {
 export default function DomainFluencyRadar({
   byDomain = [],
   pending = 0,
+  compact = false,
 }: DomainFluencyRadarProps) {
   const t = useTranslations('stats.radar');
   const format = useFormatter();
@@ -62,6 +64,43 @@ export default function DomainFluencyRadar({
   const theme = isDark ? RADAR_THEME.dark : RADAR_THEME.light;
 
   const hasSignal = byDomain.some((d) => d.axisValue > 0);
+
+  if (compact) {
+    const topics = byDomain
+      .filter((topic) => topic.axisValue > 0)
+      .sort((a, b) => b.axisValue - a.axisValue);
+    return (
+      <div className="space-y-2 p-2" data-testid="domain-fluency-radar">
+        <p className="text-xs text-muted-foreground">{t('fromTrackedWords')}</p>
+        {topics.length > 0 ? (
+          <ul className="divide-y divide-border" data-testid="domain-radar-bandlist">
+            {topics.map((topic) => (
+              <li
+                key={topic.domain}
+                className="flex flex-wrap items-baseline justify-between gap-x-2 py-2 text-sm"
+              >
+                <span>
+                  {t.has(`topics.${topic.domain}`) ? t(`topics.${topic.domain}`) : topic.label}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  {t('knownWords', { count: topic.knownCount })}
+                </span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-sm text-foreground" data-testid="domain-radar-empty">
+            {t('emptyTitle')}
+          </p>
+        )}
+        {pending > 0 && (
+          <p className="text-xs text-muted-foreground" data-testid="domain-radar-pending">
+            {t('pending', { count: pending })}
+          </p>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="panel mb-8 p-6" data-testid="domain-fluency-radar">

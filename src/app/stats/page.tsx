@@ -1,8 +1,8 @@
 'use client';
 
 import { useIsNativeApp } from '@/lib/native-app';
-import { useEffect, useMemo, useState } from 'react';
-import { Book, BookOpen, CheckCircle, Flame } from 'lucide-react';
+import { useEffect, useMemo, useState, type ReactNode } from 'react';
+import { Book, BookOpen, CheckCircle, ChevronRight, Flame } from 'lucide-react';
 import Link from 'next/link';
 import { useFormatter, useTranslations } from 'next-intl';
 import {
@@ -314,11 +314,13 @@ export default function StatsPage() {
   return (
     <main className="native-compact-page mx-auto max-w-7xl px-6 py-8">
       <PageHeader title={t('title')}>
-        <p className="text-sm text-muted-foreground">
+        <p
+          className={nativeApp ? 'text-xs text-muted-foreground' : 'text-sm text-muted-foreground'}
+        >
           {format.dateTime(new Date(), {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
+            weekday: nativeApp ? undefined : 'long',
+            year: nativeApp ? undefined : 'numeric',
+            month: nativeApp ? 'short' : 'long',
             day: 'numeric',
           })}
         </p>
@@ -330,7 +332,7 @@ export default function StatsPage() {
         data-testid="stats-top-cards"
         className={
           nativeApp
-            ? 'mb-4 grid grid-cols-2 gap-2'
+            ? 'panel mb-3 grid grid-cols-2 overflow-hidden [&>*]:border-border [&>*:nth-child(-n+2)]:border-b [&>*:nth-child(odd)]:border-e'
             : 'mb-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4'
         }
       >
@@ -367,38 +369,89 @@ export default function StatsPage() {
         />
       </div>
 
-      {nativeApp && fluencyDetails}
-
       {/* Vocabulary Growth Chart */}
-      <div className="mb-8">
+      <div className={nativeApp ? 'mb-3' : 'mb-8'}>
         <VocabGrowthChart
           data={displayedVocabGrowth}
-          controls={<RangeSelector value={range} onChange={setRange} />}
+          compact={nativeApp}
+          height={nativeApp ? 155 : undefined}
+          controls={<RangeSelector value={range} onChange={setRange} compact={nativeApp} />}
         />
       </div>
 
-      {/* Activity Heatmap */}
-      <div className="mb-8">
-        <ActivityHeatmap data={stats.activityData} unit="actions" endDate={stats.endDate} />
-      </div>
+      {nativeApp ? (
+        <div
+          className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card"
+          data-testid="iphone-stats-details"
+        >
+          <StatsDetail title={t('heatmap.title')}>
+            <ActivityHeatmap data={stats.activityData} unit="actions" endDate={stats.endDate} />
+          </StatsDetail>
+          <StatsDetail title={t('radar.title')}>
+            <DomainFluencyRadar
+              byDomain={stats.fluency.byDomain}
+              pending={stats.fluency.pending}
+              compact
+            />
+          </StatsDetail>
+          <StatsDetail title={t('details')}>
+            <FluencyBadge fluency={stats.fluency} />
+            <WordStateBreakdown byState={stats.byState} />
+            <ClozeStats
+              attempts={stats.totalClozeAttempts}
+              correct={stats.totalClozeCorrect}
+              points={stats.totalPoints}
+            />
+            <SentenceMastery collectionCounts={stats.collectionCounts} />
+            <AnkiReviewsChart data={stats.ankiReviews} hasData={stats.ankiHasData} />
+          </StatsDetail>
+        </div>
+      ) : (
+        <>
+          {/* Activity Heatmap */}
+          <div className="mb-8">
+            <ActivityHeatmap data={stats.activityData} unit="actions" endDate={stats.endDate} />
+          </div>
 
-      {/* Anki Reviews */}
-      <div className="mb-8">
-        <AnkiReviewsChart data={stats.ankiReviews} hasData={stats.ankiHasData} />
-      </div>
+          {/* Anki Reviews */}
+          <div className="mb-8">
+            <AnkiReviewsChart data={stats.ankiReviews} hasData={stats.ankiHasData} />
+          </div>
 
-      {/* Detailed breakdowns */}
-      <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2">
-        <WordStateBreakdown byState={stats.byState} />
-        <ClozeStats
-          attempts={stats.totalClozeAttempts}
-          correct={stats.totalClozeCorrect}
-          points={stats.totalPoints}
-        />
-      </div>
+          {/* Detailed breakdowns */}
+          <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2">
+            <WordStateBreakdown byState={stats.byState} />
+            <ClozeStats
+              attempts={stats.totalClozeAttempts}
+              correct={stats.totalClozeCorrect}
+              points={stats.totalPoints}
+            />
+          </div>
 
-      {/* Sentence Mastery */}
-      <SentenceMastery collectionCounts={stats.collectionCounts} />
+          {/* Sentence Mastery */}
+          <SentenceMastery collectionCounts={stats.collectionCounts} />
+        </>
+      )}
     </main>
+  );
+}
+
+function StatsDetail({ title, children }: { title: string; children: ReactNode }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <details className="group" onToggle={(event) => setOpen(event.currentTarget.open)}>
+      <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 px-3 py-2 text-sm font-semibold focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring active:bg-accent [&::-webkit-details-marker]:hidden">
+        {title}
+        <ChevronRight
+          className="size-4 shrink-0 text-muted-foreground group-open:rotate-90"
+          aria-hidden
+        />
+      </summary>
+      {open && (
+        <div className="stats-detail-content space-y-2 border-t border-border bg-background/70 p-2">
+          {children}
+        </div>
+      )}
+    </details>
   );
 }
