@@ -7,6 +7,10 @@
       "decline": "Not now"
     },
     "page": {
+      "analyticsDifficulty": "Reading difficulty",
+      "analyticsTooEasy": "Too easy",
+      "analyticsJustRight": "Just right",
+      "analyticsTooHard": "Too hard",
       "lessonNotFound": "Lesson not found",
       "loadFailed": "Failed to load lesson",
       "retryFailed": "Could not retry transcription",

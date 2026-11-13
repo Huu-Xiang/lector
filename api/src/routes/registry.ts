@@ -41,6 +41,7 @@ import emailUnsubscribe from './email-unsubscribe';
 import emailPreferences from './email-preferences';
 import feedback from './feedback';
 import sourceCount from './source-count';
+import productAnalytics from './product-analytics';
 import push from './push';
 import vocabTestReports from './vocab-test-reports';
 
@@ -114,5 +115,6 @@ export const routeMounts: readonly RouteMount[] = [
   { prefix: '/api/email/preferences', app: emailPreferences },
   { prefix: '/api/feedback', app: feedback },
   { prefix: '/api/source-count', app: sourceCount },
+  { prefix: '/api/product-analytics', app: productAnalytics },
   { prefix: '/api/push', app: push },
 ];

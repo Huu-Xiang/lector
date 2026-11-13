@@ -5,6 +5,7 @@ import { useFormatter, useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Kbd } from '@/components/ui/kbd';
 import { getActivePack } from '@/lib/data-layer';
+import { trackProductEvent } from '@/lib/product-analytics';
 import { hasAudio } from '@/lib/tts';
 import type { ClozeSentence, ReviewItem, ReviewQuestionType } from '@/types';
 import DictationCard from '../components/Dictation/DictationCard';
@@ -49,12 +50,23 @@ export default function WordReviewRound({ onExit }: { onExit: () => void }) {
   const { round, start, answer, undoKnow, advance, loadSentence } = useWordReviewRound();
   const [showTranslation, showTranslationNow] = useShowTranslation();
   const started = useRef(false);
+  const completed = useRef<string | null>(null);
 
   useEffect(() => {
     if (started.current) return;
     started.current = true;
     void start();
   }, [start]);
+
+  useEffect(() => {
+    if (round.phase !== 'complete' || completed.current === round.roundId) return;
+    completed.current = round.roundId;
+    trackProductEvent({
+      event: 'review_completed',
+      roundId: round.roundId,
+      value: round.answered.length,
+    });
+  }, [round.answered.length, round.phase, round.roundId]);
 
   const current =
     round.phase === 'practicing' || round.phase === 'feedback' ? round.queue[0] : null;

@@ -8,6 +8,7 @@ import { authMiddleware } from './lib/auth';
 import { sessionMiddleware } from './lib/session';
 import { assertBillingBootable, billingConfig, billingMiddleware } from './lib/billing';
 import { accountStatusMiddleware } from './lib/admin';
+import { startProductAnalyticsMaintenance } from './lib/product-analytics';
 import {
   getAuthEngine,
   runAuthMigrations,
@@ -208,6 +209,7 @@ startDictWorker();
 // Cloud lifecycle mail (#558). No-op in selfhost. Sweeps day-1 and day-3
 // templates. Welcome, Anki, and gloss-cap send from their own hooks.
 startLifecycleEmailWorker();
+startProductAnalyticsMaintenance();
 
 // Daily review reminders through APNs. No-op in selfhost and without APNS_* settings.
 startReminderWorker();

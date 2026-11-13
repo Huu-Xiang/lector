@@ -1,13 +1,22 @@
 import { describe, expect, it } from 'vitest';
-import { LANGS as API_LANGS, SOURCES as API_SOURCES } from '../../api/src/lib/source-list';
+import {
+  LANGS as API_LANGS,
+  PRODUCT_CAMPAIGNS as API_CAMPAIGNS,
+  productAttribution,
+  SOURCES as API_SOURCES,
+} from '../../api/src/lib/source-list';
 import {
   LANGS,
+  PRODUCT_CAMPAIGNS,
   SOURCES,
   classifySource,
   hasSourceCookie,
   isCountedRoute,
   languageBucket,
   looksLikeBot,
+  productCampaign,
+  productCookieString,
+  publicPageDimensions,
   sourceCookieString,
 } from './traffic-source';
 
@@ -18,6 +27,7 @@ describe('classifySource', () => {
   it('keeps the client list equal to the server list', () => {
     expect([...SOURCES]).toEqual([...API_SOURCES]);
     expect([...LANGS]).toEqual([...API_LANGS]);
+    expect([...PRODUCT_CAMPAIGNS]).toEqual([...API_CAMPAIGNS]);
   });
 
   it('has no duplicate names', () => {
@@ -185,6 +195,59 @@ describe('cookie', () => {
     expect(hasSourceCookie('a=1; rf_src=google.zh')).toBe(true);
     expect(hasSourceCookie('a=1; xrf_src=google.zh')).toBe(false);
     expect(hasSourceCookie('')).toBe(false);
+  });
+});
+
+describe('product acquisition', () => {
+  it('passes only approved campaigns and keeps a bounded first-touch locale in a separate cookie', () => {
+    expect(productCampaign(' Newsletter ')).toBe('newsletter');
+    expect(productCampaign('somebody@example.com')).toBe('other');
+    expect(productCampaign(null)).toBeUndefined();
+    const cookie = productCookieString('zh-TW', 'newsletter', true);
+    expect(cookie).toBe(
+      'rf_product=zh-TW.newsletter; Max-Age=2592000; Path=/; SameSite=Lax; Secure',
+    );
+    expect(
+      productAttribution(new Headers({ cookie: `rf_src=reddit.en; ${cookie.split(';')[0]}` })),
+    ).toEqual({
+      source: 'reddit',
+      browserLanguage: 'en',
+      uiLanguage: 'zh-TW',
+      campaign: 'newsletter',
+    });
+  });
+
+  it('reads a changed UI locale and ignores forged acquisition fields', () => {
+    expect(
+      productAttribution(
+        new Headers({ cookie: 'rf_src=reddit.en; rf_product=ru.beta; NEXT_LOCALE=ja' }),
+      ),
+    ).toEqual({ source: 'reddit', browserLanguage: 'en', uiLanguage: 'ja', campaign: 'beta' });
+    expect(
+      productAttribution(new Headers({ cookie: 'rf_src=arbitrary.en; rf_product=arbitrary.bad' })),
+    ).toEqual({ source: 'unknown' });
+  });
+
+  it('classifies only public landing, catalog, preview, checkout, and conversion paths', () => {
+    expect(publicPageDimensions('/', true)).toEqual({ feature: 'landing' });
+    expect(publicPageDimensions('/books/fr', true)).toEqual({
+      feature: 'books_language',
+      language: 'fr',
+    });
+    expect(publicPageDimensions('/books/fr/level/b1', true)).toEqual({
+      feature: 'books_level',
+      language: 'fr',
+      step: 'b1',
+    });
+    expect(publicPageDimensions('/books/fr/some-book/read', true)).toEqual({
+      feature: 'book_preview',
+      language: 'fr',
+      publicBook: 'fr/some-book',
+    });
+    expect(publicPageDimensions('/checkout', true)).toEqual({ feature: 'checkout' });
+    expect(publicPageDimensions('/books/fr/author/example', true)).toBeUndefined();
+    expect(publicPageDimensions('/books/fr/name%40email.test', true)).toBeUndefined();
+    expect(publicPageDimensions('/read/private-book', false)).toBeUndefined();
   });
 });
 

@@ -7,6 +7,10 @@
       "decline": "暫不"
     },
     "page": {
+      "analyticsDifficulty": "閱讀難度",
+      "analyticsTooEasy": "太簡單",
+      "analyticsJustRight": "剛剛好",
+      "analyticsTooHard": "太難",
       "lessonNotFound": "找不到課文",
       "loadFailed": "課文載入失敗",
       "retryFailed": "無法重新轉錄",

@@ -71,6 +71,8 @@ The register page calls `authClient.signUp.email`. Better Auth sends a confirmat
 | Register | `src/app/(auth)/register/page.tsx` | `handleSubmit` |
 | Engine | `api/src/lib/accounts.ts` | `createAuthEngine` |
 
+The signup handler counts email form submissions and OAuth starts from the registration screen. On account creation, the Better Auth hook writes the first source category for that account. The first-visit cookies hold the approved channel, browser language group, interface language and campaign category. An existing account that signs in again keeps its original attribution. Email confirmation and verified provider accounts record the verification milestone. See [Product analytics](admin.md#product-analytics) for retention and reporting.
+
 Reset password and two-factor live in `src/app/(auth)/reset-password/` and `src/app/(auth)/two-factor/`. They use the same Better Auth handler.
 
 ## Lifecycle email

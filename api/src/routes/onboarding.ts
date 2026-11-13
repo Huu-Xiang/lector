@@ -10,6 +10,7 @@ import { learnerEventResponse, recordLearnerEvent } from '../lib/learner-events'
 import { getActiveLanguageCode } from '../lib/active-language';
 import { ensureLanguageEnabled } from '../lib/enabled-languages';
 import { isValidLanguageCode, type LanguageCode } from '../lib/languages';
+import { recordProductEvent } from '../lib/product-analytics';
 import { getCurrentUserId } from '../lib/user';
 
 const app = new Hono();
@@ -306,6 +307,15 @@ app.post('/start', async (c) => {
       });
       recordProfileSaved(userId, input);
     })();
+    if (!existing) {
+      recordProductEvent(
+        { event: 'onboarding_started', language: input.language },
+        {
+          userId,
+          key: 'onboarding-started',
+        },
+      );
+    }
     return c.json(buildSnapshot(userId));
   } catch (error) {
     if (error instanceof InputError) return c.json({ error: error.message }, 400);
@@ -347,6 +357,13 @@ app.post('/skip', async (c) => {
         idempotencyKey: 'onboarding:v1:skipped',
       });
     })();
+    recordProductEvent(
+      { event: 'onboarding_finished', language: input.language, outcome: 'skipped' },
+      {
+        userId,
+        key: 'onboarding-finished',
+      },
+    );
     return c.json(buildSnapshot(userId));
   } catch (error) {
     if (error instanceof InputError) return c.json({ error: error.message }, 400);
@@ -374,6 +391,13 @@ app.post('/dismiss', (c) => {
       idempotencyKey: 'onboarding:v1:skipped',
     });
   })();
+  recordProductEvent(
+    { event: 'onboarding_finished', language: existing.language, outcome: 'dismissed' },
+    {
+      userId,
+      key: 'onboarding-finished',
+    },
+  );
   return c.json(buildSnapshot(userId));
 });
 
@@ -463,6 +487,13 @@ app.post('/complete', (c) => {
       idempotencyKey: 'onboarding:v1:completed',
     });
   })();
+  recordProductEvent(
+    { event: 'onboarding_finished', language: existing.language, outcome: 'completed' },
+    {
+      userId,
+      key: 'onboarding-finished',
+    },
+  );
   return c.json(buildSnapshot(userId));
 });
 

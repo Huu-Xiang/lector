@@ -7,6 +7,10 @@
       "decline": "나중에"
     },
     "page": {
+      "analyticsDifficulty": "읽기 난이도",
+      "analyticsTooEasy": "너무 쉬움",
+      "analyticsJustRight": "적당함",
+      "analyticsTooHard": "너무 어려움",
       "lessonNotFound": "레슨을 찾을 수 없어요",
       "loadFailed": "레슨을 불러오지 못했어요",
       "retryFailed": "받아쓰기를 다시 시도하지 못했어요",

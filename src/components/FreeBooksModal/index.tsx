@@ -34,6 +34,7 @@ import { useArticleDescriptions } from '@/lib/article-descriptions';
 import { languageDisplayName } from '@/lib/language-names';
 import { displayLanguage, translationFor } from '@/lib/display-language';
 import { nativeLanguageFromLocale } from '@/lib/languages';
+import { trackProductEvent } from '@/lib/product-analytics';
 import {
   CEFR_LEVELS,
   examLabels,
@@ -190,6 +191,12 @@ export default function FreeBooksModal({
     setAdding(book.slug);
     try {
       await addLibraryBook(activeLang.code, book.slug);
+      trackProductEvent({
+        event: 'content_selected',
+        language: activeLang.code,
+        feature: 'library',
+        publicBook: `${activeLang.code}/${book.slug}`,
+      });
       setBooks(
         (list) => list?.map((b) => (b.slug === book.slug ? { ...b, added: true } : b)) ?? null,
       );
@@ -206,6 +213,7 @@ export default function FreeBooksModal({
     setAdding(article.id);
     try {
       await addReadingFeedArticle(article.id);
+      trackProductEvent({ event: 'content_selected', language: activeLang.code, feature: 'feed' });
       toast.success(t('feedAdded', { title: article.title }));
       onAdded();
     } catch (error) {

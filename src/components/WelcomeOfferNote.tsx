@@ -3,13 +3,14 @@
 import Link from 'next/link';
 import { Gift } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useEffect, useState } from 'react';
+import { useSyncExternalStore } from 'react';
 import { welcomeOfferOpen } from '@/lib/welcome-offer';
+
+const subscribe = () => () => {};
 
 export default function WelcomeOfferNote({ variant = 'card' }: { variant?: 'card' | 'bar' }) {
   const t = useTranslations('welcomeOffer');
-  const [open, setOpen] = useState(() => welcomeOfferOpen());
-  useEffect(() => setOpen(welcomeOfferOpen()), []);
+  const open = useSyncExternalStore(subscribe, welcomeOfferOpen, welcomeOfferOpen);
   if (!open) return null;
   return (
     <div

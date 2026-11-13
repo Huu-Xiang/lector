@@ -72,6 +72,8 @@ sequenceDiagram
 
 Word tap pauses and opens the Translation drawer. Shadow mode repeats a unit.
 
+Cloud analytics records actual playback and reports the audio element's end or error. Replaying a shadow unit during one playback session does not add another start.
+
 Tables: `lessons`, `transcript_segments`. Files under `AUDIO_DIR`.
 
 Tests: `e2e/audio-import.spec.ts`.

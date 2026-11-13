@@ -6,10 +6,12 @@ import { useTranslations } from 'next-intl';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import {
+  getActiveLanguage,
   importYouTubeTranscript,
   resolveYouTubeTranscript,
   type YouTubeCaptionTrack,
 } from '@/lib/data-layer';
+import { trackProductEvent } from '@/lib/product-analytics';
 import type { YouTubeImportModalProps, YouTubeModalState } from './types';
 
 export default function YouTubeImportModal({
@@ -45,6 +47,8 @@ export default function YouTubeImportModal({
 
   const handleImport = useCallback(
     async (track: YouTubeCaptionTrack) => {
+      const event = { language: getActiveLanguage(), feature: 'youtube' };
+      trackProductEvent({ ...event, event: 'import_started' });
       setState((prev) =>
         prev.phase === 'select' ? { phase: 'importing', data: prev.data, track } : prev,
       );
@@ -55,6 +59,7 @@ export default function YouTubeImportModal({
           kind: track.kind,
           groupId,
         });
+        trackProductEvent({ ...event, event: 'import_finished', outcome: 'success' });
         onImported({
           collectionId: imported.collectionId,
           lessonId: imported.lessonId,
@@ -62,6 +67,7 @@ export default function YouTubeImportModal({
         });
         onClose();
       } catch (err) {
+        trackProductEvent({ ...event, event: 'import_finished', outcome: 'failure' });
         setState({
           phase: 'error',
           message: err instanceof Error ? err.message : t('youtube.importFailed'),

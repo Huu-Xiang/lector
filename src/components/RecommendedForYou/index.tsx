@@ -24,6 +24,7 @@ import {
 import { nativeLanguageFromLocale } from '@/lib/languages';
 import { displayLanguage, translationFor } from '@/lib/display-language';
 import { levelGap, pickNearLevel, recommendationLevel } from '@/lib/recommend';
+import { trackProductEvent } from '@/lib/product-analytics';
 import type { CefrLevel } from '@/lib/reading-level';
 
 const FEED_INTERESTS = ['news', 'travel', 'science'] as const;
@@ -42,6 +43,7 @@ interface Pick {
   articleId: string | null;
   bookTitle: string | null;
   bookAuthor: string | null;
+  bookSlug?: string;
   add: () => Promise<string>;
 }
 
@@ -65,6 +67,7 @@ function bookPick(
     articleId: null,
     bookTitle: book.title,
     bookAuthor: book.author,
+    bookSlug: book.slug,
     add: () => addLibraryBook(language, book.slug),
   };
 }
@@ -207,6 +210,12 @@ export default function RecommendedForYou({
     try {
       const collectionId = await pick.add();
       await onStart(collectionId);
+      trackProductEvent({
+        event: 'content_selected',
+        language,
+        feature: 'recommendation',
+        publicBook: pick.bookSlug ? `${language}/${pick.bookSlug}` : undefined,
+      });
     } catch (error) {
       toast.error(error instanceof Error ? error.message : t('errStart'));
       startingRef.current = false;

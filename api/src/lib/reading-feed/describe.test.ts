@@ -25,6 +25,9 @@ class Fake implements LLMProvider {
   async *stream() {
     yield '';
   }
+  async healthCheck() {
+    return { ok: true };
+  }
 }
 
 function seed(): ReadingFeedRow {

@@ -7,6 +7,10 @@
       "decline": "Не сейчас"
     },
     "page": {
+      "analyticsDifficulty": "Сложность чтения",
+      "analyticsTooEasy": "Слишком легко",
+      "analyticsJustRight": "В самый раз",
+      "analyticsTooHard": "Слишком сложно",
       "lessonNotFound": "Урок не найден",
       "loadFailed": "Не удалось загрузить урок",
       "retryFailed": "Не удалось повторить расшифровку",

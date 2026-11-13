@@ -7,6 +7,7 @@ import { Check } from 'lucide-react';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { getReadingLevel, setReadingLevel, type CefrLevel } from '@/lib/reading-level';
+import { trackProductEvent } from '@/lib/product-analytics';
 
 /** For a signed-in learner: make the test level their English reading level, which book picks follow. */
 export default function SaveLevel({ level }: { level: CefrLevel }) {
@@ -28,6 +29,7 @@ export default function SaveLevel({ level }: { level: CefrLevel }) {
     setState('saving');
     try {
       await setReadingLevel('en', level);
+      trackProductEvent({ event: 'quiz_level_applied', language: 'en' });
       setCurrent(level);
       setState('idle');
     } catch {
