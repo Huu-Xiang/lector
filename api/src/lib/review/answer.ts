@@ -1,6 +1,7 @@
 import { db } from '../../db';
 import { reserveDailyStatsRows } from '../daily-stats-limits';
 import { entitlements, type LimitVerdict } from '../entitlements';
+import { recordProductEvent } from '../product-analytics';
 import { localDay, type QuestionType } from './queue';
 import {
   FSRS_CONFIG_VERSION,
@@ -80,6 +81,16 @@ const CHOICE_POINTS: Partial<Record<QuestionType, number>> = {
   dictation: 8,
 };
 const RECOGNITION_KNOW_POINTS = 3;
+const DAY_MS = 86_400_000;
+
+function reviewInterval(previous: string | null, now: number): string {
+  if (!previous) return 'new';
+  const days = Math.floor((now - Date.parse(previous)) / DAY_MS);
+  if (days < 1) return 'lt_1d';
+  if (days <= 7) return '1_7d';
+  if (days <= 30) return '8_30d';
+  return 'gt_30d';
+}
 
 function answerFitsQuestion(answer: ReviewAnswer, questionType: QuestionType): boolean {
   return questionType === 'recognition'
@@ -267,6 +278,17 @@ function applyAnswer(
   });
   pruneLog(userId, deps.logRowLimit(userId), eventId);
 
+  recordProductEvent(
+    {
+      event: 'review_answer',
+      language: card.language,
+      feature: questionType,
+      outcome: rating,
+      step: reviewInterval(card.lastReview, now),
+    },
+    { userId, key: eventId, now: new Date(now) },
+  );
+
   return {
     cardId,
     eventId,
@@ -337,6 +359,16 @@ export function submitUndo(
       nowIso,
       userId,
       row.eventId,
+    );
+    recordProductEvent(
+      {
+        event: 'review_undo',
+        language: card.language,
+        feature: row.questionType,
+        outcome: row.rating,
+        step: reviewInterval(row.prevLastReview, Date.parse(row.reviewedAt)),
+      },
+      { userId, key: row.eventId, now: new Date(now) },
     );
     if (row.wasRequeue === 0) {
       adjustStats(

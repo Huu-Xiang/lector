@@ -32,6 +32,7 @@ import RedeemCampaigns from './RedeemCampaigns';
 import RefundRequests from './RefundRequests';
 import StatCard from './StatCard';
 import Trends from './Trends';
+import ProductAnalytics from './ProductAnalytics';
 import AiTiming from './AiTiming';
 
 function formatBytes(n: number): string {
@@ -396,6 +397,7 @@ export default function AdminPage() {
       )}
 
       <Trends />
+      <ProductAnalytics />
       <AiTiming />
       <EmailSwitch />
 

@@ -6,14 +6,21 @@ import {
   subscribeToReadingActivity,
 } from './reading-activity';
 
-function setup(wordCount = 1000) {
+function setup(wordCount = 1000, initialPercent = 0) {
   let t = 1_000_000;
   const send = vi.fn();
-  const activity = createReadingActivity({ wordCount, send, now: () => t });
+  const milestone = vi.fn();
+  const activity = createReadingActivity({
+    wordCount,
+    send,
+    milestone,
+    initialPercent,
+    now: () => t,
+  });
   const advance = (ms: number) => {
     t += ms;
   };
-  return { activity, send, advance };
+  return { activity, send, milestone, advance };
 }
 
 /** Moves the clock forward in TICK_MS steps, ticking each time, with the tab visible. */
@@ -145,7 +152,13 @@ describe('subscribeToReadingActivity', () => {
 
   it('treats scroll, key, pointer and touch events as interaction', () => {
     const { doc, win } = targets();
-    const activity = { noteActivity: vi.fn(), noteProgress: vi.fn(), tick: vi.fn() };
+    const activity = {
+      noteActivity: vi.fn(),
+      noteProgress: vi.fn(),
+      noteShortEnd: vi.fn(),
+      setAnalyticsEnabled: vi.fn(),
+      tick: vi.fn(),
+    };
     subscribeToReadingActivity(activity, doc, win, vi.fn() as never, vi.fn());
     for (const type of ['scroll', 'wheel', 'pointerdown', 'keydown', 'touchstart']) {
       win.dispatchEvent(new Event(type));
@@ -155,7 +168,13 @@ describe('subscribeToReadingActivity', () => {
 
   it('ticks when the tab is hidden and stops after unsubscribe', () => {
     const { doc, win } = targets();
-    const activity = { noteActivity: vi.fn(), noteProgress: vi.fn(), tick: vi.fn() };
+    const activity = {
+      noteActivity: vi.fn(),
+      noteProgress: vi.fn(),
+      noteShortEnd: vi.fn(),
+      setAnalyticsEnabled: vi.fn(),
+      tick: vi.fn(),
+    };
     const clearTimer = vi.fn();
     const off = subscribeToReadingActivity(activity, doc, win, vi.fn(() => 7) as never, clearTimer);
     activity.tick.mockClear();
@@ -166,5 +185,82 @@ describe('subscribeToReadingActivity', () => {
     win.dispatchEvent(new Event('keydown'));
     expect(activity.noteActivity).not.toHaveBeenCalled();
     expect(clearTimer).toHaveBeenCalledWith(7);
+  });
+});
+
+describe('product reading milestones', () => {
+  it('waits for effective reading when the reader reaches the end first', () => {
+    const s = setup();
+    s.activity.noteActivity();
+    s.activity.noteProgress(95);
+    run(s, 30_000);
+    expect(s.milestone).not.toHaveBeenCalled();
+    run(s, 30_000);
+    expect(s.milestone.mock.calls).toEqual([
+      ['started'],
+      ['progress', 25],
+      ['progress', 50],
+      ['progress', 75],
+      ['progress', 90],
+      ['completed'],
+    ]);
+    s.activity.noteProgress(99);
+    run(s, 60_000, true, true);
+    expect(s.milestone).toHaveBeenCalledTimes(6);
+  });
+
+  it('ignores a restored position and passive scroll as evidence of completion', () => {
+    const s = setup(1000, 94);
+    s.activity.noteActivity(false);
+    s.activity.noteProgress(94);
+    run(s, 60_000);
+    expect(s.milestone).not.toHaveBeenCalled();
+    s.activity.noteActivity();
+    s.activity.noteProgress(100);
+    run(s, 60_000);
+    expect(s.milestone.mock.calls).toEqual([['started']]);
+  });
+
+  it('allows visible short content to complete without a scroll', () => {
+    const s = setup();
+    s.activity.noteShortEnd();
+    run(s, 60_000);
+    expect(s.milestone).not.toHaveBeenCalled();
+    s.activity.noteActivity();
+    run(s, 60_000);
+    expect(s.milestone.mock.calls).toEqual([['started'], ['completed']]);
+  });
+
+  it('excludes time and progress in edit or listen mode while preserving prior active time', () => {
+    const s = setup();
+    s.activity.noteActivity();
+    run(s, 30_000);
+    s.activity.setAnalyticsEnabled(false);
+    s.activity.noteActivity();
+    s.activity.noteProgress(95);
+    run(s, 120_000);
+    expect(s.milestone).not.toHaveBeenCalled();
+    expect(s.send).toHaveBeenCalledWith('minutesRead', 1);
+
+    s.activity.setAnalyticsEnabled(true);
+    run(s, 60_000);
+    expect(s.milestone).not.toHaveBeenCalled();
+    s.activity.noteActivity();
+    run(s, 30_000);
+    expect(s.milestone.mock.calls).toEqual([['started']]);
+  });
+
+  it('extends an active reader session with trusted scrolling after input', () => {
+    const s = setup();
+    s.activity.noteActivity(false, true);
+    run(s, 60_000);
+    expect(s.milestone).not.toHaveBeenCalled();
+
+    s.activity.noteActivity();
+    run(s, ACTIVE_WINDOW_MS - 30_000);
+    s.activity.noteActivity(false, true);
+    run(s, 60_000);
+    s.activity.noteProgress(90);
+    expect(s.milestone.mock.calls).toContainEqual(['completed']);
   });
 });

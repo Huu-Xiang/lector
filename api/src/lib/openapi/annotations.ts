@@ -3202,6 +3202,15 @@ const internalOps: Record<string, OperationDoc> = {
     tag: 'Service',
     auth: 'none',
   },
+  'POST /api/product-analytics': {
+    summary: 'Record a first-party account activity milestone',
+    tag: 'Service',
+  },
+  'POST /api/product-analytics/public': {
+    summary: 'Count a public activity without an account identifier',
+    tag: 'Service',
+    auth: 'none',
+  },
 
   'POST /api/tokens': { summary: 'Create a personal access token', tag: 'Settings' },
   'GET /api/tokens': { summary: 'List personal access tokens', tag: 'Settings' },
@@ -3392,6 +3401,14 @@ const internalOps: Record<string, OperationDoc> = {
   },
   'GET /api/admin/summary': { summary: 'Read the service-wide aggregates', tag: 'Service' },
   'GET /api/admin/trends': { summary: 'Read the daily service totals', tag: 'Service' },
+  'GET /api/admin/product-analytics': {
+    summary: 'Read aggregate product activity and cohort data',
+    tag: 'Service',
+  },
+  'POST /api/admin/product-analytics/search': {
+    summary: 'Import aggregate search performance rows',
+    tag: 'Service',
+  },
   'GET /api/admin/ai-timing': { summary: 'Read AI speed and cache hit totals', tag: 'Service' },
   'GET /api/admin/users': { summary: 'List every account', tag: 'Service' },
   'GET /api/admin/users/find': {

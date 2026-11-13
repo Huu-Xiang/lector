@@ -45,9 +45,12 @@ import {
 import { maskEmail } from '../lib/mask-email';
 import { aiTimingReport, parseTimingDays, timingRangeEnds } from '../lib/ai-timing';
 import { buildAdminTrends, parseTrendRange } from '../lib/admin-trends';
+import { bodyLimit } from 'hono/body-limit';
+import { productAnalyticsReport } from '../lib/product-analytics';
+import { importProductSearchReport } from '../lib/product-search-report';
 import { productEmailsSetting, setProductEmails } from '../lib/app-settings';
 import { entitlements } from '../lib/entitlements';
-import { getAuthEngine } from '../lib/accounts';
+import { getAuthEngine, isTrustedProductOrigin } from '../lib/accounts';
 import {
   isValidLanguageCode,
   LANGUAGES,
@@ -661,6 +664,26 @@ export function makeAdminRoutes(
       ),
     );
   });
+
+  app.get('/product-analytics', (c) => {
+    const requested = Number(c.req.query('days'));
+    const days = [7, 30, 90, 180, 365, 731].includes(requested) ? requested : 30;
+    return c.json(productAnalyticsReport(days, now()));
+  });
+
+  app.post(
+    '/product-analytics/search',
+    bodyLimit({ maxSize: 512_000, onError: (c) => c.json({ error: 'too_large' }, 413) }),
+    async (c) => {
+      if (!isTrustedProductOrigin(c.req.header('origin'))) return c.body(null, 403);
+      if (c.req.header('content-type')?.split(';')[0] !== 'application/json')
+        return c.body(null, 415);
+      const input: unknown = await c.req.json().catch(() => null);
+      const imported = importProductSearchReport(input, now());
+      if (imported === null) return c.json({ error: 'invalid_search_report' }, 400);
+      return c.json({ imported });
+    },
+  );
 
   // GET/PUT /api/admin/email-switch — the one switch for every lifecycle mail.
   // GET /api/admin/ai-timing?days=1|7|30|90 — anonymous AI latency and cache hit counts.

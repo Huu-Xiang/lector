@@ -23,8 +23,9 @@ import { attachInvite, inviteRequired, isAcceptableSignupCode } from './invites'
 import { backfillWelcomeClaims } from './welcome-claims';
 import { redeemSignupCode, rememberSignupCode } from './redeem';
 import { shortenIp } from './ip-privacy';
-import { parseSourceCookie } from './source-list';
+import { parseSourceCookie, productAttribution } from './source-list';
 import { recordSourceEvent } from './source-counts';
+import { recordProductEvent, recordProductSignup } from './product-analytics';
 import { isSuspended } from './account-flags';
 import { nativeAuthHandoff } from './native-auth';
 import { Sentry } from './sentry';
@@ -115,6 +116,17 @@ function isOAuthCallback(ctx: { path?: string } | null | undefined): boolean {
   return Boolean(ctx?.path?.includes('/callback/'));
 }
 
+function isRegistrationStart(path: string, body: Record<string, unknown> | undefined): boolean {
+  if (path === '/sign-up/email') return true;
+  if (path !== '/sign-in/oauth2' && path !== '/sign-in/social') return false;
+  if (typeof body?.errorCallbackURL !== 'string') return false;
+  try {
+    return new URL(body.errorCallbackURL).pathname === '/register';
+  } catch {
+    return false;
+  }
+}
+
 function hasTwoFactor(database: Database, userId: string): boolean {
   const row = database.prepare('SELECT twoFactorEnabled FROM user WHERE id = ?').get(userId) as
     | { twoFactorEnabled: number | null }
@@ -190,6 +202,18 @@ export const VERIFICATION_LINK_SECONDS = 3 * 24 * 60 * 60;
 export const SESSION_SECONDS = 90 * 24 * 60 * 60;
 
 export function createAuthEngine(opts: AuthEngineOptions) {
+  function verified(user: { id: string; email: string }) {
+    recordProductEvent(
+      { event: 'signup_verified' },
+      {
+        userId: user.id,
+        key: 'signup-verified',
+        database: opts.database,
+      },
+    );
+    runAfterEmailVerification(user);
+  }
+
   const plugins: BetterAuthPlugin[] = [
     // TOTP two-factor auth (Google Authenticator et al), per-user opt-in from
     // Settings. Enrolment is verify-to-arm (skipVerificationOnEnable stays
@@ -273,6 +297,15 @@ export function createAuthEngine(opts: AuthEngineOptions) {
     },
     hooks: {
       before: createAuthMiddleware(async (ctx) => {
+        const body = ctx.body as Record<string, unknown> | undefined;
+        if (isRegistrationStart(ctx.path, body)) {
+          recordProductEvent(
+            { event: 'registration_started', ...productAttribution(ctx.headers) },
+            {
+              database: opts.database,
+            },
+          );
+        }
         if (ctx.path === '/sign-up/email') {
           if (
             inviteRequired() &&
@@ -280,11 +313,11 @@ export function createAuthEngine(opts: AuthEngineOptions) {
           ) {
             throw new APIError('FORBIDDEN', { message: 'invite_required' });
           }
-          checkSignupEmail((ctx.body as Record<string, unknown> | undefined)?.email, opts.database);
+          checkSignupEmail(body?.email, opts.database);
         }
         const field = PASSWORD_FIELDS[ctx.path];
         if (!field) return;
-        const problem = passwordProblem((ctx.body as Record<string, unknown> | undefined)?.[field]);
+        const problem = passwordProblem(body?.[field]);
         if (problem)
           throw new APIError('BAD_REQUEST', { message: passwordProblemMessage(problem) });
       }),
@@ -351,7 +384,7 @@ export function createAuthEngine(opts: AuthEngineOptions) {
           console.error(`[accounts] failed to send verification email to ${user.email}:`, err);
         }
       },
-      afterEmailVerification: async (user) => runAfterEmailVerification(user),
+      afterEmailVerification: async (user) => verified(user),
     },
     databaseHooks: {
       // Login records keep a shortened address (lib/ip-privacy.ts). Rate limiting
@@ -402,6 +435,11 @@ export function createAuthEngine(opts: AuthEngineOptions) {
             }
           },
           after: async (user, ctx) => {
+            recordProductSignup({
+              userId: user.id,
+              ...productAttribution(ctx?.headers ?? ctx?.request?.headers),
+              database: opts.database,
+            });
             if (isOAuthCallback(ctx)) {
               try {
                 const first = parseSourceCookie(
@@ -417,13 +455,13 @@ export function createAuthEngine(opts: AuthEngineOptions) {
                 console.error('[accounts] failed to record the provider sign-up:', err);
               }
             }
-            if (user.emailVerified) runAfterEmailVerification(user);
+            if (user.emailVerified) verified(user);
           },
         },
         update: {
           // Inside a provider callback, a verified flag set on an existing account is the first verification.
           after: async (user, ctx) => {
-            if (user?.emailVerified && isOAuthCallback(ctx)) runAfterEmailVerification(user);
+            if (user?.emailVerified && isOAuthCallback(ctx)) verified(user);
           },
         },
       },
@@ -532,6 +570,15 @@ export function resolveTrustedOrigins(): string[] {
     .filter(Boolean);
   if (fromEnv.length > 0) return fromEnv;
   return ['http://localhost:3456', 'http://localhost:3000'];
+}
+
+export function isTrustedProductOrigin(origin: string | undefined): boolean {
+  if (!origin || resolveTrustedOrigins().includes(origin)) return true;
+  try {
+    return new URL(process.env.BETTER_AUTH_URL ?? '').origin === origin;
+  } catch {
+    return false;
+  }
 }
 
 function githubFromEnv(): AuthEngineOptions['github'] {

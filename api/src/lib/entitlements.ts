@@ -36,6 +36,7 @@ import { hasByokCredential } from './byok';
 import { activeGrant } from './plan-grants';
 import { paddleCheckoutAllowed } from './admin';
 import { countableLessonBytes, isShippedLibraryLesson } from './library-content';
+import { recordProductEvent } from './product-analytics';
 
 export type PaidPlanId = 'cloud' | 'plus' | 'max';
 export type PlanId = 'free' | PaidPlanId;
@@ -1196,6 +1197,14 @@ export function setEntitlementsEngineForTests(engine: EntitlementsEngine): () =>
  * error:'plan_limit' into a soft upsell prompt, not an error wall.
  */
 export function planLimitResponse(c: Context, verdict: Exclude<LimitVerdict, { allowed: true }>) {
+  const userId = c.get('userId');
+  if (typeof userId === 'string' && verdict.metric in METRIC_WINDOW) {
+    const now = new Date();
+    recordProductEvent(
+      { event: 'quota_hit', feature: verdict.metric },
+      { userId, key: `${verdict.metric}:${now.toISOString().slice(0, 10)}`, now },
+    );
+  }
   return c.json(
     {
       error: 'plan_limit' as const,

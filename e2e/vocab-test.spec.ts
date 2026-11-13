@@ -311,6 +311,41 @@ test.describe('vocabulary test', () => {
     await context.close();
   });
 
+  test('records a completed visitor attempt without answer data or an account', async ({
+    browser,
+  }) => {
+    test.skip(!!process.env.E2E_EXTERNAL_SERVER, 'no cloud-mode API in the external-server run');
+    const { context, page } = await cloudVisitorPage(browser);
+    const attempts: Array<{ body: Record<string, unknown>; status: number }> = [];
+    page.on('response', (response) => {
+      if (new URL(response.url()).pathname !== '/api/product-analytics/public') return;
+      const request = response.request();
+      if (request.method() !== 'POST') return;
+      const body = request.postDataJSON() as Record<string, unknown>;
+      const data = body.data as { event?: string } | undefined;
+      if (data?.event?.startsWith('quiz_')) attempts.push({ body, status: response.status() });
+    });
+
+    try {
+      await page.goto('/vocab-test');
+      await finishKnowingNothing(page);
+      await expect.poll(() => attempts.length).toBe(4);
+      expect(attempts).toEqual(
+        expect.arrayContaining(
+          [
+            { event: 'quiz_started', language: 'en' },
+            { event: 'quiz_progress', language: 'en', value: 1 },
+            { event: 'quiz_progress', language: 'en', value: 8 },
+            { event: 'quiz_finished', language: 'en', value: 8 },
+          ].map((data) => ({ body: { data, key: expect.any(String) }, status: 204 })),
+        ),
+      );
+      expect(new Set(attempts.map(({ body }) => body.key)).size).toBe(4);
+    } finally {
+      await context.close();
+    }
+  });
+
   test('an expired verification callback keeps its saved report sign-in path', async ({
     browser,
   }) => {

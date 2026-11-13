@@ -11,6 +11,8 @@ vi.mock('react', () => ({
 
 const incrementDailyStat = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
 vi.mock('./data-layer', () => ({ incrementDailyStat }));
+const trackProductEvent = vi.hoisted(() => vi.fn());
+vi.mock('./product-analytics', () => ({ trackProductEvent }));
 
 import { ACTIVE_WINDOW_MS } from './reading-activity';
 import { useReadingActivity } from './use-reading-activity';
@@ -28,6 +30,7 @@ describe('useReadingActivity', () => {
     vi.useFakeTimers();
     effects.length = 0;
     incrementDailyStat.mockClear();
+    trackProductEvent.mockClear();
   });
   afterEach(() => {
     vi.useRealTimers();
@@ -57,5 +60,23 @@ describe('useReadingActivity', () => {
     incrementDailyStat.mockClear();
     (cleanups.find((c) => typeof c === 'function') as () => void)();
     expect(incrementDailyStat).not.toHaveBeenCalled();
+    expect(trackProductEvent.mock.calls).toEqual([
+      [{ event: 'reading_opened', lessonId: 'lesson-1', language: undefined }],
+    ]);
+  });
+
+  it('waits for a hidden reader to become visible before recording an open', () => {
+    const doc = stubBrowser();
+    doc.visibilityState = 'hidden';
+    useReadingActivity({ id: 'lesson-1', wordCount: 1000, language: 'en' });
+    const cleanups = effects.map((run) => run());
+    expect(trackProductEvent).not.toHaveBeenCalled();
+    doc.visibilityState = 'visible';
+    doc.dispatchEvent(new Event('visibilitychange'));
+    doc.dispatchEvent(new Event('visibilitychange'));
+    expect(trackProductEvent.mock.calls).toEqual([
+      [{ event: 'reading_opened', lessonId: 'lesson-1', language: 'en' }],
+    ]);
+    (cleanups.find((c) => typeof c === 'function') as () => void)();
   });
 });

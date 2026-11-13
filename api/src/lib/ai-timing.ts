@@ -4,8 +4,10 @@
  * and `<label>.timeout`.
  */
 import { AsyncLocalStorage } from 'node:async_hooks';
+import type { Database } from 'bun:sqlite';
 import { db } from '../db';
 import type { LLMTask } from './llm/types';
+import { recordProductEvent } from './product-analytics';
 
 export const TIMING_LABELS = [
   'lookup',
@@ -94,18 +96,47 @@ export interface AiCallTiming {
   firstTokenMs?: number;
   success: boolean;
   timedOut?: boolean;
+  retry?: boolean;
+  tokenInput?: number;
+  tokenOutput?: number;
+  tokenTotal?: number;
 }
 
-export function recordAiCall(call: AiCallTiming, now: Date = new Date()): void {
+export function recordAiCall(
+  call: AiCallTiming,
+  now: Date = new Date(),
+  database?: Database,
+): void {
   const label = labelForTask(call.task);
   if (call.success) {
     bump(`${label}.total`, bucketOf(call.totalMs), call.totalMs, now);
     if (call.firstTokenMs !== undefined) {
       bump(`${label}.first`, bucketOf(call.firstTokenMs), call.firstTokenMs, now);
+      recordProductEvent(
+        {
+          event: 'ai_first_token',
+          feature: label,
+          latencyMs: Math.min(3_600_000, call.firstTokenMs),
+        },
+        { now, database },
+      );
     }
   } else {
     bump(call.timedOut ? `${label}.timeout` : `${label}.error`, 0, 0, now);
   }
+  recordProductEvent(
+    {
+      event: 'ai_attempt',
+      feature: label,
+      outcome: call.success ? 'success' : call.timedOut ? 'timeout' : 'error',
+      step: call.retry ? 'retry' : undefined,
+      latencyMs: Math.min(3_600_000, call.totalMs),
+      tokenInput: call.tokenInput,
+      tokenOutput: call.tokenOutput,
+      tokenTotal: call.tokenTotal,
+    },
+    { now, database },
+  );
 }
 
 /** Counts one lookup served from a dictionary or shared cache (hit) or sent to the AI (miss). */
@@ -115,6 +146,7 @@ export function recordLookupOutcome(
   now: Date = new Date(),
 ): void {
   bump(`${label}.${outcome}`, 0, 0, now);
+  recordProductEvent({ event: 'ai_cache', feature: label, outcome }, { now });
 }
 
 export interface TaskTiming {

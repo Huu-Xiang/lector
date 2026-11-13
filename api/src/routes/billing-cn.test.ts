@@ -205,6 +205,12 @@ describe('refund requests', () => {
     expect(activeGrant('local')).toBeNull();
     expect(decideRefund(pending[0].id, true)).toBe(false);
     expect(await (await get(app)).json()).toMatchObject({ block: 'already_refunded' });
+
+    expect(await (await app.request(notice(outTradeNo, '15.00'))).text()).toBe('success');
+    expect(await (await app.request(`/orders/${outTradeNo}`)).json()).toMatchObject({
+      status: 'REFUNDED',
+    });
+    expect(activeGrant('local')).toBeNull();
   });
 
   test('use after payment above 10% blocks the request, use before payment does not', async () => {

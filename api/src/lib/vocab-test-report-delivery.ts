@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { db } from '../db';
 import { hashToken } from './crypto';
 import { prepareReportEmail, ReportEmailError, sendPreparedReportEmail } from './email';
+import { recordProductEvent } from './product-analytics';
 import {
   VOCAB_REPORT_DELIVERY_LEASE_MS,
   VOCAB_REPORT_SAFE_RETRY_MS,
@@ -53,12 +54,22 @@ function verifiedEmail(userId: string): string | undefined {
   return account?.email;
 }
 
-function setReportStatus(userId: string, attemptId: string, state: 'sending' | Outcome): void {
-  db.run('UPDATE vocab_test_reports SET deliveryStatus = ? WHERE userId = ? AND attemptId = ?', [
-    state,
-    userId,
-    attemptId,
-  ]);
+function setReportStatus(
+  userId: string,
+  attemptId: string,
+  state: 'sending' | Outcome,
+  now: number,
+): void {
+  const changed = db.run(
+    'UPDATE vocab_test_reports SET deliveryStatus = ? WHERE userId = ? AND attemptId = ? AND deliveryStatus != ?',
+    [state, userId, attemptId, state],
+  );
+  if (changed.changes && state !== 'sending') {
+    recordProductEvent(
+      { event: 'report_delivery', language: 'en', outcome: state },
+      { userId, key: `${attemptId}:${state}`, now: new Date(now) },
+    );
+  }
 }
 
 function claimDelivery(
@@ -100,11 +111,11 @@ function claimDelivery(
          leaseId = NULL, leaseUntil = NULL WHERE userId = ? AND attemptId = ?`,
           [userId, attemptId],
         );
-        setReportStatus(userId, attemptId, 'held');
+        setReportStatus(userId, attemptId, 'held', now);
         return;
       }
       if (!recipient) {
-        setReportStatus(userId, attemptId, 'failed');
+        setReportStatus(userId, attemptId, 'failed', now);
         return;
       }
 
@@ -116,7 +127,7 @@ function claimDelivery(
          state = excluded.state, leaseId = excluded.leaseId, leaseUntil = excluded.leaseUntil`,
         [userId, attemptId, leaseId, now + VOCAB_REPORT_DELIVERY_LEASE_MS],
       );
-      setReportStatus(userId, attemptId, 'sending');
+      setReportStatus(userId, attemptId, 'sending', now);
       return { report, leaseId, recipient, payload, firstAttemptAt };
     })
     .immediate();
@@ -127,6 +138,7 @@ function finishDelivery(
   attemptId: string,
   leaseId: string,
   state: Outcome,
+  now: number,
   providerId: string | null = null,
 ): void {
   db.transaction(() => {
@@ -138,7 +150,7 @@ function finishDelivery(
        WHERE userId = ? AND attemptId = ? AND leaseId = ?`,
       [state, providerId, state, state, userId, attemptId, leaseId],
     );
-    if (changed.changes) setReportStatus(userId, attemptId, state);
+    if (changed.changes) setReportStatus(userId, attemptId, state, now);
   }).immediate();
 }
 
@@ -171,13 +183,13 @@ export async function deliverVocabReport(
         ],
       });
     } catch {
-      finishDelivery(userId, attemptId, leaseId, 'failed');
+      finishDelivery(userId, attemptId, leaseId, 'failed', now());
       return;
     }
   }
 
   if (getVerifiedEmail(userId) !== recipient) {
-    finishDelivery(userId, attemptId, leaseId, firstAttemptAt === null ? 'failed' : 'held');
+    finishDelivery(userId, attemptId, leaseId, firstAttemptAt === null ? 'failed' : 'held', now());
     return;
   }
 
@@ -196,8 +208,8 @@ export async function deliverVocabReport(
     providerId = await send(payload, `vocab-report/${key}`);
   } catch (error) {
     const uncertain = !(error instanceof ReportEmailError) || error.uncertain;
-    finishDelivery(userId, attemptId, leaseId, uncertain ? 'unknown' : 'failed');
+    finishDelivery(userId, attemptId, leaseId, uncertain ? 'unknown' : 'failed', now());
     return;
   }
-  finishDelivery(userId, attemptId, leaseId, 'sent', providerId);
+  finishDelivery(userId, attemptId, leaseId, 'sent', now(), providerId);
 }

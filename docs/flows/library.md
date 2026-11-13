@@ -140,6 +140,8 @@ Scroll in the reader writes progress. `progressWriter` waits 1 second between wr
 
 The route updates `lessons.progress_scrollPosition`, `progress_percentComplete`, and `lastReadAt`. It also bumps `collections.lastReadAt`. Continue Reading uses a lesson under 95 percent complete.
 
+Cloud product analytics records visible opens, active reading time, progress and completion through `src/lib/use-reading-activity.ts`. Effective reading requires 60 visible seconds after reader interaction. Completion also requires newly reaching 90 percent or reaching a short lesson's visible end. Restoring a saved position does not complete the lesson.
+
 ## Import
 
 **App domain:** Library

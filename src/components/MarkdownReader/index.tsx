@@ -89,6 +89,7 @@ export default function MarkdownReader({
   const [annotationMode, setAnnotationMode] = useState<AnnotationMode>('learning');
   const [readings, setReadings] = useState<Map<string, string> | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const endRef = useRef<HTMLDivElement>(null);
   const [highlightedPhrase, setHighlightedPhrase] = useState<string[]>([]);
   // The single word the user last clicked (drawer target). Identified by its
   // block's source offset + word index within the block so we highlight the
@@ -258,6 +259,21 @@ export default function MarkdownReader({
     progressWriter(scrollTop, percentage);
     if (!isEditing) onProgress?.(percentage);
   }, [progressWriter, onProgress, isEditing]);
+
+  useEffect(() => {
+    const root = containerRef.current;
+    const end = endRef.current;
+    if (!onProgress || isEditing || !root || !end || typeof IntersectionObserver === 'undefined')
+      return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting && root.scrollTop <= 1) onProgress(100, true);
+      },
+      { root },
+    );
+    observer.observe(end);
+    return () => observer.disconnect();
+  }, [isEditing, lesson.id, onProgress]);
 
   const findSentence = useCallback(
     (element: HTMLElement): string => {
@@ -565,6 +581,7 @@ export default function MarkdownReader({
           />
         )}
 
+        {!isEditing && <div ref={endRef} className="h-px" aria-hidden />}
         {/* Prev/Next navigation at bottom */}
         {!isEditing && (prevLesson || nextLesson) && (
           <div className="mx-auto flex max-w-[38em] items-center justify-between gap-4 px-4 pb-16 sm:px-8 print:hidden">
