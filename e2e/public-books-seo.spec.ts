@@ -95,7 +95,12 @@ test.describe('public book landing pages', () => {
       const html = await chapter.text();
       expect(html).toContain('data-testid="book-chapter"');
       expect(html).toContain(source);
-      expect(html).toMatch(/CC BY 3\.0/);
+      expect(html).toContain('href="https://creativecommons.org/licenses/by/3.0/"');
+      const book = await request.get(detail);
+      const detailHtml = await book.text();
+      expect(
+        detailHtml.match(/href="https:\/\/creativecommons\.org\/licenses\/by\/3\.0\/"/g),
+      ).toHaveLength(2);
     }
   });
 

@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import { getLocale, getTranslations } from 'next-intl/server';
 import JsonLd from '@/components/JsonLd';
 import { registerHrefForBook } from '@/lib/pending-book';
-import BookSource from '../../BookSource';
+import BookSource, { CreativeCommonsLicenseLink } from '../../BookSource';
 import { LegalShell, H2 } from '@/components/LegalLinks/shell';
 import {
   AUTHOR_PAGE_MIN_BOOKS,
@@ -210,6 +210,7 @@ export default async function BookPage({ params }: Props) {
                   chunks
                 ),
             })}
+            <CreativeCommonsLicenseLink credit={book.cover.credit} />
           </>
         )}
       </p>
