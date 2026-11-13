@@ -1325,7 +1325,22 @@
     "languageTitle": "按级别浏览{language}免费书籍",
     "languageIntro": "{count} 本{language}免费书，适合学习者，级别从 {first} 到 {last}。每一本都是公版的完整原文。先打开一本看看开头，再到 Readfox 免费阅读，点任意单词即可查看释义。",
     "languageMetaTitle": "{language}免费书籍（{first}–{last}）：在线阅读 | Readfox",
-    "languageMetaDescription": "在线免费阅读 {count} 本{language}书，级别 {first} 到 {last}，包括{titles}。点任意单词，查看你的语言的释义。"
+    "languageMetaDescription": "在线免费阅读 {count} 本{language}书，级别 {first} 到 {last}，包括{titles}。点任意单词，查看你的语言的释义。",
+    "featuredTitle": "{level} {language}读物从哪本开始",
+    "featuredIntro": "打开浏览器即可免费试读开篇。在 Readfox 阅读器里，点生词就能查意思。",
+    "featuredStart": "从这本开始",
+    "featuredReadingTime": "试读约 {minutes} 分钟",
+    "featuredRead": "免费试读",
+    "featuredReasons": {
+      "contes-du-lundi": "从《最后一课》开始。故事由一名学生讲述，熟悉的课堂场景能帮你猜懂不熟悉的旧词。",
+      "lettres-de-mon-moulin": "《安顿下来》从兔子和一座旧磨坊写起。场景具体，适合在理解情节的同时积累描写乡村的词汇。",
+      "la-petite-fadette": "想读长一点的故事，可以选这本。开头写一个农家，乡村词汇和较长的句子更有挑战。",
+      "an-elementary-spanish-reader": "一只小鸡以为天塌了。开篇多用短句、现在时和重复的对话，容易跟上。",
+      "lecturas-faciles": "从父子和驴的寓言开始。情节容易想象，适合练习常见动词的过去时。",
+      "the-wonderful-wizard-of-oz": "从多萝西遇到龙卷风读起。熟悉的情节和具体的描写，能帮你遇到生词时继续读下去。",
+      "daddy-long-legs": "适合练习校园场景里的日常英语。开篇生动地写了检查日，后来通过书信讲述大学生活。",
+      "a-little-princess": "跟着萨拉走进伦敦的寄宿学校。对话方便入门，细致的场景描写也能拓展词汇。"
+    }
   },
   "dailyGoal": {
     "label": "连续 {count} 天。今天：{amount}",

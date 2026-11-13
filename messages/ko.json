@@ -1325,7 +1325,22 @@
     "languageTitle": "수준별 {language} 무료 도서",
     "languageIntro": "학습자를 위한 {language} 무료 도서 {count}권이에요. 수준은 {first}부터 {last}까지예요. 모두 퍼블릭 도메인 전문이에요. 먼저 시작 부분을 열어 보고, Readfox에서 무료로 읽어 보세요. 단어를 누르면 뜻이 나와요.",
     "languageMetaTitle": "학습자를 위한 {language} 무료 도서 ({first}–{last}) | Readfox",
-    "languageMetaDescription": "{first}~{last} 수준의 {language} 무료 도서 {count}권을 온라인으로 읽어요. {titles} 등. 단어를 누르면 내 언어로 뜻이 나와요."
+    "languageMetaDescription": "{first}~{last} 수준의 {language} 무료 도서 {count}권을 온라인으로 읽어요. {titles} 등. 단어를 누르면 내 언어로 뜻이 나와요.",
+    "featuredTitle": "{level} {language} 책, 어디서 시작할까요?",
+    "featuredIntro": "브라우저에서 책의 첫 부분을 무료로 읽어 볼 수 있어요. Readfox 리더에서는 모르는 단어를 눌러 뜻을 확인할 수 있습니다.",
+    "featuredStart": "이 책부터 시작하세요",
+    "featuredReadingTime": "미리 읽기 약 {minutes}분",
+    "featuredRead": "무료로 미리 읽기",
+    "featuredReasons": {
+      "contes-du-lundi": "「마지막 수업」부터 읽어 보세요. 소년이 직접 이야기하고 배경이 교실이라 낯선 옛 표현도 문맥으로 짐작하기 좋아요.",
+      "lettres-de-mon-moulin": "첫 장은 토끼와 오래된 방앗간으로 시작해요. 장면을 떠올리기 쉽고 시골 풍경을 묘사하는 어휘도 익힐 수 있어요.",
+      "la-petite-fadette": "긴 이야기에 도전하고 싶다면 이 책을 골라 보세요. 농가 이야기로 시작하며 시골 어휘와 긴 문장이 나와요.",
+      "an-elementary-spanish-reader": "하늘이 무너졌다고 생각하는 병아리 이야기예요. 짧은 문장, 현재형 동사, 반복되는 대화 덕분에 줄거리를 따라가기 쉬워요.",
+      "lecturas-faciles": "아버지와 아들, 당나귀가 나오는 우화부터 읽어 보세요. 장면을 떠올리기 쉽고 자주 쓰는 동사의 과거형을 연습하기 좋아요.",
+      "the-wonderful-wizard-of-oz": "도로시가 회오리바람을 만나는 장면부터 읽어 보세요. 익숙한 줄거리와 구체적인 묘사 덕분에 모르는 단어가 나와도 이어서 읽기 좋아요.",
+      "daddy-long-legs": "학교생활 속 일상 영어를 읽고 싶다면 이 책이 좋아요. 점검 날의 생생한 이야기로 시작해 편지로 대학 생활을 들려줘요.",
+      "a-little-princess": "세라를 따라 런던의 기숙학교로 가 보세요. 대화 덕분에 읽기 시작하기 쉽고, 자세한 묘사에서 어휘도 넓힐 수 있어요."
+    }
   },
   "dailyGoal": {
     "label": "연속 {count}일. 오늘: {amount}",

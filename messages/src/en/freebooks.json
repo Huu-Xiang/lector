@@ -194,6 +194,21 @@
     "languageTitle": "Free {language} books by level",
     "languageIntro": "{count, plural, one {# free {language} book} other {# free {language} books}} for learners, from level {first} to level {last}. Each one is a full public-domain text. Open a book to see how it begins, then read it free on Readfox and tap any word for its meaning.",
     "languageMetaTitle": "Free {language} books for learners, {first}–{last} | Readfox",
-    "languageMetaDescription": "Read {count} free {language} books online at levels {first} to {last}, including {titles}. Tap any word for its meaning in your language."
+    "languageMetaDescription": "Read {count} free {language} books online at levels {first} to {last}, including {titles}. Tap any word for its meaning in your language.",
+    "featuredTitle": "Where to start with {level} {language} books",
+    "featuredIntro": "Try the opening pages free in your browser. In the Readfox reader, you can tap unfamiliar words for their meanings.",
+    "featuredStart": "Start here",
+    "featuredReadingTime": "About {minutes} min for the preview",
+    "featuredRead": "Read free preview",
+    "featuredReasons": {
+      "contes-du-lundi": "Start with “The Last Lesson.” A schoolboy tells the story in the first person, and the classroom setting gives you clues when the older vocabulary is unfamiliar.",
+      "lettres-de-mon-moulin": "“Installation” opens with rabbits and an old mill. The concrete setting helps you follow the scene while you meet descriptive words about the countryside.",
+      "la-petite-fadette": "Choose this if you want a longer story. The opening follows a farming family, with rural vocabulary and longer sentences for an extra challenge.",
+      "an-elementary-spanish-reader": "A chicken thinks the sky is falling. The short sentences, present-tense verbs, and repeated dialogue make the opening easy to follow.",
+      "lecturas-faciles": "Start with the fable about a father, his son, and a donkey. The action is easy to picture, and the story is good practice for common past-tense verbs.",
+      "the-wonderful-wizard-of-oz": "Start with Dorothy and the cyclone. A familiar plot and concrete descriptions help you keep reading even when a word is new.",
+      "daddy-long-legs": "Read for everyday English in a school setting. The narrator opens with a lively account of inspection day before the story moves into letters about college life.",
+      "a-little-princess": "Follow Sara’s arrival at a London boarding school. The dialogue gives you a way into the story, and the descriptive prose adds a vocabulary challenge."
+    }
   }
 }
