@@ -55,8 +55,13 @@ export default function OidcSignInButton({
         if (!code) return;
         const response = await fetch('/api/auth/native-auth/redeem', {
           method: 'POST',
+          body: '{}',
           credentials: 'same-origin',
-          headers: { 'x-readfox-auth-code': code, 'x-readfox-auth-verifier': verifier },
+          headers: {
+            'Content-Type': 'application/json',
+            'x-readfox-auth-code': code,
+            'x-readfox-auth-verifier': verifier,
+          },
         });
         if (!response.ok) throw new Error('Could not complete sign-in');
         window.location.replace(destination);

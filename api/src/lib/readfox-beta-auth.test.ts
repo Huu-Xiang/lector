@@ -115,7 +115,9 @@ test('a verified primary password account signs into a separate beta account wit
     const challenge = new Bun.CryptoHasher('sha256').update(verifier).digest('hex');
     const finish = await fetch(betaOrigin + '/api/auth/native-auth/finish', {
       method: 'POST',
+      body: '{}',
       headers: {
+        'Content-Type': 'application/json',
         Cookie: cookies(callback),
         Origin: betaOrigin,
         'x-readfox-auth-challenge': challenge,
@@ -126,7 +128,9 @@ test('a verified primary password account signs into a separate beta account wit
     const redeem = (proof: string, origin = betaOrigin) =>
       fetch(betaOrigin + '/api/auth/native-auth/redeem', {
         method: 'POST',
+        body: '{}',
         headers: {
+          'Content-Type': 'application/json',
           Origin: origin,
           'x-readfox-auth-code': code,
           'x-readfox-auth-verifier': proof,
@@ -137,7 +141,10 @@ test('a verified primary password account signs into a separate beta account wit
     const redeemed = await redeem(verifier);
     expect(redeemed.status).toBe(200);
     const inAppSession = await fetch(betaOrigin + '/api/auth/get-session', {
-      headers: { Cookie: cookies(redeemed) },
+      headers: {
+        'Content-Type': 'application/json',
+        Cookie: cookies(redeemed),
+      },
     });
     expect((await inAppSession.json()).user.email).toBe(email);
     expect((await redeem(verifier)).status).toBe(401);

@@ -26,7 +26,8 @@ function CompleteAuthentication() {
     try {
       const response = await fetch('/api/auth/native-auth/finish', {
         method: 'POST',
-        headers: { 'x-readfox-auth-challenge': challenge },
+        body: '{}',
+        headers: { 'Content-Type': 'application/json', 'x-readfox-auth-challenge': challenge },
       });
       if (!response.ok) throw new Error('Authentication unavailable');
       const { code } = await response.json();
