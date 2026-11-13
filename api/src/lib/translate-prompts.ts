@@ -53,6 +53,15 @@ export function phraseFieldsInWrongScript(
   });
 }
 
+export function contextUsesWrongScript(translation: string, nativeCode: string): boolean {
+  const script = NATIVE_SCRIPT[nativeCode];
+  if (!script) return false;
+  return (
+    (/[a-z]/i.test(translation) && !translation.match(script)) ||
+    phraseFieldsInWrongScript({ translation }, nativeCode).length > 0
+  );
+}
+
 export function phraseLanguageReminder(fields: string[], nativeName: string): string {
   return `\n\nYour previous answer wrote ${fields.join(', ')} in English. Write every value except register in ${nativeName}.`;
 }
@@ -162,7 +171,7 @@ export function buildContextExplanationPrompt(
 Selected word: "${word}"
 Sentence: "${sentence}"
 
-Give the one meaning that fits, followed by a brief paraphrase of the relevant part of the sentence. Explain the full expression when the word is part of one. Use one or two short sentences in plain text. Omit alternative senses, headings, and Markdown.`;
+Give the one meaning that fits, followed by a brief paraphrase of the relevant part of the sentence. Explain the full expression when the word is part of one. Write the entire answer in ${nativeName}. Keep the source word only if needed for clarity. Use at most two short sentences in plain text. Omit alternative senses, headings, and Markdown.`;
 }
 
 /**

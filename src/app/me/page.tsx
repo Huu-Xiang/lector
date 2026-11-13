@@ -1,12 +1,13 @@
 'use client';
 
 import Link from 'next/link';
-import { ChartBar, ChevronRight, Pencil, Settings, UserRound } from 'lucide-react';
+import { ChartBar, Clipboard, ChevronRight, Pencil, Settings, UserRound } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import AccountMenu from '@/components/NavHeader/components/AccountMenu';
 import { authClient } from '@/lib/auth-client';
 
 const destinations = [
+  { href: '/practice', label: 'practice', icon: Clipboard },
   { href: '/stats', label: 'stats', icon: ChartBar },
   { href: '/journal', label: 'journal', icon: Pencil },
   { href: '/settings', label: 'settings', icon: Settings },

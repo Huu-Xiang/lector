@@ -402,7 +402,7 @@ export default function VocabPage() {
   return (
     <main className="native-compact-page mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
       <PageHeader title={t('title')}>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {ankiTransport === 'addon' ? (
             <div className="relative">
               <button

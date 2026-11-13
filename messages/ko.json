@@ -320,7 +320,7 @@
       "title": "하단 탐색",
       "extra": "추가 탭",
       "none": "추가 안 함",
-      "hint": "일기와 통계는 내 정보에서 언제든 열 수 있어요. 이 설정은 현재 기기에 적용돼요."
+      "hint": "연습과 일기는 내 정보에서 언제든 열 수 있어요. 이 설정은 현재 기기에 적용돼요."
     },
     "pageTitle": "설정",
     "practice": {
@@ -1171,6 +1171,7 @@
     "collection": {
       "back": "서재",
       "loading": "컬렉션 불러오는 중",
+      "actions": "책 작업",
       "editDetails": "컬렉션 정보 수정",
       "lessonsCount": "레슨 {count}개",
       "completed": "{count}개 완료",
@@ -1198,6 +1199,9 @@
         "retryTranscription": "받아쓰기 다시 시도",
         "edit": "레슨 수정",
         "delete": "레슨 삭제",
+        "actions": "수업 작업",
+        "moveUp": "위로 이동",
+        "moveDown": "아래로 이동",
         "dragToReorder": "끌어서 {title} 순서 변경"
       }
     },

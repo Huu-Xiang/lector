@@ -22,7 +22,7 @@ Tapping a word in a fill-in sentence localizes its English dictionary senses to 
 
 **App domain:** Practice
 
-The user opens `/practice` and starts "My words". The server builds a round of due and new word cards. FSRS (ts-fsrs 5.4.2) schedules each answer on the server only. The client never runs FSRS.
+The user opens `/practice` and starts Review words when cards are ready. The server builds a round of due and new word cards. FSRS (ts-fsrs 5.4.2) schedules each answer on the server only. The client never runs FSRS.
 
 ### Path
 
@@ -36,7 +36,7 @@ sequenceDiagram
   participant Sync as syncWordState
   participant DB as wordCards, wordReviewLog, reviewRounds
 
-  User->>UI: Open My words
+  User->>UI: Open Review words
   UI->>API: GET /api/review/counts
   API->>Prep: backfillWordCards, reconcileWordCards
   UI->>API: GET /api/review/queue

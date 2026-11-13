@@ -2,6 +2,8 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import {
   BookOpenText,
+  ChevronRight,
+  Ellipsis,
   Check,
   GripVertical,
   LoaderCircle,
@@ -15,12 +17,21 @@ import Link from 'next/link';
 import { useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import { lessonHeading } from '@/lib/lesson-heading';
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 export default function SortableLessonRow({
   lesson,
   index,
   bookTitles,
   lessonCount,
+  compact,
+  onMove,
   onEdit,
   onDelete,
   onRetryTranscription,
@@ -30,6 +41,8 @@ export default function SortableLessonRow({
   /** Titles of the collection, used to spot a lesson title that only repeats them. */
   bookTitles: readonly string[];
   lessonCount: number;
+  compact: boolean;
+  onMove: (from: number, to: number) => void;
   onEdit: (id: string) => void;
   onDelete: (id: string, title: string) => void;
   onRetryTranscription?: (id: string) => void;
@@ -73,38 +86,47 @@ export default function SortableLessonRow({
     <div
       ref={setNodeRef}
       style={style}
-      className={`flex items-center gap-1 rounded-xl border border-border bg-card px-1 py-4 transition-all hover:border-border hover:shadow-sm sm:px-4 md:gap-3 ${isDragging ? 'opacity-60 shadow-md' : ''}`}
+      className={`flex items-center gap-1 ${compact ? 'px-2 py-1' : 'rounded-xl border border-border bg-card px-1 py-4 transition-all hover:border-border hover:shadow-sm sm:px-4 md:gap-3'} ${isDragging ? 'opacity-60 shadow-md' : ''}`}
     >
-      <button
-        ref={setActivatorNodeRef}
-        {...attributes}
-        {...listeners}
-        aria-label={t('dragToReorder', { title: lesson.title })}
-        data-testid={`drag-lesson-${lesson.id}`}
-        className="flex-shrink-0 cursor-grab touch-none rounded-md p-1 text-muted-foreground hover:text-foreground active:cursor-grabbing"
-      >
-        <GripVertical className="h-5 w-5" />
-      </button>
+      {!compact && (
+        <button
+          ref={setActivatorNodeRef}
+          {...attributes}
+          {...listeners}
+          aria-label={t('dragToReorder', { title: lesson.title })}
+          data-testid={`drag-lesson-${lesson.id}`}
+          className="flex-shrink-0 cursor-grab touch-none rounded-md p-1 text-muted-foreground hover:text-foreground active:cursor-grabbing"
+        >
+          <GripVertical className="h-5 w-5" />
+        </button>
+      )}
 
       <Link
         href={`/read/${lesson.id}`}
         title={heading}
-        className="group flex min-w-0 flex-1 items-center gap-2 pr-2 md:gap-4 md:pr-0"
+        className="group flex min-h-11 min-w-0 flex-1 items-center gap-2 pr-2 md:gap-4 md:pr-0"
       >
         {/* Lesson number */}
         <div
-          className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full text-sm font-medium ${
+          aria-hidden
+          className={`flex flex-shrink-0 items-center justify-center rounded-full text-xs font-medium ${compact ? 'size-6' : 'size-8'} ${
             isComplete ? 'bg-[var(--primary-soft)] text-primary' : 'bg-muted text-muted-foreground'
           }`}
         >
-          {isComplete ? <Check className="h-4 w-4" /> : index + 1}
+          {isComplete ? (
+            <Check className="h-4 w-4" />
+          ) : compact ? (
+            <ChevronRight className="size-3" />
+          ) : (
+            index + 1
+          )}
         </div>
 
         <div className="min-w-0 flex-1">
           {/* Lesson info */}
           <div className="">
             <h3
-              className="truncate text-sm font-medium text-foreground"
+              className={`text-sm font-medium text-foreground ${compact ? 'break-words' : 'truncate'}`}
               data-testid="lesson-heading"
             >
               {heading}
@@ -142,42 +164,92 @@ export default function SortableLessonRow({
           )}
         </div>
 
-        <div className="flex flex-shrink-0 items-center gap-3 text-sm text-muted-foreground group-hover:text-foreground">
-          <span className="hidden md:block">{CTALabel}</span>
-          <BookOpenText className="h-4 w-4" />
-        </div>
+        {!compact && (
+          <div className="flex flex-shrink-0 items-center gap-3 text-sm text-muted-foreground group-hover:text-foreground">
+            <span className="hidden md:block">{CTALabel}</span>
+            <BookOpenText className="h-4 w-4" />
+          </div>
+        )}
       </Link>
 
-      {/* Retry transcription button (failed audio lessons only) */}
-      {transcriptionFailed && onRetryTranscription && (
-        <button
-          onClick={() => onRetryTranscription(lesson.id)}
-          className="flex-shrink-0 cursor-pointer rounded-lg p-2 text-muted-foreground hover:bg-accent hover:text-foreground"
-          title={t('retryTranscription')}
-          data-testid={`retry-transcription-${lesson.id}`}
-        >
-          <RotateCcw className="h-4 w-4" />
-        </button>
+      {compact ? (
+        <DropdownMenu>
+          <DropdownMenuTrigger
+            render={<Button variant="ghost" size="icon-lg" />}
+            aria-label={t('actions')}
+          >
+            <Ellipsis aria-hidden />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-max min-w-36">
+            {transcriptionFailed && onRetryTranscription && (
+              <DropdownMenuItem
+                className="min-h-11"
+                onClick={() => onRetryTranscription(lesson.id)}
+              >
+                <RotateCcw aria-hidden />
+                {t('retryTranscription')}
+              </DropdownMenuItem>
+            )}
+            <DropdownMenuItem className="min-h-11" onClick={() => onEdit(lesson.id)}>
+              {t('edit')}
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="min-h-11"
+              onClick={() => onMove(index, index - 1)}
+              disabled={index === 0}
+            >
+              {t('moveUp')}
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="min-h-11"
+              onClick={() => onMove(index, index + 1)}
+              disabled={index === lessonCount - 1}
+            >
+              {t('moveDown')}
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="min-h-11"
+              variant="destructive"
+              onClick={() => onDelete(lesson.id, lesson.title)}
+            >
+              {t('delete')}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ) : (
+        <>
+          {/* Retry transcription button (failed audio lessons only) */}
+          {transcriptionFailed && onRetryTranscription && (
+            <button
+              onClick={() => onRetryTranscription(lesson.id)}
+              className="flex-shrink-0 cursor-pointer rounded-lg p-2 text-muted-foreground hover:bg-accent hover:text-foreground"
+              title={t('retryTranscription')}
+              data-testid={`retry-transcription-${lesson.id}`}
+            >
+              <RotateCcw className="h-4 w-4" />
+            </button>
+          )}
+
+          {/* Edit button */}
+          <button
+            onClick={() => onEdit(lesson.id)}
+            className="flex-shrink-0 cursor-pointer rounded-lg p-2 text-muted-foreground transition-all hover:bg-accent hover:text-foreground"
+            title={t('edit')}
+            data-testid={`edit-lesson-${lesson.id}`}
+          >
+            <SquarePen className="h-4 w-4" />
+          </button>
+
+          {/* Delete button */}
+          <button
+            onClick={() => onDelete(lesson.id, lesson.title)}
+            className="flex-shrink-0 cursor-pointer rounded-lg p-2 text-muted-foreground transition-all hover:bg-accent hover:text-destructive"
+            title={t('delete')}
+          >
+            <Trash2 className="h-4 w-4" />
+          </button>
+        </>
       )}
-
-      {/* Edit button */}
-      <button
-        onClick={() => onEdit(lesson.id)}
-        className="flex-shrink-0 cursor-pointer rounded-lg p-2 text-muted-foreground transition-all hover:bg-accent hover:text-foreground"
-        title={t('edit')}
-        data-testid={`edit-lesson-${lesson.id}`}
-      >
-        <SquarePen className="h-4 w-4" />
-      </button>
-
-      {/* Delete button */}
-      <button
-        onClick={() => onDelete(lesson.id, lesson.title)}
-        className="flex-shrink-0 cursor-pointer rounded-lg p-2 text-muted-foreground transition-all hover:bg-accent hover:text-destructive"
-        title={t('delete')}
-      >
-        <Trash2 className="h-4 w-4" />
-      </button>
     </div>
   );
 }

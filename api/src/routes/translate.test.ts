@@ -1227,6 +1227,45 @@ describe('streamed translation (stream: true)', () => {
     expect(provider.calls).toHaveLength(1);
   });
 
+  test.each([true, false])(
+    'retries an English context answer for a Chinese learner (valid=%s)',
+    async (valid) => {
+      db.prepare(
+        "INSERT OR REPLACE INTO settings (userId, key, value) VALUES ('local', 'nativeLanguage', ?)",
+      ).run(JSON.stringify('zh-CN'));
+      try {
+        const engine = makeEngine({
+          now: () => new Date('2026-07-15T12:00:00Z'),
+          compedPlan: 'cloud',
+        });
+        const provider = new FakeProvider();
+        provider.completeImpl = async () =>
+          provider.calls.length === 2 && valid
+            ? '这里指欧亚鸲，一种胸口偏红的小鸟。'
+            : 'European robin';
+        const { app } = makeApp({ engine, provider });
+        const res = await post(app, '/', {
+          word: 'Redbreast',
+          sentence: 'Robin Redbreast is singing on the bough.',
+          type: 'word',
+          explainContext: true,
+        });
+        expect(provider.calls).toHaveLength(2);
+        expect(provider.calls[1].messages[0].content).toContain('Simplified Chinese');
+        if (valid) {
+          expect(res.status).toBe(200);
+          expect(await res.json()).toEqual({ translation: '这里指欧亚鸲，一种胸口偏红的小鸟。' });
+          expect(engine.getUsage('local', 'llmRequestsPerMonth')).toBe(1);
+        } else {
+          expect(res.status).toBe(500);
+          expect(await res.json()).not.toHaveProperty('translation');
+        }
+      } finally {
+        db.prepare("DELETE FROM settings WHERE userId = 'local' AND key = 'nativeLanguage'").run();
+      }
+    },
+  );
+
   test('rich context streams the sense glosses and keeps the stitched shape', async () => {
     const engine = makeEngine({
       now: () => new Date('2026-07-15T12:00:00Z'),

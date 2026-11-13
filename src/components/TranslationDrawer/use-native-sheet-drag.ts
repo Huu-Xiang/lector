@@ -1,81 +1,99 @@
-import { useCallback, useEffect, useRef, useState, type PointerEvent, type RefObject } from 'react';
+import { useEffect, useRef, useState, type PointerEvent } from 'react';
 import { applySheetVh, readStoredSheetVh, SHEET_VH_DEFAULT } from './sheet-height';
 
-const EXPANDED_VH = 82;
-const SNAP_DISTANCE = 36;
+export const NATIVE_SHEET_DEFAULT = 34;
+const MIN_HEIGHT = 25;
+const MAX_HEIGHT = 86;
+const TAP_DISTANCE = 5;
 
-export function useNativeSheetDrag(
-  sheet: RefObject<HTMLDivElement | null>,
-  active: boolean,
-  onClose: () => void,
-) {
-  const [expanded, setExpanded] = useState(false);
-  const gesture = useRef<{ pointer: number; start: number; delta: number; frame: number } | null>(
-    null,
-  );
+function bound(height: number) {
+  return Math.min(MAX_HEIGHT, Math.max(MIN_HEIGHT, height));
+}
 
-  const reset = useCallback((node: HTMLDivElement) => {
-    if (gesture.current?.frame) cancelAnimationFrame(gesture.current.frame);
+export function useNativeSheetDrag(active: boolean) {
+  const [settledHeight, setSettledHeight] = useState(NATIVE_SHEET_DEFAULT);
+  const height = useRef(NATIVE_SHEET_DEFAULT);
+  const gesture = useRef<{
+    pointer: number;
+    start: number;
+    initial: number;
+    viewport: number;
+    next: number;
+    frame: number;
+    moved: boolean;
+  } | null>(null);
+  const ignoreClick = useRef(false);
+
+  function update(value: number) {
+    height.current = value;
+    applySheetVh(value);
+  }
+
+  function finish(event: PointerEvent<HTMLButtonElement>, cancel: boolean) {
+    const drag = gesture.current;
+    if (!drag || drag.pointer !== event.pointerId) return;
+    if (drag.frame) cancelAnimationFrame(drag.frame);
     gesture.current = null;
-    node.style.removeProperty('transform');
-    node.removeAttribute('data-dragging');
-  }, []);
+    ignoreClick.current = drag.moved;
+    const next = cancel ? drag.initial : drag.next;
+    update(next);
+    setSettledHeight(next);
+  }
 
   useEffect(() => {
     if (!active) return;
-    const node = sheet.current;
+    height.current = NATIVE_SHEET_DEFAULT;
+    applySheetVh(NATIVE_SHEET_DEFAULT);
     return () => {
-      if (node) reset(node);
+      if (gesture.current?.frame) cancelAnimationFrame(gesture.current.frame);
+      gesture.current = null;
+      ignoreClick.current = false;
       applySheetVh(readStoredSheetVh() ?? SHEET_VH_DEFAULT);
     };
-  }, [active, reset, sheet]);
-
-  useEffect(() => {
-    if (active) applySheetVh(expanded ? EXPANDED_VH : SHEET_VH_DEFAULT);
-  }, [active, expanded]);
+  }, [active]);
 
   return {
-    expanded,
+    expanded: active && settledHeight > NATIVE_SHEET_DEFAULT,
     handle: {
-      onClick: (event: React.MouseEvent) => {
-        if (event.detail === 0) setExpanded(!expanded);
+      onClick: (event: React.MouseEvent<HTMLButtonElement>) => {
+        if (event.detail > 0 && ignoreClick.current) {
+          ignoreClick.current = false;
+          return;
+        }
+        const open = height.current <= NATIVE_SHEET_DEFAULT;
+        const next = open ? MAX_HEIGHT : NATIVE_SHEET_DEFAULT;
+        update(next);
+        setSettledHeight(next);
       },
       onPointerDown: (event: PointerEvent<HTMLButtonElement>) => {
-        if (!event.isPrimary || event.button !== 0 || !sheet.current) return;
+        if (!event.isPrimary || event.button !== 0) return;
+        ignoreClick.current = false;
         event.currentTarget.setPointerCapture(event.pointerId);
-        gesture.current = { pointer: event.pointerId, start: event.clientY, delta: 0, frame: 0 };
-        sheet.current.setAttribute('data-dragging', '');
+        gesture.current = {
+          pointer: event.pointerId,
+          start: event.clientY,
+          initial: height.current,
+          viewport: window.innerHeight,
+          next: height.current,
+          frame: 0,
+          moved: false,
+        };
       },
       onPointerMove: (event: PointerEvent<HTMLButtonElement>) => {
         const drag = gesture.current;
-        const node = sheet.current;
-        if (!drag || !node || drag.pointer !== event.pointerId) return;
-        const upwardLimit = expanded
-          ? 24
-          : (window.innerHeight * (EXPANDED_VH - SHEET_VH_DEFAULT)) / 100;
-        drag.delta = Math.max(
-          -upwardLimit,
-          Math.min(window.innerHeight * 0.3, event.clientY - drag.start),
-        );
+        if (!drag || drag.pointer !== event.pointerId) return;
+        const delta = drag.start - event.clientY;
+        drag.moved ||= Math.abs(delta) >= TAP_DISTANCE;
+        if (!drag.moved) return;
+        drag.next = bound(drag.initial + (delta / drag.viewport) * 100);
         if (drag.frame) return;
         drag.frame = requestAnimationFrame(() => {
-          node.style.transform = `translate3d(0, ${drag.delta}px, 0)`;
+          update(drag.next);
           drag.frame = 0;
         });
       },
-      onPointerUp: (event: PointerEvent<HTMLButtonElement>) => {
-        const drag = gesture.current;
-        const node = sheet.current;
-        if (!drag || !node || drag.pointer !== event.pointerId) return;
-        const travel = event.clientY - drag.start;
-        reset(node);
-        if (travel > SNAP_DISTANCE && !expanded) onClose();
-        else if (travel > SNAP_DISTANCE) setExpanded(false);
-        else if (travel < -SNAP_DISTANCE || Math.abs(travel) < 6) setExpanded(!expanded);
-      },
-      onLostPointerCapture: (event: PointerEvent<HTMLButtonElement>) => {
-        if (sheet.current && gesture.current?.pointer === event.pointerId) reset(sheet.current);
-      },
+      onPointerUp: (event: PointerEvent<HTMLButtonElement>) => finish(event, false),
+      onLostPointerCapture: (event: PointerEvent<HTMLButtonElement>) => finish(event, true),
     },
   };
 }

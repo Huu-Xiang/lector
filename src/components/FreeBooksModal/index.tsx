@@ -1,12 +1,21 @@
 'use client';
 
-import { SlidersHorizontal, X } from 'lucide-react';
+import { ArrowDownUp, ChevronRight, SlidersHorizontal, X } from 'lucide-react';
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useFormatter, useLocale, useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { buttonVariants, Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
+import { useIsNativeApp } from '@/lib/native-app';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Dialog, DialogClose, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import {
   addLibraryBook,
@@ -80,6 +89,7 @@ export default function FreeBooksModal({
   const [readingInterests, setReadingInterests] = useState<string[]>([]);
   const [tab, setTab] = useState<TabId>('books');
   const [query, setQuery] = useState('');
+  const inApp = useIsNativeApp();
   const [sort, setSort] = useState<BookSort>('default');
   const [filtersOpen, setFiltersOpen] = useState(false);
 
@@ -249,11 +259,23 @@ export default function FreeBooksModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="flex max-h-[85vh] max-w-2xl flex-col overflow-hidden">
-        <div className="flex items-center justify-between border-b border-border px-6 py-4">
-          <DialogTitle>{t('title')}</DialogTitle>
+      <DialogContent
+        className={`flex max-w-2xl flex-col overflow-hidden ${inApp ? 'max-h-[calc(100dvh-env(safe-area-inset-top)-env(safe-area-inset-bottom)-1.5rem)]' : 'max-h-[85vh]'}`}
+      >
+        <div
+          className={
+            inApp
+              ? 'flex items-center justify-between border-b border-border px-3'
+              : 'flex items-center justify-between border-b border-border px-6 py-4'
+          }
+        >
+          <DialogTitle className={inApp ? 'text-base' : undefined}>{t('title')}</DialogTitle>
           <DialogClose
-            className={buttonVariants({ variant: 'ghost', size: 'icon' })}
+            className={buttonVariants({
+              variant: 'ghost',
+              size: 'icon',
+              className: inApp && 'size-11',
+            })}
             aria-label={t('close')}
           >
             <X className="h-5 w-5" />
@@ -261,7 +283,7 @@ export default function FreeBooksModal({
         </div>
         {tabOrder.length > 1 && (
           <div
-            className="flex gap-1 border-b border-border px-6 pt-3"
+            className={`flex gap-1 border-b border-border ${inApp ? 'px-3' : 'px-6 pt-3'}`}
             data-testid="free-books-tabs"
           >
             {tabOrder.map((id) => (
@@ -271,7 +293,7 @@ export default function FreeBooksModal({
                 aria-pressed={tab === id}
                 onClick={() => setTab(id)}
                 data-testid={`free-books-tab-${id}`}
-                className={`rounded-t-lg px-3 py-2 text-sm font-medium transition-colors ${
+                className={`rounded-t-lg px-3 py-2 text-sm font-medium transition-colors ${inApp ? 'min-h-11' : ''} ${
                   tab === id
                     ? 'border-b-2 border-primary text-foreground'
                     : 'text-muted-foreground hover:text-foreground'
@@ -283,13 +305,18 @@ export default function FreeBooksModal({
           </div>
         )}
         {tab === 'books' ? (
-          <div className="overflow-y-auto px-6 py-4" data-testid="free-books-list">
-            <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
-              <p className="text-sm text-muted-foreground">
-                {t('intro', { language: languageName })}
-              </p>
-              <DescriptionToggle />
-            </div>
+          <div
+            className={`min-h-0 overflow-y-auto ${inApp ? 'px-3 py-2' : 'px-6 py-4'}`}
+            data-testid="free-books-list"
+          >
+            {!inApp && (
+              <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+                <p className="text-sm text-muted-foreground">
+                  {t('intro', { language: languageName })}
+                </p>
+                <DescriptionToggle />
+              </div>
+            )}
             {failed && <p className="text-sm text-destructive">{t('errLoad')}</p>}
             {!failed && books === null && (
               <p className="text-sm text-muted-foreground">{t('loading')}</p>
@@ -300,36 +327,65 @@ export default function FreeBooksModal({
               </p>
             )}
             {(books?.length ?? 0) > 0 && (
-              <div className="mb-3 flex gap-2">
+              <div className={`mb-3 flex gap-2 ${inApp ? 'items-stretch' : ''}`}>
                 <Input
                   type="search"
                   value={query}
                   onChange={(event) => setQuery(event.target.value)}
                   placeholder={t('search')}
                   aria-label={t('search')}
-                  className="min-w-0 flex-1"
+                  className={`min-w-0 flex-1 ${inApp ? 'min-h-11' : ''}`}
                   data-testid="free-books-search"
                 />
-                <Select
-                  value={sort}
-                  onChange={(event) => setSort(event.target.value as BookSort)}
-                  aria-label={t('sortLabel')}
-                  wrapperClassName="w-32 shrink-0 sm:w-40"
-                  data-testid="free-books-sort"
-                >
-                  <option value="default">{t('sortDefault')}</option>
-                  <option value="short">{t('sortShort')}</option>
-                  <option value="long">{t('sortLong')}</option>
-                </Select>
+                {inApp ? (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger
+                      render={<Button variant="outline" size="icon-lg" />}
+                      aria-label={t('sortLabel')}
+                      data-testid="free-books-sort-menu"
+                    >
+                      <ArrowDownUp aria-hidden />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-max min-w-36">
+                      <DropdownMenuRadioGroup
+                        value={sort}
+                        onValueChange={(value) => setSort(value as BookSort)}
+                      >
+                        <DropdownMenuRadioItem className="min-h-11" value="default">
+                          {t('sortDefault')}
+                        </DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem className="min-h-11" value="short">
+                          {t('sortShort')}
+                        </DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem className="min-h-11" value="long">
+                          {t('sortLong')}
+                        </DropdownMenuRadioItem>
+                      </DropdownMenuRadioGroup>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                ) : (
+                  <Select
+                    value={sort}
+                    onChange={(event) => setSort(event.target.value as BookSort)}
+                    aria-label={t('sortLabel')}
+                    wrapperClassName="w-32 shrink-0 sm:w-40"
+                    data-testid="free-books-sort"
+                  >
+                    <option value="default">{t('sortDefault')}</option>
+                    <option value="short">{t('sortShort')}</option>
+                    <option value="long">{t('sortLong')}</option>
+                  </Select>
+                )}
                 <Button
                   type="button"
                   variant={filtersOpen ? 'secondary' : 'outline'}
                   onClick={toggleFilters}
                   aria-expanded={filtersOpen}
+                  className={inApp ? 'min-w-11 px-2' : undefined}
                   data-testid="free-books-filters-toggle"
                 >
                   <SlidersHorizontal className="h-4 w-4" aria-hidden="true" />
-                  {t('filters')}
+                  <span className={inApp ? 'sr-only' : undefined}>{t('filters')}</span>
                   {activeFilters > 0 && (
                     <span className="rounded-full bg-primary px-1.5 text-xs text-primary-foreground">
                       {activeFilters}
@@ -344,10 +400,7 @@ export default function FreeBooksModal({
               </p>
             )}
             {filtersOpen && levels.length > 0 && !searching && (
-              <div
-                className="-mx-6 mb-4 flex gap-2 overflow-x-auto px-6 pb-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0"
-                data-testid="free-books-levels"
-              >
+              <div className="mb-3 flex flex-wrap gap-2" data-testid="free-books-levels">
                 {(['all', ...levels] as const).map((level) => (
                   <button
                     key={level}
@@ -408,74 +461,114 @@ export default function FreeBooksModal({
                   <h3 className="text-sm font-bold text-foreground">
                     {level} · {tl(`names.${level}`)}
                   </h3>
-                  {exams && (
+                  {!inApp && exams && (
                     <p className="mb-2 text-xs text-muted-foreground" title={tl('approx')}>
                       {exams}
                     </p>
                   )}
-                  <ul className="space-y-3">
+                  <ul className={inApp ? 'divide-y divide-border' : 'space-y-3'}>
                     {sorted
                       .filter((book) => book.level === level)
                       .map((book) => {
                         const shownTitle = titleFor(book);
                         const blurb = translationFor(book.blurbs, native);
+                        const details = (
+                          <>
+                            {shownTitle !== book.title && (
+                              <p className="text-xs text-muted-foreground">
+                                {tl('original', { title: book.title })}
+                              </p>
+                            )}
+                            <p className="text-sm text-muted-foreground">
+                              {book.author}
+                              {book.category && ` · ${t(`categories.${book.category}`)}`}
+                            </p>
+                            {(inApp || showDescriptions) && blurb && (
+                              <p className="mt-1 text-sm text-foreground">{blurb}</p>
+                            )}
+                            <p className="mt-1 text-xs text-muted-foreground">
+                              {t('size', {
+                                words: format.number(book.wordCount),
+                                lessons: format.number(book.lessonCount),
+                              })}
+                              {' · '}
+                              {timeLabel(book)}
+                              {' · '}
+                              <BookReviewLink
+                                native={native}
+                                title={book.title}
+                                author={book.author}
+                                nativeTitle={shownTitle}
+                              />
+                              {' · '}
+                              <a
+                                href={book.sourceUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="underline"
+                              >
+                                {book.sourceName}
+                              </a>
+                            </p>
+                          </>
+                        );
                         return (
                           <li
                             key={book.slug}
-                            className="flex flex-wrap items-start gap-x-4 gap-y-3 rounded-xl border border-border bg-card p-4 sm:flex-nowrap"
+                            className={
+                              inApp
+                                ? 'flex items-start gap-2 py-2'
+                                : 'flex flex-wrap items-start gap-x-4 gap-y-3 rounded-xl border border-border bg-card p-4 sm:flex-nowrap'
+                            }
                             data-testid={`free-book-${book.slug}`}
                           >
                             {book.cover && (
-                              <img
+                              <Image
+                                width={56}
+                                height={75}
+                                sizes={inApp ? '36px' : '56px'}
                                 src={book.cover.url}
                                 alt=""
                                 loading="lazy"
                                 data-testid="free-book-cover"
-                                className="aspect-[3/4] w-12 shrink-0 rounded-md bg-muted object-cover sm:w-14"
+                                className={`aspect-[3/4] shrink-0 rounded-md bg-muted object-cover ${inApp ? 'w-9' : 'w-12 sm:w-14'}`}
                               />
                             )}
-                            <div className="min-w-0 flex-1 basis-[calc(100%-4.75rem)] sm:basis-0">
-                              <h4 className="font-semibold text-foreground">{shownTitle}</h4>
-                              {shownTitle !== book.title && (
-                                <p className="text-xs text-muted-foreground">
-                                  {tl('original', { title: book.title })}
-                                </p>
+                            <div
+                              className={
+                                inApp
+                                  ? 'min-w-0 flex-1'
+                                  : 'min-w-0 flex-1 basis-[calc(100%-4.75rem)] sm:basis-0'
+                              }
+                            >
+                              {inApp ? (
+                                <details className="group">
+                                  <summary className="flex min-h-11 cursor-pointer list-none items-center gap-1 [&::-webkit-details-marker]:hidden">
+                                    <span className="min-w-0 flex-1">
+                                      <span className="block text-sm leading-snug font-semibold">
+                                        {shownTitle}
+                                      </span>
+                                      <span className="block truncate text-xs text-muted-foreground">
+                                        {book.author}
+                                      </span>
+                                    </span>
+                                    <ChevronRight
+                                      className="size-3 shrink-0 text-muted-foreground group-open:rotate-90"
+                                      aria-hidden
+                                    />
+                                  </summary>
+                                  <div className="space-y-1 pb-2">{details}</div>
+                                </details>
+                              ) : (
+                                <>
+                                  <h4 className="font-semibold text-foreground">{shownTitle}</h4>
+                                  {details}
+                                </>
                               )}
-                              <p className="text-sm text-muted-foreground">
-                                {book.author}
-                                {book.category && ` · ${t(`categories.${book.category}`)}`}
-                              </p>
-                              {showDescriptions && blurb && (
-                                <p className="mt-1 text-sm text-foreground">{blurb}</p>
-                              )}
-                              <p className="mt-1 text-xs text-muted-foreground">
-                                {t('size', {
-                                  words: format.number(book.wordCount),
-                                  lessons: format.number(book.lessonCount),
-                                })}
-                                {' · '}
-                                {timeLabel(book)}
-                                {' · '}
-                                <BookReviewLink
-                                  native={native}
-                                  title={book.title}
-                                  author={book.author}
-                                  nativeTitle={shownTitle}
-                                />
-                                {' · '}
-                                <a
-                                  href={book.sourceUrl}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="underline"
-                                >
-                                  {book.sourceName}
-                                </a>
-                              </p>
                             </div>
                             <Button
-                              size="sm"
-                              className="ml-16 sm:ml-0"
+                              size={inApp ? 'default' : 'sm'}
+                              className={inApp ? 'min-w-11 px-2 text-xs' : 'ml-16 sm:ml-0'}
                               variant={book.added ? 'outline' : 'default'}
                               disabled={book.added || adding !== null}
                               onClick={() => add(book)}
@@ -494,16 +587,23 @@ export default function FreeBooksModal({
                 </section>
               );
             })}
-            {levels.length > 0 && <p className="text-xs text-muted-foreground">{tl('approx')}</p>}
+            {!inApp && levels.length > 0 && (
+              <p className="text-xs text-muted-foreground">{tl('approx')}</p>
+            )}
           </div>
         ) : (
-          <div className="overflow-y-auto px-6 py-4" data-testid="reading-feed-list">
-            <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
-              <p className="text-sm text-muted-foreground">
-                {t('feedIntro', { interest: t(`tab.${tab}`), language: languageName })}
-              </p>
-              <DescriptionToggle />
-            </div>
+          <div
+            className={`min-h-0 overflow-y-auto ${inApp ? 'px-3 py-2' : 'px-6 py-4'}`}
+            data-testid="reading-feed-list"
+          >
+            {!inApp && (
+              <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+                <p className="text-sm text-muted-foreground">
+                  {t('feedIntro', { interest: t(`tab.${tab}`), language: languageName })}
+                </p>
+                <DescriptionToggle />
+              </div>
+            )}
             {feedFailed && <p className="text-sm text-destructive">{t('feedErrLoad')}</p>}
             {!feedFailed && feed === null && (
               <p className="text-sm text-muted-foreground">{t('feedLoading')}</p>

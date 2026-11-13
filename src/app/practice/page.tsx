@@ -895,7 +895,7 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
             {/* Practice format: Cloze (fill the blank) vs Dictation (hear the
                 sentence, type it back). Both share the collection / round size /
                 review options below. */}
-            <div className="mb-6">
+            <div className="mb-3 sm:mb-6">
               <div className="grid grid-cols-2 gap-2">
                 {/* Explicit aria-labels keep each button's accessible name to
                     just "Cloze"/"Dictation" — the descriptive subtitle stays
@@ -955,7 +955,7 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
                 );
                 if (totalDue === 0) return null;
                 return (
-                  <div className="mb-8 rounded-2xl border border-[var(--gold-lip)] bg-[var(--gold-soft)] p-5">
+                  <div className="mb-4 rounded-2xl border border-[var(--gold-lip)] bg-[var(--gold-soft)] p-3 sm:mb-8 sm:p-5">
                     <h2 className="mb-3 text-base font-semibold text-[var(--gold-strong)]">
                       {t('setup.reviewDue', { count: totalDue })}
                     </h2>
@@ -989,7 +989,7 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
               })()}
 
             {/* Learn New section */}
-            <div className="rounded-2xl border border-border bg-card p-5">
+            <div className="rounded-2xl border border-border bg-card p-3 sm:p-5">
               <h2 className="mb-4 text-base font-semibold text-foreground">
                 {t('setup.learnNew')}
               </h2>
@@ -1005,7 +1005,11 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
                         onClick={() => setSelectedCollection(coll)}
                         aria-pressed={selectedCollection === coll}
                         variant={selectedCollection === coll ? 'default' : 'secondary'}
-                        className="flex h-14 flex-col justify-center gap-0"
+                        className={
+                          nativeApp
+                            ? 'h-auto min-h-11 flex-col gap-0 px-1.5 py-1.5 whitespace-normal'
+                            : 'flex h-14 flex-col justify-center gap-0'
+                        }
                       >
                         <div>{t(`collections.${coll}`)}</div>
                         {count && count.total > 0 && (

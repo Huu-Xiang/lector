@@ -135,7 +135,7 @@ export default function HomeRecommendations({
             onEmpty={markEmpty}
             compact
           />
-          <div className="flex flex-wrap items-center gap-x-3 border-t border-border py-1">
+          <div className="flex flex-wrap items-center gap-x-2 border-t border-border">
             <Button
               variant="ghost"
               className="min-h-11 px-2 text-muted-foreground"

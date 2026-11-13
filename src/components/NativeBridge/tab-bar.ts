@@ -1,24 +1,25 @@
 const library = { href: '/', labelKey: 'library', icon: 'books.vertical.fill' } as const;
-const practice = { href: '/practice', labelKey: 'practice', icon: 'rectangle.stack.fill' } as const;
+const stats = { href: '/stats', labelKey: 'stats', icon: 'chart.bar.fill' } as const;
 const vocab = { href: '/vocab', labelKey: 'vocab', icon: 'list.bullet.rectangle.fill' } as const;
 export const ME_TAB = { href: '/me', labelKey: 'me', icon: 'person.crop.circle.fill' } as const;
 
 export const OPTIONAL_TABS = {
   journal: { href: '/journal', labelKey: 'journal', icon: 'square.and.pencil' },
-  stats: { href: '/stats', labelKey: 'stats', icon: 'chart.bar.fill' },
+  practice: { href: '/practice', labelKey: 'practice', icon: 'rectangle.stack.fill' },
 } as const;
 
 export type OptionalTab = 'none' | keyof typeof OPTIONAL_TABS;
 
 export function parseOptionalTab(value: string | null): OptionalTab {
-  return value === 'journal' || value === 'stats' ? value : 'none';
+  return value === 'journal' || value === 'practice' ? value : 'none';
 }
 
 export function nativeTabs(extra: OptionalTab) {
-  return [library, practice, vocab, ...(extra === 'none' ? [] : [OPTIONAL_TABS[extra]]), ME_TAB];
+  return [library, vocab, stats, ...(extra === 'none' ? [] : [OPTIONAL_TABS[extra]]), ME_TAB];
 }
 
 export function selectedNativeTab(pathname: string, extra: OptionalTab): string | null {
+  if (pathname.startsWith('/collection/')) return library.href;
   if (nativeTabs(extra).some((tab) => tab.href === pathname)) return pathname;
   if (
     pathname === '/settings' ||

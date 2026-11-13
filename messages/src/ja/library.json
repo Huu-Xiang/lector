@@ -135,6 +135,7 @@
     "collection": {
       "back": "ライブラリ",
       "loading": "コレクションを読み込み中",
+      "actions": "本の操作",
       "editDetails": "コレクションの詳細を編集",
       "lessonsCount": "{count} レッスン",
       "completed": "{count} 完了",
@@ -162,6 +163,9 @@
         "retryTranscription": "文字起こしを再試行",
         "edit": "レッスンを編集",
         "delete": "レッスンを削除",
+        "actions": "レッスンの操作",
+        "moveUp": "上へ移動",
+        "moveDown": "下へ移動",
         "dragToReorder": "ドラッグして{title}を並べ替え"
       }
     },

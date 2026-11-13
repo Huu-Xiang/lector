@@ -54,7 +54,7 @@ test('Me opens the hidden pages and Settings can restore an extra native tab', a
   await expect(
     page.getByRole('main').getByRole('heading', { name: 'Me', exact: true }),
   ).toBeVisible();
-  await expect.poll(tabIds).toEqual(['/', '/practice', '/vocab', '/me']);
+  await expect.poll(tabIds).toEqual(['/', '/vocab', '/stats', '/me']);
   await page.getByRole('main').getByRole('link', { name: 'Journal' }).click();
   await expect(page).toHaveURL('/journal');
   await page.getByTestId('native-back').click();
@@ -63,7 +63,7 @@ test('Me opens the hidden pages and Settings can restore an extra native tab', a
 
   const extra = page.getByLabel('Extra tab');
   await extra.selectOption('journal');
-  await expect.poll(tabIds).toEqual(['/', '/practice', '/vocab', '/journal', '/me']);
+  await expect.poll(tabIds).toEqual(['/', '/vocab', '/stats', '/journal', '/me']);
   await page.reload();
   await expect(extra).toHaveValue('journal');
   await expect.poll(tabIds).toContain('/journal');
@@ -72,8 +72,12 @@ test('Me opens the hidden pages and Settings can restore an extra native tab', a
   await selectTab('/me');
   await expect(page).toHaveURL('/me');
   await page.getByRole('main').getByRole('link', { name: 'Settings' }).click();
-  await extra.selectOption('stats');
-  await expect.poll(tabIds).toEqual(['/', '/practice', '/vocab', '/stats', '/me']);
+  await extra.selectOption('practice');
+  await expect.poll(tabIds).toEqual(['/', '/vocab', '/stats', '/practice', '/me']);
+  await selectTab('/practice');
+  await expect(page).toHaveURL('/practice');
+  await selectTab('/me');
+  await page.getByRole('main').getByRole('link', { name: 'Settings' }).click();
   await extra.selectOption('none');
-  await expect.poll(tabIds).toEqual(['/', '/practice', '/vocab', '/me']);
+  await expect.poll(tabIds).toEqual(['/', '/vocab', '/stats', '/me']);
 });

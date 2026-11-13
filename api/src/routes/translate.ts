@@ -30,6 +30,7 @@ import {
   buildWordEntryPrompt,
   phraseFieldsInWrongScript,
   phraseLanguageReminder,
+  contextUsesWrongScript,
 } from '../lib/translate-prompts';
 import { recordLookupOutcome } from '../lib/ai-timing';
 import { localizeEntry } from '../lib/localize-entry';
@@ -100,6 +101,7 @@ interface StreamPlan {
   maxTokens: number;
   /** JSON keys whose string values are shown while streaming; `null` when the raw text is the answer. */
   visibleKeys: ReadonlySet<string> | null;
+  buffer?: boolean;
   finish: (provider: LLMProvider, text: string) => Promise<unknown>;
 }
 
@@ -600,6 +602,7 @@ export function makeTranslateRoutes({
       return entry;
     };
 
+    const nativeCode = getNativeLanguageCode(userId);
     const explanation = explainContext
       ? {
           prompt: buildContextExplanationPrompt(langName, word, sentence, nativeName),
@@ -608,15 +611,36 @@ export function makeTranslateRoutes({
         }
       : null;
 
+    const completeExplanation = (provider: LLMProvider, content: string) =>
+      provider.complete({
+        messages: [{ role: 'user', content }],
+        task: 'context-simple',
+        maxTokens: 192,
+      });
+
+    const finishExplanation = async (provider: LLMProvider, prompt: string, text: string) => {
+      const translation = simpleTranslation(text);
+      if (!contextUsesWrongScript(translation, nativeCode)) return { translation };
+
+      const retry = simpleTranslation(
+        await completeExplanation(
+          provider,
+          prompt + '\n\nTranslate every part of the explanation into ' + nativeName + '.',
+        ),
+      );
+      if (contextUsesWrongScript(retry, nativeCode)) {
+        throw new Error('The explanation did not use the requested language');
+      }
+      return { translation: retry };
+    };
+
     const answerOnce = async (provider: LLMProvider): Promise<unknown> => {
       if (explanation) {
-        const { prompt, task, maxTokens } = explanation;
-        const text = await provider.complete({
-          messages: [{ role: 'user', content: prompt }],
-          task,
-          maxTokens,
-        });
-        return { translation: simpleTranslation(text) };
+        return finishExplanation(
+          provider,
+          explanation.prompt,
+          await completeExplanation(provider, explanation.prompt),
+        );
       }
 
       if (managedFree) {
@@ -664,8 +688,9 @@ export function makeTranslateRoutes({
       if (explanation) {
         return {
           ...explanation,
+          buffer: true,
           visibleKeys: null,
-          finish: async (_provider, text) => ({ translation: simpleTranslation(text) }),
+          finish: (provider, text) => finishExplanation(provider, explanation.prompt, text),
         };
       }
 
@@ -731,7 +756,7 @@ export function makeTranslateRoutes({
           for (let next = first; !next.done; next = await deltas.next()) {
             output += next.value;
             const visible = extractor ? extractor.push(next.value) : next.value;
-            if (visible) await send({ delta: visible });
+            if (visible && !plan.buffer) await send({ delta: visible });
           }
         } catch (error) {
           if (!output.trim()) engine.refund(reservation);
@@ -746,7 +771,9 @@ export function makeTranslateRoutes({
         }
         try {
           // Malformed or cut-off output falls back to one complete call; the stream already billed.
-          const result = await plan.finish(provider, output).catch(() => answerOnce(provider));
+          const result = plan.buffer
+            ? await plan.finish(provider, output)
+            : await plan.finish(provider, output).catch(() => answerOnce(provider));
           await send({ result });
         } catch (error) {
           console.error('Translation error:', error);

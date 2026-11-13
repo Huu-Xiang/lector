@@ -197,7 +197,7 @@
   N("flow:in-context", "flow", "In-context translation", {
     domain: "translation",
     md: "translation.md#in-context-translation",
-    summary: "The drawer explains the word in the current sentence and keeps the general definition.",
+    summary: "The drawer explains the current sentence. The API retries an answer in the wrong script for the translation language.",
     steps: [
       "file:translation-drawer",
       "fn:read-requestContextTranslation",
@@ -414,7 +414,7 @@
   N("flow:save-settings", "flow", "Save settings", {
     domain: "settings",
     md: "settings.md#save-settings",
-    summary: "Settings writes account keys through the API. iOS also stores the optional bottom tab on the device.",
+    summary: "Settings writes account keys through the API. iOS stores the optional Practice or Journal tab on the device.",
     steps: ["file:settings-page", "fn:setSetting", "route:settings-put", "table:settings"],
   });
   N("flow:configure-llm", "flow", "Configure LLM", {
@@ -515,7 +515,7 @@
     domain: "library",
     summary: "Header actions and reading recommendations. On iOS, saved books appear first.",
   });
-  N("file:collection-page", "file", "Collection page", { path: "src/app/collection/[id]/page.tsx", domain: "library" });
+  N("file:collection-page", "file", "Collection page", { path: "src/app/collection/[id]/page.tsx", domain: "library", summary: "On iPhone, each lesson row opens the reader or a menu of lesson actions." });
   N("file:read-page", "file", "Read page", { path: "src/app/read/[bookId]/page.tsx", domain: "translation" });
   N("file:markdown-reader", "file", "MarkdownReader", { path: "src/components/MarkdownReader/index.tsx", domain: "library" });
   N("file:reader-article", "file", "ReaderArticle", { path: "src/components/MarkdownReader/ReaderArticle.tsx", domain: "library" });
@@ -531,7 +531,7 @@
   N("file:words", "file", "words.ts", { path: "src/lib/words.ts" });
   N("file:tts", "file", "tts.ts", { path: "src/lib/tts.ts", domain: "listen" });
   N("file:optimistic-state", "file", "optimistic-word-state.ts", { path: "src/components/MarkdownReader/optimistic-word-state.ts", domain: "vocabulary" });
-  N("file:practice-page", "file", "Practice page", { path: "src/app/practice/page.tsx", domain: "practice", summary: "On iOS, practice format buttons show only the format names." });
+  N("file:practice-page", "file", "Practice page", { path: "src/app/practice/page.tsx", domain: "practice", summary: "Practice shows a compact review action when cards are ready. On iOS, format buttons show only the names." });
   N("file:use-cloze-round", "file", "use-cloze-round.ts", { path: "src/app/practice/use-cloze-round.ts", domain: "practice" });
   N("file:persist-review", "file", "persist-review.ts", { path: "src/app/practice/persist-review.ts", domain: "practice" });
   N("file:practice-utils", "file", "practice/utils.ts", { path: "src/app/practice/utils.ts", domain: "practice" });

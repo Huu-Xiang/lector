@@ -96,7 +96,7 @@ User database: `cached_entries`, `cached_senses`, `cached_related_forms`, `vocab
 
 **App domain:** Translation
 
-The In-context action asks the LLM for a sense that fits the sentence. When the word occurs in that sentence, the drawer shows the control.
+The In-context action asks the LLM for a sense that fits the sentence. When the word occurs in that sentence, the drawer shows the control. On iPhone it sits beside the word. The sheet opens at roughly one third of the screen. Drag or tap the handle to resize it.
 
 ```mermaid
 sequenceDiagram
@@ -131,6 +131,7 @@ sequenceDiagram
 
 ### Branches
 
+- If the answer is in the wrong script for the translation language, the API retries once before showing the explanation.
 - Nested lookup keeps the original sentence. If the nested word is not in that sentence, the drawer hides the In-context action.
 - Practice replaces the shown gloss and clears `dictEntry`.
 - Managed Free meters `contextTranslationsPerDay` for context explanations.
@@ -252,7 +253,7 @@ Tests: `src/lib/dictionary-client.test.ts`, `src/lib/prefetch-words.test.ts`, `e
 
 **App domain:** Translation
 
-A phrase or In-context request can ask for a stream (`stream: true` on `POST /api/translate`). The server answers with lines of JSON: `{"delta": text}` while the model writes, then `{"result": ...}`. The drawer shows the translation text as it grows.
+A phrase or In-context request can ask for a stream (`stream: true` on `POST /api/translate`). The server answers with lines of JSON: `{"delta": text}` while the model writes, then `{"result": ...}`. The drawer shows ordinary translation text as it grows. The API checks the full in-context explanation before sending it.
 
 | Role | Path | Function |
 | --- | --- | --- |

@@ -62,7 +62,9 @@ export default function NativeTopBar() {
               type="button"
               onClick={() => {
                 void haptic();
-                if (nativeBar && selectedNativeTab(pathname, extra) === ME_TAB.href) {
+                if (pathname.startsWith('/collection/')) {
+                  router.replace('/');
+                } else if (nativeBar && selectedNativeTab(pathname, extra) === ME_TAB.href) {
                   router.replace(ME_TAB.href);
                 } else {
                   router.back();

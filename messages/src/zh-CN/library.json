@@ -135,6 +135,7 @@
     "collection": {
       "back": "书库",
       "loading": "正在加载合集",
+      "actions": "书籍操作",
       "editDetails": "编辑合集详情",
       "lessonsCount": "{count} 篇课文",
       "completed": "已完成 {count} 篇",
@@ -162,6 +163,9 @@
         "retryTranscription": "重新转写",
         "edit": "编辑课文",
         "delete": "删除课文",
+        "actions": "课文操作",
+        "moveUp": "上移",
+        "moveDown": "下移",
         "dragToReorder": "拖动以调整 {title} 的顺序"
       }
     },

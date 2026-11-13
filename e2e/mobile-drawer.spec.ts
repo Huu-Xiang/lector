@@ -192,6 +192,9 @@ test.describe('iOS lookup sheet', () => {
       }),
     );
     await page.request.put(apiUrl('/api/settings/autoSaveLookups'), { data: { value: false } });
+    await page.route('**/api/translate', (route) =>
+      route.fulfill({ json: { translation: 'The festival held in Perdekraal.' } }),
+    );
     const collectionId = await openLesson(page);
     try {
       await page.getByRole('button', { name: 'Look up Perdekraal-fees' }).first().click();
@@ -216,27 +219,44 @@ test.describe('iOS lookup sheet', () => {
       await more.click();
       await expect(drawer.getByText(/A festival\./).first()).toBeInViewport();
 
+      const context = drawer.getByTestId('request-word-context');
+      await expect(context).toBeVisible();
+      const heading = (await drawer
+        .getByRole('heading', { name: 'Perdekraal-fees' })
+        .boundingBox())!;
+      expect(Math.abs((await context.boundingBox())!.y - heading.y)).toBeLessThan(24);
+      await context.click();
+      await page.getByTestId('ai-notice-agree').click();
+      await expect(drawer.getByTestId('word-context-result')).toContainText(
+        'The festival held in Perdekraal.',
+      );
+
+      const initial = (await drawer.boundingBox())!.height;
+      expect(initial).toBeCloseTo(667 * 0.34, -1);
+      async function drag(distance: number) {
+        const grip = (await handle.boundingBox())!;
+        const x = grip.x + grip.width / 2;
+        const y = grip.y + grip.height / 2;
+        await page.mouse.move(x, y);
+        await page.mouse.down();
+        await page.mouse.move(x, y + distance, { steps: 6 });
+        await page.mouse.up();
+      }
+
+      await drag(-100);
+      await expect
+        .poll(async () => Math.round((await drawer.boundingBox())!.height - initial))
+        .toBe(100);
+      await drag(55);
+      await expect
+        .poll(async () => Math.round((await drawer.boundingBox())!.height - initial))
+        .toBe(45);
       await handle.press('Enter');
-      await expect(handle).toHaveAttribute('aria-expanded', 'true');
+      await expect
+        .poll(async () => Math.round((await drawer.boundingBox())!.height))
+        .toBe(Math.round(initial));
+      await handle.press('Enter');
       await expect.poll(async () => (await drawer.boundingBox())!.height).toBeGreaterThan(500);
-
-      const grip = (await handle.boundingBox())!;
-      const x = grip.x + grip.width / 2;
-      const y = grip.y + grip.height / 2;
-      await page.mouse.move(x, y);
-      await page.mouse.down();
-      await page.mouse.move(x, y + 120, { steps: 5 });
-      await expect(drawer).toHaveAttribute('data-dragging', '');
-      await expect.poll(async () => (await drawer.boundingBox())!.height).toBeGreaterThan(500);
-      await page.mouse.up();
-      await expect(handle).toHaveAttribute('aria-expanded', 'false');
-
-      const compact = (await handle.boundingBox())!;
-      await page.mouse.move(x, compact.y + compact.height / 2);
-      await page.mouse.down();
-      await page.mouse.move(x, compact.y + 120, { steps: 5 });
-      await page.mouse.up();
-      await expect(drawer).toHaveAttribute('aria-hidden', 'true');
     } finally {
       await page.request.delete(apiUrl(`/api/collections/${collectionId}`));
       await page.request.delete(apiUrl('/api/settings/autoSaveLookups'));

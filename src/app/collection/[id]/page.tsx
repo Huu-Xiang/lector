@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-import { ArrowLeft, Pencil, Plus, Trash2 } from 'lucide-react';
+import { ArrowLeft, ChevronRight, Ellipsis, Pencil, Plus, Trash2 } from 'lucide-react';
 import LessonFormModal from '@/components/LessonFormModal';
 import PageOutline from '@/components/PageOutline';
 import { useQueryRefresh } from '@/lib/use-query-refresh';
@@ -51,9 +51,17 @@ import CollectionFormModal, { type CollectionFormData } from '../components/Coll
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { Select } from '@/components/ui/select';
+import { useIsNativeApp } from '@/lib/native-app';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 export default function CollectionPage({ params }: { params: Promise<{ id: string }> }) {
   const t = useTranslations('library');
+  const nativeApp = useIsNativeApp();
   const { id } = use(params);
   const router = useRouter();
   const [collection, setCollection] = useState<Collection | null>(
@@ -206,10 +214,15 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
   function handleLessonDragEnd(event: DragEndEvent) {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
+    moveLesson(
+      lessons.findIndex((l) => l.id === active.id),
+      lessons.findIndex((l) => l.id === over.id),
+    );
+  }
+
+  function moveLesson(oldIndex: number, newIndex: number) {
     const previous = lessons;
-    const oldIndex = previous.findIndex((l) => l.id === active.id);
-    const newIndex = previous.findIndex((l) => l.id === over.id);
-    if (oldIndex < 0 || newIndex < 0) return;
+    if (oldIndex < 0 || newIndex < 0 || newIndex >= previous.length) return;
     const next = arrayMove(previous, oldIndex, newIndex);
     setLessons(next);
     void reorderLessons(
@@ -249,8 +262,12 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
 
   if (isLoading) {
     return (
-      <main className="mx-auto max-w-4xl px-4 py-8 sm:px-6">
-        {collection && <h1 className="mb-8 text-3xl font-bold text-foreground">{shownTitle}</h1>}
+      <main className="native-compact-page mx-auto max-w-4xl px-4 py-8 sm:px-6">
+        {collection && (
+          <h1 className="native-page-title mb-8 text-3xl font-bold text-foreground">
+            {shownTitle}
+          </h1>
+        )}
         <PageOutline variant="list" />
       </main>
     );
@@ -263,79 +280,138 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
   const completedCount = lessons.filter((l) => l.progress_percentComplete >= 95).length;
 
   return (
-    <main className="mx-auto max-w-4xl px-4 py-8 sm:px-6">
+    <main className="native-compact-page mx-auto max-w-4xl px-4 py-8 sm:px-6">
       {/* Back link */}
       <Link
         href="/"
-        className="mb-6 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
+        className={`mb-6 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground ${nativeApp ? 'max-sm:hidden' : ''}`}
       >
         <ArrowLeft className="h-4 w-4" />
         {t('collection.back')}
       </Link>
 
       {/* Collection header */}
-      <div className="mb-8">
+      <div className={nativeApp ? 'mb-4 sm:mb-8' : 'mb-8'}>
         <div className="flex items-center gap-2">
-          <h1 className="text-3xl font-bold text-foreground">{shownTitle}</h1>
-          <Button
-            variant="ghost"
-            size="icon-sm"
-            onClick={() => setIsEditOpen(true)}
-            aria-label={t('collection.editDetails')}
-            data-testid="edit-collection"
-          >
-            <Pencil className="h-4 w-4" />
-          </Button>
+          <h1 className="native-page-title min-w-0 text-3xl font-bold break-words text-foreground">
+            {shownTitle}
+          </h1>
+          {nativeApp ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                render={<Button variant="ghost" size="icon-lg" />}
+                aria-label={t('collection.actions')}
+              >
+                <Ellipsis aria-hidden />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-max min-w-36">
+                <DropdownMenuItem className="min-h-11" onClick={() => setIsEditOpen(true)}>
+                  <Pencil aria-hidden />
+                  {t('collection.editDetails')}
+                </DropdownMenuItem>
+                <DropdownMenuItem className="min-h-11" variant="destructive" onClick={handleDelete}>
+                  <Trash2 aria-hidden />
+                  {t('common.delete')}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              onClick={() => setIsEditOpen(true)}
+              aria-label={t('collection.editDetails')}
+              data-testid="edit-collection"
+            >
+              <Pencil className="h-4 w-4" />
+            </Button>
+          )}
         </div>
-        <p className="mt-1 text-muted-foreground">
+        <p className="mt-1 text-sm text-muted-foreground">
           {collection.author} &middot; {t('collection.lessonsCount', { count: lessons.length })}
           {completedCount > 0 && ` \u00b7 ${t('collection.completed', { count: completedCount })}`}
         </p>
 
-        {/* Group selector */}
-        <div className="mt-3 flex items-center gap-2">
-          <label htmlFor="group-select" className="text-sm text-muted-foreground">
-            {t('collection.group')}
-          </label>
-          <Select
-            wrapperClassName="inline-block"
-            id="group-select"
-            value={collection.groupId || ''}
-            onChange={(e) => handleGroupChange(e.target.value)}
-            data-testid="group-select"
-          >
-            <option value="">{t('collection.none')}</option>
-            {groups.map((g) => (
-              <option key={g.id} value={g.id}>
-                {g.name}
-              </option>
-            ))}
-            <option value="__new__">{t('collection.newGroupOption')}</option>
-          </Select>
-        </div>
+        {nativeApp ? (
+          <details className="mt-1">
+            <summary className="flex min-h-11 cursor-pointer list-none items-center gap-1 text-sm text-muted-foreground [&::-webkit-details-marker]:hidden">
+              <ChevronRight className="size-3" aria-hidden />
+              {t('collection.group')}{' '}
+              {groups.find((group) => group.id === collection.groupId)?.name ??
+                t('collection.none')}
+            </summary>
+            <div className="mb-2 flex flex-wrap gap-2">
+              <Button variant="outline" onClick={() => void handleGroupChange('')}>
+                {t('collection.none')}
+              </Button>
+              {groups.map((group) => (
+                <Button
+                  key={group.id}
+                  variant="outline"
+                  onClick={() => void handleGroupChange(group.id)}
+                  aria-pressed={collection.groupId === group.id}
+                >
+                  {group.name}
+                </Button>
+              ))}
+              <Button variant="outline" onClick={() => void handleGroupChange('__new__')}>
+                {t('collection.newGroupOption')}
+              </Button>
+            </div>
+          </details>
+        ) : (
+          <div className="mt-3 flex items-center gap-2">
+            <label htmlFor="group-select" className="text-sm text-muted-foreground">
+              {t('collection.group')}
+            </label>
+            <Select
+              wrapperClassName="inline-block"
+              id="group-select"
+              value={collection.groupId || ''}
+              onChange={(e) => handleGroupChange(e.target.value)}
+              data-testid="group-select"
+            >
+              <option value="">{t('collection.none')}</option>
+              {groups.map((g) => (
+                <option key={g.id} value={g.id}>
+                  {g.name}
+                </option>
+              ))}
+              <option value="__new__">{t('collection.newGroupOption')}</option>
+            </Select>
+          </div>
+        )}
 
-        <div className="mt-4 flex items-center gap-3">
+        <div
+          className={nativeApp ? 'mt-1 flex items-center gap-3' : 'mt-4 flex items-center gap-3'}
+        >
           {continueLesson && (
             <Link
               href={`/read/${continueLesson.id}`}
-              className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+              className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
             >
               {t('collection.continueReading')}
             </Link>
           )}
-          <button
-            onClick={handleDelete}
-            data-testid="collection-delete"
-            className="ml-auto inline-flex items-center gap-1.5 rounded-lg px-3 py-2.5 text-sm text-destructive hover:bg-accent"
-          >
-            <Trash2 className="size-4" aria-hidden="true" />
-            {t('common.delete')}
-          </button>
+          {!nativeApp && (
+            <button
+              onClick={handleDelete}
+              data-testid="collection-delete"
+              className="ml-auto inline-flex items-center gap-1.5 rounded-lg px-3 py-2.5 text-sm text-destructive hover:bg-accent"
+            >
+              <Trash2 className="size-4" aria-hidden="true" />
+              {t('common.delete')}
+            </button>
+          )}
         </div>
       </div>
 
       {/* Lesson list */}
-      <div className="space-y-2">
+      <div
+        className={
+          nativeApp ? 'divide-y divide-border rounded-xl border border-border bg-card' : 'space-y-2'
+        }
+      >
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
@@ -349,6 +425,8 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
                 index={i}
                 bookTitles={bookTitles}
                 lessonCount={lessons.length}
+                compact={nativeApp}
+                onMove={moveLesson}
                 onEdit={openEditLesson}
                 onDelete={handleDeleteLesson}
                 onRetryTranscription={handleRetryTranscription}

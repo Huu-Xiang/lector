@@ -1104,22 +1104,10 @@ html[data-native-app]::view-transition-new(native-page) {
   }
 }
 
-.native-lookup-sheet {
-  --lookup-overhang: 32dvh;
-}
-
-.native-lookup-sheet::after {
-  position: absolute;
-  inset: 100% 0 auto;
-  height: var(--lookup-overhang);
-  background: var(--popover);
-  pointer-events: none;
-  content: '';
-}
-
-.native-lookup-sheet[data-dragging] {
-  transition: none;
-  will-change: transform;
+@media (width < 64rem) and (orientation: landscape) {
+  .native-lookup-sheet {
+    min-height: min(11rem, 75dvh);
+  }
 }
 
 .native-lookup-options button {

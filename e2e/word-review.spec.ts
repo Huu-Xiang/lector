@@ -115,14 +115,11 @@ test.describe.serial('Word review', () => {
     await expect(page.getByTestId('recognition-card')).toBeVisible();
   });
 
-  test('review goal is set in Settings and shown on the Practice entry', async ({ page }) => {
+  test('review goal is saved in Settings', async ({ page }) => {
     await page.goto('/settings');
     const spell = page.getByTestId('review-goal-recognize_spell');
     await spell.click();
     await expect(spell).toHaveAttribute('aria-pressed', 'true');
-
-    await page.goto('/practice');
-    await expect(page.getByTestId('word-review-goal-link')).toContainText('Recognize and spell');
 
     await page.goto('/settings');
     await expect(page.getByTestId('review-goal-recognize_spell')).toHaveAttribute(

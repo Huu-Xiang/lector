@@ -320,7 +320,7 @@
       "title": "Bottom navigation",
       "extra": "Extra tab",
       "none": "None",
-      "hint": "Journal and Statistics are always available under Me. This setting applies to this device."
+      "hint": "Practice and Journal are always available under Me. This setting applies to this device."
     },
     "pageTitle": "Settings",
     "practice": {
@@ -1171,6 +1171,7 @@
     "collection": {
       "back": "Library",
       "loading": "Loading collection",
+      "actions": "Book actions",
       "editDetails": "Edit collection details",
       "lessonsCount": "{count, plural, one {# lesson} other {# lessons}}",
       "completed": "{count} completed",
@@ -1198,6 +1199,9 @@
         "retryTranscription": "Retry transcription",
         "edit": "Edit lesson",
         "delete": "Delete lesson",
+        "actions": "Lesson actions",
+        "moveUp": "Move up",
+        "moveDown": "Move down",
         "dragToReorder": "Drag to reorder {title}"
       }
     },

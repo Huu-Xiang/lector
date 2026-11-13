@@ -86,7 +86,7 @@ export default function TranslationDrawer({
   const [previousOpen, setPreviousOpen] = useState(rawIsOpen);
   const moreButton = useRef<HTMLButtonElement>(null);
   const optionsHeading = useRef<HTMLHeadingElement>(null);
-  const nativeDrag = useNativeSheetDrag(drawerRef, nativeSheet && rawIsOpen, onClose);
+  const nativeDrag = useNativeSheetDrag(nativeSheet && rawIsOpen);
   if (rawIsOpen !== previousOpen) {
     setPreviousOpen(rawIsOpen);
     setActionsOpen(false);
@@ -155,6 +155,28 @@ export default function TranslationDrawer({
   const highlights = contextTokens.filter((token) =>
     vocabKeys(foldWord(token.text, pack), pack).some((key) => selectedKeys.includes(key)),
   );
+  const requestContextButton = !isPhrase &&
+    !isLoading &&
+    !isContextLoading &&
+    !isStreaming &&
+    !aiContextTranslation &&
+    onRequestContextTranslation &&
+    wordOccursInSentence && (
+      <button
+        onClick={onRequestContextTranslation}
+        data-testid="request-word-context"
+        className={clsx(
+          'inline-flex shrink-0 items-center gap-1 rounded-md px-2 text-xs font-semibold text-[var(--clay)] hover:bg-[var(--clay-soft)]',
+          nativeSheet
+            ? 'min-h-11 max-w-[45%] whitespace-normal'
+            : 'mt-3 bg-[var(--clay-soft)] py-1',
+        )}
+        title={t('inContextTitle')}
+      >
+        <Zap className="size-3 shrink-0" aria-hidden />
+        {contextError ? t('contextRetry') : t('inContext')}
+      </button>
+    );
   const canSaveWord = onSaveWord && currentState === 'new' && !error && !isLoading;
   const isSavedWord = onSaveWord && currentState.startsWith('level');
 
@@ -523,7 +545,7 @@ export default function TranslationDrawer({
               data-testid="translation-drawer-handle"
               aria-label={nativeDrag.expanded ? t('collapseSheet') : t('expandSheet')}
               aria-expanded={nativeDrag.expanded}
-              className="flex h-7 shrink-0 cursor-row-resize touch-none items-center justify-center focus-visible:outline focus-visible:outline-ring"
+              className="flex h-6 shrink-0 cursor-row-resize touch-none items-center justify-center focus-visible:outline focus-visible:outline-ring"
             >
               <span className="h-1.5 w-10 rounded-full bg-border" />
             </button>
@@ -564,13 +586,23 @@ export default function TranslationDrawer({
           {/* Header */}
           <div
             className={clsx(
-              'shrink-0 border-b border-border px-4',
-              nativeSheet ? 'pb-1' : 'bg-muted/50 py-3',
+              'shrink-0 border-b border-border',
+              nativeSheet ? 'px-3' : 'bg-muted/50 px-4 py-3',
             )}
           >
-            <div className="flex items-start justify-between gap-2">
+            <div
+              className={clsx(
+                'flex justify-between',
+                nativeSheet ? 'items-center' : 'items-start gap-2',
+              )}
+            >
               <div className="min-w-0 flex-1">
-                <div className="flex flex-wrap items-center gap-2">
+                <div
+                  className={clsx(
+                    'flex items-center',
+                    nativeSheet ? 'min-w-0 gap-0.5' : 'flex-wrap gap-2',
+                  )}
+                >
                   {(!nativeSheet || currentState !== 'new') && (
                     <span
                       className={`h-2.5 w-2.5 flex-shrink-0 rounded-full ${stateColors.dot}`}
@@ -582,25 +614,30 @@ export default function TranslationDrawer({
                   <h2
                     className={clsx(
                       'font-semibold break-words text-foreground',
-                      longTitle
-                        ? 'line-clamp-1 min-w-0 flex-1 text-sm lg:line-clamp-none lg:text-xl'
-                        : 'text-xl',
+                      nativeSheet
+                        ? 'min-w-0 truncate text-base'
+                        : longTitle
+                          ? 'line-clamp-1 min-w-0 flex-1 text-sm lg:line-clamp-none lg:text-xl'
+                          : 'text-xl',
                     )}
-                    title={longTitle ? word : undefined}
+                    title={nativeSheet || longTitle ? word : undefined}
                   >
                     <TargetText>{word}</TargetText>
                   </h2>
                   {speakable && (
                     <button
                       onClick={handleSpeakWord}
-                      className="flex-shrink-0 rounded p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                      className={clsx(
+                        'shrink-0 rounded p-1 text-muted-foreground hover:bg-accent',
+                        nativeSheet && 'grid size-11 place-items-center',
+                      )}
                       title={t('hearPronunciation')}
                       aria-label={t('hearPronunciation')}
                     >
                       <Volume2 className="h-5 w-5" />
                     </button>
                   )}
-                  {entry?.ipa && (
+                  {entry?.ipa && (!nativeSheet || !requestContextButton) && (
                     <TargetText
                       className={`text-sm text-muted-foreground ${
                         pack.script.direction === 'rtl' || pack.pronunciation?.annotation
@@ -635,12 +672,13 @@ export default function TranslationDrawer({
                 )}
                 {!nativeSheet && lookupBadges}
               </div>
+              {nativeSheet && requestContextButton}
               <button
                 onClick={onClose}
                 className={clsx(
                   'flex-shrink-0 rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground',
                   docked && 'hidden',
-                  nativeSheet && 'min-h-[44px] min-w-[44px]',
+                  nativeSheet && 'grid size-11 place-items-center',
                 )}
                 aria-label={t('close')}
                 title={t('closeEsc')}
@@ -676,7 +714,14 @@ export default function TranslationDrawer({
               ) : aiContextTranslation ? (
                 <div data-testid="word-context-result">
                   <h3 className="mb-1 text-sm font-semibold">{t('contextHeading')}</h3>
-                  <p className="leading-relaxed text-foreground">{aiContextTranslation}</p>
+                  <p
+                    className={clsx(
+                      'text-foreground',
+                      nativeSheet ? 'text-sm leading-normal' : 'leading-relaxed',
+                    )}
+                  >
+                    {aiContextTranslation}
+                  </p>
                   <div className="mt-3 flex items-start gap-2">
                     <TargetText
                       as="p"
@@ -766,26 +811,7 @@ export default function TranslationDrawer({
                 <p className="text-sm text-muted-foreground italic">{t('noDefinition')}</p>
               )}
 
-              {/* In-context AI button — always offered for single-word lookups so the
-          user can ask the LLM to re-read the sentence and give a more nuanced
-          translation than the bare dictionary gloss. */}
-              {!isPhrase &&
-                !isLoading &&
-                !isContextLoading &&
-                !isStreaming &&
-                !aiContextTranslation &&
-                onRequestContextTranslation &&
-                wordOccursInSentence && (
-                  <button
-                    onClick={onRequestContextTranslation}
-                    data-testid="request-word-context"
-                    className="mt-3 inline-flex items-center gap-1.5 rounded-md bg-[var(--clay-soft)] px-2.5 py-1 text-xs font-medium text-[var(--clay)] transition-colors hover:bg-[color-mix(in_srgb,var(--clay)_18%,transparent)]"
-                    title={t('inContextTitle')}
-                  >
-                    <Zap className="h-3 w-3" />
-                    {contextError ? t('contextRetry') : t('inContext')}
-                  </button>
-                )}
+              {!nativeSheet && requestContextButton}
               {contextError && (
                 <p role="status" className="mt-2 text-sm text-destructive">
                   {contextError}
@@ -995,8 +1021,8 @@ export default function TranslationDrawer({
             onAddCloze) && (
             <div
               className={clsx(
-                'shrink-0 border-t border-border bg-muted/50 px-4',
-                nativeSheet ? 'py-2' : 'space-y-2 py-3',
+                'shrink-0 border-t border-border bg-muted/50',
+                nativeSheet ? 'px-3 py-1.5' : 'space-y-2 px-4 py-3',
               )}
             >
               <div className={clsx(nativeSheet && 'flex items-center gap-2')}>

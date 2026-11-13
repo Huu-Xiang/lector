@@ -320,7 +320,7 @@
       "title": "底部導覽",
       "extra": "額外分頁",
       "none": "不新增",
-      "hint": "在「我」裡隨時可以開啟日記和統計。此設定只套用於目前的裝置。"
+      "hint": "在「我」裡隨時可以開啟練習和日記。此設定只套用於目前的裝置。"
     },
     "pageTitle": "設定",
     "practice": {
@@ -1171,6 +1171,7 @@
     "collection": {
       "back": "書庫",
       "loading": "正在載入合集",
+      "actions": "書籍操作",
       "editDetails": "編輯合集詳細資料",
       "lessonsCount": "{count} 篇課文",
       "completed": "已完成 {count} 篇",
@@ -1198,6 +1199,9 @@
         "retryTranscription": "重新轉錄",
         "edit": "編輯課文",
         "delete": "刪除課文",
+        "actions": "課文操作",
+        "moveUp": "上移",
+        "moveDown": "下移",
         "dragToReorder": "拖曳以調整 {title} 的順序"
       }
     },
