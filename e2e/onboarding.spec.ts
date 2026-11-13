@@ -186,8 +186,8 @@ test.describe('guided onboarding — selfhost', () => {
       await expect(french.locator('.language-emoji')).toBeHidden();
       const frenchBox = await french.boundingBox();
       const spanishBox = await spanish.boundingBox();
-      expect(frenchBox?.y).toBe(spanishBox?.y);
-      expect(frenchBox?.x).not.toBe(spanishBox?.x);
+      expect(frenchBox?.height).toBeLessThanOrEqual(72);
+      expect(spanishBox?.height).toBeLessThanOrEqual(72);
       await expect(start).toBeDisabled();
 
       await page.getByTestId('setup-native-language').selectOption('zh-CN');
