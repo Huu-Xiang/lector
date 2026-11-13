@@ -414,7 +414,7 @@
   N("flow:save-settings", "flow", "Save settings", {
     domain: "settings",
     md: "settings.md#save-settings",
-    summary: "Settings writes account keys through the API. iOS stores the optional Practice or Journal tab on the device.",
+    summary: "Settings writes account keys through the API. The iPhone tab bar defaults to Library, Statistics, and Me. The device stores the optional Practice or Journal tab.",
     steps: ["file:settings-page", "fn:setSetting", "route:settings-put", "table:settings"],
   });
   N("flow:configure-llm", "flow", "Configure LLM", {
@@ -513,7 +513,7 @@
   N("file:home-page", "file", "Home page", {
     path: "src/app/(index)/page.tsx",
     domain: "library",
-    summary: "Header actions and reading recommendations. On iOS, saved books appear first.",
+    summary: "Header actions and reading recommendations. Tap the recommendation header to expand it. On iOS, saved books appear first.",
   });
   N("file:collection-page", "file", "Collection page", { path: "src/app/collection/[id]/page.tsx", domain: "library", summary: "On iPhone, each lesson row opens the reader or a menu of lesson actions." });
   N("file:read-page", "file", "Read page", { path: "src/app/read/[bookId]/page.tsx", domain: "translation" });

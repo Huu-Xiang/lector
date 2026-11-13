@@ -28,7 +28,7 @@ Tab pages (library, practice, journal, vocab, stats) and the 5 most recently rea
 - Review sessions and cloze rounds always load fresh cards.
 - Sign-out and a signed-out login page call `forgetLocalData` (`src/lib/sign-out.ts`). A switch of account drops the other user's records.
 
-On iPhone, the free-book picker shows compact rows. Tap a book title to expand its details. The collection page puts lesson actions, including reordering, in each row menu.
+The entire For you header toggles the recommendations. On iPhone, the free-book picker shows compact rows. Tap a book title to expand its details. The collection page puts lesson actions, including reordering, in each row menu.
 
 ## Load library item
 

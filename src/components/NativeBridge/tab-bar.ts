@@ -1,6 +1,5 @@
 const library = { href: '/', labelKey: 'library', icon: 'books.vertical.fill' } as const;
 const stats = { href: '/stats', labelKey: 'stats', icon: 'chart.bar.fill' } as const;
-const vocab = { href: '/vocab', labelKey: 'vocab', icon: 'list.bullet.rectangle.fill' } as const;
 export const ME_TAB = { href: '/me', labelKey: 'me', icon: 'person.crop.circle.fill' } as const;
 
 export const OPTIONAL_TABS = {
@@ -15,7 +14,7 @@ export function parseOptionalTab(value: string | null): OptionalTab {
 }
 
 export function nativeTabs(extra: OptionalTab) {
-  return [library, vocab, stats, ...(extra === 'none' ? [] : [OPTIONAL_TABS[extra]]), ME_TAB];
+  return [library, stats, ...(extra === 'none' ? [] : [OPTIONAL_TABS[extra]]), ME_TAB];
 }
 
 export function selectedNativeTab(pathname: string, extra: OptionalTab): string | null {
@@ -23,6 +22,9 @@ export function selectedNativeTab(pathname: string, extra: OptionalTab): string 
   if (nativeTabs(extra).some((tab) => tab.href === pathname)) return pathname;
   if (
     pathname === '/settings' ||
+    pathname === '/vocab' ||
+    pathname === '/vocab-test' ||
+    pathname === '/vocab-test/history' ||
     Object.values(OPTIONAL_TABS).some((tab) => tab.href === pathname)
   ) {
     return ME_TAB.href;

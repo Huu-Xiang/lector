@@ -1,12 +1,23 @@
 'use client';
 
 import Link from 'next/link';
-import { ChartBar, Clipboard, ChevronRight, Pencil, Settings, UserRound } from 'lucide-react';
+import {
+  ChartBar,
+  Clipboard,
+  ChevronRight,
+  Gauge,
+  List,
+  Pencil,
+  Settings,
+  UserRound,
+} from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import AccountMenu from '@/components/NavHeader/components/AccountMenu';
 import { authClient } from '@/lib/auth-client';
 
 const destinations = [
+  { href: '/vocab', label: 'vocab', icon: List },
+  { href: '/vocab-test?from=nav', label: 'vocabTest', icon: Gauge },
   { href: '/practice', label: 'practice', icon: Clipboard },
   { href: '/stats', label: 'stats', icon: ChartBar },
   { href: '/journal', label: 'journal', icon: Pencil },
@@ -15,6 +26,7 @@ const destinations = [
 
 export default function MePage() {
   const t = useTranslations('nav');
+  const vocabTest = useTranslations('vocabTest');
   const { data: session } = authClient.useSession();
   const name = session?.user.name?.trim();
 
@@ -37,7 +49,9 @@ export default function MePage() {
               className="me-link flex min-h-14 items-center gap-3 px-4 py-2 text-sm font-semibold hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-ring active:bg-accent"
             >
               <Icon size={20} className="shrink-0 text-primary" aria-hidden />
-              <span className="flex-1">{t(label)}</span>
+              <span className="flex-1">
+                {label === 'vocabTest' ? vocabTest('navLink') : t(label)}
+              </span>
               <ChevronRight size={16} className="shrink-0 text-muted-foreground" aria-hidden />
             </Link>
           </li>

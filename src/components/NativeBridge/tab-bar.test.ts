@@ -31,10 +31,9 @@ describe('coversTabBar', () => {
 });
 
 describe('nativeTabs', () => {
-  it('defaults to four tabs with Me last', () => {
+  it('defaults to three tabs with Me last', () => {
     expect(nativeTabs(parseOptionalTab(null)).map((tab) => tab.href)).toEqual([
       '/',
-      '/vocab',
       '/stats',
       '/me',
     ]);
@@ -44,7 +43,6 @@ describe('nativeTabs', () => {
   it('adds one shortcut without losing access to the other pages under Me', () => {
     expect(nativeTabs('journal').map((tab) => tab.href)).toEqual([
       '/',
-      '/vocab',
       '/stats',
       '/journal',
       '/me',
@@ -54,6 +52,9 @@ describe('nativeTabs', () => {
     expect(selectedNativeTab('/stats', 'none')).toBe('/stats');
     expect(parseOptionalTab('stats')).toBe('none');
     expect(selectedNativeTab('/practice', 'none')).toBe('/me');
+    expect(selectedNativeTab('/vocab', 'none')).toBe('/me');
+    expect(selectedNativeTab('/vocab-test', 'none')).toBe('/me');
+    expect(selectedNativeTab('/vocab-test/history', 'none')).toBe('/me');
     expect(selectedNativeTab('/collection/book', 'none')).toBe('/');
     expect(selectedNativeTab('/settings', 'none')).toBe('/me');
     expect(selectedNativeTab('/read/book', 'none')).toBeNull();

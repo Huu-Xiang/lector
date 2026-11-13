@@ -54,7 +54,16 @@ test('Me opens the hidden pages and Settings can restore an extra native tab', a
   await expect(
     page.getByRole('main').getByRole('heading', { name: 'Me', exact: true }),
   ).toBeVisible();
-  await expect.poll(tabIds).toEqual(['/', '/vocab', '/stats', '/me']);
+  await expect.poll(tabIds).toEqual(['/', '/stats', '/me']);
+  await page.getByRole('main').getByRole('link', { name: 'Vocab', exact: true }).click();
+  await expect(page).toHaveURL('/vocab');
+  await page.getByTestId('native-back').click();
+  await expect(page).toHaveURL('/me');
+  await page.getByRole('main').getByRole('link', { name: 'Vocabulary test', exact: true }).click();
+  await expect(page).toHaveURL('/vocab-test?from=nav');
+  await expect(page.getByTestId('vocab-intro')).toBeVisible();
+  await page.getByTestId('native-back').click();
+  await expect(page).toHaveURL('/me');
   await page.getByRole('main').getByRole('link', { name: 'Journal' }).click();
   await expect(page).toHaveURL('/journal');
   await page.getByTestId('native-back').click();
@@ -63,7 +72,7 @@ test('Me opens the hidden pages and Settings can restore an extra native tab', a
 
   const extra = page.getByLabel('Extra tab');
   await extra.selectOption('journal');
-  await expect.poll(tabIds).toEqual(['/', '/vocab', '/stats', '/journal', '/me']);
+  await expect.poll(tabIds).toEqual(['/', '/stats', '/journal', '/me']);
   await page.reload();
   await expect(extra).toHaveValue('journal');
   await expect.poll(tabIds).toContain('/journal');
@@ -73,11 +82,11 @@ test('Me opens the hidden pages and Settings can restore an extra native tab', a
   await expect(page).toHaveURL('/me');
   await page.getByRole('main').getByRole('link', { name: 'Settings' }).click();
   await extra.selectOption('practice');
-  await expect.poll(tabIds).toEqual(['/', '/vocab', '/stats', '/practice', '/me']);
+  await expect.poll(tabIds).toEqual(['/', '/stats', '/practice', '/me']);
   await selectTab('/practice');
   await expect(page).toHaveURL('/practice');
   await selectTab('/me');
   await page.getByRole('main').getByRole('link', { name: 'Settings' }).click();
   await extra.selectOption('none');
-  await expect.poll(tabIds).toEqual(['/', '/vocab', '/stats', '/me']);
+  await expect.poll(tabIds).toEqual(['/', '/stats', '/me']);
 });

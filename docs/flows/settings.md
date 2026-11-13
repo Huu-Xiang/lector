@@ -2,7 +2,7 @@
 
 On iOS, the welcome screen links to sign-in and registration. Google sign-in uses the system authentication sheet. The sheet transfers the signed-in session back to Readfox with a short-lived, single-use code.
 
-On iOS, open Settings from Me. Bottom navigation adds a Practice or Journal shortcut on this device. The interface and definition language controls follow in compact panels. Account and plan cards follow the learning preferences.
+On iOS, the default tabs are Library, Statistics, and Me. Me opens Vocabulary, the vocabulary test, Practice, Journal, and Settings. Bottom navigation adds a Practice or Journal shortcut on this device. The interface and definition language controls follow in compact panels. Account and plan cards follow the learning preferences.
 
 This domain holds user keys, the LLM provider, personal access tokens, and account delete. Plan tiles live in [Billing](billing.md). Known-word import lives in [Vocabulary](vocabulary.md).
 
