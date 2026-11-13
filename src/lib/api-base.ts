@@ -100,6 +100,8 @@ export function checkoutUrl(): string {
  * the session only exists once the code verifies. */
 export const AUTH_ROUTES = [
   '/login',
+  '/welcome',
+  '/app-auth',
   '/beta-login',
   '/register',
   '/reset-password',
@@ -163,7 +165,7 @@ export function bounceToLogin(): void {
   if (isAuthRoute(window.location.pathname)) return;
   bouncedToLogin = true;
   const returnPath = sanitizeAuthReturnPath(`${window.location.pathname}${window.location.search}`);
-  window.location.replace(authHref('/login', returnPath));
+  window.location.replace(authHref(isNativeApp() ? '/welcome' : '/login', returnPath));
 }
 
 let bouncedToSubscribe = false;

@@ -57,6 +57,17 @@ function plugin(name: string): PluginMethods | null {
   return bridge?.Plugins?.[name] ?? null;
 }
 
+export function hasNativeAuthentication(): boolean {
+  return !!plugin('NativeAuthentication')?.open;
+}
+
+export async function openNativeAuthentication(url: string): Promise<string | null> {
+  const result = (await plugin('NativeAuthentication')?.open?.({ url })) as
+    | { code?: string }
+    | undefined;
+  return result?.code ?? null;
+}
+
 async function callWithResult(name: string, method: string, options?: unknown): Promise<unknown> {
   try {
     return (await plugin(name)?.[method]?.(options)) ?? null;

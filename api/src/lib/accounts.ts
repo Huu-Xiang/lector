@@ -26,6 +26,7 @@ import { shortenIp } from './ip-privacy';
 import { parseSourceCookie } from './source-list';
 import { recordSourceEvent } from './source-counts';
 import { isSuspended } from './account-flags';
+import { nativeAuthHandoff } from './native-auth';
 import { Sentry } from './sentry';
 import {
   readfoxBetaClient,
@@ -196,6 +197,9 @@ export function createAuthEngine(opts: AuthEngineOptions) {
     // user who closes the QR dialog early is never locked out. Email OTP is
     // deliberately not configured — TOTP + backup codes only.
     twoFactor({ issuer: 'Readfox' }),
+    ...(opts.oidc && (opts.betaConsumer || isGoogleIssuer(opts.oidc.issuer))
+      ? [nativeAuthHandoff()]
+      : []),
   ];
   if (opts.turnstileSecretKey) {
     plugins.push(

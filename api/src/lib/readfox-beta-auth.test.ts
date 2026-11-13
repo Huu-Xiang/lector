@@ -111,6 +111,36 @@ test('a verified primary password account signs into a separate beta account wit
       redirect: 'manual',
     });
     expect(callback.headers.get('location')).toBe(betaOrigin + '/vocab-test/history');
+    const verifier = 'a'.repeat(64);
+    const challenge = new Bun.CryptoHasher('sha256').update(verifier).digest('hex');
+    const finish = await fetch(betaOrigin + '/api/auth/native-auth/finish', {
+      method: 'POST',
+      headers: {
+        Cookie: cookies(callback),
+        Origin: betaOrigin,
+        'x-readfox-auth-challenge': challenge,
+      },
+    });
+    expect(finish.status).toBe(200);
+    const { code } = await finish.json();
+    const redeem = (proof: string, origin = betaOrigin) =>
+      fetch(betaOrigin + '/api/auth/native-auth/redeem', {
+        method: 'POST',
+        headers: {
+          Origin: origin,
+          'x-readfox-auth-code': code,
+          'x-readfox-auth-verifier': proof,
+        },
+      });
+    expect((await redeem(verifier, mainOrigin)).status).toBe(403);
+    expect((await redeem('b'.repeat(64))).status).toBe(401);
+    const redeemed = await redeem(verifier);
+    expect(redeemed.status).toBe(200);
+    const inAppSession = await fetch(betaOrigin + '/api/auth/get-session', {
+      headers: { Cookie: cookies(redeemed) },
+    });
+    expect((await inAppSession.json()).user.email).toBe(email);
+    expect((await redeem(verifier)).status).toBe(401);
     const account = betaDb
       .query<{ email: string; emailVerified: number }, []>('SELECT email, emailVerified FROM user')
       .get();

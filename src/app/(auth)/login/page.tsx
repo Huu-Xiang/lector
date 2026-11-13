@@ -120,8 +120,14 @@ function LoginForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <h2 className="text-lg font-semibold text-foreground">{t('title')}</h2>
+    <form onSubmit={handleSubmit} className={inApp ? 'space-y-3' : 'space-y-4'}>
+      <h2
+        className={
+          inApp ? 'text-2xl font-bold text-foreground' : 'text-lg font-semibold text-foreground'
+        }
+      >
+        {t('title')}
+      </h2>
 
       {params.get('deleted') === '1' && (
         <div

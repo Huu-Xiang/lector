@@ -4,6 +4,10 @@ import { useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useLectorMode } from '@/lib/use-env';
+import { useIsNativeApp } from '@/lib/native-app';
+import Link from 'next/link';
+import { ArrowLeft } from 'lucide-react';
+import { authHref } from '@/lib/auth-return';
 import Image from 'next/image';
 import { Spinner } from '@/components/ui/spinner';
 import LegalLinks from '@/components/LegalLinks';
@@ -26,6 +30,8 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
   const t = useTranslations('common');
   const tAuth = useTranslations('auth');
   const mode = useLectorMode();
+  const native = useIsNativeApp();
+  const tLegal = useTranslations('legal');
   const pathname = usePathname();
   const wide = pathname === '/subscribe';
   const width = wide ? 'max-w-6xl' : pathname === '/register' ? 'max-w-2xl' : 'max-w-sm';
@@ -33,6 +39,28 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
   useEffect(() => {
     if (mode === 'selfhost') router.replace('/');
   }, [mode, router]);
+
+  if (pathname === '/welcome' && mode === 'cloud') return children;
+
+  if (native && !wide && mode === 'cloud') {
+    return (
+      <main className="mx-auto w-full max-w-sm px-5 pt-2 pb-[max(1rem,env(safe-area-inset-bottom))]">
+        <Link
+          href="/welcome"
+          onClick={(event) => {
+            event.preventDefault();
+            router.push(
+              authHref('/welcome', new URLSearchParams(window.location.search).get('next')),
+            );
+          }}
+          className="inline-flex min-h-11 items-center gap-2 text-sm text-muted-foreground"
+        >
+          <ArrowLeft size={16} aria-hidden="true" /> {tLegal('back')}
+        </Link>
+        {children}
+      </main>
+    );
+  }
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4 py-10 md:py-6">

@@ -1,6 +1,7 @@
 {
   "auth": {
     "oauth": {
+      "returnToApp": "返回 Readfox",
       "continue": "使用 {provider} 繼續",
       "errCancelled": "已取消登入，你可以再試一次。",
       "errNotLinked": "這個信箱已經有帳號，而且登入服務沒有確認該信箱屬於你。請用電子郵件和密碼登入。",

@@ -190,6 +190,7 @@
       }
     },
     "oauth": {
+      "returnToApp": "Return to Readfox",
       "continue": "Continue with {provider}",
       "errCancelled": "Sign-in was cancelled. You can try again.",
       "errNotLinked": "An account with this email already exists, and the provider did not confirm the address. Sign in with your email and password.",

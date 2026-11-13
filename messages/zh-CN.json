@@ -190,6 +190,7 @@
       }
     },
     "oauth": {
+      "returnToApp": "返回 Readfox",
       "continue": "使用 {provider} 继续",
       "errCancelled": "已取消登录，你可以重试。",
       "errNotLinked": "这个邮箱已经有账号，而且登录服务没有确认该邮箱属于你。请用邮箱和密码登录。",

@@ -1,9 +1,14 @@
 'use client';
 
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { authClient } from '@/lib/auth-client';
-import { useIsNativeApp } from '@/lib/native-app';
+import {
+  hasNativeAuthentication,
+  openNativeAuthentication,
+  useIsNativeApp,
+} from '@/lib/native-app';
 import { writePendingInvite } from '@/lib/pending-invite';
 import { useOidcLogin, useOidcProviderName, useReadfoxBetaLogin } from '@/lib/use-env';
 
@@ -22,12 +27,46 @@ export default function OidcSignInButton({
   const t = useTranslations('auth.oauth');
   const enabled = useOidcLogin();
   const provider = useOidcProviderName();
-  // Google refuses OAuth inside an embedded web view (disallowed_useragent).
   const inApp = useIsNativeApp();
   const betaLogin = useReadfoxBetaLogin();
-  if (!enabled || (inApp && !betaLogin)) return null;
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState(false);
+  const native =
+    testId === 'login-oidc' &&
+    inApp &&
+    hasNativeAuthentication() &&
+    (betaLogin || provider === 'Google');
+  if (!enabled || (inApp && !native && !betaLogin)) return null;
 
   async function start() {
+    if (native) {
+      setBusy(true);
+      setError(false);
+      try {
+        const hex = (bytes: Uint8Array) =>
+          Array.from(bytes, (byte) => byte.toString(16).padStart(2, '0')).join('');
+        const verifier = hex(crypto.getRandomValues(new Uint8Array(32)));
+        const challenge = hex(
+          new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(verifier))),
+        );
+        const url = new URL('/app-auth', window.location.origin);
+        url.searchParams.set('challenge', challenge);
+        const code = await openNativeAuthentication(url.href);
+        if (!code) return;
+        const response = await fetch('/api/auth/native-auth/redeem', {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: { 'x-readfox-auth-code': code, 'x-readfox-auth-verifier': verifier },
+        });
+        if (!response.ok) throw new Error('Could not complete sign-in');
+        window.location.replace(destination);
+      } catch {
+        setError(true);
+      } finally {
+        setBusy(false);
+      }
+      return;
+    }
     if (inviteCode) writePendingInvite(inviteCode);
     await authClient.signIn.oauth2({
       providerId: 'oidc',
@@ -37,11 +76,27 @@ export default function OidcSignInButton({
     });
   }
 
+  const label = native ? 'Google' : provider;
   return (
-    <Button type="button" variant="outline" className="w-full" onClick={start} data-testid={testId}>
-      {provider === 'Google' && <GoogleMark />}
-      {t('continue', { provider })}
-    </Button>
+    <>
+      <Button
+        disabled={busy}
+        aria-busy={busy}
+        type="button"
+        variant="outline"
+        className="w-full"
+        onClick={start}
+        data-testid={testId}
+      >
+        {label === 'Google' && <GoogleMark />}
+        {t('continue', { provider: label })}
+      </Button>
+      {error && (
+        <p role="alert" className="text-sm text-destructive">
+          {t('errFailed')}
+        </p>
+      )}
+    </>
   );
 }
 
