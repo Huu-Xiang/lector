@@ -575,7 +575,7 @@
   N("file:accounts", "file", "accounts.ts", { path: "api/src/lib/accounts.ts", domain: "auth" });
   N("file:lifecycle-email", "file", "lifecycle-email.ts", { path: "api/src/lib/lifecycle-email.ts", domain: "auth" });
   N("file:email", "file", "email.ts", { path: "api/src/lib/email.ts", domain: "auth" });
-  N("file:settings-page", "file", "Settings page", { path: "src/app/settings/page.tsx", domain: "settings", summary: "On iOS, language preferences appear before account settings." });
+  N("file:settings-page", "file", "Settings page", { path: "src/app/settings/page.tsx", domain: "settings", summary: "On iPhone, compact settings panels put language preferences before account settings." });
   N("file:language-selector", "file", "LanguageSelector", { path: "src/components/LanguageSelector/index.tsx", domain: "onboarding" });
   N("file:languages-settings", "file", "LanguagesSettings", { path: "src/app/settings/components/LanguagesSettings/index.tsx", domain: "settings" });
   N("file:llm-settings", "file", "LLMSettings", { path: "src/app/settings/components/LLMSettings/index.tsx", domain: "settings" });

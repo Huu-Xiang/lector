@@ -8,15 +8,15 @@ export default function PageHeader({
 }: IPageHeaderProps) {
   return (
     <div
-      className={`flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between ${className}`}
+      className={`page-header flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between ${className}`}
     >
       {titleAside ? (
         <div className="flex items-center justify-between gap-3 sm:justify-start">
-          <h1 className="text-2xl font-extrabold text-foreground">{title}</h1>
+          <h1 className="native-page-title text-2xl font-extrabold text-foreground">{title}</h1>
           {titleAside}
         </div>
       ) : (
-        <h1 className="text-2xl font-extrabold text-foreground">{title}</h1>
+        <h1 className="native-page-title text-2xl font-extrabold text-foreground">{title}</h1>
       )}
       {children}
     </div>

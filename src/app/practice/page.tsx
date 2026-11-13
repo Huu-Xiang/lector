@@ -880,11 +880,11 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
   return (
     <div className="flex min-h-screen">
       <main
-        className={`mx-auto max-w-2xl min-w-0 flex-1 px-4 py-8 sm:px-6 lg:px-8 ${wordTooltip ? 'pb-[calc(var(--sheet-h)+2rem)] lg:pb-8' : ''}`}
+        className={`${state === 'setup' ? 'native-compact-page' : ''} mx-auto max-w-2xl min-w-0 flex-1 px-4 py-8 sm:px-6 lg:px-8 ${wordTooltip ? 'pb-[calc(var(--sheet-h)+2rem)] lg:pb-8' : ''}`}
       >
         {/* Setup screen */}
         {state === 'setup' && (
-          <div className={nativeApp ? 'py-2' : 'py-6'}>
+          <div className={nativeApp ? 'sm:py-2' : 'py-6'}>
             <PageHeader
               className={nativeApp ? 'mb-3' : undefined}
               title={practiceFormat === 'dictation' ? t('title.dictation') : t('title.cloze')}

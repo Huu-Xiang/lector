@@ -54,9 +54,9 @@ export default function SettingsPage() {
     </section>
   );
   return (
-    <main className="mx-auto max-w-3xl px-4 py-8">
+    <main className="native-compact-page mx-auto max-w-3xl px-4 py-8">
       <PageHeader title={t('pageTitle')} />
-      <div className="space-y-8">
+      <div className="settings-panels space-y-8">
         {nativeApp && hasNativeTabBar() && <MobileTabs />}
         {!nativeApp && accountSettings}
         {nativeApp && languagePreferences}

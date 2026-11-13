@@ -434,7 +434,7 @@ export default function Home() {
   const libraryImportHandlers = importHandlers(libraryDestination);
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-4 sm:px-6 sm:py-8 lg:px-8">
+    <main className="native-compact-page mx-auto max-w-6xl px-4 py-4 sm:px-6 sm:py-8 lg:px-8">
       <PendingBookOpener />
       <PageHeader title={t('page.title')} titleAside={<DailyGoalBadge />} className="mb-3 sm:mb-6">
         <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">

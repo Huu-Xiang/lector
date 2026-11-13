@@ -312,7 +312,7 @@ export default function StatsPage() {
   );
 
   return (
-    <main className="mx-auto max-w-7xl px-6 py-8">
+    <main className="native-compact-page mx-auto max-w-7xl px-6 py-8">
       <PageHeader title={t('title')}>
         <p className="text-sm text-muted-foreground">
           {format.dateTime(new Date(), {

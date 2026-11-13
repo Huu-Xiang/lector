@@ -227,7 +227,7 @@ export default function RecommendedForYou({
             variant="ghost"
             onClick={() => void start(pick)}
             disabled={starting !== null}
-            className="h-auto min-h-14 w-full justify-start gap-3 px-2 py-2 text-left whitespace-normal"
+            className="recommendation-row h-auto min-h-14 w-full justify-start gap-3 px-2 py-2 text-left whitespace-normal"
             data-testid={`recommend-start-${pick.key}`}
           >
             <span className="min-w-0 flex-1">

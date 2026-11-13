@@ -168,7 +168,7 @@ export default function JournalPage() {
   const wordCount = countTypedWords(bodyText, activeLang);
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-8 pb-24 sm:px-6 sm:pb-8 lg:px-8">
+    <main className="native-compact-page mx-auto max-w-3xl px-4 py-8 pb-24 sm:px-6 sm:pb-8 lg:px-8">
       <PageHeader title={t('title')}>
         {!showEditor && (
           <Button onClick={handleNewEntry}>

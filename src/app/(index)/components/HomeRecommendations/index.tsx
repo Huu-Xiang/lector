@@ -111,7 +111,7 @@ export default function HomeRecommendations({
       className="mb-4 rounded-xl border border-border bg-card px-3 sm:mb-6 sm:px-5"
       data-testid="home-recommend"
     >
-      <div className="flex min-h-14 items-center justify-between gap-2">
+      <div className="recommendations-header flex min-h-14 items-center justify-between gap-2">
         <h2 className="text-base font-semibold text-foreground">{t('homeTitle')}</h2>
         <Button
           variant="ghost"

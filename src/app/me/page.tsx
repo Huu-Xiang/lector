@@ -18,13 +18,13 @@ export default function MePage() {
   const name = session?.user.name?.trim();
 
   return (
-    <main className="mx-auto max-w-xl space-y-5 px-4 pt-5 pb-8">
+    <main className="native-compact-page mx-auto max-w-xl space-y-5 px-4 pt-5 pb-8">
       <header className="flex items-center gap-3">
-        <div className="grid size-12 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
+        <div className="me-avatar grid size-12 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
           <UserRound size={24} aria-hidden />
         </div>
         <div className="min-w-0">
-          <h1 className="text-2xl font-extrabold">{t('me')}</h1>
+          <h1 className="native-page-title text-2xl font-extrabold">{t('me')}</h1>
           {name && <p className="text-sm break-words text-muted-foreground">{name}</p>}
         </div>
       </header>
@@ -33,7 +33,7 @@ export default function MePage() {
           <li key={href}>
             <Link
               href={href}
-              className="flex min-h-14 items-center gap-3 px-4 py-2 text-sm font-semibold hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-ring active:bg-accent"
+              className="me-link flex min-h-14 items-center gap-3 px-4 py-2 text-sm font-semibold hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-ring active:bg-accent"
             >
               <Icon size={20} className="shrink-0 text-primary" aria-hidden />
               <span className="flex-1">{t(label)}</span>
