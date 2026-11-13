@@ -75,8 +75,20 @@
       "close": "关闭",
       "closeEsc": "关闭 (Esc)",
       "lookingUp": "正在查询…",
+      "dictionaryDetails": "词典详情",
       "showDictionary": "显示词典释义（{count}）",
       "noDefinition": "未找到释义。",
+      "backToDefinition": "返回释义",
+      "moreActions": "更多操作",
+      "expandSheet": "展开释义",
+      "collapseSheet": "收起释义",
+      "saveWord": "加入生词",
+      "wordSaved": "已加入生词",
+      "undoSave": "撤销",
+      "repeatLookup": "你之前查过这个词。",
+      "originalDefinition": "原始释义",
+      "contextHeading": "在这句话里",
+      "contextRetry": "重试语境释义",
       "inContextTitle": "结合句子语境用 AI 翻译",
       "inContext": "结合语境",
       "askingAi": "正在询问 AI…",
@@ -92,7 +104,7 @@
       "showAll": "显示全部（{count}）",
       "hearSentence": "听句子",
       "onboardingAdded": "已加入你的第一次复习",
-      "onboardingChoose": "选择 1–4 级即可添加该单词",
+      "onboardingChoose": "点「加入生词」即可保存这个词。",
       "onboardingReady": "已就绪 {count}/{target}",
       "saveAtLevel": "以学习等级 {level} 保存",
       "levelTitle": "{level} 级",
@@ -204,7 +216,7 @@
       },
       "save": {
         "title": "把这个词加入复习",
-        "body": "在释义面板里选择 1–4 级，这个词就会进入你的复习列表。"
+        "body": "在释义面板点「加入生词」，这个词就会进入你的复习列表。"
       },
       "practice": {
         "title": "练习刚读到的单词",

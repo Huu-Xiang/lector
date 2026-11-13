@@ -1,5 +1,6 @@
 'use client';
 
+import { useIsNativeApp } from '@/lib/native-app';
 import { useEffect, useMemo, useState } from 'react';
 import { Book, BookOpen, CheckCircle, Flame } from 'lucide-react';
 import Link from 'next/link';
@@ -197,6 +198,7 @@ function rememberedStats(): StatsData | null {
 
 export default function StatsPage() {
   const t = useTranslations('stats');
+  const nativeApp = useIsNativeApp();
   const format = useFormatter();
   const [stats, setStats] = useState<StatsData | null>(rememberedStats);
   const [loading, setLoading] = useState(() => stats === null);
@@ -301,6 +303,14 @@ export default function StatsPage() {
     );
   }
 
+  const fluencyDetails = (
+    <>
+      <FluencyBadge fluency={stats.fluency} />
+
+      <DomainFluencyRadar byDomain={stats.fluency.byDomain} pending={stats.fluency.pending} />
+    </>
+  );
+
   return (
     <main className="mx-auto max-w-7xl px-6 py-8">
       <PageHeader title={t('title')}>
@@ -313,22 +323,26 @@ export default function StatsPage() {
           })}
         </p>
       </PageHeader>
-      <FluencyBadge fluency={stats.fluency} />
-
-      <DomainFluencyRadar byDomain={stats.fluency.byDomain} pending={stats.fluency.pending} />
+      {!nativeApp && fluencyDetails}
 
       {/* Top stat cards */}
       <div
         data-testid="stats-top-cards"
-        className="mb-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4"
+        className={
+          nativeApp
+            ? 'mb-4 grid grid-cols-2 gap-2'
+            : 'mb-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4'
+        }
       >
         <StatCard
+          compact={nativeApp}
           label={t('cards.wordsKnown')}
           value={stats.totalKnown}
           color="green"
           icon={<CheckCircle size="24" />}
         />
         <StatCard
+          compact={nativeApp}
           label={t('cards.learning')}
           value={stats.totalLearning}
           sublabel={t('cards.learningSub')}
@@ -336,6 +350,7 @@ export default function StatsPage() {
           icon={<Book size="24" />}
         />
         <StatCard
+          compact={nativeApp}
           label={t('cards.wordsRead')}
           value={stats.reading.wordsRead}
           sublabel={t('cards.wordsReadSub')}
@@ -343,6 +358,7 @@ export default function StatsPage() {
           icon={<BookOpen size="24" />}
         />
         <StatCard
+          compact={nativeApp}
           label={t('cards.currentStreak')}
           value={t('cards.days', { count: stats.currentStreak })}
           sublabel={t('cards.longest', { count: stats.longestStreak })}
@@ -350,6 +366,8 @@ export default function StatsPage() {
           icon={<Flame size="24" />}
         />
       </div>
+
+      {nativeApp && fluencyDetails}
 
       {/* Vocabulary Growth Chart */}
       <div className="mb-8">

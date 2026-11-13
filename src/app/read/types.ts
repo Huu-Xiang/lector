@@ -14,7 +14,6 @@ export interface WordPanelState {
       broader glosses (so a narrow contextual gloss like "pull" doesn't replace
       the canonical "pull/move/draw/journey/draught" entry). */
   aiContextTranslation: string | null;
-  aiContextPartOfSpeech: string | null;
   /** Structured AI translation (from /api/translate). Populated whenever the AI
       returns multi-sense output, regardless of which translation is shown. Used
       to persist the entry into the on-device cache when the user accepts

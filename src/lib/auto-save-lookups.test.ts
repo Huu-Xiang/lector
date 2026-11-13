@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { createKeyedGuard, resolveAutoSave } from './auto-save-lookups';
+import { createKeyedGuard, createRepeatLookupTracker, resolveAutoSave } from './auto-save-lookups';
 
 describe('resolveAutoSave', () => {
-  it('is on when the setting was never set or is true', () => {
-    expect(resolveAutoSave(null)).toBe(true);
+  it('is on only when explicitly enabled', () => {
+    expect(resolveAutoSave(null)).toBe(false);
     expect(resolveAutoSave(true)).toBe(true);
   });
 
@@ -53,5 +53,17 @@ describe('createKeyedGuard', () => {
       }),
     ).rejects.toThrow('x');
     expect(await runOnce('a', async () => undefined)).toBe(true);
+  });
+});
+
+describe('createRepeatLookupTracker', () => {
+  it('reminds once per word at a different occurrence', () => {
+    const track = createRepeatLookupTracker();
+    expect(track('tucked', 'first')).toBe(false);
+    expect(track('tucked', 'first')).toBe(false);
+    expect(track('dark', 'first')).toBe(false);
+    expect(track('tucked', 'second')).toBe(true);
+    expect(track('tucked', 'third')).toBe(false);
+    expect(track('dark', 'second')).toBe(true);
   });
 });

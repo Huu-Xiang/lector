@@ -75,8 +75,20 @@
       "close": "Close",
       "closeEsc": "Close (Esc)",
       "lookingUp": "Looking up…",
+      "dictionaryDetails": "Dictionary details",
       "showDictionary": "Show dictionary ({count})",
       "noDefinition": "No definition found.",
+      "backToDefinition": "Back to definition",
+      "moreActions": "More actions",
+      "expandSheet": "Expand definition",
+      "collapseSheet": "Collapse definition",
+      "saveWord": "Add to vocabulary",
+      "wordSaved": "Added to vocabulary",
+      "undoSave": "Undo",
+      "repeatLookup": "You looked up this word before.",
+      "originalDefinition": "Original definition",
+      "contextHeading": "In this sentence",
+      "contextRetry": "Retry context explanation",
       "inContextTitle": "Translate using AI with sentence context",
       "inContext": "In context",
       "askingAi": "Asking AI…",
@@ -92,7 +104,7 @@
       "showAll": "Show all ({count})",
       "hearSentence": "Hear sentence",
       "onboardingAdded": "Added to your first review",
-      "onboardingChoose": "Choose level 1–4 to add this word",
+      "onboardingChoose": "Select Add to vocabulary to save this word.",
       "onboardingReady": "{count}/{target} ready",
       "saveAtLevel": "Save at learning level {level}",
       "levelTitle": "Level {level}",
@@ -204,7 +216,7 @@
       },
       "save": {
         "title": "Save this word for review",
-        "body": "In the meaning panel, choose a level from 1 to 4. The word goes to your review list."
+        "body": "Select Add to vocabulary in the meaning panel. The word goes to your review list."
       },
       "practice": {
         "title": "Practise the words you just read",

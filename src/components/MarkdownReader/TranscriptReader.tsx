@@ -43,7 +43,7 @@ interface TranscriptReaderProps {
   highlightedPhrase: string[];
   activeWord: ActiveReaderWord | null;
   activeSegmentIndex: number | null;
-  onWordClick: (word: string, sentence: string, source?: WordSource) => void;
+  onWordClick: (word: string, sentence: string, source?: WordSource, occurrence?: string) => void;
   onActivateWord: (word: ActiveReaderWord) => void;
   onClearPhrase: () => void;
   onSeek: (seconds: number, segmentIndex: number) => void;
@@ -163,7 +163,12 @@ function TranscriptReader({
                     onActivate={() => {
                       onClearPhrase();
                       onActivateWord({ blockId: segmentIndex, wordIndex: thisIndex });
-                      onWordClick(part.text, segment.text, source);
+                      onWordClick(
+                        part.text,
+                        segment.text,
+                        source,
+                        `transcript:${segmentIndex}:${thisIndex}`,
+                      );
                     }}
                   />
                 );

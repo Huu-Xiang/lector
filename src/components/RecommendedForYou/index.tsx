@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useFormatter, useLocale, useTranslations } from 'next-intl';
 import { toast } from 'sonner';
+import { ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import BookReviewLink from '@/components/BookReviewLink';
@@ -99,6 +100,7 @@ export default function RecommendedForYou({
   actionLabel,
   className = '',
   onEmpty,
+  compact = false,
 }: {
   language: string;
   level: CefrLevel | null;
@@ -110,6 +112,7 @@ export default function RecommendedForYou({
   className?: string;
   /** Called once books and articles have both loaded with nothing to suggest. */
   onEmpty?: () => void;
+  compact?: boolean;
 }) {
   const t = useTranslations('recommend');
   const format = useFormatter();
@@ -216,6 +219,42 @@ export default function RecommendedForYou({
     const title = description?.title ?? pick.title;
     const original = description ? pick.title : pick.original;
     const blurb = description?.summary ?? pick.blurb;
+    const label = starting === pick.key ? t('starting') : (actionLabel ?? t('start'));
+    if (compact) {
+      return (
+        <li key={pick.key} data-testid={`recommend-${pick.key}`}>
+          <Button
+            variant="ghost"
+            onClick={() => void start(pick)}
+            disabled={starting !== null}
+            className="h-auto min-h-14 w-full justify-start gap-3 px-2 py-2 text-left whitespace-normal"
+            data-testid={`recommend-start-${pick.key}`}
+          >
+            <span className="min-w-0 flex-1">
+              <span className="block font-semibold break-words text-foreground">{title}</span>
+              {pick.source && (
+                <span className="block text-xs break-words text-muted-foreground">
+                  {pick.source}
+                </span>
+              )}
+            </span>
+            {pick.level && (
+              <span className="shrink-0 rounded-md bg-muted px-1.5 py-0.5 text-xs text-muted-foreground">
+                {pick.level}
+              </span>
+            )}
+            {starting === pick.key ? (
+              <Spinner label={label} />
+            ) : (
+              <>
+                <span className="sr-only">{label}</span>
+                <ChevronRight aria-hidden="true" className="text-muted-foreground" />
+              </>
+            )}
+          </Button>
+        </li>
+      );
+    }
     return (
       <li
         key={pick.key}
@@ -260,7 +299,7 @@ export default function RecommendedForYou({
           className="shrink-0 self-start"
           data-testid={`recommend-start-${pick.key}`}
         >
-          {starting === pick.key ? t('starting') : (actionLabel ?? t('start'))}
+          {label}
         </Button>
       </li>
     );
@@ -277,11 +316,18 @@ export default function RecommendedForYou({
   const loadingArticles = articles === null;
 
   return (
-    <div className={`space-y-6 ${className}`} data-testid="recommend-list">
+    <div
+      className={`${compact ? 'space-y-3' : 'space-y-6'} ${className}`}
+      data-testid="recommend-list"
+    >
       {books.length > 0 && (
         <section>
-          <h3 className="mb-2 text-sm font-bold text-foreground">{t('booksTitle')}</h3>
-          <ul className="space-y-3">{books.map(card)}</ul>
+          <h3 className={compact ? 'sr-only' : 'mb-2 text-sm font-bold text-foreground'}>
+            {t('booksTitle')}
+          </h3>
+          <ul className={compact ? 'divide-y divide-border border-t border-border' : 'space-y-3'}>
+            {books.map(card)}
+          </ul>
         </section>
       )}
       {loadingArticles && interests.length > 0 && (
@@ -291,8 +337,16 @@ export default function RecommendedForYou({
       )}
       {articles && articles.length > 0 && (
         <section>
-          <h3 className="mb-2 text-sm font-bold text-foreground">{t('articlesTitle')}</h3>
-          <ul className="space-y-3">{articles.map(card)}</ul>
+          <h3
+            className={
+              compact
+                ? 'px-2 text-xs font-medium text-muted-foreground'
+                : 'mb-2 text-sm font-bold text-foreground'
+            }
+          >
+            {t('articlesTitle')}
+          </h3>
+          <ul className={compact ? 'divide-y divide-border' : 'space-y-3'}>{articles.map(card)}</ul>
         </section>
       )}
       {books.length === 0 && articles && articles.length === 0 && (

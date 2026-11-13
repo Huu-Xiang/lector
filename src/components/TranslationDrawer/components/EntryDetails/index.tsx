@@ -45,23 +45,36 @@ function highlight(sentence: string, forms: Set<string>) {
 export function SenseGroups({
   senses,
   onLookupWord,
+  inlinePartOfSpeech = false,
 }: {
   senses: Sense[];
   onLookupWord?: (word: string) => void;
+  inlinePartOfSpeech?: boolean;
 }) {
   const posLabel = usePosLabel();
   return (
     <div className="space-y-3">
       {groupByPartOfSpeech(senses).map((group, g) => (
         <div key={g}>
-          {group.partOfSpeech && <span className={POS_BADGE}>{posLabel(group.partOfSpeech)}</span>}
-          <ol className={group.partOfSpeech ? 'mt-1.5 space-y-1.5' : 'space-y-1.5'}>
+          {!inlinePartOfSpeech && group.partOfSpeech && (
+            <span className={POS_BADGE}>{posLabel(group.partOfSpeech)}</span>
+          )}
+          <ol
+            className={
+              !inlinePartOfSpeech && group.partOfSpeech ? 'mt-1.5 space-y-1.5' : 'space-y-1.5'
+            }
+          >
             {group.items.map((sense, i) => (
               <li key={i} className="flex gap-3">
                 <span className="mt-0.5 flex-shrink-0 text-xs font-medium text-muted-foreground tabular-nums">
                   {i + 1}.
                 </span>
                 <span className="min-w-0 flex-1 leading-relaxed text-foreground">
+                  {inlinePartOfSpeech && i === 0 && group.partOfSpeech && (
+                    <span className={`${POS_BADGE} mr-2 align-baseline whitespace-nowrap`}>
+                      {posLabel(group.partOfSpeech)}
+                    </span>
+                  )}
                   <Gloss text={sense.gloss} onLookupWord={onLookupWord} />
                 </span>
               </li>
@@ -119,10 +132,12 @@ export function EntryExtras({
   entry,
   word,
   onLookupWord,
+  inlinePartOfSpeech,
 }: {
   entry: ExpandedDictionaryEntry;
   word: string;
   onLookupWord?: (word: string) => void;
+  inlinePartOfSpeech?: boolean;
 }) {
   const t = useTranslations('reader.drawer');
   const forms = new Set(
@@ -141,7 +156,11 @@ export function EntryExtras({
             {t('englishDefinitions')}
           </h3>
           <div className="text-sm text-muted-foreground">
-            <SenseGroups senses={english} onLookupWord={onLookupWord} />
+            <SenseGroups
+              senses={english}
+              onLookupWord={onLookupWord}
+              inlinePartOfSpeech={inlinePartOfSpeech}
+            />
           </div>
         </section>
       )}

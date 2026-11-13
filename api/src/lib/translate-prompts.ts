@@ -151,6 +151,20 @@ Sentence context: "${sentence || word}"${vettedWordHint(langName, word, nativeNa
 Return ONLY the context-appropriate ${nativeName} translation. Do not list other senses. Do not explain it. Do not use quotes, labels, JSON, or Markdown.`;
 }
 
+export function buildContextExplanationPrompt(
+  langName: string,
+  word: string,
+  sentence: string,
+  nativeName: string,
+): string {
+  return `Explain the selected ${langName} word as used in this exact sentence, in ${nativeName}.
+
+Selected word: "${word}"
+Sentence: "${sentence}"
+
+Give the one meaning that fits, followed by a brief paraphrase of the relevant part of the sentence. Explain the full expression when the word is part of one. Use one or two short sentences in plain text. Omit alternative senses, headings, and Markdown.`;
+}
+
 /**
  * Rich dictionary-quality word entry (senses + IPA + etymology + related forms).
  * Used by the opt-in "enrich" action and by legacy structured word lookups

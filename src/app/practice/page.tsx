@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useFormatter, useTranslations } from 'next-intl';
+import { useIsNativeApp } from '@/lib/native-app';
 import { CheckCircle, Star } from 'lucide-react';
 import { DeckShuffle } from '@/components/Loaders';
 import TranslationDrawer, { TranslationDrawerSlot } from '@/components/TranslationDrawer';
@@ -98,6 +99,7 @@ function isInteractiveKeyTarget(event: KeyboardEvent): boolean {
 function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
   const router = useRouter();
   const t = useTranslations('practice');
+  const nativeApp = useIsNativeApp();
   const format = useFormatter();
 
   const {
@@ -882,8 +884,9 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
       >
         {/* Setup screen */}
         {state === 'setup' && (
-          <div className="py-6">
+          <div className={nativeApp ? 'py-2' : 'py-6'}>
             <PageHeader
+              className={nativeApp ? 'mb-3' : undefined}
               title={practiceFormat === 'dictation' ? t('title.dictation') : t('title.cloze')}
             ></PageHeader>
 
@@ -904,12 +907,18 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
                   onClick={() => handleSetPracticeFormat('cloze')}
                   aria-pressed={practiceFormat === 'cloze'}
                   variant={practiceFormat === 'cloze' ? 'default' : 'secondary'}
-                  className="flex h-14 flex-col justify-center gap-0"
+                  className={
+                    nativeApp
+                      ? 'h-auto min-h-11 py-2 whitespace-normal'
+                      : 'flex h-14 flex-col justify-center gap-0'
+                  }
                 >
                   <div>{t('format.cloze')}</div>
-                  <div className="mt-0.5 text-[11px] font-normal opacity-75">
-                    {t('format.clozeHint')}
-                  </div>
+                  {!nativeApp && (
+                    <div className="mt-0.5 text-[11px] font-normal opacity-75">
+                      {t('format.clozeHint')}
+                    </div>
+                  )}
                 </Button>
                 {dictationAvailable && (
                   <Button
@@ -917,12 +926,18 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
                     onClick={() => handleSetPracticeFormat('dictation')}
                     aria-pressed={practiceFormat === 'dictation'}
                     variant={practiceFormat === 'dictation' ? 'default' : 'secondary'}
-                    className="flex h-14 flex-col justify-center gap-0"
+                    className={
+                      nativeApp
+                        ? 'h-auto min-h-11 py-2 whitespace-normal'
+                        : 'flex h-14 flex-col justify-center gap-0'
+                    }
                   >
                     <div>{t('format.dictation')}</div>
-                    <div className="mt-0.5 text-[11px] font-normal opacity-75">
-                      {t('format.dictationHint')}
-                    </div>
+                    {!nativeApp && (
+                      <div className="mt-0.5 text-[11px] font-normal opacity-75">
+                        {t('format.dictationHint')}
+                      </div>
+                    )}
                   </Button>
                 )}
               </div>

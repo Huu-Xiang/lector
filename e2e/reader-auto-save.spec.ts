@@ -2,7 +2,8 @@ import { test, expect, Page } from '@playwright/test';
 import { apiUrl } from './api';
 
 const COLLECTION_TITLE = 'Auto Save Test';
-const LESSON_TEXT = 'Die flipgrobbel sit by die waterkant. Die zinkfloep spring weg.';
+const LESSON_TEXT =
+  'Die flipgrobbel sit by die waterkant. Die zinkfloep spring weg. Nou slaap flipgrobbel.';
 // Not in the pinned af dictionary, so the AI gloss mock answers.
 const TEST_WORDS = ['flipgrobbel', 'zinkfloep'];
 
@@ -58,6 +59,7 @@ test.describe('Auto-save of looked-up words', () => {
 
   test.beforeEach(async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 800 });
+    await resetAutoSave(page);
     await page.route('**/api/translate/gloss', async (route) => {
       const body = JSON.parse(route.request().postData() || '{}');
       await route.fulfill({
@@ -81,7 +83,70 @@ test.describe('Auto-save of looked-up words', () => {
     await cleanupVocab(page);
   });
 
+  test('looks up without saving by default and supports mobile save and undo', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    collectionId = await openLesson(page);
+    const drawer = page.getByTestId('translation-drawer');
+    const close = drawer.getByRole('button', { name: 'Close', exact: true });
+    const first = readerWord(page, 'flipgrobbel');
+    const next = page.locator('article span.cursor-pointer', { hasText: 'flipgrobbel' }).last();
+    await first.click();
+    await expect(drawer.getByTestId('save-looked-up-word')).toBeVisible();
+    expect(await statesOf(page, 'flipgrobbel')).toEqual([]);
+    await close.click();
+    await first.click();
+    await expect(drawer.getByTestId('save-looked-up-word')).toBeVisible();
+    await expect(drawer.getByTestId('repeat-lookup-hint')).toHaveCount(0);
+    await close.click();
+    await next.click();
+    await expect(drawer.getByTestId('repeat-lookup-hint')).toBeVisible();
+    await drawer.getByTestId('save-looked-up-word').click();
+    await expect(drawer.getByTestId('undo-lookup-save')).toBeVisible();
+    expect(await statesOf(page, 'flipgrobbel')).toEqual(['level1']);
+    await drawer.getByTestId('undo-lookup-save').click();
+    await expect(drawer.getByTestId('save-looked-up-word')).toBeVisible();
+    expect(await statesOf(page, 'flipgrobbel')).toEqual([]);
+    await close.click();
+    await first.click();
+    await expect(drawer.getByTestId('save-looked-up-word')).toBeVisible();
+    await expect(drawer.getByTestId('repeat-lookup-hint')).toHaveCount(0);
+  });
+
+  test('keeps the definition on context error and shows one result after retry', async ({
+    page,
+  }) => {
+    let calls = 0;
+    await page.route('**/api/translate', async (route) => {
+      const body = route.request().postDataJSON();
+      expect(body).toMatchObject({
+        explainContext: true,
+        word: 'flipgrobbel',
+        sentence: expect.stringContaining('waterkant'),
+      });
+      calls++;
+      await route.fulfill(
+        calls === 1
+          ? { status: 502, json: { error: 'provider error' } }
+          : { json: { translation: 'Here it describes the creature sitting by the water.' } },
+      );
+    });
+    collectionId = await openLesson(page);
+    await lookUp(page, 'flipgrobbel');
+    const drawer = page.getByTestId('translation-drawer');
+    const request = drawer.getByTestId('request-word-context');
+    await request.click();
+    await expect(request).toHaveText('Retry context explanation');
+    await expect(drawer.getByText('[gloss: flipgrobbel]').first()).toBeVisible();
+    await request.click();
+    const result = drawer.getByTestId('word-context-result');
+    await expect(result).toContainText('Here it describes the creature sitting by the water.');
+    await expect(result.locator('mark')).toHaveText('flipgrobbel');
+    await expect(request).toHaveCount(0);
+    await expect(drawer.getByTestId('save-looked-up-word')).toBeVisible();
+  });
+
   test('a looked-up word is saved once at level 1', async ({ page }) => {
+    await page.request.put(apiUrl('/api/settings/autoSaveLookups'), { data: { value: true } });
     collectionId = await openLesson(page);
     await lookUp(page, 'flipgrobbel');
 
@@ -97,6 +162,7 @@ test.describe('Auto-save of looked-up words', () => {
     test(`a save that fails with ${status} stays silent and leaves no saved word`, async ({
       page,
     }) => {
+      await page.request.put(apiUrl('/api/settings/autoSaveLookups'), { data: { value: true } });
       await page.route('**/api/vocab', async (route) => {
         if (route.request().method() === 'POST') {
           await route.fulfill({

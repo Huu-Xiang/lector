@@ -1,5 +1,7 @@
 # Journal domain
 
+The journal editor lets its word count and save controls wrap on narrow screens.
+
 This domain stores text that the learner writes in the target language. Correction uses the large language model (LLM) of the Tutor. The page does not translate English into the target language. The user writes in the target language. The tutor returns a corrected body.
 
 ## Submit journal for correction

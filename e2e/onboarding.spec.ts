@@ -117,6 +117,7 @@ async function saveGuidedWord(page: Page, onboardingUrl: string) {
   await expect(drawer.getByText(`meaning of ${GUIDED_WORD}`, { exact: false })).toBeVisible({
     timeout: 5_000,
   });
+  await drawer.getByTestId('save-looked-up-word').click();
   const savedResponse = await savedEvent;
   expect(savedResponse.status(), await savedResponse.text()).toBeLessThan(300);
   await expect(drawer.getByTestId('onboarding-drawer-progress')).toContainText('1/1 ready');
@@ -131,10 +132,10 @@ async function completeGuidedRound(
   page: Page,
   onboardingUrl = apiUrl('/api/onboarding'),
 ): Promise<void> {
-  await expect(page.getByTestId('onboarding-coach-lookup')).toContainText('Step 1 of 2');
+  await expect(page.getByTestId('onboarding-coach-lookup')).toContainText('Step 1 of 3');
   await saveGuidedWord(page, onboardingUrl);
 
-  await expect(page.getByTestId('onboarding-coach-practice')).toContainText('Step 2 of 2', {
+  await expect(page.getByTestId('onboarding-coach-practice')).toContainText('Step 3 of 3', {
     timeout: 10_000,
   });
   await page.getByTestId('start-onboarding-practice').click();
@@ -531,7 +532,7 @@ test.describe('guided onboarding — selfhost', () => {
       });
       await expect(page.getByTestId('onboarding-coach-save')).toContainText('Step 2 of 3');
       await expect(drawer.getByTestId('onboarding-drawer-progress')).toContainText(
-        'Choose level 1–4 to add this word',
+        'Select Add to vocabulary to save this word.',
       );
 
       const savedEvent = waitForSavedEvent(page);
@@ -542,8 +543,7 @@ test.describe('guided onboarding — selfhost', () => {
       ).toBeVisible();
       await expect(page.getByTestId('onboarding-coach-practice')).toContainText('Step 3 of 3');
     } finally {
-      // The selfhost reset keeps settings, so later tests would run with auto-save off.
-      await page.request.put(autoSave, { data: { value: true } });
+      await page.request.delete(autoSave);
       await context.close();
     }
   });
@@ -569,6 +569,7 @@ test.describe('guided onboarding — selfhost', () => {
     await expect(page.getByText(`meaning of ${GUIDED_WORD}`, { exact: false })).toBeVisible({
       timeout: 5_000,
     });
+    await page.getByTestId('save-looked-up-word').press('Enter');
     const savedResponse = await savedEvent;
     expect(savedResponse.status(), await savedResponse.text()).toBeLessThan(300);
     const current = await snapshot(page);

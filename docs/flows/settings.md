@@ -1,5 +1,7 @@
 # Settings domain
 
+On iOS, the interface and definition language controls come first. Account and plan cards follow the learning preferences.
+
 This domain holds user keys, the LLM provider, personal access tokens, and account delete. Plan tiles live in [Billing](billing.md). Known-word import lives in [Vocabulary](vocabulary.md).
 
 ## Save settings

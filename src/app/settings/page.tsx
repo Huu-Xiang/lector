@@ -26,35 +26,45 @@ import CloudPlanSettings from './components/CloudPlanSettings';
 import InviteCard from './components/InviteCard';
 import InstallAppCard from './components/InstallAppCard';
 import ReminderSettings from './components/ReminderSettings';
+import { useIsNativeApp } from '@/lib/native-app';
 import { lectorMode } from '@/lib/api-base';
 import { useTranslations } from 'next-intl';
 
 export default function SettingsPage() {
   const t = useTranslations('settings');
+  const nativeApp = useIsNativeApp();
+  const accountSettings = (
+    <>
+      {lectorMode() === 'cloud' && <CloudPlanSettings />}
+      {lectorMode() === 'cloud' && <CnRefund />}
+      {lectorMode() === 'cloud' && <InviteCard />}
+      <InstallAppCard />
+      {lectorMode() === 'cloud' && <ReminderSettings />}
+    </>
+  );
+  const languagePreferences = (
+    <section className="panel space-y-6 p-6" data-testid="language-preferences">
+      <div>
+        <h2 className="mb-1 text-lg font-semibold text-foreground">{t('languagePrefs.title')}</h2>
+        <p className="text-sm text-muted-foreground">{t('languagePrefs.hint')}</p>
+      </div>
+      <InterfaceLanguage />
+      <NativeLanguage />
+    </section>
+  );
   return (
     <main className="mx-auto max-w-3xl px-4 py-8">
       <PageHeader title={t('pageTitle')} />
       <div className="space-y-8">
-        {lectorMode() === 'cloud' && <CloudPlanSettings />}
-        {lectorMode() === 'cloud' && <CnRefund />}
-        {lectorMode() === 'cloud' && <InviteCard />}
-        <InstallAppCard />
-        {lectorMode() === 'cloud' && <ReminderSettings />}
+        {!nativeApp && accountSettings}
+        {nativeApp && languagePreferences}
         <LanguagesSettings />
         <ReadingLevelSettings />
         <DailyGoalSettings />
-        <section className="panel space-y-6 p-6" data-testid="language-preferences">
-          <div>
-            <h2 className="mb-1 text-lg font-semibold text-foreground">
-              {t('languagePrefs.title')}
-            </h2>
-            <p className="text-sm text-muted-foreground">{t('languagePrefs.hint')}</p>
-          </div>
-          <InterfaceLanguage />
-          <NativeLanguage />
-        </section>
+        {!nativeApp && languagePreferences}
         <ProseSettings />
         <PracticeSettings />
+        {nativeApp && accountSettings}
         {lectorMode() === 'cloud' ? <BYOKSettings /> : <LLMSettings />}
         <AnkiSettings />
         <TTSSettings />

@@ -206,7 +206,11 @@ export function savedOnboardingWords(
 ): Array<{ id: string; text: string }> {
   const words = new Map<string, string>();
   for (const event of onboardingEvents(snapshot)) {
-    if (event.eventType !== 'vocab.saved' || !event.vocabId) continue;
+    if (!event.vocabId) continue;
+    if (event.eventType === 'vocab.state_changed' && event.properties.undoSave === true) {
+      words.delete(event.vocabId);
+    }
+    if (event.eventType !== 'vocab.saved') continue;
     const text = typeof event.properties.text === 'string' ? event.properties.text : '';
     if (text) words.set(event.vocabId, text);
   }

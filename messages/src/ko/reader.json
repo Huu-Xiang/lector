@@ -75,8 +75,20 @@
       "close": "닫기",
       "closeEsc": "닫기 (Esc)",
       "lookingUp": "찾는 중…",
+      "dictionaryDetails": "사전 상세 정보",
       "showDictionary": "사전 보기 ({count})",
       "noDefinition": "뜻을 찾지 못했어요.",
+      "backToDefinition": "뜻으로 돌아가기",
+      "moreActions": "추가 작업",
+      "expandSheet": "뜻 펼치기",
+      "collapseSheet": "뜻 접기",
+      "saveWord": "단어장에 추가",
+      "wordSaved": "단어장에 추가됨",
+      "undoSave": "실행 취소",
+      "repeatLookup": "전에 찾아본 단어예요.",
+      "originalDefinition": "기존 뜻",
+      "contextHeading": "이 문장에서의 뜻",
+      "contextRetry": "문맥 설명 다시 시도",
       "inContextTitle": "문장 문맥을 활용해 AI로 번역하기",
       "inContext": "문맥으로 보기",
       "askingAi": "AI에 묻는 중…",
@@ -92,7 +104,7 @@
       "showAll": "모두 보기 ({count})",
       "hearSentence": "문장 듣기",
       "onboardingAdded": "첫 복습에 추가했어요",
-      "onboardingChoose": "레벨 1–4를 선택하면 이 단어가 추가돼요",
+      "onboardingChoose": "「단어장에 추가」를 눌러 저장하세요.",
       "onboardingReady": "{count}/{target} 준비됨",
       "saveAtLevel": "학습 레벨 {level}로 저장",
       "levelTitle": "레벨 {level}",
@@ -204,7 +216,7 @@
       },
       "save": {
         "title": "복습할 단어로 저장하세요",
-        "body": "뜻 패널에서 1부터 4까지 레벨을 선택하세요. 단어가 복습 목록에 추가돼요."
+        "body": "뜻 패널에서 「단어장에 추가」를 누르면 복습 목록에 들어가요."
       },
       "practice": {
         "title": "방금 읽은 단어를 연습해 보세요",

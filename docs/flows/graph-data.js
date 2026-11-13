@@ -197,11 +197,11 @@
   N("flow:in-context", "flow", "In-context translation", {
     domain: "translation",
     md: "translation.md#in-context-translation",
-    summary: "Drawer In-context action. LLM sense that fits the sentence. Does not overwrite a dict gloss on save.",
+    summary: "The drawer explains the word in the current sentence and keeps the general definition.",
     steps: [
       "file:translation-drawer",
       "fn:read-requestContextTranslation",
-      "fn:translateWord",
+      "fn:explainWordInContext",
       "route:translate-post",
     ],
   });
@@ -232,7 +232,7 @@
   N("flow:save-vocab", "flow", "Save vocab and set word state", {
     domain: "vocabulary",
     md: "vocabulary.md#save-vocab-and-set-word-state",
-    summary: "No Save button. Level, Known, Ignore, key S, Anki, or reader auto-save of a looked-up word creates or updates vocab and knownWords.",
+    summary: "Add to vocabulary, level, Known, Ignore, key S, Anki, or opt-in auto-save writes vocab and knownWords.",
     steps: ["fn:applyReaderWordState", "fn:patchWordState", "fn:saveVocab", "route:vocab-post", "table:vocab"],
   });
   N("flow:vocab-test-report", "flow", "Save vocabulary test report", {
@@ -510,14 +510,18 @@
 
   // ── Shared files ──────────────────────────────────────────────────────────
 
-  N("file:home-page", "file", "Home page", { path: "src/app/(index)/page.tsx", domain: "library" });
+  N("file:home-page", "file", "Home page", {
+    path: "src/app/(index)/page.tsx",
+    domain: "library",
+    summary: "Header actions and reading recommendations. On iOS, saved books appear first.",
+  });
   N("file:collection-page", "file", "Collection page", { path: "src/app/collection/[id]/page.tsx", domain: "library" });
   N("file:read-page", "file", "Read page", { path: "src/app/read/[bookId]/page.tsx", domain: "translation" });
   N("file:markdown-reader", "file", "MarkdownReader", { path: "src/components/MarkdownReader/index.tsx", domain: "library" });
   N("file:reader-article", "file", "ReaderArticle", { path: "src/components/MarkdownReader/ReaderArticle.tsx", domain: "library" });
   N("file:transcript-reader", "file", "TranscriptReader", { path: "src/components/MarkdownReader/TranscriptReader.tsx", domain: "listen" });
   N("file:word-cell", "file", "WordCell", { path: "src/components/WordCell/index.tsx", domain: "library" });
-  N("file:translation-drawer", "file", "TranslationDrawer", { path: "src/components/TranslationDrawer/index.tsx", domain: "translation" });
+  N("file:translation-drawer", "file", "TranslationDrawer", { path: "src/components/TranslationDrawer/index.tsx", domain: "translation", summary: "On iOS, shows the first meaning and original sentence before expandable dictionary details." });
   N("file:data-layer", "file", "data-layer.ts", { path: "src/lib/data-layer.ts", domain: "library" });
   N("file:api-base", "file", "api-base.ts", { path: "src/lib/api-base.ts" });
   N("file:dictionary-client", "file", "dictionary-client.ts", { path: "src/lib/dictionary-client.ts", domain: "translation" });
@@ -527,11 +531,11 @@
   N("file:words", "file", "words.ts", { path: "src/lib/words.ts" });
   N("file:tts", "file", "tts.ts", { path: "src/lib/tts.ts", domain: "listen" });
   N("file:optimistic-state", "file", "optimistic-word-state.ts", { path: "src/components/MarkdownReader/optimistic-word-state.ts", domain: "vocabulary" });
-  N("file:practice-page", "file", "Practice page", { path: "src/app/practice/page.tsx", domain: "practice" });
+  N("file:practice-page", "file", "Practice page", { path: "src/app/practice/page.tsx", domain: "practice", summary: "On iOS, practice format buttons show only the format names." });
   N("file:use-cloze-round", "file", "use-cloze-round.ts", { path: "src/app/practice/use-cloze-round.ts", domain: "practice" });
   N("file:persist-review", "file", "persist-review.ts", { path: "src/app/practice/persist-review.ts", domain: "practice" });
   N("file:practice-utils", "file", "practice/utils.ts", { path: "src/app/practice/utils.ts", domain: "practice" });
-  N("file:journal-page", "file", "Journal page", { path: "src/app/journal/page.tsx", domain: "journal" });
+  N("file:journal-page", "file", "Journal page", { path: "src/app/journal/page.tsx", domain: "journal", summary: "The editor actions wrap on narrow screens." });
   N("file:correction-view", "file", "CorrectionView", { path: "src/app/journal/components/CorrectionView.tsx", domain: "journal" });
   N("file:chat-widget", "file", "ChatWidget", { path: "src/components/ChatWidget/index.tsx", domain: "tutor" });
   N("file:cloze-feedback", "file", "ClozeFeedback", { path: "src/components/ClozeFeedback/index.tsx", domain: "tutor" });
@@ -540,7 +544,7 @@
   N("file:vocab-test-sampling", "file", "Adaptive vocabulary sampling", { path: "src/lib/vocab-test.ts", domain: "vocabulary" });
   N("file:route-vocab-test-reports", "file", "Vocabulary test reports API", { path: "api/src/routes/vocab-test-reports.ts", domain: "vocabulary" });
   N("file:vocab-test-delivery", "file", "Vocabulary report email", { path: "api/src/lib/vocab-test-report-delivery.ts", domain: "vocabulary" });
-  N("file:vocab-page", "file", "Vocab page", { path: "src/app/vocab/page.tsx", domain: "vocabulary" });
+  N("file:vocab-page", "file", "Vocab page", { path: "src/app/vocab/page.tsx", domain: "vocabulary", summary: "On iOS, vocabulary totals collapse above the word list." });
   N("file:known-words-import", "file", "KnownWordsImport", { path: "src/app/settings/components/KnownWordsImport/index.tsx", domain: "vocabulary" });
   N("file:listen-along", "file", "ListenAlong", { path: "src/components/ListenAlong/index.tsx", domain: "listen" });
   N("file:youtube-player", "file", "YouTubePlayer", { path: "src/components/YouTubePlayer/index.tsx", domain: "listen" });
@@ -550,7 +554,7 @@
   N("file:setup-page", "file", "Setup page", { path: "src/app/setup/page.tsx", domain: "onboarding" });
   N("file:setup-guard", "file", "SetupGuard", { path: "src/components/SetupGuard/index.tsx", domain: "onboarding" });
   N("file:onboarding-client", "file", "onboarding.ts", { path: "src/lib/onboarding.ts", domain: "onboarding" });
-  N("file:stats-page", "file", "Stats page", { path: "src/app/stats/page.tsx", domain: "stats" });
+  N("file:stats-page", "file", "Stats page", { path: "src/app/stats/page.tsx", domain: "stats", summary: "On iOS, the four totals appear before fluency charts." });
   N("file:web-import", "file", "WebImportModal", { path: "src/components/WebImportModal/index.tsx", domain: "library" });
   N("file:youtube-import", "file", "YouTubeImportModal", { path: "src/components/YouTubeImportModal/index.tsx", domain: "library" });
   N("file:paste-import", "file", "PasteImportModal", { path: "src/components/PasteImportModal/index.tsx", domain: "library" });
@@ -571,7 +575,7 @@
   N("file:accounts", "file", "accounts.ts", { path: "api/src/lib/accounts.ts", domain: "auth" });
   N("file:lifecycle-email", "file", "lifecycle-email.ts", { path: "api/src/lib/lifecycle-email.ts", domain: "auth" });
   N("file:email", "file", "email.ts", { path: "api/src/lib/email.ts", domain: "auth" });
-  N("file:settings-page", "file", "Settings page", { path: "src/app/settings/page.tsx", domain: "settings" });
+  N("file:settings-page", "file", "Settings page", { path: "src/app/settings/page.tsx", domain: "settings", summary: "On iOS, language preferences appear before account settings." });
   N("file:language-selector", "file", "LanguageSelector", { path: "src/components/LanguageSelector/index.tsx", domain: "onboarding" });
   N("file:languages-settings", "file", "LanguagesSettings", { path: "src/app/settings/components/LanguagesSettings/index.tsx", domain: "settings" });
   N("file:llm-settings", "file", "LLMSettings", { path: "src/app/settings/components/LLMSettings/index.tsx", domain: "settings" });
@@ -660,6 +664,7 @@
   N("fn:getVocabByText", "fn", "getVocabByText", { path: "src/lib/data-layer.ts" });
   N("fn:lookupWordRemote", "fn", "lookupWordRemote", { path: "src/lib/dictionary-client.ts" });
   N("fn:streamWordGloss", "fn", "streamWordGloss", { path: "src/lib/claude.ts" });
+  N("fn:explainWordInContext", "fn", "explainWordInContext", { path: "src/lib/claude.ts" });
   N("fn:translateWord", "fn", "translateWord", { path: "src/lib/claude.ts" });
   N("fn:translatePhrase", "fn", "translatePhrase", { path: "src/lib/claude.ts" });
   N("fn:enrichWord", "fn", "enrichWord", { path: "src/lib/claude.ts" });
@@ -1089,7 +1094,9 @@
   edge("flow:in-context", "file:translation-drawer", "starts");
   edge("flow:in-context", "fn:read-requestContextTranslation", "calls");
   edge("fn:read-requestContextTranslation", "file:read-page", "in");
-  edge("fn:read-requestContextTranslation", "fn:translateWord", "calls");
+  edge("fn:read-requestContextTranslation", "fn:explainWordInContext", "calls");
+  edge("fn:explainWordInContext", "file:claude", "in");
+  edge("fn:explainWordInContext", "route:translate-post", "http");
   edge("fn:translateWord", "file:claude", "in");
   edge("fn:translateWord", "route:translate-post", "http");
   edge("route:translate-post", "file:route-translate", "in");

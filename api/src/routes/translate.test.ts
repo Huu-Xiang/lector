@@ -1201,6 +1201,32 @@ describe('streamed translation (stream: true)', () => {
     expect(provider.calls.map((call) => call.task)).toEqual(['phrase-rich']);
   });
 
+  test('a context explanation uses the selected sentence and keeps the plan meter', async () => {
+    const engine = makeEngine({ now: () => new Date('2026-07-15T12:00:00Z'), compedPlan: 'cloud' });
+    const provider = new FakeProvider();
+    const { app } = makeApp({ engine, provider });
+    const sentence = 'She sat with her feet tucked under her.';
+    const res = await post(app, '/', {
+      word: 'tucked',
+      sentence,
+      type: 'word',
+      explainContext: true,
+    });
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ translation: 'fitting sense' });
+    expect(provider.calls[0].task).toBe('context-simple');
+    expect(provider.calls[0].messages[0].content).toContain(sentence);
+    expect(engine.getUsage('local', 'llmRequestsPerMonth')).toBe(1);
+
+    const missingSentence = await post(app, '/', {
+      word: 'tucked',
+      type: 'word',
+      explainContext: true,
+    });
+    expect(missingSentence.status).toBe(400);
+    expect(provider.calls).toHaveLength(1);
+  });
+
   test('rich context streams the sense glosses and keeps the stitched shape', async () => {
     const engine = makeEngine({
       now: () => new Date('2026-07-15T12:00:00Z'),

@@ -15,7 +15,7 @@
           "betaSignIn": "If you sign in to Readfox Beta with your Readfox account, Beta receives your account identifier, verified email address and name. Beta keeps its own session and study data.",
           "vocabTestReports": "If you save a vocabulary test, we keep the estimated range, reference level, test date and suggested books in your account. Your answers stay in your browser.",
           "readingStats": "Your reading time and the number of words you read, stored in your learning statistics.",
-          "autoSave": "The words you look up are saved to your word list automatically. You can turn this off in Settings.",
+          "autoSave": "Words you choose to save are added to your word list. You can also turn on automatic saving in Settings.",
           "timezone": "Your browser's time zone. It is saved to your account to calculate your learning day, which sets your daily statistics and streaks. The same time zone sets when we send reminder emails.",
           "reviewHistory": "Your word review history: each answer, the time you gave it, and the card's schedule. It is part of your data export. Free accounts keep the most recent 5,000 entries.",
           "usage": "Monthly counters of how many AI lookups and requests you used, so we can apply the monthly allowance.",

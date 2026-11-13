@@ -75,8 +75,20 @@
       "close": "關閉",
       "closeEsc": "關閉 (Esc)",
       "lookingUp": "正在查詢…",
+      "dictionaryDetails": "詞典詳情",
       "showDictionary": "顯示詞典釋義（{count}）",
       "noDefinition": "找不到釋義。",
+      "backToDefinition": "返回釋義",
+      "moreActions": "更多操作",
+      "expandSheet": "展開釋義",
+      "collapseSheet": "收起釋義",
+      "saveWord": "加入生字",
+      "wordSaved": "已加入生字",
+      "undoSave": "復原",
+      "repeatLookup": "你之前查過這個字。",
+      "originalDefinition": "原始釋義",
+      "contextHeading": "在這句話裡",
+      "contextRetry": "重試語境釋義",
       "inContextTitle": "結合句子語境用 AI 翻譯",
       "inContext": "結合語境",
       "askingAi": "正在詢問 AI…",
@@ -92,7 +104,7 @@
       "showAll": "顯示全部（{count}）",
       "hearSentence": "聽句子",
       "onboardingAdded": "已加入你的第一次複習",
-      "onboardingChoose": "選擇 1–4 級即可新增該單字",
+      "onboardingChoose": "點「加入生字」即可儲存這個字。",
       "onboardingReady": "已就緒 {count}/{target}",
       "saveAtLevel": "以學習等級 {level} 儲存",
       "levelTitle": "{level} 級",
@@ -204,7 +216,7 @@
       },
       "save": {
         "title": "把這個詞加入複習",
-        "body": "在釋義面板裡選擇 1–4 級，這個詞就會進入你的複習清單。"
+        "body": "在釋義面板點「加入生字」，這個字就會加入複習清單。"
       },
       "practice": {
         "title": "練習剛讀到的單字",

@@ -25,6 +25,7 @@ import {
   buildGlossPrompt,
   buildPhrasePrompt,
   buildSimpleContextPrompt,
+  buildContextExplanationPrompt,
   buildSimplePhrasePrompt,
   buildWordEntryPrompt,
   phraseFieldsInWrongScript,
@@ -87,6 +88,7 @@ interface CommonInput {
 
 interface TranslationInput extends CommonInput {
   type: 'word' | 'phrase';
+  explainContext: boolean;
 }
 
 /** One NDJSON line of a streamed `POST /api/translate` answer. */
@@ -187,7 +189,12 @@ function parseTranslation(body: Record<string, unknown>): Parsed<TranslationInpu
     maxChars: body.type === 'phrase' ? MAX_PHRASE_CHARS : MAX_WORD_CHARS,
     label: body.type === 'phrase' ? 'Phrase' : 'Word',
   });
-  return common.ok ? { ok: true, value: { ...common.value, type: body.type } } : common;
+  if (!common.ok) return common;
+  const explainContext = body.explainContext === true;
+  if (explainContext && (body.type !== 'word' || !common.value.sentence.trim())) {
+    return { ok: false, error: 'Context explanations need a word and sentence' };
+  }
+  return { ok: true, value: { ...common.value, type: body.type, explainContext } };
 }
 
 function isManagedFree(resolved: ResolvedEntitlements): boolean {
@@ -525,7 +532,7 @@ export function makeTranslateRoutes({
     const parsed = parseTranslation(parsedBody.value);
     if (!parsed.ok) return c.json({ error: parsed.error }, 400);
 
-    const { word, sentence, language, type } = parsed.value;
+    const { word, sentence, language, type, explainContext } = parsed.value;
     const userId = getCurrentUserId(c);
     const resolved = engine.resolveEntitlements(userId);
     const freeOnSmallModel = isManagedFree(resolved) && selfManagedFreeAi();
@@ -593,7 +600,25 @@ export function makeTranslateRoutes({
       return entry;
     };
 
+    const explanation = explainContext
+      ? {
+          prompt: buildContextExplanationPrompt(langName, word, sentence, nativeName),
+          task: 'context-simple' as const,
+          maxTokens: 192,
+        }
+      : null;
+
     const answerOnce = async (provider: LLMProvider): Promise<unknown> => {
+      if (explanation) {
+        const { prompt, task, maxTokens } = explanation;
+        const text = await provider.complete({
+          messages: [{ role: 'user', content: prompt }],
+          task,
+          maxTokens,
+        });
+        return { translation: simpleTranslation(text) };
+      }
+
       if (managedFree) {
         const isPhrase = type === 'phrase';
         const translation = simpleTranslation(
@@ -636,6 +661,14 @@ export function makeTranslateRoutes({
     };
 
     const streamPlan = (): StreamPlan => {
+      if (explanation) {
+        return {
+          ...explanation,
+          visibleKeys: null,
+          finish: async (_provider, text) => ({ translation: simpleTranslation(text) }),
+        };
+      }
+
       if (managedFree) {
         const isPhrase = type === 'phrase';
         return {

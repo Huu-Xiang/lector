@@ -89,6 +89,16 @@ export async function translateWord(
   );
 }
 
+export function explainWordInContext(word: string, sentence: string): Promise<WordTranslation> {
+  return postTranslate<WordTranslation>({
+    word,
+    sentence,
+    type: 'word',
+    explainContext: true,
+    language: getActiveLanguage(),
+  });
+}
+
 /**
  * Fast-path word gloss — streams a plain-text translation so the reader sees
  * the meaning form as it generates instead of waiting for a full structured

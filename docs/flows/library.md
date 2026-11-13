@@ -1,6 +1,10 @@
 # Library domain
 
+On iOS, saved books and groups come before recommendations. Recommendations still open first in an empty library.
+
 This domain holds collections, groups, lessons, and import. Word colour in the reader comes from the Vocabulary domain. A tap of a word is the Translation domain.
+
+The library header holds Import, Free books, and New group. The collapsible recommendations list shows titles, authors or sources, and reading levels. Select a row to add the item and open its first lesson. When the library is empty, a short notice appears below the recommendations, with a starter pack action if one is available.
 
 ## Remembered pages
 

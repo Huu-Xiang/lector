@@ -1,14 +1,18 @@
 # Translation domain
 
+The iOS sheet puts the first definition and the original sentence before expandable dictionary details. The state and source are available under More actions.
+
 This domain looks up a word or phrase and shows the drawer. The tap starts in the Reader. Save of the gloss is the Vocabulary domain.
 
-The large language model (LLM) path uses a plan meter. A dictionary hit does not.
+The large language model (LLM) path uses a plan meter. A dictionary hit does not. For a word in a sentence, the drawer can request a short explanation of that use. The result displays above the original sentence and leaves the general definition available.
 
 ## Translate word
 
 **App domain:** Translation
 
 The user taps a word in the reader, a transcript, Listen-along, or a cloze card. The drawer opens at once and shows a load state.
+
+On iOS, each part-of-speech label starts on the same line as its first definition. The lookup sheet keeps the save action in its footer and groups secondary actions under More actions. The handle toggles between two heights on tap. A downward drag collapses the expanded sheet or dismisses the compact sheet.
 
 ### Path
 
@@ -105,20 +109,12 @@ sequenceDiagram
 
   User->>Drawer: Click In context
   Drawer->>Read: onRequestContextTranslation
-  Read->>Claude: translateWord(word, sentence)
-  Claude->>API: POST /api/translate type=word
+  Read->>Claude: explainWordInContext(word, sentence)
+  Claude->>API: POST /api/translate with explainContext
   API->>API: reserve entitlements
-  alt Managed Free
-    API->>LLM: complete task context-simple
-  else Paid or BYOK
-    API->>LLM: completeJson task context-rich
-  end
-  LLM-->>Read: translation plus senses
-  alt Dict entry already shown
-    Read->>Drawer: aiContextTranslation only
-  else No dict entry
-    Read->>Drawer: overwrite translation
-  end
+  API->>LLM: complete task context-simple
+  LLM-->>Read: explanation in the user's translation language
+  Read->>Drawer: explanation and original sentence
 ```
 
 ### Key files
@@ -128,17 +124,17 @@ sequenceDiagram
 | Drawer | `src/components/TranslationDrawer/index.tsx` | `onRequestContextTranslation` |
 | Reader | `src/app/read/[bookId]/page.tsx` | `requestContextTranslation` |
 | Practice | `src/app/practice/page.tsx` | `requestContextTranslation` |
-| Client | `src/lib/claude.ts` | `translateWord` |
+| Client | `src/lib/claude.ts` | `explainWordInContext`, `translateWord` |
 | Sentence test | `src/lib/words.ts` | `sentenceContainsWord` |
 | API | `api/src/routes/translate.ts` | `POST /` |
-| Prompt | `api/src/lib/translate-prompts.ts` | `buildSimpleContextPrompt`, `buildWordEntryPrompt` |
+| Prompt | `api/src/lib/translate-prompts.ts` | `buildContextExplanationPrompt` |
 
 ### Branches
 
 - Nested lookup keeps the original sentence. If the nested word is not in that sentence, the drawer hides the In-context action.
 - Practice replaces the shown gloss and clears `dictEntry`.
-- Managed Free meters `contextTranslationsPerDay` and uses a short prompt.
-- Paid and BYOK use `llmRequestsPerMonth` and a rich word entry.
+- Managed Free meters `contextTranslationsPerDay` for context explanations.
+- Paid and BYOK use `llmRequestsPerMonth` for context explanations.
 - Managed Free burst for this route is `detail` (10 per 60 seconds).
 
 ## Phrase selection

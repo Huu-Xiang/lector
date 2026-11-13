@@ -42,7 +42,6 @@ export interface TranslationDrawerProps {
       of the dictionary senses (but `entry` stays in state so the page's save
       handlers can keep the dictionary translation as canonical). */
   aiContextTranslation?: string | null;
-  aiContextPartOfSpeech?: string | null;
   /** Rich AI phrase details — populated when the word is a multi-word phrase. */
   aiPhraseDetails?: {
     literalBreakdown?: string;
@@ -77,6 +76,10 @@ export interface TranslationDrawerProps {
     autoSave: boolean;
   };
 
+  contextError?: string | null;
+  repeatLookup?: boolean;
+  onSaveWord?: () => void;
+  onUndoSave?: () => void;
   onClose: () => void;
   onSpeak: (text: string) => void;
   /** Optional — provide to enable level 1-4 buttons in the footer. */

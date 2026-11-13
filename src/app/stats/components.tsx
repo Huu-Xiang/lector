@@ -53,11 +53,13 @@ export function StatCard({
   sublabel,
   icon,
   color = 'blue',
+  compact = false,
 }: {
   label: string;
   value: string | number;
   sublabel?: string;
   icon?: React.ReactNode;
+  compact?: boolean;
   color?: 'blue' | 'green' | 'yellow' | 'purple' | 'orange' | 'pink';
 }) {
   const format = useFormatter();
@@ -71,16 +73,20 @@ export function StatCard({
   };
 
   return (
-    <div className="panel p-6 transition-transform hover:scale-[1.02]">
+    <div
+      className={
+        compact ? 'panel min-w-0 p-3' : 'panel p-6 transition-transform hover:scale-[1.02]'
+      }
+    >
       <div className="flex items-start justify-between">
         <div>
           <p className="text-sm font-medium text-muted-foreground">{label}</p>
-          <p className={`mt-1 text-4xl font-bold ${textColors[color]}`}>
+          <p className={`mt-1 font-bold ${compact ? 'text-2xl' : 'text-4xl'} ${textColors[color]}`}>
             {typeof value === 'number' ? format.number(value) : value}
           </p>
           {sublabel && <p className="mt-1 text-sm text-muted-foreground">{sublabel}</p>}
         </div>
-        {icon && <div className={`${textColors[color]} opacity-60`}>{icon}</div>}
+        {icon && !compact && <div className={`${textColors[color]} opacity-60`}>{icon}</div>}
       </div>
     </div>
   );

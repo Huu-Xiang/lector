@@ -63,6 +63,7 @@ test.describe('Nested dictionary definitions (reader)', () => {
 
   test.beforeEach(async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 800 });
+    await page.request.put(apiUrl('/api/settings/autoSaveLookups'), { data: { value: true } });
 
     // AI fallback stub — only consulted when the dict misses.
     await page.route('**/api/translate', async (route) => {
@@ -101,6 +102,7 @@ test.describe('Nested dictionary definitions (reader)', () => {
   });
 
   test.afterEach(async ({ page }) => {
+    await page.request.delete(apiUrl('/api/settings/autoSaveLookups'));
     if (collectionId) await page.request.delete(apiUrl(`/api/collections/${collectionId}`));
     await cleanupVocab(page, TEST_WORDS);
   });

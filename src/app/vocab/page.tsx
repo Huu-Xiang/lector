@@ -1,5 +1,6 @@
 'use client';
 
+import { useIsNativeApp } from '@/lib/native-app';
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
@@ -61,6 +62,8 @@ function vocabStats(vocab: VocabEntry[]): { total: number; byState: Record<WordS
 export default function VocabPage() {
   const router = useRouter();
   const t = useTranslations('vocab.page');
+  const nativeApp = useIsNativeApp();
+  const tStats = useTranslations('vocab.stats');
   const activeLang = useActiveLanguage();
   const ankiTransport = useAnkiTransport();
   const postOnboardingTour = usePostOnboardingTour();
@@ -441,11 +444,19 @@ export default function VocabPage() {
           )}
         </div>
       </PageHeader>
-      {stats && (
-        <div className="mb-6">
-          <VocabStats stats={stats} />
-        </div>
-      )}
+      {stats &&
+        (nativeApp ? (
+          <details className="mb-3">
+            <summary className="flex min-h-[44px] cursor-pointer items-center text-sm text-muted-foreground">
+              {tStats('total')} · {stats.total}
+            </summary>
+            <VocabStats stats={stats} />
+          </details>
+        ) : (
+          <div className="mb-6">
+            <VocabStats stats={stats} />
+          </div>
+        ))}
       {isLoading ? (
         <PageOutline variant="list" />
       ) : (

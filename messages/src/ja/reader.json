@@ -75,8 +75,20 @@
       "close": "閉じる",
       "closeEsc": "閉じる（Esc）",
       "lookingUp": "調べています…",
+      "dictionaryDetails": "辞書の詳細",
       "showDictionary": "辞書を表示（{count}）",
       "noDefinition": "意味が見つかりませんでした。",
+      "backToDefinition": "意味に戻る",
+      "moreActions": "その他の操作",
+      "expandSheet": "意味を広げる",
+      "collapseSheet": "意味を折りたたむ",
+      "saveWord": "単語帳に追加",
+      "wordSaved": "単語帳に追加済み",
+      "undoSave": "取り消す",
+      "repeatLookup": "以前にも調べた単語です。",
+      "originalDefinition": "元の意味",
+      "contextHeading": "この文での意味",
+      "contextRetry": "文脈の説明を再試行",
       "inContextTitle": "文脈をふまえて AI で翻訳する",
       "inContext": "文脈で翻訳",
       "askingAi": "AI に確認中…",
@@ -92,7 +104,7 @@
       "showAll": "すべて表示（{count}）",
       "hearSentence": "文を聞く",
       "onboardingAdded": "最初の復習に追加しました",
-      "onboardingChoose": "レベル 1〜4 を選ぶと、この単語を追加できます",
+      "onboardingChoose": "「単語帳に追加」を押して単語を保存できます。",
       "onboardingReady": "{count}/{target} 準備完了",
       "saveAtLevel": "学習レベル {level} で保存",
       "levelTitle": "レベル {level}",
@@ -204,7 +216,7 @@
       },
       "save": {
         "title": "この単語を復習用に保存",
-        "body": "意味パネルでレベルを 1〜4 から選んでください。単語が復習リストに入ります。"
+        "body": "意味のパネルで「単語帳に追加」を押すと、復習リストに入ります。"
       },
       "practice": {
         "title": "読んだばかりの単語を練習",

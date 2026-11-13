@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
-import { ChevronDown, Sparkles } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import RecommendedForYou from '@/components/RecommendedForYou';
 import ReadingLevelPicker, { VocabTestLink } from '@/components/ReadingLevelPicker';
@@ -43,11 +43,9 @@ function rememberedProfile(language: string): Profile | null {
 export default function HomeRecommendations({
   language,
   defaultOpen,
-  onMore,
 }: {
   language: string;
   defaultOpen: boolean;
-  onMore: () => void;
 }) {
   const t = useTranslations('recommend');
   const router = useRouter();
@@ -74,8 +72,8 @@ export default function HomeRecommendations({
 
   useEffect(() => {
     let cancelled = false;
-    /* eslint-disable-next-line react-hooks/set-state-in-effect -- localStorage is client-only */
-    setChosen(readCollapsed(language) === null ? null : !readCollapsed(language));
+    const collapsed = readCollapsed(language);
+    setChosen(collapsed === null ? null : !collapsed);
     setEmpty(false);
     Promise.all([
       getSettingCached<Record<string, string>>('readingLevels').catch(() => undefined),
@@ -93,6 +91,7 @@ export default function HomeRecommendations({
   function toggle() {
     const next = !expanded;
     setChosen(next);
+    if (!next) setPicking(false);
     try {
       localStorage.setItem(`${COLLAPSED_KEY}-${language}`, next ? '0' : '1');
     } catch {
@@ -108,71 +107,64 @@ export default function HomeRecommendations({
   if (profile === null || empty) return null;
 
   return (
-    <section className="panel mb-4 p-3 sm:mb-8 sm:p-5" data-testid="home-recommend">
-      <div
-        className={`flex flex-wrap items-center justify-between gap-3 sm:items-start ${expanded ? 'mb-4' : ''}`}
-      >
-        <div className="min-w-48 flex-1">
-          <h2 className="flex items-center gap-2 text-base font-semibold text-foreground sm:text-lg">
-            <Sparkles className="h-4 w-4 text-primary" aria-hidden="true" />
-            {t('homeTitle')}
-          </h2>
-          <p className={`mt-1 text-sm text-muted-foreground ${expanded ? '' : 'max-sm:hidden'}`}>
-            {profile.level ? t('homeHintLevel', { level: profile.level }) : t('homeHint')}
-          </p>
-          <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1">
-            <button
-              type="button"
+    <section
+      className="mb-4 rounded-xl border border-border bg-card px-3 sm:mb-6 sm:px-5"
+      data-testid="home-recommend"
+    >
+      <div className="flex min-h-14 items-center justify-between gap-2">
+        <h2 className="text-base font-semibold text-foreground">{t('homeTitle')}</h2>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={toggle}
+          aria-expanded={expanded}
+          aria-label={expanded ? t('collapse') : t('expand')}
+          title={expanded ? t('collapse') : t('expand')}
+          data-testid="home-recommend-toggle"
+        >
+          <ChevronDown className={`h-4 w-4 transition-transform ${expanded ? '' : '-rotate-90'}`} />
+        </Button>
+      </div>
+      {expanded && (
+        <>
+          <RecommendedForYou
+            language={language}
+            level={profile.level}
+            interests={profile.interests}
+            onStart={open}
+            onEmpty={markEmpty}
+            compact
+          />
+          <div className="flex flex-wrap items-center gap-x-3 border-t border-border py-1">
+            <Button
+              variant="ghost"
+              className="min-h-11 px-2 text-muted-foreground"
               onClick={() => setPicking(!picking)}
               aria-expanded={picking}
               data-testid="home-recommend-level"
-              className="min-h-11 text-sm font-medium text-primary underline-offset-4 hover:underline sm:min-h-0"
             >
               {profile.level ? t('changeLevel') : t('setLevel')}
-            </button>
-            {language === 'en' && <VocabTestLink from="library" testId="home-vocab-test-link" />}
-          </div>
-        </div>
-        <div className="flex shrink-0 items-center gap-1">
-          {expanded && (
-            <Button variant="outline" size="sm" onClick={onMore} data-testid="home-recommend-more">
-              {t('more')}
             </Button>
+            {language === 'en' && (
+              <VocabTestLink
+                from="library"
+                className="min-h-11 px-2 text-muted-foreground"
+                testId="home-vocab-test-link"
+              />
+            )}
+          </div>
+          {picking && (
+            <div className="pb-3">
+              <ReadingLevelPicker
+                level={profile.level}
+                onPick={pickLevel}
+                disabled={saving}
+                label={t('levelPickerLabel')}
+                testIdPrefix="home-level"
+              />
+            </div>
           )}
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggle}
-            aria-expanded={expanded}
-            aria-label={expanded ? t('collapse') : t('expand')}
-            title={expanded ? t('collapse') : t('expand')}
-            data-testid="home-recommend-toggle"
-          >
-            <ChevronDown
-              className={`h-4 w-4 transition-transform ${expanded ? '' : '-rotate-90'}`}
-            />
-          </Button>
-        </div>
-      </div>
-      {picking && (
-        <div className={expanded ? 'mb-4' : 'mt-3'}>
-          <ReadingLevelPicker
-            level={profile.level}
-            onPick={pickLevel}
-            disabled={saving}
-            label={t('levelPickerLabel')}
-            testIdPrefix="home-level"
-          />
-        </div>
-      )}
-      {expanded && (
-        <RecommendedForYou
-          language={language}
-          level={profile.level}
-          interests={profile.interests}
-          onStart={open}
-          onEmpty={markEmpty}
-        />
+        </>
       )}
     </section>
   );

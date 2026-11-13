@@ -1,16 +1,18 @@
 # Vocabulary domain
 
+On iOS, the word list follows a compact total. Expand the total to see the breakdown by word state.
+
 This domain stores entries that the user owns. It also stores the known-word map. The reader uses `knownWords` for colour. The vocab list uses `vocab`. A save writes both.
 
 ## Save vocab and set word state
 
 **App domain:** Vocabulary
 
-There is no Save button. A level, Known, Ignore, keyboard `S`, or Add to Anki creates or updates a row.
+Add to vocabulary or keyboard `S` saves a word at level 1. A level, Known, Ignore, or Add to Anki also creates or updates a row. Undo restores the word’s prior vocabulary state from the current lookup.
 
 ```mermaid
 flowchart TD
-  action[Level, Known, Ignore, S, or Anki] --> apply[ReadPage.applyReaderWordState]
+  action[Add to vocabulary, level, Known, Ignore, S, or Anki] --> apply[ReadPage.applyReaderWordState]
   apply --> patch[patchWordState optimistic colour]
   apply --> row{Vocab row exists?}
   row -->|no| save[saveVocab POST /api/vocab]
@@ -21,13 +23,17 @@ flowchart TD
   cache -.-> translation.md
 ```
 
+### Lookups and saving
+
+By default a lookup only opens the definition. In a reader session, a second lookup of an unsaved word at a different position can show a one-time hint beside Add to vocabulary.
+
 ### Auto-save of looked-up words
 
-When the setting `autoSaveLookups` is not `false`, the reader saves a looked-up single word once its meaning arrives. The setting loads first. A failed read or an unloaded setting means no auto-save.
+Only when the setting `autoSaveLookups` is `true`, the reader saves a looked-up single word once its meaning arrives. The setting loads first. A failed read or an unloaded setting means no auto-save.
 
 - The save is silent. It never changes a word that already has a state, and a failure shows nothing.
 - One save runs per word at a time (`createKeyedGuard`). Key `S` pressed during an auto-save does not post a second row.
-- The guide lesson and nested lookups do not auto-save.
+- Nested lookups do not auto-save. The guide shows a separate save step when auto-save is off.
 
 | Role | Path | Function |
 | --- | --- | --- |

@@ -30,6 +30,7 @@ import {
   peekLessonsForCollection,
   QUERY_SCOPES,
   saveVocab,
+  deleteVocabEntry,
   updateVocabEntry,
   getSetting,
   getVocabByText,
@@ -43,12 +44,17 @@ import { addWordCard, addClozeCard, buildSourceLinkHtml } from '@/lib/anki';
 import { queueForAnki } from '@/lib/anki-queue';
 import { useAnkiTransport } from '@/lib/anki-transport';
 import { useLectorMode } from '@/lib/use-env';
-import { createKeyedGuard, resolveAutoSave } from '@/lib/auto-save-lookups';
+import {
+  createKeyedGuard,
+  createRepeatLookupTracker,
+  resolveAutoSave,
+} from '@/lib/auto-save-lookups';
 import { useReadingActivity } from '@/lib/use-reading-activity';
 import { useRefreshOnReturn } from '@/lib/use-refresh-on-return';
 import {
   CONTENT_FILTERED,
   translateWord,
+  explainWordInContext,
   translatePhrase,
   streamWordGloss,
   enrichWord,
@@ -155,6 +161,12 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
   // The one lookup whose word may be saved on its own: set for a single word
   // opened from the reader, cleared once it is used.
   const autoSaveRequestId = useRef(0);
+  const trackRepeatLookup = useRef(createRepeatLookupTracker()).current;
+  const [repeatLookup, setRepeatLookup] = useState(false);
+  const [contextError, setContextError] = useState<string | null>(null);
+  const [savedInLookup, setSavedInLookup] = useState<{ id: string; previous?: VocabEntry } | null>(
+    null,
+  );
   const nestedLookupRef = useRef(false);
   // For transcript lessons (#334): the segment source of the word currently in
   // the drawer, so a mined card can carry its timestamped YouTube link.
@@ -168,7 +180,6 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     partOfSpeech: null,
     dictEntry: null,
     aiContextTranslation: null,
-    aiContextPartOfSpeech: null,
     aiStructured: null,
     phraseDetails: null,
     isLoading: false,
@@ -461,7 +472,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
   );
 
   const trackOnboardingVocab = useCallback(
-    async (entry: VocabEntry, state: VocabEntry['state']) => {
+    async (entry: VocabEntry, state: VocabEntry['state'], saveRevision?: string) => {
       if (!onboardingActive) return null;
 
       const shared = {
@@ -493,7 +504,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
               ...shared,
               eventType: 'vocab.saved',
               properties: { ...shared.properties, practiceCardId: card.id },
-              idempotencyKey: `onboarding:saved:${entry.id}`,
+              idempotencyKey: `onboarding:saved:${entry.id}${saveRevision ? `:${saveRevision}` : ''}`,
             });
           }
         }
@@ -509,7 +520,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
 
   // Handle word click from reader
   const handleWordClick = useCallback(
-    async (word: string, sentence: string, source?: WordSource) => {
+    async (word: string, sentence: string, source?: WordSource, occurrence?: string) => {
       // Remember (or clear) the transcript segment this word came from so a
       // subsequent Anki mine can attach the timestamped source link.
       currentWordSourceRef.current = source ?? null;
@@ -532,6 +543,17 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
 
       const requestId = ++translationRequestId.current;
       autoSaveRequestId.current = isPhrase || nested ? 0 : requestId;
+      setContextError(null);
+      setSavedInLookup(null);
+      setRepeatLookup(
+        !isPhrase &&
+          !nested &&
+          !!sentence.trim() &&
+          trackRepeatLookup(
+            `${activeLang.code}:${foldWord(word, activeLang)}`,
+            `${lessonId}:${occurrence ?? sentence.trim()}`,
+          ),
+      );
 
       const wordsToSpeak = word.split(/\s+/).slice(0, 15).join(' ');
       speak(wordsToSpeak);
@@ -545,7 +567,6 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         partOfSpeech: isPhrase ? 'phrase' : null,
         dictEntry: null,
         aiContextTranslation: null,
-        aiContextPartOfSpeech: null,
         aiStructured: null,
         phraseDetails: null,
         isLoading: true,
@@ -737,7 +758,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         }
       }
     },
-    [activeLang, trackOnboardingLookup, t],
+    [activeLang, lessonId, trackOnboardingLookup, trackRepeatLookup, t],
   );
 
   const closeWordPanel = useCallback(() => {
@@ -757,81 +778,31 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
   );
 
   const requestContextTranslation = useCallback(async () => {
+    if (wordPanel.isContextLoading || wordPanel.aiContextTranslation) return;
     const requestId = translationRequestId.current;
-    const before = {
-      translation: wordPanel.translation,
-      aiContextTranslation: wordPanel.aiContextTranslation,
-    };
+    setContextError(null);
     setWordPanel((prev) => ({ ...prev, isContextLoading: true }));
     try {
-      const result = await translateWord(wordPanel.word, wordPanel.sentence, (cumulative) => {
-        if (requestId !== translationRequestId.current) return;
-        setWordPanel((prev) =>
-          prev.dictEntry
-            ? { ...prev, aiContextTranslation: cumulative }
-            : { ...prev, translation: cumulative, isStreamingGloss: true },
-        );
-      });
-      const native = (await loadNative()) ?? 'en';
+      const result = await explainWordInContext(wordPanel.word, wordPanel.sentence);
       if (requestId !== translationRequestId.current) return;
-      const structured =
-        result.senses && result.senses.length > 0
-          ? {
-              senses: result.senses,
-              ipa: result.ipa,
-              etymology: result.etymology,
-              relatedForms: result.relatedForms,
-            }
-          : null;
-      setWordPanel((prev) => {
-        // When the dict already has the word: stash the AI gloss in the
-        // override slot so the drawer renders it, but leave `translation`
-        // (dict's joined senses) alone — that's what save handlers persist.
-        // When the dict has no entry: the AI gloss IS the most authoritative
-        // translation we have, so overwrite canonical too.
-        if (prev.dictEntry) {
-          return {
-            ...prev,
-            aiContextTranslation: result.translation,
-            aiContextPartOfSpeech: result.partOfSpeech || null,
-            isContextLoading: false,
-            isStreamingGloss: false,
-          };
-        }
-        return {
-          ...prev,
-          translation: result.translation,
-          translationLang: native,
-          partOfSpeech: result.partOfSpeech || prev.partOfSpeech,
-          aiStructured: structured ?? prev.aiStructured,
-          isContextLoading: false,
-          isStreamingGloss: false,
-          isDictionaryResult: false,
-        };
-      });
-    } catch (err) {
-      if (requestId !== translationRequestId.current) return;
-      console.error('Context translation error:', err);
       setWordPanel((prev) => ({
         ...prev,
-        ...before,
+        aiContextTranslation: result.translation,
         isContextLoading: false,
-        isStreamingGloss: false,
-        error: isContentFiltered(err) ? t('aiDeclined') : t('contextFailed'),
       }));
+    } catch (err) {
+      if (requestId !== translationRequestId.current) return;
+      setContextError(isContentFiltered(err) ? t('aiDeclined') : t('contextFailed'));
+      setWordPanel((prev) => ({ ...prev, isContextLoading: false }));
     }
   }, [
     wordPanel.word,
     wordPanel.sentence,
-    wordPanel.translation,
+    wordPanel.isContextLoading,
     wordPanel.aiContextTranslation,
     t,
   ]);
 
-  // Enrich — upgrade the fast streamed gloss to the full dictionary entry
-  // (senses / IPA / etymology / related forms). Off the critical path: the user
-  // already has a meaning on screen; this just fills in the rich detail and, on
-  // accept, gives the cache a proper multi-sense entry instead of a bare gloss.
   const enrichTranslation = useCallback(async () => {
     const requestId = translationRequestId.current;
     setWordPanel((prev) => ({ ...prev, isEnriching: true }));
@@ -915,7 +886,14 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       if (!wordPanel.translation) return;
 
       const requestId = translationRequestId.current;
-      const existing = await resolveExistingEntry();
+      let existing: VocabEntry | undefined;
+      try {
+        existing = await resolveExistingEntry();
+      } catch {
+        if (!auto) toast.error(t('saveFailed'));
+        return;
+      }
+      if (existing && existing.state !== 'new') return;
       if (auto) {
         const readerState = lookupByVocabKeys(
           readerWordStatesRef.current,
@@ -933,7 +911,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         sentence: wordPanel.sentence,
         translation: wordPanel.translation,
         translationLang: wordPanel.translationLang,
-        state: existing?.state || 'level1',
+        state: 'level1',
         stateUpdatedAt: new Date(),
         reviewCount: existing?.reviewCount || 0,
         bookId: lessonId,
@@ -944,24 +922,31 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       const rollbackReaderState = applyReaderWordState(wordPanel.word, entry.state);
 
       // A failed save must not paint the word as saved (#232).
-      const saving = saveVocab(entry, { silentPlanLimit: auto });
+      const saving = existing
+        ? updateVocabState(existing.id, entry.state)
+            .then((ok) => (ok ? existing.id : null))
+            .catch(() => null)
+        : saveVocab(entry, { silentPlanLimit: auto }).catch(() => null);
       // A K or X pressed while this save runs waits for it instead of adding a second row.
-      if (auto) existingEntryLookup.current = saving.then((id) => (id ? entry : undefined));
-      if (!(await saving)) {
+      if (requestId === translationRequestId.current) {
+        existingEntryLookup.current = saving.then((id) => (id ? entry : existing));
+      }
+      const id = await saving;
+      if (!id) {
         rollbackReaderState();
         if (!auto) toast.error(t('saveFailed'));
         return;
       }
-      await incrementDailyStat('newWordsSaved', 1, { silentPlanLimit: auto });
+      const saved = existing ? { ...existing, state: entry.state } : { ...entry, id };
+      if (requestId === translationRequestId.current) {
+        existingEntryLookup.current = Promise.resolve(saved);
+        setWordPanel((prev) => ({ ...prev, existingEntry: saved }));
+      }
+      void incrementDailyStat('newWordsSaved', 1, { silentPlanLimit: auto }).catch(() => undefined);
       // The shared dictionary only takes meanings a reader chose to keep.
       if (!auto) persistAcceptedTranslation();
-      void trackOnboardingVocab(entry, entry.state);
-
-      if (auto && requestId !== translationRequestId.current) return;
-      setWordPanel((prev) => ({
-        ...prev,
-        existingEntry: entry,
-      }));
+      await trackOnboardingVocab(saved, saved.state, existing ? uuidv4() : undefined);
+      if (requestId === translationRequestId.current) setSavedInLookup({ id, previous: existing });
     },
     [
       wordPanel,
@@ -985,6 +970,52 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     },
     [wordPanel.translation, wordPanel.word, vocabTextOf, saveWordNow, saveGuard],
   );
+
+  const undoLookupSave = useCallback(async () => {
+    if (!savedInLookup || wordPanel.existingEntry?.id !== savedInLookup.id) return;
+    const requestId = translationRequestId.current;
+    await saveGuard(vocabTextOf(wordPanel.word), async () => {
+      try {
+        const { id, previous } = savedInLookup;
+        if (previous) {
+          if (!(await updateVocabState(id, previous.state))) throw new Error('Undo failed');
+        } else {
+          await deleteVocabEntry(id);
+        }
+        applyReaderWordState(wordPanel.word, 'new');
+        if (requestId === translationRequestId.current) {
+          existingEntryLookup.current = Promise.resolve(previous);
+          setSavedInLookup(null);
+          setWordPanel((prev) => ({ ...prev, existingEntry: previous ?? null }));
+        }
+        if (onboardingActive) {
+          await recordLearnerEvent({
+            eventType: 'vocab.state_changed',
+            language: activeLang.code,
+            lessonId,
+            vocabId: id,
+            properties: { source: 'onboarding', state: 'new', undoSave: true },
+          })
+            .then(refreshOnboarding)
+            .catch(() => undefined);
+        }
+      } catch {
+        toast.error(t('saveFailed'));
+      }
+    });
+  }, [
+    savedInLookup,
+    wordPanel.existingEntry,
+    wordPanel.word,
+    saveGuard,
+    vocabTextOf,
+    applyReaderWordState,
+    onboardingActive,
+    activeLang.code,
+    lessonId,
+    refreshOnboarding,
+    t,
+  ]);
 
   // Save a looked-up single word once its meaning has arrived (the lookup
   // that opened the drawer, not a nested one).
@@ -1525,7 +1556,12 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         e.preventDefault();
         e.stopPropagation();
         ignoreWord();
-      } else if (key === 's' && !wordPanel.existingEntry && wordPanel.translation) {
+      } else if (
+        key === 's' &&
+        (!wordPanel.existingEntry || wordPanel.existingEntry.state === 'new') &&
+        wordPanel.translation &&
+        !wordPanel.isStreamingGloss
+      ) {
         e.preventDefault();
         e.stopPropagation();
         saveWordToVocab();
@@ -1543,6 +1579,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     wordPanel.word,
     wordPanel.existingEntry,
     wordPanel.translation,
+    wordPanel.isStreamingGloss,
     closeWordPanel,
     markAsKnown,
     ignoreWord,
@@ -1711,7 +1748,6 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
           aiTranslation={wordPanel.translation}
           aiPartOfSpeech={wordPanel.partOfSpeech}
           aiContextTranslation={wordPanel.aiContextTranslation}
-          aiContextPartOfSpeech={wordPanel.aiContextPartOfSpeech}
           aiPhraseDetails={wordPanel.phraseDetails}
           isDictionaryResult={wordPanel.isDictionaryResult}
           isLoading={wordPanel.isLoading}
@@ -1737,6 +1773,18 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
           onMarkKnown={markAsKnown}
           onIgnore={ignoreWord}
           onRequestContextTranslation={requestContextTranslation}
+          contextError={contextError}
+          onSaveWord={
+            !wordPanel.word.includes(' ') && wordPanel.translation && !wordPanel.isStreamingGloss
+              ? saveWordToVocab
+              : undefined
+          }
+          onUndoSave={
+            savedInLookup && wordPanel.existingEntry?.state === 'level1'
+              ? undoLookupSave
+              : undefined
+          }
+          repeatLookup={repeatLookup && autoSaveLookups === false}
           onEnrich={canEnrich ? enrichTranslation : undefined}
           onRetranslate={retranslateWithAi}
           onLookupWord={handleNestedLookup}

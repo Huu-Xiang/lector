@@ -1878,6 +1878,10 @@ const languageHelpOps: Record<string, OperationDoc> = {
           type: { type: 'string', enum: ['word', 'phrase'] },
           sentence: { type: 'string', description: 'The sentence around it. Improves the result.' },
           language: { type: 'string' },
+          explainContext: {
+            type: 'boolean',
+            description: 'Return a short explanation of the selected word in the given sentence.',
+          },
           stream: {
             type: 'boolean',
             description:
@@ -1889,7 +1893,8 @@ const languageHelpOps: Record<string, OperationDoc> = {
     },
     responses: {
       '200': {
-        description: 'A phrase returns a plain translation. A word returns a full entry.',
+        description:
+          'A context explanation returns text. A regular word lookup can return a full entry.',
         schema: {
           oneOf: [
             { type: 'object', properties: { translation: { type: 'string' } } },

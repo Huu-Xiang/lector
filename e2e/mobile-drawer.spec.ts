@@ -169,3 +169,77 @@ test.describe('Word drawer on small screens', () => {
     await expect(page.getByTestId('translation-drawer-handle')).toBeHidden();
   });
 });
+
+test.describe('iOS lookup sheet', () => {
+  test.use({
+    viewport: { width: 375, height: 667 },
+    userAgent: 'Mozilla/5.0 (iPhone) AppleWebKit/605.1.15 Mobile/15E148 ReadfoxApp/1',
+  });
+
+  test('keeps definitions above a compact footer and reveals word actions on demand', async ({
+    page,
+  }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.route('**/api/dictionary/lookup?*', (route) =>
+      route.fulfill({
+        json: {
+          entry: {
+            word: 'Perdekraal-fees',
+            rank: 1200,
+            senses: [{ partOfSpeech: 'noun', gloss: 'A festival.' }],
+          },
+        },
+      }),
+    );
+    await page.request.put(apiUrl('/api/settings/autoSaveLookups'), { data: { value: false } });
+    const collectionId = await openLesson(page);
+    try {
+      await page.getByRole('button', { name: 'Look up Perdekraal-fees' }).first().click();
+      const drawer = page.getByTestId('translation-drawer');
+      const more = drawer.getByTestId('native-lookup-actions');
+      const handle = drawer.getByTestId('translation-drawer-handle');
+      const save = drawer.getByTestId('save-looked-up-word');
+      await expect(save).toBeVisible();
+      await expect(drawer.getByText(/A festival\./).first()).toBeInViewport();
+      await expect(drawer.getByTestId('lookup-original-sentence')).toBeInViewport();
+      await expect(drawer.getByTestId('entry-badges')).toBeHidden();
+      await expect(drawer.getByTestId('word-level-1')).toHaveCount(0);
+
+      const dictionaryDetails = drawer.getByText('Dictionary details', { exact: true });
+      await dictionaryDetails.click();
+      await expect(drawer.getByTestId('entry-badges')).toBeVisible();
+      await dictionaryDetails.click();
+
+      await more.click();
+      await expect(more).toHaveAttribute('aria-expanded', 'true');
+      await expect(drawer.getByTestId('word-level-1')).toBeVisible();
+      await more.click();
+      await expect(drawer.getByText(/A festival\./).first()).toBeInViewport();
+
+      await handle.press('Enter');
+      await expect(handle).toHaveAttribute('aria-expanded', 'true');
+      await expect.poll(async () => (await drawer.boundingBox())!.height).toBeGreaterThan(500);
+
+      const grip = (await handle.boundingBox())!;
+      const x = grip.x + grip.width / 2;
+      const y = grip.y + grip.height / 2;
+      await page.mouse.move(x, y);
+      await page.mouse.down();
+      await page.mouse.move(x, y + 120, { steps: 5 });
+      await expect(drawer).toHaveAttribute('data-dragging', '');
+      await expect.poll(async () => (await drawer.boundingBox())!.height).toBeGreaterThan(500);
+      await page.mouse.up();
+      await expect(handle).toHaveAttribute('aria-expanded', 'false');
+
+      const compact = (await handle.boundingBox())!;
+      await page.mouse.move(x, compact.y + compact.height / 2);
+      await page.mouse.down();
+      await page.mouse.move(x, compact.y + 120, { steps: 5 });
+      await page.mouse.up();
+      await expect(drawer).toHaveAttribute('aria-hidden', 'true');
+    } finally {
+      await page.request.delete(apiUrl(`/api/collections/${collectionId}`));
+      await page.request.delete(apiUrl('/api/settings/autoSaveLookups'));
+    }
+  });
+});

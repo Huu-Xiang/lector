@@ -1,5 +1,7 @@
 # Stats domain
 
+On iOS, the four headline totals appear before the fluency charts.
+
 This domain counts activity for the day, streaks, and fluency. Topic domains on the radar are not app domains. See `api/src/lib/domains.ts`.
 
 ## Daily stats

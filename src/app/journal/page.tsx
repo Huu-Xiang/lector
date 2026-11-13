@@ -206,13 +206,13 @@ export default function JournalPage() {
               autoFocus
             />
 
-            <div className="flex items-center justify-between">
+            <div className="flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-3 text-xs text-muted-foreground">
                 <span>{t('words', { count: wordCount })}</span>
                 {saveStatus && <span className="text-primary">{saveStatus}</span>}
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <Button
                   onClick={handleSaveDraft}
                   disabled={isSaving || isSubmitting || !bodyText.trim()}

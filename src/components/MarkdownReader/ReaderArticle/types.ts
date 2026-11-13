@@ -22,7 +22,7 @@ export interface ReaderArticleProps {
   annotationMode: AnnotationMode;
   highlightedPhrase: string[];
   activeWord: ActiveReaderWord | null;
-  onWordClick: (word: string, sentence: string) => void;
+  onWordClick: (word: string, sentence: string, source?: undefined, occurrence?: string) => void;
   onActivateWord: (word: ActiveReaderWord) => void;
   onClearPhrase: () => void;
 }

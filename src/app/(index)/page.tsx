@@ -1,5 +1,6 @@
 'use client';
 
+import { useIsNativeApp } from '@/lib/native-app';
 import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
@@ -68,12 +69,10 @@ import { useQueryRefresh } from '@/lib/use-query-refresh';
 import { useTabScroll } from '@/lib/tab-scroll';
 import { toast } from 'sonner';
 import { useActiveLanguage } from '@/utils/hooks';
-import { useIsNativeApp } from '@/lib/native-app';
 
 export default function Home() {
   const t = useTranslations('library');
-  // The app keeps one prominent button in the header; Import holds it.
-  const inApp = useIsNativeApp();
+  const nativeApp = useIsNativeApp();
   const router = useRouter();
   const activeLanguage = useActiveLanguage().code;
   const [libraryView] = useLibraryView();
@@ -445,7 +444,7 @@ export default function Home() {
                 e.preventDefault();
                 handleCreateGroup();
               }}
-              className="flex items-center gap-2"
+              className="flex w-full items-center gap-2 sm:w-auto"
             >
               <input
                 type="text"
@@ -454,14 +453,14 @@ export default function Home() {
                 placeholder={t('page.groupNamePlaceholder')}
                 autoFocus
                 data-testid="new-group-input"
-                className="rounded-lg border border-input bg-background px-3 py-1.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none"
+                className="min-w-0 flex-1 rounded-lg border border-input bg-background px-3 py-1.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none"
               />
-              <Button type="submit" data-testid="new-group-submit">
+              <Button type="submit" variant="outline" data-testid="new-group-submit">
                 {t('page.addGroup')}
               </Button>
               <Button
                 type="button"
-                variant="destructive"
+                variant="ghost"
                 onClick={() => {
                   setIsCreatingGroup(false);
                   setNewGroupName('');
@@ -473,11 +472,13 @@ export default function Home() {
           ) : (
             <Button
               onClick={() => setIsCreatingGroup(true)}
-              variant={inApp ? 'outline' : 'default'}
+              variant="ghost"
+              className={nativeApp ? 'max-sm:size-11 max-sm:px-0' : 'max-sm:px-2'}
+              aria-label={t('page.newGroup')}
               data-testid="new-group-btn"
             >
               <Folder size="16" />
-              <span className="max-sm:sr-only">{t('page.newGroup')}</span>
+              <span className={nativeApp ? 'max-sm:sr-only' : undefined}>{t('page.newGroup')}</span>
             </Button>
           )}
 
@@ -609,11 +610,9 @@ export default function Home() {
             onSave={handlePasteImportSave}
           />
 
-          <HomeRecommendations
-            language={activeLanguage}
-            defaultOpen={collections.length < 3}
-            onMore={() => setIsFreeBooksOpen(true)}
-          />
+          {(!nativeApp || (collections.length === 0 && !hasGroups)) && (
+            <HomeRecommendations language={activeLanguage} defaultOpen={collections.length < 3} />
+          )}
 
           {collections.length > 0 || hasGroups ? (
             <div className="space-y-6 sm:space-y-10">
@@ -736,11 +735,12 @@ export default function Home() {
             </div>
           ) : (
             <EmptyState
-              onBrowseBooks={() => setIsFreeBooksOpen(true)}
-              onImport={libraryImportHandlers.onFileImport}
               onAddStarter={starterAvailable ? handleAddStarter : undefined}
               isAddingStarter={isAddingStarter}
             />
+          )}
+          {nativeApp && (collections.length > 0 || hasGroups) && (
+            <HomeRecommendations language={activeLanguage} defaultOpen={false} />
           )}
         </section>
       )}

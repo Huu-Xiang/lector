@@ -76,6 +76,21 @@ describe('onboarding event derivation', () => {
     ]);
   });
 
+  it('removes an undone save from guided practice', () => {
+    const saved = event('vocab.saved', {
+      vocabId: 'v1',
+      properties: { source: 'onboarding', text: 'hola' },
+    });
+    const undo = event('vocab.state_changed', {
+      vocabId: 'v1',
+      properties: { source: 'onboarding', state: 'new', undoSave: true },
+    });
+    expect(savedOnboardingWords(snapshot([saved, undo]))).toEqual([]);
+    expect(savedOnboardingWords(snapshot([saved, undo, saved]))).toEqual([
+      { id: 'v1', text: 'hola' },
+    ]);
+  });
+
   it('counts each encountered term once', () => {
     const hola = event('reader.term_looked_up', {
       properties: { source: 'onboarding', term: 'Hola' },

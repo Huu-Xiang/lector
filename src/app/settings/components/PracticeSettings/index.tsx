@@ -16,7 +16,7 @@ export default function PracticeSettings() {
   const t = useTranslations('settings.practice');
   const [hideTranslation, setHideTranslation] = useState(false);
   const [goal, setGoal] = useState<ReviewGoal>('recognize');
-  const [autoSave, setAutoSave] = useState(true);
+  const [autoSave, setAutoSave] = useState(false);
   const autoSaveTouched = useRef(false);
 
   useEffect(() => {
@@ -29,7 +29,7 @@ export default function PracticeSettings() {
     getSetting<boolean | null>('autoSaveLookups')
       .then((value) => {
         // A failed read is undefined; a tap made before the read wins.
-        if (value !== undefined && !autoSaveTouched.current) setAutoSave(value !== false);
+        if (value !== undefined && !autoSaveTouched.current) setAutoSave(value === true);
       })
       .catch(() => undefined);
   }, []);
