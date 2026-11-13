@@ -62,7 +62,7 @@ test('Me opens the hidden pages and Settings can restore an extra native tab', a
   await page.getByRole('main').getByRole('link', { name: 'Vocabulary test', exact: true }).click();
   await expect(page).toHaveURL('/vocab-test?from=nav');
   await expect(page.getByTestId('vocab-intro')).toBeVisible();
-  await page.getByTestId('native-back').click();
+  await page.goBack();
   await expect(page).toHaveURL('/me');
   await page.getByRole('main').getByRole('link', { name: 'Journal' }).click();
   await expect(page).toHaveURL('/journal');
