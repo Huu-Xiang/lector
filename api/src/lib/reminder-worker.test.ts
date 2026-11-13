@@ -1,5 +1,6 @@
 import '../test-guard';
 import { beforeEach, describe, expect, test } from 'bun:test';
+import { generateKeyPairSync } from 'node:crypto';
 import { db } from '../db';
 import type { ApnsNotification, ApnsResult, ApnsSender } from './apns';
 import {
@@ -191,7 +192,7 @@ describe('startReminderWorker', () => {
   });
 
   test('starts with all settings present', () => {
-    const { privateKey } = require('node:crypto').generateKeyPairSync('ec', {
+    const { privateKey } = generateKeyPairSync('ec', {
       namedCurve: 'P-256',
     });
     const env = {
