@@ -209,6 +209,65 @@ test.describe('guided onboarding — selfhost', () => {
     await context.close();
   });
 
+  test('Russian setup starts with a beginner book and keeps the reader text in English', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/setup');
+    const native = page.getByTestId('setup-native-language');
+    await native.selectOption('ru');
+    await expect(page.locator('html')).toHaveAttribute('lang', 'ru');
+    await expect(native).toHaveValue('ru');
+    await expect(page.getByTestId('setup-language-en')).toHaveAttribute('aria-pressed', 'true');
+    await expect(page.getByTestId('setup-language-ru')).toHaveCount(0);
+
+    await page.getByTestId('start-guided-onboarding').click();
+    const pick = page.getByTestId('recommend-book-aldine-first-reader');
+    await expect(pick).toContainText('Первая книга для чтения (Aldine)');
+    await expect(pick).toContainText('A First Reader');
+    await expect(pick).toContainText('Короткие стишки и рассказы о птицах');
+    await expect(pick).toContainText('A1');
+    await pick.getByTestId('recommend-start-book-aldine-first-reader').click();
+
+    await expect(page).toHaveURL(/\/read\/[^/?]+\?onboarding=1$/, { timeout: 30_000 });
+    await expect(page.locator('article[lang="en"]')).toContainText('Fly, little birds');
+    const nativeSetting = await page.request.get(apiUrl('/api/settings/nativeLanguage'));
+    expect(await nativeSetting.json()).toBe('ru');
+
+    await page.goto('/');
+    await expect(
+      page.getByText('Первая книга для чтения (Aldine)', { exact: true }).first(),
+    ).toBeVisible();
+  });
+
+  test('Russian setup respects the ready languages and keeps an explicit target choice', async ({
+    page,
+  }) => {
+    await page.route('**/__env.js', (route) =>
+      route.fulfill({
+        contentType: 'application/javascript',
+        body: `window.__ENV__ = ${JSON.stringify({
+          API_URL: apiUrl('/').replace(/\/$/, ''),
+          SETUP_READY_LANGUAGES: 'fr,de',
+        })};`,
+      }),
+    );
+    await page.goto('/setup');
+    const native = page.getByTestId('setup-native-language');
+    await native.selectOption('ru');
+    await expect(page.locator('html')).toHaveAttribute('lang', 'ru');
+    await expect(page.getByTestId('start-guided-onboarding')).toBeDisabled();
+    await page.getByTestId('setup-language-show-all').click();
+    await expect(page.getByTestId('setup-language-en')).toBeDisabled();
+
+    await page.getByTestId('setup-language-fr').click();
+    await native.selectOption('en');
+    await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+    await native.selectOption('ru');
+    await expect(page.locator('html')).toHaveAttribute('lang', 'ru');
+    await expect(page.getByTestId('setup-language-fr')).toHaveAttribute('aria-pressed', 'true');
+  });
+
   test('a visitor who chose a book on a public page starts with that book', async ({ browser }) => {
     const context = await browser.newContext({ storageState: { cookies: [], origins: [] } });
     const page = await context.newPage();

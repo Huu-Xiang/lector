@@ -208,6 +208,10 @@ Tests: `e2e/reader-phrase-selection.spec.ts`, `e2e/reader-phrase-touch.spec.ts`.
 
 Tests: `e2e/nested-definitions.spec.ts`.
 
+English lookups in Russian have a short list of reviewed internet slang in `api/src/lib/russian-english-slang.ts`. Quick glosses use it before the shared cache. Enrichment keeps its plan gate and serves the reviewed senses without an AI charge. The contextual translation prompt uses these senses to choose the one that fits the sentence.
+
+Dictionary lookups depend on both the text's language and the learner's translation language. The browser caches the two together. In the reader, if localization takes more than eight seconds, show the English dictionary entry while waiting. Replace it when the localized senses arrive for the same open lookup. Auto-save waits for those senses.
+
 ## Lesson prefetch
 
 **App domain:** Translation

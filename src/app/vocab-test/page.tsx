@@ -1,10 +1,11 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
-import { getTranslations } from 'next-intl/server';
+import { getLocale, getTranslations } from 'next-intl/server';
 import { H2, LegalShell } from '@/components/LegalLinks/shell';
 import VocabTest from '@/components/VocabTest';
 import ReportResume from '@/components/VocabTest/ReportResume';
+import UiLanguageSelect from '@/i18n/UiLanguageSelect';
 import { SITE_ORIGIN } from '@/lib/public-books';
 import { loadVocabTestBooks, loadVocabTestData } from '@/lib/vocab-test-data';
 
@@ -30,7 +31,8 @@ const FAQ_KEYS = ['how', 'accuracy', 'free', 'level'] as const;
 
 export default async function VocabTestPage() {
   const t = await getTranslations('vocabTest');
-  const data = loadVocabTestData();
+  const locale = await getLocale();
+  const data = loadVocabTestData(locale === 'ru' ? 'ru' : undefined);
   if (!data) notFound();
   const faq = FAQ_KEYS.map((key) => ({ q: t(`faq.${key}Q`), a: t(`faq.${key}A`) }));
   const structured = [
@@ -65,8 +67,14 @@ export default async function VocabTestPage() {
       <Suspense fallback={null}>
         <ReportResume />
       </Suspense>
+      <UiLanguageSelect showLabel />
       <VocabTest
-        meta={{ bands: data.bands.map(({ from, to }) => ({ from, to })), source: data.source }}
+        key={locale}
+        meta={{
+          bands: data.bands.map(({ from, to }) => ({ from, to })),
+          source: data.source,
+          answerLanguage: data.answerLanguage,
+        }}
         books={loadVocabTestBooks()}
       />
       <section className="space-y-3 pt-6" data-testid="vocab-faq">

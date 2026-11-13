@@ -128,6 +128,22 @@ describe('account vocabulary test reports', () => {
     });
   });
 
+  test('saves a Russian result in history with a trusted book title', async () => {
+    const { app, calls } = build();
+    const book = listLibraryBooks('en')[0]!;
+    const russian = { ...snapshot, locale: 'ru', bookSlugs: [book.slug] };
+    const response = await post(app, { expectedUserId: ADA, snapshot: russian });
+    expect(response.status).toBe(201);
+    const report = {
+      snapshot: russian,
+      books: [{ slug: book.slug, title: book.titles.ru ?? book.titles.en ?? book.title }],
+      deliveryStatus: 'sent',
+    };
+    expect(await response.json()).toEqual(report);
+    expect(await (await app.request('/')).json()).toEqual({ reports: [report], nextCursor: null });
+    expect(calls).toEqual([[ADA, attemptId]]);
+  });
+
   test('reports an expired sending lease as retryable without leaking delivery payload', async () => {
     const { app, calls } = build();
     await post(app, { expectedUserId: ADA, snapshot });
@@ -270,13 +286,14 @@ describe('account vocabulary test reports', () => {
     expect((await post(build().app, body, '/', { Authorization: 'Bearer test' })).status).toBe(403);
   });
 
-  test('rejects a reversed interval, non-finite values, and untrusted books', async () => {
+  test('rejects malformed results, unsupported locales, and untrusted books', async () => {
     const { app, calls } = build();
     for (const update of [
       { low: 4600 },
       { estimate: Infinity },
       { bookSlugs: ['invented-report-book'] },
       { takenAt: '2026-02-30T00:00:00.000Z' },
+      { locale: 'ru-RU' },
     ]) {
       expect(
         (await post(app, { expectedUserId: ADA, snapshot: { ...snapshot, ...update } })).status,

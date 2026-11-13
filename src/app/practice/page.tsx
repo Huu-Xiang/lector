@@ -26,7 +26,12 @@ import {
 import { hasAudio, speak } from '@/lib/tts';
 import { playCorrectSound, playIncorrectSound } from '@/lib/sounds';
 import { translateGloss, translateWord } from '@/lib/claude';
-import { lookupWordRemote, type ExpandedDictionaryEntry } from '@/lib/dictionary-client';
+import {
+  localizeEntrySenses,
+  lookupWordRemote,
+  type ExpandedDictionaryEntry,
+} from '@/lib/dictionary-client';
+import { loadNative } from '@/lib/library-titles';
 import { splitTrailingPunctuation } from '@/lib/words';
 import { isComposing } from '@/lib/keyboard';
 import {
@@ -276,7 +281,12 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
       // Try the on-device SQLite dictionary first
       let dictEntry: ExpandedDictionaryEntry | null = null;
       try {
-        dictEntry = await lookupWordRemote(cleanWord);
+        const native = (await loadNative()) ?? 'en';
+        dictEntry = await lookupWordRemote(cleanWord, native);
+        if (dictEntry?.needsLocalization) {
+          const senses = await localizeEntrySenses(cleanWord, native);
+          if (senses) dictEntry = { ...dictEntry, senses, needsLocalization: false };
+        }
       } catch {
         dictEntry = null;
       }

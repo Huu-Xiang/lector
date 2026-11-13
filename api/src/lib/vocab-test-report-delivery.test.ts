@@ -1,3 +1,4 @@
+import '../test-guard';
 import { beforeEach, describe, expect, test } from 'bun:test';
 import { db } from '../db';
 import { ReportEmailError } from './email';
@@ -86,6 +87,34 @@ describe('vocabulary report delivery', () => {
     expect(
       db.query('SELECT payloadJson FROM vocab_test_report_deliveries WHERE userId = ?').get(userId),
     ).toEqual({ payloadJson: null });
+  });
+
+  test('sends Russian email copy with the Russian PDF attached', async () => {
+    const { deliverVocabReport } = await import('./vocab-test-report-delivery');
+    db.run('UPDATE vocab_test_reports SET snapshotJson = ? WHERE userId = ? AND attemptId = ?', [
+      JSON.stringify({ ...snapshot, locale: 'ru' }),
+      userId,
+      attemptId,
+    ]);
+    const sent: string[] = [];
+    await deliverVocabReport(userId, attemptId, {
+      getVerifiedEmail: () => email,
+      send: async (payload) => {
+        sent.push(payload);
+        return 'provider-id';
+      },
+    });
+
+    expect(status().deliveryStatus).toBe('sent');
+    expect(sent).toHaveLength(1);
+    const message = JSON.parse(sent[0]!);
+    expect(message.subject).toBe('Ваш отчёт о словарном запасе — Readfox');
+    expect(message.text).toContain('Во вложении');
+    expect(message.attachments).toHaveLength(1);
+    expect(message.attachments[0].filename).toBe('readfox-vocabulary-report.pdf');
+    expect(Buffer.from(message.attachments[0].content, 'base64').subarray(0, 5).toString()).toBe(
+      '%PDF-',
+    );
   });
 
   test('does not send a failed report to a different verified address', async () => {

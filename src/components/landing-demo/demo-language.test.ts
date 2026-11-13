@@ -25,10 +25,11 @@ describe('demoSetForRequest', () => {
   it('prefers the interface locale cookie', () => {
     expect(demoSetForRequest('ja', 'ru,en;q=0.5')).toEqual({ id: 'ja', fromCookie: true });
     expect(demoSetForRequest('en', 'zh-CN')).toEqual({ id: 'en', fromCookie: true });
+    expect(demoSetForRequest('ru', 'es')).toEqual({ id: 'ru', fromCookie: true });
   });
 
   it('ignores a cookie that is not an interface locale', () => {
-    expect(demoSetForRequest('ru', 'es')).toEqual({ id: 'es', fromCookie: false });
+    expect(demoSetForRequest('fr', 'es')).toEqual({ id: 'es', fromCookie: false });
   });
 
   it('reads Accept-Language in q order', () => {

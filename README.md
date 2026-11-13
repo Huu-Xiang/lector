@@ -81,7 +81,8 @@ If you do not want to run a server, use the hosted app at [app.lector.dev](https
 - **Word review.** Each saved word becomes a review card. The card asks one of three questions: choose the meaning, a recognition card (Know, Fuzzy or Don't know), or a fill-in on the sentence you saved. An optional spelling goal also asks you to type the word. Fill-in cards show real example sentences with their source: a library book, Tatoeba, or an AI example. FSRS schedules the cards on the server. The card stage matches the word level in the reader.
 - **Vocabulary.** Save words as you read. Track known and learning states. Save phrases as well as single words.
 - **Readfox Beta sign-in.** Use your existing Readfox account on a beta site configured by the operator. Each site keeps its own reading and study data.
-- **Vocabulary test.** A free, public test at `/vocab-test` for English. It estimates your vocabulary size, gives a level from A1 to C2, and suggests free books you can read. Each test draws from about 6,000 words, and the browser remembers which words it asked, so a retake uses new words. You can see the full result without an account. With a free Readfox account, you can save the result to your test history and get a PDF by email. You can also set your reading level separately. Book picks follow that level.
+- **Vocabulary test.** A free, public test at `/vocab-test` for English. The Russian interface shows Russian answer choices and feedback. It estimates your vocabulary size, gives a level from A1 to C2, and suggests free books you can read. Both versions use the same pool of 6,000 English words. The browser remembers which words it asked, so a retake uses new words. You can see the full result without an account. With a free Readfox account, you can save the result to your test history and get a PDF by email. You can also set your reading level separately. Book picks follow that level.
+- **English books for Russian speakers.** Choose Русский at `/books/en` to browse Russian book titles and descriptions. Setup offers English as the first choice. Book picks follow your reading level, or start at A1 if you are not sure. The books stay in English.
 - **Anki.** The [Lector Sync add-on](https://ankiweb.net/shared/info/1098736891) on AnkiWeb is the recommended integration. The add-on code is `1098736891`. Cloud mode and a remote HTTPS self-host always use it. A local self-host can instead push cards to AnkiConnect on the computer that runs Anki. Reviews in Anki can update mastery in Lector.
 - **Tutor and journal.** Ask grammar questions in plain language. Write in the target language. The tutor returns corrections. Use the Claude API or a local model.
 - **Listen.** Optional text-to-speech (TTS). YouTube captions stay timestamped. A podcast upload can become a transcript and a listen-along lesson.
@@ -89,6 +90,8 @@ If you do not want to run a server, use the hosted app at [app.lector.dev](https
 - **Data.** SQLite on your server. Export and restore from Settings. The self-host does not need a cloud account.
 
 ## Languages
+
+The interface is available in English, Simplified Chinese, Traditional Chinese, Japanese, Korean, and Russian. Use the interface language picker to change it.
 
 Language packs ship for:
 

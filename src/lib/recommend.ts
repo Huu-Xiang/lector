@@ -2,6 +2,14 @@ import { CEFR_LEVELS, type CefrLevel } from './reading-level';
 
 export const DEFAULT_RECOMMEND_LEVEL: CefrLevel = 'B1';
 
+export function recommendationLevel(
+  language: string,
+  nativeLanguage: string,
+  level: CefrLevel | null,
+): CefrLevel {
+  return level ?? (language === 'en' && nativeLanguage === 'ru' ? 'A1' : DEFAULT_RECOMMEND_LEVEL);
+}
+
 function levelIndex(level: string): number {
   return (CEFR_LEVELS as readonly string[]).indexOf(level);
 }

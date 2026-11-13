@@ -1,10 +1,11 @@
 import { pickNearLevel } from './recommend';
 import type { CefrLevel } from './reading-level';
 
-/** One part of speech of a word: its label, up to three Chinese meanings and a short English line. */
+/** A part of speech and the glosses available for that sense. */
 export interface SenseRow {
   p: string;
-  zh: string[];
+  zh?: string[];
+  ru?: string[];
   en: string;
 }
 
@@ -24,6 +25,7 @@ export interface VocabBand {
 
 export interface VocabTestData {
   version?: number;
+  answerLanguage?: 'ru';
   bands: VocabBand[];
   source?: string;
 }
@@ -91,9 +93,22 @@ function shuffle<T>(list: readonly T[], rng: Rng): T[] {
  */
 const FILLER = new Set('的地得使之者人性化物一.…了');
 
-function meaningChars(rows: readonly SenseRow[]): Set<string> {
+const RUSSIAN_FILLER = new Set(['в', 'на', 'с', 'из', 'по', 'за', 'и', 'или', 'для', 'от', 'к']);
+
+function meaningTokens(rows: readonly SenseRow[], answerLanguage?: 'ru'): Set<string> {
+  if (answerLanguage === 'ru') {
+    const glosses = rows.flatMap((row) =>
+      (row.ru ?? []).map((meaning) => meaning.toLowerCase().replaceAll('ё', 'е')),
+    );
+    const words = glosses.flatMap((meaning) => meaning.match(/[а-я]+/g) ?? []);
+    return new Set([
+      ...glosses.map((meaning) => `=${meaning.trim()}`),
+      ...words.filter((word) => !RUSSIAN_FILLER.has(word)),
+    ]);
+  }
   const out = new Set<string>();
-  for (const row of rows) for (const m of row.zh) for (const c of m) if (!FILLER.has(c)) out.add(c);
+  for (const row of rows)
+    for (const m of row.zh ?? []) for (const c of m) if (!FILLER.has(c)) out.add(c);
   return out;
 }
 
@@ -103,9 +118,12 @@ function overlaps(a: Set<string>, b: Set<string>): boolean {
 }
 
 /** Rough rendered width; keep in step with option_width in scripts/build-vocab-test.py. */
-export function optionWidth(rows: readonly SenseRow[]): number {
+export function optionWidth(rows: readonly SenseRow[], answerLanguage?: 'ru'): number {
+  if (answerLanguage === 'ru') {
+    return rows.reduce((sum, row) => sum + (row.ru ?? []).join('; ').length, 0);
+  }
   return rows.reduce(
-    (sum, row) => sum + row.zh.reduce((n, m) => n + m.length, 0) + 0.45 * row.en.length,
+    (sum, row) => sum + (row.zh ?? []).reduce((n, m) => n + m.length, 0) + 0.45 * row.en.length,
     0,
   );
 }
@@ -133,11 +151,11 @@ function distractors(
   const order = data.bands
     .map((_, index) => index)
     .sort((a, b) => Math.abs(a - band) - Math.abs(b - band) || a - b);
-  const targetChars = meaningChars(target.s);
-  const width = optionWidth(target.s);
+  const targetTokens = meaningTokens(target.s, data.answerLanguage);
+  const width = optionWidth(target.s, data.answerLanguage);
   const forms = wordForms(target.w);
   const picked: VocabWord[] = [];
-  const pickedChars: Set<string>[] = [];
+  const pickedTokens: Set<string>[] = [];
   const passes: Array<{ match: (other: VocabWord) => boolean; similarWidth: boolean }> = [
     { match: (other) => signature(other.s) === signature(target.s), similarWidth: true },
     { match: (other) => other.s[0].p === target.s[0].p, similarWidth: true },
@@ -153,13 +171,18 @@ function distractors(
           if (picked.length === count) return picked;
           if (other.w === target.w || picked.includes(other) || !match(other)) continue;
           if (!allowAvoided && avoid.has(other.w)) continue;
-          const chars = meaningChars(other.s);
-          if (overlaps(chars, targetChars) || pickedChars.some((c) => overlaps(c, chars))) continue;
-          const ratio = optionWidth(other.s) / width;
+          const tokens = meaningTokens(other.s, data.answerLanguage);
+          if (
+            overlaps(tokens, targetTokens) ||
+            pickedTokens.some((prior) => overlaps(prior, tokens))
+          ) {
+            continue;
+          }
+          const ratio = optionWidth(other.s, data.answerLanguage) / width;
           if (similarWidth && (ratio < 0.6 || ratio > 1.4)) continue;
           if (englishWords(other.s).some((word) => forms.has(word))) continue;
           picked.push(other);
-          pickedChars.push(chars);
+          pickedTokens.push(tokens);
         }
       }
     }

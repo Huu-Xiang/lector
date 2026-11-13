@@ -646,23 +646,35 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         //     previously-accepted AI translation must surface as `learned` now
         let dictEntry: ExpandedDictionaryEntry | null = null;
         try {
-          dictEntry = await lookupWordRemote(word);
+          dictEntry = await lookupWordRemote(word, native);
         } catch {
           dictEntry = null;
         }
         if (requestId !== translationRequestId.current) return;
 
         // Keep the "looking up" state until the meanings are in the reader's language,
-        // so English never flashes first. If translating fails, the English stays.
+        // Give the translation a head start. A slow response can still replace the English fallback.
         const needsLocalization = !!dictEntry?.needsLocalization;
         let wasLocalized = false;
         if (dictEntry?.needsLocalization) {
-          const localized = await localizeEntrySenses(word, native);
+          const localized = await localizeEntrySenses(word, native, (senses) => {
+            if (requestId !== translationRequestId.current) return;
+            const translation = senses.map((sense) => sense.gloss).join('; ');
+            replaceSavedMeaning(translation);
+            setWordPanel((prev) =>
+              prev.dictEntry?.needsLocalization
+                ? {
+                    ...prev,
+                    dictEntry: { ...prev.dictEntry, senses, needsLocalization: false },
+                    translation,
+                    translationLang: native,
+                  }
+                : prev,
+            );
+          });
           if (requestId !== translationRequestId.current) return;
           wasLocalized = !!localized;
-          dictEntry = localized
-            ? { ...dictEntry, senses: localized, needsLocalization: false }
-            : { ...dictEntry, needsLocalization: false };
+          if (localized) dictEntry = { ...dictEntry, senses: localized, needsLocalization: false };
         }
 
         if (dictEntry && dictEntry.senses.length > 0) {
@@ -981,7 +993,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     if (!wordPanel.isOpen || wordPanel.word.includes(' ')) return;
     if (autoSaveRequestId.current !== translationRequestId.current) return;
     if (!wordPanel.translation || wordPanel.isLoading || wordPanel.isStreamingGloss) return;
-    if (wordPanel.error || wordPanel.existingEntry) return;
+    if (wordPanel.error || wordPanel.existingEntry || wordPanel.dictEntry?.needsLocalization) return;
     autoSaveRequestId.current = 0;
     void saveWordToVocab(true);
   }, [autoSaveLookups, onboarding, wordPanel, saveWordToVocab]);

@@ -1,17 +1,12 @@
+import uiLocales from './ui-locales.json';
+
 export interface UiLocale {
   code: string;
   native: string;
   rtl?: boolean;
 }
 
-/** Interface languages. Add one by shipping `messages/<code>.json` and listing it here. */
-export const UI_LOCALES: readonly UiLocale[] = [
-  { code: 'en', native: 'English' },
-  { code: 'zh-CN', native: '简体中文' },
-  { code: 'zh-TW', native: '繁體中文' },
-  { code: 'ja', native: '日本語' },
-  { code: 'ko', native: '한국어' },
-];
+export const UI_LOCALES: readonly UiLocale[] = uiLocales;
 
 export const DEFAULT_LOCALE = 'en';
 export const LOCALE_COOKIE = 'NEXT_LOCALE';

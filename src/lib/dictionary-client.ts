@@ -21,9 +21,9 @@ export interface ExpandedDictionaryEntry {
   lemmaInfo?: { stem: string; label: string };
   /** `dict` = built-in kaikki dict, `cache` = user-learned AI translation. */
   source?: 'dict' | 'cache';
-  /** Set when `senses` are already in the learner's own language. */
   /** The meanings are English and `/api/translate/localize` can turn them into the reader's language. */
   needsLocalization?: boolean;
+  /** Set when `senses` are already in the learner's own language. */
   senseLanguage?: string;
   /** The English definitions, kept beside translated `senses`. */
   englishSenses?: Array<{ partOfSpeech: string; gloss: string }>;
@@ -34,16 +34,18 @@ export interface ExpandedDictionaryEntry {
 }
 
 /**
- * In-memory session cache. Map of `${language}:${lowercase word}` → entry (or
- * null for misses) — keyed by language so the same word in different target
- * languages doesn't collide. Cleared on page reload, so memory is bounded by
+ * The same word can have different senses or localization hints for different
+ * pairs of study and translation languages. Cleared on page reload, so memory is bounded by
  * how many distinct words the user looks up in one session (typically <500).
  */
 const sessionCache = new Map<string, ExpandedDictionaryEntry | null>();
 
-export async function lookupWordRemote(word: string): Promise<ExpandedDictionaryEntry | null> {
+export async function lookupWordRemote(
+  word: string,
+  native: string,
+): Promise<ExpandedDictionaryEntry | null> {
   const language = getActiveLanguage();
-  const key = `${language}:${foldWord(word, getActivePack())}`;
+  const key = `${language}:${native}:${foldWord(word, getActivePack())}`;
   if (sessionCache.has(key)) {
     return sessionCache.get(key) ?? null;
   }
@@ -60,21 +62,36 @@ export async function lookupWordRemote(word: string): Promise<ExpandedDictionary
   return entry;
 }
 
-/**
- * The entry's senses in the learner's own language, or null when the learner
- * reads English, the word has no dictionary entry, or the request fails.
- */
-function apiFetchWithTimeout(url: string, ms: number, init: RequestInit): Promise<Response> {
-  return Promise.race([
-    apiFetch(url, init),
-    new Promise<Response>((_, reject) => setTimeout(() => reject(new Error('timeout')), ms)),
-  ]);
-}
-
 type LocalizedSenses = Array<{ partOfSpeech: string; gloss: string }>;
 
 const PREFETCH_CACHE_MAX = 500;
 const LOCALIZE_TIMEOUT_MS = 8000;
+const LOCALIZE_TIMEOUT = Symbol('localization timeout');
+
+async function waitForSenses(
+  result: Promise<LocalizedSenses | null>,
+  onLate?: (senses: LocalizedSenses) => void,
+): Promise<LocalizedSenses | null | typeof LOCALIZE_TIMEOUT> {
+  let timeout: ReturnType<typeof setTimeout> | undefined;
+  try {
+    const settled = await Promise.race([
+      result,
+      new Promise<typeof LOCALIZE_TIMEOUT>((resolve) => {
+        timeout = setTimeout(() => resolve(LOCALIZE_TIMEOUT), LOCALIZE_TIMEOUT_MS);
+      }),
+    ]);
+    if (settled === LOCALIZE_TIMEOUT && onLate) {
+      void result
+        .then((senses) => {
+          if (senses) onLate(senses);
+        })
+        .catch(() => {});
+    }
+    return settled;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
 
 /** Prefetched translations by `${language}:${native}:${folded word}`, oldest dropped first. */
 const prefetchedSenses = new Map<string, LocalizedSenses>();
@@ -142,44 +159,45 @@ export async function prefetchLocalizedSenses(words: string[], native: string): 
   }
 }
 
+/** Wait briefly for localized senses, then allow the caller to show a fallback. */
 export async function localizeEntrySenses(
   word: string,
   native = '',
+  onLate?: (senses: LocalizedSenses) => void,
 ): Promise<LocalizedSenses | null> {
   const key = prefetchKey(word, native);
   const prefetched = prefetchedSenses.get(key);
   if (prefetched) return prefetched;
   const inflight = inflightPrefetch.get(key);
   if (inflight) {
-    const timedOut = Symbol('timeout');
-    const settled = await Promise.race([
-      inflight,
-      new Promise<typeof timedOut>((resolve) =>
-        setTimeout(() => resolve(timedOut), LOCALIZE_TIMEOUT_MS),
-      ),
-    ]);
-    if (settled === timedOut) return null;
+    const settled = await waitForSenses(inflight, onLate);
+    if (settled === LOCALIZE_TIMEOUT) return null;
     if (settled) return settled;
   }
-  try {
-    const res = await apiFetchWithTimeout('/api/translate/localize', LOCALIZE_TIMEOUT_MS, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ word, language: getActiveLanguage() }),
-    });
-    if (!res.ok) return null;
-    const data = (await res.json()) as { senses: LocalizedSenses | null };
-    if (data.senses && typeof window !== 'undefined') {
-      window.dispatchEvent(new Event(AI_USAGE_EVENT));
+
+  const request = async () => {
+    try {
+      const res = await apiFetch('/api/translate/localize', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ word, language: getActiveLanguage() }),
+      });
+      if (!res.ok) return null;
+      const data = (await res.json()) as { senses: LocalizedSenses | null };
+      if (data.senses && typeof window !== 'undefined') {
+        window.dispatchEvent(new Event(AI_USAGE_EVENT));
+      }
+      return data.senses;
+    } catch {
+      return null;
     }
-    return data.senses;
-  } catch {
-    return null;
-  }
+  };
+  const settled = await waitForSenses(request(), onLate);
+  return settled === LOCALIZE_TIMEOUT ? null : settled;
 }
 
 /** Drop a single cached entry (call after editing the dict to force a re-fetch).
- *  Keys are `${language}:${word}`, so invalidate the word across every language. */
+ *  Invalidate the word across every study and translation language. */
 export function invalidateLookupCache(word?: string): void {
   if (word === undefined) {
     sessionCache.clear();

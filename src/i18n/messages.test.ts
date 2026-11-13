@@ -39,6 +39,10 @@ describe('message catalogs', () => {
         expect({ missing, extra }).toEqual({ missing: [], extra: [] });
       });
 
+      it('has no empty translations', () => {
+        expect([...messages].filter(([, v]) => v.trim() === '').map(([k]) => k)).toEqual([]);
+      });
+
       it('keeps every placeholder and rich-text tag', () => {
         const broken = [...english].filter(
           ([key, text]) =>

@@ -16,6 +16,10 @@ const copy: Record<VocabReportLocale, [subject: string, text: string]> = {
   'zh-TW': ['你的 Readfox 詞彙量報告', '附件是你的英語詞彙量測驗報告。'],
   ja: ['Readfox 語彙力レポート', '英語語彙力テストの結果を添付しました。'],
   ko: ['Readfox 어휘력 보고서', '영어 어휘력 테스트 보고서를 첨부했습니다.'],
+  ru: [
+    'Ваш отчёт о словарном запасе — Readfox',
+    'Во вложении — отчёт о результатах теста на словарный запас английского языка.',
+  ],
 };
 
 type Outcome = 'sent' | 'failed' | 'unknown' | 'held';

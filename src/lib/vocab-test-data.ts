@@ -27,9 +27,24 @@ function readJson<T>(file: string): T | null {
   }
 }
 
-export function loadVocabTestData(): VocabTestData | null {
-  const data = readJson<VocabTestData>(path.join(contentDir(), 'vocab-test.json'));
-  return data && Array.isArray(data.bands) && data.bands.length > 0 ? data : null;
+export function loadVocabTestData(answerLanguage?: 'ru'): VocabTestData | null {
+  const file = answerLanguage === 'ru' ? 'vocab-test-ru.json' : 'vocab-test.json';
+  const data = readJson<VocabTestData>(path.join(contentDir(), file));
+  if (!data || !Array.isArray(data.bands) || data.bands.length === 0) return null;
+  if (answerLanguage === 'ru') {
+    const complete = data.bands.every(
+      (band) =>
+        band.words.length > 0 &&
+        band.words.every(
+          (word) =>
+            word.s.length > 0 &&
+            word.s.every((sense) => sense.ru?.length && sense.ru.every((gloss) => gloss.trim())),
+        ),
+    );
+    if (!complete) return null;
+    return { ...data, answerLanguage };
+  }
+  return data;
 }
 
 export function loadVocabTestBooks(): VocabTestBook[] {

@@ -119,4 +119,44 @@ test.describe('Reader: lookup prefetch', () => {
     await expect(drawer.getByText('localized on tap')).toBeVisible({ timeout: 5000 });
     expect(localizeCalls).toBe(1);
   });
+
+  test('replaces the English fallback with a late Russian meaning', async ({ page }) => {
+    await page.route('**/__env.js', (route) =>
+      route.fulfill({
+        contentType: 'application/javascript',
+        body: `window.__ENV__ = ${JSON.stringify({
+          API_URL: new URL(apiUrl('/')).origin,
+          LECTOR_MODE: 'selfhost',
+        })};`,
+      }),
+    );
+    await page.request.put(apiUrl('/api/settings/nativeLanguage'), { data: { value: 'ru' } });
+    let release!: () => void;
+    const delay = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    await mockLookup(page);
+    await page.route('**/api/translate/prefetch', (route) =>
+      route.fulfill({ json: { senses: {} } }),
+    );
+    await page.route('**/api/translate/localize', async (route) => {
+      await delay;
+      await route.fulfill({ json: { senses: [{ partOfSpeech: 'noun', gloss: 'чайка' }] } });
+    });
+    try {
+      await openLesson(page);
+      await page
+        .locator('article span.cursor-pointer')
+        .filter({ hasText: /^seemeeu$/ })
+        .first()
+        .click();
+      const drawer = page.getByTestId('translation-drawer');
+      await expect(drawer.getByText('seagull', { exact: true })).toBeVisible({ timeout: 12000 });
+      release();
+      await expect(drawer.getByText('чайка', { exact: true })).toBeVisible();
+      await expect(drawer.getByText('seagull', { exact: true })).toHaveCount(0);
+    } finally {
+      release();
+    }
+  });
 });

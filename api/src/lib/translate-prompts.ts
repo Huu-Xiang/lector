@@ -8,6 +8,16 @@
  * past small local models' context windows for negligible gain.
  */
 
+import { russianEnglishSlang } from './russian-english-slang';
+
+function vettedWordHint(langName: string, word: string, nativeName: string): string {
+  if (langName !== 'English' || nativeName !== 'Russian') return '';
+  const senses = russianEnglishSlang(word);
+  if (!senses) return '';
+  const meanings = senses.map(({ gloss }) => gloss).join('; ');
+  return `\nVerified Russian senses: ${meanings}. Use the sense that fits the sentence first. Omit etymology and related forms.`;
+}
+
 function writeIn(nativeName: string): string {
   return nativeName === 'English'
     ? ''
@@ -34,12 +44,12 @@ export function phraseFieldsInWrongScript(
 ): string[] {
   const script = NATIVE_SCRIPT[nativeCode];
   if (!script) return [];
-  return ['translation', 'idiomaticMeaning', 'usageNotes'].filter((key) => {
+  return ['translation', 'literalBreakdown', 'idiomaticMeaning', 'usageNotes'].filter((key) => {
     const value = result[key];
     if (typeof value !== 'string') return false;
     const latin = value.match(/\p{Script=Latin}/gu)?.length ?? 0;
     const own = value.match(script)?.length ?? 0;
-    return latin >= 20 && latin > own * 3;
+    return latin >= 20 && (key === 'literalBreakdown' ? own === 0 : latin > own * 3);
   });
 }
 
@@ -136,7 +146,7 @@ export function buildSimpleContextPrompt(
   return `Translate the selected ${langName} word into the concise ${nativeName} sense that fits this sentence.
 
 Selected word: "${word}"
-Sentence context: "${sentence || word}"
+Sentence context: "${sentence || word}"${vettedWordHint(langName, word, nativeName)}
 
 Return ONLY the context-appropriate ${nativeName} translation. Do not list other senses. Do not explain it. Do not use quotes, labels, JSON, or Markdown.`;
 }
@@ -168,9 +178,9 @@ Respond with ONLY a JSON object in this exact shape (no markdown, no code blocks
     /* ...one entry per distinct sense; order most-common first */
   ],
   "ipa": "/.../ or [...] — phonetic transcription if you're confident",
-  "etymology": "Brief origin note in ${nativeName} (e.g. 'From Dutch X, from Middle Dutch Y')",
+  "etymology": "Brief origin note in ${nativeName}",
   "relatedForms": [
-    { "form": "the related word", "relation": "plural of | diminutive of | past tense of | derived from | etc." }
+    { "form": "the related word in ${langName}", "relation": "a short grammatical relation label in ${nativeName}" }
   ]
 }
 
@@ -181,7 +191,7 @@ Rules:
 - Use the sentence to bias sense ORDER, but include all common senses a learner might reasonably encounter.
 - Each gloss is a short ${nativeName} phrase (1-4 words is typical, up to a clause for verbs with idiomatic completions).
 - Omit ipa / etymology / relatedForms entirely if you're not confident — don't guess.
-- Use the same partOfSpeech vocabulary as Wiktionary so cached entries align with the curated dict.
+- Use the same partOfSpeech vocabulary as Wiktionary so cached entries align with the curated dict.${vettedWordHint(langName, word, nativeName)}
 
 Backwards-compat fields the server adds (do NOT include these yourself — server stitches them from senses): translation, partOfSpeech.${writeIn(nativeName)}`;
 }
@@ -214,7 +224,7 @@ Sentence context: "${sentence || word}"
 Respond with ONLY a JSON object in this exact format (no markdown, no code blocks):
 {
   "translation": "the most natural ${nativeName} translation a fluent speaker would use",
-  "literalBreakdown": "word-by-word literal gloss in ${nativeName} (e.g. 'hand-shoe' for handskoen)",
+  "literalBreakdown": "the ordinary dictionary meanings of the individual ${langName} words; pair each ${langName} word or short unit with its ${nativeName} gloss",
   "idiomaticMeaning": "in ${nativeName}: if the phrase is an idiom, fixed expression, or compound, what it actually means and why",
   "usageNotes": "in ${nativeName}: register, tone, formality, or contextual notes a learner should know",
   "register": "formal | informal | literary | colloquial | archaic | neutral"

@@ -1,11 +1,11 @@
 # Converting UI text to translations
 
-Library: `next-intl`. English is the source language; `zh-CN`, `zh-TW`, `ja` and `ko` are the other catalogs (listed in `src/i18n/locales.ts`).
+Library: `next-intl`. English is the source language. The supported interface locales, including Russian (`ru`), are listed in `src/i18n/ui-locales.json`.
 
 ## Files
 
-- Edit only your own fragment: `messages/src/<locale>/<area>.json` for `en`, `zh-CN`, `zh-TW`, `ja` and `ko`. All of them must hold exactly the same keys.
-- Never edit the merged `messages/<locale>.json` files. Run `node scripts/merge-messages.mjs` to rebuild them (it fails on a duplicate key across fragments).
+- Edit only your own fragment: `messages/src/<locale>/<area>.json` for each locale in the registry. All of them must hold exactly the same keys.
+- Never edit the merged `messages/<locale>.json` files. Run `node scripts/merge-messages.mjs` to rebuild them (it fails on a duplicate key across fragments). `npm run build` checks that the merged catalogs are current.
 - Top-level key of a fragment = namespace, for example `library`, `reader`. Use your area name as the first segment so fragments never collide.
 
 ## In code

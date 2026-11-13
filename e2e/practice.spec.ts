@@ -152,6 +152,69 @@ test.describe.serial('Practice - Type Mode Full Journey', () => {
     await expect(page.getByText('Fill in the blank')).toBeVisible();
   });
 
+  test('shows Russian dictionary meanings in the cloze word drawer', async ({ page }) => {
+    test.setTimeout(60_000);
+    await page.route('**/__env.js', (route) =>
+      route.fulfill({
+        contentType: 'application/javascript',
+        body: `window.__ENV__ = ${JSON.stringify({
+          API_URL: new URL(apiUrl('/')).origin,
+          LECTOR_MODE: 'selfhost',
+        })};`,
+      }),
+    );
+    const setting = apiUrl('/api/settings/nativeLanguage');
+    const before = await (await page.request.get(setting)).json();
+    await page.request.put(setting, { data: { value: 'ru' } });
+    try {
+      await page.route('**/api/cloze/due?**', (route) =>
+        route.fulfill({
+          json: [
+            {
+              id: 'localized-cloze-fixture',
+              sentence: 'Die kat slaap.',
+              clozeWord: 'kat',
+              clozeIndex: 1,
+              collection: 'top500',
+              translation: 'The cat sleeps.',
+              masteryLevel: 0,
+              nextReview: '2000-01-01T00:00:00.000Z',
+              reviewCount: 0,
+            },
+          ],
+        }),
+      );
+      await page.route('**/api/dictionary/lookup**', (route) =>
+        route.fulfill({
+          json: {
+            entry: {
+              word: new URL(route.request().url()).searchParams.get('word'),
+              needsLocalization: true,
+              senses: [{ partOfSpeech: 'noun', gloss: 'original English definition' }],
+            },
+          },
+        }),
+      );
+      await page.route('**/api/translate/localize', (route) =>
+        route.fulfill({
+          json: { senses: [{ partOfSpeech: 'noun', gloss: 'значение по-русски' }] },
+        }),
+      );
+      await waitForSetup(page);
+      await page.getByRole('button', { name: '10', exact: true }).click();
+      await page.getByRole('button', { name: 'Type' }).click();
+      await page.getByRole('button', { name: 'Start' }).click();
+      const word = page.getByTestId('cloze-word').first();
+      await word.click();
+      const drawer = page.getByTestId('translation-drawer');
+      await expect(drawer.getByText('значение по-русски')).toBeVisible();
+      await expect(drawer.getByText('original English definition')).toHaveCount(0);
+    } finally {
+      if (before?.value) await page.request.put(setting, { data: { value: before.value } });
+      else await page.request.delete(setting);
+    }
+  });
+
   test('should type a correct answer and show feedback', async ({ page }) => {
     await waitForSetup(page);
 

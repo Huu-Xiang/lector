@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -81,7 +81,7 @@ export default function SetupPage() {
   const t = useTranslations('setup');
   const locale = useLocale();
   const router = useRouter();
-  const [selectedLanguage, setSelectedLanguage] = useState<LanguageCode | null>(null);
+  const [pickedLanguage, setPickedLanguage] = useState<LanguageCode | null>(null);
   const [pending, setPending] = useState<LanguageCode | null>(null);
   const [pickedLevel, setLevel] = useState<CefrLevel | null>(null);
   const [levelPicked, setLevelPicked] = useState(false);
@@ -92,6 +92,10 @@ export default function SetupPage() {
   // The onboarding profile keeps minutes (5-120); a review goal leaves the old default.
   const profileMinutes = dailyGoal.kind === 'minutes' ? Math.max(5, dailyGoal.target) : 10;
   const [native, setNative] = useState<string>(() => nativeLanguageFromLocale(locale));
+  const nativePicked = useRef(false);
+  const [nativeSettingStatus, setNativeSettingStatus] = useState<
+    'loading' | 'loaded' | 'unavailable'
+  >('loading');
   const [stage, setStage] = useState<'form' | 'recommend'>('form');
   const tl = useTranslations('readingLevel');
   const vt = useTranslations('vocabTest');
@@ -109,6 +113,10 @@ export default function SetupPage() {
       ? (pendingBook.language as LanguageCode)
       : null;
   const bookSlug = pendingBook?.slug ?? null;
+  const selectedLanguage =
+    pickedLanguage ??
+    bookLanguage ??
+    (native === 'ru' && isLanguageReady('en', ready) ? 'en' : null);
   const level: CefrLevel | null =
     levelPicked || selectedLanguage !== 'en' ? pickedLevel : (vocabResult?.level ?? pickedLevel);
   function pickLevel(next: CefrLevel | null) {
@@ -125,13 +133,15 @@ export default function SetupPage() {
   // is in progress resumes its real starter lesson instead of beginning again.
   useEffect(() => {
     let cancelled = false;
-    getSetting<string>('nativeLanguage')
+    getSetting<string | null>('nativeLanguage')
       .catch(() => undefined)
       .then((code) => {
         if (cancelled) return;
+        setNativeSettingStatus(code === undefined ? 'unavailable' : 'loaded');
+        if (nativePicked.current) return;
         const next = isNativeLanguageCode(code) ? code : nativeLanguageFromLocale(locale);
         setNative(next);
-        setSelectedLanguage((current) => (current === ownLanguage(next) ? null : current));
+        setPickedLanguage((current) => (current === ownLanguage(next) ? null : current));
       });
     void getOnboardingSnapshot()
       .then((snapshot) => {
@@ -161,10 +171,6 @@ export default function SetupPage() {
   }, []);
 
   useEffect(() => {
-    if (bookLanguage) setSelectedLanguage((current) => current ?? bookLanguage);
-  }, [bookLanguage]);
-
-  useEffect(() => {
     setPendingTitle(null);
     if (!bookLanguage || !bookSlug) return;
     let cancelled = false;
@@ -187,8 +193,9 @@ export default function SetupPage() {
   /* eslint-enable react-hooks/set-state-in-effect */
 
   function chooseNative(code: string) {
+    nativePicked.current = true;
     setNative(code);
-    setSelectedLanguage((current) => (current === ownLanguage(code) ? null : current));
+    setPickedLanguage((current) => (current === ownLanguage(code) ? null : current));
     const ui = matchLocale(code);
     if (ui && ui !== locale) {
       document.cookie = `${LOCALE_COOKIE}=${ui}; path=/; max-age=31536000; samesite=lax`;
@@ -197,16 +204,18 @@ export default function SetupPage() {
   }
 
   async function handleContinue(guided: boolean) {
-    if (!selectedLanguage || pending) return;
+    if (!selectedLanguage || pending || nativeSettingStatus === 'loading') return;
     const code = selectedLanguage;
     setPending(selectedLanguage);
     setError(null);
 
     try {
-      try {
-        await setSetting('nativeLanguage', native);
-        forgetNative();
-      } catch {}
+      if (nativePicked.current || nativeSettingStatus === 'loaded') {
+        try {
+          await setSetting('nativeLanguage', native);
+          forgetNative();
+        } catch {}
+      }
 
       // Seeding is safe before the target-language write: the route accepts an
       // explicit language and is idempotent. /onboarding/start or /skip then
@@ -342,6 +351,7 @@ export default function SetupPage() {
               language={selectedLanguage}
               level={level}
               interests={interests}
+              nativeLanguage={native}
               onStart={startWith}
             />
             <div className="mt-8 flex flex-col-reverse gap-2 sm:flex-row sm:items-center sm:justify-between">
@@ -408,7 +418,7 @@ export default function SetupPage() {
                     <button
                       key={lang.code}
                       type="button"
-                      onClick={() => setSelectedLanguage(lang.code)}
+                      onClick={() => setPickedLanguage(lang.code)}
                       disabled={pending !== null || soon}
                       data-testid={`setup-language-${lang.code}`}
                       aria-label={t('learn', { name: languageName(lang.code, lang.name) })}
@@ -610,7 +620,9 @@ export default function SetupPage() {
                     type="button"
                     variant="ghost"
                     onClick={() => handleContinue(false)}
-                    disabled={!selectedLanguage || pending !== null}
+                    disabled={
+                      !selectedLanguage || pending !== null || nativeSettingStatus === 'loading'
+                    }
                     className="shrink-0"
                     data-testid="skip-guided-onboarding"
                   >
@@ -619,7 +631,9 @@ export default function SetupPage() {
                   <Button
                     type="button"
                     onClick={() => handleContinue(true)}
-                    disabled={!selectedLanguage || pending !== null}
+                    disabled={
+                      !selectedLanguage || pending !== null || nativeSettingStatus === 'loading'
+                    }
                     className="min-w-0 flex-1 sm:flex-none"
                     data-testid="start-guided-onboarding"
                   >

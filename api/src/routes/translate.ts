@@ -32,6 +32,7 @@ import {
 } from '../lib/translate-prompts';
 import { recordLookupOutcome } from '../lib/ai-timing';
 import { localizeEntry } from '../lib/localize-entry';
+import { russianEnglishSlang } from '../lib/russian-english-slang';
 import { PREFETCH_MAX_CANDIDATES, prefetchLocalizations } from '../lib/localize-prefetch';
 import { recordStudySessionPing } from '../lib/study-session';
 import { notifyGlossCapHit } from '../lib/lifecycle-email';
@@ -112,6 +113,19 @@ type Parsed<T> = { ok: true; value: T } | { ok: false; error: string };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function normalizePhraseBreakdown(result: Record<string, unknown>): Record<string, unknown> {
+  const { literalBreakdown, ...rest } = result;
+  if (literalBreakdown === undefined || typeof literalBreakdown === 'string') return result;
+  if (!isRecord(literalBreakdown)) return rest;
+
+  const pairs: string[] = [];
+  for (const [word, gloss] of Object.entries(literalBreakdown)) {
+    if (!word.trim() || typeof gloss !== 'string' || !gloss.trim()) return rest;
+    pairs.push(`${word.trim()} — ${gloss.trim()}`);
+  }
+  return pairs.length ? { ...rest, literalBreakdown: pairs.join('; ') } : rest;
 }
 
 async function readObject(c: Context): Promise<Parsed<Record<string, unknown>>> {
@@ -333,6 +347,9 @@ export function makeTranslateRoutes({
 
     // A shared hit costs nothing, so it is served before any quota is reserved.
     const nativeCode = getNativeLanguageCode(userId);
+    const vetted =
+      lang === 'en' && nativeCode === 'ru' ? russianEnglishSlang(parsed.value.word) : undefined;
+    if (vetted) return c.text(vetted.map(({ gloss }) => gloss).join('; '));
     const cachedGloss = glossCache?.get(lang, nativeCode, parsed.value.word) ?? null;
     if (cachedGloss) {
       recordLookupOutcome('gloss', 'hit');
@@ -356,7 +373,8 @@ export function makeTranslateRoutes({
     const deltas = provider
       .stream({
         messages: [{ role: 'user', content: prompt }],
-        maxTokens: 32,
+        // Leave room for a short Cyrillic definition on providers that split it into more tokens.
+        maxTokens: nativeCode === 'ru' ? 64 : 32,
         task: 'word-gloss',
       })
       [Symbol.asyncIterator]();
@@ -471,6 +489,15 @@ export function makeTranslateRoutes({
     const userId = getCurrentUserId(c);
     const lang = resolveLanguage(parsed.value.language, userId);
     const langName = getLanguageConfig(lang).name;
+    const vetted =
+      lang === 'en' && getNativeLanguageCode(userId) === 'ru'
+        ? russianEnglishSlang(parsed.value.word)
+        : undefined;
+    if (vetted) {
+      const verdict = engine.checkLimit(userId, 'llmRequestsPerMonth');
+      if (!verdict.allowed) return planLimitResponse(c, verdict);
+      return c.json(stitchWordEntry({ senses: vetted }, parsed.value.word));
+    }
     const reservation = reserve(c, engine, userId, 'llmRequestsPerMonth');
     if (reservation instanceof Response) return reservation;
 
@@ -538,24 +565,31 @@ export function makeTranslateRoutes({
       !reservation.byok && (managedPhraseUsesCheapModel() || freeOnSmallModel);
 
     // Small models sometimes drift into English for the long fields.
-    const fixPhraseScript = async (
+    const finishPhrase = async (
       provider: LLMProvider,
       prompt: string,
       result: Record<string, unknown>,
     ) => {
-      const wrong = phraseFieldsInWrongScript(result, getNativeLanguageCode(userId));
-      if (wrong.length === 0) return result;
+      const answer = normalizePhraseBreakdown(result);
+      const wrong = phraseFieldsInWrongScript(answer, getNativeLanguageCode(userId));
+      if (wrong.length === 0) return answer;
       const retried = await completeJson<Record<string, unknown>>(provider, {
         messages: [{ role: 'user', content: prompt + phraseLanguageReminder(wrong, nativeName) }],
         maxTokens: 1500,
         task: 'phrase-rich',
       }).catch(() => null);
-      return retried ?? result;
+      return retried ? normalizePhraseBreakdown(retried) : answer;
     };
 
     const finishContextEntry = (entry: ReturnType<typeof stitchWordEntry>) => {
-      // The small model invents etymologies; leave the field out.
-      if (freeOnSmallModel && !reservation.byok) delete entry.etymology;
+      // Keep unverified model metadata away from reviewed slang entries.
+      const vetted = lang === 'en' && nativeName === 'Russian' && russianEnglishSlang(word);
+      if (vetted) {
+        delete entry.etymology;
+        delete entry.relatedForms;
+      } else if (freeOnSmallModel && !reservation.byok) {
+        delete entry.etymology;
+      }
       return entry;
     };
 
@@ -586,7 +620,7 @@ export function makeTranslateRoutes({
           maxTokens: 1500,
           task: 'phrase-rich',
         });
-        return fixPhraseScript(provider, prompt, result);
+        return finishPhrase(provider, prompt, result);
       }
 
       return finishContextEntry(
@@ -622,7 +656,7 @@ export function makeTranslateRoutes({
           maxTokens: 1500,
           visibleKeys: new Set(['translation']),
           finish: async (provider, text) =>
-            fixPhraseScript(provider, prompt, parseCompleteObject(text)),
+            finishPhrase(provider, prompt, parseCompleteObject(text)),
         };
       }
       return {

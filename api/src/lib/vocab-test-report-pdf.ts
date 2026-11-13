@@ -25,6 +25,17 @@ function resultMessages(locale: VocabReportLocale): Record<CatalogKey, string> {
   return JSON.parse(readFileSync(url, 'utf8')).vocabTest;
 }
 
+function formatLabel(
+  message: string,
+  locale: VocabReportLocale,
+  values: Record<string, string | number>,
+): string {
+  return new IntlMessageFormat(message, locale)
+    .formatToParts(values)
+    .map(({ value }) => value)
+    .join('');
+}
+
 function drawReport(pdf: PDFKit.PDFDocument, report: VocabReport, takenAt: Date): void {
   const { snapshot, books } = report;
   const { locale, level, estimate, margin, low, high, capped } = snapshot;
@@ -34,12 +45,12 @@ function drawReport(pdf: PDFKit.PDFDocument, report: VocabReport, takenAt: Date)
     takenAt,
   );
   const scoreKey = capped ? 'estimateCapped' : low === 0 ? 'estimateRange' : 'estimate';
-  const score = new IntlMessageFormat(messages[scoreKey], locale).format({
+  const score = formatLabel(messages[scoreKey], locale, {
     count: estimate,
     margin,
     high,
   });
-  const readingLevel = new IntlMessageFormat(messages.level, locale).format({ level });
+  const readingLevel = formatLabel(messages.level, locale, { level });
   const font = locale === 'en' ? 'zh-CN' : locale;
   const fontPath = fileURLToPath(
     new URL(`../assets/vocab-report-fonts/${font}.otf`, import.meta.url),

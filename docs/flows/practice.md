@@ -14,6 +14,8 @@ Intervals in days come from `calculateNextReview`:
 
 The table shows the legacy fixed gaps. The server now schedules bank cloze reviews with FSRS (see Bank cloze scheduling below). The client still sends the old body. A correct answer adds 25, cap 100. A miss sets mastery to 0 and re-queues the card in the same round. Retry awards no points. When a mastery 100 card is due, it still appears.
 
+
+Tapping a word in a fill-in sentence localizes its English dictionary senses to the learner’s translation language when available. The drawer uses the dictionary entry if localization fails.
 ## Word review
 
 **App domain:** Practice

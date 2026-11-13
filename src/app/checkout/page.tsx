@@ -60,7 +60,7 @@ export default function CheckoutPage() {
             theme,
             locale: locale.startsWith('zh')
               ? 'zh-Hans'
-              : locale === 'ja' || locale === 'ko'
+              : locale === 'ja' || locale === 'ko' || locale === 'ru'
                 ? locale
                 : 'en',
             successUrl: `${window.location.origin}/subscribe?checkout=success`,

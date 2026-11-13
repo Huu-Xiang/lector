@@ -1,4 +1,4 @@
-"""Build the four checked-in Readfox Report fonts from Noto Sans CJK Regular."""
+"""Build the checked-in Readfox Report fonts from Noto Sans CJK Regular."""
 from hashlib import sha256
 import json
 from pathlib import Path
@@ -22,13 +22,13 @@ def read_json(path):
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def source_text():
+def source_text(locales):
     parts = ["".join(map(chr, range(32, 127))), "± · • … 年月日년월일"]
     copy = read_json(lib / "vocab-test-report-copy.json")
     titles = read_json(library / "translations.json")
-    for locale, strings in copy.items():
+    for locale in locales:
         catalog = read_json(root / "messages/src" / locale / "vocabtest.json")["vocabTest"]
-        parts.extend(strings.values())
+        parts.extend(copy[locale].values())
         parts.extend(catalog[key] for key in CATALOG_KEYS)
         parts.extend(record["title"].get(locale, "") for record in titles.values())
     parts.extend(read_json(path)["title"] for path in library.glob("*/manifest.json"))
@@ -72,9 +72,15 @@ def main():
     if sha256(source.read_bytes()).hexdigest() != SOURCE_SHA256:
         raise ValueError("Expected Noto Sans CJK Regular from Sans2.004")
     fonts = TTCollection(source, lazy=True)
-    codepoints = source_text()
+    codepoints = source_text(("en", *FACE_LOCALES))
     for index, locale in enumerate(FACE_LOCALES):
         save_face(fonts.fonts[index], locale, codepoints)
+
+    russian = source_text(("en", "ru"))
+    russian.update(range(ord("А"), ord("я") + 1))
+    russian.update(map(ord, "Ёё\u00a0«»„“”–—"))
+    simplified_chinese = TTCollection(source, lazy=True).fonts[FACE_LOCALES.index("zh-CN")]
+    save_face(simplified_chinese, "ru", russian)
 
 
 if __name__ == "__main__":

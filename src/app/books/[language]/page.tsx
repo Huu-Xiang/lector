@@ -17,7 +17,9 @@ import {
   pickLocalized,
   type PublicBookLanguage,
 } from '@/lib/public-books';
+import { UI_LOCALES } from '@/i18n/locales';
 import BookDetailList from '../BookDetailList';
+import BookHubLocaleButton from '../BookHubLocaleButton';
 
 interface Props {
   params: Promise<{ language: string }>;
@@ -71,6 +73,10 @@ export default async function LanguageBooksPage({ params }: Props) {
   const t = await getTranslations('publicBooks');
   const title = t('languageTitle', { language: languageName });
   const path = `/books/${language}`;
+  const alternateLocale =
+    language === 'en'
+      ? UI_LOCALES.find(({ code }) => code === (locale === 'ru' ? 'en' : 'ru'))
+      : undefined;
   const others = languagesWithBooks().filter((code) => code !== language);
   return (
     <LegalShell title={title} wide>
@@ -90,6 +96,9 @@ export default async function LanguageBooksPage({ params }: Props) {
         })}
       </p>
       <p className="flex flex-wrap gap-x-3 text-muted-foreground">
+        {alternateLocale && (
+          <BookHubLocaleButton code={alternateLocale.code} label={alternateLocale.native} />
+        )}
         <span>{t('browseLevels')}:</span>
         {levels.map((level) => (
           <Link

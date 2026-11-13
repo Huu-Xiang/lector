@@ -125,6 +125,38 @@ describe('cached_entries — tenant, word, and language key', () => {
     expect(bob.sourceSentence).toBe('Bob private sentence');
   });
 
+  test('a cached English gloss misses after a switch to Russian', () => {
+    const userId = 'cache-language-switch';
+    const word = 'zzcachelanguageword';
+    const setNative = (native: string) =>
+      db
+        .prepare('INSERT OR REPLACE INTO settings (userId, key, value) VALUES (?, ?, ?)')
+        .run(userId, 'nativeLanguage', JSON.stringify(native));
+    try {
+      setNative('en');
+      cacheAcceptedEntry(userId, {
+        word,
+        language: 'en',
+        senses: [{ partOfSpeech: 'noun', gloss: 'tree bark' }],
+      });
+      expect(lookupWord(userId, word, 'en')?.senses[0]?.gloss).toBe('tree bark');
+
+      setNative('ru');
+      expect(lookupWord(userId, word, 'en')).toBeUndefined();
+      cacheAcceptedEntry(userId, {
+        word,
+        language: 'en',
+        senses: [{ partOfSpeech: 'noun', gloss: 'кора дерева (tree bark)' }],
+      });
+      expect(lookupWord(userId, word, 'en')?.senses[0]?.gloss).toBe('кора дерева (tree bark)');
+
+      setNative('en');
+      expect(lookupWord(userId, word, 'en')).toBeUndefined();
+    } finally {
+      db.prepare("DELETE FROM settings WHERE userId = ? AND key = 'nativeLanguage'").run(userId);
+    }
+  });
+
   test('validates nested cache bodies before writes', () => {
     expect(
       validateCacheAcceptedInput({

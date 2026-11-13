@@ -359,7 +359,7 @@
   N("flow:language-setup", "flow", "Language setup", {
     domain: "onboarding",
     md: "onboarding.md#language-setup",
-    summary: "SetupGuard, seed starter, guided lesson, three cloze cards, complete Onboarding.",
+    summary: "SetupGuard, language and level choice, starter or book pick, guided lesson, three cloze cards.",
     steps: ["file:setup-guard", "file:setup-page", "fn:seedStarterContent", "fn:startOnboarding", "route:onboarding-start"],
   });
   N("flow:add-language", "flow", "Add a language", {
@@ -665,6 +665,7 @@
   N("fn:lookupWord", "fn", "lookupWord", { path: "api/src/lib/dictionary-db.ts" });
   N("fn:resolveWord", "fn", "resolveWord", { path: "api/src/lib/dictionary-db.ts" });
   N("fn:cacheAcceptedEntry", "fn", "cacheAcceptedEntry", { path: "api/src/lib/dictionary-db.ts" });
+  N("fn:localizeEntrySenses", "fn", "localizeEntrySenses", { path: "src/lib/dictionary-client.ts" });
   N("fn:prefetchLocalizedSenses", "fn", "prefetchLocalizedSenses", { path: "src/lib/dictionary-client.ts" });
   N("fn:cacheAcceptedTranslation", "fn", "cacheAcceptedTranslation", { path: "src/lib/dictionary-client.ts" });
   N("fn:read-requestContextTranslation", "fn", "requestContextTranslation", { path: "src/app/read/[bookId]/page.tsx" });
@@ -763,6 +764,7 @@
   N("route:youtube-import", "route", "POST /api/import/youtube", { path: "api/src/routes/youtube-import.ts" });
   N("route:dict-lookup", "route", "GET /api/dictionary/lookup", { path: "api/src/routes/dictionary.ts" });
   N("route:dict-cache", "route", "POST /api/dictionary/cache", { path: "api/src/routes/dictionary.ts" });
+  N("route:translate-localize", "route", "POST /api/translate/localize", { path: "api/src/routes/translate.ts" });
   N("route:translate-prefetch", "route", "POST /api/translate/prefetch", { path: "api/src/routes/translate.ts" });
   N("route:admin-ai-timing", "route", "GET /api/admin/ai-timing", { path: "api/src/routes/admin.ts" });
   N("route:translate-gloss", "route", "POST /api/translate/gloss", { path: "api/src/routes/translate.ts" });
@@ -1038,6 +1040,7 @@
   edge("fn:read-handleWordClick", "fn:incrementDailyStat", "calls");
   edge("fn:read-handleWordClick", "fn:getVocabByText", "calls");
   edge("fn:read-handleWordClick", "fn:lookupWordRemote", "calls");
+  edge("fn:read-handleWordClick", "fn:localizeEntrySenses", "calls");
   edge("fn:getVocabByText", "file:data-layer", "in");
   edge("fn:getVocabByText", "route:vocab-get", "http");
   edge("route:vocab-get", "table:vocab", "reads");
@@ -1066,6 +1069,7 @@
   edge("file:translation-drawer", "flow:save-vocab", "opens");
   edge("fn:practice-handleWordClick", "file:practice-page", "in");
   edge("fn:practice-handleWordClick", "fn:lookupWordRemote", "calls");
+  edge("fn:practice-handleWordClick", "fn:localizeEntrySenses", "calls");
   edge("fn:practice-handleWordClick", "fn:translateGloss", "calls");
   edge("fn:translateGloss", "file:claude", "in");
   edge("fn:translateGloss", "fn:streamWordGloss", "calls");
@@ -1118,6 +1122,9 @@
   edge("flow:lesson-prefetch", "fn:prefetchLocalizedSenses", "starts");
   edge("fn:prefetchLocalizedSenses", "file:dictionary-client", "in");
   edge("fn:prefetchLocalizedSenses", "route:translate-prefetch", "http");
+  edge("fn:localizeEntrySenses", "file:dictionary-client", "in");
+  edge("fn:localizeEntrySenses", "route:translate-localize", "http");
+  edge("route:translate-localize", "file:route-translate", "in");
   edge("route:translate-prefetch", "file:route-translate", "in");
   edge("route:translate-prefetch", "file:localize-prefetch", "calls");
   edge("file:localize-prefetch", "file:ai-timing", "calls");

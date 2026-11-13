@@ -323,6 +323,25 @@ describe('managed Free translations', () => {
     expect(engine.getUsage('local', 'llmRequestsPerMonth')).toBe(0);
   });
 
+  test('gives Russian quick glosses room for a short Cyrillic definition', async () => {
+    db.prepare(
+      "INSERT INTO settings (userId, key, value) VALUES ('local', 'nativeLanguage', ?) " +
+        'ON CONFLICT(userId, key) DO UPDATE SET value = excluded.value',
+    ).run(JSON.stringify('ru'));
+    try {
+      const { app, provider } = makeApp({
+        engine: makeEngine({ now: () => new Date('2026-07-15T12:00:00Z') }),
+      });
+      const res = await post(app, '/gloss', { word: 'ghosting', language: 'en' });
+      expect(res.status).toBe(200);
+      await res.text();
+      expect(provider.calls[0]).toMatchObject({ task: 'word-gloss', maxTokens: 64 });
+      expect(provider.calls[0].messages[0].content).toContain('Russian');
+    } finally {
+      db.prepare("DELETE FROM settings WHERE userId = 'local' AND key = 'nativeLanguage'").run();
+    }
+  });
+
   test('returns translation-only phrase/context responses with small prompts and budgets', async () => {
     const engine = makeEngine({ now: () => new Date('2026-07-15T12:00:00Z') });
     const { app, provider } = makeApp({ engine });
@@ -645,6 +664,55 @@ class MemoryGlossCache implements GlossCache {
 
 describe('shared gloss cache', () => {
   const now = () => new Date('2026-07-15T12:00:00Z');
+
+  test('vetted English-to-Russian slang wins over an old generated gloss', async () => {
+    db.prepare(
+      "INSERT INTO settings (userId, key, value) VALUES ('local', 'nativeLanguage', ?)",
+    ).run(JSON.stringify('ru'));
+    try {
+      const cache = new MemoryGlossCache();
+      cache.put('en', 'ru', 'delulu', 'трезвый взгляд на вещи');
+      const engine = makeEngine({ now, compedPlan: 'cloud' });
+      const { app, provider } = makeApp({ engine, glossCache: cache });
+      const quick = await post(app, '/gloss', { word: 'Delulu', language: 'en' });
+      expect(await quick.text()).toBe('верящий в собственные фантазии (шутл.)');
+      for (const [word, expected] of [
+        ['Doomscrolling', 'плохими новостями'],
+        ['rage-bait', 'намеренно вызывает гнев'],
+        ['brain-rot', 'отупляющий интернет-контент'],
+        ['enshittification', 'ради прибыли'],
+      ]) {
+        const response = await post(app, '/gloss', { word, language: 'en' });
+        expect(response.status).toBe(200);
+        expect(await response.text()).toContain(expected);
+      }
+      const free = makeApp({ engine: makeEngine({ now }) });
+      await planLimit(
+        await post(free.app, '/enrich', { word: 'doomscrolling', language: 'en' }),
+        'llmRequestsPerMonth',
+      );
+      expect(free.provider.calls).toHaveLength(0);
+      const detail = await post(app, '/enrich', { word: 'doomscrolling', language: 'en' });
+      expect(detail.status).toBe(200);
+      const entry = await detail.json();
+      expect(entry).toMatchObject({
+        word: 'doomscrolling',
+        senses: [
+          { partOfSpeech: 'noun', gloss: 'навязчивое пролистывание ленты с плохими новостями' },
+        ],
+      });
+      expect(entry.relatedForms).toBeUndefined();
+      expect(entry.etymology).toBeUndefined();
+      expect(provider.calls).toHaveLength(0);
+      expect(engine.getUsage('local', 'wordGlossesPerMonth')).toBe(0);
+      expect(engine.getUsage('local', 'llmRequestsPerMonth')).toBe(0);
+      const unreviewed = await post(app, '/gloss', { word: 'ghosting', language: 'en' });
+      expect(await unreviewed.text()).toBe('meaning');
+      expect(provider.calls).toHaveLength(1);
+    } finally {
+      db.prepare("DELETE FROM settings WHERE userId = 'local' AND key = 'nativeLanguage'").run();
+    }
+  });
 
   test('a repeat lookup is served from the cache without the provider or any quota', async () => {
     const cache = new MemoryGlossCache();
@@ -1109,6 +1177,28 @@ describe('streamed translation (stream: true)', () => {
     });
     expect(provider.calls.map((call) => call.task)).toEqual(['phrase-rich']);
     expect(engine.getUsage('local', 'llmRequestsPerMonth')).toBe(1);
+  });
+
+  test.each([false, true])('normalizes a model breakdown map with stream=%s', async (stream) => {
+    const engine = makeEngine({
+      now: () => new Date('2026-07-15T12:00:00Z'),
+      compedPlan: 'cloud',
+    });
+    const output = JSON.stringify({
+      translation: 'нездоровится',
+      literalBreakdown: { under: 'под', 'the weather': 'погода' },
+    });
+    const provider = streamingProvider([output]);
+    provider.completeImpl = async () => output;
+    const { app } = makeApp({ engine, provider });
+
+    const res = await post(app, '/', { word: 'under the weather', type: 'phrase', stream });
+    const answer = stream ? (await lines(res)).at(-1)?.result : await res.json();
+    expect(answer).toEqual({
+      translation: 'нездоровится',
+      literalBreakdown: 'under — под; the weather — погода',
+    });
+    expect(provider.calls.map((call) => call.task)).toEqual(['phrase-rich']);
   });
 
   test('rich context streams the sense glosses and keeps the stitched shape', async () => {

@@ -16,6 +16,7 @@ import { stemCandidates } from '../../../languages/morphology';
 import { analyseJapanese } from './ja-morphology';
 import { acceptedDictionaryContentBytes } from './storage-limits';
 import { getNativeLanguageCode } from './native-language';
+import { matchesNative } from './translation-lang';
 
 // x-system fold (#307 §3.4): learners without an Esperanto keyboard type
 // cx/gx/hx/jx/sx/ux for the supersignoj (ĉ ĝ ĥ ĵ ŝ ŭ). Folded at the lookup
@@ -628,6 +629,8 @@ function lookupCached(
     )
     .all(userId, row.word, language) as Array<{ pos: string | null; gloss: string }>;
   if (senses.length === 0) return undefined;
+  const meaning = senses.map((sense) => sense.gloss).join('; ');
+  if (!matchesNative(meaning, null, getNativeLanguageCode(userId))) return undefined;
 
   const related = userDb
     .prepare(

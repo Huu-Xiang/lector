@@ -20,10 +20,36 @@ test.describe('public book pages', () => {
     );
 
     await page.getByTestId('book-try-read').click();
+    await expect(page.getByTestId('book-chapter')).toBeVisible({ timeout: 15_000 });
     await expect(page.getByTestId('book-chapter-register')).toHaveAttribute(
       'href',
       '/register?book=en%2Fwalden',
     );
+  });
+
+  test('the English hub can switch to Russian without translating the chapter', async ({
+    page,
+  }) => {
+    await page.goto('/books/en');
+    await page.getByRole('button', { name: 'Русский', exact: true }).click();
+    await expect(page.locator('html')).toHaveAttribute('lang', 'ru');
+
+    const book = page.locator('a[href="/books/en/walden"]').first();
+    await expect(book).toContainText('Уолден');
+    await book.click();
+    await expect(page.getByText(/Торо два года живёт в хижине/)).toBeVisible();
+    await page.getByTestId('book-try-read').click();
+    const chapter = page.getByTestId('book-chapter');
+    await expect(chapter).toHaveAttribute('lang', 'en', { timeout: 15_000 });
+    await expect(chapter).toContainText('When I wrote the following pages');
+    await expect(page.getByTestId('book-chapter-register')).toHaveAttribute(
+      'href',
+      '/register?book=en%2Fwalden',
+    );
+
+    await page.goto('/books/en');
+    await page.getByRole('button', { name: 'English', exact: true }).click();
+    await expect(page.locator('html')).toHaveAttribute('lang', 'en');
   });
 
   test('an unknown book is not found', async ({ page }) => {

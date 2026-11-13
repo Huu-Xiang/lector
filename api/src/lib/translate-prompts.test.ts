@@ -57,6 +57,28 @@ describe('buildWordEntryPrompt (enrich path)', () => {
     expect(prompt).not.toContain(SPELREELS_MARKER);
     expect(prompt).not.toContain(getSpelreelsContext());
   });
+
+  test('grounds a Russian contextual lookup in vetted senses', () => {
+    const sentence = 'My feed is full of brainrot.';
+    const rich = buildWordEntryPrompt('English', 'brainrot', sentence, 'Russian');
+    const simple = buildSimpleContextPrompt('English', 'brainrot', sentence, 'Russian');
+    for (const prompt of [rich, simple]) {
+      expect(prompt).toContain(
+        'Verified Russian senses: бессмысленный, отупляющий интернет-контент',
+      );
+      expect(prompt).toContain('ощущение умственного притупления');
+    }
+    expect(buildWordEntryPrompt('English', 'brainrot', sentence, 'French')).not.toContain(
+      'Verified Russian senses',
+    );
+  });
+
+  test('asks for related-form labels in Russian while keeping English forms', () => {
+    const russian = buildWordEntryPrompt('English', 'bark', 'The puppy barked.', 'Russian');
+    expect(russian).toContain('"form": "the related word in English"');
+    expect(russian).toContain('"relation": "a short grammatical relation label in Russian"');
+    expect(russian).not.toContain('past tense of');
+  });
 });
 
 describe('bounded Free prompts', () => {
@@ -104,6 +126,12 @@ describe('buildPhrasePrompt (keeps spelreels for af)', () => {
     expect(buildPhrasePrompt('German', '', 'der Apfel', SENTENCE, 'English', true)).toContain(
       marker,
     );
+  });
+
+  test('asks for the ordinary dictionary meanings in a literal breakdown', () => {
+    const prompt = buildPhrasePrompt('English', '', 'under the weather', '', 'Russian');
+    expect(prompt).toContain('ordinary dictionary meanings of the individual English words');
+    expect(prompt).toContain('pair each English word or short unit with its Russian gloss');
   });
 });
 
@@ -174,6 +202,18 @@ describe('phraseFieldsInWrongScript', () => {
 
   test('does not check Latin-script native languages', () => {
     expect(phraseFieldsInWrongScript({ idiomaticMeaning: english }, 'fr')).toEqual([]);
+  });
+
+  test('flags an English literal breakdown for a Russian reader', () => {
+    const result = {
+      translation: 'нездоровится',
+      literalBreakdown: 'Literally, under the atmospheric conditions.',
+      idiomaticMeaning: 'Плохо себя чувствовать.',
+    };
+    expect(phraseFieldsInWrongScript(result, 'ru')).toEqual(['literalBreakdown']);
+    expect(
+      phraseFieldsInWrongScript({ literalBreakdown: 'under — под; the weather — погода' }, 'ru'),
+    ).toEqual([]);
   });
 });
 

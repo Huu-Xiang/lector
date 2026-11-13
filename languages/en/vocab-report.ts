@@ -1,4 +1,4 @@
-export const VOCAB_REPORT_LOCALES = ['en', 'zh-CN', 'zh-TW', 'ja', 'ko'] as const;
+export const VOCAB_REPORT_LOCALES = ['en', 'zh-CN', 'zh-TW', 'ja', 'ko', 'ru'] as const;
 export const VOCAB_REPORT_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'] as const;
 
 const VOCAB_REPORT_ATTEMPT_ID =

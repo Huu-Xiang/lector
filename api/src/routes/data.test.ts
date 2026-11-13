@@ -2,6 +2,7 @@ import '../test-guard';
 import { describe, test, expect, beforeEach, afterEach } from 'bun:test';
 import { db } from '../db';
 import type { CacheAcceptedInput } from '../lib/dictionary-db';
+import type { VocabReportBackup } from '../lib/vocab-test-report-store';
 import { buildUserExport } from '../lib/user-export';
 import { libraryLessonIdFor, loadLibraryBook } from '../lib/library-content';
 import path from 'path';
@@ -59,11 +60,11 @@ describe('portable vocabulary test reports', () => {
   afterEach(reset);
 
   const attemptId = '52fc27b5-c354-4f32-9873-be701eb87161';
-  const report = {
+  const report: VocabReportBackup = {
     snapshot: {
       attemptId,
       takenAt: '2026-01-01T00:00:00.000Z',
-      locale: 'en',
+      locale: 'ru',
       estimate: 4000,
       margin: 500,
       low: 3500,
@@ -72,7 +73,7 @@ describe('portable vocabulary test reports', () => {
       level: 'B2',
       bookSlugs: ['former-library-book'],
     },
-    books: [{ slug: 'former-library-book', title: 'A saved recommendation' }],
+    books: [{ slug: 'former-library-book', title: 'Сохранённая рекомендация' }],
   };
 
   test('exports display data only, and restores without requeueing delivery', async () => {

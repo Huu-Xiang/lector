@@ -1,0 +1,24 @@
+{
+  "dailyGoal": {
+    "label": "Серия: {count, plural, one {# день} few {# дня} many {# дней} other {# дня}}. Сегодня: {amount}",
+    "amount": {
+      "minutes": "{done}/{target} мин",
+      "reviews": "{done}/{target} слов"
+    },
+    "metToast": "Цель на день выполнена! Серия: {count, plural, one {# день} few {# дня} many {# дней} other {# дня}}",
+    "doneToday": "Цель на сегодня выполнена",
+    "todayProgress": "Сегодня: {amount}",
+    "streakLine": "Серия: {count, plural, one {# день} few {# дня} many {# дней} other {# дня}}",
+    "longestLine": "Рекорд: {count, plural, one {# день} few {# дня} many {# дней} other {# дня}}",
+    "changeGoal": "Цель на день",
+    "preset": {
+      "minutes": "Читать {count} мин",
+      "reviews": "Повторять {count} слов"
+    },
+    "saveFailed": "Не удалось сохранить цель",
+    "setupTitle": "Цель на день",
+    "setupHint": "Выполняйте цель каждый день, чтобы продлить серию. Цель можно изменить позже.",
+    "settingsLabel": "Цель на день",
+    "settingsHint": "День засчитывается в серию, когда вы выполняете цель."
+  }
+}

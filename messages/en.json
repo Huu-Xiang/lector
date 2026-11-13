@@ -217,7 +217,7 @@
     "errSave": "Could not save your setup",
     "levelHint": "You can change it later in Free books.",
     "nativeTitle": "1. Your language",
-    "nativeHint": "Translations and explanations use this language. The interface is available in English, Simplified Chinese, Japanese and Korean.",
+    "nativeHint": "Translations and explanations use this language.",
     "interests": "Your interests",
     "interestsHint": "Optional — we'll add fresh articles on these topics to Free books.",
     "interest": {

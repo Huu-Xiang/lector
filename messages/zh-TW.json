@@ -217,7 +217,7 @@
     "errSave": "無法儲存你的設定",
     "levelHint": "之後可以在「免費書籍」裡修改。",
     "nativeTitle": "1. 你的母語",
-    "nativeHint": "單字翻譯和講解都用這種語言。介面目前有英文、簡體中文、繁體中文、日文和韓文。",
+    "nativeHint": "單字翻譯和講解都用這種語言。",
     "interests": "你的興趣",
     "interestsHint": "選填——選中的主題會在「免費書籍」裡顯示最新文章。",
     "interest": {

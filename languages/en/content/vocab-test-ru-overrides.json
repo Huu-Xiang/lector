@@ -1,0 +1,6348 @@
+{
+  "abase": {
+    "v.": {
+      "en": "to make someone feel less proud or important",
+      "ru": ["унижать", "умалять достоинство"]
+    }
+  },
+  "abeyance": {
+    "n.": {
+      "en": "state of not being used for now",
+      "ru": ["временная приостановка", "бездействие"]
+    }
+  },
+  "abide": {
+    "v.": {
+      "en": "to accept or bear something unpleasant",
+      "ru": ["терпеть", "мириться с чем-либо"]
+    }
+  },
+  "abnegation": {
+    "n.": {
+      "en": "act of giving up what you want",
+      "ru": ["самоотречение", "отказ от собственных желаний"]
+    }
+  },
+  "about": {
+    "prep.": {
+      "en": "on the subject of; near to",
+      "ru": ["о", "около"]
+    }
+  },
+  "above": {
+    "prep.": {
+      "en": "in a higher place than",
+      "ru": ["над", "выше"]
+    }
+  },
+  "abstinent": {
+    "adj.": {
+      "en": "not allowing yourself something like alcohol",
+      "ru": ["воздерживающийся от чего-либо"]
+    }
+  },
+  "accent": {
+    "n.": {
+      "en": "speech that shows where you come from",
+      "ru": ["акцент", "особенности произношения"]
+    }
+  },
+  "accept": {
+    "v.": {
+      "en": "take something that is offered",
+      "ru": ["принимать", "соглашаться принять"]
+    }
+  },
+  "acclaim": {
+    "v.": {
+      "en": "praise in a public way",
+      "ru": ["публично восхвалять", "приветствовать с восторгом"]
+    }
+  },
+  "accommodate": {
+    "v.": {
+      "en": "have enough room for",
+      "ru": ["вмещать", "иметь место для размещения"]
+    }
+  },
+  "accumulate": {
+    "v.": {
+      "en": "gather more and more over time",
+      "ru": ["накапливать", "скапливаться"]
+    }
+  },
+  "accuracy": {
+    "n.": {
+      "en": "quality of being exactly right",
+      "ru": ["точность"]
+    }
+  },
+  "accustom": {
+    "v.": {
+      "en": "make someone used to something new",
+      "ru": ["приучать"]
+    }
+  },
+  "acquaint": {
+    "v.": {
+      "en": "to make someone know about something or someone",
+      "ru": ["знакомить", "давать представление"]
+    }
+  },
+  "acquaintance": {
+    "n.": {
+      "en": "person you know a little",
+      "ru": ["знакомый", "знакомая"]
+    }
+  },
+  "across": {
+    "prep.": {
+      "en": "from one side to the other side",
+      "ru": ["через", "поперёк"]
+    }
+  },
+  "act": {
+    "v.": {
+      "en": "do something; behave in a certain way",
+      "ru": ["действовать", "вести себя"]
+    }
+  },
+  "activate": {
+    "v.": {
+      "en": "make a device start to work",
+      "ru": ["активировать", "приводить в действие"]
+    }
+  },
+  "actually": {
+    "adv.": {
+      "en": "in fact; in truth",
+      "ru": ["на самом деле", "фактически"]
+    }
+  },
+  "addle": {
+    "v.": {
+      "en": "make someone unable to think clearly",
+      "ru": ["одурманивать", "мутить рассудок"]
+    }
+  },
+  "adorable": {
+    "adj.": {
+      "en": "so cute that you love it",
+      "ru": ["очаровательный", "умилительный"]
+    }
+  },
+  "adversely": {
+    "adv.": {
+      "en": "in a way that causes harm",
+      "ru": ["неблагоприятно", "с вредными последствиями"]
+    }
+  },
+  "advisory": {
+    "adj.": {
+      "en": "giving help and guidance on a subject",
+      "ru": ["консультативный", "рекомендательный"]
+    }
+  },
+  "affect": {
+    "v.": {
+      "en": "cause a change in something",
+      "ru": ["влиять", "воздействовать"]
+    }
+  },
+  "affectation": {
+    "n.": {
+      "en": "unnatural behavior meant to impress",
+      "ru": ["жеманство", "манерность"]
+    }
+  },
+  "age": {
+    "n.": {
+      "en": "number of years a person has lived",
+      "ru": ["возраст"]
+    }
+  },
+  "aggregate": {
+    "n.": {
+      "en": "total made by adding many parts together",
+      "ru": ["совокупность", "общая сумма"]
+    }
+  },
+  "agitation": {
+    "n.": {
+      "en": "state of being worried and unable to rest",
+      "ru": ["волнение", "беспокойство"]
+    }
+  },
+  "agree": {
+    "v.": {
+      "en": "have the same opinion as another person",
+      "ru": ["соглашаться", "разделять мнение"]
+    }
+  },
+  "agricultural": {
+    "adj.": {
+      "en": "about farming",
+      "ru": ["сельскохозяйственный"]
+    }
+  },
+  "ahead": {
+    "adv.": {
+      "en": "in front of someone or something",
+      "ru": ["впереди"]
+    }
+  },
+  "aim": {
+    "n.": {
+      "en": "thing that you want to do or get",
+      "ru": ["цель", "намерение"]
+    },
+    "v.": {
+      "en": "point at a target; try to do",
+      "ru": ["целиться", "стремиться"]
+    }
+  },
+  "alcoholic": {
+    "adj.": {
+      "en": "containing the drink that can make you drunk",
+      "ru": ["алкогольный", "содержащий алкоголь"]
+    }
+  },
+  "algebra": {
+    "n.": {
+      "en": "kind of math using letters for numbers",
+      "ru": ["алгебра"]
+    }
+  },
+  "alibi": {
+    "n.": {
+      "en": "proof you were somewhere else",
+      "ru": ["алиби", "доказательство пребывания в другом месте"]
+    }
+  },
+  "alien": {
+    "adj.": {
+      "en": "strange and not familiar to you",
+      "ru": ["чуждый", "незнакомый"]
+    }
+  },
+  "alienate": {
+    "v.": {
+      "en": "make people feel unfriendly toward you",
+      "ru": ["отталкивать людей", "отчуждать"]
+    }
+  },
+  "all": {
+    "adj.": {
+      "en": "every one of a group; the whole",
+      "ru": ["все", "весь"]
+    }
+  },
+  "allowance": {
+    "n.": {
+      "en": "money given regularly for a set need",
+      "ru": ["регулярное денежное пособие"]
+    }
+  },
+  "along": {
+    "prep.": {
+      "en": "next to the length of something",
+      "ru": ["вдоль"]
+    }
+  },
+  "alongside": {
+    "prep.": {
+      "en": "next to or together with",
+      "ru": ["рядом с", "бок о бок с"]
+    }
+  },
+  "aloud": {
+    "adv.": {
+      "en": "in a voice that others can hear",
+      "ru": ["вслух"]
+    }
+  },
+  "although": {
+    "conj.": {
+      "en": "in spite of the fact that",
+      "ru": ["хотя", "несмотря на то что"]
+    }
+  },
+  "altruistic": {
+    "adj.": {
+      "en": "caring about others before yourself",
+      "ru": ["альтруистический", "бескорыстно заботящийся о других"]
+    }
+  },
+  "always": {
+    "adv.": {
+      "en": "at all times; every time",
+      "ru": ["всегда"]
+    }
+  },
+  "ambience": {
+    "n.": {
+      "en": "mood or feeling of a place",
+      "ru": ["атмосфера места", "обстановка"]
+    }
+  },
+  "ambient": {
+    "adj.": {
+      "en": "existing in the area around you",
+      "ru": ["окружающий", "присутствующий в окружающей среде"]
+    }
+  },
+  "amid": {
+    "prep.": {
+      "en": "in the middle of",
+      "ru": ["среди", "посреди"]
+    }
+  },
+  "amount": {
+    "n.": {
+      "en": "how much of something there is",
+      "ru": ["количество", "объём"]
+    },
+    "v.": {
+      "en": "to add up to a total",
+      "ru": ["составлять в сумме"]
+    }
+  },
+  "anagram": {
+    "n.": {
+      "en": "word made by moving the letters of another",
+      "ru": ["анаграмма", "слово из переставленных букв другого слова"]
+    }
+  },
+  "analytical": {
+    "adj.": {
+      "en": "using careful study to understand something",
+      "ru": ["аналитический", "основанный на тщательном анализе"]
+    }
+  },
+  "analyze": {
+    "v.": {
+      "en": "study the parts of something in detail",
+      "ru": ["анализировать", "подробно исследовать"]
+    }
+  },
+  "anarchic": {
+    "adj.": {
+      "en": "without rules or control",
+      "ru": ["анархический", "лишённый порядка и управления"]
+    }
+  },
+  "anathema": {
+    "n.": {
+      "en": "something that you strongly hate",
+      "ru": ["предмет сильной неприязни", "нечто ненавистное"]
+    }
+  },
+  "ancestry": {
+    "n.": {
+      "en": "family that lived long before you",
+      "ru": ["предки", "род"]
+    }
+  },
+  "and": {
+    "conj.": {
+      "en": "joins words or parts of a sentence",
+      "ru": ["и"]
+    }
+  },
+  "anesthetic": {
+    "n.": {
+      "en": "drug that stops you feeling pain",
+      "ru": ["анестетик", "обезболивающее средство"]
+    }
+  },
+  "angle": {
+    "n.": {
+      "en": "space between two lines that meet",
+      "ru": ["угол"]
+    }
+  },
+  "angry": {
+    "adj.": {
+      "en": "feeling that you want to shout",
+      "ru": ["сердитый", "разгневанный"]
+    }
+  },
+  "anniversary": {
+    "n.": {
+      "en": "day when you remember an event each year",
+      "ru": ["годовщина"]
+    }
+  },
+  "anxiety": {
+    "n.": {
+      "en": "a strong feeling of worry or fear",
+      "ru": ["тревога", "сильное беспокойство"]
+    }
+  },
+  "anyone": {
+    "pron.": {
+      "en": "any person at all",
+      "ru": ["кто угодно"]
+    }
+  },
+  "anywhere": {
+    "adv.": {
+      "en": "in or to any place",
+      "ru": ["где угодно", "куда угодно"]
+    }
+  },
+  "appear": {
+    "v.": {
+      "en": "come into view; seem",
+      "ru": ["появляться", "казаться"]
+    }
+  },
+  "apply": {
+    "v.": {
+      "en": "ask in writing for a job or place",
+      "ru": ["подавать заявление", "подавать заявку"]
+    }
+  },
+  "approve": {
+    "v.": {
+      "en": "agree to or say yes to something",
+      "ru": ["одобрять", "соглашаться"]
+    }
+  },
+  "approximate": {
+    "adj.": {
+      "en": "close to the exact number but not exact",
+      "ru": ["приблизительный", "неточный"]
+    }
+  },
+  "archive": {
+    "n.": {
+      "en": "place or record where old papers are kept",
+      "ru": ["архив"]
+    }
+  },
+  "arrange": {
+    "v.": {
+      "en": "put in order or make plans for",
+      "ru": ["упорядочивать", "организовывать"]
+    }
+  },
+  "arrive": {
+    "v.": {
+      "en": "get to the place you were going to",
+      "ru": ["прибывать", "приезжать"]
+    }
+  },
+  "art": {
+    "n.": {
+      "en": "paintings, music and other works of skill",
+      "ru": ["искусство"]
+    }
+  },
+  "arthritis": {
+    "n.": {
+      "en": "disease that makes joints sore and stiff",
+      "ru": ["артрит", "воспаление суставов"]
+    }
+  },
+  "articulate": {
+    "adj.": {
+      "en": "able to say ideas clearly",
+      "ru": ["умеющий ясно выражать мысли"]
+    }
+  },
+  "assessment": {
+    "n.": {
+      "en": "act of judging how good something is",
+      "ru": ["оценка"]
+    }
+  },
+  "associate": {
+    "n.": {
+      "en": "a person you work or spend time with",
+      "ru": ["коллега", "товарищ"]
+    }
+  },
+  "assurance": {
+    "n.": {
+      "en": "promise that something is true",
+      "ru": ["заверение", "уверение"]
+    }
+  },
+  "astound": {
+    "v.": {
+      "en": "surprise very much",
+      "ru": ["изумлять", "поражать"]
+    }
+  },
+  "astronomical": {
+    "adj.": {
+      "en": "of the stars; extremely large",
+      "ru": ["астрономический", "чрезвычайно большой"]
+    }
+  },
+  "atop": {
+    "prep.": {
+      "en": "on the very top of",
+      "ru": ["поверх", "на самом верху"]
+    }
+  },
+  "attitude": {
+    "n.": {
+      "en": "way you think and feel about something",
+      "ru": ["отношение", "настрой"]
+    }
+  },
+  "attract": {
+    "v.": {
+      "en": "make people want to come near",
+      "ru": ["привлекать", "притягивать"]
+    }
+  },
+  "authenticate": {
+    "v.": {
+      "en": "prove that something is real or true",
+      "ru": ["подтверждать подлинность", "удостоверять"]
+    }
+  },
+  "author": {
+    "n.": {
+      "en": "person who writes a book",
+      "ru": ["автор"]
+    }
+  },
+  "autocratic": {
+    "adj.": {
+      "en": "ruling with complete power over others",
+      "ru": ["самовластный", "автократический"]
+    }
+  },
+  "available": {
+    "adj.": {
+      "en": "that you can get or use now",
+      "ru": ["доступный", "имеющийся в наличии"]
+    }
+  },
+  "avocado": {
+    "n.": {
+      "en": "green fruit with a big stone",
+      "ru": ["авокадо"]
+    }
+  },
+  "awareness": {
+    "n.": {
+      "en": "knowledge that something exists or is true",
+      "ru": ["осведомлённость", "понимание"]
+    }
+  },
+  "away": {
+    "adv.": {
+      "en": "to or at a distance from a place",
+      "ru": ["прочь", "в стороне"]
+    }
+  },
+  "baby": {
+    "n.": {
+      "en": "very young child",
+      "ru": ["младенец", "малыш"]
+    }
+  },
+  "bacchanal": {
+    "n.": {
+      "en": "wild party with much drink",
+      "ru": ["вакханалия", "буйная пирушка"]
+    }
+  },
+  "backside": {
+    "n.": {
+      "en": "the part of the body you sit on",
+      "ru": ["ягодицы", "зад"]
+    }
+  },
+  "bad": {
+    "adj.": {
+      "en": "not good; of low quality",
+      "ru": ["плохой", "некачественный"]
+    }
+  },
+  "badger": {
+    "n.": {
+      "en": "gray animal with a striped face",
+      "ru": ["барсук"]
+    }
+  },
+  "ban": {
+    "v.": {
+      "en": "to say officially that something is not allowed",
+      "ru": ["официально запрещать"]
+    }
+  },
+  "bankruptcy": {
+    "n.": {
+      "en": "state of being unable to pay debts",
+      "ru": ["банкротство", "неплатёжеспособность"]
+    }
+  },
+  "barber": {
+    "n.": {
+      "en": "person who cuts men's hair",
+      "ru": ["мужской парикмахер"]
+    }
+  },
+  "barn": {
+    "n.": {
+      "en": "large farm building for crops or animals",
+      "ru": ["амбар", "сарай"]
+    }
+  },
+  "baseline": {
+    "n.": {
+      "en": "starting level used to compare later results",
+      "ru": ["исходный уровень для сравнения"]
+    }
+  },
+  "bash": {
+    "v.": {
+      "en": "hit hard",
+      "ru": ["сильно ударять", "колотить"]
+    }
+  },
+  "begin": {
+    "v.": {
+      "en": "do the first part of something",
+      "ru": ["начинать"]
+    }
+  },
+  "believe": {
+    "v.": {
+      "en": "feel that something is true",
+      "ru": ["верить"]
+    }
+  },
+  "belittle": {
+    "v.": {
+      "en": "make someone or something seem unimportant",
+      "ru": ["принижать", "преуменьшать значимость"]
+    }
+  },
+  "beside": {
+    "prep.": {
+      "en": "at the side of",
+      "ru": ["сбоку от", "возле"]
+    }
+  },
+  "betray": {
+    "v.": {
+      "en": "harm someone who trusts you, often for gain",
+      "ru": ["предавать"]
+    }
+  },
+  "between": {
+    "prep.": {
+      "en": "in the space that separates two things",
+      "ru": ["между"]
+    }
+  },
+  "beyond": {
+    "prep.": {
+      "en": "on the far side of; past",
+      "ru": ["за", "по ту сторону"]
+    }
+  },
+  "biennial": {
+    "adj.": {
+      "en": "happening once every two years",
+      "ru": ["происходящий раз в два года"]
+    }
+  },
+  "bifurcate": {
+    "v.": {
+      "en": "split into two branches",
+      "ru": ["разветвляться на две части"]
+    }
+  },
+  "bike": {
+    "n.": {
+      "en": "a two-wheeled vehicle that you pedal",
+      "ru": ["велосипед"]
+    }
+  },
+  "bill": {
+    "n.": {
+      "en": "paper that shows how much you must pay",
+      "ru": ["счёт к оплате"]
+    }
+  },
+  "billion": {
+    "num.": {
+      "en": "one thousand million",
+      "ru": ["миллиард"]
+    }
+  },
+  "bit": {
+    "n.": {
+      "en": "small piece or small amount",
+      "ru": ["кусочек", "небольшое количество"]
+    }
+  },
+  "bitter": {
+    "adj.": {
+      "en": "having a sharp, unpleasant taste",
+      "ru": ["горький", "с резким неприятным вкусом"]
+    }
+  },
+  "black": {
+    "adj.": {
+      "en": "of the color of coal",
+      "ru": ["чёрный"]
+    }
+  },
+  "blacken": {
+    "v.": {
+      "en": "make dark, or make a name look bad",
+      "ru": ["чернить", "очернять репутацию"]
+    }
+  },
+  "blend": {
+    "v.": {
+      "en": "mix things together smoothly",
+      "ru": ["смешивать до однородности"]
+    }
+  },
+  "block": {
+    "n.": {
+      "en": "solid piece of wood, stone or ice",
+      "ru": ["блок", "глыба"]
+    },
+    "v.": {
+      "en": "stop something from moving through",
+      "ru": ["преграждать", "перекрывать"]
+    }
+  },
+  "blood": {
+    "n.": {
+      "en": "red liquid that flows in your body",
+      "ru": ["кровь"]
+    }
+  },
+  "boiler": {
+    "n.": {
+      "en": "tank that heats water for a building",
+      "ru": ["водонагреватель", "котёл"]
+    }
+  },
+  "bondage": {
+    "n.": {
+      "en": "state of having no freedom",
+      "ru": ["неволя", "рабство"]
+    }
+  },
+  "bookkeeper": {
+    "n.": {
+      "en": "someone who records the money of a firm",
+      "ru": ["бухгалтер", "счетовод"]
+    }
+  },
+  "bouncy": {
+    "adj.": {
+      "en": "able to spring back up easily",
+      "ru": ["прыгучий", "легко отскакивающий"]
+    }
+  },
+  "boy": {
+    "n.": {
+      "en": "young male person",
+      "ru": ["мальчик"]
+    }
+  },
+  "brag": {
+    "v.": {
+      "en": "talk too proudly about what you have",
+      "ru": ["хвастаться"]
+    }
+  },
+  "brewery": {
+    "n.": {
+      "en": "place where beer is made",
+      "ru": ["пивоварня"]
+    }
+  },
+  "broil": {
+    "v.": {
+      "en": "cook with direct strong heat",
+      "ru": ["готовить под сильным прямым жаром"]
+    }
+  },
+  "broom": {
+    "n.": {
+      "en": "tool with a long handle for sweeping floors",
+      "ru": ["метла", "веник"]
+    }
+  },
+  "brusque": {
+    "adj.": {
+      "en": "short and rude in speech",
+      "ru": ["резкий и грубый в разговоре"]
+    }
+  },
+  "bulkhead": {
+    "n.": {
+      "en": "wall inside a ship or plane",
+      "ru": ["переборка судна или самолёта"]
+    }
+  },
+  "burnish": {
+    "v.": {
+      "en": "polish by rubbing until shiny",
+      "ru": ["полировать до блеска", "натирать до блеска"]
+    }
+  },
+  "business": {
+    "n.": {
+      "en": "work of buying and selling things",
+      "ru": ["торговля", "коммерция"]
+    }
+  },
+  "busy": {
+    "adj.": {
+      "en": "having a lot to do",
+      "ru": ["занятый", "загруженный делами"]
+    }
+  },
+  "but": {
+    "conj.": {
+      "en": "shows a different or opposite idea",
+      "ru": ["но", "однако"]
+    }
+  },
+  "calibrate": {
+    "v.": {
+      "en": "to adjust a tool so it measures correctly",
+      "ru": ["калибровать", "настраивать точность прибора"]
+    }
+  },
+  "cannabis": {
+    "n.": {
+      "en": "drug made from a plant, smoked or eaten",
+      "ru": ["каннабис", "марихуана"]
+    }
+  },
+  "capacity": {
+    "n.": {
+      "en": "amount that a thing can hold",
+      "ru": ["вместимость", "ёмкость"]
+    }
+  },
+  "cardiovascular": {
+    "adj.": {
+      "en": "about the heart and blood vessels",
+      "ru": ["сердечно-сосудистый"]
+    }
+  },
+  "career": {
+    "n.": {
+      "en": "the work a person does in life",
+      "ru": ["карьера", "профессиональный путь"]
+    }
+  },
+  "carry": {
+    "v.": {
+      "en": "hold something and take it somewhere",
+      "ru": ["нести", "переносить"]
+    }
+  },
+  "cash": {
+    "n.": {
+      "en": "money in coins and notes",
+      "ru": ["наличные", "наличные деньги"]
+    }
+  },
+  "catalytic": {
+    "adj.": {
+      "en": "causing a chemical change to happen faster",
+      "ru": ["каталитический", "ускоряющий химическую реакцию"]
+    }
+  },
+  "catastrophic": {
+    "adj.": {
+      "en": "causing very great harm or ruin",
+      "ru": ["катастрофический", "губительный"]
+    }
+  },
+  "caustic": {
+    "adj.": {
+      "en": "able to burn things by chemical action",
+      "ru": ["едкий", "способный вызвать химический ожог"]
+    }
+  },
+  "cellphone": {
+    "n.": {
+      "en": "small phone that you carry with you",
+      "ru": ["мобильный телефон", "сотовый телефон"]
+    }
+  },
+  "certain": {
+    "adj.": {
+      "en": "completely sure, with no doubt",
+      "ru": ["уверенный", "убеждённый"]
+    }
+  },
+  "chairwoman": {
+    "n.": {
+      "en": "woman who leads a meeting or group",
+      "ru": ["председательница"]
+    }
+  },
+  "challenge": {
+    "n.": {
+      "en": "something hard that tests your skill",
+      "ru": ["испытание", "трудная задача"]
+    }
+  },
+  "change": {
+    "n.": {
+      "en": "act of becoming different",
+      "ru": ["изменение", "перемена"]
+    },
+    "v.": {
+      "en": "make or become different",
+      "ru": ["менять", "меняться"]
+    }
+  },
+  "chariot": {
+    "n.": {
+      "en": "old two-wheeled vehicle pulled by horses",
+      "ru": ["колесница"]
+    }
+  },
+  "charm": {
+    "n.": {
+      "en": "quality that makes people like you",
+      "ru": ["обаяние", "очарование"]
+    }
+  },
+  "check": {
+    "v.": {
+      "en": "look to make sure it is right",
+      "ru": ["проверять"]
+    }
+  },
+  "chemist": {
+    "n.": {
+      "en": "person who studies or sells drugs and chemicals",
+      "ru": ["химик", "фармацевт"]
+    }
+  },
+  "cherubic": {
+    "adj.": {
+      "en": "sweet, round and innocent like a baby",
+      "ru": ["ангельский", "невинный как ребёнок"]
+    }
+  },
+  "chime": {
+    "n.": {
+      "en": "clear ringing sound of a bell",
+      "ru": ["звон колокола"]
+    }
+  },
+  "choose": {
+    "v.": {
+      "en": "pick one from several things",
+      "ru": ["выбирать"]
+    }
+  },
+  "chromium": {
+    "n.": {
+      "en": "hard shiny metal used to cover other metals",
+      "ru": ["хром"]
+    }
+  },
+  "cinema": {
+    "n.": {
+      "en": "place where people watch films",
+      "ru": ["кинотеатр"]
+    }
+  },
+  "claim": {
+    "n.": {
+      "en": "statement that something is true",
+      "ru": ["утверждение", "заявление"]
+    },
+    "v.": {
+      "en": "say that something is true",
+      "ru": ["утверждать", "заявлять"]
+    }
+  },
+  "clairvoyance": {
+    "n.": {
+      "en": "power to see far things or the future",
+      "ru": ["ясновидение"]
+    }
+  },
+  "clamp": {
+    "v.": {
+      "en": "hold tightly in place",
+      "ru": ["зажимать", "закреплять зажимом"]
+    }
+  },
+  "clarification": {
+    "n.": {
+      "en": "act of making something easy to understand",
+      "ru": ["разъяснение", "уточнение"]
+    }
+  },
+  "cleanse": {
+    "v.": {
+      "en": "make completely clean",
+      "ru": ["очищать"]
+    }
+  },
+  "clear": {
+    "adj.": {
+      "en": "easy to see, hear or understand",
+      "ru": ["ясный", "отчётливый"]
+    }
+  },
+  "clematis": {
+    "n.": {
+      "en": "climbing plant with showy flowers",
+      "ru": ["клематис"]
+    }
+  },
+  "clog": {
+    "n.": {
+      "en": "a shoe with a thick wooden sole",
+      "ru": ["башмак на деревянной подошве"]
+    },
+    "v.": {
+      "en": "to block a pipe so nothing flows",
+      "ru": ["засорять"]
+    }
+  },
+  "close": {
+    "adj.": {
+      "en": "not far away in space or time",
+      "ru": ["близкий"]
+    },
+    "v.": {
+      "en": "shut; bring to an end",
+      "ru": ["закрывать", "завершать"]
+    }
+  },
+  "club": {
+    "n.": {
+      "en": "group of people with a shared interest",
+      "ru": ["клуб", "объединение по интересам"]
+    }
+  },
+  "coach": {
+    "n.": {
+      "en": "person who trains a sports team",
+      "ru": ["тренер"]
+    }
+  },
+  "cocaine": {
+    "n.": {
+      "en": "white drug that is against the law",
+      "ru": ["кокаин"]
+    }
+  },
+  "code": {
+    "n.": {
+      "en": "system of signs or words with hidden meaning",
+      "ru": ["код", "шифр"]
+    }
+  },
+  "codify": {
+    "v.": {
+      "en": "put rules into an official system",
+      "ru": ["систематизировать и закреплять правила"]
+    }
+  },
+  "cognate": {
+    "adj.": {
+      "en": "having the same origin or root",
+      "ru": ["родственный по происхождению", "однокоренной"]
+    }
+  },
+  "cohabit": {
+    "v.": {
+      "en": "to live together without being married",
+      "ru": ["сожительствовать", "жить вместе без брака"]
+    }
+  },
+  "colleague": {
+    "n.": {
+      "en": "person you work with",
+      "ru": ["коллега", "сослуживец"]
+    }
+  },
+  "colloquy": {
+    "n.": {
+      "en": "formal talk between two or more people",
+      "ru": ["официальная беседа"]
+    }
+  },
+  "come": {
+    "v.": {
+      "en": "move toward the speaker or arrive",
+      "ru": ["приходить", "прибывать"]
+    }
+  },
+  "comedian": {
+    "n.": {
+      "en": "person whose job is to make people laugh",
+      "ru": ["комик"]
+    }
+  },
+  "commence": {
+    "v.": {
+      "en": "begin",
+      "ru": ["начинать", "приступать"]
+    }
+  },
+  "comment": {
+    "n.": {
+      "en": "words that give your opinion",
+      "ru": ["комментарий", "замечание"]
+    },
+    "v.": {
+      "en": "say what you think about something",
+      "ru": ["комментировать", "высказывать мнение"]
+    }
+  },
+  "commentate": {
+    "v.": {
+      "en": "to describe an event on radio or television",
+      "ru": ["комментировать событие в эфире"]
+    }
+  },
+  "common": {
+    "adj.": {
+      "en": "found in many places, happening often",
+      "ru": ["распространённый", "обычный"]
+    }
+  },
+  "commonwealth": {
+    "n.": {
+      "en": "group of states or countries joined together",
+      "ru": ["содружество государств"]
+    }
+  },
+  "community": {
+    "n.": {
+      "en": "people who live in the same area",
+      "ru": ["местное сообщество"]
+    }
+  },
+  "compare": {
+    "v.": {
+      "en": "look at things to see how they differ",
+      "ru": ["сравнивать", "сопоставлять"]
+    }
+  },
+  "compassionate": {
+    "adj.": {
+      "en": "feeling sorry for others and wanting to help",
+      "ru": ["сострадательный", "отзывчивый"]
+    }
+  },
+  "complete": {
+    "adj.": {
+      "en": "with all parts, nothing missing",
+      "ru": ["полный", "целый"]
+    },
+    "v.": {
+      "en": "finish making or doing",
+      "ru": ["завершать", "заканчивать"]
+    }
+  },
+  "comprehend": {
+    "v.": {
+      "en": "understand fully",
+      "ru": ["полностью понимать", "постигать"]
+    }
+  },
+  "compunction": {
+    "n.": {
+      "en": "a guilty feeling about a bad act",
+      "ru": ["угрызения совести", "раскаяние"]
+    }
+  },
+  "concord": {
+    "n.": {
+      "en": "state of peace and agreement between people",
+      "ru": ["согласие", "согласие и мир между людьми"]
+    }
+  },
+  "confederacy": {
+    "n.": {
+      "en": "group of states joined together",
+      "ru": ["конфедерация", "союз государств"]
+    }
+  },
+  "confederation": {
+    "n.": {
+      "en": "group of states or groups joined together",
+      "ru": ["конфедерация", "союз государств или групп"]
+    }
+  },
+  "confess": {
+    "v.": {
+      "en": "say that you did something wrong",
+      "ru": ["признаваться в проступке"]
+    }
+  },
+  "confide": {
+    "v.": {
+      "en": "tell a secret to someone you trust",
+      "ru": ["доверять тайну", "делиться сокровенным"]
+    }
+  },
+  "confidently": {
+    "adv.": {
+      "en": "in a way that shows you feel sure",
+      "ru": ["уверенно"]
+    }
+  },
+  "confirmation": {
+    "n.": {
+      "en": "proof or statement that something is true",
+      "ru": ["подтверждение"]
+    }
+  },
+  "confuse": {
+    "v.": {
+      "en": "make someone unable to think clearly",
+      "ru": ["сбивать с толку", "запутывать"]
+    }
+  },
+  "consciously": {
+    "adv.": {
+      "en": "while knowing what you do",
+      "ru": ["осознанно", "сознательно"]
+    }
+  },
+  "consider": {
+    "v.": {
+      "en": "think about something carefully",
+      "ru": ["обдумывать", "рассматривать"]
+    }
+  },
+  "consist": {
+    "v.": {
+      "en": "be made up of parts",
+      "ru": ["состоять из частей"]
+    }
+  },
+  "consonance": {
+    "n.": {
+      "en": "state of agreeing or fitting well together",
+      "ru": ["согласие", "созвучие"]
+    }
+  },
+  "constructive": {
+    "adj.": {
+      "en": "helpful and meant to improve things",
+      "ru": ["конструктивный", "способствующий улучшению"]
+    }
+  },
+  "contain": {
+    "v.": {
+      "en": "have something inside",
+      "ru": ["содержать", "вмещать"]
+    }
+  },
+  "contend": {
+    "v.": {
+      "en": "compete, or argue that something is true",
+      "ru": ["состязаться", "утверждать"]
+    }
+  },
+  "contrite": {
+    "adj.": {
+      "en": "feeling sorry for having done wrong",
+      "ru": ["раскаивающийся", "сожалеющий о проступке"]
+    }
+  },
+  "convalescent": {
+    "adj.": {
+      "en": "getting well after an illness",
+      "ru": ["выздоравливающий"]
+    }
+  },
+  "convoy": {
+    "n.": {
+      "en": "group of vehicles or ships traveling together",
+      "ru": ["колонна машин", "конвой судов"]
+    }
+  },
+  "convulse": {
+    "v.": {
+      "en": "to shake the body suddenly and hard",
+      "ru": ["сотрясать судорогами", "резко и сильно сотрясать"]
+    }
+  },
+  "cool": {
+    "adj.": {
+      "en": "a little cold, not hot",
+      "ru": ["прохладный"]
+    }
+  },
+  "coordinate": {
+    "v.": {
+      "en": "make different parts work well together",
+      "ru": ["координировать", "согласовывать работу"]
+    }
+  },
+  "cope": {
+    "v.": {
+      "en": "deal with a hard situation well",
+      "ru": ["справляться с трудной ситуацией"]
+    }
+  },
+  "coronation": {
+    "n.": {
+      "en": "ceremony when a king gets the crown",
+      "ru": ["коронация"]
+    }
+  },
+  "cost": {
+    "n.": {
+      "en": "the money you pay for something",
+      "ru": ["стоимость", "затраты"]
+    },
+    "v.": {
+      "en": "to have a price of",
+      "ru": ["стоить", "обходиться"]
+    }
+  },
+  "council": {
+    "n.": {
+      "en": "group of people chosen to govern a town",
+      "ru": ["совет", "муниципальный совет"]
+    }
+  },
+  "county": {
+    "n.": {
+      "en": "region of a country with local government",
+      "ru": ["округ", "графство"]
+    }
+  },
+  "courage": {
+    "n.": {
+      "en": "ability to face fear or danger",
+      "ru": ["смелость", "мужество"]
+    }
+  },
+  "courgette": {
+    "n.": {
+      "en": "long green vegetable with soft skin",
+      "ru": ["кабачок", "цуккини"]
+    }
+  },
+  "courthouse": {
+    "n.": {
+      "en": "building where trials take place",
+      "ru": ["здание суда"]
+    }
+  },
+  "credential": {
+    "n.": {
+      "en": "proof of your skill or right to act",
+      "ru": ["подтверждение квалификации или полномочий"]
+    }
+  },
+  "credible": {
+    "adj.": {
+      "en": "able to be trusted or believed",
+      "ru": ["заслуживающий доверия", "достоверный"]
+    }
+  },
+  "criticize": {
+    "v.": {
+      "en": "say what is wrong with something",
+      "ru": ["критиковать", "указывать на недостатки"]
+    }
+  },
+  "crony": {
+    "n.": {
+      "en": "close friend who gets unfair help from you",
+      "ru": ["приближённый приятель, пользующийся покровительством"]
+    }
+  },
+  "crunch": {
+    "n.": {
+      "en": "a loud sound of something being crushed",
+      "ru": ["хруст"]
+    }
+  },
+  "crutch": {
+    "n.": {
+      "en": "stick that helps a hurt person walk",
+      "ru": ["костыль"]
+    }
+  },
+  "cub": {
+    "n.": {
+      "en": "young lion, bear or fox",
+      "ru": ["детёныш льва", "медведя или лисы"]
+    }
+  },
+  "cuisine": {
+    "n.": {
+      "en": "style of cooking of a place",
+      "ru": ["кухня", "кулинарные традиции"]
+    }
+  },
+  "cup": {
+    "n.": {
+      "en": "small round container for a hot drink",
+      "ru": ["чашка"]
+    }
+  },
+  "curb": {
+    "n.": {
+      "en": "edge of a road beside the path",
+      "ru": ["бордюр", "край тротуара"]
+    }
+  },
+  "curdle": {
+    "v.": {
+      "en": "turn thick and lumpy, as milk does",
+      "ru": ["свёртываться", "створаживаться"]
+    }
+  },
+  "current": {
+    "adj.": {
+      "en": "happening or in use now",
+      "ru": ["текущий", "действующий"]
+    },
+    "n.": {
+      "en": "steady flow of water, air, or electricity",
+      "ru": ["течение", "электрический ток"]
+    }
+  },
+  "curtail": {
+    "v.": {
+      "en": "make shorter or smaller than planned",
+      "ru": ["сокращать", "урезать"]
+    }
+  },
+  "curtain": {
+    "n.": {
+      "en": "cloth that hangs to cover a window",
+      "ru": ["занавеска", "штора"]
+    }
+  },
+  "dabbler": {
+    "n.": {
+      "en": "person who tries many things without care",
+      "ru": ["дилетант", "человек с поверхностными увлечениями"]
+    }
+  },
+  "damage": {
+    "v.": {
+      "en": "harm something so it is broken",
+      "ru": ["повреждать", "портить"]
+    }
+  },
+  "daughter": {
+    "n.": {
+      "en": "girl or woman who is someone's child",
+      "ru": ["дочь"]
+    }
+  },
+  "daze": {
+    "v.": {
+      "en": "make someone unable to think clearly",
+      "ru": ["ошеломлять", "оглушать"]
+    }
+  },
+  "deadpan": {
+    "adj.": {
+      "en": "showing no feeling, especially when joking",
+      "ru": ["невозмутимый", "бесстрастный"]
+    }
+  },
+  "debrief": {
+    "v.": {
+      "en": "question someone after a task or mission",
+      "ru": ["расспрашивать по итогам задания"]
+    }
+  },
+  "decant": {
+    "v.": {
+      "en": "pour a drink slowly into another bottle",
+      "ru": ["медленно переливать напиток в другой сосуд"]
+    }
+  },
+  "decision": {
+    "n.": {
+      "en": "choice that you make after thinking",
+      "ru": ["решение"]
+    }
+  },
+  "decry": {
+    "v.": {
+      "en": "say in public that something is bad",
+      "ru": ["публично осуждать", "порицать"]
+    }
+  },
+  "deficiency": {
+    "n.": {
+      "en": "a lack of something that you need",
+      "ru": ["нехватка", "дефицит"]
+    }
+  },
+  "deficient": {
+    "adj.": {
+      "en": "not having enough of something",
+      "ru": ["имеющий недостаток чего-либо"]
+    }
+  },
+  "deflect": {
+    "v.": {
+      "en": "make something go in a different direction",
+      "ru": ["отклонять", "менять направление движения"]
+    }
+  },
+  "defoliate": {
+    "v.": {
+      "en": "to make the leaves fall off a plant",
+      "ru": ["удалять листья с растения", "вызывать опадение листьев"]
+    }
+  },
+  "deign": {
+    "v.": {
+      "en": "do something you think is below you",
+      "ru": ["снисходить до чего-либо", "соизволить"]
+    }
+  },
+  "delay": {
+    "n.": {
+      "en": "time when something is late",
+      "ru": ["задержка", "опоздание"]
+    },
+    "v.": {
+      "en": "make something happen later",
+      "ru": ["откладывать", "задерживать"]
+    }
+  },
+  "democratic": {
+    "adj.": {
+      "en": "ruled by the free vote of the people",
+      "ru": ["демократический", "основанный на свободном голосовании"]
+    }
+  },
+  "demolish": {
+    "v.": {
+      "en": "knock down completely",
+      "ru": ["сносить", "разрушать до основания"]
+    }
+  },
+  "denial": {
+    "n.": {
+      "en": "statement that something is not true",
+      "ru": ["отрицание", "опровержение"]
+    }
+  },
+  "dense": {
+    "adj.": {
+      "en": "with many things close together",
+      "ru": ["плотный", "густой"]
+    }
+  },
+  "denture": {
+    "n.": {
+      "en": "set of false teeth",
+      "ru": ["зубной протез"]
+    }
+  },
+  "denunciation": {
+    "n.": {
+      "en": "public statement that something is very bad",
+      "ru": ["публичное осуждение", "обличение"]
+    }
+  },
+  "department": {
+    "n.": {
+      "en": "part of a company or school",
+      "ru": ["отдел", "подразделение"]
+    }
+  },
+  "deputy": {
+    "n.": {
+      "en": "person who acts for a leader",
+      "ru": ["заместитель", "лицо, действующее от имени руководителя"]
+    }
+  },
+  "derail": {
+    "v.": {
+      "en": "to make a train leave its track",
+      "ru": ["пускать поезд под откос", "вызывать сход с рельсов"]
+    }
+  },
+  "derogate": {
+    "v.": {
+      "en": "to say that something has little value",
+      "ru": ["умалять достоинство", "отзываться пренебрежительно"]
+    }
+  },
+  "despise": {
+    "v.": {
+      "en": "feel that someone is worth nothing",
+      "ru": ["презирать"]
+    }
+  },
+  "despite": {
+    "prep.": {
+      "en": "even though something is true",
+      "ru": ["несмотря на"]
+    }
+  },
+  "destine": {
+    "v.": {
+      "en": "decide in advance what will happen",
+      "ru": ["предопределять", "предназначать"]
+    }
+  },
+  "devastate": {
+    "v.": {
+      "en": "destroy completely",
+      "ru": ["опустошать", "полностью разрушать"]
+    }
+  },
+  "development": {
+    "n.": {
+      "en": "slow growth or change to something better",
+      "ru": ["развитие"]
+    }
+  },
+  "devote": {
+    "v.": {
+      "en": "give all your time or effort to something",
+      "ru": ["посвящать время или силы"]
+    }
+  },
+  "die": {
+    "v.": {
+      "en": "stop living",
+      "ru": ["умирать"]
+    }
+  },
+  "differential": {
+    "n.": {
+      "en": "difference between two amounts",
+      "ru": ["разность", "разница"]
+    }
+  },
+  "dignify": {
+    "v.": {
+      "en": "make something seem worthy of respect",
+      "ru": ["придавать достоинство", "возвышать"]
+    }
+  },
+  "dime": {
+    "n.": {
+      "en": "american coin worth ten cents",
+      "ru": ["американская монета в десять центов"]
+    }
+  },
+  "direct": {
+    "adj.": {
+      "en": "going straight, with no stops or turns",
+      "ru": ["прямой", "без пересадок"]
+    }
+  },
+  "director": {
+    "n.": {
+      "en": "person who leads a film or company",
+      "ru": ["режиссёр", "руководитель"]
+    }
+  },
+  "disable": {
+    "v.": {
+      "en": "make something stop working",
+      "ru": ["отключать", "выводить из строя"]
+    }
+  },
+  "disagreement": {
+    "n.": {
+      "en": "state of having different opinions",
+      "ru": ["разногласие", "расхождение во мнениях"]
+    }
+  },
+  "disappearance": {
+    "n.": {
+      "en": "act of going out of sight",
+      "ru": ["исчезновение"]
+    }
+  },
+  "disapprove": {
+    "v.": {
+      "en": "think that something is wrong or bad",
+      "ru": ["не одобрять", "осуждать"]
+    }
+  },
+  "disciplinary": {
+    "adj.": {
+      "en": "about punishment for breaking rules",
+      "ru": ["дисциплинарный"]
+    }
+  },
+  "discredit": {
+    "v.": {
+      "en": "make people stop trusting someone",
+      "ru": ["подрывать доверие", "дискредитировать"]
+    }
+  },
+  "disdain": {
+    "n.": {
+      "en": "feeling that someone is not good enough",
+      "ru": ["презрение", "пренебрежение"]
+    }
+  },
+  "dishearten": {
+    "v.": {
+      "en": "make someone lose hope or confidence",
+      "ru": ["лишать надежды", "обескураживать"]
+    }
+  },
+  "dispense": {
+    "v.": {
+      "en": "give out to people in set amounts",
+      "ru": ["выдавать порциями", "дозировать"]
+    }
+  },
+  "disqualify": {
+    "v.": {
+      "en": "stop a person from taking part",
+      "ru": ["лишать права участия", "дисквалифицировать"]
+    }
+  },
+  "disrepute": {
+    "n.": {
+      "en": "state of having a bad name",
+      "ru": ["дурная слава", "плохая репутация"]
+    }
+  },
+  "ditch": {
+    "v.": {
+      "en": "get rid of something you do not want",
+      "ru": ["избавляться от ненужного"]
+    }
+  },
+  "diuretic": {
+    "n.": {
+      "en": "drug that makes you pass more urine",
+      "ru": ["мочегонное средство", "диуретик"]
+    }
+  },
+  "dizzy": {
+    "adj.": {
+      "en": "feeling that the room is turning around you",
+      "ru": ["испытывающий головокружение"]
+    }
+  },
+  "dogmatism": {
+    "n.": {
+      "en": "strong belief that your ideas are always right",
+      "ru": ["догматизм", "убеждённость в безусловной правоте своих взглядов"]
+    }
+  },
+  "dole": {
+    "n.": {
+      "en": "money from the state for people without work",
+      "ru": ["пособие по безработице"]
+    }
+  },
+  "dope": {
+    "n.": {
+      "en": "illegal drug, or a stupid person",
+      "ru": ["наркотик", "глупец"]
+    }
+  },
+  "doubt": {
+    "n.": {
+      "en": "feeling that something may not be true",
+      "ru": ["сомнение"]
+    },
+    "v.": {
+      "en": "think that something may not be true",
+      "ru": ["сомневаться"]
+    }
+  },
+  "doubtful": {
+    "adj.": {
+      "en": "not sure, or not likely to be true",
+      "ru": ["сомнительный", "неуверенный"]
+    }
+  },
+  "dour": {
+    "adj.": {
+      "en": "serious, unfriendly and grim",
+      "ru": ["угрюмый", "суровый и неприветливый"]
+    }
+  },
+  "drape": {
+    "v.": {
+      "en": "hang cloth loosely over something",
+      "ru": ["накидывать ткань", "драпировать"]
+    }
+  },
+  "due": {
+    "adj.": {
+      "en": "expected or required at a set time",
+      "ru": ["ожидаемый к определённому сроку", "подлежащий исполнению к сроку"]
+    }
+  },
+  "dungeon": {
+    "n.": {
+      "en": "dark underground prison in a castle",
+      "ru": ["подземная темница"]
+    }
+  },
+  "duty": {
+    "n.": {
+      "en": "thing you must do because it is right",
+      "ru": ["долг", "обязанность"]
+    }
+  },
+  "dyspeptic": {
+    "adj.": {
+      "en": "having trouble with the stomach after eating",
+      "ru": ["страдающий несварением"]
+    }
+  },
+  "early": {
+    "adj.": {
+      "en": "near the start; before the usual time",
+      "ru": ["ранний", "преждевременный"]
+    }
+  },
+  "earnings": {
+    "n.": {
+      "en": "money you get from work",
+      "ru": ["заработок", "трудовой доход"]
+    }
+  },
+  "earth": {
+    "n.": {
+      "en": "the planet that we live on",
+      "ru": ["планета земля"]
+    }
+  },
+  "easy": {
+    "adj.": {
+      "en": "not hard to do",
+      "ru": ["лёгкий", "несложный"]
+    }
+  },
+  "eat": {
+    "v.": {
+      "en": "put food in your mouth and swallow it",
+      "ru": ["есть", "принимать пищу"]
+    }
+  },
+  "economic": {
+    "adj.": {
+      "en": "about money, trade and industry of a country",
+      "ru": ["экономический"]
+    }
+  },
+  "effectively": {
+    "adv.": {
+      "en": "in a way that works well",
+      "ru": ["эффективно", "результативно"]
+    }
+  },
+  "effort": {
+    "n.": {
+      "en": "hard work to do something",
+      "ru": ["усилие", "старание"]
+    }
+  },
+  "eight": {
+    "num.": {
+      "en": "the number after seven",
+      "ru": ["восемь"]
+    }
+  },
+  "eighteenth": {
+    "num.": {
+      "en": "number 18 in order",
+      "ru": ["восемнадцатый"]
+    }
+  },
+  "elaborate": {
+    "adj.": {
+      "en": "full of many careful details",
+      "ru": ["тщательно проработанный", "детализированный"]
+    }
+  },
+  "election": {
+    "n.": {
+      "en": "time when people vote for a leader",
+      "ru": ["выборы"]
+    }
+  },
+  "eleventh": {
+    "num.": {
+      "en": "number 11 in order",
+      "ru": ["одиннадцатый"]
+    }
+  },
+  "eliminate": {
+    "v.": {
+      "en": "get rid of something completely",
+      "ru": ["устранять", "полностью избавляться"]
+    }
+  },
+  "elitist": {
+    "adj.": {
+      "en": "believing a chosen few are better than others",
+      "ru": ["считающий избранных выше остальных"]
+    }
+  },
+  "else": {
+    "adv.": {
+      "en": "in addition; different from what is named",
+      "ru": ["ещё", "иначе"]
+    }
+  },
+  "embalm": {
+    "v.": {
+      "en": "stop a dead body from going bad",
+      "ru": ["бальзамировать"]
+    }
+  },
+  "enact": {
+    "v.": {
+      "en": "make a proposal into an official law",
+      "ru": ["принимать закон", "вводить в силу"]
+    }
+  },
+  "encroach": {
+    "v.": {
+      "en": "slowly take more than your share of space",
+      "ru": ["постепенно занимать чужое пространство", "вторгаться"]
+    }
+  },
+  "enforce": {
+    "v.": {
+      "en": "make people obey a rule",
+      "ru": ["обеспечивать соблюдение правила"]
+    }
+  },
+  "ennoble": {
+    "v.": {
+      "en": "give a high rank or make finer",
+      "ru": ["облагораживать", "возводить в дворянство"]
+    }
+  },
+  "enroll": {
+    "v.": {
+      "en": "join a school or course officially",
+      "ru": ["записываться на курс", "зачисляться в учебное заведение"]
+    }
+  },
+  "enthusiastic": {
+    "adj.": {
+      "en": "full of eager interest",
+      "ru": ["увлечённый", "полный энтузиазма"]
+    }
+  },
+  "entirely": {
+    "adv.": {
+      "en": "in every way; fully",
+      "ru": ["полностью", "целиком"]
+    }
+  },
+  "entrench": {
+    "v.": {
+      "en": "fix firmly so it is hard to change",
+      "ru": ["прочно закреплять", "укоренять"]
+    }
+  },
+  "epitaph": {
+    "n.": {
+      "en": "words written on a grave",
+      "ru": ["эпитафия", "надгробная надпись"]
+    }
+  },
+  "equality": {
+    "n.": {
+      "en": "state of having the same rights",
+      "ru": ["равенство", "равноправие"]
+    }
+  },
+  "equalize": {
+    "v.": {
+      "en": "make things the same in amount",
+      "ru": ["уравнивать", "выравнивать"]
+    }
+  },
+  "equate": {
+    "v.": {
+      "en": "treat as being the same",
+      "ru": ["приравнивать", "отождествлять"]
+    }
+  },
+  "equilibrium": {
+    "n.": {
+      "en": "state where opposite forces are equal",
+      "ru": ["равновесие", "баланс противоположных сил"]
+    }
+  },
+  "escalate": {
+    "v.": {
+      "en": "become much worse or bigger step by step",
+      "ru": ["обостряться", "усиливаться"]
+    }
+  },
+  "especially": {
+    "adv.": {
+      "en": "more than all others, above all",
+      "ru": ["особенно", "прежде всего"]
+    }
+  },
+  "eulogize": {
+    "v.": {
+      "en": "praise highly in speech or writing",
+      "ru": ["восхвалять устно или письменно"]
+    }
+  },
+  "eulogy": {
+    "n.": {
+      "en": "speech praising a person who has died",
+      "ru": ["похвальная речь об умершем"]
+    }
+  },
+  "even": {
+    "adv.": {
+      "en": "used to show something is surprising",
+      "ru": ["даже"]
+    }
+  },
+  "everybody": {
+    "pron.": {
+      "en": "all the people",
+      "ru": ["все", "каждый"]
+    }
+  },
+  "everyone": {
+    "pron.": {
+      "en": "all the people in a group",
+      "ru": ["все", "каждый"]
+    }
+  },
+  "exam": {
+    "n.": {
+      "en": "formal test of what you know",
+      "ru": ["экзамен"]
+    }
+  },
+  "example": {
+    "n.": {
+      "en": "one thing that shows what others are like",
+      "ru": ["пример", "образец"]
+    }
+  },
+  "except": {
+    "prep.": {
+      "en": "not including",
+      "ru": ["кроме", "за исключением"]
+    }
+  },
+  "excitability": {
+    "n.": {
+      "en": "tendency to be easily stirred up",
+      "ru": ["возбудимость"]
+    }
+  },
+  "exclaim": {
+    "v.": {
+      "en": "say something loudly from surprise",
+      "ru": ["восклицать", "громко говорить от удивления"]
+    }
+  },
+  "expectation": {
+    "n.": {
+      "en": "belief that something will happen",
+      "ru": ["ожидание"]
+    }
+  },
+  "expedite": {
+    "v.": {
+      "en": "make a process happen faster",
+      "ru": ["ускорять процесс"]
+    }
+  },
+  "expense": {
+    "n.": {
+      "en": "money that you spend on something",
+      "ru": ["расход", "затраты"]
+    }
+  },
+  "expiation": {
+    "n.": {
+      "en": "act of paying for a wrong you did",
+      "ru": ["искупление вины"]
+    }
+  },
+  "expound": {
+    "v.": {
+      "en": "explain an idea fully and in detail",
+      "ru": ["подробно излагать", "разъяснять"]
+    }
+  },
+  "expression": {
+    "n.": {
+      "en": "look on a face; words you say",
+      "ru": ["выражение лица", "выражение в речи"]
+    }
+  },
+  "extension": {
+    "n.": {
+      "en": "added part or more time",
+      "ru": ["продление срока", "добавленная часть"]
+    }
+  },
+  "extinction": {
+    "n.": {
+      "en": "when a kind of animal dies out completely",
+      "ru": ["вымирание вида", "исчезновение вида"]
+    }
+  },
+  "fabulous": {
+    "adj.": {
+      "en": "extremely good",
+      "ru": ["потрясающий", "великолепный"]
+    }
+  },
+  "facilitate": {
+    "v.": {
+      "en": "to make an action easier",
+      "ru": ["облегчать", "способствовать"]
+    }
+  },
+  "fair": {
+    "adj.": {
+      "en": "treating all people in the same way",
+      "ru": ["справедливый", "беспристрастный"]
+    }
+  },
+  "fairway": {
+    "n.": {
+      "en": "smooth grass area on a golf course",
+      "ru": ["полоса коротко подстриженной травы на поле для гольфа"]
+    }
+  },
+  "fallout": {
+    "n.": {
+      "en": "bad results that follow a big event",
+      "ru": ["негативные последствия события"]
+    }
+  },
+  "family": {
+    "n.": {
+      "en": "parents, children and close relatives",
+      "ru": ["семья"]
+    }
+  },
+  "fan": {
+    "n.": {
+      "en": "person who loves a sport or singer",
+      "ru": ["поклонник", "болельщик"]
+    },
+    "v.": {
+      "en": "move air with a flat thing",
+      "ru": ["обмахивать", "овевать"]
+    }
+  },
+  "far": {
+    "adv.": {
+      "en": "at a long distance",
+      "ru": ["далеко", "вдали"]
+    }
+  },
+  "father": {
+    "n.": {
+      "en": "male parent",
+      "ru": ["отец"]
+    }
+  },
+  "faucet": {
+    "n.": {
+      "en": "tap that lets water flow out",
+      "ru": ["водопроводный кран"]
+    }
+  },
+  "faze": {
+    "v.": {
+      "en": "make someone worried or confused",
+      "ru": ["смущать", "выбивать из колеи"]
+    }
+  },
+  "fear": {
+    "n.": {
+      "en": "strong feeling when you think of danger",
+      "ru": ["страх", "боязнь"]
+    }
+  },
+  "fearless": {
+    "adj.": {
+      "en": "not afraid of anything",
+      "ru": ["бесстрашный"]
+    }
+  },
+  "feel": {
+    "v.": {
+      "en": "know a state in the body or mind",
+      "ru": ["чувствовать", "ощущать"]
+    }
+  },
+  "felicitate": {
+    "v.": {
+      "en": "tell someone you are happy about their success",
+      "ru": ["поздравлять"]
+    }
+  },
+  "fertile": {
+    "adj.": {
+      "en": "good for growing plants; able to have young",
+      "ru": ["плодородный", "плодовитый"]
+    }
+  },
+  "few": {
+    "adj.": {
+      "en": "not many; a small number of",
+      "ru": ["немногие", "малочисленный"]
+    }
+  },
+  "fight": {
+    "n.": {
+      "en": "struggle between people or groups",
+      "ru": ["драка", "борьба"]
+    },
+    "v.": {
+      "en": "use force against another person",
+      "ru": ["драться", "бороться"]
+    }
+  },
+  "figure": {
+    "n.": {
+      "en": "written number or sign for a number",
+      "ru": ["цифра", "числовой знак"]
+    }
+  },
+  "file": {
+    "n.": {
+      "en": "set of papers or data kept together",
+      "ru": ["папка с документами", "файл данных"]
+    },
+    "v.": {
+      "en": "put papers in order in a folder",
+      "ru": ["подшивать документы", "раскладывать документы по папкам"]
+    }
+  },
+  "final": {
+    "adj.": {
+      "en": "coming at the end; last",
+      "ru": ["последний", "заключительный"]
+    }
+  },
+  "finalize": {
+    "v.": {
+      "en": "to make a plan complete and fixed",
+      "ru": ["окончательно оформлять план", "утверждать окончательный вариант"]
+    }
+  },
+  "finally": {
+    "adv.": {
+      "en": "after a long time or at the end",
+      "ru": ["наконец", "в конце концов"]
+    }
+  },
+  "financial": {
+    "adj.": {
+      "en": "about money and how it is managed",
+      "ru": ["финансовый", "денежный"]
+    }
+  },
+  "find": {
+    "v.": {
+      "en": "get something you look for",
+      "ru": ["находить"]
+    }
+  },
+  "fire": {
+    "n.": {
+      "en": "heat and light that burn things",
+      "ru": ["огонь", "пламя"]
+    }
+  },
+  "first": {
+    "adj.": {
+      "en": "before all others in time or order",
+      "ru": ["первый"]
+    }
+  },
+  "fittingly": {
+    "adv.": {
+      "en": "in a way that suits the event",
+      "ru": ["уместно", "подобающим образом"]
+    }
+  },
+  "five": {
+    "num.": {
+      "en": "the number after four",
+      "ru": ["пять"]
+    }
+  },
+  "flake": {
+    "v.": {
+      "en": "come off in small thin pieces",
+      "ru": ["отслаиваться", "осыпаться чешуйками"]
+    }
+  },
+  "flat": {
+    "adj.": {
+      "en": "smooth and level",
+      "ru": ["плоский", "ровный"]
+    }
+  },
+  "flick": {
+    "v.": {
+      "en": "hit lightly with a quick move",
+      "ru": ["слегка ударять резким движением", "щёлкать"]
+    }
+  },
+  "flight": {
+    "n.": {
+      "en": "journey in a plane through the air",
+      "ru": ["полёт", "перелёт"]
+    }
+  },
+  "flinch": {
+    "v.": {
+      "en": "move back suddenly from pain or fear",
+      "ru": ["вздрагивать", "отшатываться от боли или страха"]
+    }
+  },
+  "flour": {
+    "n.": {
+      "en": "white powder from grain, used to bake bread",
+      "ru": ["мука"]
+    }
+  },
+  "flourish": {
+    "v.": {
+      "en": "grow well and be successful",
+      "ru": ["процветать", "преуспевать"]
+    }
+  },
+  "fluke": {
+    "n.": {
+      "en": "lucky result that happens by chance",
+      "ru": ["случайная удача"]
+    }
+  },
+  "flute": {
+    "n.": {
+      "en": "thin musical pipe you blow across",
+      "ru": ["флейта"]
+    }
+  },
+  "focus": {
+    "n.": {
+      "en": "main point of attention",
+      "ru": ["центр внимания"]
+    },
+    "v.": {
+      "en": "give all your attention to one thing",
+      "ru": ["сосредоточиваться"]
+    }
+  },
+  "foe": {
+    "n.": {
+      "en": "person who wants to harm you",
+      "ru": ["враг", "недруг"]
+    }
+  },
+  "foliage": {
+    "n.": {
+      "en": "all the leaves of a plant",
+      "ru": ["листва"]
+    }
+  },
+  "foment": {
+    "v.": {
+      "en": "cause trouble or anger to grow",
+      "ru": ["разжигать", "подстрекать к беспорядкам"]
+    }
+  },
+  "footstep": {
+    "n.": {
+      "en": "sound or mark of a single step",
+      "ru": ["звук шага", "след ноги"]
+    }
+  },
+  "fop": {
+    "n.": {
+      "en": "man who is too proud of his clothes",
+      "ru": ["франт", "щёголь"]
+    }
+  },
+  "forbid": {
+    "v.": {
+      "en": "say that something must not be done",
+      "ru": ["запрещать"]
+    }
+  },
+  "forensic": {
+    "adj.": {
+      "en": "using science to solve crimes",
+      "ru": ["судебно-экспертный", "криминалистический"]
+    }
+  },
+  "forswear": {
+    "v.": {
+      "en": "promise to give something up for ever",
+      "ru": ["навсегда отрекаться", "давать обет отказаться"]
+    }
+  },
+  "fortieth": {
+    "num.": {
+      "en": "number 40 in order",
+      "ru": ["сороковой"]
+    }
+  },
+  "fortitude": {
+    "n.": {
+      "en": "strong courage in times of pain or trouble",
+      "ru": ["стойкость", "сила духа"]
+    }
+  },
+  "fortnight": {
+    "n.": {
+      "en": "period of fourteen days",
+      "ru": ["две недели"]
+    }
+  },
+  "fourteen": {
+    "num.": {
+      "en": "the number 14",
+      "ru": ["четырнадцать"]
+    }
+  },
+  "free": {
+    "adj.": {
+      "en": "costing no money; not held or limited",
+      "ru": ["бесплатный", "свободный"]
+    }
+  },
+  "friction": {
+    "n.": {
+      "en": "force that slows things that rub together",
+      "ru": ["трение", "сила трения"]
+    }
+  },
+  "frieze": {
+    "n.": {
+      "en": "band of pictures or patterns along a wall",
+      "ru": ["фриз", "декоративная полоса на стене"]
+    }
+  },
+  "frontier": {
+    "n.": {
+      "en": "line where one country ends and another starts",
+      "ru": ["граница между странами"]
+    }
+  },
+  "fruit": {
+    "n.": {
+      "en": "sweet food that grows on trees",
+      "ru": ["фрукт", "сладкий плод"]
+    }
+  },
+  "fruitless": {
+    "adj.": {
+      "en": "without any useful result",
+      "ru": ["бесплодный", "безрезультатный"]
+    }
+  },
+  "game": {
+    "n.": {
+      "en": "activity with rules, played for fun",
+      "ru": ["игра"]
+    }
+  },
+  "garbage": {
+    "n.": {
+      "en": "things that you throw away",
+      "ru": ["мусор", "отходы"]
+    }
+  },
+  "geezer": {
+    "n.": {
+      "en": "man, often an old one (informal)",
+      "ru": ["старикан", "пожилой мужик"]
+    }
+  },
+  "genteel": {
+    "adj.": {
+      "en": "polite and refined, sometimes in a false way",
+      "ru": ["изысканный", "чопорный"]
+    }
+  },
+  "geometric": {
+    "adj.": {
+      "en": "of shapes such as lines, circles and squares",
+      "ru": ["геометрический"]
+    }
+  },
+  "gigantic": {
+    "adj.": {
+      "en": "extremely big",
+      "ru": ["гигантский", "огромный"]
+    }
+  },
+  "ginger": {
+    "n.": {
+      "en": "hot spicy root used in food",
+      "ru": ["имбирь"]
+    }
+  },
+  "girl": {
+    "n.": {
+      "en": "young female person",
+      "ru": ["девочка", "девушка"]
+    }
+  },
+  "glee": {
+    "n.": {
+      "en": "great happiness, often at another's bad luck",
+      "ru": ["ликование", "злорадство"]
+    }
+  },
+  "goal": {
+    "n.": {
+      "en": "thing you want to achieve",
+      "ru": ["цель"]
+    }
+  },
+  "god": {
+    "n.": {
+      "en": "a being that people worship",
+      "ru": ["бог", "божество"]
+    }
+  },
+  "good": {
+    "adj.": {
+      "en": "of high quality; pleasant",
+      "ru": ["хороший", "приятный"]
+    }
+  },
+  "governance": {
+    "n.": {
+      "en": "way a country or group is run",
+      "ru": ["управление страной или организацией"]
+    }
+  },
+  "government": {
+    "n.": {
+      "en": "group of people who rule a country",
+      "ru": ["правительство"]
+    }
+  },
+  "grandfather": {
+    "n.": {
+      "en": "male parent of your parent",
+      "ru": ["дедушка", "дед"]
+    }
+  },
+  "grateful": {
+    "adj.": {
+      "en": "feeling thanks for something done for you",
+      "ru": ["благодарный", "признательный"]
+    }
+  },
+  "great": {
+    "adj.": {
+      "en": "very good; very large or important",
+      "ru": ["отличный", "значительный"]
+    }
+  },
+  "greyhound": {
+    "n.": {
+      "en": "thin dog that runs very fast",
+      "ru": ["борзая"]
+    }
+  },
+  "grin": {
+    "v.": {
+      "en": "smile widely",
+      "ru": ["широко улыбаться"]
+    }
+  },
+  "grow": {
+    "v.": {
+      "en": "become bigger over time",
+      "ru": ["расти", "увеличиваться"]
+    }
+  },
+  "grudge": {
+    "n.": {
+      "en": "bad feeling you keep for a long time",
+      "ru": ["затаённая обида"]
+    }
+  },
+  "guffaw": {
+    "v.": {
+      "en": "laugh loudly",
+      "ru": ["громко хохотать"]
+    }
+  },
+  "gurgle": {
+    "v.": {
+      "en": "make a low bubbling sound",
+      "ru": ["булькать", "журчать"]
+    }
+  },
+  "guy": {
+    "n.": {
+      "en": "man; any person in casual speech",
+      "ru": ["парень", "мужчина"]
+    }
+  },
+  "hand": {
+    "n.": {
+      "en": "body part at the end of the arm",
+      "ru": ["кисть руки"]
+    }
+  },
+  "handler": {
+    "n.": {
+      "en": "person who trains animals or deals with something",
+      "ru": ["дрессировщик", "оператор"]
+    }
+  },
+  "hanger": {
+    "n.": {
+      "en": "frame used to keep clothes on a rail",
+      "ru": ["плечики", "вешалка для одежды"]
+    }
+  },
+  "hangover": {
+    "n.": {
+      "en": "sick feeling the day after too much alcohol",
+      "ru": ["похмелье"]
+    }
+  },
+  "happen": {
+    "v.": {
+      "en": "take place, often with no plan",
+      "ru": ["случаться", "происходить"]
+    }
+  },
+  "happy": {
+    "adj.": {
+      "en": "feeling joy or pleasure",
+      "ru": ["счастливый", "радостный"]
+    }
+  },
+  "haste": {
+    "n.": {
+      "en": "great speed in doing something",
+      "ru": ["поспешность", "спешка"]
+    }
+  },
+  "hasten": {
+    "v.": {
+      "en": "make something happen sooner or faster",
+      "ru": ["ускорять", "приближать событие"]
+    }
+  },
+  "hatch": {
+    "v.": {
+      "en": "come out of an egg",
+      "ru": ["вылупляться из яйца"]
+    }
+  },
+  "have": {
+    "v.": {
+      "en": "own or hold something",
+      "ru": ["иметь", "владеть"]
+    }
+  },
+  "hay": {
+    "n.": {
+      "en": "dry grass kept as food for farm animals",
+      "ru": ["сено"]
+    }
+  },
+  "heal": {
+    "v.": {
+      "en": "become well again",
+      "ru": ["выздоравливать", "заживать"]
+    }
+  },
+  "hectic": {
+    "adj.": {
+      "en": "full of busy and rushed activity",
+      "ru": ["суетливый", "суматошный"]
+    }
+  },
+  "help": {
+    "n.": {
+      "en": "aid or support given to someone",
+      "ru": ["помощь", "поддержка"]
+    },
+    "v.": {
+      "en": "to make something easier for someone",
+      "ru": ["помогать"]
+    }
+  },
+  "herald": {
+    "v.": {
+      "en": "be a sign that something is coming",
+      "ru": ["предвещать", "возвещать"]
+    }
+  },
+  "herb": {
+    "n.": {
+      "en": "plant used to flavor food or as medicine",
+      "ru": ["пряная или лекарственная трава"]
+    }
+  },
+  "herder": {
+    "n.": {
+      "en": "person who looks after a group of animals",
+      "ru": ["пастух"]
+    }
+  },
+  "here": {
+    "adv.": {
+      "en": "in or to this place",
+      "ru": ["здесь", "сюда"]
+    }
+  },
+  "herself": {
+    "pron.": {
+      "en": "that same woman or girl",
+      "ru": ["сама", "себя"]
+    }
+  },
+  "highlight": {
+    "v.": {
+      "en": "make something stand out",
+      "ru": ["выделять", "подчёркивать"]
+    }
+  },
+  "hilltop": {
+    "n.": {
+      "en": "highest part of a small mountain",
+      "ru": ["вершина холма"]
+    }
+  },
+  "hint": {
+    "n.": {
+      "en": "small sign that helps you guess something",
+      "ru": ["намёк", "подсказка"]
+    }
+  },
+  "his": {
+    "pron.": {
+      "en": "belonging to a man or boy",
+      "ru": ["его"]
+    }
+  },
+  "historic": {
+    "adj.": {
+      "en": "famous and important in the past",
+      "ru": ["исторически значимый"]
+    }
+  },
+  "hit": {
+    "v.": {
+      "en": "touch something hard with force",
+      "ru": ["ударять", "попадать"]
+    }
+  },
+  "hive": {
+    "n.": {
+      "en": "place where bees live",
+      "ru": ["улей"]
+    }
+  },
+  "home": {
+    "n.": {
+      "en": "place where you live",
+      "ru": ["дом", "жилище"]
+    }
+  },
+  "homemade": {
+    "adj.": {
+      "en": "prepared by a person at home",
+      "ru": ["домашнего приготовления", "сделанный дома"]
+    }
+  },
+  "homesick": {
+    "adj.": {
+      "en": "sad because you miss your home",
+      "ru": ["тоскующий по дому"]
+    }
+  },
+  "hometown": {
+    "n.": {
+      "en": "town where you grew up",
+      "ru": ["родной город"]
+    }
+  },
+  "hoof": {
+    "n.": {
+      "en": "hard foot of a horse",
+      "ru": ["копыто"]
+    }
+  },
+  "hoop": {
+    "n.": {
+      "en": "large ring made of metal, wood or plastic",
+      "ru": ["обруч"]
+    }
+  },
+  "hope": {
+    "n.": {
+      "en": "feeling that good things will happen",
+      "ru": ["надежда"]
+    },
+    "v.": {
+      "en": "want and expect something good to happen",
+      "ru": ["надеяться"]
+    }
+  },
+  "hopeful": {
+    "adj.": {
+      "en": "feeling good about what may come",
+      "ru": ["исполненный надежды", "оптимистичный"]
+    }
+  },
+  "hot": {
+    "adj.": {
+      "en": "with a very high temperature",
+      "ru": ["горячий", "жаркий"]
+    }
+  },
+  "how": {
+    "adv.": {
+      "en": "in what way",
+      "ru": ["как", "каким образом"]
+    }
+  },
+  "however": {
+    "adv.": {
+      "en": "but; in spite of that",
+      "ru": ["однако", "тем не менее"]
+    }
+  },
+  "hypnotic": {
+    "adj.": {
+      "en": "making you feel half asleep",
+      "ru": ["вызывающий сонливость", "усыпляющий"]
+    }
+  },
+  "hypodermic": {
+    "adj.": {
+      "en": "used to put medicine under the skin",
+      "ru": ["предназначенный для подкожного введения лекарства"]
+    }
+  },
+  "idolater": {
+    "n.": {
+      "en": "person who worships a statue as a god",
+      "ru": ["идолопоклонник"]
+    }
+  },
+  "immediate": {
+    "adj.": {
+      "en": "happening at once",
+      "ru": ["немедленный", "незамедлительный"]
+    }
+  },
+  "impede": {
+    "v.": {
+      "en": "make it hard to move or grow",
+      "ru": ["препятствовать", "затруднять"]
+    }
+  },
+  "impinge": {
+    "v.": {
+      "en": "have a bad effect on something",
+      "ru": ["отрицательно сказываться", "неблагоприятно воздействовать"]
+    }
+  },
+  "impress": {
+    "v.": {
+      "en": "to make people feel admiration",
+      "ru": ["производить впечатление", "впечатлять"]
+    }
+  },
+  "incidentally": {
+    "adv.": {
+      "en": "by the way; as a side note",
+      "ru": ["кстати", "между прочим"]
+    }
+  },
+  "include": {
+    "v.": {
+      "en": "have as one part of a whole",
+      "ru": ["включать в себя"]
+    }
+  },
+  "incredulity": {
+    "n.": {
+      "en": "the state of being unable to believe something",
+      "ru": ["неверие", "недоверие"]
+    }
+  },
+  "indefinite": {
+    "adj.": {
+      "en": "not fixed and with no set end",
+      "ru": ["неопределённый", "бессрочный"]
+    }
+  },
+  "indication": {
+    "n.": {
+      "en": "sign that shows something is true",
+      "ru": ["признак", "указание"]
+    }
+  },
+  "indicative": {
+    "adj.": {
+      "en": "showing that something is true or likely",
+      "ru": ["служащий признаком", "указывающий на вероятность чего-либо"]
+    }
+  },
+  "indignant": {
+    "adj.": {
+      "en": "angry because something seems unfair",
+      "ru": ["возмущённый"]
+    }
+  },
+  "induce": {
+    "v.": {
+      "en": "cause something to happen",
+      "ru": ["вызывать", "становиться причиной"]
+    }
+  },
+  "ineffective": {
+    "adj.": {
+      "en": "not producing the result that you want",
+      "ru": ["неэффективный", "безрезультатный"]
+    }
+  },
+  "infallible": {
+    "adj.": {
+      "en": "never wrong",
+      "ru": ["безошибочный", "непогрешимый"]
+    }
+  },
+  "infusion": {
+    "n.": {
+      "en": "act of putting a new thing into another",
+      "ru": ["вливание", "привнесение нового"]
+    }
+  },
+  "ingenious": {
+    "adj.": {
+      "en": "clever and full of new ideas",
+      "ru": ["изобретательный", "находчивый"]
+    }
+  },
+  "inhibition": {
+    "n.": {
+      "en": "feeling that stops you from acting freely",
+      "ru": ["внутренняя скованность"]
+    }
+  },
+  "inimical": {
+    "adj.": {
+      "en": "harmful or unfriendly",
+      "ru": ["враждебный", "вредоносный"]
+    }
+  },
+  "initiative": {
+    "n.": {
+      "en": "power to act first without being told",
+      "ru": ["инициатива", "готовность действовать самостоятельно"]
+    }
+  },
+  "innate": {
+    "adj.": {
+      "en": "that you have from birth",
+      "ru": ["врождённый"]
+    }
+  },
+  "input": {
+    "n.": {
+      "en": "something put into a system or machine",
+      "ru": ["входные данные", "ресурс, подаваемый в систему"]
+    }
+  },
+  "insincerity": {
+    "n.": {
+      "en": "saying what you do not really feel",
+      "ru": ["неискренность"]
+    }
+  },
+  "insolent": {
+    "adj.": {
+      "en": "rude and showing no respect",
+      "ru": ["дерзкий", "наглый"]
+    }
+  },
+  "instruction": {
+    "n.": {
+      "en": "words that tell you how to do something",
+      "ru": ["инструкция", "указание"]
+    }
+  },
+  "insufferable": {
+    "adj.": {
+      "en": "so bad that you cannot bear it",
+      "ru": ["невыносимый", "несносный"]
+    }
+  },
+  "insulator": {
+    "n.": {
+      "en": "material that stops heat or electricity passing",
+      "ru": ["изолятор", "теплоизоляционный материал"]
+    }
+  },
+  "insurgent": {
+    "n.": {
+      "en": "person who fights against their own government",
+      "ru": ["повстанец", "мятежник"]
+    }
+  },
+  "intelligible": {
+    "adj.": {
+      "en": "easy to understand",
+      "ru": ["понятный", "вразумительный"]
+    }
+  },
+  "intent": {
+    "n.": {
+      "en": "what you plan to do",
+      "ru": ["намерение", "замысел"]
+    }
+  },
+  "into": {
+    "prep.": {
+      "en": "to the inside of",
+      "ru": ["внутрь"]
+    }
+  },
+  "introductory": {
+    "adj.": {
+      "en": "coming first to give basic facts",
+      "ru": ["вводный", "ознакомительный"]
+    }
+  },
+  "intrusion": {
+    "n.": {
+      "en": "coming in where you are not wanted",
+      "ru": ["вторжение", "непрошеное вмешательство"]
+    }
+  },
+  "intuitive": {
+    "adj.": {
+      "en": "known by feeling, without careful thought",
+      "ru": ["интуитивный", "понятный без рассуждений"]
+    }
+  },
+  "invade": {
+    "v.": {
+      "en": "enter a country by force",
+      "ru": ["вторгаться"]
+    }
+  },
+  "invention": {
+    "n.": {
+      "en": "new thing made for the first time",
+      "ru": ["изобретение"]
+    }
+  },
+  "irk": {
+    "v.": {
+      "en": "make someone feel annoyed",
+      "ru": ["раздражать", "досаждать"]
+    }
+  },
+  "irresponsible": {
+    "adj.": {
+      "en": "not careful about what your actions cause",
+      "ru": ["безответственный"]
+    }
+  },
+  "issue": {
+    "n.": {
+      "en": "subject that people talk about or worry about",
+      "ru": ["вопрос", "предмет обсуждения"]
+    }
+  },
+  "itself": {
+    "pron.": {
+      "en": "that same thing, used after a verb",
+      "ru": ["само", "себя"]
+    }
+  },
+  "jar": {
+    "n.": {
+      "en": "glass container with a wide mouth",
+      "ru": ["банка с широким горлом"]
+    }
+  },
+  "jealousy": {
+    "n.": {
+      "en": "bad feeling when others have what you want",
+      "ru": ["зависть"]
+    }
+  },
+  "jelly": {
+    "n.": {
+      "en": "soft sweet food that shakes when moved",
+      "ru": ["желе"]
+    }
+  },
+  "jetty": {
+    "n.": {
+      "en": "wall or path built out into water",
+      "ru": ["мол", "выступающий в воду пирс"]
+    }
+  },
+  "know": {
+    "v.": {
+      "en": "have facts or information in your mind",
+      "ru": ["знать"]
+    }
+  },
+  "laboriously": {
+    "adv.": {
+      "en": "with great effort and difficulty",
+      "ru": ["с большим трудом"]
+    }
+  },
+  "lasso": {
+    "n.": {
+      "en": "rope with a loop for catching animals",
+      "ru": ["лассо", "аркан"]
+    },
+    "v.": {
+      "en": "catch with a rope loop",
+      "ru": ["ловить арканом"]
+    }
+  },
+  "last": {
+    "adj.": {
+      "en": "coming after all others; most recent",
+      "ru": ["последний", "самый недавний"]
+    }
+  },
+  "later": {
+    "adv.": {
+      "en": "at a time after now",
+      "ru": ["позже", "потом"]
+    }
+  },
+  "lead": {
+    "v.": {
+      "en": "go in front to show the way",
+      "ru": ["вести", "показывать путь"]
+    }
+  },
+  "leader": {
+    "n.": {
+      "en": "person who is in charge of a group",
+      "ru": ["лидер", "руководитель"]
+    }
+  },
+  "leaflet": {
+    "n.": {
+      "en": "small printed paper given out free",
+      "ru": ["листовка", "информационный листок"]
+    }
+  },
+  "league": {
+    "n.": {
+      "en": "group of sports teams that play each other",
+      "ru": ["спортивная лига"]
+    }
+  },
+  "letter": {
+    "n.": {
+      "en": "message on paper that you send by post",
+      "ru": ["письмо"]
+    }
+  },
+  "level": {
+    "n.": {
+      "en": "position on a scale of quality or height",
+      "ru": ["уровень", "ступень"]
+    }
+  },
+  "leverage": {
+    "n.": {
+      "en": "power to make others do what you want",
+      "ru": ["рычаг влияния"]
+    }
+  },
+  "likely": {
+    "adj.": {
+      "en": "that will probably happen",
+      "ru": ["вероятный", "ожидаемый"]
+    }
+  },
+  "limitation": {
+    "n.": {
+      "en": "something that stops you doing more",
+      "ru": ["ограничение"]
+    }
+  },
+  "limp": {
+    "v.": {
+      "en": "walk with difficulty because of a hurt leg",
+      "ru": ["хромать"]
+    }
+  },
+  "litigation": {
+    "n.": {
+      "en": "process of taking a case to court",
+      "ru": ["судебное разбирательство"]
+    }
+  },
+  "little": {
+    "adj.": {
+      "en": "small in size or amount",
+      "ru": ["маленький", "небольшой"]
+    }
+  },
+  "loan": {
+    "n.": {
+      "en": "money that you borrow and must pay back",
+      "ru": ["заём", "ссуда"]
+    }
+  },
+  "local": {
+    "adj.": {
+      "en": "of the area near you",
+      "ru": ["местный"]
+    }
+  },
+  "lock": {
+    "n.": {
+      "en": "device that keeps a door shut",
+      "ru": ["замок"]
+    },
+    "v.": {
+      "en": "shut something with a key",
+      "ru": ["запирать на ключ"]
+    }
+  },
+  "logic": {
+    "n.": {
+      "en": "way of thinking in clear correct steps",
+      "ru": ["логика", "последовательное мышление"]
+    }
+  },
+  "logical": {
+    "adj.": {
+      "en": "following clear and sensible reasoning",
+      "ru": ["логичный", "последовательный"]
+    }
+  },
+  "lonely": {
+    "adj.": {
+      "en": "sad because you have no company",
+      "ru": ["одинокий", "чувствующий одиночество"]
+    }
+  },
+  "loss": {
+    "n.": {
+      "en": "state of no longer having something",
+      "ru": ["потеря", "утрата"]
+    }
+  },
+  "lot": {
+    "n.": {
+      "en": "a large number or amount",
+      "ru": ["большое количество"]
+    }
+  },
+  "lucky": {
+    "adj.": {
+      "en": "having good things happen by chance",
+      "ru": ["везучий", "удачливый"]
+    }
+  },
+  "lumpy": {
+    "adj.": {
+      "en": "full of small hard bumps",
+      "ru": ["комковатый", "бугристый"]
+    }
+  },
+  "magic": {
+    "n.": {
+      "en": "power to do impossible things",
+      "ru": ["магия", "волшебство"]
+    }
+  },
+  "maid": {
+    "n.": {
+      "en": "woman paid to clean a house or hotel",
+      "ru": ["горничная", "домработница"]
+    }
+  },
+  "mail": {
+    "n.": {
+      "en": "letters and packages that are sent by post",
+      "ru": ["почта", "почтовые отправления"]
+    }
+  },
+  "mainstay": {
+    "n.": {
+      "en": "most important part that holds something up",
+      "ru": ["главная опора", "основа"]
+    }
+  },
+  "malfeasance": {
+    "n.": {
+      "en": "wrong act by a person in public office",
+      "ru": ["должностное правонарушение"]
+    }
+  },
+  "malicious": {
+    "adj.": {
+      "en": "meant to hurt or upset someone",
+      "ru": ["злонамеренный", "злобный"]
+    }
+  },
+  "manage": {
+    "v.": {
+      "en": "be in charge of; succeed in doing",
+      "ru": ["управлять", "справляться"]
+    }
+  },
+  "manifold": {
+    "adj.": {
+      "en": "of many kinds and in great number",
+      "ru": ["многочисленный и разнообразный"]
+    }
+  },
+  "many": {
+    "adj.": {
+      "en": "a large number of",
+      "ru": ["много", "многочисленный"]
+    }
+  },
+  "marquee": {
+    "n.": {
+      "en": "large tent used for outdoor events",
+      "ru": ["большой шатёр для мероприятий"]
+    }
+  },
+  "maturity": {
+    "n.": {
+      "en": "state of being fully grown",
+      "ru": ["зрелость"]
+    }
+  },
+  "mean": {
+    "v.": {
+      "en": "have a certain sense; show",
+      "ru": ["означать", "обозначать"]
+    }
+  },
+  "meddlesome": {
+    "adj.": {
+      "en": "liking to get into other people's business",
+      "ru": ["любящий вмешиваться в чужие дела"]
+    }
+  },
+  "medieval": {
+    "adj.": {
+      "en": "from the period between about 500 and 1500",
+      "ru": ["средневековый"]
+    }
+  },
+  "mediocrity": {
+    "n.": {
+      "en": "state of being only average, not good",
+      "ru": ["посредственность"]
+    }
+  },
+  "meet": {
+    "v.": {
+      "en": "come together with a person",
+      "ru": ["встречаться"]
+    }
+  },
+  "membership": {
+    "n.": {
+      "en": "state of belonging to a group",
+      "ru": ["членство", "принадлежность к группе"]
+    }
+  },
+  "memorize": {
+    "v.": {
+      "en": "learn so that you can recall it",
+      "ru": ["запоминать", "заучивать"]
+    }
+  },
+  "mental": {
+    "adj.": {
+      "en": "of the mind",
+      "ru": ["умственный", "психический"]
+    }
+  },
+  "mercy": {
+    "n.": {
+      "en": "kindness shown instead of punishment",
+      "ru": ["милосердие", "снисхождение"]
+    }
+  },
+  "methane": {
+    "n.": {
+      "en": "colorless gas that burns, in natural gas",
+      "ru": ["метан"]
+    }
+  },
+  "method": {
+    "n.": {
+      "en": "way of doing something",
+      "ru": ["метод", "способ"]
+    }
+  },
+  "mile": {
+    "n.": {
+      "en": "unit of distance of about 1.6 km",
+      "ru": ["миля"]
+    }
+  },
+  "military": {
+    "adj.": {
+      "en": "about soldiers and the army",
+      "ru": ["военный"]
+    }
+  },
+  "million": {
+    "num.": {
+      "en": "the number 1,000,000",
+      "ru": ["миллион"]
+    }
+  },
+  "mind": {
+    "n.": {
+      "en": "the part of you that thinks",
+      "ru": ["ум", "разум"]
+    },
+    "v.": {
+      "en": "to feel upset or annoyed about something",
+      "ru": ["возражать", "быть против"]
+    }
+  },
+  "minus": {
+    "prep.": {
+      "en": "with the next number taken away",
+      "ru": ["за вычетом"]
+    }
+  },
+  "moan": {
+    "v.": {
+      "en": "make a low sound of pain",
+      "ru": ["стонать от боли"]
+    }
+  },
+  "model": {
+    "n.": {
+      "en": "small copy or example of something",
+      "ru": ["модель", "образец"]
+    }
+  },
+  "modesty": {
+    "n.": {
+      "en": "not talking proudly about oneself",
+      "ru": ["скромность"]
+    }
+  },
+  "moment": {
+    "n.": {
+      "en": "very short period of time",
+      "ru": ["мгновение", "миг"]
+    }
+  },
+  "mood": {
+    "n.": {
+      "en": "the way you feel at a time",
+      "ru": ["настроение"]
+    }
+  },
+  "moose": {
+    "n.": {
+      "en": "a very large deer with wide flat horns",
+      "ru": ["лось"]
+    }
+  },
+  "mortify": {
+    "v.": {
+      "en": "make someone feel very ashamed",
+      "ru": ["заставлять сильно стыдиться", "унижать"]
+    }
+  },
+  "most": {
+    "adj.": {
+      "en": "nearly all; greatest in amount",
+      "ru": ["большая часть", "наибольший"]
+    }
+  },
+  "motel": {
+    "n.": {
+      "en": "roadside hotel where guests park beside the room",
+      "ru": ["мотель", "придорожная гостиница"]
+    }
+  },
+  "muscle": {
+    "n.": {
+      "en": "body part that makes you move",
+      "ru": ["мышца", "мускул"]
+    }
+  },
+  "mutilate": {
+    "v.": {
+      "en": "badly damage a body by cutting parts off",
+      "ru": ["калечить", "увечить"]
+    }
+  },
+  "mutual": {
+    "adj.": {
+      "en": "felt or done by both sides",
+      "ru": ["взаимный", "обоюдный"]
+    }
+  },
+  "name": {
+    "n.": {
+      "en": "word used to call a person or thing",
+      "ru": ["имя", "название"]
+    }
+  },
+  "nasal": {
+    "adj.": {
+      "en": "of the nose",
+      "ru": ["носовой"]
+    }
+  },
+  "naturally": {
+    "adv.": {
+      "en": "as anyone would expect",
+      "ru": ["естественно", "как и следовало ожидать"]
+    }
+  },
+  "near": {
+    "prep.": {
+      "en": "not far from",
+      "ru": ["рядом с", "недалеко от"]
+    }
+  },
+  "necessity": {
+    "n.": {
+      "en": "thing that you must have",
+      "ru": ["необходимость", "необходимая вещь"]
+    }
+  },
+  "neither": {
+    "pron.": {
+      "en": "not one and not the other",
+      "ru": ["ни тот ни другой"]
+    }
+  },
+  "network": {
+    "n.": {
+      "en": "set of things joined to each other",
+      "ru": ["сеть"]
+    }
+  },
+  "news": {
+    "n.": {
+      "en": "new facts about recent events",
+      "ru": ["новости"]
+    }
+  },
+  "newsagent": {
+    "n.": {
+      "en": "person or shop that sells papers and magazines",
+      "ru": ["продавец газет и журналов", "газетный киоск"]
+    }
+  },
+  "next": {
+    "adj.": {
+      "en": "coming right after this one",
+      "ru": ["следующий", "очередной"]
+    }
+  },
+  "nice": {
+    "adj.": {
+      "en": "pleasant; kind",
+      "ru": ["приятный", "добрый"]
+    }
+  },
+  "night": {
+    "n.": {
+      "en": "time when it is dark outside",
+      "ru": ["ночь"]
+    }
+  },
+  "ninth": {
+    "num.": {
+      "en": "number nine in order",
+      "ru": ["девятый"]
+    }
+  },
+  "nonhuman": {
+    "adj.": {
+      "en": "not a person or not like a person",
+      "ru": ["нечеловеческий", "не относящийся к людям"]
+    }
+  },
+  "nonpayment": {
+    "n.": {
+      "en": "failure to give money that is owed",
+      "ru": ["неуплата"]
+    }
+  },
+  "normalize": {
+    "v.": {
+      "en": "to make something usual or standard",
+      "ru": ["нормализовать", "приводить к норме"]
+    }
+  },
+  "notably": {
+    "adv.": {
+      "en": "in a way that is especially worth mentioning",
+      "ru": ["в особенности", "примечательным образом"]
+    }
+  },
+  "number": {
+    "n.": {
+      "en": "sign or word that shows an amount",
+      "ru": ["число"]
+    }
+  },
+  "object": {
+    "n.": {
+      "en": "thing that you can see and touch",
+      "ru": ["предмет", "вещь"]
+    }
+  },
+  "objective": {
+    "n.": {
+      "en": "thing you plan to achieve",
+      "ru": ["цель", "намеченный результат"]
+    }
+  },
+  "obligation": {
+    "n.": {
+      "en": "something you must do by duty",
+      "ru": ["обязанность", "обязательство"]
+    }
+  },
+  "occupation": {
+    "n.": {
+      "en": "a person's job or work",
+      "ru": ["род занятий", "профессия"]
+    }
+  },
+  "octogenarian": {
+    "n.": {
+      "en": "person aged between 80 and 89",
+      "ru": ["человек в возрасте от восьмидесяти до восьмидесяти девяти лет"]
+    }
+  },
+  "odd": {
+    "adj.": {
+      "en": "strange and not what you expect",
+      "ru": ["странный", "необычный"]
+    }
+  },
+  "odoriferous": {
+    "adj.": {
+      "en": "giving off a smell",
+      "ru": ["пахучий", "издающий запах"]
+    }
+  },
+  "official": {
+    "n.": {
+      "en": "a person with a public job",
+      "ru": ["должностное лицо", "чиновник"]
+    }
+  },
+  "oil": {
+    "n.": {
+      "en": "thick liquid used for fuel or cooking",
+      "ru": ["масло", "нефть"]
+    }
+  },
+  "oneself": {
+    "pron.": {
+      "en": "the same person as the one who acts",
+      "ru": ["самого себя"]
+    }
+  },
+  "only": {
+    "adv.": {
+      "en": "and no more; just",
+      "ru": ["только", "лишь"]
+    }
+  },
+  "open": {
+    "adj.": {
+      "en": "not shut; not covered",
+      "ru": ["открытый"]
+    },
+    "v.": {
+      "en": "move a door so it is not shut",
+      "ru": ["открывать"]
+    }
+  },
+  "optimize": {
+    "v.": {
+      "en": "make something work as well as possible",
+      "ru": ["оптимизировать", "улучшать работу"]
+    }
+  },
+  "orchestrate": {
+    "v.": {
+      "en": "plan and organize carefully to get a result",
+      "ru": ["тщательно планировать и организовывать"]
+    }
+  },
+  "ordain": {
+    "v.": {
+      "en": "make someone a priest; order by law",
+      "ru": ["рукополагать", "предписывать"]
+    }
+  },
+  "other": {
+    "adj.": {
+      "en": "not the same; more or different",
+      "ru": ["другой", "иной"]
+    }
+  },
+  "ounce": {
+    "n.": {
+      "en": "small unit of weight, about 28 grams",
+      "ru": ["унция"]
+    }
+  },
+  "outskirt": {
+    "n.": {
+      "en": "area at the edge of a town",
+      "ru": ["окраина", "край города"]
+    }
+  },
+  "outward": {
+    "adj.": {
+      "en": "going away from the inside",
+      "ru": ["направленный наружу"]
+    }
+  },
+  "overeat": {
+    "v.": {
+      "en": "eat more food than is good for you",
+      "ru": ["переедать"]
+    }
+  },
+  "overlap": {
+    "n.": {
+      "en": "part that two things share",
+      "ru": ["совпадающая часть", "пересечение"]
+    }
+  },
+  "oversight": {
+    "n.": {
+      "en": "mistake of not noticing something",
+      "ru": ["недосмотр", "оплошность"]
+    }
+  },
+  "own": {
+    "adj.": {
+      "en": "belonging to you and no one else",
+      "ru": ["свой", "собственный"]
+    }
+  },
+  "ownership": {
+    "n.": {
+      "en": "legal right to hold a thing as yours",
+      "ru": ["право собственности", "владение"]
+    }
+  },
+  "oxygen": {
+    "n.": {
+      "en": "gas in air that we need to breathe",
+      "ru": ["кислород"]
+    }
+  },
+  "parent": {
+    "n.": {
+      "en": "your mother or father",
+      "ru": ["родитель"]
+    }
+  },
+  "park": {
+    "n.": {
+      "en": "large public area with grass and trees",
+      "ru": ["парк"]
+    },
+    "v.": {
+      "en": "leave a car in a place",
+      "ru": ["парковать машину"]
+    }
+  },
+  "parlance": {
+    "n.": {
+      "en": "way of speaking used by a group",
+      "ru": ["манера речи определённой группы"]
+    }
+  },
+  "partner": {
+    "n.": {
+      "en": "person you do something with",
+      "ru": ["партнёр", "напарник"]
+    }
+  },
+  "party": {
+    "n.": {
+      "en": "event where people meet to enjoy themselves",
+      "ru": ["вечеринка", "праздничная встреча"]
+    }
+  },
+  "patricide": {
+    "n.": {
+      "en": "act of killing one's own father",
+      "ru": ["убийство собственного отца"]
+    }
+  },
+  "peculiar": {
+    "adj.": {
+      "en": "strange or unusual in an odd way",
+      "ru": ["странный", "необычный"]
+    }
+  },
+  "peek": {
+    "v.": {
+      "en": "look quickly and secretly",
+      "ru": ["подглядывать", "бросать украдкой взгляд"]
+    }
+  },
+  "pence": {
+    "n.": {
+      "en": "small british coins, 100 make one pound",
+      "ru": ["пенсы"]
+    }
+  },
+  "penguin": {
+    "n.": {
+      "en": "black and white sea bird that cannot fly",
+      "ru": ["пингвин"]
+    }
+  },
+  "peppermint": {
+    "n.": {
+      "en": "cool-tasting plant used in sweets and tea",
+      "ru": ["перечная мята"]
+    }
+  },
+  "perennial": {
+    "adj.": {
+      "en": "lasting a very long time or always returning",
+      "ru": ["многолетний", "постоянно возвращающийся"]
+    }
+  },
+  "perfect": {
+    "adj.": {
+      "en": "so good that nothing is wrong",
+      "ru": ["идеальный", "безупречный"]
+    }
+  },
+  "perfunctory": {
+    "adj.": {
+      "en": "done quickly without care or interest",
+      "ru": ["сделанный наспех и без старания", "формальный"]
+    }
+  },
+  "persona": {
+    "n.": {
+      "en": "image of yourself that you show to others",
+      "ru": ["образ человека в глазах окружающих"]
+    }
+  },
+  "personnel": {
+    "n.": {
+      "en": "people who work for a company",
+      "ru": ["персонал", "сотрудники"]
+    }
+  },
+  "pigeon": {
+    "n.": {
+      "en": "grey bird common in cities",
+      "ru": ["голубь"]
+    }
+  },
+  "pill": {
+    "n.": {
+      "en": "small hard piece of medicine you swallow",
+      "ru": ["таблетка", "пилюля"]
+    }
+  },
+  "piracy": {
+    "n.": {
+      "en": "illegal copying of books, films, or software",
+      "ru": ["пиратство", "незаконное копирование произведений или программ"]
+    }
+  },
+  "plant": {
+    "n.": {
+      "en": "living thing with leaves that grows in soil",
+      "ru": ["растение"]
+    },
+    "v.": {
+      "en": "put seeds or small trees in the ground",
+      "ru": ["сажать", "высаживать"]
+    }
+  },
+  "player": {
+    "n.": {
+      "en": "person who takes part in a game",
+      "ru": ["игрок"]
+    }
+  },
+  "playful": {
+    "adj.": {
+      "en": "full of fun and not serious",
+      "ru": ["игривый", "шаловливый"]
+    }
+  },
+  "please": {
+    "adv.": {
+      "en": "polite word used when you ask",
+      "ru": ["пожалуйста"]
+    }
+  },
+  "plod": {
+    "v.": {
+      "en": "walk slowly with heavy steps",
+      "ru": ["брести тяжёлым шагом", "тащиться"]
+    }
+  },
+  "plus": {
+    "prep.": {
+      "en": "added to; together with",
+      "ru": ["плюс", "с добавлением"]
+    }
+  },
+  "pocketbook": {
+    "n.": {
+      "en": "small case for money, or a woman's bag",
+      "ru": ["кошелёк", "дамская сумочка"]
+    }
+  },
+  "point": {
+    "n.": {
+      "en": "small spot; main idea",
+      "ru": ["точка", "суть"]
+    },
+    "v.": {
+      "en": "show a thing with a finger",
+      "ru": ["указывать пальцем"]
+    }
+  },
+  "poisonous": {
+    "adj.": {
+      "en": "able to make you ill or kill you",
+      "ru": ["ядовитый", "токсичный"]
+    }
+  },
+  "police": {
+    "n.": {
+      "en": "people who keep order and catch criminals",
+      "ru": ["полиция"]
+    }
+  },
+  "poll": {
+    "n.": {
+      "en": "survey of what people think",
+      "ru": ["опрос общественного мнения"]
+    }
+  },
+  "pontificate": {
+    "v.": {
+      "en": "speak as if you are always right",
+      "ru": ["изрекать назидательным тоном"]
+    }
+  },
+  "poor": {
+    "adj.": {
+      "en": "having very little money",
+      "ru": ["бедный", "неимущий"]
+    }
+  },
+  "positively": {
+    "adv.": {
+      "en": "in a good, hopeful, or certain way",
+      "ru": ["положительно", "уверенно"]
+    }
+  },
+  "possession": {
+    "n.": {
+      "en": "thing that you own",
+      "ru": ["имущество", "вещь в собственности"]
+    }
+  },
+  "possible": {
+    "adj.": {
+      "en": "able to happen or be done",
+      "ru": ["возможный", "осуществимый"]
+    }
+  },
+  "postage": {
+    "n.": {
+      "en": "money you pay to send a letter",
+      "ru": ["плата за почтовое отправление"]
+    }
+  },
+  "potato": {
+    "n.": {
+      "en": "round root vegetable that grows in soil",
+      "ru": ["картофель"]
+    }
+  },
+  "pretension": {
+    "n.": {
+      "en": "show of being more important than you are",
+      "ru": ["притязание на значительность", "претенциозность"]
+    }
+  },
+  "pretentious": {
+    "adj.": {
+      "en": "trying to seem more important than you are",
+      "ru": ["претенциозный", "старающийся казаться значительным"]
+    }
+  },
+  "prevent": {
+    "v.": {
+      "en": "stop something from happening",
+      "ru": ["предотвращать", "не давать случиться"]
+    }
+  },
+  "prevention": {
+    "n.": {
+      "en": "act of stopping bad things happening",
+      "ru": ["предотвращение", "профилактика"]
+    }
+  },
+  "pride": {
+    "n.": {
+      "en": "joy about what you or others did",
+      "ru": ["гордость"]
+    }
+  },
+  "privatize": {
+    "v.": {
+      "en": "sell a state business to private owners",
+      "ru": ["приватизировать", "передавать в частную собственность"]
+    }
+  },
+  "project": {
+    "n.": {
+      "en": "planned piece of work with a goal",
+      "ru": ["проект"]
+    }
+  },
+  "prolific": {
+    "adj.": {
+      "en": "producing a great deal of work or young",
+      "ru": ["плодовитый", "плодотворный"]
+    }
+  },
+  "prompt": {
+    "adj.": {
+      "en": "done at once, without delay",
+      "ru": ["незамедлительный", "оперативный"]
+    }
+  },
+  "pronunciation": {
+    "n.": {
+      "en": "way in which a word is said",
+      "ru": ["произношение"]
+    }
+  },
+  "propagate": {
+    "v.": {
+      "en": "spread widely, or make new plants or animals",
+      "ru": ["распространять", "размножать"]
+    }
+  },
+  "property": {
+    "n.": {
+      "en": "things, land or buildings that someone owns",
+      "ru": ["имущество", "собственность"]
+    }
+  },
+  "prophecy": {
+    "n.": {
+      "en": "statement about what will happen later",
+      "ru": ["пророчество"]
+    }
+  },
+  "propitiate": {
+    "v.": {
+      "en": "stop someone being angry by giving gifts",
+      "ru": ["умилостивлять дарами", "задабривать"]
+    }
+  },
+  "proscribe": {
+    "v.": {
+      "en": "say that something is not allowed",
+      "ru": ["запрещать", "объявлять вне закона"]
+    }
+  },
+  "protest": {
+    "n.": {
+      "en": "act of showing strong disagreement",
+      "ru": ["протест", "выражение несогласия"]
+    }
+  },
+  "prove": {
+    "v.": {
+      "en": "show that something is true",
+      "ru": ["доказывать"]
+    }
+  },
+  "proximate": {
+    "adj.": {
+      "en": "nearest in space, time or order",
+      "ru": ["ближайший", "непосредственный"]
+    }
+  },
+  "psychic": {
+    "adj.": {
+      "en": "able to know things by strange powers",
+      "ru": ["обладающий сверхъестественным восприятием"]
+    }
+  },
+  "public": {
+    "adj.": {
+      "en": "for all people to use or see",
+      "ru": ["общедоступный", "общественный"]
+    }
+  },
+  "publicity": {
+    "n.": {
+      "en": "attention from newspapers, television and people",
+      "ru": ["внимание прессы и публики", "огласка"]
+    }
+  },
+  "pulverize": {
+    "v.": {
+      "en": "crush into fine powder",
+      "ru": ["измельчать в порошок"]
+    }
+  },
+  "pummel": {
+    "v.": {
+      "en": "hit again and again with the fists",
+      "ru": ["барабанить кулаками", "многократно бить кулаками"]
+    }
+  },
+  "puncture": {
+    "n.": {
+      "en": "small hole made by a sharp point",
+      "ru": ["прокол", "небольшое отверстие от острия"]
+    },
+    "v.": {
+      "en": "make a small hole with a sharp point",
+      "ru": ["прокалывать", "делать прокол"]
+    }
+  },
+  "purpose": {
+    "n.": {
+      "en": "reason why you do something",
+      "ru": ["цель", "назначение"]
+    }
+  },
+  "pursuit": {
+    "n.": {
+      "en": "act of chasing or trying to get",
+      "ru": ["преследование", "стремление добиться"]
+    }
+  },
+  "put": {
+    "v.": {
+      "en": "move something to a place",
+      "ru": ["класть", "ставить"]
+    }
+  },
+  "putative": {
+    "adj.": {
+      "en": "generally thought or said to be so",
+      "ru": ["предполагаемый", "считающийся таковым"]
+    }
+  },
+  "pyromania": {
+    "n.": {
+      "en": "a strong need to start fires",
+      "ru": ["пиромания", "навязчивое стремление устраивать пожары"]
+    }
+  },
+  "quandary": {
+    "n.": {
+      "en": "state of not knowing what to do",
+      "ru": ["затруднительное положение", "растерянность перед выбором"]
+    }
+  },
+  "quaver": {
+    "n.": {
+      "en": "shaking sound in a voice",
+      "ru": ["дрожание голоса", "дрожащий звук"]
+    },
+    "v.": {
+      "en": "shake when you speak or sing",
+      "ru": ["дрожать при разговоре или пении"]
+    }
+  },
+  "querulous": {
+    "adj.": {
+      "en": "always complaining in a weak voice",
+      "ru": ["ворчливый", "склонный жаловаться"]
+    }
+  },
+  "quick": {
+    "adj.": {
+      "en": "done in a short time",
+      "ru": ["быстрый", "занимающий мало времени"]
+    }
+  },
+  "quote": {
+    "v.": {
+      "en": "repeat the exact words of another person",
+      "ru": ["цитировать"]
+    }
+  },
+  "race": {
+    "n.": {
+      "en": "contest to see who is fastest",
+      "ru": ["гонка", "состязание на скорость"]
+    }
+  },
+  "rack": {
+    "n.": {
+      "en": "frame with bars to hold things",
+      "ru": ["стойка", "решётчатая полка"]
+    }
+  },
+  "racy": {
+    "adj.": {
+      "en": "lively and slightly shocking in style",
+      "ru": ["бойкий и слегка вызывающий"]
+    }
+  },
+  "ravish": {
+    "v.": {
+      "en": "fill with great joy or delight",
+      "ru": ["приводить в восторг", "восхищать"]
+    }
+  },
+  "reach": {
+    "v.": {
+      "en": "get to a place or point",
+      "ru": ["достигать", "добираться"]
+    }
+  },
+  "readership": {
+    "n.": {
+      "en": "all the people who read a certain paper",
+      "ru": ["читатели издания", "читательская аудитория"]
+    }
+  },
+  "reaffirm": {
+    "v.": {
+      "en": "state again that something is true",
+      "ru": ["подтверждать вновь"]
+    }
+  },
+  "really": {
+    "adv.": {
+      "en": "in fact; very much",
+      "ru": ["действительно", "очень"]
+    }
+  },
+  "rebroadcast": {
+    "v.": {
+      "en": "show a program on air again",
+      "ru": ["повторно передавать в эфир"]
+    }
+  },
+  "recall": {
+    "v.": {
+      "en": "to remember something from the past",
+      "ru": ["вспоминать"]
+    }
+  },
+  "reciprocate": {
+    "v.": {
+      "en": "give or do the same in return",
+      "ru": ["отвечать взаимностью", "отвечать тем же"]
+    }
+  },
+  "reckon": {
+    "v.": {
+      "en": "think or guess that something is true",
+      "ru": ["полагать", "считать"]
+    }
+  },
+  "recoil": {
+    "v.": {
+      "en": "move back suddenly in fear or shock",
+      "ru": ["резко отпрянуть", "отшатнуться"]
+    }
+  },
+  "recompose": {
+    "v.": {
+      "en": "put together again or make calm again",
+      "ru": ["составлять заново", "возвращать себе самообладание"]
+    }
+  },
+  "reconcile": {
+    "v.": {
+      "en": "make people friends again; make facts agree",
+      "ru": ["мирить", "согласовывать"]
+    }
+  },
+  "record": {
+    "n.": {
+      "en": "written account of facts or events",
+      "ru": ["запись"]
+    },
+    "v.": {
+      "en": "write or store information to keep it",
+      "ru": ["записывать", "фиксировать"]
+    }
+  },
+  "reduce": {
+    "v.": {
+      "en": "make smaller in size or amount",
+      "ru": ["уменьшать", "сокращать"]
+    }
+  },
+  "reel": {
+    "n.": {
+      "en": "round tool that holds film or line",
+      "ru": ["катушка для плёнки или лески"]
+    }
+  },
+  "refinery": {
+    "n.": {
+      "en": "factory that makes oil or sugar pure",
+      "ru": ["нефтеперерабатывающий или сахарный завод"]
+    }
+  },
+  "refusal": {
+    "n.": {
+      "en": "saying no to a request",
+      "ru": ["отказ"]
+    }
+  },
+  "refuse": {
+    "v.": {
+      "en": "say you will not do or accept something",
+      "ru": ["отказываться", "отклонять"]
+    }
+  },
+  "regenerate": {
+    "v.": {
+      "en": "grow or make something new again",
+      "ru": ["восстанавливаться", "воссоздавать"]
+    }
+  },
+  "regime": {
+    "n.": {
+      "en": "system or group that rules a country",
+      "ru": ["режим", "система правления"]
+    }
+  },
+  "rejection": {
+    "n.": {
+      "en": "act of saying no to something",
+      "ru": ["отказ", "отклонение"]
+    }
+  },
+  "reliable": {
+    "adj.": {
+      "en": "able to be trusted",
+      "ru": ["надёжный", "заслуживающий доверия"]
+    }
+  },
+  "reliant": {
+    "adj.": {
+      "en": "needing someone or something for support",
+      "ru": ["зависящий от поддержки"]
+    }
+  },
+  "rely": {
+    "v.": {
+      "en": "trust someone to help you",
+      "ru": ["полагаться", "рассчитывать на помощь"]
+    }
+  },
+  "remember": {
+    "v.": {
+      "en": "keep or bring back in your mind",
+      "ru": ["помнить", "вспоминать"]
+    }
+  },
+  "reminiscent": {
+    "adj.": {
+      "en": "making you think of something else",
+      "ru": ["напоминающий о чём-либо"]
+    }
+  },
+  "renege": {
+    "v.": {
+      "en": "not do what you promised",
+      "ru": ["нарушать обещание", "отказываться от обязательства"]
+    }
+  },
+  "renounce": {
+    "v.": {
+      "en": "say in public that you give something up",
+      "ru": ["публично отказываться", "отрекаться"]
+    }
+  },
+  "repair": {
+    "v.": {
+      "en": "make something broken work again",
+      "ru": ["чинить", "ремонтировать"]
+    }
+  },
+  "repayment": {
+    "n.": {
+      "en": "act of giving back money you owe",
+      "ru": ["возврат долга", "погашение займа"]
+    }
+  },
+  "repetitive": {
+    "adj.": {
+      "en": "done again and again in the same way",
+      "ru": ["однообразно повторяющийся"]
+    }
+  },
+  "report": {
+    "n.": {
+      "en": "spoken or written account of facts",
+      "ru": ["отчёт", "доклад"]
+    },
+    "v.": {
+      "en": "tell people about facts or events",
+      "ru": ["сообщать", "докладывать"]
+    }
+  },
+  "reprimand": {
+    "v.": {
+      "en": "tell someone off for bad behavior",
+      "ru": ["делать выговор", "отчитывать за проступок"]
+    }
+  },
+  "repulsive": {
+    "adj.": {
+      "en": "so bad that you feel sick",
+      "ru": ["отвратительный", "вызывающий отвращение"]
+    }
+  },
+  "reputation": {
+    "n.": {
+      "en": "what people generally think of you",
+      "ru": ["репутация"]
+    }
+  },
+  "requirement": {
+    "n.": {
+      "en": "something that you must have",
+      "ru": ["требование", "необходимое условие"]
+    }
+  },
+  "resent": {
+    "v.": {
+      "en": "feel angry about unfair treatment",
+      "ru": ["возмущаться несправедливостью", "обижаться"]
+    }
+  },
+  "reset": {
+    "v.": {
+      "en": "set to the start state again",
+      "ru": ["сбрасывать до исходного состояния"]
+    }
+  },
+  "resettle": {
+    "v.": {
+      "en": "move to live in a new place again",
+      "ru": ["переселяться", "обосновываться на новом месте"]
+    }
+  },
+  "respect": {
+    "n.": {
+      "en": "feeling that someone is good or important",
+      "ru": ["уважение"]
+    },
+    "v.": {
+      "en": "have a high opinion of someone",
+      "ru": ["уважать"]
+    }
+  },
+  "response": {
+    "n.": {
+      "en": "answer or reaction to something",
+      "ru": ["ответ", "реакция"]
+    }
+  },
+  "responsible": {
+    "adj.": {
+      "en": "having the duty to take care of something",
+      "ru": ["ответственный", "несущий ответственность"]
+    }
+  },
+  "retaliate": {
+    "v.": {
+      "en": "to hurt someone who hurt you",
+      "ru": ["мстить", "наносить ответный удар"]
+    }
+  },
+  "retaliation": {
+    "n.": {
+      "en": "harm done to someone who harmed you first",
+      "ru": ["возмездие", "ответный удар"]
+    }
+  },
+  "retention": {
+    "n.": {
+      "en": "act of keeping something",
+      "ru": ["удержание", "сохранение"]
+    }
+  },
+  "retirement": {
+    "n.": {
+      "en": "time when you stop working because of age",
+      "ru": ["выход на пенсию", "жизнь на пенсии"]
+    }
+  },
+  "return": {
+    "v.": {
+      "en": "go or give back to a place",
+      "ru": ["возвращаться", "возвращать"]
+    }
+  },
+  "reunite": {
+    "v.": {
+      "en": "bring people together again after a long time",
+      "ru": ["воссоединять", "вновь собирать вместе"]
+    }
+  },
+  "review": {
+    "n.": {
+      "en": "written opinion about a book or film",
+      "ru": ["рецензия", "отзыв"]
+    },
+    "v.": {
+      "en": "look at again to check or judge",
+      "ru": ["пересматривать", "проверять повторно"]
+    }
+  },
+  "ribbon": {
+    "n.": {
+      "en": "long narrow strip of cloth",
+      "ru": ["лента", "тесьма"]
+    }
+  },
+  "ride": {
+    "n.": {
+      "en": "short trip in a car or bus",
+      "ru": ["короткая поездка"]
+    },
+    "v.": {
+      "en": "sit on a bike or horse and go",
+      "ru": ["ездить верхом или на велосипеде"]
+    }
+  },
+  "rind": {
+    "n.": {
+      "en": "thick outer skin of fruit, cheese or bacon",
+      "ru": ["корка", "кожура"]
+    }
+  },
+  "risk": {
+    "n.": {
+      "en": "chance that something bad will happen",
+      "ru": ["риск", "вероятность неблагоприятного исхода"]
+    }
+  },
+  "robbery": {
+    "n.": {
+      "en": "crime of taking things by force",
+      "ru": ["ограбление", "грабёж"]
+    }
+  },
+  "rodeo": {
+    "n.": {
+      "en": "show where cowboys ride wild horses and bulls",
+      "ru": ["родео"]
+    }
+  },
+  "room": {
+    "n.": {
+      "en": "a part of a building with walls",
+      "ru": ["комната", "помещение"]
+    }
+  },
+  "roommate": {
+    "n.": {
+      "en": "person who shares your room",
+      "ru": ["сосед по комнате"]
+    }
+  },
+  "rosemary": {
+    "n.": {
+      "en": "plant with thin leaves used in cooking",
+      "ru": ["розмарин"]
+    }
+  },
+  "rough": {
+    "adj.": {
+      "en": "not smooth or even",
+      "ru": ["шероховатый", "неровный"]
+    }
+  },
+  "rueful": {
+    "adj.": {
+      "en": "feeling sorry about something you did",
+      "ru": ["выражающий сожаление"]
+    }
+  },
+  "rule": {
+    "n.": {
+      "en": "official statement of what you must do",
+      "ru": ["правило", "предписание"]
+    }
+  },
+  "ruminate": {
+    "v.": {
+      "en": "think deeply about something for a long time",
+      "ru": ["долго и глубоко размышлять"]
+    }
+  },
+  "run": {
+    "v.": {
+      "en": "move fast on foot",
+      "ru": ["бежать", "бегать"]
+    }
+  },
+  "sadly": {
+    "adv.": {
+      "en": "in an unhappy way",
+      "ru": ["грустно", "печально"]
+    }
+  },
+  "saintly": {
+    "adj.": {
+      "en": "very good and holy",
+      "ru": ["святой", "праведный"]
+    }
+  },
+  "salutary": {
+    "adj.": {
+      "en": "good for you, even if unpleasant",
+      "ru": ["благотворный", "полезный"]
+    }
+  },
+  "same": {
+    "adj.": {
+      "en": "not different; alike in every way",
+      "ru": ["тот же", "одинаковый"]
+    }
+  },
+  "satire": {
+    "n.": {
+      "en": "humor used to show that something is foolish",
+      "ru": ["сатира", "насмешливое обличение"]
+    }
+  },
+  "save": {
+    "v.": {
+      "en": "keep safe; not spend or waste",
+      "ru": ["спасать", "экономить"]
+    }
+  },
+  "say": {
+    "v.": {
+      "en": "to speak words out loud",
+      "ru": ["говорить", "сказать"]
+    }
+  },
+  "scarce": {
+    "adj.": {
+      "en": "hard to find and not enough",
+      "ru": ["редкий", "имеющийся в малом количестве"]
+    }
+  },
+  "scarp": {
+    "n.": {
+      "en": "steep slope",
+      "ru": ["крутой склон", "обрыв"]
+    }
+  },
+  "school": {
+    "n.": {
+      "en": "place where children learn",
+      "ru": ["школа"]
+    }
+  },
+  "scone": {
+    "n.": {
+      "en": "a small soft cake eaten with jam",
+      "ru": ["небольшая мягкая булочка к чаю"]
+    }
+  },
+  "scooter": {
+    "n.": {
+      "en": "light vehicle with small wheels, pushed or powered",
+      "ru": ["самокат", "мотороллер"]
+    }
+  },
+  "scorch": {
+    "v.": {
+      "en": "burn the surface slightly",
+      "ru": ["слегка обжигать поверхность", "опалять"]
+    }
+  },
+  "scream": {
+    "v.": {
+      "en": "cry out loudly in fear or pain",
+      "ru": ["кричать от страха или боли", "вопить"]
+    }
+  },
+  "scruple": {
+    "n.": {
+      "en": "feeling that stops you from doing wrong",
+      "ru": ["угрызение совести", "нравственное сомнение"]
+    }
+  },
+  "seashore": {
+    "n.": {
+      "en": "land beside the sea",
+      "ru": ["морской берег", "побережье"]
+    }
+  },
+  "secrecy": {
+    "n.": {
+      "en": "the act of keeping things hidden from others",
+      "ru": ["сохранение тайны", "секретность"]
+    }
+  },
+  "sedative": {
+    "n.": {
+      "en": "drug that helps you feel calm or sleep",
+      "ru": ["успокоительное средство", "седативный препарат"]
+    }
+  },
+  "see": {
+    "v.": {
+      "en": "notice with the eyes",
+      "ru": ["видеть"]
+    }
+  },
+  "seem": {
+    "v.": {
+      "en": "give the feeling of being a certain way",
+      "ru": ["казаться", "представляться"]
+    }
+  },
+  "seize": {
+    "v.": {
+      "en": "take something quickly and with force",
+      "ru": ["хватать", "захватывать силой"]
+    }
+  },
+  "semiconductor": {
+    "n.": {
+      "en": "material used to make computer chips",
+      "ru": ["полупроводник"]
+    }
+  },
+  "seminar": {
+    "n.": {
+      "en": "a small class where people discuss a subject",
+      "ru": ["семинар"]
+    }
+  },
+  "send": {
+    "v.": {
+      "en": "make something go to another place",
+      "ru": ["отправлять", "посылать"]
+    }
+  },
+  "seraphic": {
+    "adj.": {
+      "en": "pure and beautiful like a heavenly being",
+      "ru": ["ангельски чистый и прекрасный"]
+    }
+  },
+  "service": {
+    "n.": {
+      "en": "work done to help other people",
+      "ru": ["обслуживание", "услуга"]
+    }
+  },
+  "set": {
+    "n.": {
+      "en": "group of things that go together",
+      "ru": ["набор", "комплект"]
+    },
+    "v.": {
+      "en": "put in a place or ready state",
+      "ru": ["помещать", "устанавливать"]
+    }
+  },
+  "setback": {
+    "n.": {
+      "en": "problem that delays your progress",
+      "ru": ["неудача, задерживающая продвижение", "помеха"]
+    }
+  },
+  "seven": {
+    "num.": {
+      "en": "the number after six",
+      "ru": ["семь"]
+    }
+  },
+  "seventeen": {
+    "num.": {
+      "en": "number after sixteen",
+      "ru": ["семнадцать"]
+    }
+  },
+  "seventh": {
+    "num.": {
+      "en": "number seven in a list",
+      "ru": ["седьмой"]
+    }
+  },
+  "shallow": {
+    "adj.": {
+      "en": "not deep",
+      "ru": ["мелкий", "неглубокий"]
+    }
+  },
+  "shame": {
+    "n.": {
+      "en": "bad feeling about something wrong you did",
+      "ru": ["стыд"]
+    }
+  },
+  "shank": {
+    "n.": {
+      "en": "lower part of the leg",
+      "ru": ["голень", "нижняя часть ноги"]
+    }
+  },
+  "she": {
+    "pron.": {
+      "en": "a woman or girl already named",
+      "ru": ["она"]
+    }
+  },
+  "shear": {
+    "v.": {
+      "en": "to cut wool off a sheep",
+      "ru": ["стричь овцу", "состригать шерсть"]
+    }
+  },
+  "sheath": {
+    "n.": {
+      "en": "cover for the blade of a knife",
+      "ru": ["ножны", "чехол для лезвия"]
+    }
+  },
+  "shield": {
+    "n.": {
+      "en": "flat piece of metal that guards the body",
+      "ru": ["щит"]
+    },
+    "v.": {
+      "en": "keep safe from harm or danger",
+      "ru": ["защищать", "ограждать от опасности"]
+    }
+  },
+  "ship": {
+    "n.": {
+      "en": "large boat that goes on the sea",
+      "ru": ["корабль", "судно"]
+    }
+  },
+  "shortfall": {
+    "n.": {
+      "en": "amount missing that you needed",
+      "ru": ["недостача", "нехватка до нужной величины"]
+    }
+  },
+  "shotgun": {
+    "n.": {
+      "en": "gun that fires many small metal balls",
+      "ru": ["дробовик", "ружьё для стрельбы дробью"]
+    }
+  },
+  "sign": {
+    "n.": {
+      "en": "mark or board that gives information",
+      "ru": ["знак", "вывеска"]
+    },
+    "v.": {
+      "en": "write your name on a paper",
+      "ru": ["подписывать", "ставить подпись"]
+    }
+  },
+  "similarity": {
+    "n.": {
+      "en": "way in which two things are alike",
+      "ru": ["сходство", "похожесть"]
+    }
+  },
+  "simple": {
+    "adj.": {
+      "en": "easy to understand or do",
+      "ru": ["простой", "несложный"]
+    }
+  },
+  "sincerely": {
+    "adv.": {
+      "en": "in a true and honest way",
+      "ru": ["искренне", "чистосердечно"]
+    }
+  },
+  "singe": {
+    "v.": {
+      "en": "burn the surface of something a little",
+      "ru": ["слегка опалять", "обжигать поверхность"]
+    }
+  },
+  "singer": {
+    "n.": {
+      "en": "person who sings songs",
+      "ru": ["певец", "певица"]
+    }
+  },
+  "sinister": {
+    "adj.": {
+      "en": "seeming evil or harmful",
+      "ru": ["зловещий"]
+    }
+  },
+  "sit": {
+    "v.": {
+      "en": "to rest on your bottom on a seat",
+      "ru": ["сидеть"]
+    }
+  },
+  "six": {
+    "num.": {
+      "en": "the number after five",
+      "ru": ["шесть"]
+    }
+  },
+  "sixth": {
+    "num.": {
+      "en": "after the fifth in order",
+      "ru": ["шестой"]
+    }
+  },
+  "sixty": {
+    "num.": {
+      "en": "number after fifty-nine",
+      "ru": ["шестьдесят"]
+    }
+  },
+  "skeptical": {
+    "adj.": {
+      "en": "not sure that something is true or good",
+      "ru": ["скептический", "настроенный недоверчиво"]
+    }
+  },
+  "skulk": {
+    "v.": {
+      "en": "hide or move in secret to avoid notice",
+      "ru": ["красться", "прятаться от чужих глаз"]
+    }
+  },
+  "slash": {
+    "v.": {
+      "en": "cut with a quick swinging move",
+      "ru": ["резать резким взмахом", "рассекать"]
+    }
+  },
+  "slaver": {
+    "v.": {
+      "en": "let spit run from the mouth",
+      "ru": ["пускать слюни"]
+    }
+  },
+  "slope": {
+    "n.": {
+      "en": "ground or surface that goes up or down",
+      "ru": ["склон", "наклон"]
+    }
+  },
+  "slur": {
+    "v.": {
+      "en": "speak words in an unclear way",
+      "ru": ["произносить слова невнятно"]
+    }
+  },
+  "smash": {
+    "v.": {
+      "en": "to break into many pieces with force",
+      "ru": ["разбивать вдребезги"]
+    }
+  },
+  "smirk": {
+    "n.": {
+      "en": "smile that shows you feel pleased with yourself",
+      "ru": ["самодовольная ухмылка"]
+    }
+  },
+  "sneeze": {
+    "v.": {
+      "en": "suddenly blow air out of the nose",
+      "ru": ["чихать"]
+    }
+  },
+  "snobbery": {
+    "n.": {
+      "en": "attitude of thinking you are better than others",
+      "ru": ["снобизм", "чувство превосходства над другими"]
+    }
+  },
+  "snobbish": {
+    "adj.": {
+      "en": "acting as if you are better than others",
+      "ru": ["снобистский", "высокомерный"]
+    }
+  },
+  "snub": {
+    "v.": {
+      "en": "treat someone rudely by ignoring them",
+      "ru": ["демонстративно игнорировать", "пренебрежительно обходиться"]
+    }
+  },
+  "social": {
+    "adj.": {
+      "en": "of people living together or meeting each other",
+      "ru": ["социальный", "общественный"]
+    }
+  },
+  "socialize": {
+    "v.": {
+      "en": "to spend time with other people for fun",
+      "ru": ["общаться", "проводить время в компании"]
+    }
+  },
+  "solution": {
+    "n.": {
+      "en": "way to deal with a problem",
+      "ru": ["решение проблемы"]
+    }
+  },
+  "someone": {
+    "pron.": {
+      "en": "a person who is not named",
+      "ru": ["кто-то", "кто-нибудь"]
+    }
+  },
+  "soot": {
+    "n.": {
+      "en": "black powder made by burning wood or coal",
+      "ru": ["сажа", "копоть"]
+    }
+  },
+  "soporific": {
+    "adj.": {
+      "en": "making you feel sleepy",
+      "ru": ["вызывающий сон", "снотворный"]
+    }
+  },
+  "sound": {
+    "n.": {
+      "en": "what you hear with your ears",
+      "ru": ["звук"]
+    }
+  },
+  "south": {
+    "adj.": {
+      "en": "in or toward the direction opposite north",
+      "ru": ["южный", "направленный на юг"]
+    },
+    "n.": {
+      "en": "direction opposite to north",
+      "ru": ["юг"]
+    }
+  },
+  "soviet": {
+    "adj.": {
+      "en": "of the old union led from russia",
+      "ru": ["советский"]
+    }
+  },
+  "spacecraft": {
+    "n.": {
+      "en": "vehicle that travels in outer space",
+      "ru": ["космический аппарат"]
+    }
+  },
+  "spaceship": {
+    "n.": {
+      "en": "vehicle that travels in space",
+      "ru": ["космический корабль"]
+    }
+  },
+  "speculative": {
+    "adj.": {
+      "en": "based on guesses, not on sure facts",
+      "ru": ["предположительный", "основанный на догадках"]
+    }
+  },
+  "speech": {
+    "n.": {
+      "en": "talk given to a group of people",
+      "ru": ["речь", "выступление"]
+    }
+  },
+  "spend": {
+    "v.": {
+      "en": "give money to buy things",
+      "ru": ["тратить деньги"]
+    }
+  },
+  "spiral": {
+    "n.": {
+      "en": "shape that winds round and round",
+      "ru": ["спираль"]
+    }
+  },
+  "splint": {
+    "n.": {
+      "en": "stiff support that holds a broken bone still",
+      "ru": ["шина для фиксации перелома"]
+    },
+    "v.": {
+      "en": "hold a broken bone with a stiff support",
+      "ru": ["накладывать шину", "фиксировать перелом шиной"]
+    }
+  },
+  "spray": {
+    "v.": {
+      "en": "send out liquid in small drops",
+      "ru": ["распылять", "разбрызгивать"]
+    }
+  },
+  "spur": {
+    "v.": {
+      "en": "make something happen faster or more",
+      "ru": ["подстёгивать", "ускорять"]
+    }
+  },
+  "stabilize": {
+    "v.": {
+      "en": "make steady and firm",
+      "ru": ["стабилизировать", "делать устойчивым"]
+    }
+  },
+  "stage": {
+    "n.": {
+      "en": "one step in a long process",
+      "ru": ["этап", "стадия"]
+    }
+  },
+  "stampede": {
+    "n.": {
+      "en": "a sudden rush of frightened animals",
+      "ru": ["паническое бегство стада"]
+    },
+    "v.": {
+      "en": "to run away fast in a frightened group",
+      "ru": ["спасаться бегством всей толпой"]
+    }
+  },
+  "stance": {
+    "n.": {
+      "en": "opinion on a subject, or way of standing",
+      "ru": ["позиция", "поза"]
+    }
+  },
+  "standard": {
+    "n.": {
+      "en": "level of quality that people expect",
+      "ru": ["стандарт", "норма качества"]
+    }
+  },
+  "standpoint": {
+    "n.": {
+      "en": "way of thinking about a subject",
+      "ru": ["точка зрения"]
+    }
+  },
+  "stare": {
+    "v.": {
+      "en": "look at for a long time",
+      "ru": ["пристально смотреть", "уставиться"]
+    }
+  },
+  "station": {
+    "n.": {
+      "en": "place where trains or buses stop",
+      "ru": ["станция", "остановка"]
+    }
+  },
+  "stay": {
+    "v.": {
+      "en": "remain in one place or state",
+      "ru": ["оставаться"]
+    }
+  },
+  "steadily": {
+    "adv.": {
+      "en": "at a constant, even pace",
+      "ru": ["равномерно", "в устойчивом темпе"]
+    }
+  },
+  "steamy": {
+    "adj.": {
+      "en": "full of hot water vapor",
+      "ru": ["наполненный горячим паром"]
+    }
+  },
+  "step": {
+    "n.": {
+      "en": "one movement of the foot; one stage",
+      "ru": ["шаг", "этап"]
+    }
+  },
+  "stiffly": {
+    "adv.": {
+      "en": "in a way that is hard to bend",
+      "ru": ["скованно", "не сгибаясь"]
+    }
+  },
+  "stifle": {
+    "v.": {
+      "en": "to stop something from growing or being shown",
+      "ru": ["подавлять", "сдерживать развитие или проявление"]
+    }
+  },
+  "stir": {
+    "v.": {
+      "en": "mix a liquid with a spoon",
+      "ru": ["размешивать ложкой"]
+    }
+  },
+  "store": {
+    "n.": {
+      "en": "place where you buy things",
+      "ru": ["магазин"]
+    },
+    "v.": {
+      "en": "keep something for use later",
+      "ru": ["хранить", "запасать"]
+    }
+  },
+  "storyteller": {
+    "n.": {
+      "en": "a person who tells stories",
+      "ru": ["рассказчик"]
+    }
+  },
+  "strait": {
+    "n.": {
+      "en": "a narrow sea passage between two lands",
+      "ru": ["пролив"]
+    }
+  },
+  "stratify": {
+    "v.": {
+      "en": "arrange in layers or levels",
+      "ru": ["разделять на слои или уровни"]
+    }
+  },
+  "stress": {
+    "v.": {
+      "en": "say that something is very important",
+      "ru": ["подчёркивать важность"]
+    }
+  },
+  "stricture": {
+    "n.": {
+      "en": "strong criticism; rule that limits",
+      "ru": ["резкая критика", "ограничительное правило"]
+    }
+  },
+  "strong": {
+    "adj.": {
+      "en": "having great power or force",
+      "ru": ["сильный", "крепкий"]
+    }
+  },
+  "structure": {
+    "n.": {
+      "en": "way that parts are put together",
+      "ru": ["структура", "строение"]
+    }
+  },
+  "stuff": {
+    "n.": {
+      "en": "things, when you do not name them",
+      "ru": ["вещи", "всякая всячина"]
+    }
+  },
+  "stupefy": {
+    "v.": {
+      "en": "make someone unable to think or feel",
+      "ru": ["ошеломлять", "приводить в оцепенение"]
+    }
+  },
+  "stygian": {
+    "adj.": {
+      "en": "very dark and gloomy",
+      "ru": ["непроглядно тёмный", "мрачный"]
+    }
+  },
+  "stylist": {
+    "n.": {
+      "en": "a person who designs hair, clothes, or looks",
+      "ru": ["стилист"]
+    }
+  },
+  "subliminal": {
+    "adj.": {
+      "en": "affecting the mind without you knowing it",
+      "ru": ["действующий ниже порога осознания"]
+    }
+  },
+  "submarine": {
+    "n.": {
+      "en": "a ship that can travel under water",
+      "ru": ["подводная лодка"]
+    }
+  },
+  "subsidy": {
+    "n.": {
+      "en": "money from the state to help pay costs",
+      "ru": ["субсидия", "государственная помощь на покрытие расходов"]
+    }
+  },
+  "such": {
+    "adj.": {
+      "en": "of this kind; so great",
+      "ru": ["такой", "подобный"]
+    }
+  },
+  "sue": {
+    "v.": {
+      "en": "take someone to court for money",
+      "ru": ["подавать в суд", "предъявлять иск"]
+    }
+  },
+  "suggest": {
+    "v.": {
+      "en": "say an idea for others to think about",
+      "ru": ["предлагать", "выдвигать идею"]
+    }
+  },
+  "suit": {
+    "n.": {
+      "en": "jacket and trousers made from the same cloth",
+      "ru": ["костюм"]
+    },
+    "v.": {
+      "en": "be right or good for someone",
+      "ru": ["подходить"]
+    }
+  },
+  "support": {
+    "n.": {
+      "en": "help or encouragement given to someone",
+      "ru": ["поддержка"]
+    },
+    "v.": {
+      "en": "to agree with and help someone or something",
+      "ru": ["поддерживать"]
+    }
+  },
+  "suppose": {
+    "v.": {
+      "en": "think that something is probably true",
+      "ru": ["предполагать", "полагать"]
+    }
+  },
+  "supremacy": {
+    "n.": {
+      "en": "position of greatest power or rank",
+      "ru": ["верховенство", "господство"]
+    }
+  },
+  "sure": {
+    "adj.": {
+      "en": "with no doubt in your mind",
+      "ru": ["уверенный"]
+    }
+  },
+  "survey": {
+    "n.": {
+      "en": "set of questions asked to many people",
+      "ru": ["опрос", "анкета"]
+    }
+  },
+  "suspension": {
+    "n.": {
+      "en": "act of stopping for a time",
+      "ru": ["приостановка", "временное прекращение"]
+    }
+  },
+  "suspicious": {
+    "adj.": {
+      "en": "feeling that something is wrong or bad",
+      "ru": ["подозревающий неладное"]
+    }
+  },
+  "sustainable": {
+    "adj.": {
+      "en": "able to continue without harming the environment",
+      "ru": ["устойчивый", "долгосрочный и безопасный для природы"]
+    }
+  },
+  "swathe": {
+    "v.": {
+      "en": "wrap tightly in cloth or bands",
+      "ru": ["туго обматывать тканью", "обвивать"]
+    }
+  },
+  "sweetener": {
+    "n.": {
+      "en": "substance added to food instead of sugar",
+      "ru": ["подсластитель"]
+    }
+  },
+  "switchboard": {
+    "n.": {
+      "en": "panel where phone calls or power are connected",
+      "ru": ["телефонный коммутатор", "электрический распределительный щит"]
+    }
+  },
+  "system": {
+    "n.": {
+      "en": "set of parts that work as a whole",
+      "ru": ["система"]
+    }
+  },
+  "tabloid": {
+    "n.": {
+      "en": "small newspaper with short and shocking stories",
+      "ru": ["таблоид", "газета с короткими сенсационными статьями"]
+    }
+  },
+  "tactic": {
+    "n.": {
+      "en": "planned way of getting what you want",
+      "ru": ["тактический приём", "способ достижения цели"]
+    }
+  },
+  "take": {
+    "v.": {
+      "en": "get hold of and move something",
+      "ru": ["брать", "забирать"]
+    }
+  },
+  "tamp": {
+    "v.": {
+      "en": "press down firmly by hitting",
+      "ru": ["утрамбовывать", "уплотнять ударами"]
+    }
+  },
+  "tart": {
+    "adj.": {
+      "en": "having a sharp sour taste",
+      "ru": ["резко кислый"]
+    }
+  },
+  "tax": {
+    "n.": {
+      "en": "money you pay to the government",
+      "ru": ["налог"]
+    }
+  },
+  "taxi": {
+    "n.": {
+      "en": "car with a driver you pay",
+      "ru": ["такси"]
+    }
+  },
+  "teacher": {
+    "n.": {
+      "en": "person whose job is to help students learn",
+      "ru": ["учитель", "преподаватель"]
+    }
+  },
+  "technology": {
+    "n.": {
+      "en": "tools and machines made with science",
+      "ru": ["технология", "техника"]
+    }
+  },
+  "teen": {
+    "n.": {
+      "en": "young person aged 13 to 19",
+      "ru": ["подросток от тринадцати до девятнадцати лет"]
+    }
+  },
+  "teenage": {
+    "adj.": {
+      "en": "of people aged 13 to 19",
+      "ru": ["подростковый"]
+    }
+  },
+  "temporary": {
+    "adj.": {
+      "en": "lasting only for a short time",
+      "ru": ["временный", "недолговечный"]
+    }
+  },
+  "tempt": {
+    "v.": {
+      "en": "make someone want to do wrong",
+      "ru": ["искушать", "соблазнять"]
+    }
+  },
+  "tender": {
+    "adj.": {
+      "en": "gentle and kind; soft and easy to cut",
+      "ru": ["нежный", "мягкий"]
+    },
+    "v.": {
+      "en": "to offer formally",
+      "ru": ["предлагать официально"]
+    }
+  },
+  "tenth": {
+    "num.": {
+      "en": "number ten in a list",
+      "ru": ["десятый"]
+    }
+  },
+  "term": {
+    "n.": {
+      "en": "fixed period of time; special word",
+      "ru": ["срок", "термин"]
+    }
+  },
+  "testament": {
+    "n.": {
+      "en": "legal paper about who gets your property",
+      "ru": ["завещание"]
+    }
+  },
+  "than": {
+    "conj.": {
+      "en": "used to compare two things",
+      "ru": ["чем"]
+    }
+  },
+  "their": {
+    "pron.": {
+      "en": "belonging to them",
+      "ru": ["их"]
+    }
+  },
+  "then": {
+    "adv.": {
+      "en": "after that; at that time",
+      "ru": ["тогда", "затем"]
+    }
+  },
+  "there": {
+    "adv.": {
+      "en": "in or to that place",
+      "ru": ["там", "туда"]
+    }
+  },
+  "thin": {
+    "adj.": {
+      "en": "not thick or fat",
+      "ru": ["тонкий", "худой"]
+    }
+  },
+  "thirsty": {
+    "adj.": {
+      "en": "needing or wanting to drink",
+      "ru": ["испытывающий жажду"]
+    }
+  },
+  "thirteen": {
+    "num.": {
+      "en": "number after twelve",
+      "ru": ["тринадцать"]
+    }
+  },
+  "thirty": {
+    "num.": {
+      "en": "ten times three",
+      "ru": ["тридцать"]
+    }
+  },
+  "those": {
+    "pron.": {
+      "en": "the people or things over there",
+      "ru": ["те"]
+    }
+  },
+  "thousand": {
+    "num.": {
+      "en": "the number 1000",
+      "ru": ["тысяча"]
+    }
+  },
+  "threadbare": {
+    "adj.": {
+      "en": "worn thin from long use",
+      "ru": ["истёртый", "протёртый от долгой носки"]
+    }
+  },
+  "three": {
+    "num.": {
+      "en": "the number after two",
+      "ru": ["три"]
+    }
+  },
+  "thwart": {
+    "v.": {
+      "en": "stop a plan from working",
+      "ru": ["срывать план", "мешать осуществлению"]
+    }
+  },
+  "tickler": {
+    "n.": {
+      "en": "thing that lightly touches to make you laugh",
+      "ru": ["предмет для щекотки"]
+    }
+  },
+  "timeworn": {
+    "adj.": {
+      "en": "old and used for a long time",
+      "ru": ["потёртый от долгого использования", "изношенный"]
+    }
+  },
+  "tip": {
+    "n.": {
+      "en": "small extra money given for good service",
+      "ru": ["чаевые"]
+    }
+  },
+  "tirade": {
+    "n.": {
+      "en": "long angry speech that blames someone",
+      "ru": ["тирада", "гневная обличительная речь"]
+    }
+  },
+  "tissue": {
+    "n.": {
+      "en": "soft paper used to wipe your nose",
+      "ru": ["бумажный носовой платок"]
+    }
+  },
+  "today": {
+    "adv.": {
+      "en": "on this day; at the present time",
+      "ru": ["сегодня", "в наши дни"]
+    }
+  },
+  "together": {
+    "adv.": {
+      "en": "with each other; in one group",
+      "ru": ["вместе", "сообща"]
+    }
+  },
+  "tolerant": {
+    "adj.": {
+      "en": "willing to accept things you do not like",
+      "ru": ["терпимый", "толерантный"]
+    }
+  },
+  "topical": {
+    "adj.": {
+      "en": "of interest now; about current events",
+      "ru": ["актуальный", "злободневный"]
+    }
+  },
+  "toss": {
+    "v.": {
+      "en": "throw lightly with a quick motion",
+      "ru": ["подбрасывать", "кидать лёгким движением"]
+    }
+  },
+  "tow": {
+    "v.": {
+      "en": "pull a car or boat behind another one",
+      "ru": ["буксировать", "тянуть на буксире"]
+    }
+  },
+  "town": {
+    "n.": {
+      "en": "place with many houses, bigger than a village",
+      "ru": ["небольшой город"]
+    }
+  },
+  "track": {
+    "n.": {
+      "en": "path or rails for a train or race",
+      "ru": ["железнодорожный путь", "гоночная дорожка"]
+    },
+    "v.": {
+      "en": "follow the path of someone or something",
+      "ru": ["отслеживать", "идти по следу"]
+    }
+  },
+  "traditional": {
+    "adj.": {
+      "en": "done the same way for a long time",
+      "ru": ["традиционный"]
+    }
+  },
+  "trample": {
+    "v.": {
+      "en": "walk heavily on something and crush it",
+      "ru": ["топтать", "растаптывать"]
+    }
+  },
+  "transform": {
+    "v.": {
+      "en": "change completely in form or look",
+      "ru": ["преобразовывать", "полностью менять облик"]
+    }
+  },
+  "travel": {
+    "v.": {
+      "en": "to go from one place to another",
+      "ru": ["путешествовать", "ездить"]
+    }
+  },
+  "tray": {
+    "n.": {
+      "en": "flat board for carrying food or cups",
+      "ru": ["поднос"]
+    }
+  },
+  "treatise": {
+    "n.": {
+      "en": "long formal piece of writing on one subject",
+      "ru": ["трактат"]
+    }
+  },
+  "trifle": {
+    "n.": {
+      "en": "thing of little value or importance",
+      "ru": ["пустяк", "мелочь"]
+    }
+  },
+  "trigger": {
+    "n.": {
+      "en": "part you pull to fire a gun",
+      "ru": ["спусковой крючок"]
+    }
+  },
+  "trowel": {
+    "n.": {
+      "en": "small hand tool for digging or spreading cement",
+      "ru": ["мастерок", "садовый совок"]
+    }
+  },
+  "truancy": {
+    "n.": {
+      "en": "staying away from school without permission",
+      "ru": ["прогул школьных занятий"]
+    }
+  },
+  "truant": {
+    "n.": {
+      "en": "a child who stays away from school",
+      "ru": ["школьник", "прогуливающий уроки"]
+    }
+  },
+  "trunk": {
+    "n.": {
+      "en": "main thick stem of a tree",
+      "ru": ["ствол дерева"]
+    }
+  },
+  "trust": {
+    "v.": {
+      "en": "believe that a person is honest and good",
+      "ru": ["доверять"]
+    }
+  },
+  "turgid": {
+    "adj.": {
+      "en": "swollen, or too grand in style",
+      "ru": ["вздутый", "напыщенный"]
+    }
+  },
+  "turn": {
+    "v.": {
+      "en": "move around a point or change direction",
+      "ru": ["поворачивать", "поворачиваться"]
+    }
+  },
+  "tutor": {
+    "n.": {
+      "en": "teacher who works with one student",
+      "ru": ["репетитор"]
+    }
+  },
+  "twelfth": {
+    "num.": {
+      "en": "number 12 in order",
+      "ru": ["двенадцатый"]
+    }
+  },
+  "twelve": {
+    "num.": {
+      "en": "the number after eleven",
+      "ru": ["двенадцать"]
+    }
+  },
+  "type": {
+    "n.": {
+      "en": "group of things with the same features",
+      "ru": ["тип", "разновидность"]
+    }
+  },
+  "typhoon": {
+    "n.": {
+      "en": "violent storm in the western pacific",
+      "ru": ["тайфун"]
+    }
+  },
+  "under": {
+    "prep.": {
+      "en": "below or lower than something",
+      "ru": ["под", "ниже"]
+    }
+  },
+  "underneath": {
+    "prep.": {
+      "en": "in a lower place than something",
+      "ru": ["под", "снизу"]
+    }
+  },
+  "understate": {
+    "v.": {
+      "en": "say that something is less than it is",
+      "ru": ["преуменьшать", "занижать"]
+    }
+  },
+  "unearthly": {
+    "adj.": {
+      "en": "strange and a little frightening",
+      "ru": ["жутковатый", "потусторонний"]
+    }
+  },
+  "unexpectedly": {
+    "adv.": {
+      "en": "in a way that nobody thought would happen",
+      "ru": ["неожиданно"]
+    }
+  },
+  "unfashionable": {
+    "adj.": {
+      "en": "not liked by many people now",
+      "ru": ["немодный", "вышедший из моды"]
+    }
+  },
+  "unfortunate": {
+    "adj.": {
+      "en": "having or causing bad luck",
+      "ru": ["неудачный", "невезучий"]
+    }
+  },
+  "unless": {
+    "conj.": {
+      "en": "if something does not happen",
+      "ru": ["если не"]
+    }
+  },
+  "unlucky": {
+    "adj.": {
+      "en": "having bad chance or fortune",
+      "ru": ["невезучий", "неудачливый"]
+    }
+  },
+  "unofficial": {
+    "adj.": {
+      "en": "not approved by those in authority",
+      "ru": ["неофициальный"]
+    }
+  },
+  "unpalatable": {
+    "adj.": {
+      "en": "having a bad taste",
+      "ru": ["неприятный на вкус", "невкусный"]
+    }
+  },
+  "unreliable": {
+    "adj.": {
+      "en": "not able to be trusted",
+      "ru": ["ненадёжный"]
+    }
+  },
+  "unsettle": {
+    "v.": {
+      "en": "make someone feel worried or upset",
+      "ru": ["тревожить", "лишать душевного спокойствия"]
+    }
+  },
+  "unto": {
+    "prep.": {
+      "en": "old word meaning to or toward",
+      "ru": ["к", "по направлению к"]
+    }
+  },
+  "use": {
+    "n.": {
+      "en": "reason a thing is for",
+      "ru": ["назначение", "применение"]
+    },
+    "v.": {
+      "en": "do a job with a tool or thing",
+      "ru": ["использовать", "применять"]
+    }
+  },
+  "utensil": {
+    "n.": {
+      "en": "tool used in the kitchen or house",
+      "ru": ["кухонная или домашняя принадлежность"]
+    }
+  },
+  "utilization": {
+    "n.": {
+      "en": "act of putting something to good use",
+      "ru": ["использование", "применение"]
+    }
+  },
+  "vain": {
+    "adj.": {
+      "en": "too proud of how you look; without success",
+      "ru": ["тщеславный", "напрасный"]
+    }
+  },
+  "valediction": {
+    "n.": {
+      "en": "words said when you leave or say goodbye",
+      "ru": ["прощальные слова", "прощание"]
+    }
+  },
+  "validate": {
+    "v.": {
+      "en": "prove that something is correct or true",
+      "ru": ["подтверждать правильность", "проверять достоверность"]
+    }
+  },
+  "validity": {
+    "n.": {
+      "en": "state of being true or acceptable by law",
+      "ru": ["обоснованность", "юридическая действительность"]
+    }
+  },
+  "value": {
+    "n.": {
+      "en": "how much something is worth",
+      "ru": ["стоимость", "ценность"]
+    }
+  },
+  "vanilla": {
+    "n.": {
+      "en": "sweet flavor from a plant bean",
+      "ru": ["ваниль"]
+    }
+  },
+  "venial": {
+    "adj.": {
+      "en": "small and easy to forgive",
+      "ru": ["простительный", "несерьёзный"]
+    }
+  },
+  "verify": {
+    "v.": {
+      "en": "check that something is true or correct",
+      "ru": ["проверять достоверность", "удостоверяться"]
+    }
+  },
+  "vernal": {
+    "adj.": {
+      "en": "of or happening in spring",
+      "ru": ["весенний"]
+    }
+  },
+  "via": {
+    "prep.": {
+      "en": "going through a place on the way",
+      "ru": ["через", "посредством"]
+    }
+  },
+  "vibrate": {
+    "v.": {
+      "en": "shake quickly with small movements",
+      "ru": ["вибрировать", "быстро колебаться"]
+    }
+  },
+  "viewfinder": {
+    "n.": {
+      "en": "part of a camera you look through",
+      "ru": ["видоискатель"]
+    }
+  },
+  "violinist": {
+    "n.": {
+      "en": "person who plays a small string instrument",
+      "ru": ["скрипач"]
+    }
+  },
+  "virile": {
+    "adj.": {
+      "en": "strong and full of male energy",
+      "ru": ["мужественный", "полный мужской силы"]
+    }
+  },
+  "virility": {
+    "n.": {
+      "en": "quality of being strong and manly",
+      "ru": ["мужественность", "мужская сила"]
+    }
+  },
+  "virus": {
+    "n.": {
+      "en": "tiny living thing that causes disease",
+      "ru": ["вирус"]
+    }
+  },
+  "vocation": {
+    "n.": {
+      "en": "work you feel you are meant to do",
+      "ru": ["призвание"]
+    }
+  },
+  "voluntary": {
+    "adj.": {
+      "en": "done by choice, not because you must",
+      "ru": ["добровольный"]
+    }
+  },
+  "wallop": {
+    "v.": {
+      "en": "hit very hard",
+      "ru": ["сильно ударять", "с размаху колотить"]
+    }
+  },
+  "wander": {
+    "v.": {
+      "en": "to walk around with no clear aim",
+      "ru": ["бродить", "ходить без цели"]
+    }
+  },
+  "want": {
+    "v.": {
+      "en": "wish to have or do something",
+      "ru": ["хотеть", "желать"]
+    }
+  },
+  "war": {
+    "n.": {
+      "en": "fighting between countries or groups",
+      "ru": ["война"]
+    }
+  },
+  "warmonger": {
+    "n.": {
+      "en": "person who wants to start fights between nations",
+      "ru": ["поджигатель войны"]
+    }
+  },
+  "wary": {
+    "adj.": {
+      "en": "careful because you think there may be danger",
+      "ru": ["настороженный", "осмотрительный"]
+    }
+  },
+  "watch": {
+    "n.": {
+      "en": "small clock worn on the wrist",
+      "ru": ["наручные часы"]
+    },
+    "v.": {
+      "en": "look at something for some time",
+      "ru": ["смотреть", "наблюдать"]
+    }
+  },
+  "way": {
+    "n.": {
+      "en": "method; road to a place",
+      "ru": ["способ", "путь"]
+    }
+  },
+  "wealthy": {
+    "adj.": {
+      "en": "having a lot of money",
+      "ru": ["богатый", "состоятельный"]
+    }
+  },
+  "website": {
+    "n.": {
+      "en": "place on the internet with linked pages",
+      "ru": ["сайт"]
+    }
+  },
+  "welfare": {
+    "n.": {
+      "en": "health and happiness of a person or group",
+      "ru": ["благополучие"]
+    }
+  },
+  "well": {
+    "adv.": {
+      "en": "in a good or right manner",
+      "ru": ["хорошо", "как следует"]
+    }
+  },
+  "west": {
+    "n.": {
+      "en": "direction where the sun goes down",
+      "ru": ["запад"]
+    }
+  },
+  "wet": {
+    "adj.": {
+      "en": "covered with water or liquid",
+      "ru": ["мокрый", "влажный"]
+    }
+  },
+  "what": {
+    "pron.": {
+      "en": "asks for a thing or fact",
+      "ru": ["что"]
+    }
+  },
+  "whatever": {
+    "pron.": {
+      "en": "any thing at all that",
+      "ru": ["что угодно"]
+    }
+  },
+  "where": {
+    "adv.": {
+      "en": "in or to what place",
+      "ru": ["где", "куда"]
+    }
+  },
+  "whether": {
+    "conj.": {
+      "en": "used to talk about two choices",
+      "ru": ["ли"]
+    }
+  },
+  "while": {
+    "conj.": {
+      "en": "during the time that",
+      "ru": ["пока", "в то время как"]
+    }
+  },
+  "white": {
+    "adj.": {
+      "en": "of the color of snow or milk",
+      "ru": ["белый"]
+    }
+  },
+  "whole": {
+    "adj.": {
+      "en": "complete; with no part left out",
+      "ru": ["целый", "весь"]
+    }
+  },
+  "wholesome": {
+    "adj.": {
+      "en": "good for your body or mind",
+      "ru": ["полезный для тела или ума"]
+    }
+  },
+  "whom": {
+    "pron.": {
+      "en": "which person, as object of a verb",
+      "ru": ["кого", "кому"]
+    }
+  },
+  "whoop": {
+    "v.": {
+      "en": "shout loudly because you are happy",
+      "ru": ["громко кричать от радости"]
+    }
+  },
+  "whose": {
+    "pron.": {
+      "en": "of which person, or belonging to whom",
+      "ru": ["чей"]
+    }
+  },
+  "why": {
+    "adv.": {
+      "en": "for what reason",
+      "ru": ["почему", "зачем"]
+    }
+  },
+  "wife": {
+    "n.": {
+      "en": "the woman a man is married to",
+      "ru": ["жена"]
+    }
+  },
+  "wig": {
+    "n.": {
+      "en": "false hair worn on the head",
+      "ru": ["парик"]
+    }
+  },
+  "wile": {
+    "n.": {
+      "en": "clever trick used to get what you want",
+      "ru": ["уловка", "хитрость"]
+    }
+  },
+  "winch": {
+    "n.": {
+      "en": "machine that pulls heavy things with a rope",
+      "ru": ["лебёдка"]
+    }
+  },
+  "wink": {
+    "v.": {
+      "en": "close and open one eye quickly",
+      "ru": ["подмигивать"]
+    }
+  },
+  "with": {
+    "prep.": {
+      "en": "together, or by means of",
+      "ru": ["вместе с", "при помощи"]
+    }
+  },
+  "within": {
+    "prep.": {
+      "en": "inside; not more than a limit",
+      "ru": ["внутри", "в пределах"]
+    }
+  },
+  "witty": {
+    "adj.": {
+      "en": "clever and funny in what you say",
+      "ru": ["остроумный"]
+    }
+  },
+  "woodwork": {
+    "n.": {
+      "en": "skill of making things from timber",
+      "ru": ["столярное дело", "работа по дереву"]
+    }
+  },
+  "workout": {
+    "n.": {
+      "en": "period of hard physical exercise",
+      "ru": ["тренировка"]
+    }
+  },
+  "world": {
+    "n.": {
+      "en": "the earth and all its people",
+      "ru": ["мир", "земной шар"]
+    }
+  },
+  "worldly": {
+    "adj.": {
+      "en": "concerned with money and daily life",
+      "ru": ["мирской", "житейский"]
+    }
+  },
+  "wrangle": {
+    "v.": {
+      "en": "argue for a long time",
+      "ru": ["долго препираться", "спорить"]
+    }
+  },
+  "wrong": {
+    "adj.": {
+      "en": "not true or not right",
+      "ru": ["неверный", "ошибочный"]
+    }
+  },
+  "yearly": {
+    "adj.": {
+      "en": "happening once every twelve months",
+      "ru": ["ежегодный"]
+    }
+  },
+  "yet": {
+    "adv.": {
+      "en": "up to now; by this time",
+      "ru": ["ещё", "до сих пор"]
+    }
+  },
+  "yield": {
+    "n.": {
+      "en": "the amount that something produces",
+      "ru": ["выход продукции", "количество произведённого"]
+    }
+  },
+  "yourself": {
+    "pron.": {
+      "en": "you, and not another person",
+      "ru": ["сам", "себя"]
+    }
+  },
+  "yourselves": {
+    "pron.": {
+      "en": "you, when speaking to more than one person",
+      "ru": ["вы сами", "себя"]
+    }
+  },
+  "zinc": {
+    "n.": {
+      "en": "blue-white metal used to coat iron",
+      "ru": ["цинк"]
+    }
+  },
+  "zone": {
+    "n.": {
+      "en": "an area with a special use",
+      "ru": ["зона", "участок особого назначения"]
+    }
+  }
+}

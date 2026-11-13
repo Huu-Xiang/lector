@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { loadVocabTestData } from './vocab-test-data';
 import {
   CAP_ESTIMATE,
   MAX_ANSWERS,
@@ -402,5 +403,41 @@ describe('missedWords', { timeout: 60_000 }, () => {
     expect(missed.every((i) => i.rank > 3000 && data.bands[i.band].to <= 4000)).toBe(true);
     expect(missed.map((i) => i.band)).toEqual([...missed.map((i) => i.band)].sort((a, b) => a - b));
     expect(missedWords(honest(40000, 40), 40000, data.bands)).toEqual([]);
+  });
+});
+
+describe('Russian answers for the English test', () => {
+  it('uses English lemmas from the original bank and draws complete Russian options', () => {
+    const english = loadVocabTestData()!;
+    const russian = loadVocabTestData('ru')!;
+    expect(russian?.answerLanguage).toBe('ru');
+    expect(russian.bands.map(({ from, to }) => [from, to])).toEqual(
+      english.bands.map(({ from, to }) => [from, to]),
+    );
+    russian.bands.forEach((band, index) => {
+      const original = new Map(english.bands[index].words.map((word) => [word.w, word.r]));
+      expect(band.words.map(({ w }) => w)).toEqual([...original.keys()]);
+      for (const word of band.words) {
+        expect(word.r).toBe(original.get(word.w));
+        expect(word.s.every((sense) => sense.ru?.some((gloss) => /[а-яё]/i.test(gloss)))).toBe(
+          true,
+        );
+      }
+    });
+
+    for (const seed of [1, 45, 190]) {
+      const answers: Answer[] = [];
+      for (let i = 0; i < 24; i++) {
+        const item = nextItem(answers, russian, seed)!;
+        expect(item.word).toMatch(/^[a-z]+$/i);
+        expect(item.meanings).toHaveLength(3);
+        const labels = item.meanings.map((option) =>
+          option.flatMap((sense) => sense.ru).join('; '),
+        );
+        expect(labels.every((label) => /[а-яё]/i.test(label))).toBe(true);
+        expect(new Set(labels).size).toBe(3);
+        answers.push({ item, choice: item.answer });
+      }
+    }
   });
 });

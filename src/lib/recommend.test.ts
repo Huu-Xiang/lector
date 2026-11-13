@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { levelGap, pickNearLevel } from './recommend';
+import { levelGap, pickNearLevel, recommendationLevel } from './recommend';
 
 const books = ['A1', 'A2', 'B1', 'B1', 'B2', 'C1', 'C2'].map((level, i) => ({ id: i, level }));
 
@@ -24,5 +24,17 @@ describe('levelGap', () => {
     expect(levelGap('C1', 'B1')).toBe(2);
     expect(levelGap('A2', 'B1')).toBe(-1);
     expect(levelGap('B2', null)).toBe(1);
+  });
+});
+
+describe('recommendationLevel', () => {
+  it('starts Russian speakers learning English at A1 when they have no level', () => {
+    expect(recommendationLevel('en', 'ru', null)).toBe('A1');
+  });
+
+  it('keeps a chosen level and the usual fallback for other language pairs', () => {
+    expect(recommendationLevel('en', 'ru', 'C1')).toBe('C1');
+    expect(recommendationLevel('fr', 'ru', null)).toBe('B1');
+    expect(recommendationLevel('en', 'de', null)).toBe('B1');
   });
 });

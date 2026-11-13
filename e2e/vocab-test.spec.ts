@@ -75,6 +75,43 @@ test.describe('vocabulary test', () => {
     await context.close();
   });
 
+  test('keeps the prompt English and shows Russian choices, feedback and results', async ({
+    browser,
+    baseURL,
+  }) => {
+    const context = await browser.newContext({ locale: 'ru-RU' });
+    try {
+      const page = await context.newPage();
+      await page.goto(new URL('/vocab-test', baseURL).href);
+      await expect(page.locator('html')).toHaveAttribute('lang', 'ru');
+      await page.getByTestId('vocab-start').click();
+      await expect(page.getByTestId('vocab-word')).toHaveText(/^[a-z]+$/i);
+      const options = page.getByTestId('vocab-option');
+      await expect(options).toHaveCount(4);
+      for (let i = 0; i < 3; i++) {
+        await expect(options.nth(i).locator('[lang="ru"]').first()).toHaveText(/[а-яё]/i);
+        await expect(options.nth(i).locator('[lang="en"]')).toHaveCount(0);
+      }
+      await expect(page.getByTestId('vocab-card')).toHaveAttribute('data-state', 'asking');
+      await page.getByTestId('vocab-not-sure').click();
+      await expect(page.getByTestId('vocab-feedback')).toContainText(/[а-яё]/i);
+      await expect(page.getByTestId('vocab-announcement')).toContainText(/[а-яё]/i);
+      await page.getByTestId('vocab-word').click();
+      await answerAll(page, 'vocab-not-sure', 19);
+      await page.getByTestId('vocab-finish').click();
+      await expect(page.getByTestId('vocab-result')).toBeVisible();
+      await expect(page.getByTestId('vocab-missed').locator('[lang="ru"]').first()).toHaveText(
+        /[а-яё]/i,
+      );
+      await expect(page.getByTestId('vocab-book').first()).toHaveAttribute(
+        'href',
+        /^\/books\/en\//,
+      );
+    } finally {
+      await context.close();
+    }
+  });
+
   test('shows right or wrong, moves on by itself, and ignores taps meant for the last word', async ({
     browser,
   }) => {

@@ -15,6 +15,8 @@ vi.mock('./languages', () => ({
 }));
 
 import {
+  invalidateLookupCache,
+  lookupWordRemote,
   localizeEntrySenses,
   prefetchLocalizedSenses,
   resetPrefetchState,
@@ -50,6 +52,25 @@ describe('lesson prefetch client', () => {
     expect(apiFetch).toHaveBeenCalledTimes(1);
   });
 
+  it('can replace the fallback when a slow translation eventually arrives', async () => {
+    vi.useFakeTimers();
+    try {
+      let finish!: (response: Response) => void;
+      const onLate = vi.fn();
+      apiFetch.mockImplementationOnce(() => new Promise<Response>((resolve) => (finish = resolve)));
+      const tap = localizeEntrySenses('bank', 'ru', onLate);
+      await vi.advanceTimersByTimeAsync(8000);
+      expect(await tap).toBeNull();
+      expect(onLate).not.toHaveBeenCalled();
+      const senses = [{ partOfSpeech: 'noun', gloss: 'берег' }];
+      finish(json({ senses }));
+      await vi.advanceTimersByTimeAsync(0);
+      expect(onLate).toHaveBeenCalledExactlyOnceWith(senses);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it('falls back to /localize when the prefetch had no answer for the word', async () => {
     apiFetch
       .mockResolvedValueOnce(json({ senses: {} }))
@@ -83,6 +104,21 @@ describe('lesson prefetch client', () => {
     expect(await localizeEntrySenses('mot500', 'zh-CN')).toEqual(SENSES);
     expect(apiFetch).toHaveBeenCalledTimes(1);
     expect(await localizeEntrySenses('mot0', 'zh-CN')).toBeNull();
+    expect(apiFetch).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe('dictionary lookup cache', () => {
+  it('refetches native-language-dependent entries after the learner changes language', async () => {
+    invalidateLookupCache();
+    const english = { word: 'gamin', senses: [{ partOfSpeech: 'noun', gloss: 'child' }] };
+    const russian = { ...english, needsLocalization: true };
+    apiFetch
+      .mockResolvedValueOnce(json({ entry: english }))
+      .mockResolvedValueOnce(json({ entry: russian }));
+    expect(await lookupWordRemote('gamin', 'en')).toEqual(english);
+    expect(await lookupWordRemote('gamin', 'ru')).toEqual(russian);
+    expect(await lookupWordRemote('Gamin', 'ru')).toEqual(russian);
     expect(apiFetch).toHaveBeenCalledTimes(2);
   });
 });

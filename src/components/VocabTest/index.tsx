@@ -59,6 +59,7 @@ function isTestData(value: unknown): value is VocabTestData {
 export interface VocabTestMeta {
   bands: Array<Pick<VocabBand, 'from' | 'to'>>;
   source?: string;
+  answerLanguage?: 'ru';
 }
 
 function randomSeed(): number {
@@ -69,9 +70,27 @@ function randomSeed(): number {
   }
 }
 
-/** "n. 银行；河岸" for screen-reader announcements. */
-function meaningText(rows: readonly SenseRow[]): string {
-  return rows.map((row) => `${row.p} ${row.zh.join('；')}`).join(' / ');
+const RUSSIAN_PARTS_OF_SPEECH: Record<string, string> = {
+  'adj.': 'прил.',
+  'adv.': 'нареч.',
+  'conj.': 'союз',
+  'n.': 'сущ.',
+  'num.': 'числ.',
+  'prep.': 'предл.',
+  'pron.': 'мест.',
+  'v.': 'гл.',
+};
+
+function partOfSpeech(row: SenseRow, russian: boolean): string {
+  return russian ? (RUSSIAN_PARTS_OF_SPEECH[row.p] ?? row.p) : row.p;
+}
+
+function glossText(row: SenseRow, russian: boolean): string {
+  return russian ? (row.ru ?? []).join('; ') : (row.zh ?? []).join('；');
+}
+
+function meaningText(rows: readonly SenseRow[], russian: boolean): string {
+  return rows.map((row) => `${partOfSpeech(row, russian)} ${glossText(row, russian)}`).join(' / ');
 }
 
 type Step = 'intro' | 'test' | 'result';
@@ -109,19 +128,21 @@ const OPTION_STYLES: Record<OptionState, string> = {
   other: 'opacity-60',
 };
 
-function MeaningRows({ rows }: { rows: readonly SenseRow[] }) {
+function MeaningRows({ rows, russian }: { rows: readonly SenseRow[]; russian: boolean }) {
   return (
     <span className="grid min-w-0 flex-1 grid-cols-[2.75rem_1fr] gap-x-1 gap-y-1.5">
       {rows.map((row) => (
         <span key={row.p} className="contents">
-          <span className="pt-0.5 text-sm text-muted-foreground">{row.p}</span>
+          <span className="pt-0.5 text-sm text-muted-foreground">{partOfSpeech(row, russian)}</span>
           <span className="min-w-0">
-            <span lang="zh-CN" className="block font-medium">
-              {row.zh.join('；')}
+            <span lang={russian ? 'ru' : 'zh-CN'} className="block font-medium">
+              {glossText(row, russian)}
             </span>
-            <span lang="en" className="block text-sm leading-snug text-muted-foreground">
-              {row.en}
-            </span>
+            {!russian && (
+              <span lang="en" className="block text-sm leading-snug text-muted-foreground">
+                {row.en}
+              </span>
+            )}
           </span>
         </span>
       ))}
@@ -146,6 +167,7 @@ export default function VocabTest({
 }) {
   const t = useTranslations('vocabTest');
   const locale = useLocale();
+  const russian = meta.answerLanguage === 'ru';
   const { data: session } = authClient.useSession();
   // Without cloud accounts every visitor is the one local user, whose settings always save.
   const cloud = useLectorMode() === 'cloud';
@@ -245,9 +267,11 @@ export default function VocabTest({
     if (loading === 'loading') return;
     setLoading('loading');
     try {
-      const response = await fetch(WORDS_URL);
+      const response = await fetch(russian ? `${WORDS_URL}/ru` : WORDS_URL);
       const words: unknown = response.ok ? await response.json() : null;
-      if (!isTestData(words)) throw new Error('bad word list');
+      if (!isTestData(words) || words.answerLanguage !== meta.answerLanguage) {
+        throw new Error('bad word list');
+      }
       setData(words);
       setLoading('idle');
       start(words);
@@ -310,7 +334,7 @@ export default function VocabTest({
       setAnnouncement(
         t(`announce${outcome(choice, current)}`, {
           word: current.word,
-          meaning: meaningText(current.senses),
+          meaning: meaningText(current.senses, russian),
         }),
       );
       clearTimer();
@@ -319,7 +343,7 @@ export default function VocabTest({
         choice === current.answer ? RIGHT_PAUSE_MS : OTHER_PAUSE_MS,
       );
     },
-    [phase, current, t],
+    [phase, current, t, russian],
   );
 
   function keepGoing() {
@@ -468,7 +492,7 @@ export default function VocabTest({
                         {index + 1}
                       </kbd>
                       {option.rows ? (
-                        <MeaningRows rows={option.rows} />
+                        <MeaningRows rows={option.rows} russian={russian} />
                       ) : (
                         <span className="flex-1 font-medium">{t('noneOfAbove')}</span>
                       )}
@@ -514,7 +538,7 @@ export default function VocabTest({
                       <span className="shrink-0 pt-0.5 text-muted-foreground">
                         {t('trueMeaning')}
                       </span>
-                      <MeaningRows rows={current.senses} />
+                      <MeaningRows rows={current.senses} russian={russian} />
                     </div>
                   )}
                 </>
@@ -628,9 +652,9 @@ export default function VocabTest({
                 </span>
                 {item.senses.map((row) => (
                   <span key={row.p} className="ml-2 text-muted-foreground">
-                    {row.p}{' '}
-                    {locale.startsWith('zh') ? (
-                      <span lang="zh-CN">{row.zh.join('；')}</span>
+                    {partOfSpeech(row, russian)}{' '}
+                    {russian || locale.startsWith('zh') ? (
+                      <span lang={russian ? 'ru' : 'zh-CN'}>{glossText(row, russian)}</span>
                     ) : (
                       <span lang="en">{row.en}</span>
                     )}
