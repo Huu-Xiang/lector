@@ -227,6 +227,7 @@ test.describe('iOS lookup sheet', () => {
       expect(Math.abs((await context.boundingBox())!.y - heading.y)).toBeLessThan(24);
       await context.click();
       await page.getByTestId('ai-notice-agree').click();
+      await expect(page.getByTestId('ai-notice')).toBeHidden();
       await expect(drawer.getByTestId('word-context-result')).toContainText(
         'The festival held in Perdekraal.',
       );
@@ -234,6 +235,7 @@ test.describe('iOS lookup sheet', () => {
       const initial = (await drawer.boundingBox())!.height;
       expect(initial).toBeCloseTo(667 * 0.34, -1);
       async function drag(distance: number) {
+        await expect(handle).toBeInViewport();
         const grip = (await handle.boundingBox())!;
         const x = grip.x + grip.width / 2;
         const y = grip.y + grip.height / 2;
@@ -260,6 +262,7 @@ test.describe('iOS lookup sheet', () => {
     } finally {
       await page.request.delete(apiUrl(`/api/collections/${collectionId}`));
       await page.request.delete(apiUrl('/api/settings/autoSaveLookups'));
+      await page.request.delete(apiUrl('/api/settings/aiNoticeAcceptedAt'));
     }
   });
 });
