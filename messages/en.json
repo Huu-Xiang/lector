@@ -316,6 +316,15 @@
       "title": "Interface and translation languages",
       "hint": "These are two separate choices. For example, you can use a Chinese interface and read explanations in English while you learn French."
     },
+    "groups": {
+      "languages": "Languages",
+      "reading": "Reading and practice",
+      "appearance": "Appearance and navigation",
+      "account": "Account",
+      "integrations": "AI, voice and Anki",
+      "data": "Learning data",
+      "security": "Security"
+    },
     "mobileTabs": {
       "title": "Bottom navigation",
       "extra": "Extra tab",

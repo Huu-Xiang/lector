@@ -71,9 +71,12 @@ test('Me opens the hidden pages and Settings can restore an extra native tab', a
   await page.getByRole('main').getByRole('link', { name: 'Settings' }).click();
 
   const extra = page.getByLabel('Extra tab');
+  await expect(extra).toBeHidden();
+  await page.getByText('Appearance and navigation', { exact: true }).click();
   await extra.selectOption('journal');
   await expect.poll(tabIds).toEqual(['/', '/stats', '/journal', '/me']);
   await page.reload();
+  await page.getByText('Appearance and navigation', { exact: true }).click();
   await expect(extra).toHaveValue('journal');
   await expect.poll(tabIds).toContain('/journal');
   await selectTab('/journal');
@@ -81,12 +84,30 @@ test('Me opens the hidden pages and Settings can restore an extra native tab', a
   await selectTab('/me');
   await expect(page).toHaveURL('/me');
   await page.getByRole('main').getByRole('link', { name: 'Settings' }).click();
+  await page.getByText('Appearance and navigation', { exact: true }).click();
   await extra.selectOption('practice');
   await expect.poll(tabIds).toEqual(['/', '/stats', '/practice', '/me']);
   await selectTab('/practice');
   await expect(page).toHaveURL('/practice');
   await selectTab('/me');
   await page.getByRole('main').getByRole('link', { name: 'Settings' }).click();
+  await page.getByText('Appearance and navigation', { exact: true }).click();
   await extra.selectOption('none');
   await expect.poll(tabIds).toEqual(['/', '/stats', '/me']);
+});
+
+test('iPhone settings show compact groups and expand a directly linked setting', async ({
+  page,
+}) => {
+  await page.goto('/settings');
+  const settings = page.getByTestId('iphone-settings');
+  await expect(settings.getByTestId('native-language-select')).toBeHidden();
+  await settings.getByText('Languages', { exact: true }).click();
+  await expect(settings.getByTestId('native-language-select')).toBeVisible();
+  await settings.getByText('Languages', { exact: true }).click();
+  await expect(settings.getByTestId('native-language-select')).toBeHidden();
+
+  await page.goto('/settings#review-goal');
+  await expect(settings.getByTestId('review-goal')).toBeVisible();
+  await expect(settings.getByTestId('native-language-select')).toBeHidden();
 });

@@ -29,7 +29,7 @@ function Row({
   );
 }
 
-export default function VersionInfo() {
+export default function VersionInfo({ hideTitle = false }: { hideTitle?: boolean }) {
   const t = useTranslations('settings.about');
   const { version, commit, buildTime } = buildInfo;
   const href = commitUrl(commit);
@@ -44,7 +44,7 @@ export default function VersionInfo() {
 
   return (
     <section className="panel p-6">
-      <h2 className="mb-4 text-lg font-semibold text-foreground">{t('title')}</h2>
+      {!hideTitle && <h2 className="mb-4 text-lg font-semibold text-foreground">{t('title')}</h2>}
       <dl className="space-y-3 text-sm">
         {/* Readfox images carry no release tag, so the commit stands in for it. */}
         {isKnown(version) && <Row label={t('version')}>{formatBuildVersion(version)}</Row>}

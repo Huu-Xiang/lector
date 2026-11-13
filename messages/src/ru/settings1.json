@@ -1,5 +1,14 @@
 {
   "settings": {
+    "groups": {
+      "languages": "Языки",
+      "reading": "Чтение и практика",
+      "appearance": "Оформление и навигация",
+      "account": "Аккаунт",
+      "integrations": "ИИ, озвучка и Anki",
+      "data": "Данные обучения",
+      "security": "Безопасность"
+    },
     "mobileTabs": {
       "title": "Нижняя панель",
       "extra": "Дополнительная вкладка",

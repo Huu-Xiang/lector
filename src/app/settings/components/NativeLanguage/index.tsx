@@ -16,7 +16,7 @@ import {
 } from '@/lib/languages';
 import { Select } from '@/components/ui/select';
 
-export default function NativeLanguage() {
+export default function NativeLanguage({ compact = false }: { compact?: boolean }) {
   const t = useTranslations('settings.nativeLanguage');
   const activeLang = useActiveLanguage();
   const locale = useLocale();
@@ -65,14 +65,14 @@ export default function NativeLanguage() {
   return (
     <div data-testid="native-language-settings">
       <h3 className="mb-1 text-sm font-semibold text-foreground">{t('title')}</h3>
-      <p className="mb-3 text-sm text-muted-foreground">{t('description')}</p>
+      {!compact && <p className="mb-3 text-sm text-muted-foreground">{t('description')}</p>}
       <Select
         value={value}
         disabled={pending}
         onChange={(e) => save(e.target.value)}
         aria-label={t('title')}
         data-testid="native-language-select"
-        className="w-full"
+        className={compact ? 'min-h-11 w-full' : 'w-full'}
       >
         {NATIVE_LANGUAGES.map((lang) => (
           <option key={lang.code} value={lang.code}>

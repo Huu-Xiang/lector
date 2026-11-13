@@ -1,5 +1,14 @@
 {
   "settings": {
+    "groups": {
+      "languages": "언어",
+      "reading": "읽기 및 연습",
+      "appearance": "화면 및 탐색",
+      "account": "계정",
+      "integrations": "AI, 음성 및 Anki",
+      "data": "학습 데이터",
+      "security": "보안"
+    },
     "mobileTabs": {
       "title": "하단 탐색",
       "extra": "추가 탭",

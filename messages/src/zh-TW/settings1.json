@@ -1,5 +1,14 @@
 {
   "settings": {
+    "groups": {
+      "languages": "語言",
+      "reading": "閱讀與練習",
+      "appearance": "外觀與導覽",
+      "account": "帳號",
+      "integrations": "AI、語音與 Anki",
+      "data": "學習資料",
+      "security": "安全性"
+    },
     "mobileTabs": {
       "title": "底部導覽",
       "extra": "額外分頁",

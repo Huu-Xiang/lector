@@ -1,5 +1,14 @@
 {
   "settings": {
+    "groups": {
+      "languages": "语言",
+      "reading": "阅读与练习",
+      "appearance": "外观与导航",
+      "account": "账号",
+      "integrations": "AI、语音与 Anki",
+      "data": "学习数据",
+      "security": "安全"
+    },
     "mobileTabs": {
       "title": "底部导航",
       "extra": "额外标签",

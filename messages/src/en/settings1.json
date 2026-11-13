@@ -1,5 +1,14 @@
 {
   "settings": {
+    "groups": {
+      "languages": "Languages",
+      "reading": "Reading and practice",
+      "appearance": "Appearance and navigation",
+      "account": "Account",
+      "integrations": "AI, voice and Anki",
+      "data": "Learning data",
+      "security": "Security"
+    },
     "mobileTabs": {
       "title": "Bottom navigation",
       "extra": "Extra tab",

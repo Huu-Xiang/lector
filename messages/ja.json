@@ -316,6 +316,15 @@
       "title": "表示言語と翻訳言語",
       "hint": "この 2 つは別々の設定です。たとえば、フランス語を学びながら、表示は中国語、解説は英語にできます。"
     },
+    "groups": {
+      "languages": "言語",
+      "reading": "読書と練習",
+      "appearance": "外観とナビゲーション",
+      "account": "アカウント",
+      "integrations": "AI・音声・Anki",
+      "data": "学習データ",
+      "security": "セキュリティ"
+    },
     "mobileTabs": {
       "title": "下部ナビゲーション",
       "extra": "追加タブ",
