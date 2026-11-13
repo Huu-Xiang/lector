@@ -50,6 +50,7 @@ function Welcome() {
           alt=""
           width={480}
           height={640}
+          loading="eager"
           sizes="(min-width: 768px) 210px, 150px"
           className={styles.cover}
         />

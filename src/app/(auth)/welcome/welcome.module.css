@@ -145,6 +145,17 @@
   font-size: 0.9375rem;
 }
 
+@media (max-width: 47.999rem) and (max-height: 700px) {
+  .welcome {
+    gap: 1rem;
+    padding-block-start: 1rem;
+  }
+
+  .preview {
+    min-block-size: 12rem;
+  }
+}
+
 @media (min-width: 48rem) {
   .welcome {
     grid-template-areas:
