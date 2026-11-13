@@ -1329,7 +1329,22 @@
     "languageTitle": "依級別瀏覽{language}免費書籍",
     "languageIntro": "{count} 本{language}免費書，適合學習者，級別從 {first} 到 {last}。每一本都是公有領域的完整原文。先打開一本看看開頭，再到 Readfox 免費閱讀，點任何單字即可查看釋義。",
     "languageMetaTitle": "{language}免費書籍（{first}–{last}）：線上閱讀 | Readfox",
-    "languageMetaDescription": "線上免費閱讀 {count} 本{language}書，級別 {first} 到 {last}，包括{titles}。點任何單字，查看你的語言的釋義。"
+    "languageMetaDescription": "線上免費閱讀 {count} 本{language}書，級別 {first} 到 {last}，包括{titles}。點任何單字，查看你的語言的釋義。",
+    "featuredTitle": "{level} {language}讀物從哪本開始",
+    "featuredIntro": "在瀏覽器就能免費試讀開篇。在 Readfox 閱讀器裡，點生詞就能查意思。",
+    "featuredStart": "從這本開始",
+    "featuredReadingTime": "試讀約 {minutes} 分鐘",
+    "featuredRead": "免費試讀",
+    "featuredReasons": {
+      "contes-du-lundi": "從《最後一課》開始。故事由一名學生講述，熟悉的教室場景能幫你猜懂不熟悉的舊詞。",
+      "lettres-de-mon-moulin": "〈安頓下來〉從兔子和一座老磨坊寫起。場景具體，適合邊讀邊累積描寫鄉村的詞彙。",
+      "la-petite-fadette": "想讀長一點的故事，可以選這本。開頭寫一個農家，鄉村詞彙和較長的句子更有挑戰。",
+      "an-elementary-spanish-reader": "一隻小雞以為天塌了。開篇多用短句、現在式和重複的對話，容易跟上。",
+      "lecturas-faciles": "從父子和驢的寓言開始。情節容易想像，適合練習常見動詞的過去式。",
+      "the-wonderful-wizard-of-oz": "從桃樂絲遇到龍捲風讀起。熟悉的情節和具體的描寫，能幫你遇到生詞時繼續讀下去。",
+      "daddy-long-legs": "適合練習校園場景裡的日常英文。開篇生動地寫了視察日，後來透過書信講述大學生活。",
+      "a-little-princess": "跟著莎拉走進倫敦的寄宿學校。對話容易入門，細緻的場景描寫也能拓展詞彙。"
+    }
   },
   "dailyGoal": {
     "label": "連續 {count} 天。今天：{amount}",

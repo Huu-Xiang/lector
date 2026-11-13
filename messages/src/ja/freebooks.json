@@ -194,6 +194,21 @@
     "languageTitle": "レベル別の無料{language}の本",
     "languageIntro": "学習者向けの無料{language}の本が {count} 冊あります。レベルは {first} から {last} までです。どれもパブリックドメインの全文です。まず冒頭を開いて、Readfox で無料で読みましょう。単語をタップすると意味が見られます。",
     "languageMetaTitle": "学習者向けの無料{language}の本（{first}–{last}） | Readfox",
-    "languageMetaDescription": "レベル {first} から {last} の無料{language}の本 {count} 冊をオンラインで読めます。{titles}など。単語をタップすると、あなたの言語で意味が見られます。"
+    "languageMetaDescription": "レベル {first} から {last} の無料{language}の本 {count} 冊をオンラインで読めます。{titles}など。単語をタップすると、あなたの言語で意味が見られます。",
+    "featuredTitle": "{level}の{language}の本を選ぶなら",
+    "featuredIntro": "冒頭はブラウザで無料で試し読みできます。Readfoxのリーダーでは、知らない単語をタップすると意味がわかります。",
+    "featuredStart": "最初の一冊に",
+    "featuredReadingTime": "試し読みは約{minutes}分",
+    "featuredRead": "無料で試し読み",
+    "featuredReasons": {
+      "contes-du-lundi": "「最後の授業」から始めましょう。少年の語りと身近な教室の場面を手がかりに、古い語彙が出てきても読み進められます。",
+      "lettres-de-mon-moulin": "冒頭にはウサギと古い風車小屋が登場します。場面を思い浮かべやすく、田舎の風景を描く言葉も学べます。",
+      "la-petite-fadette": "長めの物語に挑戦したい人に。農家の暮らしから始まり、田舎の語彙や長めの文が出てきます。",
+      "an-elementary-spanish-reader": "ひよこが空が落ちてきたと思い込む話です。短い文や現在形、繰り返しの会話が多く、筋を追いやすいです。",
+      "lecturas-faciles": "父と息子とロバの寓話から始めましょう。動きが想像しやすく、よく使う動詞の過去形を練習できます。",
+      "the-wonderful-wizard-of-oz": "ドロシーが竜巻に巻き込まれるところから。よく知られた筋と具体的な描写が、知らない単語を補う手がかりになります。",
+      "daddy-long-legs": "学校生活で使う日常の英語を読みたい人に。施設の視察日の描写から始まり、やがて大学生活をつづった手紙が続きます。",
+      "a-little-princess": "サラと一緒にロンドンの寄宿学校へ。会話が読み始める手がかりになり、風景描写で語彙も広げられます。"
+    }
   }
 }
