@@ -26,7 +26,8 @@ import CloudPlanSettings from './components/CloudPlanSettings';
 import InviteCard from './components/InviteCard';
 import InstallAppCard from './components/InstallAppCard';
 import ReminderSettings from './components/ReminderSettings';
-import { useIsNativeApp } from '@/lib/native-app';
+import MobileTabs from './components/MobileTabs';
+import { hasNativeTabBar, useIsNativeApp } from '@/lib/native-app';
 import { lectorMode } from '@/lib/api-base';
 import { useTranslations } from 'next-intl';
 
@@ -56,6 +57,7 @@ export default function SettingsPage() {
     <main className="mx-auto max-w-3xl px-4 py-8">
       <PageHeader title={t('pageTitle')} />
       <div className="space-y-8">
+        {nativeApp && hasNativeTabBar() && <MobileTabs />}
         {!nativeApp && accountSettings}
         {nativeApp && languagePreferences}
         <LanguagesSettings />

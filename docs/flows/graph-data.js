@@ -414,7 +414,7 @@
   N("flow:save-settings", "flow", "Save settings", {
     domain: "settings",
     md: "settings.md#save-settings",
-    summary: "Settings page writes one key at a time through data-layer to PUT /api/settings/:key.",
+    summary: "Settings writes account keys through the API. iOS also stores the optional bottom tab on the device.",
     steps: ["file:settings-page", "fn:setSetting", "route:settings-put", "table:settings"],
   });
   N("flow:configure-llm", "flow", "Configure LLM", {

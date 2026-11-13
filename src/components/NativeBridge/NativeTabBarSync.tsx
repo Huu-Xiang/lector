@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useSyncExternalStore } from 'react';
+import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { isBareRoute } from '@/lib/auth-client';
@@ -11,7 +11,8 @@ import {
   selectNativeTab,
   setNativeTabBarVisible,
 } from '@/lib/native-app';
-import { coversTabBar, hasOwnHeader, NATIVE_TABS, TAB_ICONS } from './tab-bar';
+import { coversTabBar, hasOwnHeader, ME_TAB, nativeTabs, selectedNativeTab } from './tab-bar';
+import { useTabPreference } from './use-tab-preference';
 
 /** Drives the shell's UITabBar from the web routes. Mounted only inside the app. */
 export default function NativeTabBarSync() {
@@ -21,29 +22,36 @@ export default function NativeTabBarSync() {
   const [ready] = useState(hasNativeTabBar);
   const [covered, setCovered] = useState(false);
   const wide = useWideScreen();
-  const titles = NATIVE_TABS.map((link) => tNav(link.labelKey)).join('\n');
-  const selected = NATIVE_TABS.some((link) => link.href === pathname) ? pathname : null;
+  const [extra] = useTabPreference();
+  const tabs = useMemo(
+    () =>
+      nativeTabs(extra).map(({ href, labelKey, icon }) => ({
+        id: href,
+        title: tNav(labelKey),
+        icon,
+      })),
+    [extra, tNav],
+  );
+  const selected = selectedNativeTab(pathname, extra);
 
   useEffect(() => {
     if (!ready) return;
     document.documentElement.dataset.nativeTabbar = '';
-    return onNativeTabSelected((id) => router.replace(id, { scroll: false }));
-  }, [ready, router]);
+    return onNativeTabSelected((id) => {
+      if (id !== pathname && tabs.some((tab) => tab.id === id)) {
+        router.replace(id, { scroll: id === ME_TAB.href });
+      }
+    });
+  }, [ready, router, pathname, tabs]);
 
   useEffect(() => {
     if (!ready) return;
-    const names = titles.split('\n');
-    const tabs = NATIVE_TABS.map((link, i) => ({
-      id: link.href,
-      title: names[i],
-      icon: TAB_ICONS[link.href],
-    }));
     void configureNativeTabBar(tabs, null);
-  }, [ready, titles]);
+  }, [ready, tabs]);
 
   useEffect(() => {
     if (ready) void selectNativeTab(selected);
-  }, [ready, selected, titles]);
+  }, [ready, selected, tabs]);
 
   useEffect(() => {
     if (!ready) return;

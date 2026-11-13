@@ -1,5 +1,11 @@
 {
   "settings": {
+    "mobileTabs": {
+      "title": "底部导航",
+      "extra": "额外标签",
+      "none": "不添加",
+      "hint": "在「我」里随时可以打开日记和统计。此设置仅应用于当前设备。"
+    },
     "pageTitle": "设置",
     "practice": {
       "title": "练习",

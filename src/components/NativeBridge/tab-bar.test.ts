@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { coversTabBar, hasOwnHeader, NATIVE_TABS, TAB_ICONS } from './tab-bar';
+import {
+  coversTabBar,
+  hasOwnHeader,
+  nativeTabs,
+  parseOptionalTab,
+  selectedNativeTab,
+} from './tab-bar';
 
 function element(opts: { hiddenAncestor?: boolean; rendered?: boolean }) {
   return {
@@ -24,11 +30,30 @@ describe('coversTabBar', () => {
   });
 });
 
-describe('NATIVE_TABS', () => {
-  it('keeps five tabs, each with an icon, and leaves Settings to the top bar', () => {
-    expect(NATIVE_TABS).toHaveLength(5);
-    expect(NATIVE_TABS.map((link) => link.href as string)).not.toContain('/settings');
-    for (const link of NATIVE_TABS) expect(TAB_ICONS[link.href]).toBeTruthy();
+describe('nativeTabs', () => {
+  it('defaults to four tabs with Me last', () => {
+    expect(nativeTabs(parseOptionalTab(null)).map((tab) => tab.href)).toEqual([
+      '/',
+      '/practice',
+      '/vocab',
+      '/me',
+    ]);
+    expect(parseOptionalTab('unexpected')).toBe('none');
+  });
+
+  it('adds one shortcut without losing access to the other pages under Me', () => {
+    expect(nativeTabs('journal').map((tab) => tab.href)).toEqual([
+      '/',
+      '/practice',
+      '/vocab',
+      '/journal',
+      '/me',
+    ]);
+    expect(selectedNativeTab('/journal', 'journal')).toBe('/journal');
+    expect(selectedNativeTab('/journal', 'stats')).toBe('/me');
+    expect(selectedNativeTab('/stats', 'stats')).toBe('/stats');
+    expect(selectedNativeTab('/settings', 'none')).toBe('/me');
+    expect(selectedNativeTab('/read/book', 'none')).toBeNull();
   });
 });
 

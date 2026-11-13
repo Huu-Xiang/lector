@@ -2,7 +2,7 @@
 
 On iOS, the welcome screen links to sign-in and registration. Google sign-in uses the system authentication sheet. The sheet transfers the signed-in session back to Readfox with a short-lived, single-use code.
 
-On iOS, the interface and definition language controls come first. Account and plan cards follow the learning preferences.
+On iOS, open Settings from Me. Bottom navigation adds a Journal or Statistics shortcut on this device. The interface and definition language controls follow. Account and plan cards follow the learning preferences.
 
 This domain holds user keys, the LLM provider, personal access tokens, and account delete. Plan tiles live in [Billing](billing.md). Known-word import lives in [Vocabulary](vocabulary.md).
 

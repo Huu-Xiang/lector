@@ -76,6 +76,7 @@
     "contact": "聯絡我們"
   },
   "nav": {
+    "me": "我",
     "upgrade": "升級方案",
     "library": "書庫",
     "practice": "練習",
@@ -314,6 +315,12 @@
     "languagePrefs": {
       "title": "介面語言和翻譯語言",
       "hint": "這是兩個獨立的選擇。比如學法語時，可以用中文介面，同時讓解釋用英文。"
+    },
+    "mobileTabs": {
+      "title": "底部導覽",
+      "extra": "額外分頁",
+      "none": "不新增",
+      "hint": "在「我」裡隨時可以開啟日記和統計。此設定只套用於目前的裝置。"
     },
     "pageTitle": "設定",
     "practice": {

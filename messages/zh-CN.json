@@ -76,6 +76,7 @@
     "contact": "联系我们"
   },
   "nav": {
+    "me": "我",
     "upgrade": "开会员",
     "library": "书库",
     "practice": "练习",
@@ -314,6 +315,12 @@
     "languagePrefs": {
       "title": "界面语言和翻译语言",
       "hint": "这是两个独立的选择。比如学法语时，可以用中文界面，同时让解释用英文。"
+    },
+    "mobileTabs": {
+      "title": "底部导航",
+      "extra": "额外标签",
+      "none": "不添加",
+      "hint": "在「我」里随时可以打开日记和统计。此设置仅应用于当前设备。"
     },
     "pageTitle": "设置",
     "practice": {

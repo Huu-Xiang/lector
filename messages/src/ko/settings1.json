@@ -1,5 +1,11 @@
 {
   "settings": {
+    "mobileTabs": {
+      "title": "하단 탐색",
+      "extra": "추가 탭",
+      "none": "추가 안 함",
+      "hint": "일기와 통계는 내 정보에서 언제든 열 수 있어요. 이 설정은 현재 기기에 적용돼요."
+    },
     "pageTitle": "설정",
     "practice": {
       "title": "연습",

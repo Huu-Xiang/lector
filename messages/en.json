@@ -76,6 +76,7 @@
     "contact": "Contact"
   },
   "nav": {
+    "me": "Me",
     "upgrade": "Upgrade",
     "library": "Library",
     "practice": "Practice",
@@ -314,6 +315,12 @@
     "languagePrefs": {
       "title": "Interface and translation languages",
       "hint": "These are two separate choices. For example, you can use a Chinese interface and read explanations in English while you learn French."
+    },
+    "mobileTabs": {
+      "title": "Bottom navigation",
+      "extra": "Extra tab",
+      "none": "None",
+      "hint": "Journal and Statistics are always available under Me. This setting applies to this device."
     },
     "pageTitle": "Settings",
     "practice": {

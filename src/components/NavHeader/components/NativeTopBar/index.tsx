@@ -7,8 +7,14 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import LanguageSelector from '@/components/LanguageSelector';
 import WhatsNew from '@/components/WhatsNew';
-import { haptic, useIsNativeApp } from '@/lib/native-app';
-import { hasOwnHeader, NATIVE_TABS } from '@/components/NativeBridge/tab-bar';
+import { haptic, hasNativeTabBar, useIsNativeApp } from '@/lib/native-app';
+import {
+  hasOwnHeader,
+  ME_TAB,
+  nativeTabs,
+  selectedNativeTab,
+} from '@/components/NativeBridge/tab-bar';
+import { useTabPreference } from '@/components/NativeBridge/use-tab-preference';
 import { navLinks } from '../../constants';
 import AccountMenu from '../AccountMenu';
 import { CHAT_TOGGLE_EVENT } from '@/components/ChatWidget/constants';
@@ -24,6 +30,7 @@ export default function NativeTopBar() {
   const tNav = useTranslations('nav');
   const tChat = useTranslations('chat');
   const inApp = useIsNativeApp();
+  const [extra] = useTabPreference();
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -35,8 +42,11 @@ export default function NativeTopBar() {
   }, [inApp, pathname]);
 
   if (!inApp || hasOwnHeader(pathname)) return null;
-  const tab = NATIVE_TABS.find((link) => link.href === pathname);
-  const titled = navLinks.find((link) => link.href === pathname);
+  const nativeBar = hasNativeTabBar();
+  const tab = nativeBar
+    ? nativeTabs(extra).find((link) => link.href === pathname)
+    : navLinks.find((link) => link.href === pathname && link.href !== '/settings');
+  const titled = [ME_TAB, ...navLinks].find((link) => link.href === pathname);
 
   return (
     <header
@@ -45,14 +55,18 @@ export default function NativeTopBar() {
     >
       <div className="grid h-11 w-full grid-cols-[1fr_auto_1fr] items-center px-2">
         <div className="flex items-center justify-start">
-          {tab ? (
+          {pathname === ME_TAB.href ? null : tab ? (
             <LanguageSelector compact />
           ) : (
             <button
               type="button"
               onClick={() => {
                 void haptic();
-                router.back();
+                if (nativeBar && selectedNativeTab(pathname, extra) === ME_TAB.href) {
+                  router.replace(ME_TAB.href);
+                } else {
+                  router.back();
+                }
               }}
               aria-label={tNav('back')}
               className="flex size-11 items-center justify-center text-primary active:opacity-60"
@@ -62,12 +76,15 @@ export default function NativeTopBar() {
             </button>
           )}
         </div>
-        <h1 className="truncate text-[17px] font-semibold text-foreground opacity-0 transition-opacity duration-200 group-data-[scrolled]:opacity-100">
+        <span
+          aria-hidden
+          className="truncate text-[17px] font-semibold text-foreground opacity-0 transition-opacity duration-200 group-data-[scrolled]:opacity-100"
+        >
           {titled ? tNav(titled.labelKey) : ''}
-        </h1>
+        </span>
         <div className="flex items-center justify-end gap-1">
           <WhatsNew variant="topbar" />
-          <AccountMenu compact />
+          {!nativeBar && <AccountMenu compact />}
           <button
             type="button"
             aria-label={tChat('open')}
@@ -80,7 +97,7 @@ export default function NativeTopBar() {
           >
             <MessageCircle className="size-[22px]" aria-hidden />
           </button>
-          {tab && (
+          {tab && !nativeBar && (
             <Link
               href="/settings"
               aria-label={tNav('settings')}

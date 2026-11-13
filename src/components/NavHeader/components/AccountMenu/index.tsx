@@ -11,17 +11,29 @@ import { useLectorMode } from '@/lib/use-env';
 import SignOutButton from './components/SignOutButton';
 import LegalLinks from '@/components/LegalLinks';
 
-export default function AccountMenu({ compact = false }: { compact?: boolean }) {
+export default function AccountMenu({
+  compact = false,
+  showSignOutLabel = false,
+}: {
+  compact?: boolean;
+  showSignOutLabel?: boolean;
+}) {
   const mode = useLectorMode();
 
   if (mode !== 'cloud') {
     return null;
   }
 
-  return <CloudAccountMenu compact={compact} />;
+  return <CloudAccountMenu compact={compact} showSignOutLabel={showSignOutLabel} />;
 }
 
-function CloudAccountMenu({ compact }: { compact: boolean }) {
+function CloudAccountMenu({
+  compact,
+  showSignOutLabel,
+}: {
+  compact: boolean;
+  showSignOutLabel: boolean;
+}) {
   const { data: session } = authClient.useSession();
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [showEmail, setShowEmail] = useState(false);
@@ -42,7 +54,14 @@ function CloudAccountMenu({ compact }: { compact: boolean }) {
   }
 
   if (compact) {
-    return <SignOutButton compact onClick={handleSignOut} disabled={isSigningOut} />;
+    return (
+      <SignOutButton
+        compact
+        showLabel={showSignOutLabel}
+        onClick={handleSignOut}
+        disabled={isSigningOut}
+      />
+    );
   }
 
   return (
