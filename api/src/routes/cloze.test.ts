@@ -1327,6 +1327,7 @@ describe('POST /api/cloze/:id/review — FSRS scheduling (U8)', () => {
   const stored = (id: string) =>
     db.prepare('SELECT * FROM clozeSentences WHERE id = ?').get(id) as Record<string, unknown> & {
       nextReview: string;
+      fsrsDue: string;
     };
   const review = (id: string, body: Record<string, unknown>) =>
     app.request(`/${id}/review?language=af`, {
