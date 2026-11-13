@@ -921,11 +921,55 @@ html[data-native-app] .app-bottom-spacer {
   height: var(--app-bottom-bar);
 }
 
-/* System font for the interface; Literata stays the reading face. */
 html[data-native-app] body {
-  --font-nunito:
-    -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'PingFang SC', 'Hiragino Sans', system-ui,
-    sans-serif;
+  --font-cjk: var(--font-cjk-sc), var(--font-cjk-jp), var(--font-cjk-kr), var(--font-cjk-tc);
+  --font-nunito: -apple-system, var(--font-cjk), sans-serif;
+  --font-reading: var(--font-literata), var(--font-cjk), serif;
+}
+
+html[data-native-app]:lang(zh-TW) body {
+  --font-cjk: var(--font-cjk-tc), var(--font-cjk-sc), var(--font-cjk-jp), var(--font-cjk-kr);
+}
+
+html[data-native-app]:lang(ja) body {
+  --font-cjk: var(--font-cjk-jp), var(--font-cjk-sc), var(--font-cjk-kr), var(--font-cjk-tc);
+}
+
+html[data-native-app]:lang(ko) body {
+  --font-cjk: var(--font-cjk-kr), var(--font-cjk-sc), var(--font-cjk-jp), var(--font-cjk-tc);
+}
+
+html[data-native-app] .language-emoji {
+  display: none;
+}
+
+html[data-native-app] .native-language-code {
+  display: inline;
+}
+
+html[data-native-app] body:has(.setup-page)::before {
+  position: fixed;
+  z-index: 30;
+  inset: 0 0 auto;
+  height: env(safe-area-inset-top);
+  background: var(--background);
+  content: '';
+  pointer-events: none;
+}
+
+@media (width < 40rem) {
+  html[data-native-app] .readfox-beta-notice {
+    padding-block: 0;
+    font-size: 0.75rem;
+  }
+
+  html[data-native-app] .readfox-beta-notice a {
+    min-height: 44px;
+  }
+
+  html[data-native-app] .readfox-beta-message {
+    @apply sr-only;
+  }
 }
 
 /* Flat iOS buttons: no 3D edge, no press shift; dim on press instead. */

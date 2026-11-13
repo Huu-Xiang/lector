@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
-import { ArrowLeft, ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, Sparkles } from 'lucide-react';
 import {
   addLibraryBook,
   getSetting,
@@ -321,26 +321,28 @@ export default function SetupPage() {
   const hiddenLanguageCount = offeredCards.length - visibleLanguageCards.length;
 
   return (
-    <main className="min-h-screen bg-background px-4 py-10 sm:py-16">
+    <main className="setup-page min-h-svh bg-background px-4 py-4 sm:py-16">
       <div className="mx-auto w-full max-w-3xl">
-        <div className="mb-8 text-center">
+        <div className="mb-5 sm:mb-8 sm:text-center">
           <Image
             src="/logo.png"
             alt=""
             width={56}
             height={56}
             priority
-            className="mx-auto mb-3 rounded-xl"
+            className="mx-auto mb-3 hidden rounded-xl sm:block"
           />
-          <p className="mb-4 text-lg font-bold tracking-tight text-foreground">{tc('appName')}</p>
-          <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-[var(--primary-soft)] px-3 py-1 text-sm font-semibold text-[var(--primary-text)]">
+          <p className="mb-4 hidden text-lg font-bold tracking-tight text-foreground sm:block">
+            {tc('appName')}
+          </p>
+          <div className="mb-3 hidden items-center gap-2 rounded-full bg-[var(--primary-soft)] px-3 py-1 text-sm font-semibold text-[var(--primary-text)] sm:inline-flex">
             <Sparkles className="h-4 w-4" aria-hidden="true" />
             {stage === 'form' ? t('badge') : t('recommendBadge')}
           </div>
-          <h1 className="mb-3 text-3xl font-bold tracking-tight text-foreground">
+          <h1 className="mb-1.5 text-2xl font-bold tracking-tight text-foreground sm:mb-3 sm:text-3xl">
             {stage === 'form' ? t('welcome') : t('recommendTitle')}
           </h1>
-          <p className="mx-auto max-w-xl text-base text-muted-foreground sm:text-lg">
+          <p className="mx-auto max-w-xl text-sm text-muted-foreground sm:text-lg">
             {stage === 'form' ? t('intro') : t('recommendIntro', { level: levelLabel })}
           </p>
         </div>
@@ -385,18 +387,18 @@ export default function SetupPage() {
 
         {stage === 'form' && (
           <>
-            <section aria-labelledby="native-heading" className="mb-8">
+            <section aria-labelledby="native-heading" className="mb-4 sm:mb-8">
               <h2 id="native-heading" className="mb-1 text-sm font-bold text-foreground">
                 {t('nativeTitle')}
               </h2>
-              <p className="mb-3 text-sm text-muted-foreground">{t('nativeHint')}</p>
+              <p className="mb-2 text-sm text-muted-foreground sm:mb-3">{t('nativeHint')}</p>
               <div className="sm:w-80">
                 <Select
                   value={native}
                   onChange={(e) => chooseNative(e.target.value)}
                   aria-labelledby="native-heading"
                   data-testid="setup-native-language"
-                  className="h-10 bg-card"
+                  className="min-h-11 bg-card sm:min-h-10"
                 >
                   {NATIVE_LANGUAGES.map((lang) => (
                     <option key={lang.code} value={lang.code}>
@@ -407,13 +409,15 @@ export default function SetupPage() {
               </div>
             </section>
 
-            <section aria-labelledby="language-heading" className="mb-8">
+            <section aria-labelledby="language-heading" className="mb-4 sm:mb-8">
               <h2 id="language-heading" className="mb-3 text-sm font-bold text-foreground">
                 {t('chooseLanguage')}
               </h2>
-              <div className="grid gap-3 sm:grid-cols-3">
+              <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,8.5rem),1fr))] gap-2 sm:grid-cols-3 sm:gap-3">
                 {visibleLanguageCards.map((lang) => {
                   const soon = !isLanguageReady(lang.code, ready);
+                  const active = selectedLanguage === lang.code;
+                  const name = languageName(lang.code, lang.name);
                   return (
                     <button
                       key={lang.code}
@@ -421,10 +425,10 @@ export default function SetupPage() {
                       onClick={() => setPickedLanguage(lang.code)}
                       disabled={pending !== null || soon}
                       data-testid={`setup-language-${lang.code}`}
-                      aria-label={t('learn', { name: languageName(lang.code, lang.name) })}
-                      aria-pressed={selectedLanguage === lang.code}
-                      className={`group flex min-h-36 flex-col items-center justify-center gap-2 rounded-2xl border-2 px-4 py-5 transition-all focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none ${
-                        selectedLanguage === lang.code
+                      aria-label={t('learn', { name })}
+                      aria-pressed={active}
+                      className={`relative flex min-h-14 cursor-pointer flex-col items-start justify-center rounded-xl border px-3 py-2 pe-7 text-start focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none motion-safe:transition-colors sm:min-h-36 sm:items-center sm:gap-2 sm:rounded-2xl sm:border-2 sm:px-4 sm:py-5 sm:text-center ${
+                        active
                           ? 'border-primary bg-[var(--primary-soft)]'
                           : soon
                             ? 'cursor-not-allowed border-border bg-card opacity-60'
@@ -433,13 +437,20 @@ export default function SetupPage() {
                               : 'border-border bg-card hover:border-primary hover:shadow-md'
                       }`}
                     >
-                      <span className="text-4xl" aria-hidden="true">
+                      <span className="language-emoji hidden text-4xl sm:block" aria-hidden="true">
                         {lang.flag}
                       </span>
-                      <span className="text-lg font-semibold text-foreground">{lang.native}</span>
-                      <span className="text-xs text-muted-foreground">
-                        {languageName(lang.code, lang.name)}
+                      <span className="max-w-full text-sm font-semibold break-words text-foreground sm:text-lg">
+                        {lang.native}
                       </span>
+                      <span
+                        className={`max-w-full text-xs break-words text-muted-foreground ${name === lang.native ? 'hidden sm:block' : ''}`}
+                      >
+                        {name}
+                      </span>
+                      {active && (
+                        <Check className="absolute end-2 top-2 size-4 text-primary" aria-hidden />
+                      )}
                       {soon && (
                         <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
                           {t('inDevelopment')}
@@ -450,12 +461,12 @@ export default function SetupPage() {
                 })}
               </div>
               {hiddenLanguageCount > 0 && (
-                <div className="mt-3 text-center">
+                <div className="mt-1 sm:mt-3 sm:text-center">
                   <button
                     type="button"
                     data-testid="setup-language-show-all"
                     onClick={() => setShowAllLanguages(true)}
-                    className="text-sm font-medium text-primary hover:underline"
+                    className="min-h-11 cursor-pointer text-start text-sm font-medium text-primary hover:underline"
                   >
                     {ready
                       ? t('showMoreSoon', { count: hiddenLanguageCount })
@@ -467,9 +478,9 @@ export default function SetupPage() {
 
             <section
               aria-labelledby="preferences-heading"
-              className="mb-6 rounded-2xl border border-border bg-card p-5 sm:p-6"
+              className="mb-4 rounded-xl border border-border bg-card p-3 sm:mb-6 sm:rounded-2xl sm:p-6"
             >
-              <div className="mb-5 flex items-start justify-between gap-4">
+              <div className="mb-3 flex items-start justify-between gap-3 sm:mb-5">
                 <div>
                   <h2 id="preferences-heading" className="text-sm font-bold text-foreground">
                     {t('personalise')}
@@ -485,7 +496,7 @@ export default function SetupPage() {
                 <legend className="mb-2 text-xs font-semibold text-muted-foreground">
                   {t('level')}
                 </legend>
-                <div className="grid gap-2 sm:grid-cols-3">
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
                   {CEFR_LEVELS.map((option) => {
                     const exams = selectedLanguage
                       ? examRefs(selectedLanguage, option, mainland)
@@ -499,7 +510,7 @@ export default function SetupPage() {
                         aria-pressed={level === option}
                         onClick={() => pickLevel(option)}
                         data-testid={`setup-level-${option}`}
-                        className={`rounded-xl border px-3 py-2 text-left text-sm transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
+                        className={`min-h-11 cursor-pointer rounded-xl border px-3 py-2 text-left text-sm transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
                           level === option
                             ? 'border-primary bg-[var(--primary-soft)] text-[var(--primary-text)]'
                             : 'border-border bg-background text-foreground hover:bg-accent'
@@ -520,7 +531,7 @@ export default function SetupPage() {
                     aria-pressed={level === null}
                     onClick={() => pickLevel(null)}
                     data-testid="setup-level-unsure"
-                    className={`rounded-xl border px-3 py-2 text-left text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
+                    className={`min-h-11 cursor-pointer rounded-xl border px-3 py-2 text-left text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
                       level === null
                         ? 'border-primary bg-[var(--primary-soft)] text-[var(--primary-text)]'
                         : 'border-border bg-background text-foreground hover:bg-accent'
@@ -550,7 +561,7 @@ export default function SetupPage() {
                 <legend className="mb-2 text-xs font-semibold text-muted-foreground">
                   {t('interests')}
                 </legend>
-                <div className="grid gap-2 sm:grid-cols-4">
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
                   {READING_INTERESTS.map((id) => (
                     <button
                       key={id}
@@ -558,7 +569,7 @@ export default function SetupPage() {
                       aria-pressed={interests.includes(id)}
                       onClick={() => toggleInterest(id)}
                       data-testid={`setup-interest-${id}`}
-                      className={`rounded-xl border px-3 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
+                      className={`min-h-11 cursor-pointer rounded-xl border px-3 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
                         interests.includes(id)
                           ? 'border-primary bg-[var(--primary-soft)] text-[var(--primary-text)]'
                           : 'border-border bg-background text-foreground hover:bg-accent'
@@ -585,7 +596,7 @@ export default function SetupPage() {
                         aria-pressed={chosen}
                         onClick={() => setDailyGoalChoice(goal)}
                         data-testid={`setup-goal-${goal.kind}-${goal.target}`}
-                        className={`rounded-xl border px-3 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
+                        className={`min-h-11 cursor-pointer rounded-xl border px-3 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
                           chosen
                             ? 'border-primary bg-[var(--primary-soft)] text-[var(--primary-text)]'
                             : 'border-border bg-background text-foreground hover:bg-accent'
@@ -601,7 +612,7 @@ export default function SetupPage() {
             </section>
 
             <div
-              className="sticky bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-10 rounded-2xl border border-border bg-card px-4 py-3 shadow-lg sm:px-5 sm:py-4"
+              className="sticky bottom-[env(safe-area-inset-bottom)] z-10 rounded-xl border border-border bg-card p-1.5 shadow-md sm:bottom-3 sm:rounded-2xl sm:px-5 sm:py-4"
               data-testid="setup-start-bar"
             >
               <div className="flex items-center justify-between gap-3">
@@ -615,7 +626,7 @@ export default function SetupPage() {
                     <p className="mt-0.5 text-xs text-muted-foreground">{t('readyHint')}</p>
                   )}
                 </div>
-                <div className="flex min-w-0 flex-1 gap-2 sm:flex-none">
+                <div className="flex min-w-0 flex-1 flex-wrap items-stretch gap-1 sm:flex-none sm:gap-2">
                   <Button
                     type="button"
                     variant="ghost"
@@ -623,7 +634,7 @@ export default function SetupPage() {
                     disabled={
                       !selectedLanguage || pending !== null || nativeSettingStatus === 'loading'
                     }
-                    className="shrink-0"
+                    className="h-auto min-h-11 shrink px-2 py-1 whitespace-normal sm:px-4"
                     data-testid="skip-guided-onboarding"
                   >
                     {t('skip')}
@@ -634,13 +645,13 @@ export default function SetupPage() {
                     disabled={
                       !selectedLanguage || pending !== null || nativeSettingStatus === 'loading'
                     }
-                    className="min-w-0 flex-1 sm:flex-none"
+                    className="h-auto min-h-11 min-w-0 grow basis-40 px-2 py-1 whitespace-normal sm:flex-none sm:px-4"
                     data-testid="start-guided-onboarding"
                   >
                     {pending ? (
                       t('preparing')
                     ) : chosenTitle ? (
-                      <span className="min-w-0 truncate sm:max-w-[20rem]">
+                      <span className="min-w-0 break-words sm:max-w-[20rem]">
                         {t('startBook', { title: chosenTitle })}
                       </span>
                     ) : (

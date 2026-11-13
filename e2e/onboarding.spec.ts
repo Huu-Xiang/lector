@@ -171,6 +171,36 @@ test.describe('guided onboarding — selfhost', () => {
     resetSelfhostOnboarding();
   });
 
+  test.describe('iPhone setup', () => {
+    test.use({ userAgent: 'Mozilla/5.0 (iPhone) AppleWebKit/605.1.15 ReadfoxApp/1' });
+
+    test('keeps language choices and actions reachable on a small screen', async ({ page }) => {
+      await page.setViewportSize({ width: 375, height: 667 });
+      await page.goto('/setup');
+
+      const french = page.getByTestId('setup-language-fr');
+      const spanish = page.getByTestId('setup-language-es');
+      const start = page.getByTestId('start-guided-onboarding');
+      await expect(french).toBeInViewport({ ratio: 1 });
+      await expect(spanish).toBeInViewport({ ratio: 1 });
+      await expect(french.locator('.language-emoji')).toBeHidden();
+      const frenchBox = await french.boundingBox();
+      const spanishBox = await spanish.boundingBox();
+      expect(frenchBox?.y).toBe(spanishBox?.y);
+      expect(frenchBox?.x).not.toBe(spanishBox?.x);
+      await expect(start).toBeDisabled();
+
+      await page.getByTestId('setup-native-language').selectOption('zh-CN');
+      await expect(page.locator('html')).toHaveAttribute('lang', 'zh-CN');
+      await page.getByTestId('setup-language-en').click();
+      await expect(start).toBeEnabled();
+      await expect(start).toBeInViewport({ ratio: 1 });
+      await page.getByTestId('skip-guided-onboarding').click();
+      await expect(page).toHaveURL('/');
+      await expect(page.getByRole('heading', { name: '我的书库' })).toBeVisible();
+    });
+  });
+
   test('legacy existing user bypasses onboarding when a target language already exists', async ({
     browser,
   }) => {

@@ -359,7 +359,7 @@
   N("flow:language-setup", "flow", "Language setup", {
     domain: "onboarding",
     md: "onboarding.md#language-setup",
-    summary: "SetupGuard, language and level choice, starter or book pick, guided lesson, three cloze cards.",
+    summary: "SetupGuard, compact language picker on phones, level choice, starter or book pick, guided lesson, cloze practice.",
     steps: ["file:setup-guard", "file:setup-page", "fn:seedStarterContent", "fn:startOnboarding", "route:onboarding-start"],
   });
   N("flow:add-language", "flow", "Add a language", {

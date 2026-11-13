@@ -1,5 +1,12 @@
 import type { Metadata, Viewport } from 'next';
-import { Nunito, Literata } from 'next/font/google';
+import {
+  Nunito,
+  Literata,
+  Noto_Sans_SC,
+  Noto_Sans_TC,
+  Noto_Sans_JP,
+  Noto_Sans_KR,
+} from 'next/font/google';
 import Script from 'next/script';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages, getTranslations } from 'next-intl/server';
@@ -34,6 +41,27 @@ const nunito = Nunito({
 const literata = Literata({
   variable: '--font-literata',
   subsets: ['latin', 'latin-ext', 'cyrillic', 'greek', 'greek-ext'],
+});
+
+const chinese = Noto_Sans_SC({
+  variable: '--font-cjk-sc',
+  preload: false,
+  adjustFontFallback: false,
+});
+const traditional = Noto_Sans_TC({
+  variable: '--font-cjk-tc',
+  preload: false,
+  adjustFontFallback: false,
+});
+const japanese = Noto_Sans_JP({
+  variable: '--font-cjk-jp',
+  preload: false,
+  adjustFontFallback: false,
+});
+const korean = Noto_Sans_KR({
+  variable: '--font-cjk-kr',
+  preload: false,
+  adjustFontFallback: false,
 });
 
 export const metadata: Metadata = {
@@ -94,7 +122,7 @@ export default async function RootLayout({
       </head>
 
       <body
-        className={`${nunito.variable} ${literata.variable} flex min-h-screen flex-col bg-background font-sans text-foreground antialiased sm:flex-row`}
+        className={`${nunito.variable} ${literata.variable} ${chinese.variable} ${traditional.variable} ${japanese.variable} ${korean.variable} flex min-h-screen flex-col bg-background font-sans text-foreground antialiased sm:flex-row`}
       >
         <NextIntlClientProvider locale={locale} messages={messages}>
           <SessionOnly>
@@ -105,10 +133,10 @@ export default async function RootLayout({
             {t && (
               <aside
                 data-testid="readfox-beta-notice"
-                className="border-b border-border bg-primary/10 px-4 py-2.5 text-center text-sm leading-snug text-foreground print:hidden"
+                className="readfox-beta-notice border-b border-border bg-primary/10 px-4 py-2.5 text-center text-sm leading-snug text-foreground print:hidden"
               >
                 <strong className="mr-2 font-bold">Beta</strong>
-                {t('message')}{' '}
+                <span className="readfox-beta-message">{t('message')} </span>
                 <a
                   href="https://readfox.app"
                   className="inline-flex min-h-6 items-center font-semibold underline underline-offset-4"

@@ -118,7 +118,9 @@ export default function LanguageSelector({
         data-testid={`${testIdPrefix}-${code}`}
         className={isActive ? 'font-medium' : undefined}
       >
-        <span className="shrink-0 text-lg">{LANGUAGES[code].flag}</span>
+        <span className="language-emoji shrink-0 text-lg" aria-hidden>
+          {LANGUAGES[code].flag}
+        </span>
         <span className="shrink-0 whitespace-nowrap">{LANGUAGES[code].native}</span>
         {localized !== LANGUAGES[code].native && (
           <span className="min-w-0 truncate text-xs text-muted-foreground">{localized}</span>
@@ -226,8 +228,16 @@ export default function LanguageSelector({
         title={variant === 'collapsed' ? activeLang.native : undefined}
         className={triggerClass}
       >
-        <span className={variant === 'full' ? 'text-lg' : undefined}>{activeLang.flag}</span>
+        <span
+          className={variant === 'full' ? 'language-emoji text-lg' : 'language-emoji'}
+          aria-hidden
+        >
+          {activeLang.flag}
+        </span>
         {variant === 'compact' && <span>{activeLang.code.toUpperCase()}</span>}
+        {variant === 'collapsed' && (
+          <span className="native-language-code hidden">{activeLang.code.toUpperCase()}</span>
+        )}
         {variant === 'full' && <span className="flex-1 text-left">{activeLang.native}</span>}
         {variant !== 'collapsed' && knownBadge}
         {variant !== 'collapsed' && <ChevronDown className="size-4" />}

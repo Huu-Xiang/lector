@@ -51,6 +51,8 @@ sequenceDiagram
 
 ### Branches
 
+- On phones, setup puts translation and learning languages in a compact grid with a sticky action row. The iPhone app uses text labels in the picker.
+
 - Skip to library records `skipped` and does not run the guided lesson.
 - While the guide is `in_progress`, the reader shows the coach on any lesson in the guide's language, so "Next lesson" does not drop it. Only the recommended lesson records `lesson.opened`.
 - A public `/books` page links to `/register?book=<language>/<slug>`. The register page stores the book in `localStorage`. Setup then starts the guided lesson with that book and does not show the recommendations. After a skip, `PendingBookOpener` opens the book on the library page.
