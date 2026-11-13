@@ -1,0 +1,18 @@
+{
+  "title": "El fuego",
+  "author": "Deborah Namugosa, Beatrice Nabune, Alison Tukei, Rose Sabano",
+  "level": "A1",
+  "category": "children",
+  "wordCount": 23,
+  "source": {
+    "name": "Storybooks Canada, Spanish edition",
+    "url": "https://storybookscanada.ca/stories/es/0302/",
+    "license": "CC BY 3.0. Spanish translation by Espen Stranger-Johannessen. Text-only edition with formatting changes."
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "El fuego"
+    }
+  ]
+}

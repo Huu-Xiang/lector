@@ -1,0 +1,22 @@
+{
+  "title": "兔和猫",
+  "author": "鲁迅",
+  "level": "B2",
+  "category": "stories",
+  "wordCount": 1384,
+  "source": {
+    "name": "Chinese Wikisource (Simplified Chinese, first published in Morning Post Supplement, October 10, 1922)",
+    "url": "https://zh.wikisource.org/w/index.php?title=%E5%85%94%E5%92%8C%E8%B2%93&oldid=8736224&variant=zh-hans",
+    "license": "Public domain in the United States. Wikisource transcription CC BY-SA 4.0"
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. 兔和猫（1）"
+    },
+    {
+      "file": "02.md",
+      "title": "2. 兔和猫（2）"
+    }
+  ]
+}

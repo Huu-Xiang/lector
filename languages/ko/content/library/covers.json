@@ -1,4 +1,16 @@
 {
+  "aju-kiga-keun-ajeossi": {
+    "file": "aju-kiga-keun-ajeossi.webp",
+    "kind": "art",
+    "credit": "Cover illustration by Catherine Groenewald, Storybooks Canada / African Storybook (CC BY 3.0; resized and converted to WebP)",
+    "source": "https://www.storybookscanada.ca/stories/ko/0001/"
+  },
+  "baegopeun-ageo": {
+    "file": "baegopeun-ageo.webp",
+    "kind": "art",
+    "credit": "Cover illustration by Wiehan de Jager, Storybooks Canada / African Storybook (CC BY 3.0; resized and converted to WebP)",
+    "source": "https://www.storybookscanada.ca/stories/ko/0156/"
+  },
   "chilchildan-bimil": {
     "file": "chilchildan-bimil.webp",
     "kind": "art",
@@ -17,17 +29,47 @@
     "credit": "Gathering Mugwort (채애도), Yun Du-seo, c. 1700",
     "source": "https://commons.wikimedia.org/wiki/File:Yun_Du-seo_-_Gathering_Mugwort_-_Google_Art_Project.jpg"
   },
+  "gohyang": {
+    "file": "gohyang.webp",
+    "kind": "art",
+    "credit": "Yeongdeungpo Station at the opening of the Gyeongin Line, anonymous historical photograph, public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:%EA%B2%BD%EC%9D%B8%EC%84%A0_%EA%B0%9C%ED%86%B5_%EB%8B%B9%EC%8B%9C%EC%9D%98_%EC%98%81%EB%93%B1%ED%8F%AC%EC%97%AD.jpg"
+  },
+  "hama-teol": {
+    "file": "hama-teol.webp",
+    "kind": "art",
+    "credit": "Cover illustration by Carol Liddiment, Storybooks Canada / African Storybook (CC BY 3.0; resized and converted to WebP)",
+    "source": "https://www.storybookscanada.ca/stories/ko/0111/"
+  },
+  "jamaneun-daedanhaeyo": {
+    "file": "jamaneun-daedanhaeyo.webp",
+    "kind": "art",
+    "credit": "Cover illustration by Vusi Malindi, Storybooks Canada / African Storybook (CC BY 3.0; resized and converted to WebP)",
+    "source": "https://www.storybookscanada.ca/stories/ko/0095/"
+  },
   "jindallaekkot": {
     "file": "jindallaekkot.webp",
     "kind": "art",
     "credit": "Yeonso dapcheong (연소답청, A Spring Outing of Young People), Sin Yun-bok, c. 1805",
     "source": "https://commons.wikimedia.org/wiki/File:Hyewon-Yeonsodapcheong.jpg"
   },
+  "mannyeon-syeocheu": {
+    "file": "mannyeon-syeocheu.webp",
+    "kind": "art",
+    "credit": "Seodang (Village School) by Kim Hong-do, late 18th century, public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:Danwon_Seodang.jpg"
+  },
   "memilkkot-pil-muryeop": {
     "file": "memilkkot-pil-muryeop.webp",
     "kind": "art",
     "credit": "Peddlers (행상), from the Danwon genre album, Kim Hong-do, c. 1780",
     "source": "https://commons.wikimedia.org/wiki/File:Danwon_Haengsang.jpg"
+  },
+  "millap-aideul": {
+    "file": "millap-aideul.webp",
+    "kind": "art",
+    "credit": "Cover illustration by Wiehan de Jager, Storybooks Canada / African Storybook (CC BY 3.0; resized and converted to WebP)",
+    "source": "https://www.storybookscanada.ca/stories/ko/0337/"
   },
   "nimui-chimmuk": {
     "file": "nimui-chimmuk.webp",
@@ -46,5 +88,11 @@
     "kind": "art",
     "credit": "Street and tram beside the South Gate (Namdaemun), Seoul, hand-coloured postcard, anonymous, c. 1910s (New York Public Library)",
     "source": "https://commons.wikimedia.org/wiki/File:The_Nandaimon_Gate%2C_Keijo_(NYPL_Hades-2359557-4044321).jpg"
+  },
+  "yeomso-gae-so": {
+    "file": "yeomso-gae-so.webp",
+    "kind": "art",
+    "credit": "Cover illustration by Marleen Visser, Ingrid Schechter, Storybooks Canada / African Storybook (CC BY 3.0; resized and converted to WebP)",
+    "source": "https://www.storybookscanada.ca/stories/ko/0004/"
   }
 }

@@ -5,6 +5,7 @@ import { getLocale, getTranslations } from 'next-intl/server';
 import { LegalShell } from '@/components/LegalLinks/shell';
 import { registerHrefForBook } from '@/lib/pending-book';
 import { findPublicBook, firstChapter, listPublicBooks, pickLocalized } from '@/lib/public-books';
+import BookSource from '../../../BookSource';
 
 interface Props {
   params: Promise<{ language: string; slug: string }>;
@@ -49,6 +50,7 @@ export default async function ChapterPage({ params }: Props) {
   const locale = await getLocale();
   const shown = pickLocalized(book.titles, locale, book.title);
   const bookHref = `/books/${language}/${slug}`;
+  const singleLesson = book.lessonCount === 1;
 
   return (
     <LegalShell title={t('chapterTitle', { title: shown })}>
@@ -70,17 +72,23 @@ export default async function ChapterPage({ params }: Props) {
         ))}
       </div>
 
+      <p className="text-xs text-muted-foreground">
+        <BookSource source={book.source} />
+      </p>
+
       <div className="rounded-lg border border-primary/40 bg-muted/40 p-5">
-        <p className="text-base font-semibold">{t('continueTitle')}</p>
+        <p className="text-base font-semibold">
+          {t(singleLesson ? 'singleLessonTitle' : 'continueTitle')}
+        </p>
         <p className="mt-1 text-muted-foreground">
-          {t('continueBody', { count: book.lessonCount })}
+          {singleLesson ? t('ctaNote') : t('continueBody', { count: book.lessonCount })}
         </p>
         <Link
           href={registerHrefForBook({ language, slug })}
           className="mt-3 inline-block rounded-lg bg-primary px-4 py-2 font-semibold text-primary-foreground hover:opacity-90"
           data-testid="book-chapter-register"
         >
-          {t('continueCta')}
+          {t(singleLesson ? 'singleLessonCta' : 'continueCta')}
         </Link>
       </div>
     </LegalShell>

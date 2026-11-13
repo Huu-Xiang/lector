@@ -17,6 +17,18 @@
     "credit": "Cover of the Project Gutenberg edition",
     "source": "https://www.gutenberg.org/ebooks/53552"
   },
+  "castigo": {
+    "file": "castigo.webp",
+    "kind": "art",
+    "credit": "Melany Pietersen, Storybooks Canada (CC BY 3.0, resized and padded)",
+    "source": "https://storybookscanada.ca/stories/es/0342/"
+  },
+  "contando-animales": {
+    "file": "contando-animales.webp",
+    "kind": "art",
+    "credit": "Rob Owen, Storybooks Canada (CC BY 3.0, resized and padded)",
+    "source": "https://storybookscanada.ca/stories/es/0327/"
+  },
   "corazon": {
     "file": "corazon.webp",
     "kind": "art",
@@ -40,6 +52,18 @@
     "kind": "art",
     "credit": "Don Quixote and the Dead Mule, a painting completed circa 1864 by Honoré Daumier",
     "source": "https://github.com/standardebooks/miguel-de-cervantes-saavedra_don-quixote_john-ormsby"
+  },
+  "el-fuego": {
+    "file": "el-fuego.webp",
+    "kind": "art",
+    "credit": "Rob Owen, Storybooks Canada (CC BY 3.0, resized and padded)",
+    "source": "https://storybookscanada.ca/stories/es/0302/"
+  },
+  "khalai-le-habla-a-las-plantas": {
+    "file": "khalai-le-habla-a-las-plantas.webp",
+    "kind": "art",
+    "credit": "Jesse Pietersen, Storybooks Canada (CC BY 4.0, resized and padded)",
+    "source": "https://storybookscanada.ca/stories/es/0089/"
   },
   "lazarillo-de-tormes": {
     "file": "lazarillo-de-tormes.webp",
@@ -65,6 +89,12 @@
     "credit": "Marianela (Creaciones femeninas XIII, Blanco y Negro), Cecilio Pla, 1901",
     "source": "https://commons.wikimedia.org/wiki/File:1901-09-21%2C_Blanco_y_Negro%2C_Creaciones_femeninas_XIII._Marianela%2C_Cecilio_Pla_(cropped).jpg"
   },
+  "me-gusta-leer": {
+    "file": "me-gusta-leer.webp",
+    "kind": "art",
+    "credit": "Wiehan de Jager, Storybooks Canada (CC BY 3.0, resized and padded)",
+    "source": "https://storybookscanada.ca/stories/es/0087/"
+  },
   "meditaciones-del-quijote": {
     "file": "meditaciones-del-quijote.webp",
     "kind": "art",
@@ -77,6 +107,12 @@
     "credit": "La Fuente de Reding, Guillermo Gómez Gil, c. 1880-1885",
     "source": "https://commons.wikimedia.org/wiki/File:La_fuente_de_reding.jpg"
   },
+  "que-estas-haciendo": {
+    "file": "que-estas-haciendo.webp",
+    "kind": "art",
+    "credit": "Wiehan de Jager, Storybooks Canada (CC BY 3.0, resized and padded)",
+    "source": "https://storybookscanada.ca/stories/es/0008/"
+  },
   "raton-perez": {
     "file": "raton-perez.webp",
     "kind": "book",
@@ -88,6 +124,18 @@
     "kind": "art",
     "credit": "Strolling along the Seashore, Joaquín Sorolla, 1909",
     "source": "https://commons.wikimedia.org/wiki/File:Joaqu%C3%ADn_Sorolla_y_Bastida_-_Strolling_along_the_Seashore_-_Google_Art_Project.jpg"
+  },
+  "tingi-y-las-vacas": {
+    "file": "tingi-y-las-vacas.webp",
+    "kind": "art",
+    "credit": "Ingrid Schechter, Storybooks Canada (CC BY 3.0, resized and padded)",
+    "source": "https://storybookscanada.ca/stories/es/0210/"
+  },
+  "tom-el-vendedor-de-platanos": {
+    "file": "tom-el-vendedor-de-platanos.webp",
+    "kind": "art",
+    "credit": "Zablon Alex Nguku, Storybooks Canada (CC BY 4.0, resized and padded)",
+    "source": "https://storybookscanada.ca/stories/es/0296/"
   },
   "vida-de-don-quijote-y-sancho": {
     "file": "vida-de-don-quijote-y-sancho.webp",

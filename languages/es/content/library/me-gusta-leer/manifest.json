@@ -1,0 +1,18 @@
+{
+  "title": "¡Me gusta leer!",
+  "author": "Letta Machoga",
+  "level": "A1",
+  "category": "children",
+  "wordCount": 42,
+  "source": {
+    "name": "Storybooks Canada, Spanish edition",
+    "url": "https://storybookscanada.ca/stories/es/0087/",
+    "license": "CC BY 3.0. Spanish translation by Espen Stranger-Johannessen. Text-only edition with formatting changes."
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "¡Me gusta leer!"
+    }
+  ]
+}

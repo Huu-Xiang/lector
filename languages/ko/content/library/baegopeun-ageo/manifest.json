@@ -1,0 +1,18 @@
+{
+  "title": "배고픈 악어",
+  "author": "Christian G.",
+  "level": "A1",
+  "category": "children",
+  "wordCount": 27,
+  "source": {
+    "name": "Storybooks Canada (Korean edition of African Storybook)",
+    "url": "https://www.storybookscanada.ca/stories/ko/0156/",
+    "license": "CC BY 3.0. Korean translation by Michelle Kim. Text-only edition with formatting changes."
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. 배고픈 악어"
+    }
+  ]
+}

@@ -121,7 +121,7 @@
       "dataSources": {
         "heading": "資料來源",
         "body": "句庫來自 Tatoeba（CC BY 2.0 FR），詞典來自儲存庫 README 中列出的來源，各自適用其自身的授權。",
-        "books": "書庫裡的免費書籍是來自古騰堡計畫（gutenberg.org）的公有領域文本。韓語書籍來自韓文維基文庫（ko.wikisource.org），其轉錄文字採用 CC BY-SA 4.0 授權。每本書都附有指向來源頁面的連結。",
+        "books": "書庫收錄古騰堡計畫與中文、韓文維基文庫的公有領域作品，也收錄 Storybooks Canada（Global Storybooks）開放授權的西語和韓語故事。每項讀物皆附授權資訊及原始來源連結。",
         "dictionaries": "詞典釋義來自英文維基詞典（透過 kaikki.org，CC BY-SA 授權）。英語詞典由 skywind3000 的 ECDICT（MIT 授權，github.com/skywind3000/ECDICT）整理而成，例句來自 Tatoeba（CC BY 2.0 FR）。",
         "readingFeed": "「免費書籍」對話框裡時事、旅行、科普三個分頁的文章,來自 Global Voices（CC BY 3.0,globalvoices.org）、Wikivoyage（CC BY-SA 3.0,wikivoyage.org）、簡明英語維基百科和 Vikidia（CC BY-SA 4.0）。每篇文章都附有指向授權和原始來源的連結;新增到書庫時會自動附上這些出處資訊。"
       }

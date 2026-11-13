@@ -1,0 +1,30 @@
+{
+  "title": "만년 셔츠",
+  "author": "방정환",
+  "level": "B2",
+  "category": "stories",
+  "wordCount": 1467,
+  "source": {
+    "name": "Korean Wikisource transcription of 《어린이》 (1927)",
+    "url": "https://ko.wikisource.org/w/index.php?title=%EB%A7%8C%EB%85%84_%EC%85%94%EC%B8%A0&oldid=263594",
+    "license": "Public-domain original. Korean Wikisource transcription CC BY-SA 4.0; reformatted."
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. 만년 셔츠"
+    },
+    {
+      "file": "02.md",
+      "title": "2. 만년 셔츠"
+    },
+    {
+      "file": "03.md",
+      "title": "3. 만년 셔츠"
+    },
+    {
+      "file": "04.md",
+      "title": "4. 만년 셔츠"
+    }
+  ]
+}

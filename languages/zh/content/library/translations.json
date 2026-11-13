@@ -1,4 +1,42 @@
 {
+  "bei-ying": {
+    "title": {
+      "en": "A View from Behind",
+      "zh-CN": "背影",
+      "zh-TW": "背影",
+      "es": "La figura de espaldas",
+      "fr": "Une silhouette de dos",
+      "de": "Eine Gestalt von hinten",
+      "it": "Una figura di spalle",
+      "pt": "Uma figura de costas",
+      "ru": "Силуэт со спины",
+      "ja": "後ろ姿",
+      "ko": "뒷모습",
+      "ar": "هيئة من الخلف",
+      "hi": "पीछे से दिखती आकृति",
+      "id": "Sosok dari Belakang",
+      "vi": "Bóng lưng",
+      "tr": "Arkadan Bir Siluet"
+    },
+    "blurb": {
+      "en": "A son remembers his father buying oranges for him before his train leaves.",
+      "zh-CN": "儿子回想起火车开动前，父亲穿过铁道去给自己买橘子的情景。",
+      "zh-TW": "兒子回想起火車開動前，父親穿過鐵道去給自己買橘子的情景。",
+      "es": "Un hijo recuerda cómo su padre le compró naranjas antes de que saliera su tren.",
+      "fr": "Un fils se souvient de son père qui lui achète des oranges avant le départ de son train.",
+      "de": "Ein Sohn erinnert sich daran, wie sein Vater ihm vor der Zugabfahrt Orangen kaufte.",
+      "it": "Un figlio ricorda il padre che gli comprò delle arance prima che partisse il treno.",
+      "pt": "Um filho relembra como seu pai lhe comprou laranjas antes da partida do trem.",
+      "ru": "Сын вспоминает, как отец купил ему апельсины перед отправлением поезда.",
+      "ja": "列車が出る前に父がミカンを買ってくれた日のことを、息子が思い返します。",
+      "ko": "아들은 기차가 떠나기 전 자신에게 귤을 사 주던 아버지를 떠올립니다.",
+      "ar": "يتذكر ابن كيف اشترى له والده البرتقال قبل انطلاق القطار.",
+      "hi": "एक बेटा याद करता है कि ट्रेन छूटने से पहले उसके पिता ने उसके लिए संतरे खरीदे थे।",
+      "id": "Seorang anak mengenang ayahnya yang membelikannya jeruk sebelum kereta berangkat.",
+      "vi": "Người con nhớ lại lúc cha mua cam cho mình trước khi tàu khởi hành.",
+      "tr": "Bir oğul, treni kalkmadan önce babasının ona portakal alışını hatırlar."
+    }
+  },
   "chuanxilu": {
     "title": {
       "en": "Instructions for Practical Living",
@@ -35,6 +73,44 @@
       "id": "Percakapan dan surat filsuf dinasti Ming, Wang Yangming, yang mengajarkan bahwa mengetahui dan melakukan adalah satu.",
       "vi": "Những cuộc trò chuyện và thư từ của triết gia đời Minh Vương Dương Minh, người dạy rằng biết và làm là một.",
       "tr": "Ming dönemi filozofu Wang Yangming'in bilmek ile yapmanın bir olduğunu öğreten konuşma ve mektupları."
+    }
+  },
+  "cong-cong": {
+    "title": {
+      "en": "In a Hurry",
+      "zh-CN": "匆匆",
+      "zh-TW": "匆匆",
+      "es": "De prisa",
+      "fr": "À la hâte",
+      "de": "In Eile",
+      "it": "Di fretta",
+      "pt": "À pressa",
+      "ru": "В спешке",
+      "ja": "足早に",
+      "ko": "덧없이",
+      "ar": "على عجل",
+      "hi": "जल्दी-जल्दी",
+      "id": "Bergegas",
+      "vi": "Vội vã",
+      "tr": "Aceleyle"
+    },
+    "blurb": {
+      "en": "A short essay about how time slips away while we wash our hands, eat and go about our day.",
+      "zh-CN": "洗手、吃饭、发呆，日子就在这些小事之间悄悄溜走。一篇关于时间的短文。",
+      "zh-TW": "洗手、吃飯、發呆，日子就在這些小事之間悄悄溜走。一篇關於時間的短文。",
+      "es": "Un ensayo breve sobre cómo se escapa el tiempo mientras nos lavamos las manos, comemos y seguimos con el día.",
+      "fr": "Un court essai sur le temps qui file pendant qu’on se lave les mains, qu’on mange et qu’on vaque à ses occupations.",
+      "de": "Ein kurzer Essay darüber, wie die Zeit beim Händewaschen, Essen und anderen alltäglichen Dingen vergeht.",
+      "it": "Un breve saggio sul tempo che scivola via mentre ci laviamo le mani, mangiamo e viviamo la nostra giornata.",
+      "pt": "Um ensaio breve sobre como o tempo escapa enquanto lavamos as mãos, comemos e seguimos a rotina.",
+      "ru": "Короткое эссе о том, как ускользает время, пока мы моем руки, едим и занимаемся обычными делами.",
+      "ja": "手を洗い、ご飯を食べる。何気ない日常の中を時間がすり抜けていくことを描いた短い随筆。",
+      "ko": "손을 씻고 밥을 먹으며 하루를 보내는 사이, 시간이 어떻게 흘러가는지 돌아보는 짧은 수필입니다.",
+      "ar": "مقال قصير عن انقضاء الوقت بينما نغسل أيدينا ونأكل وننشغل بأمورنا اليومية.",
+      "hi": "हाथ धोते, खाना खाते और रोज़मर्रा के काम करते हुए समय कैसे निकल जाता है, इस पर एक छोटा निबंध।",
+      "id": "Esai pendek tentang waktu yang berlalu saat kita mencuci tangan, makan, dan menjalani kegiatan sehari-hari.",
+      "vi": "Một tản văn ngắn về thời gian lặng lẽ trôi qua khi ta rửa tay, ăn cơm và làm những việc thường ngày.",
+      "tr": "Elimizi yıkarken, yemek yerken ve gündelik işlerimizi yaparken zamanın nasıl akıp gittiğini anlatan kısa bir deneme."
     }
   },
   "daodejing": {
@@ -645,6 +721,44 @@
       "tr": "Strateji, aldatma ve kendini ile düşmanını tanıma üzerine on üç bölümün Çince özgün metni."
     }
   },
+  "tu-he-mao": {
+    "title": {
+      "en": "The Rabbits and the Cat",
+      "zh-CN": "兔和猫",
+      "zh-TW": "兔和貓",
+      "es": "Los conejos y el gato",
+      "fr": "Les lapins et le chat",
+      "de": "Die Kaninchen und die Katze",
+      "it": "I conigli e il gatto",
+      "pt": "Os coelhos e o gato",
+      "ru": "Кролики и кот",
+      "ja": "ウサギと猫",
+      "ko": "토끼와 고양이",
+      "ar": "الأرانب والقط",
+      "hi": "खरगोश और बिल्ली",
+      "id": "Kelinci-kelinci dan Kucing",
+      "vi": "Thỏ và mèo",
+      "tr": "Tavşanlar ve Kedi"
+    },
+    "blurb": {
+      "en": "A family raises rabbits in a courtyard and grows wary of the black cat on the wall.",
+      "zh-CN": "一家人在院子里养兔子，渐渐提防起常在矮墙上张望的黑猫。",
+      "zh-TW": "一家人在院子裡養兔子，漸漸提防起常在矮牆上張望的黑貓。",
+      "es": "Una familia cría conejos en un patio y empieza a desconfiar del gato negro que ronda el muro.",
+      "fr": "Une famille élève des lapins dans une cour et se méfie de plus en plus du chat noir qui guette du haut du mur.",
+      "de": "Eine Familie hält Kaninchen im Hof und wird gegenüber der schwarzen Katze auf der Mauer zunehmend misstrauisch.",
+      "it": "Una famiglia alleva conigli in cortile e comincia a temere il gatto nero sul muro.",
+      "pt": "Uma família cria coelhos no pátio e começa a desconfiar do gato preto em cima do muro.",
+      "ru": "Семья разводит кроликов во дворе и начинает опасаться чёрного кота, который наблюдает за ними со стены.",
+      "ja": "庭でウサギを飼う一家は、塀の上から様子をうかがう黒猫を警戒し始めます。",
+      "ko": "마당에서 토끼를 키우던 가족은 담장 위의 검은 고양이를 경계하기 시작합니다.",
+      "ar": "تربي عائلة أرانب في الفناء، وتبدأ في الحذر من القط الأسود الذي يراقبها من فوق الجدار.",
+      "hi": "एक परिवार आँगन में खरगोश पालता है और दीवार पर बैठी काली बिल्ली से सावधान रहने लगता है।",
+      "id": "Sebuah keluarga memelihara kelinci di halaman dan mulai waspada terhadap kucing hitam yang mengintai dari atas tembok.",
+      "vi": "Một gia đình nuôi thỏ trong sân và dần dè chừng con mèo đen thường rình trên bờ tường.",
+      "tr": "Bir aile avluda tavşan besler ve duvarın üzerinden bakan kara kediye karşı temkinli olmaya başlar."
+    }
+  },
   "xiyouji": {
     "title": {
       "en": "Journey to the West (beginning)",
@@ -681,6 +795,44 @@
       "id": "Novel klasik Wu Cheng'en; bab-bab awal menceritakan lahirnya Sun Wukong si kera batu, belajar sihir, dan mengacau di Surga.",
       "vi": "Tiểu thuyết kinh điển của Ngô Thừa Ân; những hồi đầu kể về sự ra đời của khỉ đá Tôn Ngộ Không, việc học phép thuật và đại náo thiên cung.",
       "tr": "Wu Cheng'en'in klasik romanı; ilk bölümler taş maymun Sun Wukong'un doğuşunu, büyü öğrenişini ve Cennet'te çıkardığı kargaşayı anlatır."
+    }
+  },
+  "yi-jian-xiao-shi": {
+    "title": {
+      "en": "A Small Incident",
+      "zh-CN": "一件小事",
+      "zh-TW": "一件小事",
+      "es": "Un pequeño incidente",
+      "fr": "Un petit incident",
+      "de": "Ein kleiner Vorfall",
+      "it": "Un piccolo incidente",
+      "pt": "Um pequeno incidente",
+      "ru": "Маленький случай",
+      "ja": "小さな出来事",
+      "ko": "작은 사건",
+      "ar": "حادثة صغيرة",
+      "hi": "एक छोटी-सी घटना",
+      "id": "Sebuah Kejadian Kecil",
+      "vi": "Một việc nhỏ",
+      "tr": "Küçük Bir Olay"
+    },
+    "blurb": {
+      "en": "A rickshaw driver stops to help a woman who has fallen, and the passenger reconsiders his own behavior.",
+      "zh-CN": "一位车夫停下来扶起摔倒的女人，车上的乘客开始反思自己的行为。",
+      "zh-TW": "一位車夫停下來扶起摔倒的女人，車上的乘客開始反思自己的行為。",
+      "es": "Un conductor de rickshaw se detiene para ayudar a una mujer que se ha caído y el pasajero reconsidera su propia conducta.",
+      "fr": "Un tireur de pousse-pousse s’arrête pour aider une femme tombée, et son passager repense à sa propre conduite.",
+      "de": "Ein Rikschafahrer hält an, um einer gestürzten Frau zu helfen. Sein Fahrgast überdenkt sein eigenes Verhalten.",
+      "it": "Un conducente di risciò si ferma ad aiutare una donna caduta e il passeggero ripensa al proprio comportamento.",
+      "pt": "Um condutor de riquixá para para ajudar uma mulher que caiu, e o passageiro repensa seu próprio comportamento.",
+      "ru": "Рикша останавливается помочь упавшей женщине, и пассажир переосмысливает собственный поступок.",
+      "ja": "人力車の車夫が転んだ女性を助ける姿を見て、乗客は自分の行いを振り返ります。",
+      "ko": "인력거꾼이 넘어진 여인을 도우려고 멈추자, 승객은 자신의 행동을 되돌아봅니다.",
+      "ar": "يتوقف سائق عربة ريكشا لمساعدة امرأة سقطت، فيعيد الراكب النظر في تصرفه.",
+      "hi": "एक रिक्शावाला गिरी हुई महिला की मदद करने के लिए रुकता है और यात्री अपने व्यवहार पर फिर से सोचता है।",
+      "id": "Seorang penarik becak berhenti untuk menolong perempuan yang jatuh, dan penumpangnya merenungkan kembali sikapnya.",
+      "vi": "Một người kéo xe dừng lại giúp người phụ nữ bị ngã, khiến hành khách nghĩ lại về cách mình cư xử.",
+      "tr": "Bir çekçek sürücüsü düşen bir kadına yardım etmek için durur. Yolcusu kendi davranışını yeniden düşünür."
     }
   },
   "zhongyong-zhangju": {

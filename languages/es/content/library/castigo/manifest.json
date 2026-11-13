@@ -1,0 +1,18 @@
+{
+  "title": "Castigo",
+  "author": "Adelheid Marie Bwire",
+  "level": "A2",
+  "category": "children",
+  "wordCount": 119,
+  "source": {
+    "name": "Storybooks Canada, Spanish edition",
+    "url": "https://storybookscanada.ca/stories/es/0342/",
+    "license": "CC BY 3.0. Spanish translation by Karina Vásquez. Text-only edition with formatting changes."
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "Castigo"
+    }
+  ]
+}

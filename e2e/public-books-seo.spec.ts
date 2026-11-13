@@ -28,27 +28,76 @@ test.describe('public book landing pages', () => {
       level: 'b1',
       slugs: ['the-wonderful-wizard-of-oz', 'daddy-long-legs', 'a-little-princess'],
     },
+    { language: 'zh', level: 'b1', slugs: ['gushi-xin-dubo', 'yi-jian-xiao-shi', 'cong-cong'] },
+    { language: 'zh', level: 'b2', slugs: ['rulin-waishi', 'bei-ying', 'tu-he-mao'] },
+    {
+      language: 'ko',
+      level: 'b2',
+      slugs: [
+        'dongbaekkkot',
+        'unsu-joeun-nal',
+        'chilchildan-bimil',
+        'jindallaekkot',
+        'mannyeon-syeocheu',
+        'gohyang',
+      ],
+    },
   ]) {
     test(`the ${language} ${level} guide links directly to its free chapter previews`, async ({
       page,
     }) => {
       const response = await page.goto(`/books/${language}/level/${level}`);
       expect(response?.ok()).toBe(true);
+      const html = await response?.text();
       const featured = page.getByTestId('featured-reading');
       await expect(featured.getByRole('listitem')).toHaveCount(slugs.length);
       for (const slug of slugs) {
         const href = `/books/${language}/${slug}/read`;
-        expect(await response?.text()).toContain(`href="${href}"`);
+        expect(html).toContain(`href="${href}"`);
         const preview = featured.locator(`a[href="${href}"]`);
         await expect(preview).toBeVisible();
         const chapter = await page.request.get(href);
         expect(chapter.ok()).toBe(true);
-        expect(await chapter.text()).toContain('data-testid="book-chapter"');
+        const chapterHtml = await chapter.text();
+        expect(chapterHtml).toContain('data-testid="book-chapter"');
+        expect(chapterHtml).toContain(`lang="${language}"`);
       }
       await featured.locator(`a[href="/books/${language}/${slugs[0]}/read"]`).click();
       await expect(page.getByTestId('book-chapter')).toBeVisible();
     });
   }
+
+  test('new beginner titles have public previews and source credits', async ({ request }) => {
+    const cases = [
+      {
+        language: 'es',
+        level: 'a1',
+        slug: 'me-gusta-leer',
+        source: 'https://storybookscanada.ca/stories/es/0087/',
+      },
+      {
+        language: 'ko',
+        level: 'a1',
+        slug: 'baegopeun-ageo',
+        source: 'https://www.storybookscanada.ca/stories/ko/0156/',
+      },
+    ];
+    const sitemap = await (await request.get('/sitemap.xml')).text();
+    for (const { language, level, slug, source } of cases) {
+      const detail = `/books/${language}/${slug}`;
+      const preview = `${detail}/read`;
+      const list = await request.get(`/books/${language}/level/${level}`);
+      expect(list.ok()).toBe(true);
+      expect(await list.text()).toContain(`href="${detail}"`);
+      expect(sitemap).toContain(preview);
+      const chapter = await request.get(preview);
+      expect(chapter.ok()).toBe(true);
+      const html = await chapter.text();
+      expect(html).toContain('data-testid="book-chapter"');
+      expect(html).toContain(source);
+      expect(html).toMatch(/CC BY 3\.0/);
+    }
+  });
 
   test('the level chip opens the list of books at that level', async ({ page }) => {
     await page.goto('/books/en/walden');

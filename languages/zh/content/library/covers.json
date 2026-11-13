@@ -1,9 +1,21 @@
 {
+  "bei-ying": {
+    "file": "bei-ying.webp",
+    "kind": "art",
+    "credit": "Portrait of Zhu Ziqing, 1929, published in The Young Companion no. 44, public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:ZhuZiqing.jpg"
+  },
   "chuanxilu": {
     "file": "chuanxilu.webp",
     "kind": "art",
     "credit": "王守仁像 (Portrait of Wang Shouren), Shen Junhui, Ming dynasty",
     "source": "https://commons.wikimedia.org/wiki/File:%E7%8E%8B%E5%AE%88%E4%BB%81.jpg"
+  },
+  "cong-cong": {
+    "file": "cong-cong.webp",
+    "kind": "art",
+    "credit": "Peach Blossoms, from the Xian'e Changchun Album, Giuseppe Castiglione (National Palace Museum), public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:Xian%27e_Changchun_Album_02.jpg"
   },
   "daodejing": {
     "file": "daodejing.webp",
@@ -101,11 +113,23 @@
     "credit": "吴司马孙武 (Sun Wu), Qing dynasty portrait",
     "source": "https://commons.wikimedia.org/wiki/File:%E5%90%B4%E5%8F%B8%E9%A9%AC%E5%AD%99%E6%AD%A6.jpg"
   },
+  "tu-he-mao": {
+    "file": "tu-he-mao.webp",
+    "kind": "art",
+    "credit": "Two Rabbits under a Chinese Parasol Tree, Leng Mei (The Palace Museum), public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:Two_Rabbits_under_Chinese_Parasol_Tree_by_Leng_Mei.jpg"
+  },
   "xiyouji": {
     "file": "xiyouji.webp",
     "kind": "art",
     "credit": "Sun Wukong (孙行者), from 西游原旨图像 (Illustrations for the Original Intent of the Journey to the West), anonymous, 19th century",
     "source": "https://commons.wikimedia.org/wiki/File:Xiyou.PNG"
+  },
+  "yi-jian-xiao-shi": {
+    "file": "yi-jian-xiao-shi.webp",
+    "kind": "art",
+    "credit": "Portrait of Lu Xun, Tao Yuanqing, 1926 (Beijing Lu Xun Museum), public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:Luxun_xiang_1926.jpg"
   },
   "zhongyong-zhangju": {
     "file": "zhongyong-zhangju.webp",

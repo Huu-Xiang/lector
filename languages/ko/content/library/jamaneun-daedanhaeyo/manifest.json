@@ -1,0 +1,18 @@
+{
+  "title": "자마는 대단해요!",
+  "author": "Michael Oguttu",
+  "level": "A2",
+  "category": "children",
+  "wordCount": 102,
+  "source": {
+    "name": "Storybooks Canada (Korean edition of African Storybook)",
+    "url": "https://www.storybookscanada.ca/stories/ko/0095/",
+    "license": "CC BY 3.0. Korean translation by Michelle Kim. Text-only edition with formatting changes."
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. 자마는 대단해요!"
+    }
+  ]
+}

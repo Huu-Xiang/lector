@@ -8,6 +8,16 @@ const featuredSlugs: Record<string, readonly string[]> = {
   'fr/B1': ['contes-du-lundi', 'lettres-de-mon-moulin', 'la-petite-fadette'],
   'es/A2': ['an-elementary-spanish-reader', 'lecturas-faciles'],
   'en/B1': ['the-wonderful-wizard-of-oz', 'daddy-long-legs', 'a-little-princess'],
+  'zh/B1': ['gushi-xin-dubo', 'yi-jian-xiao-shi', 'cong-cong'],
+  'zh/B2': ['rulin-waishi', 'bei-ying', 'tu-he-mao'],
+  'ko/B2': [
+    'dongbaekkkot',
+    'unsu-joeun-nal',
+    'chilchildan-bimil',
+    'jindallaekkot',
+    'mannyeon-syeocheu',
+    'gohyang',
+  ],
 };
 
 export default async function FeaturedReading({
@@ -44,7 +54,8 @@ export default async function FeaturedReading({
         {picks.map((book, index) => {
           const title = pickLocalized(book.titles, locale, book.title);
           const href = `/books/${book.language}/${book.slug}`;
-          const words = firstChapter(book).join(' ').match(/\S+/g)?.length ?? 0;
+          const text = firstChapter(book).join(' ');
+          const units = text.match(language === 'zh' ? /\p{Script=Han}/gu : /\S+/g)?.length ?? 0;
           return (
             <li key={book.slug} className="flex flex-col items-start gap-2 rounded-lg border p-4">
               {index === 0 && (
@@ -56,9 +67,9 @@ export default async function FeaturedReading({
                 </Link>
               </h3>
               <p>{t(`featuredReasons.${book.slug}`)}</p>
-              {words > 0 && (
+              {units > 0 && (
                 <p className="text-xs text-muted-foreground">
-                  {t('featuredReadingTime', { minutes: readingMinutes(words, language) })}
+                  {t('featuredReadingTime', { minutes: readingMinutes(units, language) })}
                 </p>
               )}
               <Link

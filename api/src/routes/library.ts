@@ -14,7 +14,7 @@ import {
 import { entitlements, planLimitResponse, type AtomicLimitCheck } from '../lib/entitlements';
 import { collectionMetadataBytes, lessonTextBytes } from '../lib/storage-limits';
 
-// Free library: browse the public-domain books of a language and copy one into
+// Free library: browse the free books of a language and copy one into
 // the learner's own collections. Adding is idempotent per user and book.
 
 const app = new Hono();

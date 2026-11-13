@@ -5,7 +5,7 @@ import { isValidLanguageCode, type LanguageCode } from './languages';
 import { lessonTextBytes } from './storage-limits';
 
 /**
- * Free library: public-domain books a language pack ships under
+ * Free library: books a language pack ships under
  * `languages/<code>/content/library/<slug>/` as a manifest.json plus one
  * markdown file per lesson. Read from disk on the server only; adding a book
  * copies it into the learner's own collection.

@@ -1,0 +1,18 @@
+{
+  "title": "Contando animales",
+  "author": "Zanele Buthelezi, Thembani Dladla, Clare Verbeek",
+  "level": "A1",
+  "category": "children",
+  "wordCount": 69,
+  "source": {
+    "name": "Storybooks Canada, Spanish edition",
+    "url": "https://storybookscanada.ca/stories/es/0327/",
+    "license": "CC BY 3.0. Spanish translation by Espen Stranger-Johannessen. Text-only edition with formatting changes."
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "Contando animales"
+    }
+  ]
+}

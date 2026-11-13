@@ -121,7 +121,7 @@
       "dataSources": {
         "heading": "データの出典",
         "body": "文のバンクは Tatoeba（CC BY 2.0 FR）から、辞書はリポジトリの README に記載の出典から取得しています。それぞれ各自のライセンスに従います。",
-        "books": "ライブラリの無料の本は、Project Gutenberg（gutenberg.org）のパブリックドメインのテキストです。韓国語の本は韓国語版 Wikisource（ko.wikisource.org）から取得しており、その書き起こしは CC BY-SA 4.0 でライセンスされています。各書籍には出典ページへのリンクがあります。",
+        "books": "図書館にはProject Gutenbergと中国語版・韓国語版Wikisourceのパブリックドメイン作品のほか、Storybooks Canada（Global Storybooks）のオープンライセンスのスペイン語・韓国語の物語があります。各作品には出典リンクとライセンス情報があります。",
         "dictionaries": "辞書の意味は、kaikki.org 経由で英語版 Wiktionary（CC BY-SA）から取得しています。英語の辞書は skywind3000 の ECDICT（MIT ライセンス、github.com/skywind3000/ECDICT）をもとに作られており、例文は Tatoeba（CC BY 2.0 FR）から取得しています。",
         "readingFeed": "「無料の本」ダイアログの「ニュース」「旅行」「科学」タブの記事は、Global Voices（CC BY 3.0、globalvoices.org）、Wikivoyage（CC BY-SA 3.0、wikivoyage.org）、Simple English Wikipedia、Vikidia（CC BY-SA 4.0）から取得しています。各記事にはライセンスと元の出典へのリンクがあり、ライブラリに追加すると、その表記が付加されます。"
       }

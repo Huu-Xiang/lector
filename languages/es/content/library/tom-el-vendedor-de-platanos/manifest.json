@@ -1,0 +1,18 @@
+{
+  "title": "Tom, el vendedor de plátanos",
+  "author": "Humphreys Odunga",
+  "level": "A2",
+  "category": "children",
+  "wordCount": 141,
+  "source": {
+    "name": "Storybooks Canada, Spanish edition",
+    "url": "https://storybookscanada.ca/stories/es/0296/",
+    "license": "CC BY 4.0. Spanish translation by Karina Vásquez. Text-only edition with formatting changes."
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "Tom, el vendedor de plátanos"
+    }
+  ]
+}

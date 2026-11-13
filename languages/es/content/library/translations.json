@@ -113,6 +113,82 @@
       "tr": "Bécquer'in hayaletleri, aşkı ve eski İspanyol kentlerini anlatan romantik efsaneleri; Org Çalgıcısı Maese Pérez ve Yeşil Gözler de içinde."
     }
   },
+  "castigo": {
+    "title": {
+      "en": "Punishment",
+      "zh-CN": "惩罚",
+      "zh-TW": "懲罰",
+      "es": "Castigo",
+      "fr": "Punition",
+      "de": "Strafe",
+      "it": "Punizione",
+      "pt": "Castigo",
+      "ru": "Наказание",
+      "ja": "おしおき",
+      "ko": "벌",
+      "ar": "العقاب",
+      "hi": "सज़ा",
+      "id": "Hukuman",
+      "vi": "Hình phạt",
+      "tr": "Ceza"
+    },
+    "blurb": {
+      "en": "Rahim eats the fruit before dinner and gets a stomachache. Follow the family dialogue to practice words about food and how you feel.",
+      "zh-CN": "拉希姆晚饭前偷吃水果，结果肚子疼。跟着家人的对话，练习食物和身体感受的词汇。",
+      "zh-TW": "拉希姆晚飯前偷吃水果，結果肚子痛。跟著家人的對話，練習食物和身體感受的詞彙。",
+      "es": "Rahim come fruta antes de cenar y le duele el estómago. Sigue el diálogo familiar y practica el vocabulario de la comida y las sensaciones físicas.",
+      "fr": "Rahim mange les fruits avant le dîner et a mal au ventre. Suivez le dialogue familial pour apprendre des mots sur la nourriture et les sensations physiques.",
+      "de": "Rahim isst vor dem Abendessen Obst und bekommt Bauchschmerzen. Im Familiengespräch lernst du Wörter zum Essen und zum körperlichen Befinden.",
+      "it": "Rahim mangia la frutta prima di cena e gli viene mal di pancia. Segui il dialogo in famiglia per imparare parole sul cibo e su come ci si sente.",
+      "pt": "Rahim come a fruta antes do jantar e fica com dor de barriga. Acompanhe o diálogo da família para praticar palavras sobre comida e como você se sente.",
+      "ru": "Рахим ест фрукты до ужина, и у него болит живот. В семейном разговоре встречаются слова о еде и самочувствии.",
+      "ja": "ラヒムは夕食前に果物を食べておなかが痛くなります。家族の会話を読みながら、食べ物や体調の言葉を練習しましょう。",
+      "ko": "라힘은 저녁을 먹기 전에 과일을 먹고 배가 아파요. 가족의 대화를 따라 읽으며 음식과 몸 상태를 나타내는 말을 연습해 보세요.",
+      "ar": "يأكل رحيم الفاكهة قبل العشاء فيؤلمه بطنه. تابع الحوار العائلي لتتدرّب على كلمات الطعام وكيف تشعر.",
+      "hi": "रहीम रात के खाने से पहले फल खा लेता है और उसके पेट में दर्द हो जाता है। परिवार की बातचीत पढ़कर खाने और तबीयत से जुड़े शब्द सीखें।",
+      "id": "Rahim makan buah sebelum makan malam lalu sakit perut. Ikuti percakapan keluarganya untuk berlatih kosakata makanan dan kondisi tubuh.",
+      "vi": "Rahim ăn trái cây trước bữa tối rồi bị đau bụng. Đọc cuộc trò chuyện của gia đình để luyện từ vựng về thức ăn và cảm giác trong người.",
+      "tr": "Rahim akşam yemeğinden önce meyve yer ve karnı ağrır. Yiyecekler ve nasıl hissettiğinizle ilgili sözcükleri aile konuşmasıyla çalışın."
+    }
+  },
+  "contando-animales": {
+    "title": {
+      "en": "Counting Animals",
+      "zh-CN": "数动物",
+      "zh-TW": "數動物",
+      "es": "Contando animales",
+      "fr": "Compter les animaux",
+      "de": "Tiere zählen",
+      "it": "Contare gli animali",
+      "pt": "Contando animais",
+      "ru": "Считаем животных",
+      "ja": "動物を数えよう",
+      "ko": "동물 세기",
+      "ar": "عدّ الحيوانات",
+      "hi": "जानवर गिनना",
+      "id": "Menghitung Hewan",
+      "vi": "Đếm các con vật",
+      "tr": "Hayvanları Saymak"
+    },
+    "blurb": {
+      "en": "Animals come to drink at a watering hole. Count them as they arrive and meet some of the animals that live nearby.",
+      "zh-CN": "动物们来到水边喝水。数一数来了多少只，也认识一下住在附近的动物。",
+      "zh-TW": "動物們來到水邊喝水。數一數來了幾隻，也認識一下住在附近的動物。",
+      "es": "Los animales se acercan a beber agua. Cuéntalos a medida que llegan y aprende cómo se llaman.",
+      "fr": "Les animaux viennent boire au point d’eau. Comptez-les à leur arrivée et découvrez leurs noms.",
+      "de": "Tiere kommen zur Wasserstelle. Zähle sie und lerne ihre Namen kennen.",
+      "it": "Gli animali arrivano a bere. Contali man mano che arrivano e impara i loro nomi.",
+      "pt": "Os animais chegam para beber água. Conte-os e descubra como se chamam.",
+      "ru": "Животные идут на водопой. Считайте их и узнавайте названия.",
+      "ja": "動物たちが水を飲みに来ます。数を数えながら、動物の名前を覚えましょう。",
+      "ko": "동물들이 물을 마시러 와요. 몇 마리인지 세어 보고 동물 이름을 익혀 보세요.",
+      "ar": "تأتي الحيوانات لتشرب الماء. عُدّها عند وصولها وتعرّف على أسمائها.",
+      "hi": "जानवर पानी पीने आते हैं। उन्हें गिनें और उनके नाम जानें।",
+      "id": "Hewan-hewan datang untuk minum. Hitung mereka dan kenali namanya.",
+      "vi": "Các con vật đến uống nước. Hãy đếm và học tên chúng.",
+      "tr": "Hayvanlar su içmeye geliyor. Onları sayın ve adlarını öğrenin."
+    }
+  },
   "corazon": {
     "title": {
       "en": "Heart (beginning)",
@@ -263,6 +339,82 @@
       "id": "Lima belas bab pertama: seorang bangsawan yang terlalu banyak membaca kisah kesatria berangkat menjadi kesatria pengembara bersama pengawalnya, Sancho Panza.",
       "vi": "Mười lăm chương đầu: một quý tộc đọc quá nhiều truyện hiệp sĩ lên đường làm hiệp sĩ giang hồ cùng người hầu Sancho Panza.",
       "tr": "İlk on beş bölüm: şövalye romanlarını çok okuyan bir soylu, yaveri Sancho Panza ile gezgin şövalye olarak yola çıkar."
+    }
+  },
+  "el-fuego": {
+    "title": {
+      "en": "Fire",
+      "zh-CN": "火",
+      "zh-TW": "火",
+      "es": "El fuego",
+      "fr": "Le feu",
+      "de": "Feuer",
+      "it": "Il fuoco",
+      "pt": "O fogo",
+      "ru": "Огонь",
+      "ja": "火",
+      "ko": "불",
+      "ar": "النار",
+      "hi": "आग",
+      "id": "Api",
+      "vi": "Lửa",
+      "tr": "Ateş"
+    },
+    "blurb": {
+      "en": "Very short sentences describe how fire burns, cooks, warms and lights up a room. Practice common verbs in the present tense.",
+      "zh-CN": "用很短的句子认识火的作用，练习燃烧、做饭、取暖和照明等常用动词的现在时。",
+      "zh-TW": "用很短的句子認識火的作用，練習燃燒、做飯、取暖和照明等常用動詞的現在式。",
+      "es": "Frases muy breves muestran cómo el fuego quema, cocina, calienta e ilumina. Practica verbos comunes en presente.",
+      "fr": "De très courtes phrases montrent comment le feu brûle, cuit, chauffe et éclaire. Entraînez-vous à lire des verbes au présent.",
+      "de": "Sehr kurze Sätze zeigen, wie Feuer brennt, kocht, wärmt und leuchtet. Übe häufige Verben im Präsens.",
+      "it": "Frasi brevissime descrivono come il fuoco brucia, cuoce, scalda e illumina. Esercitati con i verbi comuni al presente.",
+      "pt": "Frases bem curtas mostram como o fogo queima, cozinha, aquece e ilumina. Pratique verbos comuns no presente.",
+      "ru": "Короткие предложения рассказывают, как огонь жжёт, готовит пищу, греет и освещает. Здесь можно потренировать глаголы в настоящем времени.",
+      "ja": "火が燃え、料理を作り、暖め、明るくする様子を短い文で読みます。現在形の動詞を練習できます。",
+      "ko": "불이 타고, 음식을 익히고, 따뜻하게 하고, 밝히는 모습을 짧은 문장으로 읽으며 현재형 동사를 연습해 보세요.",
+      "ar": "جمل قصيرة جداً تصف كيف تحرق النار وتطهو وتدفئ وتضيء. تدرّب على أفعال شائعة في المضارع.",
+      "hi": "बहुत छोटे वाक्य बताते हैं कि आग कैसे जलाती है, पकाती है, गर्मी और रोशनी देती है। वर्तमान काल की आम क्रियाओं का अभ्यास करें।",
+      "id": "Kalimat sangat pendek menunjukkan bagaimana api membakar, memasak, menghangatkan, dan menerangi. Latih kata kerja sehari-hari dalam kala kini.",
+      "vi": "Các câu rất ngắn kể về cách lửa đốt, nấu, sưởi ấm và chiếu sáng. Luyện các động từ thông dụng ở thì hiện tại.",
+      "tr": "Çok kısa cümleler ateşin nasıl yaktığını, pişirdiğini, ısıttığını ve aydınlattığını anlatır. Yaygın fiilleri şimdiki zamanda çalışın."
+    }
+  },
+  "khalai-le-habla-a-las-plantas": {
+    "title": {
+      "en": "Khalai Talks to Plants",
+      "zh-CN": "哈莱和植物说话",
+      "zh-TW": "哈萊和植物說話",
+      "es": "Khalai le habla a las plantas",
+      "fr": "Khalai parle aux plantes",
+      "de": "Khalai spricht mit Pflanzen",
+      "it": "Khalai parla alle piante",
+      "pt": "Khalai fala com as plantas",
+      "ru": "Халай разговаривает с растениями",
+      "ja": "カライは植物とおしゃべり",
+      "ko": "칼라이가 식물에게 말을 걸어요",
+      "ar": "خالاي تتحدث إلى النباتات",
+      "hi": "खालाई पौधों से बात करती है",
+      "id": "Khalai Berbicara dengan Tumbuhan",
+      "vi": "Khalai trò chuyện với cây cối",
+      "tr": "Khalai Bitkilerle Konuşuyor"
+    },
+    "blurb": {
+      "en": "Khalai talks to the plants she passes on her way to school. Follow her route and practice simple requests about trees, grass and flowers.",
+      "zh-CN": "哈莱上学路上会和遇到的植物说话。跟着她一路走，练习用简单的句子对树、草和花提出请求。",
+      "zh-TW": "哈萊上學路上會和遇到的植物說話。跟著她一路走，練習用簡單的句子對樹、草和花提出請求。",
+      "es": "Khalai habla con las plantas que encuentra camino a la escuela. Sigue su recorrido y practica peticiones sencillas sobre árboles, pasto y flores.",
+      "fr": "Khalai parle aux plantes qu’elle croise sur le chemin de l’école. Suivez son parcours et entraînez-vous à formuler des demandes simples aux arbres, à l’herbe et aux fleurs.",
+      "de": "Auf dem Schulweg spricht Khalai mit den Pflanzen. Begleite sie und übe einfache Bitten rund um Bäume, Gras und Blumen.",
+      "it": "Khalai parla alle piante che incontra andando a scuola. Segui il suo percorso e fai pratica con richieste semplici su alberi, erba e fiori.",
+      "pt": "Khalai conversa com as plantas no caminho para a escola. Acompanhe seu percurso e pratique pedidos simples sobre árvores, grama e flores.",
+      "ru": "По дороге в школу Халай разговаривает с растениями. Проследите её путь и потренируйтесь читать простые просьбы о деревьях, траве и цветах.",
+      "ja": "カライは通学路の植物に話しかけます。一緒に歩きながら、木や草や花に向けた簡単なお願いの表現を練習しましょう。",
+      "ko": "칼라이는 학교에 가는 길에 만난 식물에게 말을 걸어요. 그 길을 따라가며 나무와 풀과 꽃에게 하는 간단한 부탁을 읽어 보세요.",
+      "ar": "تتحدث خالاي إلى النباتات في طريقها إلى المدرسة. اتبع مسارها وتدرّب على قراءة طلبات بسيطة تتعلق بالأشجار والعشب والأزهار.",
+      "hi": "खालाई स्कूल जाते समय रास्ते के पौधों से बात करती है। उसके साथ चलते हुए पेड़ों, घास और फूलों के बारे में सरल अनुरोध पढ़ें।",
+      "id": "Khalai berbicara kepada tumbuhan yang ia lewati dalam perjalanan ke sekolah. Ikuti jalannya dan latih permintaan sederhana tentang pohon, rumput, dan bunga.",
+      "vi": "Khalai trò chuyện với cây cối em gặp trên đường đến trường. Theo chân em và luyện những lời đề nghị đơn giản về cây, cỏ và hoa.",
+      "tr": "Khalai okula giderken karşılaştığı bitkilerle konuşur. Yolunu izleyip ağaçlar, çimenler ve çiçeklerle ilgili basit istekleri çalışın."
     }
   },
   "lazarillo-de-tormes": {
@@ -417,6 +569,44 @@
       "tr": "Yoksul bir yetim kız, kör bir genci kuzey İspanya'nın maden bölgesinde gezdirir; ta ki genç görme yetisini kazanana dek."
     }
   },
+  "me-gusta-leer": {
+    "title": {
+      "en": "I Like to Read!",
+      "zh-CN": "我喜欢读书！",
+      "zh-TW": "我喜歡讀書！",
+      "es": "¡Me gusta leer!",
+      "fr": "J’aime lire !",
+      "de": "Ich lese gern!",
+      "it": "Mi piace leggere!",
+      "pt": "Eu gosto de ler!",
+      "ru": "Я люблю читать!",
+      "ja": "本を読むのが好き！",
+      "ko": "나는 책 읽기가 좋아요!",
+      "ar": "أحب القراءة!",
+      "hi": "मुझे पढ़ना पसंद है!",
+      "id": "Aku Suka Membaca!",
+      "vi": "Em thích đọc sách!",
+      "tr": "Okumayı Seviyorum!"
+    },
+    "blurb": {
+      "en": "A child wants to read aloud, but everyone is busy. Practice family words and a question that comes back on each page.",
+      "zh-CN": "一个孩子想读书给家人听，可大家都很忙。跟着反复出现的问句练习家庭词汇。",
+      "zh-TW": "一個孩子想讀書給家人聽，可大家都很忙。跟著反覆出現的問句練習家庭詞彙。",
+      "es": "Un niño quiere leer en voz alta, pero todos están ocupados. Practica el vocabulario de la familia con una pregunta que se repite.",
+      "fr": "Un enfant veut lire à voix haute, mais tout le monde est occupé. Une question répétée aide à mémoriser les mots de la famille.",
+      "de": "Ein Kind möchte vorlesen, doch alle sind beschäftigt. Eine wiederkehrende Frage hilft beim Üben der Familienwörter.",
+      "it": "Un bambino vuole leggere ad alta voce, ma sono tutti occupati. La stessa domanda aiuta a imparare le parole della famiglia.",
+      "pt": "Uma criança quer ler em voz alta, mas todos estão ocupados. Uma pergunta que se repete ajuda a praticar o vocabulário da família.",
+      "ru": "Ребёнок хочет почитать вслух, но все заняты. Повторяющийся вопрос помогает запомнить слова о семье.",
+      "ja": "声に出して読みたい子ども。でも家族はみんな忙しそうです。繰り返される質問と一緒に、家族を表す言葉を練習できます。",
+      "ko": "한 아이가 소리 내어 책을 읽어 주고 싶지만 가족은 모두 바빠요. 반복되는 질문으로 가족을 가리키는 말을 연습해 보세요.",
+      "ar": "يريد طفل أن يقرأ بصوت عالٍ لكن الجميع مشغولون. يساعد السؤال المتكرر على تعلم كلمات العائلة.",
+      "hi": "एक बच्चा ज़ोर से पढ़ना चाहता है, पर सभी व्यस्त हैं। बार-बार आने वाले सवाल के साथ परिवार से जुड़े शब्द सीखें।",
+      "id": "Seorang anak ingin membaca nyaring, tetapi semua orang sibuk. Pertanyaan yang berulang membantu melatih kosakata keluarga.",
+      "vi": "Một em nhỏ muốn đọc thành tiếng nhưng ai cũng bận. Câu hỏi lặp lại giúp luyện từ vựng về gia đình.",
+      "tr": "Bir çocuk sesli okumak istiyor ama herkes meşgul. Tekrarlanan bir soruyla aile sözcüklerini çalışın."
+    }
+  },
   "meditaciones-del-quijote": {
     "title": {
       "en": "Meditations on Quixote",
@@ -493,6 +683,44 @@
       "tr": "Endülüs'te bir köyde yaşayan bir şair ile küçük, uysal eşeği hakkında altmış üç kısa düzyazı şiir."
     }
   },
+  "que-estas-haciendo": {
+    "title": {
+      "en": "What Are You Doing?",
+      "zh-CN": "你在做什么？",
+      "zh-TW": "你在做什麼？",
+      "es": "¿Qué estás haciendo?",
+      "fr": "Qu’est-ce que tu fais ?",
+      "de": "Was machst du gerade?",
+      "it": "Cosa stai facendo?",
+      "pt": "O que você está fazendo?",
+      "ru": "Что ты делаешь?",
+      "ja": "何をしているの？",
+      "ko": "무엇을 하고 있나요?",
+      "ar": "ماذا تفعل؟",
+      "hi": "तुम क्या कर रहे हो?",
+      "id": "Apa yang Sedang Kamu Lakukan?",
+      "vi": "Bạn đang làm gì?",
+      "tr": "Ne Yapıyorsun?"
+    },
+    "blurb": {
+      "en": "Children sing, wave and listen. Read one action at a time to practice saying what someone is doing right now.",
+      "zh-CN": "孩子们唱歌、挥手、倾听。每次读一个动作，练习怎么说某人正在做什么。",
+      "zh-TW": "孩子們唱歌、揮手、傾聽。每次讀一個動作，練習怎麼說某人正在做什麼。",
+      "es": "Unos niños cantan, se despiden y escuchan. Lee una acción a la vez y practica cómo decir lo que alguien está haciendo.",
+      "fr": "Des enfants chantent, font signe et écoutent. Lisez une action à la fois pour apprendre à dire ce que quelqu’un est en train de faire.",
+      "de": "Kinder singen, winken und hören zu. Übe mit jeder Handlung, wie man sagt, was jemand gerade tut.",
+      "it": "Alcuni bambini cantano, salutano e ascoltano. Leggi un’azione per volta per imparare a dire cosa sta facendo qualcuno.",
+      "pt": "As crianças cantam, acenam e escutam. Leia uma ação por vez para praticar como dizer o que alguém está fazendo.",
+      "ru": "Дети поют, машут рукой и слушают. По одному действию за раз учитесь говорить о том, что кто-то делает прямо сейчас.",
+      "ja": "子どもたちが歌ったり、手を振ったり、話を聞いたりします。一つずつ読みながら、今していることの言い方を練習しましょう。",
+      "ko": "아이들이 노래하고, 손을 흔들고, 귀 기울여요. 동작을 하나씩 읽으며 지금 무엇을 하고 있는지 말하는 법을 연습해 보세요.",
+      "ar": "يغني الأطفال ويلوحون ويستمعون. اقرأ فعلاً واحداً في كل مرة لتتدرّب على وصف ما يفعله شخص الآن.",
+      "hi": "बच्चे गाते हैं, हाथ हिलाते हैं और सुनते हैं। एक-एक काम पढ़कर कहना सीखें कि कोई अभी क्या कर रहा है।",
+      "id": "Anak-anak bernyanyi, melambaikan tangan, dan mendengarkan. Baca satu tindakan setiap kali untuk berlatih menyatakan apa yang sedang dilakukan seseorang.",
+      "vi": "Các em nhỏ hát, vẫy tay và lắng nghe. Đọc từng hành động để luyện cách nói ai đó đang làm gì.",
+      "tr": "Çocuklar şarkı söylüyor, el sallıyor ve dinliyor. Birinin şu anda ne yaptığını söylemeyi her seferinde bir eylemle çalışın."
+    }
+  },
   "raton-perez": {
     "title": {
       "en": "Pérez the Mouse",
@@ -567,6 +795,82 @@
       "id": "Cerita pendek dan puisi dari penulis Spanyol terkenal seperti Echegaray, Trueba, Pardo Bazán, dan Alarcón, dipilih untuk pelajar.",
       "vi": "Truyện ngắn và thơ của các nhà văn Tây Ban Nha nổi tiếng như Echegaray, Trueba, Pardo Bazán và Alarcón, chọn cho người học.",
       "tr": "Echegaray, Trueba, Pardo Bazán ve Alarcón gibi tanınmış İspanyol yazarların kısa hikâyeleri ve şiirleri; öğrenenler için seçildi."
+    }
+  },
+  "tingi-y-las-vacas": {
+    "title": {
+      "en": "Tingi and the Cows",
+      "zh-CN": "廷吉和奶牛",
+      "zh-TW": "廷吉和乳牛",
+      "es": "Tingi y las vacas",
+      "fr": "Tingi et les vaches",
+      "de": "Tingi und die Kühe",
+      "it": "Tingi e le mucche",
+      "pt": "Tingi e as vacas",
+      "ru": "Тинги и коровы",
+      "ja": "ティンギと牛たち",
+      "ko": "팅기와 소들",
+      "ar": "تينغي والأبقار",
+      "hi": "टिंगी और गायें",
+      "id": "Tingi dan Sapi-Sapi",
+      "vi": "Tingi và những con bò",
+      "tr": "Tingi ve İnekler"
+    },
+    "blurb": {
+      "en": "Tingi and his grandmother hide after soldiers take their cows. Follow the short sequence of events and practice reading the past tense.",
+      "zh-CN": "士兵牵走奶牛后，廷吉和祖母躲了起来。跟着一连串简短的事件练习阅读过去时。",
+      "zh-TW": "士兵牽走乳牛後，廷吉和祖母躲了起來。跟著一連串簡短的事件練習閱讀過去式。",
+      "es": "Tingi y su abuela se esconden cuando unos soldados se llevan sus vacas. Sigue la breve sucesión de hechos para practicar los tiempos del pasado.",
+      "fr": "Tingi et sa grand-mère se cachent après le vol de leurs vaches par des soldats. Suivez cette courte suite d’événements et entraînez-vous à lire au passé.",
+      "de": "Tingi und seine Großmutter verstecken sich, nachdem Soldaten ihre Kühe weggebracht haben. Die kurze Handlung hilft beim Lesen in der Vergangenheit.",
+      "it": "Tingi e sua nonna si nascondono dopo che i soldati portano via le loro mucche. Segui i pochi eventi per esercitarti a leggere i tempi passati.",
+      "pt": "Tingi e sua avó se escondem depois que soldados levam suas vacas. Acompanhe a sequência curta de acontecimentos para praticar os tempos do passado.",
+      "ru": "Тинги и его бабушка прячутся после того, как солдаты уводят их коров. Короткая цепочка событий помогает читать глаголы в прошедшем времени.",
+      "ja": "兵士たちに牛を連れ去られ、ティンギとおばあさんは身を隠します。短い話を追いながら過去形を読む練習ができます。",
+      "ko": "군인들이 소를 데려가자 팅기와 할머니는 숨었어요. 짧게 이어지는 사건을 읽으며 과거 시제를 연습해 보세요.",
+      "ar": "يختبئ تينغي وجدته بعد أن يأخذ الجنود أبقارهما. تابع الأحداث القصيرة وتدرّب على قراءة أفعال الماضي.",
+      "hi": "सैनिक गायों को ले जाते हैं, तो टिंगी और उसकी दादी छिप जाते हैं। घटनाओं का छोटा क्रम पढ़कर भूतकाल का अभ्यास करें।",
+      "id": "Tingi dan neneknya bersembunyi setelah tentara membawa pergi sapi mereka. Ikuti rangkaian kejadian singkat untuk berlatih membaca bentuk lampau.",
+      "vi": "Tingi và bà trốn đi sau khi lính dắt mất đàn bò. Theo dõi các sự việc ngắn để luyện đọc thì quá khứ.",
+      "tr": "Askerler ineklerini götürünce Tingi ve büyükannesi saklanır. Olayların kısa sırasını izleyerek geçmiş zaman okumasını çalışın."
+    }
+  },
+  "tom-el-vendedor-de-platanos": {
+    "title": {
+      "en": "Tom the Banana Seller",
+      "zh-CN": "卖香蕉的汤姆",
+      "zh-TW": "賣香蕉的湯姆",
+      "es": "Tom, el vendedor de plátanos",
+      "fr": "Tom le vendeur de bananes",
+      "de": "Tom, der Bananenverkäufer",
+      "it": "Tom, il venditore di banane",
+      "pt": "Tom, o vendedor de bananas",
+      "ru": "Том, продавец бананов",
+      "ja": "バナナ売りのトム",
+      "ko": "바나나를 파는 톰",
+      "ar": "توم بائع الموز",
+      "hi": "केले बेचने वाला टॉम",
+      "id": "Tom si Penjual Pisang",
+      "vi": "Tom, người bán chuối",
+      "tr": "Muz Satıcısı Tom"
+    },
+    "blurb": {
+      "en": "Tom tries to sell a basket of bananas at the market. Learn everyday words for shopping and food through his exchanges with customers.",
+      "zh-CN": "汤姆带着一篮香蕉去市场卖。通过他与顾客的交流学习买卖和食物词汇。",
+      "zh-TW": "湯姆帶著一籃香蕉去市場賣。透過他與顧客的對話學習買賣和食物詞彙。",
+      "es": "Tom intenta vender una cesta de plátanos en el mercado. Sus conversaciones con los clientes presentan vocabulario cotidiano de compras y alimentos.",
+      "fr": "Tom essaie de vendre un panier de bananes au marché. Ses échanges avec les clients font découvrir des mots utiles pour faire ses courses.",
+      "de": "Tom versucht, einen Korb Bananen auf dem Markt zu verkaufen. In seinen Gesprächen lernt man Wörter rund ums Einkaufen und Essen.",
+      "it": "Tom prova a vendere un cesto di banane al mercato. Dai suoi scambi con i clienti impari parole comuni per fare la spesa e parlare di cibo.",
+      "pt": "Tom tenta vender uma cesta de bananas no mercado. Nas conversas com os clientes, você aprende palavras do dia a dia sobre compras e comida.",
+      "ru": "Том пытается продать корзину бананов на рынке. Его разговоры с покупателями помогают освоить повседневные слова о покупках и еде.",
+      "ja": "トムが市場でかごいっぱいのバナナを売ろうとします。お客さんとのやりとりから、買い物や食べ物の言葉を覚えられます。",
+      "ko": "톰이 시장에서 바나나 한 바구니를 팔려고 해요. 손님과 나누는 대화를 통해 장보기와 음식에 관한 일상 표현을 익힐 수 있어요.",
+      "ar": "يحاول توم بيع سلة من الموز في السوق. تعلّم كلمات التسوق والطعام من حواراته مع الزبائن.",
+      "hi": "टॉम बाज़ार में एक टोकरी केले बेचने की कोशिश करता है। ग्राहकों से उसकी बातचीत में खरीदारी और खाने-पीने के शब्द सीखें।",
+      "id": "Tom berusaha menjual sekeranjang pisang di pasar. Pelajari kosakata belanja dan makanan dari percakapannya dengan pelanggan.",
+      "vi": "Tom cố bán một giỏ chuối ở chợ. Học từ vựng về mua sắm và thực phẩm qua lời trao đổi với khách hàng.",
+      "tr": "Tom pazarda bir sepet muz satmaya çalışır. Müşterilerle konuşmalarından alışveriş ve yiyeceklerle ilgili günlük sözcükleri öğrenin."
     }
   },
   "vida-de-don-quijote-y-sancho": {

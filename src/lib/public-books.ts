@@ -128,7 +128,12 @@ export function findPublicBook(language: string, slug: string): PublicBook | nul
 
 function firstLessonText(book: PublicBook): string {
   try {
-    return fs.readFileSync(path.join(libraryDir(book.language), book.slug, book.firstFile), 'utf8');
+    const text = fs.readFileSync(
+      path.join(libraryDir(book.language), book.slug, book.firstFile),
+      'utf8',
+    );
+    // The reader keeps the Markdown credits in copied lessons. Public pages render the source below the text.
+    return text.split(/^<!-- attribution -->[ \t]*$/m, 1)[0];
   } catch {
     return '';
   }

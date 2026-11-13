@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { getLocale, getTranslations } from 'next-intl/server';
 import JsonLd from '@/components/JsonLd';
 import { registerHrefForBook } from '@/lib/pending-book';
+import BookSource from '../../BookSource';
 import { LegalShell, H2 } from '@/components/LegalLinks/shell';
 import {
   AUTHOR_PAGE_MIN_BOOKS,
@@ -189,20 +190,7 @@ export default async function BookPage({ params }: Props) {
       </p>
 
       <p className="text-xs text-muted-foreground">
-        {t.rich('source', {
-          source: book.source.name,
-          link: (chunks) => (
-            <a
-              className="underline"
-              href={book.source.url}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {chunks}
-            </a>
-          ),
-          license: book.source.license,
-        })}
+        <BookSource source={book.source} />
         {book.cover?.credit && (
           <>
             {' '}

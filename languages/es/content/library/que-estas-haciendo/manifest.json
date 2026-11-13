@@ -1,0 +1,18 @@
+{
+  "title": "¿Qué estás haciendo?",
+  "author": "Nina Orange",
+  "level": "A1",
+  "category": "children",
+  "wordCount": 17,
+  "source": {
+    "name": "Storybooks Canada, Spanish edition",
+    "url": "https://storybookscanada.ca/stories/es/0008/",
+    "license": "CC BY 3.0. Spanish translation by dohliam. Text-only edition with formatting changes."
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "¿Qué estás haciendo?"
+    }
+  ]
+}

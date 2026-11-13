@@ -1,0 +1,18 @@
+{
+  "title": "하마는 왜 털이 없을까요?",
+  "author": "Basilio Gimo, David Ker",
+  "level": "A2",
+  "category": "children",
+  "wordCount": 165,
+  "source": {
+    "name": "Storybooks Canada (Korean edition of African Storybook)",
+    "url": "https://www.storybookscanada.ca/stories/ko/0111/",
+    "license": "CC BY 3.0. Korean translation by Michelle Kim. Text-only edition with formatting changes."
+  },
+  "lessons": [
+    {
+      "file": "01.md",
+      "title": "1. 하마는 왜 털이 없을까요?"
+    }
+  ]
+}
