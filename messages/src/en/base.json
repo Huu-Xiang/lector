@@ -6,6 +6,10 @@
     "library": "Go to library",
     "invalid": "This link cannot be imported."
   },
+  "betaNotice": {
+    "message": "This test site runs an unreleased version.",
+    "productionLink": "Official site: readfox.app"
+  },
   "common": {
     "appName": "Readfox",
     "tagline": "Read your way to a new language"

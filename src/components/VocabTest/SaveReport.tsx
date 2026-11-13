@@ -38,8 +38,10 @@ export function ReportAuthChoices({ returnPath }: { returnPath: string }) {
 
 export default function SaveReport({
   createSnapshot,
+  secondary = false,
 }: {
   createSnapshot: () => VocabReportSnapshot;
+  secondary?: boolean;
 }) {
   const t = useTranslations('vocabTest.report');
   const { data: session, isPending, error: sessionError } = authClient.useSession();
@@ -81,7 +83,7 @@ export default function SaveReport({
   }
 
   return (
-    <div className="space-y-3 rounded-xl border border-border bg-card p-4">
+    <div className="space-y-2">
       {saved && saved.userId === user?.id ? (
         <>
           <p className="font-medium" data-testid="vocab-report-saved">
@@ -95,7 +97,7 @@ export default function SaveReport({
           {!authReturn && (
             <Button
               type="button"
-              size="lg"
+              variant={secondary ? 'outline' : 'default'}
               className="min-h-11"
               onClick={() => void save()}
               disabled={isPending || busy}

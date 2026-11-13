@@ -153,10 +153,20 @@ describe('question order', { timeout: 60_000 }, () => {
     });
   });
 
-  it('starts with easy words and never repeats a word', () => {
+  it('starts with three mid-frequency words and never repeats a word', () => {
     const answers = honest(3000, 60);
-    expect(answers.slice(0, 4).every((a) => a.item.band === 0)).toBe(true);
+    expect(answers.slice(0, 3).every(({ item }) => item.rank >= 2001 && item.rank <= 5000)).toBe(
+      true,
+    );
     expect(new Set(answers.map((a) => a.item.id)).size).toBe(answers.length);
+  });
+
+  it('samples different nearby words for the same answers with different seeds', () => {
+    const answers = honest(3000, 4);
+    const target = nextTarget(answers, data, seededRng(5));
+    const picks = Array.from({ length: 20 }, (_, seed) => nextItem(answers, data, seed)!);
+    expect(new Set(picks.map(({ word }) => word)).size).toBeGreaterThan(1);
+    expect(picks.every(({ rank }) => Math.abs(Math.log(rank) - target) < 0.15)).toBe(true);
   });
 
   it('Covers AE4: a learner who knows the top 2,000 words gets later words near rank 2,000', () => {
@@ -280,9 +290,9 @@ describe('the real test data', { timeout: 120_000 }, () => {
 
 // Each answer refits the learner model, so long simulated runs need more than the default 5 s.
 describe('estimateFromAnswers', { timeout: 60_000 }, () => {
-  it('waits for the first few answers', () => {
+  it('can estimate after the first answer', () => {
     expect(estimateFromAnswers([], data.bands)).toBeNull();
-    expect(estimateFromAnswers(honest(3000, 5), data.bands)).toBeNull();
+    expect(estimateFromAnswers(honest(3000, 1), data.bands)?.answered).toBe(1);
   });
 
   it('lands near the true size, inside its range, and narrows with more answers', () => {

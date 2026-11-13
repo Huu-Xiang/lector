@@ -45,8 +45,10 @@ async function finishKnowingNothing(page: Page) {
   await expect(page.getByTestId('vocab-option')).toHaveCount(4);
   await expect(page.getByTestId('vocab-option').last()).toHaveText(/None of these/);
   await expect(page.getByTestId('vocab-finish')).toBeDisabled();
-  await answerAll(page, 'vocab-not-sure', 20);
+  await answerAll(page, 'vocab-not-sure', 8);
   await expect(page.getByTestId('vocab-finish')).toBeEnabled();
+  await expect(page.getByTestId('vocab-result-progress')).toHaveCount(0);
+  await expect(page.getByTestId('vocab-result-ready')).toHaveText('Result available');
   await page.getByTestId('vocab-finish').click();
   await expect(page.getByTestId('vocab-result')).toBeVisible();
 }
@@ -67,7 +69,7 @@ test.describe('vocabulary test', () => {
     await expect(page.getByTestId('vocab-estimate')).toContainText('0');
     await expect(page.getByTestId('vocab-book').first()).toHaveAttribute('href', /^\/books\/en\//);
     await expect(page.getByTestId('vocab-continue-setup')).toHaveCount(0);
-    await expect(page.getByTestId('vocab-precision')).toContainText('20 words answered');
+    await expect(page.getByTestId('vocab-precision')).toContainText('8 words answered');
     await expect(page.getByTestId('vocab-missed')).toBeVisible();
 
     await page.getByTestId('vocab-retake').click();
@@ -97,9 +99,10 @@ test.describe('vocabulary test', () => {
       await expect(page.getByTestId('vocab-feedback')).toContainText(/[а-яё]/i);
       await expect(page.getByTestId('vocab-announcement')).toContainText(/[а-яё]/i);
       await page.getByTestId('vocab-word').click();
-      await answerAll(page, 'vocab-not-sure', 19);
+      await answerAll(page, 'vocab-not-sure', 7);
       await page.getByTestId('vocab-finish').click();
       await expect(page.getByTestId('vocab-result')).toBeVisible();
+      await page.getByTestId('vocab-missed').locator('summary').click();
       await expect(page.getByTestId('vocab-missed').locator('[lang="ru"]').first()).toHaveText(
         /[а-яё]/i,
       );
@@ -131,12 +134,17 @@ test.describe('vocabulary test', () => {
     await expect(options.nth(answer)).toHaveAttribute('data-state', 'unsure');
     await expect(page.getByTestId('vocab-feedback')).toContainText('The right answer is marked');
     await expect(page.getByTestId('vocab-announcement')).toContainText(first ?? '');
+    await expect(page.getByTestId('vocab-estimate-change')).toContainText('First estimate');
     await expect(page.getByTestId('vocab-word')).not.toHaveText(first ?? '', { timeout: 4000 });
     await expect(page.getByTestId('vocab-answered')).toHaveText('1 answered');
+    await expect(page.getByTestId('vocab-result-progress')).toHaveAttribute('aria-valuenow', '1');
+    await expect(page.getByTestId('vocab-live-estimate')).toContainText('±');
+    await expect(page.getByTestId('vocab-option').locator('[lang=en]')).toHaveCount(0);
 
     // Picking option 1: it is marked right, or wrong with the right one marked too.
     await expect(card).toHaveAttribute('data-state', 'asking');
     await options.first().click();
+    await expect(page.getByTestId('vocab-estimate-change')).toContainText('Estimate');
     const right = Number(await card.getAttribute('data-answer'));
     if (right === 0) {
       await expect(options.first()).toHaveAttribute('data-state', 'right');
@@ -250,11 +258,8 @@ test.describe('vocabulary test', () => {
     const saved = await page.evaluate(() => localStorage.getItem('readfox-vocab-result'));
     const result = JSON.parse(saved ?? 'null') as { estimate: number; level: string };
     expect(result.level).toBe('A1');
-    expect(result.estimate).toBeLessThan(500);
-
-    // Twenty "not sure" answers already pin the result down, so there is no "answer more".
-    await expect(page.getByTestId('vocab-precision')).toContainText('high');
-    await expect(page.getByTestId('vocab-continue')).toHaveCount(0);
+    expect(result.estimate).toBeLessThan(1500);
+    await expect(page.getByTestId('vocab-precision')).toContainText('8 words answered');
     await context.close();
   });
 
@@ -588,7 +593,12 @@ test.describe('vocabulary test', () => {
       '/vocab-test',
     );
     await page.goto('/vocab-test');
-    await expect(page.getByTestId('vocab-faq').locator('h3')).toHaveCount(4);
+    const faq = page.getByTestId('vocab-faq').locator('details');
+    await expect(faq).toHaveCount(4);
+    await expect(faq.first().locator('p')).toBeHidden();
+    await faq.first().locator('summary').click();
+    await expect(faq.first().locator('p')).toContainText('first three words');
+    await expect(faq.first().locator('p')).toBeVisible();
     const structured = await page.locator('script[type="application/ld+json"]').allTextContents();
     expect(structured.join('')).toContain('"FAQPage"');
     expect(structured.join('')).toContain('"WebApplication"');

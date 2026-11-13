@@ -6,6 +6,10 @@
     "library": "回到書庫",
     "invalid": "這個連結無法匯入。"
   },
+  "betaNotice": {
+    "message": "本網站僅供測試，目前版本尚未正式發布。",
+    "productionLink": "正式版見 readfox.app"
+  },
   "common": {
     "appName": "Readfox",
     "tagline": "用閱讀學會一門新語言"

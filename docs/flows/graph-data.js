@@ -536,6 +536,8 @@
   N("file:chat-widget", "file", "ChatWidget", { path: "src/components/ChatWidget/index.tsx", domain: "tutor" });
   N("file:cloze-feedback", "file", "ClozeFeedback", { path: "src/components/ClozeFeedback/index.tsx", domain: "tutor" });
   N("file:vocab-test-page", "file", "Vocabulary test", { path: "src/app/vocab-test/page.tsx", domain: "vocabulary" });
+  N("file:vocab-test-quiz", "file", "Vocabulary quiz and progress", { path: "src/components/VocabTest/index.tsx", domain: "vocabulary" });
+  N("file:vocab-test-sampling", "file", "Adaptive vocabulary sampling", { path: "src/lib/vocab-test.ts", domain: "vocabulary" });
   N("file:route-vocab-test-reports", "file", "Vocabulary test reports API", { path: "api/src/routes/vocab-test-reports.ts", domain: "vocabulary" });
   N("file:vocab-test-delivery", "file", "Vocabulary report email", { path: "api/src/lib/vocab-test-report-delivery.ts", domain: "vocabulary" });
   N("file:vocab-page", "file", "Vocab page", { path: "src/app/vocab/page.tsx", domain: "vocabulary" });
@@ -1163,6 +1165,8 @@
   edge("file:translation-drawer", "fn:applyReaderWordState", "calls");
 
   edge("flow:vocab-test-report", "file:vocab-test-page", "starts");
+  edge("file:vocab-test-page", "file:vocab-test-quiz", "uses");
+  edge("file:vocab-test-quiz", "file:vocab-test-sampling", "calls");
   edge("file:vocab-test-page", "file:route-vocab-test-reports", "calls");
   edge("file:route-vocab-test-reports", "file:vocab-test-delivery", "calls");
   edge("file:vocab-test-delivery", "file:email", "calls");

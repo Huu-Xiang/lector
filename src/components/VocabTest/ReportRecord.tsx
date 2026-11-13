@@ -7,13 +7,15 @@ import { Button } from '@/components/ui/button';
 import { retryVocabReport } from '@/lib/vocab-report-client';
 import type { VocabReport, VocabReportSnapshot } from '../../../languages/en/vocab-report';
 
-type Estimate = Pick<VocabReportSnapshot, 'capped' | 'low' | 'high' | 'estimate' | 'margin'>;
+type Estimate = Pick<VocabReportSnapshot, 'capped' | 'low' | 'high'>;
 
 export function ReportEstimate({ score }: { score: Estimate }) {
   const t = useTranslations('vocabTest');
   if (score.capped) return t('estimateCapped');
-  if (score.low === 0) return t('estimateRange', { high: score.high });
-  return t('estimate', { count: score.estimate, margin: score.margin });
+  return t('estimate', {
+    count: (score.low + score.high) / 2,
+    margin: (score.high - score.low) / 2,
+  });
 }
 
 export function ReportStatus({ report, userId }: { report: VocabReport; userId: string }) {

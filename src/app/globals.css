@@ -465,6 +465,21 @@
     stroke: var(--gold);
   }
 }
+@keyframes vocab-answer-float {
+  from {
+    transform: translateY(0.4rem) scale(0.88);
+    opacity: 0.55;
+  }
+  45% {
+    transform: translateY(-0.15rem) scale(1.05);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
 @keyframes mastery-step {
   0%,
   12% {

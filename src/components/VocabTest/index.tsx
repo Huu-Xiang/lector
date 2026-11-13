@@ -33,12 +33,6 @@ import { ReportEstimate, ReportHistoryLink } from './ReportRecord';
 import { VOCAB_REPORT_LOCALES, type VocabReportSnapshot } from '../../../languages/en/vocab-report';
 import type { VocabTestBook } from '@/lib/vocab-test-data';
 
-/** The live bar runs to the end of the hardest band on a square-root scale, so small counts stay readable. */
-const SCALE_MAX = 40000;
-const SCALE_MARKS = [0, 2500, 10000, 22500, 40000];
-const scalePosition = (n: number) =>
-  `${Math.sqrt(Math.min(Math.max(n, 0), SCALE_MAX) / SCALE_MAX) * 100}%`;
-
 /** How long feedback stays before the next word, and how long a new word ignores input. */
 const RIGHT_PAUSE_MS = 600;
 const OTHER_PAUSE_MS = 1500;
@@ -128,9 +122,17 @@ const OPTION_STYLES: Record<OptionState, string> = {
   other: 'opacity-60',
 };
 
-function MeaningRows({ rows, russian }: { rows: readonly SenseRow[]; russian: boolean }) {
+function MeaningRows({
+  rows,
+  russian,
+  showEnglish = true,
+}: {
+  rows: readonly SenseRow[];
+  russian: boolean;
+  showEnglish?: boolean;
+}) {
   return (
-    <span className="grid min-w-0 flex-1 grid-cols-[2.75rem_1fr] gap-x-1 gap-y-1.5">
+    <span className="grid min-w-0 flex-1 grid-cols-[auto_minmax(0,1fr)] gap-x-2 gap-y-1.5">
       {rows.map((row) => (
         <span key={row.p} className="contents">
           <span className="pt-0.5 text-sm text-muted-foreground">{partOfSpeech(row, russian)}</span>
@@ -138,7 +140,7 @@ function MeaningRows({ rows, russian }: { rows: readonly SenseRow[]; russian: bo
             <span lang={russian ? 'ru' : 'zh-CN'} className="block font-medium">
               {glossText(row, russian)}
             </span>
-            {!russian && (
+            {showEnglish && !russian && (
               <span lang="en" className="block text-sm leading-snug text-muted-foreground">
                 {row.en}
               </span>
@@ -170,7 +172,8 @@ export default function VocabTest({
   const russian = meta.answerLanguage === 'ru';
   const { data: session } = authClient.useSession();
   // Without cloud accounts every visitor is the one local user, whose settings always save.
-  const cloud = useLectorMode() === 'cloud';
+  const mode = useLectorMode();
+  const cloud = mode === 'cloud';
   const hasAccount = !cloud || Boolean(session);
   const [step, setStep] = useState<Step>('intro');
   const [answers, setAnswers] = useState<Answer[]>([]);
@@ -179,6 +182,7 @@ export default function VocabTest({
   /** The choice for the current word once answered; undefined while asking. */
   const [chosen, setChosen] = useState<number | null | undefined>(undefined);
   const [announcement, setAnnouncement] = useState('');
+  const [estimateBeforeAnswer, setEstimateBeforeAnswer] = useState<number | null>(null);
   const [data, setData] = useState<VocabTestData | null>(null);
   const [loading, setLoading] = useState<'idle' | 'loading' | 'error'>('idle');
   const seedRef = useRef(1);
@@ -325,6 +329,7 @@ export default function VocabTest({
   const answer = useCallback(
     (choice: number | null) => {
       if (phase !== 'asking' || !current) return;
+      setEstimateBeforeAnswer(live ? (live.low + live.high) / 2 : null);
       const all = [...answersRef.current, { item: current, choice }];
       answersRef.current = all;
       setAnswers(all);
@@ -343,7 +348,7 @@ export default function VocabTest({
         choice === current.answer ? RIGHT_PAUSE_MS : OTHER_PAUSE_MS,
       );
     },
-    [phase, current, t, russian],
+    [phase, current, live, t, russian],
   );
 
   function keepGoing() {
@@ -385,28 +390,34 @@ export default function VocabTest({
 
   if (step === 'intro') {
     return (
-      <section className="space-y-5" data-testid="vocab-intro">
-        <p className="text-base">{t('intro')}</p>
+      <section
+        className="space-y-5 rounded-2xl border border-border bg-card p-5 sm:p-8"
+        data-testid="vocab-intro"
+      >
+        <p className="max-w-prose text-lg leading-relaxed text-foreground">{t('introLead')}</p>
+        <p className="text-sm text-muted-foreground">{t('introFacts')}</p>
         {lastResult && (
           <p className="text-base font-medium" data-testid="vocab-last-result">
             {t('lastResult', { count: lastResult.estimate })}
           </p>
         )}
-        <Button
-          size="lg"
-          onClick={begin}
-          disabled={loading === 'loading'}
-          aria-busy={loading === 'loading'}
-          data-testid="vocab-start"
-          className="min-h-11"
-        >
-          {loading === 'loading'
-            ? t('loading')
-            : loading === 'error'
-              ? t('retryStart')
-              : t('start')}
-        </Button>
-        {cloud && session?.user.emailVerified && <ReportHistoryLink />}
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
+          <Button
+            size="lg"
+            onClick={begin}
+            disabled={mode === 'unknown' || loading === 'loading'}
+            aria-busy={loading === 'loading'}
+            data-testid="vocab-start"
+            className="min-h-11"
+          >
+            {loading === 'loading'
+              ? t('loading')
+              : loading === 'error'
+                ? t('retryStart')
+                : t('start')}
+          </Button>
+          {cloud && session?.user.emailVerified && <ReportHistoryLink />}
+        </div>
         {loading === 'error' && (
           <p role="alert" className="text-sm text-destructive" data-testid="vocab-load-error">
             {t('loadError')}
@@ -424,6 +435,9 @@ export default function VocabTest({
     const answered = chosen !== undefined;
     const feedbackText =
       current && chosen !== undefined ? t(`feedback${outcome(chosen, current)}`) : '';
+    const midpoint = live ? (live.low + live.high) / 2 : null;
+    const estimateChange =
+      midpoint !== null && estimateBeforeAnswer !== null ? midpoint - estimateBeforeAnswer : null;
     const options = current ? [...current.meanings.map((rows) => ({ rows })), { rows: null }] : [];
     return (
       <section
@@ -441,11 +455,7 @@ export default function VocabTest({
         <h2 ref={headingRef} tabIndex={-1} className="sr-only">
           {t('testHeading')}
         </h2>
-        <LivePanel
-          live={live}
-          waiting={FIRST_ESTIMATE_AFTER - answers.length}
-          answered={answers.length}
-        />
+        <LivePanel live={live} waiting={FIRST_ESTIMATE_AFTER - answers.length} answers={answers} />
         <p className="sr-only" aria-live="polite" data-testid="vocab-announcement">
           {announcement}
         </p>
@@ -457,11 +467,11 @@ export default function VocabTest({
             data-testid="vocab-card"
             data-state={phase}
             data-answer={answered ? String(current.answer) : undefined}
-            className="rounded-2xl border border-border bg-card p-4 outline-none sm:p-6"
+            className="px-1 pt-3 outline-none sm:px-3 sm:pt-6"
           >
             <p
               lang="en"
-              className="text-center text-3xl font-bold tracking-tight break-words sm:text-4xl"
+              className="text-center text-4xl font-bold tracking-tight break-words sm:text-5xl"
               data-testid="vocab-word"
             >
               {current.word}
@@ -477,7 +487,7 @@ export default function VocabTest({
                       size="lg"
                       aria-disabled={phase !== 'asking'}
                       className={cn(
-                        'h-auto min-h-12 w-full items-start justify-start gap-3 px-3 py-3 text-left text-base font-normal whitespace-normal transition-colors motion-reduce:transition-none sm:px-4',
+                        'h-auto min-h-12 w-full items-start justify-start gap-2.5 px-3 py-2 text-left text-base font-normal whitespace-normal transition-colors motion-reduce:transition-none sm:px-4',
                         option.rows === null && 'items-center',
                         OPTION_STYLES[state],
                       )}
@@ -486,17 +496,17 @@ export default function VocabTest({
                       data-state={state}
                     >
                       <kbd
-                        className="flex size-6 shrink-0 items-center justify-center rounded-md border border-border bg-background font-sans text-xs font-semibold text-muted-foreground"
+                        className="flex size-6 shrink-0 items-center justify-center border-r border-border pr-2 font-sans text-xs font-semibold text-muted-foreground"
                         aria-hidden="true"
                       >
                         {index + 1}
                       </kbd>
                       {option.rows ? (
-                        <MeaningRows rows={option.rows} russian={russian} />
+                        <MeaningRows rows={option.rows} russian={russian} showEnglish={false} />
                       ) : (
                         <span className="flex-1 font-medium">{t('noneOfAbove')}</span>
                       )}
-                      <span className="ml-auto flex size-5 shrink-0 items-center">
+                      <span className="ml-auto flex size-4 shrink-0 items-center">
                         <OptionIcon state={state} />
                       </span>
                     </Button>
@@ -509,7 +519,7 @@ export default function VocabTest({
               size="lg"
               aria-disabled={phase !== 'asking'}
               className={cn(
-                'mt-2 min-h-12 w-full gap-2 border-dashed text-base text-muted-foreground transition-colors motion-reduce:transition-none',
+                'mt-2 min-h-11 w-full gap-2 border-border bg-muted/50 text-base font-semibold transition-colors motion-reduce:transition-none',
                 answered &&
                   chosen === null &&
                   'border-2 border-answer-unsure-border! bg-answer-unsure!',
@@ -528,6 +538,27 @@ export default function VocabTest({
                 <>
                   <p className="font-semibold">
                     {feedbackText}
+                    {midpoint !== null && (
+                      <span
+                        className={cn(
+                          'ml-2 inline-block rounded-md bg-muted px-2 py-0.5 font-bold whitespace-nowrap tabular-nums motion-safe:animate-[vocab-answer-float_480ms_ease-out_both]',
+                          estimateChange === null || estimateChange === 0
+                            ? 'text-foreground'
+                            : estimateChange > 0
+                              ? 'text-answer-icon-right'
+                              : 'text-answer-icon-wrong',
+                        )}
+                        data-testid="vocab-estimate-change"
+                      >
+                        {estimateChange === null
+                          ? t('initialEstimate', { count: midpoint })
+                          : t('estimateChange', {
+                              change: new Intl.NumberFormat(locale, {
+                                signDisplay: 'exceptZero',
+                              }).format(estimateChange),
+                            })}
+                      </span>
+                    )}
                     <span className="ml-2 font-normal text-muted-foreground">{t('skipHint')}</span>
                   </p>
                   {current.answer === NONE_OF_ABOVE && (
@@ -557,8 +588,8 @@ export default function VocabTest({
         <div className="flex justify-end">
           <Button
             size="lg"
-            variant={live?.precision === 'high' ? 'default' : 'outline'}
-            className="min-h-11"
+            variant={canFinish ? 'default' : 'outline'}
+            className="min-h-11 w-full sm:w-auto"
             disabled={!canFinish}
             onClick={() => finish(answersRef.current)}
             data-testid="vocab-finish"
@@ -578,6 +609,7 @@ export default function VocabTest({
   const fromSetup = new URLSearchParams(window.location.search).get('from') === 'setup';
   const recommended = recommendBooks(books, score.estimate, score.level);
   const missed = missedWords(answers, score.estimate, meta.bands);
+  const canContinue = score.precision !== 'high' && current !== null;
   const createSnapshot = (): VocabReportSnapshot => {
     const version = resultVersion.current ?? {
       answered: answers.length,
@@ -599,8 +631,8 @@ export default function VocabTest({
   };
 
   return (
-    <section className="space-y-6" data-testid="vocab-result">
-      <div className="rounded-2xl border border-border bg-card p-5 text-center">
+    <section className="space-y-4 sm:space-y-5" data-testid="vocab-result">
+      <div className="space-y-3 rounded-xl border border-border bg-card p-4 sm:p-5">
         <h2
           ref={headingRef}
           tabIndex={-1}
@@ -609,24 +641,63 @@ export default function VocabTest({
           {t('resultHeading')}
         </h2>
         <p
-          className="mt-2 text-3xl font-bold tracking-tight text-balance sm:text-4xl"
+          className="text-2xl leading-tight font-bold tracking-tight text-balance sm:text-3xl"
           data-testid="vocab-estimate"
         >
           <ReportEstimate score={score} />
         </p>
-        <p className="mt-1 text-muted-foreground" data-testid="vocab-precision">
-          {t('precisionResult', {
-            level: t(`precisionLevel.${score.precision}`),
-            count: score.answered,
-          })}
-        </p>
-        <p className="mt-3 text-xl font-semibold" data-testid="vocab-level">
-          {t('level', { level: score.level })}
-        </p>
-        <p className="mt-3 text-muted-foreground">{t('explain')}</p>
+        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 text-sm">
+          <p className="font-semibold" data-testid="vocab-level">
+            {t('level', { level: score.level })}
+          </p>
+          <p className="text-muted-foreground" data-testid="vocab-precision">
+            {t('precisionResult', {
+              level: t(`precisionLevel.${score.precision}`),
+              count: score.answered,
+            })}
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-2 border-t border-border pt-3">
+          {fromSetup && (
+            <Link
+              href="/setup"
+              onClick={() => writeVocabResult(score.estimate, score.level)}
+              data-testid="vocab-continue-setup"
+              className={cn(buttonVariants({ size: 'lg' }), 'min-h-11')}
+            >
+              {t('useLevel', { level: score.level })}
+            </Link>
+          )}
+          {canContinue && (
+            <Button
+              variant={fromSetup ? 'outline' : 'default'}
+              size="default"
+              className="min-h-11"
+              onClick={keepGoing}
+              data-testid="vocab-continue"
+            >
+              {t('continue')}
+            </Button>
+          )}
+          <Button
+            variant="ghost"
+            size="default"
+            className="min-h-11"
+            onClick={begin}
+            data-testid="vocab-retake"
+          >
+            {t('retake')}
+          </Button>
+        </div>
       </div>
 
-      {cloud && <SaveReport key={answers.length} createSnapshot={createSnapshot} />}
+      {cloud && (
+        <SaveReport
+          key={answers.length}
+          createSnapshot={createSnapshot}
+          secondary={canContinue || fromSetup}
+        />
+      )}
       {hasAccount && !fromSetup && <SaveLevel level={score.level} />}
 
       {score.guessing && (
@@ -641,10 +712,13 @@ export default function VocabTest({
       )}
 
       {missed.length > 0 && (
-        <div data-testid="vocab-missed">
-          <h3 className="text-lg font-semibold">{t('missedTitle')}</h3>
-          <p className="text-muted-foreground">{t('missedHint')}</p>
-          <ul className="mt-2 flex flex-wrap gap-2">
+        <details data-testid="vocab-missed" className="border-b border-border">
+          <summary className="min-h-11 cursor-pointer py-2 text-sm font-semibold focus-visible:outline-2 focus-visible:outline-ring">
+            {t('missedTitle')}{' '}
+            <span className="font-normal text-muted-foreground">({missed.length})</span>
+          </summary>
+          <p className="text-sm text-muted-foreground">{t('missedHint')}</p>
+          <ul className="mt-2 mb-3 flex flex-wrap gap-2">
             {missed.map((item) => (
               <li key={item.id} className="rounded-lg border border-border bg-card px-3 py-1.5">
                 <span lang="en" className="font-medium">
@@ -663,13 +737,12 @@ export default function VocabTest({
               </li>
             ))}
           </ul>
-        </div>
+        </details>
       )}
 
       {recommended.length > 0 && (
         <div data-testid="vocab-books">
           <h3 className="text-lg font-semibold">{t('booksTitle')}</h3>
-          <p className="text-muted-foreground">{t('booksIntro')}</p>
           <ul className="mt-3 grid gap-3 sm:grid-cols-2">
             {recommended.map((book) => {
               const shown = shownTitle(book, locale);
@@ -708,38 +781,7 @@ export default function VocabTest({
         </div>
       )}
 
-      <div className="flex flex-col gap-2 sm:flex-row">
-        {fromSetup && (
-          <Link
-            href="/setup"
-            onClick={() => writeVocabResult(score.estimate, score.level)}
-            data-testid="vocab-continue-setup"
-            className={cn(buttonVariants({ size: 'lg' }), 'min-h-11')}
-          >
-            {t('useLevel', { level: score.level })}
-          </Link>
-        )}
-        {score.precision !== 'high' && current !== null && (
-          <Button
-            variant="outline"
-            size="lg"
-            className="min-h-11"
-            onClick={keepGoing}
-            data-testid="vocab-continue"
-          >
-            {t('continue')}
-          </Button>
-        )}
-        <Button
-          variant="outline"
-          size="lg"
-          className="min-h-11"
-          onClick={begin}
-          data-testid="vocab-retake"
-        >
-          {t('retake')}
-        </Button>
-      </div>
+      <p className="text-sm text-muted-foreground">{t('explain')}</p>
       <p className="text-sm">
         <Link href="/books" className="underline hover:text-foreground">
           {t('browse')}
@@ -755,79 +797,77 @@ export default function VocabTest({
 function LivePanel({
   live,
   waiting,
-  answered,
+  answers,
 }: {
   live: LiveEstimate | null;
   waiting: number;
-  answered: number;
+  answers: readonly Answer[];
 }) {
   const t = useTranslations('vocabTest');
+  const answered = answers.length;
+  const right = answers.filter(({ item, choice }) => choice === item.answer).length;
+  const unsure = answers.filter(({ choice }) => choice === null).length;
+  const resultReady = answered >= MIN_ANSWERS && live !== null;
   return (
-    <div className="rounded-2xl border border-border bg-card p-3 sm:p-4" data-testid="vocab-live">
-      <div className="flex items-baseline justify-between gap-3">
-        <p className="font-semibold" aria-live="polite" data-testid="vocab-live-estimate">
+    <div
+      className="space-y-3 rounded-xl border border-border bg-card p-3 sm:p-4"
+      data-testid="vocab-live"
+    >
+      <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 text-sm">
+        <p className="font-semibold tabular-nums" data-testid="vocab-live-estimate">
           {live === null
             ? t('liveWaiting', { count: Math.max(1, waiting) })
-            : live.capped
-              ? t('liveCapped')
-              : live.low === 0
-                ? t('liveRange', { high: live.high })
-                : t('liveEstimate', { count: live.estimate, margin: live.margin })}
+            : t('liveEstimate', {
+                count: (live.low + live.high) / 2,
+                margin: (live.high - live.low) / 2,
+              })}
         </p>
-        <p className="shrink-0 text-sm text-muted-foreground" data-testid="vocab-answered">
+        <p className="text-muted-foreground tabular-nums" data-testid="vocab-answered">
           {t('answered', { count: answered })}
         </p>
       </div>
-      <div
-        className="relative mt-3 h-3 rounded-full bg-muted"
-        role="img"
-        aria-label={
-          live === null
-            ? t('liveWaiting', { count: Math.max(1, waiting) })
-            : live.low === 0
-              ? t('liveRange', { high: live.high })
-              : t('liveEstimate', { count: live.estimate, margin: live.margin })
-        }
-      >
-        {live !== null && (
-          <>
-            <div
-              className="absolute inset-y-0 rounded-full bg-primary/30 transition-all duration-300 motion-reduce:transition-none"
-              style={{
-                left: scalePosition(live.low),
-                width: `calc(${scalePosition(live.high)} - ${scalePosition(live.low)})`,
-              }}
-            />
-            <div
-              className="absolute -top-1 -bottom-1 w-1 -translate-x-1/2 rounded-full bg-primary transition-all duration-300 motion-reduce:transition-none"
-              style={{ left: scalePosition(live.estimate) }}
-            />
-          </>
-        )}
-      </div>
-      <div className="relative mt-1 h-4 text-xs text-muted-foreground" aria-hidden="true">
-        {SCALE_MARKS.map((mark, index) => (
-          <span
-            key={mark}
-            className={cn(
-              'absolute',
-              index === 0
-                ? ''
-                : index === SCALE_MARKS.length - 1
-                  ? '-translate-x-full'
-                  : '-translate-x-1/2',
-            )}
-            style={{ left: scalePosition(mark) }}
+      <div className="space-y-1.5">
+        {!resultReady && (
+          <div
+            role="progressbar"
+            aria-label={t('resultMilestone', { count: MIN_ANSWERS })}
+            aria-valuemin={0}
+            aria-valuemax={MIN_ANSWERS}
+            aria-valuenow={answered}
+            className="relative h-1.5 rounded-full bg-muted"
+            data-testid="vocab-result-progress"
           >
-            {mark.toLocaleString('en')}
+            <div
+              className="absolute inset-0 origin-left rounded-full bg-primary transition-transform duration-200 motion-reduce:transition-none"
+              style={{ transform: `scaleX(${answered / MIN_ANSWERS})` }}
+            />
+            <span
+              aria-hidden="true"
+              className="absolute -inset-y-1 right-0 border-r border-foreground/60"
+            />
+          </div>
+        )}
+        <div className="flex flex-wrap justify-between gap-x-3 gap-y-1 text-xs text-muted-foreground">
+          <span className="tabular-nums">
+            {t('answerBreakdown', { right, unsure, wrong: answered - right - unsure })}
           </span>
-        ))}
+          {resultReady ? (
+            <span
+              className="inline-flex items-center gap-1 font-semibold text-foreground"
+              data-testid="vocab-result-ready"
+            >
+              <Check className="size-3.5" aria-hidden="true" />
+              {t('resultReady')}
+            </span>
+          ) : (
+            <span>{t('resultMilestone', { count: MIN_ANSWERS })}</span>
+          )}
+        </div>
       </div>
-      {live !== null && (
-        <p className="mt-2 text-sm text-muted-foreground" data-testid="vocab-live-precision">
+      {live && (
+        <p className="text-xs text-muted-foreground" data-testid="vocab-live-precision">
           {t('precision', { level: t(`precisionLevel.${live.precision}`) })}
-          {' · '}
-          {live.precision === 'high' ? t('enough') : t('precisionHint')}
+          {live.precision !== 'high' && ` · ${t('precisionHint')}`}
         </p>
       )}
     </div>

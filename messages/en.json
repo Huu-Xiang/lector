@@ -45,6 +45,10 @@
     "library": "Go to library",
     "invalid": "This link cannot be imported."
   },
+  "betaNotice": {
+    "message": "This test site runs an unreleased version.",
+    "productionLink": "Official site: readfox.app"
+  },
   "common": {
     "appName": "Readfox",
     "tagline": "Read your way to a new language"
@@ -2412,7 +2416,14 @@
     "title": "Free English vocabulary test",
     "metaTitle": "Free English vocabulary test: how many words do you know?",
     "metaDescription": "Take the free 2-minute English vocabulary test and see your full results without an account. Save your result and get a PDF with a free account.",
-    "intro": "You see one English word at a time with three meanings and “None of these”. Pick the right one, or tap “Not sure” if you do not know the word: guessing makes the result less accurate. After each answer you see whether it was right, and the next word appears by itself. The test starts with easy words and adjusts to your answers. After 20 words you can see your result; the more you answer, the narrower the range. The test covers words up to the 40,000 most common. We do not store your answers on our server. Your last result stays in this browser for 30 days. This browser also remembers which words you were asked, so your next test uses new words.",
+    "initialEstimate": "First estimate: {count, number} words",
+    "estimateChange": "Estimate {change}",
+    "introLead": "Find out how many English words you know and get book recommendations for your level.",
+    "introFacts": "Free · No account needed · First result after 8 questions",
+    "resultReady": "Result available",
+    "resultMilestone": "Results after {count, number}",
+    "answerBreakdown": "Right {right} · Not sure {unsure} · Wrong {wrong}",
+    "intro": "You see one English word at a time with three meanings and “None of these”. Pick the right one, or tap “Not sure” if you do not know the word: guessing makes the result less accurate. After each answer you see whether it was right, and the next word appears by itself. The first three words are of medium difficulty. After that, words are sampled around your estimated level. After 8 words you can see your result; the more you answer, the narrower the range. The test covers words up to the 40,000 most common. We do not store your answers on our server. Your last result stays in this browser for 30 days. This browser also remembers which words you were asked, so your next test uses new words.",
     "start": "Start the test",
     "resultHeading": "Your result",
     "estimate": "About {count, number} ± {margin, number} words",
@@ -2447,7 +2458,7 @@
       "medium": "medium",
       "high": "high"
     },
-    "precisionHint": "Answer more to narrow the range.",
+    "precisionHint": "More answers can narrow the range.",
     "enough": "Precise enough. You can see your result.",
     "estimateCapped": "More than 30,000 words",
     "precisionResult": "Precision: {level} ({count, plural, one {# word} other {# words}} answered)",
@@ -2456,7 +2467,7 @@
     "notSure": "Not sure",
     "guessingTitle": "Tip: fewer guesses, better result",
     "guessingBody": "Many of your answers were wrong, which usually means guessing. The score already corrects for luck, but choosing “Not sure” when you do not know a word makes the range narrower.",
-    "liveRange": "Now: 0 to {high, number} words",
+    "liveRange": "Now: {low, number} to {high, number} words",
     "estimateRange": "0 to {high, number} words",
     "noneOfAbove": "None of these",
     "feedbackRight": "Right",
@@ -2481,7 +2492,7 @@
     "faq": {
       "title": "Questions about the test",
       "howQ": "How does the vocabulary test work?",
-      "howA": "You see one English word at a time and pick its meaning from three options or “None of these”. The test starts with easy words and adapts to your answers. You can see your result after 20 words.",
+      "howA": "You see one English word at a time and pick its meaning from three options or “None of these”. The first three words are of medium difficulty. After that, words are sampled around your estimated level. You can see your result after 8 words.",
       "accuracyQ": "How accurate is the result?",
       "accuracyA": "The result is a range, not a single number. The more words you answer, the narrower the range. Word families count as one word, so “help”, “helps” and “helped” are one word. Choosing “Not sure” instead of guessing keeps the result accurate.",
       "freeQ": "Is the test free? Do I need an account?",

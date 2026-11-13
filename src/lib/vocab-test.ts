@@ -58,7 +58,7 @@ export const NONE_OF_ABOVE = 3;
 /** How often "none of the above" is the right answer: as often as each other option. */
 const NONE_SHARE = 1 / OPTION_COUNT;
 /** The result can be shown after this many answers; the test stops at the maximum. */
-export const MIN_ANSWERS = 20;
+export const MIN_ANSWERS = 8;
 export const MAX_ANSWERS = 120;
 /** A fitted guess rate this high means the learner guesses where "not sure" would be truer. */
 const GUESSING_LEVEL = 0.75;
@@ -215,27 +215,31 @@ function makeItem(
 }
 
 /** Shown before this many answers is not an estimate yet. */
-export const FIRST_ESTIMATE_AFTER = 8;
+export const FIRST_ESTIMATE_AFTER = 1;
 
-// Question order: EASY_COUNT first-band words, a log-rank staircase until STAIRCASE_END, then
+// Three mid-frequency words, a log-rank staircase, then
 // the fitted knee moved by FIT_SHIFT toward the last answer, with a log-normal spread.
-const EASY_COUNT = 4;
+const OPENING_COUNT = 3;
+const OPENING_LOW = 2001;
+const OPENING_HIGH = 5000;
 const STAIRCASE_END = 16;
-const STAIRCASE_START = Math.log(800);
+const STAIRCASE_START = Math.log(3200);
 const STEP_FIRST = 0.9;
 const STEP_DECAY = 0.85;
 const STEP_MIN = 0.25;
 const FIT_SHIFT = 0.1;
 const FIT_SPREAD = 0.6;
 /** Extra log-rank distance for a word asked in an earlier test on this device. */
-const SEEN_PENALTY = 0.5;
+const SEEN_PENALTY = 1;
 const NOTHING_SEEN: ReadonlySet<string> = new Set();
 
 function staircaseTarget(answers: readonly Answer[], maxRank: number): number {
   let target = STAIRCASE_START;
   answers.forEach((answer, i) => {
-    if (i < EASY_COUNT) return;
-    const step = Math.max(STEP_MIN, STEP_FIRST * Math.pow(STEP_DECAY, i - EASY_COUNT));
+    const step =
+      i < OPENING_COUNT
+        ? 0.35
+        : Math.max(STEP_MIN, STEP_FIRST * Math.pow(STEP_DECAY, i - OPENING_COUNT));
     target += answer.choice === answer.item.answer ? step : -step;
     target = Math.min(Math.log(maxRank), Math.max(Math.log(40), target));
   });
@@ -279,24 +283,33 @@ export function nextItem(
   const fresh = data.bands.map((band) =>
     band.words.map((_, i) => i).filter((i) => !asked.has(band.words[i].w)),
   );
-  if (answers.length < EASY_COUNT && fresh[0].length > 0) {
-    const unseen = fresh[0].filter((i) => !seen.has(data.bands[0].words[i].w));
-    const from = unseen.length > 0 ? unseen : fresh[0];
-    return makeItem(data, 0, from[Math.floor(rng() * from.length)], avoid, rng);
+  const candidates = data.bands.flatMap((band, b) =>
+    fresh[b].map((index) => ({ band: b, index, word: band.words[index] })),
+  );
+  if (!candidates.length) return null;
+  if (answers.length < OPENING_COUNT) {
+    const opening = candidates.filter(
+      ({ word }) => word.r >= OPENING_LOW && word.r <= OPENING_HIGH,
+    );
+    const unseen = opening.filter(({ word }) => !seen.has(word.w));
+    const pool = unseen.length ? unseen : opening;
+    if (pool.length) {
+      const pick = pool[Math.floor(rng() * pool.length)];
+      return makeItem(data, pick.band, pick.index, avoid, rng);
+    }
   }
   const target = nextTarget(answers, data, rng);
-  let best: { band: number; index: number; distance: number } | null = null;
-  data.bands.forEach((band, b) => {
-    for (const i of fresh[b]) {
-      const word = band.words[i];
-      // A tiny random tie-break so equal distances do not always pick the same word.
-      const distance =
-        Math.abs(Math.log(word.r) - target) + (seen.has(word.w) ? SEEN_PENALTY : 0) + rng() * 1e-3;
-      if (!best || distance < best.distance) best = { band: b, index: i, distance };
-    }
-  });
-  if (!best) return null;
-  const pick = best as { band: number; index: number };
+  const distance = (word: VocabWord) =>
+    Math.abs(Math.log(word.r) - target) + (seen.has(word.w) ? SEEN_PENALTY : 0);
+  const ranked = candidates
+    .map((candidate) => ({ ...candidate, distance: distance(candidate.word) }))
+    .sort((a, b) => a.distance - b.distance);
+  const near = ranked
+    .slice(0, 8)
+    .filter((candidate) => candidate.distance <= ranked[0].distance + 0.08);
+  const unseen = near.filter(({ word }) => !seen.has(word.w));
+  const pool = unseen.length ? unseen : near;
+  const pick = pool[Math.floor(rng() * pool.length)];
   return makeItem(data, pick.band, pick.index, avoid, rng);
 }
 

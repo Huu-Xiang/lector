@@ -6,6 +6,10 @@
     "library": "라이브러리로 이동",
     "invalid": "이 링크는 가져올 수 없습니다."
   },
+  "betaNotice": {
+    "message": "이 사이트는 테스트용이며 현재 버전은 정식 출시 전입니다.",
+    "productionLink": "정식 버전은 readfox.app"
+  },
   "common": {
     "appName": "Readfox",
     "tagline": "읽으면서 배우는 새로운 언어"

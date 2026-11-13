@@ -6,6 +6,10 @@
     "library": "ライブラリへ",
     "invalid": "このリンクは取り込めません。"
   },
+  "betaNotice": {
+    "message": "このサイトはテスト用です。現在のバージョンは正式公開前です。",
+    "productionLink": "正式版は readfox.app"
+  },
   "common": {
     "appName": "Readfox",
     "tagline": "読んで身につける、新しい言語"

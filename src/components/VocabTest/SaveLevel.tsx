@@ -39,11 +39,11 @@ export default function SaveLevel({ level }: { level: CefrLevel }) {
   const saved = current === level;
 
   return (
-    <div className="rounded-xl border border-border bg-card p-4" data-testid="vocab-save-level">
-      <p className="text-muted-foreground" data-testid="vocab-current-level">
+    <div className="space-y-1 border-b border-border pb-2" data-testid="vocab-save-level">
+      <p className="text-sm text-muted-foreground" data-testid="vocab-current-level">
         {current ? t('currentLevel', { level: current }) : t('noLevelYet')}
       </p>
-      <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
         {saved ? (
           <p className="flex items-center gap-1.5 font-medium" data-testid="vocab-level-saved">
             <Check className="size-5 text-answer-icon-right" aria-hidden="true" />
@@ -51,7 +51,7 @@ export default function SaveLevel({ level }: { level: CefrLevel }) {
           </p>
         ) : (
           <Button
-            size="lg"
+            variant="outline"
             className="min-h-11"
             onClick={() => void save()}
             disabled={state === 'saving'}
@@ -63,10 +63,7 @@ export default function SaveLevel({ level }: { level: CefrLevel }) {
         <Link
           href="/"
           data-testid="vocab-back-library"
-          className={cn(
-            buttonVariants({ size: 'lg', variant: saved ? 'default' : 'outline' }),
-            'min-h-11',
-          )}
+          className={cn(buttonVariants({ variant: 'link' }), 'min-h-11')}
         >
           {t('backToLibrary')}
         </Link>

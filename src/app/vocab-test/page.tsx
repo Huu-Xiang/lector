@@ -34,7 +34,10 @@ export default async function VocabTestPage() {
   const locale = await getLocale();
   const data = loadVocabTestData(locale === 'ru' ? 'ru' : undefined);
   if (!data) notFound();
-  const faq = FAQ_KEYS.map((key) => ({ q: t(`faq.${key}Q`), a: t(`faq.${key}A`) }));
+  const faq = FAQ_KEYS.map((key) => ({
+    q: t(`faq.${key}Q`),
+    a: key === 'how' ? t('intro') : t(`faq.${key}A`),
+  }));
   const structured = [
     {
       '@context': 'https://schema.org',
@@ -77,13 +80,15 @@ export default async function VocabTestPage() {
         }}
         books={loadVocabTestBooks()}
       />
-      <section className="space-y-3 pt-6" data-testid="vocab-faq">
+      <section className="space-y-2 pt-4" data-testid="vocab-faq">
         <H2>{t('faq.title')}</H2>
         {faq.map(({ q, a }) => (
-          <div key={q}>
-            <h3 className="font-semibold">{q}</h3>
-            <p className="text-muted-foreground">{a}</p>
-          </div>
+          <details key={q} className="border-b border-border">
+            <summary className="min-h-11 cursor-pointer py-3 text-sm font-semibold focus-visible:outline-2 focus-visible:outline-ring">
+              {q}
+            </summary>
+            <p className="max-w-prose pb-4 text-sm leading-relaxed text-muted-foreground">{a}</p>
+          </details>
         ))}
       </section>
     </LegalShell>

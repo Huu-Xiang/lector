@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Nunito, Literata } from 'next/font/google';
 import Script from 'next/script';
 import { NextIntlClientProvider } from 'next-intl';
-import { getLocale, getMessages } from 'next-intl/server';
+import { getLocale, getMessages, getTranslations } from 'next-intl/server';
 import { Toaster } from 'sonner';
 import AuthGuard from '@/components/AuthGuard';
 import BillingGuard from '@/components/BillingGuard';
@@ -63,6 +63,8 @@ export default async function RootLayout({
 }>) {
   const locale = await getLocale();
   const messages = await getMessages();
+  const beta = process.env.READFOX_BETA_NOTICE === '1';
+  const t = beta ? await getTranslations('betaNotice') : null;
   return (
     <html lang={locale} dir={isRtl(locale) ? 'rtl' : 'ltr'} suppressHydrationWarning>
       <head>
@@ -100,6 +102,21 @@ export default async function RootLayout({
           </SessionOnly>
 
           <div className="min-w-0 flex-1">
+            {t && (
+              <aside
+                data-testid="readfox-beta-notice"
+                className="border-b border-border bg-primary/10 px-4 py-2.5 text-center text-sm leading-snug text-foreground print:hidden"
+              >
+                <strong className="mr-2 font-bold">Beta</strong>
+                {t('message')}{' '}
+                <a
+                  href="https://readfox.app"
+                  className="inline-flex min-h-6 items-center font-semibold underline underline-offset-4"
+                >
+                  {t('productionLink')}
+                </a>
+              </aside>
+            )}
             {/* AuthGuard outside SetupGuard: in cloud mode the session must
               resolve before SetupGuard's settings probe (which would 401
               unauthenticated). Selfhost passes straight through (#218).

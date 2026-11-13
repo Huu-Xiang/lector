@@ -6,6 +6,10 @@
     "library": "回到书库",
     "invalid": "这个链接无法导入。"
   },
+  "betaNotice": {
+    "message": "本网站仅供测试，当前版本尚未正式发布。",
+    "productionLink": "正式版见 readfox.app"
+  },
   "common": {
     "appName": "Readfox",
     "tagline": "用阅读学会一门新语言"

@@ -50,6 +50,8 @@ The issuer and consumer run in cloud mode with separate databases, host-only coo
 - `READFOX_BETA_ORIGIN=https://test.readfox.app`
 - `READFOX_BETA_CLIENT_SECRET` to a new random secret of at least 32 characters.
 
+Set `READFOX_BETA_NOTICE=1` in the Beta container to display the localized site-wide notice and official Readfox link.
+
 On Beta, set `READFOX_BETA_CONSUMER=1`, `OIDC_ISSUER=https://readfox.app`, `OIDC_CLIENT_ID=readfox-beta`, `OIDC_CLIENT_SECRET` to the same OAuth client secret, and `OIDC_PROVIDER_NAME=Readfox`. The primary issuer registers one exact callback on startup. An existing Beta account with the same email needs explicit account linking before it can sign in this way.
 
 Test locally with `npm run build && npx playwright test -c playwright.beta-sso.config.ts`. The harness creates two temporary databases. The primary site's authorization remains off until its issuer environment is configured.
