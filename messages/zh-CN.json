@@ -87,6 +87,12 @@
     "reviewReady": "{count} 个词可以复习"
   },
   "auth": {
+    "welcome": {
+      "title": "读故事，学语言",
+      "description": "读原版书。遇到生词，点一下就能看到它在这句话里的意思。",
+      "inContext": "在这句话里",
+      "gloss": "双脚蜷在身下。"
+    },
     "loadingAuth": "正在加载",
     "login": {
       "title": "登录",

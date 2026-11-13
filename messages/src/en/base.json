@@ -48,6 +48,12 @@
     "reviewReady": "{count, plural, one {# word} other {# words}} ready to review"
   },
   "auth": {
+    "welcome": {
+      "title": "Learn a language through stories",
+      "description": "Read real books. Tap a word to see what it means in the sentence.",
+      "inContext": "In this sentence",
+      "gloss": "Folded under her body."
+    },
     "loadingAuth": "Loading authentication",
     "login": {
       "title": "Sign in",

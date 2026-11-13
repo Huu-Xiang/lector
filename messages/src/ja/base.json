@@ -48,6 +48,12 @@
     "reviewReady": "復習できる単語 {count} 語"
   },
   "auth": {
+    "welcome": {
+      "title": "物語を読んで、言葉を学ぼう",
+      "description": "原書を読んでみよう。知らない単語をタップすると、文の中での意味がわかります。",
+      "inContext": "この文での意味",
+      "gloss": "足を折り曲げて体の下に入れた。"
+    },
     "loadingAuth": "認証を読み込んでいます",
     "login": {
       "title": "ログイン",

@@ -70,6 +70,30 @@ test.describe('provider button on the sign-in and register pages', () => {
   test.describe('inside the iOS app', () => {
     test.use({ userAgent: 'Mozilla/5.0 (iPhone) AppleWebKit/605.1.15 ReadfoxApp/1' });
 
+    test('shows the reader preview and both account actions on a short screen', async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width: 375, height: 667 });
+      await useCloudEnv(page);
+      await page.goto('/welcome?next=%2Fvocab-test%2Fhistory');
+
+      await expect(
+        page.getByRole('heading', { name: 'Learn a language through stories' }),
+      ).toBeInViewport();
+      await expect(page.getByText('Folded under her body.')).toBeInViewport();
+      const create = page.getByRole('link', { name: 'Create account' });
+      const signIn = page.getByRole('link', { name: 'Sign in' });
+      await expect(create).toBeInViewport({ ratio: 1 });
+      await expect(signIn).toBeInViewport({ ratio: 1 });
+      await expect(create).toHaveAttribute('href', '/register?next=%2Fvocab-test%2Fhistory');
+      await signIn.click();
+      await expect(page).toHaveURL(/\/login\?next=%2Fvocab-test%2Fhistory$/);
+      await expect(page.getByTestId('login-submit')).toBeVisible();
+      await page.getByRole('link', { name: 'Back' }).click();
+      await expect(page).toHaveURL(/\/welcome\?next=%2Fvocab-test%2Fhistory$/);
+      await expect(create).toBeInViewport({ ratio: 1 });
+    });
+
     test('offers Readfox Beta sign-in in the app', async ({ page }) => {
       await useCloudEnv(page, {
         OIDC_LOGIN: '1',

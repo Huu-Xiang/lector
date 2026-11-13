@@ -1,0 +1,183 @@
+.welcome {
+  display: grid;
+  grid-template-areas:
+    'brand'
+    'intro'
+    'preview'
+    'actions';
+  gap: clamp(1rem, 3svh, 2rem);
+  inline-size: min(100%, 30rem);
+  margin-inline: auto;
+  padding: clamp(0.875rem, 3.5svh, 2.5rem) 1.375rem max(0.75rem, env(safe-area-inset-bottom));
+}
+
+.brand {
+  grid-area: brand;
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-size: 1.125rem;
+  font-weight: 800;
+}
+
+.intro {
+  grid-area: intro;
+}
+
+.intro h1 {
+  max-inline-size: 16ch;
+  font-family: var(--font-literata), Georgia, serif;
+  font-size: clamp(1.875rem, 5svh, 2.625rem);
+  font-weight: 700;
+  line-height: 1.14;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.intro p {
+  margin-block-start: 0.625rem;
+  color: var(--muted-foreground);
+  font-size: 1rem;
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+
+.preview {
+  grid-area: preview;
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: 29% minmax(0, 1fr);
+  align-items: end;
+  min-block-size: clamp(12rem, 30svh, 17rem);
+  padding: 1.25rem 0.875rem 1rem;
+  border: 1px solid color-mix(in srgb, var(--primary) 18%, var(--border));
+  border-radius: 1.5rem;
+  background: radial-gradient(
+    ellipse at 20% 25%,
+    color-mix(in srgb, var(--primary) 19%, var(--card)),
+    color-mix(in srgb, var(--primary) 7%, var(--card)) 72%
+  );
+}
+
+.cover {
+  position: absolute;
+  z-index: -1;
+  inset-block-start: 1.25rem;
+  inset-inline-start: 7%;
+  inline-size: clamp(6.5rem, 37%, 10rem);
+  block-size: auto;
+  border-radius: 0.3rem 0.625rem 0.625rem 0.3rem;
+  box-shadow: 0 0.875rem 1.375rem -0.5rem #0006;
+  transform: rotate(-8deg);
+}
+
+.sample {
+  grid-column: 2;
+  min-inline-size: 0;
+  padding: 0.875rem;
+  border: 1px solid var(--border);
+  border-radius: 0.875rem;
+  background: var(--card);
+  box-shadow: 0 0.625rem 1.5rem -0.75rem #0005;
+}
+
+.bookTitle {
+  color: var(--muted-foreground);
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.sample blockquote {
+  margin-block-start: 0.375rem;
+  font-family: var(--font-literata), Georgia, serif;
+  font-size: clamp(1rem, 4.6vw, 1.25rem);
+  line-height: 1.55;
+}
+
+.sample mark {
+  padding-inline: 0.14em;
+  border-radius: 0.2em;
+  background: color-mix(in srgb, var(--primary) 19%, var(--card));
+  color: var(--foreground);
+  box-decoration-break: clone;
+  text-decoration: underline;
+  text-decoration-color: var(--primary);
+  text-underline-offset: 0.19em;
+}
+
+.gloss {
+  margin-block-start: 0.625rem;
+  padding-block-start: 0.5rem;
+  border-block-start: 1px solid var(--border);
+}
+
+.gloss span {
+  color: var(--primary);
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.gloss p {
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-wrap: pretty;
+}
+
+.actions {
+  grid-area: actions;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.actions .start {
+  position: relative;
+  min-block-size: 3rem;
+  padding-inline: 2.5rem;
+  border-radius: 0.875rem;
+  font-size: 1rem;
+}
+
+.actions .signIn {
+  min-block-size: 2.75rem;
+  border-radius: 0.875rem;
+  color: var(--primary);
+  font-size: 0.9375rem;
+}
+
+@media (min-width: 48rem) {
+  .welcome {
+    grid-template-areas:
+      'brand preview'
+      'intro preview'
+      'actions preview';
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.13fr);
+    align-items: center;
+    column-gap: clamp(2rem, 7vw, 6rem);
+    inline-size: min(100%, 69rem);
+    padding: clamp(3rem, 14svh, 9rem) 2rem 3rem;
+  }
+
+  .intro h1 {
+    font-size: clamp(2.5rem, 4.5vw, 3.75rem);
+  }
+
+  .preview {
+    align-self: stretch;
+    min-block-size: 22rem;
+    padding: 2rem 1.5rem 2rem 1.25rem;
+  }
+
+  .cover {
+    inset-block-start: 12%;
+    inline-size: min(45%, 13rem);
+  }
+
+  .sample {
+    padding: 1.25rem;
+  }
+
+  .actions {
+    max-inline-size: 19rem;
+  }
+}

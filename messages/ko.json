@@ -87,6 +87,12 @@
     "reviewReady": "복습할 단어 {count}개"
   },
   "auth": {
+    "welcome": {
+      "title": "이야기를 읽으며 언어를 배워요",
+      "description": "원서를 읽다가 모르는 단어를 누르면 문장 속 뜻을 바로 볼 수 있어요.",
+      "inContext": "이 문장에서의 뜻",
+      "gloss": "발을 접어 몸 아래로 넣은 상태."
+    },
     "loadingAuth": "인증 불러오는 중",
     "login": {
       "title": "로그인",

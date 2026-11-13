@@ -87,6 +87,12 @@
     "reviewReady": "{count} 個詞可以複習"
   },
   "auth": {
+    "welcome": {
+      "title": "讀故事，學語言",
+      "description": "讀原文書。遇到生字，點一下就能看到它在這句話裡的意思。",
+      "inContext": "在這句話裡",
+      "gloss": "雙腳蜷在身下。"
+    },
     "loadingAuth": "載入中",
     "login": {
       "title": "登入",
