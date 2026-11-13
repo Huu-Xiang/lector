@@ -2,6 +2,8 @@
 
 import { usePathname } from 'next/navigation';
 import { authClient, isBareRoute } from '@/lib/auth-client';
+import { isSessionChromeRoute } from '@/lib/api-base';
+import { setActiveTenant } from '@/lib/language-cache';
 import { useLectorMode } from '@/lib/use-env';
 
 /**
@@ -11,12 +13,14 @@ import { useLectorMode } from '@/lib/use-env';
 export default function SessionOnly({ children }: { children: React.ReactNode }) {
   const mode = useLectorMode();
   const pathname = usePathname();
-  if (mode === 'unknown' || isBareRoute(pathname)) return null;
-  if (mode === 'selfhost') return <>{children}</>;
+  if (mode === 'unknown' || !isSessionChromeRoute(pathname)) return null;
+  if (mode === 'selfhost') return isBareRoute(pathname) ? null : <>{children}</>;
   return <CloudSessionOnly>{children}</CloudSessionOnly>;
 }
 
 function CloudSessionOnly({ children }: { children: React.ReactNode }) {
   const { data: session } = authClient.useSession();
-  return session ? <>{children}</> : null;
+  if (!session) return null;
+  setActiveTenant(session.user.id);
+  return <>{children}</>;
 }

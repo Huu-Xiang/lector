@@ -112,7 +112,7 @@ New rows have `domain IS NULL` until the classifier runs. See [stats.md](stats.m
 
 **App domain:** Vocabulary
 
-The public test calculates the result in the browser. It sends a result summary only when a reader chooses to save it to an account. The summary contains the estimate, level, test date and book references. Answers stay in the browser. The report history is private and uses the account session.
+The public test calculates the result in the browser. Visitors see a standalone page. Signed-in users see the test and report history within the Readfox layout. It sends a result summary only when a reader chooses to save it to an account. The summary contains the estimate, level, test date and book references. Answers stay in the browser. The report history is private and uses the account session.
 
 ```mermaid
 flowchart TD

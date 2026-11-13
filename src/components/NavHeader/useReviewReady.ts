@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { VOCAB_SAVED_EVENT } from '@/constants/storage';
 import { getReviewCounts, QUERY_SCOPES } from '@/lib/data-layer';
-import { isBareRoute } from '@/lib/auth-client';
+import { isSessionChromeRoute } from '@/lib/api-base';
 import { reviewReadyCount } from '@/lib/review-badge';
 import { useQueryRefresh } from '@/lib/use-query-refresh';
 
@@ -13,7 +13,7 @@ const SAVE_DEBOUNCE_MS = 800;
 export function useReviewReady(): number {
   const pathname = usePathname();
   const [count, setCount] = useState(0);
-  const bare = isBareRoute(pathname);
+  const bare = !isSessionChromeRoute(pathname);
 
   useEffect(() => {
     if (bare) return;

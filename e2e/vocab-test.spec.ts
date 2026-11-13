@@ -295,6 +295,9 @@ test.describe('vocabulary test', () => {
   test('the complete cloud result is visible before asking for an account', async ({ browser }) => {
     const { context, page } = await cloudVisitorPage(browser);
     await page.goto('/vocab-test');
+    await expect(page.getByTestId('legal-back')).toBeVisible();
+    await expect(page.getByTestId('vocab-test-workspace')).toHaveCount(0);
+    await expect(page.getByTestId('vocab-test-nav-link')).toHaveCount(0);
     await finishKnowingNothing(page);
     await expect(page.getByTestId('vocab-estimate')).toBeVisible();
     await expect(page.getByTestId('vocab-book').first()).toBeVisible();
@@ -454,6 +457,14 @@ test.describe('vocabulary test', () => {
         if (page.reports[0]) page.reports[0] = { ...page.reports[0], deliveryStatus: 'failed' };
         await route.fulfill({ response, json: page });
       });
+      await callback.goto('/vocab-test/history');
+      await expect(callback.getByTestId('vocab-test-workspace')).toBeVisible();
+      const quizLink = callback.getByTestId('vocab-test-nav-link');
+      await expect(quizLink).toHaveAttribute('aria-current', 'page');
+      await quizLink.click();
+      await expect(callback.getByTestId('vocab-test-workspace')).toBeVisible();
+      await expect(callback.getByTestId('vocab-start')).toBeVisible();
+      await expect(callback.getByTestId('legal-back')).toHaveCount(0);
       await callback.goto('/vocab-test/history');
       await expect(callback.getByTestId('vocab-report-record')).toHaveCount(30);
       await expect(callback.getByTestId('vocab-report-record').first()).toContainText(estimate);

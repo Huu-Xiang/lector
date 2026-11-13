@@ -539,7 +539,7 @@
   N("file:correction-view", "file", "CorrectionView", { path: "src/app/journal/components/CorrectionView.tsx", domain: "journal" });
   N("file:chat-widget", "file", "ChatWidget", { path: "src/components/ChatWidget/index.tsx", domain: "tutor" });
   N("file:cloze-feedback", "file", "ClozeFeedback", { path: "src/components/ClozeFeedback/index.tsx", domain: "tutor" });
-  N("file:vocab-test-page", "file", "Vocabulary test", { path: "src/app/vocab-test/page.tsx", domain: "vocabulary" });
+  N("file:vocab-test-page", "file", "Vocabulary test", { path: "src/app/vocab-test/page.tsx", domain: "vocabulary", summary: "Standalone for visitors, within the workspace for signed-in users." });
   N("file:vocab-test-quiz", "file", "Vocabulary quiz and progress", { path: "src/components/VocabTest/index.tsx", domain: "vocabulary" });
   N("file:vocab-test-sampling", "file", "Adaptive vocabulary sampling", { path: "src/lib/vocab-test.ts", domain: "vocabulary" });
   N("file:route-vocab-test-reports", "file", "Vocabulary test reports API", { path: "api/src/routes/vocab-test-reports.ts", domain: "vocabulary" });

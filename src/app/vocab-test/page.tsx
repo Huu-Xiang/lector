@@ -1,8 +1,9 @@
+import VocabTestShell from '@/components/VocabTest/VocabTestShell';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import { getLocale, getTranslations } from 'next-intl/server';
-import { H2, LegalShell } from '@/components/LegalLinks/shell';
+import { H2 } from '@/components/LegalLinks/shell';
 import VocabTest from '@/components/VocabTest';
 import ReportResume from '@/components/VocabTest/ReportResume';
 import UiLanguageSelect from '@/i18n/UiLanguageSelect';
@@ -62,7 +63,7 @@ export default async function VocabTestPage() {
     },
   ];
   return (
-    <LegalShell title={t('title')}>
+    <VocabTestShell title={t('title')} visitorTools={<UiLanguageSelect showLabel />}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structured).replace(/</g, '\\u003c') }}
@@ -70,7 +71,6 @@ export default async function VocabTestPage() {
       <Suspense fallback={null}>
         <ReportResume />
       </Suspense>
-      <UiLanguageSelect showLabel />
       <VocabTest
         key={locale}
         meta={{
@@ -91,6 +91,6 @@ export default async function VocabTestPage() {
           </details>
         ))}
       </section>
-    </LegalShell>
+    </VocabTestShell>
   );
 }

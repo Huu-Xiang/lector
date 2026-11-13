@@ -144,6 +144,10 @@ export function isBareRoute(pathname: string): boolean {
   return isAuthRoute(pathname) || pathname === BILLING_ROUTE || pathname === SETUP_ROUTE;
 }
 
+export function isSessionChromeRoute(pathname: string): boolean {
+  return !isBareRoute(pathname) || pathname === '/vocab-test' || pathname === '/vocab-test/history';
+}
+
 let bouncedToLogin = false;
 
 /**

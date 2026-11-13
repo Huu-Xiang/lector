@@ -7,7 +7,7 @@ import ThemeToggle from '@/components/ThemeToggle';
 import LanguageSelector from '@/components/LanguageSelector';
 import NewLanguagePrompt from '@/components/NewLanguagePrompt';
 import AiQuota from './components/AiQuota';
-import { isBareRoute } from '@/lib/auth-client';
+import { isSessionChromeRoute } from '@/lib/api-base';
 import { useSidebarCollapsed } from '@/utils/hooks';
 import {
   advancePostOnboardingTour,
@@ -67,7 +67,7 @@ export default function NavHeader() {
   // Auth pages are pre-session chrome (#218): no nav — its links would all
   // 401 for a signed-out cloud visitor. Same on /subscribe (#224), where
   // they'd all 402 for a locked account.
-  if (isBareRoute(pathname)) return null;
+  if (!isSessionChromeRoute(pathname)) return null;
 
   return (
     <>
