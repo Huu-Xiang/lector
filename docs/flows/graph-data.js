@@ -155,7 +155,7 @@
   N("flow:import", "flow", "Import", {
     domain: "library",
     md: "library.md#import",
-    summary: "EPUB, paste, markdown, web URL, YouTube captions, or audio. On Readfox Beta, YouTube import shows Coming soon. Destination group is importGroupId.",
+    summary: "EPUB, paste, markdown, web URL, YouTube captions, or audio. Readfox and its Beta site show YouTube import as Coming soon. Destination group is importGroupId.",
     steps: [
       "file:home-page",
       "fn:importEpub",

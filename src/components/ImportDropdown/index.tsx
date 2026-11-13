@@ -4,7 +4,7 @@ import { Check, Plus } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
-import { useReadfoxBeta } from '@/lib/use-env';
+import { useYouTubeImportPending } from '@/lib/use-env';
 import { cn } from '@/lib/utils';
 import { IMPORT_OPTIONS } from './constants';
 import type { ImportDropdownProps, ImportSource } from './types';
@@ -28,7 +28,7 @@ export default function ImportDropdown({
   anchorToToolbarOnMobile = false,
 }: ImportDropdownProps) {
   const t = useTranslations('library.import');
-  const beta = useReadfoxBeta();
+  const youtubeImportPending = useYouTubeImportPending();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -145,7 +145,7 @@ export default function ImportDropdown({
             </div>
           )}
           {IMPORT_OPTIONS.map(({ source, icon: Icon }) => {
-            const comingSoon = beta && source === 'youtube';
+            const comingSoon = youtubeImportPending && source === 'youtube';
             return (
               <button
                 key={source}

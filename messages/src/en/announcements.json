@@ -8,6 +8,10 @@
     "dismiss": "Dismiss",
     "learnMore": "Learn more",
     "items": {
+      "readingAndVocabulary": {
+        "title": "A quicker vocabulary test and a simpler reader",
+        "body": "Get your first English vocabulary estimate after 8 questions. In the reader, look up words and save the ones you want to practise. You can turn automatic saving on in Settings. The iPhone app also has simpler navigation, a more compact dictionary and a new daily goal picker."
+      },
       "emailReminders": {
         "title": "About email reminders",
         "body": "We may email you when a plan that does not renew on its own is about to end, and when you have words to review. You can turn these emails off in Settings, or with the link at the bottom of any of them."

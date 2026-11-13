@@ -25,7 +25,7 @@ async function cleanupImports(page: import('@playwright/test').Page) {
   }
 }
 
-test('Beta labels YouTube import coming soon and keeps web import accessible on iPhone', async ({
+test('the hosted import menu labels YouTube coming soon and keeps web import accessible on iPhone', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 375, height: 667 });
@@ -34,7 +34,7 @@ test('Beta labels YouTube import coming soon and keeps web import accessible on 
       contentType: 'application/javascript',
       body: `window.__ENV__ = ${JSON.stringify({
         API_URL: apiUrl(''),
-        READFOX_BETA_CONSUMER: '1',
+        YOUTUBE_IMPORT_PENDING: '1',
       })};`,
     }),
   );

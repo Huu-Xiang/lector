@@ -49,6 +49,16 @@ export function useReadfoxBeta(): boolean {
   );
 }
 
+export function useYouTubeImportPending(): boolean {
+  return useSyncExternalStore(
+    subscribe,
+    () =>
+      window.__ENV__?.YOUTUBE_IMPORT_PENDING === '1' ||
+      window.__ENV__?.READFOX_BETA_CONSUMER === '1',
+    () => false,
+  );
+}
+
 /** Button label for the BYO OIDC provider; a lone snapshot per render. */
 export function useOidcProviderName(): string {
   return useSyncExternalStore(
