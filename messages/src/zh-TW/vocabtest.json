@@ -89,6 +89,7 @@
     },
     "report": {
       "save": "儲存並接收 PDF",
+      "signInToSave": "登入／註冊以儲存結果",
       "saving": "正在儲存結果…",
       "saved": "結果已儲存",
       "authPrompt": "登入或註冊免費帳號，即可儲存這次結果並接收 PDF 電郵。",

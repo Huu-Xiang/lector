@@ -52,6 +52,7 @@ export default function SaveReport({
   const saving = useRef(false);
   const snapshotRef = useRef<VocabReportSnapshot | null>(null);
   const user = session?.user;
+  const saveLabel = user || isPending ? t('save') : t('signInToSave');
 
   async function save() {
     if (saving.current) return;
@@ -98,12 +99,12 @@ export default function SaveReport({
             <Button
               type="button"
               variant={secondary ? 'outline' : 'default'}
-              className="min-h-11"
+              className="h-auto min-h-11 max-w-full py-2 text-center whitespace-normal"
               onClick={() => void save()}
               disabled={isPending || busy}
               data-testid="vocab-save-report"
             >
-              {busy ? t('saving') : t('save')}
+              {busy ? t('saving') : saveLabel}
             </Button>
           )}
           {authReturn && <ReportAuthChoices returnPath={authReturn} />}

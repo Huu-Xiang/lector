@@ -2543,6 +2543,7 @@
     },
     "report": {
       "save": "保存并接收 PDF",
+      "signInToSave": "登录 / 注册以保存结果",
       "saving": "正在保存结果…",
       "saved": "结果已保存",
       "authPrompt": "登录或注册免费账号，即可保存这次结果并接收 PDF 邮件。",

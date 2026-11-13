@@ -2543,6 +2543,7 @@
     },
     "report": {
       "save": "Save and email me a PDF",
+      "signInToSave": "Sign in or sign up to save your result",
       "saving": "Saving your result…",
       "saved": "Result saved",
       "authPrompt": "Sign in or create a free account to save this result and receive a PDF by email.",

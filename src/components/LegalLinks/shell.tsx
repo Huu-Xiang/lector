@@ -7,10 +7,12 @@ export function LegalShell({
   title,
   children,
   wide = false,
+  showBack = true,
 }: {
   title: string;
   children: React.ReactNode;
   wide?: boolean;
+  showBack?: boolean;
 }) {
   return (
     <div className="flex min-h-screen w-full flex-col items-center bg-background px-4 py-10">
@@ -21,7 +23,7 @@ export function LegalShell({
       <article
         className={`w-full ${wide ? 'max-w-6xl' : 'max-w-2xl'} space-y-5 text-sm leading-relaxed text-foreground`}
       >
-        <BackButton />
+        {showBack && <BackButton />}
         <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
         {children}
       </article>

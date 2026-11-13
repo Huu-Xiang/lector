@@ -63,7 +63,11 @@ export default async function VocabTestPage() {
     },
   ];
   return (
-    <VocabTestShell title={t('title')} visitorTools={<UiLanguageSelect showLabel />}>
+    <VocabTestShell
+      title={t('title')}
+      visitorTools={<UiLanguageSelect showLabel />}
+      showVisitorBack={false}
+    >
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structured).replace(/</g, '\\u003c') }}

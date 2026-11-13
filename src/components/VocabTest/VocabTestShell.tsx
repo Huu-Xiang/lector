@@ -6,7 +6,12 @@ import PageHeader from '@/components/PageHeader';
 import { authClient } from '@/lib/auth-client';
 import { useLectorMode } from '@/lib/use-env';
 
-type Props = { title: string; children: ReactNode; visitorTools?: ReactNode };
+type Props = {
+  title: string;
+  children: ReactNode;
+  visitorTools?: ReactNode;
+  showVisitorBack?: boolean;
+};
 
 export default function VocabTestShell(props: Props) {
   return useLectorMode() === 'cloud' ? <CloudShell {...props} /> : <VisitorShell {...props} />;
@@ -27,9 +32,9 @@ function CloudShell(props: Props) {
   );
 }
 
-function VisitorShell({ title, children, visitorTools }: Props) {
+function VisitorShell({ title, children, visitorTools, showVisitorBack }: Props) {
   return (
-    <LegalShell title={title}>
+    <LegalShell title={title} showBack={showVisitorBack}>
       {visitorTools}
       {children}
     </LegalShell>

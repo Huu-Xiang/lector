@@ -295,7 +295,7 @@ test.describe('vocabulary test', () => {
   test('the complete cloud result is visible before asking for an account', async ({ browser }) => {
     const { context, page } = await cloudVisitorPage(browser);
     await page.goto('/vocab-test');
-    await expect(page.getByTestId('legal-back')).toBeVisible();
+    await expect(page.getByTestId('legal-back')).toHaveCount(0);
     await expect(page.getByTestId('vocab-test-workspace')).toHaveCount(0);
     await expect(page.getByTestId('vocab-test-nav-link')).toHaveCount(0);
     await finishKnowingNothing(page);
@@ -303,7 +303,9 @@ test.describe('vocabulary test', () => {
     await expect(page.getByTestId('vocab-book').first()).toBeVisible();
     await expect(page.getByTestId('vocab-report-auth-prompt')).toHaveCount(0);
     await expect(page.getByTestId('vocab-save-level')).toHaveCount(0);
-    await page.getByTestId('vocab-save-report').click();
+    const save = page.getByTestId('vocab-save-report');
+    await expect(save).toHaveText('Sign in or sign up to save your result');
+    await save.click();
     await expect(page.getByTestId('vocab-report-login')).toBeVisible();
     await expect(page.getByTestId('vocab-report-register')).toBeVisible();
     await context.close();
