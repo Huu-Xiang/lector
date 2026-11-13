@@ -67,6 +67,20 @@ test.describe('provider button on the sign-in and register pages', () => {
     await expect(page.getByTestId('register-oidc')).toHaveCount(0);
   });
 
+  test.describe('inside the iOS app', () => {
+    test.use({ userAgent: 'Mozilla/5.0 (iPhone) AppleWebKit/605.1.15 ReadfoxApp/1' });
+
+    test('offers Readfox Beta sign-in in the app', async ({ page }) => {
+      await useCloudEnv(page, {
+        OIDC_LOGIN: '1',
+        OIDC_PROVIDER_NAME: 'Readfox',
+        READFOX_BETA_CONSUMER: '1',
+      });
+      await page.goto('/login');
+      await expect(page.getByTestId('login-oidc')).toHaveText('Continue with Readfox');
+    });
+  });
+
   test('a cancelled provider login shows a message on /login', async ({ page }) => {
     await useCloudEnv(page, { OIDC_LOGIN: '1', OIDC_PROVIDER_NAME: 'Google' });
     await page.goto('/login?error=access_denied');

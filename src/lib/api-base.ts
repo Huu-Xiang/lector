@@ -50,6 +50,7 @@ declare global {
       INVITE_REQUIRED?: string;
       /** '1' when the API has a BYO OIDC provider configured (#218). */
       OIDC_LOGIN?: string;
+      READFOX_BETA_CONSUMER?: string;
       /** Label for the OIDC sign-in button (e.g. "Authentik"); default "SSO". */
       OIDC_PROVIDER_NAME?: string;
       /** Comma-separated language codes that setup offers; unset offers every language. */
