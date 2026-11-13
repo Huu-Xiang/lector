@@ -144,7 +144,7 @@ The route updates `lessons.progress_scrollPosition`, `progress_percentComplete`,
 
 **App domain:** Library
 
-The Import menu on the home page is the entry. Destination group is `importGroupId` on `src/app/(index)/page.tsx`.
+The Import menu on the home page is the entry. Readfox Beta shows YouTube subtitles as Coming soon. Destination group is `importGroupId` on `src/app/(index)/page.tsx`.
 
 ```mermaid
 flowchart TD

@@ -1,9 +1,11 @@
 'use client';
 
-import { Check, ChevronDown, Plus } from 'lucide-react';
+import { Check, Plus } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
+import { useReadfoxBeta } from '@/lib/use-env';
+import { cn } from '@/lib/utils';
 import { IMPORT_OPTIONS } from './constants';
 import type { ImportDropdownProps, ImportSource } from './types';
 
@@ -23,9 +25,10 @@ export default function ImportDropdown({
   destinationId = null,
   onDestinationChange,
   minimalOnMobile,
-  alignStartOnMobile = false,
+  anchorToToolbarOnMobile = false,
 }: ImportDropdownProps) {
   const t = useTranslations('library.import');
+  const beta = useReadfoxBeta();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -83,7 +86,7 @@ export default function ImportDropdown({
     : [];
 
   return (
-    <div ref={dropdownRef} className="relative">
+    <div ref={dropdownRef} className={cn('relative', anchorToToolbarOnMobile && 'max-sm:static')}>
       <Button
         onClick={() => setIsOpen(!isOpen)}
         disabled={disabled || isImporting}
@@ -108,7 +111,10 @@ export default function ImportDropdown({
 
       {isOpen && (
         <div
-          className={`absolute ${alignStartOnMobile ? 'left-0 sm:right-0 sm:left-auto' : 'right-0'} z-50 mt-2 w-56 rounded-lg border border-border bg-popover py-1 text-popover-foreground shadow-lg`}
+          className={cn(
+            'absolute right-0 z-50 mt-2 w-56 rounded-lg border border-border bg-popover py-1 text-popover-foreground shadow-lg',
+            anchorToToolbarOnMobile && 'max-sm:top-full',
+          )}
         >
           {destinationList.length > 0 && (
             <div className="mb-1 border-b border-border pb-1">
@@ -138,16 +144,22 @@ export default function ImportDropdown({
               </div>
             </div>
           )}
-          {IMPORT_OPTIONS.map(({ source, icon: Icon }) => (
-            <button
-              key={source}
-              onClick={() => handleSelect(source)}
-              className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-popover-foreground transition-colors hover:bg-accent"
-            >
-              <Icon size="20" />
-              {t(`options.${source}`)}
-            </button>
-          ))}
+          {IMPORT_OPTIONS.map(({ source, icon: Icon }) => {
+            const comingSoon = beta && source === 'youtube';
+            return (
+              <button
+                key={source}
+                type="button"
+                disabled={comingSoon}
+                onClick={() => handleSelect(source)}
+                className="flex min-h-11 w-full items-center gap-3 px-4 py-2.5 text-start text-sm text-popover-foreground transition-colors enabled:hover:bg-accent disabled:text-muted-foreground"
+              >
+                <Icon size="20" className="shrink-0" aria-hidden="true" />
+                <span>{t(`options.${source}`)}</span>
+                {comingSoon && <span className="ms-auto text-xs">{t('comingSoon')}</span>}
+              </button>
+            );
+          })}
         </div>
       )}
     </div>

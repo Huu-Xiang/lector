@@ -1,10 +1,9 @@
-import React from 'react';
-import { AudioLines, Captions, File, Link, Text } from 'lucide-react';
+import { AudioLines, Captions, File, Link, Text, type LucideIcon } from 'lucide-react';
 import type { ImportSource } from './types';
 
 export const IMPORT_OPTIONS: Array<{
   source: ImportSource;
-  icon: React.FC<{ size?: string | number }>;
+  icon: LucideIcon;
 }> = [
   {
     source: 'file',

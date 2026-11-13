@@ -74,7 +74,7 @@ If you do not want to run a server, use the hosted app at [app.lector.dev](https
   - a Markdown file
   - a web article
   - pasted text
-  - a YouTube transcript
+  - a YouTube transcript (coming soon on Readfox Beta)
   - a podcast
 
 - **Cloze practice.** Frequency-ordered sentences. Choose an answer from a list, or type the missing word. Spaced repetition (SRS) with mastery levels.

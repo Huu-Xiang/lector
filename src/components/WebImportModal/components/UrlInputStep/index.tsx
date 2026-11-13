@@ -38,11 +38,15 @@ export default function UrlInputStep({
             value={url}
             onChange={(e) => onUrlChange(e.target.value)}
             onKeyDown={onKeyDown}
-            placeholder="https://www.netwerk24.com/..."
+            placeholder="https://example.com/article"
             disabled={isLoading}
-            className="flex-1 rounded-lg border border-input bg-background px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none disabled:opacity-50"
+            className="min-w-0 flex-1 rounded-lg border border-input bg-background px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none disabled:opacity-50"
           />
-          <Button onClick={onExtract} disabled={!url.trim() || isLoading} className="px-5 py-2.5">
+          <Button
+            onClick={onExtract}
+            disabled={!url.trim() || isLoading}
+            className="shrink-0 px-3 py-2.5 sm:px-5"
+          >
             {isLoading ? (
               <div className="flex items-center gap-2">
                 <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground/30 border-t-primary-foreground" />
@@ -67,7 +71,7 @@ export default function UrlInputStep({
         </div>
       )}
 
-      <p className="text-sm text-muted-foreground">
+      <p className="native-subtitle text-sm text-muted-foreground">
         {t('web.help', { language: activeLang.native })}
       </p>
     </div>

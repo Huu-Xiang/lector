@@ -10,7 +10,7 @@ import {
   useIsNativeApp,
 } from '@/lib/native-app';
 import { writePendingInvite } from '@/lib/pending-invite';
-import { useOidcLogin, useOidcProviderName, useReadfoxBetaLogin } from '@/lib/use-env';
+import { useOidcLogin, useOidcProviderName, useReadfoxBeta } from '@/lib/use-env';
 
 /** Starts the login with providerId 'oidc'; a refused login returns to `errorPath`. */
 export default function OidcSignInButton({
@@ -28,7 +28,7 @@ export default function OidcSignInButton({
   const enabled = useOidcLogin();
   const provider = useOidcProviderName();
   const inApp = useIsNativeApp();
-  const betaLogin = useReadfoxBetaLogin();
+  const betaLogin = useReadfoxBeta();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(false);
   const native =

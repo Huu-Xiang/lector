@@ -41,7 +41,7 @@ export function useOidcLogin(): boolean {
   );
 }
 
-export function useReadfoxBetaLogin(): boolean {
+export function useReadfoxBeta(): boolean {
   return useSyncExternalStore(
     subscribe,
     () => window.__ENV__?.READFOX_BETA_CONSUMER === '1',

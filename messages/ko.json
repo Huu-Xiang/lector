@@ -1137,6 +1137,7 @@
       "importing": "가져오는 중...",
       "addTo": "추가할 위치",
       "ungrouped": "서재 (그룹 없음)",
+      "comingSoon": "출시 예정",
       "options": {
         "file": "파일 가져오기",
         "audio": "오디오 가져오기",

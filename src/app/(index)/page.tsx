@@ -437,7 +437,7 @@ export default function Home() {
     <main className="native-compact-page mx-auto max-w-6xl px-4 py-4 sm:px-6 sm:py-8 lg:px-8">
       <PendingBookOpener />
       <PageHeader title={t('page.title')} titleAside={<DailyGoalBadge />} className="mb-3 sm:mb-6">
-        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+        <div className="relative flex flex-wrap items-center gap-1.5 sm:gap-2">
           {isCreatingGroup ? (
             <form
               onSubmit={(e) => {
@@ -497,7 +497,7 @@ export default function Home() {
             disabled={isImporting}
             isImporting={isImporting && importGroupId === libraryDestination}
             testId="library-import"
-            alignStartOnMobile
+            anchorToToolbarOnMobile
             destinations={visibleGroups.map((g) => ({ id: g.id, name: g.name }))}
             destinationId={libraryDestination}
             onDestinationChange={setLibraryDestinationId}

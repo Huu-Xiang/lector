@@ -85,6 +85,7 @@
       "importing": "取り込み中...",
       "addTo": "追加先",
       "ungrouped": "ライブラリ（グループなし）",
+      "comingSoon": "近日公開",
       "options": {
         "file": "ファイルを取り込む",
         "audio": "音声を取り込む",

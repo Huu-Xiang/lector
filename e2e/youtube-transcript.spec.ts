@@ -25,6 +25,31 @@ async function cleanupImports(page: import('@playwright/test').Page) {
   }
 }
 
+test('Beta labels YouTube import coming soon and keeps web import accessible on iPhone', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 375, height: 667 });
+  await page.route('**/__env.js', (route) =>
+    route.fulfill({
+      contentType: 'application/javascript',
+      body: `window.__ENV__ = ${JSON.stringify({
+        API_URL: apiUrl(''),
+        READFOX_BETA_CONSUMER: '1',
+      })};`,
+    }),
+  );
+  await page.goto('/');
+  await page.getByTestId('library-import').click();
+
+  const youtube = page.getByRole('button', { name: 'YouTube Transcript Coming soon' });
+  await expect(youtube).toBeVisible();
+  await expect(youtube).toBeDisabled();
+  const box = await youtube.boundingBox();
+  expect(box!.x + box!.width).toBeLessThanOrEqual(375);
+  await page.getByRole('button', { name: 'Import from URL' }).click();
+  await expect(page.getByRole('textbox', { name: 'Article URL' })).toBeVisible();
+});
+
 test.describe('YouTube transcript import', () => {
   test.skip(externalServer, 'transcript-import fixtures are not shipped in the production image');
 
