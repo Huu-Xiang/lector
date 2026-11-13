@@ -14,6 +14,7 @@ import {
   pickLocalized,
 } from '@/lib/public-books';
 import BookDetailList from '../../../BookDetailList';
+import FeaturedReading from '../../../FeaturedReading';
 
 interface Props {
   params: Promise<{ language: string; level: string }>;
@@ -82,6 +83,13 @@ export default async function LevelPage({ params }: Props) {
         {t('levelIntro', { count: books.length, language: languageName, level })}
       </p>
       <p>{t(`levelAbout.${level}` as 'levelAbout.A1', { language: languageName })}</p>
+      <FeaturedReading
+        language={language}
+        languageName={languageName}
+        level={level}
+        books={books}
+        locale={locale}
+      />
       <BookDetailList books={books} locale={locale} />
       {neighbours.length > 0 && (
         <nav aria-label={t('otherLevels')} className="flex flex-wrap gap-x-4">

@@ -16,6 +16,40 @@ test.describe('public book landing pages', () => {
     );
   });
 
+  for (const { language, level, slugs } of [
+    {
+      language: 'fr',
+      level: 'b1',
+      slugs: ['contes-du-lundi', 'lettres-de-mon-moulin', 'la-petite-fadette'],
+    },
+    { language: 'es', level: 'a2', slugs: ['an-elementary-spanish-reader', 'lecturas-faciles'] },
+    {
+      language: 'en',
+      level: 'b1',
+      slugs: ['the-wonderful-wizard-of-oz', 'daddy-long-legs', 'a-little-princess'],
+    },
+  ]) {
+    test(`the ${language} ${level} guide links directly to its free chapter previews`, async ({
+      page,
+    }) => {
+      const response = await page.goto(`/books/${language}/level/${level}`);
+      expect(response?.ok()).toBe(true);
+      const featured = page.getByTestId('featured-reading');
+      await expect(featured.getByRole('listitem')).toHaveCount(slugs.length);
+      for (const slug of slugs) {
+        const href = `/books/${language}/${slug}/read`;
+        expect(await response?.text()).toContain(`href="${href}"`);
+        const preview = featured.locator(`a[href="${href}"]`);
+        await expect(preview).toBeVisible();
+        const chapter = await page.request.get(href);
+        expect(chapter.ok()).toBe(true);
+        expect(await chapter.text()).toContain('data-testid="book-chapter"');
+      }
+      await featured.locator(`a[href="/books/${language}/${slugs[0]}/read"]`).click();
+      await expect(page.getByTestId('book-chapter')).toBeVisible();
+    });
+  }
+
   test('the level chip opens the list of books at that level', async ({ page }) => {
     await page.goto('/books/en/walden');
     await page.locator('a[href="/books/en/level/c2"]').first().click();
