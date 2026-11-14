@@ -131,3 +131,54 @@ test('iPhone settings show compact groups and expand a directly linked setting',
   await expect(settings.getByTestId('review-goal')).toBeVisible();
   await expect(settings.getByTestId('native-language-select')).toBeHidden();
 });
+
+test('iPad moves the same app tabs between the toolbar and the narrow layout', async ({ page }) => {
+  await page.setViewportSize({ width: 1180, height: 820 });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, 'platform', { value: 'MacIntel' });
+    Object.defineProperty(navigator, 'maxTouchPoints', { value: 5 });
+    window.Capacitor = {
+      isNativePlatform: () => true,
+      isPluginAvailable: (name) => name === 'NativeTabBar',
+      Plugins: {
+        NativeTabBar: {
+          addListener: async () => ({ remove: async () => {} }),
+          configure: async () => {},
+          select: async () => {},
+          show: async () => {},
+          hide: async () => {},
+        },
+      },
+    };
+  });
+
+  await page.goto('/me');
+  await expect(page.getByRole('heading', { name: 'Me', exact: true })).toBeVisible();
+  await expect(page.getByTestId('native-chat')).toBeVisible();
+  await expect(page.locator('html')).toHaveAttribute('data-native-tabbar', '');
+  await expect(page.locator('html')).toHaveAttribute('data-native-tabbar-hidden', '');
+  await expect(page.locator('.app-sidebar')).toBeHidden();
+  const tabs = page.getByTestId('ipad-tabs');
+  await expect(tabs.getByRole('link', { name: 'Me' })).toHaveAttribute('aria-current', 'location');
+  await tabs.getByRole('link', { name: 'Library' }).click();
+  await expect(page).toHaveURL('/');
+  await expect(tabs.getByRole('link', { name: 'Library' })).toHaveAttribute(
+    'aria-current',
+    'location',
+  );
+  await tabs.getByRole('link', { name: 'Me' }).click();
+  await expect(page).toHaveURL('/me');
+
+  await page.setViewportSize({ width: 500, height: 820 });
+  await expect(tabs).toBeHidden();
+  await expect(page.locator('html')).not.toHaveAttribute('data-native-tabbar-hidden');
+  await page.setViewportSize({ width: 820, height: 1180 });
+  await expect(tabs).toBeVisible();
+  await expect(tabs.getByRole('link', { name: 'Me' })).toHaveAttribute('aria-current', 'location');
+
+  await page.getByRole('main').getByRole('link', { name: 'Settings' }).click();
+  await expect(page.getByTestId('iphone-settings')).toBeVisible();
+  await page.getByTestId('native-back').click();
+  await expect(page).toHaveURL('/me');
+});

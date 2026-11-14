@@ -1,6 +1,7 @@
 'use client';
 
 import { useIsNativeApp } from '@/lib/native-app';
+import { useRegularIPadWindow } from '@/components/NativeBridge/ipad-layout';
 import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
@@ -8,6 +9,7 @@ import { ArrowRight, BookMarked, ChevronDown, Folder, Plus, Sparkles } from 'luc
 import PageOutline from '@/components/PageOutline';
 import AddCollectionTile from './components/AddCollectionTile';
 import EmptyState from './components/EmptyState';
+import IPadFeaturedBook, { hasUnfinishedReading } from './components/IPadFeaturedBook';
 import HomeRecommendations from './components/HomeRecommendations';
 import DescriptionToggle from '@/components/DescriptionToggle';
 import LibraryViewToggle from '@/components/LibraryViewToggle';
@@ -73,13 +75,14 @@ import { useActiveLanguage } from '@/utils/hooks';
 export default function Home() {
   const t = useTranslations('library');
   const nativeApp = useIsNativeApp();
+  const regularIPad = useRegularIPadWindow();
   const router = useRouter();
   const activeLanguage = useActiveLanguage().code;
   const [libraryView] = useLibraryView();
   const listClass =
     libraryView === 'list'
       ? 'flex flex-col gap-3'
-      : 'grid grid-cols-3 gap-x-3 gap-y-5 sm:gap-4 lg:grid-cols-4 xl:grid-cols-5';
+      : 'library-book-grid grid grid-cols-3 gap-x-3 gap-y-5 sm:gap-4 lg:grid-cols-4 xl:grid-cols-5';
   const [collections, setCollections] = useState<Collection[]>(() => peekAllCollections() ?? []);
   const [groups, setGroups] = useState<CollectionGroup[]>(() => peekAllGroups() ?? []);
   const [isLoading, setIsLoading] = useState(() => peekAllCollections() === undefined);
@@ -432,9 +435,16 @@ export default function Home() {
     ? libraryDestinationId
     : null;
   const libraryImportHandlers = importHandlers(libraryDestination);
+  const featuredBook =
+    regularIPad && onboarding?.progress?.status !== 'in_progress'
+      ? (collections.reduce<Collection | undefined>((latest, book) => {
+          if (!hasUnfinishedReading(book)) return latest;
+          return !latest || book.lastReadAt > latest.lastReadAt ? book : latest;
+        }, undefined) ?? collections.find((book) => book.lessonCount > 0))
+      : undefined;
 
   return (
-    <main className="native-compact-page mx-auto max-w-6xl px-4 py-4 sm:px-6 sm:py-8 lg:px-8">
+    <main className="native-compact-page ipad-library mx-auto max-w-6xl px-4 py-4 sm:px-6 sm:py-8 lg:px-8">
       <PendingBookOpener />
       <PageHeader title={t('page.title')} titleAside={<DailyGoalBadge />} className="mb-3 sm:mb-6">
         <div className="relative flex flex-wrap items-center gap-1.5 sm:gap-2">
@@ -614,134 +624,151 @@ export default function Home() {
             <HomeRecommendations language={activeLanguage} defaultOpen={collections.length < 3} />
           )}
 
-          {collections.length > 0 || hasGroups ? (
-            <div className="space-y-6 sm:space-y-10">
-              <div
-                className={`mb-3 flex items-center justify-end ${libraryView === 'grid' ? 'max-sm:hidden' : ''}`}
-              >
-                <DescriptionToggle />
-              </div>
-              {/* Grouped sections */}
-              {visibleGroups.map((group) => {
-                const items = groupedCollections.get(group.id) || [];
-                const isCollapsed = collapsedGroups.has(group.id);
-                return (
-                  <div
-                    key={group.id}
-                    data-testid={`group-${group.id}`}
-                    className="panel p-3 sm:p-5"
-                  >
-                    <div className="mb-3 flex items-center gap-3 sm:mb-4">
-                      <button
-                        onClick={() => toggleGroup(group.id)}
-                        aria-expanded={!isCollapsed}
-                        aria-label={
-                          isCollapsed
-                            ? t('group.expand', { name: group.name })
-                            : t('group.collapse', { name: group.name })
-                        }
-                        data-testid={`group-toggle-${group.id}`}
-                        className="-ml-1 flex items-center gap-2 rounded-lg px-1 py-0.5 text-left hover:bg-accent"
-                      >
-                        <ChevronDown
-                          className={`h-4 w-4 text-muted-foreground transition-transform ${isCollapsed ? '-rotate-90' : ''}`}
-                        />
-                        <h3 className="text-lg font-semibold text-foreground">{group.name}</h3>
-                      </button>
-                      <span className="text-sm text-muted-foreground">
-                        {t('group.items', { count: items.length })}
-                      </span>
-                      <div className="flex-1" />
-                      <ImportDropdown
-                        {...importHandlers(group.id)}
-                        size="sm"
-                        variant="outline"
-                        disabled={isImporting}
-                        isImporting={isImporting && importGroupId === group.id}
-                        testId={`group-import-${group.id}`}
-                        minimalOnMobile
-                      />
-                      <GroupMenu
-                        onRename={() => handleRenameGroup(group.id, group.name)}
-                        onDelete={() => handleDeleteGroup(group.id, group.name)}
-                      />
-                    </div>
-                    {!isCollapsed && (
-                      <DndContext
-                        sensors={sensors}
-                        collisionDetection={closestCenter}
-                        onDragEnd={(e) => handleCollectionDragEnd(group.id, e)}
-                      >
-                        <div className={listClass}>
-                          <SortableContext
-                            items={items.map((c) => c.id)}
-                            strategy={rectSortingStrategy}
-                          >
-                            {items.map((collection) => (
-                              <SortableCollectionCard key={collection.id} collection={collection} />
-                            ))}
-                          </SortableContext>
-                          {addingToGroupId === group.id ? (
-                            <AddCollectionTile
-                              value={newCollectionTitle}
-                              onChange={setNewCollectionTitle}
-                              onSubmit={() => handleAddCollectionToGroup(group.id)}
-                              onCancel={() => {
-                                setAddingToGroupId(null);
-                                setNewCollectionTitle('');
-                              }}
-                            />
-                          ) : (
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setAddingToGroupId(group.id);
-                                setNewCollectionTitle('');
-                              }}
-                              data-testid={`add-collection-${group.id}`}
-                              className={`group flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border text-muted-foreground transition-all hover:bg-accent hover:text-foreground ${libraryView === 'list' ? 'min-h-16' : 'min-h-36 sm:min-h-[14rem]'}`}
-                            >
-                              <Plus className="h-8 w-8" strokeWidth={1.5} />
-                              <span className="text-sm font-medium">
-                                {t('group.newCollection')}
-                              </span>
-                            </button>
-                          )}
-                        </div>
-                      </DndContext>
-                    )}
-                  </div>
-                );
-              })}
-
-              {/* Ungrouped */}
-              {ungrouped.length > 0 && (
-                <div
-                  data-testid="ungrouped-section"
-                  className="panel p-5 max-sm:rounded-none max-sm:border-0 max-sm:bg-transparent max-sm:p-0"
-                >
-                  {hasGroups && (
-                    <h3 className="mb-4 text-lg font-semibold text-foreground">
-                      {t('page.ungrouped')}
-                    </h3>
-                  )}
-                  <div className={listClass}>
-                    {ungrouped.map((collection) => (
-                      <CollectionCard key={collection.id} collection={collection} />
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          ) : (
-            <EmptyState
-              onAddStarter={starterAvailable ? handleAddStarter : undefined}
-              isAddingStarter={isAddingStarter}
+          {featuredBook && (
+            <IPadFeaturedBook
+              key={`${featuredBook.id}:${featuredBook.lastReadAt}`}
+              collection={featuredBook}
             />
           )}
-          {nativeApp && (collections.length > 0 || hasGroups) && (
-            <HomeRecommendations language={activeLanguage} defaultOpen={false} />
-          )}
+          <div className="ipad-library-columns">
+            {collections.length > 0 || hasGroups ? (
+              <div className="min-w-0 space-y-6 sm:space-y-10">
+                <div
+                  className={`mb-3 flex items-center justify-end ${libraryView === 'grid' ? 'max-sm:hidden' : ''}`}
+                >
+                  <DescriptionToggle />
+                </div>
+                {/* Grouped sections */}
+                {visibleGroups.map((group) => {
+                  const items = groupedCollections.get(group.id) || [];
+                  const isCollapsed = collapsedGroups.has(group.id);
+                  return (
+                    <div
+                      key={group.id}
+                      data-testid={`group-${group.id}`}
+                      className="panel p-3 sm:p-5"
+                    >
+                      <div className="mb-3 flex items-center gap-3 sm:mb-4">
+                        <button
+                          onClick={() => toggleGroup(group.id)}
+                          aria-expanded={!isCollapsed}
+                          aria-label={
+                            isCollapsed
+                              ? t('group.expand', { name: group.name })
+                              : t('group.collapse', { name: group.name })
+                          }
+                          data-testid={`group-toggle-${group.id}`}
+                          className="-ml-1 flex items-center gap-2 rounded-lg px-1 py-0.5 text-left hover:bg-accent"
+                        >
+                          <ChevronDown
+                            className={`h-4 w-4 text-muted-foreground transition-transform ${isCollapsed ? '-rotate-90' : ''}`}
+                          />
+                          <h3 className="text-lg font-semibold text-foreground">{group.name}</h3>
+                        </button>
+                        <span className="text-sm text-muted-foreground">
+                          {t('group.items', { count: items.length })}
+                        </span>
+                        <div className="flex-1" />
+                        <ImportDropdown
+                          {...importHandlers(group.id)}
+                          size="sm"
+                          variant="outline"
+                          disabled={isImporting}
+                          isImporting={isImporting && importGroupId === group.id}
+                          testId={`group-import-${group.id}`}
+                          minimalOnMobile
+                        />
+                        <GroupMenu
+                          onRename={() => handleRenameGroup(group.id, group.name)}
+                          onDelete={() => handleDeleteGroup(group.id, group.name)}
+                        />
+                      </div>
+                      {!isCollapsed && (
+                        <DndContext
+                          sensors={sensors}
+                          collisionDetection={closestCenter}
+                          onDragEnd={(e) => handleCollectionDragEnd(group.id, e)}
+                        >
+                          <div className={listClass}>
+                            <SortableContext
+                              items={items.map((c) => c.id)}
+                              strategy={rectSortingStrategy}
+                            >
+                              {items.map((collection) => (
+                                <SortableCollectionCard
+                                  key={collection.id}
+                                  collection={collection}
+                                />
+                              ))}
+                            </SortableContext>
+                            {addingToGroupId === group.id ? (
+                              <AddCollectionTile
+                                value={newCollectionTitle}
+                                onChange={setNewCollectionTitle}
+                                onSubmit={() => handleAddCollectionToGroup(group.id)}
+                                onCancel={() => {
+                                  setAddingToGroupId(null);
+                                  setNewCollectionTitle('');
+                                }}
+                              />
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setAddingToGroupId(group.id);
+                                  setNewCollectionTitle('');
+                                }}
+                                data-testid={`add-collection-${group.id}`}
+                                className={`group flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border text-muted-foreground transition-all hover:bg-accent hover:text-foreground ${libraryView === 'list' ? 'min-h-16' : 'min-h-36 sm:min-h-[14rem]'}`}
+                              >
+                                <Plus className="h-8 w-8" strokeWidth={1.5} />
+                                <span className="text-sm font-medium">
+                                  {t('group.newCollection')}
+                                </span>
+                              </button>
+                            )}
+                          </div>
+                        </DndContext>
+                      )}
+                    </div>
+                  );
+                })}
+
+                {/* Ungrouped */}
+                {ungrouped.length > 0 && (
+                  <div
+                    data-testid="ungrouped-section"
+                    className="library-books-panel panel p-5 max-sm:rounded-none max-sm:border-0 max-sm:bg-transparent max-sm:p-0"
+                  >
+                    {hasGroups && (
+                      <h3 className="mb-4 text-lg font-semibold text-foreground">
+                        {t('page.ungrouped')}
+                      </h3>
+                    )}
+                    <div className={listClass}>
+                      {ungrouped.map((collection) => (
+                        <CollectionCard key={collection.id} collection={collection} />
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <EmptyState
+                onAddStarter={starterAvailable ? handleAddStarter : undefined}
+                isAddingStarter={isAddingStarter}
+              />
+            )}
+            {nativeApp && (collections.length > 0 || hasGroups) && (
+              <div className="library-recommendations min-w-0">
+                <HomeRecommendations
+                  language={activeLanguage}
+                  defaultOpen={regularIPad}
+                  keepControlsWhenEmpty={regularIPad}
+                />
+              </div>
+            )}
+          </div>
         </section>
       )}
     </main>

@@ -1,6 +1,6 @@
 # Translation domain
 
-The iOS sheet puts the first definition and the original sentence before expandable dictionary details. The state and source are available under More actions.
+On iPhone and iPad, lookups show a side panel in wide windows and a bottom sheet in narrow windows. Both put the first definition and the original sentence before expandable dictionary details. The state and source are available under More actions.
 
 This domain looks up a word or phrase and shows the drawer. The tap starts in the Reader. Save of the gloss is the Vocabulary domain.
 

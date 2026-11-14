@@ -513,7 +513,7 @@
   N("file:home-page", "file", "Home page", {
     path: "src/app/(index)/page.tsx",
     domain: "library",
-    summary: "Header actions and reading recommendations. Tap the recommendation header to expand it. On iOS, saved books appear first.",
+    summary: "Header actions and reading recommendations. The iPad library features a book and links to its current chapter. Saved books and recommendations reflow with the window.",
   });
   N("file:collection-page", "file", "Collection page", { path: "src/app/collection/[id]/page.tsx", domain: "library", summary: "On iPhone, author and lesson counts sit below the title in smaller text. Each lesson row opens the reader or a menu of lesson actions." });
   N("file:read-page", "file", "Read page", { path: "src/app/read/[bookId]/page.tsx", domain: "translation" });
@@ -521,7 +521,7 @@
   N("file:reader-article", "file", "ReaderArticle", { path: "src/components/MarkdownReader/ReaderArticle.tsx", domain: "library" });
   N("file:transcript-reader", "file", "TranscriptReader", { path: "src/components/MarkdownReader/TranscriptReader.tsx", domain: "listen" });
   N("file:word-cell", "file", "WordCell", { path: "src/components/WordCell/index.tsx", domain: "library" });
-  N("file:translation-drawer", "file", "TranslationDrawer", { path: "src/components/TranslationDrawer/index.tsx", domain: "translation", summary: "On iOS, shows the first meaning and original sentence before expandable dictionary details." });
+  N("file:translation-drawer", "file", "TranslationDrawer", { path: "src/components/TranslationDrawer/index.tsx", domain: "translation", summary: "The iOS reader puts the first meaning and sentence in a side panel or bottom sheet, depending on window width." });
   N("file:data-layer", "file", "data-layer.ts", { path: "src/lib/data-layer.ts", domain: "library" });
   N("file:api-base", "file", "api-base.ts", { path: "src/lib/api-base.ts" });
   N("file:dictionary-client", "file", "dictionary-client.ts", { path: "src/lib/dictionary-client.ts", domain: "translation" });
@@ -559,7 +559,7 @@
   N("file:youtube-import", "file", "YouTubeImportModal", { path: "src/components/YouTubeImportModal/index.tsx", domain: "library" });
   N("file:paste-import", "file", "PasteImportModal", { path: "src/components/PasteImportModal/index.tsx", domain: "library" });
   N("file:definition-links", "file", "definition-links.ts", { path: "src/lib/definition-links.ts", domain: "translation" });
-  N("file:layout", "file", "Root layout", { path: "src/app/layout.tsx", domain: "auth" });
+  N("file:layout", "file", "Root layout", { path: "src/app/layout.tsx", domain: "auth", summary: "Mounts the app chrome, with top tabs in regular iPad windows." });
   N("file:auth-guard", "file", "AuthGuard", { path: "src/components/AuthGuard/index.tsx", domain: "auth" });
   N("file:billing-guard", "file", "BillingGuard", { path: "src/components/BillingGuard/index.tsx", domain: "billing" });
   N("file:beta-login-page", "file", "Readfox beta login continuation", { path: "src/app/(auth)/beta-login/BetaLogin.tsx", domain: "auth" });

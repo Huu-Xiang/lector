@@ -802,8 +802,8 @@ html {
   }
 }
 
-/* Inside the iPhone app the page runs edge to edge; keep content off the notch and the home bar. */
 html[data-native-app] body {
+  flex-direction: column;
   padding-top: env(safe-area-inset-top);
 }
 
@@ -811,23 +811,22 @@ html[data-native-app] body {
   display: none;
 }
 
-/* Phone widths only; on an iPad the sidebar shows instead. The bar pads itself for the notch. */
-@media (width < 40rem) {
+@media screen {
   html[data-native-app] .native-topbar {
     display: flex;
   }
 
-  html[data-native-app] .web-topbar {
+  html[data-native-app] :is(.web-topbar, .app-sidebar) {
     display: none;
   }
 
   html[data-native-app] body:has(.native-topbar) {
     padding-top: 0;
   }
-}
-
-html[data-native-app] .native-bottom-nav {
-  padding-bottom: env(safe-area-inset-bottom);
+  html[data-native-app]:not([data-native-tabbar]) .native-bottom-nav {
+    display: block;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
 }
 
 /* `data-native-app` is set before paint by the script in layout.tsx; `data-native-tabbar`
@@ -911,14 +910,24 @@ html[data-native-app] :is(input, textarea, select) {
   font-size: max(16px, 1em);
 }
 
-@media (width < 64rem) {
-  html[data-native-app] [data-testid='translation-drawer'] {
-    padding-bottom: env(safe-area-inset-bottom);
-  }
+html[data-native-app] [data-native-sheet] {
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
-html[data-native-app] .app-bottom-spacer {
-  height: var(--app-bottom-bar);
+@media screen {
+  html[data-native-app] .app-bottom-spacer {
+    display: block;
+    height: var(--app-bottom-bar);
+  }
+
+  html[data-native-app] .reader-page {
+    height: calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  }
+
+  html[data-native-app] [data-native-side-drawer] {
+    top: env(safe-area-inset-top);
+    bottom: env(safe-area-inset-bottom);
+  }
 }
 
 html[data-native-app] body {
@@ -972,7 +981,7 @@ html[data-native-app] body:has(.setup-page)::before {
   }
 }
 
-@media (width < 40rem) {
+@media screen {
   html[data-native-app] .native-compact-page {
     padding-inline: 1rem;
     padding-block-start: 0.75rem;
@@ -1087,7 +1096,7 @@ html[data-native-app] .native-topbar {
   -webkit-touch-callout: none;
 }
 
-@media (width < 40rem) {
+@media screen {
   html[data-native-app] [data-above-tabbar] {
     bottom: calc(var(--app-bottom-bar) + 1rem);
   }
@@ -1143,7 +1152,235 @@ html[data-native-app]::view-transition-new(native-page) {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .native-lookup-sheet {
+  :is(.native-lookup-sheet, [data-native-side-drawer]) {
     transition: none;
+  }
+}
+
+.ipad-tabs {
+  display: none;
+}
+
+@media screen and (min-width: 48rem) {
+  html[data-ipad-app] {
+    --ipad-gutter: clamp(1.5rem, 4vw, 3rem);
+    scroll-padding-top: calc(4.5rem + env(safe-area-inset-top));
+  }
+
+  html[data-ipad-app] .native-toolbar {
+    min-height: 4rem;
+    padding-inline: max(var(--ipad-gutter), env(safe-area-inset-left))
+      max(var(--ipad-gutter), env(safe-area-inset-right));
+  }
+
+  html[data-ipad-app] .native-toolbar:has(.ipad-tabs) .native-scroll-title,
+  html[data-native-app][data-ipad-app] .native-bottom-nav {
+    display: none;
+  }
+
+  html[data-ipad-app] .ipad-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.25rem;
+    max-width: min(30rem, 57vw);
+    padding: 0.25rem;
+    border: 1px solid var(--border);
+    border-radius: 1.5rem;
+    background: var(--card);
+  }
+
+  html[data-ipad-app] .ipad-tabs a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    min-height: 44px;
+    min-width: 44px;
+    padding: 0.375rem 0.875rem;
+    border-radius: 1.125rem;
+    color: var(--muted-foreground);
+    font-weight: 700;
+    font-size: 0.875rem;
+    text-align: center;
+    overflow-wrap: anywhere;
+  }
+
+  html[data-ipad-app] .ipad-tabs a:is(:hover, :active, :focus-visible) {
+    color: var(--foreground);
+    background: var(--accent);
+  }
+
+  html[data-ipad-app] .ipad-tabs a[aria-current] {
+    color: var(--primary-text);
+    background: var(--primary-soft);
+  }
+
+  html[data-ipad-app] .native-topbar .ipad-tabs a::after {
+    content: none;
+  }
+
+  html[data-ipad-app] .app-bottom-spacer {
+    height: env(safe-area-inset-bottom);
+  }
+
+  html[data-ipad-app] .native-compact-page {
+    padding: 1.25rem var(--ipad-gutter) 2rem;
+  }
+
+  html[data-ipad-app] .native-compact-page .native-page-title {
+    font-size: clamp(1.625rem, 3vw, 2.25rem);
+  }
+
+  html[data-ipad-app] .ipad-library {
+    max-width: 90rem;
+  }
+
+  html[data-ipad-app] .ipad-library .page-header {
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-block-end: 1.25rem;
+  }
+
+  html[data-ipad-app] .ipad-library .native-page-title {
+    font-family: var(--font-reading);
+    font-size: clamp(2rem, 4vw, 3.25rem);
+    font-weight: 650;
+    line-height: 1.15;
+  }
+
+  .ipad-featured-book {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.65fr);
+    align-items: center;
+    gap: clamp(1.5rem, 5vw, 4.5rem);
+    margin-block-end: clamp(1.75rem, 4vw, 3.5rem);
+    padding: clamp(1.25rem, 4vw, 3.5rem);
+    border: 1px solid var(--border);
+    border-radius: 1.75rem;
+    background: linear-gradient(
+      115deg,
+      color-mix(in srgb, var(--primary-soft) 72%, var(--card)),
+      var(--card) 72%
+    );
+  }
+
+  .ipad-featured-cover {
+    justify-self: center;
+    width: min(100%, 10.75rem);
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    border-radius: 0.375rem;
+    background: var(--muted);
+    box-shadow: 0 1rem 2rem color-mix(in srgb, black 24%, transparent);
+  }
+
+  .ipad-featured-copy {
+    min-width: 0;
+    max-width: 38rem;
+  }
+
+  .ipad-featured-progress {
+    margin-block-end: 0.5rem;
+    color: var(--primary-text);
+    font-size: 0.875rem;
+    font-weight: 700;
+  }
+
+  .ipad-featured-title {
+    overflow-wrap: anywhere;
+    font-family: var(--font-reading);
+    font-size: clamp(1.75rem, 4vw, 3.5rem);
+    font-weight: 650;
+    line-height: 1.12;
+    text-wrap: balance;
+  }
+
+  .ipad-featured-author {
+    margin-block-start: 0.5rem;
+    color: var(--muted-foreground);
+  }
+
+  .ipad-featured-meter {
+    max-width: 16rem;
+    height: 0.25rem;
+    margin-block-start: 1rem;
+    overflow: hidden;
+    border-radius: 999px;
+    background: var(--border);
+  }
+
+  .ipad-featured-meter > div {
+    height: 100%;
+    border-radius: inherit;
+    background: var(--primary);
+  }
+
+  .ipad-featured-action {
+    height: auto;
+    min-height: 44px;
+    margin-block-start: 1.25rem;
+    padding-block: 0.5rem;
+    border-radius: 999px;
+    white-space: normal;
+  }
+
+  html[data-ipad-app] .ipad-library .library-cover-card {
+    overflow: visible;
+    border: 0;
+    border-radius: 0.5rem;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  html[data-ipad-app] .ipad-library .library-cover-art {
+    border-radius: 0.5rem;
+    box-shadow: 0 0.375rem 0.875rem color-mix(in srgb, black 17%, transparent);
+  }
+
+  html[data-ipad-app] .ipad-library .library-cover-caption {
+    padding: 0.625rem 0.125rem 0;
+  }
+
+  html[data-ipad-app] .ipad-library .library-cover-meta {
+    justify-content: flex-start;
+  }
+
+  html[data-ipad-app] .ipad-library .library-recommendations > section {
+    border-radius: 1.25rem;
+  }
+
+  html[data-ipad-app] .ipad-library-columns {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  html[data-ipad-app] .library-books-panel {
+    border: 0;
+    background: transparent;
+    padding: 0;
+    box-shadow: none;
+  }
+
+  html[data-ipad-app] .library-book-grid {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 8.75rem), 1fr));
+    gap: 1.5rem 1rem;
+  }
+
+  html[data-ipad-app] .reader-page .reader-text {
+    padding-block: clamp(2rem, 5vh, 4rem);
+  }
+
+  html[data-ipad-app] [data-native-side-drawer] {
+    border-start-start-radius: 1.25rem;
+    border-end-start-radius: 1.25rem;
+  }
+}
+
+@media screen and (min-width: 64rem) {
+  html[data-ipad-app] .ipad-library-columns:has(.library-recommendations > section) {
+    grid-template-columns: minmax(0, 1fr) minmax(14rem, 19rem);
+    align-items: start;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
   }
 }

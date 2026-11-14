@@ -16,6 +16,7 @@ import { rememberPendingShare } from '@/lib/share-import';
 import { SETTINGS_KEYS } from '@/app/settings/constants';
 import OfflineSync from './OfflineSync';
 import NativeTabBarSync from './NativeTabBarSync';
+import { isIPadApp } from './ipad-layout';
 import ReviewWidgetSync from './ReviewWidgetSync';
 
 /** Connects the web app to the iPhone shell. Renders nothing and does nothing on the web. */
@@ -28,6 +29,7 @@ export default function NativeBridge() {
     if (!isNativeApp()) return;
     const root = document.documentElement;
     root.dataset.nativeApp = '';
+    root.toggleAttribute('data-ipad-app', isIPadApp());
     // Next rewrites the viewport tag on every route change, so keep `viewport-fit=cover` on it.
     const keepViewportFit = () => {
       const viewport = document.querySelector('meta[name="viewport"]');
