@@ -1024,7 +1024,8 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     if (!wordPanel.isOpen || wordPanel.word.includes(' ')) return;
     if (autoSaveRequestId.current !== translationRequestId.current) return;
     if (!wordPanel.translation || wordPanel.isLoading || wordPanel.isStreamingGloss) return;
-    if (wordPanel.error || wordPanel.existingEntry || wordPanel.dictEntry?.needsLocalization) return;
+    if (wordPanel.error || wordPanel.existingEntry || wordPanel.dictEntry?.needsLocalization)
+      return;
     autoSaveRequestId.current = 0;
     void saveWordToVocab(true);
   }, [autoSaveLookups, onboarding, wordPanel, saveWordToVocab]);
@@ -1691,7 +1692,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
   );
 
   return (
-    <div className="flex h-dvh flex-col overflow-x-hidden bg-card 2xl:flex-row print:block print:h-auto print:overflow-visible">
+    <div className="reader-page flex h-dvh flex-col overflow-x-hidden bg-card 2xl:flex-row print:block print:h-auto print:overflow-visible">
       <div
         className={`relative min-h-0 flex-1 overflow-hidden print:block print:h-auto print:overflow-visible ${
           wordPanel.isOpen ? 'pb-[var(--sheet-h)] lg:pr-96 lg:pb-0 2xl:pr-0' : ''

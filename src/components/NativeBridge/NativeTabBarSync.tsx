@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
+import { useEffect, useEffectEvent, useMemo, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { isBareRoute } from '@/lib/auth-client';
@@ -21,7 +21,6 @@ export default function NativeTabBarSync() {
   const tNav = useTranslations('nav');
   const [ready] = useState(hasNativeTabBar);
   const [covered, setCovered] = useState(false);
-  const wide = useWideScreen();
   const [extra] = useTabPreference();
   const tabs = useMemo(
     () =>
@@ -33,16 +32,17 @@ export default function NativeTabBarSync() {
     [extra, tNav],
   );
   const selected = selectedNativeTab(pathname, extra);
+  const openTab = useEffectEvent((id: string) => {
+    if (id !== pathname && tabs.some((tab) => tab.id === id)) {
+      router.replace(id, { scroll: id === ME_TAB.href });
+    }
+  });
 
   useEffect(() => {
     if (!ready) return;
     document.documentElement.dataset.nativeTabbar = '';
-    return onNativeTabSelected((id) => {
-      if (id !== pathname && tabs.some((tab) => tab.id === id)) {
-        router.replace(id, { scroll: id === ME_TAB.href });
-      }
-    });
-  }, [ready, router, pathname, tabs]);
+    return onNativeTabSelected((id) => openTab(id));
+  }, [ready]);
 
   useEffect(() => {
     if (!ready) return;
@@ -74,7 +74,7 @@ export default function NativeTabBarSync() {
     };
   }, [ready]);
 
-  const visible = !isBareRoute(pathname) && !hasOwnHeader(pathname) && !covered && !wide;
+  const visible = !isBareRoute(pathname) && !hasOwnHeader(pathname) && !covered;
   useEffect(() => {
     if (!ready) return;
     void setNativeTabBarVisible(visible);
@@ -82,19 +82,4 @@ export default function NativeTabBarSync() {
   }, [ready, visible]);
 
   return null;
-}
-
-/** At `sm` and up the web sidebar shows, as on an iPad, so the tab bar steps aside. */
-const WIDE = '(min-width: 40rem)';
-
-function useWideScreen(): boolean {
-  return useSyncExternalStore(
-    (onChange) => {
-      const query = window.matchMedia(WIDE);
-      query.addEventListener('change', onChange);
-      return () => query.removeEventListener('change', onChange);
-    },
-    () => window.matchMedia(WIDE).matches,
-    () => false,
-  );
 }

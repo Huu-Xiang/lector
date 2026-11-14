@@ -30,6 +30,8 @@ npx cap open ios
 
 The shell opens a small bundled page (`launcher/`). It checks `https://readfox.app/health`, then loads the site. The user agent carries `ReadfoxApp/1`, which the web code reads (`src/lib/native-app.ts`). Links to other hosts open in Safari.
 
+TestFlight loads the UI deployed at `readfox.app`. A simulator pointed at a local or test server shows that server's UI. Verify web fixes against the production deployment and launcher fixes against the archive selected for upload.
+
 Signing, the app icon, the launch screen, and the TestFlight upload are added with the release unit.
 
 ## Offline reading
@@ -74,7 +76,7 @@ Run these on a real iPhone from a TestFlight build.
 The app draws some of its interface natively, on top of the web page.
 
 - `MainViewController.swift` replaces Capacitor's root view controller (set in `Main.storyboard`). It registers the two plugins below and turns on the edge swipe back.
-- `NativeTabBarPlugin.swift` is a UITabBar over the bottom of the web view. The page sends the tabs and the selection (`src/components/NativeBridge/NativeTabBarSync.tsx`) and hides the bar in the reader, under a dialog or sheet, and at iPad widths, where the web sidebar shows. The plugin hides it while the keyboard is up. Built with the iOS 26 SDK, the bar takes the Liquid Glass look.
+- `NativeTabBarPlugin.swift` is a UITabBar over the bottom of the web view on iPhone and iPad. The page sends the tabs and selection through `src/components/NativeBridge/NativeTabBarSync.tsx`. The bar hides in the reader, under a dialog or sheet, and while the keyboard is up. Built with the iOS 26 SDK, the bar takes the Liquid Glass look.
 - `ReviewWidgetPlugin.swift` saves the review counts the page sends into the App Group, and `ReviewWidget/` is a WidgetKit extension that shows them (small, medium, and two lock screen sizes). The widget opens `readfox://practice`. It needs iOS 17; the app itself still runs on iOS 14.
 - The web side marks the page with `data-native-app` before first paint (`src/app/layout.tsx`); `globals.css` then uses the system font at the iOS text size setting (Dynamic Type), flat buttons, tinted selected options, 44-point tap targets, and a short slide on page changes.
 - On iPhone, page headings, settings panels, and lists use less space. Touch targets still use at least 44 points in these layouts. The reader keeps its own text size.

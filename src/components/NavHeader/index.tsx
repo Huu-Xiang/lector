@@ -88,7 +88,7 @@ export default function NavHeader() {
       {/* Desktop left sidebar — hidden on mobile */}
       <aside
         className={clsx(
-          'sticky top-0 z-50 hidden h-screen border-r border-border bg-card sm:flex sm:flex-col print:hidden',
+          'app-sidebar sticky top-0 z-50 hidden h-screen border-r border-border bg-card sm:flex sm:flex-col print:hidden',
           collapsed ? 'w-16' : 'w-56',
         )}
       >

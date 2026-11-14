@@ -51,7 +51,7 @@ export default function NativeTopBar() {
   return (
     <header
       data-scrolled={scrolled || undefined}
-      className="native-topbar group sticky top-0 isolate z-40 items-end pt-[env(safe-area-inset-top)] sm:hidden print:hidden"
+      className="native-topbar group sticky top-0 isolate z-40 items-end pt-[env(safe-area-inset-top)]"
     >
       <div className="grid h-11 w-full grid-cols-[1fr_auto_1fr] items-center px-2">
         <div className="flex items-center justify-start">

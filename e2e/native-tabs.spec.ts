@@ -131,3 +131,35 @@ test('iPhone settings show compact groups and expand a directly linked setting',
   await expect(settings.getByTestId('review-goal')).toBeVisible();
   await expect(settings.getByTestId('native-language-select')).toBeHidden();
 });
+
+test('wide iPad windows use the iPhone app navigation', async ({ page }) => {
+  await page.setViewportSize({ width: 1180, height: 820 });
+  await page.addInitScript(() => {
+    window.Capacitor = {
+      isNativePlatform: () => true,
+      isPluginAvailable: (name) => name === 'NativeTabBar',
+      Plugins: {
+        NativeTabBar: {
+          addListener: async () => ({ remove: async () => {} }),
+          configure: async () => {},
+          select: async () => {},
+          show: async () => {},
+          hide: async () => {},
+        },
+      },
+    };
+  });
+
+  await page.goto('/me');
+  await expect(page.getByRole('heading', { name: 'Me', exact: true })).toBeVisible();
+  await expect(page.getByTestId('native-chat')).toBeVisible();
+  await expect(page.locator('html')).toHaveAttribute('data-native-tabbar', '');
+  await expect(page.locator('html')).not.toHaveAttribute('data-native-tabbar-hidden');
+  await expect(page.locator('.app-sidebar')).toBeHidden();
+  await expect(page.locator('.app-bottom-spacer')).toBeVisible();
+
+  await page.getByRole('main').getByRole('link', { name: 'Settings' }).click();
+  await expect(page.getByTestId('iphone-settings')).toBeVisible();
+  await page.getByTestId('native-back').click();
+  await expect(page).toHaveURL('/me');
+});

@@ -802,8 +802,8 @@ html {
   }
 }
 
-/* Inside the iPhone app the page runs edge to edge; keep content off the notch and the home bar. */
 html[data-native-app] body {
+  flex-direction: column;
   padding-top: env(safe-area-inset-top);
 }
 
@@ -811,23 +811,22 @@ html[data-native-app] body {
   display: none;
 }
 
-/* Phone widths only; on an iPad the sidebar shows instead. The bar pads itself for the notch. */
-@media (width < 40rem) {
+@media screen {
   html[data-native-app] .native-topbar {
     display: flex;
   }
 
-  html[data-native-app] .web-topbar {
+  html[data-native-app] :is(.web-topbar, .app-sidebar) {
     display: none;
   }
 
   html[data-native-app] body:has(.native-topbar) {
     padding-top: 0;
   }
-}
-
-html[data-native-app] .native-bottom-nav {
-  padding-bottom: env(safe-area-inset-bottom);
+  html[data-native-app]:not([data-native-tabbar]) .native-bottom-nav {
+    display: block;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
 }
 
 /* `data-native-app` is set before paint by the script in layout.tsx; `data-native-tabbar`
@@ -911,14 +910,24 @@ html[data-native-app] :is(input, textarea, select) {
   font-size: max(16px, 1em);
 }
 
-@media (width < 64rem) {
-  html[data-native-app] [data-testid='translation-drawer'] {
-    padding-bottom: env(safe-area-inset-bottom);
-  }
+html[data-native-app] [data-native-sheet] {
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
-html[data-native-app] .app-bottom-spacer {
-  height: var(--app-bottom-bar);
+@media screen {
+  html[data-native-app] .app-bottom-spacer {
+    display: block;
+    height: var(--app-bottom-bar);
+  }
+
+  html[data-native-app] .reader-page {
+    height: calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  }
+
+  html[data-native-app] [data-native-side-drawer] {
+    top: env(safe-area-inset-top);
+    bottom: env(safe-area-inset-bottom);
+  }
 }
 
 html[data-native-app] body {
@@ -972,7 +981,7 @@ html[data-native-app] body:has(.setup-page)::before {
   }
 }
 
-@media (width < 40rem) {
+@media screen {
   html[data-native-app] .native-compact-page {
     padding-inline: 1rem;
     padding-block-start: 0.75rem;
@@ -1087,7 +1096,7 @@ html[data-native-app] .native-topbar {
   -webkit-touch-callout: none;
 }
 
-@media (width < 40rem) {
+@media screen {
   html[data-native-app] [data-above-tabbar] {
     bottom: calc(var(--app-bottom-bar) + 1rem);
   }
@@ -1143,7 +1152,7 @@ html[data-native-app]::view-transition-new(native-page) {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .native-lookup-sheet {
+  :is(.native-lookup-sheet, [data-native-side-drawer]) {
     transition: none;
   }
 }

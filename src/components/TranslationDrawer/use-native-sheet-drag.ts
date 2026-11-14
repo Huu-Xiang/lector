@@ -12,6 +12,11 @@ function bound(height: number) {
 
 export function useNativeSheetDrag(active: boolean) {
   const [settledHeight, setSettledHeight] = useState(NATIVE_SHEET_DEFAULT);
+  const [wasActive, setWasActive] = useState(active);
+  if (active !== wasActive) {
+    setWasActive(active);
+    setSettledHeight(NATIVE_SHEET_DEFAULT);
+  }
   const height = useRef(NATIVE_SHEET_DEFAULT);
   const gesture = useRef<{
     pointer: number;

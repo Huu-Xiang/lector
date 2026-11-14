@@ -90,6 +90,8 @@ sequenceDiagram
 
 ### Branches
 
+- On iPhone and iPad, the library uses the app's bottom tabs. The reader hides the app bars and provides its own Back button.
+
 - A collection that holds one lesson links from the library to `/read/:id` (`onlyLessonId` in the collection list). The card's details link opens its page, and Back in the reader returns to the library.
 - A lesson row shows the opening words (`excerpt` in the lesson list) when the lesson title only repeats the collection title.
 - A collection without `coverUrl` gets a drawn cover (`src/components/CollectionCover`).
