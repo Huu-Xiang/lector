@@ -559,7 +559,7 @@
   N("file:youtube-import", "file", "YouTubeImportModal", { path: "src/components/YouTubeImportModal/index.tsx", domain: "library" });
   N("file:paste-import", "file", "PasteImportModal", { path: "src/components/PasteImportModal/index.tsx", domain: "library" });
   N("file:definition-links", "file", "definition-links.ts", { path: "src/lib/definition-links.ts", domain: "translation" });
-  N("file:layout", "file", "Root layout", { path: "src/app/layout.tsx", domain: "auth" });
+  N("file:layout", "file", "Root layout", { path: "src/app/layout.tsx", domain: "auth", summary: "Mounts the app chrome, with top tabs in regular iPad windows." });
   N("file:auth-guard", "file", "AuthGuard", { path: "src/components/AuthGuard/index.tsx", domain: "auth" });
   N("file:billing-guard", "file", "BillingGuard", { path: "src/components/BillingGuard/index.tsx", domain: "billing" });
   N("file:beta-login-page", "file", "Readfox beta login continuation", { path: "src/app/(auth)/beta-login/BetaLogin.tsx", domain: "auth" });
