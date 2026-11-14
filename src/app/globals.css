@@ -1173,7 +1173,7 @@ html[data-native-app]::view-transition-new(native-page) {
       max(var(--ipad-gutter), env(safe-area-inset-right));
   }
 
-  html[data-ipad-app] .native-scroll-title,
+  html[data-ipad-app] .native-toolbar:has(.ipad-tabs) .native-scroll-title,
   html[data-native-app][data-ipad-app] .native-bottom-nav {
     display: none;
   }

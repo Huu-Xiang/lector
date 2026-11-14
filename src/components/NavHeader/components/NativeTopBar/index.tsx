@@ -23,6 +23,7 @@ import {
   nativeTabs,
   selectedNativeTab,
 } from '@/components/NativeBridge/tab-bar';
+import { isBareRoute } from '@/lib/api-base';
 import { useTabPreference } from '@/components/NativeBridge/use-tab-preference';
 import { navLinks } from '../../constants';
 import AccountMenu from '../AccountMenu';
@@ -102,24 +103,26 @@ export default function NativeTopBar() {
         >
           {titled ? tNav(titled.labelKey) : ''}
         </span>
-        <nav className="ipad-tabs" data-testid="ipad-tabs">
-          {nativeTabs(extra).map(({ href, labelKey }) => {
-            const Icon = tabletIcons[href];
-            return (
-              <Link
-                key={href}
-                href={href}
-                replace
-                scroll={href === ME_TAB.href}
-                aria-current={selected === href ? 'location' : undefined}
-                onClick={() => void haptic()}
-              >
-                <Icon className="size-4 shrink-0" aria-hidden />
-                <span>{tNav(labelKey)}</span>
-              </Link>
-            );
-          })}
-        </nav>
+        {!isBareRoute(pathname) && (
+          <nav className="ipad-tabs" data-testid="ipad-tabs">
+            {nativeTabs(extra).map(({ href, labelKey }) => {
+              const Icon = tabletIcons[href];
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  replace
+                  scroll={href === ME_TAB.href}
+                  aria-current={selected === href ? 'location' : undefined}
+                  onClick={() => void haptic()}
+                >
+                  <Icon className="size-4 shrink-0" aria-hidden />
+                  <span>{tNav(labelKey)}</span>
+                </Link>
+              );
+            })}
+          </nav>
+        )}
         <div className="flex items-center justify-end gap-1">
           <WhatsNew variant="topbar" />
           {!nativeBar && <AccountMenu compact />}
