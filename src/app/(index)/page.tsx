@@ -9,6 +9,7 @@ import { ArrowRight, BookMarked, ChevronDown, Folder, Plus, Sparkles } from 'luc
 import PageOutline from '@/components/PageOutline';
 import AddCollectionTile from './components/AddCollectionTile';
 import EmptyState from './components/EmptyState';
+import IPadFeaturedBook, { hasUnfinishedReading } from './components/IPadFeaturedBook';
 import HomeRecommendations from './components/HomeRecommendations';
 import DescriptionToggle from '@/components/DescriptionToggle';
 import LibraryViewToggle from '@/components/LibraryViewToggle';
@@ -434,6 +435,13 @@ export default function Home() {
     ? libraryDestinationId
     : null;
   const libraryImportHandlers = importHandlers(libraryDestination);
+  const featuredBook =
+    regularIPad && onboarding?.progress?.status !== 'in_progress'
+      ? (collections.reduce<Collection | undefined>((latest, book) => {
+          if (!hasUnfinishedReading(book)) return latest;
+          return !latest || book.lastReadAt > latest.lastReadAt ? book : latest;
+        }, undefined) ?? collections.find((book) => book.lessonCount > 0))
+      : undefined;
 
   return (
     <main className="native-compact-page ipad-library mx-auto max-w-6xl px-4 py-4 sm:px-6 sm:py-8 lg:px-8">
@@ -616,6 +624,12 @@ export default function Home() {
             <HomeRecommendations language={activeLanguage} defaultOpen={collections.length < 3} />
           )}
 
+          {featuredBook && (
+            <IPadFeaturedBook
+              key={`${featuredBook.id}:${featuredBook.lastReadAt}`}
+              collection={featuredBook}
+            />
+          )}
           <div className="ipad-library-columns">
             {collections.length > 0 || hasGroups ? (
               <div className="min-w-0 space-y-6 sm:space-y-10">

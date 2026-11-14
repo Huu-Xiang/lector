@@ -513,7 +513,7 @@
   N("file:home-page", "file", "Home page", {
     path: "src/app/(index)/page.tsx",
     domain: "library",
-    summary: "Header actions and reading recommendations. Tap the recommendation header to expand it. On iOS, saved books appear first.",
+    summary: "Header actions and reading recommendations. The iPad library features a book and links to its current chapter. Saved books and recommendations reflow with the window.",
   });
   N("file:collection-page", "file", "Collection page", { path: "src/app/collection/[id]/page.tsx", domain: "library", summary: "On iPhone, author and lesson counts sit below the title in smaller text. Each lesson row opens the reader or a menu of lesson actions." });
   N("file:read-page", "file", "Read page", { path: "src/app/read/[bookId]/page.tsx", domain: "translation" });

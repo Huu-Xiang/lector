@@ -23,3 +23,9 @@ execution: code
 ## Verification
 
 Browser coverage uses the existing native bridge fixture and exercises the same UI the current TestFlight shell loads. Check selected tabs, direct navigation, viewport resize, library layout and existing reader interactions. The iPad design takes its top tabs and adaptive layout from [Apple's iPad guidance](https://developer.apple.com/design/human-interface-guidelines/tab-bars?changes=l_1__4&language=objc).
+
+## iPad library visual refinement
+
+Apple Books puts current reading above the cover grid, and Readwise makes the return to a saved position a direct action. Use available cover artwork and existing Reading typography in the iPad library. A prominent book uses the most recently read collection with unfinished progress. Resolve the next readable chapter through the existing lesson cache. When there is no progress, feature the first available book and link to it using the library's existing destination. Place the remaining shelf below with the current grouping, actions, and view preference. Keep recommendations aligned beside the shelf at wide widths and below it on portrait iPad. Check empty libraries, resumed chapters, narrow windows, and dark mode.
+
+References: [Apple Books Home](https://support.apple.com/nl-nl/guide/ipad/ipadc8494b6b/ipados), [Apple Books library](https://support.apple.com/de-de/guide/ipad/ipad5ecae3c6/ipados), [Readwise long-form reading](https://docs.readwise.io/reader/guides/workflows/longform-reading).

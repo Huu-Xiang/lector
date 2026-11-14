@@ -3,7 +3,7 @@
 import { Clock, Ellipsis } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import CollectionCover from '@/components/CollectionCover';
+import CollectionArtwork from './CollectionArtwork';
 import type { Collection } from '@/lib/data-layer';
 import { useCollectionDisplay } from '@/lib/library-titles';
 import { useLibraryView } from '@/lib/library-view';
@@ -28,25 +28,6 @@ export default function CollectionCard({ collection }: CollectionCardProps) {
     : t('notStarted');
 
   const ownCover = collection.coverUrl && collection.coverKind !== 'art';
-  const cover = (variant: 'card' | 'thumb') =>
-    ownCover ? (
-      <img
-        src={collection.coverUrl}
-        alt={t('coverAlt', { title })}
-        loading="lazy"
-        className="h-full w-full object-cover"
-      />
-    ) : (
-      <CollectionCover
-        seed={collection.id}
-        title={original ?? title}
-        author={collection.author}
-        article={article}
-        artUrl={collection.coverKind === 'art' ? collection.coverUrl : undefined}
-        variant={variant}
-      />
-    );
-
   const details = article && (
     <Link
       href={detailsHref}
@@ -68,7 +49,12 @@ export default function CollectionCard({ collection }: CollectionCardProps) {
           className="flex items-stretch gap-4 overflow-hidden rounded-xl border border-border bg-card p-3 transition-shadow hover:shadow-lg"
         >
           <div className="relative aspect-[3/4] w-14 shrink-0 self-start overflow-hidden rounded-md bg-muted sm:w-16">
-            {cover('thumb')}
+            <CollectionArtwork
+              collection={collection}
+              title={title}
+              original={original}
+              variant="thumb"
+            />
           </div>
           <div className={`flex min-w-0 flex-1 flex-col ${article ? 'pr-10' : ''}`}>
             <h3 className="line-clamp-2 text-base font-semibold text-foreground">{title}</h3>
@@ -116,10 +102,10 @@ export default function CollectionCard({ collection }: CollectionCardProps) {
       <Link
         href={href}
         data-testid="collection-card"
-        className="flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card transition-shadow hover:shadow-lg max-sm:rounded-none max-sm:border-0 max-sm:bg-transparent max-sm:hover:shadow-none"
+        className="library-cover-card flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card transition-shadow hover:shadow-lg max-sm:rounded-none max-sm:border-0 max-sm:bg-transparent max-sm:hover:shadow-none"
       >
-        <div className="relative aspect-[3/4] w-full overflow-hidden bg-muted max-sm:rounded-md max-sm:shadow-md max-sm:ring-1 max-sm:ring-border/60">
-          {cover('card')}
+        <div className="library-cover-art relative aspect-[3/4] w-full overflow-hidden bg-muted max-sm:rounded-md max-sm:shadow-md max-sm:ring-1 max-sm:ring-border/60">
+          <CollectionArtwork collection={collection} title={title} original={original} />
           {progressPercent > 0 && (
             <div className="absolute inset-x-0 bottom-0 h-1 bg-black/20">
               <div className="h-full bg-primary" style={{ width: `${progressPercent}%` }} />
@@ -127,7 +113,7 @@ export default function CollectionCard({ collection }: CollectionCardProps) {
           )}
         </div>
 
-        <div className="flex flex-1 flex-col px-0.5 pt-1.5 sm:p-3">
+        <div className="library-cover-caption flex flex-1 flex-col px-0.5 pt-1.5 sm:p-3">
           <h3 className="line-clamp-2 text-xs leading-snug font-semibold text-foreground sm:text-sm">
             {title}
           </h3>
@@ -147,7 +133,7 @@ export default function CollectionCard({ collection }: CollectionCardProps) {
               {description}
             </p>
           )}
-          <div className="mt-auto flex flex-wrap items-center justify-between gap-x-2 gap-y-0.5 pt-2 text-xs text-muted-foreground max-sm:hidden">
+          <div className="library-cover-meta mt-auto flex flex-wrap items-center justify-between gap-x-2 gap-y-0.5 pt-2 text-xs text-muted-foreground max-sm:hidden">
             <span className="inline-flex items-center gap-1">
               <Clock className="h-3.5 w-3.5" aria-hidden="true" />
               {lastRead}
