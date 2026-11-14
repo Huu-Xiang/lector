@@ -747,7 +747,11 @@ export default function Home() {
             )}
             {nativeApp && (collections.length > 0 || hasGroups) && (
               <div className="library-recommendations min-w-0">
-                <HomeRecommendations language={activeLanguage} defaultOpen={regularIPad} />
+                <HomeRecommendations
+                  language={activeLanguage}
+                  defaultOpen={regularIPad}
+                  keepControlsWhenEmpty={regularIPad}
+                />
               </div>
             )}
           </div>

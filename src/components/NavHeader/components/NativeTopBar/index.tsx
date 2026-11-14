@@ -110,7 +110,7 @@ export default function NativeTopBar() {
                 key={href}
                 href={href}
                 replace
-                scroll={href !== pathname}
+                scroll={href === ME_TAB.href}
                 aria-current={selected === href ? 'location' : undefined}
                 onClick={() => void haptic()}
               >
