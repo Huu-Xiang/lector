@@ -24,6 +24,7 @@ import {
   selectedNativeTab,
 } from '@/components/NativeBridge/tab-bar';
 import { isBareRoute } from '@/lib/api-base';
+import { isIPadApp } from '@/components/NativeBridge/ipad-layout';
 import { useTabPreference } from '@/components/NativeBridge/use-tab-preference';
 import { navLinks } from '../../constants';
 import AccountMenu from '../AccountMenu';
@@ -60,8 +61,8 @@ export default function NativeTopBar() {
   }, [inApp, pathname]);
 
   if (!inApp || hasOwnHeader(pathname)) return null;
-  const nativeBar = hasNativeTabBar();
-  const tab = nativeBar
+  const usesAppTabs = isIPadApp() || hasNativeTabBar();
+  const tab = usesAppTabs
     ? nativeTabs(extra).find((link) => link.href === pathname)
     : navLinks.find((link) => link.href === pathname && link.href !== '/settings');
   const titled = [ME_TAB, ...navLinks].find((link) => link.href === pathname);
@@ -83,7 +84,7 @@ export default function NativeTopBar() {
                 void haptic();
                 if (pathname.startsWith('/collection/')) {
                   router.replace('/');
-                } else if (nativeBar && selectedNativeTab(pathname, extra) === ME_TAB.href) {
+                } else if (usesAppTabs && selected === ME_TAB.href) {
                   router.replace(ME_TAB.href);
                 } else {
                   router.back();
@@ -125,7 +126,7 @@ export default function NativeTopBar() {
         )}
         <div className="flex items-center justify-end gap-1">
           <WhatsNew variant="topbar" />
-          {!nativeBar && <AccountMenu compact />}
+          {!usesAppTabs && <AccountMenu compact />}
           <button
             type="button"
             aria-label={tChat('open')}
@@ -138,7 +139,7 @@ export default function NativeTopBar() {
           >
             <MessageCircle className="size-[22px]" aria-hidden />
           </button>
-          {tab && !nativeBar && (
+          {tab && !usesAppTabs && (
             <Link
               href="/settings"
               aria-label={tNav('settings')}

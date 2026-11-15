@@ -19,18 +19,20 @@ export interface NavTourTip {
 export default function NavLink({
   link,
   isMobile,
+  active,
   collapsed = false,
   tourTip,
   badge,
 }: {
   isMobile: boolean;
+  active?: boolean;
   collapsed?: boolean;
   link: { href: string; label: string };
   tourTip?: NavTourTip;
   badge?: { count: number; description: string };
 }) {
   const pathname = usePathname();
-  const isActive = pathname === link.href;
+  const isActive = active ?? pathname === link.href;
   const Icon = iconMap[link.href];
   const linkClasses = useMemo(() => {
     return getNavLinkClassname({ isActive, isMobile, collapsed });
@@ -53,6 +55,7 @@ export default function NavLink({
         )}
         data-onboarding-highlight={tourTip ? link.href.slice(1) || 'library' : undefined}
         onClick={tourTip?.onNavigate}
+        aria-current={isActive ? 'location' : undefined}
         aria-describedby={showBadge ? badgeId : undefined}
         title={collapsed && !isMobile ? link.label : undefined}
         aria-label={collapsed && !isMobile ? link.label : undefined}

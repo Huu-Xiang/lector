@@ -90,7 +90,7 @@ sequenceDiagram
 
 ### Branches
 
-- The iPad library features a book with reading progress first and places recommendations alongside books when there is room. Regular windows on iPadOS 18 and later use top tabs. On iPadOS 26 and later, the shell draws the tabs in UIKit Liquid Glass when the layout has enough room. Narrow iPad windows, iPadOS 17 and earlier, and iPhone use bottom tabs. The reader provides its own Back button.
+- The iPad library features a book with reading progress first and places recommendations alongside books when there is room. Regular windows on iPadOS 18 and later use top tabs. On iPadOS 26 and later, the shell draws the tabs in UIKit Liquid Glass when the layout has enough room. Narrow iPad windows, iPadOS 17 and earlier, and iPhone use bottom tabs. iPad defaults to Library, Statistics, Practice, and Me in either position. Settings can replace Practice with Journal or remove the extra tab. The reader provides its own Back button.
 
 - A collection that holds one lesson links from the library to `/read/:id` (`onlyLessonId` in the collection list). The card's details link opens its page, and Back in the reader returns to the library.
 - A lesson row shows the opening words (`excerpt` in the lesson list) when the lesson title only repeats the collection title.

@@ -17,7 +17,7 @@
       "security": "Security"
     },
     "mobileTabs": {
-      "title": "Bottom navigation",
+      "title": "Tab bar",
       "extra": "Extra tab",
       "none": "None",
       "hint": "Practice and Journal are always available under Me. This setting applies to this device."

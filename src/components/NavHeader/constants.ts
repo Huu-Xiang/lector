@@ -1,4 +1,4 @@
-import { Clipboard, Pencil, List, Library, ChartBar, Settings } from 'lucide-react';
+import { Clipboard, Pencil, List, Library, ChartBar, Settings, UserRound } from 'lucide-react';
 
 export const navLinks = [
   { href: '/', labelKey: 'library' },
@@ -16,4 +16,5 @@ export const iconMap: Record<string, React.FC<{ size?: number | string }>> = {
   '/vocab': List,
   '/stats': ChartBar,
   '/settings': Settings,
+  '/me': UserRound,
 };
