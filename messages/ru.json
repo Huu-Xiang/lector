@@ -2199,6 +2199,7 @@
       "decline": "Не сейчас"
     },
     "page": {
+      "readingSection": "Раздел {number}",
       "lessonNotFound": "Урок не найден",
       "loadFailed": "Не удалось загрузить урок",
       "retryFailed": "Не удалось повторить расшифровку",

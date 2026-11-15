@@ -16,7 +16,6 @@ import { LessonSummary } from '@/types';
 import Link from 'next/link';
 import { useMemo } from 'react';
 import { useTranslations } from 'next-intl';
-import { lessonHeading } from '@/lib/lesson-heading';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -28,7 +27,7 @@ import {
 export default function SortableLessonRow({
   lesson,
   index,
-  bookTitles,
+  heading,
   lessonCount,
   compact,
   onMove,
@@ -38,8 +37,7 @@ export default function SortableLessonRow({
 }: {
   lesson: LessonSummary;
   index: number;
-  /** Titles of the collection, used to spot a lesson title that only repeats them. */
-  bookTitles: readonly string[];
+  heading: string;
   lessonCount: number;
   compact: boolean;
   onMove: (from: number, to: number) => void;
@@ -65,7 +63,6 @@ export default function SortableLessonRow({
   };
   const progress = Math.round(lesson.progress_percentComplete);
   const isComplete = progress >= 95;
-  const heading = lessonHeading(lesson, bookTitles, lessonCount);
   const transcribing =
     lesson.transcriptionStatus === 'pending' || lesson.transcriptionStatus === 'processing';
   const transcriptionFailed = lesson.transcriptionStatus === 'error';
@@ -93,7 +90,7 @@ export default function SortableLessonRow({
           ref={setActivatorNodeRef}
           {...attributes}
           {...listeners}
-          aria-label={t('dragToReorder', { title: lesson.title })}
+          aria-label={t('dragToReorder', { title: heading })}
           data-testid={`drag-lesson-${lesson.id}`}
           className="flex-shrink-0 cursor-grab touch-none rounded-md p-1 text-muted-foreground hover:text-foreground active:cursor-grabbing"
         >
@@ -210,7 +207,7 @@ export default function SortableLessonRow({
             <DropdownMenuItem
               className="min-h-11"
               variant="destructive"
-              onClick={() => onDelete(lesson.id, lesson.title)}
+              onClick={() => onDelete(lesson.id, heading)}
             >
               {t('delete')}
             </DropdownMenuItem>
@@ -242,7 +239,7 @@ export default function SortableLessonRow({
 
           {/* Delete button */}
           <button
-            onClick={() => onDelete(lesson.id, lesson.title)}
+            onClick={() => onDelete(lesson.id, heading)}
             className="flex-shrink-0 cursor-pointer rounded-lg p-2 text-muted-foreground transition-all hover:bg-accent hover:text-destructive"
             title={t('delete')}
           >

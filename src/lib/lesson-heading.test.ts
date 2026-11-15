@@ -48,3 +48,17 @@ describe('lessonHeading', () => {
     );
   });
 });
+
+describe('library section headings', () => {
+  it('uses the excerpt only when the API recognizes a generated title', () => {
+    const lesson = {
+      collectionId: 'library-en-happy-prince',
+      title: '1. The Happy Prince',
+      excerpt: 'High above the city…',
+    };
+    expect(lessonHeading(lesson, ['The Happy Prince'], 2)).toBe(lesson.title);
+    expect(lessonHeading({ ...lesson, sectionNumber: '1' }, ['The Happy Prince'], 2)).toBe(
+      lesson.excerpt,
+    );
+  });
+});

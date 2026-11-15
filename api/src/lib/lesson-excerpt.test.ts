@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { lessonExcerpt } from './lesson-excerpt';
+import { lessonExcerpt, librarySectionNumber } from './lesson-excerpt';
 
 describe('lessonExcerpt', () => {
   test('skips the heading and returns the first words', () => {
@@ -31,4 +31,15 @@ describe('lessonExcerpt', () => {
     expect(lessonExcerpt('# Title\n\n')).toBe('');
     expect(lessonExcerpt('')).toBe('');
   });
+});
+
+test('uses the published section number while preserving source headings and edited titles', () => {
+  const title = '2. The Happy Prince';
+  const opening = `# ${title}\n\nHe passed over the river.`;
+  const source = { title, number: '2' };
+  expect(librarySectionNumber(title, opening, source)).toBe('2');
+  expect(librarySectionNumber(title, `# ${title}\n\n## The Happy Prince`, source)).toBeUndefined();
+  expect(librarySectionNumber('My title', opening, source)).toBeUndefined();
+  expect(librarySectionNumber(title, '# My new heading', source)).toBeUndefined();
+  expect(librarySectionNumber(title, opening)).toBeUndefined();
 });

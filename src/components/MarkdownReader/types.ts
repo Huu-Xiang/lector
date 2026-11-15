@@ -14,6 +14,7 @@ export interface WordSource {
 
 export interface MarkdownReaderProps {
   lesson: Lesson;
+  sectionTitle?: string;
   onWordClick: (word: string, sentence: string, source?: WordSource, occurrence?: string) => void;
   /** Whether the word/phrase drawer this reader feeds is open. When it closes
    *  (Esc, the X, clicking away) the reader clears its word/phrase highlight. */
@@ -26,8 +27,8 @@ export interface MarkdownReaderProps {
   /** Scroll position as a whole percent of the lesson, on every scroll. */
   onProgress?: (percent: number) => void;
   knownWordsMap: Map<string, WordState>;
-  prevLesson?: LessonSummary | null;
-  nextLesson?: LessonSummary | null;
+  prevLesson?: Pick<LessonSummary, 'id' | 'title'> | null;
+  nextLesson?: Pick<LessonSummary, 'id' | 'title'> | null;
   /** Extra header button(s), e.g. the listen-along toggle on audio lessons (#185). */
   headerAction?: ReactNode;
 }

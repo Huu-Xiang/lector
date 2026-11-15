@@ -7,6 +7,7 @@
       "decline": "Not now"
     },
     "page": {
+      "readingSection": "Section {number}",
       "lessonNotFound": "Lesson not found",
       "loadFailed": "Failed to load lesson",
       "retryFailed": "Could not retry transcription",

@@ -105,6 +105,7 @@ export interface LessonSummary {
   title: string;
   /** The opening words of the text; the collection listing sets it. */
   excerpt?: string;
+  sectionNumber?: string;
   sortOrder: number;
   progress_scrollPosition: number;
   progress_percentComplete: number;
