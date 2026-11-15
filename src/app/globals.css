@@ -1238,6 +1238,14 @@ html[data-ios-appearance='glass'] .ipad-tabs [aria-current] {
     }
   }
 
+  html[data-native-glass-tabs] .ipad-tabs {
+    visibility: hidden;
+  }
+
+  html[data-native-glass-tabs] .native-topbar[data-scrolled]::before {
+    mask-image: linear-gradient(to right, #000 10%, transparent 32%, transparent 68%, #000 90%);
+  }
+
   html[data-ipad-app] .ipad-tabs a {
     display: inline-flex;
     align-items: center;

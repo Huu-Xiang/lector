@@ -1,8 +1,8 @@
 import UIKit
+import WebKit
 import Capacitor
 
-/// A UITabBar over the bottom of the web view. The page sends the tabs and the selection;
-/// a tap comes back as `tabSelected` with the tab id. Built with the iOS 26 SDK it gets Liquid Glass.
+/// Shares selection between the bottom UITabBar and the iPad glass toolbar.
 @objc(NativeTabBarPlugin)
 public class NativeTabBarPlugin: CAPPlugin, CAPBridgedPlugin, UITabBarDelegate {
     public let identifier = "NativeTabBarPlugin"
@@ -13,10 +13,13 @@ public class NativeTabBarPlugin: CAPPlugin, CAPBridgedPlugin, UITabBarDelegate {
         CAPPluginMethod(name: "show", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "hide", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "setAppearance", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "setGlassFrame", returnType: CAPPluginReturnPromise),
     ]
 
     private var tabBar: UITabBar?
     private var ids: [String] = []
+    private var glassBar: UIVisualEffectView?
+    private var glassStack: UIStackView?
     /// What the page asked for; the keyboard hides the bar on top of that.
     private var wanted = true
     private var keyboardUp = false
@@ -56,6 +59,7 @@ public class NativeTabBarPlugin: CAPPlugin, CAPBridgedPlugin, UITabBarDelegate {
                 let image = (tab["icon"] as? String).flatMap { UIImage(systemName: $0) }
                 return UITabBarItem(title: tab["title"] as? String, image: image, tag: index)
             }
+            if #available(iOS 26.0, *) { self.rebuildGlassTabs() }
             self.applySelection(selected)
             call.resolve()
         }
@@ -100,10 +104,105 @@ public class NativeTabBarPlugin: CAPPlugin, CAPBridgedPlugin, UITabBarDelegate {
         }
     }
 
+    @objc func setGlassFrame(_ call: CAPPluginCall) {
+        DispatchQueue.main.async {
+            guard #available(iOS 26.0, *),
+                  let webView = self.bridge?.webView,
+                  let host = self.bridge?.viewController?.view,
+                  host.traitCollection.userInterfaceIdiom == .pad,
+                  let x = call.getDouble("x"), let y = call.getDouble("y"),
+                  let width = call.getDouble("width"), let height = call.getDouble("height"),
+                  [x, y, width, height].allSatisfy({ $0.isFinite }),
+                  width > 0, height >= 52
+            else {
+                self.glassBar?.isHidden = true
+                return call.resolve(["shown": false])
+            }
+
+            let frame = webView.convert(CGRect(x: x, y: y, width: width, height: height), to: host)
+            let glass = self.ensureGlassBar(in: host)
+            guard host.bounds.contains(frame), let stack = self.glassStack,
+                  !stack.arrangedSubviews.isEmpty,
+                  stack.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).width + 8 <= frame.width
+            else {
+                glass.isHidden = true
+                return call.resolve(["shown": false])
+            }
+            glass.frame = frame
+            glass.isHidden = false
+            call.resolve(["shown": true])
+        }
+    }
+
+    @available(iOS 26.0, *)
+    private func ensureGlassBar(in host: UIView) -> UIVisualEffectView {
+        if let glassBar { return glassBar }
+        let effect = UIGlassEffect(style: .regular)
+        effect.isInteractive = true
+        let glass = UIVisualEffectView(effect: effect)
+        glass.cornerConfiguration = .capsule()
+        glass.isHidden = true
+        let stack = UIStackView()
+        stack.spacing = 2
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        glass.contentView.addSubview(stack)
+        NSLayoutConstraint.activate([
+            stack.leadingAnchor.constraint(equalTo: glass.contentView.leadingAnchor, constant: 4),
+            stack.trailingAnchor.constraint(equalTo: glass.contentView.trailingAnchor, constant: -4),
+            stack.topAnchor.constraint(equalTo: glass.contentView.topAnchor, constant: 4),
+            stack.bottomAnchor.constraint(equalTo: glass.contentView.bottomAnchor, constant: -4),
+        ])
+        host.addSubview(glass)
+        glassBar = glass
+        glassStack = stack
+        rebuildGlassTabs()
+        applySelection(tabBar?.selectedItem.flatMap { ids.indices.contains($0.tag) ? ids[$0.tag] : nil })
+        return glass
+    }
+
+    @available(iOS 26.0, *)
+    private func rebuildGlassTabs() {
+        guard let stack = glassStack else { return }
+        stack.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        for item in tabBar?.items ?? [] {
+            let button = UIButton()
+            var config = UIButton.Configuration.plain()
+            config.title = item.title
+            config.image = item.image?.withConfiguration(UIImage.SymbolConfiguration(pointSize: 14))
+            config.imagePadding = 5
+            config.baseForegroundColor = .label
+            config.cornerStyle = .capsule
+            config.contentInsets = NSDirectionalEdgeInsets(top: 4, leading: 9, bottom: 4, trailing: 9)
+            config.titleLineBreakMode = .byTruncatingTail
+            config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { attributes in
+                var text = attributes
+                let base = UIFont.systemFont(ofSize: 14, weight: .semibold)
+                let rounded = base.fontDescriptor.withDesign(.rounded) ?? base.fontDescriptor
+                text.font = UIFontMetrics(forTextStyle: .subheadline).scaledFont(for: UIFont(descriptor: rounded, size: 14))
+                return text
+            }
+            button.configuration = config
+            button.titleLabel?.adjustsFontForContentSizeCategory = true
+            button.widthAnchor.constraint(greaterThanOrEqualToConstant: 44).isActive = true
+            button.tag = item.tag
+            button.addAction(UIAction { [weak self] _ in self?.openTab(item.tag) }, for: .touchUpInside)
+            button.configurationUpdateHandler = { button in
+                button.configuration?.background.backgroundColor = button.isSelected
+                    ? Self.sage.withAlphaComponent(0.17)
+                    : .clear
+            }
+            stack.addArrangedSubview(button)
+        }
+    }
+
     public func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
-        guard ids.indices.contains(item.tag) else { return }
+        openTab(item.tag)
+    }
+
+    private func openTab(_ index: Int) {
+        guard ids.indices.contains(index) else { return }
         feedback.selectionChanged()
-        notifyListeners("tabSelected", data: ["id": ids[item.tag]])
+        notifyListeners("tabSelected", data: ["id": ids[index]])
     }
 
     private func ensureBar() -> UITabBar? {
@@ -128,6 +227,14 @@ public class NativeTabBarPlugin: CAPPlugin, CAPBridgedPlugin, UITabBarDelegate {
         guard let bar = tabBar else { return }
         let index = id.flatMap { ids.firstIndex(of: $0) }
         bar.selectedItem = index.flatMap { bar.items?[$0] }
+        for case let button as UIButton in glassStack?.arrangedSubviews ?? [] {
+            button.isSelected = button.tag == index
+            if button.isSelected {
+                button.accessibilityTraits.insert(.selected)
+            } else {
+                button.accessibilityTraits.remove(.selected)
+            }
+        }
     }
 
     private func updateVisibility() {

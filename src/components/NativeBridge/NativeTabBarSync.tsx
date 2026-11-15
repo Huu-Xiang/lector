@@ -10,10 +10,11 @@ import {
   onNativeTabSelected,
   selectNativeTab,
   setNativeTabBarVisible,
+  setNativeGlassTabFrame,
 } from '@/lib/native-app';
 import { coversTabBar, hasOwnHeader, ME_TAB, nativeTabs, selectedNativeTab } from './tab-bar';
 import { useTabPreference } from './use-tab-preference';
-import { useIPadTopTabs } from './ipad-layout';
+import { iosAppearance, useIPadTopTabs } from './ipad-layout';
 
 /** Drives the shell's UITabBar from the web routes. Mounted only inside the app. */
 export default function NativeTabBarSync() {
@@ -76,7 +77,67 @@ export default function NativeTabBarSync() {
     };
   }, [ready]);
 
-  const visible = !ipadTopTabs && !isBareRoute(pathname) && !hasOwnHeader(pathname) && !covered;
+  const tabsAvailable = !isBareRoute(pathname) && !hasOwnHeader(pathname) && !covered;
+  const visible = !ipadTopTabs && tabsAvailable;
+  const useGlass = ready && ipadTopTabs && iosAppearance(navigator.userAgent) === 'glass';
+  useEffect(() => {
+    if (!useGlass || !tabsAvailable) return;
+    const root = document.documentElement;
+    const viewport = window.visualViewport;
+    let nav: HTMLElement | null = null;
+    let raf = 0;
+    let lastFrame = '';
+    let request = 0;
+    const resize = new ResizeObserver(schedule);
+    const observer = new MutationObserver(schedule);
+
+    async function update() {
+      const next = document.querySelector<HTMLElement>('.ipad-tabs');
+      if (next !== nav) {
+        resize.disconnect();
+        if (next) {
+          resize.observe(next);
+          const toolbar = next.closest('.native-topbar');
+          if (toolbar) resize.observe(toolbar, { box: 'border-box' });
+        }
+        nav = next;
+      }
+      const rect = nav?.getBoundingClientRect();
+      const frame =
+        rect?.width && rect.height && (!viewport || viewport.scale === 1)
+          ? { x: rect.x, y: rect.y, width: rect.width, height: rect.height }
+          : null;
+      const key = JSON.stringify(frame);
+      if (key === lastFrame) return;
+      lastFrame = key;
+      const current = ++request;
+      const shown = await setNativeGlassTabFrame(frame);
+      if (current === request) root.toggleAttribute('data-native-glass-tabs', shown);
+    }
+
+    function schedule() {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => void update());
+    }
+
+    observer.observe(document.body, { childList: true, subtree: true });
+    viewport?.addEventListener('resize', schedule);
+    window.addEventListener('resize', schedule);
+    window.addEventListener('scroll', schedule, { passive: true });
+    schedule();
+
+    return () => {
+      request++;
+      cancelAnimationFrame(raf);
+      observer.disconnect();
+      resize.disconnect();
+      viewport?.removeEventListener('resize', schedule);
+      window.removeEventListener('resize', schedule);
+      window.removeEventListener('scroll', schedule);
+      root.removeAttribute('data-native-glass-tabs');
+      void setNativeGlassTabFrame(null);
+    };
+  }, [useGlass, tabsAvailable, pathname, tabs]);
   useEffect(() => {
     if (!ready) return;
     void setNativeTabBarVisible(visible);

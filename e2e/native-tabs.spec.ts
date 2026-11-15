@@ -220,3 +220,81 @@ for (const [major, appearance] of [
     }
   });
 }
+
+test('native glass takes over the iPad tabs and releases them around sheets and resizing', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1180, height: 820 });
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, 'userAgent', {
+      value: 'Mozilla/5.0 (iPad; CPU OS 26_0 like Mac OS X) ReadfoxApp/1 ReadfoxOS/26',
+    });
+    let selectTab: ((event: unknown) => void) | undefined;
+    let frame: unknown;
+    Object.assign(window, {
+      getGlassFrame: () => frame,
+      tapGlassTab: (id: string) => selectTab?.({ id }),
+    });
+    window.Capacitor = {
+      isNativePlatform: () => true,
+      isPluginAvailable: (name) => name === 'NativeTabBar',
+      Plugins: {
+        NativeTabBar: {
+          configure: async () => {},
+          select: async () => {},
+          show: async () => {},
+          hide: async () => {},
+          addListener: async (_event, callback) => {
+            selectTab = callback;
+            return { remove: async () => {} };
+          },
+          setGlassFrame: async (options) => {
+            frame = options;
+            return { shown: Number((options as { width?: number })?.width) > 0 };
+          },
+        },
+      },
+    };
+  });
+
+  await page.goto('/me');
+  const root = page.locator('html');
+  const tabs = page.getByTestId('ipad-tabs');
+  await expect(root).toHaveAttribute('data-native-glass-tabs', '');
+  await expect(tabs).toBeHidden();
+  const reserved = await tabs.boundingBox();
+  expect(reserved?.height).toBeGreaterThanOrEqual(44);
+
+  const glassY = () =>
+    page.evaluate(
+      () => (window as unknown as { getGlassFrame: () => { y: number } }).getGlassFrame().y,
+    );
+  const beforeInset = await glassY();
+  await page.locator('.native-topbar').evaluate((header) => {
+    header.style.paddingTop = '34px';
+  });
+  await expect.poll(glassY).toBeGreaterThan(beforeInset);
+
+  await page.evaluate(() =>
+    (window as unknown as { tapGlassTab: (id: string) => void }).tapGlassTab('/'),
+  );
+  await expect(page).toHaveURL('/');
+  await expect(root).toHaveAttribute('data-native-glass-tabs', '');
+
+  await page.getByTestId('native-chat').click();
+  await expect(page.getByTestId('chat-panel')).toBeVisible();
+  await expect(root).not.toHaveAttribute('data-native-glass-tabs');
+  expect(
+    await page.evaluate(() =>
+      (window as unknown as { getGlassFrame: () => unknown }).getGlassFrame(),
+    ),
+  ).toEqual({});
+  await page.getByTestId('native-chat').click();
+  await expect(root).toHaveAttribute('data-native-glass-tabs', '');
+
+  await page.setViewportSize({ width: 500, height: 820 });
+  await expect(root).not.toHaveAttribute('data-native-glass-tabs');
+  await expect(root).not.toHaveAttribute('data-native-tabbar-hidden');
+  await page.setViewportSize({ width: 820, height: 1180 });
+  await expect(root).toHaveAttribute('data-native-glass-tabs', '');
+});
