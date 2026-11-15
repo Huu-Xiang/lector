@@ -13,7 +13,13 @@ test.describe('Free library covers', () => {
 
   test.afterEach(async ({ page }) => {
     await page.request.delete(apiUrl('/api/settings/nativeLanguage'));
-    for (const slug of ['walden', 'moby-dick', 'the-wonderful-wizard-of-oz', 'the-happy-prince']) {
+    for (const slug of [
+      'walden',
+      'moby-dick',
+      'the-wonderful-wizard-of-oz',
+      'the-happy-prince',
+      'kittens-and-cats',
+    ]) {
       await page.request.delete(apiUrl(`/api/collections/library-en-${slug}`));
     }
     await page.request.put(apiUrl('/api/settings/targetLanguage'), { data: { value: 'af' } });
@@ -113,6 +119,33 @@ test.describe('Free library covers', () => {
     await expect(
       page.getByRole('heading', { name: '1. The Happy Prince', exact: true }),
     ).toBeVisible();
+  });
+
+  test('keeps section numbers after a neighboring lesson is renamed and updates after an edit', async ({
+    page,
+  }) => {
+    const slug = 'kittens-and-cats';
+    const added = await page.request.post(apiUrl('/api/library/add'), {
+      data: { language: 'en', slug },
+    });
+    expect(added.ok()).toBe(true);
+    await page.goto('/');
+    await switchLanguage(page, 'en', 'English');
+    const list = await page.request.get(apiUrl(`/api/collections/library-en-${slug}/lessons`));
+    const [, chapter, neighbor] = (await list.json()) as { id: string }[];
+    const renamed = await page.request.put(apiUrl(`/api/lessons/${neighbor.id}?language=en`), {
+      data: { title: 'My reading notes' },
+    });
+    expect(renamed.ok()).toBe(true);
+
+    await page.goto(`/read/${chapter.id}`);
+    await expect(page.getByRole('heading', { name: 'Section 2', exact: true })).toBeVisible();
+    await page.getByTestId('edit-text-button').click();
+    await page.getByTestId('edit-text-textarea').fill('# My new opening\n\nThe kittens slept.');
+    await page.getByTestId('edit-text-save').click();
+    await expect(page.getByRole('banner').getByRole('heading', { level: 1 })).toHaveText(
+      '2. Kittens and Cats',
+    );
   });
 
   test('a collection the reader made keeps the drawn cover', async ({ page }) => {

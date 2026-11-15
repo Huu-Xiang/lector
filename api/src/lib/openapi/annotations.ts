@@ -301,7 +301,7 @@ export const schemas: Record<string, JsonSchema> = {
       sectionNumber: {
         type: 'string',
         description:
-          'The number of a free-library section whose generated title repeats a book label.',
+          'The number of a free-library section whose generated title uses a book label.',
       },
       sortOrder: { type: 'integer' },
       wordCount: { type: 'integer' },

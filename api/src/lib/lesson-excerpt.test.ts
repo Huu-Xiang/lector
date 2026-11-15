@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { lessonExcerpt, librarySectionNumbers } from './lesson-excerpt';
+import { lessonExcerpt, librarySectionNumber } from './lesson-excerpt';
 
 describe('lessonExcerpt', () => {
   test('skips the heading and returns the first words', () => {
@@ -33,33 +33,13 @@ describe('lessonExcerpt', () => {
   });
 });
 
-test('recognizes numbered library placeholders without replacing original headings or edits', () => {
-  const source = 'library-en-lesson-' + '1'.repeat(64);
-  const placeholder = 'library-en-lesson-' + '2'.repeat(64);
-  const renamed = 'library-en-lesson-' + '3'.repeat(64);
-  const imported = 'custom-lesson';
-  expect(
-    librarySectionNumbers([
-      {
-        id: source,
-        title: '1. The Happy Prince',
-        opening: '# 1. The Happy Prince\n\n## The Happy Prince\n\nHigh above the city.',
-      },
-      {
-        id: placeholder,
-        title: '2. The Happy Prince',
-        opening: '# 2. The Happy Prince\n\nHe passed over the river.',
-      },
-      {
-        id: renamed,
-        title: '3. The Happy Prince',
-        opening: '# 3. My chapter\n\nHe passed over the river.',
-      },
-      {
-        id: imported,
-        title: '4. The Happy Prince',
-        opening: '# 4. The Happy Prince\n\nThe swallow.',
-      },
-    ]),
-  ).toEqual(new Map([[placeholder, '2']]));
+test('uses the published section number while preserving source headings and edited titles', () => {
+  const title = '2. The Happy Prince';
+  const opening = `# ${title}\n\nHe passed over the river.`;
+  const source = { title, number: '2' };
+  expect(librarySectionNumber(title, opening, source)).toBe('2');
+  expect(librarySectionNumber(title, `# ${title}\n\n## The Happy Prince`, source)).toBeUndefined();
+  expect(librarySectionNumber('My title', opening, source)).toBeUndefined();
+  expect(librarySectionNumber(title, '# My new heading', source)).toBeUndefined();
+  expect(librarySectionNumber(title, opening)).toBeUndefined();
 });

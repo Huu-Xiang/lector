@@ -90,7 +90,7 @@ export default function SortableLessonRow({
           ref={setActivatorNodeRef}
           {...attributes}
           {...listeners}
-          aria-label={t('dragToReorder', { title: lesson.title })}
+          aria-label={t('dragToReorder', { title: heading })}
           data-testid={`drag-lesson-${lesson.id}`}
           className="flex-shrink-0 cursor-grab touch-none rounded-md p-1 text-muted-foreground hover:text-foreground active:cursor-grabbing"
         >
@@ -207,7 +207,7 @@ export default function SortableLessonRow({
             <DropdownMenuItem
               className="min-h-11"
               variant="destructive"
-              onClick={() => onDelete(lesson.id, lesson.title)}
+              onClick={() => onDelete(lesson.id, heading)}
             >
               {t('delete')}
             </DropdownMenuItem>
@@ -239,7 +239,7 @@ export default function SortableLessonRow({
 
           {/* Delete button */}
           <button
-            onClick={() => onDelete(lesson.id, lesson.title)}
+            onClick={() => onDelete(lesson.id, heading)}
             className="flex-shrink-0 cursor-pointer rounded-lg p-2 text-muted-foreground transition-all hover:bg-accent hover:text-destructive"
             title={t('delete')}
           >

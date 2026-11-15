@@ -1506,9 +1506,19 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
   const handleSaveText = useCallback(
     async (newContent: string) => {
       await updateLesson(lessonId, { textContent: newContent });
-      setLesson((prev) => (prev ? { ...prev, textContent: newContent } : prev));
+      setLesson((prev) => (prev?.id === lessonId ? { ...prev, textContent: newContent } : prev));
+      const collectionId = lesson?.collectionId;
+      if (collectionId?.startsWith('library-')) {
+        void getLessonsForCollection(collectionId, { fresh: true })
+          .then((updated) => {
+            setSiblings((current) =>
+              current.some((entry) => entry.id === lessonId) ? updated : current,
+            );
+          })
+          .catch(() => undefined);
+      }
     },
-    [lessonId],
+    [lesson?.collectionId, lessonId],
   );
 
   const handleEditingChange = useCallback((editing: boolean) => {
