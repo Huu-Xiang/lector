@@ -1243,7 +1243,10 @@ html[data-ios-appearance='glass'] .ipad-tabs [aria-current] {
   }
 
   html[data-native-glass-tabs] .native-topbar[data-scrolled]::before {
-    mask-image: linear-gradient(to right, #000 10%, transparent 32%, transparent 68%, #000 90%);
+    mask-image:
+      linear-gradient(to right, #000 10%, transparent 32%, transparent 68%, #000 90%),
+      linear-gradient(to bottom, #000 calc(100% - 22px), transparent);
+    mask-composite: intersect;
   }
 
   html[data-ipad-app] .ipad-tabs a {
