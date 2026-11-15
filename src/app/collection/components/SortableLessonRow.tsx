@@ -16,7 +16,6 @@ import { LessonSummary } from '@/types';
 import Link from 'next/link';
 import { useMemo } from 'react';
 import { useTranslations } from 'next-intl';
-import { lessonHeading } from '@/lib/lesson-heading';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -28,7 +27,7 @@ import {
 export default function SortableLessonRow({
   lesson,
   index,
-  bookTitles,
+  heading,
   lessonCount,
   compact,
   onMove,
@@ -38,8 +37,7 @@ export default function SortableLessonRow({
 }: {
   lesson: LessonSummary;
   index: number;
-  /** Titles of the collection, used to spot a lesson title that only repeats them. */
-  bookTitles: readonly string[];
+  heading: string;
   lessonCount: number;
   compact: boolean;
   onMove: (from: number, to: number) => void;
@@ -65,7 +63,6 @@ export default function SortableLessonRow({
   };
   const progress = Math.round(lesson.progress_percentComplete);
   const isComplete = progress >= 95;
-  const heading = lessonHeading(lesson, bookTitles, lessonCount);
   const transcribing =
     lesson.transcriptionStatus === 'pending' || lesson.transcriptionStatus === 'processing';
   const transcriptionFailed = lesson.transcriptionStatus === 'error';

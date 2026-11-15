@@ -2199,6 +2199,7 @@
       "decline": "今はしない"
     },
     "page": {
+      "readingSection": "第{number}節",
       "lessonNotFound": "レッスンが見つかりません",
       "loadFailed": "レッスンを読み込めませんでした",
       "retryFailed": "文字起こしを再試行できませんでした",

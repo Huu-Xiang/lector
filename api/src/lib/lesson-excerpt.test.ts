@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { lessonExcerpt } from './lesson-excerpt';
+import { lessonExcerpt, librarySectionNumbers } from './lesson-excerpt';
 
 describe('lessonExcerpt', () => {
   test('skips the heading and returns the first words', () => {
@@ -31,4 +31,35 @@ describe('lessonExcerpt', () => {
     expect(lessonExcerpt('# Title\n\n')).toBe('');
     expect(lessonExcerpt('')).toBe('');
   });
+});
+
+test('recognizes numbered library placeholders without replacing original headings or edits', () => {
+  const source = 'library-en-lesson-' + '1'.repeat(64);
+  const placeholder = 'library-en-lesson-' + '2'.repeat(64);
+  const renamed = 'library-en-lesson-' + '3'.repeat(64);
+  const imported = 'custom-lesson';
+  expect(
+    librarySectionNumbers([
+      {
+        id: source,
+        title: '1. The Happy Prince',
+        opening: '# 1. The Happy Prince\n\n## The Happy Prince\n\nHigh above the city.',
+      },
+      {
+        id: placeholder,
+        title: '2. The Happy Prince',
+        opening: '# 2. The Happy Prince\n\nHe passed over the river.',
+      },
+      {
+        id: renamed,
+        title: '3. The Happy Prince',
+        opening: '# 3. My chapter\n\nHe passed over the river.',
+      },
+      {
+        id: imported,
+        title: '4. The Happy Prince',
+        opening: '# 4. The Happy Prince\n\nThe swallow.',
+      },
+    ]),
+  ).toEqual(new Map([[placeholder, '2']]));
 });

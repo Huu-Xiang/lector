@@ -515,7 +515,7 @@
     domain: "library",
     summary: "Header actions and reading recommendations. The iPad library features a book and links to its current chapter. Saved books and recommendations reflow with the window.",
   });
-  N("file:collection-page", "file", "Collection page", { path: "src/app/collection/[id]/page.tsx", domain: "library", summary: "On iPhone, author and lesson counts sit below the title in smaller text. Each lesson row opens the reader or a menu of lesson actions." });
+  N("file:collection-page", "file", "Collection page", { path: "src/app/collection/[id]/page.tsx", domain: "library", summary: "On iPhone, author and lesson counts sit below the title in smaller text. Each lesson row opens the reader or a menu of lesson actions. Rows show opening words for repeated library labels." });
   N("file:read-page", "file", "Read page", { path: "src/app/read/[bookId]/page.tsx", domain: "translation" });
   N("file:markdown-reader", "file", "MarkdownReader", { path: "src/components/MarkdownReader/index.tsx", domain: "library" });
   N("file:reader-article", "file", "ReaderArticle", { path: "src/components/MarkdownReader/ReaderArticle.tsx", domain: "library" });

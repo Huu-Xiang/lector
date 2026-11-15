@@ -17,7 +17,7 @@ import {
 } from '../lib/storage-limits';
 import { validateOptionalLanguage, validateOwnedReference } from '../lib/persisted-input';
 import { deleteAudioFile } from '../lib/audio-files';
-import { EXCERPT_SOURCE_CHARS, lessonExcerpt } from '../lib/lesson-excerpt';
+import { EXCERPT_SOURCE_CHARS, lessonExcerpt, librarySectionNumbers } from '../lib/lesson-excerpt';
 import { withLibraryCover } from '../lib/library-content';
 
 const app = new Hono();
@@ -312,8 +312,13 @@ app.get('/:id/lessons', (c) => {
     )
     .all(id, userId) as (Omit<LessonRow, 'textContent'> & { opening: string | null })[];
 
+  const sectionNumbers = librarySectionNumbers(lessons);
   return c.json(
-    lessons.map(({ opening, ...lesson }) => ({ ...lesson, excerpt: lessonExcerpt(opening ?? '') })),
+    lessons.map(({ opening, ...lesson }) => ({
+      ...lesson,
+      excerpt: lessonExcerpt(opening ?? ''),
+      sectionNumber: sectionNumbers.get(lesson.id),
+    })),
   );
 });
 

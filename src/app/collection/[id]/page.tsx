@@ -1,5 +1,6 @@
 'use client';
 
+import { lessonHeading } from '@/lib/lesson-heading';
 import { useCollectionDisplay } from '@/lib/library-titles';
 import { useEffect, useMemo, useState, use } from 'react';
 import { useRouter } from 'next/navigation';
@@ -423,7 +424,7 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
                 key={lesson.id}
                 lesson={lesson}
                 index={i}
-                bookTitles={bookTitles}
+                heading={lessonHeading(lesson, bookTitles, lessons.length)}
                 lessonCount={lessons.length}
                 compact={nativeApp}
                 onMove={moveLesson}

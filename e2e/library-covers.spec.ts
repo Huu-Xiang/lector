@@ -13,7 +13,7 @@ test.describe('Free library covers', () => {
 
   test.afterEach(async ({ page }) => {
     await page.request.delete(apiUrl('/api/settings/nativeLanguage'));
-    for (const slug of ['walden', 'moby-dick']) {
+    for (const slug of ['walden', 'moby-dick', 'the-wonderful-wizard-of-oz', 'the-happy-prince']) {
       await page.request.delete(apiUrl(`/api/collections/library-en-${slug}`));
     }
     await page.request.put(apiUrl('/api/settings/targetLanguage'), { data: { value: 'af' } });
@@ -46,6 +46,73 @@ test.describe('Free library covers', () => {
     if (await booksTab.count()) await booksTab.click();
     await page.getByTestId('free-books-search').fill('Thoreau');
     await loaded(page.getByTestId('free-book-walden').getByTestId('free-book-cover'));
+  });
+
+  test('reading sections with a repeated book name have distinct headings', async ({ page }) => {
+    const slug = 'the-wonderful-wizard-of-oz';
+    const added = await page.request.post(apiUrl('/api/library/add'), {
+      data: { language: 'en', slug },
+    });
+    expect(added.ok()).toBe(true);
+    await page.goto('/');
+    await switchLanguage(page, 'en', 'English');
+    await page.goto(`/collection/library-en-${slug}`);
+
+    const headings = page.getByTestId('lesson-heading');
+    await expect(headings.first()).toContainText('Dorothy lived in the midst');
+    await expect(headings.nth(1)).toContainText('Three were men and one a woman');
+    await headings.first().click();
+    await expect(page.getByRole('heading', { name: 'Section 1', exact: true })).toBeVisible();
+    await page.getByRole('button', { name: 'Section 2', exact: true }).click();
+    await expect(page.getByRole('heading', { name: 'Section 2', exact: true })).toBeVisible();
+  });
+
+  test('refreshes section titles from a cached list created before the fix', async ({ page }) => {
+    const id = 'library-en-the-wonderful-wizard-of-oz';
+    const result = await page.request.post(apiUrl('/api/library/add'), {
+      data: { language: 'en', slug: 'the-wonderful-wizard-of-oz' },
+    });
+    expect(result.ok()).toBe(true);
+    await page.goto('/');
+    await switchLanguage(page, 'en', 'English');
+    await page.goto(`/collection/${id}`);
+    await page.getByTestId('lesson-heading').first().click();
+    const section = page.getByRole('heading', { name: 'Section 1', exact: true });
+    await expect(section).toBeVisible();
+
+    const replaced = await page.evaluate((collectionId) => {
+      const key = Object.keys(localStorage).find(
+        (key) => key.startsWith('lector-qc:') && key.includes(`"list","${collectionId}"`),
+      );
+      if (!key) return false;
+      const record = JSON.parse(localStorage.getItem(key)!);
+      for (const lesson of record.v) delete lesson.sectionNumber;
+      localStorage.setItem(key, JSON.stringify(record));
+      return true;
+    }, id);
+    expect(replaced).toBe(true);
+
+    await page.reload();
+    await expect(section).toBeVisible();
+  });
+
+  test('keeps a source heading when later reading sections repeat its words', async ({ page }) => {
+    const slug = 'the-happy-prince';
+    const result = await page.request.post(apiUrl('/api/library/add'), {
+      data: { language: 'en', slug },
+    });
+    expect(result.ok()).toBe(true);
+    await page.goto('/');
+    await switchLanguage(page, 'en', 'English');
+    await page.goto(`/collection/library-en-${slug}`);
+
+    const headings = page.getByTestId('lesson-heading');
+    await expect(headings.first()).toHaveText('1. The Happy Prince');
+    await expect(headings.nth(1)).toContainText('He passed over the river');
+    await headings.first().click();
+    await expect(
+      page.getByRole('heading', { name: '1. The Happy Prince', exact: true }),
+    ).toBeVisible();
   });
 
   test('a collection the reader made keeps the drawn cover', async ({ page }) => {

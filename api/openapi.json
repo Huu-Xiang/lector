@@ -12640,6 +12640,10 @@
             "type": "string",
             "description": "The opening words of the text, at most about 140 characters."
           },
+          "sectionNumber": {
+            "type": "string",
+            "description": "The number of a free-library section whose generated title repeats a book label."
+          },
           "sortOrder": {
             "type": "integer"
           },
