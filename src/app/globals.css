@@ -1157,6 +1157,36 @@ html[data-native-app]::view-transition-new(native-page) {
   }
 }
 
+html[data-ios-appearance] body {
+  --font-ui: system-ui, var(--font-cjk), sans-serif;
+}
+
+html[data-ios-appearance] {
+  --ios-title-weight: 600;
+  --ios-tab-weight: 600;
+}
+
+html[data-ios-appearance='modern'],
+html[data-ios-appearance='glass'] {
+  --ios-title-weight: 700;
+}
+
+html[data-ios-appearance] :is(.native-page-title, .native-scroll-title) {
+  font-weight: var(--ios-title-weight);
+}
+
+html[data-ios-appearance] .native-scroll-title {
+  font-size: 1rem;
+}
+
+html[data-ios-appearance='glass'] .ipad-tabs {
+  font-family: ui-rounded, system-ui, var(--font-cjk), sans-serif;
+}
+
+html[data-ios-appearance='glass'] .ipad-tabs [aria-current] {
+  font-weight: 700;
+}
+
 .ipad-tabs {
   display: none;
 }
@@ -1173,12 +1203,12 @@ html[data-native-app]::view-transition-new(native-page) {
       max(var(--ipad-gutter), env(safe-area-inset-right));
   }
 
-  html[data-ipad-app] .native-toolbar:has(.ipad-tabs) .native-scroll-title,
-  html[data-native-app][data-ipad-app] .native-bottom-nav {
+  html[data-ipad-top-tabs] .native-toolbar:has(.ipad-tabs) .native-scroll-title,
+  html[data-native-app][data-ipad-top-tabs] .native-bottom-nav {
     display: none;
   }
 
-  html[data-ipad-app] .ipad-tabs {
+  html[data-ipad-top-tabs] .ipad-tabs {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -1188,6 +1218,24 @@ html[data-native-app]::view-transition-new(native-page) {
     border: 1px solid var(--border);
     border-radius: 1.5rem;
     background: var(--card);
+  }
+
+  @supports (backdrop-filter: blur(1px)) {
+    html[data-ipad-top-tabs][data-ios-appearance='glass'] .ipad-tabs {
+      border-color: color-mix(in srgb, var(--foreground) 14%, transparent);
+      background: color-mix(in srgb, var(--card) 64%, transparent);
+      box-shadow:
+        0 0.375rem 1.25rem color-mix(in srgb, black 14%, transparent),
+        inset 0 1px 0 color-mix(in srgb, white 25%, transparent);
+      backdrop-filter: blur(20px) saturate(1.45);
+    }
+
+    @media (prefers-reduced-transparency: reduce) {
+      html[data-ipad-top-tabs][data-ios-appearance='glass'] .ipad-tabs {
+        background: var(--card);
+        backdrop-filter: none;
+      }
+    }
   }
 
   html[data-ipad-app] .ipad-tabs a {
@@ -1200,7 +1248,7 @@ html[data-native-app]::view-transition-new(native-page) {
     padding: 0.375rem 0.875rem;
     border-radius: 1.125rem;
     color: var(--muted-foreground);
-    font-weight: 700;
+    font-weight: var(--ios-tab-weight, 600);
     font-size: 0.875rem;
     text-align: center;
     overflow-wrap: anywhere;
@@ -1220,7 +1268,7 @@ html[data-native-app]::view-transition-new(native-page) {
     content: none;
   }
 
-  html[data-ipad-app] .app-bottom-spacer {
+  html[data-ipad-top-tabs] .app-bottom-spacer {
     height: env(safe-area-inset-bottom);
   }
 
@@ -1243,9 +1291,7 @@ html[data-native-app]::view-transition-new(native-page) {
   }
 
   html[data-ipad-app] .ipad-library .native-page-title {
-    font-family: var(--font-reading);
     font-size: clamp(2rem, 4vw, 3.25rem);
-    font-weight: 650;
     line-height: 1.15;
   }
 

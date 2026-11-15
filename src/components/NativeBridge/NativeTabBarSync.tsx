@@ -13,7 +13,7 @@ import {
 } from '@/lib/native-app';
 import { coversTabBar, hasOwnHeader, ME_TAB, nativeTabs, selectedNativeTab } from './tab-bar';
 import { useTabPreference } from './use-tab-preference';
-import { useRegularIPadWindow } from './ipad-layout';
+import { useIPadTopTabs } from './ipad-layout';
 
 /** Drives the shell's UITabBar from the web routes. Mounted only inside the app. */
 export default function NativeTabBarSync() {
@@ -22,7 +22,7 @@ export default function NativeTabBarSync() {
   const tNav = useTranslations('nav');
   const [ready] = useState(hasNativeTabBar);
   const [covered, setCovered] = useState(false);
-  const regularIPad = useRegularIPadWindow();
+  const ipadTopTabs = useIPadTopTabs();
   const [extra] = useTabPreference();
   const tabs = useMemo(
     () =>
@@ -76,7 +76,7 @@ export default function NativeTabBarSync() {
     };
   }, [ready]);
 
-  const visible = !regularIPad && !isBareRoute(pathname) && !hasOwnHeader(pathname) && !covered;
+  const visible = !ipadTopTabs && !isBareRoute(pathname) && !hasOwnHeader(pathname) && !covered;
   useEffect(() => {
     if (!ready) return;
     void setNativeTabBarVisible(visible);

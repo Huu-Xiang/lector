@@ -136,6 +136,9 @@ test('iPad moves the same app tabs between the toolbar and the narrow layout', a
   await page.setViewportSize({ width: 1180, height: 820 });
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.addInitScript(() => {
+    Object.defineProperty(navigator, 'userAgent', {
+      value: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) ReadfoxApp/1 ReadfoxOS/18',
+    });
     Object.defineProperty(navigator, 'platform', { value: 'MacIntel' });
     Object.defineProperty(navigator, 'maxTouchPoints', { value: 5 });
     window.Capacitor = {
@@ -160,6 +163,11 @@ test('iPad moves the same app tabs between the toolbar and the narrow layout', a
   await expect(page.locator('html')).toHaveAttribute('data-native-tabbar-hidden', '');
   await expect(page.locator('.app-sidebar')).toBeHidden();
   const tabs = page.getByTestId('ipad-tabs');
+  await expect(page.getByRole('heading', { name: 'Me', exact: true })).toHaveCSS(
+    'font-weight',
+    '700',
+  );
+  await expect(tabs).toHaveCSS('backdrop-filter', 'none');
   await expect(tabs.getByRole('link', { name: 'Me' })).toHaveAttribute('aria-current', 'location');
   await tabs.getByRole('link', { name: 'Library' }).click();
   await expect(page).toHaveURL('/');
@@ -182,3 +190,33 @@ test('iPad moves the same app tabs between the toolbar and the narrow layout', a
   await page.getByTestId('native-back').click();
   await expect(page).toHaveURL('/me');
 });
+
+for (const [major, appearance] of [
+  [17, 'classic'],
+  [26, 'glass'],
+] as const) {
+  test(`iPadOS ${major} uses the matching navigation appearance`, async ({ page }) => {
+    await page.setViewportSize({ width: 1180, height: 820 });
+    await page.addInitScript((version) => {
+      Object.defineProperty(navigator, 'userAgent', {
+        value: `Mozilla/5.0 (iPad; CPU OS ${version}_0 like Mac OS X) ReadfoxApp/1`,
+      });
+    }, major);
+    await page.goto('/me');
+    await expect(page.locator('html')).toHaveAttribute('data-ios-appearance', appearance);
+    const topTabs = page.getByTestId('ipad-tabs');
+    if (major === 17) {
+      await expect(page.getByRole('heading', { name: 'Me', exact: true })).toHaveCSS(
+        'font-weight',
+        '600',
+      );
+      await expect(topTabs).toBeHidden();
+      await expect(page.locator('.native-bottom-nav')).toBeVisible();
+    } else {
+      await expect(topTabs).toBeVisible();
+      await expect(topTabs).toHaveCSS('font-family', /^ui-rounded,/);
+      await expect(topTabs).toHaveCSS('backdrop-filter', 'blur(20px) saturate(1.45)');
+      await expect(page.locator('.native-bottom-nav')).toBeHidden();
+    }
+  });
+}

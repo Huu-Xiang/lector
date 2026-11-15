@@ -90,7 +90,7 @@ sequenceDiagram
 
 ### Branches
 
-- In regular iPad windows, the library uses top tabs, features a book with reading progress first, and places recommendations alongside books when there is room. Narrow iPad windows and iPhone use the app's bottom tabs. The reader provides its own Back button.
+- The iPad library features a book with reading progress first and places recommendations alongside books when there is room. Regular windows on iPadOS 18 and later use top tabs. Narrow iPad windows, iPadOS 17 and earlier, and iPhone use bottom tabs. The reader provides its own Back button.
 
 - A collection that holds one lesson links from the library to `/read/:id` (`onlyLessonId` in the collection list). The card's details link opens its page, and Back in the reader returns to the library.
 - A lesson row shows the opening words (`excerpt` in the lesson list) when the lesson title only repeats the collection title.
