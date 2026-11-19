@@ -2,14 +2,15 @@ import { Hono } from 'hono';
 import { bodyLimit } from 'hono/body-limit';
 import { InMemoryExtractionBurstLimiter, type ExtractionBurstLimiter } from '../lib/rate-limit';
 import { recordSourceEvent } from '../lib/source-counts';
+import { isTrustedProductOrigin } from '../lib/accounts';
+import { ignoreAnonymousAnalytics } from '../lib/analytics-traffic';
 
 const MAX_BODY_BYTES = 256;
-const BOT_USER_AGENT =
-  /bot|crawl|spider|slurp|headless|phantom|lighthouse|curl|wget|python|httpclient/i;
 
 export interface SourceCountRouteDeps {
   limiter: ExtractionBurstLimiter;
   now: () => Date;
+  trustedOrigin?: (origin: string | undefined) => boolean;
 }
 
 export function makeSourceCountRoutes(
@@ -25,6 +26,16 @@ export function makeSourceCountRoutes(
     '/',
     bodyLimit({ maxSize: MAX_BODY_BYTES, onError: (c) => c.json({ error: 'too_large' }, 413) }),
     async (c) => {
+      const origin = c.req.header('origin');
+      if (!origin || !(deps.trustedOrigin ?? isTrustedProductOrigin)(origin))
+        return c.body(null, 403);
+      if (c.req.header('content-type')?.split(';')[0] !== 'application/json')
+        return c.body(null, 415);
+      if (
+        ignoreAnonymousAnalytics(c.req.raw.headers) ||
+        (c.req.header('cookie') ?? '').includes('session_token')
+      )
+        return c.body(null, 204);
       const key = c.req.header('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
       // The limiter's user key is one shared site-wide bucket; the visitor address gets its own.
       if (!deps.limiter.tryConsume('visit', key)) {
@@ -35,12 +46,6 @@ export function makeSourceCountRoutes(
         source?: unknown;
         lang?: unknown;
       } | null;
-      const userAgent = c.req.header('user-agent') ?? '';
-      // A signed-in browser is a returning user, and a bot is not a visitor.
-      const skip =
-        BOT_USER_AGENT.test(userAgent) || (c.req.header('cookie') ?? '').includes('session_token');
-      if (skip) return c.body(null, 204);
-
       if (!recordSourceEvent('visit', body?.source, body?.lang, deps.now())) {
         return c.json({ error: 'invalid_source' }, 400);
       }

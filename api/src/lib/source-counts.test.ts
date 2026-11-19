@@ -94,6 +94,7 @@ describe('POST /api/source-count', () => {
       makeSourceCountRoutes({
         limiter: new InMemoryExtractionBurstLimiter({ ipPerWindow: limit }),
         now: () => NOW,
+        trustedOrigin: (origin) => origin === 'https://readfox.test',
       }),
     );
     return app;
@@ -106,7 +107,13 @@ describe('POST /api/source-count', () => {
   ) =>
     app.request('/api/source-count', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-Forwarded-For': '203.0.113.5', ...headers },
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Forwarded-For': '203.0.113.5',
+        Origin: 'https://readfox.test',
+        'x-readfox-engaged': '1',
+        ...headers,
+      },
       body: raw ?? JSON.stringify(body),
     });
 

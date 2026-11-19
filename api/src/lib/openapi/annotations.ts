@@ -3204,6 +3204,19 @@ const internalOps: Record<string, OperationDoc> = {
   },
   'POST /api/source-count': {
     summary: 'Count one anonymous visit by traffic source',
+    description:
+      'Requires a trusted Origin, application/json and x-readfox-engaged: 1 after visible trusted browser interaction. Known automated agents and signed-in browsers are ignored.',
+    tag: 'Service',
+    auth: 'none',
+  },
+  'POST /api/product-analytics': {
+    summary: 'Record a first-party account activity milestone',
+    tag: 'Service',
+  },
+  'POST /api/product-analytics/public': {
+    summary: 'Count a public activity without an account identifier',
+    description:
+      'Requires a trusted Origin, application/json and x-readfox-engaged: 1 after visible trusted browser interaction. Known automated agents are ignored.',
     tag: 'Service',
     auth: 'none',
   },
@@ -3397,6 +3410,14 @@ const internalOps: Record<string, OperationDoc> = {
   },
   'GET /api/admin/summary': { summary: 'Read the service-wide aggregates', tag: 'Service' },
   'GET /api/admin/trends': { summary: 'Read the daily service totals', tag: 'Service' },
+  'GET /api/admin/product-analytics': {
+    summary: 'Read aggregate product activity and cohort data',
+    tag: 'Service',
+  },
+  'POST /api/admin/product-analytics/search': {
+    summary: 'Import aggregate search performance rows',
+    tag: 'Service',
+  },
   'GET /api/admin/ai-timing': { summary: 'Read AI speed and cache hit totals', tag: 'Service' },
   'GET /api/admin/users': { summary: 'List every account', tag: 'Service' },
   'GET /api/admin/users/find': {

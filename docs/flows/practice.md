@@ -66,6 +66,8 @@ sequenceDiagram
 | Meanings | `api/src/lib/review/meanings.ts` | four meanings for choose-the-meaning |
 | Prepare | `api/src/lib/review/backfill.ts`, `reconcile.ts` | `backfillWordCards`, `reconcileWordCards` |
 
+Cloud analytics records whether the review entry has cards, whether a round starts, and whether the learner reaches the summary. Accepted answers contribute bounded outcome and interval counts on the server.
+
 ### Rules
 
 - Tables: `wordCards` (one per folded word and language), `wordReviewLog` (append-only answers with the pre-review FSRS snapshot), `reviewRounds` (short-lived, not exported).

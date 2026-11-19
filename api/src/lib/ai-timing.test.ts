@@ -1,3 +1,4 @@
+import '../test-guard';
 import { beforeEach, describe, expect, test } from 'bun:test';
 import { db } from '../db';
 import {
@@ -52,6 +53,61 @@ describe('ai timing', () => {
     expect(gloss.errors).toBe(1);
     expect(gloss.timeouts).toBe(1);
     expect(gloss.calls).toBe(1);
+  });
+
+  test('separates provider usage coverage, retries, first token and missing token data', () => {
+    const date = new Date('2026-07-21T12:00:00Z');
+    db.run(
+      "DELETE FROM product_daily WHERE date = '2026-07-21' AND event IN ('ai_attempt', 'ai_first_token')",
+    );
+    try {
+      recordAiCall({ task: 'word-gloss', totalMs: 90, success: true }, date, db);
+      recordAiCall(
+        {
+          task: 'word-gloss',
+          totalMs: 240,
+          firstTokenMs: 70,
+          success: true,
+          retry: true,
+          tokenInput: 0,
+          tokenOutput: 25,
+          tokenTotal: 25,
+        },
+        date,
+        db,
+      );
+      const rows = db
+        .prepare(
+          `SELECT event, json_extract(dimensions,'$.step') AS step,
+                json_extract(dimensions,'$.latencyBucketMs') AS latency, count, tokenSamples, tokenTotal
+           FROM product_daily WHERE date = '2026-07-21'
+            AND event IN ('ai_attempt', 'ai_first_token') ORDER BY event, step`,
+        )
+        .all();
+      expect(rows).toEqual([
+        { event: 'ai_attempt', step: null, latency: 100, count: 1, tokenSamples: 0, tokenTotal: 0 },
+        {
+          event: 'ai_attempt',
+          step: 'retry',
+          latency: 500,
+          count: 1,
+          tokenSamples: 1,
+          tokenTotal: 25,
+        },
+        {
+          event: 'ai_first_token',
+          step: null,
+          latency: 100,
+          count: 1,
+          tokenSamples: 0,
+          tokenTotal: 0,
+        },
+      ]);
+    } finally {
+      db.run(
+        "DELETE FROM product_daily WHERE date = '2026-07-21' AND event IN ('ai_attempt', 'ai_first_token')",
+      );
+    }
   });
 
   test('counts hits and misses and splits days', () => {

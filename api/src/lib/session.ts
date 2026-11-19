@@ -55,7 +55,8 @@ export function makeSessionMiddleware(authRequired: boolean, engine: () => AuthE
     if (c.req.path === '/api/billing/cn/webhook') return next();
     if (c.req.path === '/api/email/unsubscribe') return next();
     // Anonymous visit counter: the caller has no account yet.
-    if (c.req.path === '/api/source-count') return next();
+    if (c.req.path === '/api/source-count' || c.req.path === '/api/product-analytics/public')
+      return next();
 
     // Per-user PAT (#218): defer to the PAT middleware mounted right after
     // this one — it authenticates the token and resolves its tenant.

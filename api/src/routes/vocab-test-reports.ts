@@ -4,6 +4,7 @@ import { isVocabReportAttemptId } from '../../../languages/en/vocab-report';
 import { db } from '../db';
 import { config } from '../lib/config';
 import { InMemoryExtractionBurstLimiter } from '../lib/rate-limit';
+import { recordProductEvent } from '../lib/product-analytics';
 import { LOCAL_USER_ID, resolveUserId } from '../lib/user';
 import { deliverVocabReport } from '../lib/vocab-test-report-delivery';
 import {
@@ -88,7 +89,13 @@ export function createVocabTestReportsApp(deps: VocabTestReportDeps) {
     const books = resolveVocabReportBooks(snapshot);
     if (!books) return c.json({ error: 'Unknown recommended book' }, 400);
     const inserted = insertVocabReport(userId, { snapshot, books }, 'pending');
-    if (inserted) await deps.deliver(userId, snapshot.attemptId);
+    if (inserted) {
+      recordProductEvent(
+        { event: 'report_saved', language: 'en' },
+        { userId, key: snapshot.attemptId },
+      );
+      await deps.deliver(userId, snapshot.attemptId);
+    }
     const report = getVocabReport(userId, snapshot.attemptId);
     if (!report) return c.json({ error: 'Report not found' }, 404);
     return c.json(report, inserted ? 201 : 200);

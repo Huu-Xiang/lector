@@ -715,6 +715,7 @@ describe('comp / uncomp (complimentary membership for testers)', () => {
     return (await (await buildApp().request(`/api/admin/users/${id}`, asUser(ADMIN))).json()) as {
       compedPlan: 'cloud' | 'plus' | null;
       suspended: boolean;
+      grant: { plan: string } | null;
     };
   }
 

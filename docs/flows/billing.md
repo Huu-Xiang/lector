@@ -45,6 +45,7 @@ sequenceDiagram
 - A failed status probe does not lock the UI. The API still returns 402 on gated calls.
 - `apiFetch` treats any 402 as `bounceToSubscribe`.
 - Entitlement waits for the webhook. A success return from Paddle is not enough.
+- Product analytics records verified captured transactions, payment failures, cancellations and approved refunds by provider outcome. The Paddle notification destination must deliver `transaction.completed`, `transaction.payment_failed`, `transaction.canceled`, `subscription.canceled`, `adjustment.created` and `adjustment.updated` for those metrics. The subscription mirror remains the authority for plan access.
 
 ## Entitlements
 

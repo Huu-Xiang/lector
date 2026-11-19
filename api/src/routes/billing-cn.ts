@@ -7,6 +7,7 @@ import { getUserEmail, isEntitledStatus, resolveBillingStatus } from '../lib/bil
 import { entitlements, type EntitlementsEngine } from '../lib/entitlements';
 import { grantPlan, planRank, type GrantPlan } from '../lib/plan-grants';
 import { recordRefundBaseline, refundStatus, requestRefund } from '../lib/cn-refund';
+import { recordProductEvent } from '../lib/product-analytics';
 import {
   makeXiaodouClient,
   newOutTradeNo,
@@ -28,6 +29,7 @@ interface CnOrderRow {
   plan: GrantPlan;
   months: number;
   amountFen: number;
+  channel: CnChannel;
   status: string;
 }
 
@@ -71,7 +73,7 @@ function payerIp(c: Context): string | null {
 function findOrder(outTradeNo: string): CnOrderRow | undefined {
   return db
     .prepare(
-      'SELECT outTradeNo, userId, plan, months, amountFen, status FROM cn_orders WHERE outTradeNo = ?',
+      'SELECT outTradeNo, userId, plan, months, amountFen, channel, status FROM cn_orders WHERE outTradeNo = ?',
     )
     .get(outTradeNo) as CnOrderRow | undefined;
 }
@@ -86,11 +88,15 @@ export function settleCnOrder(
   return db.transaction(() => {
     const order = findOrder(outTradeNo);
     if (!order) return false;
-    if (order.status === 'SUCCEEDED') return true;
+    if (order.status === 'SUCCEEDED' || order.status === 'REFUNDED') return true;
     if (paidFen !== order.amountFen) {
       console.error(`[cn-billing] ${outTradeNo}: paid ${paidFen} fen, expected ${order.amountFen}`);
       db.prepare("UPDATE cn_orders SET status = 'AMOUNT_MISMATCH' WHERE outTradeNo = ?").run(
         outTradeNo,
+      );
+      recordProductEvent(
+        { event: 'payment_failed', feature: 'xiaodou', outcome: 'amount_mismatch' },
+        { userId: order.userId, key: outTradeNo, now },
       );
       return false;
     }
@@ -111,6 +117,16 @@ export function settleCnOrder(
       ref: outTradeNo,
       now,
     });
+    recordProductEvent(
+      {
+        event: 'payment_succeeded',
+        feature: 'xiaodou',
+        outcome: order.channel,
+        step: 'CNY',
+        value: order.amountFen,
+      },
+      { userId: order.userId, key: outTradeNo, now },
+    );
     return true;
   })();
 }
@@ -166,10 +182,21 @@ export function makeCnBillingRoutes(
 
     const outTradeNo = newOutTradeNo();
     const amountFen = cfg.prices[plan][months];
+    const now = new Date();
     db.prepare(
       `INSERT INTO cn_orders (outTradeNo, userId, plan, months, amountFen, channel, status, createdAt)
        VALUES (?, ?, ?, ?, ?, ?, 'CREATED', ?)`,
-    ).run(outTradeNo, userId, plan, months, amountFen, channel, new Date().toISOString());
+    ).run(outTradeNo, userId, plan, months, amountFen, channel, now.toISOString());
+    recordProductEvent(
+      {
+        event: 'checkout_started',
+        feature: 'xiaodou',
+        outcome: channel,
+        step: 'CNY',
+        value: amountFen,
+      },
+      { userId, key: outTradeNo, now },
+    );
 
     try {
       const order = await client.createPayment({
@@ -183,7 +210,17 @@ export function makeCnBillingRoutes(
       return c.json({ outTradeNo, payUrl: order.payUrl, qrCode: order.qrCode });
     } catch (error) {
       console.error('[cn-billing] create payment failed:', (error as Error).message);
-      db.prepare("UPDATE cn_orders SET status = 'FAILED' WHERE outTradeNo = ?").run(outTradeNo);
+      const failed = db
+        .prepare(
+          "UPDATE cn_orders SET status = 'FAILED' WHERE outTradeNo = ? AND status = 'CREATED'",
+        )
+        .run(outTradeNo);
+      if (failed.changes) {
+        recordProductEvent(
+          { event: 'payment_failed', feature: 'xiaodou', outcome: 'checkout_error' },
+          { userId, key: outTradeNo },
+        );
+      }
       return c.json({ error: 'cn_checkout_failed' }, 502);
     }
   });
@@ -195,7 +232,7 @@ export function makeCnBillingRoutes(
     if (!pollLimiter.tryConsume(userId, null)) return c.json({ error: 'rate_limited' }, 429);
     const order = findOrder(c.req.param('outTradeNo'));
     if (!order || order.userId !== userId) return c.json({ error: 'not_found' }, 404);
-    if (order.status !== 'SUCCEEDED' && client) {
+    if (order.status !== 'SUCCEEDED' && order.status !== 'REFUNDED' && client) {
       try {
         const remote = await client.queryPayment(order.outTradeNo);
         if (remote.status === 'SUCCEEDED')

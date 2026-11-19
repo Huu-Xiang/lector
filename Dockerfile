@@ -140,6 +140,8 @@ RUN apk add --no-cache espeak-ng ffmpeg
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
+ARG GIT_COMMIT=
+ENV GIT_COMMIT=$GIT_COMMIT
 ENV DATA_DIR=/app/data
 # Dictionaries live outside DATA_DIR so a user volume mount on /app/data does
 # not shadow them. They are no longer read-only image content: the runtime

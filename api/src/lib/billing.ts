@@ -776,7 +776,7 @@ export function makeBillingMiddleware(opts: BillingGateOptions) {
     if (path.startsWith('/api/auth/')) return next();
     if (path === '/api/billing' || path.startsWith('/api/billing/')) return next();
     if (path === '/api/email/unsubscribe') return next();
-    if (path === '/api/source-count') return next();
+    if (path === '/api/source-count' || path === '/api/product-analytics/public') return next();
     // Admin surface (#221): the operator runs the service regardless of their
     // own subscription. requireAdmin still guards it — a non-admin gets 403
     // there, never a free pass around billing for ordinary accounts.

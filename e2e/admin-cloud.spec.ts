@@ -1,6 +1,7 @@
 import { test, expect, type Page, type Browser } from '@playwright/test';
 import { readFileSync } from 'fs';
 import path from 'path';
+import { TICK_MS } from '../src/lib/reading-activity';
 
 /**
  * Admin dashboard (#221), end to end against the admin cloud API on :3471
@@ -27,6 +28,9 @@ const PASSWORD = 'admin-spec-password-123';
 const masked = (email: string) => `${email.slice(0, 2)}***${email.slice(email.lastIndexOf('@'))}`;
 
 async function applyAdminEnv(page: Page) {
+  await page.addInitScript((API_URL) => {
+    window.__ENV__ = { API_URL, LECTOR_MODE: 'cloud' };
+  }, ADMIN_API);
   await page.route('**/__env.js', (route) =>
     route.fulfill({
       contentType: 'application/javascript',
@@ -37,7 +41,7 @@ async function applyAdminEnv(page: Page) {
 
 /** A page in its own context (isolated cookies), pre-wired to the admin API. */
 async function freshPage(browser: Browser): Promise<Page> {
-  const ctx = await browser.newContext();
+  const ctx = await browser.newContext({ serviceWorkers: 'block' });
   const page = await ctx.newPage();
   await applyAdminEnv(page);
   return page;
@@ -86,16 +90,21 @@ async function registerAndVerify(browser: Browser, name: string, email: string):
     data: { targetLanguage: 'af' },
   });
   expect(res.ok()).toBeTruthy();
+  const language = await page.request.get(`${ADMIN_API}/api/settings/targetLanguage`);
+  expect(await language.json()).toBe('af');
+  await page.goto('/');
+  await expect(page.getByTestId('free-books-btn')).toBeVisible();
   return page;
 }
 
-async function signIn(browser: Browser, email: string): Promise<Page> {
+async function signIn(browser: Browser, email: string, suspended = false): Promise<Page> {
   const page = await freshPage(browser);
   await page.goto('/login');
   await page.getByTestId('login-email').fill(email);
   await page.getByTestId('login-password').fill(PASSWORD);
   await page.getByTestId('login-submit').click();
   await page.waitForURL((url) => url.pathname === '/');
+  if (!suspended) await expect(page.getByTestId('free-books-btn')).toBeVisible();
   return page;
 }
 
@@ -242,7 +251,7 @@ test.describe.serial('admin dashboard (#221)', () => {
     expect(suspend.status()).toBe(200);
 
     // The suspended member is locked out of normal routes; takeout stays open.
-    const blockedMember = await signIn(browser, USER_EMAIL);
+    const blockedMember = await signIn(browser, USER_EMAIL, true);
     const blocked = await blockedMember.request.get(`${ADMIN_API}/api/collections`);
     expect(blocked.status()).toBe(403);
     expect((await blocked.json()).error).toBe('account_suspended');
@@ -265,6 +274,263 @@ test.describe.serial('admin dashboard (#221)', () => {
     await operator.waitForURL('**/admin/funnel');
     await expect(operator.getByTestId('funnel-step-signedUp')).toBeVisible();
     await expect(operator.getByTestId('funnel-step-paid')).toBeVisible();
+  });
+
+  test('records a verified registration and exposes only aggregate analytics to the operator', async ({
+    browser,
+  }) => {
+    const operator = await signIn(browser, ADMIN_EMAIL);
+    const endpoint = `${ADMIN_API}/api/admin/product-analytics?days=30`;
+    const count = (
+      rows: Array<{ event: string; dimensions: Record<string, string>; count: number }>,
+      event: string,
+      source?: string,
+    ) =>
+      rows
+        .filter((row) => row.event === event && (!source || row.dimensions.source === source))
+        .reduce((total, row) => total + row.count, 0);
+    const before = await (await operator.request.get(endpoint)).json();
+
+    const page = await freshPage(browser);
+    await page.context().addCookies([
+      { name: 'rf_src', value: 'reddit.en', url: ADMIN_API },
+      { name: 'rf_product', value: 'zh-TW.launch', url: ADMIN_API },
+    ]);
+    const email = `analytics+${Date.now()}@e2e.test`;
+    await page.goto('/register');
+    await page.getByTestId('register-name').fill('Analytics Reader');
+    await page.getByTestId('register-email').fill(email);
+    await page.getByTestId('register-password').fill(PASSWORD);
+    await page.getByTestId('register-confirm-password').fill(PASSWORD);
+    await page.getByTestId('register-submit').click();
+    await expect(page.getByTestId('register-check-email')).toBeVisible();
+    await page.goto(await lastVerifyLink(email));
+
+    const denied = await page.request.get(endpoint);
+    expect(denied.status()).toBe(403);
+    const after = await (await operator.request.get(endpoint)).json();
+    expect(count(after.daily, 'registration_started', 'reddit')).toBe(
+      count(before.daily, 'registration_started', 'reddit') + 1,
+    );
+    expect(count(after.daily, 'signup_created', 'reddit')).toBe(
+      count(before.daily, 'signup_created', 'reddit') + 1,
+    );
+    expect(count(after.daily, 'signup_verified')).toBe(count(before.daily, 'signup_verified') + 1);
+    expect(after.daily).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          event: 'signup_created',
+          dimensions: expect.objectContaining({
+            source: 'reddit',
+            browserLanguage: 'en',
+            uiLanguage: 'zh-TW',
+            campaign: 'launch',
+          }),
+        }),
+      ]),
+    );
+    expect(JSON.stringify(after)).not.toContain(email);
+
+    await operator.goto('/admin');
+    await expect(operator.getByRole('heading', { name: 'Product analytics' })).toBeVisible();
+    const download = operator.waitForEvent('download');
+    await operator.getByRole('button', { name: 'Download JSON' }).click();
+    expect((await download).suggestedFilename()).toMatch(/^readfox-.*-analytics-.*\.json$/);
+    await page.context().close();
+    await operator.context().close();
+  });
+
+  test('counts ChatGPT arrivals only after visible user activity and skips automated visits', async ({
+    browser,
+    baseURL,
+  }) => {
+    const operator = await signIn(browser, ADMIN_EMAIL);
+    const visitor = await freshPage(browser);
+    await visitor.addInitScript(() =>
+      Object.defineProperty(navigator, 'webdriver', { get: () => false }),
+    );
+    const posts: Array<{
+      path: string;
+      data: Record<string, unknown>;
+      engaged: string | undefined;
+      status: number;
+    }> = [];
+    visitor.on('response', (response) => {
+      const request = response.request();
+      const path = new URL(request.url()).pathname;
+      if (
+        request.method() !== 'POST' ||
+        !['/api/source-count', '/api/product-analytics/public'].includes(path)
+      )
+        return;
+      posts.push({
+        path,
+        data: request.postDataJSON(),
+        engaged: request.headers()['x-readfox-engaged'],
+        status: response.status(),
+      });
+    });
+    try {
+      await visitor.goto('/books/en?utm_source=chatgpt.com');
+      await expect(visitor.locator('h1').first()).toBeVisible();
+      await expect
+        .poll(
+          async () =>
+            (await visitor.context().cookies()).find((cookie) => cookie.name === 'rf_src')?.value,
+        )
+        .toBe('chatgpt.en');
+      await visitor.evaluate(() =>
+        document.dispatchEvent(new Event('pointerdown', { bubbles: true })),
+      );
+      await visitor.waitForTimeout(300);
+      expect(posts).toEqual([]);
+      await visitor.keyboard.press('Tab');
+      await expect.poll(() => posts.length).toBe(2);
+      expect(posts).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            path: '/api/source-count',
+            data: { source: 'chatgpt', lang: 'en' },
+            engaged: '1',
+            status: 204,
+          }),
+          expect.objectContaining({
+            path: '/api/product-analytics/public',
+            data: expect.objectContaining({
+              data: expect.objectContaining({
+                event: 'page_view',
+                source: 'chatgpt',
+                feature: 'books_language',
+                language: 'en',
+              }),
+            }),
+            engaged: '1',
+            status: 204,
+          }),
+        ]),
+      );
+      const report = await (
+        await operator.request.get(`${ADMIN_API}/api/admin/product-analytics?days=7`)
+      ).json();
+      expect(report.daily).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            event: 'page_view',
+            dimensions: expect.objectContaining({ source: 'chatgpt' }),
+          }),
+        ]),
+      );
+      const rejected = await visitor.request.post(`${ADMIN_API}/api/product-analytics/public`, {
+        headers: { origin: new URL(baseURL!).origin },
+        data: { key: 'without-engagement', data: { event: 'page_view', feature: 'landing' } },
+      });
+      expect(rejected.status()).toBe(204);
+      const automated = await freshPage(browser);
+      try {
+        const sent: string[] = [];
+        automated.on('request', (request) => {
+          if (
+            request.method() === 'POST' &&
+            /\/api\/(source-count|product-analytics\/public)$/.test(new URL(request.url()).pathname)
+          )
+            sent.push(request.url());
+        });
+        await automated.goto('/books/en?utm_source=chatgpt.com');
+        await expect(automated.locator('h1').first()).toBeVisible();
+        await automated.keyboard.press('Tab');
+        await automated.waitForTimeout(300);
+        expect(sent).toEqual([]);
+      } finally {
+        await automated.context().close();
+      }
+    } finally {
+      await visitor.context().close();
+      await operator.context().close();
+    }
+  });
+
+  test('records an engaged short read in aggregate without including its private text', async ({
+    browser,
+  }) => {
+    const operator = await signIn(browser, ADMIN_EMAIL);
+    const learner = await signIn(browser, USER_EMAIL);
+    const setting = await learner.request.put(`${ADMIN_API}/api/settings/targetLanguage`, {
+      data: { value: 'af' },
+    });
+    expect(setting.ok()).toBeTruthy();
+    const endpoint = `${ADMIN_API}/api/admin/product-analytics?days=30`;
+    const read = async () => {
+      const response = await operator.request.get(endpoint);
+      expect(response.ok()).toBeTruthy();
+      return (await response.json()) as {
+        daily: Array<{ event: string; count: number; value: number }>;
+      };
+    };
+    const count = (report: Awaited<ReturnType<typeof read>>, event: string) =>
+      report.daily.reduce((total, row) => total + (row.event === event ? row.count : 0), 0);
+    const minutes = (report: Awaited<ReturnType<typeof read>>) =>
+      report.daily.reduce(
+        (total, row) => total + (row.event === 'reading_time' ? row.value : 0),
+        0,
+      );
+    const before = await read();
+    const title = `Private reader ${Date.now()}`;
+    const collection = await learner.request.post(`${ADMIN_API}/api/collections`, {
+      data: { title, language: 'af' },
+    });
+    expect(collection.ok()).toBeTruthy();
+    const { id } = (await collection.json()) as { id: string };
+
+    try {
+      const lessonsUrl = `${ADMIN_API}/api/collections/${id}/lessons`;
+      const created = await learner.request.post(lessonsUrl, {
+        data: { title, textContent: 'Een klein verhaal oor lees.' },
+      });
+      expect(created.ok()).toBeTruthy();
+      const [lesson] = (await (await learner.request.get(lessonsUrl)).json()) as Array<{
+        id: string;
+      }>;
+      await learner.setViewportSize({ width: 1280, height: 800 });
+      // Install before mounting the reader so it binds to the test clock.
+      await learner.clock.install();
+      await learner.goto(`/read/${lesson.id}`);
+      const onLesson = (url: URL) => url.pathname === `/read/${lesson.id}`;
+      const article = learner.locator('article');
+      await expect(learner).toHaveURL(onLesson);
+      await expect(article).toContainText('Een klein verhaal');
+      expect(
+        await article.evaluate((element) => {
+          const container = element.closest('.overflow-auto');
+          if (!container) throw new Error('Reader scroll container not found');
+          return element.getBoundingClientRect().bottom <= container.getBoundingClientRect().bottom;
+        }),
+      ).toBe(true);
+      await expect
+        .poll(async () => count(await read(), 'reading_opened'))
+        .toBe(count(before, 'reading_opened') + 1);
+      const readingWindow = 60_000 + TICK_MS;
+      await learner.clock.runFor(readingWindow);
+      await expect(learner).toHaveURL(onLesson);
+      expect(count(await read(), 'reading_started')).toBe(count(before, 'reading_started'));
+      expect(count(await read(), 'reading_completed')).toBe(count(before, 'reading_completed'));
+
+      await article.click({ position: { x: 8, y: 8 } });
+      await learner.clock.runFor(readingWindow);
+      await expect
+        .poll(async () => count(await read(), 'reading_completed'))
+        .toBe(count(before, 'reading_completed') + 1);
+      const after = await read();
+      expect(count(after, 'reading_started')).toBe(count(before, 'reading_started') + 1);
+      await expect
+        .poll(async () => minutes(await read()))
+        .toBeGreaterThanOrEqual(minutes(before) + 1);
+      expect(JSON.stringify(after)).not.toContain(title);
+      expect(JSON.stringify(after)).not.toContain(lesson.id);
+    } finally {
+      await learner.request.delete(`${ADMIN_API}/api/collections/${id}`);
+      await learner.context().close();
+      await operator.context().close();
+    }
   });
 
   test('the product email switch turns lifecycle mail off and on, audit-logged', async ({

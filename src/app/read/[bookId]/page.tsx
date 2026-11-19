@@ -10,6 +10,12 @@ import MarkdownReader from '@/components/MarkdownReader';
 import OnboardingCoach from '@/components/OnboardingCoach';
 import TranslationDrawer, { TranslationDrawerSlot } from '@/components/TranslationDrawer';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import ListenAlong from '@/components/ListenAlong';
 import {
   type Lesson,
@@ -50,6 +56,7 @@ import {
   resolveAutoSave,
 } from '@/lib/auto-save-lookups';
 import { useReadingActivity } from '@/lib/use-reading-activity';
+import { trackProductEvent } from '@/lib/product-analytics';
 import { useRefreshOnReturn } from '@/lib/use-refresh-on-return';
 import {
   CONTENT_FILTERED,
@@ -77,7 +84,7 @@ import {
   vocabKeys,
 } from '@/lib/languages';
 import { toast } from 'sonner';
-import { Headphones, LoaderCircle } from 'lucide-react';
+import { Headphones, LoaderCircle, MessageSquare } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import { WordPanelState } from '../types';
 import { useActiveLanguage } from '@/utils/hooks';
@@ -109,6 +116,43 @@ function isContentFiltered(err: unknown): boolean {
   return err instanceof Error && err.message === CONTENT_FILTERED;
 }
 
+function ReadingDifficulty({ lessonId, language }: { lessonId: string; language: string }) {
+  const t = useTranslations('reader.page');
+  const [submitted, setSubmitted] = useState(false);
+  if (submitted) return null;
+
+  const choices = [
+    { outcome: 'too_easy', label: t('analyticsTooEasy') },
+    { outcome: 'just_right', label: t('analyticsJustRight') },
+    { outcome: 'too_hard', label: t('analyticsTooHard') },
+  ];
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger
+        aria-label={t('analyticsDifficulty')}
+        title={t('analyticsDifficulty')}
+        className="flex min-h-9 min-w-9 items-center justify-center rounded-lg text-muted-foreground hover:bg-accent"
+        data-testid="reading-difficulty"
+      >
+        <MessageSquare className="size-5" aria-hidden />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        {choices.map(({ outcome, label }) => (
+          <DropdownMenuItem
+            key={outcome}
+            onClick={() => {
+              trackProductEvent({ event: 'reading_difficulty', language, lessonId, outcome });
+              setSubmitted(true);
+            }}
+          >
+            {label}
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
 function rememberedLesson(lessonId: string): Lesson | null {
   const lesson = peekLesson(lessonId);
   return lesson && peekKnownWordsMap() ? lesson : null;
@@ -129,7 +173,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
   const router = useRouter();
   const activeLang = useActiveLanguage();
   const ankiTransport = useAnkiTransport();
-  const ankiHidden = useLectorMode() === 'cloud';
+  const cloud = useLectorMode() === 'cloud';
 
   const [lesson, setLesson] = useState<Lesson | null>(() => rememberedLesson(lessonId));
   // The LESSON's pack, not the active one — same precedent as MarkdownReader.
@@ -139,6 +183,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     lesson?.language && isValidLanguageCode(lesson.language)
       ? getLanguageConfig(lesson.language)
       : activeLang;
+  const readingLanguage = lessonPack.code;
   const [siblings, setSiblings] = useState<LessonSummary[]>(() => {
     const collectionId = rememberedLesson(lessonId)?.collectionId;
     return (collectionId && peekLessonsForCollection(collectionId)) || [];
@@ -148,6 +193,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
   // Listen-along (#185): the audio lesson's transcript segments + mode toggle.
   const [segments, setSegments] = useState<AudioTranscriptSegment[]>([]);
   const [listenMode, setListenMode] = useState(false);
+  const [editing, setEditing] = useState(false);
   const [readerWordStates, setReaderWordStates] = useState<Map<string, WordState>>(
     () => peekKnownWordsMap() ?? new Map(),
   );
@@ -357,6 +403,15 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
   const transcriptionStatus = lesson?.transcriptionStatus ?? null;
   const reportReadingProgress = useReadingActivity(
     lesson && (!transcriptionStatus || transcriptionStatus === 'done') ? lesson : null,
+    !editing && !(listenMode && segments.length > 0),
+  );
+  const loadedLessonId = lesson?.id;
+  const trackReaderEvent = useCallback(
+    (event: string, feature?: string, outcome?: string) => {
+      if (loadedLessonId !== lessonId) return;
+      trackProductEvent({ event, lessonId, language: readingLanguage, feature, outcome });
+    },
+    [lessonId, loadedLessonId, readingLanguage],
   );
   useEffect(() => {
     if (transcriptionStatus === 'done') {
@@ -583,6 +638,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       });
 
       incrementDailyStat('dictionaryLookups');
+      trackReaderEvent('word_lookup', isPhrase ? 'phrase' : 'word');
       trackOnboardingLookup(word);
 
       const lookupPromise = findVocab(
@@ -762,7 +818,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         }
       }
     },
-    [activeLang, lessonId, trackOnboardingLookup, trackRepeatLookup, t],
+    [activeLang, lessonId, trackOnboardingLookup, trackReaderEvent, trackRepeatLookup, t],
   );
 
   const closeWordPanel = useCallback(() => {
@@ -786,8 +842,10 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     const requestId = translationRequestId.current;
     setContextError(null);
     setWordPanel((prev) => ({ ...prev, isContextLoading: true }));
+    trackReaderEvent('reading_help', 'context', 'started');
     try {
       const result = await explainWordInContext(wordPanel.word, wordPanel.sentence);
+      trackReaderEvent('reading_help', 'context', 'success');
       if (requestId !== translationRequestId.current) return;
       setWordPanel((prev) => ({
         ...prev,
@@ -795,6 +853,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         isContextLoading: false,
       }));
     } catch (err) {
+      trackReaderEvent('reading_help', 'context', 'failure');
       if (requestId !== translationRequestId.current) return;
       setContextError(isContentFiltered(err) ? t('aiDeclined') : t('contextFailed'));
       setWordPanel((prev) => ({ ...prev, isContextLoading: false }));
@@ -804,14 +863,17 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     wordPanel.sentence,
     wordPanel.isContextLoading,
     wordPanel.aiContextTranslation,
+    trackReaderEvent,
     t,
   ]);
 
   const enrichTranslation = useCallback(async () => {
     const requestId = translationRequestId.current;
     setWordPanel((prev) => ({ ...prev, isEnriching: true }));
+    trackReaderEvent('reading_help', 'enrich', 'started');
     try {
       const result = await enrichWord(wordPanel.word, wordPanel.sentence);
+      trackReaderEvent('reading_help', 'enrich', 'success');
       const native = (await loadNative()) ?? 'en';
       if (requestId !== translationRequestId.current) return;
       const structured =
@@ -832,12 +894,13 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         isEnriching: false,
       }));
     } catch (err) {
+      trackReaderEvent('reading_help', 'enrich', 'failure');
       if (requestId !== translationRequestId.current) return;
       console.error('Enrich error:', err);
       // Keep the gloss on screen; just stop the spinner (non-blocking failure).
       setWordPanel((prev) => ({ ...prev, isEnriching: false }));
     }
-  }, [wordPanel.word, wordPanel.sentence]);
+  }, [wordPanel.word, wordPanel.sentence, trackReaderEvent]);
 
   // Resolves the existing vocab entry, awaiting an in-flight lookup if needed.
   // Prevents duplicate-row races when the user acts before getVocabByText returns.
@@ -942,6 +1005,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         return;
       }
       const saved = existing ? { ...existing, state: entry.state } : { ...entry, id };
+      if (!existing) trackReaderEvent('word_saved', saved.type === 'phrase' ? 'phrase' : 'word');
       if (requestId === translationRequestId.current) {
         existingEntryLookup.current = Promise.resolve(saved);
         setWordPanel((prev) => ({ ...prev, existingEntry: saved }));
@@ -961,6 +1025,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       vocabTextOf,
       persistAcceptedTranslation,
       trackOnboardingVocab,
+      trackReaderEvent,
       t,
     ],
   );
@@ -1185,6 +1250,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
           toast.error(t('levelFailed'));
           return;
         }
+        trackReaderEvent('word_saved', entry.type === 'phrase' ? 'phrase' : 'word');
         await incrementDailyStat('newWordsSaved');
         setWordPanel((prev) => ({ ...prev, existingEntry: entry }));
         trackedEntry = entry;
@@ -1229,6 +1295,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       resolveExistingEntry,
       persistAcceptedTranslation,
       trackOnboardingVocab,
+      trackReaderEvent,
       t,
     ],
   );
@@ -1285,6 +1352,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       throw new Error(t('saveFailedShort'));
     }
     await incrementDailyStat('newWordsSaved');
+    trackReaderEvent('word_saved', isPhrase ? 'phrase' : 'word');
     persistAcceptedTranslation();
     void trackOnboardingVocab(entry, entry.state);
     setWordPanel((prev) => ({ ...prev, existingEntry: entry }));
@@ -1297,6 +1365,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     resolveExistingEntry,
     persistAcceptedTranslation,
     trackOnboardingVocab,
+    trackReaderEvent,
     t,
   ]);
 
@@ -1522,6 +1591,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
   );
 
   const handleEditingChange = useCallback((editing: boolean) => {
+    setEditing(editing);
     if (editing) {
       setWordPanel((prev) => ({ ...prev, isOpen: false }));
     }
@@ -1743,17 +1813,26 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
             prevLesson={lessonLink(prevLesson)}
             nextLesson={lessonLink(nextLesson)}
             headerAction={
-              segments.length > 0 ? (
-                <button
-                  onClick={() => setListenMode(true)}
-                  title={t('listenAlong')}
-                  aria-label={t('listenAlong')}
-                  data-testid="listen-along-toggle"
-                  className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-accent"
-                >
-                  <Headphones className="h-5 w-5" />
-                </button>
-              ) : undefined
+              <>
+                {cloud && (
+                  <ReadingDifficulty
+                    key={lessonId}
+                    lessonId={lessonId}
+                    language={readingLanguage}
+                  />
+                )}
+                {segments.length > 0 && (
+                  <button
+                    onClick={() => setListenMode(true)}
+                    title={t('listenAlong')}
+                    aria-label={t('listenAlong')}
+                    data-testid="listen-along-toggle"
+                    className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-accent"
+                  >
+                    <Headphones className="h-5 w-5" />
+                  </button>
+                )}
+              </>
             }
           />
         )}
@@ -1810,8 +1889,8 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
           onEnrich={canEnrich ? enrichTranslation : undefined}
           onRetranslate={retranslateWithAi}
           onLookupWord={handleNestedLookup}
-          onAddToAnki={!ankiHidden && !wordPanel.word.includes(' ') ? addWordToAnki : undefined}
-          onAddCloze={!ankiHidden && wordPanel.word.includes(' ') ? addClozeToAnki : undefined}
+          onAddToAnki={!cloud && !wordPanel.word.includes(' ') ? addWordToAnki : undefined}
+          onAddCloze={!cloud && wordPanel.word.includes(' ') ? addClozeToAnki : undefined}
         />
       </TranslationDrawerSlot>
       {onboardingActive && autoSaveChecked && (

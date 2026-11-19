@@ -1,33 +1,53 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { RotateCcw } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { getReviewCounts, peekReviewCounts, QUERY_SCOPES } from '@/lib/data-layer';
+import { trackProductEvent } from '@/lib/product-analytics';
+import { useActiveLanguage } from '@/utils/hooks';
 import { useQueryRefresh } from '@/lib/use-query-refresh';
 import type { ReviewCounts } from '@/types';
 
 export default function WordReviewEntry({ onStart }: { onStart: () => void }) {
   const t = useTranslations('practice.words');
-  const [counts, setCounts] = useState<ReviewCounts | null>(() => peekReviewCounts() ?? null);
+  const { code: language } = useActiveLanguage();
+  const [snapshot, setSnapshot] = useState<{ language: string; counts: ReviewCounts | null }>(
+    () => ({
+      language,
+      counts: peekReviewCounts() ?? null,
+    }),
+  );
+  const reported = useRef<string | null>(null);
 
   useEffect(() => {
     let live = true;
     getReviewCounts()
-      .then((value) => live && setCounts(value))
+      .then((counts) => live && setSnapshot({ language, counts }))
       .catch(() => undefined);
     return () => {
       live = false;
     };
-  }, []);
+  }, [language]);
   useQueryRefresh([QUERY_SCOPES.review], () => {
     getReviewCounts()
-      .then(setCounts)
+      .then((counts) => setSnapshot({ language, counts }))
       .catch(() => undefined);
   });
 
+  const counts = snapshot.language === language ? snapshot.counts : null;
   const ready = counts !== null && counts.dueNow + counts.newAvailable > 0;
+  useEffect(() => {
+    if (!counts || reported.current === language) return;
+    reported.current = language;
+    trackProductEvent({
+      event: 'review_opened',
+      language,
+      outcome: ready ? 'available' : 'empty',
+      value: Math.min(counts.dueNow, 1000),
+    });
+  }, [counts, language, ready]);
   if (!ready) return null;
 
   return (

@@ -7,7 +7,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t('privacy.metaTitle') };
 }
 
-const LAST_UPDATED = new Date(Date.UTC(2026, 10, 12));
+const LAST_UPDATED = new Date(Date.UTC(2026, 10, 13));
 const STORE_ITEMS = [
   'account',
   'betaSignIn',
@@ -23,6 +23,7 @@ const STORE_ITEMS = [
   'session',
   'loginRecords',
   'sourceCounts',
+  'productAnalytics',
   'feedback',
   'invites',
   'inviteFingerprint',

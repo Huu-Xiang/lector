@@ -267,6 +267,8 @@ describe('TENANT_TABLES ratchet', () => {
   // Subtracted here so the assertion stays meaningful even on a DB that has
   // them (a fresh getDb() schema omits Better Auth's, but not billing's).
   const NON_TENANT_USERID_TABLES = new Set([
+    'product_events',
+    'product_attribution',
     'session',
     'account',
     'billing_subscriptions',

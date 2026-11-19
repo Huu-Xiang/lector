@@ -90,7 +90,9 @@ export class OpenAICompatibleProvider implements LLMProvider {
         ? (usage.completion_tokens_details as Record<string, unknown>)
         : undefined;
     const number = (value: unknown) =>
-      typeof value === 'number' && Number.isFinite(value) ? value : undefined;
+      typeof value === 'number' && Number.isSafeInteger(value) && value >= 0 && value <= 1e9
+        ? value
+        : undefined;
     return {
       promptTokens: number(usage.prompt_tokens),
       completionTokens: number(usage.completion_tokens),
@@ -125,6 +127,10 @@ export class OpenAICompatibleProvider implements LLMProvider {
       firstTokenMs: extra.firstTokenMs,
       success,
       timedOut: extra.error instanceof Error && extra.error.name === 'AbortError',
+      retry: event.attempt > 1,
+      tokenInput: event.promptTokens,
+      tokenOutput: event.completionTokens,
+      tokenTotal: event.totalTokens,
     });
     try {
       options.onUsage?.(event);

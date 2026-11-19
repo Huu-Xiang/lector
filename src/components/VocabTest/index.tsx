@@ -26,6 +26,7 @@ import {
 import { readVocabResult, writeVocabResult } from '@/lib/vocab-result';
 import { addSeenWord, readSeenWords } from '@/lib/vocab-seen';
 import { authClient } from '@/lib/auth-client';
+import { trackProductEvent } from '@/lib/product-analytics';
 import { useLectorMode } from '@/lib/use-env';
 import SaveLevel from './SaveLevel';
 import SaveReport from './SaveReport';
@@ -37,6 +38,7 @@ import type { VocabTestBook } from '@/lib/vocab-test-data';
 const RIGHT_PAUSE_MS = 600;
 const OTHER_PAUSE_MS = 1500;
 const INPUT_LOCK_MS = 250;
+const ANSWER_MILESTONES = [1, MIN_ANSWERS, 20, 40, 80, MAX_ANSWERS];
 
 function shownTitle(book: VocabTestBook, locale: string): string {
   return book.titles[locale] ?? book.titles.en ?? book.title;
@@ -189,6 +191,7 @@ export default function VocabTest({
   /** Words asked in earlier tests in this browser, read when a test starts. */
   const seenRef = useRef<ReadonlySet<string>>(new Set());
   const answersRef = useRef<Answer[]>([]);
+  const trackedAttempt = useRef({ anonymous: true, finished: false, progress: 0 });
   const resultVersion = useRef<{
     answered: number;
     takenAt: string;
@@ -256,6 +259,9 @@ export default function VocabTest({
     preparedRef.current = null;
     setAnswers([]);
     answersRef.current = [];
+    const anonymous = !session;
+    trackedAttempt.current = { anonymous, finished: false, progress: 0 };
+    trackProductEvent({ event: 'quiz_started', language: 'en' }, { anonymous });
     resultVersion.current = null;
     setAnnouncement('');
     showItem(nextItem([], words, seedRef.current, seenRef.current));
@@ -289,6 +295,14 @@ export default function VocabTest({
       clearTimer();
       const result = estimateFromAnswers(all, meta.bands);
       if (result) {
+        const attempt = trackedAttempt.current;
+        if (!attempt.finished) {
+          attempt.finished = true;
+          trackProductEvent(
+            { event: 'quiz_finished', language: 'en', value: all.length },
+            { anonymous: attempt.anonymous },
+          );
+        }
         writeVocabResult(result.estimate, result.level);
         if (resultVersion.current?.answered !== all.length) {
           resultVersion.current = { answered: all.length, takenAt: new Date().toISOString() };
@@ -332,6 +346,14 @@ export default function VocabTest({
       setEstimateBeforeAnswer(live ? (live.low + live.high) / 2 : null);
       const all = [...answersRef.current, { item: current, choice }];
       answersRef.current = all;
+      const attempt = trackedAttempt.current;
+      if (all.length > attempt.progress && ANSWER_MILESTONES.includes(all.length)) {
+        attempt.progress = all.length;
+        trackProductEvent(
+          { event: 'quiz_progress', language: 'en', value: all.length },
+          { anonymous: attempt.anonymous },
+        );
+      }
       setAnswers(all);
       addSeenWord(current.word);
       setChosen(choice);
@@ -750,6 +772,16 @@ export default function VocabTest({
                 <li key={book.slug}>
                   <Link
                     href={`/books/en/${book.slug}`}
+                    onClick={() =>
+                      trackProductEvent(
+                        {
+                          event: 'quiz_book_opened',
+                          language: 'en',
+                          publicBook: `en/${book.slug}`,
+                        },
+                        { anonymous: trackedAttempt.current.anonymous },
+                      )
+                    }
                     data-testid="vocab-book"
                     className="flex min-h-11 gap-3 rounded-xl border border-border bg-card p-3 transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                   >

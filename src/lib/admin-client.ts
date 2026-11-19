@@ -367,6 +367,69 @@ export async function getAdminTrends(days: AdminTrendRange): Promise<AdminTrends
   return res.json();
 }
 
+export type ProductAnalyticsRange = 7 | 30 | 90 | 180 | 365 | 731;
+
+export interface ProductAnalyticsReport {
+  from: string;
+  to: string;
+  environment: string;
+  coverageStart: string | null;
+  lastMaintenance: string | null;
+  writeFailuresSinceStart: number;
+  truncated: { daily: boolean; search: boolean };
+  daily: {
+    date: string;
+    event: string;
+    dimensions: Record<string, string | number>;
+    count: number;
+    value: number;
+    tokenInput: number;
+    tokenOutput: number;
+    tokenTotal: number;
+    tokenSamples: number;
+  }[];
+  cohorts: {
+    period: string;
+    source: string;
+    metric: string;
+    eligible: number;
+    returned: number;
+  }[];
+  legacyLookupCohort: {
+    from: string;
+    to: string;
+    eligible: number;
+    returned: number;
+  } | null;
+  search: {
+    source: string;
+    date: string;
+    page: string;
+    query: string;
+    clicks: number;
+    impressions: number;
+  }[];
+}
+
+export async function getProductAnalytics(
+  days: ProductAnalyticsRange,
+): Promise<ProductAnalyticsReport> {
+  const res = await apiFetch(`/api/admin/product-analytics?days=${days}`);
+  if (!res.ok) throw new Error(`product analytics failed (${res.status})`);
+  return res.json();
+}
+
+export async function importSearchAnalytics(report: string): Promise<number> {
+  const res = await apiFetch('/api/admin/product-analytics/search', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: report,
+  });
+  if (!res.ok) throw new Error('Could not import the search report');
+  const { imported } = (await res.json()) as { imported: number };
+  return imported;
+}
+
 export type AiTimingRange = 1 | 7 | 30 | 90;
 
 export interface AiTaskTiming {

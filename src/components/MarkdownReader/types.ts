@@ -24,8 +24,8 @@ export interface MarkdownReaderProps {
   onClearSelection?: () => void;
   onSaveText?: (textContent: string) => Promise<void>;
   onEditingChange?: (isEditing: boolean) => void;
-  /** Scroll position as a whole percent of the lesson, on every scroll. */
-  onProgress?: (percent: number) => void;
+  /** Scroll progress, or a visible end in a lesson that fits without scrolling. */
+  onProgress?: (percent: number, shortEnd?: boolean) => void;
   knownWordsMap: Map<string, WordState>;
   prevLesson?: Pick<LessonSummary, 'id' | 'title'> | null;
   nextLesson?: Pick<LessonSummary, 'id' | 'title'> | null;

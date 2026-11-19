@@ -10,7 +10,9 @@ const FIXTURE_POST = {
 
 describe('GLOBAL_VOICES_EN source', () => {
   test('extracts clean text and decodes HTML entities in the title', async () => {
-    const fakeFetch = (async () => new Response(JSON.stringify([FIXTURE_POST]))) as typeof fetch;
+    const fakeFetch = Object.assign(async () => new Response(JSON.stringify([FIXTURE_POST])), {
+      preconnect: fetch.preconnect,
+    });
     const articles = await GLOBAL_VOICES_EN.fetch(fakeFetch);
     expect(articles).toHaveLength(1);
     expect(articles[0].title).toBe('An “example” post');

@@ -6,8 +6,9 @@ import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import { extractArticle } from '@/components/WebImportModal/utils';
-import { createStandaloneLesson } from '@/lib/data-layer';
+import { createStandaloneLesson, getActiveLanguage } from '@/lib/data-layer';
 import { isNativeApp } from '@/lib/native-app';
+import { trackProductEvent } from '@/lib/product-analytics';
 import {
   clearPendingShare,
   importSharedArticle,
@@ -26,9 +27,21 @@ function ShareImport() {
 
   const run = useCallback(async () => {
     const url = parseSharedUrl(params.get('url')) ?? peekPendingShare();
-    const result = await (url
-      ? importSharedArticle(url, { extract: extractArticle, create: createStandaloneLesson })
-      : Promise.resolve({ ok: false as const, message: t('invalid') }));
+    if (!url) {
+      setState({ phase: 'error', message: t('invalid') });
+      return;
+    }
+    const event = { language: getActiveLanguage(), feature: 'web' };
+    trackProductEvent({ ...event, event: 'import_started' });
+    const result = await importSharedArticle(url, {
+      extract: extractArticle,
+      create: createStandaloneLesson,
+    });
+    trackProductEvent({
+      ...event,
+      event: 'import_finished',
+      outcome: result.ok ? 'success' : 'failure',
+    });
     if (result.ok) {
       clearPendingShare();
       router.replace(`/read/${result.lessonId}`);

@@ -232,7 +232,7 @@ describe('report email', () => {
           throw new Error('expected report send to reject');
         } catch (error) {
           expect(error).toBeInstanceOf(ReportEmailError);
-          expect((error as ReportEmailError).uncertain).toBe(uncertain);
+          expect(error).toMatchObject({ uncertain });
         }
       }
       globalThis.fetch = (async () => {

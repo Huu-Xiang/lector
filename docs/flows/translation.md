@@ -117,6 +117,8 @@ sequenceDiagram
   Read->>Drawer: explanation and original sentence
 ```
 
+Cloud analytics records a contextual help request and its outcome. Analytics carries the lesson reference and help category, while translation content stays in the translation flow.
+
 ### Key files
 
 | Role | Path | Function |

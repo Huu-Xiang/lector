@@ -69,8 +69,25 @@ import {
 } from '@/lib/onboarding';
 import { useQueryRefresh } from '@/lib/use-query-refresh';
 import { useTabScroll } from '@/lib/tab-scroll';
+import { trackProductEvent } from '@/lib/product-analytics';
 import { toast } from 'sonner';
 import { useActiveLanguage } from '@/utils/hooks';
+
+async function observeImport<T>(
+  feature: 'audio' | 'epub' | 'markdown' | 'paste' | 'web',
+  action: () => Promise<T>,
+): Promise<T> {
+  const language = getActiveLanguage();
+  trackProductEvent({ event: 'import_started', language, feature });
+  try {
+    const result = await action();
+    trackProductEvent({ event: 'import_finished', language, feature, outcome: 'success' });
+    return result;
+  } catch (error) {
+    trackProductEvent({ event: 'import_finished', language, feature, outcome: 'failure' });
+    throw error;
+  }
+}
 
 export default function Home() {
   const t = useTranslations('library');
@@ -241,7 +258,9 @@ export default function Home() {
 
     setIsImporting(true);
     try {
-      const imported = await importAudio(file, undefined, importGroupId);
+      const imported = await observeImport('audio', () =>
+        importAudio(file, undefined, importGroupId),
+      );
       setCollections(await getAllCollections());
       const minutes = imported.audioDurationMs
         ? Math.max(1, Math.round(imported.audioDurationMs / 60000))
@@ -275,21 +294,22 @@ export default function Home() {
     try {
       if (ext === 'epub') {
         // EPUB — parse server-side into collection of lessons
-        await importEpub(file, importGroupId);
+        await observeImport('epub', () => importEpub(file, importGroupId));
         // Reload collections to get the new one
         const updated = await getAllCollections();
         setCollections(updated);
       } else if (ext === 'md' || ext === 'markdown') {
         // Markdown — create single-lesson collection
-        const textContent = await file.text();
-        const titleMatch = textContent.match(/^#\s+(.+)$/m);
-        const title = titleMatch ? titleMatch[1].trim() : file.name.replace(/\.[^/.]+$/, '');
-
-        await createStandaloneLesson({
-          title,
-          author: 'Unknown Author',
-          textContent,
-          groupId: importGroupId,
+        await observeImport('markdown', async () => {
+          const textContent = await file.text();
+          const titleMatch = textContent.match(/^#\s+(.+)$/m);
+          const title = titleMatch ? titleMatch[1].trim() : file.name.replace(/\.[^/.]+$/, '');
+          await createStandaloneLesson({
+            title,
+            author: 'Unknown Author',
+            textContent,
+            groupId: importGroupId,
+          });
         });
         const updated = await getAllCollections();
         setCollections(updated);
@@ -313,23 +333,27 @@ export default function Home() {
     author: string;
     content: string;
   }) {
-    await createStandaloneLesson({
-      title: article.title,
-      author: article.author,
-      textContent: article.content,
-      groupId: importGroupId,
-    });
+    await observeImport('paste', () =>
+      createStandaloneLesson({
+        title: article.title,
+        author: article.author,
+        textContent: article.content,
+        groupId: importGroupId,
+      }),
+    );
     const updated = await getAllCollections();
     setCollections(updated);
   }
 
   async function handleWebImportSave(article: { title: string; author: string; content: string }) {
-    await createStandaloneLesson({
-      title: article.title,
-      author: article.author,
-      textContent: article.content,
-      groupId: importGroupId,
-    });
+    await observeImport('web', () =>
+      createStandaloneLesson({
+        title: article.title,
+        author: article.author,
+        textContent: article.content,
+        groupId: importGroupId,
+      }),
+    );
     const updated = await getAllCollections();
     setCollections(updated);
   }

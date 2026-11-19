@@ -29,7 +29,7 @@ flowchart TD
 
 A day counts toward the streak when the daily goal is met (`dailyGoal`: reading minutes or words reviewed; default 5 minutes). Days before `goalStreakSince` count with any lookup, practice or reading minute. The iPhone goal editor lets you choose Reading or Review, then scroll or tap to select minutes or words. Saving updates the same daily goal. Do not compute a streak on a page.
 
-The web client does not write `minutesRead`. `api/src/lib/stats-derive.ts` estimates read minutes from lesson progress.
+The reader writes `minutesRead` from its visible activity clock. Readfox also reports aggregate reading starts, progress and completions separately from daily stats. A restored position can establish the progress baseline. Effective reading requires visible, recent interaction and a full active minute.
 
 `POST /api/study-ping` is for scripts. The UI does not call it. Dictionary and translate routes stamp the session on the server.
 

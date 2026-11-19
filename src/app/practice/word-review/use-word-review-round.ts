@@ -2,12 +2,14 @@ import { useCallback, useReducer, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import {
+  getActiveLanguage,
   getReviewExampleSentence,
   getReviewQueue,
   getReviewSentenceTranslation,
   submitReviewAnswer,
   undoReviewAnswer,
 } from '@/lib/data-layer';
+import { trackProductEvent } from '@/lib/product-analytics';
 import { applyCardPatch, resolveLazySentence, type CardPatch } from './lazy-sentence';
 import { playCorrectSound, playIncorrectSound } from '@/lib/sounds';
 import type {
@@ -235,7 +237,16 @@ export function useWordReviewRound() {
       requested.current.clear();
       pendingEvents.current.clear();
       try {
+        const language = getActiveLanguage();
         const queue = await getReviewQueue(size);
+        if (queue.items.length > 0) {
+          trackProductEvent({
+            event: 'review_started',
+            language,
+            roundId: queue.roundId,
+            value: queue.items.length,
+          });
+        }
         dispatch({ type: 'loaded', roundId: queue.roundId, items: queue.items });
       } catch {
         dispatch({ type: 'load-failed' });

@@ -609,6 +609,69 @@ function getDb(): Database {
       PRIMARY KEY (date, key, bucket)
     );
 
+    -- First-party analytics. Daily rows contain only bounded dimensions.
+    CREATE TABLE IF NOT EXISTS product_daily (
+      date TEXT NOT NULL,
+      event TEXT NOT NULL,
+      dimensions TEXT NOT NULL,
+      count INTEGER NOT NULL DEFAULT 0,
+      value INTEGER NOT NULL DEFAULT 0,
+      tokenInput INTEGER NOT NULL DEFAULT 0,
+      tokenOutput INTEGER NOT NULL DEFAULT 0,
+      tokenTotal INTEGER NOT NULL DEFAULT 0,
+      tokenSamples INTEGER NOT NULL DEFAULT 0,
+      PRIMARY KEY (date, event, dimensions)
+    );
+    CREATE TABLE IF NOT EXISTS product_events (
+      eventKey TEXT PRIMARY KEY,
+      userId TEXT NOT NULL,
+      date TEXT NOT NULL,
+      occurredAt TEXT NOT NULL,
+      event TEXT NOT NULL,
+      subject TEXT NOT NULL DEFAULT '',
+      dimensions TEXT NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS idx_product_events_user_day
+      ON product_events(userId, date, event);
+    CREATE INDEX IF NOT EXISTS idx_product_events_age
+      ON product_events(occurredAt);
+    CREATE TABLE IF NOT EXISTS product_receipts (
+      eventKey TEXT PRIMARY KEY,
+      expiresAt TEXT NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS idx_product_receipts_expiry
+      ON product_receipts(expiresAt);
+    CREATE TABLE IF NOT EXISTS product_attribution (
+      userId TEXT PRIMARY KEY,
+      date TEXT NOT NULL,
+      source TEXT NOT NULL,
+      browserLanguage TEXT NOT NULL DEFAULT '',
+      uiLanguage TEXT NOT NULL DEFAULT '',
+      campaign TEXT NOT NULL DEFAULT ''
+    );
+    CREATE INDEX IF NOT EXISTS idx_product_attribution_date ON product_attribution(date);
+    CREATE TABLE IF NOT EXISTS product_cohorts (
+      period TEXT NOT NULL,
+      source TEXT NOT NULL,
+      metric TEXT NOT NULL,
+      eligible INTEGER NOT NULL,
+      returned INTEGER NOT NULL,
+      PRIMARY KEY (period, source, metric)
+    );
+    CREATE TABLE IF NOT EXISTS product_analytics_state (
+      key TEXT PRIMARY KEY,
+      value TEXT NOT NULL
+    );
+    CREATE TABLE IF NOT EXISTS product_search_daily (
+      source TEXT NOT NULL,
+      date TEXT NOT NULL,
+      page TEXT NOT NULL,
+      query TEXT NOT NULL,
+      clicks INTEGER NOT NULL,
+      impressions INTEGER NOT NULL,
+      PRIMARY KEY (source, date, page, query)
+    );
+
     -- Guided onboarding + learner activity (#331). The profile is deliberately
     -- small but durable: it is the first slice of the shared learner model
     -- planned in #125. Progress is one non-restartable v1 journey per account;

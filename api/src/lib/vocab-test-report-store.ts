@@ -10,6 +10,7 @@ import {
 } from '../../../languages/en/vocab-report';
 import { db } from '../db';
 import { listLibraryBooks } from './library-content';
+import { recordProductEvent } from './product-analytics';
 import { VOCAB_REPORT_SAFE_RETRY_MS } from './vocab-test-report-policy';
 
 export type VocabReportBackup = Pick<VocabReport, 'snapshot' | 'books'>;
@@ -160,14 +161,23 @@ export function expireVocabReportDeliveries(userId: string, now = Date.now()): v
       )
       .run(userId, now - VOCAB_REPORT_SAFE_RETRY_MS, now);
     if (!expired.changes) return;
-    db.prepare(
-      `UPDATE vocab_test_reports SET deliveryStatus = 'held'
-       WHERE userId = ? AND deliveryStatus IN ('sending', 'unknown')
-         AND attemptId IN (
-           SELECT attemptId FROM vocab_test_report_deliveries
-           WHERE userId = ? AND state = 'held' AND firstAttemptAt <= ?
-         )`,
-    ).run(userId, userId, now - VOCAB_REPORT_SAFE_RETRY_MS);
+    const held = db
+      .query<{ attemptId: string }, [string, string, number]>(
+        `UPDATE vocab_test_reports SET deliveryStatus = 'held'
+         WHERE userId = ? AND deliveryStatus IN ('sending', 'unknown')
+           AND attemptId IN (
+             SELECT attemptId FROM vocab_test_report_deliveries
+             WHERE userId = ? AND state = 'held' AND firstAttemptAt <= ?
+           )
+         RETURNING attemptId`,
+      )
+      .all(userId, userId, now - VOCAB_REPORT_SAFE_RETRY_MS);
+    for (const { attemptId } of held) {
+      recordProductEvent(
+        { event: 'report_delivery', language: 'en', outcome: 'held' },
+        { userId, key: `${attemptId}:held`, now: new Date(now) },
+      );
+    }
   }).immediate();
 }
 

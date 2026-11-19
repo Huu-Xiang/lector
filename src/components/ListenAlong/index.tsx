@@ -30,6 +30,7 @@ import {
 import type { AudioTranscriptSegment, Lesson, WordState } from '@/types';
 import { foldWord, getLanguageConfig, isValidLanguageCode } from '@/lib/languages';
 import { useActiveLanguage } from '@/utils/hooks';
+import { trackProductEvent } from '@/lib/product-analytics';
 import { splitWords } from '@/components/MarkdownReader/utils';
 import WordCell from '@/components/WordCell';
 import { createAudioUnitPlayer, type UnitPlayer } from './drill-player';
@@ -85,11 +86,21 @@ export default function ListenAlong({
   // Shadow's own pointer: which sentence the drill is on. Continuous derives
   // the highlight from the playhead instead.
   const [shadowIdx, setShadowIdx] = useState(0);
+  const trackedPlayback = useRef(false);
 
   const durationMs =
     lesson.audioDurationMs ?? (segments.length ? segments[segments.length - 1].endMs : 0);
   const playheadIdx = useMemo(() => activeSegmentIndex(segments, currentMs), [segments, currentMs]);
   const activeIdx = mode === 'shadow' ? shadowIdx : playheadIdx;
+  const trackAudio = (event: string, outcome?: string) => {
+    trackProductEvent({
+      event,
+      language: pack.code,
+      lessonId: lesson.id,
+      feature: 'listen_along',
+      outcome,
+    });
+  };
 
   const unitPlayer = useCallback((): UnitPlayer | null => {
     if (!audioRef.current) return null;
@@ -412,8 +423,22 @@ export default function ListenAlong({
         ref={audioRef}
         src={audioUrl}
         preload="metadata"
-        onPlay={() => setIsPlaying(true)}
+        onPlay={() => {
+          setIsPlaying(true);
+          if (!trackedPlayback.current) {
+            trackedPlayback.current = true;
+            trackAudio('audio_started');
+          }
+        }}
         onPause={() => setIsPlaying(false)}
+        onEnded={() => {
+          if (trackedPlayback.current) trackAudio('audio_finished', 'success');
+          trackedPlayback.current = false;
+        }}
+        onError={() => {
+          trackAudio('audio_finished', 'failure');
+          trackedPlayback.current = false;
+        }}
         onTimeUpdate={(event) => setCurrentMs(Math.round(event.currentTarget.currentTime * 1000))}
         data-testid="listen-audio"
       />

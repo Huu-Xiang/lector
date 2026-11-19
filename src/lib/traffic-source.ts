@@ -73,7 +73,18 @@ export const LANGS = [
 export type Lang = (typeof LANGS)[number];
 
 export const SOURCE_COOKIE = 'rf_src';
+export const PRODUCT_COOKIE = 'rf_product';
 export const SOURCE_COOKIE_MAX_AGE_SECONDS = 30 * 24 * 60 * 60;
+export const PRODUCT_CAMPAIGNS = [
+  'launch',
+  'newsletter',
+  'reading-list',
+  'vocab-test',
+  'beta',
+  'welcome',
+  'other',
+] as const;
+type ProductCampaign = (typeof PRODUCT_CAMPAIGNS)[number];
 
 const UTM_ALIASES: Record<string, Source> = {
   xhs: 'xiaohongshu',
@@ -163,7 +174,15 @@ export function classifySource(input: {
   const utm = (input.utmSource ?? '').trim().toLowerCase();
   if (utm) {
     const named = UTM_ALIASES[utm] ?? utm;
-    return isSource(named) && !NOT_A_CHANNEL.includes(named) ? named : 'campaign';
+    if (isSource(named) && !NOT_A_CHANNEL.includes(named)) return named;
+    try {
+      const url = new URL(utm.includes('://') ? utm : `https://${utm}`);
+      if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password)
+        return 'campaign';
+      return REFERRER_HOSTS.find(([, pattern]) => pattern.test(url.hostname))?.[0] ?? 'campaign';
+    } catch {
+      return 'campaign';
+    }
   }
 
   let host: string;
@@ -202,6 +221,78 @@ export function sourceCookieString(source: Source, lang: Lang, secure: boolean):
     `${SOURCE_COOKIE}=${sourceCookieValue(source, lang)}; Max-Age=${SOURCE_COOKIE_MAX_AGE_SECONDS}` +
     `; Path=/; SameSite=Lax${secure ? '; Secure' : ''}`
   );
+}
+
+export function productCampaign(raw: string | null): ProductCampaign | undefined {
+  const campaign = raw?.trim().toLowerCase();
+  if (!campaign) return undefined;
+  return (PRODUCT_CAMPAIGNS as readonly string[]).includes(campaign)
+    ? (campaign as ProductCampaign)
+    : 'other';
+}
+
+export function productCookieString(
+  uiLanguage: string,
+  campaign: ProductCampaign | undefined,
+  secure: boolean,
+): string {
+  const value = campaign ? `${uiLanguage}.${campaign}` : uiLanguage;
+  return (
+    `${PRODUCT_COOKIE}=${value}; Max-Age=${SOURCE_COOKIE_MAX_AGE_SECONDS}; Path=/; SameSite=Lax` +
+    (secure ? '; Secure' : '')
+  );
+}
+
+export function readFirstTouch(cookieHeader: string): {
+  source?: Source;
+  campaign?: ProductCampaign;
+} {
+  const cookies = new Map<string, string>();
+  for (const part of cookieHeader.split(';')) {
+    const [name, value, extra] = part.trim().split('=');
+    if (value !== undefined && extra === undefined) cookies.set(name, value);
+  }
+  const [source, browserLanguage, sourceExtra] = cookies.get(SOURCE_COOKIE)?.split('.') ?? [];
+  const [, campaign, campaignExtra] = cookies.get(PRODUCT_COOKIE)?.split('.') ?? [];
+  if (!isSource(source) || !(LANGS as readonly string[]).includes(browserLanguage) || sourceExtra) {
+    return {};
+  }
+  return {
+    source,
+    campaign: campaign && campaignExtra === undefined ? productCampaign(campaign) : undefined,
+  };
+}
+
+const PUBLIC_PAGE_FEATURES: Record<string, string> = {
+  '/': 'landing',
+  '/landing': 'landing',
+  '/books': 'books',
+  '/vocab-test': 'vocab_test',
+  '/pricing': 'pricing',
+  '/register': 'register',
+  '/checkout': 'checkout',
+};
+
+export function publicPageDimensions(
+  pathname: string,
+  isPublicRoute: boolean,
+): { feature: string; language?: string; publicBook?: string; step?: string } | undefined {
+  if (!isPublicRoute) return undefined;
+  const feature = PUBLIC_PAGE_FEATURES[pathname];
+  if (feature) return { feature };
+  const level = /^\/books\/([a-z]{2,3})\/level\/([abc][12])$/.exec(pathname.toLowerCase());
+  if (level) return { feature: 'books_level', language: level[1], step: level[2] };
+  const language = /^\/books\/([a-z]{2,3})$/.exec(pathname);
+  if (language) return { feature: 'books_language', language: language[1] };
+  const book = /^\/books\/([a-z]{2,3})\/([a-z0-9]+(?:-[a-z0-9]+)*)(\/read)?$/.exec(pathname);
+  if (book && book[2] !== 'authors') {
+    return {
+      feature: book[3] ? 'book_preview' : 'book',
+      language: book[1],
+      publicBook: `${book[1]}/${book[2]}`,
+    };
+  }
+  return undefined;
 }
 
 /** Pages where a first visit is counted. Sign-in, password reset and checkout serve people who already have an account. */

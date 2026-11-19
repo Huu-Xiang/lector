@@ -2,6 +2,7 @@ import { randomUUID } from 'crypto';
 import { db } from '../db';
 import type { EntitlementsEngine } from './entitlements';
 import { endGrantByRef } from './plan-grants';
+import { recordProductEvent } from './product-analytics';
 
 /** A paid RMB order can be refunded within this window. */
 export const REFUND_WINDOW_MS = 24 * 3_600_000;
@@ -193,9 +194,23 @@ export function decideRefund(id: string, approve: boolean, now: Date = new Date(
     );
     if (approve) {
       endGrantByRef(request.outTradeNo, now);
-      db.prepare("UPDATE cn_orders SET status = 'REFUNDED' WHERE outTradeNo = ?").run(
-        request.outTradeNo,
-      );
+      const order = db
+        .prepare(
+          "UPDATE cn_orders SET status = 'REFUNDED' WHERE outTradeNo = ? RETURNING userId, amountFen",
+        )
+        .get(request.outTradeNo) as { userId: string; amountFen: number } | undefined;
+      if (order) {
+        recordProductEvent(
+          {
+            event: 'payment_refunded',
+            feature: 'xiaodou',
+            outcome: 'refund',
+            step: 'CNY',
+            value: order.amountFen,
+          },
+          { userId: order.userId, key: request.outTradeNo, now },
+        );
+      }
     }
     return true;
   })();

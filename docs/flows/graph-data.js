@@ -489,6 +489,12 @@
     summary: "Daily signups, active learners, lookups, Free AI translations, RMB revenue, funnel and retention.",
     steps: ["file:admin-trends-ui", "fn:getAdminTrends", "route:admin-trends", "file:admin-trends-lib"],
   });
+  N("flow:product-analytics", "flow", "Product analytics", {
+    domain: "admin",
+    md: "admin.md#product-analytics",
+    summary: "Readfox records bounded milestones, rolls up mature sign-up cohorts, and exposes aggregate downloads.",
+    steps: ["file:route-product-analytics", "file:product-analytics-store", "file:product-analytics-ui"],
+  });
   N("flow:admin-support", "flow", "Admin support action", {
     domain: "admin",
     md: "admin.md#admin-support-action",
@@ -591,6 +597,9 @@
   N("file:ai-timing", "file", "ai-timing.ts", { path: "api/src/lib/ai-timing.ts", domain: "admin" });
   N("file:admin-trends-ui", "file", "Trends.tsx", { path: "src/app/admin/Trends.tsx", domain: "admin" });
   N("file:admin-trends-lib", "file", "admin-trends.ts", { path: "api/src/lib/admin-trends.ts", domain: "admin" });
+  N("file:route-product-analytics", "file", "Product analytics intake", { path: "api/src/routes/product-analytics.ts", domain: "admin" });
+  N("file:product-analytics-store", "file", "Product analytics store", { path: "api/src/lib/product-analytics.ts", domain: "admin" });
+  N("file:product-analytics-ui", "file", "Product analytics panel", { path: "src/app/admin/ProductAnalytics.tsx", domain: "admin" });
   N("file:admin-lib", "file", "admin.ts", { path: "api/src/lib/admin.ts", domain: "admin" });
   N("file:user-export", "file", "user-export.ts", { path: "api/src/lib/user-export.ts", domain: "data" });
   N("file:byok-lib", "file", "byok.ts", { path: "api/src/lib/byok.ts", domain: "settings" });
@@ -938,7 +947,7 @@
   domainFlows("settings", ["flow:save-settings", "flow:configure-llm", "flow:api-tokens", "flow:delete-account"]);
   domainFlows("data", ["flow:export-data", "flow:restore-data"]);
   domainFlows("billing", ["flow:subscribe", "flow:entitlements", "flow:plan-change"]);
-  domainFlows("admin", ["flow:admin-list", "flow:admin-trends", "flow:admin-ai-timing", "flow:admin-support", "flow:admin-email-switch", "flow:source-counts"]);
+  domainFlows("admin", ["flow:admin-list", "flow:admin-trends", "flow:admin-ai-timing", "flow:admin-support", "flow:admin-email-switch", "flow:source-counts", "flow:product-analytics"]);
 
   // Cross-flow walks
   edge("flow:load-library-item", "flow:translate-word", "then");
@@ -1529,6 +1538,11 @@
 
   edge("flow:admin-list", "file:admin-page", "starts");
   edge("flow:admin-trends", "file:admin-trends-ui", "starts");
+  edge("flow:product-analytics", "file:route-product-analytics", "starts");
+  edge("file:route-product-analytics", "file:product-analytics-store", "calls");
+  edge("file:admin-page", "file:product-analytics-ui", "calls");
+  edge("file:product-analytics-ui", "file:route-admin", "http");
+  edge("file:route-admin", "file:product-analytics-store", "calls");
   edge("flow:admin-email-switch", "file:route-admin", "starts");
   edge("file:route-admin", "file:app-settings", "calls");
   edge("file:app-settings", "file:lifecycle-email", "then");

@@ -8,13 +8,22 @@ import { apiUrl } from './api';
 const CLOUD_API = `http://localhost:${process.env.E2E_AUTH_API_PORT || '3462'}`;
 
 async function loggedOutPage(browser: Browser) {
-  const context = await browser.newContext({ storageState: { cookies: [], origins: [] } });
+  const context = await browser.newContext({
+    serviceWorkers: 'block',
+    storageState: { cookies: [], origins: [] },
+  });
   return { context, page: await context.newPage() };
 }
 
 /** A visitor with no cloud session. The report email is captured by the test API. */
 async function cloudVisitorPage(browser: Browser) {
-  const context = await browser.newContext({ storageState: { cookies: [], origins: [] } });
+  const context = await browser.newContext({
+    serviceWorkers: 'block',
+    storageState: { cookies: [], origins: [] },
+  });
+  await context.addInitScript((API_URL) => {
+    window.__ENV__ = { API_URL, LECTOR_MODE: 'cloud' };
+  }, CLOUD_API);
   await context.route('**/__env.js', (route) =>
     route.fulfill({
       contentType: 'application/javascript',
@@ -309,6 +318,44 @@ test.describe('vocabulary test', () => {
     await expect(page.getByTestId('vocab-report-login')).toBeVisible();
     await expect(page.getByTestId('vocab-report-register')).toBeVisible();
     await context.close();
+  });
+
+  test('records a completed visitor attempt without answer data or an account', async ({
+    browser,
+  }) => {
+    test.skip(!!process.env.E2E_EXTERNAL_SERVER, 'no cloud-mode API in the external-server run');
+    const { context, page } = await cloudVisitorPage(browser);
+    await page.addInitScript(() =>
+      Object.defineProperty(navigator, 'webdriver', { get: () => false }),
+    );
+    const attempts: Array<{ body: Record<string, unknown>; status: number }> = [];
+    page.on('response', (response) => {
+      if (new URL(response.url()).pathname !== '/api/product-analytics/public') return;
+      const request = response.request();
+      if (request.method() !== 'POST') return;
+      const body = request.postDataJSON() as Record<string, unknown>;
+      const data = body.data as { event?: string } | undefined;
+      if (data?.event?.startsWith('quiz_')) attempts.push({ body, status: response.status() });
+    });
+
+    try {
+      await page.goto('/vocab-test');
+      await finishKnowingNothing(page);
+      await expect.poll(() => attempts.length).toBe(4);
+      expect(attempts).toEqual(
+        expect.arrayContaining(
+          [
+            { event: 'quiz_started', language: 'en' },
+            { event: 'quiz_progress', language: 'en', value: 1 },
+            { event: 'quiz_progress', language: 'en', value: 8 },
+            { event: 'quiz_finished', language: 'en', value: 8 },
+          ].map((data) => ({ body: { data, key: expect.any(String) }, status: 204 })),
+        ),
+      );
+      expect(new Set(attempts.map(({ body }) => body.key)).size).toBe(4);
+    } finally {
+      await context.close();
+    }
   });
 
   test('an expired verification callback keeps its saved report sign-in path', async ({

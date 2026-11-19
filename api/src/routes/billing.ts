@@ -21,6 +21,8 @@ import { isBillingExempt, isSuspended } from '../lib/account-flags';
 import { entitlements, type EntitlementsEngine } from '../lib/entitlements';
 import { activeGrant } from '../lib/plan-grants';
 import { paddleCheckoutAllowed } from '../lib/admin';
+import { recordPaddleAnalytics } from '../lib/paddle-analytics';
+import { recordProductEvent } from '../lib/product-analytics';
 import {
   makePaddleBillingOperations,
   PaddleBillingError,
@@ -259,11 +261,16 @@ export function makeBillingRoutes(
         customerId: findPaddleCustomerId(email),
         discountId,
       });
+      recordProductEvent({ event: 'checkout_started', feature: 'paddle' }, { userId, key: txn.id });
       return c.json({ txnId: txn.id, discount: outcome });
     } catch (err) {
       // Paddle down / bad key / rejected price — the /subscribe screen turns a
       // non-2xx into its "try again" state; nothing is charged.
       console.error(`[billing] checkout create failed: ${(err as Error).message}`);
+      recordProductEvent(
+        { event: 'payment_failed', feature: 'paddle', outcome: 'checkout_error' },
+        { userId },
+      );
       return c.json({ error: 'checkout_unavailable' }, 502);
     }
   });
@@ -424,6 +431,11 @@ export function makeBillingRoutes(
 
       const paddleEvent = event as Parameters<typeof applyPaddleEvent>[0];
       const applied = applyPaddleEvent(paddleEvent);
+      try {
+        recordPaddleAnalytics(event);
+      } catch {
+        console.warn('[billing] webhook analytics could not be recorded');
+      }
       const type = (event as { event_type?: string }).event_type ?? 'unknown';
       console.log(`[billing] webhook ${type}: ${applied}`);
       // A full refund ends the plan here at once; ending it at Paddle too stops the next charge.

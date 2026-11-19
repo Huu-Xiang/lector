@@ -2,6 +2,7 @@ import '../test-guard';
 import { describe, test, expect, beforeEach, afterEach } from 'bun:test';
 import { db } from '../db';
 import { getTodayDate } from '../lib/dates';
+import { LOCAL_USER_ID } from '../lib/user';
 
 const { default: app } = await import('../routes/stats');
 
@@ -83,7 +84,7 @@ describe('stats /streak', () => {
       addMinutes('2026-01-02', 'af', 6);
       addMinutes('2026-01-02', 'de', 4);
       addMinutes('2026-01-03', 'af', 3);
-      addMinutes(getTodayDate(), 'af', 4);
+      addMinutes(getTodayDate(LOCAL_USER_ID), 'af', 4);
 
       const body = (await (await app.request('/streak')).json()) as Record<string, unknown>;
       expect(body).toMatchObject({
@@ -97,7 +98,7 @@ describe('stats /streak', () => {
     });
 
     test('uses five minutes of reading when no goal is set', async () => {
-      addMinutes(getTodayDate(), 'af', 5);
+      addMinutes(getTodayDate(LOCAL_USER_ID), 'af', 5);
       const body = (await (await app.request('/streak')).json()) as Record<string, unknown>;
       expect(body).toMatchObject({
         streak: 1,
