@@ -9,8 +9,12 @@ export const OPTIONAL_TABS = {
 
 export type OptionalTab = 'none' | keyof typeof OPTIONAL_TABS;
 
-export function parseOptionalTab(value: string | null): OptionalTab {
-  return value === 'journal' || value === 'practice' ? value : 'none';
+export function parseOptionalTab(
+  value: string | null,
+  fallback: OptionalTab = 'none',
+): OptionalTab {
+  if (value === 'none' || value === 'journal' || value === 'practice') return value;
+  return fallback;
 }
 
 export function nativeTabs(extra: OptionalTab) {

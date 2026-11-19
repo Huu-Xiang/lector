@@ -38,6 +38,7 @@ const TITLE_BLOCK_ID = -1;
 
 export default function MarkdownReader({
   lesson,
+  sectionTitle,
   onWordClick,
   wordPanelOpen = false,
   onClose,
@@ -73,8 +74,8 @@ export default function MarkdownReader({
   // The title's words, tokenized the same way the body is, so each one can
   // reuse WordCell for lookup instead of rendering as plain text.
   const titleParts = useMemo(
-    () => splitWords(lesson.title, pack, segmentation),
-    [lesson.title, pack, segmentation],
+    () => (sectionTitle === undefined ? splitWords(lesson.title, pack, segmentation) : []),
+    [lesson.title, pack, sectionTitle, segmentation],
   );
   // Whether this language has pronunciations worth printing above the words
   // (#289 4.4). Opt-in per pack: a pack whose dictionary has sparse readings
@@ -422,6 +423,7 @@ export default function MarkdownReader({
 
         <h1 className="reader-text mx-2 flex-1 truncate text-center text-sm font-medium text-foreground sm:text-lg print:mx-0 print:text-left print:text-2xl print:font-bold">
           {(() => {
+            if (sectionTitle !== undefined) return sectionTitle;
             let wordIndex = -1;
             return titleParts.map((part, index) => {
               if (!part.isWord) {

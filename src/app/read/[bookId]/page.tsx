@@ -321,6 +321,10 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     loadLesson();
   }, [activeLang.code, lessonId, t]);
   useQueryRefresh([QUERY_SCOPES.lessons, QUERY_SCOPES.vocab], () => {
+    const collectionId = peekLesson(lessonId)?.collectionId;
+    const refreshedSiblings = collectionId ? peekLessonsForCollection(collectionId) : undefined;
+    if (refreshedSiblings) setSiblings(refreshedSiblings);
+
     getLesson(lessonId)
       .then((updated) => {
         if (updated) {
@@ -1571,9 +1575,19 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
   const handleSaveText = useCallback(
     async (newContent: string) => {
       await updateLesson(lessonId, { textContent: newContent });
-      setLesson((prev) => (prev ? { ...prev, textContent: newContent } : prev));
+      setLesson((prev) => (prev?.id === lessonId ? { ...prev, textContent: newContent } : prev));
+      const collectionId = lesson?.collectionId;
+      if (collectionId?.startsWith('library-')) {
+        void getLessonsForCollection(collectionId, { fresh: true })
+          .then((updated) => {
+            setSiblings((current) =>
+              current.some((entry) => entry.id === lessonId) ? updated : current,
+            );
+          })
+          .catch(() => undefined);
+      }
     },
-    [lessonId],
+    [lesson?.collectionId, lessonId],
   );
 
   const handleEditingChange = useCallback((editing: boolean) => {
@@ -1587,6 +1601,12 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
   const currentIndex = siblings.findIndex((l) => l.id === lessonId);
   const prevLesson = currentIndex > 0 ? siblings[currentIndex - 1] : null;
   const nextLesson = currentIndex < siblings.length - 1 ? siblings[currentIndex + 1] : null;
+  const sectionTitle = (entry?: LessonSummary) =>
+    entry?.sectionNumber === undefined
+      ? undefined
+      : t('readingSection', { number: entry.sectionNumber });
+  const lessonLink = (entry?: LessonSummary | null) =>
+    entry ? { id: entry.id, title: sectionTitle(entry) ?? entry.title } : null;
 
   // Handle keyboard shortcuts when the drawer is open
   useEffect(() => {
@@ -1762,7 +1782,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
   );
 
   return (
-    <div className="flex h-dvh flex-col overflow-x-hidden bg-card 2xl:flex-row print:block print:h-auto print:overflow-visible">
+    <div className="reader-page flex h-dvh flex-col overflow-x-hidden bg-card 2xl:flex-row print:block print:h-auto print:overflow-visible">
       <div
         className={`relative min-h-0 flex-1 overflow-hidden print:block print:h-auto print:overflow-visible ${
           wordPanel.isOpen ? 'pb-[var(--sheet-h)] lg:pr-96 lg:pb-0 2xl:pr-0' : ''
@@ -1781,6 +1801,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         ) : (
           <MarkdownReader
             lesson={lesson}
+            sectionTitle={sectionTitle(siblings[currentIndex])}
             onWordClick={handleWordClick}
             wordPanelOpen={wordPanel.isOpen}
             onClose={handleClose}
@@ -1789,8 +1810,8 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
             onEditingChange={handleEditingChange}
             onProgress={reportReadingProgress}
             knownWordsMap={readerWordStates}
-            prevLesson={prevLesson}
-            nextLesson={nextLesson}
+            prevLesson={lessonLink(prevLesson)}
+            nextLesson={lessonLink(nextLesson)}
             headerAction={
               <>
                 {cloud && (

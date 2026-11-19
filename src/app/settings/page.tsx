@@ -40,6 +40,7 @@ import InviteCard from './components/InviteCard';
 import InstallAppCard from './components/InstallAppCard';
 import ReminderSettings from './components/ReminderSettings';
 import MobileTabs from './components/MobileTabs';
+import { isIPadApp } from '@/components/NativeBridge/ipad-layout';
 import { hasNativeTabBar, useIsNativeApp } from '@/lib/native-app';
 import { lectorMode } from '@/lib/api-base';
 import { useTranslations } from 'next-intl';
@@ -99,7 +100,7 @@ export default function SettingsPage() {
             title={t('groups.appearance')}
             icon={LayoutGrid}
           >
-            {hasNativeTabBar() && <MobileTabs />}
+            {(isIPadApp() || hasNativeTabBar()) && <MobileTabs />}
             <ThemeSettings />
           </CompactDisclosure>
           <CompactDisclosure

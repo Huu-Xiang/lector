@@ -31,13 +31,24 @@ describe('coversTabBar', () => {
 });
 
 describe('nativeTabs', () => {
-  it('defaults to three tabs with Me last', () => {
+  it('defaults to three tabs with Me last on iPhone', () => {
     expect(nativeTabs(parseOptionalTab(null)).map((tab) => tab.href)).toEqual([
       '/',
       '/stats',
       '/me',
     ]);
     expect(parseOptionalTab('unexpected')).toBe('none');
+  });
+
+  it('defaults to Practice on iPad and respects an explicit choice', () => {
+    expect(nativeTabs(parseOptionalTab(null, 'practice')).map((tab) => tab.href)).toEqual([
+      '/',
+      '/stats',
+      '/practice',
+      '/me',
+    ]);
+    expect(parseOptionalTab('none', 'practice')).toBe('none');
+    expect(parseOptionalTab('journal', 'practice')).toBe('journal');
   });
 
   it('adds one shortcut without losing access to the other pages under Me', () => {

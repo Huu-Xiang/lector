@@ -145,6 +145,15 @@ export function setNativeTabBarVisible(visible: boolean): Promise<void> {
   return call(TAB_BAR, visible ? 'show' : 'hide');
 }
 
+export async function setNativeGlassTabFrame(
+  frame: { x: number; y: number; width: number; height: number } | null,
+): Promise<boolean> {
+  const result = (await callWithResult(TAB_BAR, 'setGlassFrame', frame ?? {})) as {
+    shown?: boolean;
+  } | null;
+  return result?.shown === true;
+}
+
 /** Native bars follow the page theme; `system` lets the system setting decide again. */
 export function setNativeAppearance(style: 'light' | 'dark' | 'system'): Promise<void> {
   return call(TAB_BAR, 'setAppearance', { style });

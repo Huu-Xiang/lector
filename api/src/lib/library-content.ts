@@ -203,6 +203,41 @@ function readManifest(dir: string, slug: string): Manifest {
   return JSON.parse(fs.readFileSync(path.join(dir, 'manifest.json'), 'utf8')) as Manifest;
 }
 
+const sectionCandidates = new Map<string, Map<string, { title: string; number: string }>>();
+
+export function librarySectionCandidates(collectionId: string) {
+  const match = /^library-([a-z]{2,3})-(.+)$/.exec(collectionId);
+  if (!match) return;
+  const [, language, slug] = match;
+  if (!isValidLanguageCode(language) || !isLibrarySlug(slug)) return;
+  const dir = path.join(libraryDir(language), slug);
+  const cached = sectionCandidates.get(dir);
+  if (cached) return cached;
+  if (!fs.existsSync(path.join(dir, 'manifest.json'))) return;
+
+  const manifest = readManifest(dir, slug);
+  const bookTitle = str(manifest.title, 'title', slug).trim().toLowerCase();
+  const counts = new Map<string, number>();
+  const numbered = (manifest.lessons ?? []).flatMap(({ file, title }) => {
+    if (typeof file !== 'string' || typeof title !== 'string') return [];
+    const parts = /^(\d+)\. (.+)$/.exec(title);
+    if (!parts) return [];
+    const [, number, name] = parts;
+    const label = name.trim().toLowerCase();
+    counts.set(label, (counts.get(label) ?? 0) + 1);
+    return [{ file, title, number, label }];
+  });
+
+  const sections = new Map<string, { title: string; number: string }>();
+  for (const { file, title, number, label } of numbered) {
+    if (label === bookTitle || (counts.get(label) ?? 0) > 1) {
+      sections.set(libraryLessonIdFor(language, slug, file), { title, number });
+    }
+  }
+  sectionCandidates.set(dir, sections);
+  return sections;
+}
+
 function summarise(
   slug: string,
   manifest: Manifest,

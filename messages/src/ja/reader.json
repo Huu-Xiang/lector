@@ -11,6 +11,7 @@
       "analyticsTooEasy": "簡単すぎる",
       "analyticsJustRight": "ちょうどよい",
       "analyticsTooHard": "難しすぎる",
+      "readingSection": "第{number}節",
       "lessonNotFound": "レッスンが見つかりません",
       "loadFailed": "レッスンを読み込めませんでした",
       "retryFailed": "文字起こしを再試行できませんでした",

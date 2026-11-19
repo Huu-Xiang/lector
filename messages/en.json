@@ -337,7 +337,7 @@
       "security": "Security"
     },
     "mobileTabs": {
-      "title": "Bottom navigation",
+      "title": "Tab bar",
       "extra": "Extra tab",
       "none": "None",
       "hint": "Practice and Journal are always available under Me. This setting applies to this device."
@@ -2204,6 +2204,7 @@
       "analyticsTooEasy": "Too easy",
       "analyticsJustRight": "Just right",
       "analyticsTooHard": "Too hard",
+      "readingSection": "Section {number}",
       "lessonNotFound": "Lesson not found",
       "loadFailed": "Failed to load lesson",
       "retryFailed": "Could not retry transcription",

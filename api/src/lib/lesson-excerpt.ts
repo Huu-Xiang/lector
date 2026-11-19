@@ -1,6 +1,18 @@
 /** Characters of stored text the lesson list reads to build an excerpt. */
 export const EXCERPT_SOURCE_CHARS = 600;
 const EXCERPT_CHARS = 140;
+export function librarySectionNumber(
+  title: string,
+  opening: string | null,
+  source?: { title: string; number: string },
+): string | undefined {
+  if (!source || title !== source.title || !opening) return;
+  const [heading, ...lines] = opening.split(/\r?\n/);
+  // The library builder writes a source heading as the first block after the generated H1.
+  if (heading === `# ${title}` && !lines.find((line) => line.trim())?.startsWith('## ')) {
+    return source.number;
+  }
+}
 
 /** The opening words of a lesson, without its headings and Markdown marks. */
 export function lessonExcerpt(text: string): string {

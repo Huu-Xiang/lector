@@ -298,6 +298,11 @@ export const schemas: Record<string, JsonSchema> = {
         type: 'string',
         description: 'The opening words of the text, at most about 140 characters.',
       },
+      sectionNumber: {
+        type: 'string',
+        description:
+          'The number of a free-library section whose generated title uses a book label.',
+      },
       sortOrder: { type: 'integer' },
       wordCount: { type: 'integer' },
       progress_scrollPosition: { type: 'number' },

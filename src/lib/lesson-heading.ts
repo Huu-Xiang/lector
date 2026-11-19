@@ -11,14 +11,14 @@ export function repeatsBookTitle(lessonTitle: string, bookTitles: readonly strin
   return core !== '' && bookTitles.some((title) => plain(title) === core);
 }
 
-/** What a lesson row shows: the excerpt when the title says nothing about the lesson. */
 export function lessonHeading(
-  lesson: { title: string; excerpt?: string },
+  lesson: { title: string; excerpt?: string; collectionId?: string | null; sectionNumber?: string },
   bookTitles: readonly string[],
   lessonCount: number,
 ): string {
-  if (lessonCount > 1 && lesson.excerpt && repeatsBookTitle(lesson.title, bookTitles)) {
-    return lesson.excerpt;
-  }
-  return lesson.title;
+  if (lessonCount < 2 || !lesson.excerpt) return lesson.title;
+  const useExcerpt = lesson.collectionId?.startsWith('library-')
+    ? lesson.sectionNumber !== undefined
+    : repeatsBookTitle(lesson.title, bookTitles);
+  return useExcerpt ? lesson.excerpt : lesson.title;
 }

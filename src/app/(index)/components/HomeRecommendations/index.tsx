@@ -43,9 +43,11 @@ function rememberedProfile(language: string): Profile | null {
 export default function HomeRecommendations({
   language,
   defaultOpen,
+  keepControlsWhenEmpty = false,
 }: {
   language: string;
   defaultOpen: boolean;
+  keepControlsWhenEmpty?: boolean;
 }) {
   const t = useTranslations('recommend');
   const router = useRouter();
@@ -104,7 +106,7 @@ export default function HomeRecommendations({
     router.push(lessons[0] ? `/read/${lessons[0].id}` : '/');
   }
 
-  if (profile === null || empty) return null;
+  if (profile === null || (empty && !keepControlsWhenEmpty)) return null;
 
   return (
     <section

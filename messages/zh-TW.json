@@ -337,7 +337,7 @@
       "security": "安全性"
     },
     "mobileTabs": {
-      "title": "底部導覽",
+      "title": "分頁列",
       "extra": "額外分頁",
       "none": "不新增",
       "hint": "在「我」裡隨時可以開啟練習和日記。此設定只套用於目前的裝置。"
@@ -2204,6 +2204,7 @@
       "analyticsTooEasy": "太簡單",
       "analyticsJustRight": "剛剛好",
       "analyticsTooHard": "太難",
+      "readingSection": "第 {number} 節",
       "lessonNotFound": "找不到課文",
       "loadFailed": "課文載入失敗",
       "retryFailed": "無法重新轉錄",

@@ -131,3 +131,220 @@ test('iPhone settings show compact groups and expand a directly linked setting',
   await expect(settings.getByTestId('review-goal')).toBeVisible();
   await expect(settings.getByTestId('native-language-select')).toBeHidden();
 });
+
+test('iPad moves the same app tabs between the toolbar and the narrow layout', async ({ page }) => {
+  await page.setViewportSize({ width: 1180, height: 820 });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  const defaults = ['/', '/stats', '/practice', '/me'];
+  const bottomTabs = () =>
+    page.evaluate(() => (window as unknown as { configuredTabs: string[] }).configuredTabs);
+
+  await page.addInitScript(() => {
+    const state = Object.assign(window, { configuredTabs: [] as string[] });
+    Object.defineProperty(navigator, 'userAgent', {
+      value: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) ReadfoxApp/1 ReadfoxOS/18',
+    });
+    Object.defineProperty(navigator, 'platform', { value: 'MacIntel' });
+    Object.defineProperty(navigator, 'maxTouchPoints', { value: 5 });
+    window.Capacitor = {
+      isNativePlatform: () => true,
+      isPluginAvailable: (name) => name === 'NativeTabBar',
+      Plugins: {
+        NativeTabBar: {
+          addListener: async () => ({ remove: async () => {} }),
+          configure: async (options) => {
+            state.configuredTabs = (options as { tabs: { id: string }[] }).tabs.map(({ id }) => id);
+          },
+          select: async () => {},
+          show: async () => {},
+          hide: async () => {},
+        },
+      },
+    };
+  });
+
+  await page.goto('/me');
+  await expect(page.getByRole('heading', { name: 'Me', exact: true })).toBeVisible();
+  await expect(page.getByTestId('native-chat')).toBeVisible();
+  await expect(page.locator('html')).toHaveAttribute('data-native-tabbar', '');
+  await expect(page.locator('html')).toHaveAttribute('data-native-tabbar-hidden', '');
+  await expect(page.locator('.app-sidebar')).toBeHidden();
+  const tabs = page.getByTestId('ipad-tabs');
+  await expect(page.getByRole('heading', { name: 'Me', exact: true })).toHaveCSS(
+    'font-weight',
+    '700',
+  );
+  await expect(tabs).toHaveCSS('backdrop-filter', 'none');
+  await expect(tabs.getByRole('link')).toHaveText(['Library', 'Statistics', 'Practice', 'Me']);
+  await expect(tabs.getByRole('link', { name: 'Me' })).toHaveAttribute('aria-current', 'location');
+  await tabs.getByRole('link', { name: 'Library' }).click();
+  await expect(page).toHaveURL('/');
+  await expect(tabs.getByRole('link', { name: 'Library' })).toHaveAttribute(
+    'aria-current',
+    'location',
+  );
+  await tabs.getByRole('link', { name: 'Me' }).click();
+  await expect(page).toHaveURL('/me');
+
+  await tabs.getByRole('link', { name: 'Practice' }).click();
+  await expect(page).toHaveURL('/practice');
+  await expect(tabs.getByRole('link', { name: 'Practice' })).toHaveAttribute(
+    'aria-current',
+    'location',
+  );
+  await tabs.getByRole('link', { name: 'Me' }).click();
+
+  await page.setViewportSize({ width: 500, height: 820 });
+  await expect(tabs).toBeHidden();
+  await expect(page.locator('html')).not.toHaveAttribute('data-native-tabbar-hidden');
+  await expect.poll(bottomTabs).toEqual(defaults);
+  await page.setViewportSize({ width: 820, height: 1180 });
+  await expect(tabs).toBeVisible();
+  await expect(tabs.getByRole('link', { name: 'Me' })).toHaveAttribute('aria-current', 'location');
+
+  await page.getByRole('main').getByRole('link', { name: 'Settings' }).click();
+  await expect(page.getByTestId('iphone-settings')).toBeVisible();
+  await page.getByText('Appearance and navigation', { exact: true }).click();
+  const extra = page.getByLabel('Extra tab');
+  await expect(extra).toHaveValue('practice');
+  await extra.selectOption('journal');
+  await expect(tabs.getByRole('link')).toHaveText(['Library', 'Statistics', 'Journal', 'Me']);
+  await expect.poll(bottomTabs).toEqual(['/', '/stats', '/journal', '/me']);
+  await extra.selectOption('none');
+  await page.reload();
+  await page.getByText('Appearance and navigation', { exact: true }).click();
+  await expect(extra).toHaveValue('none');
+  await expect(tabs.getByRole('link')).toHaveText(['Library', 'Statistics', 'Me']);
+  await page.getByTestId('native-back').click();
+  await expect(page).toHaveURL('/me');
+});
+
+for (const [major, appearance] of [
+  [17, 'classic'],
+  [26, 'glass'],
+] as const) {
+  test(`iPadOS ${major} uses the matching navigation appearance`, async ({ page }) => {
+    await page.setViewportSize({ width: 1180, height: 820 });
+    await page.addInitScript((version) => {
+      Object.defineProperty(navigator, 'userAgent', {
+        value: `Mozilla/5.0 (iPad; CPU OS ${version}_0 like Mac OS X) ReadfoxApp/1`,
+      });
+    }, major);
+    await page.goto('/me');
+    await expect(page.locator('html')).toHaveAttribute('data-ios-appearance', appearance);
+    const topTabs = page.getByTestId('ipad-tabs');
+    if (major === 17) {
+      await expect(page.getByRole('heading', { name: 'Me', exact: true })).toHaveCSS(
+        'font-weight',
+        '600',
+      );
+      await expect(topTabs).toBeHidden();
+      const bottomTabs = page.locator('.native-bottom-nav');
+      await expect(bottomTabs.getByRole('link')).toHaveText([
+        'Library',
+        'Statistics',
+        'Practice',
+        'Me',
+      ]);
+    } else {
+      await expect(topTabs.getByRole('link')).toHaveText([
+        'Library',
+        'Statistics',
+        'Practice',
+        'Me',
+      ]);
+      await expect(topTabs).toHaveCSS('font-family', /^ui-rounded,/);
+      await expect(topTabs).toHaveCSS('backdrop-filter', 'blur(20px) saturate(1.45)');
+      await expect(page.locator('.native-bottom-nav')).toBeHidden();
+
+      await page.context().addCookies([{ name: 'NEXT_LOCALE', value: 'ru', url: page.url() }]);
+      await page.setViewportSize({ width: 768, height: 1024 });
+      await page.reload();
+      const links = topTabs.getByRole('link');
+      await expect(links).toHaveText(['Библиотека', 'Статистика', 'Упражнения', 'Профиль']);
+      const rows = await links.evaluateAll(
+        (items) => new Set(items.map((item) => item.getBoundingClientRect().top)).size,
+      );
+      expect(rows).toBe(1);
+    }
+  });
+}
+
+test('native glass takes over the iPad tabs and releases them around sheets and resizing', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1180, height: 820 });
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, 'userAgent', {
+      value: 'Mozilla/5.0 (iPad; CPU OS 26_0 like Mac OS X) ReadfoxApp/1 ReadfoxOS/26',
+    });
+    let selectTab: ((event: unknown) => void) | undefined;
+    let frame: unknown;
+    Object.assign(window, {
+      getGlassFrame: () => frame,
+      tapGlassTab: (id: string) => selectTab?.({ id }),
+    });
+    window.Capacitor = {
+      isNativePlatform: () => true,
+      isPluginAvailable: (name) => name === 'NativeTabBar',
+      Plugins: {
+        NativeTabBar: {
+          configure: async () => {},
+          select: async () => {},
+          show: async () => {},
+          hide: async () => {},
+          addListener: async (_event, callback) => {
+            selectTab = callback;
+            return { remove: async () => {} };
+          },
+          setGlassFrame: async (options) => {
+            frame = options;
+            return { shown: Number((options as { width?: number })?.width) > 0 };
+          },
+        },
+      },
+    };
+  });
+
+  await page.goto('/me');
+  const root = page.locator('html');
+  const tabs = page.getByTestId('ipad-tabs');
+  await expect(root).toHaveAttribute('data-native-glass-tabs', '');
+  await expect(tabs).toBeHidden();
+  const reserved = await tabs.boundingBox();
+  expect(reserved?.height).toBeGreaterThanOrEqual(44);
+  expect(reserved?.height).toBeLessThan(64);
+
+  const glassY = () =>
+    page.evaluate(
+      () => (window as unknown as { getGlassFrame: () => { y: number } }).getGlassFrame().y,
+    );
+  const beforeInset = await glassY();
+  await page.locator('.native-topbar').evaluate((header) => {
+    header.style.paddingTop = '34px';
+  });
+  await expect.poll(glassY).toBeGreaterThan(beforeInset);
+
+  await page.evaluate(() =>
+    (window as unknown as { tapGlassTab: (id: string) => void }).tapGlassTab('/practice'),
+  );
+  await expect(page).toHaveURL('/practice');
+  await expect(root).toHaveAttribute('data-native-glass-tabs', '');
+
+  await page.getByTestId('native-chat').click();
+  await expect(page.getByTestId('chat-panel')).toBeVisible();
+  await expect(root).not.toHaveAttribute('data-native-glass-tabs');
+  expect(
+    await page.evaluate(() =>
+      (window as unknown as { getGlassFrame: () => unknown }).getGlassFrame(),
+    ),
+  ).toEqual({});
+  await page.getByTestId('native-chat').click();
+  await expect(root).toHaveAttribute('data-native-glass-tabs', '');
+
+  await page.setViewportSize({ width: 500, height: 820 });
+  await expect(root).not.toHaveAttribute('data-native-glass-tabs');
+  await expect(root).not.toHaveAttribute('data-native-tabbar-hidden');
+  await page.setViewportSize({ width: 820, height: 1180 });
+  await expect(root).toHaveAttribute('data-native-glass-tabs', '');
+});

@@ -11,6 +11,7 @@
       "analyticsTooEasy": "Too easy",
       "analyticsJustRight": "Just right",
       "analyticsTooHard": "Too hard",
+      "readingSection": "Section {number}",
       "lessonNotFound": "Lesson not found",
       "loadFailed": "Failed to load lesson",
       "retryFailed": "Could not retry transcription",

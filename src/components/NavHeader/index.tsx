@@ -1,13 +1,17 @@
 'use client';
 
 import clsx from 'clsx';
+import { useIsNativeApp } from '@/lib/native-app';
+import { isIPadApp } from '@/components/NativeBridge/ipad-layout';
+import { useTabPreference } from '@/components/NativeBridge/use-tab-preference';
+import { hasOwnHeader, nativeTabs, selectedNativeTab } from '@/components/NativeBridge/tab-bar';
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import ThemeToggle from '@/components/ThemeToggle';
 import LanguageSelector from '@/components/LanguageSelector';
 import NewLanguagePrompt from '@/components/NewLanguagePrompt';
 import AiQuota from './components/AiQuota';
-import { isSessionChromeRoute } from '@/lib/api-base';
+import { isBareRoute, isSessionChromeRoute } from '@/lib/api-base';
 import { useSidebarCollapsed } from '@/utils/hooks';
 import {
   advancePostOnboardingTour,
@@ -31,6 +35,11 @@ import type { NavTourTip } from './components/NavLink';
 
 export default function NavHeader() {
   const pathname = usePathname();
+  const inApp = useIsNativeApp();
+  const ipad = inApp && isIPadApp();
+  const [extra] = useTabPreference();
+  const bottomLinks = ipad ? nativeTabs(extra) : navLinks;
+  const selected = ipad ? selectedNativeTab(pathname, extra) : undefined;
   const tNav = useTranslations('nav');
   const tTour = useTranslations('chrome.tour');
   const postOnboardingTour = usePostOnboardingTour();
@@ -88,7 +97,7 @@ export default function NavHeader() {
       {/* Desktop left sidebar — hidden on mobile */}
       <aside
         className={clsx(
-          'sticky top-0 z-50 hidden h-screen border-r border-border bg-card sm:flex sm:flex-col print:hidden',
+          'app-sidebar sticky top-0 z-50 hidden h-screen border-r border-border bg-card sm:flex sm:flex-col print:hidden',
           collapsed ? 'w-16' : 'w-56',
         )}
       >
@@ -148,22 +157,25 @@ export default function NavHeader() {
       </aside>
 
       {/* Mobile bottom nav — hidden on sm+ */}
-      <nav className="native-bottom-nav fixed right-0 bottom-0 left-0 z-50 border-t border-border bg-card sm:hidden print:hidden">
-        <div className="flex items-stretch">
-          {navLinks.map((link) => {
-            return (
-              <NavLink
-                key={link.href}
-                link={{ href: link.href, label: tNav(link.labelKey) }}
-                isMobile
-                tourTip={tourTipFor(link.href)}
-                badge={badgeFor(link.href)}
-              />
-            );
-          })}
-          <AdminNavLink isMobile />
-        </div>
-      </nav>
+      {!(ipad && (hasOwnHeader(pathname) || isBareRoute(pathname))) && (
+        <nav className="native-bottom-nav fixed right-0 bottom-0 left-0 z-50 border-t border-border bg-card sm:hidden print:hidden">
+          <div className="flex items-stretch">
+            {bottomLinks.map((link) => {
+              return (
+                <NavLink
+                  key={link.href}
+                  link={{ href: link.href, label: tNav(link.labelKey) }}
+                  isMobile
+                  active={ipad ? selected === link.href : undefined}
+                  tourTip={tourTipFor(link.href)}
+                  badge={badgeFor(link.href)}
+                />
+              );
+            })}
+            {!ipad && <AdminNavLink isMobile />}
+          </div>
+        </nav>
+      )}
     </>
   );
 }

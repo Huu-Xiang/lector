@@ -2,16 +2,18 @@
 
 import { useSyncExternalStore } from 'react';
 import { type OptionalTab, parseOptionalTab } from './tab-bar';
+import { isIPadApp } from './ipad-layout';
 
 const KEY = 'readfox-mobile-extra-tab';
 let current: OptionalTab | undefined;
 
 function read(): OptionalTab {
   if (current !== undefined) return current;
+  const fallback = isIPadApp() ? 'practice' : 'none';
   try {
-    return parseOptionalTab(localStorage.getItem(KEY));
+    return parseOptionalTab(localStorage.getItem(KEY), fallback);
   } catch {
-    return 'none';
+    return fallback;
   }
 }
 

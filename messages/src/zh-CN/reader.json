@@ -11,6 +11,7 @@
       "analyticsTooEasy": "太简单",
       "analyticsJustRight": "刚刚好",
       "analyticsTooHard": "太难",
+      "readingSection": "第 {number} 节",
       "lessonNotFound": "找不到课文",
       "loadFailed": "课文加载失败",
       "retryFailed": "无法重新转写",

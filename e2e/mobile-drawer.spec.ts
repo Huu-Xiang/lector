@@ -266,3 +266,65 @@ test.describe('iOS lookup sheet', () => {
     }
   });
 });
+
+test.describe('iPad reader', () => {
+  test.use({
+    viewport: { width: 1180, height: 820 },
+    userAgent: 'Mozilla/5.0 (iPad) AppleWebKit/605.1.15 Mobile/15E148 ReadfoxApp/1',
+  });
+
+  test('keeps the active lookup when the reader switches from a side panel to a sheet', async ({
+    page,
+  }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.route('**/api/dictionary/lookup?*', (route) =>
+      route.fulfill({
+        json: {
+          entry: {
+            word: 'Perdekraal-fees',
+            senses: [{ partOfSpeech: 'noun', gloss: 'A festival.' }],
+          },
+        },
+      }),
+    );
+    const collectionId = await openLesson(page);
+    try {
+      const sidebar = page.locator('.app-sidebar');
+      await expect(sidebar).toBeHidden();
+      await page.getByRole('button', { name: 'Look up Perdekraal-fees' }).first().click();
+
+      const drawer = page.getByTestId('translation-drawer');
+      const heading = drawer.getByRole('heading', { name: 'Perdekraal-fees' });
+      await expect(drawer).toHaveAttribute('data-native-side-drawer', 'true');
+      await expect(heading).toBeInViewport();
+      await expect(drawer.getByTestId('lookup-original-sentence')).toBeInViewport();
+      await expect(drawer.getByTestId('native-lookup-actions')).toBeVisible();
+      await expect(drawer.getByTestId('translation-drawer-handle')).toBeHidden();
+
+      await page.setViewportSize({ width: 820, height: 1180 });
+      await expect(drawer).toHaveAttribute('data-native-sheet', 'true');
+      await expect(heading).toBeInViewport();
+      const handle = drawer.getByTestId('translation-drawer-handle');
+      await expect(handle).toBeVisible();
+      await handle.click();
+      await expect(handle).toHaveAttribute('aria-expanded', 'true');
+
+      await page.setViewportSize({ width: 1180, height: 820 });
+      await expect(handle).toBeHidden();
+      await page.setViewportSize({ width: 820, height: 1180 });
+      await expect(handle).toHaveAttribute('aria-expanded', 'false');
+      await expect(heading).toBeInViewport();
+
+      await page.setViewportSize({ width: 440, height: 820 });
+      await expect(heading).toBeInViewport();
+      await drawer.getByRole('button', { name: /close/i }).click();
+      await expect(drawer).toHaveAttribute('aria-hidden', 'true');
+
+      await page.setViewportSize({ width: 1180, height: 820 });
+      await page.getByRole('button', { name: 'Back', exact: true }).click();
+      await expect(sidebar).toBeHidden();
+    } finally {
+      await page.request.delete(apiUrl(`/api/collections/${collectionId}`));
+    }
+  });
+});

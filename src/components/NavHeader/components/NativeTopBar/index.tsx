@@ -2,7 +2,16 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ChevronLeft, MessageCircle, Settings } from 'lucide-react';
+import {
+  BookOpen,
+  ChartBar,
+  ChevronLeft,
+  Clipboard,
+  MessageCircle,
+  Pencil,
+  Settings,
+  UserRound,
+} from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import LanguageSelector from '@/components/LanguageSelector';
@@ -14,10 +23,20 @@ import {
   nativeTabs,
   selectedNativeTab,
 } from '@/components/NativeBridge/tab-bar';
+import { isBareRoute } from '@/lib/api-base';
+import { isIPadApp } from '@/components/NativeBridge/ipad-layout';
 import { useTabPreference } from '@/components/NativeBridge/use-tab-preference';
 import { navLinks } from '../../constants';
 import AccountMenu from '../AccountMenu';
 import { CHAT_TOGGLE_EVENT } from '@/components/ChatWidget/constants';
+
+const tabletIcons = {
+  '/': BookOpen,
+  '/stats': ChartBar,
+  '/journal': Pencil,
+  '/practice': Clipboard,
+  '/me': UserRound,
+} as const;
 
 /**
  * The iOS-style bar shown instead of the web top bar inside the app. At rest it has no
@@ -42,18 +61,19 @@ export default function NativeTopBar() {
   }, [inApp, pathname]);
 
   if (!inApp || hasOwnHeader(pathname)) return null;
-  const nativeBar = hasNativeTabBar();
-  const tab = nativeBar
+  const usesAppTabs = isIPadApp() || hasNativeTabBar();
+  const tab = usesAppTabs
     ? nativeTabs(extra).find((link) => link.href === pathname)
     : navLinks.find((link) => link.href === pathname && link.href !== '/settings');
   const titled = [ME_TAB, ...navLinks].find((link) => link.href === pathname);
+  const selected = selectedNativeTab(pathname, extra);
 
   return (
     <header
       data-scrolled={scrolled || undefined}
-      className="native-topbar group sticky top-0 isolate z-40 items-end pt-[env(safe-area-inset-top)] sm:hidden print:hidden"
+      className="native-topbar group sticky top-0 isolate z-40 items-end pt-[env(safe-area-inset-top)]"
     >
-      <div className="grid h-11 w-full grid-cols-[1fr_auto_1fr] items-center px-2">
+      <div className="native-toolbar grid min-h-11 w-full grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center px-2">
         <div className="flex items-center justify-start">
           {pathname === ME_TAB.href ? null : tab ? (
             <LanguageSelector compact />
@@ -64,7 +84,7 @@ export default function NativeTopBar() {
                 void haptic();
                 if (pathname.startsWith('/collection/')) {
                   router.replace('/');
-                } else if (nativeBar && selectedNativeTab(pathname, extra) === ME_TAB.href) {
+                } else if (usesAppTabs && selected === ME_TAB.href) {
                   router.replace(ME_TAB.href);
                 } else {
                   router.back();
@@ -80,13 +100,33 @@ export default function NativeTopBar() {
         </div>
         <span
           aria-hidden
-          className="truncate text-[17px] font-semibold text-foreground opacity-0 transition-opacity duration-200 group-data-[scrolled]:opacity-100"
+          className="native-scroll-title truncate text-[17px] font-semibold text-foreground opacity-0 transition-opacity duration-200 group-data-[scrolled]:opacity-100"
         >
           {titled ? tNav(titled.labelKey) : ''}
         </span>
+        {!isBareRoute(pathname) && (
+          <nav className="ipad-tabs" data-testid="ipad-tabs">
+            {nativeTabs(extra).map(({ href, labelKey }) => {
+              const Icon = tabletIcons[href];
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  replace
+                  scroll={href === ME_TAB.href}
+                  aria-current={selected === href ? 'location' : undefined}
+                  onClick={() => void haptic()}
+                >
+                  <Icon className="size-4 shrink-0" aria-hidden />
+                  <span>{tNav(labelKey)}</span>
+                </Link>
+              );
+            })}
+          </nav>
+        )}
         <div className="flex items-center justify-end gap-1">
           <WhatsNew variant="topbar" />
-          {!nativeBar && <AccountMenu compact />}
+          {!usesAppTabs && <AccountMenu compact />}
           <button
             type="button"
             aria-label={tChat('open')}
@@ -99,7 +139,7 @@ export default function NativeTopBar() {
           >
             <MessageCircle className="size-[22px]" aria-hidden />
           </button>
-          {tab && !nativeBar && (
+          {tab && !usesAppTabs && (
             <Link
               href="/settings"
               aria-label={tNav('settings')}

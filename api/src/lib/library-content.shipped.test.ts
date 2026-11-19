@@ -3,6 +3,8 @@ import { describe, expect, test } from 'bun:test';
 import { getAllLanguages, NATIVE_LANGUAGES } from './languages';
 import {
   LIBRARY_CATEGORIES,
+  libraryLessonIdFor,
+  librarySectionCandidates,
   listLibraryBooks,
   loadLibraryBook,
   type LibraryCategory,
@@ -22,6 +24,14 @@ describe('shipped library books', () => {
         expect(`${code} ${level}: ${count}`).toBe(`${code} ${level}: ${Math.max(count, 3)}`);
       }
     }
+  });
+
+  test('keeps numbered sections whose catalog label is the full book title', () => {
+    const sectionId = libraryLessonIdFor('zh', 'daodejing', '01.md');
+    expect(librarySectionCandidates('library-zh-daodejing')?.get(sectionId)).toEqual({
+      title: '1. 道德经',
+      number: '1',
+    });
   });
 
   test('at least French and English ship books', () => {

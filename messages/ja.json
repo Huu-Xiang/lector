@@ -337,7 +337,7 @@
       "security": "セキュリティ"
     },
     "mobileTabs": {
-      "title": "下部ナビゲーション",
+      "title": "タブバー",
       "extra": "追加タブ",
       "none": "追加しない",
       "hint": "練習と日記はマイページからいつでも開けます。この設定はこの端末に適用されます。"
@@ -2204,6 +2204,7 @@
       "analyticsTooEasy": "簡単すぎる",
       "analyticsJustRight": "ちょうどよい",
       "analyticsTooHard": "難しすぎる",
+      "readingSection": "第{number}節",
       "lessonNotFound": "レッスンが見つかりません",
       "loadFailed": "レッスンを読み込めませんでした",
       "retryFailed": "文字起こしを再試行できませんでした",

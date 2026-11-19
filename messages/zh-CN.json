@@ -337,7 +337,7 @@
       "security": "安全"
     },
     "mobileTabs": {
-      "title": "底部导航",
+      "title": "标签栏",
       "extra": "额外标签",
       "none": "不添加",
       "hint": "在「我」里随时可以打开练习和日记。此设置仅应用于当前设备。"
@@ -2204,6 +2204,7 @@
       "analyticsTooEasy": "太简单",
       "analyticsJustRight": "刚刚好",
       "analyticsTooHard": "太难",
+      "readingSection": "第 {number} 节",
       "lessonNotFound": "找不到课文",
       "loadFailed": "课文加载失败",
       "retryFailed": "无法重新转写",

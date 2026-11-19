@@ -519,15 +519,15 @@
   N("file:home-page", "file", "Home page", {
     path: "src/app/(index)/page.tsx",
     domain: "library",
-    summary: "Header actions and reading recommendations. Tap the recommendation header to expand it. On iOS, saved books appear first.",
+    summary: "Header actions and reading recommendations. The iPad library features a book and links to its current chapter. Saved books and recommendations reflow with the window.",
   });
-  N("file:collection-page", "file", "Collection page", { path: "src/app/collection/[id]/page.tsx", domain: "library", summary: "On iPhone, author and lesson counts sit below the title in smaller text. Each lesson row opens the reader or a menu of lesson actions." });
+  N("file:collection-page", "file", "Collection page", { path: "src/app/collection/[id]/page.tsx", domain: "library", summary: "On iPhone, author and lesson counts sit below the title in smaller text. Each lesson row opens the reader or a menu of lesson actions. Rows show opening words for repeated library labels." });
   N("file:read-page", "file", "Read page", { path: "src/app/read/[bookId]/page.tsx", domain: "translation" });
   N("file:markdown-reader", "file", "MarkdownReader", { path: "src/components/MarkdownReader/index.tsx", domain: "library" });
   N("file:reader-article", "file", "ReaderArticle", { path: "src/components/MarkdownReader/ReaderArticle.tsx", domain: "library" });
   N("file:transcript-reader", "file", "TranscriptReader", { path: "src/components/MarkdownReader/TranscriptReader.tsx", domain: "listen" });
   N("file:word-cell", "file", "WordCell", { path: "src/components/WordCell/index.tsx", domain: "library" });
-  N("file:translation-drawer", "file", "TranslationDrawer", { path: "src/components/TranslationDrawer/index.tsx", domain: "translation", summary: "On iOS, shows the first meaning and original sentence before expandable dictionary details." });
+  N("file:translation-drawer", "file", "TranslationDrawer", { path: "src/components/TranslationDrawer/index.tsx", domain: "translation", summary: "The iOS reader puts the first meaning and sentence in a side panel or bottom sheet, depending on window width." });
   N("file:data-layer", "file", "data-layer.ts", { path: "src/lib/data-layer.ts", domain: "library" });
   N("file:api-base", "file", "api-base.ts", { path: "src/lib/api-base.ts" });
   N("file:dictionary-client", "file", "dictionary-client.ts", { path: "src/lib/dictionary-client.ts", domain: "translation" });
@@ -565,7 +565,7 @@
   N("file:youtube-import", "file", "YouTubeImportModal", { path: "src/components/YouTubeImportModal/index.tsx", domain: "library" });
   N("file:paste-import", "file", "PasteImportModal", { path: "src/components/PasteImportModal/index.tsx", domain: "library" });
   N("file:definition-links", "file", "definition-links.ts", { path: "src/lib/definition-links.ts", domain: "translation" });
-  N("file:layout", "file", "Root layout", { path: "src/app/layout.tsx", domain: "auth" });
+  N("file:layout", "file", "Root layout", { path: "src/app/layout.tsx", domain: "auth", summary: "Mounts the app chrome. iPad defaults to Library, Statistics, Practice, and Me, with native Liquid Glass tabs in regular iPadOS 26 windows." });
   N("file:auth-guard", "file", "AuthGuard", { path: "src/components/AuthGuard/index.tsx", domain: "auth" });
   N("file:billing-guard", "file", "BillingGuard", { path: "src/components/BillingGuard/index.tsx", domain: "billing" });
   N("file:beta-login-page", "file", "Readfox beta login continuation", { path: "src/app/(auth)/beta-login/BetaLogin.tsx", domain: "auth" });
@@ -581,7 +581,7 @@
   N("file:accounts", "file", "accounts.ts", { path: "api/src/lib/accounts.ts", domain: "auth" });
   N("file:lifecycle-email", "file", "lifecycle-email.ts", { path: "api/src/lib/lifecycle-email.ts", domain: "auth" });
   N("file:email", "file", "email.ts", { path: "api/src/lib/email.ts", domain: "auth" });
-  N("file:settings-page", "file", "Settings page", { path: "src/app/settings/page.tsx", domain: "settings", summary: "On iPhone, settings open one group at a time and use smaller help text below titles. An anchor link opens the group that contains the setting." });
+  N("file:settings-page", "file", "Settings page", { path: "src/app/settings/page.tsx", domain: "settings", summary: "In the iPhone and iPad apps, settings open one group at a time. Appearance and navigation sets the optional tab for this device. An anchor link opens the group that contains the setting." });
   N("file:language-selector", "file", "LanguageSelector", { path: "src/components/LanguageSelector/index.tsx", domain: "onboarding" });
   N("file:languages-settings", "file", "LanguagesSettings", { path: "src/app/settings/components/LanguagesSettings/index.tsx", domain: "settings" });
   N("file:llm-settings", "file", "LLMSettings", { path: "src/app/settings/components/LLMSettings/index.tsx", domain: "settings" });

@@ -80,8 +80,8 @@ export default function TranslationDrawer({
     if (stored !== null) applySheetVh(stored);
   }, []);
   const screenSize = useScreenSize();
-  const nativeApp = useIsNativeApp();
-  const nativeSheet = nativeApp && ['xs', 'sm', 'md'].includes(screenSize);
+  const compact = useIsNativeApp();
+  const nativeSheet = compact && ['xs', 'sm', 'md'].includes(screenSize);
   const [actionsOpen, setActionsOpen] = useState(false);
   const [previousOpen, setPreviousOpen] = useState(rawIsOpen);
   const moreButton = useRef<HTMLButtonElement>(null);
@@ -149,7 +149,7 @@ export default function TranslationDrawer({
   // "Ek het die katte gesien"). Only offer the in-context AI translation
   // when it does.
   const wordOccursInSentence = !!sentence && sentenceContainsWord(sentence, word, pack);
-  const showHighlightedSentence = nativeSheet || !!aiContextTranslation;
+  const showHighlightedSentence = compact || !!aiContextTranslation;
   const contextTokens = showHighlightedSentence ? tokenizeWords(sentence, pack) : [];
   const selectedKeys = showHighlightedSentence ? vocabKeys(foldWord(word, pack), pack) : [];
   const highlights = contextTokens.filter((token) =>
@@ -167,9 +167,7 @@ export default function TranslationDrawer({
         data-testid="request-word-context"
         className={clsx(
           'inline-flex shrink-0 items-center gap-1 rounded-md px-2 text-xs font-semibold text-[var(--clay)] hover:bg-[var(--clay-soft)]',
-          nativeSheet
-            ? 'min-h-11 max-w-[45%] whitespace-normal'
-            : 'mt-3 bg-[var(--clay-soft)] py-1',
+          compact ? 'min-h-11 max-w-[45%] whitespace-normal' : 'mt-3 bg-[var(--clay-soft)] py-1',
         )}
         title={t('inContextTitle')}
       >
@@ -183,7 +181,7 @@ export default function TranslationDrawer({
   const senses = entry?.senses ?? [];
   const hasRichEntry = senses.length > 0;
   const fallbackTranslation = aiTranslation ?? null;
-  const leadSenses = nativeSheet && sentence ? senses.slice(0, 1) : senses;
+  const leadSenses = compact && sentence ? senses.slice(0, 1) : senses;
   const hasDictionaryDetails = !!(
     senses.length > leadSenses.length ||
     entry?.rank ||
@@ -196,7 +194,7 @@ export default function TranslationDrawer({
     entry?.relatedForms?.length ||
     entry?.lemmaInfo
   );
-  const DictionaryDetails = nativeSheet ? 'details' : Fragment;
+  const DictionaryDetails = compact ? 'details' : Fragment;
   const announcement = lookupAnnouncement(
     {
       isOpen,
@@ -466,7 +464,7 @@ export default function TranslationDrawer({
 
   const originalSentence = sentence && !aiContextTranslation && (
     <section
-      className={clsx('border-b border-border px-4', nativeSheet ? 'py-2' : 'py-3')}
+      className={clsx('border-b border-border px-4', compact ? 'py-2' : 'py-3')}
       data-testid="lookup-original-sentence"
     >
       <div className="flex items-start gap-2">
@@ -474,7 +472,7 @@ export default function TranslationDrawer({
           className="min-w-0 flex-1 text-sm leading-relaxed text-muted-foreground italic"
           as="p"
         >
-          {nativeSheet
+          {compact
             ? highlights.map((token, index) => (
                 <Fragment key={token.start}>
                   {sentence.slice(highlights[index - 1]?.end ?? 0, token.start)}
@@ -482,7 +480,7 @@ export default function TranslationDrawer({
                 </Fragment>
               ))
             : sentence}
-          {nativeSheet && sentence.slice(highlights.at(-1)?.end ?? 0)}
+          {compact && sentence.slice(highlights.at(-1)?.end ?? 0)}
         </TargetText>
         {speakable && (
           <button
@@ -518,6 +516,7 @@ export default function TranslationDrawer({
       )}
       ref={drawerRef}
       data-native-sheet={nativeSheet || undefined}
+      data-native-side-drawer={(compact && !nativeSheet && !docked) || undefined}
       role={docked ? 'complementary' : 'dialog'}
       aria-label={idle ? t('wordDefinition') : t('definitionOf', { word })}
     >
@@ -587,23 +586,23 @@ export default function TranslationDrawer({
           <div
             className={clsx(
               'shrink-0 border-b border-border',
-              nativeSheet ? 'px-3' : 'bg-muted/50 px-4 py-3',
+              compact ? 'px-3' : 'bg-muted/50 px-4 py-3',
             )}
           >
             <div
               className={clsx(
                 'flex justify-between',
-                nativeSheet ? 'items-center' : 'items-start gap-2',
+                compact ? 'items-center' : 'items-start gap-2',
               )}
             >
               <div className="min-w-0 flex-1">
                 <div
                   className={clsx(
                     'flex items-center',
-                    nativeSheet ? 'min-w-0 gap-0.5' : 'flex-wrap gap-2',
+                    compact ? 'min-w-0 gap-0.5' : 'flex-wrap gap-2',
                   )}
                 >
-                  {(!nativeSheet || currentState !== 'new') && (
+                  {(!compact || currentState !== 'new') && (
                     <span
                       className={`h-2.5 w-2.5 flex-shrink-0 rounded-full ${stateColors.dot}`}
                       title={t(`state.${currentState}`)}
@@ -614,13 +613,13 @@ export default function TranslationDrawer({
                   <h2
                     className={clsx(
                       'font-semibold break-words text-foreground',
-                      nativeSheet
+                      compact
                         ? 'min-w-0 truncate text-base'
                         : longTitle
                           ? 'line-clamp-1 min-w-0 flex-1 text-sm lg:line-clamp-none lg:text-xl'
                           : 'text-xl',
                     )}
-                    title={nativeSheet || longTitle ? word : undefined}
+                    title={compact || longTitle ? word : undefined}
                   >
                     <TargetText>{word}</TargetText>
                   </h2>
@@ -629,7 +628,7 @@ export default function TranslationDrawer({
                       onClick={handleSpeakWord}
                       className={clsx(
                         'shrink-0 rounded p-1 text-muted-foreground hover:bg-accent',
-                        nativeSheet && 'grid size-11 place-items-center',
+                        compact && 'grid size-11 place-items-center',
                       )}
                       title={t('hearPronunciation')}
                       aria-label={t('hearPronunciation')}
@@ -637,7 +636,7 @@ export default function TranslationDrawer({
                       <Volume2 className="h-5 w-5" />
                     </button>
                   )}
-                  {entry?.ipa && (!nativeSheet || !requestContextButton) && (
+                  {entry?.ipa && (!compact || !requestContextButton) && (
                     <TargetText
                       className={`text-sm text-muted-foreground ${
                         pack.script.direction === 'rtl' || pack.pronunciation?.annotation
@@ -650,7 +649,7 @@ export default function TranslationDrawer({
                     </TargetText>
                   )}
                 </div>
-                {!nativeSheet && entry?.lemmaInfo && (
+                {!compact && entry?.lemmaInfo && (
                   <p className="mt-1 text-xs text-muted-foreground">
                     <LemmaLine
                       label={entry.lemmaInfo.label}
@@ -670,15 +669,15 @@ export default function TranslationDrawer({
                     />
                   </p>
                 )}
-                {!nativeSheet && lookupBadges}
+                {!compact && lookupBadges}
               </div>
-              {nativeSheet && requestContextButton}
+              {compact && requestContextButton}
               <button
                 onClick={onClose}
                 className={clsx(
                   'flex-shrink-0 rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground',
                   docked && 'hidden',
-                  nativeSheet && 'grid size-11 place-items-center',
+                  compact && 'grid size-11 place-items-center',
                 )}
                 aria-label={t('close')}
                 title={t('closeEsc')}
@@ -689,7 +688,7 @@ export default function TranslationDrawer({
           </div>
 
           {/* Body — scrollable */}
-          {nativeSheet && actionsOpen && (
+          {compact && actionsOpen && (
             <div className="native-lookup-options min-h-0 flex-1 space-y-3 overflow-y-auto overscroll-contain px-4 py-3">
               <h3 ref={optionsHeading} tabIndex={-1} className="text-sm font-semibold">
                 {t('moreActions')}
@@ -699,11 +698,11 @@ export default function TranslationDrawer({
             </div>
           )}
           <div
-            hidden={nativeSheet && actionsOpen}
+            hidden={compact && actionsOpen}
             className="min-h-0 flex-1 overflow-y-auto overscroll-contain"
           >
             {/* Definition section */}
-            <section className={clsx('border-b border-border px-4', nativeSheet ? 'py-2' : 'py-4')}>
+            <section className={clsx('border-b border-border px-4', compact ? 'py-2' : 'py-4')}>
               {isLoading ? (
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <span className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
@@ -717,7 +716,7 @@ export default function TranslationDrawer({
                   <p
                     className={clsx(
                       'text-foreground',
-                      nativeSheet ? 'text-sm leading-normal' : 'leading-relaxed',
+                      compact ? 'text-sm leading-normal' : 'leading-relaxed',
                     )}
                   >
                     {aiContextTranslation}
@@ -783,11 +782,11 @@ export default function TranslationDrawer({
                 </div>
               ) : hasRichEntry ? (
                 <div className="space-y-3">
-                  {!nativeSheet && entry && <EntryBadges entry={entry} />}
+                  {!compact && entry && <EntryBadges entry={entry} />}
                   <SenseGroups
                     senses={leadSenses}
                     onLookupWord={onLookupWord}
-                    inlinePartOfSpeech={nativeSheet}
+                    inlinePartOfSpeech={compact}
                   />
                 </div>
               ) : fallbackTranslation ? (
@@ -811,7 +810,7 @@ export default function TranslationDrawer({
                 <p className="text-sm text-muted-foreground italic">{t('noDefinition')}</p>
               )}
 
-              {!nativeSheet && requestContextButton}
+              {!compact && requestContextButton}
               {contextError && (
                 <p role="status" className="mt-2 text-sm text-destructive">
                   {contextError}
@@ -896,10 +895,10 @@ export default function TranslationDrawer({
                 </section>
               )}
 
-            {nativeSheet && !isLoading && originalSentence}
-            {(!nativeSheet || hasDictionaryDetails) && (
+            {compact && !isLoading && originalSentence}
+            {(!compact || hasDictionaryDetails) && (
               <DictionaryDetails>
-                {nativeSheet && (
+                {compact && (
                   <>
                     <summary className="flex min-h-[44px] cursor-pointer list-none items-center gap-2 px-4 text-sm font-medium text-muted-foreground">
                       <ChevronRight className="size-4" aria-hidden="true" />
@@ -942,7 +941,7 @@ export default function TranslationDrawer({
                     entry={entry}
                     word={word}
                     onLookupWord={onLookupWord}
-                    inlinePartOfSpeech={nativeSheet}
+                    inlinePartOfSpeech={compact}
                   />
                 )}
 
@@ -1008,7 +1007,7 @@ export default function TranslationDrawer({
                   })()}
               </DictionaryDetails>
             )}
-            {!nativeSheet && originalSentence}
+            {!compact && originalSentence}
           </div>
 
           {/* Footer — action buttons. */}
@@ -1022,15 +1021,15 @@ export default function TranslationDrawer({
             <div
               className={clsx(
                 'shrink-0 border-t border-border bg-muted/50',
-                nativeSheet ? 'px-3 py-1.5' : 'space-y-2 px-4 py-3',
+                compact ? 'px-3 py-1.5' : 'space-y-2 px-4 py-3',
               )}
             >
-              <div className={clsx(nativeSheet && 'flex items-center gap-2')}>
+              <div className={clsx(compact && 'flex items-center gap-2')}>
                 {(canSaveWord || isSavedWord) && (
                   <div
                     className={clsx(
                       'flex flex-wrap items-center gap-x-3 gap-y-1',
-                      nativeSheet && 'min-w-0 flex-1',
+                      compact && 'min-w-0 flex-1',
                     )}
                   >
                     {canSaveWord ? (
@@ -1038,7 +1037,7 @@ export default function TranslationDrawer({
                         <Button
                           className={clsx(
                             'min-h-11',
-                            nativeSheet
+                            compact
                               ? 'h-auto w-full px-2 py-2 whitespace-normal'
                               : 'w-full sm:w-auto',
                           )}
@@ -1047,9 +1046,11 @@ export default function TranslationDrawer({
                         >
                           <span aria-hidden="true">+</span> {t('saveWord')}
                         </Button>
-                        <kbd className="hidden rounded border border-border px-1.5 text-xs text-muted-foreground lg:inline">
-                          S
-                        </kbd>
+                        {!compact && (
+                          <kbd className="hidden rounded border border-border px-1.5 text-xs text-muted-foreground lg:inline">
+                            S
+                          </kbd>
+                        )}
                         {repeatLookup && (
                           <p
                             className="text-xs text-muted-foreground"
@@ -1078,7 +1079,7 @@ export default function TranslationDrawer({
                     )}
                   </div>
                 )}
-                {nativeSheet && hasSecondaryActions && (
+                {compact && hasSecondaryActions && (
                   <Button
                     ref={moreButton}
                     variant="outline"
@@ -1130,7 +1131,7 @@ export default function TranslationDrawer({
                   </div>
                 </div>
               )}
-              {!nativeSheet && secondaryActions}
+              {!compact && secondaryActions}
             </div>
           )}
         </>
