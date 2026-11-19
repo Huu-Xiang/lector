@@ -1,8 +1,16 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-const state = vi.hoisted(() => ({ pathname: '/', mode: 'cloud' as string, track: vi.fn() }));
+const state = vi.hoisted(() => ({
+  pathname: '/',
+  mode: 'cloud' as string,
+  track: vi.fn(),
+  cleanups: [] as (() => void)[],
+}));
 vi.mock('react', () => ({
-  useEffect: (fn: () => void) => fn(),
+  useEffect: (fn: () => (() => void) | void) => {
+    const cleanup = fn();
+    if (cleanup) state.cleanups.push(cleanup);
+  },
 }));
 vi.mock('next/navigation', () => ({ usePathname: () => state.pathname }));
 vi.mock('next-intl', () => ({ useLocale: () => 'zh-TW' }));
@@ -22,6 +30,8 @@ function stubBrowser({
   search = '',
   userAgent = 'Mozilla/5.0 Chrome/120',
   webdriver = false,
+  visibilityState = 'visible',
+  stored = {} as Record<string, string>,
 }) {
   const jar = new Map(
     cookie
@@ -29,9 +39,19 @@ function stubBrowser({
       .filter(Boolean)
       .map((pair) => pair.split('=') as [string, string]),
   );
-  const storage = new Map<string, string>();
+  const storage = new Map(Object.entries(stored));
+  const listeners = new Map<string, Set<(event: Event) => void>>();
   const doc = {
     referrer: '',
+    visibilityState,
+    addEventListener(type: string, listener: (event: Event) => void) {
+      const handlers = listeners.get(type) ?? new Set();
+      handlers.add(listener);
+      listeners.set(type, handlers);
+    },
+    removeEventListener(type: string, listener: (event: Event) => void) {
+      listeners.get(type)?.delete(listener);
+    },
     get cookie() {
       return [...jar].map(([key, value]) => `${key}=${value}`).join('; ');
     },
@@ -53,7 +73,12 @@ function stubBrowser({
   });
   const fetchMock = vi.fn().mockResolvedValue(new Response('{}'));
   vi.stubGlobal('fetch', fetchMock);
-  return { fetchMock, doc };
+  const interact = (type = 'pointerdown', isTrusted = true) => {
+    for (const listener of [...(listeners.get(type) ?? [])]) {
+      listener({ isTrusted } as Event);
+    }
+  };
+  return { fetchMock, doc, interact, storage };
 }
 
 /** SourceBeacon returns the cloud component as an element; run that component. */
@@ -68,21 +93,41 @@ describe('SourceBeacon', () => {
     state.mode = 'cloud';
     state.track.mockClear();
   });
-  afterEach(() => vi.unstubAllGlobals());
+  afterEach(() => {
+    for (const cleanup of state.cleanups.splice(0)) cleanup();
+    vi.unstubAllGlobals();
+  });
+
+  it('sets attribution immediately but waits for a visible trusted interaction before counting', () => {
+    const { fetchMock, doc, interact } = stubBrowser({ search: '?utm_source=google' });
+    render();
+    expect(doc.cookie).toContain('rf_src=google.en');
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(state.track).not.toHaveBeenCalled();
+    interact();
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(fetchMock.mock.calls[0][1].headers['x-readfox-engaged']).toBe('1');
+    expect(state.track).toHaveBeenCalledTimes(1);
+  });
 
   it('counts the first visit once and sets the cookie', () => {
-    const { fetchMock } = stubBrowser({});
+    const { fetchMock, interact } = stubBrowser({});
     render();
     render();
+    interact();
+    interact();
     expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(fetchMock.mock.calls[0][1].keepalive).toBe(true);
   });
 
   it('counts a public entry independently of an existing attribution cookie and dedupes an immediate refresh', () => {
-    const { fetchMock } = stubBrowser({ cookie: 'rf_src=google.en; rf_product=en.launch' });
+    const { fetchMock, interact } = stubBrowser({
+      cookie: 'rf_src=google.en; rf_product=en.launch',
+    });
     state.pathname = '/books/en/a-christmas-carol/read';
     render();
     render();
+    interact('keydown');
     expect(fetchMock).not.toHaveBeenCalled();
     expect(state.track).toHaveBeenCalledTimes(1);
     expect(state.track).toHaveBeenCalledWith(
@@ -101,6 +146,49 @@ describe('SourceBeacon', () => {
     state.pathname = '/books/en';
     render();
     expect(state.track).toHaveBeenCalledTimes(2);
+  });
+
+  it('ignores synthetic activity and activity in a hidden tab', () => {
+    const { fetchMock, doc, interact } = stubBrowser({ visibilityState: 'hidden' });
+    render();
+    interact();
+    doc.visibilityState = 'visible';
+    interact('visibilitychange');
+    interact('pointerdown', false);
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(state.track).not.toHaveBeenCalled();
+    interact('touchstart');
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('retains a pending first visit across a reload without recounting a returning visitor', () => {
+    const { fetchMock, interact } = stubBrowser({
+      cookie: 'rf_src=google.en',
+      stored: { 'readfox-pending-source-visit': 'pending' },
+    });
+    render();
+    interact('wheel');
+    render();
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('drops page exposure when the route unmounts before engagement', () => {
+    const { fetchMock, interact } = stubBrowser({});
+    render();
+    for (const cleanup of state.cleanups.splice(0)) cleanup();
+    interact();
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(state.track).not.toHaveBeenCalled();
+  });
+
+  it('continues page tracking if source delivery throws synchronously', () => {
+    const { fetchMock, interact } = stubBrowser({});
+    fetchMock.mockImplementation(() => {
+      throw new Error('fetch unavailable');
+    });
+    render();
+    expect(interact).not.toThrow();
+    expect(state.track).toHaveBeenCalledTimes(1);
   });
 
   it('keeps only the campaign category and displayed locale in the first-touch metadata', () => {

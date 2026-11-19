@@ -3204,6 +3204,8 @@ const internalOps: Record<string, OperationDoc> = {
   },
   'POST /api/source-count': {
     summary: 'Count one anonymous visit by traffic source',
+    description:
+      'Requires a trusted Origin, application/json and x-readfox-engaged: 1 after visible trusted browser interaction. Known automated agents and signed-in browsers are ignored.',
     tag: 'Service',
     auth: 'none',
   },
@@ -3213,6 +3215,8 @@ const internalOps: Record<string, OperationDoc> = {
   },
   'POST /api/product-analytics/public': {
     summary: 'Count a public activity without an account identifier',
+    description:
+      'Requires a trusted Origin, application/json and x-readfox-engaged: 1 after visible trusted browser interaction. Known automated agents are ignored.',
     tag: 'Service',
     auth: 'none',
   },

@@ -22,7 +22,14 @@ function buildApp(limiter = new InMemoryExtractionBurstLimiter({ ipPerWindow: 2 
     '/api/*',
     makeBillingMiddleware({ enforced: true, freeTierEnabled: false, exemptEmails: new Set() }),
   );
-  app.route('/api/source-count', makeSourceCountRoutes({ limiter, now: () => new Date() }));
+  app.route(
+    '/api/source-count',
+    makeSourceCountRoutes({
+      limiter,
+      now: () => new Date(),
+      trustedOrigin: (origin) => origin === BASE,
+    }),
+  );
   return app;
 }
 
@@ -32,6 +39,8 @@ function post(app: Hono, headers: Record<string, string> = {}) {
     headers: {
       'Content-Type': 'application/json',
       'User-Agent': 'Mozilla/5.0 Safari',
+      Origin: BASE,
+      'x-readfox-engaged': '1',
       ...headers,
     },
     body: JSON.stringify({ source: 'google', lang: 'zh' }),
@@ -64,6 +73,32 @@ afterAll(() => {
 });
 
 describe('POST /api/source-count behind the real middleware', () => {
+  test('ignores requests without the client engagement signal', async () => {
+    expect((await post(buildApp(), { 'x-readfox-engaged': '' })).status).toBe(204);
+    expect((await post(buildApp(), { 'x-readfox-engaged': '0' })).status).toBe(204);
+    expect(visits()).toBe(0);
+  });
+
+  test('rejects missing or untrusted origins and non-JSON requests', async () => {
+    expect((await post(buildApp(), { Origin: '' })).status).toBe(403);
+    expect((await post(buildApp(), { Origin: 'https://untrusted.example' })).status).toBe(403);
+    expect((await post(buildApp(), { 'Content-Type': 'text/plain' })).status).toBe(415);
+    expect(visits()).toBe(0);
+  });
+
+  test.each([
+    'Googlebot/2.1',
+    'meta-externalagent/1.1',
+    'meta-externalfetcher/1.1',
+    'Go-http-client/1.1',
+    'HeadlessChrome/149',
+    'prerender',
+    'curl/8.0',
+  ])('does not count the identified automation agent %s', async (agent) => {
+    expect((await post(buildApp(), { 'User-Agent': agent })).status).toBe(204);
+    expect(visits()).toBe(0);
+  });
+
   test('a signed-out request passes the session and billing gates and is counted', async () => {
     const res = await post(buildApp(), { 'x-forwarded-for': '203.0.113.7' });
     expect(res.status).toBe(204);

@@ -8,13 +8,22 @@ import { apiUrl } from './api';
 const CLOUD_API = `http://localhost:${process.env.E2E_AUTH_API_PORT || '3462'}`;
 
 async function loggedOutPage(browser: Browser) {
-  const context = await browser.newContext({ storageState: { cookies: [], origins: [] } });
+  const context = await browser.newContext({
+    serviceWorkers: 'block',
+    storageState: { cookies: [], origins: [] },
+  });
   return { context, page: await context.newPage() };
 }
 
 /** A visitor with no cloud session. The report email is captured by the test API. */
 async function cloudVisitorPage(browser: Browser) {
-  const context = await browser.newContext({ storageState: { cookies: [], origins: [] } });
+  const context = await browser.newContext({
+    serviceWorkers: 'block',
+    storageState: { cookies: [], origins: [] },
+  });
+  await context.addInitScript((API_URL) => {
+    window.__ENV__ = { API_URL, LECTOR_MODE: 'cloud' };
+  }, CLOUD_API);
   await context.route('**/__env.js', (route) =>
     route.fulfill({
       contentType: 'application/javascript',
@@ -316,6 +325,9 @@ test.describe('vocabulary test', () => {
   }) => {
     test.skip(!!process.env.E2E_EXTERNAL_SERVER, 'no cloud-mode API in the external-server run');
     const { context, page } = await cloudVisitorPage(browser);
+    await page.addInitScript(() =>
+      Object.defineProperty(navigator, 'webdriver', { get: () => false }),
+    );
     const attempts: Array<{ body: Record<string, unknown>; status: number }> = [];
     page.on('response', (response) => {
       if (new URL(response.url()).pathname !== '/api/product-analytics/public') return;

@@ -314,6 +314,12 @@ export function recordProductEvent(input: ProductEvent, options: EventOptions = 
     if (now.getTime() < Date.now() - OBSERVATION_DAYS * DAY_MS && !options.database) return true;
     return database.transaction(() => {
       if (
+        event.event === 'signup_verified' &&
+        (!options.userId ||
+          !database.query('SELECT 1 FROM product_attribution WHERE userId=?').get(options.userId))
+      )
+        return true;
+      if (
         options.userId &&
         config.authRequired &&
         !accountCanRecord(database, options.userId, now, event.event === 'signup_verified')
@@ -453,7 +459,7 @@ function cohortReport(database: Database, from: string, to: string): CohortRow[]
     .query(
       'SELECT period,source,metric,eligible,returned FROM product_cohorts WHERE period BETWEEN ? AND ? ORDER BY period,metric,source',
     )
-    .all(`${from.slice(0, 7)}-01`, to) as CohortRow[];
+    .all(from, to) as CohortRow[];
   const grouped = new Map<string, CohortRow>();
   for (const row of rows) {
     const period = row.period.slice(0, 7);

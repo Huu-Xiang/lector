@@ -174,7 +174,15 @@ export function classifySource(input: {
   const utm = (input.utmSource ?? '').trim().toLowerCase();
   if (utm) {
     const named = UTM_ALIASES[utm] ?? utm;
-    return isSource(named) && !NOT_A_CHANNEL.includes(named) ? named : 'campaign';
+    if (isSource(named) && !NOT_A_CHANNEL.includes(named)) return named;
+    try {
+      const url = new URL(utm.includes('://') ? utm : `https://${utm}`);
+      if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password)
+        return 'campaign';
+      return REFERRER_HOSTS.find(([, pattern]) => pattern.test(url.hostname))?.[0] ?? 'campaign';
+    } catch {
+      return 'campaign';
+    }
   }
 
   let host: string;

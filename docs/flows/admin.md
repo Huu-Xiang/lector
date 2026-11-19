@@ -92,7 +92,7 @@ The Trends page lists visits and sign-ups per traffic source. The counts hold no
 
 **App domain:** Admin
 
-The Product analytics panel shows UTC daily totals and sign-up cohorts for the months intersecting the selected date range. It displays collection coverage, the last maintenance run, and write failures since startup. Download JSON exports dimensions, counts, and token coverage. The launch cohort lookup measure uses learner-local days from `dailyStats` and appears separately from exact UTC return metrics.
+The Product analytics panel shows UTC daily totals and sign-up cohorts whose registration dates fall inside the selected date range. It displays collection coverage, the last maintenance run, and write failures since startup. Download JSON exports dimensions, counts, and token coverage. The launch cohort lookup measure uses learner-local days from `dailyStats` and appears separately from exact UTC return metrics.
 
 | Role | Path | Function |
 | --- | --- | --- |
@@ -101,7 +101,7 @@ The Product analytics panel shows UTC daily totals and sign-up cohorts for the m
 | API | `api/src/routes/admin.ts` | `GET /product-analytics`, `POST /product-analytics/search` |
 | Store | `api/src/lib/product-analytics.ts` | Collection, maintenance, and reporting |
 
-The anonymous page view totals include public pages shown to signed-in readers. They count page exposures. The older source report counts first visits. Product events contain allowlisted categories, and the admin API returns aggregates. Detailed records and account-linked attribution expire after 90 days or account deletion. Aggregates remain for up to 24 months. Beta and production keep separate reports.
+Public page views require a visible page and trusted pointer, touch, keyboard or wheel activity. Known crawlers and automated browsers are excluded. The older source report now uses the same engagement rule for new first visits. First-touch source cookies are set before engagement, so sign-up attribution survives navigation. Anonymous requests also require a trusted origin and the current engagement protocol header. These rules reduce automated traffic but cannot prove that every counted visitor is human. Raw server requests remain a separate measure. Historical source totals keep their original definition. Domain-form UTM sources such as `chatgpt.com` map to the known source category. Unknown campaigns remain `campaign`. Product events contain allowlisted categories, and the admin API returns aggregates. Detailed records and account-linked attribution expire after 90 days or account deletion. Aggregates remain for up to 24 months. Beta and production keep separate reports.
 
 An operator can upload an authorized Search Console or Bing Webmaster Tools report in the Product analytics panel. The panel sends the JSON to `POST /api/admin/product-analytics/search`. Import up to 2,500 rows and 512 KB per request. Include a date, public landing page, clicks, and impressions in each row. Include the query when the search platform provides it. A repeated import updates matching rows. Reports can cover partial ranges.
 

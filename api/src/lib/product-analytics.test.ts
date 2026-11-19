@@ -115,6 +115,42 @@ describe('product analytics', () => {
     expect(report.daily.filter((row) => row.event === 'signup_created')).toHaveLength(1);
   });
 
+  test('keeps cohort denominators inside the selected registration date range', () => {
+    for (const [date, prefix] of [
+      ['2026-11-01', 'early'],
+      ['2026-11-14', 'recent'],
+    ]) {
+      for (let i = 0; i < 5; i++) {
+        recordProductSignup({
+          ...opted,
+          userId: `${prefix}-${i}`,
+          source: 'google',
+          now: new Date(`${date}T08:00:00Z`),
+        });
+      }
+    }
+    const now = new Date('2026-11-19T08:00:00Z');
+    maintainProductAnalytics(now, db);
+    const report = productAnalyticsReport(7, now, db);
+    expect(report.from).toBe('2026-11-13');
+    expect(
+      report.cohorts.find((row) => row.metric === 'd1' && row.source === 'google'),
+    ).toMatchObject({ eligible: 5, returned: 0 });
+  });
+
+  test('does not count existing-account verification as a new signup', () => {
+    const options = { ...opted, userId: 'existing-login', key: 'signup-verified', now: joined };
+    expect(recordProductEvent({ event: 'signup_verified' }, options)).toBe(true);
+    expect(productAnalyticsReport(7, joined, db).daily).toEqual([]);
+    recordProductSignup({ ...options, source: 'chatgpt' });
+    recordProductEvent({ event: 'signup_verified' }, options);
+    recordProductEvent({ event: 'signup_verified' }, options);
+    const report = productAnalyticsReport(7, joined, db);
+    expect(report.daily.filter((row) => row.event === 'signup_verified')).toMatchObject([
+      { count: 1 },
+    ]);
+  });
+
   test('rolls up expired account cohorts and erases account-linked rows', () => {
     recordProductSignup({ ...opted, userId: 'delete-me', source: 'chatgpt', now: joined });
     recordProductEvent(

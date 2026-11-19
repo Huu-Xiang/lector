@@ -59,6 +59,37 @@ describe('classifySource', () => {
   });
 
   it.each([
+    ['chatgpt.com', 'chatgpt'],
+    [' CHATGPT.COM ', 'chatgpt'],
+    ['chat.openai.com', 'chatgpt'],
+    ['https://chatgpt.com/search', 'chatgpt'],
+    ['perplexity.ai', 'perplexity'],
+    ['www.perplexity.ai/search', 'perplexity'],
+    ['claude.ai', 'claude'],
+    ['gemini.google.com', 'gemini'],
+    ['copilot.microsoft.com', 'copilot'],
+    ['chat.deepseek.com', 'deepseek'],
+    ['www.google.com', 'google'],
+    ['google.co.uk/search', 'google'],
+    ['https://cn.bing.com/search?q=reading', 'bing'],
+  ])('maps the utm_source host %s to %s', (source, expected) => {
+    expect(classify(source, 'https://www.baidu.com/')).toBe(expected);
+  });
+
+  it.each([
+    'chatgpt.com.evil.example',
+    'notchatgpt.com',
+    'https://evil.example/chatgpt.com',
+    'https://evil.example@chatgpt.com/',
+    'javascript://chatgpt.com',
+    'ftp://chatgpt.com',
+    'https://unknown.example/',
+    'campaign',
+  ])('keeps an unmatched or invalid utm_source %s as campaign', (source) => {
+    expect(classify(source, 'https://www.google.com/')).toBe('campaign');
+  });
+
+  it.each([
     ['https://www.google.co.jp/', 'google'],
     ['https://www.google.com.hk/search', 'google'],
     ['https://google.de/', 'google'],

@@ -1,4 +1,5 @@
 import { apiUrl, lectorMode } from './api-base';
+import { afterAnalyticsEngagement } from './analytics-engagement';
 
 export interface ProductEventInput {
   event: string;
@@ -29,15 +30,23 @@ export function trackProductEvent(
 ): void {
   if (typeof window === 'undefined' || lectorMode() !== 'cloud') return;
   const path = options.anonymous ? '/api/product-analytics/public' : '/api/product-analytics';
-  try {
-    void fetch(apiUrl(path), {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: options.anonymous ? 'omit' : 'include',
-      body: JSON.stringify({ data, key: options.key ?? productEventKey() }),
-      keepalive: true,
-    }).catch(() => {});
-  } catch {
-    // Analytics may be unavailable while the product action still succeeds.
-  }
+  const key = options.key ?? productEventKey();
+  const send = () => {
+    try {
+      void fetch(apiUrl(path), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(options.anonymous ? { 'x-readfox-engaged': '1' } : {}),
+        },
+        credentials: options.anonymous ? 'omit' : 'include',
+        body: JSON.stringify({ data, key }),
+        keepalive: true,
+      }).catch(() => {});
+    } catch {
+      // Analytics may be unavailable while the product action still succeeds.
+    }
+  };
+  if (options.anonymous) afterAnalyticsEngagement(send);
+  else send();
 }

@@ -142,6 +142,10 @@ export default function ProductAnalytics() {
               : 'No completed maintenance run'}{' '}
             · {number.format(report.writeFailuresSinceStart)} write failures since server start
           </p>
+          <p className="text-xs text-muted-foreground">
+            Public visits require a visible page and user interaction. Known automation is excluded.
+            Historical source counts use the earlier definition.
+          </p>
           {(report.truncated.daily || report.truncated.search) && (
             <p role="status" className="text-sm text-muted-foreground">
               This range shows the latest 25,000 rows per data source. Select a shorter range for
@@ -151,7 +155,7 @@ export default function ProductAnalytics() {
           {totals.size > 0 ? (
             <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
               <StatCard
-                label="Public page views"
+                label="Engaged public page views"
                 value={number.format(totals.get('page_view') ?? 0)}
               />
               <StatCard

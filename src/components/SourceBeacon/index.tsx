@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import { apiUrl, isAuthRoute } from '@/lib/api-base';
+import { afterAnalyticsEngagement } from '@/lib/analytics-engagement';
 import { trackProductEvent } from '@/lib/product-analytics';
 import { useLectorMode } from '@/lib/use-env';
 import {
@@ -21,6 +22,25 @@ import {
 
 const RECENT_EXPOSURE_KEY = 'readfox-recent-public-exposure';
 const RECENT_EXPOSURE_MS = 30_000;
+const PENDING_VISIT_KEY = 'readfox-pending-source-visit';
+const pendingVisits = new WeakSet<Document>();
+
+function setPendingVisit(pending: boolean): void {
+  if (pending) pendingVisits.add(document);
+  else pendingVisits.delete(document);
+  try {
+    window.sessionStorage.setItem(PENDING_VISIT_KEY, pending ? 'pending' : 'sent');
+  } catch {}
+}
+
+function hasPendingVisit(): boolean {
+  if (pendingVisits.has(document)) return true;
+  try {
+    return window.sessionStorage.getItem(PENDING_VISIT_KEY) === 'pending';
+  } catch {
+    return false;
+  }
+}
 
 function claimExposure(bucket: string): boolean {
   try {
@@ -35,10 +55,6 @@ function claimExposure(bucket: string): boolean {
   return true;
 }
 
-/**
- * Counts the first visit of a browser to a public page in anonymous daily totals
- * (api/src/lib/source-counts.ts). A first-party cookie keeps later pages from counting.
- */
 export default function SourceBeacon() {
   const mode = useLectorMode();
   if (mode !== 'cloud') return null;
@@ -72,17 +88,24 @@ function CloudSourceBeacon() {
       // Without the cookie every page would count as a new first visit.
       if (hasSourceCookie(document.cookie)) {
         document.cookie = productCookieString(uiLanguage, campaign, secure);
-        void fetch(apiUrl('/api/source-count'), {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ source, lang }),
-          keepalive: true,
-        }).catch(() => {});
+        setPendingVisit(true);
       }
     }
 
-    if (page) {
-      const firstTouch = readFirstTouch(document.cookie);
+    const firstTouch = readFirstTouch(document.cookie);
+    return afterAnalyticsEngagement(() => {
+      if (hasPendingVisit() && firstTouch.source) {
+        setPendingVisit(false);
+        try {
+          void fetch(apiUrl('/api/source-count'), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'x-readfox-engaged': '1' },
+            body: JSON.stringify({ source: firstTouch.source, lang }),
+            keepalive: true,
+          }).catch(() => {});
+        } catch {}
+      }
+      if (!page) return;
       const entrySource = utmSource ? source : (firstTouch.source ?? source);
       const entryCampaign = campaign ?? firstTouch.campaign;
       const bucket = [
@@ -107,7 +130,7 @@ function CloudSourceBeacon() {
           { anonymous: true },
         );
       }
-    }
+    });
   }, [pathname, uiLanguage]);
 
   return null;
