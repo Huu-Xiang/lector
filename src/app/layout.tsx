@@ -19,6 +19,7 @@ import SourceBeacon from '@/components/SourceBeacon';
 import './globals.css';
 import NativeBridge from '@/components/NativeBridge';
 import NativePageTransition from '@/components/NativeBridge/NativePageTransition';
+import ServiceWorkerRegistrar from '@/components/ServiceWorkerRegistrar';
 import { isRtl } from '@/i18n/locales';
 import { pickMessages, SHELL_AND_PUBLIC_NAMESPACES, type MessageTree } from '@/i18n/namespaces';
 
@@ -155,6 +156,7 @@ export default async function RootLayout({
           </div>
           <SourceBeacon />
           <NativeBridge />
+          <ServiceWorkerRegistrar />
           {/* Move Sonner's focus hotkey off its Alt+T default — Alt+T toggles the
             translation on the Practice page. */}
           <Toaster theme="system" duration={5000} hotkey={['altKey', 'KeyN']} />

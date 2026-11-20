@@ -66,17 +66,38 @@ const DEFAULT_API_URL = 'http://localhost:3457';
 
 export type LectorMode = 'selfhost' | 'cloud';
 
+const LAST_MODE_STORAGE_KEY = 'readfox-last-mode';
+
 /**
  * Deployment mode (#242): 'selfhost' (the default, today's app) or 'cloud'
  * (the future managed offering). Injected the same way as API_URL —
- * `/__env.js` in a container, `process.env` on the server. Deliberately
- * fail-safe toward 'selfhost': anything unset or unrecognized reads as
- * selfhost so the client can never render cloud-only chrome by accident
- * (strict validation lives server-side in api/src/lib/config.ts).
+ * `/__env.js` in a container, `process.env` on the server.
+ *
+ * When online `/__env.js` is present, its value is persisted so a previously
+ * cloud origin never fails open to 'selfhost' if `/__env.js` is unreachable
+ * while offline in a PWA.
  */
 export function lectorMode(): LectorMode {
-  const raw = typeof window === 'undefined' ? process.env.LECTOR_MODE : window.__ENV__?.LECTOR_MODE;
-  return raw === 'cloud' ? 'cloud' : 'selfhost';
+  if (typeof window === 'undefined') {
+    return process.env.LECTOR_MODE === 'cloud' ? 'cloud' : 'selfhost';
+  }
+  const raw = window.__ENV__?.LECTOR_MODE;
+  if (raw === 'cloud' || raw === 'selfhost') {
+    try {
+      window.localStorage.setItem(LAST_MODE_STORAGE_KEY, raw);
+    } catch {
+      // ignore storage errors
+    }
+    return raw;
+  }
+  try {
+    if (window.localStorage.getItem(LAST_MODE_STORAGE_KEY) === 'cloud') {
+      return 'cloud';
+    }
+  } catch {
+    // ignore storage errors
+  }
+  return 'selfhost';
 }
 
 export function apiBase(): string {
@@ -165,6 +186,7 @@ export function bounceToLogin(): void {
   if (bouncedToLogin || typeof window === 'undefined') return;
   if (isAuthRoute(window.location.pathname)) return;
   bouncedToLogin = true;
+  void import('./offline/sync').then((m) => m.clearOfflineData()).catch(() => {});
   const returnPath = sanitizeAuthReturnPath(`${window.location.pathname}${window.location.search}`);
   window.location.replace(authHref(isNativeApp() ? '/welcome' : '/login', returnPath));
 }

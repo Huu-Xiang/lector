@@ -1,4 +1,5 @@
 import { apiFetch } from './api-base';
+import { setOfflineUser } from './offline/identity';
 
 export interface BootstrapUser {
   id: string;
@@ -52,6 +53,7 @@ export function fetchBootstrap(fetcher: typeof apiFetch = apiFetch): Promise<Boo
         return { ok: false, status: res.status };
       }
       const data = (await res.json()) as BootstrapPayload;
+      setOfflineUser(data.user?.id ?? 'local');
       const result: BootstrapResult = { ok: true, data };
       cachedResult = result;
       return result;
