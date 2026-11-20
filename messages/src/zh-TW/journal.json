@@ -266,6 +266,19 @@
       "info": "關於額度",
       "tip": "點這個圓圈，可以看到本月還剩多少 AI 額度。",
       "tipDismiss": "知道了"
+    },
+    "skipToMain": "跳至主要內容",
+    "error": {
+      "title": "頁面發生錯誤",
+      "body": "載入此頁面時發生了意外錯誤。",
+      "retry": "重試",
+      "backToLibrary": "返回書庫"
+    },
+    "notFound": {
+      "title": "找不到頁面",
+      "body": "你造訪的頁面不存在或已被移動。",
+      "backToLibrary": "返回書庫",
+      "freeBooks": "瀏覽免費書庫"
     }
   }
 }

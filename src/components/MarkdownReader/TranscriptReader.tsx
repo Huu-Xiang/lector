@@ -124,7 +124,7 @@ function TranscriptReader({
               aria-label={t('playFrom', { time: formatTimestamp(segment.start) })}
               className="mt-1 flex h-fit shrink-0 items-center gap-1 rounded-md px-2 py-1 font-mono text-xs text-muted-foreground tabular-nums transition-colors hover:bg-accent hover:text-foreground"
             >
-              <Play className="h-3 w-3 opacity-0 transition-opacity group-hover:opacity-100" />
+              <Play className="h-3 w-3 opacity-70 transition-opacity sm:opacity-0 sm:group-hover:opacity-100" />
               {formatTimestamp(segment.start)}
             </button>
             {/* <p> so the reader's drag-select phrase lookup (closest('p')) works. */}

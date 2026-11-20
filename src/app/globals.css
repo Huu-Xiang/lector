@@ -829,12 +829,37 @@ html[data-native-app] body {
   }
 }
 
+/* Shared mobile browser & PWA polish: eliminate double-tap delay, respect safe
+   areas (with viewport-fit=cover), and prevent iOS Safari zoom on <16px inputs. */
+html {
+  touch-action: manipulation;
+}
+
+.native-bottom-nav {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.app-bottom-spacer {
+  height: calc(4rem + env(safe-area-inset-bottom));
+}
+
+@media (hover: none) and (pointer: coarse) {
+  :is(input, textarea, select) {
+    font-size: max(16px, 1em);
+  }
+}
+
+@media (width < 64rem) {
+  [data-testid='translation-drawer'] {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
 /* `data-native-app` is set before paint by the script in layout.tsx; `data-native-tabbar`
    when the shell draws a UITabBar over the page. */
 html[data-native-app] {
   --app-bottom-bar: calc(4rem + env(safe-area-inset-bottom));
   -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
   /* The root size follows the iOS text size setting (17px at the default), so every rem
      scales with it. The shorthand resets line-height, which Tailwind's base sets to 1.5. */
   font: -apple-system-body;

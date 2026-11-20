@@ -22,14 +22,22 @@ export default function VocabRow({
 
   return (
     <tr
-      className="cursor-pointer border-b border-border transition-colors hover:bg-accent"
+      tabIndex={0}
+      className="cursor-pointer border-b border-border transition-colors hover:bg-accent focus-visible:bg-accent focus-visible:outline-none"
       onClick={() => onClick(entry)}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick(entry);
+        }
+      }}
     >
       {/* Checkbox */}
       <td className="w-10 px-2 py-3 sm:w-12 sm:px-4">
         <input
           type="checkbox"
           checked={isSelected}
+          aria-label={entry.text}
           onChange={(e) => {
             e.stopPropagation();
             onSelect(entry.id, e.target.checked);

@@ -19,8 +19,16 @@ export default function HistoryCard({
 
   return (
     <div
+      role="button"
+      tabIndex={0}
       onClick={() => onSelect(entry)}
-      className="cursor-pointer rounded-lg border border-border p-4 transition-colors hover:bg-accent"
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onSelect(entry);
+        }
+      }}
+      className="cursor-pointer rounded-lg border border-border p-4 transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
     >
       <div className="mb-2 flex items-center justify-between">
         <span className="text-sm font-medium text-foreground">
@@ -37,12 +45,14 @@ export default function HistoryCard({
             </span>
           )}
           <button
+            type="button"
             onClick={(e) => {
               e.stopPropagation();
               onDelete(entry.id);
             }}
-            className="text-muted-foreground transition-colors hover:text-destructive"
+            className="-m-1.5 rounded-md p-1.5 text-muted-foreground transition-colors hover:text-destructive"
             title={t('deleteEntry')}
+            aria-label={t('deleteEntry')}
           >
             <Trash2 className="h-4 w-4" />
           </button>

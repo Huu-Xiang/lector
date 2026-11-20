@@ -267,8 +267,16 @@ export default function RecommendedForYou({
     return (
       <li
         key={pick.key}
+        role="button"
+        tabIndex={0}
         onClick={() => void start(pick)}
-        className="flex cursor-pointer flex-col gap-3 rounded-xl border border-border bg-card p-4 transition-colors hover:border-primary sm:flex-row sm:items-start sm:justify-between"
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            void start(pick);
+          }
+        }}
+        className="flex cursor-pointer flex-col gap-3 rounded-xl border border-border bg-card p-4 transition-colors hover:border-primary focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none sm:flex-row sm:items-start sm:justify-between"
         data-testid={`recommend-${pick.key}`}
       >
         <div className="min-w-0">

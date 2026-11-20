@@ -500,6 +500,7 @@ export default function TranslationDrawer({
     <div
       data-testid="translation-drawer"
       aria-hidden={docked ? false : !isOpen}
+      inert={!isOpen}
       className={clsx(
         'flex flex-col border-border bg-popover print:hidden',
         nativeSheet && 'native-lookup-sheet',

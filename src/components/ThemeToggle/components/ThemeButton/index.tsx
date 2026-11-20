@@ -16,6 +16,8 @@ export default function ThemeButton({ icon: Icon, theme, value, onClick }: IThem
       type="button"
       onClick={handleOptionClicked}
       title={t(value)}
+      aria-label={t(value)}
+      aria-pressed={isActive}
       className={clsx(
         'rounded-md p-1.5 transition-colors',
         isActive

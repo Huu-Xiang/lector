@@ -24,7 +24,9 @@ export default async function AppLayout({
         <SessionOnly>
           <NavHeader />
         </SessionOnly>
-        <div className="min-w-0 flex-1">{children}</div>
+        <div id="main-content" className="min-w-0 flex-1">
+          {children}
+        </div>
         <SessionOnly>
           <ChatWidget />
         </SessionOnly>
