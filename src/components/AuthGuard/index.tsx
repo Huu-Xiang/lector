@@ -1,12 +1,15 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { bounceToLogin } from '@/lib/api-base';
-import { setActiveTenant } from '@/lib/language-cache';
+import { fetchBootstrap, peekBootstrap, resetBootstrapCache } from '@/lib/bootstrap';
+import { setActiveTenant, writeLanguageCache } from '@/lib/language-cache';
+import { setOfflineUser } from '@/lib/offline/identity';
 import { useLectorMode } from '@/lib/use-env';
 import { authClient, isAuthRoute } from '@/lib/auth-client';
+import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 
 /**
@@ -37,34 +40,118 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     );
   }
 
-  if (mode === 'selfhost') return <>{children}</>;
+  if (mode === 'selfhost') {
+    return <SelfhostPassThrough>{children}</SelfhostPassThrough>;
+  }
 
   return <CloudSessionGate>{children}</CloudSessionGate>;
 }
 
+function SelfhostPassThrough({ children }: { children: React.ReactNode }) {
+  useEffect(() => {
+    setOfflineUser('local');
+  }, []);
+  return <>{children}</>;
+}
+
 function CloudSessionGate({ children }: { children: React.ReactNode }) {
   const t = useTranslations('chrome.loading');
+  const te = useTranslations('chrome.error');
   const pathname = usePathname();
-  const { data: session, isPending } = authClient.useSession();
   const onAuthRoute = isAuthRoute(pathname);
+  const cached = peekBootstrap();
+  const [userId, setUserId] = useState<string | null>(
+    () => cached?.user?.id ?? (cached?.mode === 'cloud' ? 'local' : null),
+  );
+  const [resolved, setResolved] = useState<boolean>(() =>
+    Boolean(cached && (cached.user?.id || cached.mode === 'cloud')),
+  );
+  const [loadError, setLoadError] = useState(false);
+  const [attempt, setAttempt] = useState(0);
 
   // Set during render so gated children read the right namespace from their first render.
-  if (session) setActiveTenant(session.user.id);
+  if (userId) setActiveTenant(userId);
 
   useEffect(() => {
-    if (isPending || onAuthRoute || session) return;
-    // Shared idempotent hard redirect — a soft router.replace here races the
-    // 401 bounce from apiFetch (outside-guard components fetch on mount) and
-    // whichever navigation loses aborts (net::ERR_ABORTED).
-    bounceToLogin();
-  }, [isPending, onAuthRoute, session]);
+    if (onAuthRoute || resolved) return;
+    let cancelled = false;
+    fetchBootstrap().then(async (result) => {
+      if (cancelled) return;
+      if (result.ok && result.data.user?.id) {
+        setActiveTenant(result.data.user.id);
+        if (result.data.targetLanguage) {
+          writeLanguageCache(result.data.targetLanguage);
+        }
+        setUserId(result.data.user.id);
+        setResolved(true);
+        return;
+      }
+      if (result.ok && result.data.mode === 'cloud' && !result.data.user) {
+        // External-gate cloud mode (authRequired: false): pass through as local tenant.
+        setActiveTenant('local');
+        if (result.data.targetLanguage) {
+          writeLanguageCache(result.data.targetLanguage);
+        }
+        setUserId('local');
+        setResolved(true);
+        return;
+      }
+      if (!result.ok && result.status === 401) {
+        bounceToLogin();
+        return;
+      }
+      if (!result.ok && result.status === 404) {
+        // Rolling-deploy fallback when browser leads an older API without /api/bootstrap.
+        try {
+          const session = await authClient.getSession();
+          if (cancelled) return;
+          const uid = session.data?.user?.id;
+          if (uid) {
+            setActiveTenant(uid);
+            setOfflineUser(uid);
+            setUserId(uid);
+            setResolved(true);
+            return;
+          }
+          if (!session.error) {
+            bounceToLogin();
+            return;
+          }
+        } catch {
+          // fall through to retry UI
+        }
+      }
+      if (!cancelled) setLoadError(true);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [onAuthRoute, resolved, attempt]);
 
   // Auth pages own their inverse redirect (session → /) and render regardless.
   if (onAuthRoute) return <>{children}</>;
 
-  if (!session) {
+  if (loadError) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
+      <div className="flex min-h-dvh flex-col items-center justify-center gap-4 bg-background px-6 text-center">
+        <p className="text-sm text-muted-foreground">{te('body')}</p>
+        <Button
+          type="button"
+          onClick={() => {
+            resetBootstrapCache();
+            setLoadError(false);
+            setAttempt((n) => n + 1);
+          }}
+        >
+          {te('retry')}
+        </Button>
+      </div>
+    );
+  }
+
+  if (!resolved) {
+    return (
+      <div className="flex min-h-dvh items-center justify-center bg-background">
         <Spinner size="lg" label={t('session')} className="text-primary" />
       </div>
     );

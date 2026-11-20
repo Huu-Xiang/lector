@@ -76,7 +76,7 @@ export default function NativeTopBar() {
       <div className="native-toolbar grid min-h-11 w-full grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center px-2">
         <div className="flex items-center justify-start">
           {pathname === ME_TAB.href ? null : tab ? (
-            <LanguageSelector compact />
+            <LanguageSelector compact align="start" />
           ) : (
             <button
               type="button"

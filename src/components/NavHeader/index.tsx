@@ -156,8 +156,8 @@ export default function NavHeader() {
         </div>
       </aside>
 
-      {/* Mobile bottom nav — hidden on sm+ */}
-      {!(ipad && (hasOwnHeader(pathname) || isBareRoute(pathname))) && (
+      {/* Mobile bottom nav — hidden on sm+ and own-header routes like /read */}
+      {!(hasOwnHeader(pathname) || isBareRoute(pathname)) && (
         <nav className="native-bottom-nav fixed right-0 bottom-0 left-0 z-50 border-t border-border bg-card sm:hidden print:hidden">
           <div className="flex items-stretch">
             {bottomLinks.map((link) => {

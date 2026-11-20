@@ -223,6 +223,13 @@
       "jindallaekkot": "Try a few poems at a time. Repeated images and phrases help you read even when the poetic wording is unfamiliar.",
       "mannyeon-syeocheu": "Start with the schoolboy’s jokes. Classroom dialogue is easy to follow before the story shifts to a fire and an act of generosity.",
       "gohyang": "A conversation on a train leads to a memory of home. The short frame helps you follow the story when speakers use dialect."
-    }
+    },
+    "previewHint": "Tap any word to preview — sign up free for full AI context explanations and spaced repetition.",
+    "previewUnglossed": "Create a free account to get instant AI translations in context for every word in this book.",
+    "claimTitle": "Add this book to your library",
+    "claimBody": "We will switch your active language and open Chapter 1 right away.",
+    "claimConfirm": "Add to library & start reading",
+    "claimAdding": "Opening book…",
+    "claimBack": "Back to library"
   }
 }

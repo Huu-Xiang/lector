@@ -1,6 +1,6 @@
 import { test, expect, Page } from '@playwright/test';
 import { apiUrl } from './api';
-import { SETTINGS_KEYS } from '@/app/settings/constants';
+import { SETTINGS_KEYS } from '@/app/(app)/settings/constants';
 
 // Reader typography (#570). Three layers decide how a lesson is drawn: the
 // language pack, the reader's global setting, and the reader's per-language

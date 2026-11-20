@@ -13,18 +13,14 @@ import { getLocale, getMessages, getTranslations } from 'next-intl/server';
 import { Toaster } from 'sonner';
 import AuthGuard from '@/components/AuthGuard';
 import BillingGuard from '@/components/BillingGuard';
-import ChatWidget from '@/components/ChatWidget';
-import SessionOnly from '@/components/SessionOnly';
 import SetupGuard from '@/components/SetupGuard';
 import TimezoneSync from '@/components/TimezoneSync';
 import SourceBeacon from '@/components/SourceBeacon';
 import './globals.css';
-import NavHeader from '@/components/NavHeader';
-import PlanLimitPrompt from '@/components/PlanLimitPrompt';
-import AiDataNotice from '@/components/AiDataNotice';
 import NativeBridge from '@/components/NativeBridge';
-import NativePageTransition from '@/components/NativeBridge/NativePageTransition';
+import ServiceWorkerRegistrar from '@/components/ServiceWorkerRegistrar';
 import { isRtl } from '@/i18n/locales';
+import { pickMessages, SHELL_AND_PUBLIC_NAMESPACES, type MessageTree } from '@/i18n/namespaces';
 
 // Nunito is the UI/chrome font; Literata stays the reading body (issue #147 §2.1).
 // Script subsets beyond Latin are #289 Phase 1.1: Literata ships Cyrillic and
@@ -78,6 +74,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
+  viewportFit: 'cover',
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: '#f3eee3' },
     { media: '(prefers-color-scheme: dark)', color: '#17140f' },
@@ -89,8 +86,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const locale = await getLocale();
-  const messages = await getMessages();
+  const [locale, fullMessages] = await Promise.all([getLocale(), getMessages()]);
+  const publicMessages = pickMessages(fullMessages as MessageTree, SHELL_AND_PUBLIC_NAMESPACES);
   const beta = process.env.READFOX_BETA_NOTICE === '1';
   const t = beta ? await getTranslations('betaNotice') : null;
   return (
@@ -122,13 +119,9 @@ export default async function RootLayout({
       </head>
 
       <body
-        className={`${nunito.variable} ${literata.variable} ${chinese.variable} ${traditional.variable} ${japanese.variable} ${korean.variable} flex min-h-screen flex-col bg-background font-sans text-foreground antialiased sm:flex-row`}
+        className={`${nunito.variable} ${literata.variable} ${chinese.variable} ${traditional.variable} ${japanese.variable} ${korean.variable} flex min-h-dvh flex-col bg-background font-sans text-foreground antialiased`}
       >
-        <NextIntlClientProvider locale={locale} messages={messages}>
-          <SessionOnly>
-            <NavHeader />
-          </SessionOnly>
-
+        <NextIntlClientProvider locale={locale} messages={publicMessages}>
           <div className="min-w-0 flex-1">
             {t && (
               <aside
@@ -154,24 +147,24 @@ export default async function RootLayout({
             <AuthGuard>
               <BillingGuard>
                 <TimezoneSync />
-                <SetupGuard>
-                  <NativePageTransition>{children}</NativePageTransition>
-                </SetupGuard>
+                <SetupGuard>{children}</SetupGuard>
               </BillingGuard>
             </AuthGuard>
           </div>
-          <SessionOnly>
-            <ChatWidget />
-          </SessionOnly>
           <SourceBeacon />
-          <PlanLimitPrompt />
-          <AiDataNotice />
           <NativeBridge />
-          {/* Spacer for mobile bottom nav — invisible on sm+ */}
-          <div className="app-bottom-spacer h-16 sm:hidden print:hidden" aria-hidden="true" />
+          <ServiceWorkerRegistrar />
           {/* Move Sonner's focus hotkey off its Alt+T default — Alt+T toggles the
             translation on the Practice page. */}
-          <Toaster theme="system" duration={5000} hotkey={['altKey', 'KeyN']} />
+          <Toaster
+            theme="system"
+            duration={5000}
+            hotkey={['altKey', 'KeyN']}
+            mobileOffset={{
+              bottom: 'calc(var(--app-bottom-bar, 0px) + 12px)',
+              top: 'calc(env(safe-area-inset-top) + 12px)',
+            }}
+          />
         </NextIntlClientProvider>
       </body>
     </html>

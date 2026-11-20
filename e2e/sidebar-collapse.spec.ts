@@ -1,4 +1,4 @@
-import { SETTINGS_KEYS } from '@/app/settings/constants';
+import { SETTINGS_KEYS } from '@/app/(app)/settings/constants';
 import { test, expect } from '@playwright/test';
 
 test.describe('Sidebar collapse', () => {

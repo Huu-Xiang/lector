@@ -13,6 +13,18 @@ import * as Sentry from '@sentry/nextjs';
 // queue AFTER this module evaluates, so reading window.__ENV__ here at eval time
 // finds it undefined. Hence we DEFER init until the config lands — see below.
 
+export const DEFAULT_TRACES_SAMPLE_RATE = 0.1;
+
+/**
+ * Parse NEXT_PUBLIC_SENTRY_TRACES_SAMPLE_RATE. Uses parseFloat (not Number) so
+ * empty/unset falls back to DEFAULT_TRACES_SAMPLE_RATE while an explicit "0"
+ * still disables tracing cleanly.
+ */
+export function parseTracesSampleRate(raw: string | undefined): number {
+  const parsed = parseFloat(raw ?? '');
+  return Number.isFinite(parsed) ? parsed : DEFAULT_TRACES_SAMPLE_RATE;
+}
+
 let initialized = false;
 
 function initSentry(): boolean {
@@ -27,16 +39,7 @@ function initSentry(): boolean {
     dsn,
     environment: env?.SENTRY_ENVIRONMENT || undefined,
     integrations: [Sentry.browserTracingIntegration()],
-    // Full tracing on a low-traffic app. browserTracing samples page loads +
-    // navigations and — the load-bearing part for end-to-end traces —
-    // propagates sentry-trace/baggage onto the cross-origin apiFetch() calls.
-    // Finite rate from env (a deliberate 0 turns tracing OFF); empty/unset → full.
-    // parseFloat, not Number: Number("") is 0, which would silently disable tracing.
-    tracesSampleRate: Number.isFinite(
-      parseFloat(process.env.NEXT_PUBLIC_SENTRY_TRACES_SAMPLE_RATE ?? ''),
-    )
-      ? parseFloat(process.env.NEXT_PUBLIC_SENTRY_TRACES_SAMPLE_RATE ?? '')
-      : 1.0,
+    tracesSampleRate: parseTracesSampleRate(process.env.NEXT_PUBLIC_SENTRY_TRACES_SAMPLE_RATE),
     // Attach trace headers to the Hono API (a different origin — see
     // api-base.ts) and to any same-origin /api call, and nowhere else. Without
     // this the browser strips the headers and the trace dead-ends here instead

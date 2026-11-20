@@ -25,7 +25,7 @@ import { Button } from '@/components/ui/button';
 import WordCell from '@/components/WordCell';
 import ReaderArticle, { type ActiveReaderWord } from './ReaderArticle';
 import { ANNOTATION_MODES, type AnnotationMode } from './annotation';
-import { SETTINGS_KEYS } from '@/app/settings/constants';
+import { SETTINGS_KEYS } from '@/app/(app)/settings/constants';
 import TranscriptReader from './TranscriptReader';
 import YouTubePlayer, { type SeekTarget } from '@/components/YouTubePlayer';
 import type { TranscriptSegment, YouTubeSourceMeta } from '@/types';
@@ -411,11 +411,12 @@ export default function MarkdownReader({
   return (
     <div className="flex h-full flex-col bg-card print:block print:h-auto">
       {/* Header */}
-      <header className="flex items-center justify-between border-b border-border px-4 py-2 print:border-0 print:px-0">
+      <header className="flex items-center justify-between gap-1 border-b border-border px-2 py-1.5 sm:px-4 sm:py-2 print:border-0 print:px-0">
         <button
           onClick={onClose}
           disabled={isEditing}
-          className="flex items-center gap-2 rounded-lg px-3 py-2 text-muted-foreground transition-colors hover:bg-accent disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent print:hidden"
+          aria-label={t('back')}
+          className="flex min-h-11 min-w-11 shrink-0 items-center justify-center gap-2 rounded-lg text-muted-foreground transition-colors hover:bg-accent active:opacity-60 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent sm:px-3 print:hidden"
         >
           <ArrowLeft className="h-5 w-5" />
           <span className="hidden sm:inline">{t('back')}</span>
@@ -471,16 +472,16 @@ export default function MarkdownReader({
             </Button>
           </div>
         ) : (
-          <div className="flex items-center gap-2 print:hidden">
+          <div className="flex shrink-0 items-center gap-1 sm:gap-2 print:hidden">
             <DailyGoalBadge compact />
-            <div className="text-sm text-muted-foreground">{scrollPercentage}%</div>
+            <div className="hidden text-sm text-muted-foreground sm:block">{scrollPercentage}%</div>
             {supportsAnnotation && (
               <button
                 onClick={cycleAnnotationMode}
                 data-testid="annotation-mode-button"
                 title={t('pronunciation', { mode: t(`annotation.${annotationMode}`) })}
                 aria-label={t('pronunciation', { mode: t(`annotation.${annotationMode}`) })}
-                className={`flex items-center gap-1.5 rounded-lg p-2 transition-colors hover:bg-accent ${
+                className={`flex min-h-11 min-w-11 items-center justify-center gap-1.5 rounded-lg transition-colors hover:bg-accent active:opacity-60 sm:px-2 ${
                   annotationMode === 'off' ? 'text-muted-foreground/50' : 'text-muted-foreground'
                 }`}
               >
@@ -497,7 +498,7 @@ export default function MarkdownReader({
                 data-testid="edit-text-button"
                 title={t('editText')}
                 aria-label={t('editText')}
-                className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-accent"
+                className="flex min-h-11 min-w-11 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent active:opacity-60"
               >
                 <SquarePen className="h-5 w-5" />
               </button>
@@ -512,7 +513,7 @@ export default function MarkdownReader({
         onScroll={handleScroll}
         onMouseUp={handleMouseUp}
         onClick={handleBlankClick}
-        className="flex-1 overflow-auto print:block print:h-auto print:overflow-visible"
+        className="flex-1 overflow-auto overscroll-y-contain pb-[env(safe-area-inset-bottom)] print:block print:h-auto print:overflow-visible"
       >
         {isEditing ? (
           <div className="mx-auto max-w-[38em] px-4 py-8 sm:px-8 sm:py-12">

@@ -27,7 +27,7 @@ export default function LibraryViewToggle() {
           title={t(id)}
           onClick={() => setView(id)}
           data-testid={`library-view-${id}`}
-          className={`flex h-8 w-8 items-center justify-center rounded-md transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none sm:w-9 ${
+          className={`flex min-h-11 min-w-11 items-center justify-center rounded-md transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none active:opacity-60 sm:min-h-8 sm:min-w-9 ${
             view === id
               ? 'bg-primary text-primary-foreground'
               : 'text-muted-foreground hover:text-foreground'

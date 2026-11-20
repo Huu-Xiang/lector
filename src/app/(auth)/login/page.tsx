@@ -153,7 +153,7 @@ function LoginForm() {
             type="button"
             onClick={resendVerification}
             disabled={!!turnstileSiteKey() && !captchaToken}
-            className="mt-1 font-medium text-primary hover:underline disabled:opacity-50"
+            className="mt-1 inline-flex min-h-11 items-center font-medium text-primary hover:underline active:opacity-60 disabled:opacity-50"
           >
             {t('resend')}
           </button>
@@ -178,7 +178,7 @@ function LoginForm() {
           <Label htmlFor="password">{t('password')}</Label>
           <Link
             href={authHref('/reset-password', returnPath)}
-            className="text-xs text-primary hover:underline"
+            className="inline-flex min-h-11 items-center text-xs text-primary hover:underline active:opacity-60"
           >
             {t('forgot')}
           </Link>

@@ -2,11 +2,14 @@ import { describe, expect, it } from 'vitest';
 import {
   authHref,
   authReturnPathFromSearch,
+  claimBookFromSearch,
+  claimBookPath,
   paidPlanFromSearch,
   promoFromSearch,
   sanitizeAuthReturnPath,
   vocabReportResumeFromSearch,
 } from './auth-return';
+import { isAuthRoute } from './api-base';
 
 describe('sanitizeAuthReturnPath', () => {
   it('allows only the paid-plan picker and canonicalizes its known plans', () => {
@@ -79,6 +82,26 @@ describe('auth return helpers', () => {
     expect(authReturnPathFromSearch(href.slice(href.indexOf('?')))).toBe(
       '/subscribe?plan=plus&promo=PRODUCTHUNT',
     );
+  });
+
+  it('allows validated /claim-book return paths and rejects invalid slugs or languages', () => {
+    const claim = claimBookPath('fr', 'le-petit-prince');
+    expect(claim).toBe('/claim-book?book=le-petit-prince&lang=fr');
+    expect(sanitizeAuthReturnPath(claim)).toBe('/claim-book?book=le-petit-prince&lang=fr');
+    expect(sanitizeAuthReturnPath('/claim-book?lang=fr&book=le-petit-prince')).toBe(
+      '/claim-book?book=le-petit-prince&lang=fr',
+    );
+    expect(claimBookFromSearch('?book=le-petit-prince&lang=fr')).toEqual({
+      book: 'le-petit-prince',
+      lang: 'fr',
+    });
+
+    // Rejects invalid slugs, unknown languages, extra params, or oversized slugs
+    expect(sanitizeAuthReturnPath('/claim-book?book=../etc&lang=fr')).toBeNull();
+    expect(sanitizeAuthReturnPath(`/claim-book?book=${'a'.repeat(65)}&lang=fr`)).toBeNull();
+    expect(sanitizeAuthReturnPath('/claim-book?book=le-petit-prince&lang=xx')).toBeNull();
+    expect(sanitizeAuthReturnPath('/claim-book?book=le-petit-prince&lang=fr&extra=1')).toBeNull();
+    expect(isAuthRoute('/claim-book')).toBe(false);
   });
 });
 

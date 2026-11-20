@@ -14,7 +14,16 @@ import { useActiveLanguage, useScreenSize } from '@/utils/hooks';
 import { TranslationDrawerProps } from './types';
 import { wordStateColors } from './constants';
 import { LevelCaption } from './LevelCaption';
-import { ChevronRight, Ellipsis, RefreshCw, Sparkles, Volume2, X, Zap } from 'lucide-react';
+import {
+  ChevronLeft,
+  ChevronRight,
+  Ellipsis,
+  RefreshCw,
+  Sparkles,
+  Volume2,
+  X,
+  Zap,
+} from 'lucide-react';
 import TargetText from '@/components/TargetText';
 import NestedWordButton from './components/NestedWordButton';
 import Gloss from './components/Gloss';
@@ -86,7 +95,7 @@ export default function TranslationDrawer({
   const [previousOpen, setPreviousOpen] = useState(rawIsOpen);
   const moreButton = useRef<HTMLButtonElement>(null);
   const optionsHeading = useRef<HTMLHeadingElement>(null);
-  const nativeDrag = useNativeSheetDrag(nativeSheet && rawIsOpen);
+  const nativeDrag = useNativeSheetDrag(nativeSheet && rawIsOpen, onClose);
   if (rawIsOpen !== previousOpen) {
     setPreviousOpen(rawIsOpen);
     setActionsOpen(false);
@@ -485,7 +494,10 @@ export default function TranslationDrawer({
         {speakable && (
           <button
             onClick={handleSpeakSentence}
-            className="flex-shrink-0 rounded p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+            className={clsx(
+              'flex-shrink-0 rounded text-muted-foreground transition-colors hover:bg-accent hover:text-foreground',
+              compact ? 'grid size-11 place-items-center active:opacity-60' : 'p-1',
+            )}
             title={t('hearSentence')}
             aria-label={t('hearSentence')}
           >
@@ -500,13 +512,14 @@ export default function TranslationDrawer({
     <div
       data-testid="translation-drawer"
       aria-hidden={docked ? false : !isOpen}
+      inert={!docked && !isOpen}
       className={clsx(
         'flex flex-col border-border bg-popover print:hidden',
         nativeSheet && 'native-lookup-sheet',
         docked
           ? 'relative h-full w-full translate-x-0 border-l shadow-none'
           : [
-              'fixed z-50 shadow-2xl transition-transform duration-300 ease-out',
+              'fixed z-50 shadow-2xl transition-transform duration-300 ease-out dark:shadow-[0_-10px_32px_rgba(0,0,0,0.55)]',
               'inset-x-0 bottom-0 h-[var(--sheet-h)] rounded-t-2xl border-t',
               'lg:inset-x-auto lg:inset-y-0 lg:right-0 lg:h-auto lg:max-h-screen lg:w-96 lg:rounded-none lg:border-t-0 lg:border-l',
               isOpen
@@ -544,7 +557,7 @@ export default function TranslationDrawer({
               data-testid="translation-drawer-handle"
               aria-label={nativeDrag.expanded ? t('collapseSheet') : t('expandSheet')}
               aria-expanded={nativeDrag.expanded}
-              className="flex h-6 shrink-0 cursor-row-resize touch-none items-center justify-center focus-visible:outline focus-visible:outline-ring"
+              className="flex min-h-11 shrink-0 cursor-row-resize touch-none items-center justify-center focus-visible:outline focus-visible:outline-ring"
             >
               <span className="h-1.5 w-10 rounded-full bg-border" />
             </button>
@@ -739,7 +752,10 @@ export default function TranslationDrawer({
                     {speakable && (
                       <button
                         onClick={handleSpeakSentence}
-                        className="shrink-0 rounded p-1 text-muted-foreground hover:bg-accent hover:text-foreground"
+                        className={clsx(
+                          'shrink-0 rounded text-muted-foreground hover:bg-accent hover:text-foreground',
+                          compact ? 'grid size-11 place-items-center active:opacity-60' : 'p-1',
+                        )}
                         aria-label={t('hearSentence')}
                       >
                         <Volume2 className="size-4" />
@@ -748,7 +764,12 @@ export default function TranslationDrawer({
                   </div>
                   {(hasRichEntry || fallbackTranslation) && (
                     <details className="group mt-3">
-                      <summary className="flex cursor-pointer list-none items-center gap-1 text-xs font-medium text-muted-foreground hover:text-foreground">
+                      <summary
+                        className={clsx(
+                          'flex cursor-pointer list-none items-center gap-1 text-xs font-medium text-muted-foreground hover:text-foreground',
+                          compact && 'min-h-11',
+                        )}
+                      >
                         <ChevronRight className="h-3 w-3 transition-transform group-open:rotate-90" />
                         {hasRichEntry
                           ? t('showDictionary', { count: senses.length })
@@ -835,7 +856,10 @@ export default function TranslationDrawer({
                 !isEnriching && (
                   <button
                     onClick={onEnrich}
-                    className="mt-3 ml-2 inline-flex items-center gap-1.5 rounded-md bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                    className={clsx(
+                      'mt-3 ml-2 inline-flex items-center gap-1.5 rounded-md bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground',
+                      compact && 'min-h-11 px-3',
+                    )}
                     title={t('enrichTitle')}
                   >
                     <Sparkles className="h-3 w-3" />
@@ -994,7 +1018,10 @@ export default function TranslationDrawer({
                         {total > COLLAPSED_COUNT && (
                           <button
                             onClick={() => setRelatedExpanded((v) => !v)}
-                            className="mt-2 text-xs font-medium text-primary transition-colors hover:text-[var(--primary-text)]"
+                            className={clsx(
+                              'mt-2 inline-flex items-center text-xs font-medium text-primary transition-colors hover:text-[var(--primary-text)]',
+                              compact && 'min-h-11',
+                            )}
                           >
                             {relatedExpanded ? t('showFewer') : t('showAll', { count: total })}
                             {!relatedExpanded && hiddenCount > 0 && (
@@ -1093,7 +1120,11 @@ export default function TranslationDrawer({
                       if (actionsOpen) moreButton.current?.focus();
                     }}
                   >
-                    {actionsOpen ? <X aria-hidden="true" /> : <Ellipsis aria-hidden="true" />}
+                    {actionsOpen ? (
+                      <ChevronLeft aria-hidden="true" />
+                    ) : (
+                      <Ellipsis aria-hidden="true" />
+                    )}
                   </Button>
                 )}
               </div>

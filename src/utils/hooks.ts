@@ -21,7 +21,7 @@ import {
 import type { ProseStyleSettings } from '@/lib/prose-style';
 import { applyTheme, getEffectiveTheme } from './theme';
 import { Theme } from '@/types/theme';
-import { SETTINGS_KEYS } from '@/app/settings/constants';
+import { SETTINGS_KEYS } from '@/app/(app)/settings/constants';
 
 export function useIsDark() {
   const [isDark, setIsDark] = useState(true);

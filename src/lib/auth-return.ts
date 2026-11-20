@@ -1,12 +1,19 @@
 import { isVocabReportAttemptId } from '../../languages/en/vocab-report';
 
+import { isPublicBookLanguage, type PublicBookLanguage } from './public-book-languages';
+
 export type PaidPlan = 'cloud' | 'plus' | 'max';
 
 const SUBSCRIBE_PATH = '/subscribe';
 export const VOCAB_REPORT_HISTORY_PATH = '/vocab-test/history';
 const VOCAB_TEST_PATH = '/vocab-test';
+const CLAIM_BOOK_PATH = '/claim-book';
 const SAFE_ORIGIN = 'https://app.lector.invalid';
-const ALLOWED_PARAMS = new Set(['plan', 'promo']);
+const ALLOWED_SUBSCRIBE_PARAMS = new Set(['plan', 'promo']);
+const ALLOWED_CLAIM_PARAMS = new Set(['book', 'lang']);
+
+/** Matches api/src/lib/library-content.ts slug pattern to bound URL length. */
+const BOOK_SLUG_PATTERN = /^[a-z0-9][a-z0-9-]{0,63}$/;
 
 /**
  * Paddle's grammar for a redeemable code: letters and numbers, 32 maximum.
@@ -78,6 +85,27 @@ export function readfoxBetaLoginPath(query: string): string | null {
   return `/beta-login?${params.toString()}`;
 }
 
+/** Build a canonical `/claim-book` path for a public book, or null if invalid. */
+export function claimBookPath(
+  lang: string | null | undefined,
+  slug: string | null | undefined,
+): string | null {
+  if (!isPublicBookLanguage(lang) || !slug || !BOOK_SLUG_PATTERN.test(slug)) return null;
+  const params = new URLSearchParams({ book: slug, lang });
+  return `${CLAIM_BOOK_PATH}?${params.toString()}`;
+}
+
+/** Parse validated book/lang claim parameters from a query string. */
+export function claimBookFromSearch(
+  search: string,
+): { book: string; lang: PublicBookLanguage } | null {
+  const params = new URLSearchParams(search);
+  const book = params.get('book');
+  const lang = params.get('lang');
+  if (!book || !BOOK_SLUG_PATTERN.test(book) || !isPublicBookLanguage(lang)) return null;
+  return { book, lang };
+}
+
 /** Return a canonical allowlisted in-app destination after auth. */
 export function sanitizeAuthReturnPath(value: string | null | undefined): string | null {
   if (!value || !value.startsWith('/') || value.startsWith('//')) return null;
@@ -100,12 +128,21 @@ export function sanitizeAuthReturnPath(value: string | null | undefined): string
   if (url.pathname === VOCAB_REPORT_HISTORY_PATH && url.search === '') {
     return VOCAB_REPORT_HISTORY_PATH;
   }
+  if (url.pathname === CLAIM_BOOK_PATH) {
+    for (const key of params.keys()) {
+      if (!ALLOWED_CLAIM_PARAMS.has(key)) return null;
+      if (params.getAll(key).length > 1) return null;
+    }
+    const book = params.get('book');
+    const lang = params.get('lang');
+    return claimBookPath(lang, book);
+  }
   if (url.pathname !== SUBSCRIBE_PATH) return null;
   // An unrecognised parameter, or a repeated one, rejects the whole
   // destination. Silently dropping it would let a crafted link look preserved
   // while it quietly lost the reader's coupon.
   for (const key of params.keys()) {
-    if (!ALLOWED_PARAMS.has(key)) return null;
+    if (!ALLOWED_SUBSCRIBE_PARAMS.has(key)) return null;
     if (params.getAll(key).length > 1) return null;
   }
 

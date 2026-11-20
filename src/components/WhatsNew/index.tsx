@@ -56,11 +56,18 @@ function WhatsNewPanel({
         title={t('button')}
         data-testid="whats-new-button"
         className={cn(
-          'relative flex items-center rounded-lg text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground',
-          iconOnly ? 'justify-center p-2' : 'w-full gap-3 px-3 py-2',
+          'relative flex items-center rounded-lg text-sm font-medium transition-colors',
+          variant === 'topbar'
+            ? 'size-11 justify-center text-foreground active:opacity-60'
+            : iconOnly
+              ? 'justify-center p-2 text-muted-foreground hover:bg-accent hover:text-foreground'
+              : 'w-full gap-3 px-3 py-2 text-muted-foreground hover:bg-accent hover:text-foreground',
         )}
       >
-        <Megaphone className="h-4 w-4 shrink-0" aria-hidden="true" />
+        <Megaphone
+          className={variant === 'topbar' ? 'size-[22px] shrink-0' : 'h-4 w-4 shrink-0'}
+          aria-hidden="true"
+        />
         {!iconOnly && <span>{t('button')}</span>}
         {unseen > 0 && (
           <span

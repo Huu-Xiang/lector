@@ -2,11 +2,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { translationFor } from './display-language';
 import { readingMinutes } from './reading-time';
+import { PUBLIC_BOOK_LANGUAGES, type PublicBookLanguage } from './public-book-languages';
 
 /** Server-only: reads the free library from `languages/<code>/content/library`. */
 
-export const PUBLIC_BOOK_LANGUAGES = ['en', 'fr', 'es', 'zh', 'ko'] as const;
-export type PublicBookLanguage = (typeof PUBLIC_BOOK_LANGUAGES)[number];
+export { PUBLIC_BOOK_LANGUAGES, type PublicBookLanguage };
 
 export const LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'] as const;
 

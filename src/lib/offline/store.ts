@@ -54,7 +54,7 @@ export function parseOfflineState(raw: string | null | undefined): OfflineState 
 }
 
 export function cacheLesson(state: OfflineState, lesson: OfflineLesson): OfflineState {
-  const others = state.lessons.filter((l) => !(l.userId === lesson.userId && l.id === lesson.id));
+  const others = state.lessons.filter((l) => l.userId === lesson.userId && l.id !== lesson.id);
   return { ...state, lessons: [lesson, ...others].slice(0, MAX_CACHED_LESSONS) };
 }
 

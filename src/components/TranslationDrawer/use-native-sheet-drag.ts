@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState, type PointerEvent } from 'react';
-import { applySheetVh, readStoredSheetVh, SHEET_VH_DEFAULT } from './sheet-height';
+import {
+  applySheetVh,
+  readStoredSheetVh,
+  SHEET_VH_CLOSE_BELOW,
+  SHEET_VH_DEFAULT,
+} from './sheet-height';
 
 export const NATIVE_SHEET_DEFAULT = 34;
 const MIN_HEIGHT = 25;
@@ -10,7 +15,7 @@ function bound(height: number) {
   return Math.min(MAX_HEIGHT, Math.max(MIN_HEIGHT, height));
 }
 
-export function useNativeSheetDrag(active: boolean) {
+export function useNativeSheetDrag(active: boolean, onClose?: () => void) {
   const [settledHeight, setSettledHeight] = useState(NATIVE_SHEET_DEFAULT);
   const [wasActive, setWasActive] = useState(active);
   if (active !== wasActive) {
@@ -23,6 +28,7 @@ export function useNativeSheetDrag(active: boolean) {
     start: number;
     initial: number;
     viewport: number;
+    rawNext: number;
     next: number;
     frame: number;
     moved: boolean;
@@ -40,6 +46,12 @@ export function useNativeSheetDrag(active: boolean) {
     if (drag.frame) cancelAnimationFrame(drag.frame);
     gesture.current = null;
     ignoreClick.current = drag.moved;
+    if (!cancel && drag.moved && drag.rawNext < SHEET_VH_CLOSE_BELOW && onClose) {
+      update(NATIVE_SHEET_DEFAULT);
+      setSettledHeight(NATIVE_SHEET_DEFAULT);
+      onClose();
+      return;
+    }
     const next = cancel ? drag.initial : drag.next;
     update(next);
     setSettledHeight(next);
@@ -79,6 +91,7 @@ export function useNativeSheetDrag(active: boolean) {
           start: event.clientY,
           initial: height.current,
           viewport: window.innerHeight,
+          rawNext: height.current,
           next: height.current,
           frame: 0,
           moved: false,
@@ -90,10 +103,12 @@ export function useNativeSheetDrag(active: boolean) {
         const delta = drag.start - event.clientY;
         drag.moved ||= Math.abs(delta) >= TAP_DISTANCE;
         if (!drag.moved) return;
-        drag.next = bound(drag.initial + (delta / drag.viewport) * 100);
+        drag.rawNext = drag.initial + (delta / drag.viewport) * 100;
+        drag.next = bound(drag.rawNext);
+        const visualHeight = Math.min(MAX_HEIGHT, Math.max(8, drag.rawNext));
         if (drag.frame) return;
         drag.frame = requestAnimationFrame(() => {
-          update(drag.next);
+          update(visualHeight);
           drag.frame = 0;
         });
       },

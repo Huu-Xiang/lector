@@ -266,6 +266,19 @@
       "info": "About this allowance",
       "tip": "Tap this circle to see how much AI you have left this month.",
       "tipDismiss": "Got it"
+    },
+    "skipToMain": "Skip to main content",
+    "error": {
+      "title": "Something went wrong",
+      "body": "An unexpected error occurred while loading this page.",
+      "retry": "Try again",
+      "backToLibrary": "Back to library"
+    },
+    "notFound": {
+      "title": "Page not found",
+      "body": "The page you are looking for does not exist or has moved.",
+      "backToLibrary": "Back to library",
+      "freeBooks": "Browse free books"
     }
   }
 }

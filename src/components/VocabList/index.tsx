@@ -5,7 +5,7 @@ import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import type { WordState } from '@/lib/data-layer';
 import { getPageCount, clampPage, paginate } from '@/lib/pagination';
-import { SETTINGS_KEYS } from '@/app/settings/constants';
+import { SETTINGS_KEYS } from '@/app/(app)/settings/constants';
 import VocabRow from './components/VocabRow';
 import PaginationControls from './components/PaginationControls';
 import { stateFilters, stateOrder, DEFAULT_PAGE_SIZE, PAGE_SIZE_OPTIONS } from './constants';
@@ -309,7 +309,7 @@ export default function VocabList({
 
         {/* State Filter */}
         <Select
-          wrapperClassName="inline-block"
+          wrapperClassName="inline-block max-w-full min-w-0"
           value={stateFilter}
           onChange={(e) => setStateFilter(e.target.value as WordState | 'all' | 'learning')}
         >
@@ -324,7 +324,7 @@ export default function VocabList({
 
         {/* Book Filter */}
         <Select
-          wrapperClassName="inline-block"
+          wrapperClassName="inline-block max-w-full min-w-0"
           value={bookFilter}
           onChange={(e) => setBookFilter(e.target.value)}
         >
@@ -338,90 +338,96 @@ export default function VocabList({
       </div>
 
       {/* Bulk Actions */}
-      <div className="flex flex-wrap items-center gap-3">
-        <Button onClick={openExportModal} disabled={!someSelected || isExporting}>
-          {isExporting ? (
+      {(someSelected || onSyncWithAnki) && (
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+          {someSelected && (
             <>
-              <Loader2 className="h-4 w-4 animate-spin" />
-              {t('exporting')}
-            </>
-          ) : (
-            <>
-              <Upload className="h-4 w-4" />
-              {t('exportToAnki', { count: selectedIds.size })}
+              <Button onClick={openExportModal} disabled={isExporting}>
+                {isExporting ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    {t('exporting')}
+                  </>
+                ) : (
+                  <>
+                    <Upload className="h-4 w-4" />
+                    {t('exportToAnki', { count: selectedIds.size })}
+                  </>
+                )}
+              </Button>
+
+              <Button onClick={handleMarkAsKnown} disabled={isMarkingKnown}>
+                {isMarkingKnown ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    {t('updating')}
+                  </>
+                ) : (
+                  <>
+                    <Check className="h-4 w-4" />
+                    {t('markAsKnown', { count: selectedIds.size })}
+                  </>
+                )}
+              </Button>
+              <Button
+                onClick={handleBulkDeleteButtonPressed}
+                variant="destructive"
+                disabled={isDeleting}
+              >
+                {isDeleting ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    {t('deleting')}
+                  </>
+                ) : (
+                  <>
+                    <Trash className="h-4 w-4" />
+                    {t('delete', { count: selectedIds.size })}
+                  </>
+                )}
+              </Button>
             </>
           )}
-        </Button>
 
-        <Button onClick={handleMarkAsKnown} disabled={!someSelected || isMarkingKnown}>
-          {isMarkingKnown ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" />
-              {t('updating')}
-            </>
-          ) : (
-            <>
-              <Check className="h-4 w-4" />
-              {t('markAsKnown', { count: selectedIds.size })}
-            </>
-          )}
-        </Button>
-        <Button
-          onClick={handleBulkDeleteButtonPressed}
-          variant="destructive"
-          disabled={!someSelected || isDeleting}
-        >
-          {isDeleting ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" />
-              {t('deleting')}
-            </>
-          ) : (
-            <>
-              <Trash className="h-4 w-4" />
-              {t('delete', { count: selectedIds.size })}
-            </>
-          )}
-        </Button>
+          <div className="flex-1" />
 
-        <div className="flex-1" />
-
-        {onSyncWithAnki && (
-          <div className="relative">
-            <Button
-              onClick={handleSyncWithAnki}
-              disabled={isSyncing}
-              className={
-                showAnkiOnboardingTip
-                  ? 'relative z-[60] ring-2 ring-[var(--gold-strong)] ring-offset-2 ring-offset-background'
-                  : undefined
-              }
-              data-testid="sync-with-anki"
-            >
-              {isSyncing ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  {t('syncing')}
-                </>
-              ) : (
-                <>
-                  <RefreshCw className="h-4 w-4" />
-                  {t('syncWithAnki')}
-                </>
+          {onSyncWithAnki && (
+            <div className="relative">
+              <Button
+                onClick={handleSyncWithAnki}
+                disabled={isSyncing}
+                className={
+                  showAnkiOnboardingTip
+                    ? 'relative z-[60] ring-2 ring-[var(--gold-strong)] ring-offset-2 ring-offset-background'
+                    : undefined
+                }
+                data-testid="sync-with-anki"
+              >
+                {isSyncing ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    {t('syncing')}
+                  </>
+                ) : (
+                  <>
+                    <RefreshCw className="h-4 w-4" />
+                    {t('syncWithAnki')}
+                  </>
+                )}
+              </Button>
+              {showAnkiOnboardingTip && onAnkiOnboardingTipDone && (
+                <OnboardingTip
+                  title={t('ankiTip.title')}
+                  body={t('ankiTip.body')}
+                  onDismiss={onAnkiOnboardingTipDone}
+                  testId="post-onboarding-anki-tip"
+                  className="absolute top-[calc(100%+0.75rem)] right-0"
+                />
               )}
-            </Button>
-            {showAnkiOnboardingTip && onAnkiOnboardingTipDone && (
-              <OnboardingTip
-                title={t('ankiTip.title')}
-                body={t('ankiTip.body')}
-                onDismiss={onAnkiOnboardingTipDone}
-                testId="post-onboarding-anki-tip"
-                className="absolute top-[calc(100%+0.75rem)] right-0"
-              />
-            )}
-          </div>
-        )}
-      </div>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Results count — the filtered total (the page footer shows the visible
           range). The page count itself is paginated below. */}
@@ -440,13 +446,15 @@ export default function VocabList({
         <table className="w-full text-left">
           <thead className="bg-muted">
             <tr>
-              <th className="w-10 px-2 py-3 sm:w-12 sm:px-4">
-                <input
-                  type="checkbox"
-                  checked={allSelected}
-                  onChange={(e) => handleSelectAll(e.target.checked)}
-                  className="h-4 w-4 rounded border-input text-primary focus:ring-ring"
-                />
+              <th className="w-11 px-1 py-1 sm:w-12 sm:px-4 sm:py-3">
+                <label className="flex size-11 cursor-pointer items-center justify-center sm:size-auto">
+                  <input
+                    type="checkbox"
+                    checked={allSelected}
+                    onChange={(e) => handleSelectAll(e.target.checked)}
+                    className="h-4 w-4 rounded border-input text-primary focus:ring-ring"
+                  />
+                </label>
               </th>
               <th
                 className="cursor-pointer px-2 py-3 text-sm font-semibold whitespace-nowrap text-foreground hover:text-foreground sm:px-4"
@@ -466,7 +474,7 @@ export default function VocabList({
                 <SortIndicator field="state" />
               </th>
               <th
-                className="cursor-pointer px-2 py-3 text-sm font-semibold whitespace-nowrap text-foreground hover:text-foreground sm:px-4"
+                className="hidden cursor-pointer px-2 py-3 text-sm font-semibold whitespace-nowrap text-foreground hover:text-foreground sm:px-4 md:table-cell"
                 onClick={() => handleSort('bookId')}
               >
                 {t('columns.source')}

@@ -1,9 +1,22 @@
+const OFFLINE_USER_STORAGE_KEY = 'readfox-offline-user';
+
 let current: string | null = null;
 const waiting = new Set<(userId: string) => void>();
 
-/** The signed-in account id, set by NativeBridge; the offline cache tags every entry with it. */
+/** The signed-in account id (or 'local' in selfhost); tags every offline entry. */
 export function setOfflineUser(userId: string | null): void {
   current = userId;
+  if (typeof window !== 'undefined') {
+    try {
+      if (userId) {
+        window.localStorage.setItem(OFFLINE_USER_STORAGE_KEY, userId);
+      } else {
+        window.localStorage.removeItem(OFFLINE_USER_STORAGE_KEY);
+      }
+    } catch {
+      // Storage blocked (private browsing)
+    }
+  }
   if (userId) {
     waiting.forEach((resolve) => resolve(userId));
     waiting.clear();

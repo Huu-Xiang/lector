@@ -3,14 +3,17 @@
 import {
   Fragment,
   cloneElement,
+  createContext,
   isValidElement,
   memo,
+  useContext,
+  useMemo,
   type ReactElement,
   type ReactNode,
 } from 'react';
 import { ExternalLink } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import ReactMarkdown from 'react-markdown';
+import ReactMarkdown, { type Components } from 'react-markdown';
 import remarkBreaks from 'remark-breaks';
 import type { LanguageConfig, WordSegmentation } from '@/lib/languages';
 import { foldWord, lookupByVocabKeys, splitSentences, vocabKeys } from '@/lib/languages';
@@ -248,6 +251,73 @@ const ReaderBlock = memo(function ReaderBlock({
   );
 }, readerBlockPropsEqual);
 
+type ReaderBlockSharedProps = Omit<
+  ReaderBlockProps,
+  'as' | 'className' | 'children' | 'blockId'
+> & {
+  title?: string;
+};
+
+const ReaderBlockContext = createContext<ReaderBlockSharedProps | null>(null);
+
+const REMARK_PLUGINS = [remarkBreaks];
+
+function createBlockComponent(as: ReaderBlockProps['as'], className?: string) {
+  return function ContextualReaderBlock({
+    node,
+    children,
+  }: {
+    node?: TextNode & { position?: { start?: { offset?: number } } };
+    children?: ReactNode;
+  }) {
+    const shared = useContext(ReaderBlockContext);
+    if (!shared) return null;
+    if (
+      as === 'h1' &&
+      node?.position?.start?.offset === 0 &&
+      shared.title &&
+      nodeText(node) === shared.title.trim()
+    ) {
+      return null;
+    }
+    const { title: _title, ...blockProps } = shared;
+    void _title;
+    return (
+      <ReaderBlock
+        as={as}
+        className={className}
+        blockId={node?.position?.start?.offset ?? 0}
+        {...blockProps}
+      >
+        {children}
+      </ReaderBlock>
+    );
+  };
+}
+
+/** Module-level component map so react-markdown keeps stable element types across renders. */
+export const READER_MARKDOWN_COMPONENTS: Components = {
+  h1: createBlockComponent('h1', 'mt-8 mb-4 font-sans text-3xl font-extrabold first:mt-0'),
+  h2: createBlockComponent('h2', 'mt-8 mb-3 font-sans text-2xl font-bold first:mt-0'),
+  h3: createBlockComponent('h3', 'mt-6 mb-2 font-sans text-xl font-bold first:mt-0'),
+  h4: createBlockComponent('h4', 'mt-5 mb-2 font-sans text-lg font-bold first:mt-0'),
+  h5: createBlockComponent('h5', 'mt-5 mb-2 font-sans text-base font-bold first:mt-0'),
+  h6: createBlockComponent('h6', 'mt-5 mb-2 font-sans text-sm font-bold uppercase first:mt-0'),
+  p: createBlockComponent('p', 'my-5'),
+  ul: ({ children }) => <ul className="my-5 list-disc space-y-2 pl-6">{children}</ul>,
+  ol: ({ children }) => <ol className="my-5 list-decimal space-y-2 pl-6">{children}</ol>,
+  li: createBlockComponent('li'),
+  blockquote: ({ children }) => (
+    <blockquote className="my-6 border-l-4 border-border pl-4 text-foreground/75 italic">
+      {children}
+    </blockquote>
+  ),
+  strong: ({ children }) => <strong className="font-bold">{children}</strong>,
+  em: ({ children }) => <em className="italic">{children}</em>,
+  a: ({ href, children }) => <LessonLink href={href}>{children}</LessonLink>,
+  hr: () => <hr className="my-8 border-border" />,
+};
+
 function ReaderArticle({
   content,
   title,
@@ -263,19 +333,45 @@ function ReaderArticle({
   onActivateWord,
   onClearPhrase,
 }: ReaderArticleProps) {
-  const blockProps = {
-    contentVersion: content,
-    pack,
-    segmentation,
-    knownWordsMap,
-    readings,
-    annotationMode,
-    highlightedPhrase,
-    activeWord,
-    onWordClick,
-    onActivateWord,
-    onClearPhrase,
-  };
+  const blockProps = useMemo<ReaderBlockSharedProps>(
+    () => ({
+      contentVersion: content,
+      title,
+      pack,
+      segmentation,
+      knownWordsMap,
+      readings,
+      annotationMode,
+      highlightedPhrase,
+      activeWord,
+      onWordClick,
+      onActivateWord,
+      onClearPhrase,
+    }),
+    [
+      content,
+      title,
+      pack,
+      segmentation,
+      knownWordsMap,
+      readings,
+      annotationMode,
+      highlightedPhrase,
+      activeWord,
+      onWordClick,
+      onActivateWord,
+      onClearPhrase,
+    ],
+  );
+
+  const markdownTree = useMemo(
+    () => (
+      <ReactMarkdown remarkPlugins={REMARK_PLUGINS} components={READER_MARKDOWN_COMPONENTS}>
+        {content}
+      </ReactMarkdown>
+    ),
+    [content],
+  );
 
   const wrapClass = readerWrapClass(pack);
 
@@ -299,102 +395,7 @@ function ReaderArticle({
         ...proseStyleVars(prose, pack),
       }}
     >
-      <ReactMarkdown
-        remarkPlugins={[remarkBreaks]}
-        components={{
-          h1: ({ node, children }) =>
-            node?.position?.start?.offset === 0 &&
-            title &&
-            nodeText(node) === title.trim() ? null : (
-              <ReaderBlock
-                as="h1"
-                className="mt-8 mb-4 font-sans text-3xl font-extrabold first:mt-0"
-                blockId={node?.position?.start?.offset ?? 0}
-                {...blockProps}
-              >
-                {children}
-              </ReaderBlock>
-            ),
-          h2: ({ node, children }) => (
-            <ReaderBlock
-              as="h2"
-              className="mt-8 mb-3 font-sans text-2xl font-bold first:mt-0"
-              blockId={node?.position?.start?.offset ?? 0}
-              {...blockProps}
-            >
-              {children}
-            </ReaderBlock>
-          ),
-          h3: ({ node, children }) => (
-            <ReaderBlock
-              as="h3"
-              className="mt-6 mb-2 font-sans text-xl font-bold first:mt-0"
-              blockId={node?.position?.start?.offset ?? 0}
-              {...blockProps}
-            >
-              {children}
-            </ReaderBlock>
-          ),
-          h4: ({ node, children }) => (
-            <ReaderBlock
-              as="h4"
-              className="mt-5 mb-2 font-sans text-lg font-bold first:mt-0"
-              blockId={node?.position?.start?.offset ?? 0}
-              {...blockProps}
-            >
-              {children}
-            </ReaderBlock>
-          ),
-          h5: ({ node, children }) => (
-            <ReaderBlock
-              as="h5"
-              className="mt-5 mb-2 font-sans text-base font-bold first:mt-0"
-              blockId={node?.position?.start?.offset ?? 0}
-              {...blockProps}
-            >
-              {children}
-            </ReaderBlock>
-          ),
-          h6: ({ node, children }) => (
-            <ReaderBlock
-              as="h6"
-              className="mt-5 mb-2 font-sans text-sm font-bold uppercase first:mt-0"
-              blockId={node?.position?.start?.offset ?? 0}
-              {...blockProps}
-            >
-              {children}
-            </ReaderBlock>
-          ),
-          p: ({ node, children }) => (
-            <ReaderBlock
-              as="p"
-              className="my-5"
-              blockId={node?.position?.start?.offset ?? 0}
-              {...blockProps}
-            >
-              {children}
-            </ReaderBlock>
-          ),
-          ul: ({ children }) => <ul className="my-5 list-disc space-y-2 pl-6">{children}</ul>,
-          ol: ({ children }) => <ol className="my-5 list-decimal space-y-2 pl-6">{children}</ol>,
-          li: ({ node, children }) => (
-            <ReaderBlock as="li" blockId={node?.position?.start?.offset ?? 0} {...blockProps}>
-              {children}
-            </ReaderBlock>
-          ),
-          blockquote: ({ children }) => (
-            <blockquote className="my-6 border-l-4 border-border pl-4 text-foreground/75 italic">
-              {children}
-            </blockquote>
-          ),
-          strong: ({ children }) => <strong className="font-bold">{children}</strong>,
-          em: ({ children }) => <em className="italic">{children}</em>,
-          a: ({ href, children }) => <LessonLink href={href}>{children}</LessonLink>,
-          hr: () => <hr className="my-8 border-border" />,
-        }}
-      >
-        {content}
-      </ReactMarkdown>
+      <ReaderBlockContext.Provider value={blockProps}>{markdownTree}</ReaderBlockContext.Provider>
     </article>
   );
 }

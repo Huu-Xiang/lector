@@ -27,7 +27,7 @@ export default function DescriptionToggle({ className = '' }: { className?: stri
           }`}
         />
       </button>
-      <span onClick={() => setShow(!show)}>{t('toggle')}</span>
+      <span>{t('toggle')}</span>
     </label>
   );
 }

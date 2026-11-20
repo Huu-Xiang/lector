@@ -1,0 +1,810 @@
+'use client';
+
+import { useIsNativeApp } from '@/lib/native-app';
+import { useRegularIPadWindow } from '@/components/NativeBridge/ipad-layout';
+import { useEffect, useState, useRef } from 'react';
+import dynamic from 'next/dynamic';
+import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { ArrowRight, BookMarked, ChevronDown, Folder, Plus, Sparkles } from 'lucide-react';
+import PageOutline from '@/components/PageOutline';
+import AddCollectionTile from './components/AddCollectionTile';
+import EmptyState from './components/EmptyState';
+import IPadFeaturedBook, { hasUnfinishedReading } from './components/IPadFeaturedBook';
+import HomeRecommendations from './components/HomeRecommendations';
+import DescriptionToggle from '@/components/DescriptionToggle';
+import LibraryViewToggle from '@/components/LibraryViewToggle';
+import { useLibraryView } from '@/lib/library-view';
+import GroupMenu from './components/GroupMenu';
+import SortableCollectionCard from './components/SortableCollectionCard';
+import CollectionCard from '@/components/CollectionCard';
+import ImportDropdown from '@/components/ImportDropdown';
+import PendingBookOpener from '@/components/PendingBookOpener';
+
+const WebImportModal = dynamic(() => import('@/components/WebImportModal'), { ssr: false });
+const YouTubeImportModal = dynamic(() => import('@/components/YouTubeImportModal'), { ssr: false });
+const PasteImportModal = dynamic(() => import('@/components/PasteImportModal'), { ssr: false });
+const FreeBooksModal = dynamic(() => import('@/components/FreeBooksModal'), { ssr: false });
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  arrayMove,
+  rectSortingStrategy,
+  sortableKeyboardCoordinates,
+} from '@dnd-kit/sortable';
+import {
+  getActiveLanguage,
+  getAllCollections,
+  getAllGroups,
+  getStarterStatus,
+  peekAllCollections,
+  peekAllGroups,
+  QUERY_SCOPES,
+  createCollection,
+  createGroup,
+  updateGroup,
+  deleteGroup,
+  reorderCollections,
+  createStandaloneLesson,
+  importEpub,
+  importAudio,
+  seedStarterContent,
+  type Collection,
+  type CollectionGroup,
+} from '@/lib/data-layer';
+import { Button } from '@/components/ui/button';
+import AnnouncementBanner from '@/components/AnnouncementBanner';
+import PageHeader from '@/components/PageHeader';
+import DailyGoalBadge from '@/components/DailyGoalBadge';
+import {
+  getOnboardingSnapshotCached,
+  peekOnboardingSnapshot,
+  type OnboardingSnapshot,
+} from '@/lib/onboarding';
+import { useQueryRefresh } from '@/lib/use-query-refresh';
+import { useTabScroll } from '@/lib/tab-scroll';
+import { trackProductEvent } from '@/lib/product-analytics';
+import { toast } from 'sonner';
+import { useActiveLanguage } from '@/utils/hooks';
+
+async function observeImport<T>(
+  feature: 'audio' | 'epub' | 'markdown' | 'paste' | 'web',
+  action: () => Promise<T>,
+): Promise<T> {
+  const language = getActiveLanguage();
+  trackProductEvent({ event: 'import_started', language, feature });
+  try {
+    const result = await action();
+    trackProductEvent({ event: 'import_finished', language, feature, outcome: 'success' });
+    return result;
+  } catch (error) {
+    trackProductEvent({ event: 'import_finished', language, feature, outcome: 'failure' });
+    throw error;
+  }
+}
+
+export default function Home() {
+  const t = useTranslations('library');
+  const nativeApp = useIsNativeApp();
+  const regularIPad = useRegularIPadWindow();
+  const router = useRouter();
+  const activeLanguage = useActiveLanguage().code;
+  const [libraryView] = useLibraryView();
+  const listClass =
+    libraryView === 'list'
+      ? 'flex flex-col gap-3'
+      : 'library-book-grid grid grid-cols-3 gap-x-3 gap-y-5 sm:gap-4 lg:grid-cols-4 xl:grid-cols-5';
+  const [collections, setCollections] = useState<Collection[]>(() => peekAllCollections() ?? []);
+  const [groups, setGroups] = useState<CollectionGroup[]>(() => peekAllGroups() ?? []);
+  const [isLoading, setIsLoading] = useState(() => peekAllCollections() === undefined);
+  useTabScroll(!isLoading);
+  const [isImporting, setIsImporting] = useState(false);
+  const [isWebImportOpen, setIsWebImportOpen] = useState(false);
+  const [isYouTubeImportOpen, setIsYouTubeImportOpen] = useState(false);
+  const [isPasteImportOpen, setIsPasteImportOpen] = useState(false);
+  const [newGroupName, setNewGroupName] = useState('');
+  const [isCreatingGroup, setIsCreatingGroup] = useState(false);
+  const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
+  const [addingToGroupId, setAddingToGroupId] = useState<string | null>(null);
+  // Group that the running (or about to run) import belongs to. Null imports
+  // into Ungrouped.
+  const [importGroupId, setImportGroupId] = useState<string | null>(null);
+  // Destination chosen in the page-level Import menu. It stays selected between
+  // imports, so several files can go into the same group.
+  const [libraryDestinationId, setLibraryDestinationId] = useState<string | null>(null);
+  const [newCollectionTitle, setNewCollectionTitle] = useState('');
+  const [starterAvailable, setStarterAvailable] = useState(false);
+  const [isFreeBooksOpen, setIsFreeBooksOpen] = useState(false);
+  const [isAddingStarter, setIsAddingStarter] = useState(false);
+  const [onboarding, setOnboarding] = useState<OnboardingSnapshot | null>(
+    () => peekOnboardingSnapshot() ?? null,
+  );
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const audioInputRef = useRef<HTMLInputElement>(null);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+  );
+
+  useEffect(() => {
+    loadData();
+  }, []);
+  useQueryRefresh(
+    [QUERY_SCOPES.collections, QUERY_SCOPES.groups, QUERY_SCOPES.onboarding],
+    () => void loadData(),
+  );
+
+  // Restore collapsed-group state client-side (avoids SSR/hydration mismatch).
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem('lector-collapsed-groups');
+      if (raw) setCollapsedGroups(new Set(JSON.parse(raw) as string[]));
+    } catch {
+      // ignore malformed storage
+    }
+  }, []);
+
+  function persistCollapsed(next: Set<string>) {
+    try {
+      localStorage.setItem('lector-collapsed-groups', JSON.stringify([...next]));
+    } catch {
+      // ignore storage failure
+    }
+    return next;
+  }
+
+  function toggleGroup(groupId: string) {
+    setCollapsedGroups((prev) => {
+      const next = new Set(prev);
+      if (next.has(groupId)) next.delete(groupId);
+      else next.add(groupId);
+      return persistCollapsed(next);
+    });
+  }
+
+  function expandGroup(groupId: string) {
+    setCollapsedGroups((prev) => {
+      if (!prev.has(groupId)) return prev;
+      const next = new Set(prev);
+      next.delete(groupId);
+      return persistCollapsed(next);
+    });
+  }
+
+  async function loadData() {
+    try {
+      const [collectionsData, groupsData, onboardingData] = await Promise.all([
+        getAllCollections(),
+        getAllGroups(),
+        getOnboardingSnapshotCached().catch(() => null),
+      ]);
+
+      setCollections(collectionsData);
+      setGroups(groupsData);
+      setOnboarding(onboardingData);
+
+      // Empty-library CTA (#315): offer the starter pack to users who selected
+      // this language before seeding existed. Seeded-once users (flag set)
+      // don't get it re-offered after deleting the collection.
+      if (collectionsData.length === 0) {
+        const status = await getStarterStatus(getActiveLanguage());
+        setStarterAvailable(status.available && !status.seeded);
+      } else {
+        setStarterAvailable(false);
+      }
+    } catch (error) {
+      console.error('Error loading data:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  async function handleAddStarter() {
+    setIsAddingStarter(true);
+    try {
+      const { seeded } = await seedStarterContent(getActiveLanguage());
+      if (seeded) {
+        setStarterAvailable(false);
+        setCollections(await getAllCollections());
+      }
+    } finally {
+      setIsAddingStarter(false);
+    }
+  }
+
+  // Every import entry point goes through this factory so the target group is
+  // recorded before a file picker or a modal opens. The page-level Import
+  // button passes null, which keeps the new collection ungrouped.
+  function importHandlers(groupId: string | null) {
+    const begin = () => {
+      setImportGroupId(groupId);
+      // A collapsed group would hide the item that the import adds.
+      if (groupId) expandGroup(groupId);
+    };
+    return {
+      onFileImport: () => {
+        begin();
+        fileInputRef.current?.click();
+      },
+      onAudioImport: () => {
+        begin();
+        audioInputRef.current?.click();
+      },
+      onUrlImport: () => {
+        begin();
+        setIsWebImportOpen(true);
+      },
+      onYouTubeImport: () => {
+        begin();
+        setIsYouTubeImportOpen(true);
+      },
+      onPasteImport: () => {
+        begin();
+        setIsPasteImportOpen(true);
+      },
+    };
+  }
+
+  async function handleAudioFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setIsImporting(true);
+    try {
+      const imported = await observeImport('audio', () =>
+        importAudio(file, undefined, importGroupId),
+      );
+      setCollections(await getAllCollections());
+      const minutes = imported.audioDurationMs
+        ? Math.max(1, Math.round(imported.audioDurationMs / 60000))
+        : null;
+      // Transcription runs in the background; give a rough local-Whisper time
+      // estimate (cost only matters on a hosted fallback, where it's cents).
+      toast.success(
+        t('page.audioUploaded', { title: imported.title }) +
+          (minutes ? t('page.audioMinutes', { minutes }) : ''),
+      );
+    } catch (error) {
+      console.error('Error importing audio:', error);
+      toast.error(error instanceof Error ? error.message : t('errors.importAudio'));
+    } finally {
+      setIsImporting(false);
+      setImportGroupId(null);
+      if (audioInputRef.current) {
+        audioInputRef.current.value = '';
+      }
+    }
+  }
+
+  async function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const ext = file.name.toLowerCase().split('.').pop();
+
+    setIsImporting(true);
+
+    try {
+      if (ext === 'epub') {
+        // EPUB — parse server-side into collection of lessons
+        await observeImport('epub', () => importEpub(file, importGroupId));
+        // Reload collections to get the new one
+        const updated = await getAllCollections();
+        setCollections(updated);
+      } else if (ext === 'md' || ext === 'markdown') {
+        // Markdown — create single-lesson collection
+        await observeImport('markdown', async () => {
+          const textContent = await file.text();
+          const titleMatch = textContent.match(/^#\s+(.+)$/m);
+          const title = titleMatch ? titleMatch[1].trim() : file.name.replace(/\.[^/.]+$/, '');
+          await createStandaloneLesson({
+            title,
+            author: 'Unknown Author',
+            textContent,
+            groupId: importGroupId,
+          });
+        });
+        const updated = await getAllCollections();
+        setCollections(updated);
+      } else {
+        alert(t('page.selectFile'));
+      }
+    } catch (error) {
+      console.error('Error importing file:', error);
+      alert(t('errors.importFile'));
+    } finally {
+      setIsImporting(false);
+      setImportGroupId(null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  }
+
+  async function handlePasteImportSave(article: {
+    title: string;
+    author: string;
+    content: string;
+  }) {
+    await observeImport('paste', () =>
+      createStandaloneLesson({
+        title: article.title,
+        author: article.author,
+        textContent: article.content,
+        groupId: importGroupId,
+      }),
+    );
+    const updated = await getAllCollections();
+    setCollections(updated);
+  }
+
+  async function handleWebImportSave(article: { title: string; author: string; content: string }) {
+    await observeImport('web', () =>
+      createStandaloneLesson({
+        title: article.title,
+        author: article.author,
+        textContent: article.content,
+        groupId: importGroupId,
+      }),
+    );
+    const updated = await getAllCollections();
+    setCollections(updated);
+  }
+
+  async function handleCreateGroup() {
+    if (!newGroupName.trim()) return;
+    try {
+      await createGroup(newGroupName.trim());
+      setNewGroupName('');
+      setIsCreatingGroup(false);
+      const updated = await getAllGroups();
+      setGroups(updated);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : t('errors.createGroup'));
+    }
+  }
+
+  async function handleRenameGroup(id: string, currentName: string) {
+    const name = prompt(t('group.renamePrompt'), currentName);
+    if (name === null || !name.trim() || name.trim() === currentName) return;
+    try {
+      await updateGroup(id, { name: name.trim() });
+      const updated = await getAllGroups();
+      setGroups(updated);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : t('errors.renameGroup'));
+    }
+  }
+
+  async function handleDeleteGroup(id: string, name: string) {
+    if (!confirm(t('group.deleteConfirm', { name }))) return;
+    try {
+      await deleteGroup(id);
+      const [updatedGroups, updatedCollections] = await Promise.all([
+        getAllGroups(),
+        getAllCollections(),
+      ]);
+      setGroups(updatedGroups);
+      setCollections(updatedCollections);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : t('errors.deleteGroup'));
+    }
+  }
+
+  async function handleAddCollectionToGroup(groupId: string) {
+    const title = newCollectionTitle.trim();
+    if (!title) return;
+    await createCollection({ title, groupId });
+    setNewCollectionTitle('');
+    setAddingToGroupId(null);
+    const updated = await getAllCollections();
+    setCollections(updated);
+  }
+
+  // Reorder collections within a single group. The library buckets `collections`
+  // by groupId in array order, so we splice the reordered bucket back into the
+  // members' original slots and persist the new order optimistically.
+  function handleCollectionDragEnd(groupId: string, event: DragEndEvent) {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    const previous = collections;
+    const bucket = previous.filter((c) => c.groupId === groupId);
+    const oldIndex = bucket.findIndex((c) => c.id === active.id);
+    const newIndex = bucket.findIndex((c) => c.id === over.id);
+    if (oldIndex < 0 || newIndex < 0) return;
+    const newBucket = arrayMove(bucket, oldIndex, newIndex);
+    let bucketIndex = 0;
+    setCollections(previous.map((c) => (c.groupId === groupId ? newBucket[bucketIndex++] : c)));
+    void reorderCollections(newBucket.map((c) => c.id)).catch((error) => {
+      setCollections(previous);
+      toast.error(error instanceof Error ? error.message : t('errors.reorderCollections'));
+    });
+  }
+
+  // Group collections by groupId
+  const groupedCollections = new Map<string, Collection[]>();
+  const ungrouped: Collection[] = [];
+
+  for (const c of collections) {
+    if (c.groupId) {
+      const list = groupedCollections.get(c.groupId) || [];
+      list.push(c);
+      groupedCollections.set(c.groupId, list);
+    } else {
+      ungrouped.push(c);
+    }
+  }
+
+  // Groups are language-agnostic, but `collections` here is already scoped to the
+  // active language. Show a group when it has a collection in this language, or
+  // when it has no collections at all (a brand-new/emptied group — kept visible
+  // so it can be populated). Hide groups whose collections all belong to other
+  // languages. `collectionCount` is the group's total across all languages.
+  const visibleGroups = groups.filter(
+    (g) => (groupedCollections.get(g.id)?.length ?? 0) > 0 || (g.collectionCount ?? 0) === 0,
+  );
+
+  const hasGroups = visibleGroups.length > 0;
+
+  // A deleted group, or one whose collections all moved to another language,
+  // must not stay selected as the import destination.
+  const libraryDestination = visibleGroups.some((g) => g.id === libraryDestinationId)
+    ? libraryDestinationId
+    : null;
+  const libraryImportHandlers = importHandlers(libraryDestination);
+  const featuredBook =
+    regularIPad && onboarding?.progress?.status !== 'in_progress'
+      ? (collections.reduce<Collection | undefined>((latest, book) => {
+          if (!hasUnfinishedReading(book)) return latest;
+          return !latest || book.lastReadAt > latest.lastReadAt ? book : latest;
+        }, undefined) ?? collections.find((book) => book.lessonCount > 0))
+      : undefined;
+
+  return (
+    <main className="native-compact-page ipad-library mx-auto max-w-6xl px-4 py-4 sm:px-6 sm:py-8 lg:px-8">
+      <PendingBookOpener />
+      <PageHeader title={t('page.title')} titleAside={<DailyGoalBadge />} className="mb-3 sm:mb-6">
+        <div className="relative flex flex-wrap items-center gap-1.5 sm:gap-2">
+          {isCreatingGroup ? (
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleCreateGroup();
+              }}
+              className="flex w-full items-center gap-2 sm:w-auto"
+            >
+              <input
+                type="text"
+                value={newGroupName}
+                onChange={(e) => setNewGroupName(e.target.value)}
+                placeholder={t('page.groupNamePlaceholder')}
+                autoFocus
+                data-testid="new-group-input"
+                className="min-w-0 flex-1 rounded-lg border border-input bg-background px-3 py-1.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none"
+              />
+              <Button type="submit" variant="outline" data-testid="new-group-submit">
+                {t('page.addGroup')}
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => {
+                  setIsCreatingGroup(false);
+                  setNewGroupName('');
+                }}
+              >
+                {t('common.cancel')}
+              </Button>
+            </form>
+          ) : (
+            <Button
+              onClick={() => setIsCreatingGroup(true)}
+              variant="ghost"
+              className={nativeApp ? 'max-sm:size-11 max-sm:px-0' : 'max-sm:px-2'}
+              aria-label={t('page.newGroup')}
+              data-testid="new-group-btn"
+            >
+              <Folder size="16" />
+              <span className={nativeApp ? 'max-sm:sr-only' : undefined}>{t('page.newGroup')}</span>
+            </Button>
+          )}
+
+          <Button
+            variant="outline"
+            onClick={() => setIsFreeBooksOpen(true)}
+            className="max-sm:px-3"
+            data-testid="free-books-btn"
+          >
+            <BookMarked size="16" />
+            {t('freeBooks.button')}
+          </Button>
+
+          <ImportDropdown
+            {...libraryImportHandlers}
+            disabled={isImporting}
+            isImporting={isImporting && importGroupId === libraryDestination}
+            testId="library-import"
+            anchorToToolbarOnMobile
+            destinations={visibleGroups.map((g) => ({ id: g.id, name: g.name }))}
+            destinationId={libraryDestination}
+            onDestinationChange={setLibraryDestinationId}
+          />
+          {(collections.length > 0 || hasGroups) && (
+            <div className="ml-auto sm:ml-0">
+              <LibraryViewToggle />
+            </div>
+          )}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".epub,.md,.markdown"
+            onChange={handleFileChange}
+            data-testid="document-file-input"
+            className="hidden"
+          />
+          <input
+            ref={audioInputRef}
+            type="file"
+            accept="audio/*,.mp3,.m4a,.m4b,.mp4,.wav,.ogg,.oga,.opus,.flac,.aac,.webm"
+            onChange={handleAudioFileChange}
+            data-testid="audio-file-input"
+            className="hidden"
+          />
+        </div>
+      </PageHeader>
+      {!isLoading && onboarding?.progress?.status !== 'in_progress' && <AnnouncementBanner />}
+      {onboarding?.progress?.status === 'in_progress' && (
+        <section
+          aria-labelledby="resume-guide-heading"
+          data-testid="onboarding-resume"
+          className="mb-6 flex flex-col gap-4 rounded-2xl border border-[var(--gold-lip)] bg-[var(--gold-soft)] p-5 sm:flex-row sm:items-center sm:justify-between"
+        >
+          <div className="flex items-start gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-card text-[var(--gold-strong)]">
+              <Sparkles className="h-5 w-5" aria-hidden="true" />
+            </div>
+            <div>
+              <h2 id="resume-guide-heading" className="font-bold text-foreground">
+                {t('onboarding.title')}
+              </h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {onboarding.progress.currentStep === 'practice'
+                  ? t('onboarding.practiceReady')
+                  : t('onboarding.resumeLesson', {
+                      title:
+                        onboarding.progress.recommendedLessonTitle ||
+                        t('onboarding.fallbackLesson'),
+                    })}
+              </p>
+            </div>
+          </div>
+          <Button
+            type="button"
+            onClick={() =>
+              router.push(
+                onboarding.progress?.currentStep === 'practice'
+                  ? '/practice?onboarding=1'
+                  : `/read/${onboarding.progress?.recommendedLessonId}?onboarding=1`,
+              )
+            }
+            disabled={
+              onboarding.progress.currentStep !== 'practice' &&
+              !onboarding.progress.recommendedLessonId
+            }
+            className="self-start sm:self-auto"
+          >
+            {t('onboarding.resume')}
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </Button>
+        </section>
+      )}
+      {isLoading ? (
+        <PageOutline variant={libraryView === 'list' ? 'list' : 'cards'} />
+      ) : (
+        <section>
+          {isWebImportOpen && (
+            <WebImportModal
+              isOpen={isWebImportOpen}
+              onClose={() => {
+                setIsWebImportOpen(false);
+                setImportGroupId(null);
+              }}
+              onSave={handleWebImportSave}
+            />
+          )}
+          {isYouTubeImportOpen && (
+            <YouTubeImportModal
+              isOpen={isYouTubeImportOpen}
+              groupId={importGroupId}
+              onClose={() => {
+                setIsYouTubeImportOpen(false);
+                setImportGroupId(null);
+              }}
+              onImported={({ lessonId }) => {
+                setIsYouTubeImportOpen(false);
+                setImportGroupId(null);
+                router.push(`/read/${lessonId}`);
+              }}
+            />
+          )}
+          {isFreeBooksOpen && (
+            <FreeBooksModal
+              isOpen={isFreeBooksOpen}
+              onClose={() => setIsFreeBooksOpen(false)}
+              onAdded={() => void loadData()}
+            />
+          )}
+          {isPasteImportOpen && (
+            <PasteImportModal
+              isOpen={isPasteImportOpen}
+              onClose={() => {
+                setIsPasteImportOpen(false);
+                setImportGroupId(null);
+              }}
+              onSave={handlePasteImportSave}
+            />
+          )}
+
+          {(!nativeApp || (collections.length === 0 && !hasGroups)) && (
+            <HomeRecommendations language={activeLanguage} defaultOpen={collections.length < 3} />
+          )}
+
+          {featuredBook && (
+            <IPadFeaturedBook
+              key={`${featuredBook.id}:${featuredBook.lastReadAt}`}
+              collection={featuredBook}
+            />
+          )}
+          <div className="ipad-library-columns">
+            {collections.length > 0 || hasGroups ? (
+              <div className="min-w-0 space-y-6 sm:space-y-10">
+                <div
+                  className={`mb-3 flex items-center justify-end ${libraryView === 'grid' ? 'max-sm:hidden' : ''}`}
+                >
+                  <DescriptionToggle />
+                </div>
+                {/* Grouped sections */}
+                {visibleGroups.map((group) => {
+                  const items = groupedCollections.get(group.id) || [];
+                  const isCollapsed = collapsedGroups.has(group.id);
+                  return (
+                    <div
+                      key={group.id}
+                      data-testid={`group-${group.id}`}
+                      className="panel p-3 sm:p-5"
+                    >
+                      <div className="mb-3 flex items-center gap-3 sm:mb-4">
+                        <button
+                          onClick={() => toggleGroup(group.id)}
+                          aria-expanded={!isCollapsed}
+                          aria-label={
+                            isCollapsed
+                              ? t('group.expand', { name: group.name })
+                              : t('group.collapse', { name: group.name })
+                          }
+                          data-testid={`group-toggle-${group.id}`}
+                          className="-ml-1 flex min-h-11 items-center gap-2 rounded-lg px-2 py-1 text-left hover:bg-accent active:opacity-60"
+                        >
+                          <ChevronDown
+                            className={`h-4 w-4 text-muted-foreground transition-transform ${isCollapsed ? '-rotate-90' : ''}`}
+                          />
+                          <h3 className="text-lg font-semibold text-foreground">{group.name}</h3>
+                        </button>
+                        <span className="text-sm text-muted-foreground">
+                          {t('group.items', { count: items.length })}
+                        </span>
+                        <div className="flex-1" />
+                        <ImportDropdown
+                          {...importHandlers(group.id)}
+                          size="sm"
+                          variant="outline"
+                          disabled={isImporting}
+                          isImporting={isImporting && importGroupId === group.id}
+                          testId={`group-import-${group.id}`}
+                          minimalOnMobile
+                        />
+                        <GroupMenu
+                          onRename={() => handleRenameGroup(group.id, group.name)}
+                          onDelete={() => handleDeleteGroup(group.id, group.name)}
+                        />
+                      </div>
+                      {!isCollapsed && (
+                        <DndContext
+                          sensors={sensors}
+                          collisionDetection={closestCenter}
+                          onDragEnd={(e) => handleCollectionDragEnd(group.id, e)}
+                        >
+                          <div className={listClass}>
+                            <SortableContext
+                              items={items.map((c) => c.id)}
+                              strategy={rectSortingStrategy}
+                            >
+                              {items.map((collection) => (
+                                <SortableCollectionCard
+                                  key={collection.id}
+                                  collection={collection}
+                                />
+                              ))}
+                            </SortableContext>
+                            {addingToGroupId === group.id ? (
+                              <AddCollectionTile
+                                value={newCollectionTitle}
+                                onChange={setNewCollectionTitle}
+                                onSubmit={() => handleAddCollectionToGroup(group.id)}
+                                onCancel={() => {
+                                  setAddingToGroupId(null);
+                                  setNewCollectionTitle('');
+                                }}
+                              />
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setAddingToGroupId(group.id);
+                                  setNewCollectionTitle('');
+                                }}
+                                data-testid={`add-collection-${group.id}`}
+                                className={`group flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border text-muted-foreground transition-all hover:bg-accent hover:text-foreground ${libraryView === 'list' ? 'min-h-16' : 'min-h-36 sm:min-h-[14rem]'}`}
+                              >
+                                <Plus className="h-8 w-8" strokeWidth={1.5} />
+                                <span className="text-sm font-medium">
+                                  {t('group.newCollection')}
+                                </span>
+                              </button>
+                            )}
+                          </div>
+                        </DndContext>
+                      )}
+                    </div>
+                  );
+                })}
+
+                {/* Ungrouped */}
+                {ungrouped.length > 0 && (
+                  <div
+                    data-testid="ungrouped-section"
+                    className="library-books-panel panel p-5 max-sm:rounded-none max-sm:border-0 max-sm:bg-transparent max-sm:p-0"
+                  >
+                    {hasGroups && (
+                      <h3 className="mb-4 text-lg font-semibold text-foreground">
+                        {t('page.ungrouped')}
+                      </h3>
+                    )}
+                    <div className={listClass}>
+                      {ungrouped.map((collection) => (
+                        <CollectionCard key={collection.id} collection={collection} />
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <EmptyState
+                onAddStarter={starterAvailable ? handleAddStarter : undefined}
+                isAddingStarter={isAddingStarter}
+              />
+            )}
+            {nativeApp && (collections.length > 0 || hasGroups) && (
+              <div className="library-recommendations min-w-0">
+                <HomeRecommendations
+                  language={activeLanguage}
+                  defaultOpen={regularIPad}
+                  keepControlsWhenEmpty={regularIPad}
+                />
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+    </main>
+  );
+}

@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { UI_LOCALES } from './locales';
+import { APP_ONLY_NAMESPACES, pickMessages, SHELL_AND_PUBLIC_NAMESPACES } from './namespaces';
 
 type Tree = { [key: string]: string | Tree };
 
@@ -56,5 +57,25 @@ describe('message catalogs', () => {
 
   it('has no empty English strings', () => {
     expect([...english].filter(([, v]) => v.trim() === '').map(([k]) => k)).toEqual([]);
+  });
+
+  it('partitions all top-level namespaces cleanly between public/shell and app-only slices', () => {
+    const enRoot = load('en');
+    const enKeys = Object.keys(enRoot).sort();
+    const publicSet = new Set<string>(SHELL_AND_PUBLIC_NAMESPACES);
+    const appSet = new Set<string>(APP_ONLY_NAMESPACES);
+
+    const overlap = [...publicSet].filter((k) => appSet.has(k));
+    const combined = [...new Set([...publicSet, ...appSet])].sort();
+
+    expect(overlap).toEqual([]);
+    expect(combined).toEqual(enKeys);
+
+    const fullBytes = Buffer.byteLength(JSON.stringify(enRoot), 'utf8');
+    const publicBytes = Buffer.byteLength(
+      JSON.stringify(pickMessages(enRoot, SHELL_AND_PUBLIC_NAMESPACES)),
+      'utf8',
+    );
+    expect(publicBytes).toBeLessThan(fullBytes * 0.5);
   });
 });

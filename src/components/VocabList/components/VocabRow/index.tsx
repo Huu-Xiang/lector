@@ -22,21 +22,35 @@ export default function VocabRow({
 
   return (
     <tr
-      className="cursor-pointer border-b border-border transition-colors hover:bg-accent"
+      tabIndex={0}
+      className="cursor-pointer border-b border-border transition-colors hover:bg-accent focus-visible:bg-accent focus-visible:outline-none"
       onClick={() => onClick(entry)}
+      onKeyDown={(e) => {
+        if (e.target !== e.currentTarget) return;
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick(entry);
+        }
+      }}
     >
       {/* Checkbox */}
-      <td className="w-10 px-2 py-3 sm:w-12 sm:px-4">
-        <input
-          type="checkbox"
-          checked={isSelected}
-          onChange={(e) => {
-            e.stopPropagation();
-            onSelect(entry.id, e.target.checked);
-          }}
+      <td className="w-11 px-1 py-1 sm:w-12 sm:px-4 sm:py-3">
+        <label
           onClick={(e) => e.stopPropagation()}
-          className="h-4 w-4 rounded border-input text-primary focus:ring-ring"
-        />
+          className="flex size-11 cursor-pointer items-center justify-center sm:size-auto"
+        >
+          <input
+            type="checkbox"
+            checked={isSelected}
+            aria-label={entry.text}
+            onChange={(e) => {
+              e.stopPropagation();
+              onSelect(entry.id, e.target.checked);
+            }}
+            onClick={(e) => e.stopPropagation()}
+            className="h-4 w-4 rounded border-input text-primary focus:ring-ring"
+          />
+        </label>
       </td>
 
       {/* Word/Phrase */}
@@ -50,7 +64,7 @@ export default function VocabRow({
       </td>
 
       {/* Translation */}
-      <td className="max-w-xs min-w-32 px-2 py-3 sm:px-4">
+      <td className="max-w-xs min-w-0 px-2 py-3 sm:px-4">
         <span className="line-clamp-2 text-muted-foreground">{entry.translation}</span>
       </td>
 
@@ -61,7 +75,7 @@ export default function VocabRow({
         </div>
       </td>
 
-      <td className="max-w-[150px] min-w-20 px-2 py-3 sm:px-4">
+      <td className="hidden max-w-[150px] min-w-20 px-2 py-3 sm:px-4 md:table-cell">
         <span className="line-clamp-2 text-sm text-muted-foreground sm:line-clamp-1">
           {bookTitle || '-'}
         </span>

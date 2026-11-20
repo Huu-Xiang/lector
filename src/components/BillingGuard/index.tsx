@@ -4,9 +4,9 @@ import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { bounceToSubscribe, BILLING_ROUTE } from '@/lib/api-base';
+import { fetchBootstrap, peekBootstrap } from '@/lib/bootstrap';
 import { useLectorMode } from '@/lib/use-env';
 import { isAuthRoute } from '@/lib/auth-client';
-import { fetchBillingStatus } from '@/lib/billing';
 import { signOutAndForget } from '@/lib/sign-out';
 import { useIsNativeApp } from '@/lib/native-app';
 import { Button } from '@/components/ui/button';
@@ -42,14 +42,18 @@ function CloudBillingGate({ children }: { children: React.ReactNode }) {
   // its own status fetch and must render for exactly the accounts this guard
   // locks out.
   const skip = isAuthRoute(pathname) || pathname === BILLING_ROUTE;
-  const [state, setState] = useState<'pending' | 'ok' | 'locked'>('pending');
+  const [state, setState] = useState<'pending' | 'ok' | 'locked'>(() => {
+    const cached = peekBootstrap();
+    if (!cached) return 'pending';
+    return cached.billing.accessAllowed ? 'ok' : 'locked';
+  });
 
   useEffect(() => {
     if (skip || state !== 'pending') return;
     let cancelled = false;
-    fetchBillingStatus().then((status) => {
+    fetchBootstrap().then((result) => {
       if (cancelled) return;
-      setState(status === null || status.accessAllowed ? 'ok' : 'locked');
+      setState(!result.ok || result.data.billing.accessAllowed ? 'ok' : 'locked');
     });
     return () => {
       cancelled = true;

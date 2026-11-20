@@ -305,7 +305,12 @@
     "openTitle": "Open source, and your reading stays yours",
     "openBody": "Readfox is open-source software (AGPL-3.0), built on the open-source reader Lector. AI features include a limited monthly allowance. We do not run advertising or analytics trackers. Read the <privacy>privacy policy</privacy>.",
     "pricing": "Pricing",
-    "vocabTest": "Not sure of your English level? Take the free 2-minute vocabulary test →"
+    "vocabTest": "Not sure of your English level? Take the free 2-minute vocabulary test →",
+    "quickDemo": {
+      "badge": "Try tapping a word",
+      "hint": "Tap any highlighted word to see instant meaning — no sign-up needed.",
+      "cta": "Read full books free"
+    }
   },
   "settings": {
     "nativeLanguage": {
@@ -1397,7 +1402,14 @@
       "jindallaekkot": "Try a few poems at a time. Repeated images and phrases help you read even when the poetic wording is unfamiliar.",
       "mannyeon-syeocheu": "Start with the schoolboy’s jokes. Classroom dialogue is easy to follow before the story shifts to a fire and an act of generosity.",
       "gohyang": "A conversation on a train leads to a memory of home. The short frame helps you follow the story when speakers use dialect."
-    }
+    },
+    "previewHint": "Tap any word to preview — sign up free for full AI context explanations and spaced repetition.",
+    "previewUnglossed": "Create a free account to get instant AI translations in context for every word in this book.",
+    "claimTitle": "Add this book to your library",
+    "claimBody": "We will switch your active language and open Chapter 1 right away.",
+    "claimConfirm": "Add to library & start reading",
+    "claimAdding": "Opening book…",
+    "claimBack": "Back to library"
   },
   "dailyGoal": {
     "editor": {
@@ -1704,6 +1716,19 @@
       "info": "About this allowance",
       "tip": "Tap this circle to see how much AI you have left this month.",
       "tipDismiss": "Got it"
+    },
+    "skipToMain": "Skip to main content",
+    "error": {
+      "title": "Something went wrong",
+      "body": "An unexpected error occurred while loading this page.",
+      "retry": "Try again",
+      "backToLibrary": "Back to library"
+    },
+    "notFound": {
+      "title": "Page not found",
+      "body": "The page you are looking for does not exist or has moved.",
+      "backToLibrary": "Back to library",
+      "freeBooks": "Browse free books"
     }
   },
   "legalPages": {

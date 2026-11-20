@@ -3388,6 +3388,10 @@ const internalOps: Record<string, OperationDoc> = {
     summary: 'Read the subscription state and the prices',
     tag: 'Service',
   },
+  'GET /api/bootstrap': {
+    summary: 'Read session summary, billing access, and active target language in one request',
+    tag: 'Service',
+  },
   'POST /api/billing/checkout': { summary: 'Create a checkout transaction', tag: 'Service' },
   'POST /api/billing/portal': { summary: 'Create a customer portal link', tag: 'Service' },
   'POST /api/billing/change/preview': { summary: 'Preview a plan change', tag: 'Service' },

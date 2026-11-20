@@ -32,7 +32,10 @@ function DialogContent({
       />
       <DialogPrimitive.Viewport
         data-slot="dialog-viewport"
-        className={cn('fixed inset-0 z-50 flex items-center justify-center p-4', viewportClassName)}
+        className={cn(
+          'fixed inset-0 z-50 flex items-center justify-center px-4 pt-[max(1rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))]',
+          viewportClassName,
+        )}
       >
         <DialogPrimitive.Popup
           data-slot="dialog-content"

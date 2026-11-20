@@ -305,7 +305,12 @@
     "openTitle": "開源透明，資料歸你",
     "openBody": "Readfox 是開源軟體（AGPL-3.0），基於開源閱讀器 Lector 開發。AI 功能每月有一定額度。網站不放廣告，也不安裝任何追蹤統計工具。詳見<privacy>隱私權政策</privacy>。",
     "pricing": "價格",
-    "vocabTest": "不確定自己的英文程度？免費做 2 分鐘單字量測驗 →"
+    "vocabTest": "不確定自己的英文程度？免費做 2 分鐘單字量測驗 →",
+    "quickDemo": {
+      "badge": "點詞試讀體驗",
+      "hint": "點任意高亮詞立刻看釋義，無需註冊。",
+      "cta": "免費閱讀完整書籍"
+    }
   },
   "settings": {
     "nativeLanguage": {
@@ -1397,7 +1402,14 @@
       "jindallaekkot": "一次讀幾首。反覆出現的意象和句式能幫你理解陌生的詩歌表達。",
       "mannyeon-syeocheu": "先讀男孩在學校開的玩笑。教室裡的對話容易跟上，後面轉入火災和互助的情節。",
       "gohyang": "火車上的一段對話引出故鄉往事。故事架構短，遇到方言時也能順著情節讀下去。"
-    }
+    },
+    "previewHint": "點擊任意單字體驗查詞——免費註冊即可解鎖全書上下文 AI 解釋與間隔複習。",
+    "previewUnglossed": "免費註冊即可解鎖本書每個詞的上下文 AI 釋義與生詞複習。",
+    "claimTitle": "將這本書加入你的書庫",
+    "claimBody": "確認後會自動切換到對應語言並直接打開第一章。",
+    "claimConfirm": "加入書庫並開始閱讀",
+    "claimAdding": "正在打開書籍…",
+    "claimBack": "返回書庫"
   },
   "dailyGoal": {
     "editor": {
@@ -1704,6 +1716,19 @@
       "info": "關於額度",
       "tip": "點這個圓圈，可以看到本月還剩多少 AI 額度。",
       "tipDismiss": "知道了"
+    },
+    "skipToMain": "跳至主要內容",
+    "error": {
+      "title": "頁面發生錯誤",
+      "body": "載入此頁面時發生了意外錯誤。",
+      "retry": "重試",
+      "backToLibrary": "返回書庫"
+    },
+    "notFound": {
+      "title": "找不到頁面",
+      "body": "你造訪的頁面不存在或已被移動。",
+      "backToLibrary": "返回書庫",
+      "freeBooks": "瀏覽免費書庫"
     }
   },
   "legalPages": {

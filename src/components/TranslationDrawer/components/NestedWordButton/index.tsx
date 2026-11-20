@@ -17,7 +17,7 @@ export default function NestedWordButton({
       type="button"
       onClick={() => onLookupWord(word)}
       data-testid={testId}
-      className="font-medium text-indigo-600 hover:underline dark:text-indigo-400"
+      className="font-medium text-[var(--primary-text)] hover:underline"
       title={t('lookUp', { word })}
     >
       <TargetText>{word}</TargetText>
