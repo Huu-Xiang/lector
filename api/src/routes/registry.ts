@@ -44,6 +44,7 @@ import sourceCount from './source-count';
 import productAnalytics from './product-analytics';
 import push from './push';
 import vocabTestReports from './vocab-test-reports';
+import bootstrap from './bootstrap';
 
 export type RouteMount = {
   /** Mount prefix, exactly as `app.route()` receives it. */
@@ -117,4 +118,5 @@ export const routeMounts: readonly RouteMount[] = [
   { prefix: '/api/source-count', app: sourceCount },
   { prefix: '/api/product-analytics', app: productAnalytics },
   { prefix: '/api/push', app: push },
+  { prefix: '/api/bootstrap', app: bootstrap },
 ];

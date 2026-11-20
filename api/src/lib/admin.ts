@@ -148,6 +148,8 @@ export function makeAccountStatusMiddleware(opts: AccountStatusOptions) {
     if (path === '/api/email/unsubscribe') return next();
     if (path === '/api/admin' || path.startsWith('/api/admin/')) return next();
     if (path === '/api/data' && (c.req.method === 'GET' || c.req.method === 'HEAD')) return next();
+    if (path === '/api/bootstrap' && (c.req.method === 'GET' || c.req.method === 'HEAD'))
+      return next();
 
     const userId = c.get('userId');
     // No resolved tenant → let the downstream gates answer (this middleware

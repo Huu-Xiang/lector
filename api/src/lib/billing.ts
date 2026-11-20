@@ -783,6 +783,7 @@ export function makeBillingMiddleware(opts: BillingGateOptions) {
     if (path === '/api/admin' || path.startsWith('/api/admin/')) return next();
     const method = c.req.method;
     if (path === '/api/data' && (method === 'GET' || method === 'HEAD')) return next();
+    if (path === '/api/bootstrap' && (method === 'GET' || method === 'HEAD')) return next();
 
     // Set by the session or PAT middleware. Absent means a wiring bug (a
     // route mounted before those middlewares) — fail closed like lib/user.ts.

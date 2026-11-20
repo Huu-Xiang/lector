@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
+import { fetchBootstrap, peekBootstrap } from '@/lib/bootstrap';
 import { getSetting } from '@/lib/data-layer';
 import { readLanguageCache, writeLanguageCache } from '@/lib/language-cache';
 import { isBareRoute } from '@/lib/auth-client';
@@ -39,9 +40,31 @@ export default function SetupGuard({ children }: { children: React.ReactNode }) 
         return;
       }
 
+      const cachedBootstrap = peekBootstrap();
+      if (cachedBootstrap) {
+        if (cachedBootstrap.targetLanguage) {
+          writeLanguageCache(cachedBootstrap.targetLanguage);
+          setChecked(true);
+          return;
+        }
+        if (!cancelled) router.replace('/setup');
+        return;
+      }
+
       try {
-        // The server-side setting is the source of truth; on a hit, backfill
-        // this browser's keyed cache so the fast path works next load.
+        const boot = await fetchBootstrap();
+        if (cancelled) return;
+        if (boot.ok) {
+          if (boot.data.targetLanguage) {
+            writeLanguageCache(boot.data.targetLanguage);
+            setChecked(true);
+            return;
+          }
+          router.replace('/setup');
+          return;
+        }
+
+        // Fallback for rolling deploys where the browser leads the API.
         const serverLang = await getSetting<string>('targetLanguage');
         if (cancelled) return;
         if (serverLang) {
