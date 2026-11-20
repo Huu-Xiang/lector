@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { getLocale, getTranslations } from 'next-intl/server';
 import { LegalShell } from '@/components/LegalLinks/shell';
 import { registerHrefForBook } from '@/lib/pending-book';
+import PublicChapterReader from '@/components/PublicChapterReader';
 import { findPublicBook, firstChapter, listPublicBooks, pickLocalized } from '@/lib/public-books';
 import BookSource from '../../../BookSource';
 
@@ -51,6 +52,7 @@ export default async function ChapterPage({ params }: Props) {
   const shown = pickLocalized(book.titles, locale, book.title);
   const bookHref = `/books/${language}/${slug}`;
   const singleLesson = book.lessonCount === 1;
+  const registerHref = registerHrefForBook({ language, slug });
 
   return (
     <LegalShell title={t('chapterTitle', { title: shown })}>
@@ -62,15 +64,12 @@ export default async function ChapterPage({ params }: Props) {
         {t('byAuthor', { author: book.author })} · {t('level', { level: book.level })}
       </p>
 
-      <div
-        lang={language}
-        className="space-y-4 font-serif text-lg leading-8"
-        data-testid="book-chapter"
-      >
-        {firstChapter(book).map((paragraph, i) => (
-          <p key={i}>{paragraph}</p>
-        ))}
-      </div>
+      <PublicChapterReader
+        language={language}
+        paragraphs={firstChapter(book)}
+        hardWords={book.hardWords}
+        registerHref={registerHref}
+      />
 
       <p className="text-xs text-muted-foreground">
         <BookSource source={book.source} />
@@ -84,7 +83,7 @@ export default async function ChapterPage({ params }: Props) {
           {singleLesson ? t('ctaNote') : t('continueBody', { count: book.lessonCount })}
         </p>
         <Link
-          href={registerHrefForBook({ language, slug })}
+          href={registerHref}
           className="mt-3 inline-block rounded-lg bg-primary px-4 py-2 font-semibold text-primary-foreground hover:opacity-90"
           data-testid="book-chapter-register"
         >

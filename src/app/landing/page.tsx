@@ -13,6 +13,7 @@ import { PUBLIC_BOOK_LANGUAGES } from '@/lib/public-books';
 import { LOCALE_COOKIE, UI_LOCALES } from '@/i18n/locales';
 import { LANDING_ROOT_ID } from '@/lib/api-base';
 import NativeAppRedirect from '@/components/NativeAppRedirect';
+import LandingReaderDemo from '@/components/LandingReaderDemo';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('landing');
@@ -82,10 +83,7 @@ export default async function LandingPage() {
           <span className="text-lg font-extrabold tracking-tight text-foreground">Readfox</span>
         </Link>
         <nav className="flex items-center gap-3 text-sm">
-          <Link
-            href="/books"
-            className="hidden font-medium text-foreground hover:underline sm:inline"
-          >
+          <Link href="/books" className="font-medium text-foreground hover:underline">
             {t('freeBooks')}
           </Link>
           <Link href="/pricing" className="font-medium text-foreground hover:underline">
@@ -163,6 +161,7 @@ export default async function LandingPage() {
               })}
             </p>
           </div>
+          <LandingReaderDemo />
         </section>
 
         <section className="mx-auto w-full max-w-5xl px-4 py-8" aria-labelledby="features">

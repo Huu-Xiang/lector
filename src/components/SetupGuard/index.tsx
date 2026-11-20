@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
+import { claimBookFromSearch } from '@/lib/auth-return';
 import { fetchBootstrap, peekBootstrap } from '@/lib/bootstrap';
 import { getSetting } from '@/lib/data-layer';
 import { readLanguageCache, writeLanguageCache } from '@/lib/language-cache';
@@ -40,6 +41,16 @@ export default function SetupGuard({ children }: { children: React.ReactNode }) 
         return;
       }
 
+      const setupTarget = () => {
+        if (pathname === '/claim-book' && typeof window !== 'undefined') {
+          const claim = claimBookFromSearch(window.location.search);
+          if (claim) {
+            return `/setup?${new URLSearchParams({ book: claim.book, lang: claim.lang }).toString()}`;
+          }
+        }
+        return '/setup';
+      };
+
       const cachedBootstrap = peekBootstrap();
       if (cachedBootstrap) {
         if (cachedBootstrap.targetLanguage) {
@@ -47,7 +58,7 @@ export default function SetupGuard({ children }: { children: React.ReactNode }) 
           setChecked(true);
           return;
         }
-        if (!cancelled) router.replace('/setup');
+        if (!cancelled) router.replace(setupTarget());
         return;
       }
 
@@ -60,7 +71,7 @@ export default function SetupGuard({ children }: { children: React.ReactNode }) 
             setChecked(true);
             return;
           }
-          router.replace('/setup');
+          router.replace(setupTarget());
           return;
         }
 
@@ -78,7 +89,7 @@ export default function SetupGuard({ children }: { children: React.ReactNode }) 
         return;
       }
 
-      if (!cancelled) router.replace('/setup');
+      if (!cancelled) router.replace(setupTarget());
     }
 
     checkLanguage();
