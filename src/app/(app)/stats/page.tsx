@@ -254,21 +254,12 @@ export default function StatsPage() {
           getFluencyStats(),
           getReadingStats(),
           getStreak(),
-<<<<<<< HEAD
           getSettingCached<string>('timezone'),
-        ]);
-        // Fetch all history so the "All" range and the cumulative growth series
-        // have everything; panels that are scoped to "the last year" slice it.
-        // The per-language series feeds the per-language panels; the app-wide
-        // activity series feeds the heatmap only (#238).
-        const [dailyStats, allVocab, appWideActivity] = await Promise.all([
           getAllDailyStats(),
           getAllVocab(),
           getAppWideActivity(),
+          getClozeTotals(),
         ]);
-        // Lifetime cloze-correct total — a server-side SUM, not the whole
-        // table shipped over just to reduce it here (#240).
-        const { timesCorrect: totalClozeCorrect } = await getClozeTotals();
 
         setStats(
           buildStats({
@@ -282,54 +273,6 @@ export default function StatsPage() {
             appWideActivity,
             totalClozeCorrect,
           }),
-=======
-          getSetting<string>('timezone'),
-          getAllDailyStats(),
-          getAllVocab(),
-          getAppWideActivity(),
-          getClozeTotals(),
-        ]);
-
-        // "Today" is a calendar date in the configured time zone (falling back
-        // to this device's zone), not UTC — otherwise the window misses today's
-        // row before 10:00 AEST (issue #108).
-        const timeZone =
-          tzSetting && isValidTimeZone(tzSetting)
-            ? tzSetting
-            : Intl.DateTimeFormat().resolvedOptions().timeZone;
-        const endDate = dateStringInTimeZone(new Date(), timeZone);
-
-        const last365 = sliceSeriesByDays(dailyStats, 365, endDate);
-        const activityLast365 = sliceSeriesByDays(appWideActivity, 365, endDate);
-
-        const totalClozeAttempts = last365.reduce((sum, d) => sum + d.clozePracticed, 0);
-        const totalPoints = last365.reduce((sum, d) => sum + d.points, 0);
-
-        // Unified server-side streaks (issue #108) — one definition app-wide.
-        const currentStreak = streakData.streak;
-        const longestStreak = streakData.longest;
-
-        // Activity heatmap: composite study activity (lookups + cloze reviews +
-        // reading minutes + Anki) over the APP-WIDE series, so the heatmap
-        // agrees with the equally app-wide streak — a day studied only in
-        // another language must not render as an empty cell (#238). All other
-        // panels stay language-scoped. Limited to the last year it renders.
-        const activityData = activityLast365.map((d) => ({
-          date: d.date,
-          count: compositeActivityCount(d),
-          // Per-type breakdown so the heatmap tooltip can show what made up the day.
-          parts: {
-            dictionaryLookups: d.dictionaryLookups || 0,
-            clozePracticed: d.clozePracticed || 0,
-            minutesRead: d.minutesRead || 0,
-            ankiReviews: d.ankiReviews || 0,
-          },
-        }));
-
-        // Keep daily stats in date order for the Anki series below.
-        const sortedDailyStats = [...dailyStats].sort(
-          (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
->>>>>>> 28e9c848 (Parallelize page fetches, code-split heavy modules, lazy-load covers, and tune Sentry)
         );
       } catch (error) {
         console.error('Failed to load stats:', error);

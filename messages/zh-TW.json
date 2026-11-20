@@ -263,9 +263,21 @@
     "languagesUi": "介面：{ui} · 釋義和講解：{count} 種語言（可在設定裡更改）",
     "createAccount": "免費註冊",
     "demo": {
-      "badge": "點詞試讀體驗",
-      "hint": "點任意高亮詞立刻看釋義，無需註冊。",
-      "cta": "免費閱讀完整書籍"
+      "label": "可以動手試的閱讀示範",
+      "panelLabel": "釋義",
+      "hintFine": "點一個詞，或按住滑鼠拖過一句話。",
+      "hintCoarse": "點一個詞，或長按後拖過一句話。",
+      "stepWord": "換你試試：點一下發亮的詞。",
+      "stepContext": "再點「結合語境」，看這個詞在這句裡的意思。",
+      "stepDragFine": "最後，按住滑鼠拖過這句話。",
+      "stepDragCoarse": "最後，長按後拖過這句話。",
+      "done": "讀書時就這樣用。其他詞也可以點。",
+      "pause": "暫停",
+      "replay": "重播",
+      "startFree": "免費開始",
+      "inContext": "結合語境",
+      "usage": "用法",
+      "idiom": "慣用含義"
     },
     "howTitle": "怎麼用",
     "features": {
@@ -293,7 +305,12 @@
     "openTitle": "開源透明，資料歸你",
     "openBody": "Readfox 是開源軟體（AGPL-3.0），基於開源閱讀器 Lector 開發。AI 功能每月有一定額度。網站不放廣告，也不安裝任何追蹤統計工具。詳見<privacy>隱私權政策</privacy>。",
     "pricing": "價格",
-    "vocabTest": "不確定自己的英文程度？免費做 2 分鐘單字量測驗 →"
+    "vocabTest": "不確定自己的英文程度？免費做 2 分鐘單字量測驗 →",
+    "quickDemo": {
+      "badge": "點詞試讀體驗",
+      "hint": "點任意高亮詞立刻看釋義，無需註冊。",
+      "cta": "免費閱讀完整書籍"
+    }
   },
   "settings": {
     "nativeLanguage": {

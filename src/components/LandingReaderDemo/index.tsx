@@ -105,7 +105,7 @@ const SAMPLES: readonly DemoSample[] = [
 ];
 
 export default function LandingReaderDemo() {
-  const t = useTranslations('landing.demo');
+  const t = useTranslations('landing.quickDemo');
   const [sampleId, setSampleId] = useState<DemoSample['id']>('fr');
   const sample = SAMPLES.find((s) => s.id === sampleId) ?? SAMPLES[0];
   const [selectedIndex, setSelectedIndex] = useState<number>(sample.defaultIndex);

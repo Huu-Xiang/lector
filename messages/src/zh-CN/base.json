@@ -209,9 +209,21 @@
     "languagesUi": "界面：{ui} · 释义和讲解：{count} 种语言（可在设置里改）",
     "createAccount": "免费注册",
     "demo": {
-      "badge": "点词试读体验",
-      "hint": "点任意高亮词立刻看释义，无需注册。",
-      "cta": "免费阅读完整书籍"
+      "label": "可以动手试的阅读演示",
+      "panelLabel": "释义",
+      "hintFine": "点一个词，或按住鼠标划过一句话。",
+      "hintCoarse": "点一个词，或长按后划过一句话。",
+      "stepWord": "轮到你了：点一下发亮的词。",
+      "stepContext": "再点“结合语境”，看这个词在这句里的意思。",
+      "stepDragFine": "最后，按住鼠标划过这句话。",
+      "stepDragCoarse": "最后，长按后划过这句话。",
+      "done": "读书时就这样用。其他词也可以点。",
+      "pause": "暂停",
+      "replay": "重播",
+      "startFree": "免费开始",
+      "inContext": "结合语境",
+      "usage": "用法",
+      "idiom": "惯用含义"
     },
     "howTitle": "怎么用",
     "features": {
@@ -239,7 +251,12 @@
     "openTitle": "开源透明，数据归你",
     "openBody": "Readfox 是开源软件（AGPL-3.0），基于开源阅读器 Lector 开发。AI 功能每月有一定额度。网站不放广告，也不装任何追踪统计工具。详见<privacy>隐私政策</privacy>。",
     "pricing": "价格",
-    "vocabTest": "不确定自己的英语水平？免费做 2 分钟词汇量测试 →"
+    "vocabTest": "不确定自己的英语水平？免费做 2 分钟词汇量测试 →",
+    "quickDemo": {
+      "badge": "点词试读体验",
+      "hint": "点任意高亮词立刻看释义，无需注册。",
+      "cta": "免费阅读完整书籍"
+    }
   },
   "settings": {
     "nativeLanguage": {

@@ -7,6 +7,7 @@ export type MessageTree = { [key: string]: string | MessageTree };
  */
 export const SHELL_AND_PUBLIC_NAMESPACES = [
   'auth',
+  'betaNotice',
   'bookLink',
   'checkoutPage',
   'chrome',
@@ -22,6 +23,7 @@ export const SHELL_AND_PUBLIC_NAMESPACES = [
   'refund',
   'subscribe',
   'uiLanguage',
+  'vocabTest',
   'welcomeOffer',
 ] as const;
 
@@ -32,6 +34,7 @@ export const SHELL_AND_PUBLIC_NAMESPACES = [
 export const APP_ONLY_NAMESPACES = [
   'announcements',
   'chat',
+  'dailyGoal',
   'feedback',
   'journal',
   'library',
