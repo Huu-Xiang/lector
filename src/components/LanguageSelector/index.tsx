@@ -21,6 +21,7 @@ import { useNativeLanguage } from '@/lib/library-titles';
 import { LanguageCode } from '@/types/language';
 import { flagNewLanguage } from '@/components/NewLanguagePrompt';
 import { languageDisplayName } from '@/lib/language-names';
+import { isNativeApp } from '@/lib/native-app';
 import { isLanguageReady, parseReadyLanguages } from '@/lib/ready-languages';
 import { useReadyLanguagesSetting } from '@/lib/use-env';
 import { useActiveLanguage, useEnabledLanguages, useLanguageResolved } from '@/utils/hooks';
@@ -34,9 +35,11 @@ function foldForSearch(text: string): string {
 export default function LanguageSelector({
   compact = false,
   collapsed = false,
+  align,
 }: {
   compact?: boolean;
   collapsed?: boolean;
+  align?: 'start' | 'end';
 }) {
   const t = useTranslations('chrome.language');
   const locale = useLocale();
@@ -197,7 +200,7 @@ export default function LanguageSelector({
     <div className="sticky top-0 z-10 -mx-1 -mt-1 flex items-center gap-2 border-b border-border bg-popover px-3 py-2">
       <Search className="size-4 shrink-0 text-muted-foreground" />
       <input
-        autoFocus
+        autoFocus={!isNativeApp()}
         value={query}
         onChange={(event) => setQuery(event.target.value)}
         onKeyDown={(event) => {
@@ -216,7 +219,7 @@ export default function LanguageSelector({
     collapsed:
       'flex items-center justify-center rounded-lg p-2 text-lg transition-colors hover:bg-accent',
     compact:
-      'flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-foreground transition-colors hover:bg-muted',
+      'flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-foreground transition-colors hover:bg-muted active:opacity-60',
     full: 'flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-accent',
   }[variant];
 
@@ -243,7 +246,7 @@ export default function LanguageSelector({
         {variant !== 'collapsed' && <ChevronDown className="size-4" />}
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        align={variant === 'compact' ? 'end' : 'start'}
+        align={align ?? (variant === 'compact' ? 'end' : 'start')}
         aria-label={t('select')}
         className={`${variant === 'compact' ? 'w-52' : 'min-w-56'} max-h-80 overflow-y-auto`}
       >

@@ -237,8 +237,10 @@ export default function ChatWidget() {
     <>
       {floatingButton && (
         <>
-          {/* Keeps the last row of a page clear of the button on phones. */}
-          <div className="h-16 sm:hidden print:hidden" aria-hidden="true" />
+          {/* Keeps the last row of a page clear of the button on phones (skipped on self-scrolling reader). */}
+          {!hasOwnHeader(pathname) && (
+            <div className="h-16 sm:hidden print:hidden" aria-hidden="true" />
+          )}
           <Button
             onClick={toggleOpen}
             data-chat-toggle
@@ -246,7 +248,9 @@ export default function ChatWidget() {
             className={clsx(
               'fixed right-4 bottom-20 z-50 flex h-12 w-12 rounded-full shadow-lg transition-all hover:shadow-xl sm:right-6 sm:bottom-6 print:hidden',
               pathname.includes('/read') && '2xl:right-[406px]',
-              tucked && !isOpen && 'max-sm:pointer-events-none max-sm:translate-y-24 max-sm:opacity-0',
+              tucked &&
+                !isOpen &&
+                'max-sm:pointer-events-none max-sm:translate-y-24 max-sm:opacity-0',
             )}
             aria-label={isOpen ? t('close') : t('open')}
             data-testid="chat-toggle"

@@ -162,7 +162,7 @@
   --foreground: #ece5d6;
   --card: #211d16;
   --card-foreground: #ece5d6;
-  --popover: #211d16;
+  --popover: #27221a;
   --popover-foreground: #ece5d6;
   --primary: #54ab92; /* brighter sage for dark */
   --primary-foreground: #10221c; /* dark text on the bright sage CTA */
@@ -616,7 +616,7 @@
 }
 
 html {
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 /* Reader phrase drag. The touch gesture paints the run under the finger before
@@ -807,6 +807,10 @@ html[data-native-app] body {
   padding-top: env(safe-area-inset-top);
 }
 
+html[data-native-app] .app-shell {
+  flex-direction: column;
+}
+
 .native-topbar {
   display: none;
 }
@@ -945,8 +949,12 @@ html[data-native-app] [data-native-sheet] {
     height: var(--app-bottom-bar);
   }
 
+  html[data-native-app] body:has(.reader-page) .app-bottom-spacer {
+    display: none;
+  }
+
   html[data-native-app] .reader-page {
-    height: calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    height: calc(100dvh - env(safe-area-inset-top));
   }
 
   html[data-native-app] [data-native-side-drawer] {
@@ -1111,6 +1119,21 @@ html[data-native-app] [data-slot='button'][class*='h-6'],
 html[data-native-app] [data-slot='button'][class*='size-8'],
 html[data-native-app] [data-slot='button'][class*='h-8'] {
   min-height: 0;
+  position: relative;
+}
+
+html[data-native-app] [data-slot='button'][class*='size-8']::after,
+html[data-native-app] [data-slot='button'][class*='h-8']::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  [data-slot='kbd'],
+  [data-slot='kbd-group'] {
+    display: none;
+  }
 }
 
 /* Interface chrome is not text to copy; reading text keeps its own rules above. */

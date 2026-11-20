@@ -11,7 +11,7 @@ export function getNavLinkClassname({
 }) {
   if (isMobile) {
     return clsx(
-      'flex flex-1 flex-col items-center justify-center gap-1 py-2 text-[10px] font-medium transition-colors',
+      'flex flex-1 flex-col items-center justify-center gap-1 py-2 text-[10px] font-medium transition-colors active:opacity-60',
       isActive ? 'text-primary' : 'text-muted-foreground',
     );
   }

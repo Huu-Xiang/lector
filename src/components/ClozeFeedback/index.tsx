@@ -61,7 +61,7 @@ export default function ClozeFeedback({
 
   return (
     <div
-      className={`rounded-xl border-2 p-6 transition-all ${
+      className={`rounded-xl border-2 p-4 transition-all sm:p-6 ${
         isCorrect
           ? 'border-primary bg-[color-mix(in_srgb,var(--primary)_14%,var(--card))]'
           : 'border-destructive bg-[color-mix(in_srgb,var(--destructive)_12%,var(--card))]'

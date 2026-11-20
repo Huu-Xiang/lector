@@ -67,7 +67,10 @@ export default function VocabDetailModal({
 
   return (
     <Dialog open onOpenChange={(open) => !open && onClose()}>
-      <DialogContent data-testid="vocab-detail-modal" className="max-w-lg rounded-lg p-6">
+      <DialogContent
+        data-testid="vocab-detail-modal"
+        className="max-h-[85dvh] max-w-lg overflow-y-auto rounded-lg p-5 sm:p-6"
+      >
         {/* Header */}
         <div className="mb-4 flex items-start justify-between">
           <div>
@@ -77,7 +80,7 @@ export default function VocabDetailModal({
             </span>
           </div>
           <DialogClose
-            className="rounded-full p-1 text-muted-foreground hover:bg-accent hover:text-foreground"
+            className="-mt-2 -mr-2 flex size-11 items-center justify-center rounded-full text-muted-foreground hover:bg-accent hover:text-foreground active:opacity-60"
             aria-label={t('close')}
           >
             <X className="h-6 w-6" />

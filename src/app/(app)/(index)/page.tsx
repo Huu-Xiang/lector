@@ -692,7 +692,7 @@ export default function Home() {
                               : t('group.collapse', { name: group.name })
                           }
                           data-testid={`group-toggle-${group.id}`}
-                          className="-ml-1 flex items-center gap-2 rounded-lg px-1 py-0.5 text-left hover:bg-accent"
+                          className="-ml-1 flex min-h-11 items-center gap-2 rounded-lg px-2 py-1 text-left hover:bg-accent active:opacity-60"
                         >
                           <ChevronDown
                             className={`h-4 w-4 text-muted-foreground transition-transform ${isCollapsed ? '-rotate-90' : ''}`}

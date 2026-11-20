@@ -1110,7 +1110,7 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
                     const counts = await getCollectionCounts();
                     setCollectionCounts(counts);
                   }}
-                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                  className="-ml-2 inline-flex min-h-11 items-center px-2 text-sm text-muted-foreground transition-colors hover:text-foreground active:opacity-60"
                 >
                   {t('round.back')}
                 </button>
@@ -1150,7 +1150,7 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
 
         {/* Main content area */}
         {state !== 'setup' && (
-          <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+          <div className="rounded-2xl border border-border bg-card p-4 shadow-sm sm:p-6">
             {/* Loading state */}
             {state === 'loading' && (
               <div className="flex flex-col items-center justify-center py-12">
@@ -1386,7 +1386,7 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
 
                     {/* Type mode buttons */}
                     {practiceMode === 'type' && !mcFallback && (
-                      <div className="flex justify-center gap-2">
+                      <div className="flex flex-wrap justify-center gap-2">
                         <Button
                           type="button"
                           variant="secondary"
@@ -1676,8 +1676,8 @@ export default function PracticePage() {
 
   if (wordReview) {
     return (
-      <div className="flex min-h-screen">
-        <main className="mx-auto max-w-2xl min-w-0 flex-1 px-4 py-8 sm:px-6 lg:px-8">
+      <div className="flex min-h-0">
+        <main className="native-compact-page mx-auto max-w-2xl min-w-0 flex-1 px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
           <WordReviewRound onExit={() => setWordReview(false)} />
         </main>
       </div>

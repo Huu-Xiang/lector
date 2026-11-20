@@ -216,7 +216,7 @@ export default function ProseSettings() {
               step={step}
               value={shown[field]}
               onChange={(event) => setField(field, Number(event.target.value))}
-              className="w-full accent-blue-500"
+              className="h-11 w-full accent-primary"
             />
             <p className="mt-1 text-xs text-muted-foreground">{t(`controls.${field}.hint`)}</p>
           </div>

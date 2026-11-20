@@ -2,6 +2,7 @@ import { getLocale, getMessages } from 'next-intl/server';
 import AppIntlProvider from '@/components/AppIntlProvider';
 import NavHeader from '@/components/NavHeader';
 import ChatWidget from '@/components/ChatWidget';
+import NativePageTransition from '@/components/NativeBridge/NativePageTransition';
 import SessionOnly from '@/components/SessionOnly';
 import PlanLimitPrompt from '@/components/PlanLimitPrompt';
 import AiDataNotice from '@/components/AiDataNotice';
@@ -18,12 +19,12 @@ export default async function AppLayout({
 
   return (
     <AppIntlProvider locale={locale} appMessages={appMessages}>
-      <div className="flex min-h-dvh w-full flex-col sm:flex-row">
+      <div className="app-shell flex min-h-dvh w-full flex-col sm:flex-row">
         <SessionOnly>
           <NavHeader />
         </SessionOnly>
         <div id="main-content" className="min-w-0 flex-1">
-          {children}
+          <NativePageTransition>{children}</NativePageTransition>
         </div>
         <SessionOnly>
           <ChatWidget />
@@ -31,7 +32,10 @@ export default async function AppLayout({
         <PlanLimitPrompt />
         <AiDataNotice />
         {/* Spacer for mobile bottom nav — invisible on sm+ */}
-        <div className="app-bottom-spacer h-16 sm:hidden print:hidden" aria-hidden="true" />
+        <div
+          className="app-bottom-spacer h-16 shrink-0 sm:hidden print:hidden"
+          aria-hidden="true"
+        />
       </div>
     </AppIntlProvider>
   );

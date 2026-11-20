@@ -42,7 +42,7 @@ export default function GroupMenu({
               setIsOpen(false);
               onRename();
             }}
-            className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-foreground hover:bg-accent"
+            className="flex min-h-11 w-full items-center gap-2 px-3 py-2 text-left text-sm text-foreground hover:bg-accent active:opacity-60"
             data-testid="group-rename-btn"
           >
             {t('rename')}
@@ -52,7 +52,7 @@ export default function GroupMenu({
               setIsOpen(false);
               onDelete();
             }}
-            className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-destructive hover:bg-accent"
+            className="flex min-h-11 w-full items-center gap-2 px-3 py-2 text-left text-sm text-destructive hover:bg-accent active:opacity-60"
             data-testid="group-delete-btn"
           >
             {t('delete')}

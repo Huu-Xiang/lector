@@ -84,6 +84,7 @@ export default function RecognitionCard({
                 disabled={locked}
                 onClick={() => void onAnswer(answer)}
                 data-testid={`answer-${answer}`}
+                className="h-auto min-h-11 px-2 py-2 text-center leading-tight whitespace-normal"
               >
                 {t(label)}
                 <Kbd>{key}</Kbd>

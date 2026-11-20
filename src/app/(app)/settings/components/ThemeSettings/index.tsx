@@ -21,7 +21,7 @@ export default function ThemeSettings() {
               key={themeOpt}
               data-theme={themeOpt}
               onClick={() => handleThemeChanged(themeOpt)}
-              className={`flex-1 rounded-md border px-4 py-2 text-sm font-medium capitalize transition-colors ${
+              className={`min-h-11 flex-1 rounded-md border px-4 py-2 text-sm font-medium capitalize transition-colors active:opacity-60 ${
                 theme === themeOpt
                   ? 'border-primary bg-[var(--primary-soft)] text-primary'
                   : 'border-border bg-card text-foreground hover:bg-accent'

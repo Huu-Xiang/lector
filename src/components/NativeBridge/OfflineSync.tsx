@@ -48,12 +48,16 @@ export default function OfflineSync() {
   if (!offline) return null;
   return (
     <div
-      className="fixed inset-x-3 bottom-24 z-50 flex items-center justify-between gap-3 rounded-xl border border-border bg-card px-4 py-3 text-sm shadow-lg"
+      className="fixed inset-x-3 bottom-4 z-50 flex items-center justify-between gap-3 rounded-xl border border-border bg-card px-4 py-2 text-sm shadow-lg"
       role="status"
+      data-above-tabbar=""
       data-testid="offline-banner"
     >
       <span className="text-foreground">{t('banner')}</span>
-      <a href={OFFLINE_LIST} className="font-semibold text-primary hover:underline">
+      <a
+        href={OFFLINE_LIST}
+        className="inline-flex min-h-11 shrink-0 items-center px-2 font-semibold text-primary hover:underline active:opacity-60"
+      >
         {t('openList')}
       </a>
     </div>

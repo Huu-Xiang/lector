@@ -19,7 +19,7 @@ export default function AddCollectionTile({
         e.preventDefault();
         onSubmit();
       }}
-      className="flex min-h-[14rem] flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed border-border p-4"
+      className="col-span-full flex min-h-0 flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed border-border p-4 sm:col-span-1 sm:min-h-[14rem]"
     >
       <input
         type="text"

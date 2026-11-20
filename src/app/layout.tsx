@@ -18,7 +18,6 @@ import TimezoneSync from '@/components/TimezoneSync';
 import SourceBeacon from '@/components/SourceBeacon';
 import './globals.css';
 import NativeBridge from '@/components/NativeBridge';
-import NativePageTransition from '@/components/NativeBridge/NativePageTransition';
 import ServiceWorkerRegistrar from '@/components/ServiceWorkerRegistrar';
 import { isRtl } from '@/i18n/locales';
 import { pickMessages, SHELL_AND_PUBLIC_NAMESPACES, type MessageTree } from '@/i18n/namespaces';
@@ -148,9 +147,7 @@ export default async function RootLayout({
             <AuthGuard>
               <BillingGuard>
                 <TimezoneSync />
-                <SetupGuard>
-                  <NativePageTransition>{children}</NativePageTransition>
-                </SetupGuard>
+                <SetupGuard>{children}</SetupGuard>
               </BillingGuard>
             </AuthGuard>
           </div>
@@ -159,7 +156,15 @@ export default async function RootLayout({
           <ServiceWorkerRegistrar />
           {/* Move Sonner's focus hotkey off its Alt+T default — Alt+T toggles the
             translation on the Practice page. */}
-          <Toaster theme="system" duration={5000} hotkey={['altKey', 'KeyN']} />
+          <Toaster
+            theme="system"
+            duration={5000}
+            hotkey={['altKey', 'KeyN']}
+            mobileOffset={{
+              bottom: 'calc(var(--app-bottom-bar, 0px) + 12px)',
+              top: 'calc(env(safe-area-inset-top) + 12px)',
+            }}
+          />
         </NextIntlClientProvider>
       </body>
     </html>
