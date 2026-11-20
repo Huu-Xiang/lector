@@ -1,4 +1,4 @@
-import { SETTINGS_KEYS } from '@/app/settings/constants';
+import { SETTINGS_KEYS } from '@/app/(app)/settings/constants';
 import { LANGUAGE_CHANGE_EVENT, SIDEBAR_COLLAPSE_EVENT } from '@/constants/storage';
 import { readLanguageCache, writeLanguageCache } from '@/lib/language-cache';
 import { DEFAULT_LANGUAGE, isValidLanguageCode, LANGUAGES } from '@/lib/languages';

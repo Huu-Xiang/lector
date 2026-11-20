@@ -9,7 +9,7 @@
 // desired behaviour here, not a leak.
 
 import { PROSE_STYLE_CHANGE_EVENT } from '@/constants/storage';
-import { SETTINGS_KEYS } from '@/app/settings/constants';
+import { SETTINGS_KEYS } from '@/app/(app)/settings/constants';
 import {
   EMPTY_PROSE_STYLE_SETTINGS,
   parseProseStyleSettings,

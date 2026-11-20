@@ -5,7 +5,7 @@ import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import type { WordState } from '@/lib/data-layer';
 import { getPageCount, clampPage, paginate } from '@/lib/pagination';
-import { SETTINGS_KEYS } from '@/app/settings/constants';
+import { SETTINGS_KEYS } from '@/app/(app)/settings/constants';
 import VocabRow from './components/VocabRow';
 import PaginationControls from './components/PaginationControls';
 import { stateFilters, stateOrder, DEFAULT_PAGE_SIZE, PAGE_SIZE_OPTIONS } from './constants';

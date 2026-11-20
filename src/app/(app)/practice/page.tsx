@@ -68,7 +68,7 @@ import { PRACTICE_FORMAT_SETTING_KEY, ROUND_SIZES, VISIBLE_COLLECTIONS } from '.
 import BlacklistSentence from './components/BlacklistSentence';
 import { Button } from '@/components/ui/button';
 import { Kbd, KbdGroup } from '@/components/ui/kbd';
-import { SETTINGS_KEYS } from '@/app/settings/constants';
+import { SETTINGS_KEYS } from '@/app/(app)/settings/constants';
 import EmptyState from './components/EmptyState';
 import PageHeader from '@/components/PageHeader';
 import Feedback from './components/Feedback';

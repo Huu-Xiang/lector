@@ -13,7 +13,7 @@ import {
 import { useLectorMode } from '@/lib/use-env';
 import { listenForAppLinks, listenForNotificationTaps } from '@/lib/app-url';
 import { rememberPendingShare } from '@/lib/share-import';
-import { SETTINGS_KEYS } from '@/app/settings/constants';
+import { SETTINGS_KEYS } from '@/app/(app)/settings/constants';
 import OfflineSync from './OfflineSync';
 import NativeTabBarSync from './NativeTabBarSync';
 import { iosAppearance, isIPadApp, supportsIPadTopTabs } from './ipad-layout';

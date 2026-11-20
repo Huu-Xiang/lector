@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { SETTINGS_KEYS } from '@/app/settings/constants';
+import { SETTINGS_KEYS } from '@/app/(app)/settings/constants';
 import { isComposing } from '@/lib/keyboard';
 
 export function useShowTranslation(): [boolean, () => void] {

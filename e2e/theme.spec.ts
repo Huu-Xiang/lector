@@ -1,4 +1,4 @@
-import { SETTINGS_KEYS } from '@/app/settings/constants';
+import { SETTINGS_KEYS } from '@/app/(app)/settings/constants';
 import { test, expect, Page } from '@playwright/test';
 
 // The Next.js dev overlay (<nextjs-portal>) intercepts pointer events on

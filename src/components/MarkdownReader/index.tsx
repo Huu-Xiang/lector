@@ -25,7 +25,7 @@ import { Button } from '@/components/ui/button';
 import WordCell from '@/components/WordCell';
 import ReaderArticle, { type ActiveReaderWord } from './ReaderArticle';
 import { ANNOTATION_MODES, type AnnotationMode } from './annotation';
-import { SETTINGS_KEYS } from '@/app/settings/constants';
+import { SETTINGS_KEYS } from '@/app/(app)/settings/constants';
 import TranscriptReader from './TranscriptReader';
 import YouTubePlayer, { type SeekTarget } from '@/components/YouTubePlayer';
 import type { TranscriptSegment, YouTubeSourceMeta } from '@/types';
