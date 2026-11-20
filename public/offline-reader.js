@@ -28,7 +28,11 @@
         }
       };
       req.onsuccess = function () {
-        resolve(req.result);
+        var db = req.result;
+        db.onversionchange = function () {
+          db.close();
+        };
+        resolve(db);
       };
       req.onerror = function () {
         reject(req.error);
@@ -39,18 +43,30 @@
   function readState() {
     return openDb().then(function (db) {
       return new Promise(function (resolve) {
+        var done = false;
+        function finish(val) {
+          if (done) return;
+          done = true;
+          try {
+            db.close();
+          } catch (_) {}
+          resolve(val);
+        }
         var tx = db.transaction(STORE_NAME, 'readonly');
         var getReq = tx.objectStore(STORE_NAME).get(STATE_KEY);
         getReq.onsuccess = function () {
           try {
             var parsed = JSON.parse(getReq.result || '');
-            resolve(parsed && parsed.version === 1 ? parsed : { version: 1, lessons: [], queue: [] });
+            finish(parsed && parsed.version === 1 ? parsed : { version: 1, lessons: [], queue: [] });
           } catch (_) {
-            resolve({ version: 1, lessons: [], queue: [] });
+            finish({ version: 1, lessons: [], queue: [] });
           }
         };
         getReq.onerror = function () {
-          resolve({ version: 1, lessons: [], queue: [] });
+          finish({ version: 1, lessons: [], queue: [] });
+        };
+        tx.onabort = function () {
+          finish({ version: 1, lessons: [], queue: [] });
         };
       });
     });
@@ -59,13 +75,26 @@
   function writeState(state) {
     return openDb().then(function (db) {
       return new Promise(function (resolve, reject) {
+        var done = false;
+        function finish(err) {
+          if (done) return;
+          done = true;
+          try {
+            db.close();
+          } catch (_) {}
+          if (err) reject(err);
+          else resolve();
+        }
         var tx = db.transaction(STORE_NAME, 'readwrite');
         tx.objectStore(STORE_NAME).put(JSON.stringify(state), STATE_KEY);
         tx.oncomplete = function () {
-          resolve();
+          finish(null);
         };
         tx.onerror = function () {
-          reject(tx.error);
+          finish(tx.error || new Error('IndexedDB write failed'));
+        };
+        tx.onabort = function () {
+          finish(tx.error || new Error('IndexedDB transaction aborted'));
         };
       });
     });
@@ -159,9 +188,15 @@
           createdAt: new Date().toISOString(),
         });
         btn.classList.add('saved');
-        writeState(state).then(function () {
-          statusEl.textContent = 'Saved "' + cleaned + '" — will sync when back online.';
-        });
+        writeState(state)
+          .then(function () {
+            statusEl.textContent = 'Saved "' + cleaned + '" — will sync when back online.';
+          })
+          .catch(function () {
+            state.queue.pop();
+            btn.classList.remove('saved');
+            statusEl.textContent = 'Could not save "' + cleaned + '" to offline storage.';
+          });
       });
       article.appendChild(btn);
     });

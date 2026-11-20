@@ -21,6 +21,7 @@
 import { interceptPlanLimit } from './plan-limits';
 import { authHref, sanitizeAuthReturnPath } from './auth-return';
 import { isNativeApp } from './native-app';
+import { setOfflineUser } from './offline/identity';
 
 declare global {
   interface Window {
@@ -179,9 +180,17 @@ export function bounceToLogin(): void {
   if (bouncedToLogin || typeof window === 'undefined') return;
   if (isAuthRoute(window.location.pathname)) return;
   bouncedToLogin = true;
-  void import('./offline/sync').then((m) => m.clearOfflineData()).catch(() => {});
+  setOfflineUser(null);
   const returnPath = sanitizeAuthReturnPath(`${window.location.pathname}${window.location.search}`);
-  window.location.replace(authHref(isNativeApp() ? '/welcome' : '/login', returnPath));
+  const target = authHref(isNativeApp() ? '/welcome' : '/login', returnPath);
+  const cleanup = Promise.allSettled([
+    import('./bootstrap').then((m) => m.resetBootstrapCache()),
+    import('./offline/sync').then((m) => m.clearOfflineData()),
+  ]);
+  const deadline = new Promise<void>((resolve) => setTimeout(resolve, 250));
+  void Promise.race([cleanup, deadline]).finally(() => {
+    window.location.replace(target);
+  });
 }
 
 let bouncedToSubscribe = false;

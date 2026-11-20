@@ -17,6 +17,7 @@ import { DAILY_GOAL_PRESETS, DEFAULT_DAILY_GOAL, goalKey, type DailyGoal } from 
 import { loadCatalog } from '@/lib/catalog-cache';
 import { displayLanguage } from '@/lib/display-language';
 import { readPendingBook, writePendingBook, type BookRef } from '@/lib/pending-book';
+import { claimBookFromSearch } from '@/lib/auth-return';
 import {
   LANGUAGES,
   NATIVE_LANGUAGES,
@@ -161,9 +162,19 @@ export default function SetupPage() {
     };
   }, [router, locale]);
 
-  /* eslint-disable react-hooks/set-state-in-effect -- the book a visitor chose is in localStorage */
+  /* eslint-disable react-hooks/set-state-in-effect -- the book a visitor chose is in localStorage or query params */
   useEffect(() => {
-    setPendingBook(readPendingBook());
+    const stored = readPendingBook();
+    if (stored) {
+      setPendingBook(stored);
+      return;
+    }
+    const fromQuery = claimBookFromSearch(window.location.search);
+    if (fromQuery) {
+      const ref: BookRef = { language: fromQuery.lang, slug: fromQuery.book };
+      writePendingBook(ref);
+      setPendingBook(ref);
+    }
   }, []);
 
   useEffect(() => {

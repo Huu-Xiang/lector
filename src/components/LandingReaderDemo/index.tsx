@@ -20,7 +20,7 @@ interface DemoSample {
   defaultIndex: number;
 }
 
-const SAMPLES: readonly DemoSample[] = [
+export const SAMPLES: readonly DemoSample[] = [
   {
     id: 'fr',
     label: 'Français',
@@ -55,7 +55,7 @@ const SAMPLES: readonly DemoSample[] = [
     id: 'es',
     label: 'Español',
     bookTitle: 'Don Quijote',
-    defaultIndex: 4,
+    defaultIndex: 5,
     tokens: [
       { text: 'En un ' },
       { text: 'lugar', gloss: 'place / village', pos: 'noun (m.)' },
@@ -86,7 +86,7 @@ const SAMPLES: readonly DemoSample[] = [
     id: 'en',
     label: 'English',
     bookTitle: 'Alice in Wonderland',
-    defaultIndex: 4,
+    defaultIndex: 5,
     tokens: [
       { text: 'Alice was beginning to get very ' },
       { text: 'tired', gloss: 'weary, bored', pos: 'adjective' },

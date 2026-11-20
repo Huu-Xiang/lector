@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
@@ -15,17 +15,32 @@ import {
   setSetting,
   type LibraryBook,
 } from '@/lib/data-layer';
+import { readLanguageCache } from '@/lib/language-cache';
 import { setLanguageInStorage } from '@/utils/storage';
 
 function ClaimBookInner() {
   const t = useTranslations('publicBooks');
   const router = useRouter();
   const searchParams = useSearchParams();
-  const claim = claimBookFromSearch(searchParams.toString());
+  const search = searchParams.toString();
+  const claim = useMemo(() => claimBookFromSearch(search), [search]);
 
   const [book, setBook] = useState<LibraryBook | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+
+  async function openClaimedBook(
+    target: { book: string; lang: string },
+    switchLanguage: boolean,
+  ): Promise<void> {
+    const collectionId = await addLibraryBook(target.lang, target.book);
+    if (switchLanguage) {
+      await setSetting('targetLanguage', target.lang);
+      setLanguageInStorage(target.lang);
+    }
+    const lessons = await getLessonsForCollection(collectionId);
+    router.replace(lessons[0] ? `/read/${lessons[0].id}` : `/collection/${collectionId}`);
+  }
 
   useEffect(() => {
     if (!claim) {
@@ -45,11 +60,8 @@ function ClaimBookInner() {
           router.replace('/');
           return;
         }
-        if (match.added) {
-          // Book is already in the user's library — switch language and open directly
-          // without mutating library state or consuming quota.
-          await setSetting('targetLanguage', claim.lang);
-          setLanguageInStorage(claim.lang);
+        // Only auto-open without confirmation when already in the book's language and library.
+        if (match.added && readLanguageCache() === claim.lang) {
           const collectionId = await addLibraryBook(claim.lang, claim.book);
           const lessons = await getLessonsForCollection(collectionId);
           if (cancelled) return;
@@ -74,11 +86,7 @@ function ClaimBookInner() {
     if (!claim || submitting) return;
     setSubmitting(true);
     try {
-      await setSetting('targetLanguage', claim.lang);
-      setLanguageInStorage(claim.lang);
-      const collectionId = await addLibraryBook(claim.lang, claim.book);
-      const lessons = await getLessonsForCollection(collectionId);
-      router.replace(lessons[0] ? `/read/${lessons[0].id}` : `/collection/${collectionId}`);
+      await openClaimedBook(claim, true);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : t('claimBack'));
       setSubmitting(false);

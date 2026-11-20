@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getLocale, getTranslations } from 'next-intl/server';
 import { LegalShell } from '@/components/LegalLinks/shell';
-import { registerHrefForBook } from '@/lib/pending-book';
+import { authHref, claimBookPath } from '@/lib/auth-return';
 import PublicChapterReader from '@/components/PublicChapterReader';
 import { findPublicBook, firstChapter, listPublicBooks, pickLocalized } from '@/lib/public-books';
 import BookSource from '../../../BookSource';
@@ -52,7 +52,7 @@ export default async function ChapterPage({ params }: Props) {
   const shown = pickLocalized(book.titles, locale, book.title);
   const bookHref = `/books/${language}/${slug}`;
   const singleLesson = book.lessonCount === 1;
-  const registerHref = registerHrefForBook({ language, slug });
+  const registerHref = authHref('/register', claimBookPath(language, slug));
 
   return (
     <LegalShell title={t('chapterTitle', { title: shown })}>

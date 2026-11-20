@@ -251,7 +251,10 @@ const ReaderBlock = memo(function ReaderBlock({
   );
 }, readerBlockPropsEqual);
 
-type ReaderBlockSharedProps = Omit<ReaderBlockProps, 'as' | 'className' | 'children' | 'blockId'> & {
+type ReaderBlockSharedProps = Omit<
+  ReaderBlockProps,
+  'as' | 'className' | 'children' | 'blockId'
+> & {
   title?: string;
 };
 
@@ -292,12 +295,7 @@ function createBlockComponent(as: ReaderBlockProps['as'], className?: string) {
   };
 }
 
-/**
- * Module-level component map so react-markdown keeps stable element types across
- * renders. Passing an inline object literal caused React to unmount and remount
- * every block DOM node on each word click or streamed gloss token, defeating
- * memo(ReaderBlock).
- */
+/** Module-level component map so react-markdown keeps stable element types across renders. */
 export const READER_MARKDOWN_COMPONENTS: Components = {
   h1: createBlockComponent('h1', 'mt-8 mb-4 font-sans text-3xl font-extrabold first:mt-0'),
   h2: createBlockComponent('h2', 'mt-8 mb-3 font-sans text-2xl font-bold first:mt-0'),
@@ -338,6 +336,7 @@ function ReaderArticle({
   const blockProps = useMemo<ReaderBlockSharedProps>(
     () => ({
       contentVersion: content,
+      title,
       pack,
       segmentation,
       knownWordsMap,
@@ -351,6 +350,7 @@ function ReaderArticle({
     }),
     [
       content,
+      title,
       pack,
       segmentation,
       knownWordsMap,
@@ -362,6 +362,15 @@ function ReaderArticle({
       onActivateWord,
       onClearPhrase,
     ],
+  );
+
+  const markdownTree = useMemo(
+    () => (
+      <ReactMarkdown remarkPlugins={REMARK_PLUGINS} components={READER_MARKDOWN_COMPONENTS}>
+        {content}
+      </ReactMarkdown>
+    ),
+    [content],
   );
 
   const wrapClass = readerWrapClass(pack);
@@ -386,11 +395,7 @@ function ReaderArticle({
         ...proseStyleVars(prose, pack),
       }}
     >
-      <ReaderBlockContext.Provider value={{ ...blockProps, title }}>
-        <ReactMarkdown remarkPlugins={REMARK_PLUGINS} components={READER_MARKDOWN_COMPONENTS}>
-          {content}
-        </ReactMarkdown>
-      </ReaderBlockContext.Provider>
+      <ReaderBlockContext.Provider value={blockProps}>{markdownTree}</ReaderBlockContext.Provider>
     </article>
   );
 }

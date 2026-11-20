@@ -270,6 +270,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
 
   // Load lesson
   useEffect(() => {
+    let cancelled = false;
     async function loadLesson() {
       try {
         const remembered = rememberedLesson(lessonId);
@@ -293,6 +294,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
           getLesson(lessonId),
           readerWordStateLoadRef.current.promise,
         ]);
+        if (cancelled) return;
 
         if (!loadedLesson) {
           void forgetLesson(lessonId);
@@ -309,19 +311,23 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         if (loadedLesson.collectionId) {
           getLessonsForCollection(loadedLesson.collectionId)
             .then((allLessons) => {
-              setSiblings(allLessons);
+              if (!cancelled) setSiblings(allLessons);
             })
             .catch(() => {});
         }
       } catch (err) {
+        if (cancelled) return;
         console.error('Error loading lesson:', err);
         setError(err instanceof Error ? err.message : t('loadFailed'));
       } finally {
-        setIsLoading(false);
+        if (!cancelled) setIsLoading(false);
       }
     }
 
     loadLesson();
+    return () => {
+      cancelled = true;
+    };
   }, [activeLang.code, lessonId, t]);
   useQueryRefresh([QUERY_SCOPES.lessons, QUERY_SCOPES.vocab], () => {
     const collectionId = peekLesson(lessonId)?.collectionId;
@@ -1686,11 +1692,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     () => (
       <>
         {cloud && (
-          <ReadingDifficulty
-            key={lessonId}
-            lessonId={lessonId}
-            language={readingLanguage}
-          />
+          <ReadingDifficulty key={lessonId} lessonId={lessonId} language={readingLanguage} />
         )}
         {hasSegments && (
           <button

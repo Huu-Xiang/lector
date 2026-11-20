@@ -26,6 +26,7 @@ export default function VocabRow({
       className="cursor-pointer border-b border-border transition-colors hover:bg-accent focus-visible:bg-accent focus-visible:outline-none"
       onClick={() => onClick(entry)}
       onKeyDown={(e) => {
+        if (e.target !== e.currentTarget) return;
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           onClick(entry);

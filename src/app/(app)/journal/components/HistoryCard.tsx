@@ -23,6 +23,7 @@ export default function HistoryCard({
       tabIndex={0}
       onClick={() => onSelect(entry)}
       onKeyDown={(e) => {
+        if (e.target !== e.currentTarget) return;
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           onSelect(entry);

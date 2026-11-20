@@ -14,11 +14,12 @@ const OFFLINE_LIST = 'capacitor://localhost/offline.html';
 /** Sends words saved offline when the account is known and when the connection returns. */
 export default function OfflineSync() {
   const t = useTranslations('chrome.offline');
-  const { data: session } = authClient.useSession();
+  const { data: session, isPending } = authClient.useSession();
   const userId = session?.user?.id ?? null;
   const [offline, setOffline] = useState(() => !navigator.onLine);
 
   useEffect(() => {
+    if (isPending) return;
     setOfflineUser(userId);
     if (!userId) return;
     // A link shared while signed out waits here until sign-in is done.
@@ -42,7 +43,7 @@ export default function OfflineSync() {
       window.removeEventListener('online', onOnline);
       window.removeEventListener('offline', onOffline);
     };
-  }, [userId, t]);
+  }, [isPending, userId, t]);
 
   if (!offline) return null;
   return (
