@@ -1,7 +1,7 @@
 'use client';
 
 import { forgetLesson, rememberLesson } from '@/lib/offline/sync';
-import { useEffect, useState, useCallback, use, useRef } from 'react';
+import { useEffect, useState, useCallback, use, useMemo, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import PageOutline from '@/components/PageOutline';
@@ -1679,6 +1679,33 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     t,
   ]);
 
+  const hasSegments = segments.length > 0;
+  const listenHeaderAction = useMemo(
+    () => (
+      <>
+        {cloud && (
+          <ReadingDifficulty
+            key={lessonId}
+            lessonId={lessonId}
+            language={readingLanguage}
+          />
+        )}
+        {hasSegments && (
+          <button
+            onClick={() => setListenMode(true)}
+            title={t('listenAlong')}
+            aria-label={t('listenAlong')}
+            data-testid="listen-along-toggle"
+            className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-accent"
+          >
+            <Headphones className="h-5 w-5" />
+          </button>
+        )}
+      </>
+    ),
+    [cloud, hasSegments, lessonId, readingLanguage, t],
+  );
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-card px-4 py-10 sm:px-6">
@@ -1812,28 +1839,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
             knownWordsMap={readerWordStates}
             prevLesson={lessonLink(prevLesson)}
             nextLesson={lessonLink(nextLesson)}
-            headerAction={
-              <>
-                {cloud && (
-                  <ReadingDifficulty
-                    key={lessonId}
-                    lessonId={lessonId}
-                    language={readingLanguage}
-                  />
-                )}
-                {segments.length > 0 && (
-                  <button
-                    onClick={() => setListenMode(true)}
-                    title={t('listenAlong')}
-                    aria-label={t('listenAlong')}
-                    data-testid="listen-along-toggle"
-                    className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-accent"
-                  >
-                    <Headphones className="h-5 w-5" />
-                  </button>
-                )}
-              </>
-            }
+            headerAction={listenHeaderAction}
           />
         )}
       </div>
