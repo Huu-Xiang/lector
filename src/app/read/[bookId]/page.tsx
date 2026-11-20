@@ -305,10 +305,13 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         setReaderWordStates(loadedWordStates);
         setLesson((current) => keepProgress(current, loadedLesson));
 
-        // Load sibling lessons for prev/next navigation
+        // Load sibling lessons asynchronously so prev/next nav never blocks text render
         if (loadedLesson.collectionId) {
-          const allLessons = await getLessonsForCollection(loadedLesson.collectionId);
-          setSiblings(allLessons);
+          getLessonsForCollection(loadedLesson.collectionId)
+            .then((allLessons) => {
+              setSiblings(allLessons);
+            })
+            .catch(() => {});
         }
       } catch (err) {
         console.error('Error loading lesson:', err);
@@ -645,10 +648,9 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         isPhrase ? [foldWord(word, activeLang)] : vocabKeys(word, activeLang),
       );
       existingEntryLookup.current = lookupPromise;
-      const existingEntry = await lookupPromise;
+      const [existingEntry, loadedNative] = await Promise.all([lookupPromise, loadNative()]);
       if (requestId !== translationRequestId.current) return;
-      const native = (await loadNative()) ?? 'en';
-      if (requestId !== translationRequestId.current) return;
+      const native = loadedNative ?? 'en';
       const hasTranslation = !!existingEntry && savedMeaningFits(existingEntry, native);
       const staleSaved = !!existingEntry && !hasTranslation;
       const replaceSavedMeaning = (translation: string) => {

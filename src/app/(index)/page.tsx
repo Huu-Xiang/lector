@@ -3,6 +3,7 @@
 import { useIsNativeApp } from '@/lib/native-app';
 import { useRegularIPadWindow } from '@/components/NativeBridge/ipad-layout';
 import { useEffect, useState, useRef } from 'react';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { ArrowRight, BookMarked, ChevronDown, Folder, Plus, Sparkles } from 'lucide-react';
@@ -18,11 +19,12 @@ import GroupMenu from './components/GroupMenu';
 import SortableCollectionCard from './components/SortableCollectionCard';
 import CollectionCard from '@/components/CollectionCard';
 import ImportDropdown from '@/components/ImportDropdown';
-import WebImportModal from '@/components/WebImportModal';
-import YouTubeImportModal from '@/components/YouTubeImportModal';
-import PasteImportModal from '@/components/PasteImportModal';
-import FreeBooksModal from '@/components/FreeBooksModal';
 import PendingBookOpener from '@/components/PendingBookOpener';
+
+const WebImportModal = dynamic(() => import('@/components/WebImportModal'), { ssr: false });
+const YouTubeImportModal = dynamic(() => import('@/components/YouTubeImportModal'), { ssr: false });
+const PasteImportModal = dynamic(() => import('@/components/PasteImportModal'), { ssr: false });
+const FreeBooksModal = dynamic(() => import('@/components/FreeBooksModal'), { ssr: false });
 import {
   DndContext,
   closestCenter,
@@ -609,40 +611,48 @@ export default function Home() {
         <PageOutline variant={libraryView === 'list' ? 'list' : 'cards'} />
       ) : (
         <section>
-          <WebImportModal
-            isOpen={isWebImportOpen}
-            onClose={() => {
-              setIsWebImportOpen(false);
-              setImportGroupId(null);
-            }}
-            onSave={handleWebImportSave}
-          />
-          <YouTubeImportModal
-            isOpen={isYouTubeImportOpen}
-            groupId={importGroupId}
-            onClose={() => {
-              setIsYouTubeImportOpen(false);
-              setImportGroupId(null);
-            }}
-            onImported={({ lessonId }) => {
-              setIsYouTubeImportOpen(false);
-              setImportGroupId(null);
-              router.push(`/read/${lessonId}`);
-            }}
-          />
-          <FreeBooksModal
-            isOpen={isFreeBooksOpen}
-            onClose={() => setIsFreeBooksOpen(false)}
-            onAdded={() => void loadData()}
-          />
-          <PasteImportModal
-            isOpen={isPasteImportOpen}
-            onClose={() => {
-              setIsPasteImportOpen(false);
-              setImportGroupId(null);
-            }}
-            onSave={handlePasteImportSave}
-          />
+          {isWebImportOpen && (
+            <WebImportModal
+              isOpen={isWebImportOpen}
+              onClose={() => {
+                setIsWebImportOpen(false);
+                setImportGroupId(null);
+              }}
+              onSave={handleWebImportSave}
+            />
+          )}
+          {isYouTubeImportOpen && (
+            <YouTubeImportModal
+              isOpen={isYouTubeImportOpen}
+              groupId={importGroupId}
+              onClose={() => {
+                setIsYouTubeImportOpen(false);
+                setImportGroupId(null);
+              }}
+              onImported={({ lessonId }) => {
+                setIsYouTubeImportOpen(false);
+                setImportGroupId(null);
+                router.push(`/read/${lessonId}`);
+              }}
+            />
+          )}
+          {isFreeBooksOpen && (
+            <FreeBooksModal
+              isOpen={isFreeBooksOpen}
+              onClose={() => setIsFreeBooksOpen(false)}
+              onAdded={() => void loadData()}
+            />
+          )}
+          {isPasteImportOpen && (
+            <PasteImportModal
+              isOpen={isPasteImportOpen}
+              onClose={() => {
+                setIsPasteImportOpen(false);
+                setImportGroupId(null);
+              }}
+              onSave={handlePasteImportSave}
+            />
+          )}
 
           {(!nativeApp || (collections.length === 0 && !hasGroups)) && (
             <HomeRecommendations language={activeLanguage} defaultOpen={collections.length < 3} />

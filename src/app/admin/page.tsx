@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState, type ReactNode } from 'react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { toast } from 'sonner';
 import PageHeader from '@/components/PageHeader';
@@ -31,9 +32,10 @@ import EmailSwitch from './EmailSwitch';
 import RedeemCampaigns from './RedeemCampaigns';
 import RefundRequests from './RefundRequests';
 import StatCard from './StatCard';
-import Trends from './Trends';
 import ProductAnalytics from './ProductAnalytics';
 import AiTiming from './AiTiming';
+
+const Trends = dynamic(() => import('./Trends'), { ssr: false });
 
 function formatBytes(n: number): string {
   if (n < 1024) return `${n} B`;
