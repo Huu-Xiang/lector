@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { LAST_MODE_STORAGE_KEY } from '@/lib/api-base';
 import { isNativeApp } from '@/lib/native-app';
 import { getOfflineUser } from '@/lib/offline/identity';
 import { syncOfflineWords } from '@/lib/offline/sync';
@@ -13,7 +14,18 @@ import { syncOfflineWords } from '@/lib/offline/sync';
  */
 export default function ServiceWorkerRegistrar() {
   useEffect(() => {
-    if (typeof window === 'undefined' || !('serviceWorker' in navigator)) return;
+    if (typeof window === 'undefined') return;
+
+    const liveMode = window.__ENV__?.LECTOR_MODE;
+    if (liveMode === 'cloud' || liveMode === 'selfhost') {
+      try {
+        window.localStorage.setItem(LAST_MODE_STORAGE_KEY, liveMode);
+      } catch {
+        // ignore storage errors
+      }
+    }
+
+    if (!('serviceWorker' in navigator)) return;
 
     if (isNativeApp()) {
       navigator.serviceWorker

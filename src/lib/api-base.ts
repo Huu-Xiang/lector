@@ -66,30 +66,23 @@ const DEFAULT_API_URL = 'http://localhost:3457';
 
 export type LectorMode = 'selfhost' | 'cloud';
 
-const LAST_MODE_STORAGE_KEY = 'readfox-last-mode';
+export const LAST_MODE_STORAGE_KEY = 'readfox-last-mode';
 
 /**
  * Deployment mode (#242): 'selfhost' (the default, today's app) or 'cloud'
  * (the future managed offering). Injected the same way as API_URL —
  * `/__env.js` in a container, `process.env` on the server.
  *
- * When online `/__env.js` is present, its value is persisted so a previously
- * cloud origin never fails open to 'selfhost' if `/__env.js` is unreachable
- * while offline in a PWA.
+ * Kept pure (no writes on read). ServiceWorkerRegistrar persists the verified
+ * online mode under LAST_MODE_STORAGE_KEY so a previously-cloud origin never
+ * fails open to 'selfhost' when `/__env.js` is unreachable while offline.
  */
 export function lectorMode(): LectorMode {
   if (typeof window === 'undefined') {
     return process.env.LECTOR_MODE === 'cloud' ? 'cloud' : 'selfhost';
   }
   const raw = window.__ENV__?.LECTOR_MODE;
-  if (raw === 'cloud' || raw === 'selfhost') {
-    try {
-      window.localStorage.setItem(LAST_MODE_STORAGE_KEY, raw);
-    } catch {
-      // ignore storage errors
-    }
-    return raw;
-  }
+  if (raw === 'cloud' || raw === 'selfhost') return raw;
   try {
     if (window.localStorage.getItem(LAST_MODE_STORAGE_KEY) === 'cloud') {
       return 'cloud';
