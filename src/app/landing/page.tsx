@@ -77,24 +77,33 @@ export default async function LandingPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(SOFTWARE_LD) }}
       />
       <WelcomeOfferNote variant="bar" />
-      <header className="mx-auto flex w-full max-w-5xl items-center justify-between px-4 py-5">
-        <Link href="/" className="flex items-center gap-2" title="Readfox">
-          <Image src="/logo.png" alt="" width={32} height={32} className="rounded" />
+      <header className="mx-auto flex w-full max-w-5xl items-center justify-between gap-3 px-4 py-4 sm:py-5">
+        <Link href="/" className="flex shrink-0 items-center gap-2" title="Readfox">
+          <Image src="/logo.png" alt="" width={32} height={32} className="shrink-0 rounded" />
           <span className="text-lg font-extrabold tracking-tight text-foreground">Readfox</span>
         </Link>
-        <nav className="flex items-center gap-3 text-sm">
-          <Link href="/books" className="font-medium text-foreground hover:underline">
+        <nav className="flex items-center gap-2.5 text-xs sm:gap-4 sm:text-sm">
+          <Link
+            href="/books"
+            className="font-medium whitespace-nowrap text-foreground hover:underline"
+          >
             {t('freeBooks')}
           </Link>
-          <Link href="/pricing" className="font-medium text-foreground hover:underline">
+          <Link
+            href="/pricing"
+            className="hidden font-medium whitespace-nowrap text-foreground hover:underline sm:inline"
+          >
             {t('pricing')}
           </Link>
-          <Link href="/login" className="font-medium text-foreground hover:underline">
+          <Link
+            href="/login"
+            className="font-medium whitespace-nowrap text-foreground hover:underline"
+          >
             {t('signIn')}
           </Link>
           <Link
             href="/register"
-            className="rounded-lg bg-primary px-3 py-1.5 font-semibold text-primary-foreground hover:opacity-90"
+            className="rounded-lg bg-primary px-2.5 py-1.5 font-semibold whitespace-nowrap text-primary-foreground hover:opacity-90 sm:px-3"
           >
             {t('getStarted')}
           </Link>
