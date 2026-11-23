@@ -158,4 +158,62 @@ describe('concordance-jump', () => {
       ),
     ).toBe(36);
   });
+
+  it('excludes nested [data-block-id] descendants so loose lists, blockquotes, and tight nested lists do not double-count occ (B3 R2)', () => {
+    const mkText = (textContent: string): Node => ({ nodeType: 3, textContent }) as unknown as Node;
+    const mkEl = (tagName: string, blockId: number | null, childNodes: Node[]): Node =>
+      ({
+        nodeType: 1,
+        tagName,
+        childNodes,
+        hasAttribute: (name: string) => name === 'data-block-id' && blockId !== null,
+        getAttribute: (name: string) =>
+          name === 'data-block-id' && blockId !== null ? String(blockId) : null,
+      }) as unknown as Node;
+
+    // Loose list + final paragraph:
+    //   - The harbor is busy.
+    //
+    //     Another sentence.
+    //
+    //   The harbor is busy.
+    const innerP1 = mkEl('P', 2, [mkText('The harbor is busy.')]);
+    const innerP2 = mkEl('P', 25, [mkText('Another sentence.')]);
+    const outerLi = mkEl('LI', 0, [innerP1, innerP2]);
+    const finalP = mkEl('P', 46, [mkText('The harbor is busy.')]);
+
+    // Simulate querySelectorAll('[data-block-id]') order: outer <li>, <p#2>, <p#25>, <p#46>.
+    const looseNodes = [
+      { id: 0, node: outerLi },
+      { id: 2, node: innerP1 },
+      { id: 25, node: innerP2 },
+      { id: 46, node: finalP },
+    ];
+    expect(readableBlockText(outerLi)).toBe('');
+    expect(readableBlockText(innerP1)).toBe('The harbor is busy.');
+    const looseBlocks = looseNodes
+      .map(({ id, node }) => ({ blockId: id, text: readableBlockText(node) }))
+      .filter((b) => b.text.length > 0);
+    expect(
+      findMatchingBlockId(
+        looseBlocks,
+        { sentence: 'The harbor is busy.', q: 'harbor', occ: 0 },
+        LANGUAGES.en,
+      ),
+    ).toBe(2);
+    expect(
+      findMatchingBlockId(
+        looseBlocks,
+        { sentence: 'The harbor is busy.', q: 'harbor', occ: 1 },
+        LANGUAGES.en,
+      ),
+    ).toBe(46);
+
+    // Tight nested list: parent <li> retains its own direct text without swallowing child <li>.
+    const nestedChildLi = mkEl('LI', 24, [mkText('Nested harbor.')]);
+    const nestedUl = mkEl('UL', null, [nestedChildLi]);
+    const tightParentLi = mkEl('LI', 0, [mkText('Parent harbor.'), nestedUl]);
+    expect(readableBlockText(tightParentLi)).toBe('Parent harbor.');
+    expect(readableBlockText(nestedChildLi)).toBe('Nested harbor.');
+  });
 });

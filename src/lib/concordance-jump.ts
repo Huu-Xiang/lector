@@ -160,9 +160,19 @@ function foldForJump(text: string, pack: LanguageConfig): string {
   return pack.code === 'grc' ? stripMarks(folded) : folded;
 }
 
-function collectBlockText(node: Node): string {
+function hasBlockIdAttr(node: Node): boolean {
+  const el = node as Partial<Element>;
+  if (typeof el.hasAttribute === 'function') return el.hasAttribute('data-block-id');
+  if (typeof el.getAttribute === 'function') return el.getAttribute('data-block-id') !== null;
+  return false;
+}
+
+function collectBlockText(node: Node, isRoot: boolean): string {
   if (node.nodeType === TEXT_NODE) return node.textContent ?? '';
   if (node.nodeType === ELEMENT_NODE) {
+    // Stop at nested ReaderBlocks (`<li><p>`, `<blockquote><p>`, nested `<li>`)
+    // so ancestor blocks do not duplicate sentences owned by descendant blocks.
+    if (!isRoot && hasBlockIdAttr(node)) return '';
     const tagName = (node as Element).tagName;
     if (typeof tagName === 'string') {
       const upper = tagName.toUpperCase();
@@ -173,17 +183,19 @@ function collectBlockText(node: Node): string {
   if (!node.childNodes) return '';
   let out = '';
   for (const child of Array.from(node.childNodes)) {
-    out += collectBlockText(child);
+    out += collectBlockText(child, false);
   }
   return out;
 }
 
 /**
- * Extract normalized visible text from a rendered reader block, treating `<br>`
- * (from `remarkBreaks`) as a space and skipping ruby annotations/buttons.
+ * Extract normalized visible text owned directly by a rendered reader block,
+ * treating `<br>` (from `remarkBreaks`) as a space, skipping ruby annotations
+ * and buttons, and excluding nested `[data-block-id]` subtrees so loose list
+ * items and blockquotes never double-count their child paragraphs.
  */
 export function readableBlockText(node: Node): string {
-  return normalizeJumpText(collectBlockText(node));
+  return normalizeJumpText(collectBlockText(node, true));
 }
 
 function stripSnippetEllipses(snippet: string): string {

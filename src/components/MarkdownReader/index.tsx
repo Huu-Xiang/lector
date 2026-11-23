@@ -330,7 +330,8 @@ export default function MarkdownReader({
       .map((el) => {
         const rawId = el.getAttribute('data-block-id');
         const blockId = rawId !== null ? Number(rawId) : NaN;
-        return Number.isFinite(blockId) ? { blockId, text: readableBlockText(el) } : null;
+        const text = readableBlockText(el);
+        return Number.isFinite(blockId) && text ? { blockId, text } : null;
       })
       .filter((item): item is { blockId: number; text: string } => item !== null);
 
