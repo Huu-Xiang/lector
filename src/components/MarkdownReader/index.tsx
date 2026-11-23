@@ -6,7 +6,6 @@ import { useTranslations } from 'next-intl';
 import { ArrowLeft, ChevronLeft, ChevronRight, Languages, SquarePen } from 'lucide-react';
 import { getLessonReadings, updateLessonProgress } from '@/lib/data-layer';
 import { createTrailingThrottle } from './throttle';
-import { snapToWordBoundaries } from './utils';
 import {
   foldWord,
   getLanguageConfig,
@@ -16,7 +15,14 @@ import {
   splitSentences,
   tokenize,
 } from '@/lib/languages';
-import { parseSegmentWords, readableRangeText, readableText, splitWords } from './utils';
+import {
+  findSelectionAnchorElement,
+  parseSegmentWords,
+  readableRangeText,
+  readableText,
+  snapToWordBoundaries,
+  splitWords,
+} from './utils';
 import { usePhraseTouchSelection } from './usePhraseTouchSelection';
 import { useActiveLanguage, useProseStyleSettings } from '@/utils/hooks';
 import { resolveProseStyle } from '@/lib/prose-style';
@@ -281,8 +287,9 @@ export default function MarkdownReader({
       const block = element.closest('p, li, blockquote, h1, h2, h3, h4, h5, h6');
       // readableText, not textContent — see the note on the ReaderArticle copy.
       // A ruby annotation would interleave and corrupt vocab.sentence (#289 4.4).
-      const text = block ? readableText(block) : '';
-      const wordText = readableText(element);
+      const spaced = pack.script.kind !== 'cjk-unspaced';
+      const text = block ? readableText(block, spaced) : '';
+      const wordText = readableText(element, spaced);
 
       const sentences = splitSentences(text, pack);
       for (const sentence of sentences) {
@@ -379,9 +386,14 @@ export default function MarkdownReader({
   // Handle text selection for phrases
   const handleMouseUp = useCallback(() => {
     const selection = window.getSelection();
-    if (!selection || selection.isCollapsed) return;
+    if (!selection || selection.isCollapsed || selection.rangeCount === 0) return;
 
-    const rawText = selection.toString().trim();
+    const spaced = pack.script.kind !== 'cjk-unspaced';
+    const range = selection.getRangeAt(0);
+    // Read via readableRangeText rather than selection.toString() so timestamp
+    // buttons are excluded and cross-cue word separation stays consistent
+    // across browsers without mutating the live range.
+    const rawText = readableRangeText(range, spaced).trim();
     if (!rawText || phraseWords(rawText).length < 2) return;
 
     // Snap to word boundaries
@@ -390,7 +402,7 @@ export default function MarkdownReader({
     const snappedText = snapToWordBoundaries(selection, pack, segmentation);
     if (!snappedText) return;
 
-    lookUpPhrase(snappedText, selection.anchorNode?.parentElement as HTMLElement);
+    lookUpPhrase(snappedText, findSelectionAnchorElement(selection, range));
   }, [lookUpPhrase, phraseWords, pack, segmentation]);
 
   // The touch gesture reports its endpoint spans, so the phrase text comes from
@@ -401,9 +413,10 @@ export default function MarkdownReader({
       const range = document.createRange();
       range.setStartBefore(first);
       range.setEndAfter(last);
-      lookUpPhrase(readableRangeText(range).trim(), first);
+      const spaced = pack.script.kind !== 'cjk-unspaced';
+      lookUpPhrase(readableRangeText(range, spaced).trim(), first);
     },
-    [lookUpPhrase],
+    [lookUpPhrase, pack.script.kind],
   );
 
   usePhraseTouchSelection(containerRef, handleTouchPhrase);

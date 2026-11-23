@@ -20,10 +20,16 @@ export function parseSegmentWords(value: string | null | undefined): string[] | 
   return parseStoredSegmentWords(value);
 }
 
-// Ruby annotation elements (#289 4.4). `<rt>` holds the reading; `<rp>` holds
-// the fallback parentheses a non-ruby browser shows instead. Both are ANNOTATION,
-// never content, so every path that reads text out of the DOM must skip them.
-const ANNOTATION_TAGS = new Set(['RT', 'RP']);
+// Non-content elements skipped when extracting readable text from the DOM:
+// `<rt>`/`<rp>` hold ruby annotations (#289 4.4), and `<button>` holds
+// interactive chrome such as transcript timestamp seek buttons (`TranscriptReader`).
+const SKIP_TAGS = new Set(['RT', 'RP', 'BUTTON']);
+
+// Block elements whose cloned boundaries separate words in spaced scripts
+// (e.g. dragging across YouTube transcript cues or markdown paragraphs).
+const BLOCK_TAGS = new Set(['DIV', 'P', 'LI', 'BLOCKQUOTE', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6']);
+
+const BLOCK_SELECTOR = 'p, li, blockquote, h1, h2, h3, h4, h5, h6';
 
 // Numeric nodeType constants rather than `Node.ELEMENT_NODE`. The `Node` global
 // does not exist outside a browser, so referencing it would throw under the
@@ -31,8 +37,14 @@ const ANNOTATION_TAGS = new Set(['RT', 'RP']);
 const ELEMENT_NODE = 1;
 const TEXT_NODE = 3;
 
+function isBlockElement(node: Node): boolean {
+  if (node.nodeType !== ELEMENT_NODE) return false;
+  const tagName = (node as Element).tagName;
+  return typeof tagName === 'string' && BLOCK_TAGS.has(tagName.toUpperCase());
+}
+
 /**
- * The text of a DOM subtree, excluding ruby annotations.
+ * The text of a DOM subtree, excluding ruby annotations and button chrome.
  *
  * `textContent` interleaves them. Measured in Chromium on
  * `<ruby>我<rt>wǒ</rt></ruby><ruby>喜欢<rt>xǐhuan</rt></ruby>`, `textContent`
@@ -40,31 +52,55 @@ const TEXT_NODE = 3;
  * cosmetic: `findSentence` feeds it to `wordPanel.sentence`, which is persisted
  * to `vocab.sentence` and later validated by the Anki cloze builder, so an
  * interleaved read corrupts saved vocabulary and fails the export.
+ *
+ * When `spaced` is true (default), adjacent cloned block boundaries get a
+ * single space separator so cross-cue and cross-paragraph selections preserve
+ * word separation; pass `false` for unspaced CJK scripts (`cjk-unspaced`).
  */
-export function readableText(node: Node): string {
+export function readableText(node: Node, spaced = true): string {
   if (node.nodeType === TEXT_NODE) return node.textContent ?? '';
-  if (node.nodeType === ELEMENT_NODE && ANNOTATION_TAGS.has((node as Element).tagName)) {
-    return '';
+  if (node.nodeType === ELEMENT_NODE) {
+    const tagName = (node as Element).tagName;
+    if (typeof tagName === 'string' && SKIP_TAGS.has(tagName.toUpperCase())) {
+      return '';
+    }
   }
+  if (!node.childNodes) return '';
   let out = '';
-  for (const child of Array.from(node.childNodes)) out += readableText(child);
+  let prevWasBlock = false;
+  for (const child of Array.from(node.childNodes)) {
+    const part = readableText(child, spaced);
+    if (!part) continue;
+    const childIsBlock = isBlockElement(child);
+    if (
+      spaced &&
+      out.length > 0 &&
+      (prevWasBlock || childIsBlock) &&
+      !/\s$/.test(out) &&
+      !/^\s/.test(part)
+    ) {
+      out += ' ';
+    }
+    out += part;
+    prevWasBlock = childIsBlock;
+  }
   return out;
 }
 
 /**
- * A Range's text, excluding ruby annotations.
+ * A Range's text, excluding ruby annotations and button chrome.
  *
  * `range.toString()` cannot be used: unlike a selection it ignores
- * `user-select: none`, so the CSS guard that keeps annotations out of a copy
- * does NOT keep them out of this. Verified in Chromium — with
- * `rt { user-select: none }`, `selection.toString()` returns "我喜欢读书。" while
- * `range.toString()` still returns "我wǒ喜欢xǐhuan读书dúshū。".
+ * `user-select: none`, so the CSS guard that keeps annotations and timestamp
+ * buttons out of a copy does NOT keep them out of this. Verified in Chromium —
+ * with `rt { user-select: none }`, `selection.toString()` returns "我喜欢读书。"
+ * while `range.toString()` still returns "我wǒ喜欢xǐhuan读书dúshū。".
  *
  * `cloneContents` is a detached fragment, so walking it cannot disturb the live
  * selection or the rendered DOM.
  */
-export function readableRangeText(range: Range): string {
-  return readableText(range.cloneContents());
+export function readableRangeText(range: Range, spaced = true): string {
+  return readableText(range.cloneContents(), spaced);
 }
 
 // Expand a selection to full word boundaries. DOM wrapper around the pure
@@ -78,7 +114,7 @@ export function snapToWordBoundaries(
   const range = selection.getRangeAt(0);
 
   const startContainer = range.startContainer;
-  if (startContainer.nodeType === Node.TEXT_NODE) {
+  if (startContainer.nodeType === TEXT_NODE) {
     const text = startContainer.textContent || '';
     const { start } = snapOffsetsToWordBoundaries(
       text,
@@ -91,7 +127,7 @@ export function snapToWordBoundaries(
   }
 
   const endContainer = range.endContainer;
-  if (endContainer.nodeType === Node.TEXT_NODE) {
+  if (endContainer.nodeType === TEXT_NODE) {
     const text = endContainer.textContent || '';
     const { end } = snapOffsetsToWordBoundaries(
       text,
@@ -103,7 +139,50 @@ export function snapToWordBoundaries(
     range.setEnd(endContainer, end);
   }
 
-  return readableRangeText(range).trim();
+  const spaced = pack.script.kind !== 'cjk-unspaced';
+  return readableRangeText(range, spaced).replace(/\s+/g, ' ').trim();
+}
+
+function asElement(node: Node | null): HTMLElement | null {
+  if (!node) return null;
+  return node.nodeType === ELEMENT_NODE
+    ? (node as HTMLElement)
+    : (node.parentElement as HTMLElement | null);
+}
+
+/**
+ * Resolve an element inside a readable text block (`<p>`, `<li>`, etc.) for
+ * sentence extraction on mouse drag selection.
+ *
+ * When a drag begins outside a `<p>` (for example on a transcript segment
+ * container or timestamp button), `selection.anchorNode?.parentElement` has no
+ * ancestor block, so fall back to the first block intersected by the range.
+ */
+export function findSelectionAnchorElement(selection: Selection, range: Range): HTMLElement | null {
+  const anchor = asElement(selection.anchorNode);
+  if (anchor?.closest?.(BLOCK_SELECTOR)) return anchor;
+
+  const start = asElement(range.startContainer);
+  if (start?.closest?.(BLOCK_SELECTOR)) return start;
+
+  const ancestor = asElement(range.commonAncestorContainer);
+  if (ancestor) {
+    const ancestorBlock = ancestor.closest?.(BLOCK_SELECTOR) as HTMLElement | null;
+    if (ancestorBlock) return ancestorBlock;
+    if (
+      typeof ancestor.querySelectorAll === 'function' &&
+      typeof range.intersectsNode === 'function'
+    ) {
+      for (const block of Array.from(ancestor.querySelectorAll<HTMLElement>(BLOCK_SELECTOR))) {
+        if (range.intersectsNode(block)) return block;
+      }
+    }
+  }
+
+  const end = asElement(range.endContainer);
+  if (end?.closest?.(BLOCK_SELECTOR)) return end;
+
+  return null;
 }
 
 export interface TextPart {

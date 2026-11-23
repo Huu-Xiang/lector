@@ -122,7 +122,7 @@ function TranscriptReader({
               onClick={() => onSeek(segment.start, segmentIndex)}
               title={t('playFromHere')}
               aria-label={t('playFrom', { time: formatTimestamp(segment.start) })}
-              className="mt-1 flex h-fit shrink-0 items-center gap-1 rounded-md px-2 py-1 font-mono text-xs text-muted-foreground tabular-nums transition-colors hover:bg-accent hover:text-foreground"
+              className="mt-1 flex h-fit shrink-0 items-center gap-1 rounded-md px-2 py-1 font-mono text-xs text-muted-foreground tabular-nums transition-colors select-none hover:bg-accent hover:text-foreground"
             >
               <Play className="h-3 w-3 opacity-70 transition-opacity sm:opacity-0 sm:group-hover:opacity-100" />
               {formatTimestamp(segment.start)}
