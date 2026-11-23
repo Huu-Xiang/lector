@@ -21,6 +21,7 @@ import {
   type CreateTransaction,
 } from './billing';
 import { makeBillingRoutes } from '../routes/billing';
+import { isServerTtsConfigured } from '../routes/tts';
 import { makeSessionMiddleware } from './session';
 import type { AuthEngine } from './accounts';
 import {
@@ -312,6 +313,44 @@ describe('billing env parsing', () => {
     expect(() => assertBillingBootable('paddle', true, false, true, { ...base })).toThrow(
       /PADDLE_WEBHOOK_SECRET/,
     );
+  });
+
+  test('production Free accepts valid TTS_PROVIDER=openai and rejects unconfigured or invalid server TTS', () => {
+    const base = {
+      enabled: true,
+      production: true,
+      hasTurnstileSecret: true,
+      hasTurnstileSiteKey: true,
+      hasCheckoutPrice: true,
+      byokAvailable: true,
+      classifyWorkerEnabled: false,
+      llmProvider: 'openai',
+      openAiCompatUrl: 'https://openrouter.ai/api',
+      hasOpenAiCompatApiKey: true,
+      wordGlossModel: 'google/gemini-2.5-flash-lite',
+      simplePhraseModel: 'google/gemini-2.5-flash-lite',
+      simpleContextModel: 'google/gemini-2.5-flash-lite',
+    };
+    const assertWithEnv = (env: NodeJS.ProcessEnv, hasGoogleTtsApiKey?: boolean) =>
+      assertBillingBootable('paddle', true, true, true, {
+        ...base,
+        hasGoogleTtsApiKey,
+        hasServerTts: isServerTtsConfigured(env),
+      });
+
+    expect(() =>
+      assertWithEnv({ TTS_PROVIDER: 'openai', TTS_URL: 'http://kokoro:8880/kokoro' }, false),
+    ).not.toThrow();
+    expect(() =>
+      assertWithEnv({ TTS_PROVIDER: 'openai', TTS_API_KEY: 'sk-test' }, false),
+    ).not.toThrow();
+    expect(() => assertWithEnv({ TTS_PROVIDER: 'openai' }, false)).toThrow(/GOOGLE_CLOUD_API_KEY/);
+    expect(() =>
+      assertWithEnv({ TTS_PROVIDER: 'openai', TTS_URL: 'ftp://bad' }, true),
+    ).toThrow(/GOOGLE_CLOUD_API_KEY/);
+    expect(() =>
+      assertWithEnv({ TTS_PROVIDER: 'typo', GOOGLE_CLOUD_API_KEY: 'g-key' }, true),
+    ).toThrow(/GOOGLE_CLOUD_API_KEY/);
   });
 
   test('billing defaults off in this test env', () => {

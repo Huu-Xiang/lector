@@ -54,6 +54,73 @@ describe('ttsCacheKey', () => {
     expect(key.hash).toMatch(/^[0-9a-f]{64}$/);
     expect(key.objectKey).toBe(`af/${key.hash.slice(0, 2)}/${key.hash}.mp3`);
   });
+
+  test('preserves exact Google v1 cache hash when provider and model are omitted', () => {
+    const expectedV1Hash = 'e6ca31cb5a0e8d6114bb079ed1ffe81f147939e6ae76973df6403606518239ae';
+    expect(ttsCacheKey(base).hash).toBe(expectedV1Hash);
+    expect(ttsCacheKey({ ...base, provider: undefined, model: undefined }).hash).toBe(
+      expectedV1Hash,
+    );
+  });
+
+  test('isolates OpenAI-compatible keys from Google v1 and across model, path prefix, and voice', () => {
+    const google = ttsCacheKey({
+      language: 'fr',
+      voice: 'fr-FR:fr-FR-Standard-A',
+      rate: 1.0,
+      text: 'Bonjour',
+    });
+    const openaiSameVoice = ttsCacheKey({
+      provider: 'openai',
+      model: 'kokoro',
+      language: 'fr',
+      voice: 'fr-FR:fr-FR-Standard-A',
+      rate: 1.0,
+      text: 'Bonjour',
+    });
+    const kokoro = ttsCacheKey({
+      provider: 'openai',
+      model: 'kokoro',
+      language: 'fr',
+      voice: 'http://kokoro:8880/kokoro:af_heart',
+      rate: 1.0,
+      text: 'Bonjour',
+    });
+    const edgePrefix = ttsCacheKey({
+      provider: 'openai',
+      model: 'kokoro',
+      language: 'fr',
+      voice: 'http://kokoro:8880/edge:af_heart',
+      rate: 1.0,
+      text: 'Bonjour',
+    });
+    const otherModel = ttsCacheKey({
+      provider: 'openai',
+      model: 'tts-1',
+      language: 'fr',
+      voice: 'http://kokoro:8880/kokoro:af_heart',
+      rate: 1.0,
+      text: 'Bonjour',
+    });
+    const otherVoice = ttsCacheKey({
+      provider: 'openai',
+      model: 'kokoro',
+      language: 'fr',
+      voice: 'http://kokoro:8880/kokoro:ff_siwis',
+      rate: 1.0,
+      text: 'Bonjour',
+    });
+
+    const hashes = new Set([
+      google.hash,
+      openaiSameVoice.hash,
+      kokoro.hash,
+      edgePrefix.hash,
+      otherModel.hash,
+      otherVoice.hash,
+    ]);
+    expect(hashes.size).toBe(6);
+  });
 });
 
 describe('backend selection', () => {

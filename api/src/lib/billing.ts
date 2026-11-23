@@ -103,6 +103,7 @@ export function assertBillingBootable(
     hasTurnstileSiteKey: boolean;
     hasCheckoutPrice?: boolean;
     hasGoogleTtsApiKey?: boolean;
+    hasServerTts?: boolean;
     byokAvailable?: boolean;
     classifyWorkerEnabled?: boolean;
     classifyLlmUrl?: string;
@@ -143,9 +144,10 @@ export function assertBillingBootable(
         'LECTOR_FREE_TIER=true in production requires at least one configured PADDLE_PRICE_* so the advertised Cloud upsell can start checkout.',
       );
     }
-    if (!free.hasGoogleTtsApiKey && !free.selfManaged) {
+    const hasServerTts = free.hasServerTts ?? free.hasGoogleTtsApiKey;
+    if (!hasServerTts && !free.selfManaged) {
       throw new Error(
-        'LECTOR_FREE_TIER=true in production requires GOOGLE_CLOUD_API_KEY so the advertised paid managed-voice upsell is available.',
+        'LECTOR_FREE_TIER=true in production requires server TTS (GOOGLE_CLOUD_API_KEY or TTS_PROVIDER=openai with TTS_URL/TTS_API_KEY) so the advertised paid managed-voice upsell is available.',
       );
     }
     if (!free.byokAvailable) {

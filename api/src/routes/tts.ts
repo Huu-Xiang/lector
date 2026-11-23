@@ -5,9 +5,17 @@ import { resolveLanguage } from '../lib/active-language';
 import { getCurrentUserId } from '../lib/user';
 import { getLanguageConfig } from '../lib/languages';
 import { entitlements, planLimitResponse, type UsageReservation } from '../lib/entitlements';
+import { readBodyCapped } from '../lib/safe-fetch';
 import { getTtsCache, ttsCacheKey } from '../lib/tts-cache';
 
 const GOOGLE_TTS_URL = 'https://texttospeech.googleapis.com/v1/text:synthesize';
+const DEFAULT_OPENAI_TTS_URL = 'https://api.openai.com';
+const DEFAULT_OPENAI_TTS_MODEL = 'tts-1';
+const DEFAULT_OPENAI_TTS_VOICE = 'alloy';
+const OPENAI_TTS_TIMEOUT_MS = 30_000;
+const MAX_OPENAI_TTS_RESPONSE_BYTES = 10 * 1024 * 1024;
+const MAX_OPENAI_TTS_ERROR_BYTES = 4096;
+
 const MAX_TTS_BODY_BYTES = 32 * 1024;
 // Google Cloud TTS caps SynthesisInput content at 5,000 UTF-8 bytes. Reject
 // locally before reserving quota or paying for an upstream request.
@@ -19,6 +27,98 @@ const MAX_TTS_TEXT_BYTES = 5_000;
 const ESPEAK_BASE_WPM = 175;
 const ESPEAK_MIN_WPM = 80;
 const ESPEAK_MAX_WPM = 450;
+
+type TtsProvider = 'google' | 'openai';
+
+function parseTtsProvider(raw: string | undefined): TtsProvider | null {
+  const value = (raw ?? '').trim();
+  if (value === '' || value === 'google') return 'google';
+  if (value === 'openai') return 'openai';
+  return null;
+}
+
+/**
+ * Validate and normalize an OpenAI-compatible TTS base URL: allow only
+ * http(s), reject embedded credentials, strip trailing `/` and a trailing
+ * `/v1` segment, and return `origin + pathname` (dropping query/hash so
+ * neither the speech endpoint nor cache keys carry extraneous tokens).
+ */
+function normalizeOpenAiTtsBaseUrl(raw: string): string | null {
+  let url: URL;
+  try {
+    url = new URL(raw);
+  } catch {
+    return null;
+  }
+  if (url.protocol !== 'http:' && url.protocol !== 'https:') return null;
+  if (url.username || url.password || !url.hostname) return null;
+  let pathname = url.pathname.replace(/\/+$/, '');
+  if (pathname === '/v1' || pathname.endsWith('/v1')) {
+    pathname = pathname.slice(0, -3).replace(/\/+$/, '');
+  }
+  return `${url.origin}${pathname}`;
+}
+
+function resolveOpenAiVoice(lang: string, env: NodeJS.ProcessEnv = process.env): string {
+  const fallbackVoice = (env.TTS_VOICE ?? '').trim() || DEFAULT_OPENAI_TTS_VOICE;
+  const rawVoices = (env.TTS_VOICES ?? '').trim();
+  if (!rawVoices) return fallbackVoice;
+  try {
+    const parsed: unknown = JSON.parse(rawVoices);
+    if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
+      console.warn('[tts] TTS_VOICES must be a JSON object — falling back to default voice.');
+      return fallbackVoice;
+    }
+    if (Object.hasOwn(parsed, lang)) {
+      const mapped = (parsed as Record<string, unknown>)[lang];
+      if (typeof mapped === 'string' && mapped.trim().length > 0) {
+        return mapped.trim();
+      }
+    }
+  } catch (err) {
+    console.warn('[tts] Invalid TTS_VOICES JSON — falling back to default voice:', err);
+  }
+  return fallbackVoice;
+}
+
+function isAllowedAudioContentType(contentType: string | null): boolean {
+  if (!contentType) return false;
+  const mediaType = contentType.split(';', 1)[0]?.trim().toLowerCase() ?? '';
+  return (
+    (mediaType.startsWith('audio/') && mediaType.length > 'audio/'.length) ||
+    mediaType === 'application/octet-stream'
+  );
+}
+
+function isValidMp3Bytes(bytes: Uint8Array): boolean {
+  if (bytes.byteLength >= 3 && bytes[0] === 0x49 && bytes[1] === 0x44 && bytes[2] === 0x33) {
+    return true; // ID3v2 header
+  }
+  if (bytes.byteLength >= 2 && bytes[0] === 0xff && (bytes[1] & 0xe0) === 0xe0) {
+    return true; // MPEG audio frame sync
+  }
+  return false;
+}
+
+/**
+ * Boot-path helper: true when the active TTS_PROVIDER has a valid server-side
+ * synthesis configuration (Google Cloud key, or OpenAI-compatible TTS_URL or
+ * TTS_API_KEY with a valid URL when set). False for unknown providers or
+ * malformed TTS_URL values.
+ */
+export function isServerTtsConfigured(env: NodeJS.ProcessEnv = process.env): boolean {
+  const provider = parseTtsProvider(env.TTS_PROVIDER);
+  if (provider === 'google') {
+    return Boolean((env.GOOGLE_CLOUD_API_KEY ?? '').trim());
+  }
+  if (provider === 'openai') {
+    const rawUrl = (env.TTS_URL ?? '').trim();
+    const apiKey = (env.TTS_API_KEY ?? '').trim();
+    if (rawUrl && normalizeOpenAiTtsBaseUrl(rawUrl) === null) return false;
+    return Boolean(rawUrl || apiKey);
+  }
+  return false;
+}
 
 interface SynthesizeRequest {
   input: { text: string };
@@ -118,7 +218,7 @@ app.post(
         // there is deliberately no `fallback: true` — an espeak-only language
         // has no browser voice to fall back to, and mis-speaking in a
         // wrong-language voice is the failure mode this seam exists to kill.
-        const rateNum = typeof rate === 'number' ? rate : 0.9;
+        const rateNum = typeof rate === 'number' && Number.isFinite(rate) ? rate : 0.9;
         try {
           const audioContent = await synthesizeWithEspeak(text, langConfig.code, rateNum);
           return c.json({ audioContent, contentType: 'audio/wav' });
@@ -128,13 +228,125 @@ app.post(
         }
       }
 
+      const speakingRate =
+        typeof rate === 'number' && Number.isFinite(rate)
+          ? Math.max(0.25, Math.min(4.0, rate))
+          : 0.9;
+
+      const provider = parseTtsProvider(process.env.TTS_PROVIDER);
+      if (provider === null) {
+        console.error(`Unknown TTS_PROVIDER: "${process.env.TTS_PROVIDER}"`);
+        return c.json({ error: 'TTS service unavailable', fallback: true }, 503);
+      }
+
+      const cache = getTtsCache();
+
+      if (provider === 'openai') {
+        const rawUrl = (process.env.TTS_URL ?? '').trim();
+        const baseUrl = rawUrl ? normalizeOpenAiTtsBaseUrl(rawUrl) : DEFAULT_OPENAI_TTS_URL;
+        if (!baseUrl) {
+          console.error('Invalid TTS_URL configuration for OpenAI-compatible TTS');
+          return c.json({ error: 'TTS service unavailable', fallback: true }, 503);
+        }
+
+        const apiKey = (process.env.TTS_API_KEY ?? '').trim() || undefined;
+        const model = (process.env.TTS_MODEL ?? '').trim() || DEFAULT_OPENAI_TTS_MODEL;
+        const voice = resolveOpenAiVoice(lang, process.env);
+
+        // Cache first: checked before the missing-config gate (keyless cache
+        // replay) and before usage metering.
+        const cacheKey = ttsCacheKey({
+          provider: 'openai',
+          model,
+          language: lang,
+          voice: `${baseUrl}:${voice}`,
+          rate: speakingRate,
+          text,
+        });
+        const hit = await cache.get(cacheKey);
+        if (hit) {
+          return c.json({
+            audioContent: Buffer.from(hit).toString('base64'),
+            contentType: 'audio/mp3',
+            cached: true,
+          });
+        }
+
+        if (!rawUrl && !apiKey) {
+          return c.json({ error: 'TTS service unavailable', fallback: true }, 503);
+        }
+
+        const ttsVerdict = entitlements.reserve(userId, 'ttsCharsPerMonth', text.length);
+        if (!ttsVerdict.allowed) return planLimitResponse(c, ttsVerdict);
+        reservation = ttsVerdict.reservation;
+
+        const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+        if (apiKey) headers.Authorization = `Bearer ${apiKey}`;
+
+        let response: Response;
+        try {
+          response = await fetch(`${baseUrl}/v1/audio/speech`, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify({
+              model,
+              input: text,
+              voice,
+              response_format: 'mp3',
+              speed: speakingRate,
+            }),
+            signal: AbortSignal.timeout(OPENAI_TTS_TIMEOUT_MS),
+            redirect: apiKey ? 'manual' : 'follow',
+          });
+        } catch (err) {
+          console.error('OpenAI-compatible TTS fetch error:', err);
+          return c.json({ error: 'TTS service unavailable', fallback: true }, 502);
+        }
+
+        if (!response.ok) {
+          const snippet = await readBodyCapped(response, MAX_OPENAI_TTS_ERROR_BYTES)
+            .then((bytes) => new TextDecoder().decode(bytes).slice(0, 500))
+            .catch(() => '');
+          console.error(`OpenAI-compatible TTS upstream error (${response.status}):`, snippet);
+          // Sanitize all upstream failures (never forward 401/402 or raw provider errors).
+          return c.json({ error: 'TTS service unavailable', fallback: true }, 502);
+        }
+
+        const contentType = response.headers.get('content-type');
+        if (!isAllowedAudioContentType(contentType)) {
+          await response.body?.cancel().catch(() => {});
+          console.error(`OpenAI-compatible TTS returned unexpected content-type: ${contentType}`);
+          return c.json({ error: 'TTS service unavailable', fallback: true }, 502);
+        }
+
+        let audioBytes: Uint8Array;
+        try {
+          audioBytes = await readBodyCapped(response, MAX_OPENAI_TTS_RESPONSE_BYTES);
+        } catch (err) {
+          console.error('OpenAI-compatible TTS body read error:', err);
+          return c.json({ error: 'TTS service unavailable', fallback: true }, 502);
+        }
+
+        if (!isValidMp3Bytes(audioBytes)) {
+          console.error(
+            `OpenAI-compatible TTS returned invalid or empty MP3 (${audioBytes.byteLength} bytes)`,
+          );
+          return c.json({ error: 'TTS service unavailable', fallback: true }, 502);
+        }
+
+        earned = true;
+        await cache.put(cacheKey, audioBytes);
+        return c.json({
+          audioContent: Buffer.from(audioBytes).toString('base64'),
+          contentType: 'audio/mp3',
+        });
+      }
+
       // Google path. A pack that lists 'google' must carry the voice fields.
       if (!langConfig.ttsCode || !langConfig.ttsVoice) {
         console.error(`Language "${lang}" declares Google TTS but has no ttsCode/ttsVoice`);
         return c.json({ error: 'TTS voice not configured for this language', fallback: true }, 503);
       }
-
-      const speakingRate = Math.max(0.25, Math.min(4.0, rate)); // Google's range is 0.25–4.0
 
       // Cache first (#226): identical (language, voice, rate, text) always
       // renders identical audio, so a hit skips Google entirely — checked
@@ -142,7 +354,6 @@ app.post(
       // metering, since ttsCharsPerMonth meters *synthesized* characters and a
       // hit synthesizes nothing. This is what makes read-along affordable:
       // re-reads and cross-user vocab overlap stop billing.
-      const cache = getTtsCache();
       const cacheKey = ttsCacheKey({
         language: lang,
         voice: `${langConfig.ttsCode}:${langConfig.ttsVoice}`,

@@ -30,9 +30,13 @@ export interface TtsCacheKeyParts {
   language: string;
   /** Full voice identity, e.g. 'af-ZA:af-ZA-Standard-A' (ttsCode:ttsVoice). */
   voice: string;
-  /** Speaking rate as sent to Google — different rates are different audio. */
+  /** Speaking rate as sent to the TTS provider — different rates are different audio. */
   rate: number;
   text: string;
+  /** Optional provider discriminator; omitted for Google v1 so existing hashes stay byte-identical. */
+  provider?: string;
+  /** Optional model identifier; omitted for Google v1 so existing hashes stay byte-identical. */
+  model?: string;
 }
 
 export interface TtsCacheKey {
@@ -43,22 +47,21 @@ export interface TtsCacheKey {
 
 /**
  * The issue's (lang, voice, sha(text)) key, hardened: rate participates too,
- * because Google renders a different waveform per speakingRate, and the whole
+ * because providers render a different waveform per speakingRate, and the whole
  * tuple is hashed as versioned JSON so a future format change can't collide
  * with old entries.
  */
 export function ttsCacheKey(parts: TtsCacheKeyParts): TtsCacheKey {
-  const hash = createHash('sha256')
-    .update(
-      JSON.stringify({
-        v: 1,
-        language: parts.language,
-        voice: parts.voice,
-        rate: parts.rate.toFixed(2),
-        text: parts.text,
-      }),
-    )
-    .digest('hex');
+  const payload: Record<string, string | number> = {
+    v: 1,
+    language: parts.language,
+    voice: parts.voice,
+    rate: parts.rate.toFixed(2),
+    text: parts.text,
+  };
+  if (parts.provider !== undefined) payload.provider = parts.provider;
+  if (parts.model !== undefined) payload.model = parts.model;
+  const hash = createHash('sha256').update(JSON.stringify(payload)).digest('hex');
   // Shard by language then by the first hash byte: debuggable per-language
   // prefixes for ops (S3 lifecycle rules, du -sh), no giant flat directories.
   return { hash, objectKey: `${parts.language}/${hash.slice(0, 2)}/${hash}.mp3` };

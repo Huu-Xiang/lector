@@ -4,6 +4,7 @@ import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
 
 import { routeMounts } from './routes/registry';
+import { isServerTtsConfigured } from './routes/tts';
 import { authMiddleware } from './lib/auth';
 import { sessionMiddleware } from './lib/session';
 import { assertBillingBootable, billingConfig, billingMiddleware } from './lib/billing';
@@ -55,6 +56,7 @@ try {
       hasTurnstileSiteKey: Boolean(process.env.TURNSTILE_SITE_KEY),
       hasCheckoutPrice: billingConfig.prices.length > 0,
       hasGoogleTtsApiKey: Boolean(process.env.GOOGLE_CLOUD_API_KEY),
+      hasServerTts: isServerTtsConfigured(),
       byokAvailable: isByokAvailable(),
       classifyWorkerEnabled: process.env.CLASSIFY_WORKER === '1',
       classifyLlmUrl: process.env.CLASSIFY_LLM_URL,
