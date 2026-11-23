@@ -112,6 +112,8 @@ export function calculateFreeTakeoutUpperBound(limits: PlanLimits) {
     sentence: '',
     translation: '',
     translationLang: 'zh-CN',
+    translationSource: 'ai_retranslate',
+    phraseDetails: '',
     state: 'ignored',
     stateUpdatedAt: HOSTILE_TIMESTAMP,
     reviewCount: MAX_FINITE_NUMBER,

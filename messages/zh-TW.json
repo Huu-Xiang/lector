@@ -2299,6 +2299,8 @@
       },
       "hearPronunciation": "聽發音",
       "sourceAiInContext": "AI · 語境",
+      "sourceAiSaved": "AI · 已儲存",
+      "sourceSaved": "已儲存",
       "sourceLearned": "已學習",
       "sourceOnDevice": "本機詞典",
       "sourceAi": "AI",

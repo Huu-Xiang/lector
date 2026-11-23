@@ -495,3 +495,204 @@ describe('vocab.translationLang', () => {
     expect(rows[0].translationLang).toBe('ko');
   });
 });
+
+describe('vocab.phraseDetails and vocab.translationSource (U2)', () => {
+  const clear = () => {
+    db.prepare('DELETE FROM wordCards').run();
+    db.prepare('DELETE FROM knownWords').run();
+    db.prepare('DELETE FROM vocab').run();
+  };
+  beforeEach(clear);
+  afterEach(clear);
+
+  function send(method: string, path: string, body: unknown) {
+    return app.request(path, {
+      method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+  }
+
+  test('POST and PUT round-trip phraseDetails and translationSource consistently across GET / and GET /:id', async () => {
+    const phraseDetails = {
+      literalBreakdown: 'under — под; weather — погода',
+      idiomaticMeaning: 'Feeling slightly unwell',
+      usageNotes: 'Common in everyday speech',
+      register: 'colloquial',
+    };
+
+    const created = await send('POST', '/', {
+      id: 'phrase-1',
+      text: 'under the weather',
+      type: 'phrase',
+      sentence: 'She felt under the weather today.',
+      translation: 'feeling sick',
+      translationLang: 'en',
+      translationSource: 'ai_phrase',
+      phraseDetails,
+      state: 'level1',
+      language: 'en',
+    });
+    expect(created.status).toBe(200);
+
+    const list = (await (await app.request('/?language=en&text=under%20the%20weather')).json()) as
+      | Array<Record<string, unknown>>
+      | undefined;
+    expect(list).toHaveLength(1);
+    expect(list![0].translationSource).toBe('ai_phrase');
+    expect(list![0].phraseDetails).toEqual(phraseDetails);
+
+    const single = (await (await app.request('/phrase-1')).json()) as Record<string, unknown>;
+    expect(single.translationSource).toBe('ai_phrase');
+    expect(single.phraseDetails).toEqual(phraseDetails);
+    expect(single).not.toHaveProperty('userId');
+
+    // Update phraseDetails and translationSource via PUT
+    const updatedDetails = {
+      idiomaticMeaning: 'Unwell or tired',
+      register: 'informal',
+    };
+    const putRes = await send('PUT', '/phrase-1', {
+      translation: 'not feeling well',
+      translationSource: 'ai_phrase',
+      phraseDetails: updatedDetails,
+    });
+    expect(putRes.status).toBe(200);
+
+    const afterPut = (await (await app.request('/phrase-1')).json()) as Record<string, unknown>;
+    expect(afterPut.translation).toBe('not feeling well');
+    expect(afterPut.translationSource).toBe('ai_phrase');
+    expect(afterPut.phraseDetails).toEqual(updatedDetails);
+
+    // Clearing phraseDetails to null omits it from GET responses
+    const clearRes = await send('PUT', '/phrase-1', { phraseDetails: null });
+    expect(clearRes.status).toBe(200);
+    const cleared = (await (await app.request('/phrase-1')).json()) as Record<string, unknown>;
+    expect(cleared.phraseDetails).toBeUndefined();
+  });
+
+  test('strips C0 control characters from phraseDetails fields before storing', async () => {
+    const res = await send('POST', '/', {
+      id: 'phrase-c0',
+      text: 'dar la lata',
+      type: 'phrase',
+      sentence: 'No me des la lata.',
+      translation: 'to annoy',
+      translationSource: 'ai_phrase',
+      phraseDetails: {
+        idiomaticMeaning: 'to bother\u0000\u0007 someone',
+        usageNotes: 'informal\u001f tone',
+      },
+      state: 'level1',
+      language: 'es',
+    });
+    expect(res.status).toBe(200);
+    const fetched = (await (await app.request('/phrase-c0')).json()) as {
+      phraseDetails?: Record<string, string>;
+    };
+    expect(fetched.phraseDetails).toEqual({
+      idiomaticMeaning: 'to bother someone',
+      usageNotes: 'informal tone',
+    });
+  });
+
+  test('rejects unknown keys, oversized fields, invalid register, non-object phraseDetails, and invalid translationSource with 400', async () => {
+    const badCases: Array<Record<string, unknown>> = [
+      {
+        text: 'a b',
+        type: 'phrase',
+        phraseDetails: { idiomaticMeaning: 'ok', extraKey: 'nope' },
+      },
+      {
+        text: 'a b',
+        type: 'phrase',
+        phraseDetails: { literalBreakdown: 'x'.repeat(513) },
+      },
+      {
+        text: 'a b',
+        type: 'phrase',
+        phraseDetails: { idiomaticMeaning: '汉'.repeat(171) }, // 513 UTF-8 bytes
+      },
+      {
+        text: 'a b',
+        type: 'phrase',
+        phraseDetails: { usageNotes: 'x'.repeat(513) },
+      },
+      {
+        text: 'a b',
+        type: 'phrase',
+        phraseDetails: { register: 'super-casual' },
+      },
+      {
+        text: 'a b',
+        type: 'phrase',
+        phraseDetails: '{"idiomaticMeaning":"raw string rejected on REST API"}',
+      },
+      {
+        text: 'a b',
+        type: 'phrase',
+        phraseDetails: ['not-an-object'],
+      },
+      {
+        text: 'gato',
+        type: 'word',
+        translationSource: 'invented_source',
+      },
+    ];
+
+    for (const body of badCases) {
+      const postRes = await send('POST', '/', { language: 'es', ...body });
+      expect(postRes.status).toBe(400);
+    }
+
+    await send('POST', '/', { id: 'valid-1', text: 'gato', translation: 'cat', language: 'es' });
+    expect((await send('PUT', '/valid-1', { translationSource: 'bad' })).status).toBe(400);
+    expect(
+      (await send('PUT', '/valid-1', { phraseDetails: { unknownField: 'x' } })).status,
+    ).toBe(400);
+    expect(
+      (await send('PUT', '/valid-1', { phraseDetails: { register: 'bogus' } })).status,
+    ).toBe(400);
+  });
+
+  test('PUT defaults translationSource to manual when translation changes without explicit source, and preserves existing source when translation is unchanged', async () => {
+    await send('POST', '/', {
+      id: 'w1',
+      text: 'banco',
+      translation: 'bench',
+      translationSource: 'ai_context',
+      state: 'level1',
+      language: 'es',
+    });
+
+    // Editing state while echoing the unchanged translation (like VocabDetailModal) keeps ai_context.
+    expect((await send('PUT', '/w1', { translation: 'bench', state: 'level2' })).status).toBe(200);
+    expect(
+      ((await (await app.request('/w1')).json()) as { translationSource: string | null })
+        .translationSource,
+    ).toBe('ai_context');
+
+    // Changing translation without specifying translationSource marks it as manual.
+    expect((await send('PUT', '/w1', { translation: 'park bench', state: 'level2' })).status).toBe(
+      200,
+    );
+    expect(
+      ((await (await app.request('/w1')).json()) as { translationSource: string | null })
+        .translationSource,
+    ).toBe('manual');
+
+    // Explicit translationSource overrides the manual default.
+    expect(
+      (
+        await send('PUT', '/w1', {
+          translation: 'financial bank',
+          translationSource: 'ai_retranslate',
+        })
+      ).status,
+    ).toBe(200);
+    expect(
+      ((await (await app.request('/w1')).json()) as { translationSource: string | null })
+        .translationSource,
+    ).toBe('ai_retranslate');
+  });
+});

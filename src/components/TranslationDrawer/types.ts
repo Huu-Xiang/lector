@@ -1,4 +1,4 @@
-import { VocabEntry, WordState } from '@/types';
+import { AiPhraseDetails, VocabEntry, VocabTranslationSource, WordState } from '@/types';
 
 /**
  * Shape returned by /api/dictionary/lookup. Mirror of the server-side type — kept in
@@ -38,17 +38,17 @@ export interface TranslationDrawerProps {
   /** AI fallback translation (used when entry is null/absent). */
   aiTranslation?: string | null;
   aiPartOfSpeech?: string | null;
-  /** Active AI in-context override. When set, the drawer shows this in place
-      of the dictionary senses (but `entry` stays in state so the page's save
-      handlers can keep the dictionary translation as canonical). */
+  /** Active AI in-context override from the current click session. */
   aiContextTranslation?: string | null;
+  /** Persisted AI/manual meaning from `vocab` matching the active explanation language.
+      Displayed as the primary translation above collapsed dictionary senses. */
+  savedAiTranslation?: string | null;
+  /** Provenance of `savedAiTranslation` (`ai_context`, `ai_retranslate`, or `manual`). */
+  savedTranslationSource?: VocabTranslationSource | null;
+  /** Sentence saved alongside `savedAiTranslation`; used to keep "In context" available on new sentences. */
+  savedSentence?: string | null;
   /** Rich AI phrase details — populated when the word is a multi-word phrase. */
-  aiPhraseDetails?: {
-    literalBreakdown?: string;
-    idiomaticMeaning?: string;
-    usageNotes?: string;
-    register?: string;
-  } | null;
+  aiPhraseDetails?: AiPhraseDetails | null;
 
   /** Whether the displayed result came from the on-device dictionary. */
   isDictionaryResult?: boolean;
@@ -90,6 +90,8 @@ export interface TranslationDrawerProps {
   onIgnore?: () => void;
   /** Request a fresh contextual translation from the AI (uses surrounding sentence). */
   onRequestContextTranslation?: () => void;
+  /** Called when the user expands a collapsed dictionary section (triggers lazy localization). */
+  onExpandDictionary?: () => void;
   /** Upgrade a fast streamed gloss to the full dictionary entry (senses, IPA,
       etymology, related forms). When absent the Enrich button is hidden. */
   onEnrich?: () => void;

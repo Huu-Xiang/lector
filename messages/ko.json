@@ -2299,6 +2299,8 @@
       },
       "hearPronunciation": "발음 듣기",
       "sourceAiInContext": "AI · 문맥 기반",
+      "sourceAiSaved": "AI · 저장됨",
+      "sourceSaved": "저장됨",
       "sourceLearned": "학습한 뜻",
       "sourceOnDevice": "기기 내 사전",
       "sourceAi": "AI",

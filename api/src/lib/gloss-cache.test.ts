@@ -1,7 +1,12 @@
 import '../test-guard';
 import { afterEach, describe, expect, test } from 'bun:test';
 import { db } from '../db';
-import { isCacheableGloss, normalizeGlossWord, sharedGlossCache } from './gloss-cache';
+import {
+  GLOSS_PROMPT_VERSION,
+  isCacheableGloss,
+  normalizeGlossWord,
+  sharedGlossCache,
+} from './gloss-cache';
 
 afterEach(() => db.prepare('DELETE FROM shared_gloss_cache').run());
 
@@ -39,5 +44,14 @@ describe('shared gloss cache', () => {
     sharedGlossCache.put('fr', 'en', 'vieux', 'old');
     db.prepare("UPDATE shared_gloss_cache SET createdAt = '2020-01-01T00:00:00.000Z'").run();
     expect(sharedGlossCache.get('fr', 'en', 'vieux')).toBeNull();
+  });
+
+  test('bumps GLOSS_PROMPT_VERSION to 2 and ignores stale v1 entries', () => {
+    expect(GLOSS_PROMPT_VERSION).toBe(2);
+    db.prepare(
+      `INSERT INTO shared_gloss_cache (language, nativeLanguage, word, promptVersion, gloss, hits, createdAt)
+       VALUES ('de', 'en', 'tisch', 1, 'table', 0, ?)`,
+    ).run(new Date().toISOString());
+    expect(sharedGlossCache.get('de', 'en', 'tisch')).toBeNull();
   });
 });

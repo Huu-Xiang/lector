@@ -42,7 +42,9 @@ import {
   lessonTextBytes,
   MAX_PERSISTED_ID_BYTES,
   utf8Bytes,
+  validateAndSerializePhraseDetails,
   validatePersistedId,
+  validateTranslationSource,
   vocabContentBytes,
 } from '../lib/storage-limits';
 import { countableLessonBytes, isShippedLibraryLesson } from '../lib/library-content';
@@ -604,6 +606,18 @@ app.post(
       if (row.translationLang != null && typeof row.translationLang !== 'string') {
         return c.json({ error: 'vocab.translationLang must be a string' }, 400);
       }
+      const sourceResult = validateTranslationSource(row.translationSource);
+      if (!sourceResult.ok) {
+        return c.json({ error: `vocab.${sourceResult.error}` }, 400);
+      }
+      row.translationSource = sourceResult.value ?? null;
+      const phraseResult = validateAndSerializePhraseDetails(row.phraseDetails, {
+        allowJsonString: true,
+      });
+      if (!phraseResult.ok) {
+        return c.json({ error: `vocab.${phraseResult.error}` }, 400);
+      }
+      row.phraseDetails = phraseResult.value ?? null;
       if (row.type !== undefined && row.type !== 'word' && row.type !== 'phrase') {
         return c.json({ error: "vocab.type must be 'word' or 'phrase'" }, 400);
       }
@@ -1074,6 +1088,8 @@ app.post(
         text: normalizeText(row.text ?? ''),
         sentence: row.sentence || '',
         translation: row.translation || '',
+        translationSource: row.translationSource ?? null,
+        phraseDetails: row.phraseDetails ?? null,
       });
     }
     const finalCloze = new Map<string, RestoreRow>();
@@ -1228,7 +1244,8 @@ app.post(
     const vocabBefore = existingBytesById(
       'vocab',
       `length(CAST(text AS BLOB)) + length(CAST(sentence AS BLOB)) +
-       length(CAST(translation AS BLOB))`,
+       length(CAST(translation AS BLOB)) +
+       length(CAST(COALESCE(phraseDetails, '') AS BLOB))`,
       userId,
       [...finalVocab.keys()],
     );
@@ -1512,11 +1529,12 @@ app.post(
 
       if (data.vocab?.length) {
         const stmt = db.prepare(`
-      INSERT INTO vocab (id, text, type, sentence, translation, translationLang, state, stateUpdatedAt, reviewCount, bookId, chapter, language, createdAt, pushedToAnki, ankiNoteId, userId)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO vocab (id, text, type, sentence, translation, translationLang, translationSource, phraseDetails, state, stateUpdatedAt, reviewCount, bookId, chapter, language, createdAt, pushedToAnki, ankiNoteId, userId)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       ON CONFLICT(userId, id) DO UPDATE SET
         text = excluded.text, type = excluded.type, sentence = excluded.sentence,
         translation = excluded.translation, translationLang = excluded.translationLang,
+        translationSource = excluded.translationSource, phraseDetails = excluded.phraseDetails,
         state = excluded.state, stateUpdatedAt = excluded.stateUpdatedAt,
         reviewCount = excluded.reviewCount, bookId = excluded.bookId, chapter = excluded.chapter,
         language = excluded.language, createdAt = excluded.createdAt,
@@ -1531,6 +1549,8 @@ app.post(
             v.sentence || '',
             v.translation || '',
             v.translation && isNativeLanguageCode(v.translationLang) ? v.translationLang : null,
+            v.translationSource ?? null,
+            v.phraseDetails ?? null,
             v.state || 'new',
             v.stateUpdatedAt || new Date().toISOString(),
             v.reviewCount || 0,

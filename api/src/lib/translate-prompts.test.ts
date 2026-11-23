@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'bun:test';
 import {
   phraseFieldsInWrongScript,
+  buildContextExplanationPrompt,
   buildExplainPrompt,
   buildExampleSentencePrompt,
   buildGlossPrompt,
@@ -232,5 +233,55 @@ describe('sentence prompts', () => {
     expect(prompt).toContain('éponge');
     expect(prompt).toContain('"sentence"');
     expect(prompt).toContain('"translation"');
+  });
+});
+
+describe('noun gender instructions (U2 / R5)', () => {
+  test('includes noun gender guidance for gendered languages across lookup prompts', () => {
+    const cases: Array<[string, string, string]> = [
+      ['German', 'Tisch', 'Der Tisch ist groß.'],
+      ['French', 'maison', 'La maison est belle.'],
+      ['Spanish', 'libro', 'El libro es interesante.'],
+      ['Russian', 'книга', 'Эта книга очень интересная.'],
+    ];
+    for (const [lang, word, sentence] of cases) {
+      const gloss = buildGlossPrompt(lang, word, sentence, 'Simplified Chinese');
+      expect(gloss).toContain('grammatical gender');
+      expect(gloss.length).toBeLessThan(1000);
+      expect(gloss).not.toContain('English');
+
+      const entry = buildWordEntryPrompt(lang, word, sentence, 'English');
+      expect(entry).toContain('grammatical gender');
+      expect(entry).toContain('"partOfSpeech"');
+
+      const simpleCtx = buildSimpleContextPrompt(lang, word, sentence, 'English');
+      expect(simpleCtx).toContain('grammatical gender');
+
+      const explainCtx = buildContextExplanationPrompt(lang, word, sentence, 'English');
+      expect(explainCtx).toContain('grammatical gender');
+
+      const phrase = buildPhrasePrompt(lang, '', `${word} ${word}`, sentence, 'English');
+      expect(phrase).toContain('grammatical gender');
+    }
+  });
+
+  test('omits noun gender instructions for genderless languages', () => {
+    for (const lang of ['English', 'Japanese', 'Mandarin Chinese', 'Afrikaans', 'Korean']) {
+      expect(buildGlossPrompt(lang, 'book', 'A book.', 'English')).not.toContain(
+        'grammatical gender',
+      );
+      expect(buildWordEntryPrompt(lang, 'book', 'A book.', 'English')).not.toContain(
+        'grammatical gender',
+      );
+      expect(buildSimpleContextPrompt(lang, 'book', 'A book.', 'English')).not.toContain(
+        'grammatical gender',
+      );
+      expect(buildContextExplanationPrompt(lang, 'book', 'A book.', 'English')).not.toContain(
+        'grammatical gender',
+      );
+      expect(buildPhrasePrompt(lang, '', 'a book', 'A book.', 'English')).not.toContain(
+        'grammatical gender',
+      );
+    }
   });
 });

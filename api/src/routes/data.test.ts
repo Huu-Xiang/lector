@@ -1336,3 +1336,187 @@ describe('export/restore — word cards and review log', () => {
     });
   });
 });
+
+describe('vocab phraseDetails and translationSource export/restore (U2)', () => {
+  beforeEach(reset);
+  afterEach(reset);
+
+  test('round-trips phraseDetails as raw JSON string and translationSource cleanly', async () => {
+    const details = {
+      literalBreakdown: 'tomar — take; pelo — hair',
+      idiomaticMeaning: 'to pull someone’s leg',
+      usageNotes: 'Very common in Spain and Latin America',
+      register: 'colloquial',
+    };
+    const res = await importData({
+      vocab: [
+        {
+          id: 'p-rt',
+          text: 'tomar el pelo',
+          type: 'phrase',
+          sentence: 'Me estás tomando el pelo.',
+          translation: 'you are pulling my leg',
+          translationLang: 'en',
+          translationSource: 'ai_phrase',
+          phraseDetails: details,
+          state: 'level2',
+          language: 'es',
+        },
+        {
+          id: 'w-rt',
+          text: 'banco',
+          type: 'word',
+          sentence: 'Me senté en el banco.',
+          translation: 'bench',
+          translationLang: 'en',
+          translationSource: 'ai_context',
+          state: 'level1',
+          language: 'es',
+        },
+      ],
+    });
+    expect(res.status).toBe(200);
+
+    const exported = (await (await app.request('/')).json()) as {
+      vocab: Array<{
+        id: string;
+        phraseDetails: string | null;
+        translationSource: string | null;
+      }>;
+    };
+    const exportedPhrase = exported.vocab.find((v) => v.id === 'p-rt');
+    const exportedWord = exported.vocab.find((v) => v.id === 'w-rt');
+    expect(exportedPhrase?.translationSource).toBe('ai_phrase');
+    expect(typeof exportedPhrase?.phraseDetails).toBe('string');
+    expect(JSON.parse(exportedPhrase!.phraseDetails!)).toEqual(details);
+    expect(exportedWord?.translationSource).toBe('ai_context');
+    expect(exportedWord?.phraseDetails).toBeNull();
+
+    // Restore from exported JSON string shape and confirm identical round-trip.
+    reset();
+    expect((await importData(exported)).status).toBe(200);
+    const reexported = (await (await app.request('/')).json()) as typeof exported;
+    expect(reexported.vocab.find((v) => v.id === 'p-rt')).toEqual(exportedPhrase);
+    expect(reexported.vocab.find((v) => v.id === 'w-rt')).toEqual(exportedWord);
+  });
+
+  test('rejects malformed backup phraseDetails or translationSource before any writes', async () => {
+    const invalidPayloads = [
+      {
+        collections: [{ id: 'c-atomic', title: 'No write' }],
+        vocab: [{ id: 'v1', text: 'a b', phraseDetails: '{bad json' }],
+      },
+      {
+        collections: [{ id: 'c-atomic', title: 'No write' }],
+        vocab: [{ id: 'v1', text: 'a b', phraseDetails: JSON.stringify({ rogue: 'x' }) }],
+      },
+      {
+        collections: [{ id: 'c-atomic', title: 'No write' }],
+        vocab: [
+          { id: 'v1', text: 'a b', phraseDetails: JSON.stringify({ register: 'not-a-register' }) },
+        ],
+      },
+      {
+        collections: [{ id: 'c-atomic', title: 'No write' }],
+        vocab: [
+          { id: 'v1', text: 'a b', phraseDetails: JSON.stringify({ usageNotes: 'x'.repeat(513) }) },
+        ],
+      },
+      {
+        collections: [{ id: 'c-atomic', title: 'No write' }],
+        vocab: [{ id: 'v1', text: 'gato', translationSource: 'unknown_source' }],
+      },
+    ];
+
+    for (const payload of invalidPayloads) {
+      const response = await importData(payload);
+      expect(response.status).toBe(400);
+      expect(db.prepare('SELECT COUNT(*) AS n FROM collections').get()).toEqual({ n: 0 });
+      expect(db.prepare('SELECT COUNT(*) AS n FROM vocab').get()).toEqual({ n: 0 });
+    }
+  });
+
+  test('accounts serialized phraseDetails bytes in vocabBefore and maxVocabTextBytesTotal', async () => {
+    const tightVocabLimits: PlanLimits = {
+      ...LIMITED,
+      maxVocabEntries: 10,
+      maxVocabEntryBytes: 120,
+      maxVocabTextBytesTotal: 120,
+    };
+    const restoreEngine = setEntitlementsEngineForTests(
+      makeEntitlements({
+        enforced: true,
+        freeTierEnabled: true,
+        exemptEmails: new Set(),
+        prices: [],
+        planLimits: {
+          free: tightVocabLimits,
+          cloud: tightVocabLimits,
+          plus: tightVocabLimits,
+          max: tightVocabLimits,
+        },
+        resolveEmail: () => null,
+        isByok: () => false,
+        compedPlan: () => null,
+        now: () => new Date('2026-07-15T12:00:00Z'),
+      }),
+    );
+
+    try {
+      // Seed a vocab row whose text + sentence + translation + serialized phraseDetails fits <= 120 bytes
+      const initialDetails = { idiomaticMeaning: 'x'.repeat(50) };
+      const first = await importData({
+        vocab: [
+          {
+            id: 'v-cap',
+            text: 'a b',
+            type: 'phrase',
+            sentence: 'a b',
+            translation: 'ab',
+            phraseDetails: initialDetails,
+            language: 'es',
+          },
+        ],
+      });
+      expect(first.status).toBe(200);
+
+      // Re-importing the exact same row (zero net growth) must succeed because vocabBefore counts phraseDetails
+      const replay = await importData({
+        vocab: [
+          {
+            id: 'v-cap',
+            text: 'a b',
+            type: 'phrase',
+            sentence: 'a b',
+            translation: 'ab',
+            phraseDetails: initialDetails,
+            language: 'es',
+          },
+        ],
+      });
+      expect(replay.status).toBe(200);
+
+      // Growing phraseDetails past the 120-byte ceiling must be blocked with 429
+      const oversized = await importData({
+        vocab: [
+          {
+            id: 'v-cap',
+            text: 'a b',
+            type: 'phrase',
+            sentence: 'a b',
+            translation: 'ab',
+            phraseDetails: { idiomaticMeaning: 'x'.repeat(100) },
+            language: 'es',
+          },
+        ],
+      });
+      expect(oversized.status).toBe(429);
+      expect(await oversized.json()).toMatchObject({
+        error: 'plan_limit',
+        metric: 'maxVocabEntryBytes',
+      });
+    } finally {
+      restoreEngine();
+    }
+  });
+});

@@ -1044,6 +1044,12 @@ function getDb(): Database {
   if (!vocabCols.some((c) => c.name === 'translationLang')) {
     _db.exec('ALTER TABLE vocab ADD COLUMN translationLang TEXT');
   }
+  if (!vocabCols.some((c) => c.name === 'phraseDetails')) {
+    _db.exec('ALTER TABLE vocab ADD COLUMN phraseDetails TEXT');
+  }
+  if (!vocabCols.some((c) => c.name === 'translationSource')) {
+    _db.exec('ALTER TABLE vocab ADD COLUMN translationSource TEXT');
+  }
 
   _db.exec(
     "UPDATE collections SET author = 'Readfox' WHERE author = 'Lector' AND id LIKE 'starter-%'",
@@ -2324,6 +2330,13 @@ export interface TranscriptSegmentRow {
   text: string;
 }
 
+export type VocabTranslationSource =
+  | 'dictionary'
+  | 'ai_context'
+  | 'ai_retranslate'
+  | 'ai_phrase'
+  | 'manual';
+
 export interface VocabRow {
   userId: string;
   id: string;
@@ -2341,6 +2354,8 @@ export interface VocabRow {
   pushedToAnki: number;
   ankiNoteId: number | null;
   translationLang: string | null;
+  phraseDetails: string | null;
+  translationSource: VocabTranslationSource | null;
 }
 
 export interface KnownWordRow {

@@ -51,6 +51,9 @@ export default function TranslationDrawer({
   aiTranslation,
   aiPartOfSpeech,
   aiContextTranslation,
+  savedAiTranslation,
+  savedTranslationSource,
+  savedSentence,
   aiPhraseDetails,
   isDictionaryResult,
   isLoading,
@@ -71,6 +74,7 @@ export default function TranslationDrawer({
   onMarkKnown,
   onIgnore,
   onRequestContextTranslation,
+  onExpandDictionary,
   onEnrich,
   onRetranslate,
   onLookupWord,
@@ -164,11 +168,19 @@ export default function TranslationDrawer({
   const highlights = contextTokens.filter((token) =>
     vocabKeys(foldWord(token.text, pack), pack).some((key) => selectedKeys.includes(key)),
   );
+  const showingSavedAi = !aiContextTranslation && !!savedAiTranslation;
+  const primaryAiActive = !!aiContextTranslation || showingSavedAi;
+  const alreadyInContextForSentence =
+    !!aiContextTranslation ||
+    (showingSavedAi &&
+      savedTranslationSource === 'ai_context' &&
+      !!savedSentence &&
+      sentence.trim() === savedSentence.trim());
   const requestContextButton = !isPhrase &&
     !isLoading &&
     !isContextLoading &&
     !isStreaming &&
-    !aiContextTranslation &&
+    !alreadyInContextForSentence &&
     onRequestContextTranslation &&
     wordOccursInSentence && (
       <button
@@ -210,7 +222,13 @@ export default function TranslationDrawer({
       word,
       isLoading: !!isLoading,
       error,
-      hasResult: !!(hasRichEntry || fallbackTranslation || aiContextTranslation || aiPhraseDetails),
+      hasResult: !!(
+        hasRichEntry ||
+        fallbackTranslation ||
+        aiContextTranslation ||
+        savedAiTranslation ||
+        aiPhraseDetails
+      ),
     },
     (key, values) => t(`announce.${key}`, values),
   );
@@ -296,7 +314,10 @@ export default function TranslationDrawer({
           </button>
         )}
         {/* Anki — single word: pure word card */}
-        {!isPhrase && onAddToAnki && (hasRichEntry || fallbackTranslation) && !isLoading && (
+        {!isPhrase &&
+          onAddToAnki &&
+          (hasRichEntry || fallbackTranslation || aiContextTranslation || savedAiTranslation) &&
+          !isLoading && (
           <button
             data-testid="add-to-anki-btn"
             onClick={async () => {
@@ -432,6 +453,26 @@ export default function TranslationDrawer({
     </>
   );
 
+  const savedAiSourcePill = showingSavedAi ? (
+    savedTranslationSource === 'manual' ? (
+      <span
+        data-testid="saved-ai-source-pill"
+        className="inline-flex items-center gap-1 rounded-md bg-[var(--gold-soft)] px-2 py-0.5 text-xs font-medium text-[var(--gold-strong)]"
+      >
+        <span className="h-1.5 w-1.5 rounded-full bg-[var(--gold-strong)]" />
+        {t('sourceSaved')}
+      </span>
+    ) : (
+      <span
+        data-testid="saved-ai-source-pill"
+        className="inline-flex items-center gap-1 rounded-md bg-[var(--clay-soft)] px-2 py-0.5 text-xs font-medium text-[var(--clay)]"
+      >
+        <span className="h-1.5 w-1.5 rounded-full bg-[var(--clay)]" />
+        {savedTranslationSource === 'ai_context' ? t('sourceAiInContext') : t('sourceAiSaved')}
+      </span>
+    )
+  ) : null;
+
   const lookupBadges = (
     <div className="mt-2 flex flex-wrap items-center gap-2">
       <span
@@ -452,6 +493,8 @@ export default function TranslationDrawer({
           <span className="h-1.5 w-1.5 rounded-full bg-[var(--clay)]" />
           {t('sourceAiInContext')}
         </span>
+      ) : showingSavedAi ? (
+        savedAiSourcePill
       ) : entry?.source === 'cache' ? (
         <span className="inline-flex items-center gap-1 rounded-md bg-[var(--gold-soft)] px-2 py-0.5 text-xs font-medium text-[var(--gold-strong)]">
           <span className="h-1.5 w-1.5 rounded-full bg-[var(--gold-strong)]" />
@@ -721,7 +764,7 @@ export default function TranslationDrawer({
                   <span className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
                   {t('lookingUp')}
                 </div>
-              ) : error && !aiContextTranslation ? (
+              ) : error && !aiContextTranslation && !showingSavedAi ? (
                 <p className="text-sm text-destructive">{error}</p>
               ) : aiContextTranslation ? (
                 <div data-testid="word-context-result">
@@ -763,7 +806,12 @@ export default function TranslationDrawer({
                     )}
                   </div>
                   {(hasRichEntry || fallbackTranslation) && (
-                    <details className="group mt-3">
+                    <details
+                      className="group mt-3"
+                      onToggle={(e) => {
+                        if (e.currentTarget.open) onExpandDictionary?.();
+                      }}
+                    >
                       <summary
                         className={clsx(
                           'flex cursor-pointer list-none items-center gap-1 text-xs font-medium text-muted-foreground hover:text-foreground',
@@ -798,6 +846,56 @@ export default function TranslationDrawer({
                       ) : (
                         <p className="mt-2 text-sm">{fallbackTranslation}</p>
                       )}
+                    </details>
+                  )}
+                </div>
+              ) : showingSavedAi ? (
+                <div data-testid="saved-ai-result">
+                  {compact && savedAiSourcePill && <div className="mb-1.5">{savedAiSourcePill}</div>}
+                  <p
+                    className={clsx(
+                      'text-foreground',
+                      compact ? 'text-sm leading-normal' : 'leading-relaxed',
+                    )}
+                  >
+                    {savedAiTranslation}
+                  </p>
+                  {hasRichEntry && (
+                    <details
+                      className="group mt-3"
+                      data-testid="saved-ai-dictionary-toggle"
+                      onToggle={(e) => {
+                        if (e.currentTarget.open) onExpandDictionary?.();
+                      }}
+                    >
+                      <summary
+                        className={clsx(
+                          'flex cursor-pointer list-none items-center gap-1 text-xs font-medium text-muted-foreground hover:text-foreground',
+                          compact && 'min-h-11',
+                        )}
+                      >
+                        <ChevronRight className="h-3 w-3 transition-transform group-open:rotate-90" />
+                        {t('showDictionary', { count: senses.length })}
+                      </summary>
+                      <ol className="mt-2 space-y-2">
+                        {senses.map((sense, i) => (
+                          <li key={i} className="flex gap-3 text-sm">
+                            <span className="mt-0.5 flex-shrink-0 text-xs font-medium text-muted-foreground tabular-nums">
+                              {i + 1}.
+                            </span>
+                            <div className="min-w-0 flex-1">
+                              {sense.partOfSpeech && (
+                                <span className="mr-2 inline-block rounded bg-muted px-1.5 py-0.5 align-middle text-[10px] font-semibold tracking-wide text-muted-foreground uppercase">
+                                  {posLabel(sense.partOfSpeech)}
+                                </span>
+                              )}
+                              <span className="text-foreground">
+                                <Gloss text={sense.gloss} onLookupWord={onLookupWord} />
+                              </span>
+                            </div>
+                          </li>
+                        ))}
+                      </ol>
                     </details>
                   )}
                 </div>
@@ -848,7 +946,7 @@ export default function TranslationDrawer({
           (senses, IPA, etymology, related forms). Only offered for a bare AI
           gloss (the page passes onEnrich only when there's no rich entry yet). */}
               {onEnrich &&
-                !aiContextTranslation &&
+                !primaryAiActive &&
                 !isPhrase &&
                 !isLoading &&
                 !isStreaming &&
@@ -950,7 +1048,7 @@ export default function TranslationDrawer({
                           />
                         </p>
                       )}
-                      {!aiContextTranslation && senses.length > leadSenses.length && (
+                      {!primaryAiActive && senses.length > leadSenses.length && (
                         <SenseGroups
                           senses={senses.slice(leadSenses.length)}
                           onLookupWord={onLookupWord}
@@ -960,7 +1058,7 @@ export default function TranslationDrawer({
                     </div>
                   </>
                 )}
-                {entry && !aiContextTranslation && (
+                {entry && !primaryAiActive && (
                   <EntryExtras
                     entry={entry}
                     word={word}

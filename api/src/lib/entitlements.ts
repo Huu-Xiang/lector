@@ -969,7 +969,8 @@ export function makeEntitlements(deps: EntitlementsDeps): EntitlementsEngine {
         return scalarUsage(
           `SELECT COALESCE(SUM(
              length(CAST(text AS BLOB)) + length(CAST(sentence AS BLOB)) +
-             length(CAST(translation AS BLOB))
+             length(CAST(translation AS BLOB)) +
+             length(CAST(COALESCE(phraseDetails, '') AS BLOB))
            ), 0) AS used FROM vocab WHERE userId = ?`,
           userId,
         );

@@ -1,7 +1,7 @@
 import { db } from '../db';
 
 /** Bump when the gloss prompt or model changes enough to invalidate stored answers. */
-export const GLOSS_PROMPT_VERSION = 1;
+export const GLOSS_PROMPT_VERSION = 2;
 
 const MAX_GLOSS_CHARS = 120;
 const MAX_AGE_MS = 180 * 24 * 60 * 60 * 1000;

@@ -10,6 +10,61 @@
 
 import { russianEnglishSlang } from './russian-english-slang';
 
+/** Languages whose nouns carry grammatical gender (ar, cs, de, el, es, fr, grc, hi, it, la, nb, nl, pl, pt, ru, sv, uk). */
+const GENDERED_LANGUAGE_NAMES = new Set([
+  'Arabic',
+  'Czech',
+  'German',
+  'Greek',
+  'Spanish',
+  'French',
+  'Koine Greek',
+  'Hindi',
+  'Italian',
+  'Latin',
+  'Norwegian',
+  'Dutch',
+  'Polish',
+  'Portuguese',
+  'Russian',
+  'Swedish',
+  'Ukrainian',
+]);
+
+export function hasGrammaticalGender(langName: string): boolean {
+  return GENDERED_LANGUAGE_NAMES.has(langName);
+}
+
+function glossGenderHint(langName: string): string {
+  return hasGrammaticalGender(langName)
+    ? ' For nouns, include grammatical gender or definite article (e.g. "(m.)" or article).'
+    : '';
+}
+
+function simpleContextGenderHint(langName: string): string {
+  return hasGrammaticalGender(langName)
+    ? ' If the word is a noun, include its grammatical gender or definite article.'
+    : '';
+}
+
+function contextExplanationGenderHint(langName: string): string {
+  return hasGrammaticalGender(langName)
+    ? ' If the word is a noun, note its grammatical gender or definite article.'
+    : '';
+}
+
+function wordEntryGenderHint(langName: string): string {
+  return hasGrammaticalGender(langName)
+    ? '\n- For nouns, include grammatical gender or definite article inside the gloss (e.g. "(m.)" or article), while keeping "partOfSpeech" bare as "noun".'
+    : '';
+}
+
+function phraseGenderHint(langName: string): string {
+  return hasGrammaticalGender(langName)
+    ? ' Include grammatical gender or definite articles for key nouns when helpful.'
+    : '';
+}
+
 function vettedWordHint(langName: string, word: string, nativeName: string): string {
   if (langName !== 'English' || nativeName !== 'Russian') return '';
   const senses = russianEnglishSlang(word);
@@ -81,7 +136,7 @@ export function buildGlossPrompt(
   return `You are a ${langName} to ${nativeName} translator. A learner clicked the word "${word}" while reading.
 Sentence context: "${sentence || word}"
 
-Reply with ONLY the concise ${nativeName} meaning — the natural translation(s), most common sense first, separated by "; ". No explanation, no quotes, no markdown, no extra words. If the word is an inflected form you may prefix a short tag like "(plural)" or "(past tense)". Keep it under ~12 words.`;
+Reply with ONLY the concise ${nativeName} meaning — the natural translation(s), most common sense first, separated by "; ". No explanation, no quotes, no markdown, no extra words. If the word is an inflected form you may prefix a short tag like "(plural)" or "(past tense)".${glossGenderHint(langName)} Keep it under ~12 words.`;
 }
 
 /**
@@ -157,7 +212,7 @@ export function buildSimpleContextPrompt(
 Selected word: "${word}"
 Sentence context: "${sentence || word}"${vettedWordHint(langName, word, nativeName)}
 
-Return ONLY the context-appropriate ${nativeName} translation. Do not list other senses. Do not explain it. Do not use quotes, labels, JSON, or Markdown.`;
+Return ONLY the context-appropriate ${nativeName} translation.${simpleContextGenderHint(langName)} Do not list other senses. Do not explain it. Do not use quotes, labels, JSON, or Markdown.`;
 }
 
 export function buildContextExplanationPrompt(
@@ -171,7 +226,7 @@ export function buildContextExplanationPrompt(
 Selected word: "${word}"
 Sentence: "${sentence}"
 
-Give the one meaning that fits, followed by a brief paraphrase of the relevant part of the sentence. Explain the full expression when the word is part of one. Write the entire answer in ${nativeName}. Keep the source word only if needed for clarity. Use at most two short sentences in plain text. Omit alternative senses, headings, and Markdown.`;
+Give the one meaning that fits, followed by a brief paraphrase of the relevant part of the sentence.${contextExplanationGenderHint(langName)} Explain the full expression when the word is part of one. Write the entire answer in ${nativeName}. Keep the source word only if needed for clarity. Use at most two short sentences in plain text. Omit alternative senses, headings, and Markdown.`;
 }
 
 /**
@@ -214,7 +269,7 @@ Rules:
 - Use the sentence to bias sense ORDER, but include all common senses a learner might reasonably encounter.
 - Each gloss is a short ${nativeName} phrase (1-4 words is typical, up to a clause for verbs with idiomatic completions).
 - Omit ipa / etymology / relatedForms entirely if you're not confident — don't guess.
-- Use the same partOfSpeech vocabulary as Wiktionary so cached entries align with the curated dict.${vettedWordHint(langName, word, nativeName)}
+- Use the same partOfSpeech vocabulary as Wiktionary so cached entries align with the curated dict.${wordEntryGenderHint(langName)}${vettedWordHint(langName, word, nativeName)}
 
 Backwards-compat fields the server adds (do NOT include these yourself — server stitches them from senses): translation, partOfSpeech.${writeIn(nativeName)}`;
 }
@@ -261,7 +316,7 @@ Required fields: translation. All other fields are optional — only include the
 - Include usageNotes when the phrase carries register / tone / cultural baggage the learner couldn't infer from the dictionary.
 - Include register if you're confident; omit if neutral or unclear.
 
-Be specific and concrete in idiomaticMeaning and usageNotes — avoid vague phrases like 'commonly used' or 'has a special meaning'.${omitOrigins ? NO_ORIGINS : ''}${writeIn(nativeName)}`;
+Be specific and concrete in idiomaticMeaning and usageNotes — avoid vague phrases like 'commonly used' or 'has a special meaning'.${phraseGenderHint(langName)}${omitOrigins ? NO_ORIGINS : ''}${writeIn(nativeName)}`;
 }
 
 export function buildExplainPrompt(input: {

@@ -74,6 +74,8 @@
       },
       "hearPronunciation": "発音を聞く",
       "sourceAiInContext": "AI · 文脈つき",
+      "sourceAiSaved": "AI · 保存済み",
+      "sourceSaved": "保存済み",
       "sourceLearned": "学習済み",
       "sourceOnDevice": "端末内",
       "sourceAi": "AI",

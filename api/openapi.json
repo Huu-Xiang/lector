@@ -11638,6 +11638,31 @@
                     ],
                     "description": "Language code of `translation`. Optional; the server guesses it when absent."
                   },
+                  "translationSource": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "enum": [
+                      "dictionary",
+                      "ai_context",
+                      "ai_retranslate",
+                      "ai_phrase",
+                      "manual",
+                      null
+                    ],
+                    "description": "Where `translation` came from."
+                  },
+                  "phraseDetails": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/PhraseDetails"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
                   "state": {
                     "type": "string",
                     "enum": [
@@ -11979,6 +12004,31 @@
                       "null"
                     ],
                     "description": "Language code of `translation`. Optional; the server guesses it when absent."
+                  },
+                  "translationSource": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "enum": [
+                      "dictionary",
+                      "ai_context",
+                      "ai_retranslate",
+                      "ai_phrase",
+                      "manual",
+                      null
+                    ],
+                    "description": "Where `translation` came from."
+                  },
+                  "phraseDetails": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/PhraseDetails"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
                   },
                   "state": {
                     "type": "string",
@@ -12725,6 +12775,34 @@
           "text"
         ]
       },
+      "PhraseDetails": {
+        "type": "object",
+        "description": "Structured breakdown of a saved phrase.",
+        "properties": {
+          "literalBreakdown": {
+            "type": "string"
+          },
+          "idiomaticMeaning": {
+            "type": "string"
+          },
+          "usageNotes": {
+            "type": "string"
+          },
+          "register": {
+            "type": "string",
+            "enum": [
+              "formal",
+              "informal",
+              "literary",
+              "colloquial",
+              "archaic",
+              "neutral",
+              "slang"
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
       "VocabEntry": {
         "type": "object",
         "description": "A word or phrase the account saved, with the sentence it came from.",
@@ -12755,6 +12833,25 @@
               "null"
             ],
             "description": "Language code of `translation`. Optional; the server guesses it when absent."
+          },
+          "translationSource": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "dictionary",
+              "ai_context",
+              "ai_retranslate",
+              "ai_phrase",
+              "manual",
+              null
+            ],
+            "description": "Where `translation` came from."
+          },
+          "phraseDetails": {
+            "$ref": "#/components/schemas/PhraseDetails",
+            "description": "Structured breakdown persisted for multi-word phrases."
           },
           "state": {
             "type": "string",
@@ -13440,6 +13537,119 @@
           "entryDate"
         ]
       },
+      "VocabEntryExport": {
+        "type": "object",
+        "description": "A vocabulary row as the data takeout carries it. `phraseDetails` stays a JSON string here, while the vocabulary endpoints parse it.",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "word",
+              "phrase"
+            ]
+          },
+          "sentence": {
+            "type": "string"
+          },
+          "translation": {
+            "type": "string"
+          },
+          "translationLang": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "translationSource": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "dictionary",
+              "ai_context",
+              "ai_retranslate",
+              "ai_phrase",
+              "manual",
+              null
+            ],
+            "description": "Where `translation` came from."
+          },
+          "phraseDetails": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Structured phrase details, as a JSON string."
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "new",
+              "level1",
+              "level2",
+              "level3",
+              "level4",
+              "known",
+              "ignored"
+            ],
+            "description": "How well the account knows a word. `level1` to `level4` are the learning steps between `new` and `known`. `ignored` hides the word."
+          },
+          "stateUpdatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "reviewCount": {
+            "type": "integer"
+          },
+          "bookId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "chapter": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "language": {
+            "type": "string"
+          },
+          "pushedToAnki": {
+            "type": "integer",
+            "enum": [
+              0,
+              1
+            ]
+          },
+          "ankiNoteId": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "text",
+          "type",
+          "state",
+          "language",
+          "createdAt"
+        ]
+      },
       "UserExport": {
         "type": "object",
         "description": "Every portable learning record for the account.",
@@ -13481,7 +13691,7 @@
           "vocab": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/VocabEntry"
+              "$ref": "#/components/schemas/VocabEntryExport"
             }
           },
           "knownWords": {

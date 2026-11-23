@@ -74,6 +74,8 @@
       },
       "hearPronunciation": "Hear pronunciation",
       "sourceAiInContext": "AI · in context",
+      "sourceAiSaved": "AI · saved",
+      "sourceSaved": "saved",
       "sourceLearned": "learned",
       "sourceOnDevice": "on-device",
       "sourceAi": "AI",

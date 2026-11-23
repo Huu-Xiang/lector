@@ -161,8 +161,9 @@ export function buildUserExport(userId: string): UserExport {
     vocab: portableRows(
       db
         .prepare(
-          `SELECT id, text, type, sentence, translation, translationLang, state, stateUpdatedAt,
-                  reviewCount, bookId, chapter, language, createdAt, pushedToAnki, ankiNoteId
+          `SELECT id, text, type, sentence, translation, translationLang, translationSource,
+                  phraseDetails, state, stateUpdatedAt, reviewCount, bookId, chapter, language,
+                  createdAt, pushedToAnki, ankiNoteId
            FROM vocab WHERE userId = ?`,
         )
         .all(userId),

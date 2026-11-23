@@ -10,7 +10,10 @@ import {
   aggregateGrowthCheck,
   batchGrowthCheck,
   growingRowCheck,
+  parsePhraseDetails,
   utf8Bytes,
+  validateAndSerializePhraseDetails,
+  validateTranslationSource,
   vocabContentBytes,
   validatePersistedId,
 } from '../lib/storage-limits';
@@ -46,6 +49,30 @@ const WORD_STATES = new Set([
   'known',
   'ignored',
 ] as const);
+
+function serializeVocabRow(v: VocabRow & { collectionId?: string | null }) {
+  const phraseDetails = parsePhraseDetails(v.phraseDetails);
+  return {
+    id: v.id,
+    text: v.text,
+    type: v.type,
+    sentence: v.sentence,
+    translation: v.translation,
+    translationLang: v.translationLang,
+    translationSource: v.translationSource ?? null,
+    ...(phraseDetails ? { phraseDetails } : {}),
+    state: v.state,
+    stateUpdatedAt: v.stateUpdatedAt,
+    reviewCount: v.reviewCount,
+    bookId: v.bookId,
+    ...('collectionId' in v ? { collectionId: v.collectionId } : {}),
+    chapter: v.chapter,
+    language: v.language,
+    createdAt: v.createdAt,
+    pushedToAnki: v.pushedToAnki === 1,
+    ankiNoteId: v.ankiNoteId,
+  };
+}
 
 // GET /api/vocab
 app.get('/', (c) => {
@@ -86,25 +113,7 @@ app.get('/', (c) => {
     VocabRow & { collectionId: string | null }
   >;
 
-  return c.json(
-    vocab.map((v) => ({
-      id: v.id,
-      text: v.text,
-      type: v.type,
-      sentence: v.sentence,
-      translation: v.translation,
-      translationLang: v.translationLang,
-      state: v.state,
-      stateUpdatedAt: v.stateUpdatedAt,
-      reviewCount: v.reviewCount,
-      bookId: v.bookId,
-      collectionId: v.collectionId,
-      chapter: v.chapter,
-      createdAt: v.createdAt,
-      pushedToAnki: v.pushedToAnki === 1,
-      ankiNoteId: v.ankiNoteId,
-    })),
-  );
+  return c.json(vocab.map(serializeVocabRow));
 });
 
 // POST /api/vocab
@@ -132,6 +141,10 @@ app.post('/', async (c) => {
   }
   const langTagError = translationLangError(body.translationLang);
   if (langTagError) return c.json({ error: langTagError }, 400);
+  const sourceResult = validateTranslationSource(body.translationSource);
+  if (!sourceResult.ok) return c.json({ error: sourceResult.error }, 400);
+  const phraseDetailsResult = validateAndSerializePhraseDetails(body.phraseDetails);
+  if (!phraseDetailsResult.ok) return c.json({ error: phraseDetailsResult.error }, 400);
   const typeError = validateEnum(body.type, 'type', VOCAB_TYPES);
   if (typeError) return c.json({ error: typeError }, 400);
   const stateError = validateEnum(body.state, 'state', WORD_STATES);
@@ -159,15 +172,21 @@ app.post('/', async (c) => {
     body.translationLang,
     getNativeLanguageCode(userId),
   );
+  const translationSource = sourceResult.value ?? null;
+  const phraseDetails = phraseDetailsResult.value ?? null;
   const foldedText = foldWord(text, pack);
   const existing = db
-    .prepare('SELECT text, sentence, translation FROM vocab WHERE id = ? AND userId = ?')
-    .get(id, userId) as { text: string; sentence: string; translation: string } | undefined;
+    .prepare(
+      'SELECT text, sentence, translation, phraseDetails FROM vocab WHERE id = ? AND userId = ?',
+    )
+    .get(id, userId) as
+    | { text: string; sentence: string; translation: string; phraseDetails: string | null }
+    | undefined;
   const knownExists = !!db
     .prepare('SELECT 1 FROM knownWords WHERE userId = ? AND word = ? AND language = ?')
     .get(userId, foldedText, lang);
   const previousVocabBytes = existing ? vocabContentBytes(existing) : 0;
-  const nextVocabBytes = vocabContentBytes({ text, sentence, translation });
+  const nextVocabBytes = vocabContentBytes({ text, sentence, translation, phraseDetails });
   const vocabGrowth = Math.max(0, nextVocabBytes - previousVocabBytes);
   const knownGrowth = knownExists ? 0 : utf8Bytes(foldedText);
   const checks: AtomicLimitCheck[] = [
@@ -186,11 +205,12 @@ app.post('/', async (c) => {
   const verdict = entitlements.reserveCount(userId, checks, () => {
     db.prepare(
       `
-      INSERT INTO vocab (id, text, type, sentence, translation, translationLang, state, stateUpdatedAt, reviewCount, bookId, chapter, createdAt, pushedToAnki, ankiNoteId, language, userId)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO vocab (id, text, type, sentence, translation, translationLang, translationSource, phraseDetails, state, stateUpdatedAt, reviewCount, bookId, chapter, createdAt, pushedToAnki, ankiNoteId, language, userId)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       ON CONFLICT(userId, id) DO UPDATE SET
         text = excluded.text, type = excluded.type, sentence = excluded.sentence,
         translation = excluded.translation, translationLang = excluded.translationLang,
+        translationSource = excluded.translationSource, phraseDetails = excluded.phraseDetails,
         state = excluded.state, stateUpdatedAt = excluded.stateUpdatedAt, reviewCount = excluded.reviewCount,
         bookId = excluded.bookId, chapter = excluded.chapter, createdAt = excluded.createdAt,
         pushedToAnki = excluded.pushedToAnki, ankiNoteId = excluded.ankiNoteId,
@@ -203,6 +223,8 @@ app.post('/', async (c) => {
       sentence,
       translation,
       translationLang,
+      translationSource,
+      phraseDetails,
       body.state ?? 'new',
       now,
       body.reviewCount ?? 0,
@@ -244,7 +266,7 @@ app.get('/:id', (c) => {
 
   if (!vocab) return c.json({ error: 'Vocab not found' }, 404);
 
-  return c.json({ ...vocab, pushedToAnki: vocab.pushedToAnki === 1 });
+  return c.json(serializeVocabRow(vocab));
 });
 
 // PUT /api/vocab/:id
@@ -263,6 +285,10 @@ app.put('/:id', async (c) => {
   }
   const langTagError = translationLangError(body.translationLang);
   if (langTagError) return c.json({ error: langTagError }, 400);
+  const sourceResult = validateTranslationSource(body.translationSource);
+  if (!sourceResult.ok) return c.json({ error: sourceResult.error }, 400);
+  const phraseDetailsResult = validateAndSerializePhraseDetails(body.phraseDetails);
+  if (!phraseDetailsResult.ok) return c.json({ error: phraseDetailsResult.error }, 400);
   const reviewCountError = validateSafeInteger(body.reviewCount, 'reviewCount', { min: 0 });
   if (reviewCountError) return c.json({ error: reviewCountError }, 400);
   const pushedError = validateBooleanLike(body.pushedToAnki, 'pushedToAnki');
@@ -298,6 +324,17 @@ app.put('/:id', async (c) => {
       resolveTranslationLang(body.translation, body.translationLang, getNativeLanguageCode(userId)),
     );
   }
+  if (body.translationSource !== undefined) {
+    updates.push('translationSource = ?');
+    values.push(sourceResult.value ?? null);
+  } else if (body.translation !== undefined && body.translation !== existing.translation) {
+    updates.push('translationSource = ?');
+    values.push(body.translation.trim() ? 'manual' : null);
+  }
+  if (body.phraseDetails !== undefined) {
+    updates.push('phraseDetails = ?');
+    values.push(phraseDetailsResult.value ?? null);
+  }
   if (body.sentence !== undefined) {
     updates.push('sentence = ?');
     values.push(body.sentence);
@@ -315,11 +352,14 @@ app.put('/:id', async (c) => {
     values.push(body.ankiNoteId);
   }
 
+  const nextPhraseDetails =
+    body.phraseDetails !== undefined ? (phraseDetailsResult.value ?? null) : existing.phraseDetails;
   const previousVocabBytes = vocabContentBytes(existing);
   const nextVocabBytes = vocabContentBytes({
     text: existing.text,
     sentence: body.sentence !== undefined ? body.sentence : existing.sentence,
     translation: body.translation !== undefined ? body.translation : existing.translation,
+    phraseDetails: nextPhraseDetails,
   });
   const knownExists =
     knownWrite === null ||

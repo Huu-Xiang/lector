@@ -6,6 +6,28 @@
 
 export type WordState = 'new' | 'level1' | 'level2' | 'level3' | 'level4' | 'known' | 'ignored';
 export type VocabType = 'word' | 'phrase';
+export type VocabTranslationSource =
+  | 'dictionary'
+  | 'ai_context'
+  | 'ai_retranslate'
+  | 'ai_phrase'
+  | 'manual';
+export type PhraseRegister =
+  | 'formal'
+  | 'informal'
+  | 'literary'
+  | 'colloquial'
+  | 'archaic'
+  | 'neutral'
+  | 'slang';
+
+export interface AiPhraseDetails {
+  literalBreakdown?: string;
+  idiomaticMeaning?: string;
+  usageNotes?: string;
+  register?: PhraseRegister;
+}
+
 export type ClozeMasteryLevel = 0 | 25 | 50 | 75 | 100;
 export type ClozeSource = 'tatoeba' | 'mined';
 export type ClozeCollection = 'top500' | 'top1000' | 'top2000' | 'mined' | 'random';
@@ -135,6 +157,10 @@ export interface VocabEntry {
   translation: string;
   /** Language of `translation`; null when unknown. */
   translationLang?: string | null;
+  /** Provenance of `translation` (dictionary, AI in-context/re-translate/phrase, or manual edit). */
+  translationSource?: VocabTranslationSource | null;
+  /** Structured phrase breakdown persisted alongside multi-word phrase translations. */
+  phraseDetails?: AiPhraseDetails | null;
   state: WordState;
   stateUpdatedAt: Date;
   reviewCount: number;

@@ -2,6 +2,7 @@ import { getActiveLanguage } from './data-layer';
 import { apiFetch } from './api-base';
 import { AI_USAGE_EVENT } from '@/constants/storage';
 import { readTranslateStream } from './translate-stream';
+import type { AiPhraseDetails } from '@/types';
 
 function noteAiUsage(): void {
   if (typeof window !== 'undefined') window.dispatchEvent(new Event(AI_USAGE_EVENT));
@@ -21,12 +22,8 @@ export interface WordTranslation {
   relatedForms?: Array<{ form: string; relation: string }>;
 }
 
-export interface PhraseTranslation {
+export interface PhraseTranslation extends AiPhraseDetails {
   translation: string;
-  literalBreakdown?: string;
-  idiomaticMeaning?: string;
-  usageNotes?: string;
-  register?: 'formal' | 'informal' | 'literary' | 'colloquial' | 'archaic' | 'neutral';
 }
 
 /** Error message thrown when the AI provider's moderation refused the passage. */

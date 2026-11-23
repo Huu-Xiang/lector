@@ -178,6 +178,9 @@ async function requireOk(res: Response, fallback: string): Promise<void> {
 
 // Re-export the shared domain types for convenience
 export type {
+  AiPhraseDetails,
+  PhraseRegister,
+  VocabTranslationSource,
   WordState,
   VocabType,
   ClozeMasteryLevel,
@@ -826,10 +829,15 @@ export async function updateVocabState(id: string, state: WordState): Promise<bo
   return res.ok;
 }
 
-/** Persist the editable fields exposed by the vocab detail modal in one write. */
+/** Persist the editable fields exposed by the vocab detail modal and reader AI saves in one write. */
 export async function updateVocabEntry(
   id: string,
-  updates: Partial<Pick<VocabEntry, 'state' | 'translation' | 'translationLang' | 'sentence'>>,
+  updates: Partial<
+    Pick<
+      VocabEntry,
+      'state' | 'translation' | 'translationLang' | 'translationSource' | 'phraseDetails' | 'sentence'
+    >
+  >,
 ): Promise<void> {
   const res = await apiFetch(`/api/vocab/${id}`, {
     method: 'PUT',

@@ -74,6 +74,8 @@
       },
       "hearPronunciation": "Прослушать произношение",
       "sourceAiInContext": "ИИ · в контексте",
+      "sourceAiSaved": "ИИ · сохранено",
+      "sourceSaved": "сохранено",
       "sourceLearned": "выучено",
       "sourceOnDevice": "на устройстве",
       "sourceAi": "ИИ",

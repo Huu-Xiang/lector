@@ -125,6 +125,12 @@ const WORD_STATE: JsonSchema = {
     'How well the account knows a word. `level1` to `level4` are the learning steps between `new` and `known`. `ignored` hides the word.',
 };
 
+const TRANSLATION_SOURCE: JsonSchema = {
+  type: ['string', 'null'],
+  enum: ['dictionary', 'ai_context', 'ai_retranslate', 'ai_phrase', 'manual', null],
+  description: 'Where `translation` came from.',
+};
+
 /** Reusable schemas. Referenced from operations as `{ $ref: '#/components/schemas/<name>' }`. */
 export const schemas: Record<string, JsonSchema> = {
   Error: {
@@ -331,6 +337,21 @@ export const schemas: Record<string, JsonSchema> = {
     required: ['idx', 'startMs', 'endMs', 'text'],
   },
 
+  PhraseDetails: {
+    type: 'object',
+    description: 'Structured breakdown of a saved phrase.',
+    properties: {
+      literalBreakdown: { type: 'string' },
+      idiomaticMeaning: { type: 'string' },
+      usageNotes: { type: 'string' },
+      register: {
+        type: 'string',
+        enum: ['formal', 'informal', 'literary', 'colloquial', 'archaic', 'neutral', 'slang'],
+      },
+    },
+    additionalProperties: false,
+  },
+
   VocabEntry: {
     type: 'object',
     description: 'A word or phrase the account saved, with the sentence it came from.',
@@ -343,6 +364,11 @@ export const schemas: Record<string, JsonSchema> = {
       translationLang: {
         ...NULLABLE_STRING,
         description: 'Language code of `translation`. Optional; the server guesses it when absent.',
+      },
+      translationSource: TRANSLATION_SOURCE,
+      phraseDetails: {
+        $ref: '#/components/schemas/PhraseDetails',
+        description: 'Structured breakdown persisted for multi-word phrases.',
       },
       state: WORD_STATE,
       stateUpdatedAt: ISO_DATE_TIME,
@@ -592,6 +618,35 @@ export const schemas: Record<string, JsonSchema> = {
     required: ['id', 'body', 'status', 'wordCount', 'language', 'entryDate'],
   },
 
+  VocabEntryExport: {
+    type: 'object',
+    description:
+      'A vocabulary row as the data takeout carries it. `phraseDetails` stays a JSON string here, while the vocabulary endpoints parse it.',
+    properties: {
+      id: { type: 'string' },
+      text: { type: 'string' },
+      type: { type: 'string', enum: ['word', 'phrase'] },
+      sentence: { type: 'string' },
+      translation: { type: 'string' },
+      translationLang: NULLABLE_STRING,
+      translationSource: TRANSLATION_SOURCE,
+      phraseDetails: {
+        ...NULLABLE_STRING,
+        description: 'Structured phrase details, as a JSON string.',
+      },
+      state: WORD_STATE,
+      stateUpdatedAt: ISO_DATE_TIME,
+      reviewCount: { type: 'integer' },
+      bookId: NULLABLE_STRING,
+      chapter: { type: ['integer', 'null'] },
+      language: { type: 'string' },
+      pushedToAnki: { type: 'integer', enum: [0, 1] },
+      ankiNoteId: { type: ['integer', 'null'] },
+      createdAt: ISO_DATE_TIME,
+    },
+    required: ['id', 'text', 'type', 'state', 'language', 'createdAt'],
+  },
+
   UserExport: {
     type: 'object',
     description: 'Every portable learning record for the account.',
@@ -602,7 +657,7 @@ export const schemas: Record<string, JsonSchema> = {
       collections: { type: 'array', items: { $ref: '#/components/schemas/Collection' } },
       collectionGroups: { type: 'array', items: { $ref: '#/components/schemas/CollectionGroup' } },
       lessons: { type: 'array', items: { $ref: '#/components/schemas/LessonExport' } },
-      vocab: { type: 'array', items: { $ref: '#/components/schemas/VocabEntry' } },
+      vocab: { type: 'array', items: { $ref: '#/components/schemas/VocabEntryExport' } },
       knownWords: {
         type: 'array',
         items: {
@@ -1150,6 +1205,10 @@ const vocabOps: Record<string, OperationDoc> = {
             description:
               'Language code of `translation`. Optional; the server guesses it when absent.',
           },
+          translationSource: TRANSLATION_SOURCE,
+          phraseDetails: {
+            oneOf: [ref('PhraseDetails'), { type: 'null' }],
+          },
           state: WORD_STATE,
           bookId: NULLABLE_STRING,
           chapter: { type: ['integer', 'null'] },
@@ -1188,6 +1247,10 @@ const vocabOps: Record<string, OperationDoc> = {
             ...NULLABLE_STRING,
             description:
               'Language code of `translation`. Optional; the server guesses it when absent.',
+          },
+          translationSource: TRANSLATION_SOURCE,
+          phraseDetails: {
+            oneOf: [ref('PhraseDetails'), { type: 'null' }],
           },
           state: WORD_STATE,
           reviewCount: { type: 'integer' },
