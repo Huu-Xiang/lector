@@ -2,7 +2,14 @@
 // Uses managed TTS when entitled and available, otherwise browser TTS
 import { getActiveLanguage, getEntitlements } from './data-layer';
 import { apiFetch, lectorMode } from './api-base';
-import { LANGUAGES, DEFAULT_LANGUAGE, type LanguageCode } from './languages';
+import {
+  LANGUAGES,
+  DEFAULT_LANGUAGE,
+  getLanguageConfig,
+  isValidLanguageCode,
+  type LanguageCode,
+  type LanguageConfig,
+} from './languages';
 
 // Default speech rate (1.0 is normal speed). Exported so callers that offer a
 // speed control (e.g. dictation practice) can scale relative to the app's
@@ -12,19 +19,87 @@ export const DEFAULT_RATE = 0.9;
 // Resolve the active language's TTS config. Browser-TTS voice selection is
 // driven entirely off this, so switching the target language picks an
 // appropriate voice instead of always assuming Afrikaans.
-function activeLangConfig() {
+function activeLangConfig(): LanguageConfig {
   return LANGUAGES[getActiveLanguage() as LanguageCode] ?? LANGUAGES[DEFAULT_LANGUAGE];
 }
 
-// Accepted langs for the active language, most-specific first — e.g.
-// af → ['af-ZA', 'af', 'nl-NL', 'nl']; de → ['de-DE', 'de']. Languages without
-// a Google voice (eo) have no ttsCode/fallbackTts — only the bare code remains
-// (browser TTS is not used for them, but voice listings stay well-defined).
-function candidateLangs(): string[] {
-  const config = activeLangConfig();
-  return [config.ttsCode, config.code, ...(config.fallbackTts ?? [])].filter(
+function langConfigFor(language?: string): LanguageConfig {
+  if (language && isValidLanguageCode(language)) {
+    return getLanguageConfig(language);
+  }
+  return activeLangConfig();
+}
+
+function normalizeLangTag(tag: string): string {
+  return tag.replace(/_/g, '-').trim().toLowerCase();
+}
+
+function primarySubtag(tag: string): string {
+  return normalizeLangTag(tag).split('-')[0] ?? '';
+}
+
+function tagMatches(voiceLang: string, candidate: string): boolean {
+  const normalizedVoice = normalizeLangTag(voiceLang);
+  const normalizedCandidate = normalizeLangTag(candidate);
+  if (!normalizedVoice || !normalizedCandidate) return false;
+  if (normalizedVoice === normalizedCandidate) return true;
+  const primary = primarySubtag(normalizedCandidate);
+  return normalizedVoice === primary || normalizedVoice.startsWith(`${primary}-`);
+}
+
+// Accepted langs for a language, most-specific first — e.g.
+// af → ['af-ZA', 'af', 'nl-NL', 'nl']; zh → ['cmn-CN', 'zh-Hans', 'zh', 'zh-CN'];
+// ar → ['ar-XA', 'ar', 'ar-SA', 'ar-EG']. Includes script.bcp47 so Google-only
+// ttsCodes (cmn-CN, ar-XA) never prevent matching standard BCP-47 OS voices.
+function candidateLangsFor(config: LanguageConfig): string[] {
+  const raw = [config.ttsCode, config.script.bcp47, config.code, ...(config.fallbackTts ?? [])];
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const tag of raw) {
+    if (!tag) continue;
+    const key = normalizeLangTag(tag);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(tag);
+  }
+  return out;
+}
+
+function primaryTargetTags(config: LanguageConfig): string[] {
+  return [config.ttsCode, config.script.bcp47, config.code].filter(
     (lang): lang is string => Boolean(lang),
   );
+}
+
+function matchesConfigLang(voice: SpeechSynthesisVoice, config: LanguageConfig): boolean {
+  return candidateLangsFor(config).some((lang) => tagMatches(voice.lang, lang));
+}
+
+function browserUtteranceLang(config: LanguageConfig): string {
+  const ttsCode = config.ttsCode;
+  // Google-specific codes (cmn-CN, ar-XA) don't always match OS speech
+  // synthesis tags when no explicit voice object is bound; prefer a standard
+  // BCP-47 tag matching script.bcp47 in those cases.
+  if (
+    ttsCode &&
+    !normalizeLangTag(ttsCode).endsWith('-xa') &&
+    primarySubtag(ttsCode) === primarySubtag(config.script.bcp47)
+  ) {
+    return ttsCode;
+  }
+  const fallbackMatch = config.fallbackTts?.find(
+    (tag) => primarySubtag(tag) === primarySubtag(config.script.bcp47),
+  );
+  return fallbackMatch ?? config.script.bcp47 ?? ttsCode ?? config.code;
+}
+
+function getSavedVoicePref(): string | null {
+  if (typeof localStorage === 'undefined') return null;
+  try {
+    return localStorage.getItem(VOICE_PREF_KEY);
+  } catch {
+    return null;
+  }
 }
 
 /**
@@ -62,6 +137,8 @@ let voiceInitialized = false;
 
 // Audio element for Google TTS playback
 let audioElement: HTMLAudioElement | null = null;
+// Retained until settled so Chromium does not GC active browser word utterances.
+let activeWordUtterance: SpeechSynthesisUtterance | null = null;
 
 // LocalStorage keys
 const VOICE_PREF_KEY = 'lector-tts-voice';
@@ -95,10 +172,10 @@ export function setTTSMode(mode: TTSMode): void {
 }
 
 /**
- * Score a voice based on quality indicators
- * Higher score = better quality
+ * Score a voice based on quality indicators and match specificity for `config`.
+ * Higher score = better quality.
  */
-function scoreVoice(voice: SpeechSynthesisVoice): number {
+function scoreVoiceFor(voice: SpeechSynthesisVoice, config: LanguageConfig): number {
   let score = 0;
 
   // Prefer local/offline voices (usually higher quality)
@@ -120,14 +197,104 @@ function scoreVoice(voice: SpeechSynthesisVoice): number {
     }
   }
 
-  // Prefer exact language match for the active language
-  const primaryLang = activeLangConfig().ttsCode;
-  if (primaryLang) {
-    if (voice.lang === primaryLang) score += 3;
-    if (voice.lang.startsWith(primaryLang.split('-')[0])) score += 2;
+  const voiceLang = normalizeLangTag(voice.lang);
+  if (primaryTargetTags(config).some((tag) => tagMatches(voiceLang, tag))) {
+    // Keep genuine target-language voices ahead of different-language fallbacks
+    // (e.g. af-ZA ahead of nl-NL).
+    score += 20;
   }
 
+  if (config.ttsCode && voiceLang === normalizeLangTag(config.ttsCode)) score += 4;
+  if (voiceLang === normalizeLangTag(config.script.bcp47)) score += 4;
+  const fallbackFirst = config.fallbackTts?.[0];
+  if (fallbackFirst && voiceLang === normalizeLangTag(fallbackFirst)) score += 2;
+
   return score;
+}
+
+/**
+ * Get the best available browser voice for an explicit language code without
+ * reading `getActiveLanguage()` or mutating the active-language preference.
+ */
+export function getVoiceForLanguage(language: string): SpeechSynthesisVoice | undefined {
+  if (!isTTSAvailable()) {
+    return undefined;
+  }
+
+  const config = langConfigFor(language);
+  const voices = window.speechSynthesis.getVoices();
+  if (voices.length === 0) {
+    return undefined;
+  }
+
+  const savedVoiceName = getSavedVoicePref();
+  if (savedVoiceName) {
+    const savedVoice = voices.find((v) => v.name === savedVoiceName);
+    if (savedVoice && matchesConfigLang(savedVoice, config)) {
+      return savedVoice;
+    }
+  }
+
+  const candidateVoices = voices.filter((v) => matchesConfigLang(v, config));
+  if (candidateVoices.length === 0) {
+    return undefined;
+  }
+
+  candidateVoices.sort((a, b) => scoreVoiceFor(b, config) - scoreVoiceFor(a, config));
+  return candidateVoices[0];
+}
+
+/**
+ * Build a configured SpeechSynthesisUtterance for an explicit language using
+ * browser voices only (never calls `/api/tts`).
+ */
+export function createBrowserUtterance(
+  text: string,
+  options: { language: string; rate?: number },
+): SpeechSynthesisUtterance {
+  const config = langConfigFor(options.language);
+  const utterance = new SpeechSynthesisUtterance(text);
+
+  const voice = getVoiceForLanguage(config.code);
+  if (voice) {
+    utterance.voice = voice;
+    utterance.lang = voice.lang;
+  } else {
+    utterance.lang = browserUtteranceLang(config);
+  }
+
+  const rate = options.rate ?? DEFAULT_RATE;
+  utterance.rate = Math.max(0.1, Math.min(10, Number.isFinite(rate) ? rate : DEFAULT_RATE));
+  utterance.pitch = 1.0;
+  utterance.volume = 1.0;
+  return utterance;
+}
+
+/**
+ * Speak a single word or short phrase strictly via browser speech synthesis
+ * for an explicit language. Never routes through `speakWithServer` or `/api/tts`.
+ */
+export function speakWordWithBrowser(
+  text: string,
+  language: string,
+  rate: number = DEFAULT_RATE,
+): void {
+  if (!isTTSAvailable()) return;
+  const config = langConfigFor(language);
+  if (config.pronunciation.audio === 'none') return;
+  const trimmed = text.trim();
+  if (!trimmed) return;
+
+  stopSpeaking();
+
+  const utterance = createBrowserUtterance(trimmed, { language: config.code, rate });
+  activeWordUtterance = utterance;
+  const clear = () => {
+    if (activeWordUtterance === utterance) activeWordUtterance = null;
+  };
+  utterance.onend = clear;
+  utterance.onerror = clear;
+  window.speechSynthesis.speak(utterance);
 }
 
 /**
@@ -140,16 +307,14 @@ function getActiveLanguageVoice(): SpeechSynthesisVoice | undefined {
     return undefined;
   }
 
-  const allLangs = candidateLangs();
-  const matchesActiveLang = (v: SpeechSynthesisVoice) =>
-    allLangs.some((lang) => v.lang === lang || v.lang.startsWith(lang.split('-')[0]));
+  const config = activeLangConfig();
 
   // Return the cached voice only while it still matches the active language.
   // The cache outlives a server-side language switch (settings PUT without a
   // reload), and a stale voice is worse than none: a Latin voice handed
   // Cyrillic text plays silence rather than erroring.
   if (voiceInitialized && cachedVoice) {
-    if (matchesActiveLang(cachedVoice)) return cachedVoice;
+    if (matchesConfigLang(cachedVoice, config)) return cachedVoice;
     cachedVoice = undefined;
     voiceInitialized = false;
   }
@@ -162,10 +327,10 @@ function getActiveLanguageVoice(): SpeechSynthesisVoice | undefined {
   // Check for user's saved preference — but only reuse it if it still matches
   // the active language. The saved name is global, so an Afrikaans voice must
   // not be reused after the user switches the target language to German.
-  const savedVoiceName = localStorage.getItem(VOICE_PREF_KEY);
+  const savedVoiceName = getSavedVoicePref();
   if (savedVoiceName) {
     const savedVoice = voices.find((v) => v.name === savedVoiceName);
-    if (savedVoice && matchesActiveLang(savedVoice)) {
+    if (savedVoice && matchesConfigLang(savedVoice, config)) {
       cachedVoice = savedVoice;
       voiceInitialized = true;
       return cachedVoice;
@@ -173,7 +338,7 @@ function getActiveLanguageVoice(): SpeechSynthesisVoice | undefined {
   }
 
   // Find all candidate voices for the active language (+ fallbacks)
-  const candidateVoices = voices.filter(matchesActiveLang);
+  const candidateVoices = voices.filter((v) => matchesConfigLang(v, config));
 
   if (candidateVoices.length === 0) {
     voiceInitialized = true;
@@ -181,12 +346,12 @@ function getActiveLanguageVoice(): SpeechSynthesisVoice | undefined {
   }
 
   // Sort by score and pick the best one
-  candidateVoices.sort((a, b) => scoreVoice(b) - scoreVoice(a));
+  candidateVoices.sort((a, b) => scoreVoiceFor(b, config) - scoreVoiceFor(a, config));
   cachedVoice = candidateVoices[0];
   voiceInitialized = true;
 
   // Save the selection for next time
-  if (cachedVoice) {
+  if (cachedVoice && typeof localStorage !== 'undefined') {
     localStorage.setItem(VOICE_PREF_KEY, cachedVoice.name);
   }
 
@@ -344,6 +509,8 @@ export async function speak(text: string, rate: number = DEFAULT_RATE): Promise<
  * Stop any current speech (both Google and browser)
  */
 export function stopSpeaking(): void {
+  activeWordUtterance = null;
+
   // Stop browser TTS
   if (isTTSAvailable()) {
     window.speechSynthesis.cancel();
@@ -368,11 +535,9 @@ export function getAvailableVoices(): SpeechSynthesisVoice[] {
   }
 
   const voices = window.speechSynthesis.getVoices();
-  const relevantLangs = candidateLangs();
+  const config = activeLangConfig();
 
-  return voices.filter((v) =>
-    relevantLangs.some((lang) => v.lang === lang || v.lang.startsWith(lang.split('-')[0])),
-  );
+  return voices.filter((v) => matchesConfigLang(v, config));
 }
 
 /**
@@ -387,8 +552,21 @@ export function waitForVoices(): Promise<SpeechSynthesisVoice[]> {
       return;
     }
 
+    let settled = false;
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    const synth = window.speechSynthesis;
+
     const initializeAndResolve = () => {
-      const voices = window.speechSynthesis.getVoices();
+      if (settled) return;
+      settled = true;
+      if (timer !== null) {
+        clearTimeout(timer);
+        timer = null;
+      }
+      if (typeof synth.removeEventListener === 'function') {
+        synth.removeEventListener('voiceschanged', initializeAndResolve);
+      }
+      const voices = synth.getVoices();
       // Pre-initialize the voice cache
       if (voices.length > 0 && !voiceInitialized) {
         getActiveLanguageVoice();
@@ -396,17 +574,19 @@ export function waitForVoices(): Promise<SpeechSynthesisVoice[]> {
       resolve(voices);
     };
 
-    const voices = window.speechSynthesis.getVoices();
+    const voices = synth.getVoices();
     if (voices.length > 0) {
       initializeAndResolve();
       return;
     }
 
     // Wait for voiceschanged event
-    window.speechSynthesis.addEventListener('voiceschanged', initializeAndResolve, { once: true });
+    if (typeof synth.addEventListener === 'function') {
+      synth.addEventListener('voiceschanged', initializeAndResolve, { once: true });
+    }
 
     // Timeout after 3 seconds
-    setTimeout(initializeAndResolve, 3000);
+    timer = setTimeout(initializeAndResolve, 3000);
   });
 }
 

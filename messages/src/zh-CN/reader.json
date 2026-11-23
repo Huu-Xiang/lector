@@ -252,7 +252,10 @@
       "pause": "暂停",
       "play": "播放",
       "repeatSentence": "重复本句",
-      "nextSentence": "下一句"
+      "nextSentence": "下一句",
+      "noVoiceAvailable": "此设备上未找到{language}的浏览器语音。请在系统设置中安装语音后再收听。",
+      "speechError": "无法播放浏览器语音。请点击播放重试。",
+      "speechStalled": "浏览器语音意外中断。请点击播放继续。"
     }
   }
 }

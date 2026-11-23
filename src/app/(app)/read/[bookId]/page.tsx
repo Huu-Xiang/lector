@@ -17,6 +17,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import ListenAlong from '@/components/ListenAlong';
+import { extractListenSentences } from '@/components/ListenAlong/browser-tts-player';
 import {
   type AiPhraseDetails,
   type Lesson,
@@ -76,7 +77,7 @@ import {
   type ExpandedDictionaryEntry,
 } from '@/lib/dictionary-client';
 import { pickPrefetchCandidates } from '@/lib/prefetch-words';
-import { speak } from '@/lib/tts';
+import { isTTSAvailable, speak, speakWordWithBrowser } from '@/lib/tts';
 import { isComposing } from '@/lib/keyboard';
 import {
   foldWord,
@@ -211,9 +212,39 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
   });
   const [isLoading, setIsLoading] = useState(() => rememberedLesson(lessonId) === null);
   const [error, setError] = useState<string | null>(null);
-  // Listen-along (#185): the audio lesson's transcript segments + mode toggle.
+  // Listen-along (#185 & U6): audio transcript segments + client-TTS text mode toggle.
   const [segments, setSegments] = useState<AudioTranscriptSegment[]>([]);
   const [listenMode, setListenMode] = useState(false);
+  const [browserTtsSupported, setBrowserTtsSupported] = useState(false);
+  useEffect(() => {
+    setBrowserTtsSupported(isTTSAvailable());
+  }, []);
+  const hasAudioSegments = segments.length > 0;
+  const supportsBrowserTts =
+    lessonPack.pronunciation.audio !== 'none' &&
+    lessonPack.pronunciation.audio.includes('google');
+  const textSentences = useMemo(() => {
+    if (
+      !lesson ||
+      hasAudioSegments ||
+      lesson.sourceType === 'youtube' ||
+      lesson.transcriptionStatus ||
+      !supportsBrowserTts
+    ) {
+      return [];
+    }
+    return extractListenSentences(lesson.textContent, lessonPack);
+  }, [lesson, hasAudioSegments, supportsBrowserTts, lessonPack]);
+  const canTextListen =
+    !hasAudioSegments &&
+    Boolean(lesson) &&
+    lesson?.sourceType !== 'youtube' &&
+    !lesson?.transcriptionStatus &&
+    supportsBrowserTts &&
+    textSentences.length > 0 &&
+    browserTtsSupported;
+  const canListenAlong = hasAudioSegments || canTextListen;
+  const isTextListenActive = listenMode && !hasAudioSegments && canTextListen;
   const [editing, setEditing] = useState(false);
   const [concordanceJump, setConcordanceJump] = useState<ConcordanceJumpPayload | null>(null);
   const consumedJumpLessonRef = useRef<string | null>(null);
@@ -501,7 +532,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
   const transcriptionStatus = lesson?.transcriptionStatus ?? null;
   const reportReadingProgress = useReadingActivity(
     lesson && (!transcriptionStatus || transcriptionStatus === 'done') ? lesson : null,
-    !editing && !(listenMode && segments.length > 0),
+    !editing && !listenMode,
   );
   const loadedLessonId = lesson?.id;
   const trackReaderEvent = useCallback(
@@ -677,7 +708,13 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
 
   // Handle word click from reader
   const handleWordClick = useCallback(
-    async (word: string, sentence: string, source?: WordSource, occurrence?: string) => {
+    async (
+      word: string,
+      sentence: string,
+      source?: WordSource,
+      occurrence?: string,
+      options?: { browserOnlySpeech?: boolean },
+    ) => {
       // Remember (or clear) the transcript segment this word came from so a
       // subsequent Anki mine can attach the timestamped source link.
       currentWordSourceRef.current = source ?? null;
@@ -714,7 +751,11 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       );
 
       const wordsToSpeak = word.split(/\s+/).slice(0, 15).join(' ');
-      speak(wordsToSpeak);
+      if (options?.browserOnlySpeech) {
+        speakWordWithBrowser(wordsToSpeak, readingLanguage);
+      } else {
+        speak(wordsToSpeak);
+      }
 
       // Open popup immediately in loading state so keyboard shortcuts (K/X) are responsive
       setWordPanel({
@@ -1073,6 +1114,13 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     setWordPanel((prev) => ({ ...prev, isOpen: false }));
   }, []);
 
+  const handleTextListenWordClick = useCallback(
+    (word: string, sentence: string) => {
+      void handleWordClick(word, sentence, undefined, undefined, { browserOnlySpeech: true });
+    },
+    [handleWordClick],
+  );
+
   // Nested lookup from inside the drawer (issue #106) — e.g. clicking "vrug"
   // in the gloss "plural of vrug". Re-targets the drawer like a reader word
   // click, keeping the sentence the user was reading so a save/known action
@@ -1080,9 +1128,15 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
   const handleNestedLookup = useCallback(
     (nestedWord: string) => {
       nestedLookupRef.current = true;
-      void handleWordClick(nestedWord, wordPanel.sentence);
+      void handleWordClick(
+        nestedWord,
+        wordPanel.sentence,
+        undefined,
+        undefined,
+        isTextListenActive ? { browserOnlySpeech: true } : undefined,
+      );
     },
-    [handleWordClick, wordPanel.sentence],
+    [handleWordClick, wordPanel.sentence, isTextListenActive],
   );
 
   const handleSearchInLibrary = useCallback(() => {
@@ -2169,14 +2223,13 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     t,
   ]);
 
-  const hasSegments = segments.length > 0;
   const listenHeaderAction = useMemo(
     () => (
       <>
         {cloud && (
           <ReadingDifficulty key={lessonId} lessonId={lessonId} language={readingLanguage} />
         )}
-        {hasSegments && (
+        {canListenAlong && (
           <button
             onClick={() => setListenMode(true)}
             title={t('listenAlong')}
@@ -2189,7 +2242,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         )}
       </>
     ),
-    [cloud, hasSegments, lessonId, readingLanguage, t],
+    [cloud, canListenAlong, lessonId, readingLanguage, t],
   );
 
   if (isLoading) {
@@ -2313,14 +2366,26 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
           wordPanel.isOpen ? 'pb-[var(--sheet-h)] lg:pr-96 lg:pb-0 2xl:pr-0' : ''
         }`}
       >
-        {listenMode && segments.length > 0 ? (
+        {listenMode && hasAudioSegments ? (
           <ListenAlong
+            key={lesson.id}
             lesson={lesson}
             segments={segments}
             audioUrl={lessonAudioUrl(lesson.id)}
             knownWordsMap={readerWordStates}
             wordPanelOpen={wordPanel.isOpen}
             onWordClick={handleWordClick}
+            onExit={() => setListenMode(false)}
+          />
+        ) : listenMode && canTextListen ? (
+          <ListenAlong
+            key={lesson.id}
+            mode="tts"
+            lesson={lesson}
+            sentences={textSentences}
+            knownWordsMap={readerWordStates}
+            wordPanelOpen={wordPanel.isOpen}
+            onWordClick={handleTextListenWordClick}
             onExit={() => setListenMode(false)}
           />
         ) : (
@@ -2378,7 +2443,14 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
               : undefined
           }
           onClose={closeWordPanel}
-          onSpeak={(text) => speak(text.split(/\s+/).slice(0, 15).join(' '))}
+          onSpeak={(text) => {
+            const words = text.split(/\s+/).slice(0, 15).join(' ');
+            if (isTextListenActive) {
+              speakWordWithBrowser(words, readingLanguage);
+            } else {
+              void speak(words);
+            }
+          }}
           onSetLevel={setWordLevel}
           onMarkKnown={markAsKnown}
           onIgnore={ignoreWord}

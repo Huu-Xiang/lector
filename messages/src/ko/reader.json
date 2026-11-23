@@ -252,7 +252,10 @@
       "pause": "일시정지",
       "play": "재생",
       "repeatSentence": "문장 반복",
-      "nextSentence": "다음 문장"
+      "nextSentence": "다음 문장",
+      "noVoiceAvailable": "이 기기에서 {language} 브라우저 음성을 찾을 수 없습니다. 재생하려면 시스템 설정에서 음성을 설치하세요.",
+      "speechError": "브라우저 음성을 재생할 수 없습니다. 재생을 눌러 다시 시도하세요.",
+      "speechStalled": "브라우저 음성이 예기치 않게 멈췄습니다. 재생을 눌러 이어서 들으세요."
     }
   }
 }

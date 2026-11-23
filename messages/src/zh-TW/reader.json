@@ -252,7 +252,10 @@
       "pause": "暫停",
       "play": "播放",
       "repeatSentence": "重複本句",
-      "nextSentence": "下一句"
+      "nextSentence": "下一句",
+      "noVoiceAvailable": "此裝置上找不到{language}的瀏覽器語音。請在系統設定中安裝語音後再收聽。",
+      "speechError": "無法播放瀏覽器語音。請點擊播放重試。",
+      "speechStalled": "瀏覽器語音意外中斷。請點擊播放繼續。"
     }
   }
 }

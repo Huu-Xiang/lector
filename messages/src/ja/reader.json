@@ -252,7 +252,10 @@
       "pause": "一時停止",
       "play": "再生",
       "repeatSentence": "文をくり返す",
-      "nextSentence": "次の文"
+      "nextSentence": "次の文",
+      "noVoiceAvailable": "この端末には{language}のブラウザ音声が見つかりません。再生するにはシステム設定で音声をインストールしてください。",
+      "speechError": "ブラウザ音声を再生できませんでした。再生を押してもう一度お試しください。",
+      "speechStalled": "ブラウザ音声が予期せず停止しました。再生を押して再開してください。"
     }
   }
 }

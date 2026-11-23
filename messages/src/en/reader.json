@@ -252,7 +252,10 @@
       "pause": "Pause",
       "play": "Play",
       "repeatSentence": "Repeat sentence",
-      "nextSentence": "Next sentence"
+      "nextSentence": "Next sentence",
+      "noVoiceAvailable": "No {language} browser voice was found on this device. Install one in system settings to hear playback.",
+      "speechError": "Could not play browser speech. Tap Play to try again.",
+      "speechStalled": "Browser speech paused unexpectedly. Tap Play to resume."
     }
   }
 }
