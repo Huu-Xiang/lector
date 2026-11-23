@@ -4,7 +4,12 @@ import {
   tokenizeWords,
   type LanguageConfig,
 } from '@/lib/languages';
-import { createBrowserUtterance, isTTSAvailable, stopSpeaking } from '@/lib/tts';
+import {
+  createBrowserUtterance,
+  isTTSAvailable,
+  onBrowserSpeechInterrupt,
+  stopSpeaking,
+} from '@/lib/tts';
 
 export const SPACED_CHUNK_LIMIT = 220;
 export const CJK_CHUNK_LIMIT = 70;
@@ -27,6 +32,8 @@ export type BrowserTtsErrorCode = 'unsupported' | 'speech_error' | 'stalled';
 export interface BrowserTtsCallbacks {
   onStart?: () => void;
   onEnd?: () => void;
+  /** Called when an external caller (e.g. drawer word speaker or OS audio focus) cancels the live utterance. */
+  onInterrupted?: () => void;
   onError?: (code: BrowserTtsErrorCode, detail?: string) => void;
 }
 
@@ -175,6 +182,7 @@ export function createBrowserTtsPlayer({
   let generation = 0;
   let disposed = false;
   let activeUtterance: SpeechSynthesisUtterance | null = null;
+  let activeCallbacks: BrowserTtsCallbacks | null = null;
   let watchdogTimer: ReturnType<typeof setTimeout> | null = null;
 
   const clearWatchdog = () => {
@@ -184,10 +192,21 @@ export function createBrowserTtsPlayer({
     }
   };
 
+  const unsubscribeInterrupt = onBrowserSpeechInterrupt(() => {
+    if (disposed || !activeUtterance) return;
+    const cb = activeCallbacks;
+    generation += 1;
+    clearWatchdog();
+    activeUtterance = null;
+    activeCallbacks = null;
+    cb?.onInterrupted?.();
+  });
+
   const stop = () => {
     generation += 1;
     clearWatchdog();
     activeUtterance = null;
+    activeCallbacks = null;
     stopSpeaking();
   };
 
@@ -209,9 +228,11 @@ export function createBrowserTtsPlayer({
       const myGen = generation;
       clearWatchdog();
       activeUtterance = null;
+      activeCallbacks = callbacks ?? null;
 
       const chunks = chunkSentenceForSpeech(text, pack);
       if (chunks.length === 0) {
+        activeCallbacks = null;
         callbacks?.onEnd?.();
         return;
       }
@@ -231,6 +252,7 @@ export function createBrowserTtsPlayer({
           generation += 1;
           watchdogTimer = null;
           activeUtterance = null;
+          activeCallbacks = null;
           if (isTTSAvailable()) {
             window.speechSynthesis.cancel();
           }
@@ -263,6 +285,7 @@ export function createBrowserTtsPlayer({
             return;
           }
           if (activeUtterance === utterance) activeUtterance = null;
+          activeCallbacks = null;
           callbacks?.onEnd?.();
         };
 
@@ -271,7 +294,13 @@ export function createBrowserTtsPlayer({
           const errorCode = event?.error;
           clearWatchdog();
           if (activeUtterance === utterance) activeUtterance = null;
+          activeCallbacks = null;
           if (errorCode === 'canceled' || errorCode === 'interrupted') {
+            // Internal stop/skip already incremented `generation`, so reaching
+            // here with `myGen === generation` means an external interruption
+            // (drawer speech or OS audio focus). Notify caller to leave playing state.
+            generation += 1;
+            callbacks?.onInterrupted?.();
             return;
           }
           generation += 1;
@@ -285,6 +314,7 @@ export function createBrowserTtsPlayer({
           if (disposed || myGen !== generation) return;
           clearWatchdog();
           if (activeUtterance === utterance) activeUtterance = null;
+          activeCallbacks = null;
           generation += 1;
           callbacks?.onError?.(
             'speech_error',
@@ -301,6 +331,7 @@ export function createBrowserTtsPlayer({
 
     dispose() {
       disposed = true;
+      unsubscribeInterrupt();
       stop();
     },
   };

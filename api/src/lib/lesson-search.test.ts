@@ -301,5 +301,45 @@ describe('searchLessonsInCorpus', () => {
     });
     expect(byteCapped.matches.every((m) => m.lessonId === 'noisy')).toBe(true);
     expect(byteCapped.truncated).toBe(true);
+
+    // S1: a huge single first lesson is bounded BEFORE prefilter/stripMarkdown runs.
+    const hugeBody = `${'alpha harbor beta.\n\n'.repeat(20)}${'x '.repeat(2_000_000)}late harbor token.`;
+    const hugeStart = performance.now();
+    const hugeRes = searchLessonsInCorpus(
+      [makeLesson({ id: 'huge', textContent: hugeBody })],
+      'harbor',
+      en,
+      { maxScannedBytes: 4096 },
+    );
+    expect(performance.now() - hugeStart).toBeLessThan(100);
+    expect(hugeRes.truncated).toBe(true);
+    expect(hugeRes.matches.length).toBeGreaterThan(0);
+    expect(hugeRes.matches.every((m) => !m.snippet.includes('late harbor'))).toBe(true);
+  });
+
+  test('assigns consistent occ indices for substring-overlapping and window-trimmed sentences (B3)', () => {
+    const en = getLanguageConfig('en');
+    const lesson = makeLesson({
+      id: 'overlap',
+      textContent: 'A visitor said the harbor is busy.\n\nThe harbor is busy.',
+    });
+    const res = searchLessonsInCorpus([lesson], 'harbor', en);
+    expect(res.matches).toHaveLength(2);
+    expect(res.matches[0]).toMatchObject({ snippet: 'A visitor said the harbor is busy.', occ: 0 });
+    expect(res.matches[1]).toMatchObject({ snippet: 'The harbor is busy.', occ: 0 });
+
+    // Window-trimmed snippet overlapping an earlier sentence increments occ consistently.
+    const longLead = `${'intro '.repeat(60)}the harbor is busy today${' outro'.repeat(60)}.`;
+    const trimmedLesson = makeLesson({
+      id: 'trimmed-overlap',
+      textContent: `${longLead}\n\n${longLead}`,
+    });
+    const trimmedRes = searchLessonsInCorpus([trimmedLesson], 'harbor', en, {
+      maxSnippetChars: 80,
+    });
+    expect(trimmedRes.matches).toHaveLength(2);
+    expect(trimmedRes.matches[0].snippet.startsWith('…')).toBe(true);
+    expect(trimmedRes.matches[0].occ).toBe(0);
+    expect(trimmedRes.matches[1].occ).toBe(1);
   });
 });

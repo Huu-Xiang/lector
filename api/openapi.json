@@ -11762,6 +11762,7 @@
                     ],
                     "enum": [
                       "dictionary",
+                      "mono_dict",
                       "ai_context",
                       "ai_retranslate",
                       "ai_phrase",
@@ -12129,6 +12130,7 @@
                     ],
                     "enum": [
                       "dictionary",
+                      "mono_dict",
                       "ai_context",
                       "ai_retranslate",
                       "ai_phrase",
@@ -13059,6 +13061,7 @@
             ],
             "enum": [
               "dictionary",
+              "mono_dict",
               "ai_context",
               "ai_retranslate",
               "ai_phrase",
@@ -13791,6 +13794,7 @@
             ],
             "enum": [
               "dictionary",
+              "mono_dict",
               "ai_context",
               "ai_retranslate",
               "ai_phrase",

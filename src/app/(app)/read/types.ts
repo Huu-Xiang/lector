@@ -125,6 +125,25 @@ export function shouldPersistImmediateAiUpdate(
   return !!existing && existing.state !== 'new';
 }
 
+/**
+ * Automatic phrase lookup on click must never silently overwrite an existing
+ * saved phrase whose meaning belongs to another explanation language (e.g. a
+ * Chinese saved phrase clicked after enabling monolingual mode). It may persist
+ * only when:
+ * - the phrase did not exist before this lookup and auto-save just created a
+ *   brand-new saved row mid-stream (attaching `phraseDetails` to that row), OR
+ * - `canAutoReplace` explicitly allows repairing a stale/empty fallback row.
+ */
+export function shouldPersistAutoPhraseLookup(
+  initialExisting: VocabEntry | undefined,
+  latestExisting: VocabEntry | undefined,
+  canAutoReplace: boolean,
+): latestExisting is VocabEntry {
+  if (!latestExisting) return false;
+  if (!initialExisting) return shouldPersistImmediateAiUpdate(latestExisting);
+  return canAutoReplace;
+}
+
 export function resolveEffectiveMeaning(panel: WordPanelState): {
   translation: string;
   translationLang: string | null;

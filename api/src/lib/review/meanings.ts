@@ -31,9 +31,10 @@ export function senseFromEntry(
 
 /**
  * True when a stored vocab row carries a deliberate target-language (monolingual)
- * explanation. For English target cards while monolingual mode is OFF, legacy
- * unlocalized dictionary fallbacks (`translationLang = 'en'`, null/'dictionary'
- * source) stay eligible for bilingual refresh so existing English decks still localize.
+ * explanation (including `'mono_dict'` for intentional English dictionary saves).
+ * For English target cards while monolingual mode is OFF, legacy unlocalized
+ * dictionary fallbacks (`translationLang = 'en'`, null/`'dictionary'` source)
+ * stay eligible for bilingual refresh so existing English decks still localize.
  */
 export function isMonolingualCardMeaning(
   row: { translationLang?: string | null; translationSource?: string | null },

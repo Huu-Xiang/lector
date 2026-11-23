@@ -137,4 +137,25 @@ describe('concordance-jump', () => {
       ),
     ).toBe(80);
   });
+
+  it('does not jump to an earlier block whose longer sentence contains the shorter target sentence as a substring (B3)', () => {
+    const blocks = [
+      { blockId: 0, text: 'A visitor said the harbor is busy.' },
+      { blockId: 36, text: 'The harbor is busy.' },
+    ];
+    expect(
+      findMatchingBlockId(
+        blocks,
+        { sentence: 'A visitor said the harbor is busy.', q: 'harbor', occ: 0 },
+        LANGUAGES.en,
+      ),
+    ).toBe(0);
+    expect(
+      findMatchingBlockId(
+        blocks,
+        { sentence: 'The harbor is busy.', q: 'harbor', occ: 0 },
+        LANGUAGES.en,
+      ),
+    ).toBe(36);
+  });
 });

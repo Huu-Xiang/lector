@@ -96,6 +96,7 @@ import {
   isSavedAiTranslationSource,
   normalizePhraseDetails,
   resolveEffectiveMeaning,
+  shouldPersistAutoPhraseLookup,
   shouldPersistImmediateAiUpdate,
   type WordPanelState,
 } from '../types';
@@ -880,8 +881,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
               (await existingEntryLookup.current?.catch(() => undefined)) ?? existingEntry;
             if (requestId !== translationRequestId.current) return;
             if (
-              latestExisting &&
-              (shouldPersistImmediateAiUpdate(latestExisting) || canAutoReplace) &&
+              shouldPersistAutoPhraseLookup(existingEntry, latestExisting, canAutoReplace) &&
               result.translation.trim()
             ) {
               const patch = {
@@ -1030,19 +1030,20 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
 
         if (dictEntry && dictEntry.senses.length > 0) {
           const translation = dictEntry.senses.map((s) => s.gloss).join('; ');
+          const dictSource: VocabTranslationSource = monolingual ? 'mono_dict' : 'dictionary';
           const translationLang = dictionaryMeaningLang(
             needsLocalization,
             wasLocalized,
             expectedMeaningLang,
           );
           if (translationLang === expectedMeaningLang) {
-            replaceSavedMeaning(translation, { translationSource: 'dictionary' });
+            replaceSavedMeaning(translation, { translationSource: dictSource });
           }
           setWordPanel((prev) => ({
             ...prev,
             translation,
             translationLang,
-            translationSource: 'dictionary',
+            translationSource: dictSource,
             partOfSpeech: dictEntry!.senses[0]?.partOfSpeech || null,
             dictEntry,
             isLoading: false,

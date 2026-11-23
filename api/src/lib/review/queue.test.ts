@@ -60,11 +60,22 @@ describe('monolingual cards in Practice queue (U3 / R8)', () => {
     translation: string,
     translationLang: string | null,
     language: string,
+    translationSource: string | null = null,
   ) {
     db.prepare(
-      `INSERT INTO vocab (id, text, type, sentence, translation, translationLang, state, stateUpdatedAt, createdAt, language)
-       VALUES (?, ?, 'word', ?, ?, ?, 'level1', ?, ?, ?)`,
-    ).run(id, text, `Context with ${text}.`, translation, translationLang, TS, TS, language);
+      `INSERT INTO vocab (id, text, type, sentence, translation, translationLang, translationSource, state, stateUpdatedAt, createdAt, language)
+       VALUES (?, ?, 'word', ?, ?, ?, ?, 'level1', ?, ?, ?)`,
+    ).run(
+      id,
+      text,
+      `Context with ${text}.`,
+      translation,
+      translationLang,
+      translationSource,
+      TS,
+      TS,
+      language,
+    );
   }
 
   beforeEach(clear);
@@ -153,5 +164,37 @@ describe('monolingual cards in Practice queue (U3 / R8)', () => {
     for (const choice of chien.choices!) {
       expect(choice).not.toBe('petit félin domestique');
     }
+  });
+
+  test('preserves intentionally saved English mono_dict definitions when monolingual mode is disabled (B2)', () => {
+    setSetting('nativeLanguage', 'zh-CN');
+    setSetting('monolingualExplanations', false);
+    seedVocab('en-mono', 'harbor', 'a sheltered port for ships', 'en', 'en', 'mono_dict');
+    seedVocab('en-legacy', 'cat', 'small feline', 'en', 'en', 'dictionary');
+    backfillWordCards('local', 'en', NOW);
+
+    const filled: string[] = [];
+    const items = buildRound(
+      'local',
+      'en',
+      10,
+      NOW,
+      (_userId, word) => {
+        filled.push(word);
+        return word === 'cat' ? '猫' : '港口';
+      },
+    ).items;
+
+    // Legacy English fallback (`dictionary`) still localizes to Chinese; intentional `mono_dict` is preserved.
+    expect(filled).toEqual(['cat']);
+    const harbor = items.find((i) => i.word === 'harbor')!;
+    expect(harbor.translation).toBe('a sheltered port for ships');
+    expect(db.prepare("SELECT translation, translationLang, translationSource FROM vocab WHERE id = 'en-mono'").get()).toEqual({
+      translation: 'a sheltered port for ships',
+      translationLang: 'en',
+      translationSource: 'mono_dict',
+    });
+    const cat = items.find((i) => i.word === 'cat')!;
+    expect(cat.translation).toBe('猫');
   });
 });

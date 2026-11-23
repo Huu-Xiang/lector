@@ -338,6 +338,70 @@ function stripEllipsesForKey(snippet: string): string {
   return snippet.replace(/^…+/, '').replace(/…+$/, '').replace(/\s+/g, ' ').trim();
 }
 
+function isWindowTrimmed(snippet: string): boolean {
+  return snippet.startsWith('…') || snippet.endsWith('…');
+}
+
+/**
+ * Slice a UTF-8-bounded prefix in O(maxBytes) without measuring the full length
+ * of an arbitrarily huge string (`utf8Bytes(s) >= s.length` always holds in UTF-16).
+ */
+function sliceUtf8Prefix(text: string, maxBytes: number): { slice: string; trimmed: boolean } {
+  if (maxBytes <= 0) return { slice: '', trimmed: text.length > 0 };
+  // Fast O(1) upper bound: every UTF-16 code unit encodes to at most 3 UTF-8 bytes
+  // (surrogate pairs: 2 code units -> 4 bytes = 2 bytes/unit).
+  if (text.length * 3 <= maxBytes) return { slice: text, trimmed: false };
+
+  let end = Math.min(text.length, maxBytes);
+  if (end < text.length) {
+    const prev = text.charCodeAt(end - 1);
+    if (prev >= 0xd800 && prev <= 0xdbff) end -= 1;
+  }
+  let candidate = text.slice(0, end);
+  const wasLengthCapped = end < text.length;
+  if (!wasLengthCapped && Buffer.byteLength(candidate, 'utf8') <= maxBytes) {
+    return { slice: candidate, trimmed: false };
+  }
+
+  // Shrink via binary search until UTF-8 byte length fits maxBytes.
+  let lo = 0;
+  let hi = candidate.length;
+  while (lo < hi) {
+    let mid = (lo + hi + 1) >> 1;
+    if (mid > 0) {
+      const ch = candidate.charCodeAt(mid - 1);
+      if (ch >= 0xd800 && ch <= 0xdbff) mid -= 1;
+    }
+    if (mid <= lo) break;
+    if (Buffer.byteLength(candidate.slice(0, mid), 'utf8') <= maxBytes) {
+      lo = mid;
+    } else {
+      hi = mid - 1;
+    }
+  }
+  let cut = lo;
+  // Prefer breaking cleanly on a paragraph or whitespace boundary near the end.
+  const searchFloor = Math.max(0, cut - 1024);
+  const paraBreak = candidate.lastIndexOf('\n\n', cut);
+  if (paraBreak > searchFloor) {
+    cut = paraBreak;
+  } else {
+    const lineBreak = candidate.lastIndexOf('\n', cut);
+    if (lineBreak > searchFloor) {
+      cut = lineBreak;
+    } else {
+      const spaceBreak = candidate.lastIndexOf(' ', cut);
+      if (spaceBreak > searchFloor) cut = spaceBreak;
+    }
+  }
+  if (cut > 0) {
+    const ch = candidate.charCodeAt(cut - 1);
+    if (ch >= 0xd800 && ch <= 0xdbff) cut -= 1;
+  }
+  candidate = candidate.slice(0, cut);
+  return { slice: candidate, trimmed: true };
+}
+
 export function searchLessonsInCorpus(
   lessons: Iterable<SearchableLesson>,
   query: string,
@@ -373,22 +437,53 @@ export function searchLessonsInCorpus(
       break;
     }
 
+    const remainingBytes = maxScannedBytes - scannedBytes;
     const ytSegments = parseYouTubeSegments(lesson);
-    const rawSource = ytSegments
-      ? ytSegments.map((seg) => seg.text).join('\n')
-      : lesson.textContent ?? '';
-    const lessonBytes = Buffer.byteLength(rawSource, 'utf8');
+    let boundedSegments: RawYouTubeSegment[] | null = null;
+    let rawSource: string;
 
-    if (lessonsScanned > 0 && scannedBytes + lessonBytes > maxScannedBytes) {
-      truncated = true;
-      break;
+    if (ytSegments) {
+      let segBytes = 0;
+      const kept: RawYouTubeSegment[] = [];
+      let over = false;
+      for (const seg of ytSegments) {
+        const b = Buffer.byteLength(seg.text, 'utf8');
+        if (lessonsScanned > 0 && segBytes + b > remainingBytes) {
+          over = true;
+          break;
+        }
+        if (lessonsScanned === 0 && kept.length > 0 && segBytes + b > maxScannedBytes) {
+          over = true;
+          break;
+        }
+        segBytes += b;
+        kept.push(seg);
+      }
+      if (lessonsScanned > 0 && over) {
+        truncated = true;
+        break;
+      }
+      if (over) truncated = true;
+      boundedSegments = kept;
+      rawSource = kept.map((seg) => seg.text).join('\n');
+      scannedBytes += Math.min(segBytes, maxScannedBytes);
+    } else {
+      const fullText = lesson.textContent ?? '';
+      // O(1) lower-bound reject before UTF-8 byte measurement (utf8Bytes >= length).
+      if (lessonsScanned > 0 && fullText.length > remainingBytes) {
+        truncated = true;
+        break;
+      }
+      const budget = lessonsScanned === 0 ? maxScannedBytes : remainingBytes;
+      const { slice, trimmed } = sliceUtf8Prefix(fullText, budget);
+      if (trimmed) {
+        truncated = true;
+        if (lessonsScanned > 0) break;
+      }
+      rawSource = slice;
+      scannedBytes += trimmed ? budget : Buffer.byteLength(slice, 'utf8');
     }
 
-    const singleLessonOverBudget = lessonsScanned === 0 && lessonBytes > maxScannedBytes;
-    if (singleLessonOverBudget) {
-      truncated = true;
-    }
-    scannedBytes += Math.min(lessonBytes, maxScannedBytes);
     lessonsScanned += 1;
 
     if (!passesRawPrefilter(rawSource, compiled, pack)) {
@@ -399,28 +494,25 @@ export function searchLessonsInCorpus(
       pack.script.kind === 'cjk-unspaced'
         ? makeWordSegmentation(parseStoredSegmentWords(lesson.segmentWords))
         : null;
-    const seenCoreCounts = new Map<string, number>();
+    const seenExactCounts = new Map<string, number>();
+    const priorFoldedSentences: string[] = [];
     let lessonMatches = 0;
-    let lessonBudgetBytes = 0;
 
-    if (ytSegments) {
-      for (let segmentIndex = 0; segmentIndex < ytSegments.length; segmentIndex++) {
+    if (boundedSegments) {
+      for (let segmentIndex = 0; segmentIndex < boundedSegments.length; segmentIndex++) {
         if (now() - startedAt >= maxScanMs) {
           truncated = true;
           return { query: trimmedQuery, matches, truncated };
         }
-        const seg = ytSegments[segmentIndex];
-        if (singleLessonOverBudget) {
-          lessonBudgetBytes += Buffer.byteLength(seg.text, 'utf8');
-          if (lessonBudgetBytes > maxScannedBytes) {
-            truncated = true;
-            return { query: trimmedQuery, matches, truncated };
-          }
-        }
+        const seg = boundedSegments[segmentIndex];
         const cleaned = normalizeText(seg.text).replace(/\s+/g, ' ').trim();
         if (!cleaned) continue;
+        const foldedCleaned = searchFold(cleaned, pack);
         const found = findMatchInSentence(cleaned, compiled, pack, segmentation);
-        if (!found) continue;
+        if (!found) {
+          priorFoldedSentences.push(foldedCleaned);
+          continue;
+        }
 
         if (matches.length >= limit) {
           truncated = true;
@@ -429,8 +521,11 @@ export function searchLessonsInCorpus(
 
         const windowed = windowSnippet(cleaned, found.start, found.end, maxSnippetChars);
         const coreKey = searchFold(stripEllipsesForKey(windowed.snippet), pack);
-        const occ = seenCoreCounts.get(coreKey) ?? 0;
-        seenCoreCounts.set(coreKey, occ + 1);
+        const occ = isWindowTrimmed(windowed.snippet)
+          ? priorFoldedSentences.reduce((n, prev) => (prev.includes(coreKey) ? n + 1 : n), 0)
+          : (seenExactCounts.get(coreKey) ?? 0);
+        seenExactCounts.set(foldedCleaned, (seenExactCounts.get(foldedCleaned) ?? 0) + 1);
+        priorFoldedSentences.push(foldedCleaned);
 
         matches.push({
           lessonId: lesson.id,
@@ -459,20 +554,18 @@ export function searchLessonsInCorpus(
         truncated = true;
         return { query: trimmedQuery, matches, truncated };
       }
-      if (singleLessonOverBudget) {
-        lessonBudgetBytes += Buffer.byteLength(paragraph, 'utf8');
-        if (lessonBudgetBytes > maxScannedBytes) {
-          truncated = true;
-          return { query: trimmedQuery, matches, truncated };
-        }
-      }
       if (!paragraph) continue;
 
       for (const rawSentence of splitSentences(paragraph, pack)) {
         const sentence = normalizeText(rawSentence).replace(/\s+/g, ' ').trim();
         if (!sentence) continue;
+        const foldedSentence = searchFold(sentence, pack);
         const found = findMatchInSentence(sentence, compiled, pack, segmentation);
-        if (!found) continue;
+        if (!found) {
+          seenExactCounts.set(foldedSentence, (seenExactCounts.get(foldedSentence) ?? 0) + 1);
+          priorFoldedSentences.push(foldedSentence);
+          continue;
+        }
 
         if (matches.length >= limit) {
           truncated = true;
@@ -481,8 +574,11 @@ export function searchLessonsInCorpus(
 
         const windowed = windowSnippet(sentence, found.start, found.end, maxSnippetChars);
         const coreKey = searchFold(stripEllipsesForKey(windowed.snippet), pack);
-        const occ = seenCoreCounts.get(coreKey) ?? 0;
-        seenCoreCounts.set(coreKey, occ + 1);
+        const occ = isWindowTrimmed(windowed.snippet)
+          ? priorFoldedSentences.reduce((n, prev) => (prev.includes(coreKey) ? n + 1 : n), 0)
+          : (seenExactCounts.get(coreKey) ?? 0);
+        seenExactCounts.set(foldedSentence, (seenExactCounts.get(foldedSentence) ?? 0) + 1);
+        priorFoldedSentences.push(foldedSentence);
 
         matches.push({
           lessonId: lesson.id,

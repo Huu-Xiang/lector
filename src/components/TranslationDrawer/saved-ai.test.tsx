@@ -12,6 +12,7 @@ import {
   hydrateExistingVocab,
   isSavedAiTranslationSource,
   normalizePhraseDetails,
+  shouldPersistAutoPhraseLookup,
   shouldPersistImmediateAiUpdate,
   type WordPanelState,
 } from '@/app/(app)/read/types';
@@ -297,6 +298,28 @@ describe('Reader saved AI & phrase persistence state helpers (R2–R4)', () => {
     expect(shouldPersistImmediateAiUpdate(makeVocab({ state: 'new' }))).toBe(false);
     expect(shouldPersistImmediateAiUpdate(makeVocab({ state: 'level1' }))).toBe(true);
     expect(shouldPersistImmediateAiUpdate(makeVocab({ state: 'known' }))).toBe(true);
+  });
+
+  it('never silently overwrites a saved phrase in another explanation language during automatic lookup (B1)', () => {
+    const savedChinesePhrase = makeVocab({
+      text: 'prendre son temps',
+      type: 'phrase',
+      translation: '慢慢来',
+      translationLang: 'zh-CN',
+      translationSource: 'ai_phrase',
+      state: 'level1',
+    });
+    // Toggling monolingual ON and clicking the phrase: canAutoReplace is false -> must NOT overwrite.
+    expect(shouldPersistAutoPhraseLookup(savedChinesePhrase, savedChinesePhrase, false)).toBe(
+      false,
+    );
+    // Stale/empty row where canAutoReplace is true may still be repaired.
+    expect(shouldPersistAutoPhraseLookup(savedChinesePhrase, savedChinesePhrase, true)).toBe(true);
+    // Brand-new phrase auto-saved mid-stream (initialExisting was undefined) still persists phraseDetails.
+    expect(shouldPersistAutoPhraseLookup(undefined, savedChinesePhrase, false)).toBe(true);
+    expect(
+      shouldPersistAutoPhraseLookup(undefined, makeVocab({ state: 'new' }), false),
+    ).toBe(false);
   });
 
   it('builds full update patches for existing state=new rows on re-save and preserves savedSentence on level-only bumps', () => {

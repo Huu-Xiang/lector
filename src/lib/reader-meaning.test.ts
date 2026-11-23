@@ -99,6 +99,24 @@ describe('monolingual reader helpers (U3 / R7 / R8)', () => {
         true,
       ),
     ).toBe(false);
+    // Intentionally saved English monolingual dictionary definition (`mono_dict`) is protected
+    // when bilingual mode is turned back on (B2), while legacy `dictionary` fallback still repairs.
+    expect(
+      shouldAutoReplaceSavedMeaning(
+        { translation: 'a small domesticated feline', translationLang: 'en', translationSource: 'mono_dict' },
+        'en',
+        'zh-CN',
+        false,
+      ),
+    ).toBe(false);
+    expect(
+      shouldAutoReplaceSavedMeaning(
+        { translation: 'a small domesticated feline', translationLang: 'en', translationSource: 'dictionary' },
+        'en',
+        'zh-CN',
+        false,
+      ),
+    ).toBe(true);
   });
 
   it('invalidateLookupCache clears prefetched and in-flight localization caches too', async () => {

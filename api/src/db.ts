@@ -2334,6 +2334,7 @@ export interface TranscriptSegmentRow {
 
 export type VocabTranslationSource =
   | 'dictionary'
+  | 'mono_dict'
   | 'ai_context'
   | 'ai_retranslate'
   | 'ai_phrase'

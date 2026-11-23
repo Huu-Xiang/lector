@@ -127,7 +127,7 @@ const WORD_STATE: JsonSchema = {
 
 const TRANSLATION_SOURCE: JsonSchema = {
   type: ['string', 'null'],
-  enum: ['dictionary', 'ai_context', 'ai_retranslate', 'ai_phrase', 'manual', null],
+  enum: ['dictionary', 'mono_dict', 'ai_context', 'ai_retranslate', 'ai_phrase', 'manual', null],
   description: 'Where `translation` came from.',
 };
 

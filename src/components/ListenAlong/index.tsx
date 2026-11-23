@@ -277,6 +277,10 @@ export default function ListenAlong(props: ListenAlongProps) {
               trackedPlayback.current = false;
             }
           },
+          onInterrupted: () => {
+            isPlayingRef.current = false;
+            setIsPlaying(false);
+          },
           onError: (code) => {
             isPlayingRef.current = false;
             setIsPlaying(false);

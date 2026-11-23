@@ -7,6 +7,7 @@ const NON_PORTABLE_TEXT_CONTROLS = /[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g;
 
 export const VOCAB_TRANSLATION_SOURCES = new Set<VocabTranslationSource>([
   'dictionary',
+  'mono_dict',
   'ai_context',
   'ai_retranslate',
   'ai_phrase',

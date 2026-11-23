@@ -367,19 +367,48 @@ describe('BrowserTtsPlayer', () => {
     expect(onEnd1).not.toHaveBeenCalled();
     expect(onError1).not.toHaveBeenCalled();
 
-    // Benign canceled/interrupted error on active utterance does not trigger onError
-    utt1.onerror?.({ error: 'interrupted' });
+    // External canceled/interrupted error on active utterance notifies onInterrupted without onError (B4)
+    const onInterrupted1 = vi.fn();
+    player.playSentence(1, 'Deuxième phrase.', 1.25, {
+      onEnd: onEnd1,
+      onInterrupted: onInterrupted1,
+      onError: onError1,
+    });
+    const uttInterrupted = synth.spoken[2];
+    uttInterrupted.onerror?.({ error: 'interrupted' });
+    expect(onInterrupted1).toHaveBeenCalledTimes(1);
     expect(onError1).not.toHaveBeenCalled();
 
     // Real error on a fresh utterance surfaces speech_error
     player.playSentence(1, 'Deuxième phrase.', 1.25, { onEnd: onEnd1, onError: onError1 });
-    const utt2 = synth.spoken[2];
+    const utt2 = synth.spoken[3];
     utt2.onerror?.({ error: 'synthesis-failed' });
     expect(onError1).toHaveBeenCalledWith('speech_error', 'synthesis-failed');
 
     // Trailing onend after onerror is ignored
     utt2.onend?.(new Event('end'));
     expect(onEnd1).not.toHaveBeenCalled();
+    player.dispose();
+  });
+
+  test('drawer speakWordWithBrowser interrupts active ListenAlong playback cleanly even without onerror (B4)', () => {
+    const player = createBrowserTtsPlayer({ pack: LANGUAGES.fr });
+    const onInterrupted = vi.fn();
+    const onError = vi.fn();
+    const onEnd = vi.fn();
+
+    player.playSentence(0, 'Bonjour tout le monde.', 1, { onEnd, onInterrupted, onError });
+    const sentenceUtt = synth.spoken[0];
+
+    // User presses speaker button in TranslationDrawer while ListenAlong is playing.
+    speakWordWithBrowser('bonjour', 'fr');
+    expect(onInterrupted).toHaveBeenCalledTimes(1);
+    expect(onError).not.toHaveBeenCalled();
+
+    // Asynchronous browser onerror('canceled') for the canceled sentence does not double-fire.
+    sentenceUtt.onerror?.({ error: 'canceled' });
+    expect(onInterrupted).toHaveBeenCalledTimes(1);
+    expect(onEnd).not.toHaveBeenCalled();
     player.dispose();
   });
 

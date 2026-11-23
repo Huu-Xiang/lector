@@ -1,4 +1,10 @@
-import { foldWord, normalizeText, stripMarks, type LanguageConfig } from '@/lib/languages';
+import {
+  foldWord,
+  normalizeText,
+  splitSentences,
+  stripMarks,
+  type LanguageConfig,
+} from '@/lib/languages';
 
 export const CONCORDANCE_JUMP_STORAGE_KEY = 'readfox-concordance-jump';
 
@@ -198,10 +204,34 @@ export function findMatchingBlockId(
   if (blocks.length === 0) return null;
   const occ = Math.max(0, target.occ);
 
+  const isTrimmed = target.sentence.startsWith('…') || target.sentence.endsWith('…');
   const needleRaw = stripSnippetEllipses(target.sentence);
   if (needleRaw) {
     const foldedNeedle = foldForJump(needleRaw, pack);
     if (foldedNeedle) {
+      // Primary pass: match on the same `splitSentences` boundaries that
+      // `lesson-search.ts` uses to assign `occ`, so a shorter sentence that
+      // appears as a substring of an earlier longer sentence never resolves to
+      // the earlier paragraph.
+      let seenSentence = 0;
+      let lastSentenceMatch: number | null = null;
+      for (const block of blocks) {
+        for (const rawSentence of splitSentences(block.text, pack)) {
+          const foldedSentence = foldForJump(rawSentence, pack);
+          if (!foldedSentence) continue;
+          const matched = isTrimmed
+            ? foldedSentence.includes(foldedNeedle)
+            : foldedSentence === foldedNeedle;
+          if (!matched) continue;
+          lastSentenceMatch = block.blockId;
+          if (seenSentence === occ) return block.blockId;
+          seenSentence += 1;
+        }
+      }
+      if (lastSentenceMatch !== null) return lastSentenceMatch;
+
+      // Fallback pass: block-level substring matching when sentence boundaries
+      // shifted slightly (e.g. minor post-search edits or list-item splits).
       let seen = 0;
       let lastMatch: number | null = null;
       for (const block of blocks) {

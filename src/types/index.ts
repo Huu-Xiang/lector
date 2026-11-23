@@ -8,6 +8,7 @@ export type WordState = 'new' | 'level1' | 'level2' | 'level3' | 'level4' | 'kno
 export type VocabType = 'word' | 'phrase';
 export type VocabTranslationSource =
   | 'dictionary'
+  | 'mono_dict'
   | 'ai_context'
   | 'ai_retranslate'
   | 'ai_phrase'

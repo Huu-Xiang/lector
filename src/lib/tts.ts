@@ -270,6 +270,26 @@ export function createBrowserUtterance(
   return utterance;
 }
 
+const browserSpeechInterruptListeners = new Set<() => void>();
+
+/**
+ * Subscribe to external browser speech interruptions (such as drawer word/sentence
+ * pronunciation calling `speakWordWithBrowser` or `speakWithBrowser`). Returns an
+ * unsubscribe function.
+ */
+export function onBrowserSpeechInterrupt(listener: () => void): () => void {
+  browserSpeechInterruptListeners.add(listener);
+  return () => {
+    browserSpeechInterruptListeners.delete(listener);
+  };
+}
+
+function notifyBrowserSpeechInterrupt(): void {
+  for (const listener of [...browserSpeechInterruptListeners]) {
+    listener();
+  }
+}
+
 /**
  * Speak a single word or short phrase strictly via browser speech synthesis
  * for an explicit language. Never routes through `speakWithServer` or `/api/tts`.
@@ -285,6 +305,7 @@ export function speakWordWithBrowser(
   const trimmed = text.trim();
   if (!trimmed) return;
 
+  notifyBrowserSpeechInterrupt();
   stopSpeaking();
 
   const utterance = createBrowserUtterance(trimmed, { language: config.code, rate });
@@ -405,6 +426,7 @@ async function speakWithServer(text: string, rate: number): Promise<boolean> {
     }
 
     // Stop any current audio
+    notifyBrowserSpeechInterrupt();
     stopSpeaking();
 
     // Create audio element and play
@@ -429,6 +451,7 @@ function speakWithBrowser(text: string, rate: number): void {
   }
 
   // Stop any current speech
+  notifyBrowserSpeechInterrupt();
   window.speechSynthesis.cancel();
 
   const utterance = new SpeechSynthesisUtterance(text);
