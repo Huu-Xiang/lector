@@ -165,7 +165,7 @@
     "chooseLanguage": "2. 배울 언어 선택",
     "learn": "{name} 배우기",
     "showMore": "언어 {count}개 더 보기",
-    "personalise": "3. 내 수준",
+    "personalise": "내 수준",
     "personaliseHint": "수준에 맞는 난이도의 무료 도서를 먼저 보여 드리는 데 사용해요.",
     "optional": "선택",
     "level": "읽기 수준",
@@ -194,7 +194,14 @@
     "recommendTitle": "첫 읽을거리 고르기",
     "recommendIntro": "내 수준({level})과 관심사를 바탕으로 골랐어요. 하나를 고르면 첫 읽기를 안내해 드려요.",
     "recommendBack": "답변 바꾸기",
-    "recommendSkip": "대신 서재 둘러보기"
+    "recommendSkip": "대신 서재 둘러보기",
+    "stepProgress": "{total}단계 중 {current}단계",
+    "continue": "계속",
+    "back": "언어 선택으로 돌아가기",
+    "step1Ready": "다음: 수준과 하루 목표",
+    "step1ReadyHint": "모두 선택 사항이에요. 바로 서재로 건너뛸 수도 있어요.",
+    "step2Title": "첫 레슨 맞춤 설정",
+    "step2Intro": "여기 항목은 모두 선택 사항이에요. 나중에 설정에서 바꿀 수 있어요."
   },
   "landing": {
     "metaTitle": "Readfox – 배우는 언어로 진짜 책을 읽어요",

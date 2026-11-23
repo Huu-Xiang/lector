@@ -219,7 +219,7 @@
     "chooseLanguage": "2. 学ぶ言語を選ぶ",
     "learn": "{name}を学ぶ",
     "showMore": "さらに {count} 言語を表示",
-    "personalise": "3. あなたのレベル",
+    "personalise": "あなたのレベル",
     "personaliseHint": "ちょうどよい難易度の無料の本を先に表示するために使います。",
     "optional": "任意",
     "level": "読解レベル",
@@ -248,7 +248,14 @@
     "recommendTitle": "最初に読む本を選ぶ",
     "recommendIntro": "あなたのレベル（{level}）と興味に合わせています。1 冊選ぶと、最初の読書をご案内します。",
     "recommendBack": "回答を変更する",
-    "recommendSkip": "代わりにライブラリを見る"
+    "recommendSkip": "代わりにライブラリを見る",
+    "stepProgress": "ステップ {current} / {total}",
+    "continue": "次へ",
+    "back": "言語の選択に戻る",
+    "step1Ready": "次へ：レベルと毎日の目標",
+    "step1ReadyHint": "すべて任意です。そのままライブラリへ進むこともできます。",
+    "step2Title": "最初のレッスンを合わせる",
+    "step2Intro": "ここでの選択はすべて任意です。あとから設定で変更できます。"
   },
   "landing": {
     "metaTitle": "Readfox – 学んでいる言語で本物の本を読もう",

@@ -45,6 +45,7 @@ import { Button } from '@/components/ui/button';
 import { Select } from '@/components/ui/select';
 import RecommendedForYou from '@/components/RecommendedForYou';
 import { readVocabResult, type VocabResult } from '@/lib/vocab-result';
+import { canEnterPreferences, consumeSetupResume, writeSetupResume } from './setup-resume';
 
 const SETUP_GOALS = DAILY_GOAL_PRESETS.filter((goal) => goal.target <= 20);
 
@@ -97,7 +98,7 @@ export default function SetupPage() {
   const [nativeSettingStatus, setNativeSettingStatus] = useState<
     'loading' | 'loaded' | 'unavailable'
   >('loading');
-  const [stage, setStage] = useState<'form' | 'recommend'>('form');
+  const [stage, setStage] = useState<'languages' | 'preferences' | 'recommend'>('languages');
   const tl = useTranslations('readingLevel');
   const vt = useTranslations('vocabTest');
   const tc = useTranslations('common');
@@ -118,6 +119,7 @@ export default function SetupPage() {
     pickedLanguage ??
     bookLanguage ??
     (native === 'ru' && isLanguageReady('en', ready) ? 'en' : null);
+  const canAdvanceToPreferences = canEnterPreferences(native, selectedLanguage);
   const level: CefrLevel | null =
     levelPicked || selectedLanguage !== 'en' ? pickedLevel : (vocabResult?.level ?? pickedLevel);
   function pickLevel(next: CefrLevel | null) {
@@ -129,6 +131,30 @@ export default function SetupPage() {
   }
   const languageName = (code: string, fallback: string) =>
     languageDisplayName(code, locale, fallback);
+
+  /* eslint-disable react-hooks/set-state-in-effect -- browser storage and query params hydrate client-only setup state */
+  useEffect(() => {
+    const resumed = consumeSetupResume();
+    if (resumed) {
+      nativePicked.current = true;
+      setNative(resumed.native);
+      setPickedLanguage(resumed.targetLanguage);
+      setStage('preferences');
+    }
+    setVocabResult(readVocabResult());
+    const stored = readPendingBook();
+    if (stored) {
+      setPendingBook(stored);
+      return;
+    }
+    const fromQuery = claimBookFromSearch(window.location.search);
+    if (fromQuery) {
+      const ref: BookRef = { language: fromQuery.lang, slug: fromQuery.book };
+      writePendingBook(ref);
+      setPendingBook(ref);
+    }
+  }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   // A completed/skipped guide never reappears. An explicit visit while a guide
   // is in progress resumes its real starter lesson instead of beginning again.
@@ -162,25 +188,7 @@ export default function SetupPage() {
     };
   }, [router, locale]);
 
-  /* eslint-disable react-hooks/set-state-in-effect -- the book a visitor chose is in localStorage or query params */
-  useEffect(() => {
-    const stored = readPendingBook();
-    if (stored) {
-      setPendingBook(stored);
-      return;
-    }
-    const fromQuery = claimBookFromSearch(window.location.search);
-    if (fromQuery) {
-      const ref: BookRef = { language: fromQuery.lang, slug: fromQuery.book };
-      writePendingBook(ref);
-      setPendingBook(ref);
-    }
-  }, []);
-
-  useEffect(() => {
-    setVocabResult(readVocabResult());
-  }, []);
-
+  /* eslint-disable react-hooks/set-state-in-effect -- pending book title resets before async catalog lookup */
   useEffect(() => {
     setPendingTitle(null);
     if (!bookLanguage || !bookSlug) return;
@@ -212,6 +220,20 @@ export default function SetupPage() {
       document.cookie = `${LOCALE_COOKIE}=${ui}; path=/; max-age=31536000; samesite=lax`;
       router.refresh();
     }
+  }
+
+  function goToPreferences() {
+    if (!canAdvanceToPreferences || pending !== null || nativeSettingStatus === 'loading') return;
+    setError(null);
+    setStage('preferences');
+    window.scrollTo({ top: 0 });
+  }
+
+  function backToLanguages() {
+    if (pending !== null) return;
+    setError(null);
+    setStage('languages');
+    window.scrollTo({ top: 0 });
   }
 
   async function handleContinue(guided: boolean) {
@@ -331,6 +353,21 @@ export default function SetupPage() {
   const visibleLanguageCards = expanded ? [...readyCards, ...restCards] : readyCards;
   const hiddenLanguageCount = offeredCards.length - visibleLanguageCards.length;
 
+  const showPreferences = stage === 'preferences' && canAdvanceToPreferences;
+  const showLanguages =
+    stage === 'languages' || (stage === 'preferences' && !canAdvanceToPreferences);
+  const showForm = showLanguages || showPreferences;
+  const showDirectStart = showPreferences || chosenTitle !== null;
+  const headerBadge = stage === 'recommend' ? t('recommendBadge') : t('badge');
+  const headerTitle =
+    stage === 'recommend' ? t('recommendTitle') : showPreferences ? t('step2Title') : t('welcome');
+  const headerIntro =
+    stage === 'recommend'
+      ? t('recommendIntro', { level: levelLabel })
+      : showPreferences
+        ? t('step2Intro')
+        : t('intro');
+
   return (
     <main className="setup-page min-h-svh bg-background px-4 py-4 sm:py-16">
       <div className="mx-auto w-full max-w-3xl">
@@ -348,14 +385,36 @@ export default function SetupPage() {
           </p>
           <div className="mb-3 hidden items-center gap-2 rounded-full bg-[var(--primary-soft)] px-3 py-1 text-sm font-semibold text-[var(--primary-text)] sm:inline-flex">
             <Sparkles className="h-4 w-4" aria-hidden="true" />
-            {stage === 'form' ? t('badge') : t('recommendBadge')}
+            {headerBadge}
           </div>
+          {showForm && (
+            <div
+              className="mb-2 flex items-center gap-2 sm:justify-center"
+              data-testid="setup-step-indicator"
+            >
+              <span className="sr-only">
+                {t('stepProgress', { current: showPreferences ? 2 : 1, total: 2 })}
+              </span>
+              <span
+                className="text-xs font-semibold tracking-wide text-[var(--primary-text)]"
+                aria-hidden="true"
+              >
+                {showPreferences ? '2 / 2' : '1 / 2'}
+              </span>
+              <span className="flex items-center gap-1.5" aria-hidden="true">
+                <span className="h-1.5 w-6 rounded-full bg-primary" />
+                <span
+                  className={`h-1.5 w-6 rounded-full motion-safe:transition-colors ${
+                    showPreferences ? 'bg-primary' : 'bg-muted'
+                  }`}
+                />
+              </span>
+            </div>
+          )}
           <h1 className="mb-1.5 text-2xl font-bold tracking-tight text-foreground sm:mb-3 sm:text-3xl">
-            {stage === 'form' ? t('welcome') : t('recommendTitle')}
+            {headerTitle}
           </h1>
-          <p className="mx-auto max-w-xl text-sm text-muted-foreground sm:text-lg">
-            {stage === 'form' ? t('intro') : t('recommendIntro', { level: levelLabel })}
-          </p>
+          <p className="mx-auto max-w-xl text-sm text-muted-foreground sm:text-lg">{headerIntro}</p>
         </div>
 
         {stage === 'recommend' && selectedLanguage && (
@@ -371,7 +430,11 @@ export default function SetupPage() {
               <Button
                 type="button"
                 variant="ghost"
-                onClick={() => setStage('form')}
+                onClick={() => {
+                  setError(null);
+                  setStage('preferences');
+                  window.scrollTo({ top: 0 });
+                }}
                 disabled={pending !== null}
                 data-testid="setup-recommend-back"
               >
@@ -396,235 +459,268 @@ export default function SetupPage() {
           </section>
         )}
 
-        {stage === 'form' && (
+        {showForm && (
           <>
-            <section aria-labelledby="native-heading" className="mb-4 sm:mb-8">
-              <h2 id="native-heading" className="mb-1 text-sm font-bold text-foreground">
-                {t('nativeTitle')}
-              </h2>
-              <p className="native-subtitle mb-2 text-sm text-muted-foreground sm:mb-3">
-                {t('nativeHint')}
-              </p>
-              <div className="sm:w-80">
-                <Select
-                  value={native}
-                  onChange={(e) => chooseNative(e.target.value)}
-                  aria-labelledby="native-heading"
-                  data-testid="setup-native-language"
-                  className="min-h-11 bg-card sm:min-h-10"
-                >
-                  {NATIVE_LANGUAGES.map((lang) => (
-                    <option key={lang.code} value={lang.code}>
-                      {lang.native}
-                    </option>
-                  ))}
-                </Select>
-              </div>
-            </section>
-
-            <section aria-labelledby="language-heading" className="mb-4 sm:mb-8">
-              <h2 id="language-heading" className="mb-3 text-sm font-bold text-foreground">
-                {t('chooseLanguage')}
-              </h2>
-              <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,8.5rem),1fr))] gap-2 sm:grid-cols-3 sm:gap-3">
-                {visibleLanguageCards.map((lang) => {
-                  const soon = !isLanguageReady(lang.code, ready);
-                  const active = selectedLanguage === lang.code;
-                  const name = languageName(lang.code, lang.name);
-                  return (
-                    <button
-                      key={lang.code}
-                      type="button"
-                      onClick={() => setPickedLanguage(lang.code)}
-                      disabled={pending !== null || soon}
-                      data-testid={`setup-language-${lang.code}`}
-                      aria-label={t('learn', { name })}
-                      aria-pressed={active}
-                      className={`relative flex min-h-14 cursor-pointer flex-col items-start justify-center rounded-xl border px-3 py-2 pe-7 text-start focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none motion-safe:transition-colors sm:min-h-36 sm:items-center sm:gap-2 sm:rounded-2xl sm:border-2 sm:px-4 sm:py-5 sm:text-center ${
-                        active
-                          ? 'border-primary bg-[var(--primary-soft)]'
-                          : soon
-                            ? 'cursor-not-allowed border-border bg-card opacity-60'
-                            : pending !== null
-                              ? 'cursor-not-allowed border-border bg-card opacity-50'
-                              : 'border-border bg-card hover:border-primary hover:shadow-md'
-                      }`}
-                    >
-                      <span className="language-emoji hidden text-4xl sm:block" aria-hidden="true">
-                        {lang.flag}
-                      </span>
-                      <span className="max-w-full text-sm font-semibold break-words text-foreground sm:text-lg">
-                        {lang.native}
-                      </span>
-                      <span
-                        className={`max-w-full text-xs break-words text-muted-foreground ${name === lang.native ? 'hidden sm:block' : ''}`}
-                      >
-                        {name}
-                      </span>
-                      {active && (
-                        <Check className="absolute end-2 top-2 size-4 text-primary" aria-hidden />
-                      )}
-                      {soon && (
-                        <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
-                          {t('inDevelopment')}
-                        </span>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-              {hiddenLanguageCount > 0 && (
-                <div className="mt-1 sm:mt-3 sm:text-center">
-                  <button
-                    type="button"
-                    data-testid="setup-language-show-all"
-                    onClick={() => setShowAllLanguages(true)}
-                    className="min-h-11 cursor-pointer text-start text-sm font-medium text-primary hover:underline"
-                  >
-                    {ready
-                      ? t('showMoreSoon', { count: hiddenLanguageCount })
-                      : t('showMore', { count: hiddenLanguageCount })}
-                  </button>
-                </div>
-              )}
-            </section>
-
-            <section
-              aria-labelledby="preferences-heading"
-              className="mb-4 rounded-xl border border-border bg-card p-3 sm:mb-6 sm:rounded-2xl sm:p-6"
-            >
-              <div className="mb-3 flex items-start justify-between gap-3 sm:mb-5">
-                <div>
-                  <h2 id="preferences-heading" className="text-sm font-bold text-foreground">
-                    {t('personalise')}
+            {showLanguages && (
+              <>
+                <section aria-labelledby="native-heading" className="mb-4 sm:mb-8">
+                  <h2 id="native-heading" className="mb-1 text-sm font-bold text-foreground">
+                    {t('nativeTitle')}
                   </h2>
-                  <p className="native-subtitle mt-1 text-sm text-muted-foreground">
-                    {t('personaliseHint')}
+                  <p className="native-subtitle mb-2 text-sm text-muted-foreground sm:mb-3">
+                    {t('nativeHint')}
                   </p>
-                </div>
-                <span className="rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground">
-                  {t('optional')}
-                </span>
-              </div>
+                  <div className="sm:w-80">
+                    <Select
+                      value={native}
+                      onChange={(e) => chooseNative(e.target.value)}
+                      aria-labelledby="native-heading"
+                      data-testid="setup-native-language"
+                      className="min-h-11 bg-card sm:min-h-10"
+                    >
+                      {NATIVE_LANGUAGES.map((lang) => (
+                        <option key={lang.code} value={lang.code}>
+                          {lang.native}
+                        </option>
+                      ))}
+                    </Select>
+                  </div>
+                </section>
 
-              <fieldset>
-                <legend className="mb-2 text-xs font-semibold text-muted-foreground">
-                  {t('level')}
-                </legend>
-                <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-                  {CEFR_LEVELS.map((option) => {
-                    const exams = selectedLanguage
-                      ? examRefs(selectedLanguage, option, mainland)
-                          .map((ref) => tl(`exam.${ref.exam}`, { score: ref.score ?? '' }))
-                          .join(' · ')
-                      : '';
-                    return (
-                      <button
-                        key={option}
-                        type="button"
-                        aria-pressed={level === option}
-                        onClick={() => pickLevel(option)}
-                        data-testid={`setup-level-${option}`}
-                        className={`min-h-11 cursor-pointer rounded-xl border px-3 py-2 text-left text-sm transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
-                          level === option
-                            ? 'border-primary bg-[var(--primary-soft)] text-[var(--primary-text)]'
-                            : 'border-border bg-background text-foreground hover:bg-accent'
-                        }`}
-                      >
-                        <span className="font-semibold">{option}</span>
-                        <span className="ml-1.5 font-medium">{tl(`names.${option}`)}</span>
-                        {exams && (
-                          <span className="mt-0.5 block text-xs text-muted-foreground">
-                            {exams}
+                <section aria-labelledby="language-heading" className="mb-4 sm:mb-8">
+                  <h2 id="language-heading" className="mb-3 text-sm font-bold text-foreground">
+                    {t('chooseLanguage')}
+                  </h2>
+                  <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,8.5rem),1fr))] gap-2 sm:grid-cols-3 sm:gap-3">
+                    {visibleLanguageCards.map((lang) => {
+                      const soon = !isLanguageReady(lang.code, ready);
+                      const active = selectedLanguage === lang.code;
+                      const name = languageName(lang.code, lang.name);
+                      return (
+                        <button
+                          key={lang.code}
+                          type="button"
+                          onClick={() => setPickedLanguage(lang.code)}
+                          disabled={pending !== null || soon}
+                          data-testid={`setup-language-${lang.code}`}
+                          aria-label={t('learn', { name })}
+                          aria-pressed={active}
+                          className={`relative flex min-h-14 cursor-pointer flex-col items-start justify-center rounded-xl border px-3 py-2 pe-7 text-start focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none motion-safe:transition-colors sm:min-h-36 sm:items-center sm:gap-2 sm:rounded-2xl sm:border-2 sm:px-4 sm:py-5 sm:text-center ${
+                            active
+                              ? 'border-primary bg-[var(--primary-soft)]'
+                              : soon
+                                ? 'cursor-not-allowed border-border bg-card opacity-60'
+                                : pending !== null
+                                  ? 'cursor-not-allowed border-border bg-card opacity-50'
+                                  : 'border-border bg-card hover:border-primary hover:shadow-md'
+                          }`}
+                        >
+                          <span
+                            className="language-emoji hidden text-4xl sm:block"
+                            aria-hidden="true"
+                          >
+                            {lang.flag}
                           </span>
-                        )}
-                      </button>
-                    );
-                  })}
-                  <button
-                    type="button"
-                    aria-pressed={level === null}
-                    onClick={() => pickLevel(null)}
-                    data-testid="setup-level-unsure"
-                    className={`min-h-11 cursor-pointer rounded-xl border px-3 py-2 text-left text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
-                      level === null
-                        ? 'border-primary bg-[var(--primary-soft)] text-[var(--primary-text)]'
-                        : 'border-border bg-background text-foreground hover:bg-accent'
-                    }`}
-                  >
-                    {tl('notSure')}
-                  </button>
-                  {(selectedLanguage === null || selectedLanguage === 'en') && (
-                    <Link
-                      href="/vocab-test?from=setup"
-                      data-testid="setup-vocab-test-link"
-                      className="flex min-h-11 items-center px-1 text-sm font-medium text-primary hover:underline focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none sm:col-span-2"
-                    >
-                      {vt('setupLink')}
-                    </Link>
-                  )}
-                </div>
-                {vocabResult && selectedLanguage === 'en' && (
-                  <p className="mt-2 text-xs text-muted-foreground" data-testid="setup-vocab-note">
-                    {vt('setupNote', { count: vocabResult.estimate })}
-                  </p>
-                )}
-                <p className="mt-2 text-xs text-muted-foreground">{t('levelHint')}</p>
-              </fieldset>
-
-              <fieldset className="mt-5">
-                <legend className="mb-2 text-xs font-semibold text-muted-foreground">
-                  {t('interests')}
-                </legend>
-                <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                  {READING_INTERESTS.map((id) => (
-                    <button
-                      key={id}
-                      type="button"
-                      aria-pressed={interests.includes(id)}
-                      onClick={() => toggleInterest(id)}
-                      data-testid={`setup-interest-${id}`}
-                      className={`min-h-11 cursor-pointer rounded-xl border px-3 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
-                        interests.includes(id)
-                          ? 'border-primary bg-[var(--primary-soft)] text-[var(--primary-text)]'
-                          : 'border-border bg-background text-foreground hover:bg-accent'
-                      }`}
-                    >
-                      {t(`interest.${id}`)}
-                    </button>
-                  ))}
-                </div>
-                <p className="mt-2 text-xs text-muted-foreground">{t('interestsHint')}</p>
-              </fieldset>
-
-              <fieldset className="mt-5">
-                <legend className="mb-2 text-xs font-semibold text-muted-foreground">
-                  {goalT('setupTitle')}
-                </legend>
-                <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-                  {SETUP_GOALS.map((goal) => {
-                    const chosen = goalKey(goal) === goalKey(dailyGoal);
-                    return (
+                          <span className="max-w-full text-sm font-semibold break-words text-foreground sm:text-lg">
+                            {lang.native}
+                          </span>
+                          <span
+                            className={`max-w-full text-xs break-words text-muted-foreground ${name === lang.native ? 'hidden sm:block' : ''}`}
+                          >
+                            {name}
+                          </span>
+                          {active && (
+                            <Check
+                              className="absolute end-2 top-2 size-4 text-primary"
+                              aria-hidden
+                            />
+                          )}
+                          {soon && (
+                            <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
+                              {t('inDevelopment')}
+                            </span>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {hiddenLanguageCount > 0 && (
+                    <div className="mt-1 sm:mt-3 sm:text-center">
                       <button
-                        key={goalKey(goal)}
                         type="button"
-                        aria-pressed={chosen}
-                        onClick={() => setDailyGoalChoice(goal)}
-                        data-testid={`setup-goal-${goal.kind}-${goal.target}`}
-                        className={`min-h-11 cursor-pointer rounded-xl border px-3 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
-                          chosen
+                        data-testid="setup-language-show-all"
+                        onClick={() => setShowAllLanguages(true)}
+                        className="min-h-11 cursor-pointer text-start text-sm font-medium text-primary hover:underline"
+                      >
+                        {ready
+                          ? t('showMoreSoon', { count: hiddenLanguageCount })
+                          : t('showMore', { count: hiddenLanguageCount })}
+                      </button>
+                    </div>
+                  )}
+                </section>
+              </>
+            )}
+
+            {showPreferences && (
+              <>
+                <div className="mb-3">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={backToLanguages}
+                    disabled={pending !== null}
+                    data-testid="setup-step-back"
+                    className="-ms-2 min-h-11 px-2 text-muted-foreground hover:text-foreground"
+                  >
+                    <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+                    {t('back')}
+                  </Button>
+                </div>
+
+                <section
+                  aria-labelledby="preferences-heading"
+                  className="mb-4 rounded-xl border border-border bg-card p-3 sm:mb-6 sm:rounded-2xl sm:p-6"
+                >
+                  <div className="mb-3 flex items-start justify-between gap-3 sm:mb-5">
+                    <div>
+                      <h2 id="preferences-heading" className="text-sm font-bold text-foreground">
+                        {t('personalise')}
+                      </h2>
+                      <p className="native-subtitle mt-1 text-sm text-muted-foreground">
+                        {t('personaliseHint')}
+                      </p>
+                    </div>
+                    <span className="rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground">
+                      {t('optional')}
+                    </span>
+                  </div>
+
+                  <fieldset>
+                    <legend className="mb-2 text-xs font-semibold text-muted-foreground">
+                      {t('level')}
+                    </legend>
+                    <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                      {CEFR_LEVELS.map((option) => {
+                        const exams = selectedLanguage
+                          ? examRefs(selectedLanguage, option, mainland)
+                              .map((ref) => tl(`exam.${ref.exam}`, { score: ref.score ?? '' }))
+                              .join(' · ')
+                          : '';
+                        return (
+                          <button
+                            key={option}
+                            type="button"
+                            aria-pressed={level === option}
+                            onClick={() => pickLevel(option)}
+                            data-testid={`setup-level-${option}`}
+                            className={`min-h-11 cursor-pointer rounded-xl border px-3 py-2 text-left text-sm transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
+                              level === option
+                                ? 'border-primary bg-[var(--primary-soft)] text-[var(--primary-text)]'
+                                : 'border-border bg-background text-foreground hover:bg-accent'
+                            }`}
+                          >
+                            <span className="font-semibold">{option}</span>
+                            <span className="ml-1.5 font-medium">{tl(`names.${option}`)}</span>
+                            {exams && (
+                              <span className="mt-0.5 block text-xs text-muted-foreground">
+                                {exams}
+                              </span>
+                            )}
+                          </button>
+                        );
+                      })}
+                      <button
+                        type="button"
+                        aria-pressed={level === null}
+                        onClick={() => pickLevel(null)}
+                        data-testid="setup-level-unsure"
+                        className={`min-h-11 cursor-pointer rounded-xl border px-3 py-2 text-left text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
+                          level === null
                             ? 'border-primary bg-[var(--primary-soft)] text-[var(--primary-text)]'
                             : 'border-border bg-background text-foreground hover:bg-accent'
                         }`}
                       >
-                        {goalT(`preset.${goal.kind}`, { count: goal.target })}
+                        {tl('notSure')}
                       </button>
-                    );
-                  })}
-                </div>
-                <p className="mt-2 text-xs text-muted-foreground">{goalT('setupHint')}</p>
-              </fieldset>
-            </section>
+                      {selectedLanguage === 'en' && (
+                        <Link
+                          href="/vocab-test?from=setup"
+                          onClick={() => writeSetupResume(native, selectedLanguage)}
+                          data-testid="setup-vocab-test-link"
+                          className="flex min-h-11 items-center px-1 text-sm font-medium text-primary hover:underline focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none sm:col-span-2"
+                        >
+                          {vt('setupLink')}
+                        </Link>
+                      )}
+                    </div>
+                    {vocabResult && selectedLanguage === 'en' && (
+                      <p
+                        className="mt-2 text-xs text-muted-foreground"
+                        data-testid="setup-vocab-note"
+                      >
+                        {vt('setupNote', { count: vocabResult.estimate })}
+                      </p>
+                    )}
+                    <p className="mt-2 text-xs text-muted-foreground">{t('levelHint')}</p>
+                  </fieldset>
+
+                  <fieldset className="mt-5">
+                    <legend className="mb-2 text-xs font-semibold text-muted-foreground">
+                      {t('interests')}
+                    </legend>
+                    <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                      {READING_INTERESTS.map((id) => (
+                        <button
+                          key={id}
+                          type="button"
+                          aria-pressed={interests.includes(id)}
+                          onClick={() => toggleInterest(id)}
+                          data-testid={`setup-interest-${id}`}
+                          className={`min-h-11 cursor-pointer rounded-xl border px-3 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
+                            interests.includes(id)
+                              ? 'border-primary bg-[var(--primary-soft)] text-[var(--primary-text)]'
+                              : 'border-border bg-background text-foreground hover:bg-accent'
+                          }`}
+                        >
+                          {t(`interest.${id}`)}
+                        </button>
+                      ))}
+                    </div>
+                    <p className="mt-2 text-xs text-muted-foreground">{t('interestsHint')}</p>
+                  </fieldset>
+
+                  <fieldset className="mt-5">
+                    <legend className="mb-2 text-xs font-semibold text-muted-foreground">
+                      {goalT('setupTitle')}
+                    </legend>
+                    <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                      {SETUP_GOALS.map((goal) => {
+                        const chosen = goalKey(goal) === goalKey(dailyGoal);
+                        return (
+                          <button
+                            key={goalKey(goal)}
+                            type="button"
+                            aria-pressed={chosen}
+                            onClick={() => setDailyGoalChoice(goal)}
+                            data-testid={`setup-goal-${goal.kind}-${goal.target}`}
+                            className={`min-h-11 cursor-pointer rounded-xl border px-3 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
+                              chosen
+                                ? 'border-primary bg-[var(--primary-soft)] text-[var(--primary-text)]'
+                                : 'border-border bg-background text-foreground hover:bg-accent'
+                            }`}
+                          >
+                            {goalT(`preset.${goal.kind}`, { count: goal.target })}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    <p className="mt-2 text-xs text-muted-foreground">{goalT('setupHint')}</p>
+                  </fieldset>
+                </section>
+              </>
+            )}
 
             <div
               className="sticky bottom-[env(safe-area-inset-bottom)] z-10 rounded-xl border border-border bg-card p-1.5 shadow-md sm:bottom-3 sm:rounded-2xl sm:px-5 sm:py-4"
@@ -632,13 +728,17 @@ export default function SetupPage() {
             >
               <div className="flex items-center justify-between gap-3">
                 <div className="hidden sm:block">
-                  <p className="text-sm font-semibold text-foreground">{t('ready')}</p>
+                  <p className="text-sm font-semibold text-foreground">
+                    {showDirectStart ? t('ready') : t('step1Ready')}
+                  </p>
                   {chosenTitle ? (
                     <p className="mt-0.5 text-sm text-foreground" data-testid="setup-pending-book">
                       {t('pendingBook', { title: chosenTitle })}
                     </p>
                   ) : (
-                    <p className="mt-0.5 text-xs text-muted-foreground">{t('readyHint')}</p>
+                    <p className="mt-0.5 text-xs text-muted-foreground">
+                      {showDirectStart ? t('readyHint') : t('step1ReadyHint')}
+                    </p>
                   )}
                 </div>
                 <div className="flex min-w-0 flex-1 flex-wrap items-stretch gap-1 sm:flex-none sm:gap-2">
@@ -654,26 +754,43 @@ export default function SetupPage() {
                   >
                     {t('skip')}
                   </Button>
-                  <Button
-                    type="button"
-                    onClick={() => handleContinue(true)}
-                    disabled={
-                      !selectedLanguage || pending !== null || nativeSettingStatus === 'loading'
-                    }
-                    className="h-auto min-h-11 min-w-0 grow basis-40 px-2 py-1 whitespace-normal sm:flex-none sm:px-4"
-                    data-testid="start-guided-onboarding"
-                  >
-                    {pending ? (
-                      t('preparing')
-                    ) : chosenTitle ? (
-                      <span className="min-w-0 break-words sm:max-w-[20rem]">
-                        {t('startBook', { title: chosenTitle })}
-                      </span>
-                    ) : (
-                      t('start')
-                    )}
-                    {!pending && <ArrowRight className="h-4 w-4" aria-hidden="true" />}
-                  </Button>
+                  {showDirectStart ? (
+                    <Button
+                      type="button"
+                      onClick={() => handleContinue(true)}
+                      disabled={
+                        !selectedLanguage || pending !== null || nativeSettingStatus === 'loading'
+                      }
+                      className="h-auto min-h-11 min-w-0 grow basis-40 px-2 py-1 whitespace-normal sm:flex-none sm:px-4"
+                      data-testid="start-guided-onboarding"
+                    >
+                      {pending ? (
+                        t('preparing')
+                      ) : chosenTitle ? (
+                        <span className="min-w-0 break-words sm:max-w-[20rem]">
+                          {t('startBook', { title: chosenTitle })}
+                        </span>
+                      ) : (
+                        t('start')
+                      )}
+                      {!pending && <ArrowRight className="h-4 w-4" aria-hidden="true" />}
+                    </Button>
+                  ) : (
+                    <Button
+                      type="button"
+                      onClick={goToPreferences}
+                      disabled={
+                        !canAdvanceToPreferences ||
+                        pending !== null ||
+                        nativeSettingStatus === 'loading'
+                      }
+                      className="h-auto min-h-11 min-w-0 grow basis-40 px-2 py-1 whitespace-normal sm:flex-none sm:px-4"
+                      data-testid="setup-step-next"
+                    >
+                      {t('continue')}
+                      <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                    </Button>
+                  )}
                 </div>
               </div>
             </div>

@@ -81,6 +81,7 @@ async function startSpanishGuide(page: Page): Promise<string> {
   await page.goto('/');
   await expect(page).toHaveURL(/\/setup/, { timeout: 15_000 });
   await page.getByTestId('setup-language-es').click();
+  await page.getByTestId('setup-step-next').click();
   await page.getByTestId('setup-level-A2').click();
   await page.getByTestId('setup-interest-news').click();
   await page.getByTestId('start-guided-onboarding').click();
@@ -180,22 +181,42 @@ test.describe('guided onboarding — selfhost', () => {
 
       const french = page.getByTestId('setup-language-fr');
       const spanish = page.getByTestId('setup-language-es');
-      const start = page.getByTestId('start-guided-onboarding');
+      const next = page.getByTestId('setup-step-next');
+      const skip = page.getByTestId('skip-guided-onboarding');
+      await expect(page.getByTestId('setup-step-indicator')).toContainText('1 / 2');
       await expect(french).toBeInViewport({ ratio: 1 });
       await expect(spanish).toBeInViewport({ ratio: 1 });
       await expect(french.locator('.language-emoji')).toBeHidden();
+      await expect(page.getByTestId('setup-level-B1')).toHaveCount(0);
       const frenchBox = await french.boundingBox();
       const spanishBox = await spanish.boundingBox();
       expect(frenchBox?.height).toBeLessThanOrEqual(72);
       expect(spanishBox?.height).toBeLessThanOrEqual(72);
-      await expect(start).toBeDisabled();
+      await expect(next).toBeDisabled();
+      await expect(skip).toBeDisabled();
 
       await page.getByTestId('setup-native-language').selectOption('zh-CN');
       await expect(page.locator('html')).toHaveAttribute('lang', 'zh-CN');
       await page.getByTestId('setup-language-en').click();
+      await expect(next).toBeEnabled();
+      await expect(next).toBeInViewport({ ratio: 1 });
+      await expect(skip).toBeInViewport({ ratio: 1 });
+
+      await next.click();
+      await expect(page.getByTestId('setup-step-indicator')).toContainText('2 / 2');
+      await expect(page.getByTestId('setup-step-back')).toBeVisible();
+      await expect(page.getByTestId('setup-level-B1')).toBeVisible();
+      await expect(page.getByTestId('setup-interest-news')).toBeVisible();
+      await expect(page.getByTestId('setup-goal-minutes-10')).toBeVisible();
+      const start = page.getByTestId('start-guided-onboarding');
       await expect(start).toBeEnabled();
       await expect(start).toBeInViewport({ ratio: 1 });
-      await expect(page.getByTestId('skip-guided-onboarding')).toBeInViewport({ ratio: 1 });
+      await expect(skip).toBeInViewport({ ratio: 1 });
+
+      await page.getByTestId('setup-step-back').click();
+      await expect(page.getByTestId('setup-step-indicator')).toContainText('1 / 2');
+      await expect(page.getByTestId('setup-native-language')).toHaveValue('zh-CN');
+      await expect(page.getByTestId('setup-language-en')).toHaveAttribute('aria-pressed', 'true');
     });
   });
 
@@ -228,7 +249,14 @@ test.describe('guided onboarding — selfhost', () => {
     await expect(page.getByTestId('setup-language-en')).toHaveCount(0);
     await page.getByTestId('setup-native-language').selectOption('de');
     await page.getByTestId('setup-language-en').click();
+    await page.getByTestId('setup-step-next').click();
     await page.getByTestId('setup-level-B1').click();
+    await page.getByTestId('start-guided-onboarding').click();
+
+    await expect(page.getByTestId('setup-recommend')).toBeVisible({ timeout: 15_000 });
+    await page.getByTestId('setup-recommend-back').click();
+    await expect(page.getByTestId('setup-step-indicator')).toContainText('2 / 2');
+    await expect(page.getByTestId('setup-level-B1')).toHaveAttribute('aria-pressed', 'true');
     await page.getByTestId('start-guided-onboarding').click();
 
     await expect(page.getByTestId('setup-recommend')).toBeVisible({ timeout: 15_000 });
@@ -250,6 +278,7 @@ test.describe('guided onboarding — selfhost', () => {
     await expect(page.getByTestId('setup-language-en')).toHaveAttribute('aria-pressed', 'true');
     await expect(page.getByTestId('setup-language-ru')).toHaveCount(0);
 
+    await page.getByTestId('setup-step-next').click();
     await page.getByTestId('start-guided-onboarding').click();
     const pick = page.getByTestId('recommend-book-aldine-first-reader');
     await expect(pick).toContainText('Первая книга для чтения (Aldine)');
@@ -285,7 +314,7 @@ test.describe('guided onboarding — selfhost', () => {
     const native = page.getByTestId('setup-native-language');
     await native.selectOption('ru');
     await expect(page.locator('html')).toHaveAttribute('lang', 'ru');
-    await expect(page.getByTestId('start-guided-onboarding')).toBeDisabled();
+    await expect(page.getByTestId('setup-step-next')).toBeDisabled();
     await page.getByTestId('setup-language-show-all').click();
     await expect(page.getByTestId('setup-language-en')).toBeDisabled();
 
@@ -323,9 +352,10 @@ test.describe('guided onboarding — selfhost', () => {
     expect(await page.evaluate(() => window.scrollY)).toBe(0);
     await expect(start).toBeInViewport({ ratio: 1 });
 
-    // Another language has no chosen book, so the button names the guided lesson again.
+    // Another language has no chosen book, so Step 1 offers Continue to Step 2 instead.
     await page.getByTestId('setup-language-es').click();
-    await expect(start).toHaveText('Start guided lesson');
+    await expect(page.getByTestId('setup-step-next')).toBeVisible();
+    await expect(start).toHaveCount(0);
     await expect(page.getByTestId('setup-pending-book')).toHaveCount(0);
     await page.getByTestId('setup-language-fr').click();
     await expect(start).toContainText('Start reading “Candide');
@@ -362,6 +392,7 @@ test.describe('guided onboarding — selfhost', () => {
     await expect(page.getByTestId('setup-pending-book')).toHaveCount(0);
     // The stored book is gone after one look, so a dev-server reload here shows a plain form.
     await page.getByTestId('setup-language-fr').click();
+    await page.getByTestId('setup-step-next').click();
     const start = page.getByTestId('start-guided-onboarding');
     await expect(start).toHaveText('Start guided lesson');
     await start.click();
@@ -383,6 +414,7 @@ test.describe('guided onboarding — selfhost', () => {
     await page.getByTestId('setup-native-language').selectOption('en');
     await expect(page.getByTestId('setup-language-en')).toHaveCount(0);
     await expect(page.getByTestId('skip-guided-onboarding')).toBeDisabled();
+    await expect(page.getByTestId('setup-step-next')).toBeDisabled();
     await context.close();
   });
 
@@ -393,8 +425,10 @@ test.describe('guided onboarding — selfhost', () => {
     await page.goto('/');
     await expect(page).toHaveURL(/\/setup/, { timeout: 15_000 });
     await page.getByTestId('setup-language-es').click();
-    await page.getByTestId('setup-level-B1').click();
     await page.getByTestId('setup-native-language').selectOption('ja');
+    await expect(page.locator('html')).toHaveAttribute('lang', 'ja');
+    await page.getByTestId('setup-step-next').click();
+    await page.getByTestId('setup-level-B1').click();
     await expect(page.getByTestId('setup-goal-minutes-5')).toHaveAttribute('aria-pressed', 'true');
     await page.getByTestId('setup-goal-minutes-15').click();
     await page.getByTestId('skip-guided-onboarding').click();

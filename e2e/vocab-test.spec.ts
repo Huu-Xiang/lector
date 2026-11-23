@@ -681,29 +681,104 @@ test.describe('vocabulary test', () => {
     browser,
   }) => {
     const { context, page } = await loggedOutPage(browser);
-    await page.addInitScript(() => {
-      localStorage.setItem(
-        'readfox-vocab-result',
-        JSON.stringify({ estimate: 3000, level: 'B1', takenAt: Date.now() }),
-      );
-    });
-    await page.request.delete(apiUrl('/api/settings/targetLanguage'));
-    await page.goto('/setup');
-    await expect(page.getByTestId('setup-vocab-test-link')).toBeVisible({ timeout: 15000 });
+    const targetUrl = apiUrl('/api/settings/targetLanguage');
+    const targetRes = await page.request.get(targetUrl);
+    const targetBefore = targetRes.ok() ? ((await targetRes.json()) as unknown) : null;
+    try {
+      await page.addInitScript(() => {
+        localStorage.setItem(
+          'readfox-vocab-result',
+          JSON.stringify({ estimate: 3000, level: 'B1', takenAt: Date.now() }),
+        );
+      });
+      await page.request.delete(targetUrl);
+      await page.goto('/setup');
+      // A pre-existing vocab result alone must not skip Step 1.
+      await expect(page.getByTestId('setup-step-indicator')).toContainText('1 / 2', {
+        timeout: 15000,
+      });
+      await expect(page.getByTestId('setup-vocab-test-link')).toHaveCount(0);
 
-    await page.getByTestId('setup-native-language').selectOption('de');
-    await page.getByTestId('setup-language-en').click();
-    await expect(page.getByTestId('setup-level-B1')).toHaveAttribute('aria-pressed', 'true');
-    await expect(page.getByTestId('setup-vocab-note')).toBeVisible();
+      await page.getByTestId('setup-native-language').selectOption('de');
+      await page.getByTestId('setup-language-en').click();
+      await page.getByTestId('setup-step-next').click();
+      await expect(page.getByTestId('setup-step-indicator')).toContainText('2 / 2');
+      await expect(page.getByTestId('setup-vocab-test-link')).toBeVisible();
+      await expect(page.getByTestId('setup-level-B1')).toHaveAttribute('aria-pressed', 'true');
+      await expect(page.getByTestId('setup-vocab-note')).toBeVisible();
 
-    await page.getByTestId('setup-language-es').click();
-    await expect(page.getByTestId('setup-level-B1')).toHaveAttribute('aria-pressed', 'false');
-    await expect(page.getByTestId('setup-level-unsure')).toHaveAttribute('aria-pressed', 'true');
+      await page.getByTestId('setup-step-back').click();
+      await page.getByTestId('setup-language-es').click();
+      await page.getByTestId('setup-step-next').click();
+      await expect(page.getByTestId('setup-vocab-test-link')).toHaveCount(0);
+      await expect(page.getByTestId('setup-level-B1')).toHaveAttribute('aria-pressed', 'false');
+      await expect(page.getByTestId('setup-level-unsure')).toHaveAttribute('aria-pressed', 'true');
 
-    await page.getByTestId('setup-language-en').click();
-    await page.getByTestId('setup-level-A2').click();
-    await expect(page.getByTestId('setup-level-A2')).toHaveAttribute('aria-pressed', 'true');
-    await expect(page.getByTestId('setup-level-B1')).toHaveAttribute('aria-pressed', 'false');
-    await context.close();
+      await page.getByTestId('setup-step-back').click();
+      await page.getByTestId('setup-language-en').click();
+      await page.getByTestId('setup-step-next').click();
+      await page.getByTestId('setup-level-A2').click();
+      await expect(page.getByTestId('setup-level-A2')).toHaveAttribute('aria-pressed', 'true');
+      await expect(page.getByTestId('setup-level-B1')).toHaveAttribute('aria-pressed', 'false');
+    } finally {
+      if (targetBefore === null) await page.request.delete(targetUrl);
+      else await page.request.put(targetUrl, { data: { value: targetBefore } });
+      await context.close();
+    }
+  });
+
+  test('returning from vocab test restores Step 2 with a non-UI-locale native language and English target', async ({
+    browser,
+  }) => {
+    const { context, page } = await loggedOutPage(browser);
+    const targetUrl = apiUrl('/api/settings/targetLanguage');
+    const nativeUrl = apiUrl('/api/settings/nativeLanguage');
+    const read = async (url: string) => {
+      const response = await page.request.get(url);
+      return response.ok() ? ((await response.json()) as unknown) : null;
+    };
+    const restore = async (url: string, value: unknown) => {
+      if (value === null) await page.request.delete(url);
+      else await page.request.put(url, { data: { value } });
+    };
+    const targetBefore = await read(targetUrl);
+    const nativeBefore = await read(nativeUrl);
+    try {
+      await page.request.delete(targetUrl);
+      await page.request.delete(nativeUrl);
+      await page.setViewportSize({ width: 375, height: 667 });
+      await page.goto('/setup');
+
+      await page.getByTestId('setup-native-language').selectOption('de');
+      await page.getByTestId('setup-language-en').click();
+      await page.getByTestId('setup-step-next').click();
+      await expect(page.getByTestId('setup-step-indicator')).toContainText('2 / 2');
+
+      await page.getByTestId('setup-vocab-test-link').click();
+      await expect(page).toHaveURL(/\/vocab-test\?from=setup$/, { timeout: 15_000 });
+      await finishKnowingNothing(page);
+      await page.getByTestId('vocab-continue-setup').click();
+
+      await expect(page).toHaveURL(/\/setup$/, { timeout: 15_000 });
+      await expect(page.getByTestId('setup-step-indicator')).toContainText('2 / 2');
+      await expect(page.getByTestId('setup-level-A1')).toHaveAttribute('aria-pressed', 'true');
+      await expect(page.getByTestId('setup-vocab-note')).toBeVisible();
+      await expect(page.getByTestId('start-guided-onboarding')).toBeEnabled();
+      await expect(page.getByTestId('skip-guided-onboarding')).toBeEnabled();
+
+      // Returning to Step 1 confirms non-UI-locale native (`de`) and target (`en`) were preserved.
+      await page.getByTestId('setup-step-back').click();
+      await expect(page.getByTestId('setup-step-indicator')).toContainText('1 / 2');
+      await expect(page.getByTestId('setup-native-language')).toHaveValue('de');
+      await expect(page.getByTestId('setup-language-en')).toHaveAttribute('aria-pressed', 'true');
+
+      // Reloading after one-shot resume starts cleanly at Step 1 despite saved vocabResult.
+      await page.reload();
+      await expect(page.getByTestId('setup-step-indicator')).toContainText('1 / 2');
+    } finally {
+      await restore(targetUrl, targetBefore);
+      await restore(nativeUrl, nativeBefore);
+      await context.close();
+    }
   });
 });

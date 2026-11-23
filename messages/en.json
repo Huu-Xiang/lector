@@ -219,7 +219,7 @@
     "chooseLanguage": "2. Choose a language to learn",
     "learn": "Learn {name}",
     "showMore": "Show {count} more languages",
-    "personalise": "3. Your level",
+    "personalise": "Your level",
     "personaliseHint": "We use it to show free books at the right difficulty first.",
     "optional": "Optional",
     "level": "Reading level",
@@ -248,7 +248,14 @@
     "recommendTitle": "Pick your first read",
     "recommendIntro": "Based on your level ({level}) and interests. Choose one and we will walk you through your first reading.",
     "recommendBack": "Change my answers",
-    "recommendSkip": "Browse the library instead"
+    "recommendSkip": "Browse the library instead",
+    "stepProgress": "Step {current} of {total}",
+    "continue": "Continue",
+    "back": "Back to languages",
+    "step1Ready": "Next: level and daily goal",
+    "step1ReadyHint": "Every preference is optional — or skip straight to your library.",
+    "step2Title": "Tailor your first lesson",
+    "step2Intro": "Every choice here is optional. You can change them later in Settings."
   },
   "landing": {
     "metaTitle": "Readfox – read real books in the language you are learning",

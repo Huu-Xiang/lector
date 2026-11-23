@@ -165,7 +165,7 @@
     "chooseLanguage": "2. 选择要学的语言",
     "learn": "学习{name}",
     "showMore": "显示另外 {count} 种语言",
-    "personalise": "3. 你的水平",
+    "personalise": "你的水平",
     "personaliseHint": "用来优先推荐难度合适的免费书。",
     "optional": "可选",
     "level": "阅读水平",
@@ -194,7 +194,14 @@
     "recommendTitle": "选一份开始读吧",
     "recommendIntro": "根据你的水平（{level}）和兴趣挑选。选一份，我们带你完成第一次阅读。",
     "recommendBack": "修改我的选择",
-    "recommendSkip": "先去书库逛逛"
+    "recommendSkip": "先去书库逛逛",
+    "stepProgress": "第 {current} 步，共 {total} 步",
+    "continue": "继续",
+    "back": "返回语言选择",
+    "step1Ready": "下一步：阅读水平与每日目标",
+    "step1ReadyHint": "所有选项均为可选，也可以直接进入书库。",
+    "step2Title": "定制你的第一课",
+    "step2Intro": "这里的选项都是可选的，之后可以随时在设置里修改。"
   },
   "landing": {
     "metaTitle": "Readfox：读原版书，学地道外语",
