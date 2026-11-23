@@ -1353,3 +1353,187 @@ describe('streamed translation (stream: true)', () => {
     expect(res.headers.get('content-type')).toContain('application/json');
   });
 });
+
+describe('monolingual AI explanations and cache isolation (U3 / AE3 / R7 / R8)', () => {
+  const now = () => new Date('2026-07-15T12:00:00Z');
+
+  function setSettingRow(key: string, value: unknown | null) {
+    db.prepare("DELETE FROM settings WHERE userId = 'local' AND key = ?").run(key);
+    if (value !== null) {
+      db.prepare("INSERT INTO settings (userId, key, value) VALUES ('local', ?, ?)").run(
+        key,
+        JSON.stringify(value),
+      );
+    }
+  }
+
+  afterEach(() => {
+    setSettingRow('nativeLanguage', null);
+    setSettingRow('monolingualExplanations', null);
+    setSettingRow('readingLevels', null);
+    db.prepare('DELETE FROM shared_gloss_cache').run();
+  });
+
+  test('AE3: zh-CN learner reading French B2 gets sentence-free monolingual gloss isolated under mono:fr:B2', async () => {
+    setSettingRow('nativeLanguage', 'zh-CN');
+    setSettingRow('monolingualExplanations', true);
+    setSettingRow('readingLevels', { fr: 'B2' });
+
+    const { sharedGlossCache } = await import('../lib/gloss-cache');
+    // Pre-seed bilingual zh-CN row to verify monolingual lookup never reads or overwrites it.
+    sharedGlossCache.put('fr', 'zh-CN', 'éponge', '海绵');
+
+    const longFrenchDef =
+      "Matière souple et poreuse, naturelle ou synthétique, qui absorbe facilement l'eau et sert à nettoyer les surfaces (f.).";
+    expect(longFrenchDef.length).toBeGreaterThan(60);
+    expect(longFrenchDef.length).toBeLessThanOrEqual(240);
+
+    const provider = new FakeProvider();
+    provider.streamImpl = async function* () {
+      yield longFrenchDef;
+    };
+    const engine = makeEngine({ now });
+    const { app } = makeApp({ engine, provider, glossCache: sharedGlossCache });
+
+    const injectedSentence = 'UNTRUSTED_INJECTION_SENTENCE_DO_NOT_LEAK';
+    const first = await post(app, '/gloss', {
+      word: 'éponge',
+      sentence: injectedSentence,
+      language: 'fr',
+    });
+    expect(first.status).toBe(200);
+    expect(await first.text()).toBe(longFrenchDef);
+    expect(provider.calls).toHaveLength(1);
+    expect(provider.calls[0].maxTokens).toBe(96);
+    expect(provider.calls[0].messages[0].content).toContain('French');
+    expect(provider.calls[0].messages[0].content).toContain('B2');
+    expect(provider.calls[0].messages[0].content).not.toContain(injectedSentence);
+
+    // Cached under mono:fr:B2 without disturbing zh-CN bilingual cache.
+    expect(sharedGlossCache.get('fr', 'mono:fr:B2', 'éponge')).toBe(longFrenchDef);
+    expect(sharedGlossCache.get('fr', 'zh-CN', 'éponge')).toBe('海绵');
+
+    // Second monolingual lookup hits mono:fr:B2 cache with zero additional provider calls.
+    const second = await post(app, '/gloss', { word: 'éponge', language: 'fr' });
+    expect(second.status).toBe(200);
+    expect(await second.text()).toBe(longFrenchDef);
+    expect(provider.calls).toHaveLength(1);
+
+    // Switching monolingual OFF immediately restores zh-CN bilingual cache hit.
+    setSettingRow('monolingualExplanations', false);
+    const bilingual = await post(app, '/gloss', { word: 'éponge', language: 'fr' });
+    expect(bilingual.status).toBe(200);
+    expect(await bilingual.text()).toBe('海绵');
+    expect(provider.calls).toHaveLength(1);
+  });
+
+  test('does not cache wrong-script monolingual glosses in shared_gloss_cache', async () => {
+    setSettingRow('nativeLanguage', 'en');
+    setSettingRow('monolingualExplanations', true);
+    const { sharedGlossCache } = await import('../lib/gloss-cache');
+
+    const provider = new FakeProvider();
+    provider.streamImpl = async function* () {
+      yield 'a small wooden house';
+    };
+    const { app } = makeApp({
+      engine: makeEngine({ now }),
+      provider,
+      glossCache: sharedGlossCache,
+    });
+
+    for (const [lang, word] of [
+      ['uk', 'дім'],
+      ['el', 'σπίτι'],
+      ['grc', 'οἶκος'],
+      ['bn', 'বাড়ি'],
+      ['zh', '房子'],
+    ] as const) {
+      const res = await post(app, '/gloss', { word, language: lang });
+      expect(res.status).toBe(200);
+      await res.text();
+      expect(sharedGlossCache.get(lang, `mono:${lang}:default`, word)).toBeNull();
+    }
+  });
+
+  test('bypasses Russian-English slang shortcut when monolingual is ON', async () => {
+    setSettingRow('nativeLanguage', 'ru');
+    setSettingRow('monolingualExplanations', true);
+    setSettingRow('readingLevels', { en: 'C1' });
+
+    const provider = new FakeProvider();
+    provider.streamImpl = async function* () {
+      yield 'Low-quality online content that dulls attention.';
+    };
+    const { app } = makeApp({
+      engine: makeEngine({ now, compedPlan: 'cloud' }),
+      provider,
+    });
+
+    const glossRes = await post(app, '/gloss', { word: 'brainrot', language: 'en' });
+    expect(glossRes.status).toBe(200);
+    expect(await glossRes.text()).toBe('Low-quality online content that dulls attention.');
+    expect(provider.calls).toHaveLength(1);
+    expect(provider.calls[0].messages[0].content).toContain('English');
+    expect(provider.calls[0].messages[0].content).not.toContain('Russian');
+
+    const enrichRes = await post(app, '/enrich', { word: 'brainrot', language: 'en' });
+    expect(enrichRes.status).toBe(200);
+    expect(provider.calls).toHaveLength(2);
+    expect(provider.calls[1].messages[0].content).not.toContain('Verified Russian senses');
+  });
+
+  test('disables /localize and /prefetch when monolingual is ON', async () => {
+    setSettingRow('nativeLanguage', 'zh-CN');
+    setSettingRow('monolingualExplanations', true);
+
+    const provider = new FakeProvider();
+    const { app } = makeApp({
+      engine: makeEngine({ now }),
+      provider,
+      lookupEntry: (_u, word) => ({
+        word,
+        source: 'dict',
+        rank: 8000,
+        senses: [{ partOfSpeech: 'noun', gloss: 'time' }],
+      }),
+    });
+
+    const loc = await (await post(app, '/localize', { word: 'fois', language: 'fr' })).json();
+    expect(loc).toEqual({ senses: null });
+    const pre = await (await post(app, '/prefetch', { words: ['fois'], language: 'fr' })).json();
+    expect(pre).toEqual({ senses: {} });
+    expect(provider.calls).toHaveLength(0);
+  });
+
+  test('validates context explanation and phrase scripts against target language when monolingual is ON', async () => {
+    setSettingRow('nativeLanguage', 'en');
+    setSettingRow('monolingualExplanations', true);
+    setSettingRow('readingLevels', { uk: 'B1' });
+
+    const provider = new FakeProvider();
+    provider.completeImpl = async () =>
+      provider.calls.length === 2
+        ? 'Тут слово означає невеликий будинок для проживання.'
+        : 'Here it means a small house to live in.';
+    const { app } = makeApp({
+      engine: makeEngine({ now, compedPlan: 'cloud' }),
+      provider,
+    });
+
+    const res = await post(app, '/', {
+      word: 'дім',
+      sentence: 'Це наш дім.',
+      type: 'word',
+      language: 'uk',
+      explainContext: true,
+    });
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({
+      translation: 'Тут слово означає невеликий будинок для проживання.',
+    });
+    expect(provider.calls).toHaveLength(2);
+    expect(provider.calls[0].messages[0].content).toContain('Ukrainian');
+    expect(provider.calls[0].messages[0].content).toContain('B1');
+  });
+});

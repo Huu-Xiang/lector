@@ -45,6 +45,7 @@ const PORTABLE_SETTING_KEYS = [
   'timezone',
   'reviewGoal',
   'dailyGoal',
+  'monolingualExplanations',
 ] as const;
 
 function portableValue(value: unknown): unknown {

@@ -14,3 +14,16 @@ export function getNativeLanguageCode(userId: string): string {
 export function getNativeLanguageName(userId: string): string {
   return nativeLanguageName(getNativeLanguageCode(userId));
 }
+
+/** Whether the learner wants target-language (monolingual) explanations instead of native translations. */
+export function isMonolingualExplanationsEnabled(userId: string): boolean {
+  const row = db
+    .prepare('SELECT value FROM settings WHERE userId = ? AND key = ?')
+    .get(userId, 'monolingualExplanations') as { value: string } | undefined;
+  if (!row) return false;
+  try {
+    return JSON.parse(row.value) === true;
+  } catch {
+    return row.value === 'true';
+  }
+}

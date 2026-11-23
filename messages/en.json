@@ -332,6 +332,13 @@
       "title": "Interface and translation languages",
       "hint": "These are two separate choices. For example, you can use a Chinese interface and read explanations in English while you learn French."
     },
+    "monolingual": {
+      "title": "Target-language explanations",
+      "description": "Explain looked-up words and phrases in the language you are reading, matched to your reading level, instead of translating into your native language.",
+      "on": "On",
+      "off": "Off",
+      "failed": "Could not update target-language explanations"
+    },
     "languageRoles": {
       "app": "App language",
       "definition": "Definition language",

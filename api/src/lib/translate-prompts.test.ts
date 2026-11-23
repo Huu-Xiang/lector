@@ -1,10 +1,17 @@
 import { describe, expect, test } from 'bun:test';
 import {
+  contextUsesWrongScript,
   phraseFieldsInWrongScript,
   buildContextExplanationPrompt,
   buildExplainPrompt,
   buildExampleSentencePrompt,
   buildGlossPrompt,
+  buildMonolingualContextExplanationPrompt,
+  buildMonolingualGlossPrompt,
+  buildMonolingualPhrasePrompt,
+  buildMonolingualSimpleContextPrompt,
+  buildMonolingualSimplePhrasePrompt,
+  buildMonolingualWordEntryPrompt,
   buildSentenceTranslationPrompt,
   buildPhrasePrompt,
   buildSimpleContextPrompt,
@@ -283,5 +290,90 @@ describe('noun gender instructions (U2 / R5)', () => {
         'grammatical gender',
       );
     }
+  });
+});
+
+describe('monolingual prompts and target-script validation (U3 / R7)', () => {
+  test('buildMonolingualGlossPrompt is sentence-free, CEFR-calibrated, and < 1000 chars', () => {
+    const prompt = buildMonolingualGlossPrompt('French', 'éponge', 'B2');
+    expect(prompt).toContain('French');
+    expect(prompt).toContain('éponge');
+    expect(prompt).toContain('B2');
+    expect(prompt).toContain('grammatical gender');
+    expect(prompt.length).toBeLessThan(1000);
+    // Function arity must not accept an untrusted user sentence.
+    expect(buildMonolingualGlossPrompt.length).toBeLessThanOrEqual(3);
+  });
+
+  test('monolingual word/context/phrase prompts target the reading language and omit Russian slang', () => {
+    const entry = buildMonolingualWordEntryPrompt('English', 'brainrot', 'Full of brainrot.', 'B2');
+    expect(entry).toContain('English');
+    expect(entry).toContain('B2');
+    expect(entry).not.toContain('Verified Russian senses');
+
+    const simpleCtx = buildMonolingualSimpleContextPrompt(
+      'English',
+      'brainrot',
+      'Full of brainrot.',
+      'B1',
+    );
+    expect(simpleCtx).toContain('B1');
+    expect(simpleCtx).not.toContain('Verified Russian senses');
+
+    const explain = buildMonolingualContextExplanationPrompt(
+      'French',
+      'éponge',
+      "Il passe l'éponge.",
+      'B2',
+    );
+    expect(explain).toContain('French');
+    expect(explain).toContain('B2');
+    expect(explain).toContain('grammatical gender');
+
+    const simplePhrase = buildMonolingualSimplePhrasePrompt(
+      'French',
+      "passer l'éponge",
+      "Il passe l'éponge.",
+      'A2',
+    );
+    expect(simplePhrase).toContain('French');
+    expect(simplePhrase).toContain('A2');
+
+    const richPhrase = buildMonolingualPhrasePrompt(
+      'French',
+      '',
+      "passer l'éponge",
+      "Il passe l'éponge.",
+      'C1',
+      false,
+    );
+    expect(richPhrase).toContain('French');
+    expect(richPhrase).toContain('C1');
+    expect(richPhrase).toContain('"literalBreakdown"');
+  });
+
+  test('validates output script across non-Latin and Latin target languages', () => {
+    // Non-Latin targets fail when model answers in English.
+    for (const code of ['zh', 'ja', 'ko', 'ru', 'uk', 'ar', 'hi', 'bn', 'el', 'grc']) {
+      expect(contextUsesWrongScript('a small house where people live', code)).toBe(true);
+    }
+    expect(contextUsesWrongScript('一种柔软多孔的吸水工具', 'zh')).toBe(false);
+    expect(contextUsesWrongScript('невеликий будинок для проживання', 'uk')).toBe(false);
+    expect(contextUsesWrongScript('κτίριο όπου κατοικούν άνθρωποι', 'el')).toBe(false);
+    expect(contextUsesWrongScript('λόγος ἢ ὁμιλία περὶ πράγματος', 'grc')).toBe(false);
+    expect(contextUsesWrongScript('একটি ছোট প্রাণী যা বাড়িতে থাকে', 'bn')).toBe(false);
+
+    // Latin targets reject pure non-Latin output in monolingual mode (e.g., Chinese leak into French) and accept Latin.
+    expect(contextUsesWrongScript('一种用来清洁的柔软多孔物体', 'fr', true)).toBe(true);
+    expect(
+      contextUsesWrongScript("Matière souple et poreuse qui absorbe l'eau (f.).", 'fr', true),
+    ).toBe(false);
+    expect(
+      phraseFieldsInWrongScript(
+        { translation: '一种常见表达，表示原谅过去的事并重新开始' },
+        'fr',
+        true,
+      ),
+    ).toEqual(['translation']);
   });
 });

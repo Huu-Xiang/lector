@@ -196,16 +196,24 @@ export async function localizeEntrySenses(
   return settled === LOCALIZE_TIMEOUT ? null : settled;
 }
 
-/** Drop a single cached entry (call after editing the dict to force a re-fetch).
- *  Invalidate the word across every study and translation language. */
+/** Drop cached lookup and localization entries (call after editing the dict or changing explanation mode).
+ *  Invalidates the word (or all words when omitted) across every study and translation language. */
 export function invalidateLookupCache(word?: string): void {
   if (word === undefined) {
     sessionCache.clear();
+    prefetchedSenses.clear();
+    inflightPrefetch.clear();
     return;
   }
   const suffix = `:${foldWord(word, getActivePack())}`;
   for (const key of sessionCache.keys()) {
     if (key.endsWith(suffix)) sessionCache.delete(key);
+  }
+  for (const key of prefetchedSenses.keys()) {
+    if (key.endsWith(suffix)) prefetchedSenses.delete(key);
+  }
+  for (const key of inflightPrefetch.keys()) {
+    if (key.endsWith(suffix)) inflightPrefetch.delete(key);
   }
 }
 

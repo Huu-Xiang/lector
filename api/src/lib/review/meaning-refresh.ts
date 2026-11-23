@@ -5,8 +5,9 @@ import {
   defaultLocalizeDeps,
   type LocalizeDeps,
 } from '../localize-entry';
-import { getNativeLanguageCode } from '../native-language';
+import { getNativeLanguageCode, isMonolingualExplanationsEnabled } from '../native-language';
 import { matchesNative } from '../translation-lang';
+import { isMonolingualCardMeaning } from './meanings';
 import { vocabRowsByKey } from './word-card-rows';
 
 export const MAX_REFRESH_PER_FETCH = 10;
@@ -27,9 +28,15 @@ function applyMeaning(
   translation: string,
   nativeCode: string,
 ): number {
-  if (getNativeLanguageCode(userId) !== nativeCode || translation.trim() === '') return 0;
+  if (
+    isMonolingualExplanationsEnabled(userId) ||
+    getNativeLanguageCode(userId) !== nativeCode ||
+    translation.trim() === ''
+  ) {
+    return 0;
+  }
   const read = db.prepare(
-    'SELECT translation, translationLang FROM vocab WHERE userId = ? AND id = ?',
+    'SELECT translation, translationLang, translationSource FROM vocab WHERE userId = ? AND id = ?',
   );
   const write = db.prepare(
     'UPDATE vocab SET translation = ?, translationLang = ? WHERE userId = ? AND id = ?',
@@ -37,9 +44,15 @@ function applyMeaning(
   let changed = 0;
   for (const { id } of vocabRowsByKey(userId, target.language).get(target.wordKey) ?? []) {
     const row = read.get(userId, id) as
-      | { translation: string; translationLang: string | null }
+      | { translation: string; translationLang: string | null; translationSource: string | null }
       | undefined;
-    if (!row || matchesNative(row.translation, row.translationLang, nativeCode)) continue;
+    if (
+      !row ||
+      matchesNative(row.translation, row.translationLang, nativeCode) ||
+      isMonolingualCardMeaning(row, target.language, false)
+    ) {
+      continue;
+    }
     write.run(translation, nativeCode, userId, id);
     changed++;
   }
@@ -55,6 +68,7 @@ export function createMeaningRefresh(
   cap = MAX_REFRESH_PER_FETCH,
 ): MeaningRefresh {
   return async (userId, targets) => {
+    if (isMonolingualExplanationsEnabled(userId)) return;
     const chosen: Array<{ target: RefreshTarget; key: string }> = [];
     for (const target of targets) {
       if (chosen.length >= cap) break;

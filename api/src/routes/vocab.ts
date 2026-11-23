@@ -2,7 +2,7 @@ import type { SQLQueryBindings } from 'bun:sqlite';
 import { Hono } from 'hono';
 import { db, VocabRow, type WordState } from '../db';
 import { resolveLanguage } from '../lib/active-language';
-import { foldWord, getLanguageConfig, isNativeLanguageCode, normalizeText } from '../lib/languages';
+import { foldWord, getLanguageConfig, normalizeText } from '../lib/languages';
 import { getCurrentUserId } from '../lib/user';
 import { randomUUID } from 'crypto';
 import { entitlements, planLimitResponse, type AtomicLimitCheck } from '../lib/entitlements';
@@ -29,13 +29,13 @@ import {
 import { notifyVocabSaved } from '../lib/lifecycle-email';
 import { syncWordDelete, syncWordState } from '../lib/review/sync-word-state';
 import { getNativeLanguageCode } from '../lib/native-language';
-import { resolveTranslationLang } from '../lib/translation-lang';
+import { isSupportedTranslationLang, resolveTranslationLang } from '../lib/translation-lang';
 import { newestOf, vocabRowsByKey, type NewestVocab } from '../lib/review/word-card-rows';
 
 const app = new Hono();
 
 function translationLangError(value: unknown): string | null {
-  if (value === undefined || value === null || isNativeLanguageCode(value)) return null;
+  if (value === undefined || value === null || isSupportedTranslationLang(value)) return null;
   return 'translationLang must be a supported translation language code';
 }
 

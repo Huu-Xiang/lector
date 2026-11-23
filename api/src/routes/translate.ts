@@ -17,12 +17,27 @@ import { getSpelreelsContext } from '../lib/spelreels';
 import { resolveLanguage } from '../lib/active-language';
 import { getCurrentUserId } from '../lib/user';
 import { getLanguageConfig } from '../lib/languages';
-import { getNativeLanguageCode, getNativeLanguageName } from '../lib/native-language';
-import { sharedGlossCache, type GlossCache } from '../lib/gloss-cache';
+import {
+  getNativeLanguageCode,
+  getNativeLanguageName,
+  isMonolingualExplanationsEnabled,
+} from '../lib/native-language';
+import {
+  MAX_MONOLINGUAL_GLOSS_CHARS,
+  sharedGlossCache,
+  type GlossCache,
+} from '../lib/gloss-cache';
+import { readLearnerLevel } from '../lib/review/queue';
 import { sharedEntryCache, type EntryCache } from '../lib/entry-cache';
 import { lookupWord, type ExpandedDictionaryEntry } from '../lib/dictionary-db';
 import {
   buildGlossPrompt,
+  buildMonolingualContextExplanationPrompt,
+  buildMonolingualGlossPrompt,
+  buildMonolingualPhrasePrompt,
+  buildMonolingualSimpleContextPrompt,
+  buildMonolingualSimplePhrasePrompt,
+  buildMonolingualWordEntryPrompt,
   buildPhrasePrompt,
   buildSimpleContextPrompt,
   buildContextExplanationPrompt,
@@ -280,10 +295,8 @@ function stitchWordEntry(
 async function buildWordEntryResponse(
   provider: LLMProvider,
   task: Extract<LLMTask, 'word-enrichment' | 'context-rich'>,
-  langName: string,
   word: string,
-  sentence: string,
-  nativeName: string,
+  prompt: string,
 ) {
   const entry = await completeJson<{
     word?: string;
@@ -292,19 +305,23 @@ async function buildWordEntryResponse(
     etymology?: string;
     relatedForms?: Array<{ form: string; relation: string }>;
   }>(provider, {
-    messages: [
-      { role: 'user', content: buildWordEntryPrompt(langName, word, sentence, nativeName) },
-    ],
+    messages: [{ role: 'user', content: prompt }],
     maxTokens: 1500,
     task,
   });
   return stitchWordEntry(entry, word);
 }
 
-/** The prompt carries the user's sentence, so a gloss that links or names a contact is not shared. */
-function isShareableGloss(gloss: string): boolean {
+/** A shared gloss must be single-line, bounded, and free of links or contact strings. */
+function isShareableGloss(gloss: string, monolingual = false): boolean {
   const text = gloss.trim();
-  return text.length <= 60 && !/https?:|www\.|@|[a-z0-9-]\.[a-z]{2,}/i.test(text);
+  const maxChars = monolingual ? MAX_MONOLINGUAL_GLOSS_CHARS : 60;
+  return (
+    text.length > 0 &&
+    text.length <= maxChars &&
+    !/[\r\n]/.test(text) &&
+    !/https?:|www\.|@|[a-z0-9-]\.[a-z]{2,}/i.test(text)
+  );
 }
 
 /** The client shows its own message for `content_filtered`; nothing to retry or fix in settings. */
@@ -346,20 +363,27 @@ export function makeTranslateRoutes({
 
     const lang = resolveLanguage(parsed.value.language, userId);
     const langName = getLanguageConfig(lang).name;
-    const prompt = buildGlossPrompt(
-      langName,
-      parsed.value.word,
-      parsed.value.sentence,
-      getNativeLanguageName(userId),
-    );
+    const monolingual = isMonolingualExplanationsEnabled(userId);
+    const nativeCode = getNativeLanguageCode(userId);
+    const level = monolingual ? readLearnerLevel(userId, lang) : null;
+    const cacheKeyLang = monolingual ? `mono:${lang}:${level ?? 'default'}` : nativeCode;
+    const prompt = monolingual
+      ? buildMonolingualGlossPrompt(langName, parsed.value.word, level)
+      : buildGlossPrompt(
+          langName,
+          parsed.value.word,
+          parsed.value.sentence,
+          getNativeLanguageName(userId),
+        );
     recordStudySessionPing(userId, lang);
 
     // A shared hit costs nothing, so it is served before any quota is reserved.
-    const nativeCode = getNativeLanguageCode(userId);
     const vetted =
-      lang === 'en' && nativeCode === 'ru' ? russianEnglishSlang(parsed.value.word) : undefined;
+      !monolingual && lang === 'en' && nativeCode === 'ru'
+        ? russianEnglishSlang(parsed.value.word)
+        : undefined;
     if (vetted) return c.text(vetted.map(({ gloss }) => gloss).join('; '));
-    const cachedGloss = glossCache?.get(lang, nativeCode, parsed.value.word) ?? null;
+    const cachedGloss = glossCache?.get(lang, cacheKeyLang, parsed.value.word) ?? null;
     if (cachedGloss) {
       recordLookupOutcome('gloss', 'hit');
       return c.text(cachedGloss);
@@ -382,8 +406,8 @@ export function makeTranslateRoutes({
     const deltas = provider
       .stream({
         messages: [{ role: 'user', content: prompt }],
-        // Leave room for a short Cyrillic definition on providers that split it into more tokens.
-        maxTokens: nativeCode === 'ru' ? 64 : 32,
+        // Leave room for a monolingual learner definition or a short Cyrillic gloss.
+        maxTokens: monolingual ? 96 : nativeCode === 'ru' ? 64 : 32,
         task: 'word-gloss',
       })
       [Symbol.asyncIterator]();
@@ -406,8 +430,13 @@ export function makeTranslateRoutes({
         }
         if (!output.trim()) engine.refund(reservation);
         // Only server-funded answers are shared; a user's own model never writes here.
-        else if (!reservation.byok && isShareableGloss(output))
-          glossCache?.put(lang, nativeCode, parsed.value.word, output);
+        // Monolingual entries are additionally gated by target-script validation.
+        else if (
+          !reservation.byok &&
+          isShareableGloss(output, monolingual) &&
+          (!monolingual || !contextUsesWrongScript(output, lang, true))
+        )
+          glossCache?.put(lang, cacheKeyLang, parsed.value.word, output);
       } catch (error) {
         if (!output.trim()) engine.refund(reservation);
         console.error('Gloss stream error:', error);
@@ -498,8 +527,10 @@ export function makeTranslateRoutes({
     const userId = getCurrentUserId(c);
     const lang = resolveLanguage(parsed.value.language, userId);
     const langName = getLanguageConfig(lang).name;
+    const monolingual = isMonolingualExplanationsEnabled(userId);
+    const level = monolingual ? readLearnerLevel(userId, lang) : null;
     const vetted =
-      lang === 'en' && getNativeLanguageCode(userId) === 'ru'
+      !monolingual && lang === 'en' && getNativeLanguageCode(userId) === 'ru'
         ? russianEnglishSlang(parsed.value.word)
         : undefined;
     if (vetted) {
@@ -510,14 +541,21 @@ export function makeTranslateRoutes({
     const reservation = reserve(c, engine, userId, 'llmRequestsPerMonth');
     if (reservation instanceof Response) return reservation;
 
+    const enrichPrompt = monolingual
+      ? buildMonolingualWordEntryPrompt(langName, parsed.value.word, parsed.value.sentence, level)
+      : buildWordEntryPrompt(
+          langName,
+          parsed.value.word,
+          parsed.value.sentence,
+          getNativeLanguageName(userId),
+        );
+
     try {
       const entry = await buildWordEntryResponse(
         providerForUser(userId, { byok: reservation.byok }),
         'word-enrichment',
-        langName,
         parsed.value.word,
-        parsed.value.sentence,
-        getNativeLanguageName(userId),
+        enrichPrompt,
       );
       return c.json(entry);
     } catch (error) {
@@ -552,7 +590,12 @@ export function makeTranslateRoutes({
     const lang = resolveLanguage(language, userId);
     const langConfig = getLanguageConfig(lang);
     const langName = langConfig.name;
+    const monolingual = isMonolingualExplanationsEnabled(userId);
+    const nativeCode = getNativeLanguageCode(userId);
     const nativeName = getNativeLanguageName(userId);
+    const level = monolingual ? readLearnerLevel(userId, lang) : null;
+    const outputLangCode = monolingual ? lang : nativeCode;
+    const outputLangName = monolingual ? langName : nativeName;
     recordStudySessionPing(userId, lang);
 
     const metric: MeteredMetric = managedFree
@@ -568,22 +611,41 @@ export function makeTranslateRoutes({
       const spelreelsSection = spelreels
         ? `Use the following official spelling rules to inform your understanding of the ${langName} input:\n\n${spelreels}\n\n---\n\n`
         : '';
-      return buildPhrasePrompt(langName, spelreelsSection, word, sentence, nativeName, cheapModel);
+      return monolingual
+        ? buildMonolingualPhrasePrompt(langName, spelreelsSection, word, sentence, level, cheapModel)
+        : buildPhrasePrompt(langName, spelreelsSection, word, sentence, nativeName, cheapModel);
     };
+    const wordEntryPrompt = () =>
+      monolingual
+        ? buildMonolingualWordEntryPrompt(langName, word, sentence, level)
+        : buildWordEntryPrompt(langName, word, sentence, nativeName);
+    const simplePrompt = (isPhrase: boolean) =>
+      isPhrase
+        ? monolingual
+          ? buildMonolingualSimplePhrasePrompt(langName, word, sentence, level)
+          : buildSimplePhrasePrompt(langName, word, sentence, nativeName)
+        : monolingual
+          ? buildMonolingualSimpleContextPrompt(langName, word, sentence, level)
+          : buildSimpleContextPrompt(langName, word, sentence, nativeName);
     const phraseCheapModel =
       !reservation.byok && (managedPhraseUsesCheapModel() || freeOnSmallModel);
 
-    // Small models sometimes drift into English for the long fields.
+    // Small models sometimes drift into the wrong script for long fields.
     const finishPhrase = async (
       provider: LLMProvider,
       prompt: string,
       result: Record<string, unknown>,
     ) => {
       const answer = normalizePhraseBreakdown(result);
-      const wrong = phraseFieldsInWrongScript(answer, getNativeLanguageCode(userId));
+      const wrong = phraseFieldsInWrongScript(answer, outputLangCode, monolingual);
       if (wrong.length === 0) return answer;
       const retried = await completeJson<Record<string, unknown>>(provider, {
-        messages: [{ role: 'user', content: prompt + phraseLanguageReminder(wrong, nativeName) }],
+        messages: [
+          {
+            role: 'user',
+            content: prompt + phraseLanguageReminder(wrong, outputLangName, monolingual),
+          },
+        ],
         maxTokens: 1500,
         task: 'phrase-rich',
       }).catch(() => null);
@@ -592,7 +654,8 @@ export function makeTranslateRoutes({
 
     const finishContextEntry = (entry: ReturnType<typeof stitchWordEntry>) => {
       // Keep unverified model metadata away from reviewed slang entries.
-      const vetted = lang === 'en' && nativeName === 'Russian' && russianEnglishSlang(word);
+      const vetted =
+        !monolingual && lang === 'en' && nativeName === 'Russian' && russianEnglishSlang(word);
       if (vetted) {
         delete entry.etymology;
         delete entry.relatedForms;
@@ -602,10 +665,11 @@ export function makeTranslateRoutes({
       return entry;
     };
 
-    const nativeCode = getNativeLanguageCode(userId);
     const explanation = explainContext
       ? {
-          prompt: buildContextExplanationPrompt(langName, word, sentence, nativeName),
+          prompt: monolingual
+            ? buildMonolingualContextExplanationPrompt(langName, word, sentence, level)
+            : buildContextExplanationPrompt(langName, word, sentence, nativeName),
           task: 'context-simple' as const,
           maxTokens: 192,
         }
@@ -620,15 +684,13 @@ export function makeTranslateRoutes({
 
     const finishExplanation = async (provider: LLMProvider, prompt: string, text: string) => {
       const translation = simpleTranslation(text);
-      if (!contextUsesWrongScript(translation, nativeCode)) return { translation };
+      if (!contextUsesWrongScript(translation, outputLangCode, monolingual)) return { translation };
 
-      const retry = simpleTranslation(
-        await completeExplanation(
-          provider,
-          prompt + '\n\nTranslate every part of the explanation into ' + nativeName + '.',
-        ),
-      );
-      if (contextUsesWrongScript(retry, nativeCode)) {
+      const retryPrompt = monolingual
+        ? `${prompt}\n\nWrite every part of the explanation in ${outputLangName}.`
+        : `${prompt}\n\nTranslate every part of the explanation into ${nativeName}.`;
+      const retry = simpleTranslation(await completeExplanation(provider, retryPrompt));
+      if (contextUsesWrongScript(retry, outputLangCode, monolingual)) {
         throw new Error('The explanation did not use the requested language');
       }
       return { translation: retry };
@@ -650,9 +712,7 @@ export function makeTranslateRoutes({
             messages: [
               {
                 role: 'user',
-                content: isPhrase
-                  ? buildSimplePhrasePrompt(langName, word, sentence, nativeName)
-                  : buildSimpleContextPrompt(langName, word, sentence, nativeName),
+                content: simplePrompt(isPhrase),
               },
             ],
             maxTokens: 96,
@@ -673,14 +733,7 @@ export function makeTranslateRoutes({
       }
 
       return finishContextEntry(
-        await buildWordEntryResponse(
-          provider,
-          'context-rich',
-          langName,
-          word,
-          sentence,
-          nativeName,
-        ),
+        await buildWordEntryResponse(provider, 'context-rich', word, wordEntryPrompt()),
       );
     };
 
@@ -697,9 +750,7 @@ export function makeTranslateRoutes({
       if (managedFree) {
         const isPhrase = type === 'phrase';
         return {
-          prompt: isPhrase
-            ? buildSimplePhrasePrompt(langName, word, sentence, nativeName)
-            : buildSimpleContextPrompt(langName, word, sentence, nativeName),
+          prompt: simplePrompt(isPhrase),
           task: isPhrase ? 'phrase-simple' : 'context-simple',
           maxTokens: 96,
           visibleKeys: null,
@@ -718,7 +769,7 @@ export function makeTranslateRoutes({
         };
       }
       return {
-        prompt: buildWordEntryPrompt(langName, word, sentence, nativeName),
+        prompt: wordEntryPrompt(),
         task: 'context-rich',
         maxTokens: 1500,
         visibleKeys: new Set(['gloss']),

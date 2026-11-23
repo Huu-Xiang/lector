@@ -2,7 +2,13 @@ import { randomUUID } from 'crypto';
 import { db, type VocabType } from '../../db';
 import { dateStringInTimeZone, getConfiguredTimeZone } from '../dates';
 import { LANGUAGES, isValidLanguageCode } from '../languages';
-import { chooseMeanings, dictionarySense, fillMeaning, type SenseLookup } from './meanings';
+import {
+  chooseMeanings,
+  dictionarySense,
+  fillMeaning,
+  isMonolingualCardMeaning,
+  type SenseLookup,
+} from './meanings';
 import { stageOf, type ReviewStage } from './stages';
 import {
   findSentence,
@@ -11,7 +17,7 @@ import {
   type SentenceSource,
 } from './sentence-sources';
 import { reviewCardOf, type WordCardRow } from './word-card-rows';
-import { getNativeLanguageCode } from '../native-language';
+import { getNativeLanguageCode, isMonolingualExplanationsEnabled } from '../native-language';
 import { matchesNative } from '../translation-lang';
 import { scheduleMeaningRefresh, type MeaningRefresh, type RefreshTarget } from './meaning-refresh';
 import { sharedExampleSentenceCache, type ExampleSentenceCache } from '../example-sentence-cache';
@@ -100,13 +106,14 @@ interface CardWithVocab extends WordCardRow {
   sentence: string;
   translation: string;
   translationLang: string | null;
+  translationSource: string | null;
   vocabCreatedAt: string;
 }
 
 function activeCards(userId: string, language: string): CardWithVocab[] {
   return db
     .prepare(
-      `SELECT c.*, v.text, v.sentence, v.translation, v.translationLang, v.createdAt AS vocabCreatedAt
+      `SELECT c.*, v.text, v.sentence, v.translation, v.translationLang, v.translationSource, v.createdAt AS vocabCreatedAt
          FROM wordCards c JOIN vocab v ON v.id = c.vocabId AND v.userId = c.userId
         WHERE c.userId = ? AND c.language = ? AND c.retiredAt IS NULL`,
     )
@@ -211,9 +218,14 @@ export function buildRound(
   const { due, newCards } = selection(userId, language, now);
   const goal = readReviewGoal(userId);
   const native = getNativeLanguageCode(userId);
+  const monolingual = isMonolingualExplanationsEnabled(userId);
+  const isMonolingualMeaning = (card: CardWithVocab) =>
+    card.translation.trim() !== '' && isMonolingualCardMeaning(card, language, monolingual);
   const hasNativeMeaning = (card: CardWithVocab) =>
     card.translation.trim() !== '' && matchesNative(card.translation, card.translationLang, native);
-  const pool = activeCards(userId, language).filter(hasNativeMeaning);
+  const allActive = activeCards(userId, language);
+  const nativePool = allActive.filter(hasNativeMeaning);
+  const monolingualPool = allActive.filter(isMonolingualMeaning);
   const stale: RefreshTarget[] = [];
   const items: QueueItem[] = [];
   const served = new Map<string, string>();
@@ -235,18 +247,22 @@ export function buildRound(
   for (const card of [...due, ...newCards]) {
     if (items.length >= size) break;
     let translation = card.translation;
+    const monoMeaning = isMonolingualMeaning(card);
     let nativeMeaning = hasNativeMeaning(card);
-    if (!nativeMeaning) {
-      const sense = card.vocabId
-        ? fillMeaning(userId, card.vocabId, card.text, language, lookup)
-        : null;
+    let hasValidMeaning = monoMeaning || nativeMeaning;
+    if (!hasValidMeaning) {
+      const sense =
+        !monolingual && card.vocabId
+          ? fillMeaning(userId, card.vocabId, card.text, language, lookup)
+          : null;
       if (sense) {
         translation = sense;
         nativeMeaning = true;
-        pool.push({ ...card, translation, translationLang: native });
+        hasValidMeaning = true;
+        nativePool.push({ ...card, translation, translationLang: native });
       } else if (translation.trim() === '') {
         continue;
-      } else {
+      } else if (!monolingual) {
         stale.push({ word: card.text, wordKey: card.wordKey, language });
       }
     }
@@ -259,9 +275,10 @@ export function buildRound(
       reps: card.reps,
     });
     let choices: string[] | undefined;
-    if (questionType === 'choose_meaning' && !nativeMeaning) questionType = 'recognition';
+    if (questionType === 'choose_meaning' && !hasValidMeaning) questionType = 'recognition';
     if (questionType === 'choose_meaning') {
-      const options = chooseMeanings({ id: card.id, text: card.text, translation }, pool);
+      const choicePool = monoMeaning && !nativeMeaning ? monolingualPool : nativePool;
+      const options = chooseMeanings({ id: card.id, text: card.text, translation }, choicePool);
       if (options) choices = options;
       else questionType = 'recognition';
     }
@@ -321,7 +338,7 @@ export function buildRound(
         : {}),
     });
   }
-  if (stale.length > 0)
+  if (!monolingual && stale.length > 0)
     refresh(userId, stale).catch((error) => console.error('Meaning refresh error:', error));
   const roundId = randomUUID();
   db.transaction(() => {

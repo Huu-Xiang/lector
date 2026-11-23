@@ -30,6 +30,7 @@ import ReadingLevelSettings from './components/ReadingLevelSettings';
 import CnRefund from './components/CnRefund';
 import NativeLanguage from './components/NativeLanguage';
 import InterfaceLanguage from './components/InterfaceLanguage';
+import MonolingualSettings from './components/MonolingualSettings';
 import VersionInfo from './components/VersionInfo';
 import DeleteAccount from './components/DeleteAccount';
 import PageHeader from '@/components/PageHeader';
@@ -66,6 +67,7 @@ export default function SettingsPage() {
       </div>
       <InterfaceLanguage />
       <NativeLanguage />
+      <MonolingualSettings />
     </section>
   );
   if (nativeApp) {
@@ -80,6 +82,7 @@ export default function SettingsPage() {
             <section className="panel space-y-4 p-4" data-testid="language-preferences">
               <InterfaceLanguage compact />
               <NativeLanguage compact />
+              <MonolingualSettings compact />
             </section>
             <LanguagesSettings compact />
             <ReadingLevelSettings />

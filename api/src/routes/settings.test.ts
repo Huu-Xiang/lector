@@ -3,6 +3,8 @@ import { describe, test, expect, beforeEach, afterEach } from 'bun:test';
 import { db } from '../db';
 
 const { default: app } = await import('../routes/settings');
+const { default: dataApp } = await import('../routes/data');
+const { buildUserExport } = await import('../lib/user-export');
 
 // Settings write validation (#233): writes are checked against the known-key
 // allowlist, and URL-shaped keys must parse as http(s) — their values become
@@ -16,6 +18,7 @@ const TEST_KEYS = [
   'targetLanguage',
   'enabledLanguages',
   'aiNoticeAcceptedAt',
+  'monolingualExplanations',
 ];
 
 function clear() {
@@ -170,5 +173,37 @@ describe('opted-in languages (#442)', () => {
   test('a write of another key does not touch the list', async () => {
     expect((await putKey('timezone', 'Australia/Sydney')).status).toBe(200);
     expect(storedValue('enabledLanguages')).toBeUndefined();
+  });
+});
+
+describe('monolingualExplanations setting (U3 / R6)', () => {
+  beforeEach(clear);
+  afterEach(clear);
+
+  test('accepts booleans, rejects non-booleans with 400, and survives export/restore', async () => {
+    expect((await putKey('monolingualExplanations', true)).status).toBe(200);
+    expect(storedValue('monolingualExplanations')).toBe('true');
+    expect(await (await app.request('/monolingualExplanations')).json()).toBe(true);
+
+    expect((await putKey('monolingualExplanations', 'yes')).status).toBe(400);
+    expect((await putKey('monolingualExplanations', 1)).status).toBe(400);
+    expect(storedValue('monolingualExplanations')).toBe('true');
+
+    const exported = buildUserExport('local');
+    expect(exported.settings).toContainEqual({
+      key: 'monolingualExplanations',
+      value: 'true',
+    });
+
+    clear();
+    expect(storedValue('monolingualExplanations')).toBeUndefined();
+
+    const restore = await dataApp.request('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(exported),
+    });
+    expect(restore.status).toBe(200);
+    expect(storedValue('monolingualExplanations')).toBe('true');
   });
 });

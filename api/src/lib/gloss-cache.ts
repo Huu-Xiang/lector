@@ -3,7 +3,8 @@ import { db } from '../db';
 /** Bump when the gloss prompt or model changes enough to invalidate stored answers. */
 export const GLOSS_PROMPT_VERSION = 2;
 
-const MAX_GLOSS_CHARS = 120;
+export const MAX_GLOSS_CHARS = 120;
+export const MAX_MONOLINGUAL_GLOSS_CHARS = 240;
 const MAX_AGE_MS = 180 * 24 * 60 * 60 * 1000;
 
 export interface GlossCache {
@@ -15,10 +16,20 @@ export function normalizeGlossWord(word: string): string {
   return word.normalize('NFC').trim().toLowerCase();
 }
 
+export function isMonolingualCacheNamespace(nativeLanguage: string): boolean {
+  return nativeLanguage.startsWith('mono:');
+}
+
+export function maxGlossCharsFor(nativeLanguage?: string): number {
+  return nativeLanguage && isMonolingualCacheNamespace(nativeLanguage)
+    ? MAX_MONOLINGUAL_GLOSS_CHARS
+    : MAX_GLOSS_CHARS;
+}
+
 /** A stored answer must be a short single-line gloss, not an error or a rambling reply. */
-export function isCacheableGloss(gloss: string): boolean {
+export function isCacheableGloss(gloss: string, maxChars = MAX_GLOSS_CHARS): boolean {
   const text = gloss.trim();
-  return text.length > 0 && text.length <= MAX_GLOSS_CHARS && !/[\r\n]/.test(text);
+  return text.length > 0 && text.length <= maxChars && !/[\r\n]/.test(text);
 }
 
 export const sharedGlossCache: GlossCache = {
@@ -40,7 +51,7 @@ export const sharedGlossCache: GlossCache = {
   },
 
   put(language, nativeLanguage, word, gloss) {
-    if (!isCacheableGloss(gloss)) return;
+    if (!isCacheableGloss(gloss, maxGlossCharsFor(nativeLanguage))) return;
     db.prepare(
       `INSERT OR REPLACE INTO shared_gloss_cache
          (language, nativeLanguage, word, promptVersion, gloss, hits, createdAt)

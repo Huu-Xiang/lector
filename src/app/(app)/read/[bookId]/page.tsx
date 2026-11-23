@@ -113,7 +113,13 @@ import {
 } from '@/lib/onboarding';
 
 import { loadNative } from '@/lib/library-titles';
-import { dictionaryMeaningLang, savedMeaningFits } from '@/lib/reader-meaning';
+import {
+  dictionaryMeaningLang,
+  expectedMeaningLanguage,
+  savedMeaningFits,
+  shouldAutoReplaceSavedMeaning,
+  shouldUseMonolingualAiGloss,
+} from '@/lib/reader-meaning';
 
 /** The saved row under the first of `keys` that has one. */
 async function findVocab(keys: string[]): Promise<VocabEntry | undefined> {
@@ -368,11 +374,34 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       .catch(() => undefined);
   });
 
+  const [monolingualExplanations, setMonolingualExplanations] = useState(false);
+  const monolingualRef = useRef(false);
+  const monolingualLoadRef = useRef<Promise<boolean> | null>(null);
+  const loadMonolingualSetting = useCallback(() => {
+    const request = getSetting<boolean | null>('monolingualExplanations')
+      .then((value) => {
+        const next = value === true;
+        monolingualRef.current = next;
+        setMonolingualExplanations(next);
+        return next;
+      })
+      .catch(() => monolingualRef.current);
+    monolingualLoadRef.current = request;
+    return request;
+  }, []);
+  useEffect(() => {
+    void loadMonolingualSetting();
+  }, [loadMonolingualSetting]);
+  useRefreshOnReturn(() => {
+    void loadMonolingualSetting();
+  });
+
   // Warm likely lookups once per lesson, after the page is idle.
   const prefetchedLessonRef = useRef<string | null>(null);
   useEffect(() => {
     if (!lesson || isLoading || prefetchedLessonRef.current === lesson.id) return;
     if (lesson.language && lesson.language !== activeLang.code) return;
+    if (monolingualExplanations) return;
     const lessonKey = lesson.id;
     const words = pickPrefetchCandidates(
       lesson.textContent,
@@ -382,8 +411,12 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     if (words.length === 0) return;
     let cancelled = false;
     const run = async () => {
-      const native = (await loadNative()) ?? 'en';
-      if (cancelled || native === 'en' || native === activeLang.code) return;
+      const [loadedNative, monolingual] = await Promise.all([
+        loadNative(),
+        monolingualLoadRef.current ?? loadMonolingualSetting(),
+      ]);
+      const native = loadedNative ?? 'en';
+      if (cancelled || monolingual || native === 'en' || native === activeLang.code) return;
       prefetchedLessonRef.current = lessonKey;
       await prefetchLocalizedSenses(words, native);
     };
@@ -395,7 +428,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       if (idle) window.cancelIdleCallback?.(handle);
       else window.clearTimeout(handle);
     };
-  }, [lesson, isLoading, activeLang.code, lessonPack]);
+  }, [lesson, isLoading, activeLang.code, lessonPack, monolingualExplanations, loadMonolingualSetting]);
 
   // Null until the setting has loaded, and after a failed read: a lookup never saves then.
   const [autoSaveLookups, setAutoSaveLookups] = useState<boolean | null>(null);
@@ -676,13 +709,27 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         isPhrase ? [foldWord(word, activeLang)] : vocabKeys(word, activeLang),
       );
       existingEntryLookup.current = lookupPromise;
-      const [existingEntry, loadedNative] = await Promise.all([lookupPromise, loadNative()]);
+      const [existingEntry, loadedNative, monolingual] = await Promise.all([
+        lookupPromise,
+        loadNative(),
+        monolingualLoadRef.current ?? loadMonolingualSetting(),
+      ]);
       if (requestId !== translationRequestId.current) return;
       const native = loadedNative ?? 'en';
-      const hasTranslation = !!existingEntry && savedMeaningFits(existingEntry, native);
-      const staleSaved = !!existingEntry && !hasTranslation;
+      const expectedMeaningLang = expectedMeaningLanguage(readingLanguage, native, monolingual);
+      const dictCacheKey = monolingual ? `mono:${readingLanguage}` : native;
+      const useMonolingualGloss = shouldUseMonolingualAiGloss(readingLanguage, monolingual);
+      const hasTranslation = !!existingEntry && savedMeaningFits(existingEntry, expectedMeaningLang);
+      const canAutoReplace = shouldAutoReplaceSavedMeaning(
+        existingEntry,
+        readingLanguage,
+        native,
+        monolingual,
+      );
       const hasSavedAiWordMeaning =
-        !isPhrase && hasTranslation && isSavedAiTranslationSource(existingEntry?.translationSource);
+        !isPhrase &&
+        hasTranslation &&
+        (isSavedAiTranslationSource(existingEntry?.translationSource) || useMonolingualGloss);
       const replaceSavedMeaning = (
         translation: string,
         extra?: {
@@ -691,10 +738,10 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
           sentence?: string;
         },
       ) => {
-        if (!existingEntry || !staleSaved || !translation.trim()) return;
+        if (!existingEntry || !canAutoReplace || !translation.trim()) return;
         const patch = {
           translation,
-          translationLang: native,
+          translationLang: expectedMeaningLang,
           ...(extra?.translationSource !== undefined
             ? { translationSource: extra.translationSource }
             : {}),
@@ -729,7 +776,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
               setWordPanel((prev) => ({
                 ...prev,
                 translation: cumulative,
-                translationLang: native,
+                translationLang: expectedMeaningLang,
                 translationSource: 'ai_phrase',
                 partOfSpeech: 'phrase',
                 isLoading: false,
@@ -741,7 +788,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
             setWordPanel((prev) => ({
               ...prev,
               translation: result.translation,
-              translationLang: native,
+              translationLang: expectedMeaningLang,
               translationSource: 'ai_phrase',
               partOfSpeech: 'phrase',
               phraseDetails,
@@ -753,12 +800,12 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
             if (requestId !== translationRequestId.current) return;
             if (
               latestExisting &&
-              (shouldPersistImmediateAiUpdate(latestExisting) || staleSaved) &&
+              (shouldPersistImmediateAiUpdate(latestExisting) || canAutoReplace) &&
               result.translation.trim()
             ) {
               const patch = {
                 translation: result.translation,
-                translationLang: native,
+                translationLang: expectedMeaningLang,
                 translationSource: 'ai_phrase' as const,
                 phraseDetails,
                 sentence,
@@ -800,14 +847,14 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         //     previously-accepted AI translation must surface as `learned` now
         let dictEntry: ExpandedDictionaryEntry | null = null;
         try {
-          dictEntry = await lookupWordRemote(word, native);
+          dictEntry = await lookupWordRemote(word, dictCacheKey);
         } catch {
           dictEntry = null;
         }
         if (requestId !== translationRequestId.current) return;
 
         if (hasSavedAiWordMeaning) {
-          // Saved AI/manual meaning takes primary spot; skip eager dictionary
+          // Saved AI/manual/monolingual meaning takes primary spot; skip eager dictionary
           // localization until the learner expands the collapsed dictionary section.
           if (dictEntry && dictEntry.senses.length > 0) {
             setWordPanel((prev) => ({
@@ -823,11 +870,62 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
           return;
         }
 
+        if (useMonolingualGloss) {
+          // Non-English monolingual lookups bypass bilingual curated senses for the
+          // primary definition and stream a target-language AI gloss, keeping any
+          // curated dictionary entry collapsed as secondary reference (R7).
+          const secondaryDict = dictEntry && dictEntry.senses.length > 0 ? dictEntry : null;
+          try {
+            const gloss = await streamWordGloss(word, sentence, (cumulative) => {
+              if (requestId !== translationRequestId.current) return;
+              setWordPanel((prev) => ({
+                ...prev,
+                translation: cumulative,
+                translationLang: expectedMeaningLang,
+                translationSource: 'ai_retranslate',
+                partOfSpeech: secondaryDict?.senses[0]?.partOfSpeech || null,
+                dictEntry: secondaryDict,
+                aiStructured: null,
+                isLoading: false,
+                isStreamingGloss: true,
+                isDictionaryResult: false,
+              }));
+            });
+            if (requestId !== translationRequestId.current) return;
+            setWordPanel((prev) => ({
+              ...prev,
+              translation: gloss,
+              translationLang: expectedMeaningLang,
+              translationSource: 'ai_retranslate',
+              partOfSpeech: secondaryDict?.senses[0]?.partOfSpeech || prev.partOfSpeech,
+              dictEntry: secondaryDict,
+              isLoading: false,
+              isStreamingGloss: false,
+              isDictionaryResult: false,
+            }));
+          } catch (err) {
+            if (requestId !== translationRequestId.current) return;
+            console.error('Monolingual gloss stream error:', err);
+            setWordPanel((prev) => ({
+              ...prev,
+              translation: null,
+              translationLang: null,
+              translationSource: null,
+              dictEntry: secondaryDict,
+              isLoading: false,
+              isStreamingGloss: false,
+              isDictionaryResult: false,
+              error: isContentFiltered(err) ? t('aiDeclined') : t('wordFailed'),
+            }));
+          }
+          return;
+        }
+
         // Keep the "looking up" state until the meanings are in the reader's language,
         // Give the translation a head start. A slow response can still replace the English fallback.
-        const needsLocalization = !!dictEntry?.needsLocalization;
+        const needsLocalization = !monolingual && !!dictEntry?.needsLocalization;
         let wasLocalized = false;
-        if (dictEntry?.needsLocalization) {
+        if (needsLocalization && dictEntry) {
           const localized = await localizeEntrySenses(word, native, (senses) => {
             if (requestId !== translationRequestId.current) return;
             const translation = senses.map((sense) => sense.gloss).join('; ');
@@ -838,7 +936,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
                     ...prev,
                     dictEntry: { ...prev.dictEntry, senses, needsLocalization: false },
                     translation,
-                    translationLang: native,
+                    translationLang: expectedMeaningLang,
                     translationSource: 'dictionary',
                   }
                 : prev,
@@ -851,8 +949,12 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
 
         if (dictEntry && dictEntry.senses.length > 0) {
           const translation = dictEntry.senses.map((s) => s.gloss).join('; ');
-          const translationLang = dictionaryMeaningLang(needsLocalization, wasLocalized, native);
-          if (translationLang === native) {
+          const translationLang = dictionaryMeaningLang(
+            needsLocalization,
+            wasLocalized,
+            expectedMeaningLang,
+          );
+          if (translationLang === expectedMeaningLang) {
             replaceSavedMeaning(translation, { translationSource: 'dictionary' });
           }
           setWordPanel((prev) => ({
@@ -875,8 +977,8 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
               setWordPanel((prev) => ({
                 ...prev,
                 translation: cumulative,
-                translationLang: native,
-                translationSource: null,
+                translationLang: expectedMeaningLang,
+                translationSource: monolingual ? 'ai_retranslate' : null,
                 partOfSpeech: null,
                 dictEntry: null,
                 aiStructured: null,
@@ -890,8 +992,8 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
             setWordPanel((prev) => ({
               ...prev,
               translation: gloss,
-              translationLang: native,
-              translationSource: null,
+              translationLang: expectedMeaningLang,
+              translationSource: monolingual ? 'ai_retranslate' : null,
               isLoading: false,
               isStreamingGloss: false,
             }));
@@ -915,7 +1017,16 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         }
       }
     },
-    [activeLang, lessonId, trackOnboardingLookup, trackReaderEvent, trackRepeatLookup, t],
+    [
+      activeLang,
+      lessonId,
+      loadMonolingualSetting,
+      readingLanguage,
+      trackOnboardingLookup,
+      trackReaderEvent,
+      trackRepeatLookup,
+      t,
+    ],
   );
 
   const closeWordPanel = useCallback(() => {
@@ -946,6 +1057,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
 
   const handleExpandDictionary = useCallback(async () => {
     const requestId = translationRequestId.current;
+    if (monolingualRef.current) return;
     if (!wordPanel.dictEntry?.needsLocalization) return;
     if (localizedExpandRequestRef.current === requestId) return;
     localizedExpandRequestRef.current = requestId;
@@ -971,19 +1083,24 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     setWordPanel((prev) => ({ ...prev, isContextLoading: true }));
     trackReaderEvent('reading_help', 'context', 'started');
     try {
-      const [result, loadedNative] = await Promise.all([
+      const [result, loadedNative, monolingual] = await Promise.all([
         explainWordInContext(wordPanel.word, wordPanel.sentence),
         loadNative(),
+        monolingualLoadRef.current ?? loadMonolingualSetting(),
       ]);
       trackReaderEvent('reading_help', 'context', 'success');
       if (requestId !== translationRequestId.current) return;
-      const native = loadedNative ?? 'en';
+      const expectedMeaningLang = expectedMeaningLanguage(
+        readingLanguage,
+        loadedNative ?? 'en',
+        monolingual,
+      );
       const nextTranslation = result.translation;
       const nextSentence = wordPanel.sentence;
       setWordPanel((prev) => ({
         ...prev,
         aiContextTranslation: nextTranslation,
-        translationLang: native,
+        translationLang: expectedMeaningLang,
         translationSource: 'ai_context',
         isContextLoading: false,
       }));
@@ -993,7 +1110,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       if (shouldPersistImmediateAiUpdate(existing)) {
         const patch = {
           translation: nextTranslation,
-          translationLang: native,
+          translationLang: expectedMeaningLang,
           translationSource: 'ai_context' as const,
           sentence: nextSentence,
         };
@@ -1025,6 +1142,8 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     wordPanel.sentence,
     wordPanel.isContextLoading,
     wordPanel.aiContextTranslation,
+    loadMonolingualSetting,
+    readingLanguage,
     resolveExistingEntry,
     trackReaderEvent,
     t,
@@ -1035,10 +1154,18 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     setWordPanel((prev) => ({ ...prev, isEnriching: true }));
     trackReaderEvent('reading_help', 'enrich', 'started');
     try {
-      const result = await enrichWord(wordPanel.word, wordPanel.sentence);
+      const [result, loadedNative, monolingual] = await Promise.all([
+        enrichWord(wordPanel.word, wordPanel.sentence),
+        loadNative(),
+        monolingualLoadRef.current ?? loadMonolingualSetting(),
+      ]);
       trackReaderEvent('reading_help', 'enrich', 'success');
-      const native = (await loadNative()) ?? 'en';
       if (requestId !== translationRequestId.current) return;
+      const expectedMeaningLang = expectedMeaningLanguage(
+        readingLanguage,
+        loadedNative ?? 'en',
+        monolingual,
+      );
       const structured =
         result.senses && result.senses.length > 0
           ? {
@@ -1051,7 +1178,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       setWordPanel((prev) => ({
         ...prev,
         translation: result.translation || prev.translation,
-        translationLang: result.translation ? native : prev.translationLang,
+        translationLang: result.translation ? expectedMeaningLang : prev.translationLang,
         partOfSpeech: result.partOfSpeech || prev.partOfSpeech,
         aiStructured: structured ?? prev.aiStructured,
         isEnriching: false,
@@ -1063,13 +1190,21 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       // Keep the gloss on screen; just stop the spinner (non-blocking failure).
       setWordPanel((prev) => ({ ...prev, isEnriching: false }));
     }
-  }, [wordPanel.word, wordPanel.sentence, trackReaderEvent]);
+  }, [
+    wordPanel.word,
+    wordPanel.sentence,
+    loadMonolingualSetting,
+    readingLanguage,
+    trackReaderEvent,
+  ]);
 
   // Persist the current AI translation into the on-device dictionary cache.
   // Called from accept actions (Save / Known / level). No-op for phrases,
-  // dictionary hits (already canonical), and when the AI didn't return
-  // structured senses. Fire-and-forget — never blocks the UI action.
+  // dictionary hits (already canonical), monolingual mode (cached_entries is
+  // strictly bilingual per KTD5), and when the AI didn't return structured senses.
+  // Fire-and-forget — never blocks the UI action.
   const persistAcceptedTranslation = useCallback(() => {
+    if (monolingualRef.current) return;
     if (wordPanel.word.includes(' ')) return;
     if (wordPanel.dictEntry) return;
     // Prefer the rich enriched entry; otherwise persist the streamed gloss as a
@@ -1594,8 +1729,10 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
   const addWordToAnki = useCallback(async () => {
     const { basic: deckName } = getAnkiDecks();
     const wordMeaning =
-      wordPanel.dictEntry?.senses[0]?.gloss ??
+      (wordPanel.isDictionaryResult ? wordPanel.dictEntry?.senses[0]?.gloss : undefined) ??
       wordPanel.aiStructured?.senses[0]?.gloss ??
+      wordPanel.aiContextTranslation ??
+      wordPanel.savedAiTranslation ??
       wordPanel.translation ??
       '';
     const translation =
@@ -1727,14 +1864,22 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     setWordPanel((prev) => applyRetranslateStart(prev));
     const isPhrase = wordPanel.word.includes(' ');
     try {
-      const native = (await loadNative()) ?? 'en';
+      const [loadedNative, monolingual] = await Promise.all([
+        loadNative(),
+        monolingualLoadRef.current ?? loadMonolingualSetting(),
+      ]);
+      const expectedMeaningLang = expectedMeaningLanguage(
+        readingLanguage,
+        loadedNative ?? 'en',
+        monolingual,
+      );
       if (isPhrase) {
         const result = await translatePhrase(wordPanel.word, wordPanel.sentence, (cumulative) => {
           if (requestId !== translationRequestId.current) return;
           setWordPanel((prev) => ({
             ...prev,
             translation: cumulative,
-            translationLang: native,
+            translationLang: expectedMeaningLang,
             translationSource: 'ai_phrase',
             isLoading: false,
             isStreamingGloss: true,
@@ -1745,7 +1890,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         setWordPanel((prev) => ({
           ...prev,
           translation: result.translation,
-          translationLang: native,
+          translationLang: expectedMeaningLang,
           translationSource: 'ai_phrase',
           aiContextTranslation: null,
           savedAiTranslation: null,
@@ -1763,7 +1908,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         if (shouldPersistImmediateAiUpdate(existing) && result.translation.trim()) {
           const patch = {
             translation: result.translation,
-            translationLang: native,
+            translationLang: expectedMeaningLang,
             translationSource: 'ai_phrase' as const,
             phraseDetails,
             sentence: wordPanel.sentence,
@@ -1785,7 +1930,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
           setWordPanel((prev) => ({
             ...prev,
             translation: cumulative,
-            translationLang: native,
+            translationLang: expectedMeaningLang,
             translationSource: 'ai_retranslate',
             isLoading: false,
             isStreamingGloss: true,
@@ -1804,7 +1949,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         setWordPanel((prev) => ({
           ...prev,
           translation: result.translation,
-          translationLang: native,
+          translationLang: expectedMeaningLang,
           translationSource: 'ai_retranslate',
           aiContextTranslation: null,
           savedAiTranslation: null,
@@ -1823,7 +1968,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         if (shouldPersistImmediateAiUpdate(existing) && result.translation.trim()) {
           const patch = {
             translation: result.translation,
-            translationLang: native,
+            translationLang: expectedMeaningLang,
             translationSource: 'ai_retranslate' as const,
             sentence: wordPanel.sentence,
           };
@@ -1860,6 +2005,8 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     wordPanel.savedTranslationSource,
     wordPanel.savedSentence,
     wordPanel.phraseDetails,
+    loadMonolingualSetting,
+    readingLanguage,
     resolveExistingEntry,
     t,
   ]);
@@ -2101,6 +2248,18 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     (savedWord) => savedWord.id === wordPanel.existingEntry?.id,
   );
 
+  // When a non-dictionary primary meaning (saved AI/manual or monolingual AI gloss)
+  // coexists with a curated dictionary entry, pass it through `savedAiTranslation` so
+  // TranslationDrawer renders it primary above the collapsed "Show dictionary (N)" toggle.
+  const displaySavedAiTranslation =
+    wordPanel.savedAiTranslation ??
+    (!wordPanel.word.includes(' ') &&
+    !wordPanel.isDictionaryResult &&
+    wordPanel.dictEntry &&
+    wordPanel.translation
+      ? wordPanel.translation
+      : null);
+
   return (
     <div className="reader-page flex h-dvh flex-col overflow-x-hidden bg-card 2xl:flex-row print:block print:h-auto print:overflow-visible">
       <div
@@ -2148,7 +2307,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
           aiTranslation={wordPanel.translation}
           aiPartOfSpeech={wordPanel.partOfSpeech}
           aiContextTranslation={wordPanel.aiContextTranslation}
-          savedAiTranslation={wordPanel.savedAiTranslation}
+          savedAiTranslation={displaySavedAiTranslation}
           savedTranslationSource={wordPanel.savedTranslationSource}
           savedSentence={wordPanel.savedSentence}
           aiPhraseDetails={wordPanel.phraseDetails}
@@ -2177,7 +2336,9 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
           onIgnore={ignoreWord}
           onRequestContextTranslation={requestContextTranslation}
           onExpandDictionary={
-            wordPanel.dictEntry?.needsLocalization ? handleExpandDictionary : undefined
+            !monolingualExplanations && wordPanel.dictEntry?.needsLocalization
+              ? handleExpandDictionary
+              : undefined
           }
           contextError={contextError}
           onSaveWord={

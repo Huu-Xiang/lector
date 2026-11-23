@@ -1,5 +1,10 @@
-import { describe, expect, test } from 'bun:test';
+import '../test-guard';
+import { afterEach, beforeEach, describe, expect, test } from 'bun:test';
+import { db } from '../db';
+import { isValidLanguageCode, LANGUAGES } from './languages';
 import { guessScript, matchesNative, resolveTranslationLang } from './translation-lang';
+import vocabApp from '../routes/vocab';
+import dataApp from '../routes/data';
 
 describe('guessScript', () => {
   test.each([
@@ -88,5 +93,99 @@ describe('resolveTranslationLang', () => {
   test('stores nothing for empty or unknown text', () => {
     expect(resolveTranslationLang('', 'en', 'en')).toBeNull();
     expect(resolveTranslationLang('123', null, 'en')).toBeNull();
+  });
+
+  test('accepts bare target language codes and rejects prototype keys', () => {
+    expect(isValidLanguageCode('constructor')).toBe(false);
+    expect(isValidLanguageCode('__proto__')).toBe(false);
+    expect(isValidLanguageCode('toString')).toBe(false);
+
+    expect(resolveTranslationLang('een klein huis', 'nl', 'zh-CN')).toBe('nl');
+    expect(resolveTranslationLang('ett litet hus', 'sv', 'zh-CN')).toBe('sv');
+    expect(resolveTranslationLang('一种常见的小动物', 'zh', 'en')).toBe('zh');
+    expect(resolveTranslationLang('маленький будинок', 'uk', 'en')).toBe('uk');
+    expect(resolveTranslationLang('μικρό σπίτι', 'el', 'en')).toBe('el');
+    expect(resolveTranslationLang('λόγος καὶ ἔργον', 'grc', 'en')).toBe('grc');
+    expect(resolveTranslationLang('একটি ছোট বাড়ি', 'bn', 'en')).toBe('bn');
+    expect(resolveTranslationLang('a house', 'constructor', 'ja')).toBe('en');
+    expect(resolveTranslationLang('a house', '__proto__', 'ja')).toBe('en');
+  });
+});
+
+describe('all 28 target languages script matching (U3 / R7 / R8)', () => {
+  test('every language in LANGUAGES validates its own testPhrase via matchesNative', () => {
+    for (const [code, config] of Object.entries(LANGUAGES)) {
+      expect(matchesNative(config.testPhrase, null, code)).toBe(true);
+      expect(matchesNative(config.testPhrase, code, code)).toBe(true);
+    }
+    expect(guessScript('Привіт')).toBe('ru');
+    expect(guessScript('Γεια σου')).toBe('el');
+    expect(guessScript('Ἐν ἀρχῇ')).toBe('el');
+    expect(guessScript('নমস্কার')).toBe('bn');
+  });
+
+  describe('vocab POST and data restore accept monolingual target language codes', () => {
+    const clear = () => {
+      db.prepare('DELETE FROM wordCards').run();
+      db.prepare('DELETE FROM knownWords').run();
+      db.prepare('DELETE FROM vocab').run();
+    };
+    beforeEach(clear);
+    afterEach(clear);
+
+    test('POST /api/vocab accepts nl, sv, zh and rejects prototype keys', async () => {
+      for (const [id, lang, translation] of [
+        ['mono-nl', 'nl', 'een klein gebouw'],
+        ['mono-sv', 'sv', 'ett litet hus'],
+        ['mono-zh', 'zh', '一种常见的动物'],
+      ] as const) {
+        const res = await vocabApp.request('/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id,
+            text: 'woord',
+            translation,
+            translationLang: lang,
+            language: lang,
+          }),
+        });
+        expect(res.status).toBe(200);
+        expect(db.prepare('SELECT translationLang FROM vocab WHERE id = ?').get(id)).toEqual({
+          translationLang: lang,
+        });
+      }
+
+      const proto = await vocabApp.request('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: 'mono-bad',
+          text: 'woord',
+          translation: 'bad',
+          translationLang: 'constructor',
+          language: 'nl',
+        }),
+      });
+      expect(proto.status).toBe(400);
+
+      const exported = await (await dataApp.request('/')).json();
+      clear();
+      const restored = await dataApp.request('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(exported),
+      });
+      expect(restored.status).toBe(200);
+      expect(
+        db
+          .prepare("SELECT id, translationLang FROM vocab WHERE id LIKE 'mono-%' ORDER BY id")
+          .all(),
+      ).toEqual([
+        { id: 'mono-nl', translationLang: 'nl' },
+        { id: 'mono-sv', translationLang: 'sv' },
+        { id: 'mono-zh', translationLang: 'zh' },
+      ]);
+    });
   });
 });

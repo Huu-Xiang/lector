@@ -79,46 +79,102 @@ function writeIn(nativeName: string): string {
     : `\n\nWrite every translation, gloss and explanation in ${nativeName}, not in English. Keep the JSON keys and the partOfSpeech and register values exactly as specified.`;
 }
 
+const LEVEL_GUIDANCE: Record<string, string> = {
+  A1: 'Use very simple A1-level words and short basic sentences.',
+  A2: 'Use simple everyday A2-level vocabulary and clear short wording.',
+  B1: 'Use clear intermediate B1-level vocabulary.',
+  B2: 'Use natural upper-intermediate B2-level learner-dictionary wording.',
+  C1: 'Use precise advanced C1-level dictionary wording.',
+  C2: 'Use nuanced C2-level dictionary wording.',
+};
+
+function levelGuidance(level?: string | null): string {
+  const normalized = level?.trim().toUpperCase();
+  const guidance = normalized ? LEVEL_GUIDANCE[normalized] : undefined;
+  return guidance
+    ? `Calibrate the explanation to CEFR ${normalized}: ${guidance}`
+    : 'Use clear, simple learner-dictionary wording.';
+}
+
+function writeInTarget(langName: string): string {
+  const notEnglish = langName === 'English' ? '' : ', not in English';
+  return `\n\nWrite every definition, gloss, breakdown, and note entirely in ${langName}${notEnglish}. Keep the JSON keys and the partOfSpeech and register values exactly as specified.`;
+}
+
 const NATIVE_SCRIPT: Record<string, RegExp> = {
+  zh: /\p{Script=Han}/gu,
   'zh-CN': /\p{Script=Han}/gu,
   'zh-TW': /\p{Script=Han}/gu,
   ja: /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}]/gu,
   ko: /\p{Script=Hangul}/gu,
   ru: /\p{Script=Cyrillic}/gu,
+  uk: /\p{Script=Cyrillic}/gu,
   ar: /\p{Script=Arabic}/gu,
   hi: /\p{Script=Devanagari}/gu,
+  bn: /\p{Script=Bengali}/gu,
+  el: /\p{Script=Greek}/gu,
+  grc: /\p{Script=Greek}/gu,
 };
 
+const NON_LATIN_SCRIPT =
+  /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}\p{Script=Cyrillic}\p{Script=Arabic}\p{Script=Devanagari}\p{Script=Bengali}\p{Script=Greek}]/gu;
+
 /**
- * Phrase fields written mostly in Latin letters although the native language
- * uses another script. Latin-script native languages are not checked.
+ * Phrase fields written in the wrong script for the requested explanation
+ * language. Non-Latin languages always require their own script; Latin-script
+ * languages reject predominantly non-Latin output when `checkLatin` is enabled
+ * (used in monolingual mode to block native-script leakage).
  */
 export function phraseFieldsInWrongScript(
   result: Record<string, unknown>,
-  nativeCode: string,
+  langCode: string,
+  checkLatin = false,
 ): string[] {
-  const script = NATIVE_SCRIPT[nativeCode];
-  if (!script) return [];
+  const script = NATIVE_SCRIPT[langCode];
+  if (!script && !checkLatin) return [];
   return ['translation', 'literalBreakdown', 'idiomaticMeaning', 'usageNotes'].filter((key) => {
     const value = result[key];
     if (typeof value !== 'string') return false;
     const latin = value.match(/\p{Script=Latin}/gu)?.length ?? 0;
-    const own = value.match(script)?.length ?? 0;
-    return latin >= 20 && (key === 'literalBreakdown' ? own === 0 : latin > own * 3);
+    if (script) {
+      const own = value.match(script)?.length ?? 0;
+      return latin >= 20 && (key === 'literalBreakdown' ? own === 0 : latin > own * 3);
+    }
+    const nonLatin = value.match(NON_LATIN_SCRIPT)?.length ?? 0;
+    return nonLatin >= 10 && (key === 'literalBreakdown' ? latin === 0 : nonLatin > latin * 3);
   });
 }
 
-export function contextUsesWrongScript(translation: string, nativeCode: string): boolean {
-  const script = NATIVE_SCRIPT[nativeCode];
-  if (!script) return false;
+export function contextUsesWrongScript(
+  translation: string,
+  langCode: string,
+  checkLatin = false,
+): boolean {
+  const script = NATIVE_SCRIPT[langCode];
+  if (script) {
+    return (
+      (/\p{Letter}/u.test(translation) && !translation.match(script)) ||
+      phraseFieldsInWrongScript({ translation }, langCode).length > 0
+    );
+  }
+  if (!checkLatin) return false;
+  const latin = translation.match(/\p{Script=Latin}/gu)?.length ?? 0;
+  const nonLatin = translation.match(NON_LATIN_SCRIPT)?.length ?? 0;
   return (
-    (/[a-z]/i.test(translation) && !translation.match(script)) ||
-    phraseFieldsInWrongScript({ translation }, nativeCode).length > 0
+    (nonLatin > 0 && latin === 0) ||
+    phraseFieldsInWrongScript({ translation }, langCode, true).length > 0
   );
 }
 
-export function phraseLanguageReminder(fields: string[], nativeName: string): string {
-  return `\n\nYour previous answer wrote ${fields.join(', ')} in English. Write every value except register in ${nativeName}.`;
+export function phraseLanguageReminder(
+  fields: string[],
+  targetName: string,
+  monolingual = false,
+): string {
+  if (monolingual) {
+    return `\n\nYour previous answer did not write ${fields.join(', ')} in ${targetName}. Write every value except register in ${targetName}.`;
+  }
+  return `\n\nYour previous answer wrote ${fields.join(', ')} in English. Write every value except register in ${targetName}.`;
 }
 
 /**
@@ -332,4 +388,139 @@ export function buildExplainPrompt(input: {
 Sentence: "${sentence}"
 Translation: "${translation}"
 Study word: "${clozeWord}"`;
+}
+
+/**
+ * Monolingual fast-path word gloss. Deliberately omits untrusted user sentence
+ * text so cached results under `mono:<lang>:<level>` cannot be prompt-injected
+ * across tenants (KTD5).
+ */
+export function buildMonolingualGlossPrompt(
+  langName: string,
+  word: string,
+  level?: string | null,
+): string {
+  return `You are a ${langName} learner's dictionary. Define the ${langName} word "${word}" entirely in ${langName}.
+${levelGuidance(level)}
+
+Reply with ONLY a concise ${langName} definition — the most common sense(s), separated by "; ", on one line. Write ONLY in ${langName}; do not translate into English or any other language. No quotes, no markdown, no extra commentary.${glossGenderHint(langName)} Keep it under ~20 words.`;
+}
+
+export function buildMonolingualSimplePhrasePrompt(
+  langName: string,
+  phrase: string,
+  sentence: string,
+  level?: string | null,
+): string {
+  return `You are a ${langName} learner's dictionary. Explain the selected ${langName} phrase as used in the sentence, entirely in ${langName}.
+${levelGuidance(level)}
+
+Selected phrase: "${phrase}"
+Sentence context: "${sentence || phrase}"
+
+Return ONLY a concise ${langName} paraphrase or definition. Do not translate into another language. Do not use quotes, labels, JSON, or Markdown.`;
+}
+
+export function buildMonolingualSimpleContextPrompt(
+  langName: string,
+  word: string,
+  sentence: string,
+  level?: string | null,
+): string {
+  return `You are a ${langName} learner's dictionary. Define the selected ${langName} word in the exact sense that fits this sentence, entirely in ${langName}.
+${levelGuidance(level)}
+
+Selected word: "${word}"
+Sentence context: "${sentence || word}"
+
+Return ONLY the single context-appropriate ${langName} definition.${simpleContextGenderHint(langName)} Do not list other senses or translate into another language. Do not use quotes, labels, JSON, or Markdown.`;
+}
+
+export function buildMonolingualContextExplanationPrompt(
+  langName: string,
+  word: string,
+  sentence: string,
+  level?: string | null,
+): string {
+  return `You are a ${langName} learner's dictionary. Explain the selected ${langName} word as used in this exact sentence, entirely in ${langName}.
+${levelGuidance(level)}
+
+Selected word: "${word}"
+Sentence: "${sentence}"
+
+Give the one meaning that fits, followed by a brief paraphrase of the relevant part of the sentence.${contextExplanationGenderHint(langName)} Explain the full expression when the word is part of one. Write the entire answer in ${langName}; do not translate into another language. Use at most two short sentences in plain text. Omit alternative senses, headings, and Markdown.`;
+}
+
+export function buildMonolingualWordEntryPrompt(
+  langName: string,
+  word: string,
+  sentence: string,
+  level?: string | null,
+): string {
+  return `You are a ${langName} learner's dictionary editor with deep knowledge of ${langName} orthography, morphology, and etymology.
+${levelGuidance(level)}
+
+A learner clicked the following ${langName} word while reading. Produce a monolingual learner-dictionary entry written entirely in ${langName}.
+
+Word: "${word}"
+Sentence context: "${sentence || word}"
+
+Respond with ONLY a JSON object in this exact shape (no markdown, no code blocks):
+{
+  "word": "${word}",
+  "senses": [
+    { "partOfSpeech": "noun | verb | adjective | adverb | pronoun | preposition | conjunction | interjection | determiner | numeral | particle", "gloss": "concise ${langName} definition, no period" }
+    /* ...one entry per distinct sense; order most-common first */
+  ],
+  "ipa": "/.../ or [...] — phonetic transcription if you're confident",
+  "etymology": "Brief origin note in ${langName}",
+  "relatedForms": [
+    { "form": "the related word in ${langName}", "relation": "a short grammatical relation label in ${langName}" }
+  ]
+}
+
+Rules:
+- "word" and "senses" are REQUIRED. senses must be non-empty.
+- CRITICAL — valid JSON only: never put a double-quote character (") inside any string value. Use single quotes ('like this') or parentheses instead.
+- Include separate sense entries for genuinely distinct meanings. Use the sentence to bias sense ORDER, but include all common senses a learner might encounter.
+- Omit ipa / etymology / relatedForms entirely if you're not confident — don't guess.
+- Keep "partOfSpeech" values in standard English Wiktionary tokens ("noun", "verb", etc.).${wordEntryGenderHint(langName)}
+
+Backwards-compat fields the server adds (do NOT include these yourself — server stitches them from senses): translation, partOfSpeech.${writeInTarget(langName)}`;
+}
+
+export function buildMonolingualPhrasePrompt(
+  langName: string,
+  spelreelsSection: string,
+  word: string,
+  sentence: string,
+  level?: string | null,
+  omitOrigins = false,
+): string {
+  return `You are a ${langName} learner's dictionary editor with deep knowledge of ${langName} idiom and register.
+${levelGuidance(level)}
+
+${spelreelsSection}A learner selected a ${langName} phrase from a text they're reading. Explain what it means, how its parts work, and when it is used, entirely in ${langName}.
+
+Phrase: "${word}"
+Sentence context: "${sentence || word}"
+
+Respond with ONLY a JSON object in this exact format (no markdown, no code blocks):
+{
+  "translation": "a clear, natural ${langName} paraphrase or definition of the phrase",
+  "literalBreakdown": "in ${langName}: brief word-by-word explanation of the component words",
+  "idiomaticMeaning": "in ${langName}: if the phrase is an idiom, fixed expression, or compound, what it actually means and when it is used",
+  "usageNotes": "in ${langName}: register, tone, formality, or contextual notes a learner should know",
+  "register": "formal | informal | literary | colloquial | archaic | neutral"
+}
+
+CRITICAL — valid JSON only: never put a double-quote character (") inside any string value. Use single quotes ('like this') or parentheses instead.
+
+Required fields: translation. All other fields are optional — only include them when they add real value:
+- Include literalBreakdown if the phrase is more than one word AND the literal sense differs from the overall meaning.
+- Include idiomaticMeaning ALWAYS for idioms, fixed expressions, sayings, or proverbs.
+- Include usageNotes when the phrase carries register, tone, or cultural nuance.
+- Include register if you're confident; omit if neutral or unclear.
+
+Be specific and concrete in idiomaticMeaning and usageNotes.${phraseGenderHint(langName)}${omitOrigins ? NO_ORIGINS : ''}${writeInTarget(langName)}`;
 }

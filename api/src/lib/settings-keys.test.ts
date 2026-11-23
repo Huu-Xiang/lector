@@ -60,3 +60,13 @@ describe('autoSaveLookups setting', () => {
     expect(validateSettingWrite('autoSaveLookups', 0)).not.toBeNull();
   });
 });
+
+describe('monolingualExplanations setting', () => {
+  test('accepts a boolean only', () => {
+    expect(validateSettingWrite('monolingualExplanations', true)).toBeNull();
+    expect(validateSettingWrite('monolingualExplanations', false)).toBeNull();
+    expect(validateSettingWrite('monolingualExplanations', 'true')).not.toBeNull();
+    expect(validateSettingWrite('monolingualExplanations', 1)).not.toBeNull();
+    expect(validateSettingWrite('monolingualExplanations', null)).not.toBeNull();
+  });
+});

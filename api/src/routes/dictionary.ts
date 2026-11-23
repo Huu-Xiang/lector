@@ -3,7 +3,7 @@ import { bodyLimit } from 'hono/body-limit';
 import { getCurrentUserId } from '../lib/user';
 import { db } from '../db';
 import { resolveLanguage } from '../lib/active-language';
-import { getNativeLanguageCode } from '../lib/native-language';
+import { getNativeLanguageCode, isMonolingualExplanationsEnabled } from '../lib/native-language';
 import { getTodayDate } from '../lib/dates';
 import { recordStudySessionPing } from '../lib/study-session';
 import {
@@ -59,8 +59,11 @@ export function makeDictionaryRoutes(
 
       // Meanings are English unless the dictionary already holds the reader's language.
       // The hint tells the client to wait for /api/translate/localize before it shows them.
+      // Monolingual mode bypasses bilingual localization completely (R7).
+      const monolingual = isMonolingualExplanationsEnabled(userId);
       const native = getNativeLanguageCode(userId);
       const needsLocalization =
+        !monolingual &&
         !!entry &&
         entry.source === 'dict' &&
         !entry.senseLanguage &&
@@ -104,6 +107,10 @@ export function makeDictionaryRoutes(
         if (!validated.ok) return c.json({ error: validated.error }, 400);
 
         const identity = acceptedCacheIdentity(validated.value);
+        // cached_entries is strictly bilingual (KTD5): never overwrite or pollute it in monolingual mode.
+        if (isMonolingualExplanationsEnabled(userId)) {
+          return c.json({ word: identity.word, skipped: true });
+        }
         const previousBytes = storedAcceptedCacheContentBytes(
           userId,
           identity.word,

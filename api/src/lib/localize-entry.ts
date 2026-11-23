@@ -2,7 +2,11 @@ import { completeJson, getProvider, type LLMProvider, type ProviderAccessOptions
 import { currentTimingLabel, recordLookupOutcome, withTimingLabel } from './ai-timing';
 import { resolveLanguage } from './active-language';
 import { getLanguageConfig } from './languages';
-import { getNativeLanguageCode, getNativeLanguageName } from './native-language';
+import {
+  getNativeLanguageCode,
+  getNativeLanguageName,
+  isMonolingualExplanationsEnabled,
+} from './native-language';
 import {
   isCacheableGlosses,
   MAX_ENTRY_GLOSS_CHARS,
@@ -59,6 +63,7 @@ export function localizableEntry(
   word: string,
   language: string,
 ): ExpandedDictionaryEntry | null {
+  if (isMonolingualExplanationsEnabled(userId)) return null;
   const nativeCode = getNativeLanguageCode(userId);
   if (nativeCode === 'en' || nativeCode === language) return null;
   const entry = deps.lookupEntry(userId, word, language);

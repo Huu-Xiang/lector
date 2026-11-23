@@ -87,8 +87,8 @@ export function getLanguageConfig(code: LanguageCode): LanguageConfig {
   return LANGUAGES[code];
 }
 
-export function isValidLanguageCode(code: string): code is LanguageCode {
-  return code in LANGUAGES;
+export function isValidLanguageCode(code: unknown): code is LanguageCode {
+  return typeof code === 'string' && Object.hasOwn(LANGUAGES, code);
 }
 
 export function getAllLanguages(): LanguageConfig[] {

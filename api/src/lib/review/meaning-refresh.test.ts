@@ -77,7 +77,7 @@ beforeEach(() => {
   for (const table of ['wordReviewLog', 'reviewRounds', 'wordCards', 'knownWords', 'vocab']) {
     db.prepare(`DELETE FROM ${table}`).run();
   }
-  db.prepare("DELETE FROM settings WHERE key = 'nativeLanguage'").run();
+  db.prepare("DELETE FROM settings WHERE key IN ('nativeLanguage', 'monolingualExplanations')").run();
   db.prepare("DELETE FROM usage_counters WHERE userId = 'local'").run();
   setNative('ja');
 });
@@ -159,5 +159,26 @@ describe('createMeaningRefresh', () => {
     const { deps } = setup();
     await createMeaningRefresh(deps)('local', [target('chien')]);
     expect(row('v1')).toEqual({ translation: '犬', translationLang: 'ja' });
+  });
+
+  test('skips refresh completely when monolingualExplanations is ON', async () => {
+    db.prepare(
+      "INSERT OR REPLACE INTO settings (userId, key, value) VALUES ('local', 'monolingualExplanations', 'true')",
+    ).run();
+    seed('v1', 'chien', 'dog', 'en');
+    const { deps, provider } = setup();
+    await createMeaningRefresh(deps)('local', [target('chien')]);
+    expect(provider.calls).toHaveLength(0);
+    expect(row('v1')).toEqual({ translation: 'dog', translationLang: 'en' });
+  });
+
+  test('never overwrites a saved monolingual meaning even when monolingualExplanations is OFF', async () => {
+    seed('v1', 'chien', 'animal domestique fidèle', 'fr');
+    const { deps } = setup();
+    await createMeaningRefresh(deps)('local', [target('chien')]);
+    expect(row('v1')).toEqual({
+      translation: 'animal domestique fidèle',
+      translationLang: 'fr',
+    });
   });
 });

@@ -1548,7 +1548,9 @@ app.post(
             v.type || 'word',
             v.sentence || '',
             v.translation || '',
-            v.translation && isNativeLanguageCode(v.translationLang) ? v.translationLang : null,
+            v.translation && (isNativeLanguageCode(v.translationLang) || isValidLanguageCode(v.translationLang))
+              ? v.translationLang
+              : null,
             v.translationSource ?? null,
             v.phraseDetails ?? null,
             v.state || 'new',

@@ -15,7 +15,7 @@ import { esperantoIpa } from '../../../languages/eo/ipa';
 import { stemCandidates } from '../../../languages/morphology';
 import { analyseJapanese } from './ja-morphology';
 import { acceptedDictionaryContentBytes } from './storage-limits';
-import { getNativeLanguageCode } from './native-language';
+import { getNativeLanguageCode, isMonolingualExplanationsEnabled } from './native-language';
 import { matchesNative } from './translation-lang';
 
 // x-system fold (#307 §3.4): learners without an Esperanto keyboard type
@@ -1047,7 +1047,8 @@ function enrichEntry(entry: ExpandedDictionaryEntry, userId: string, language: s
     if (tags.length) entry.tags = tags;
   }
 
-  const nativeSenses = senseLanguageFor(getNativeLanguageCode(userId));
+  const monolingual = isMonolingualExplanationsEnabled(userId);
+  const nativeSenses = monolingual ? null : senseLanguageFor(getNativeLanguageCode(userId));
   if (nativeSenses && stmts.selectI18n) {
     const rows = stmts.selectI18n.all(headword, nativeSenses) as SenseRow[];
     if (rows.length > 0) {
@@ -1413,8 +1414,11 @@ function resolveWord(
   }
 
   // 5. AI cache fallthrough — user-accepted translations persisted in lector.db.
-  const cached = lookupCached(userId, lower, language);
-  if (cached) return cached;
+  // cached_entries holds bilingual entries only (KTD5), so skip it in monolingual mode.
+  if (!isMonolingualExplanationsEnabled(userId)) {
+    const cached = lookupCached(userId, lower, language);
+    if (cached) return cached;
+  }
 
   return undefined;
 }

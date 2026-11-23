@@ -46,6 +46,7 @@ const SETTING_VALUE_BYTE_LIMITS: Record<string, number> = {
   reviewGoal: 24,
   // true or false.
   autoSaveLookups: 8,
+  monolingualExplanations: 8,
   dailyGoal: 48,
   // An ISO timestamp, quoted.
   aiNoticeAcceptedAt: 40,
@@ -71,6 +72,8 @@ export const KNOWN_SETTING_KEYS = new Set([
   'reviewGoal',
   // Reader: save a looked-up word at once. Unset means on.
   'autoSaveLookups',
+  // Reader: explain words and phrases in the target language instead of native.
+  'monolingualExplanations',
   // Daily goal for the streak: { kind: 'minutes' | 'reviews', target }.
   'dailyGoal',
   'aiNoticeAcceptedAt',
@@ -155,6 +158,9 @@ export function validateSettingWrite(key: string, value: unknown): string | null
   }
   if (key === 'autoSaveLookups' && typeof value !== 'boolean') {
     return 'autoSaveLookups must be true or false';
+  }
+  if (key === 'monolingualExplanations' && typeof value !== 'boolean') {
+    return 'monolingualExplanations must be true or false';
   }
   if (key === 'enabledLanguages') {
     if (!Array.isArray(value)) return 'enabledLanguages must be an array of language codes';

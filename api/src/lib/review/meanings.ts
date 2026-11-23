@@ -1,6 +1,6 @@
 import { db } from '../../db';
 import { lookupWord, type ExpandedDictionaryEntry } from '../dictionary-db';
-import { getNativeLanguageCode } from '../native-language';
+import { getNativeLanguageCode, isMonolingualExplanationsEnabled } from '../native-language';
 
 export const CHOICE_COUNT = 4;
 const CANDIDATE_LIMIT = 12;
@@ -29,8 +29,26 @@ export function senseFromEntry(
   return entry.senses[0]?.gloss.trim() || null;
 }
 
+/**
+ * True when a stored vocab row carries a deliberate target-language (monolingual)
+ * explanation. For English target cards while monolingual mode is OFF, legacy
+ * unlocalized dictionary fallbacks (`translationLang = 'en'`, null/'dictionary'
+ * source) stay eligible for bilingual refresh so existing English decks still localize.
+ */
+export function isMonolingualCardMeaning(
+  row: { translationLang?: string | null; translationSource?: string | null },
+  language: string,
+  monolingualEnabled: boolean,
+): boolean {
+  if (!row.translationLang || row.translationLang !== language) return false;
+  if (monolingualEnabled || language !== 'en') return true;
+  return row.translationSource != null && row.translationSource !== 'dictionary';
+}
+
 export const dictionarySense: SenseLookup = (userId, word, language) =>
-  senseFromEntry(lookupWord(userId, word, language), getNativeLanguageCode(userId));
+  isMonolingualExplanationsEnabled(userId)
+    ? null
+    : senseFromEntry(lookupWord(userId, word, language), getNativeLanguageCode(userId));
 
 export function fillMeaning(
   userId: string,
@@ -39,6 +57,7 @@ export function fillMeaning(
   language: string,
   lookup: SenseLookup,
 ): string | null {
+  if (isMonolingualExplanationsEnabled(userId)) return null;
   const sense = lookup(userId, word, language);
   if (!sense) return null;
   db.prepare(
