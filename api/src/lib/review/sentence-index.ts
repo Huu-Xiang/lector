@@ -2,6 +2,7 @@ import {
   getLanguageConfig,
   isValidLanguageCode,
   splitSentences,
+  stripMarkdown,
   tokenizeWords,
   type LanguageCode,
 } from '../languages';
@@ -201,29 +202,6 @@ export function candidateChapters(index: LibraryIndex, patterns: string[][]): Ch
       (hashes) => hashes.length > 0 && hashes.every((hash) => inBloom(chapter.bloom, hash)),
     ),
   );
-}
-
-const MARKDOWN_RULES: Array<[RegExp, string]> = [
-  [/!\[[^\]]*\]\([^)]*\)/g, ''],
-  [/\[([^\]]*)\]\([^)]*\)/g, '$1'],
-  [/`+/g, ''],
-  [/\*+/g, ''],
-  [/(^|[^\p{L}\p{N}])_+([^_\n]+?)_+(?![\p{L}\p{N}])/gu, '$1$2'],
-];
-
-function stripMarkdown(markdown: string): string {
-  const paragraphs: string[] = [];
-  for (const block of markdown.split(/\n\s*\n/)) {
-    const lines = block
-      .split('\n')
-      .filter((line) => !/^\s*(#|-{3,}\s*$|\*{3,}\s*$)/.test(line))
-      .map((line) => line.replace(/^\s*(>\s?)+/, '').replace(/^\s*[-+]\s+/, ''));
-    let text = lines.join(' ');
-    for (const [pattern, replacement] of MARKDOWN_RULES) text = text.replace(pattern, replacement);
-    text = text.replace(/\s+/g, ' ').trim();
-    if (text) paragraphs.push(text);
-  }
-  return paragraphs.join('\n\n');
 }
 
 const sentenceCache = new Map<string, ChapterSentences | null>();

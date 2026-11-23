@@ -19,6 +19,7 @@ import {
   ChevronRight,
   Ellipsis,
   RefreshCw,
+  Search,
   Sparkles,
   Volume2,
   X,
@@ -77,6 +78,7 @@ export default function TranslationDrawer({
   onExpandDictionary,
   onEnrich,
   onRetranslate,
+  onSearchLibrary,
   onLookupWord,
   onAddToAnki,
   onAddCloze,
@@ -238,6 +240,7 @@ export default function TranslationDrawer({
     onMarkKnown ||
     onIgnore ||
     onRetranslate ||
+    onSearchLibrary ||
     onAddToAnki ||
     onAddCloze
   );
@@ -311,6 +314,18 @@ export default function TranslationDrawer({
           >
             <RefreshCw className="h-3.5 w-3.5" />
             {t('retranslate')}
+          </button>
+        )}
+        {onSearchLibrary && word.trim() && (
+          <button
+            type="button"
+            data-testid="search-in-library-btn"
+            onClick={onSearchLibrary}
+            className="flex w-full min-w-0 flex-1 items-center justify-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+            title={t('findInLibraryTitle')}
+          >
+            <Search className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+            {t('findInLibrary')}
           </button>
         )}
         {/* Anki — single word: pure word card */}
@@ -1141,6 +1156,7 @@ export default function TranslationDrawer({
             onMarkKnown ||
             onIgnore ||
             onRetranslate ||
+            onSearchLibrary ||
             onAddToAnki ||
             onAddCloze) && (
             <div

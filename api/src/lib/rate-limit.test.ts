@@ -1,5 +1,9 @@
 import { describe, expect, test } from 'bun:test';
-import { InMemoryExtractionBurstLimiter, InMemoryTranslationBurstLimiter } from './rate-limit';
+import {
+  InMemoryExtractionBurstLimiter,
+  InMemorySearchBurstLimiter,
+  InMemoryTranslationBurstLimiter,
+} from './rate-limit';
 
 describe('InMemoryExtractionBurstLimiter', () => {
   test('enforces per-user limits without coupling accounts on the same IP', () => {
@@ -105,6 +109,30 @@ describe('InMemoryTranslationBurstLimiter', () => {
     const limiter = new InMemoryTranslationBurstLimiter({ maxKeys: 1 });
     expect(limiter.tryConsume('a', 'gloss')).toBe(true);
     expect(limiter.tryConsume('b', 'gloss')).toBe(false);
+    expect(limiter.sizeForTests()).toBe(1);
+  });
+});
+
+describe('InMemorySearchBurstLimiter', () => {
+  test('enforces per-user search bursts, isolates users, resets after window, and bounds keys', () => {
+    let now = 0;
+    const limiter = new InMemorySearchBurstLimiter({
+      now: () => now,
+      windowMs: 1_000,
+      maxKeys: 2,
+      userPerWindow: 2,
+    });
+
+    expect(limiter.tryConsume('alice')).toBe(true);
+    expect(limiter.tryConsume('alice')).toBe(true);
+    expect(limiter.tryConsume('alice')).toBe(false);
+    expect(limiter.tryConsume('bob')).toBe(true);
+    // Hard key bound rejects unseen users until window expires.
+    expect(limiter.tryConsume('carol')).toBe(false);
+    expect(limiter.sizeForTests()).toBe(2);
+
+    now = 1_000;
+    expect(limiter.tryConsume('carol')).toBe(true);
     expect(limiter.sizeForTests()).toBe(1);
   });
 });

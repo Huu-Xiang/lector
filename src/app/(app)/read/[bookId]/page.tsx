@@ -1,7 +1,7 @@
 'use client';
 
 import { forgetLesson, rememberLesson } from '@/lib/offline/sync';
-import { useEffect, useState, useCallback, use, useMemo, useRef } from 'react';
+import { useEffect, useLayoutEffect, useState, useCallback, use, useMemo, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import PageOutline from '@/components/PageOutline';
@@ -101,6 +101,10 @@ import {
 import { useActiveLanguage } from '@/utils/hooks';
 import { patchWordState } from '@/components/MarkdownReader/optimistic-word-state';
 import type { WordSource } from '@/components/MarkdownReader/types';
+import {
+  consumeConcordanceJump,
+  type ConcordanceJumpPayload,
+} from '@/lib/concordance-jump';
 import {
   dismissOnboarding,
   encounteredOnboardingTerms,
@@ -211,6 +215,42 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
   const [segments, setSegments] = useState<AudioTranscriptSegment[]>([]);
   const [listenMode, setListenMode] = useState(false);
   const [editing, setEditing] = useState(false);
+  const [concordanceJump, setConcordanceJump] = useState<ConcordanceJumpPayload | null>(null);
+  const consumedJumpLessonRef = useRef<string | null>(null);
+
+  // Consume one-shot concordance jump coordinates before paint/effects so
+  // MarkdownReader suppresses saved scrollPosition restoration cleanly (KTD8).
+  useLayoutEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (consumedJumpLessonRef.current !== lessonId) {
+      consumedJumpLessonRef.current = lessonId;
+      setConcordanceJump(null);
+    }
+    const payload = consumeConcordanceJump(lessonId, window.location.search);
+    if (payload) {
+      setConcordanceJump(payload);
+    }
+  }, [lessonId]);
+
+  // Strip opaque jump query params from the URL once the payload is in state so
+  // browser refreshes do not re-trigger jump behavior.
+  useEffect(() => {
+    if (!concordanceJump || typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    if (!params.has('jump') && !params.has('segment')) return;
+    params.delete('jump');
+    params.delete('segment');
+    const nextSearch = params.toString();
+    window.history.replaceState(
+      window.history.state,
+      '',
+      `${window.location.pathname}${nextSearch ? `?${nextSearch}` : ''}${window.location.hash}`,
+    );
+  }, [concordanceJump]);
+
+  const dismissConcordanceJump = useCallback(() => {
+    setConcordanceJump(null);
+  }, []);
   const [readerWordStates, setReaderWordStates] = useState<Map<string, WordState>>(
     () => peekKnownWordsMap() ?? new Map(),
   );
@@ -1044,6 +1084,12 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     },
     [handleWordClick, wordPanel.sentence],
   );
+
+  const handleSearchInLibrary = useCallback(() => {
+    const query = wordPanel.word.trim();
+    if (!query) return;
+    router.push(`/?q=${encodeURIComponent(query)}`);
+  }, [router, wordPanel.word]);
 
   // Resolves the existing vocab entry, awaiting an in-flight lookup or auto-save if needed.
   // Checking existingEntryLookup.current first ensures we never miss an in-flight autoSaveLookups write.
@@ -2292,6 +2338,8 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
             prevLesson={lessonLink(prevLesson)}
             nextLesson={lessonLink(nextLesson)}
             headerAction={listenHeaderAction}
+            concordanceJump={concordanceJump}
+            onDismissConcordanceJump={dismissConcordanceJump}
           />
         )}
       </div>
@@ -2358,6 +2406,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
           repeatLookup={repeatLookup && autoSaveLookups === false}
           onEnrich={canEnrich ? enrichTranslation : undefined}
           onRetranslate={retranslateWithAi}
+          onSearchLibrary={wordPanel.word.trim() ? handleSearchInLibrary : undefined}
           onLookupWord={handleNestedLookup}
           onAddToAnki={!cloud && !wordPanel.word.includes(' ') ? addWordToAnki : undefined}
           onAddCloze={!cloud && wordPanel.word.includes(' ') ? addClozeToAnki : undefined}

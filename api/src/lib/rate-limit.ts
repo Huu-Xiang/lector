@@ -38,6 +38,65 @@ export interface ExtractionBurstLimiterOptions {
   ipPerWindow?: number;
 }
 
+export interface SearchBurstLimiter {
+  tryConsume(userId: string): boolean;
+}
+
+export interface SearchBurstLimiterOptions {
+  now?: () => number;
+  windowMs?: number;
+  maxKeys?: number;
+  userPerWindow?: number;
+}
+
+/**
+ * Fixed-window burst protection for library concordance searches. Keeps one
+ * noisy tenant from monopolizing the scan loop while letting interactive
+ * debounced typing flow cleanly.
+ */
+export class InMemorySearchBurstLimiter implements SearchBurstLimiter {
+  private readonly entries = new Map<string, BurstEntry>();
+  private readonly now: () => number;
+  private readonly windowMs: number;
+  private readonly maxKeys: number;
+  private readonly userPerWindow: number;
+
+  constructor(options: SearchBurstLimiterOptions = {}) {
+    this.now = options.now ?? Date.now;
+    this.windowMs = options.windowMs ?? 60_000;
+    this.maxKeys = options.maxKeys ?? 20_000;
+    this.userPerWindow = options.userPerWindow ?? 60;
+  }
+
+  tryConsume(userId: string): boolean {
+    const now = this.now();
+    this.evictExpired(now);
+    if (this.userPerWindow <= 0) return false;
+
+    const key = `search:${userId}`;
+    let entry = this.entries.get(key);
+    if (!entry) {
+      if (this.entries.size >= this.maxKeys) return false;
+      entry = { count: 0, expiresAt: now + this.windowMs };
+      this.entries.set(key, entry);
+    }
+    if (entry.count >= this.userPerWindow) return false;
+    entry.count += 1;
+    return true;
+  }
+
+  /** Visible only for deterministic unit tests. */
+  sizeForTests(): number {
+    return this.entries.size;
+  }
+
+  private evictExpired(now: number): void {
+    for (const [key, entry] of this.entries) {
+      if (entry.expiresAt <= now) this.entries.delete(key);
+    }
+  }
+}
+
 /**
  * Fixed-window protection for URL fetch/extraction work. Authenticated users
  * and source IPs have separate ceilings: account rotation cannot bypass the
@@ -166,3 +225,4 @@ export const prefetchDailyLimiter = new InMemoryTranslationBurstLimiter({
   prefetchPerWindow: PREFETCH_DAILY_AI_LIMIT,
 });
 export const extractionBurstLimiter = new InMemoryExtractionBurstLimiter();
+export const searchBurstLimiter = new InMemorySearchBurstLimiter();

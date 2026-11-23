@@ -1354,6 +1354,8 @@ export function migrateFoldWordKeys(database: Database) {
  */
 function ensurePartitionIndexes(database: Database) {
   database.exec(`
+    CREATE INDEX IF NOT EXISTS idx_lessons_user_lang ON lessons(userId, language);
+    CREATE INDEX IF NOT EXISTS idx_collections_user_lang_group ON collections(userId, language, groupId);
     CREATE INDEX IF NOT EXISTS idx_knownWords_user_lang_state ON knownWords(userId, language, state);
     CREATE INDEX IF NOT EXISTS idx_vocab_user_lang_created ON vocab(userId, language, createdAt);
     CREATE INDEX IF NOT EXISTS idx_vocab_user_lang_state ON vocab(userId, language, state);

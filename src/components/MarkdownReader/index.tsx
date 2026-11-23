@@ -3,8 +3,14 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { ArrowLeft, ChevronLeft, ChevronRight, Languages, SquarePen } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ChevronRight, Languages, SquarePen, X } from 'lucide-react';
 import { getLessonReadings, updateLessonProgress } from '@/lib/data-layer';
+import {
+  findMatchingBlockId,
+  hasConcordanceJumpInSearch,
+  readableBlockText,
+  type ConcordanceJumpPayload,
+} from '@/lib/concordance-jump';
 import { createTrailingThrottle } from './throttle';
 import {
   foldWord,
@@ -56,6 +62,8 @@ export default function MarkdownReader({
   prevLesson,
   nextLesson,
   headerAction,
+  concordanceJump = null,
+  onDismissConcordanceJump,
 }: MarkdownReaderProps) {
   const t = useTranslations('reader.markdown');
   const router = useRouter();
@@ -125,6 +133,32 @@ export default function MarkdownReader({
 
   const [seekTarget, setSeekTarget] = useState<SeekTarget | null>(null);
   const [activeSegmentIndex, setActiveSegmentIndex] = useState<number | null>(null);
+  const [highlightedBlockId, setHighlightedBlockId] = useState<number | null>(null);
+  const [concordanceSegmentIndex, setConcordanceSegmentIndex] = useState<number | null>(null);
+  const resolvedJumpRef = useRef<ConcordanceJumpPayload | null>(null);
+  const hasConcordanceHighlight = highlightedBlockId !== null || concordanceSegmentIndex !== null;
+
+  const clearConcordanceHighlight = useCallback(() => {
+    setHighlightedBlockId(null);
+    setConcordanceSegmentIndex(null);
+    onDismissConcordanceJump?.();
+  }, [onDismissConcordanceJump]);
+
+  const handleReaderWordClick = useCallback<MarkdownReaderProps['onWordClick']>(
+    (word, sentence, source, occurrence) => {
+      if (hasConcordanceHighlight) clearConcordanceHighlight();
+      onWordClick(word, sentence, source, occurrence);
+    },
+    [hasConcordanceHighlight, clearConcordanceHighlight, onWordClick],
+  );
+
+  // Reset local concordance highlights when switching to another lesson.
+  useEffect(() => {
+    setHighlightedBlockId(null);
+    setConcordanceSegmentIndex(null);
+    resolvedJumpRef.current = null;
+  }, [lesson.id]);
+
   const seekNonce = useRef(0);
   const handleSeek = useCallback((seconds: number, segmentIndex: number) => {
     seekNonce.current += 1;
@@ -137,11 +171,12 @@ export default function MarkdownReader({
   const canEdit = !transcript && !!onSaveText;
 
   const startEdit = useCallback(() => {
+    if (hasConcordanceHighlight) clearConcordanceHighlight();
     setDraftContent(lesson.textContent);
     setSaveError(null);
     setIsEditing(true);
     onEditingChange?.(true);
-  }, [lesson.textContent, onEditingChange]);
+  }, [lesson.textContent, onEditingChange, hasConcordanceHighlight, clearConcordanceHighlight]);
 
   const cancelEdit = useCallback(() => {
     setIsEditing(false);
@@ -240,10 +275,90 @@ export default function MarkdownReader({
   useEffect(() => {
     if (restoredForLesson.current === lesson.id) return;
     restoredForLesson.current = lesson.id;
+    if (
+      concordanceJump ||
+      (typeof window !== 'undefined' && hasConcordanceJumpInSearch(window.location.search))
+    ) {
+      return;
+    }
     if (containerRef.current && lesson.progress_scrollPosition > 0) {
       containerRef.current.scrollTop = lesson.progress_scrollPosition;
     }
-  }, [lesson.id, lesson.progress_scrollPosition]);
+  }, [lesson.id, lesson.progress_scrollPosition, concordanceJump]);
+
+  // Post-mount concordance jump: locate the matching rendered block (or
+  // validated YouTube transcript segment), scroll it into view, and apply a
+  // dismissible highlight (KTD8).
+  useEffect(() => {
+    if (!concordanceJump || concordanceJump.lessonId !== lesson.id || isEditing) return;
+    if (resolvedJumpRef.current === concordanceJump) return;
+
+    const root = containerRef.current;
+    if (!root) return;
+
+    if (transcript) {
+      let targetIdx: number | null = null;
+      if (
+        typeof concordanceJump.segmentIndex === 'number' &&
+        concordanceJump.segmentIndex >= 0 &&
+        concordanceJump.segmentIndex < transcript.segments.length
+      ) {
+        targetIdx = concordanceJump.segmentIndex;
+      } else {
+        const blocks = transcript.segments.map((seg, idx) => ({
+          blockId: idx,
+          text: seg.text,
+        }));
+        targetIdx = findMatchingBlockId(blocks, concordanceJump, pack);
+      }
+      resolvedJumpRef.current = concordanceJump;
+      if (targetIdx !== null) {
+        setConcordanceSegmentIndex(targetIdx);
+        setHighlightedBlockId(null);
+        requestAnimationFrame(() => {
+          root
+            .querySelector<HTMLElement>(`[data-segment-index="${targetIdx}"]`)
+            ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+      }
+      return;
+    }
+
+    const elements = Array.from(root.querySelectorAll<HTMLElement>('[data-block-id]'));
+    if (elements.length === 0) return;
+    const blocks = elements
+      .map((el) => {
+        const rawId = el.getAttribute('data-block-id');
+        const blockId = rawId !== null ? Number(rawId) : NaN;
+        return Number.isFinite(blockId) ? { blockId, text: readableBlockText(el) } : null;
+      })
+      .filter((item): item is { blockId: number; text: string } => item !== null);
+
+    resolvedJumpRef.current = concordanceJump;
+    const matchedId = findMatchingBlockId(blocks, concordanceJump, pack);
+    if (matchedId !== null) {
+      setHighlightedBlockId(matchedId);
+      setConcordanceSegmentIndex(null);
+      requestAnimationFrame(() => {
+        root
+          .querySelector<HTMLElement>(`[data-block-id="${matchedId}"]`)
+          ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+    }
+  }, [concordanceJump, lesson.id, lesson.textContent, transcript, isEditing, pack]);
+
+  // Dismiss concordance highlight on Escape when the translation drawer is closed.
+  useEffect(() => {
+    if (!hasConcordanceHighlight || wordPanelOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        clearConcordanceHighlight();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [hasConcordanceHighlight, wordPanelOpen, clearConcordanceHighlight]);
 
   // Persist scroll progress at most once per second (trailing edge, latest
   // position wins) instead of one PUT per scroll event (#234); pending state
@@ -324,17 +439,26 @@ export default function MarkdownReader({
   const lastPhraseAt = useRef(0);
   const handleBlankClick = useCallback(
     (event: React.MouseEvent<HTMLDivElement>) => {
-      if (!onClearSelection || isEditing) return;
+      if ((!onClearSelection && !hasConcordanceHighlight) || isEditing) return;
       if (Date.now() - lastPhraseAt.current < 500) return;
       const selection = window.getSelection();
       if (selection && !selection.isCollapsed) return;
       const target = event.target as HTMLElement;
       if (target.closest('[data-leaf], a, button, input, textarea, video, iframe')) return;
-      clearPhraseHighlight();
-      setActiveWord(null);
-      onClearSelection();
+      if (hasConcordanceHighlight) clearConcordanceHighlight();
+      if (onClearSelection) {
+        clearPhraseHighlight();
+        setActiveWord(null);
+        onClearSelection();
+      }
     },
-    [onClearSelection, isEditing, clearPhraseHighlight],
+    [
+      onClearSelection,
+      hasConcordanceHighlight,
+      isEditing,
+      clearConcordanceHighlight,
+      clearPhraseHighlight,
+    ],
   );
 
   // Drop the word/phrase highlight when the drawer closes (Esc, the X, or a
@@ -378,9 +502,9 @@ export default function MarkdownReader({
       setActiveWord(null);
       setHighlightedPhrase(words);
 
-      onWordClick(text, wordElement ? findSentence(wordElement) : '');
+      handleReaderWordClick(text, wordElement ? findSentence(wordElement) : '');
     },
-    [onWordClick, phraseWords, findSentence],
+    [handleReaderWordClick, phraseWords, findSentence],
   );
 
   // Handle text selection for phrases
@@ -461,7 +585,7 @@ export default function MarkdownReader({
                   onActivate={(text) => {
                     clearPhraseHighlight();
                     setActiveWord({ blockId: TITLE_BLOCK_ID, wordIndex: thisIndex });
-                    onWordClick(text, lesson.title.trim());
+                    handleReaderWordClick(text, lesson.title.trim());
                   }}
                 />
               );
@@ -528,6 +652,28 @@ export default function MarkdownReader({
         onClick={handleBlankClick}
         className="flex-1 overflow-auto overscroll-y-contain pb-[env(safe-area-inset-bottom)] print:block print:h-auto print:overflow-visible"
       >
+        {hasConcordanceHighlight && !isEditing && (
+          <div
+            data-testid="concordance-highlight-chip"
+            className="sticky top-2 z-20 mx-auto flex w-fit items-center gap-2 rounded-full border border-[var(--gold-lip)] bg-card/95 px-3 py-1 text-xs font-medium text-foreground shadow-sm backdrop-blur print:hidden"
+          >
+            <span>
+              {concordanceJump?.q
+                ? t('jumpHighlightQuery', { query: concordanceJump.q })
+                : t('jumpHighlight')}
+            </span>
+            <button
+              type="button"
+              onClick={clearConcordanceHighlight}
+              data-testid="dismiss-concordance-highlight"
+              aria-label={t('dismissHighlight')}
+              title={t('dismissHighlight')}
+              className="grid size-5 place-items-center rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+            >
+              <X className="h-3.5 w-3.5" aria-hidden="true" />
+            </button>
+          </div>
+        )}
         {isEditing ? (
           <div className="mx-auto max-w-[38em] px-4 py-8 sm:px-8 sm:py-12">
             <textarea
@@ -573,7 +719,8 @@ export default function MarkdownReader({
               highlightedPhrase={highlightedPhrase}
               activeWord={activeWord}
               activeSegmentIndex={activeSegmentIndex}
-              onWordClick={onWordClick}
+              concordanceSegmentIndex={concordanceSegmentIndex}
+              onWordClick={handleReaderWordClick}
               onActivateWord={setActiveWord}
               onClearPhrase={clearPhraseHighlight}
               onSeek={handleSeek}
@@ -590,8 +737,9 @@ export default function MarkdownReader({
             readings={readings}
             annotationMode={annotationMode}
             highlightedPhrase={highlightedPhrase}
+            highlightedBlockId={highlightedBlockId}
             activeWord={activeWord}
-            onWordClick={onWordClick}
+            onWordClick={handleReaderWordClick}
             onActivateWord={setActiveWord}
             onClearPhrase={clearPhraseHighlight}
           />

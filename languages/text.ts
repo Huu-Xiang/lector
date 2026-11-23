@@ -199,3 +199,192 @@ export function foldForComparison(text: string, pack: LanguageConfig): string {
   if (pack.code === 'ar') return foldArabicKey(text);
   return stripMarks(text);
 }
+
+export interface StripMarkdownOptions {
+  /**
+   * When true, keep heading text by stripping leading `#` markers (used by
+   * library concordance search and text ListenAlong). When false (default),
+   * drop heading lines entirely (matching `sentence-index.ts`).
+   */
+  keepHeadings?: boolean;
+}
+
+const PURE_HR_LINE = /^\s*(-{3,}|\*{3,}|_{3,})\s*$/;
+const HEADING_LINE = /^\s*#/;
+const HEADING_PREFIX = /^\s*#{1,6}(?:\s+|$)/;
+const HEADING_SUFFIX = /\s+#+\s*$/;
+const UNDERSCORE_WORD_CHAR = /[\p{L}\p{N}]/u;
+
+function stripInlineImages(text: string): string {
+  if (!text.includes('![')) return text;
+  let out = '';
+  let i = 0;
+  const n = text.length;
+  let nextCloseBracket = -2;
+  let nextCloseParen = -2;
+  while (i < n) {
+    if (text[i] === '!' && i + 1 < n && text[i + 1] === '[') {
+      const contentStart = i + 2;
+      if (nextCloseBracket !== -1 && nextCloseBracket < contentStart) {
+        nextCloseBracket = text.indexOf(']', contentStart);
+      }
+      const closeBracket = nextCloseBracket;
+      if (closeBracket !== -1 && closeBracket + 1 < n && text[closeBracket + 1] === '(') {
+        const urlStart = closeBracket + 2;
+        if (nextCloseParen !== -1 && nextCloseParen < urlStart) {
+          nextCloseParen = text.indexOf(')', urlStart);
+        }
+        const closeParen = nextCloseParen;
+        if (closeParen !== -1) {
+          i = closeParen + 1;
+          continue;
+        }
+      }
+    }
+    out += text[i];
+    i += 1;
+  }
+  return out;
+}
+
+function stripInlineLinks(text: string): string {
+  if (!text.includes('[')) return text;
+  let out = '';
+  let i = 0;
+  const n = text.length;
+  let nextCloseBracket = -2;
+  let nextCloseParen = -2;
+  while (i < n) {
+    if (text[i] === '[') {
+      const contentStart = i + 1;
+      if (nextCloseBracket !== -1 && nextCloseBracket < contentStart) {
+        nextCloseBracket = text.indexOf(']', contentStart);
+      }
+      const closeBracket = nextCloseBracket;
+      if (closeBracket !== -1 && closeBracket + 1 < n && text[closeBracket + 1] === '(') {
+        const urlStart = closeBracket + 2;
+        if (nextCloseParen !== -1 && nextCloseParen < urlStart) {
+          nextCloseParen = text.indexOf(')', urlStart);
+        }
+        const closeParen = nextCloseParen;
+        if (closeParen !== -1) {
+          out += text.slice(contentStart, closeBracket);
+          i = closeParen + 1;
+          continue;
+        }
+      }
+    }
+    out += text[i];
+    i += 1;
+  }
+  return out;
+}
+
+function prevCharIsWord(text: string, index: number): boolean {
+  if (index <= 0) return false;
+  const code = text.charCodeAt(index - 1);
+  if (code >= 0xdc00 && code <= 0xdfff && index >= 2) {
+    return UNDERSCORE_WORD_CHAR.test(text.slice(index - 2, index));
+  }
+  return UNDERSCORE_WORD_CHAR.test(text[index - 1]);
+}
+
+function nextCharIsWord(text: string, index: number): boolean {
+  if (index >= text.length) return false;
+  const code = text.charCodeAt(index);
+  if (code >= 0xd800 && code <= 0xdbff && index + 1 < text.length) {
+    return UNDERSCORE_WORD_CHAR.test(text.slice(index, index + 2));
+  }
+  return UNDERSCORE_WORD_CHAR.test(text[index]);
+}
+
+function stripUnderscoreEmphasis(text: string): string {
+  if (!text.includes('_')) return text;
+  const n = text.length;
+  const dropRanges: Array<[number, number]> = [];
+  let openStart = -1;
+  let openEnd = -1;
+  let i = 0;
+
+  while (i < n) {
+    const ch = text[i];
+    if (ch === '\n') {
+      openStart = -1;
+      openEnd = -1;
+      i += 1;
+      continue;
+    }
+    if (ch !== '_') {
+      i += 1;
+      continue;
+    }
+    const runStart = i;
+    while (i < n && text[i] === '_') i += 1;
+    const runEnd = i;
+    const prevIsWord = prevCharIsWord(text, runStart);
+    const nextIsWord = nextCharIsWord(text, runEnd);
+
+    if (openStart !== -1 && !nextIsWord && runStart > openEnd) {
+      dropRanges.push([openStart, openEnd], [runStart, runEnd]);
+      openStart = -1;
+      openEnd = -1;
+    } else if (!prevIsWord && runEnd < n && text[runEnd] !== '\n') {
+      if (openStart === -1 || nextIsWord) {
+        openStart = runStart;
+        openEnd = runEnd;
+      }
+    }
+  }
+
+  if (dropRanges.length === 0) return text;
+  let out = '';
+  let cursor = 0;
+  for (const [start, end] of dropRanges) {
+    out += text.slice(cursor, start);
+    cursor = end;
+  }
+  out += text.slice(cursor);
+  return out;
+}
+
+function stripInlineMarkdown(text: string): string {
+  let out = stripInlineImages(text);
+  out = stripInlineLinks(out);
+  out = out.replace(/[`*]+/g, '');
+  out = stripUnderscoreEmphasis(out);
+  return out.replace(/\s+/g, ' ').trim();
+}
+
+/**
+ * Strip Markdown syntax into clean `\n\n`-separated prose paragraphs in linear
+ * time (no backtracking regexes on untrusted underscores or brackets).
+ */
+export function stripMarkdown(markdown: string, options?: StripMarkdownOptions): string {
+  const keepHeadings = options?.keepHeadings === true;
+  const paragraphs: string[] = [];
+  const flushLines = (lines: string[]) => {
+    if (lines.length === 0) return;
+    const text = stripInlineMarkdown(lines.join(' '));
+    if (text) paragraphs.push(text);
+    lines.length = 0;
+  };
+
+  for (const block of markdown.replace(/\r\n?/g, '\n').split(/\n\s*\n/)) {
+    const buffered: string[] = [];
+    for (const rawLine of block.split('\n')) {
+      if (PURE_HR_LINE.test(rawLine)) continue;
+      if (HEADING_LINE.test(rawLine)) {
+        if (!keepHeadings) continue;
+        flushLines(buffered);
+        const headingText = stripInlineMarkdown(
+          rawLine.replace(HEADING_PREFIX, '').replace(HEADING_SUFFIX, ''),
+        );
+        if (headingText) paragraphs.push(headingText);
+        continue;
+      }
+      buffered.push(rawLine.replace(/^\s*(>\s?)+/, '').replace(/^\s*[-+]\s+/, ''));
+    }
+    flushLines(buffered);
+  }
+  return paragraphs.join('\n\n');
+}

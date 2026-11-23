@@ -1249,6 +1249,21 @@
       "label": "书库排列方式",
       "grid": "网格视图",
       "list": "列表视图"
+    },
+    "search": {
+      "placeholder": "搜索书库中的词句…",
+      "ariaLabel": "搜索书库",
+      "clear": "清除搜索",
+      "scopeLabel": "搜索范围",
+      "allLibrary": "全部书库",
+      "ungrouped": "未分组",
+      "searching": "正在搜索…",
+      "error": "无法搜索书库。",
+      "retry": "重试",
+      "noResults": "没有找到包含“{query}”的句子。",
+      "searchAllLibrary": "在全部书库中搜索",
+      "resultCount": "{count} 条匹配",
+      "truncated": "仅显示前 {count} 条匹配"
     }
   },
   "readingLevel": {
@@ -2289,7 +2304,10 @@
       "openOnYouTube": "在 YouTube 上打开",
       "playFromHere": "从这里播放",
       "playFrom": "从 {time} 开始播放",
-      "openLink": "在新标签页打开原链接"
+      "openLink": "在新标签页打开原链接",
+      "jumpHighlight": "搜索匹配",
+      "jumpHighlightQuery": "匹配“{query}”",
+      "dismissHighlight": "取消高亮"
     },
     "drawer": {
       "wordDefinition": "单词释义",
@@ -2354,6 +2372,8 @@
       "ignore": "✕ 忽略",
       "retranslateTitle": "强制重新用 AI 查询（忽略词典）",
       "retranslate": "用 AI 重新翻译",
+      "findInLibrary": "在书库中查找",
+      "findInLibraryTitle": "在书库中搜索包含该词的句子",
       "ankiAdded": "✓ 已添加到 Anki",
       "ankiAdding": "正在添加…",
       "ankiError": "Anki 出错，点击重试",

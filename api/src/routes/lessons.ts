@@ -23,10 +23,129 @@ import {
   validateOwnedReference,
   validateSafeInteger,
 } from '../lib/persisted-input';
+import { ConcurrencyGate, gateMiddleware } from '../lib/concurrency-gate';
+import {
+  DEFAULT_SEARCH_LIMIT,
+  MAX_QUERY_CHARS,
+  MAX_SEARCH_LIMIT,
+  searchLessonsInCorpus,
+  type SearchableLesson,
+} from '../lib/lesson-search';
+import { searchBurstLimiter, type SearchBurstLimiter } from '../lib/rate-limit';
 
-const app = new Hono();
+export interface LessonsRouteDeps {
+  searchLimiter?: SearchBurstLimiter;
+  searchGate?: ConcurrencyGate;
+}
 
-// GET /api/lessons/:id
+const defaultSearchGate = new ConcurrencyGate(8, 2);
+
+/**
+ * The words of a lesson, in document order, for the annotation layer (#289 4.4).
+ *
+ * Splits with the lesson's STORED segmentation, so the words asked about are the
+ * words the reader draws (#289 4.2). A lesson with none falls back to the pack's
+ * default engine, which is what the reader falls back to as well.
+ *
+ * Exported for its own test. Splitting any other way keys the readings to words
+ * that no reader span carries, and the reader then prints nothing.
+ */
+export function lessonReadingWords(
+  lesson: Pick<LessonRow, 'textContent' | 'segmentWords'>,
+  pack: LanguageConfig,
+): string[] {
+  return tokenizeWords(
+    lesson.textContent,
+    pack,
+    makeWordSegmentation(parseStoredSegmentWords(lesson.segmentWords)),
+  ).map((token) => token.text);
+}
+
+export function makeLessonsRoutes(deps: LessonsRouteDeps = {}): Hono {
+  const searchLimiter = deps.searchLimiter ?? searchBurstLimiter;
+  const searchGate = deps.searchGate ?? defaultSearchGate;
+  const app = new Hono();
+
+  // GET /api/lessons/search — concordance sentence search across the learner's
+  // active-language library (or one group / collection). Registered BEFORE /:id
+  // so "search" is never captured as a lesson identifier.
+  app.get('/search', gateMiddleware(searchGate), (c) => {
+    const userId = getCurrentUserId(c);
+    if (!searchLimiter.tryConsume(userId)) {
+      c.header('Retry-After', '60');
+      return c.json({ error: 'rate_limited', retryAfterSeconds: 60 }, 429);
+    }
+
+    const rawQ = c.req.query('q') ?? '';
+    const q = normalizeText(rawQ).trim();
+    if (!q) {
+      return c.json({ error: 'q is required' }, 400);
+    }
+    if (q.length > MAX_QUERY_CHARS) {
+      return c.json({ error: `q must be at most ${MAX_QUERY_CHARS} characters` }, 400);
+    }
+
+    const rawLimit = c.req.query('limit');
+    let limit = DEFAULT_SEARCH_LIMIT;
+    if (rawLimit !== undefined && rawLimit !== '') {
+      if (!/^\d+$/.test(rawLimit)) {
+        return c.json({ error: 'limit must be a positive integer' }, 400);
+      }
+      const parsed = Number.parseInt(rawLimit, 10);
+      if (!Number.isSafeInteger(parsed) || parsed < 1) {
+        return c.json({ error: 'limit must be a positive integer' }, 400);
+      }
+      limit = Math.min(parsed, MAX_SEARCH_LIMIT);
+    }
+
+    const lang = resolveLanguage(c.req.query('language'), userId);
+    const groupId = c.req.query('groupId')?.trim() || undefined;
+    const collectionId = c.req.query('collectionId')?.trim() || undefined;
+
+    const where: string[] = ['l.userId = ?', 'l.language = ?'];
+    const params: SQLQueryBindings[] = [userId, lang];
+
+    if (groupId === 'ungrouped') {
+      where.push('c.groupId IS NULL');
+    } else if (groupId) {
+      // Composite-PK join enforces tenant ownership on both collections and groups.
+      where.push('c.groupId = ?', 'g.id IS NOT NULL');
+      params.push(groupId);
+    }
+
+    if (collectionId) {
+      where.push('l.collectionId = ?');
+      params.push(collectionId);
+    }
+
+    const stmt = db.prepare(`
+      SELECT
+        l.id,
+        l.title,
+        l.collectionId,
+        c.title AS collectionTitle,
+        c.groupId AS groupId,
+        g.name AS groupName,
+        l.textContent,
+        l.sourceType,
+        l.segments,
+        l.segmentWords
+      FROM lessons l
+      LEFT JOIN collections c
+        ON c.id = l.collectionId AND c.userId = l.userId AND c.language = l.language
+      LEFT JOIN collection_groups g
+        ON g.id = c.groupId AND g.userId = c.userId
+      WHERE ${where.join(' AND ')}
+      ORDER BY l.lastReadAt DESC, l.sortOrder ASC, l.id ASC
+    `);
+
+    const pack = getLanguageConfig(lang);
+    const rows = stmt.iterate(...params) as Iterable<SearchableLesson>;
+    const result = searchLessonsInCorpus(rows, q, pack, { limit });
+    return c.json(result);
+  });
+
+  // GET /api/lessons/:id
 // By-id routes scope to the active language (defense-in-depth): a stale
 // cross-language id 404s rather than reading/mutating another language's lesson.
 app.get('/:id', (c) => {
@@ -64,27 +183,6 @@ app.get('/:id/segments', (c) => {
     .all(userId, id) as Pick<TranscriptSegmentRow, 'idx' | 'startMs' | 'endMs' | 'text'>[];
   return c.json(segments);
 });
-
-/**
- * The words of a lesson, in document order, for the annotation layer (#289 4.4).
- *
- * Splits with the lesson's STORED segmentation, so the words asked about are the
- * words the reader draws (#289 4.2). A lesson with none falls back to the pack's
- * default engine, which is what the reader falls back to as well.
- *
- * Exported for its own test. Splitting any other way keys the readings to words
- * that no reader span carries, and the reader then prints nothing.
- */
-export function lessonReadingWords(
-  lesson: Pick<LessonRow, 'textContent' | 'segmentWords'>,
-  pack: LanguageConfig,
-): string[] {
-  return tokenizeWords(
-    lesson.textContent,
-    pack,
-    makeWordSegmentation(parseStoredSegmentWords(lesson.segmentWords)),
-  ).map((token) => token.text);
-}
 
 // GET /api/lessons/:id/readings (#289 4.4)
 // Per-word readings for the reader's annotation layer, keyed by the FOLDED word
@@ -363,4 +461,8 @@ app.put('/:id/progress', async (c) => {
   return c.json({ success: true });
 });
 
+  return app;
+}
+
+const app = makeLessonsRoutes();
 export default app;

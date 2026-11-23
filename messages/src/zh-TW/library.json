@@ -174,6 +174,21 @@
       "label": "書庫排列方式",
       "grid": "網格檢視",
       "list": "清單檢視"
+    },
+    "search": {
+      "placeholder": "搜尋書庫中的詞句…",
+      "ariaLabel": "搜尋書庫",
+      "clear": "清除搜尋",
+      "scopeLabel": "搜尋範圍",
+      "allLibrary": "全部書庫",
+      "ungrouped": "未分組",
+      "searching": "正在搜尋…",
+      "error": "無法搜尋書庫。",
+      "retry": "重試",
+      "noResults": "找不到包含「{query}」的句子。",
+      "searchAllLibrary": "在全部書庫中搜尋",
+      "resultCount": "{count} 筆符合",
+      "truncated": "僅顯示前 {count} 筆符合"
     }
   }
 }

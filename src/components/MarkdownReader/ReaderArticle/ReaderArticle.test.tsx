@@ -120,4 +120,56 @@ describe('ReaderArticle', () => {
 
     expect(readerBlockPropsEqual(base, affected)).toBe(false);
   });
+
+  it('renders data-block-id on blocks and re-renders only the block whose highlightedBlockId changed', () => {
+    const html = renderToStaticMarkup(
+      <ReaderArticle
+        content={'# Titre\n\nBonjour le monde.\n\nMerci beaucoup.'}
+        pack={fr}
+        prose={DEFAULT_PROSE_STYLE}
+        segmentation={null}
+        knownWordsMap={new Map()}
+        readings={null}
+        annotationMode="off"
+        highlightedPhrase={[]}
+        highlightedBlockId={9}
+        activeWord={null}
+        onWordClick={vi.fn()}
+        onActivateWord={vi.fn()}
+        onClearPhrase={vi.fn()}
+      />,
+    );
+
+    expect(html).toContain('data-block-id="0"');
+    expect(html).toContain('data-block-id="9"');
+    expect(html).toContain('data-concordance-highlighted="true"');
+
+    const onWordClick = vi.fn();
+    const onActivateWord = vi.fn();
+    const onClearPhrase = vi.fn();
+    const base = makeBlockProps({
+      blockId: 20,
+      highlightedBlockId: null,
+      onWordClick,
+      onActivateWord,
+      onClearPhrase,
+    });
+    const otherBlockHighlighted = makeBlockProps({
+      blockId: 20,
+      highlightedBlockId: 9,
+      onWordClick,
+      onActivateWord,
+      onClearPhrase,
+    });
+    const thisBlockHighlighted = makeBlockProps({
+      blockId: 20,
+      highlightedBlockId: 20,
+      onWordClick,
+      onActivateWord,
+      onClearPhrase,
+    });
+
+    expect(readerBlockPropsEqual(base, otherBlockHighlighted)).toBe(true);
+    expect(readerBlockPropsEqual(base, thisBlockHighlighted)).toBe(false);
+  });
 });

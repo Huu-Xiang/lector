@@ -43,6 +43,8 @@ interface TranscriptReaderProps {
   highlightedPhrase: string[];
   activeWord: ActiveReaderWord | null;
   activeSegmentIndex: number | null;
+  /** Concordance search jump highlight, kept distinct from video-seek `activeSegmentIndex`. */
+  concordanceSegmentIndex?: number | null;
   onWordClick: (word: string, sentence: string, source?: WordSource, occurrence?: string) => void;
   onActivateWord: (word: ActiveReaderWord) => void;
   onClearPhrase: () => void;
@@ -69,6 +71,7 @@ function TranscriptReader({
   highlightedPhrase,
   activeWord,
   activeSegmentIndex,
+  concordanceSegmentIndex = null,
   onWordClick,
   onActivateWord,
   onClearPhrase,
@@ -104,17 +107,23 @@ function TranscriptReader({
         };
 
         let wordIndex = -1;
+        const isActiveSegment = activeSegmentIndex === segmentIndex;
+        const isConcordanceSegment = concordanceSegmentIndex === segmentIndex;
+        const segmentHighlightClass = isActiveSegment && isConcordanceSegment
+          ? 'bg-[color-mix(in_srgb,var(--clay)_12%,transparent)] ring-2 ring-[var(--gold-lip)]'
+          : isConcordanceSegment
+            ? 'bg-[var(--gold-soft)] ring-1 ring-[var(--gold-lip)]'
+            : isActiveSegment
+              ? 'bg-[color-mix(in_srgb,var(--clay)_12%,transparent)]'
+              : '';
         return (
           <div
             key={segmentIndex}
             data-testid="transcript-segment"
             data-segment-index={segmentIndex}
-            data-active-segment={activeSegmentIndex === segmentIndex || undefined}
-            className={`group flex gap-3 rounded-lg px-2 py-1.5 transition-colors sm:gap-4 ${
-              activeSegmentIndex === segmentIndex
-                ? 'bg-[color-mix(in_srgb,var(--clay)_12%,transparent)]'
-                : ''
-            }`}
+            data-active-segment={isActiveSegment || undefined}
+            data-concordance-segment={isConcordanceSegment || undefined}
+            className={`group flex gap-3 rounded-lg px-2 py-1.5 transition-colors sm:gap-4 ${segmentHighlightClass}`}
           >
             <button
               type="button"

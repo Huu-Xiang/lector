@@ -57,7 +57,10 @@
       "openOnYouTube": "在 YouTube 上打开",
       "playFromHere": "从这里播放",
       "playFrom": "从 {time} 开始播放",
-      "openLink": "在新标签页打开原链接"
+      "openLink": "在新标签页打开原链接",
+      "jumpHighlight": "搜索匹配",
+      "jumpHighlightQuery": "匹配“{query}”",
+      "dismissHighlight": "取消高亮"
     },
     "drawer": {
       "wordDefinition": "单词释义",
@@ -122,6 +125,8 @@
       "ignore": "✕ 忽略",
       "retranslateTitle": "强制重新用 AI 查询（忽略词典）",
       "retranslate": "用 AI 重新翻译",
+      "findInLibrary": "在书库中查找",
+      "findInLibraryTitle": "在书库中搜索包含该词的句子",
       "ankiAdded": "✓ 已添加到 Anki",
       "ankiAdding": "正在添加…",
       "ankiError": "Anki 出错，点击重试",

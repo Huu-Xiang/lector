@@ -227,6 +227,23 @@ describe('TranslationDrawer saved AI meaning & phrase details (AE2)', () => {
     expect(html).toContain('Common in everyday Spanish');
     expect(html).toContain('colloquial');
   });
+
+  it('renders Find in library in desktop secondary actions and exposes More actions in compact native mobile mode', () => {
+    const desktopHtml = renderDrawer({
+      onSearchLibrary: () => {},
+    });
+    expect(desktopHtml).toContain('data-testid="search-in-library-btn"');
+    expect(desktopHtml).toContain('Find in library');
+
+    // In compact native iOS mode, passing ONLY onSearchLibrary must still render the footer
+    // and the More actions overflow toggle (hasSecondaryActions + footer guard).
+    mockState.isNativeApp = true;
+    mockState.screenSize = 'xs';
+    const compactHtml = renderDrawer({
+      onSearchLibrary: () => {},
+    });
+    expect(compactHtml).toContain('data-testid="native-lookup-actions"');
+  });
 });
 
 describe('Reader saved AI & phrase persistence state helpers (R2–R4)', () => {

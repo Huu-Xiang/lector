@@ -97,6 +97,8 @@ export interface TranslationDrawerProps {
   onEnrich?: () => void;
   /** Force a fresh LLM lookup, ignoring cache + local dict. */
   onRetranslate?: () => void;
+  /** Search the learner's active-language library for sentences containing this word/phrase. */
+  onSearchLibrary?: () => void;
   /** Look up a word referenced inside the entry (form-of glosses, lemma stem,
       related forms — issue #106). When absent, references render as plain text. */
   onLookupWord?: (word: string) => void;

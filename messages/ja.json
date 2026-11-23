@@ -1249,6 +1249,21 @@
       "label": "ライブラリの表示",
       "grid": "グリッド表示",
       "list": "リスト表示"
+    },
+    "search": {
+      "placeholder": "ライブラリ内の単語を検索…",
+      "ariaLabel": "ライブラリを検索",
+      "clear": "検索をクリア",
+      "scopeLabel": "検索範囲",
+      "allLibrary": "すべてのライブラリ",
+      "ungrouped": "グループなし",
+      "searching": "検索中…",
+      "error": "ライブラリを検索できませんでした。",
+      "retry": "もう一度試す",
+      "noResults": "「{query}」に一致する文が見つかりません。",
+      "searchAllLibrary": "すべてのライブラリを検索",
+      "resultCount": "{count} 件の一致",
+      "truncated": "最初の {count} 件を表示中"
     }
   },
   "readingLevel": {
@@ -2289,7 +2304,10 @@
       "openOnYouTube": "YouTube で開く",
       "playFromHere": "ここから再生",
       "playFrom": "{time} から再生",
-      "openLink": "元のリンクを新しいタブで開く"
+      "openLink": "元のリンクを新しいタブで開く",
+      "jumpHighlight": "検索一致",
+      "jumpHighlightQuery": "「{query}」の一致",
+      "dismissHighlight": "ハイライトを閉じる"
     },
     "drawer": {
       "wordDefinition": "単語の意味",
@@ -2354,6 +2372,8 @@
       "ignore": "✕ 無視",
       "retranslateTitle": "辞書を使わず、AI でもう一度調べる",
       "retranslate": "AI で再翻訳",
+      "findInLibrary": "ライブラリで検索",
+      "findInLibraryTitle": "この単語を含む文をライブラリから検索",
       "ankiAdded": "✓ Anki に追加しました",
       "ankiAdding": "追加中…",
       "ankiError": "Anki エラー（再試行）",

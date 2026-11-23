@@ -415,6 +415,61 @@ export function peekLesson(id: string): Lesson | undefined {
   return peekQuery(activeTenantQueryKey(LESSONS_QUERY_SCOPE, ['lesson', id]));
 }
 
+export interface LessonSearchMatch {
+  lessonId: string;
+  lessonTitle: string;
+  collectionId: string | null;
+  collectionTitle: string | null;
+  groupId: string | null;
+  groupName: string | null;
+  snippet: string;
+  matchStart: number;
+  matchEnd: number;
+  occ: number;
+  segmentIndex?: number;
+  startMs?: number;
+}
+
+export interface LessonSearchResponse {
+  query: string;
+  matches: LessonSearchMatch[];
+  truncated: boolean;
+}
+
+/**
+ * Concordance search across the active-language library (or one group/collection).
+ * Ephemeral search results deliberately bypass the offline query-cache.
+ */
+export async function searchLessons(
+  params: {
+    q: string;
+    groupId?: string | null;
+    collectionId?: string | null;
+    limit?: number;
+    language?: string;
+  },
+  options?: { signal?: AbortSignal },
+): Promise<LessonSearchResponse> {
+  const search = new URLSearchParams();
+  search.set('q', params.q);
+  search.set('language', params.language || getActiveLanguage());
+  if (params.groupId) search.set('groupId', params.groupId);
+  if (params.collectionId) search.set('collectionId', params.collectionId);
+  if (params.limit !== undefined) search.set('limit', String(params.limit));
+
+  const res = await apiFetch(`/api/lessons/search?${search.toString()}`, {
+    signal: options?.signal,
+    silentPlanLimit: true,
+  });
+  if (options?.signal?.aborted) {
+    const abortError = new Error('Search aborted');
+    abortError.name = 'AbortError';
+    throw abortError;
+  }
+  await requireOk(res, 'Could not search your library');
+  return (await res.json()) as LessonSearchResponse;
+}
+
 export async function addLessonToCollection(
   collectionId: string,
   data: { title: string; textContent: string },

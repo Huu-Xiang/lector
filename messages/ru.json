@@ -1249,6 +1249,21 @@
       "label": "Вид библиотеки",
       "grid": "Плитка",
       "list": "Список"
+    },
+    "search": {
+      "placeholder": "Поиск слов в библиотеке…",
+      "ariaLabel": "Поиск по библиотеке",
+      "clear": "Очистить поиск",
+      "scopeLabel": "Область поиска",
+      "allLibrary": "Вся библиотека",
+      "ungrouped": "Без группы",
+      "searching": "Ищем…",
+      "error": "Не удалось выполнить поиск по библиотеке.",
+      "retry": "Попробовать снова",
+      "noResults": "Нет предложений с «{query}».",
+      "searchAllLibrary": "Искать по всей библиотеке",
+      "resultCount": "{count, plural, one {# совпадение} few {# совпадения} many {# совпадений} other {# совпадения}}",
+      "truncated": "Показаны первые {count} совпадений"
     }
   },
   "readingLevel": {
@@ -2289,7 +2304,10 @@
       "openOnYouTube": "Открыть на YouTube",
       "playFromHere": "Воспроизвести отсюда",
       "playFrom": "Воспроизвести с {time}",
-      "openLink": "Открыть исходную ссылку в новой вкладке"
+      "openLink": "Открыть исходную ссылку в новой вкладке",
+      "jumpHighlight": "Совпадение поиска",
+      "jumpHighlightQuery": "Совпадение для «{query}»",
+      "dismissHighlight": "Снять выделение"
     },
     "drawer": {
       "wordDefinition": "Значение слова",
@@ -2354,6 +2372,8 @@
       "ignore": "✕ Скрыть",
       "retranslateTitle": "Запросить новый перевод у ИИ без поиска в словаре",
       "retranslate": "Перевести заново с ИИ",
+      "findInLibrary": "Найти в библиотеке",
+      "findInLibraryTitle": "Найти предложения с этим словом в библиотеке",
       "ankiAdded": "✓ Добавлено в Anki",
       "ankiAdding": "Добавляем…",
       "ankiError": "Ошибка Anki. Попробуйте снова",

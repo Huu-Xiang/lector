@@ -57,7 +57,10 @@
       "openOnYouTube": "Открыть на YouTube",
       "playFromHere": "Воспроизвести отсюда",
       "playFrom": "Воспроизвести с {time}",
-      "openLink": "Открыть исходную ссылку в новой вкладке"
+      "openLink": "Открыть исходную ссылку в новой вкладке",
+      "jumpHighlight": "Совпадение поиска",
+      "jumpHighlightQuery": "Совпадение для «{query}»",
+      "dismissHighlight": "Снять выделение"
     },
     "drawer": {
       "wordDefinition": "Значение слова",
@@ -122,6 +125,8 @@
       "ignore": "✕ Скрыть",
       "retranslateTitle": "Запросить новый перевод у ИИ без поиска в словаре",
       "retranslate": "Перевести заново с ИИ",
+      "findInLibrary": "Найти в библиотеке",
+      "findInLibraryTitle": "Найти предложения с этим словом в библиотеке",
       "ankiAdded": "✓ Добавлено в Anki",
       "ankiAdding": "Добавляем…",
       "ankiError": "Ошибка Anki. Попробуйте снова",

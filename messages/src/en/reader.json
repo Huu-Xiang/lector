@@ -57,7 +57,10 @@
       "openOnYouTube": "Open on YouTube",
       "playFromHere": "Play from here",
       "playFrom": "Play from {time}",
-      "openLink": "Open the original link in a new tab"
+      "openLink": "Open the original link in a new tab",
+      "jumpHighlight": "Search match",
+      "jumpHighlightQuery": "Match for “{query}”",
+      "dismissHighlight": "Dismiss highlight"
     },
     "drawer": {
       "wordDefinition": "Word definition",
@@ -122,6 +125,8 @@
       "ignore": "✕ Ignore",
       "retranslateTitle": "Force fresh AI lookup (ignores dictionary)",
       "retranslate": "Re-translate with AI",
+      "findInLibrary": "Find in library",
+      "findInLibraryTitle": "Search your library for sentences containing this word",
       "ankiAdded": "✓ Added to Anki",
       "ankiAdding": "Adding…",
       "ankiError": "Anki error — retry",

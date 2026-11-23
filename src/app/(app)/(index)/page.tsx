@@ -19,6 +19,7 @@ import GroupMenu from './components/GroupMenu';
 import SortableCollectionCard from './components/SortableCollectionCard';
 import CollectionCard from '@/components/CollectionCard';
 import ImportDropdown from '@/components/ImportDropdown';
+import LibrarySearch from '@/components/LibrarySearch';
 import PendingBookOpener from '@/components/PendingBookOpener';
 
 const WebImportModal = dynamic(() => import('@/components/WebImportModal'), { ssr: false });
@@ -124,6 +125,7 @@ export default function Home() {
   const [starterAvailable, setStarterAvailable] = useState(false);
   const [isFreeBooksOpen, setIsFreeBooksOpen] = useState(false);
   const [isAddingStarter, setIsAddingStarter] = useState(false);
+  const [isSearchActive, setIsSearchActive] = useState(false);
   const [onboarding, setOnboarding] = useState<OnboardingSnapshot | null>(
     () => peekOnboardingSnapshot() ?? null,
   );
@@ -561,8 +563,16 @@ export default function Home() {
           />
         </div>
       </PageHeader>
-      {!isLoading && onboarding?.progress?.status !== 'in_progress' && <AnnouncementBanner />}
-      {onboarding?.progress?.status === 'in_progress' && (
+      <LibrarySearch
+        activeLanguage={activeLanguage}
+        groups={visibleGroups}
+        hasUngrouped={ungrouped.length > 0}
+        onActiveChange={setIsSearchActive}
+      />
+      {!isSearchActive && !isLoading && onboarding?.progress?.status !== 'in_progress' && (
+        <AnnouncementBanner />
+      )}
+      {!isSearchActive && onboarding?.progress?.status === 'in_progress' && (
         <section
           aria-labelledby="resume-guide-heading"
           data-testid="onboarding-resume"
@@ -654,17 +664,18 @@ export default function Home() {
             />
           )}
 
-          {(!nativeApp || (collections.length === 0 && !hasGroups)) && (
+          {!isSearchActive && (!nativeApp || (collections.length === 0 && !hasGroups)) && (
             <HomeRecommendations language={activeLanguage} defaultOpen={collections.length < 3} />
           )}
 
-          {featuredBook && (
+          {!isSearchActive && featuredBook && (
             <IPadFeaturedBook
               key={`${featuredBook.id}:${featuredBook.lastReadAt}`}
               collection={featuredBook}
             />
           )}
-          <div className="ipad-library-columns">
+          {!isSearchActive && (
+            <div className="ipad-library-columns">
             {collections.length > 0 || hasGroups ? (
               <div className="min-w-0 space-y-6 sm:space-y-10">
                 <div
@@ -803,6 +814,7 @@ export default function Home() {
               </div>
             )}
           </div>
+          )}
         </section>
       )}
     </main>

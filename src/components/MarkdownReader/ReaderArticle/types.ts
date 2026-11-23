@@ -21,6 +21,8 @@ export interface ReaderArticleProps {
   readings: Map<string, string> | null;
   annotationMode: AnnotationMode;
   highlightedPhrase: string[];
+  /** Concordance jump target block offset (`data-block-id`), or null when none is highlighted. */
+  highlightedBlockId?: number | null;
   activeWord: ActiveReaderWord | null;
   onWordClick: (word: string, sentence: string, source?: undefined, occurrence?: string) => void;
   onActivateWord: (word: ActiveReaderWord) => void;

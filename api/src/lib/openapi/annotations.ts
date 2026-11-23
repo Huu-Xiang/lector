@@ -337,6 +337,74 @@ export const schemas: Record<string, JsonSchema> = {
     required: ['idx', 'startMs', 'endMs', 'text'],
   },
 
+  LessonSearchMatch: {
+    type: 'object',
+    description: 'One matched sentence snippet from a lesson in the account’s library.',
+    properties: {
+      lessonId: { type: 'string' },
+      lessonTitle: { type: 'string' },
+      collectionId: NULLABLE_STRING,
+      collectionTitle: NULLABLE_STRING,
+      groupId: NULLABLE_STRING,
+      groupName: NULLABLE_STRING,
+      snippet: {
+        type: 'string',
+        description: 'Plain-text sentence snippet (at most 300 characters) around the match.',
+      },
+      matchStart: {
+        type: 'integer',
+        minimum: 0,
+        description: 'UTF-16 start offset of the matched word or phrase within `snippet`.',
+      },
+      matchEnd: {
+        type: 'integer',
+        minimum: 0,
+        description: 'UTF-16 end offset (exclusive) of the matched word or phrase within `snippet`.',
+      },
+      occ: {
+        type: 'integer',
+        minimum: 0,
+        description: 'Zero-based occurrence index of the matched sentence within the lesson.',
+      },
+      segmentIndex: {
+        type: 'integer',
+        minimum: 0,
+        description: 'Zero-based transcript cue index for YouTube lessons.',
+      },
+      startMs: {
+        type: 'integer',
+        minimum: 0,
+        description: 'Cue start timestamp in milliseconds for YouTube lessons.',
+      },
+    },
+    required: [
+      'lessonId',
+      'lessonTitle',
+      'collectionId',
+      'collectionTitle',
+      'groupId',
+      'groupName',
+      'snippet',
+      'matchStart',
+      'matchEnd',
+      'occ',
+    ],
+  },
+
+  LessonSearchResponse: {
+    type: 'object',
+    description: 'Bounded concordance matches across the account’s lessons in one language.',
+    properties: {
+      query: { type: 'string' },
+      matches: { type: 'array', items: { $ref: '#/components/schemas/LessonSearchMatch' } },
+      truncated: {
+        type: 'boolean',
+        description: 'True when results hit the limit or scan time/byte ceiling.',
+      },
+    },
+    required: ['query', 'matches', 'truncated'],
+  },
+
   PhraseDetails: {
     type: 'object',
     description: 'Structured breakdown of a saved phrase.',
@@ -905,6 +973,43 @@ const libraryOps: Record<string, OperationDoc> = {
   },
 
   // ── Library: lessons ──────────────────────────────────────────────────────
+  'GET /api/lessons/search': {
+    summary: 'Search lessons for a word or phrase',
+    description:
+      'Concordance search across the account’s lessons in the active language, optionally filtered to one group or collection. Returns Markdown-stripped sentence snippets with match offsets.',
+    tag: 'Library',
+    sharedParams: LANG,
+    query: [
+      {
+        name: 'q',
+        description: 'Word or phrase to search for (1–200 characters).',
+        schema: { type: 'string', minLength: 1, maxLength: 200 },
+        required: true,
+      },
+      {
+        name: 'groupId',
+        description:
+          'Limit results to collections in this group, or `ungrouped` for ungrouped collections.',
+        schema: { type: 'string' },
+      },
+      {
+        name: 'collectionId',
+        description: 'Limit results to lessons in this collection.',
+        schema: { type: 'string' },
+      },
+      {
+        name: 'limit',
+        description: 'Maximum number of matches to return (default 50, max 100).',
+        schema: { type: 'integer', minimum: 1, maximum: 100, default: 50 },
+      },
+    ],
+    responses: {
+      '200': {
+        description: 'Matched sentence snippets.',
+        schema: ref('LessonSearchResponse'),
+      },
+    },
+  },
   'GET /api/lessons/{id}': {
     notFound: true,
     summary: 'Get a lesson',

@@ -1249,6 +1249,21 @@
       "label": "서재 보기 방식",
       "grid": "격자 보기",
       "list": "목록 보기"
+    },
+    "search": {
+      "placeholder": "서재에서 단어 검색…",
+      "ariaLabel": "서재 검색",
+      "clear": "검색 지우기",
+      "scopeLabel": "검색 범위",
+      "allLibrary": "전체 서재",
+      "ungrouped": "그룹 없음",
+      "searching": "검색 중…",
+      "error": "서재를 검색할 수 없어요.",
+      "retry": "다시 시도",
+      "noResults": "\"{query}\"와(과) 일치하는 문장이 없어요.",
+      "searchAllLibrary": "전체 서재에서 검색",
+      "resultCount": "일치 항목 {count}개",
+      "truncated": "처음 {count}개 결과 표시 중"
     }
   },
   "readingLevel": {
@@ -2289,7 +2304,10 @@
       "openOnYouTube": "YouTube에서 열기",
       "playFromHere": "여기서부터 재생",
       "playFrom": "{time}부터 재생",
-      "openLink": "새 탭에서 원래 링크 열기"
+      "openLink": "새 탭에서 원래 링크 열기",
+      "jumpHighlight": "검색 결과",
+      "jumpHighlightQuery": "\"{query}\" 일치 항목",
+      "dismissHighlight": "강조 표시 닫기"
     },
     "drawer": {
       "wordDefinition": "단어 뜻",
@@ -2354,6 +2372,8 @@
       "ignore": "✕ 무시",
       "retranslateTitle": "사전을 무시하고 AI로 새로 찾기",
       "retranslate": "AI로 다시 번역",
+      "findInLibrary": "서재에서 찾기",
+      "findInLibraryTitle": "서재에서 이 단어가 포함된 문장 검색",
       "ankiAdded": "✓ Anki에 추가됨",
       "ankiAdding": "추가하는 중…",
       "ankiError": "Anki 오류 - 다시 시도",

@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import type { Lesson, LessonSummary, WordState } from '@/types';
+import type { ConcordanceJumpPayload } from '@/lib/concordance-jump';
 
 /** Where a clicked word came from, when the lesson is a video transcript
  *  (#334). Threaded to the reader page so a mined card can carry the segment's
@@ -31,4 +32,8 @@ export interface MarkdownReaderProps {
   nextLesson?: Pick<LessonSummary, 'id' | 'title'> | null;
   /** Extra header button(s), e.g. the listen-along toggle on audio lessons (#185). */
   headerAction?: ReactNode;
+  /** One-shot concordance jump target from library search (KTD8). */
+  concordanceJump?: ConcordanceJumpPayload | null;
+  /** Called when the learner dismisses or clears the concordance highlight. */
+  onDismissConcordanceJump?: () => void;
 }

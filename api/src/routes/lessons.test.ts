@@ -2,7 +2,9 @@ import '../test-guard';
 import { afterEach, beforeEach, describe, expect, test } from 'bun:test';
 import fs from 'fs';
 import { AUDIO_DIR, db } from '../db';
-import app from './lessons';
+import { ConcurrencyGate } from '../lib/concurrency-gate';
+import { InMemorySearchBurstLimiter } from '../lib/rate-limit';
+import app, { makeLessonsRoutes } from './lessons';
 
 const TS = '2026-01-01T00:00:00Z';
 
@@ -285,5 +287,175 @@ describe('audio lesson routes (#185)', () => {
       db.prepare("SELECT COUNT(*) AS n FROM transcript_segments WHERE lessonId = 'lesson-1'").get(),
     ).toEqual({ n: 0 });
     expect(fs.existsSync(audioPath)).toBe(false);
+  });
+});
+
+describe('GET /search (concordance search, R10 / AE5)', () => {
+  function resetSearch() {
+    reset();
+    db.prepare('DELETE FROM collection_groups').run();
+  }
+
+  beforeEach(resetSearch);
+  afterEach(resetSearch);
+
+  function seedSearchCorpus() {
+    // Tenant 'local' groups & collections (German + French)
+    db.prepare(
+      `INSERT INTO collection_groups (id, name, sortOrder, createdAt, userId)
+       VALUES ('grp-news', 'News', 0, ?, 'local'),
+              ('grp-fiction', 'Fiction', 1, ?, 'local')`,
+    ).run(TS, TS);
+    db.prepare(
+      `INSERT INTO collections (id, title, author, groupId, language, createdAt, lastReadAt, userId)
+       VALUES ('col-news', 'Tagesschau', 'ARD', 'grp-news', 'de', ?, ?, 'local'),
+              ('col-fiction', 'Märchen', 'Grimm', 'grp-fiction', 'de', ?, ?, 'local'),
+              ('col-ungrouped', 'Notizen', 'Me', NULL, 'de', ?, ?, 'local'),
+              ('col-fr', 'Le Monde', 'FR', 'grp-news', 'fr', ?, ?, 'local')`,
+    ).run(TS, TS, TS, TS, TS, TS, TS, TS);
+    db.prepare(
+      `INSERT INTO lessons
+        (id, collectionId, title, textContent, language, createdAt, lastReadAt, userId)
+       VALUES
+        ('lesson-a', 'col-news', 'Artikel 1', '# Häuser\n\nAlte Häuser\nstehen am Fluss.', 'de', ?, '2026-01-03T00:00:00Z', 'local'),
+        ('lesson-b', 'col-fiction', 'Kapitel 1', 'Wir sehen viele häuser in der Stadt.', 'de', ?, '2026-01-02T00:00:00Z', 'local'),
+        ('lesson-u', 'col-ungrouped', 'Notiz 1', 'Diese Häuser sind neu.', 'de', ?, '2026-01-01T00:00:00Z', 'local'),
+        ('lesson-fr', 'col-fr', 'Article FR', 'Les Häuser en Allemagne.', 'fr', ?, '2026-01-04T00:00:00Z', 'local')`,
+    ).run(TS, TS, TS, TS);
+
+    // Second tenant 'other-user' using IDENTICAL collectionId ('col-news') and groupId ('grp-news') + private group
+    db.prepare(
+      `INSERT INTO collection_groups (id, name, sortOrder, createdAt, userId)
+       VALUES ('grp-news', 'Other News', 0, ?, 'other-user'),
+              ('grp-secret', 'Secret Group', 1, ?, 'other-user')`,
+    ).run(TS, TS);
+    db.prepare(
+      `INSERT INTO collections (id, title, author, groupId, language, createdAt, lastReadAt, userId)
+       VALUES ('col-news', 'Private News', 'Other', 'grp-news', 'de', ?, ?, 'other-user'),
+              ('col-secret', 'Private Secret', 'Other', 'grp-secret', 'de', ?, ?, 'other-user')`,
+    ).run(TS, TS, TS, TS);
+    db.prepare(
+      `INSERT INTO lessons
+        (id, collectionId, title, textContent, language, createdAt, lastReadAt, userId)
+       VALUES
+        ('other-lesson-1', 'col-news', 'Secret 1', 'Geheime Häuser gehören nicht dir.', 'de', ?, ?, 'other-user'),
+        ('other-lesson-2', 'col-secret', 'Secret 2', 'Versteckte Häuser im Wald.', 'de', ?, ?, 'other-user')`,
+    ).run(TS, TS, TS, TS);
+  }
+
+  test('searches active language, folds case/diacritics, filters by groupId/ungrouped/collectionId, and isolates tenants', async () => {
+    seedSearchCorpus();
+    const routes = makeLessonsRoutes();
+
+    // All library (German only — excludes French and excludes other-user even with identical col-news/grp-news IDs)
+    const allRes = await routes.request('/search?q=h%C3%A4user&language=de');
+    expect(allRes.status).toBe(200);
+    const allBody = (await allRes.json()) as {
+      query: string;
+      truncated: boolean;
+      matches: Array<{
+        lessonId: string;
+        groupName: string | null;
+        collectionTitle: string | null;
+        snippet: string;
+      }>;
+    };
+    expect(allBody.query).toBe('häuser');
+    expect(allBody.truncated).toBe(false);
+    expect(allBody.matches.map((m) => m.lessonId)).toEqual([
+      'lesson-a',
+      'lesson-a',
+      'lesson-b',
+      'lesson-u',
+    ]);
+    expect(allBody.matches[0].groupName).toBe('News');
+    expect(allBody.matches[0].collectionTitle).toBe('Tagesschau');
+
+    // Filter to News group only
+    const newsRes = await routes.request('/search?q=h%C3%A4user&language=de&groupId=grp-news');
+    expect(newsRes.status).toBe(200);
+    const newsBody = (await newsRes.json()) as { matches: Array<{ lessonId: string }> };
+    expect(newsBody.matches.map((m) => m.lessonId)).toEqual(['lesson-a', 'lesson-a']);
+
+    // Filter to ungrouped only
+    const ungroupedRes = await routes.request('/search?q=h%C3%A4user&language=de&groupId=ungrouped');
+    expect(ungroupedRes.status).toBe(200);
+    const ungroupedBody = (await ungroupedRes.json()) as { matches: Array<{ lessonId: string }> };
+    expect(ungroupedBody.matches.map((m) => m.lessonId)).toEqual(['lesson-u']);
+
+    // Filter to another tenant's groupId returns empty results
+    const foreignGroupRes = await routes.request(
+      '/search?q=h%C3%A4user&language=de&groupId=grp-secret',
+    );
+    expect(foreignGroupRes.status).toBe(200);
+    expect(((await foreignGroupRes.json()) as { matches: unknown[] }).matches).toEqual([]);
+
+    // Filter to a specific collectionId
+    const colRes = await routes.request('/search?q=h%C3%A4user&language=de&collectionId=col-fiction');
+    expect(colRes.status).toBe(200);
+    const colBody = (await colRes.json()) as { matches: Array<{ lessonId: string }> };
+    expect(colBody.matches.map((m) => m.lessonId)).toEqual(['lesson-b']);
+  });
+
+  test('validates q (1..200 chars) and limit, and returns 400 on invalid inputs', async () => {
+    const routes = makeLessonsRoutes();
+    expect((await routes.request('/search?language=de')).status).toBe(400);
+    expect((await routes.request('/search?q=%20%20&language=de')).status).toBe(400);
+    expect((await routes.request(`/search?q=${'a'.repeat(201)}&language=de`)).status).toBe(400);
+    expect((await routes.request('/search?q=haus&limit=0&language=de')).status).toBe(400);
+    expect((await routes.request('/search?q=haus&limit=abc&language=de')).status).toBe(400);
+  });
+
+  test('returns YouTube segmentIndex and startMs without leaking raw JSON', async () => {
+    seedSearchCorpus();
+    db.prepare(
+      `INSERT INTO lessons
+        (id, collectionId, title, textContent, sourceType, segments, language, createdAt, lastReadAt, userId)
+       VALUES
+        ('yt-de', 'col-news', 'Video', 'Guten Tag\nSchöne Häuser', 'youtube', ?, 'de', ?, '2026-01-05T00:00:00Z', 'local')`,
+    ).run(
+      JSON.stringify([
+        { start: 0, end: 2, text: 'Guten Tag' },
+        { start: 5.5, end: 8.0, text: 'Schöne Häuser' },
+      ]),
+      TS,
+    );
+
+    const routes = makeLessonsRoutes();
+    const res = await routes.request('/search?q=h%C3%A4user&language=de&collectionId=col-news');
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as {
+      matches: Array<{ lessonId: string; segmentIndex?: number; startMs?: number; snippet: string }>;
+    };
+    const ytMatch = body.matches.find((m) => m.lessonId === 'yt-de');
+    expect(ytMatch).toMatchObject({
+      lessonId: 'yt-de',
+      segmentIndex: 1,
+      startMs: 5500,
+      snippet: 'Schöne Häuser',
+    });
+  });
+
+  test('enforces per-user burst rate limit (429) and concurrency gate (503)', async () => {
+    seedSearchCorpus();
+    const limiter = new InMemorySearchBurstLimiter({ userPerWindow: 2 });
+    const limitedRoutes = makeLessonsRoutes({ searchLimiter: limiter });
+
+    expect((await limitedRoutes.request('/search?q=h%C3%A4user&language=de')).status).toBe(200);
+    expect((await limitedRoutes.request('/search?q=h%C3%A4user&language=de')).status).toBe(200);
+    const third = await limitedRoutes.request('/search?q=h%C3%A4user&language=de');
+    expect(third.status).toBe(429);
+    expect(third.headers.get('Retry-After')).toBe('60');
+
+    const gate = new ConcurrencyGate(1, 1);
+    const release = gate.tryEnter('local');
+    expect(release).not.toBeNull();
+    try {
+      const gatedRoutes = makeLessonsRoutes({ searchGate: gate });
+      const busy = await gatedRoutes.request('/search?q=h%C3%A4user&language=de');
+      expect(busy.status).toBe(503);
+    } finally {
+      release?.();
+    }
   });
 });

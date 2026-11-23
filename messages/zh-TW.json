@@ -1249,6 +1249,21 @@
       "label": "書庫排列方式",
       "grid": "網格檢視",
       "list": "清單檢視"
+    },
+    "search": {
+      "placeholder": "搜尋書庫中的詞句…",
+      "ariaLabel": "搜尋書庫",
+      "clear": "清除搜尋",
+      "scopeLabel": "搜尋範圍",
+      "allLibrary": "全部書庫",
+      "ungrouped": "未分組",
+      "searching": "正在搜尋…",
+      "error": "無法搜尋書庫。",
+      "retry": "重試",
+      "noResults": "找不到包含「{query}」的句子。",
+      "searchAllLibrary": "在全部書庫中搜尋",
+      "resultCount": "{count} 筆符合",
+      "truncated": "僅顯示前 {count} 筆符合"
     }
   },
   "readingLevel": {
@@ -2289,7 +2304,10 @@
       "openOnYouTube": "在 YouTube 上開啟",
       "playFromHere": "從這裡播放",
       "playFrom": "從 {time} 開始播放",
-      "openLink": "在新分頁開啟原始連結"
+      "openLink": "在新分頁開啟原始連結",
+      "jumpHighlight": "搜尋符合",
+      "jumpHighlightQuery": "符合「{query}」",
+      "dismissHighlight": "取消醒目提示"
     },
     "drawer": {
       "wordDefinition": "單字釋義",
@@ -2354,6 +2372,8 @@
       "ignore": "✕ 忽略",
       "retranslateTitle": "強制重新用 AI 查詢（忽略詞典）",
       "retranslate": "用 AI 重新翻譯",
+      "findInLibrary": "在書庫中尋找",
+      "findInLibraryTitle": "在書庫中搜尋包含此詞的句子",
       "ankiAdded": "✓ 已新增到 Anki",
       "ankiAdding": "正在新增…",
       "ankiError": "Anki 出錯，點擊重試",

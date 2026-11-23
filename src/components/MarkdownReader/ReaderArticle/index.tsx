@@ -86,6 +86,7 @@ export interface ReaderBlockProps {
   readings: Map<string, string> | null;
   annotationMode: AnnotationMode;
   highlightedPhrase: string[];
+  highlightedBlockId?: number | null;
   activeWord: ActiveReaderWord | null;
   onWordClick: (word: string, sentence: string, source?: undefined, occurrence?: string) => void;
   onActivateWord: (word: ActiveReaderWord) => void;
@@ -140,6 +141,10 @@ export function readerBlockPropsEqual(previous: ReaderBlockProps, next: ReaderBl
     next.activeWord?.blockId === next.blockId ? next.activeWord.wordIndex : null;
   if (previousActiveIndex !== nextActiveIndex) return false;
 
+  const previousHighlighted = previous.highlightedBlockId === previous.blockId;
+  const nextHighlighted = next.highlightedBlockId === next.blockId;
+  if (previousHighlighted !== nextHighlighted) return false;
+
   if (previous.knownWordsMap === next.knownWordsMap) return true;
   const words = new Set(
     collectWords(previous.children, previous.pack, previous.segmentation).flatMap((word) =>
@@ -163,6 +168,7 @@ const ReaderBlock = memo(function ReaderBlock({
   readings,
   annotationMode,
   highlightedPhrase,
+  highlightedBlockId,
   activeWord,
   onWordClick,
   onActivateWord,
@@ -244,8 +250,17 @@ const ReaderBlock = memo(function ReaderBlock({
   const lineHeight = annotated
     ? 'var(--reader-line-height-annotated)'
     : 'var(--reader-line-height)';
+  const isConcordanceHighlighted = highlightedBlockId === blockId;
+  const blockClassName = isConcordanceHighlighted
+    ? `${className ?? ''} -mx-2 rounded-lg bg-[var(--gold-soft)] px-2 py-1 ring-1 ring-[var(--gold-lip)] transition-colors`.trim()
+    : className;
   return (
-    <Tag className={className} style={{ lineHeight }}>
+    <Tag
+      data-block-id={blockId}
+      data-concordance-highlighted={isConcordanceHighlighted || undefined}
+      className={blockClassName}
+      style={{ lineHeight }}
+    >
       {content}
     </Tag>
   );
@@ -328,6 +343,7 @@ function ReaderArticle({
   readings,
   annotationMode,
   highlightedPhrase,
+  highlightedBlockId = null,
   activeWord,
   onWordClick,
   onActivateWord,
@@ -343,6 +359,7 @@ function ReaderArticle({
       readings,
       annotationMode,
       highlightedPhrase,
+      highlightedBlockId,
       activeWord,
       onWordClick,
       onActivateWord,
@@ -357,6 +374,7 @@ function ReaderArticle({
       readings,
       annotationMode,
       highlightedPhrase,
+      highlightedBlockId,
       activeWord,
       onWordClick,
       onActivateWord,

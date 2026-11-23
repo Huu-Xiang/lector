@@ -174,6 +174,21 @@
       "label": "Library layout",
       "grid": "Grid view",
       "list": "List view"
+    },
+    "search": {
+      "placeholder": "Search words in your library…",
+      "ariaLabel": "Search your library",
+      "clear": "Clear search",
+      "scopeLabel": "Search scope",
+      "allLibrary": "All library",
+      "ungrouped": "Ungrouped",
+      "searching": "Searching…",
+      "error": "Could not search your library.",
+      "retry": "Try again",
+      "noResults": "No sentences matching “{query}”.",
+      "searchAllLibrary": "Search all library",
+      "resultCount": "{count, plural, one {# match} other {# matches}}",
+      "truncated": "Showing first {count} matches"
     }
   }
 }

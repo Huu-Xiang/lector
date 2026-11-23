@@ -1249,6 +1249,21 @@
       "label": "Library layout",
       "grid": "Grid view",
       "list": "List view"
+    },
+    "search": {
+      "placeholder": "Search words in your library…",
+      "ariaLabel": "Search your library",
+      "clear": "Clear search",
+      "scopeLabel": "Search scope",
+      "allLibrary": "All library",
+      "ungrouped": "Ungrouped",
+      "searching": "Searching…",
+      "error": "Could not search your library.",
+      "retry": "Try again",
+      "noResults": "No sentences matching “{query}”.",
+      "searchAllLibrary": "Search all library",
+      "resultCount": "{count, plural, one {# match} other {# matches}}",
+      "truncated": "Showing first {count} matches"
     }
   },
   "readingLevel": {
@@ -2289,7 +2304,10 @@
       "openOnYouTube": "Open on YouTube",
       "playFromHere": "Play from here",
       "playFrom": "Play from {time}",
-      "openLink": "Open the original link in a new tab"
+      "openLink": "Open the original link in a new tab",
+      "jumpHighlight": "Search match",
+      "jumpHighlightQuery": "Match for “{query}”",
+      "dismissHighlight": "Dismiss highlight"
     },
     "drawer": {
       "wordDefinition": "Word definition",
@@ -2354,6 +2372,8 @@
       "ignore": "✕ Ignore",
       "retranslateTitle": "Force fresh AI lookup (ignores dictionary)",
       "retranslate": "Re-translate with AI",
+      "findInLibrary": "Find in library",
+      "findInLibraryTitle": "Search your library for sentences containing this word",
       "ankiAdded": "✓ Added to Anki",
       "ankiAdding": "Adding…",
       "ankiError": "Anki error — retry",
