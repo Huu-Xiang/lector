@@ -14,6 +14,7 @@ import { LOCALE_COOKIE, UI_LOCALES } from '@/i18n/locales';
 import { LANDING_ROOT_ID } from '@/lib/api-base';
 import NativeAppRedirect from '@/components/NativeAppRedirect';
 import LandingReaderDemo from '@/components/LandingReaderDemo';
+import { READFOX_LOCALE_HEADER } from '@/lib/public-locale';
 import { publicAlternatesForRequest } from '@/lib/public-locale.server';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -65,7 +66,7 @@ export default async function LandingPage() {
   const locale = await getLocale();
   const [store, requestHeaders] = await Promise.all([cookies(), headers()]);
   const demo = demoSetForRequest(
-    store.get(LOCALE_COOKIE)?.value,
+    requestHeaders.get(READFOX_LOCALE_HEADER) ?? store.get(LOCALE_COOKIE)?.value,
     requestHeaders.get('accept-language'),
   );
   const names = new Intl.DisplayNames([locale], { type: 'language' });

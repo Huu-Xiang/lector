@@ -1,10 +1,18 @@
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
-import { READFOX_LOCALE_PREFIX_HEADER, buildPublicAlternates, publicUrl } from './public-locale';
+import {
+  PUBLIC_LOCALE_PREFIXES,
+  READFOX_LOCALE_PREFIX_HEADER,
+  buildPublicAlternates,
+  publicUrl,
+} from './public-locale';
+
+const VALID_PREFIXES = new Set(Object.keys(PUBLIC_LOCALE_PREFIXES).map((slug) => `/${slug}`));
 
 export async function activePublicLocalePrefix(): Promise<string> {
   const requestHeaders = await headers();
-  return requestHeaders.get(READFOX_LOCALE_PREFIX_HEADER) ?? '';
+  const raw = requestHeaders.get(READFOX_LOCALE_PREFIX_HEADER) ?? '';
+  return VALID_PREFIXES.has(raw) ? raw : '';
 }
 
 export async function publicAlternatesForRequest(canonicalPath: string): Promise<{

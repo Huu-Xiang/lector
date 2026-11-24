@@ -7,7 +7,7 @@ import VocabTest from '@/components/VocabTest';
 import { H2 } from '@/components/LegalLinks/shell';
 import UiLanguageSelect from '@/i18n/UiLanguageSelect';
 import { SITE_ORIGIN } from '@/lib/public-books';
-import { publicAlternatesForRequest } from '@/lib/public-locale.server';
+import { activePublicLocalePrefix, publicAlternatesForRequest } from '@/lib/public-locale.server';
 import {
   loadVocabTestBooks,
   loadVocabTestData,
@@ -24,15 +24,18 @@ export function generateStaticParams() {
   return [{ language: 'fr' }, { language: 'es' }];
 }
 
-function resolveTarget(raw: string): Exclude<VocabTestLanguage, 'en'> {
-  if (raw === 'en') permanentRedirect('/vocab-test');
+async function resolveTarget(raw: string): Promise<Exclude<VocabTestLanguage, 'en'>> {
+  if (raw === 'en') {
+    const prefix = await activePublicLocalePrefix();
+    permanentRedirect(prefix ? `${prefix}/vocab-test` : '/vocab-test');
+  }
   if (raw === 'fr' || raw === 'es') return raw;
   notFound();
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { language: raw } = await params;
-  const language = resolveTarget(raw);
+  const language = await resolveTarget(raw);
   const [t, locale, { alternates, canonicalUrl }] = await Promise.all([
     getTranslations('vocabTest'),
     getLocale(),
@@ -58,7 +61,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function LanguageVocabTestPage({ params }: Props) {
   const { language: raw } = await params;
-  const language = resolveTarget(raw);
+  const language = await resolveTarget(raw);
   const [t, locale, { canonicalUrl }] = await Promise.all([
     getTranslations('vocabTest'),
     getLocale(),
@@ -71,7 +74,12 @@ export default async function LanguageVocabTestPage({ params }: Props) {
 
   const faq = FAQ_KEYS.map((key) => ({
     q: t(`faq.${key}Q`),
-    a: key === 'how' ? t('langIntroLead', { language: languageName }) : t(`faq.${key}A`),
+    a:
+      key === 'how'
+        ? t('langIntroLead', { language: languageName })
+        : key === 'free'
+          ? t('faq.langFreeA')
+          : t(`faq.${key}A`),
   }));
 
   const structured = [

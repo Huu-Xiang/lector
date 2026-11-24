@@ -38,6 +38,7 @@ BANDS = [(i * 1000 + 1, (i + 1) * 1000) for i in range(10)] + [
     (15001, 20000),
     (20001, 25000),
     (25001, 30000),
+    (30001, 40000),
 ]
 
 POS_MAP = {
@@ -78,7 +79,8 @@ ENGLISH_FILLER = {
 
 BAD_GLOSS_PATTERNS = re.compile(
     r"(?i)\b("
-    r"inflection of|plural of|feminine of|masculine of|singular of|participle of|"
+    r"inflection of|infinitive of|dative of|accusative of|genitive of|nominative of|combined with|"
+    r"plural of|feminine of|masculine of|singular of|participle of|"
     r"past tense of|present tense of|future tense of|subjunctive of|imperative of|"
     r"conditional of|indicative of|preterite of|imperfect of|gerund of|"
     r"first-person|second-person|third-person|reflexive of|comparative of|superlative of|"
@@ -127,17 +129,26 @@ def verify_sha256(path: Path, expected: str) -> None:
         raise ValueError(f"SHA-256 mismatch for {path}: expected {expected}, got {actual}")
 
 
+def strip_parens(text: str) -> str:
+    prev = None
+    out = text
+    while prev != out:
+        prev = out
+        out = re.sub(r"\([^()]*\)", " ", out)
+    return " ".join(out.split()).strip()
+
+
 def clean_gloss(raw: str) -> str | None:
     text = unicodedata.normalize("NFC", raw).strip()
     if not text or BAD_GLOSS_PATTERNS.search(text):
         return None
-    # Strip leading parenthetical usage tags like "(transitive, figuratively) "
-    text = re.sub(r"^(?:\([^)]{1,40}\)\s*)+", "", text).strip()
-    # Keep first concise clause before semicolon or trailing explanatory parenthetical
+    # Strip parenthetical qualifiers before splitting on ';' so no dangling '(' survives.
+    text = strip_parens(text)
     text = re.split(r"\s*;\s*", text)[0].strip()
-    text = re.sub(r"\s*\([^)]*\)\s*$", "", text).strip()
     text = text.rstrip(".,;:").strip()
     if not text or BAD_GLOSS_PATTERNS.search(text):
+        return None
+    if "(" in text or ")" in text:
         return None
     words = text.split()
     if len(words) == 0 or len(words) > 8 or len(text) > 54:
@@ -147,7 +158,6 @@ def clean_gloss(raw: str) -> str | None:
         return None
     # Reject capitalized proper-noun definitions unless starting with "I "
     if text[0].isupper() and not text.startswith(("I ", "God")):
-        # Lowercase only if the rest looks like an ordinary sentence start
         first = words[0]
         if len(words) == 1 or first.lower() not in {"to", "a", "an", "the", "one", "in", "on", "of", "for", "with"}:
             return None
@@ -180,19 +190,34 @@ def load_dictionary(lang: str, db_path: Path):
         if inf and lem and inf != lem:
             inflections[inf].add(lem)
 
+    # Track all standalone dictionary headwords (including function words) so inflected
+    # homographs like French "comme"/"fois"/"tu" or Spanish "para"/"nada" never donate
+    # their frequency to unrelated rare verbs/nouns.
+    standalone_words: set[str] = set()
+    for (w_raw,) in cur.execute("SELECT word FROM entries"):
+        w_low = (w_raw or "").strip().lower()
+        if w_low:
+            standalone_words.add(w_low)
+
+    first_pos: dict[str, str] = {}
     raw_senses: dict[str, list[tuple[str, str]]] = defaultdict(list)
     for word, pos, gloss in cur.execute(
         "SELECT word, pos, gloss FROM senses ORDER BY word, sort_order, id"
     ):
         w = word.strip()
-        if not w or len(w) < MIN_WORD_LEN or w != w.lower() or not word_re.fullmatch(w):
+        w_low = w.lower()
+        if w_low:
+            standalone_words.add(w_low)
+        pos_low = (pos or "").strip().lower()
+        if w_low and w_low not in first_pos and pos_low:
+            first_pos[w_low] = pos_low
+        if not w or len(w) < MIN_WORD_LEN or w != w_low or not word_re.fullmatch(w):
             continue
         if w in ROMAN_NUMERALS:
             continue
-        # Skip pure inflected forms (e.g. conjugated verbs or plural-only entries)
-        if w in inflections:
+        if first_pos.get(w) in {"art", "art.", "article", "det", "det.", "determiner"}:
             continue
-        norm_pos = POS_MAP.get((pos or "").strip().lower())
+        norm_pos = POS_MAP.get(pos_low)
         if not norm_pos:
             continue
         cleaned = clean_gloss(gloss or "")
@@ -222,19 +247,29 @@ def load_dictionary(lang: str, db_path: Path):
         if senses and gloss_tokens(senses):
             entries[w] = senses
 
-    return entries, inflections
+    return entries, inflections, standalone_words
 
 
-def rank_lemmas(lang: str, entries: dict[str, list[dict[str, str]]], inflections: dict[str, set[str]]):
-    # Aggregate wordfreq frequencies of each lemma plus its inflected forms
-    lemma_freq: dict[str, float] = {}
+def rank_lemmas(
+    lang: str,
+    entries: dict[str, list[dict[str, str]]],
+    inflections: dict[str, set[str]],
+    standalone_words: set[str],
+):
+    # Aggregate wordfreq frequencies of each lemma plus genuinely non-standalone inflections.
+    base_freq: dict[str, float] = {}
     for lemma in entries:
         f = word_frequency(lemma, lang)
         if f > 0:
-            lemma_freq[lemma] = f
+            base_freq[lemma] = f
+
+    lemma_freq: dict[str, float] = dict(base_freq)
 
     for inf, lemmas in inflections.items():
-        valid = [lem for lem in lemmas if lem in entries]
+        # Never transfer a standalone headword's frequency (e.g. "para" -> "parar", "comme" -> "commer").
+        if inf in standalone_words:
+            continue
+        valid = [lem for lem in lemmas if lem in entries and base_freq.get(lem, 0.0) > 0]
         if not valid:
             continue
         f = word_frequency(inf, lang)
@@ -242,6 +277,9 @@ def rank_lemmas(lang: str, entries: dict[str, list[dict[str, str]]], inflections
             continue
         share = f / len(valid)
         for lem in valid:
+            # Also guard against extreme homograph distortion where an inflected form is >15x its base.
+            if share > base_freq[lem] * 15:
+                continue
             lemma_freq[lem] = lemma_freq.get(lem, 0.0) + share
 
     ranked = [
@@ -394,8 +432,8 @@ def main() -> None:
     args = parser.parse_args()
 
     verify_sha256(args.dict, DICT_PINS[args.lang])
-    entries, inflections = load_dictionary(args.lang, args.dict)
-    ranked, rank_of = rank_lemmas(args.lang, entries, inflections)
+    entries, inflections, standalone_words = load_dictionary(args.lang, args.dict)
+    ranked, rank_of = rank_lemmas(args.lang, entries, inflections, standalone_words)
     bands = build_bands(args.lang, ranked, entries)
     needs = compute_book_needs(args.lang, rank_of, inflections)
 

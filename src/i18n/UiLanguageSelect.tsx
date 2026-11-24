@@ -51,7 +51,9 @@ export default function UiLanguageSelect({
     if (shouldSyncPublicUrl && pathname) {
       const nextPath = localizePublicPath(pathname, code);
       if (nextPath !== pathname) {
-        router.push(nextPath);
+        const suffix =
+          typeof window !== 'undefined' ? `${window.location.search}${window.location.hash}` : '';
+        router.push(`${nextPath}${suffix}`);
         void offerNativeSwitch(code);
         return;
       }

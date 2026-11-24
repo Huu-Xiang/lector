@@ -92,6 +92,7 @@
       "accuracyA": "The result is a range, not a single number. The more words you answer, the narrower the range. Word families count as one word, so “help”, “helps” and “helped” are one word. Choosing “Not sure” instead of guessing keeps the result accurate.",
       "freeQ": "Is the test free? Do I need an account?",
       "freeA": "You can take the free test and see your full results without an account. A free Readfox account is needed only to save your result and receive it by email as a PDF.",
+      "langFreeA": "You can take the free test and see your full results without an account. A free Readfox account lets you save your CEFR level for book recommendations.",
       "levelQ": "What does my level mean for reading?",
       "levelA": "Your vocabulary size maps to a CEFR level from A1 to C2. The test suggests free books where you already know about 95% of the words, which is the point where reading becomes comfortable."
     },

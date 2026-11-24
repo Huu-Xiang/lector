@@ -22,7 +22,28 @@ describe('multi-language vocab test data and storage', () => {
       const data = loadVocabTestData(undefined, lang);
       expect(data).not.toBeNull();
       expect(data!.answerLanguage).toBe('en');
-      expect(data!.bands.length).toBeGreaterThanOrEqual(15);
+      expect(data!.bands.length).toBe(16);
+      expect(data!.bands[data!.bands.length - 1]?.to).toBe(40000);
+
+      for (const band of data!.bands) {
+        for (const word of band.words) {
+          for (const sense of word.s) {
+            expect(sense.en).not.toContain('(');
+            expect(sense.en).not.toContain(')');
+            expect(sense.en.toLowerCase()).not.toContain('combined with');
+            expect(sense.en.toLowerCase()).not.toContain('infinitive of ');
+          }
+        }
+      }
+
+      const top50 = new Set(data!.bands[0]!.words.filter((w) => w.r <= 50).map((w) => w.w));
+      if (lang === 'fr') {
+        expect(top50.has('commer')).toBe(false);
+        expect(top50.has('éyoù')).toBe(false);
+      } else {
+        expect(top50.has('parar')).toBe(false);
+        expect(top50.has('nadar')).toBe(false);
+      }
 
       const answers: Answer[] = [];
       const seen = new Set<string>();

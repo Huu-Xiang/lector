@@ -6,19 +6,33 @@ import {
 } from '@/lib/public-locale';
 import { isNoIndexSite } from '@/lib/site-seo';
 
+const INTERNAL_PROXY_TOKEN_HEADER = 'x-readfox-proxy-token';
+const INTERNAL_PROXY_TOKEN = globalThis.crypto.randomUUID();
+
 export function proxy(request: NextRequest) {
+  const requestHeaders = new Headers(request.headers);
+  const isInternalRewriteHop =
+    requestHeaders.get(INTERNAL_PROXY_TOKEN_HEADER) === INTERNAL_PROXY_TOKEN;
+  requestHeaders.delete(INTERNAL_PROXY_TOKEN_HEADER);
+
   const parsed = parsePublicLocalePath(request.nextUrl.pathname);
   let response: NextResponse;
 
   if (parsed) {
-    const requestHeaders = new Headers(request.headers);
     requestHeaders.set(READFOX_LOCALE_HEADER, parsed.locale);
     requestHeaders.set(READFOX_LOCALE_PREFIX_HEADER, parsed.prefix);
+    requestHeaders.set(INTERNAL_PROXY_TOKEN_HEADER, INTERNAL_PROXY_TOKEN);
     const rewriteUrl = request.nextUrl.clone();
     rewriteUrl.pathname = parsed.rewritePath;
     response = NextResponse.rewrite(rewriteUrl, { request: { headers: requestHeaders } });
   } else {
-    response = NextResponse.next();
+    // Strip client-supplied internal locale headers so external callers cannot spoof locale
+    // or canonical URLs, while preserving headers forwarded by our own internal rewrite hop.
+    if (!isInternalRewriteHop) {
+      requestHeaders.delete(READFOX_LOCALE_HEADER);
+      requestHeaders.delete(READFOX_LOCALE_PREFIX_HEADER);
+    }
+    response = NextResponse.next({ request: { headers: requestHeaders } });
   }
 
   if (isNoIndexSite()) {
