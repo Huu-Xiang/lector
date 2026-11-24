@@ -24,16 +24,18 @@ export function buildLlmsTxt(): string {
     '## Facts',
     '',
     `- Website: ${SITE_ORIGIN}/`,
-    '- Runs in the browser on a computer or a phone. It can be added to the phone home screen; there is no app-store download.',
+    '- Runs in the browser on a computer or a phone. It can be added to the phone home screen (PWA with offline reader shell); there is no app-store download.',
+    '- Interface languages: English, Simplified Chinese, Traditional Chinese, Japanese, Korean, and Russian.',
     `- A Free plan is available. Paid plans are Plus, Pro and Max, monthly or yearly: ${SITE_ORIGIN}/pricing`,
     `- Free library: ${books.length} public-domain or openly licensed books, ${PUBLIC_BOOK_LANGUAGES.map((code) => `${name(code)} ${books.filter((b) => b.language === code).length}`).join(', ')}. Every book has a CEFR level (A1 to C2).`,
+    '- Learning tools: tap-to-translate words and phrases with optional monolingual AI explanations, server-scheduled FSRS spaced-repetition word review with real example sentences, library concordance word search, zero-cost browser text-to-speech follow-along, EPUB/article import, and LingQ CSV known-words import.',
     ...(welcomeOfferOpen()
       ? [
           `- Welcome offer: a new account that verifies its email gets 15 days of Plus free, with no code needed. Valid until ${WELCOME_OFFER_ENDS.slice(0, 10)} (end of 15 December, Beijing time), once per account. Accounts made earlier can enter the redeem code ${WELCOME_CODE} in Settings → Plan. 新账号验证邮箱即可免费领 15 天 Plus，无需兑换码，12 月 15 日前有效；老账号可在设置 → 套餐输入兑换码 ${WELCOME_CODE}。`,
         ]
       : []),
     '- Reading a free-library book does not use the Free plan lesson allowance.',
-    '- The first chapter of each free book can be read without an account.',
+    '- Interactive zero-signup reader demos run on the landing page, and the first chapter of every free book can be read without an account.',
     `- Free English vocabulary size test: ${SITE_ORIGIN}/vocab-test . About 2 minutes, no account needed. It adapts to your answers, estimates how many English word families you know (up to 40,000), gives a CEFR level (A1 to C2), and suggests free books you can read. A signed-in learner can save the level, and book picks follow it. 免费英语词汇量测试，约 2 分钟，无需注册，给出词汇量、A1–C2 等级和适合阅读的免费书。`,
     '',
     '## Pages',

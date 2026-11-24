@@ -24,6 +24,13 @@ describe('llms.txt', () => {
     expect(text).toContain(`Free library: ${listPublicBooks().length} public-domain`);
   });
 
+  it('highlights shipped learning capabilities and LingQ CSV import', () => {
+    expect(text).toContain('FSRS');
+    expect(text).toContain('LingQ');
+    expect(text).toContain('concordance');
+    expect(text).toContain('text-to-speech');
+  });
+
   it('names the welcome code only while the offer runs', () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date('2026-12-15T15:59:00Z'));

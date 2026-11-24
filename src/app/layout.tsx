@@ -21,6 +21,7 @@ import NativeBridge from '@/components/NativeBridge';
 import ServiceWorkerRegistrar from '@/components/ServiceWorkerRegistrar';
 import { isRtl } from '@/i18n/locales';
 import { pickMessages, SHELL_AND_PUBLIC_NAMESPACES, type MessageTree } from '@/i18n/namespaces';
+import { isNoIndexSite } from '@/lib/site-seo';
 
 // Nunito is the UI/chrome font; Literata stays the reading body (issue #147 §2.1).
 // Script subsets beyond Latin are #289 Phase 1.1: Literata ships Cyrillic and
@@ -60,18 +61,21 @@ const korean = Noto_Sans_KR({
   adjustFontFallback: false,
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL('https://readfox.app'),
-  title: 'Readfox',
-  description:
-    'Read real books in the language you are learning, with instant translations and spaced-repetition practice',
-  appleWebApp: { capable: true, title: 'Readfox', statusBarStyle: 'default' },
-  openGraph: {
-    siteName: 'Readfox',
-    images: [{ url: '/og.png', width: 1200, height: 630, alt: 'Readfox' }],
-  },
-  twitter: { card: 'summary_large_image', images: ['/og.png'] },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    metadataBase: new URL('https://readfox.app'),
+    title: 'Readfox',
+    description:
+      'Read real books in the language you are learning, with instant translations and spaced-repetition practice',
+    ...(isNoIndexSite() ? { robots: { index: false, follow: false } } : {}),
+    appleWebApp: { capable: true, title: 'Readfox', statusBarStyle: 'default' },
+    openGraph: {
+      siteName: 'Readfox',
+      images: [{ url: '/og.png', width: 1200, height: 630, alt: 'Readfox' }],
+    },
+    twitter: { card: 'summary_large_image', images: ['/og.png'] },
+  };
+}
 
 export const viewport: Viewport = {
   viewportFit: 'cover',
