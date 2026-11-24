@@ -23,9 +23,11 @@ export interface VocabBand {
   words: VocabWord[];
 }
 
+export type VocabAnswerLanguage = 'ru' | 'en';
+
 export interface VocabTestData {
   version?: number;
-  answerLanguage?: 'ru';
+  answerLanguage?: VocabAnswerLanguage;
   bands: VocabBand[];
   source?: string;
 }
@@ -94,8 +96,44 @@ function shuffle<T>(list: readonly T[], rng: Rng): T[] {
 const FILLER = new Set('的地得使之者人性化物一.…了');
 
 const RUSSIAN_FILLER = new Set(['в', 'на', 'с', 'из', 'по', 'за', 'и', 'или', 'для', 'от', 'к']);
+const ENGLISH_FILLER = new Set([
+  'a',
+  'an',
+  'the',
+  'to',
+  'of',
+  'in',
+  'on',
+  'at',
+  'by',
+  'for',
+  'from',
+  'with',
+  'into',
+  'as',
+  'or',
+  'and',
+  'be',
+  'is',
+  'are',
+  'one',
+  'someone',
+  'something',
+  'person',
+  'thing',
+  'act',
+  'state',
+  'make',
+  'get',
+  'have',
+  'not',
+  'no',
+]);
 
-function meaningTokens(rows: readonly SenseRow[], answerLanguage?: 'ru'): Set<string> {
+function meaningTokens(
+  rows: readonly SenseRow[],
+  answerLanguage?: VocabAnswerLanguage,
+): Set<string> {
   if (answerLanguage === 'ru') {
     const glosses = rows.flatMap((row) =>
       (row.ru ?? []).map((meaning) => meaning.toLowerCase().replaceAll('ё', 'е')),
@@ -104,6 +142,14 @@ function meaningTokens(rows: readonly SenseRow[], answerLanguage?: 'ru'): Set<st
     return new Set([
       ...glosses.map((meaning) => `=${meaning.trim()}`),
       ...words.filter((word) => !RUSSIAN_FILLER.has(word)),
+    ]);
+  }
+  if (answerLanguage === 'en') {
+    const glosses = rows.map((row) => row.en.toLowerCase().trim()).filter(Boolean);
+    const words = glosses.flatMap((meaning) => meaning.match(/[a-z]+/g) ?? []);
+    return new Set([
+      ...glosses.map((meaning) => `=${meaning}`),
+      ...words.filter((word) => word.length > 2 && !ENGLISH_FILLER.has(word)),
     ]);
   }
   const out = new Set<string>();
@@ -118,9 +164,15 @@ function overlaps(a: Set<string>, b: Set<string>): boolean {
 }
 
 /** Rough rendered width; keep in step with option_width in scripts/build-vocab-test.py. */
-export function optionWidth(rows: readonly SenseRow[], answerLanguage?: 'ru'): number {
+export function optionWidth(
+  rows: readonly SenseRow[],
+  answerLanguage?: VocabAnswerLanguage,
+): number {
   if (answerLanguage === 'ru') {
     return rows.reduce((sum, row) => sum + (row.ru ?? []).join('; ').length, 0);
+  }
+  if (answerLanguage === 'en') {
+    return rows.reduce((sum, row) => sum + row.en.length, 0);
   }
   return rows.reduce(
     (sum, row) => sum + (row.zh ?? []).reduce((n, m) => n + m.length, 0) + 0.45 * row.en.length,

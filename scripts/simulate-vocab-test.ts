@@ -16,13 +16,24 @@ import {
 } from '../src/lib/vocab-test';
 
 // Run from the repository root.
-const file = path.join(process.cwd(), 'languages', 'en', 'content', 'vocab-test.json');
+const rawArgs = process.argv.slice(2);
+let lang = 'en';
+const positional: string[] = [];
+for (let i = 0; i < rawArgs.length; i++) {
+  if (rawArgs[i] === '--lang' && rawArgs[i + 1]) {
+    lang = rawArgs[++i];
+  } else {
+    positional.push(rawArgs[i]);
+  }
+}
+const file = path.join(process.cwd(), 'languages', lang, 'content', 'vocab-test.json');
 const data = JSON.parse(fs.readFileSync(file, 'utf8')) as VocabTestData;
 const MAX_RANK = data.bands[data.bands.length - 1].to;
-const SIZES = [500, 1000, 2000, 3500, 5000, 8000, 12000, 18000, 27000];
+const SIZES = [500, 1000, 2000, 3500, 5000, 8000, 12000, 18000, 27000].filter(
+  (size) => size < MAX_RANK,
+);
 
-const [shapesArg = 'A,B,C', stopsArg = '40,80', runsArg = '150', unsureArg = '0.7'] =
-  process.argv.slice(2);
+const [shapesArg = 'A,B,C', stopsArg = '40,80', runsArg = '150', unsureArg = '0.7'] = positional;
 const RUNS = Number(runsArg);
 const UNSURE = Number(unsureArg);
 
