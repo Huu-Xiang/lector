@@ -9,16 +9,20 @@ import {
   pickLocalized,
   type PublicBook,
 } from '@/lib/public-books';
+import { publicAlternatesForRequest } from '@/lib/public-locale.server';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations('publicBooks');
+  const [t, { alternates, canonicalUrl }] = await Promise.all([
+    getTranslations('publicBooks'),
+    publicAlternatesForRequest('/books'),
+  ]);
   const title = `${t('indexTitle')} | Readfox`;
   const description = t('indexMetaDescription', { count: listPublicBooks().length });
   return {
     title,
     description,
-    alternates: { canonical: '/books' },
-    openGraph: { title, description, url: '/books', siteName: 'Readfox', type: 'website' },
+    alternates,
+    openGraph: { title, description, url: canonicalUrl, siteName: 'Readfox', type: 'website' },
   };
 }
 

@@ -3,14 +3,18 @@ import Link from 'next/link';
 import { getLocale, getTranslations } from 'next-intl/server';
 import { LegalShell, H2 } from '@/components/LegalLinks/shell';
 import { SOURCE_URL } from '@/components/LegalLinks';
+import { publicAlternatesForRequest } from '@/lib/public-locale.server';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations('legalPages');
+  const [t, { alternates }] = await Promise.all([
+    getTranslations('legalPages'),
+    publicAlternatesForRequest('/about'),
+  ]);
   return {
     title: t('about.metaTitle'),
     description:
       'About Readfox: an open-source reader for learning languages from real books, with tap-to-translate, a vocabulary list and spaced-repetition review.',
-    alternates: { canonical: '/about' },
+    alternates,
   };
 }
 

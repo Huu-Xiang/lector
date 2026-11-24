@@ -13,6 +13,7 @@ import {
   PUBLIC_BOOK_LANGUAGES,
 } from '@/lib/public-books';
 import BookList from '../../../BookList';
+import { publicAlternatesForRequest } from '@/lib/public-locale.server';
 
 interface Props {
   params: Promise<{ language: string; author: string }>;
@@ -53,12 +54,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     language: languageName,
     titles,
   });
-  const url = `/books/${language}/author/${slug}`;
+  const url = `/books/${language}/author/${encodeURIComponent(slug)}`;
+  const { alternates, canonicalUrl } = await publicAlternatesForRequest(url);
   return {
     title,
     description,
-    alternates: { canonical: url },
-    openGraph: { title, description, url, siteName: 'Readfox', type: 'profile' },
+    alternates,
+    openGraph: { title, description, url: canonicalUrl, siteName: 'Readfox', type: 'profile' },
   };
 }
 

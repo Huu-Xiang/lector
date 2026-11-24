@@ -9,19 +9,23 @@ import ReportResume from '@/components/VocabTest/ReportResume';
 import UiLanguageSelect from '@/i18n/UiLanguageSelect';
 import { SITE_ORIGIN } from '@/lib/public-books';
 import { loadVocabTestBooks, loadVocabTestData } from '@/lib/vocab-test-data';
+import { publicAlternatesForRequest } from '@/lib/public-locale.server';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations('vocabTest');
+  const [t, { alternates, canonicalUrl }] = await Promise.all([
+    getTranslations('vocabTest'),
+    publicAlternatesForRequest('/vocab-test'),
+  ]);
   const title = `${t('metaTitle')} | Readfox`;
   const description = t('metaDescription');
   return {
     title,
     description,
-    alternates: { canonical: '/vocab-test' },
+    alternates,
     openGraph: {
       title,
       description,
-      url: `${SITE_ORIGIN}/vocab-test`,
+      url: canonicalUrl,
       siteName: 'Readfox',
       type: 'website',
     },

@@ -20,6 +20,7 @@ import {
   pickLocalized,
   readingHours,
 } from '@/lib/public-books';
+import { publicAlternatesForRequest } from '@/lib/public-locale.server';
 
 interface Props {
   params: Promise<{ language: string; slug: string }>;
@@ -53,11 +54,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const blurb = pickLocalized(book.blurbs, locale);
   const description = fitText(`${t('bookMetaDescription', values)} ${blurb}`, DESCRIPTION_MAX);
   const url = `/books/${language}/${slug}`;
+  const { alternates, canonicalUrl } = await publicAlternatesForRequest(url);
   return {
     title,
     description,
-    alternates: { canonical: url },
-    openGraph: { title, description, url, siteName: 'Readfox', type: 'book' },
+    alternates,
+    openGraph: {
+      title,
+      description,
+      url: canonicalUrl,
+      siteName: 'Readfox',
+      type: 'book',
+      ...(book.cover
+        ? { images: [{ url: book.cover.url, width: 480, height: 640, alt: book.title }] }
+        : {}),
+    },
   };
 }
 

@@ -7,13 +7,17 @@ import WelcomeOfferNote from '@/components/WelcomeOfferNote';
 import NativeAppRedirect from '@/components/NativeAppRedirect';
 import CardPendingNote from './CardPendingNote';
 import PricingTiers from './PricingTiers';
+import { publicAlternatesForRequest } from '@/lib/public-locale.server';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations('pricing');
+  const [t, { alternates }] = await Promise.all([
+    getTranslations('pricing'),
+    publicAlternatesForRequest('/pricing'),
+  ]);
   return {
     title: t('metaTitle'),
     description: t('metaDescription'),
-    alternates: { canonical: '/pricing' },
+    alternates,
   };
 }
 

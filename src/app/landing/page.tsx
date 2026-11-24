@@ -14,19 +14,23 @@ import { LOCALE_COOKIE, UI_LOCALES } from '@/i18n/locales';
 import { LANDING_ROOT_ID } from '@/lib/api-base';
 import NativeAppRedirect from '@/components/NativeAppRedirect';
 import LandingReaderDemo from '@/components/LandingReaderDemo';
+import { publicAlternatesForRequest } from '@/lib/public-locale.server';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations('landing');
+  const [t, { alternates, canonicalUrl }] = await Promise.all([
+    getTranslations('landing'),
+    publicAlternatesForRequest('/'),
+  ]);
   const title = t('metaTitle');
   const description = t('metaDescription');
   return {
     title,
     description,
-    alternates: { canonical: '/' },
+    alternates,
     openGraph: {
       title,
       description,
-      url: '/',
+      url: canonicalUrl,
       siteName: 'Readfox',
       type: 'website',
       images: [{ url: '/og.png', width: 1200, height: 630, alt: 'Readfox' }],

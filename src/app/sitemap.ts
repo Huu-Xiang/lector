@@ -8,11 +8,22 @@ import {
   levelSlug,
   listPublicBooks,
 } from '@/lib/public-books';
+import { sitemapLanguages } from '@/lib/public-locale';
 import { siteLastModified } from '@/lib/site-seo';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = 'https://readfox.app';
   const lastModified = siteLastModified();
+  const entry = (
+    path: string,
+    changeFrequency: 'weekly' | 'monthly' | 'yearly',
+  ): MetadataRoute.Sitemap[number] => ({
+    url: `${base}${path}`,
+    lastModified,
+    changeFrequency,
+    alternates: { languages: sitemapLanguages(path) },
+  });
+
   const pages = [
     '/',
     '/pricing',
@@ -22,55 +33,31 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/about',
     '/vocab-test',
     ...ALTERNATIVE_COMPETITORS.map((c) => alternativePath(c)),
-  ].map((path) => ({
-    url: `${base}${path}`,
-    lastModified,
-    changeFrequency: 'monthly' as const,
-  }));
+  ].map((path) => entry(path, 'monthly'));
+
   const books = [
-    { url: `${base}/books`, lastModified, changeFrequency: 'weekly' as const },
-    ...languagesWithBooks().map((language) => ({
-      url: `${base}/books/${language}`,
-      lastModified,
-      changeFrequency: 'weekly' as const,
-    })),
+    entry('/books', 'weekly'),
+    ...languagesWithBooks().map((language) => entry(`/books/${language}`, 'weekly')),
     ...listPublicBooks().flatMap((book) => [
-      {
-        url: `${base}/books/${book.language}/${book.slug}`,
-        lastModified,
-        changeFrequency: 'yearly' as const,
-      },
-      {
-        url: `${base}/books/${book.language}/${book.slug}/read`,
-        lastModified,
-        changeFrequency: 'yearly' as const,
-      },
+      entry(`/books/${book.language}/${book.slug}`, 'yearly'),
+      entry(`/books/${book.language}/${book.slug}/read`, 'yearly'),
     ]),
   ];
+
   const levels = [
     ...new Set(listPublicBooks().map((b) => `/books/${b.language}/level/${levelSlug(b.level)}`)),
-  ].map((path) => ({
-    url: `${base}${path}`,
-    lastModified,
-    changeFrequency: 'monthly' as const,
-  }));
+  ].map((path) => entry(path, 'monthly'));
+
   const authors = PUBLIC_BOOK_LANGUAGES.flatMap((language) => {
     const list = authorsOf(language);
     if (list.length === 0) return [];
     return [
-      {
-        url: `${base}/books/${language}/authors`,
-        lastModified,
-        changeFrequency: 'monthly' as const,
-      },
+      entry(`/books/${language}/authors`, 'monthly'),
       ...list
         .filter((a) => a.count >= AUTHOR_PAGE_MIN_BOOKS)
-        .map((a) => ({
-          url: `${base}/books/${language}/author/${encodeURIComponent(a.slug)}`,
-          lastModified,
-          changeFrequency: 'monthly' as const,
-        })),
+        .map((a) => entry(`/books/${language}/author/${encodeURIComponent(a.slug)}`, 'monthly')),
     ];
   });
+
   return [...pages, ...books, ...levels, ...authors];
 }

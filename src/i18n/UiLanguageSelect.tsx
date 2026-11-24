@@ -1,12 +1,19 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { Globe } from 'lucide-react';
 import { toast } from 'sonner';
 import { Select } from '@/components/ui/select';
 import { loadNative, saveNativeLanguage } from '@/lib/library-titles';
 import { NATIVE_LANGUAGES, nativeLanguageFromLocale } from '@/lib/languages';
+import {
+  isPublicSeoPath,
+  localizePublicPath,
+  parsePublicLocalePath,
+  stripPublicLocalePrefix,
+} from '@/lib/public-locale';
+import { LANDING_ROOT_ID } from '@/lib/api-base';
 import { LOCALE_COOKIE, UI_LOCALES } from './locales';
 
 const ONE_YEAR_SECONDS = 60 * 60 * 24 * 365;
@@ -26,11 +33,29 @@ export default function UiLanguageSelect({
   accessibleLabel?: string;
 }) {
   const router = useRouter();
+  const pathname = usePathname();
   const locale = useLocale();
   const t = useTranslations('uiLanguage');
 
   function change(code: string) {
     writeLocaleCookie(code);
+    const isLocalizedRoute = pathname ? parsePublicLocalePath(pathname) !== null : false;
+    const isPublicLanding =
+      pathname === '/' &&
+      typeof document !== 'undefined' &&
+      document.getElementById(LANDING_ROOT_ID) !== null;
+    const basePath = pathname ? stripPublicLocalePrefix(pathname) : '';
+    const shouldSyncPublicUrl =
+      pathname !== null &&
+      (isLocalizedRoute || isPublicLanding || (basePath !== '/' && isPublicSeoPath(basePath)));
+    if (shouldSyncPublicUrl && pathname) {
+      const nextPath = localizePublicPath(pathname, code);
+      if (nextPath !== pathname) {
+        router.push(nextPath);
+        void offerNativeSwitch(code);
+        return;
+      }
+    }
     router.refresh();
     void offerNativeSwitch(code);
   }

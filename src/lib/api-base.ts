@@ -22,6 +22,7 @@ import { interceptPlanLimit } from './plan-limits';
 import { authHref, sanitizeAuthReturnPath } from './auth-return';
 import { isNativeApp } from './native-app';
 import { setOfflineUser } from './offline/identity';
+import { parsePublicLocalePath } from './public-locale';
 
 declare global {
   interface Window {
@@ -138,6 +139,8 @@ export const AUTH_ROUTES = [
 export const LANDING_ROOT_ID = 'readfox-landing';
 
 export function isAuthRoute(pathname: string): boolean {
+  const localizedPublic = parsePublicLocalePath(pathname);
+  if (localizedPublic) return true;
   if (
     pathname === '/' &&
     typeof document !== 'undefined' &&

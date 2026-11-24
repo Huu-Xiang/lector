@@ -7,6 +7,7 @@ import { authHref, claimBookPath } from '@/lib/auth-return';
 import PublicChapterReader from '@/components/PublicChapterReader';
 import { findPublicBook, firstChapter, listPublicBooks, pickLocalized } from '@/lib/public-books';
 import BookSource from '../../../BookSource';
+import { publicAlternatesForRequest } from '@/lib/public-locale.server';
 
 interface Props {
   params: Promise<{ language: string; slug: string }>;
@@ -34,11 +35,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     level: book.level,
   });
   const url = `/books/${language}/${slug}/read`;
+  const { alternates, canonicalUrl } = await publicAlternatesForRequest(url);
   return {
     title,
     description,
-    alternates: { canonical: url },
-    openGraph: { title, description, url, siteName: 'Readfox', type: 'article' },
+    alternates,
+    openGraph: { title, description, url: canonicalUrl, siteName: 'Readfox', type: 'article' },
   };
 }
 

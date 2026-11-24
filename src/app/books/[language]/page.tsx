@@ -20,6 +20,7 @@ import {
 import { UI_LOCALES } from '@/i18n/locales';
 import BookDetailList from '../BookDetailList';
 import BookHubLocaleButton from '../BookHubLocaleButton';
+import { publicAlternatesForRequest } from '@/lib/public-locale.server';
 
 interface Props {
   params: Promise<{ language: string }>;
@@ -60,11 +61,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     DESCRIPTION_MAX,
   );
   const url = `/books/${language}`;
+  const { alternates, canonicalUrl } = await publicAlternatesForRequest(url);
   return {
     title,
     description,
-    alternates: { canonical: url },
-    openGraph: { title, description, url, siteName: 'Readfox', type: 'website' },
+    alternates,
+    openGraph: { title, description, url: canonicalUrl, siteName: 'Readfox', type: 'website' },
   };
 }
 

@@ -1,10 +1,14 @@
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { LegalShell, H2 } from '@/components/LegalLinks/shell';
+import { publicAlternatesForRequest } from '@/lib/public-locale.server';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations('legalPages');
-  return { title: t('refunds.metaTitle'), alternates: { canonical: '/refunds' } };
+  const [t, { alternates }] = await Promise.all([
+    getTranslations('legalPages'),
+    publicAlternatesForRequest('/refunds'),
+  ]);
+  return { title: t('refunds.metaTitle'), alternates };
 }
 
 export default async function RefundsPage() {

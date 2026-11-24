@@ -15,6 +15,7 @@ import {
 } from '@/lib/public-books';
 import BookDetailList from '../../../BookDetailList';
 import FeaturedReading from '../../../FeaturedReading';
+import { publicAlternatesForRequest } from '@/lib/public-locale.server';
 
 interface Props {
   params: Promise<{ language: string; level: string }>;
@@ -51,11 +52,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     .join(', ');
   const description = t('levelMetaDescription', { language: languageName, level, titles });
   const url = `/books/${language}/level/${levelSlug(level)}`;
+  const { alternates, canonicalUrl } = await publicAlternatesForRequest(url);
   return {
     title,
     description,
-    alternates: { canonical: url },
-    openGraph: { title, description, url, siteName: 'Readfox', type: 'website' },
+    alternates,
+    openGraph: { title, description, url: canonicalUrl, siteName: 'Readfox', type: 'website' },
   };
 }
 

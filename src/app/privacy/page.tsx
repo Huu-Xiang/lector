@@ -1,10 +1,14 @@
 import type { Metadata } from 'next';
 import { getLocale, getTranslations } from 'next-intl/server';
 import { LegalShell, H2 } from '@/components/LegalLinks/shell';
+import { publicAlternatesForRequest } from '@/lib/public-locale.server';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations('legalPages');
-  return { title: t('privacy.metaTitle') };
+  const [t, { alternates }] = await Promise.all([
+    getTranslations('legalPages'),
+    publicAlternatesForRequest('/privacy'),
+  ]);
+  return { title: t('privacy.metaTitle'), alternates };
 }
 
 const LAST_UPDATED = new Date(Date.UTC(2026, 10, 13));

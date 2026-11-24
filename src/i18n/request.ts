@@ -1,6 +1,7 @@
 import { cookies, headers } from 'next/headers';
 import { getRequestConfig } from 'next-intl/server';
-import { DEFAULT_LOCALE, LOCALE_COOKIE, resolveLocale } from './locales';
+import { DEFAULT_LOCALE, LOCALE_COOKIE, isUiLocale, resolveLocale } from './locales';
+import { READFOX_LOCALE_HEADER } from '@/lib/public-locale';
 
 type Messages = { [key: string]: string | Messages };
 
@@ -19,10 +20,10 @@ function withFallback(base: Messages, overlay: Messages): Messages {
 
 export default getRequestConfig(async () => {
   const [store, requestHeaders] = await Promise.all([cookies(), headers()]);
-  const locale = resolveLocale(
-    store.get(LOCALE_COOKIE)?.value,
-    requestHeaders.get('accept-language'),
-  );
+  const forcedLocale = requestHeaders.get(READFOX_LOCALE_HEADER);
+  const locale = isUiLocale(forcedLocale)
+    ? forcedLocale
+    : resolveLocale(store.get(LOCALE_COOKIE)?.value, requestHeaders.get('accept-language'));
   const english = (await import('../../messages/en.json')).default as Messages;
   const messages =
     locale === DEFAULT_LOCALE
