@@ -1,4 +1,129 @@
 {
+  "alternatives": {
+    "breadcrumbHome": "Readfox",
+    "ctaBooks": "瀏覽 {books} 本免費原著",
+    "ctaVocabTest": "免費測英語詞彙量",
+    "ctaRegister": "免費註冊開始讀",
+    "tableHeading": "Readfox 與 {competitor} 比較",
+    "colFeature": "比較項目",
+    "whenReadfoxHeading": "什麼情況更適合 Readfox",
+    "whenCompetitorHeading": "什麼情況更適合 {competitor}",
+    "faqHeading": "常見問題",
+    "compareOther": "查看與 {competitor} 的比較",
+    "seePricing": "查看定價",
+    "browseLibrary": "免費分級書庫",
+    "rows": {
+      "price": {
+        "label": "起步價格",
+        "readfox": "免費方案可用（每月 {freeLookups} 次 AI 查詞）；Plus 低至 {plusPrice}/月"
+      },
+      "freeLibrary": {
+        "label": "內建分級原著",
+        "readfox": "{books} 本 A1–C2 分級公版原著，免註冊即可試讀第一章"
+      },
+      "lookup": {
+        "label": "查詞與語境講解",
+        "readfox": "離線詞典免費查 + AI 結合上下文講解（支援母語或單語解釋）"
+      },
+      "review": {
+        "label": "生詞複習",
+        "readfox": "伺服器端 FSRS 記憶曲線 + 真實例句複習，支援匯出 Anki"
+      },
+      "audio": {
+        "label": "朗讀跟讀",
+        "readfox": "所有課文支援零成本瀏覽器 TTS 朗讀跟讀"
+      },
+      "import": {
+        "label": "匯入內容與詞庫",
+        "readfox": "支援 EPUB、網頁連結、純文字，以及直接匯入 LingQ CSV 生詞表"
+      },
+      "offline": {
+        "label": "手機與離線閱讀",
+        "readfox": "可加入手機主畫面（PWA），支援最近開啟課文的離線閱讀"
+      },
+      "openSource": {
+        "label": "開源與隱私",
+        "readfox": "基於 AGPL-3.0 開源程式碼，無第三方廣告追蹤，支援完整資料匯出"
+      }
+    },
+    "lingq": {
+      "metaTitle": "Readfox vs LingQ：更實惠清爽的 LingQ 開源替代方案",
+      "metaDescription": "比較 Readfox 與 LingQ：內建 {books} 本 A1–C2 分級原著、FSRS 複習、AI 語境查詞、匯入 LingQ CSV 詞庫，Plus 低至 {plusPrice}/月。",
+      "title": "Readfox：更輕量實惠的 LingQ 替代方案",
+      "summary": "如果你想透過閱讀原著學外語，但覺得 LingQ 訂閱太貴或介面複雜，Readfox 提供更專注的閱讀體驗：內建 {books} 本 A1–C2 分級原著、FSRS 間隔複習、AI 上下文查詞、免費跟讀，並支援直接匯入 LingQ CSV 生詞表，Plus 低至 {plusPrice}/月。",
+      "rows": {
+        "price": "免費方案限制生詞額度；Premium 月付通常約 $12.99/月",
+        "freeLibrary": "社群課程與迷你故事豐富，但多數需登入且有額度限制",
+        "lookup": "社群釋義 + 詞典彈窗；部分 AI 功能需較高方案",
+        "review": "內建 1–4 級熟悉度字卡複習",
+        "audio": "大量社群課文配有真人或 TTS 同步音訊",
+        "import": "支援瀏覽器擴充功能、電子書與 YouTube/Netflix 匯入",
+        "offline": "提供原生 iOS / Android App 與離線下載",
+        "openSource": "閉源商業平台"
+      },
+      "migrationHeading": "1 分鐘匯入你在 LingQ 累積的生詞",
+      "migrationBody": "不需要重新標記已認識的單字。Readfox 可直接讀取 LingQ 匯出的 CSV 詞表，保留譯文與 1–4 級掌握狀態。",
+      "migrationStep1": "從 LingQ 詞彙頁面匯出你的 CSV 檔案。",
+      "migrationStep2": "前往 Readfox 設定 → 匯入已知詞彙並上傳該 CSV。",
+      "migrationStep3": "所有已知詞與熟悉度會立即套用到你開啟的每本書。",
+      "readfoxWins": {
+        "w1": "價格親民：免費版每月附 {freeLookups} 次 AI 查詞與 {freeDetailed} 次深入講解，Plus 低至 {plusPrice}/月。",
+        "w2": "閱讀介面清爽，內建 {books} 本 A1–C2 分級原著、FSRS 複習與全書語境搜尋。",
+        "w3": "無廣告追蹤、AGPL 開源透明，並支援一鍵匯入 LingQ CSV 詞庫。"
+      },
+      "competitorWins": {
+        "w1": "目前支援 40 多種語言，而 Readfox 先集中打磨少數主力語言書庫。",
+        "w2": "擁有原生行動 App 以及龐大的社群 Podcast 與迷你故事音訊庫。",
+        "w3": "提供瀏覽器擴充功能，方便從 YouTube 與串流平台一鍵匯入。"
+      },
+      "faq": {
+        "importQ": "可以把 LingQ 的生詞和掌握狀態匯入 Readfox 嗎？",
+        "importA": "可以。在 LingQ 匯出 CSV 後，於 Readfox 設定 → 匯入已知詞彙上傳即可自動對應譯文與熟悉度。",
+        "freeQ": "Readfox 免費方案可以使用多少功能？",
+        "freeA": "免費帳號可無限閱讀全部 {books} 本免費原著、無限查本機詞典，每月含 {freeLookups} 次 AI 查詞與 {freeDetailed} 次深度解析。",
+        "booksQ": "需要自己準備電子書上傳嗎？",
+        "booksA": "不用。Readfox 內建 {books} 本涵蓋英、法、西、中、韓的 A1–C2 公版原著，免註冊即可試讀第一章。",
+        "differencesQ": "Readfox 和 LingQ 最大的差別是什麼？",
+        "differencesA": "LingQ 強項是 40+ 語言與龐大的社群音訊生態，價格較高；Readfox 專注無干擾原著精讀、FSRS 複習、低至 {plusPrice}/月 的定價與開源透明。"
+      }
+    },
+    "readlang": {
+      "metaTitle": "Readfox vs Readlang：內建分級原著與 FSRS 複習的 Readlang 替代方案",
+      "metaDescription": "比較 Readfox 與 Readlang：內建 {books} 本 A1–C2 免費原著、FSRS 複習、AI 語境解釋與免費跟讀，Plus 低至 {plusPrice}/月。",
+      "title": "Readfox：內建分級書庫的 Readlang 替代方案",
+      "summary": "Readfox 與 Readlang 都是為認真閱讀外語打造的獨立工具。Readfox 在點詞閱讀之外，進一步提供 {books} 本 A1–C2 分級原著、伺服器端 FSRS 間隔複習、全書語境搜尋與免費瀏覽器跟讀，免費起步、Plus 低至 {plusPrice}/月。",
+      "rows": {
+        "price": "免費方案有每日片語翻譯上限；Premium 約 $5/月（$48/年）",
+        "freeLibrary": "以社群分享文章為主，缺少系統化的 A1–C2 經典原著書庫",
+        "lookup": "即時單字與片語翻譯，附 AI 講解",
+        "review": "內建克漏字字卡與 SM-2 風格排程",
+        "audio": "字卡與網頁文字支援 TTS 朗讀",
+        "import": "Chrome / Safari 網頁閱讀擴充功能成熟，支援 EPUB 與文章匯入",
+        "offline": "純網頁使用，無離線 PWA 閱讀外殼",
+        "openSource": "閉源獨立 Web 應用"
+      },
+      "readfoxWins": {
+        "w1": "開箱即讀 {books} 本 A1–C2 分級原著，附多語書名簡介並可免註冊試讀第一章。",
+        "w2": "採用現代 FSRS 複習演算法搭配真實例句，並提供全書庫語境搜尋。",
+        "w3": "AGPL 開源、原生支援 6 種介面語言，Plus 低至 {plusPrice}/月。"
+      },
+      "competitorWins": {
+        "w1": "Readlang 瀏覽器擴充功能可直接在任何外語新聞網站上原地翻譯。",
+        "w2": "透過網頁翻譯介面立即支援數十種語言。",
+        "w3": "深耕十餘年，輕量網頁閱讀流程相當穩定成熟。"
+      },
+      "faq": {
+        "freeQ": "Readfox 免費方案與 Readlang 相比如何？",
+        "freeA": "Readfox 免費方案可不限次數閱讀 {books} 本免費原著、無限查離線詞典，每月含 {freeLookups} 次 AI 查詞與 {freeDetailed} 次深度解析，Plus 低至 {plusPrice}/月。",
+        "booksQ": "使用 Readfox 需要安裝瀏覽器外掛嗎？",
+        "booksA": "不需要。直接在電腦或手機瀏覽器就能讀 {books} 本內建原著，也可貼上網址或上傳 EPUB。",
+        "reviewQ": "兩者的單字複習有什麼差別？",
+        "reviewA": "Readfox 在伺服器端執行 FSRS 記憶曲線，搭配原著與 Tatoeba 真實例句提供多元練習模式，並支援 Anki 匯出。",
+        "differencesQ": "該選 Readfox 還是 Readlang？",
+        "differencesA": "若你最需要 Chrome 外掛直接瀏覽數十種語言的新聞網頁，選 Readlang；若你想有系統地閱讀分級原著、用 FSRS 複習並享有完整多語介面，Readfox 更適合。"
+      }
+    }
+  },
   "announcements": {
     "button": "新功能",
     "buttonUnseen": "新功能，有未讀更新",

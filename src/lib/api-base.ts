@@ -131,6 +131,7 @@ export const AUTH_ROUTES = [
   '/checkout',
   '/books',
   '/vocab-test',
+  '/alternatives',
 ] as const;
 
 /** Caddy serves /landing at "/" to visitors without a session cookie; the page carries this id. */

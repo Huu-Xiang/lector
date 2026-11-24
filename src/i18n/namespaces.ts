@@ -6,6 +6,7 @@ export type MessageTree = { [key: string]: string | MessageTree };
  * and free-book pages never pay for the heavy app-only catalogs.
  */
 export const SHELL_AND_PUBLIC_NAMESPACES = [
+  'alternatives',
   'auth',
   'betaNotice',
   'bookLink',

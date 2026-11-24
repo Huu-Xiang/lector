@@ -1,4 +1,5 @@
 import type { MetadataRoute } from 'next';
+import { ALTERNATIVE_COMPETITORS, alternativePath } from '@/lib/alternatives';
 import {
   AUTHOR_PAGE_MIN_BOOKS,
   PUBLIC_BOOK_LANGUAGES,
@@ -12,13 +13,20 @@ import { siteLastModified } from '@/lib/site-seo';
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = 'https://readfox.app';
   const lastModified = siteLastModified();
-  const pages = ['/', '/pricing', '/privacy', '/terms', '/refunds', '/about', '/vocab-test'].map(
-    (path) => ({
-      url: `${base}${path}`,
-      lastModified,
-      changeFrequency: 'monthly' as const,
-    }),
-  );
+  const pages = [
+    '/',
+    '/pricing',
+    '/privacy',
+    '/terms',
+    '/refunds',
+    '/about',
+    '/vocab-test',
+    ...ALTERNATIVE_COMPETITORS.map((c) => alternativePath(c)),
+  ].map((path) => ({
+    url: `${base}${path}`,
+    lastModified,
+    changeFrequency: 'monthly' as const,
+  }));
   const books = [
     { url: `${base}/books`, lastModified, changeFrequency: 'weekly' as const },
     ...languagesWithBooks().map((language) => ({

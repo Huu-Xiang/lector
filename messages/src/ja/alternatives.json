@@ -1,0 +1,127 @@
+{
+  "alternatives": {
+    "breadcrumbHome": "Readfox",
+    "ctaBooks": "{books}冊の無料洋書を見る",
+    "ctaVocabTest": "無料語彙力テストを受ける",
+    "ctaRegister": "無料アカウント作成",
+    "tableHeading": "Readfox と {competitor} の比較",
+    "colFeature": "比較項目",
+    "whenReadfoxHeading": "Readfox が向いている方",
+    "whenCompetitorHeading": "{competitor} が向いている方",
+    "faqHeading": "よくある質問",
+    "compareOther": "{competitor} との比較を見る",
+    "seePricing": "料金プランを見る",
+    "browseLibrary": "無料ライブラリ",
+    "rows": {
+      "price": {
+        "label": "開始料金",
+        "readfox": "無料プランあり（月{freeLookups}回のAI辞書）；Plusは月額{plusPrice}〜"
+      },
+      "freeLibrary": {
+        "label": "レベル別収録作品",
+        "readfox": "A1〜C2のパブリックドメイン書籍{books}冊、登録なしで第1章を試し読み可能"
+      },
+      "lookup": {
+        "label": "辞書・文脈解説",
+        "readfox": "無料のオフライン辞書＋文脈を踏まえたAI解説（母語・モノリンガル対応）"
+      },
+      "review": {
+        "label": "語彙復習",
+        "readfox": "サーバー側FSRS間隔反復＋実例句での復習、Ankiエクスポート対応"
+      },
+      "audio": {
+        "label": "音声読み上げ",
+        "readfox": "すべてのテキストレッスンで無料のブラウザTTS読み上げに対応"
+      },
+      "import": {
+        "label": "インポート機能",
+        "readfox": "EPUB・Web記事URL・テキストに加え、LingQ CSVの単語帳を直接インポート"
+      },
+      "offline": {
+        "label": "モバイル・オフライン",
+        "readfox": "ホーム画面追加（PWA）と最近開いたレッスンのオフライン閲覧に対応"
+      },
+      "openSource": {
+        "label": "オープンソースとプライバシー",
+        "readfox": "AGPL-3.0オープンソース、広告トラッカーなし、完全なデータエクスポート"
+      }
+    },
+    "lingq": {
+      "metaTitle": "Readfox vs LingQ：手頃でシンプルなオープンソースのLingQ代替ツール",
+      "metaDescription": "ReadfoxとLingQを比較：{books}冊のレベル別無料洋書、FSRS復習、AI文脈解説、LingQ CSVインポートに対応し月額{plusPrice}〜。",
+      "title": "LingQ の代替としての Readfox",
+      "summary": "Readfoxは、洋書多読で語学を学ぶためのシンプルで手頃なLingQ代替ツールです。CEFR A1〜C2の無料書籍{books}冊、FSRS復習、文脈AI解説、無料TTS読み上げ、LingQ CSVインポートを備え、Plusプランは月額{plusPrice}から始められます。",
+      "rows": {
+        "price": "無料版は保存語数に制限あり；Premiumは月額約$12.99",
+        "freeLibrary": "豊富なコミュニティ教材とミニストーリー（多くはログイン・制限あり）",
+        "lookup": "コミュニティ訳と辞書ポップアップ；AI機能は上位プラン向け",
+        "review": "LingQステータス（1〜4）連動のフラッシュカード復習",
+        "audio": "多くのコミュニティ教材に音声・TTSが同期",
+        "import": "ブラウザ拡張機能、電子書籍、YouTube/Netflixインポート",
+        "offline": "ネイティブiOS/Androidアプリとオフライン保存",
+        "openSource": "プロプライエタリな商用サービス"
+      },
+      "migrationHeading": "LingQの単語リストを1分で移行",
+      "migrationBody": "これまでLingQで記録した単語をやり直す必要はありません。ReadfoxはLingQのCSVエクスポートを直接読み込み、訳語と1〜4の習得度を引き継ぎます。",
+      "migrationStep1": "LingQの単語ページからCSVファイルをエクスポートします。",
+      "migrationStep2": "Readfoxの設定 → 既知語のインポートを開いてCSVをアップロードします。",
+      "migrationStep3": "習得度と訳語が、開くすべての本に即座に反映されます。",
+      "readfoxWins": {
+        "w1": "圧倒的なコスパ：無料プランに月{freeLookups}回のAI辞書と{freeDetailed}回の詳細解説が含まれ、Plusは月額{plusPrice}〜。",
+        "w2": "読書に集中できるUIと{books}冊のA1〜C2洋書、FSRS復習、ライブラリ横断コンコーダンス検索。",
+        "w3": "広告トラッカーなしのAGPLオープンソース設計と、LingQ CSVのワンステップ移行。"
+      },
+      "competitorWins": {
+        "w1": "40以上の言語に対応しており、Readfoxよりも対応言語数が広い。",
+        "w2": "ネイティブアプリと豊富なコミュニティポッドキャスト・音声ミニストーリーがある。",
+        "w3": "YouTubeや動画配信サイトからワンクリックで取り込める拡張機能を備える。"
+      },
+      "faq": {
+        "importQ": "LingQの単語や習得ステータスをインポートできますか？",
+        "importA": "はい。LingQからCSVをエクスポートし、Readfoxの設定 → 既知語のインポートからアップロードするだけで引き継げます。",
+        "freeQ": "無料プランではどこまで使えますか？",
+        "freeA": "{books}冊の無料書籍の閲覧と内蔵辞書は無制限で、毎月{freeLookups}回のAI単語翻訳と{freeDetailed}回の詳細解説が使えます。",
+        "booksQ": "自分で電子書籍を用意する必要がありますか？",
+        "booksA": "いいえ。英語・フランス語・スペイン語・中国語・韓国語の計{books}冊のレベル別作品が収録されており、登録なしで第1章を試せます。",
+        "differencesQ": "ReadfoxとLingQの最大の違いは何ですか？",
+        "differencesA": "LingQは40以上の言語と大規模な音声コミュニティが強みですが料金が高めです。Readfoxは快適な洋書精読、FSRS復習、月額{plusPrice}〜の価格とオープンソース性を重視しています。"
+      }
+    },
+    "readlang": {
+      "metaTitle": "Readfox vs Readlang：レベル別書籍とFSRS復習を備えたReadlang代替",
+      "metaDescription": "ReadfoxとReadlangを比較：{books}冊の無料レベル別書籍、FSRS復習、文脈AI解説、無料TTSに対応しPlusは月額{plusPrice}〜。",
+      "title": "Readlang の代替としての Readfox",
+      "summary": "ReadfoxとReadlangはどちらも読書中心の独立系語学ツールです。Readfoxはタップ翻訳に加え、{books}冊のA1〜C2無料書籍、FSRS間隔反復、コンコーダンス検索、ブラウザTTS読み上げを標準搭載し、無料からPlus月額{plusPrice}で利用できます。",
+      "rows": {
+        "price": "無料版はフレーズ翻訳に日次制限；Premiumは約$5/月（年$48）",
+        "freeLibrary": "ユーザー共有記事が中心で、体系的なA1〜C2古典書籍カタログはなし",
+        "lookup": "単語・フレーズの即時翻訳とAI解説",
+        "review": "SM-2方式の穴埋めフラッシュカード復習",
+        "audio": "フラッシュカードやテキストのTTS読み上げ",
+        "import": "強力なChrome/Safari Webリーダー拡張、EPUB・記事取り込み",
+        "offline": "Webアプリのみ、オフラインPWAシェルなし",
+        "openSource": "クローズドソースの個人開発Webアプリ"
+      },
+      "readfoxWins": {
+        "w1": "登録なしで第1章を試せる{books}冊のA1〜C2レベル別書籍カタログを標準収録。",
+        "w2": "実例句を使ったFSRS間隔反復復習と、ライブラリ全体のコンコーダンス検索を搭載。",
+        "w3": "AGPLオープンソースで6言語UIに対応し、Plusも月額{plusPrice}〜と手頃。"
+      },
+      "competitorWins": {
+        "w1": "Readlangのブラウザ拡張機能を使えば、任意の外国語Webページ上でそのまま翻訳できる。",
+        "w2": "Web翻訳ベースで数十言語にすぐ対応している。",
+        "w3": "10年以上の実績があり、軽量なWeb多読ツールとして成熟している。"
+      },
+      "faq": {
+        "freeQ": "無料プランはReadlangと比べてどう違いますか？",
+        "freeA": "Readfoxは{books}冊の無料書籍と内蔵辞書が無制限、さらに毎月{freeLookups}回のAI辞書と{freeDetailed}回の詳細解説が含まれ、Plusは月額{plusPrice}〜です。",
+        "booksQ": "ブラウザ拡張機能のインストールは必要ですか？",
+        "booksA": "不要です。PCやスマホのブラウザで{books}冊の無料書籍をすぐ読み始められ、記事URLやEPUBの取り込みにも対応しています。",
+        "reviewQ": "単語復習機能の違いは何ですか？",
+        "reviewA": "Readfoxはサーバー側FSRSアルゴリズムと書籍・Tatoebaの実例句を使った複数の復習モードに加え、Ankiエクスポートを備えています。",
+        "differencesQ": "ReadfoxとReadlang、どちらを選ぶべきですか？",
+        "differencesA": "数十言語のニュースサイトをChrome拡張でそのまま読みたいならReadlang、レベル別洋書カタログやFSRS復習、コンコーダンス検索を重視するならReadfoxが最適です。"
+      }
+    }
+  }
+}

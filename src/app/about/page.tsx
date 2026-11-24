@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { getLocale, getTranslations } from 'next-intl/server';
 import { LegalShell, H2 } from '@/components/LegalLinks/shell';
 import { SOURCE_URL } from '@/components/LegalLinks';
@@ -24,8 +25,11 @@ function externalLink(href: string) {
 }
 
 export default async function AboutPage() {
-  const t = await getTranslations('legalPages');
-  const locale = await getLocale();
+  const [t, ta, locale] = await Promise.all([
+    getTranslations('legalPages'),
+    getTranslations('alternatives'),
+    getLocale(),
+  ]);
   const isEnglish = locale.startsWith('en');
 
   return (
@@ -52,6 +56,15 @@ export default async function AboutPage() {
       <p>{t('about.dataSources.dictionaries')}</p>
       <p>{t('about.dataSources.books')}</p>
       <p>{t('about.dataSources.readingFeed')}</p>
+
+      <p className="flex flex-wrap gap-x-4 pt-2 text-xs text-muted-foreground">
+        <Link href="/alternatives/lingq" className="underline hover:text-foreground">
+          {ta('compareOther', { competitor: 'LingQ' })}
+        </Link>
+        <Link href="/alternatives/readlang" className="underline hover:text-foreground">
+          {ta('compareOther', { competitor: 'Readlang' })}
+        </Link>
+      </p>
     </LegalShell>
   );
 }

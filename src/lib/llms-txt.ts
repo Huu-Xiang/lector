@@ -42,6 +42,8 @@ export function buildLlmsTxt(): string {
     '',
     `- [Free books](${SITE_ORIGIN}/books): the whole free library`,
     `- [English vocabulary test](${SITE_ORIGIN}/vocab-test): free, about 2 minutes, CEFR level and book picks`,
+    `- [LingQ alternative](${SITE_ORIGIN}/alternatives/lingq): compare Readfox and LingQ (pricing, graded books, FSRS review, LingQ CSV import)`,
+    `- [Readlang alternative](${SITE_ORIGIN}/alternatives/readlang): compare Readfox and Readlang (built-in graded books, FSRS review, browser TTS)`,
     `- [Pricing](${SITE_ORIGIN}/pricing)`,
     `- [About](${SITE_ORIGIN}/about)`,
     `- [Privacy](${SITE_ORIGIN}/privacy)`,

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 import { LegalShell } from '@/components/LegalLinks/shell';
 import { fetchPlanPricesOnServer } from '@/lib/plan-prices.server';
@@ -17,8 +18,11 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function PricingPage() {
-  const t = await getTranslations('pricing');
-  const prices = await fetchPlanPricesOnServer();
+  const [t, ta, prices] = await Promise.all([
+    getTranslations('pricing'),
+    getTranslations('alternatives'),
+    fetchPlanPricesOnServer(),
+  ]);
   return (
     <LegalShell title={t('title')} wide>
       <NativeAppRedirect to="/" />
@@ -27,6 +31,14 @@ export default async function PricingPage() {
       <CardPendingNote />
       <PricingTiers initialPrices={prices} />
       <p className="text-xs text-muted-foreground">{t('notes')}</p>
+      <p className="flex flex-wrap gap-x-4 text-xs text-muted-foreground">
+        <Link href="/alternatives/lingq" className="underline hover:text-foreground">
+          {ta('compareOther', { competitor: 'LingQ' })}
+        </Link>
+        <Link href="/alternatives/readlang" className="underline hover:text-foreground">
+          {ta('compareOther', { competitor: 'Readlang' })}
+        </Link>
+      </p>
     </LegalShell>
   );
 }

@@ -1,4 +1,129 @@
 {
+  "alternatives": {
+    "breadcrumbHome": "Readfox",
+    "ctaBooks": "Browse {books} free books",
+    "ctaVocabTest": "Take free vocab test",
+    "ctaRegister": "Create free account",
+    "tableHeading": "Readfox vs {competitor}",
+    "colFeature": "Feature",
+    "whenReadfoxHeading": "When Readfox fits better",
+    "whenCompetitorHeading": "When {competitor} fits better",
+    "faqHeading": "Frequently asked questions",
+    "compareOther": "Compare with {competitor}",
+    "seePricing": "See pricing",
+    "browseLibrary": "Free book library",
+    "rows": {
+      "price": {
+        "label": "Starting price",
+        "readfox": "Free tier ({freeLookups} AI lookups/mo); Plus from {plusPrice}/mo"
+      },
+      "freeLibrary": {
+        "label": "Built-in graded books",
+        "readfox": "{books} public-domain books graded A1–C2, first chapter readable without sign-up"
+      },
+      "lookup": {
+        "label": "Word & phrase lookup",
+        "readfox": "Free on-device dictionary plus contextual AI explanations (native or monolingual)"
+      },
+      "review": {
+        "label": "Vocabulary review",
+        "readfox": "Server-scheduled FSRS spaced repetition with real example sentences and Anki export"
+      },
+      "audio": {
+        "label": "Audio & follow-along",
+        "readfox": "Zero-cost browser text-to-speech follow-along on every text lesson"
+      },
+      "import": {
+        "label": "Content & word import",
+        "readfox": "EPUB, web URLs, plain text, plus direct LingQ CSV known-words import"
+      },
+      "offline": {
+        "label": "Mobile & offline",
+        "readfox": "Installable PWA with offline reader shell for recently opened lessons"
+      },
+      "openSource": {
+        "label": "Open source & privacy",
+        "readfox": "AGPL-3.0 open-source fork, no third-party ad trackers, full JSON export"
+      }
+    },
+    "lingq": {
+      "metaTitle": "Readfox vs LingQ: Affordable Open-Source LingQ Alternative",
+      "metaDescription": "Compare Readfox and LingQ: {books} free CEFR-graded books, FSRS review, contextual AI lookup, LingQ CSV import, and Plus from {plusPrice}/mo.",
+      "title": "Readfox as a LingQ alternative",
+      "summary": "Readfox is a calmer, lower-cost alternative to LingQ for learning languages by reading real books. It includes {books} CEFR-graded public-domain books, FSRS spaced repetition, contextual AI lookup, free browser follow-along audio, and direct LingQ CSV word import, with paid plans starting at {plusPrice}/month.",
+      "rows": {
+        "price": "Limited free LingQ slots; Premium typically around $12.99/mo billed monthly",
+        "freeLibrary": "Large community lesson library and mini-stories, mostly gated behind an account",
+        "lookup": "Community hints and dictionary popups; AI features on higher tiers",
+        "review": "Built-in flashcards and SRS review tied to LingQ statuses (1–4)",
+        "audio": "Synced human and TTS audio across many community lessons",
+        "import": "Browser extension, e-books, YouTube/Netflix import",
+        "offline": "Native iOS and Android apps with offline lesson downloads",
+        "openSource": "Proprietary commercial platform"
+      },
+      "migrationHeading": "Bring your LingQ vocabulary in under a minute",
+      "migrationBody": "Already tracked thousands of words in LingQ? Readfox reads LingQ CSV exports directly and preserves your translations and 1–4 familiarity levels.",
+      "migrationStep1": "Export your vocabulary list from LingQ as a CSV file.",
+      "migrationStep2": "Open Settings → Known words import in Readfox and upload the CSV.",
+      "migrationStep3": "Your known words and familiarity levels apply immediately across every book you open.",
+      "readfoxWins": {
+        "w1": "Lower cost: free tier includes {freeLookups} AI word lookups and {freeDetailed} detailed explanations monthly, with Plus from {plusPrice}/mo.",
+        "w2": "Cleaner book-reading interface with {books} curated A1–C2 books, FSRS review, and full-library concordance search.",
+        "w3": "Open-source AGPL codebase, no ad trackers, and one-step LingQ CSV import."
+      },
+      "competitorWins": {
+        "w1": "Supports 40+ languages today, whereas Readfox focuses on a smaller set of polished libraries first.",
+        "w2": "Includes native mobile apps and a huge catalog of community podcasts and audio mini-stories.",
+        "w3": "Offers browser extensions for one-click importing from YouTube and streaming sites."
+      },
+      "faq": {
+        "importQ": "Can I import my saved words and statuses from LingQ?",
+        "importA": "Yes. Export your LingQ vocabulary as CSV and upload it in Readfox Settings → Known words import. Readfox maps LingQ statuses directly into your vocabulary list.",
+        "freeQ": "How much can I use Readfox for free?",
+        "freeA": "Free accounts get unlimited reading of all {books} free-library books, free on-device dictionary lookups, {freeLookups} AI word lookups, and {freeDetailed} detailed phrase explanations each month.",
+        "booksQ": "Do I have to upload my own books to start?",
+        "booksA": "No. Readfox ships {books} public-domain books graded A1 to C2 across English, French, Spanish, Chinese, and Korean, and you can read the first chapter before signing up.",
+        "differencesQ": "What is the biggest difference between Readfox and LingQ?",
+        "differencesA": "LingQ offers a broader media ecosystem and 40+ languages at a higher subscription price. Readfox focuses on distraction-free book reading, FSRS review, lower pricing from {plusPrice}/mo, and open-source transparency."
+      }
+    },
+    "readlang": {
+      "metaTitle": "Readfox vs Readlang: Alternative with Graded Books & FSRS Review",
+      "metaDescription": "Compare Readfox and Readlang: {books} built-in A1–C2 books, FSRS review, contextual AI explanations, browser TTS, and plans from {plusPrice}/mo.",
+      "title": "Readfox as a Readlang alternative",
+      "summary": "Both Readfox and Readlang are indie, reader-first tools for learning languages from real text. Readfox adds {books} built-in CEFR-graded books, server-scheduled FSRS spaced repetition, library concordance search, and browser text-to-speech follow-along, starting free with Plus at {plusPrice}/month.",
+      "rows": {
+        "price": "Free tier with daily phrase limits; Premium around $5/mo ($48/yr)",
+        "freeLibrary": "Community-shared texts and web articles; no curated A1–C2 classic book catalog",
+        "lookup": "Instant single-word and phrase translation with AI explanations",
+        "review": "Built-in cloze flashcards with SM-2 style scheduling",
+        "audio": "TTS playback on flashcards and web texts",
+        "import": "Strong Chrome/Safari web reader extension, EPUB upload, and web articles",
+        "offline": "Web app; no offline PWA reader shell",
+        "openSource": "Proprietary indie web app"
+      },
+      "readfoxWins": {
+        "w1": "Ready-to-read catalog of {books} CEFR-graded books with localized titles, blurbs, and zero-signup chapter previews.",
+        "w2": "Modern FSRS word review with real example sentences, plus library-wide concordance word search.",
+        "w3": "Open-source AGPL software with localized interfaces in 6 languages and free tier from day one (Plus from {plusPrice}/mo)."
+      },
+      "competitorWins": {
+        "w1": "Readlang's browser Web Reader extension lets you translate any live webpage directly in place.",
+        "w2": "Supports dozens of languages immediately via web translation backends.",
+        "w3": "Mature, minimal workflow trusted by independent language learners for over a decade."
+      },
+      "faq": {
+        "freeQ": "How does Readfox's free plan compare to Readlang's?",
+        "freeA": "Readfox includes unlimited reading of all {books} free-library books, free dictionary lookups, {freeLookups} AI lookups, and {freeDetailed} detailed AI answers per month, with paid Plus plans starting at {plusPrice}/mo.",
+        "booksQ": "Does Readfox require a browser extension?",
+        "booksA": "No. You can start reading any of the {books} built-in graded books immediately in your browser or phone, or paste a web URL / upload an EPUB into your library.",
+        "reviewQ": "How is vocabulary review different?",
+        "reviewA": "Readfox uses the FSRS spaced-repetition algorithm on the server with multiple review modes and real sentences from books and Tatoeba, plus Anki export.",
+        "differencesQ": "Should I choose Readfox or Readlang?",
+        "differencesA": "Pick Readlang if you primarily want a Chrome extension for reading live news websites in dozens of languages. Pick Readfox if you want curated graded books, FSRS review, concordance search, and multilingual UI support."
+      }
+    }
+  },
   "announcements": {
     "button": "What's new",
     "buttonUnseen": "What's new, you have unread updates",
