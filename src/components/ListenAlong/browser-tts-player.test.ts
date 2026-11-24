@@ -481,6 +481,8 @@ describe('ListenAlong static render modes', () => {
     );
 
     expect(html).toContain('data-testid="listen-along"');
+    expect(html).toContain('data-testid="listen-transport"');
+    expect(html).toContain('min-h-0 flex-1 overflow-auto');
     expect(html).toContain('Sentence 1 of 2');
     expect(html).not.toContain('data-testid="listen-audio"');
     expect(html).not.toContain('data-testid="listen-scrubber"');

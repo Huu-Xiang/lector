@@ -127,6 +127,7 @@ export default function ListenAlong(props: ListenAlongProps) {
   const ttsPlayerRef = useRef<BrowserTtsPlayer | null>(null);
   const segmentRefs = useRef<Map<number, HTMLElement>>(new Map());
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const transportRef = useRef<HTMLDivElement>(null);
 
   const [playbackMode, setPlaybackMode] = useState<PlayerMode>('continuous');
   const playbackModeRef = useRef<PlayerMode>('continuous');
@@ -224,6 +225,28 @@ export default function ListenAlong(props: ListenAlongProps) {
   // like the reader. Derived, not an effect — no cascading render.
   const effectiveActiveWord = wordPanelOpen ? activeWord : null;
 
+  // Publish the transport dock height so floating chrome (e.g. ChatWidget) sits
+  // cleanly above the dock instead of overlapping playback controls.
+  useEffect(() => {
+    const el = transportRef.current;
+    if (!el || typeof document === 'undefined') return;
+    const root = document.documentElement;
+    const syncHeight = () => {
+      const h = Math.ceil(el.getBoundingClientRect().height);
+      if (h > 0) root.style.setProperty('--listen-bar-h', `${h}px`);
+    };
+    syncHeight();
+    if (typeof ResizeObserver === 'undefined') {
+      return () => root.style.removeProperty('--listen-bar-h');
+    }
+    const observer = new ResizeObserver(syncHeight);
+    observer.observe(el);
+    return () => {
+      observer.disconnect();
+      root.style.removeProperty('--listen-bar-h');
+    };
+  }, []);
+
   // Keep the active sentence in view while playing — but never while the
   // learner is mid-lookup (#433): tapping a word pauses playback, and that
   // isPlaying flip must not drag the view back under the drawer. Shadow has
@@ -236,7 +259,20 @@ export default function ListenAlong(props: ListenAlongProps) {
     lastCenteredIdx.current = activeIdx;
     if (wordPanelOpen || activeIdx < 0) return;
     if (!isPlaying && (playbackMode === 'continuous' || prevIdx === activeIdx)) return;
-    segmentRefs.current.get(activeIdx)?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    const segment = segmentRefs.current.get(activeIdx);
+    if (!segment) return;
+    const scroller = scrollContainerRef.current;
+    if (scroller && typeof scroller.scrollTo === 'function') {
+      const segRect = segment.getBoundingClientRect();
+      const scrollerRect = scroller.getBoundingClientRect();
+      const targetTop =
+        scroller.scrollTop +
+        (segRect.top - scrollerRect.top) -
+        (scrollerRect.height - segRect.height) / 2;
+      scroller.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
+      return;
+    }
+    segment.scrollIntoView({ block: 'center', behavior: 'smooth' });
   }, [activeIdx, isPlaying, playbackMode, wordPanelOpen]);
 
   const speakSentenceAtRef = useRef<
@@ -451,9 +487,9 @@ export default function ListenAlong(props: ListenAlongProps) {
     'flex h-11 w-11 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:opacity-40';
 
   return (
-    <div className="flex h-full flex-col bg-card" data-testid="listen-along">
+    <div className="flex h-full min-h-0 flex-col bg-card" data-testid="listen-along">
       {/* Header */}
-      <header className="flex items-center justify-between border-b border-border px-4 py-2">
+      <header className="flex shrink-0 items-center justify-between border-b border-border px-4 py-2">
         <button
           onClick={handleExit}
           data-testid="listen-along-exit"
@@ -476,7 +512,7 @@ export default function ListenAlong(props: ListenAlongProps) {
       </header>
 
       {/* Segments / Sentences */}
-      <div ref={scrollContainerRef} className="flex-1 overflow-auto">
+      <div ref={scrollContainerRef} className="min-h-0 flex-1 overflow-auto">
         <div
           lang={pack.script.bcp47}
           dir={pack.script.direction}
@@ -535,7 +571,11 @@ export default function ListenAlong(props: ListenAlongProps) {
       </div>
 
       {/* Transport */}
-      <div className="border-t border-border bg-card px-4 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
+      <div
+        ref={transportRef}
+        data-testid="listen-transport"
+        className="shrink-0 border-t border-border bg-card px-4 pt-2 pb-[max(0.75rem,env(safe-area-inset-bottom))]"
+      >
         <div className="mx-auto max-w-[38em]">
           {ttsBannerMessage && (
             <div

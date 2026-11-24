@@ -2361,7 +2361,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       : null);
 
   return (
-    <div className="reader-page flex h-dvh flex-col overflow-x-hidden bg-card 2xl:flex-row print:block print:h-auto print:overflow-visible">
+    <div className="reader-page flex min-h-0 flex-1 flex-col overflow-x-hidden bg-card 2xl:flex-row print:block print:h-auto print:overflow-visible">
       <div
         className={`relative min-h-0 flex-1 overflow-hidden print:block print:h-auto print:overflow-visible ${
           wordPanel.isOpen ? 'pb-[var(--sheet-h)] lg:pr-96 lg:pb-0 2xl:pr-0' : ''

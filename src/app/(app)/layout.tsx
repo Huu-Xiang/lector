@@ -19,11 +19,11 @@ export default async function AppLayout({
 
   return (
     <AppIntlProvider locale={locale} appMessages={appMessages}>
-      <div className="app-shell flex min-h-dvh w-full flex-col sm:flex-row">
+      <div className="app-shell flex min-h-0 w-full flex-1 flex-col sm:flex-row">
         <SessionOnly>
           <NavHeader />
         </SessionOnly>
-        <div id="main-content" className="min-w-0 flex-1">
+        <div id="main-content" className="flex min-h-0 min-w-0 flex-1 flex-col">
           <NativePageTransition>{children}</NativePageTransition>
         </div>
         <SessionOnly>

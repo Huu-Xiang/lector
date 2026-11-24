@@ -547,9 +547,9 @@ export default function MarkdownReader({
   usePhraseTouchSelection(containerRef, handleTouchPhrase);
 
   return (
-    <div className="flex h-full flex-col bg-card print:block print:h-auto">
+    <div className="flex h-full min-h-0 flex-col bg-card print:block print:h-auto">
       {/* Header */}
-      <header className="flex items-center justify-between gap-1 border-b border-border px-2 py-1.5 sm:px-4 sm:py-2 print:border-0 print:px-0">
+      <header className="flex shrink-0 items-center justify-between gap-1 border-b border-border px-2 py-1.5 sm:px-4 sm:py-2 print:border-0 print:px-0">
         <button
           onClick={onClose}
           disabled={isEditing}
@@ -651,7 +651,7 @@ export default function MarkdownReader({
         onScroll={handleScroll}
         onMouseUp={handleMouseUp}
         onClick={handleBlankClick}
-        className="flex-1 overflow-auto overscroll-y-contain pb-[env(safe-area-inset-bottom)] print:block print:h-auto print:overflow-visible"
+        className="min-h-0 flex-1 overflow-auto overscroll-y-contain pb-[env(safe-area-inset-bottom)] print:block print:h-auto print:overflow-visible"
       >
         {hasConcordanceHighlight && !isEditing && (
           <div

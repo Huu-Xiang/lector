@@ -84,7 +84,7 @@ export default function NavHeader() {
       <NewLanguagePrompt />
       {/* Mobile top bar — language selector, visible only on mobile */}
       <NativeTopBar />
-      <div className="web-topbar flex h-[var(--mobile-topbar-h)] items-center justify-between border-b border-border bg-card/80 px-3 py-2 backdrop-blur-sm sm:hidden print:hidden">
+      <div className="web-topbar flex h-[var(--mobile-topbar-h)] shrink-0 items-center justify-between border-b border-border bg-card/80 px-3 py-2 backdrop-blur-sm sm:hidden print:hidden">
         <AppName />
         <div className="flex items-center gap-1">
           <UpgradeLink />
@@ -97,13 +97,13 @@ export default function NavHeader() {
       {/* Desktop left sidebar — hidden on mobile */}
       <aside
         className={clsx(
-          'app-sidebar sticky top-0 z-50 hidden h-screen border-r border-border bg-card sm:flex sm:flex-col print:hidden',
+          'app-sidebar sticky top-0 z-50 hidden h-dvh shrink-0 border-r border-border bg-card sm:flex sm:flex-col print:hidden',
           collapsed ? 'w-16' : 'w-56',
         )}
       >
         <div
           className={clsx(
-            'flex h-16 items-center',
+            'flex h-16 shrink-0 items-center',
             collapsed ? 'flex-col justify-center gap-1 px-0' : 'justify-between gap-2 px-5',
           )}
         >
@@ -111,11 +111,17 @@ export default function NavHeader() {
           <UpgradeLink iconOnly={collapsed} />
         </div>
 
-        <div className="border-b border-border pb-2">
+        <div className="shrink-0 border-b border-border pb-2">
           <LanguageSelector collapsed={collapsed} />
         </div>
 
-        <nav className={clsx('flex-1 space-y-1 py-2', collapsed ? 'px-1' : 'px-3')}>
+        <nav
+          className={clsx(
+            'min-h-0 flex-1 space-y-1 py-2',
+            !postOnboardingTour && 'overflow-y-auto',
+            collapsed ? 'px-1' : 'px-3',
+          )}
+        >
           {navLinks.map((link) => {
             return (
               <NavLink
@@ -133,19 +139,21 @@ export default function NavHeader() {
           <FeedbackNavLink collapsed={collapsed} />
         </nav>
 
-        <AiQuota compact={collapsed} />
+        <div className="shrink-0">
+          <AiQuota compact={collapsed} />
+        </div>
 
-        <div className={clsx(collapsed ? 'flex justify-center px-1' : 'px-3')}>
+        <div className={clsx('shrink-0', collapsed ? 'flex justify-center px-1' : 'px-3')}>
           <WhatsNew variant="sidebar" collapsed={collapsed} />
         </div>
 
-        <div className={clsx(collapsed ? 'flex justify-center py-1' : '')}>
+        <div className={clsx('shrink-0', collapsed ? 'flex justify-center py-1' : '')}>
           <AccountMenu compact={collapsed} />
         </div>
 
         <div
           className={clsx(
-            'border-t border-border',
+            'shrink-0 border-t border-border',
             collapsed
               ? 'flex flex-col items-center gap-2 px-1 py-3'
               : 'flex items-center justify-between gap-2 px-4 py-3',

@@ -122,11 +122,11 @@ export default async function RootLayout({
         className={`${nunito.variable} ${literata.variable} ${chinese.variable} ${traditional.variable} ${japanese.variable} ${korean.variable} flex min-h-dvh flex-col bg-background font-sans text-foreground antialiased`}
       >
         <NextIntlClientProvider locale={locale} messages={publicMessages}>
-          <div className="min-w-0 flex-1">
+          <div className="flex min-h-0 min-w-0 flex-1 flex-col">
             {t && (
               <aside
                 data-testid="readfox-beta-notice"
-                className="readfox-beta-notice border-b border-border bg-primary/10 px-4 py-2.5 text-center text-sm leading-snug text-foreground print:hidden"
+                className="readfox-beta-notice shrink-0 border-b border-border bg-primary/10 px-4 py-2.5 text-center text-sm leading-snug text-foreground print:hidden"
               >
                 <strong className="mr-2 font-bold">Beta</strong>
                 <span className="readfox-beta-message">{t('message')} </span>

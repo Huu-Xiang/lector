@@ -15,6 +15,6 @@ const ViewTransition = (React as unknown as { ViewTransition?: ViewTransitionCom
  */
 export default function NativePageTransition({ children }: { children: React.ReactNode }) {
   // One host element: a name shared by several siblings aborts the transition.
-  const page = <div>{children}</div>;
+  const page = <div className="flex min-h-0 min-w-0 flex-1 flex-col">{children}</div>;
   return ViewTransition ? <ViewTransition name="native-page">{page}</ViewTransition> : page;
 }

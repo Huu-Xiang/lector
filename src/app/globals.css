@@ -944,17 +944,26 @@ html[data-native-app] [data-native-sheet] {
 }
 
 @media screen {
+  /* Lock the viewport to 100dvh while the self-scrolling reader or ListenAlong
+     is active so top chrome (beta notice, mobile web topbar, iOS safe area)
+     never pushes the reader header or ListenAlong transport bar off-screen. */
+  body:has(.reader-page) {
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  body:has(.reader-page) .app-sidebar {
+    height: 100%;
+  }
+
   html[data-native-app] .app-bottom-spacer {
     display: block;
     height: var(--app-bottom-bar);
   }
 
+  body:has(.reader-page) .app-bottom-spacer,
   html[data-native-app] body:has(.reader-page) .app-bottom-spacer {
     display: none;
-  }
-
-  html[data-native-app] .reader-page {
-    height: calc(100dvh - env(safe-area-inset-top));
   }
 
   html[data-native-app] [data-native-side-drawer] {
@@ -1147,6 +1156,23 @@ html[data-native-app] .native-topbar {
 @media screen {
   html[data-native-app] [data-above-tabbar] {
     bottom: calc(var(--app-bottom-bar) + 1rem);
+  }
+
+  /* Keep the floating AI chat button & popup clear of the ListenAlong player dock. */
+  html body:has([data-testid='listen-along']) [data-chat-toggle] {
+    bottom: calc(var(--listen-bar-h, 7.5rem) + 0.75rem);
+  }
+
+  html:not([data-native-app]) body:has([data-testid='listen-along']) [data-testid='chat-panel'] {
+    bottom: calc(var(--listen-bar-h, 7.5rem) + 4.25rem);
+    max-height: calc(100dvh - var(--listen-bar-h, 7.5rem) - 5.5rem);
+  }
+}
+
+@media screen and (width >= 40rem) {
+  html[data-native-app] body:has([data-testid='listen-along']) [data-testid='chat-panel'] {
+    bottom: calc(var(--listen-bar-h, 7.5rem) + 4.25rem);
+    max-height: calc(100dvh - var(--listen-bar-h, 7.5rem) - 5.5rem);
   }
 }
 
