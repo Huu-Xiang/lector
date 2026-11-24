@@ -32,6 +32,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/refunds',
     '/about',
     '/vocab-test',
+    '/vocab-test/fr',
+    '/vocab-test/es',
     ...ALTERNATIVE_COMPETITORS.map((c) => alternativePath(c)),
   ].map((path) => entry(path, 'monthly'));
 

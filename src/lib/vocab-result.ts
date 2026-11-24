@@ -9,18 +9,27 @@ export interface VocabResult {
   takenAt: number;
 }
 
-export function writeVocabResult(estimate: number, level: CefrLevel, now = Date.now()): void {
+function keyFor(language: string): string {
+  return language === 'en' ? VOCAB_RESULT_KEY : `${VOCAB_RESULT_KEY}-${language}`;
+}
+
+export function writeVocabResult(
+  estimate: number,
+  level: CefrLevel,
+  now = Date.now(),
+  language = 'en',
+): void {
   try {
-    localStorage.setItem(VOCAB_RESULT_KEY, JSON.stringify({ estimate, level, takenAt: now }));
+    localStorage.setItem(keyFor(language), JSON.stringify({ estimate, level, takenAt: now }));
   } catch {
     /* storage can be blocked; the result still shows on the test page */
   }
 }
 
 /** The last test result, or null when it is missing, malformed or older than 30 days. */
-export function readVocabResult(now = Date.now()): VocabResult | null {
+export function readVocabResult(now = Date.now(), language = 'en'): VocabResult | null {
   try {
-    const stored = JSON.parse(localStorage.getItem(VOCAB_RESULT_KEY) ?? 'null') as Partial<
+    const stored = JSON.parse(localStorage.getItem(keyFor(language)) ?? 'null') as Partial<
       Record<keyof VocabResult, unknown>
     > | null;
     if (

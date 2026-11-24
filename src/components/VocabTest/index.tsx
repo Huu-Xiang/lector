@@ -20,6 +20,7 @@ import {
   type LiveEstimate,
   type SenseRow,
   type TestItem,
+  type VocabAnswerLanguage,
   type VocabBand,
   type VocabTestData,
 } from '@/lib/vocab-test';
@@ -32,7 +33,7 @@ import SaveLevel from './SaveLevel';
 import SaveReport from './SaveReport';
 import { ReportEstimate, ReportHistoryLink } from './ReportRecord';
 import { VOCAB_REPORT_LOCALES, type VocabReportSnapshot } from '../../../languages/en/vocab-report';
-import type { VocabTestBook } from '@/lib/vocab-test-data';
+import type { VocabTestBook, VocabTestLanguage } from '@/lib/vocab-test-data';
 
 /** How long feedback stays before the next word, and how long a new word ignores input. */
 const RIGHT_PAUSE_MS = 600;
@@ -55,7 +56,7 @@ function isTestData(value: unknown): value is VocabTestData {
 export interface VocabTestMeta {
   bands: Array<Pick<VocabBand, 'from' | 'to'>>;
   source?: string;
-  answerLanguage?: 'ru';
+  answerLanguage?: VocabAnswerLanguage;
 }
 
 function randomSeed(): number {
@@ -77,16 +78,20 @@ const RUSSIAN_PARTS_OF_SPEECH: Record<string, string> = {
   'v.': 'гл.',
 };
 
-function partOfSpeech(row: SenseRow, russian: boolean): string {
-  return russian ? (RUSSIAN_PARTS_OF_SPEECH[row.p] ?? row.p) : row.p;
+function partOfSpeech(row: SenseRow, answerLanguage?: VocabAnswerLanguage): string {
+  return answerLanguage === 'ru' ? (RUSSIAN_PARTS_OF_SPEECH[row.p] ?? row.p) : row.p;
 }
 
-function glossText(row: SenseRow, russian: boolean): string {
-  return russian ? (row.ru ?? []).join('; ') : (row.zh ?? []).join('；');
+function glossText(row: SenseRow, answerLanguage?: VocabAnswerLanguage): string {
+  if (answerLanguage === 'ru') return (row.ru ?? []).join('; ');
+  if (answerLanguage === 'en') return row.en;
+  return (row.zh ?? []).join('；');
 }
 
-function meaningText(rows: readonly SenseRow[], russian: boolean): string {
-  return rows.map((row) => `${partOfSpeech(row, russian)} ${glossText(row, russian)}`).join(' / ');
+function meaningText(rows: readonly SenseRow[], answerLanguage?: VocabAnswerLanguage): string {
+  return rows
+    .map((row) => `${partOfSpeech(row, answerLanguage)} ${glossText(row, answerLanguage)}`)
+    .join(' / ');
 }
 
 type Step = 'intro' | 'test' | 'result';
@@ -126,23 +131,26 @@ const OPTION_STYLES: Record<OptionState, string> = {
 
 function MeaningRows({
   rows,
-  russian,
+  answerLanguage,
   showEnglish = true,
 }: {
   rows: readonly SenseRow[];
-  russian: boolean;
+  answerLanguage?: VocabAnswerLanguage;
   showEnglish?: boolean;
 }) {
+  const primaryLang = answerLanguage === 'ru' ? 'ru' : answerLanguage === 'en' ? 'en' : 'zh-CN';
   return (
     <span className="grid min-w-0 flex-1 grid-cols-[auto_minmax(0,1fr)] gap-x-2 gap-y-1.5">
       {rows.map((row) => (
         <span key={row.p} className="contents">
-          <span className="pt-0.5 text-sm text-muted-foreground">{partOfSpeech(row, russian)}</span>
+          <span className="pt-0.5 text-sm text-muted-foreground">
+            {partOfSpeech(row, answerLanguage)}
+          </span>
           <span className="min-w-0">
-            <span lang={russian ? 'ru' : 'zh-CN'} className="block font-medium">
-              {glossText(row, russian)}
+            <span lang={primaryLang} className="block font-medium">
+              {glossText(row, answerLanguage)}
             </span>
-            {showEnglish && !russian && (
+            {showEnglish && !answerLanguage && (
               <span lang="en" className="block text-sm leading-snug text-muted-foreground">
                 {row.en}
               </span>
@@ -165,13 +173,20 @@ function OptionIcon({ state }: { state: OptionState }) {
 export default function VocabTest({
   meta,
   books,
+  targetLanguage = 'en',
+  wordsUrl,
 }: {
   meta: VocabTestMeta;
   books: VocabTestBook[];
+  targetLanguage?: VocabTestLanguage;
+  wordsUrl?: string;
 }) {
   const t = useTranslations('vocabTest');
   const locale = useLocale();
-  const russian = meta.answerLanguage === 'ru';
+  const answerLanguage = meta.answerLanguage;
+  const russian = answerLanguage === 'ru';
+  const targetLanguageName =
+    new Intl.DisplayNames([locale], { type: 'language' }).of(targetLanguage) ?? targetLanguage;
   const { data: session } = authClient.useSession();
   // Without cloud accounts every visitor is the one local user, whose settings always save.
   const mode = useLectorMode();
@@ -208,8 +223,8 @@ export default function VocabTest({
   const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setLastResult(readVocabResult());
-  }, []);
+    setLastResult(readVocabResult(undefined, targetLanguage));
+  }, [targetLanguage]);
 
   useEffect(() => {
     if (step !== 'intro') headingRef.current?.focus();
@@ -255,13 +270,13 @@ export default function VocabTest({
   function start(words: VocabTestData) {
     clearTimer();
     seedRef.current = randomSeed();
-    seenRef.current = new Set(readSeenWords());
+    seenRef.current = new Set(readSeenWords(targetLanguage));
     preparedRef.current = null;
     setAnswers([]);
     answersRef.current = [];
     const anonymous = !session;
     trackedAttempt.current = { anonymous, finished: false, progress: 0 };
-    trackProductEvent({ event: 'quiz_started', language: 'en' }, { anonymous });
+    trackProductEvent({ event: 'quiz_started', language: targetLanguage }, { anonymous });
     resultVersion.current = null;
     setAnnouncement('');
     showItem(nextItem([], words, seedRef.current, seenRef.current));
@@ -277,7 +292,8 @@ export default function VocabTest({
     if (loading === 'loading') return;
     setLoading('loading');
     try {
-      const response = await fetch(russian ? `${WORDS_URL}/ru` : WORDS_URL);
+      const endpoint = wordsUrl ?? (russian ? `${WORDS_URL}/ru` : WORDS_URL);
+      const response = await fetch(endpoint);
       const words: unknown = response.ok ? await response.json() : null;
       if (!isTestData(words) || words.answerLanguage !== meta.answerLanguage) {
         throw new Error('bad word list');
@@ -299,11 +315,11 @@ export default function VocabTest({
         if (!attempt.finished) {
           attempt.finished = true;
           trackProductEvent(
-            { event: 'quiz_finished', language: 'en', value: all.length },
+            { event: 'quiz_finished', language: targetLanguage, value: all.length },
             { anonymous: attempt.anonymous },
           );
         }
-        writeVocabResult(result.estimate, result.level);
+        writeVocabResult(result.estimate, result.level, undefined, targetLanguage);
         if (resultVersion.current?.answered !== all.length) {
           resultVersion.current = { answered: all.length, takenAt: new Date().toISOString() };
         }
@@ -311,7 +327,7 @@ export default function VocabTest({
       setStep('result');
       window.scrollTo({ top: 0 });
     },
-    [meta.bands],
+    [meta.bands, targetLanguage],
   );
 
   const advance = useCallback(() => {
@@ -350,18 +366,18 @@ export default function VocabTest({
       if (all.length > attempt.progress && ANSWER_MILESTONES.includes(all.length)) {
         attempt.progress = all.length;
         trackProductEvent(
-          { event: 'quiz_progress', language: 'en', value: all.length },
+          { event: 'quiz_progress', language: targetLanguage, value: all.length },
           { anonymous: attempt.anonymous },
         );
       }
       setAnswers(all);
-      addSeenWord(current.word);
+      addSeenWord(current.word, targetLanguage);
       setChosen(choice);
       setPhase('feedback');
       setAnnouncement(
         t(`announce${outcome(choice, current)}`, {
           word: current.word,
-          meaning: meaningText(current.senses, russian),
+          meaning: meaningText(current.senses, answerLanguage),
         }),
       );
       clearTimer();
@@ -370,7 +386,7 @@ export default function VocabTest({
         choice === current.answer ? RIGHT_PAUSE_MS : OTHER_PAUSE_MS,
       );
     },
-    [phase, current, live, t, russian],
+    [phase, current, live, t, answerLanguage, targetLanguage],
   );
 
   function keepGoing() {
@@ -416,7 +432,11 @@ export default function VocabTest({
         className="space-y-5 rounded-2xl border border-border bg-card p-5 sm:p-8"
         data-testid="vocab-intro"
       >
-        <p className="max-w-prose text-lg leading-relaxed text-foreground">{t('introLead')}</p>
+        <p className="max-w-prose text-lg leading-relaxed text-foreground">
+          {targetLanguage === 'en'
+            ? t('introLead')
+            : t('langIntroLead', { language: targetLanguageName })}
+        </p>
         <p className="text-sm text-muted-foreground">{t('introFacts')}</p>
         {lastResult && (
           <p className="text-base font-medium" data-testid="vocab-last-result">
@@ -438,7 +458,7 @@ export default function VocabTest({
                 ? t('retryStart')
                 : t('start')}
           </Button>
-          {cloud && session?.user.emailVerified && <ReportHistoryLink />}
+          {cloud && targetLanguage === 'en' && session?.user.emailVerified && <ReportHistoryLink />}
         </div>
         {loading === 'error' && (
           <p role="alert" className="text-sm text-destructive" data-testid="vocab-load-error">
@@ -492,7 +512,7 @@ export default function VocabTest({
             className="px-1 pt-3 outline-none sm:px-3 sm:pt-6"
           >
             <p
-              lang="en"
+              lang={targetLanguage}
               className="text-center text-4xl font-bold tracking-tight break-words sm:text-5xl"
               data-testid="vocab-word"
             >
@@ -524,7 +544,11 @@ export default function VocabTest({
                         {index + 1}
                       </kbd>
                       {option.rows ? (
-                        <MeaningRows rows={option.rows} russian={russian} showEnglish={false} />
+                        <MeaningRows
+                          rows={option.rows}
+                          answerLanguage={answerLanguage}
+                          showEnglish={false}
+                        />
                       ) : (
                         <span className="flex-1 font-medium">{t('noneOfAbove')}</span>
                       )}
@@ -591,7 +615,7 @@ export default function VocabTest({
                       <span className="shrink-0 pt-0.5 text-muted-foreground">
                         {t('trueMeaning')}
                       </span>
-                      <MeaningRows rows={current.senses} russian={russian} />
+                      <MeaningRows rows={current.senses} answerLanguage={answerLanguage} />
                     </div>
                   )}
                 </>
@@ -683,7 +707,9 @@ export default function VocabTest({
           {fromSetup && (
             <Link
               href="/setup"
-              onClick={() => writeVocabResult(score.estimate, score.level)}
+              onClick={() =>
+                writeVocabResult(score.estimate, score.level, undefined, targetLanguage)
+              }
               data-testid="vocab-continue-setup"
               className={cn(buttonVariants({ size: 'lg' }), 'min-h-11')}
             >
@@ -713,14 +739,14 @@ export default function VocabTest({
         </div>
       </div>
 
-      {cloud && (
+      {cloud && targetLanguage === 'en' && (
         <SaveReport
           key={answers.length}
           createSnapshot={createSnapshot}
           secondary={canContinue || fromSetup}
         />
       )}
-      {hasAccount && !fromSetup && <SaveLevel level={score.level} />}
+      {hasAccount && !fromSetup && <SaveLevel level={score.level} language={targetLanguage} />}
 
       {score.guessing && (
         <div
@@ -743,14 +769,16 @@ export default function VocabTest({
           <ul className="mt-2 mb-3 flex flex-wrap gap-2">
             {missed.map((item) => (
               <li key={item.id} className="rounded-lg border border-border bg-card px-3 py-1.5">
-                <span lang="en" className="font-medium">
+                <span lang={targetLanguage} className="font-medium">
                   {item.word}
                 </span>
                 {item.senses.map((row) => (
                   <span key={row.p} className="ml-2 text-muted-foreground">
-                    {partOfSpeech(row, russian)}{' '}
-                    {russian || locale.startsWith('zh') ? (
-                      <span lang={russian ? 'ru' : 'zh-CN'}>{glossText(row, russian)}</span>
+                    {partOfSpeech(row, answerLanguage)}{' '}
+                    {answerLanguage === 'en' ? (
+                      <span lang="en">{row.en}</span>
+                    ) : russian || locale.startsWith('zh') ? (
+                      <span lang={russian ? 'ru' : 'zh-CN'}>{glossText(row, answerLanguage)}</span>
                     ) : (
                       <span lang="en">{row.en}</span>
                     )}
@@ -771,13 +799,13 @@ export default function VocabTest({
               return (
                 <li key={book.slug}>
                   <Link
-                    href={`/books/en/${book.slug}`}
+                    href={`/books/${targetLanguage}/${book.slug}`}
                     onClick={() =>
                       trackProductEvent(
                         {
                           event: 'quiz_book_opened',
-                          language: 'en',
-                          publicBook: `en/${book.slug}`,
+                          language: targetLanguage,
+                          publicBook: `${targetLanguage}/${book.slug}`,
                         },
                         { anonymous: trackedAttempt.current.anonymous },
                       )
@@ -817,7 +845,10 @@ export default function VocabTest({
 
       <p className="text-sm text-muted-foreground">{t('explain')}</p>
       <p className="text-sm">
-        <Link href="/books" className="underline hover:text-foreground">
+        <Link
+          href={targetLanguage === 'en' ? '/books' : `/books/${targetLanguage}`}
+          className="underline hover:text-foreground"
+        >
           {t('browse')}
         </Link>
       </p>

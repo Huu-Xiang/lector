@@ -72,9 +72,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function LanguageBooksPage({ params }: Props) {
   const { language, books, levels, locale, languageName } = await load(params);
-  const t = await getTranslations('publicBooks');
+  const [t, tv] = await Promise.all([getTranslations('publicBooks'), getTranslations('vocabTest')]);
   const title = t('languageTitle', { language: languageName });
   const path = `/books/${language}`;
+  const vocabTestHref =
+    language === 'en'
+      ? '/vocab-test'
+      : language === 'fr' || language === 'es'
+        ? `/vocab-test/${language}`
+        : null;
   const alternateLocale =
     language === 'en'
       ? UI_LOCALES.find(({ code }) => code === (locale === 'ru' ? 'en' : 'ru'))
@@ -97,6 +103,17 @@ export default async function LanguageBooksPage({ params }: Props) {
           last: levels[levels.length - 1],
         })}
       </p>
+      {vocabTestHref && (
+        <p>
+          <Link
+            href={vocabTestHref}
+            data-testid="books-lang-vocab-test-link"
+            className="underline hover:text-foreground"
+          >
+            {language === 'en' ? tv('booksLink') : tv('langBooksLink', { language: languageName })}
+          </Link>
+        </p>
+      )}
       <p className="flex flex-wrap gap-x-3 text-muted-foreground">
         {alternateLocale && (
           <BookHubLocaleButton code={alternateLocale.code} label={alternateLocale.native} />

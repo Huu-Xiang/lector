@@ -2,34 +2,43 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { Check } from 'lucide-react';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { getReadingLevel, setReadingLevel, type CefrLevel } from '@/lib/reading-level';
 import { trackProductEvent } from '@/lib/product-analytics';
 
-/** For a signed-in learner: make the test level their English reading level, which book picks follow. */
-export default function SaveLevel({ level }: { level: CefrLevel }) {
+/** For a signed-in learner: make the test level their target reading level, which book picks follow. */
+export default function SaveLevel({
+  level,
+  language = 'en',
+}: {
+  level: CefrLevel;
+  language?: 'en' | 'fr' | 'es';
+}) {
   const t = useTranslations('vocabTest');
+  const locale = useLocale();
   const [current, setCurrent] = useState<CefrLevel | null | undefined>(undefined);
   const [state, setState] = useState<'idle' | 'saving' | 'error'>('idle');
+  const languageName =
+    new Intl.DisplayNames([locale], { type: 'language' }).of(language) ?? language;
 
   useEffect(() => {
     let cancelled = false;
-    void getReadingLevel('en').then((saved) => {
+    void getReadingLevel(language).then((saved) => {
       if (!cancelled) setCurrent(saved);
     });
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [language]);
 
   async function save() {
     setState('saving');
     try {
-      await setReadingLevel('en', level);
-      trackProductEvent({ event: 'quiz_level_applied', language: 'en' });
+      await setReadingLevel(language, level);
+      trackProductEvent({ event: 'quiz_level_applied', language });
       setCurrent(level);
       setState('idle');
     } catch {
@@ -43,7 +52,13 @@ export default function SaveLevel({ level }: { level: CefrLevel }) {
   return (
     <div className="space-y-1 border-b border-border pb-2" data-testid="vocab-save-level">
       <p className="text-sm text-muted-foreground" data-testid="vocab-current-level">
-        {current ? t('currentLevel', { level: current }) : t('noLevelYet')}
+        {language === 'en'
+          ? current
+            ? t('currentLevel', { level: current })
+            : t('noLevelYet')
+          : current
+            ? t('currentLevelFor', { language: languageName, level: current })
+            : t('noLevelYetFor', { language: languageName })}
       </p>
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
         {saved ? (

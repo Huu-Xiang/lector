@@ -1,4 +1,5 @@
 import VocabTestShell from '@/components/VocabTest/VocabTestShell';
+import VocabTestLanguageTabs from '@/components/VocabTest/LanguageTabs';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
@@ -79,6 +80,7 @@ export default async function VocabTestPage() {
       <Suspense fallback={null}>
         <ReportResume />
       </Suspense>
+      <VocabTestLanguageTabs active="en" />
       <VocabTest
         key={locale}
         meta={{
