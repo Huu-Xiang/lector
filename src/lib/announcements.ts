@@ -27,6 +27,12 @@ export const PANEL_LIMIT = 5;
 /** Newest first. Add an entry here and its texts in `messages/src/<locale>/announcements.json`. */
 export const ANNOUNCEMENTS: Announcement[] = [
   {
+    id: 'novemberUpgrades',
+    date: '2026-11-24',
+    level: 'important',
+    href: '/vocab-test',
+  },
+  {
     id: 'readingAndVocabulary',
     date: '2026-11-13',
     level: 'important',

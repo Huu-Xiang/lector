@@ -133,6 +133,10 @@
     "dismiss": "Dismiss",
     "learnMore": "Learn more",
     "items": {
+      "novemberUpgrades": {
+        "title": "French & Spanish vocab tests, ListenAlong, and library search",
+        "body": "Test your French and Spanish vocabulary size alongside English. In the reader, try ListenAlong voice playback, search any word across your books, switch on monolingual AI explanations, and keep accepted AI meanings saved. Pages also load faster with offline reading support."
+      },
       "readingAndVocabulary": {
         "title": "A quicker vocabulary test and a simpler reader",
         "body": "Get your first English vocabulary estimate after 8 questions. In the reader, look up words and save the ones you want to practise. You can turn automatic saving on in Settings. The iPhone app also has simpler navigation, a more compact dictionary and a new daily goal picker."

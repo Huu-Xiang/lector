@@ -53,6 +53,11 @@ export default function UiLanguageSelect({
       if (nextPath !== pathname) {
         const suffix =
           typeof window !== 'undefined' ? `${window.location.search}${window.location.hash}` : '';
+        if (nextPath === '/' && typeof window !== 'undefined') {
+          void offerNativeSwitch(code);
+          window.location.assign(`${nextPath}${suffix}`);
+          return;
+        }
         router.push(`${nextPath}${suffix}`);
         void offerNativeSwitch(code);
         return;
