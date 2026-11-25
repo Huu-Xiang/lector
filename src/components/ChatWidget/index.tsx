@@ -12,7 +12,12 @@ import { isComposing } from '@/lib/keyboard';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useIsNativeApp } from '@/lib/native-app';
 import { hasOwnHeader } from '@/components/NativeBridge/tab-bar';
-import { CHAT_TOGGLE_EVENT, EXAMPLE_PROMPTS } from './constants';
+import {
+  CHAT_ASK_CONTEXT_EVENT,
+  CHAT_TOGGLE_EVENT,
+  EXAMPLE_PROMPTS,
+  type ChatAskContextDetail,
+} from './constants';
 import ChatMessageContent from './ChatMessageContent';
 
 interface ChatMessage {
@@ -37,57 +42,92 @@ export default function ChatWidget() {
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const initialLoadDone = useRef(false);
+  const lastMessageIdRef = useRef<string | null>(null);
   const activeLang = useActiveLanguage();
+  const [threadLangOverride, setThreadLangOverride] = useState<string | null>(null);
+  const chatLangCode = threadLangOverride ?? activeLang.code;
+  const chatLangRef = useRef(chatLangCode);
+  const sessionSeqRef = useRef(0);
+  const askFocusTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pathname = usePathname();
-  const langName = languageDisplayName(activeLang.code, locale, activeLang.name);
+  const langName = languageDisplayName(chatLangCode, locale, activeLang.name);
+
+  useEffect(() => {
+    chatLangRef.current = chatLangCode;
+  }, [chatLangCode]);
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, []);
 
   const fetchMessages = useCallback(async () => {
+    const langCode = chatLangCode;
+    const seq = sessionSeqRef.current;
     try {
-      const res = await apiFetch(`/api/chat?limit=50&language=${activeLang.code}`);
+      const res = await apiFetch(`/api/chat?limit=50&language=${langCode}`);
       const data = await res.json();
+      if (seq !== sessionSeqRef.current || langCode !== chatLangRef.current) return;
       setMessages(data);
       setHasMore(data.length === 50);
     } catch (err) {
       console.error('Failed to load chat history:', err);
     }
-  }, [activeLang]);
+  }, [chatLangCode]);
 
-  // Load messages when opened
+  // Clear any lesson-specific language override when the user switches active language.
+  useEffect(() => {
+    setThreadLangOverride(null);
+  }, [activeLang.code]);
+
+  // Reset history whenever the chat thread language changes so threads never bleed across languages.
+  useEffect(() => {
+    sessionSeqRef.current += 1;
+    initialLoadDone.current = false;
+    lastMessageIdRef.current = null;
+    setMessages([]);
+    setHasMore(true);
+    setLoadingHistory(false);
+    setLoading(false);
+  }, [chatLangCode]);
+
+  // Load messages when opened (or after language switch while open)
   useEffect(() => {
     if (isOpen && !initialLoadDone.current) {
       initialLoadDone.current = true;
-      fetchMessages();
+      void fetchMessages();
     }
     // On iOS a focused field raises the keyboard at once and pushes the sheet up.
     if (isOpen && !inApp) {
-      setTimeout(() => inputRef.current?.focus(), 100);
+      const timer = setTimeout(() => inputRef.current?.focus(), 100);
+      return () => clearTimeout(timer);
     }
-  }, [isOpen, fetchMessages, inApp]);
+  }, [isOpen, fetchMessages, inApp, chatLangCode]);
 
-  // Scroll to bottom on new messages
+  // Scroll to bottom only when a newer message is appended (never when loadMore prepends).
+  const latestMessageId = messages.at(-1)?.id ?? null;
   useEffect(() => {
-    if (isOpen && messages.length > 0) {
+    if (isOpen && latestMessageId && latestMessageId !== lastMessageIdRef.current) {
+      lastMessageIdRef.current = latestMessageId;
       scrollToBottom();
     }
-  }, [messages.length, isOpen, scrollToBottom]);
+  }, [latestMessageId, isOpen, scrollToBottom]);
 
   async function loadMore() {
     if (loadingHistory || !hasMore || messages.length === 0) return;
     setLoadingHistory(true);
 
+    const langCode = chatLangCode;
+    const seq = sessionSeqRef.current;
     const container = messagesContainerRef.current;
     const prevScrollHeight = container?.scrollHeight || 0;
 
     try {
       const oldest = messages[0];
       const res = await apiFetch(
-        `/api/chat?limit=50&before=${encodeURIComponent(oldest.createdAt)}&language=${activeLang.code}`,
+        `/api/chat?limit=50&before=${encodeURIComponent(oldest.createdAt)}&language=${langCode}`,
       );
       const older = await res.json();
+      if (seq !== sessionSeqRef.current || langCode !== chatLangRef.current) return;
       if (older.length === 0) {
         setHasMore(false);
       } else {
@@ -103,7 +143,9 @@ export default function ChatWidget() {
     } catch (err) {
       console.error('Failed to load more messages:', err);
     } finally {
-      setLoadingHistory(false);
+      if (seq === sessionSeqRef.current) {
+        setLoadingHistory(false);
+      }
     }
   }
 
@@ -111,6 +153,8 @@ export default function ChatWidget() {
     const content = (text || input).trim();
     if (!content || loading) return;
 
+    const langCode = chatLangCode;
+    const seq = sessionSeqRef.current;
     setInput('');
     setLoading(true);
 
@@ -122,18 +166,29 @@ export default function ChatWidget() {
       provider: null,
       createdAt: new Date().toISOString(),
     };
+    // Exclude failed exchanges (error- assistant turns and their paired failed-user- turns)
+    // so client-supplied history stays strictly alternating user/assistant turns.
+    const priorHistory = messages
+      .filter((m) => !m.id.startsWith('error-') && !m.id.startsWith('failed-user-'))
+      .slice(-18)
+      .map(({ role, content: msgContent }) => ({ role, content: msgContent }));
     setMessages((prev) => [...prev, tempUserMsg]);
 
     try {
       const res = await apiFetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: content, language: activeLang.code }),
+        body: JSON.stringify({
+          message: content,
+          language: langCode,
+          history: priorHistory,
+        }),
       });
 
       if (!res.ok) throw new Error('Failed to send message');
 
       const { userMessage, assistantMessage } = await res.json();
+      if (seq !== sessionSeqRef.current || langCode !== chatLangRef.current) return;
 
       setMessages((prev) => [
         ...prev.filter((m) => m.id !== tempUserMsg.id),
@@ -142,10 +197,11 @@ export default function ChatWidget() {
       ]);
     } catch (err) {
       console.error('Chat error:', err);
+      if (seq !== sessionSeqRef.current || langCode !== chatLangRef.current) return;
       // Replace optimistic message with error feedback
       setMessages((prev) => [
         ...prev.filter((m) => m.id !== tempUserMsg.id),
-        { ...tempUserMsg, id: 'user-' + Date.now() },
+        { ...tempUserMsg, id: 'failed-user-' + Date.now() },
         {
           id: 'error-' + Date.now(),
           role: 'assistant' as const,
@@ -155,7 +211,9 @@ export default function ChatWidget() {
         },
       ]);
     } finally {
-      setLoading(false);
+      if (seq === sessionSeqRef.current) {
+        setLoading(false);
+      }
     }
   }
 
@@ -173,7 +231,7 @@ export default function ChatWidget() {
 
   async function clearChat() {
     try {
-      await apiFetch(`/api/chat?language=${activeLang.code}`, { method: 'DELETE' });
+      await apiFetch(`/api/chat?language=${chatLangCode}`, { method: 'DELETE' });
       setMessages([]);
       setHasMore(false);
     } catch (err) {
@@ -222,9 +280,50 @@ export default function ChatWidget() {
 
   useEffect(() => {
     const toggle = () => setIsOpen((open) => !open);
+    const askContext = (event: Event) => {
+      const detail = (event as CustomEvent<ChatAskContextDetail>).detail;
+      if (detail?.language && detail.language !== activeLang.code) {
+        setThreadLangOverride(detail.language);
+      } else {
+        setThreadLangOverride(null);
+      }
+      setIsOpen(true);
+      if (detail?.prompt) {
+        setInput(detail.prompt);
+      }
+      if (!inApp) {
+        if (askFocusTimerRef.current) clearTimeout(askFocusTimerRef.current);
+        askFocusTimerRef.current = setTimeout(() => {
+          askFocusTimerRef.current = null;
+          inputRef.current?.focus();
+        }, 100);
+      }
+    };
     window.addEventListener(CHAT_TOGGLE_EVENT, toggle);
-    return () => window.removeEventListener(CHAT_TOGGLE_EVENT, toggle);
-  }, []);
+    window.addEventListener(CHAT_ASK_CONTEXT_EVENT, askContext);
+    return () => {
+      window.removeEventListener(CHAT_TOGGLE_EVENT, toggle);
+      window.removeEventListener(CHAT_ASK_CONTEXT_EVENT, askContext);
+      if (askFocusTimerRef.current) {
+        clearTimeout(askFocusTimerRef.current);
+        askFocusTimerRef.current = null;
+      }
+    };
+  }, [activeLang.code, inApp]);
+
+  // Close chat on Escape without leaking to underlying reader shortcuts.
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsOpen(false);
+      }
+    };
+    window.addEventListener('keydown', onKeyDown, true);
+    return () => window.removeEventListener('keydown', onKeyDown, true);
+  }, [isOpen]);
 
   // Chrome-free routes (#218/#224): the widget sits outside the layout
   // guards, so hide it itself — chat could only 401/402 there.
@@ -264,7 +363,7 @@ export default function ChatWidget() {
       {isOpen && (
         <div
           className={clsx(
-            'fixed right-4 bottom-36 z-50 flex h-[80vh] w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-xl border border-border bg-card shadow-2xl sm:right-6 sm:bottom-20 sm:w-96 print:hidden',
+            'fixed right-4 bottom-36 z-50 flex h-[min(75dvh,calc(100dvh-10rem))] w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-xl border border-border bg-card shadow-2xl sm:right-6 sm:bottom-20 sm:h-[min(80dvh,38rem)] sm:w-96 print:hidden',
             pathname.includes('/read') && '2xl:right-[406px]',
           )}
           data-testid="chat-panel"

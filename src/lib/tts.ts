@@ -1,5 +1,7 @@
 // Text-to-Speech wrapper
 // Uses managed TTS when entitled and available, otherwise browser TTS
+import { SETTINGS_KEYS } from '@/app/(app)/settings/constants';
+import { isAbortError } from './claude';
 import { getActiveLanguage, getEntitlements } from './data-layer';
 import { apiFetch, lectorMode } from './api-base';
 import {
@@ -15,6 +17,18 @@ import {
 // speed control (e.g. dictation practice) can scale relative to the app's
 // normal "1x" listening rate instead of hard-coding it.
 export const DEFAULT_RATE = 0.9;
+
+/** Read the user's saved Speech speed slider from Settings (falls back to DEFAULT_RATE). */
+export function getStoredSpeechRate(): number {
+  if (typeof window === 'undefined' || !window.localStorage) return DEFAULT_RATE;
+  const raw = window.localStorage.getItem(SETTINGS_KEYS.TTS_SPEED);
+  const parsed = raw ? Number.parseFloat(raw) : NaN;
+  if (!Number.isFinite(parsed)) return DEFAULT_RATE;
+  return Math.max(0.5, Math.min(2.0, parsed));
+}
+
+let speechRequestSeq = 0;
+let speechAbortController: AbortController | null = null;
 
 // Resolve the active language's TTS config. Browser-TTS voice selection is
 // driven entirely off this, so switching the target language picks an
@@ -66,8 +80,8 @@ function candidateLangsFor(config: LanguageConfig): string[] {
 }
 
 function primaryTargetTags(config: LanguageConfig): string[] {
-  return [config.ttsCode, config.script.bcp47, config.code].filter(
-    (lang): lang is string => Boolean(lang),
+  return [config.ttsCode, config.script.bcp47, config.code].filter((lang): lang is string =>
+    Boolean(lang),
   );
 }
 
@@ -409,15 +423,23 @@ export function getCurrentVoiceName(): string | undefined {
  * packs, self-hosted eSpeak NG for Esperanto (#307 §3.2c).
  * @returns true if successful, false if the caller may fall back to browser TTS
  */
-async function speakWithServer(text: string, rate: number): Promise<boolean> {
+async function speakWithServer(
+  text: string,
+  rate: number,
+  requestSeq: number,
+  signal: AbortSignal,
+  language?: string,
+): Promise<boolean> {
   try {
     const response = await apiFetch('/api/tts', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text, rate, language: getActiveLanguage() }),
+      signal,
+      body: JSON.stringify({ text, rate, language: language ?? getActiveLanguage() }),
     });
 
     const data = await response.json();
+    if (requestSeq !== speechRequestSeq) return true;
 
     // Check if we should fall back to browser TTS
     if (data.fallback || data.error) {
@@ -427,7 +449,7 @@ async function speakWithServer(text: string, rate: number): Promise<boolean> {
 
     // Stop any current audio
     notifyBrowserSpeechInterrupt();
-    stopSpeaking();
+    stopAudioOnly();
 
     // Create audio element and play
     const audioData = `data:${data.contentType};base64,${data.audioContent}`;
@@ -436,6 +458,7 @@ async function speakWithServer(text: string, rate: number): Promise<boolean> {
 
     return true;
   } catch (error) {
+    if (isAbortError(error)) return true;
     console.error('Server TTS error:', error);
     return false;
   }
@@ -444,31 +467,26 @@ async function speakWithServer(text: string, rate: number): Promise<boolean> {
 /**
  * Speak using browser's speech synthesis
  */
-function speakWithBrowser(text: string, rate: number): void {
+function speakWithBrowser(text: string, rate: number, language?: string): void {
   if (!isTTSAvailable()) {
     console.warn('Text-to-speech is not available in this browser');
     return;
   }
 
-  // Stop any current speech
+  // Stop any current speech (including active managed/server audio elements).
   notifyBrowserSpeechInterrupt();
-  window.speechSynthesis.cancel();
+  stopAudioOnly();
 
   const utterance = new SpeechSynthesisUtterance(text);
 
-  // Set the voice for the active language (falls back per the registry)
-  const voice = getActiveLanguageVoice();
+  // Set the voice for the requested (or active) language (falls back per the registry)
+  const config = langConfigFor(language);
+  const voice = language ? getVoiceForLanguage(config.code) : getActiveLanguageVoice();
   if (voice) {
     utterance.voice = voice;
     utterance.lang = voice.lang;
   } else {
-    // Set language even without a specific voice (bcp47 covers languages
-    // without a Google ttsCode).
-    const config = activeLangConfig();
     utterance.lang = config.ttsCode ?? config.script.bcp47;
-    // The browser will pick its default voice, which for a non-matching
-    // language often plays nothing at all (e.g. a Latin voice handed
-    // Cyrillic text) — leave a trail for that otherwise-silent failure.
     console.warn(
       `No ${config.name} browser voice found — install one in the OS or configure managed TTS`,
     );
@@ -484,27 +502,30 @@ function speakWithBrowser(text: string, rate: number): void {
 }
 
 /**
- * Speaks text via system audio, dispatching on the active language's
- * pronunciation capability (#307 §3.2):
- * - `audio: 'none'` — no-op. Nothing can sensibly speak the language; the
- *   speaker UI is already absent (see `hasAudio`).
- * - server-engine-only languages (eo → eSpeak NG) — always the server route,
- *   unmetered, and NEVER browser TTS: there is no matching browser voice, so
- *   a failure surfaces instead of mis-speaking in the wrong language.
- * - Google languages — managed TTS when entitled, browser TTS otherwise
- *   (existing behavior).
- * @param text - The text to speak
- * @param rate - Speech rate (default 0.9 for clearer learning)
+ * Speaks text via system audio, dispatching on the target language's
+ * pronunciation capability (#307 §3.2).
  */
-export async function speak(text: string, rate: number = DEFAULT_RATE): Promise<void> {
-  const audio = activeLangConfig().pronunciation.audio;
+export async function speak(
+  text: string,
+  rate: number = getStoredSpeechRate(),
+  language?: string,
+): Promise<void> {
+  const config = langConfigFor(language);
+  const audio = config.pronunciation.audio;
   if (audio === 'none') return;
+
+  speechAbortController?.abort();
+  const controller = new AbortController();
+  speechAbortController = controller;
+  const requestSeq = ++speechRequestSeq;
 
   if (!audio.includes('google')) {
     // eSpeak-only language: no plan gating (synthesis is zero-marginal-cost
     // and unmetered on every tier — #307 §3.2c) and no browser fallback.
-    const success = await speakWithServer(text, rate);
-    if (!success) console.error('TTS failed and this language has no browser fallback voice');
+    const success = await speakWithServer(text, rate, requestSeq, controller.signal, config.code);
+    if (!success && requestSeq === speechRequestSeq) {
+      console.error('TTS failed and this language has no browser fallback voice');
+    }
     return;
   }
 
@@ -513,38 +534,43 @@ export async function speak(text: string, rate: number = DEFAULT_RATE): Promise<
   if (mode === 'google') {
     if (lectorMode() === 'cloud') {
       const entitlements = await getEntitlements();
+      if (requestSeq !== speechRequestSeq) return;
       if (entitlements?.limits.ttsCharsPerMonth === 0) {
         // Free (including Free+BYOK) is browser-only. Persist the fallback so a
         // lapsed subscriber does not repeatedly make denied managed-TTS calls.
         setTTSMode('browser');
-        speakWithBrowser(text, rate);
+        speakWithBrowser(text, rate, config.code);
         return;
       }
     }
-    const success = await speakWithServer(text, rate);
-    if (success) return;
+    const success = await speakWithServer(text, rate, requestSeq, controller.signal, config.code);
+    if (success || requestSeq !== speechRequestSeq) return;
   }
 
-  speakWithBrowser(text, rate);
+  if (requestSeq !== speechRequestSeq) return;
+  speakWithBrowser(text, rate, config.code);
+}
+
+function stopAudioOnly(): void {
+  activeWordUtterance = null;
+  if (isTTSAvailable()) {
+    window.speechSynthesis.cancel();
+  }
+  if (audioElement) {
+    audioElement.pause();
+    audioElement.currentTime = 0;
+    audioElement = null;
+  }
 }
 
 /**
  * Stop any current speech (both Google and browser)
  */
 export function stopSpeaking(): void {
-  activeWordUtterance = null;
-
-  // Stop browser TTS
-  if (isTTSAvailable()) {
-    window.speechSynthesis.cancel();
-  }
-
-  // Stop audio element
-  if (audioElement) {
-    audioElement.pause();
-    audioElement.currentTime = 0;
-    audioElement = null;
-  }
+  speechRequestSeq += 1;
+  speechAbortController?.abort();
+  speechAbortController = null;
+  stopAudioOnly();
 }
 
 /**

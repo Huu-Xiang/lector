@@ -111,6 +111,48 @@ export default function VocabDetailModal({
             )}
           </div>
 
+          {/* Structured phrase details (idiomatic meaning, literal breakdown, usage, register) */}
+          {entry.phraseDetails &&
+            (entry.phraseDetails.idiomaticMeaning ||
+              entry.phraseDetails.literalBreakdown ||
+              entry.phraseDetails.usageNotes ||
+              entry.phraseDetails.register) && (
+              <div
+                className="space-y-2 rounded-lg border border-border bg-muted/40 p-3 text-sm"
+                data-testid="vocab-phrase-details"
+              >
+                {entry.phraseDetails.register && (
+                  <span className="inline-block rounded-full border border-border bg-card px-2 py-0.5 text-[11px] font-medium text-muted-foreground capitalize">
+                    {entry.phraseDetails.register}
+                  </span>
+                )}
+                {entry.phraseDetails.idiomaticMeaning && (
+                  <div>
+                    <span className="text-xs font-medium text-muted-foreground">
+                      {t('idiomaticMeaning')}
+                    </span>
+                    <p className="text-foreground">{entry.phraseDetails.idiomaticMeaning}</p>
+                  </div>
+                )}
+                {entry.phraseDetails.literalBreakdown && (
+                  <div>
+                    <span className="text-xs font-medium text-muted-foreground">
+                      {t('literalBreakdown')}
+                    </span>
+                    <p className="text-muted-foreground">{entry.phraseDetails.literalBreakdown}</p>
+                  </div>
+                )}
+                {entry.phraseDetails.usageNotes && (
+                  <div>
+                    <span className="text-xs font-medium text-muted-foreground">
+                      {t('usageNotes')}
+                    </span>
+                    <p className="text-muted-foreground">{entry.phraseDetails.usageNotes}</p>
+                  </div>
+                )}
+              </div>
+            )}
+
           {/* Context Sentence */}
           <div>
             <label className="mb-1 block text-sm font-medium text-foreground">

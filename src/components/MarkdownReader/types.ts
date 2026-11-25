@@ -16,7 +16,13 @@ export interface WordSource {
 export interface MarkdownReaderProps {
   lesson: Lesson;
   sectionTitle?: string;
-  onWordClick: (word: string, sentence: string, source?: WordSource, occurrence?: string) => void;
+  onWordClick: (
+    word: string,
+    sentence: string,
+    source?: WordSource,
+    occurrence?: string,
+    options?: { isPhrase?: boolean },
+  ) => void;
   /** Whether the word/phrase drawer this reader feeds is open. When it closes
    *  (Esc, the X, clicking away) the reader clears its word/phrase highlight. */
   wordPanelOpen?: boolean;
@@ -36,4 +42,8 @@ export interface MarkdownReaderProps {
   concordanceJump?: ConcordanceJumpPayload | null;
   /** Called when the learner dismisses or clears the concordance highlight. */
   onDismissConcordanceJump?: () => void;
+  /** Optional chapter-end wrap-up footer (e.g. Mark remaining new words as Known). */
+  chapterFooter?: ReactNode;
+  /** Increment to force-clear any active word/phrase highlight even while the drawer stays closed. */
+  clearHighlightToken?: number;
 }

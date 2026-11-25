@@ -30,7 +30,7 @@ export interface SyncWordStateInput {
 }
 
 const TARGET_STAGE: Record<WordState, ReviewStage | null> = {
-  new: 'new',
+  new: null,
   level1: 'new',
   level2: 'learning',
   level3: 'familiar',
@@ -40,7 +40,7 @@ const TARGET_STAGE: Record<WordState, ReviewStage | null> = {
 };
 
 export function isRetiringState(state: WordState): boolean {
-  return state === 'known' || state === 'ignored';
+  return state === 'new' || state === 'known' || state === 'ignored';
 }
 
 export function newestVocabForWord(

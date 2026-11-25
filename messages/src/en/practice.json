@@ -23,7 +23,9 @@
       "modeType": "Type",
       "modeMc": "Choices",
       "start": "Start",
-      "loading": "Loading..."
+      "loading": "Loading...",
+      "sentenceBankHeading": "Sentence bank drills",
+      "sentenceBankHint": "Practice common vocabulary by frequency band"
     },
     "collections": {
       "top500": "Top 500",
@@ -204,7 +206,8 @@
         "noWords": "Save words while you read, and they appear here to review.",
         "failed": "Could not load your words.",
         "goal": "Goal: {goal}"
-      }
+      },
+      "reviewMore": "Review next round ({count})"
     }
   },
   "vocab": {
@@ -302,7 +305,10 @@
       "cancel": "Cancel",
       "saving": "Saving...",
       "save": "Save",
-      "edit": "Edit"
+      "edit": "Edit",
+      "idiomaticMeaning": "Idiomatic meaning",
+      "literalBreakdown": "Literally",
+      "usageNotes": "Usage"
     },
     "page": {
       "title": "Vocabulary",

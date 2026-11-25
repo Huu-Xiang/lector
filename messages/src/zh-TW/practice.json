@@ -23,7 +23,9 @@
       "modeType": "輸入",
       "modeMc": "選擇題",
       "start": "開始",
-      "loading": "載入中..."
+      "loading": "載入中...",
+      "sentenceBankHeading": "例句庫專項練習",
+      "sentenceBankHint": "依詞頻分層練習常見詞彙"
     },
     "collections": {
       "top500": "前 500",
@@ -204,7 +206,8 @@
         "noWords": "閱讀時儲存的單字會出現在這裡，供你複習。",
         "failed": "無法載入你的單字。",
         "goal": "目標：{goal}"
-      }
+      },
+      "reviewMore": "繼續複習下一輪 ({count})"
     }
   },
   "vocab": {
@@ -302,7 +305,10 @@
       "cancel": "取消",
       "saving": "儲存中...",
       "save": "儲存",
-      "edit": "編輯"
+      "edit": "編輯",
+      "idiomaticMeaning": "道地含義",
+      "literalBreakdown": "字面拆解",
+      "usageNotes": "用法說明"
     },
     "page": {
       "title": "詞彙",

@@ -3,10 +3,10 @@ import { db, ChatMessageRow } from '../db';
 import { getProvider } from '../lib/llm';
 import { getCurrentUserId } from '../lib/user';
 import { resolveLanguage } from '../lib/active-language';
-import { getNativeLanguageName } from '../lib/native-language';
+import { getNativeLanguageName, isMonolingualExplanationsEnabled } from '../lib/native-language';
 import { getLanguageConfig } from '../lib/languages';
 import { entitlements, planLimitResponse, type UsageReservation } from '../lib/entitlements';
-import { getSystemPrompt, withSystemPrompt } from '../lib/chat-prompt';
+import { getSystemPrompt, withSystemPrompt, type ChatTurn } from '../lib/chat-prompt';
 import { randomUUID } from 'crypto';
 
 const app = new Hono();
@@ -60,14 +60,14 @@ app.post('/', async (c) => {
   try {
     cleanExpired();
 
-    const { message, language } = await c.req.json();
+    const { message, language, history: clientHistory } = await c.req.json();
     const normalizedMessage = typeof message === 'string' ? message.trim() : '';
 
     if (!normalizedMessage) {
       return c.json({ error: 'message is required' }, 400);
     }
     if (utf8Bytes(normalizedMessage) > MAX_CHAT_MESSAGE_BYTES) {
-      return c.json({ error: 'message must be at most 32 KiB' }, 413);
+      return c.json({ error: 'message must be at most 8 KiB' }, 413);
     }
 
     const persistHistory = entitlements.resolveEntitlements(userId).plan !== 'free';
@@ -79,7 +79,8 @@ app.post('/', async (c) => {
 
     const lang = resolveLanguage(language, userId);
     const langName = getLanguageConfig(lang).name;
-    const SYSTEM_PROMPT = getSystemPrompt(langName, getNativeLanguageName(userId));
+    const monolingual = isMonolingualExplanationsEnabled(userId);
+    const SYSTEM_PROMPT = getSystemPrompt(langName, getNativeLanguageName(userId), monolingual);
 
     const now = new Date().toISOString();
     const userMsg: ChatMessageRow = {
@@ -94,17 +95,66 @@ app.post('/', async (c) => {
 
     const provider = getProvider(userId, { byok: reservation.byok });
 
-    // Send the full recent (same-language) history every turn. We previously had
-    // a stateful path for LM Studio that threaded a server-side response_id; that
-    // was dropped when the local providers were unified behind one
-    // OpenAI-compatible backend, so every provider now uses this single path.
-    const recentMessages = db
-      .prepare(
-        'SELECT * FROM chat_messages WHERE userId = ? AND language = ? ORDER BY createdAt DESC LIMIT ?',
-      )
-      .all(userId, lang, MAX_CONTEXT_MESSAGES - 1) as ChatMessageRow[];
+    // Send the full recent (same-language) history every turn. Paid plans load
+    // from chat_messages; Free/BYOK plans (where persistHistory is false) accept
+    // bounded client-provided session turns so follow-up questions keep context
+    // without creating unbounded server storage.
+    let priorTurns: ChatTurn[];
+    if (persistHistory) {
+      const recentMessages = db
+        .prepare(
+          'SELECT * FROM chat_messages WHERE userId = ? AND language = ? ORDER BY createdAt DESC LIMIT ?',
+        )
+        .all(userId, lang, MAX_CONTEXT_MESSAGES - 1) as ChatMessageRow[];
+      priorTurns = recentMessages.reverse().map((m) => ({
+        role: m.role,
+        content: m.content,
+      }));
+    } else if (Array.isArray(clientHistory)) {
+      // Accumulate newest-to-oldest within the byte and turn budgets so newer context
+      // wins over stale early turns, then normalize to strict alternating user/assistant
+      // order starting with a user turn and ending with an assistant turn (Anthropic API rule).
+      const MAX_HISTORY_TOTAL_BYTES = MAX_CHAT_MESSAGE_BYTES * 4;
+      const reversedAccepted: ChatTurn[] = [];
+      let totalBytes = 0;
+      for (let i = clientHistory.length - 1; i >= 0; i--) {
+        if (reversedAccepted.length >= MAX_CONTEXT_MESSAGES - 1) break;
+        const item = clientHistory[i];
+        if (!item || (item.role !== 'user' && item.role !== 'assistant')) continue;
+        if (typeof item.content !== 'string') continue;
+        const content = item.content.trim();
+        if (!content) continue;
+        const size = utf8Bytes(content);
+        if (size > MAX_CHAT_MESSAGE_BYTES || totalBytes + size > MAX_HISTORY_TOTAL_BYTES) continue;
+        totalBytes += size;
+        reversedAccepted.push({ role: item.role, content });
+      }
+      const chronological = reversedAccepted.reverse();
+      // Drop leading assistant turns (Anthropic requires first turn to be user).
+      let startIdx = 0;
+      while (startIdx < chronological.length && chronological[startIdx].role !== 'user') {
+        startIdx++;
+      }
+      // Collapse consecutive same-role turns by keeping the latest turn of each run.
+      const alternating: ChatTurn[] = [];
+      for (let i = startIdx; i < chronological.length; i++) {
+        const turn = chronological[i];
+        if (alternating.length > 0 && alternating[alternating.length - 1].role === turn.role) {
+          alternating[alternating.length - 1] = turn;
+        } else {
+          alternating.push(turn);
+        }
+      }
+      // Before appending the new user turn, drop any trailing unpaired user turn.
+      while (alternating.length > 0 && alternating[alternating.length - 1].role === 'user') {
+        alternating.pop();
+      }
+      priorTurns = alternating;
+    } else {
+      priorTurns = [];
+    }
 
-    const history = [...recentMessages.reverse(), userMsg];
+    const history: ChatTurn[] = [...priorTurns, { role: 'user', content: userMsg.content }];
 
     const chatHistory = withSystemPrompt(history, SYSTEM_PROMPT);
 

@@ -15,9 +15,11 @@ import { TranslationDrawerProps } from './types';
 import { wordStateColors } from './constants';
 import { LevelCaption } from './LevelCaption';
 import {
+  BookOpen,
   ChevronLeft,
   ChevronRight,
   Ellipsis,
+  MessageCircle,
   RefreshCw,
   Search,
   Sparkles,
@@ -47,11 +49,14 @@ export { TranslationDrawerSlot } from './slot';
 export default function TranslationDrawer({
   isOpen: rawIsOpen,
   word,
+  isPhrase: explicitIsPhrase,
+  languagePack,
   sentence,
   entry,
   aiTranslation,
   aiPartOfSpeech,
   aiContextTranslation,
+  liveAiPrimaryTranslation,
   savedAiTranslation,
   savedTranslationSource,
   savedSentence,
@@ -62,6 +67,12 @@ export default function TranslationDrawer({
   isStreaming,
   isEnriching,
   error,
+  retranslateError,
+  sentenceExplanation,
+  isExplainingSentence,
+  sentenceExplainError,
+  onExplainSentence,
+  onAskTutor,
   existingEntry,
   wordState,
   onboardingSaveProgress,
@@ -85,7 +96,12 @@ export default function TranslationDrawer({
 }: TranslationDrawerProps) {
   const t = useTranslations('reader.drawer');
   const posLabel = usePosLabel();
-  const pack = useActiveLanguage();
+  const activeLang = useActiveLanguage();
+  const pack = languagePack ?? activeLang;
+  const activeWordRef = useRef(word);
+  useEffect(() => {
+    activeWordRef.current = word;
+  }, [word]);
   const drawerRef = useRef<HTMLDivElement>(null);
   const dragStartVh = useRef<number | null>(null);
   const dragVh = useRef(0);
@@ -133,9 +149,30 @@ export default function TranslationDrawer({
   const isOpen = useMemo(() => docked || rawIsOpen, [docked, rawIsOpen]);
   const idle = docked && !word.trim();
 
+  // Publish drawer open state so floating ChatWidget clears the 384px drawer on lg/xl screens.
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    if (rawIsOpen) {
+      document.documentElement.dataset.drawerOpen = 'true';
+    } else {
+      delete document.documentElement.dataset.drawerOpen;
+    }
+    return () => {
+      delete document.documentElement.dataset.drawerOpen;
+    };
+  }, [rawIsOpen]);
+
   useEffect(() => {
     if (!isOpen || docked) return;
     const handleKey = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (
+        target?.closest(
+          'input, textarea, select, [contenteditable="true"], [data-testid="chat-panel"]',
+        )
+      ) {
+        return;
+      }
       if (e.key === 'Escape') onClose();
     };
     document.addEventListener('keydown', handleKey);
@@ -156,7 +193,7 @@ export default function TranslationDrawer({
 
   const currentState = wordState ?? existingEntry?.state ?? 'new';
   const stateColors = wordStateColors[currentState];
-  const isPhrase = word.includes(' ');
+  const isPhrase = explicitIsPhrase ?? word.includes(' ');
   const longTitle = isPhrase || word.length > 30;
   // After a nested lookup (issue #106) the drawer keeps the sentence of the
   // word the user originally clicked — genuine provenance, but not context
@@ -171,7 +208,9 @@ export default function TranslationDrawer({
     vocabKeys(foldWord(token.text, pack), pack).some((key) => selectedKeys.includes(key)),
   );
   const showingSavedAi = !aiContextTranslation && !!savedAiTranslation;
-  const primaryAiActive = !!aiContextTranslation || showingSavedAi;
+  const showingLiveAiPrimary =
+    !aiContextTranslation && !showingSavedAi && !!liveAiPrimaryTranslation;
+  const primaryAiActive = !!aiContextTranslation || showingSavedAi || showingLiveAiPrimary;
   const alreadyInContextForSentence =
     !!aiContextTranslation ||
     (showingSavedAi &&
@@ -206,17 +245,24 @@ export default function TranslationDrawer({
   const fallbackTranslation = aiTranslation ?? null;
   const leadSenses = compact && sentence ? senses.slice(0, 1) : senses;
   const hasDictionaryDetails = !!(
-    senses.length > leadSenses.length ||
+    (!primaryAiActive && senses.length > leadSenses.length) ||
     entry?.rank ||
     entry?.oxford ||
     entry?.collins ||
     entry?.tags?.length ||
-    entry?.englishSenses?.length ||
-    entry?.examples?.length ||
-    entry?.etymology ||
-    entry?.relatedForms?.length ||
+    (!primaryAiActive && entry?.englishSenses?.length) ||
+    (!primaryAiActive && entry?.examples?.length) ||
+    (!primaryAiActive && entry?.etymology) ||
+    (!primaryAiActive && entry?.relatedForms?.length) ||
     entry?.lemmaInfo
   );
+  const effectiveAnkiStatus =
+    ankiStatus === 'idle' && existingEntry?.pushedToAnki ? 'done' : ankiStatus;
+  const clozeWords = useMemo(() => {
+    if (!isPhrase) return [];
+    const tokens = tokenizeWords(word, pack).map((tok) => tok.text);
+    return tokens.length > 0 ? tokens : word.split(/\s+/).filter(Boolean);
+  }, [isPhrase, word, pack]);
   const DictionaryDetails = compact ? 'details' : Fragment;
   const announcement = lookupAnnouncement(
     {
@@ -309,7 +355,8 @@ export default function TranslationDrawer({
         {onRetranslate && (
           <button
             onClick={onRetranslate}
-            className="flex w-full min-w-0 flex-1 items-center justify-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+            disabled={isLoading || isStreaming || isContextLoading}
+            className="flex w-full min-w-0 flex-1 items-center justify-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
             title={t('retranslateTitle')}
           >
             <RefreshCw className="h-3.5 w-3.5" />
@@ -331,38 +378,43 @@ export default function TranslationDrawer({
         {/* Anki — single word: pure word card */}
         {!isPhrase &&
           onAddToAnki &&
-          (hasRichEntry || fallbackTranslation || aiContextTranslation || savedAiTranslation) &&
+          (hasRichEntry ||
+            fallbackTranslation ||
+            aiContextTranslation ||
+            savedAiTranslation ||
+            liveAiPrimaryTranslation) &&
           !isLoading && (
-          <button
-            data-testid="add-to-anki-btn"
-            onClick={async () => {
-              if (ankiStatus === 'loading' || ankiStatus === 'done') return;
-              setAnkiStatus('loading');
-              try {
-                await onAddToAnki();
-                setAnkiStatus('done');
-              } catch {
-                setAnkiStatus('error');
-              }
-            }}
-            disabled={ankiStatus === 'loading' || ankiStatus === 'done'}
-            className={`flex w-full min-w-0 flex-1 items-center justify-center gap-1.5 rounded-md border px-3 py-1.5 text-xs font-medium transition-colors ${
-              ankiStatus === 'done'
-                ? 'cursor-default border-primary/40 bg-primary/10 text-[var(--primary-text)]'
-                : ankiStatus === 'error'
-                  ? 'border-destructive/40 bg-destructive/10 text-destructive hover:bg-destructive/20'
-                  : 'border-border text-muted-foreground hover:bg-accent hover:text-foreground'
-            }`}
-          >
-            {ankiStatus === 'done'
-              ? t('ankiAdded')
-              : ankiStatus === 'loading'
-                ? t('ankiAdding')
-                : ankiStatus === 'error'
-                  ? t('ankiError')
-                  : t('ankiAdd')}
-          </button>
-        )}
+            <button
+              data-testid="add-to-anki-btn"
+              onClick={async () => {
+                if (effectiveAnkiStatus === 'loading' || effectiveAnkiStatus === 'done') return;
+                const startedForWord = word;
+                setAnkiStatus('loading');
+                try {
+                  await onAddToAnki();
+                  if (activeWordRef.current === startedForWord) setAnkiStatus('done');
+                } catch {
+                  if (activeWordRef.current === startedForWord) setAnkiStatus('error');
+                }
+              }}
+              disabled={effectiveAnkiStatus === 'loading' || effectiveAnkiStatus === 'done'}
+              className={`flex w-full min-w-0 flex-1 items-center justify-center gap-1.5 rounded-md border px-3 py-1.5 text-xs font-medium transition-colors ${
+                effectiveAnkiStatus === 'done'
+                  ? 'cursor-default border-primary/40 bg-primary/10 text-[var(--primary-text)]'
+                  : effectiveAnkiStatus === 'error'
+                    ? 'border-destructive/40 bg-destructive/10 text-destructive hover:bg-destructive/20'
+                    : 'border-border text-muted-foreground hover:bg-accent hover:text-foreground'
+              }`}
+            >
+              {effectiveAnkiStatus === 'done'
+                ? t('ankiAdded')
+                : effectiveAnkiStatus === 'loading'
+                  ? t('ankiAdding')
+                  : effectiveAnkiStatus === 'error'
+                    ? t('ankiError')
+                    : t('ankiAdd')}
+            </button>
+          )}
       </div>
       {/* Anki — phrase: cloze card with inline word picker */}
       {isPhrase && onAddCloze && (fallbackTranslation || aiPhraseDetails) && !isLoading && (
@@ -379,39 +431,33 @@ export default function TranslationDrawer({
             <div className="space-y-2">
               <p className="text-xs text-muted-foreground">{t('clozePick')}</p>
               <div className="flex flex-wrap gap-1" data-testid="cloze-word-chips">
-                {word
-                  .split(/\s+/)
-                  .filter(Boolean)
-                  .map((w, i) => (
-                    <button
-                      key={i}
-                      data-testid={`cloze-chip-${i}`}
-                      onClick={() => setClozeBlankWord(clozeBlankWord === w ? null : w)}
-                      className={`rounded px-2 py-0.5 text-sm font-medium transition-colors ${
-                        clozeBlankWord === w
-                          ? 'bg-primary text-primary-foreground'
-                          : 'bg-muted text-foreground hover:bg-accent'
-                      }`}
-                    >
-                      {w}
-                    </button>
-                  ))}
+                {clozeWords.map((w, i) => (
+                  <button
+                    key={i}
+                    data-testid={`cloze-chip-${i}`}
+                    onClick={() => setClozeBlankWord(clozeBlankWord === w ? null : w)}
+                    className={`rounded px-2 py-0.5 text-sm font-medium transition-colors ${
+                      clozeBlankWord === w
+                        ? 'bg-primary text-primary-foreground'
+                        : 'bg-muted text-foreground hover:bg-accent'
+                    }`}
+                  >
+                    {w}
+                  </button>
+                ))}
               </div>
               {clozeBlankWord && (
                 <p className="font-mono text-xs text-muted-foreground" data-testid="cloze-preview">
-                  {word
-                    .split(/\s+/)
-                    .filter(Boolean)
-                    .map((w, i) => (
-                      <span key={i}>
-                        {i > 0 && ' '}
-                        {w === clozeBlankWord ? (
-                          <span className="font-semibold text-primary">[{w}]</span>
-                        ) : (
-                          w
-                        )}
-                      </span>
-                    ))}
+                  {clozeWords.map((w, i) => (
+                    <span key={i}>
+                      {i > 0 && pack.script.kind !== 'cjk-unspaced' && ' '}
+                      {w === clozeBlankWord ? (
+                        <span className="font-semibold text-primary">[{w}]</span>
+                      ) : (
+                        w
+                      )}
+                    </span>
+                  ))}
                 </p>
               )}
               <div className="flex gap-2">
@@ -420,12 +466,13 @@ export default function TranslationDrawer({
                   onClick={async () => {
                     if (!clozeBlankWord || clozeStatus === 'loading' || clozeStatus === 'done')
                       return;
+                    const startedForWord = word;
                     setClozeStatus('loading');
                     try {
                       await onAddCloze(clozeBlankWord);
-                      setClozeStatus('done');
+                      if (activeWordRef.current === startedForWord) setClozeStatus('done');
                     } catch {
-                      setClozeStatus('error');
+                      if (activeWordRef.current === startedForWord) setClozeStatus('error');
                     }
                   }}
                   disabled={!clozeBlankWord || clozeStatus === 'loading' || clozeStatus === 'done'}
@@ -510,6 +557,11 @@ export default function TranslationDrawer({
         </span>
       ) : showingSavedAi ? (
         savedAiSourcePill
+      ) : showingLiveAiPrimary ? (
+        <span className="inline-flex items-center gap-1 rounded-md bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
+          <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground" />
+          {t('sourceAi')}
+        </span>
       ) : entry?.source === 'cache' ? (
         <span className="inline-flex items-center gap-1 rounded-md bg-[var(--gold-soft)] px-2 py-0.5 text-xs font-medium text-[var(--gold-strong)]">
           <span className="h-1.5 w-1.5 rounded-full bg-[var(--gold-strong)]" />
@@ -565,6 +617,52 @@ export default function TranslationDrawer({
       </div>
     </section>
   );
+
+  const renderCollapsedDictionary = (testId?: string, includeFallbackText = false) => {
+    if (!hasRichEntry && !(includeFallbackText && fallbackTranslation)) return null;
+    return (
+      <details
+        className="group mt-3"
+        data-testid={testId}
+        onToggle={(e) => {
+          if (e.currentTarget.open) onExpandDictionary?.();
+        }}
+      >
+        <summary
+          className={clsx(
+            'flex cursor-pointer list-none items-center gap-1 text-xs font-medium text-muted-foreground hover:text-foreground',
+            compact && 'min-h-11',
+          )}
+        >
+          <ChevronRight className="h-3 w-3 transition-transform group-open:rotate-90" />
+          {hasRichEntry ? t('showDictionary', { count: senses.length }) : t('originalDefinition')}
+        </summary>
+        {hasRichEntry ? (
+          <ol className="mt-2 space-y-2">
+            {senses.map((sense, i) => (
+              <li key={i} className="flex gap-3 text-sm">
+                <span className="mt-0.5 flex-shrink-0 text-xs font-medium text-muted-foreground tabular-nums">
+                  {i + 1}.
+                </span>
+                <div className="min-w-0 flex-1">
+                  {sense.partOfSpeech && (
+                    <span className="mr-2 inline-block rounded bg-muted px-1.5 py-0.5 align-middle text-[10px] font-semibold tracking-wide text-muted-foreground uppercase">
+                      {posLabel(sense.partOfSpeech)}
+                    </span>
+                  )}
+                  <span className="text-foreground">
+                    <Gloss text={sense.gloss} onLookupWord={onLookupWord} />
+                  </span>
+                </div>
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <p className="mt-2 text-sm">{fallbackTranslation}</p>
+        )}
+      </details>
+    );
+  };
 
   const content = (
     <div
@@ -779,7 +877,11 @@ export default function TranslationDrawer({
                   <span className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
                   {t('lookingUp')}
                 </div>
-              ) : error && !aiContextTranslation && !showingSavedAi ? (
+              ) : error &&
+                !aiContextTranslation &&
+                !showingSavedAi &&
+                !showingLiveAiPrimary &&
+                !hasRichEntry ? (
                 <p className="text-sm text-destructive">{error}</p>
               ) : aiContextTranslation ? (
                 <div data-testid="word-context-result">
@@ -820,53 +922,13 @@ export default function TranslationDrawer({
                       </button>
                     )}
                   </div>
-                  {(hasRichEntry || fallbackTranslation) && (
-                    <details
-                      className="group mt-3"
-                      onToggle={(e) => {
-                        if (e.currentTarget.open) onExpandDictionary?.();
-                      }}
-                    >
-                      <summary
-                        className={clsx(
-                          'flex cursor-pointer list-none items-center gap-1 text-xs font-medium text-muted-foreground hover:text-foreground',
-                          compact && 'min-h-11',
-                        )}
-                      >
-                        <ChevronRight className="h-3 w-3 transition-transform group-open:rotate-90" />
-                        {hasRichEntry
-                          ? t('showDictionary', { count: senses.length })
-                          : t('originalDefinition')}
-                      </summary>
-                      {hasRichEntry ? (
-                        <ol className="mt-2 space-y-2">
-                          {senses.map((sense, i) => (
-                            <li key={i} className="flex gap-3 text-sm">
-                              <span className="mt-0.5 flex-shrink-0 text-xs font-medium text-muted-foreground tabular-nums">
-                                {i + 1}.
-                              </span>
-                              <div className="min-w-0 flex-1">
-                                {sense.partOfSpeech && (
-                                  <span className="mr-2 inline-block rounded bg-muted px-1.5 py-0.5 align-middle text-[10px] font-semibold tracking-wide text-muted-foreground uppercase">
-                                    {posLabel(sense.partOfSpeech)}
-                                  </span>
-                                )}
-                                <span className="text-foreground">
-                                  <Gloss text={sense.gloss} onLookupWord={onLookupWord} />
-                                </span>
-                              </div>
-                            </li>
-                          ))}
-                        </ol>
-                      ) : (
-                        <p className="mt-2 text-sm">{fallbackTranslation}</p>
-                      )}
-                    </details>
-                  )}
+                  {renderCollapsedDictionary(undefined, true)}
                 </div>
               ) : showingSavedAi ? (
                 <div data-testid="saved-ai-result">
-                  {compact && savedAiSourcePill && <div className="mb-1.5">{savedAiSourcePill}</div>}
+                  {compact && savedAiSourcePill && (
+                    <div className="mb-1.5">{savedAiSourcePill}</div>
+                  )}
                   <p
                     className={clsx(
                       'text-foreground',
@@ -875,47 +937,33 @@ export default function TranslationDrawer({
                   >
                     {savedAiTranslation}
                   </p>
-                  {hasRichEntry && (
-                    <details
-                      className="group mt-3"
-                      data-testid="saved-ai-dictionary-toggle"
-                      onToggle={(e) => {
-                        if (e.currentTarget.open) onExpandDictionary?.();
-                      }}
-                    >
-                      <summary
-                        className={clsx(
-                          'flex cursor-pointer list-none items-center gap-1 text-xs font-medium text-muted-foreground hover:text-foreground',
-                          compact && 'min-h-11',
-                        )}
-                      >
-                        <ChevronRight className="h-3 w-3 transition-transform group-open:rotate-90" />
-                        {t('showDictionary', { count: senses.length })}
-                      </summary>
-                      <ol className="mt-2 space-y-2">
-                        {senses.map((sense, i) => (
-                          <li key={i} className="flex gap-3 text-sm">
-                            <span className="mt-0.5 flex-shrink-0 text-xs font-medium text-muted-foreground tabular-nums">
-                              {i + 1}.
-                            </span>
-                            <div className="min-w-0 flex-1">
-                              {sense.partOfSpeech && (
-                                <span className="mr-2 inline-block rounded bg-muted px-1.5 py-0.5 align-middle text-[10px] font-semibold tracking-wide text-muted-foreground uppercase">
-                                  {posLabel(sense.partOfSpeech)}
-                                </span>
-                              )}
-                              <span className="text-foreground">
-                                <Gloss text={sense.gloss} onLookupWord={onLookupWord} />
-                              </span>
-                            </div>
-                          </li>
-                        ))}
-                      </ol>
-                    </details>
-                  )}
+                  {renderCollapsedDictionary('saved-ai-dictionary-toggle')}
+                </div>
+              ) : showingLiveAiPrimary ? (
+                <div data-testid="live-ai-primary-result">
+                  <p
+                    className={clsx(
+                      'text-foreground',
+                      compact ? 'text-sm leading-normal' : 'leading-relaxed',
+                    )}
+                  >
+                    {liveAiPrimaryTranslation}
+                    {isStreaming && (
+                      <span
+                        className="-mb-0.5 ml-0.5 inline-block h-4 w-1.5 animate-pulse bg-primary"
+                        aria-hidden="true"
+                      />
+                    )}
+                  </p>
+                  {renderCollapsedDictionary('live-ai-dictionary-toggle')}
                 </div>
               ) : hasRichEntry ? (
                 <div className="space-y-3">
+                  {error && (
+                    <p role="status" className="text-xs text-destructive">
+                      {error}
+                    </p>
+                  )}
                   {!compact && entry && <EntryBadges entry={entry} />}
                   <SenseGroups
                     senses={leadSenses}
@@ -944,10 +992,55 @@ export default function TranslationDrawer({
                 <p className="text-sm text-muted-foreground italic">{t('noDefinition')}</p>
               )}
 
-              {!compact && requestContextButton}
+              <div className="flex flex-wrap items-center gap-2 empty:hidden">
+                {!compact && requestContextButton}
+                {onExplainSentence &&
+                  sentence.trim() &&
+                  !isLoading &&
+                  !isStreaming &&
+                  !isExplainingSentence &&
+                  !sentenceExplanation && (
+                    <button
+                      type="button"
+                      onClick={onExplainSentence}
+                      data-testid="explain-sentence-btn"
+                      className={clsx(
+                        'inline-flex items-center gap-1 rounded-md bg-muted px-2.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground',
+                        compact ? 'min-h-11 px-3' : 'mt-3 py-1',
+                      )}
+                    >
+                      <BookOpen className="size-3 shrink-0" aria-hidden />
+                      {sentenceExplainError ? t('explainSentenceRetry') : t('explainSentence')}
+                    </button>
+                  )}
+                {onAskTutor && sentence.trim() && !isLoading && !isStreaming && (
+                  <button
+                    type="button"
+                    onClick={onAskTutor}
+                    data-testid="ask-tutor-btn"
+                    className={clsx(
+                      'inline-flex items-center gap-1 rounded-md bg-muted px-2.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground',
+                      compact ? 'min-h-11 px-3' : 'mt-3 py-1',
+                    )}
+                  >
+                    <MessageCircle className="size-3 shrink-0" aria-hidden />
+                    {t('askTutor')}
+                  </button>
+                )}
+              </div>
+              {retranslateError && (
+                <p role="status" className="mt-2 text-sm text-destructive">
+                  {retranslateError}
+                </p>
+              )}
               {contextError && (
                 <p role="status" className="mt-2 text-sm text-destructive">
                   {contextError}
+                </p>
+              )}
+              {sentenceExplainError && (
+                <p role="status" className="mt-2 text-sm text-destructive">
+                  {sentenceExplainError}
                 </p>
               )}
               {isContextLoading && (
@@ -955,6 +1048,23 @@ export default function TranslationDrawer({
                   <span className="h-3 w-3 animate-spin rounded-full border-2 border-[var(--clay)] border-t-transparent" />
                   {t('askingAi')}
                 </span>
+              )}
+              {isExplainingSentence && (
+                <span className="mt-3 inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <span className="h-3 w-3 animate-spin rounded-full border-2 border-muted-foreground border-t-transparent" />
+                  {t('explainingSentence')}
+                </span>
+              )}
+              {sentenceExplanation && (
+                <div
+                  data-testid="sentence-explanation-result"
+                  className="mt-3 rounded-lg border border-border bg-muted/40 p-3 text-sm leading-relaxed text-foreground"
+                >
+                  <p className="mb-1 text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">
+                    {t('sentenceBreakdownHeading')}
+                  </p>
+                  <div className="whitespace-pre-wrap">{sentenceExplanation.explanation}</div>
+                </div>
               )}
 
               {/* Enrich — upgrade a fast streamed gloss to the full dictionary entry
@@ -1083,7 +1193,7 @@ export default function TranslationDrawer({
                 )}
 
                 {/* Etymology */}
-                {entry?.etymology && (
+                {!primaryAiActive && entry?.etymology && (
                   <section className="border-b border-border px-4 py-3">
                     <h3 className="mb-1 text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">
                       {t('etymology')}
@@ -1094,7 +1204,8 @@ export default function TranslationDrawer({
 
                 {/* Related forms — capped at 3 with expand toggle to keep the drawer
         from being flooded by polysemous words (e.g. "Dit" has ~20 forms). */}
-                {entry?.relatedForms &&
+                {!primaryAiActive &&
+                  entry?.relatedForms &&
                   entry.relatedForms.length > 0 &&
                   (() => {
                     const total = entry.relatedForms.length;

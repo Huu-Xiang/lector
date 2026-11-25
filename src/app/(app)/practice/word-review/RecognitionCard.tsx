@@ -10,6 +10,8 @@ import { useQuestionKeys } from './use-question-keys';
 import SentenceTranslation from './SentenceTranslation';
 import SourceLine from './SourceLine';
 import WordHeader from './WordHeader';
+import ClickableReviewSentence from './ClickableReviewSentence';
+import PhraseDetailsCard from './PhraseDetailsCard';
 
 const ANSWERS: { answer: RecognitionAnswer; key: string; label: 'dontKnow' | 'fuzzy' | 'know' }[] =
   [
@@ -24,12 +26,14 @@ export default function RecognitionCard({
   showTranslation,
   onShowTranslation,
   onAnswer,
+  onWordClick,
 }: {
   item: ReviewItem;
   locked: boolean;
   showTranslation: boolean;
   onShowTranslation: () => void;
   onAnswer: (answer: RecognitionAnswer) => Promise<boolean>;
+  onWordClick?: (word: string, contextSentence: string, displaySentence: string) => void;
 }) {
   const t = useTranslations('practice.words.recognition');
   const [revealed, setRevealed] = useState(false);
@@ -60,9 +64,15 @@ export default function RecognitionCard({
           <p className="text-center text-lg text-foreground" data-testid="recognition-meaning">
             {item.translation}
           </p>
+          <PhraseDetailsCard details={item.phraseDetails} className="mt-3" />
           {example ? (
             <div className="mt-3" data-testid="recognition-example">
-              <p className="mb-1 text-center text-sm text-muted-foreground">{example.text}</p>
+              <ClickableReviewSentence
+                text={example.text}
+                contextSentence={example.text}
+                onWordClick={onWordClick}
+                className="mb-1 text-center text-sm text-muted-foreground"
+              />
               <SourceLine source={example.source} className="mb-1 text-center" />
               <SentenceTranslation
                 text={example.translation?.text}
@@ -73,7 +83,12 @@ export default function RecognitionCard({
             </div>
           ) : (
             item.sentence && (
-              <p className="mt-3 text-center text-sm text-muted-foreground">{item.sentence}</p>
+              <ClickableReviewSentence
+                text={item.sentence}
+                contextSentence={item.sentence}
+                onWordClick={onWordClick}
+                className="mt-3 text-center text-sm text-muted-foreground"
+              />
             )
           )}
           <div className="mt-6 grid grid-cols-3 gap-2">

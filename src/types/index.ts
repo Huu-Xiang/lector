@@ -256,6 +256,7 @@ export interface ReviewItem {
   questionType: ReviewQuestionType;
   sentence: string;
   translation: string;
+  phraseDetails?: AiPhraseDetails | null;
   choices?: string[];
   sentenceSource?: SentenceSource;
   sentenceBlank?: SentenceBlank;

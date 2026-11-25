@@ -8,7 +8,12 @@ import { foldWord, lookupByVocabKeys } from '@/lib/languages';
 import type { TranscriptSegment, WordState } from '@/types';
 import type { WordSource } from './types';
 import type { ActiveReaderWord } from './ReaderArticle';
-import { collectWords, computePhraseHighlightSet, splitWords } from './utils';
+import {
+  computePhraseHighlightSetForBlock,
+  phraseHighlightTouchesBlock,
+  splitWords,
+  type HighlightedPhrase,
+} from './utils';
 import { wordReading, type AnnotationMode } from './annotation';
 import { readerWrapClass } from './wrap';
 import { proseStyleVars, type ProseStyle } from '@/lib/prose-style';
@@ -40,12 +45,18 @@ interface TranscriptReaderProps {
   /** Folded word -> pronunciation for the ruby layer (#289 4.4). */
   readings: Map<string, string> | null;
   annotationMode: AnnotationMode;
-  highlightedPhrase: string[];
+  highlightedPhrase: HighlightedPhrase;
   activeWord: ActiveReaderWord | null;
   activeSegmentIndex: number | null;
   /** Concordance search jump highlight, kept distinct from video-seek `activeSegmentIndex`. */
   concordanceSegmentIndex?: number | null;
-  onWordClick: (word: string, sentence: string, source?: WordSource, occurrence?: string) => void;
+  onWordClick: (
+    word: string,
+    sentence: string,
+    source?: WordSource,
+    occurrence?: string,
+    options?: { isPhrase?: boolean },
+  ) => void;
   onActivateWord: (word: ActiveReaderWord) => void;
   onClearPhrase: () => void;
   onSeek: (seconds: number, segmentIndex: number) => void;
@@ -98,8 +109,17 @@ function TranscriptReader({
       data-testid="transcript-reader"
     >
       {segments.map((segment, segmentIndex) => {
-        const words = collectWords(segment.text, pack, segmentation);
-        const phraseSet = computePhraseHighlightSet(words, highlightedPhrase, pack);
+        const parts = splitWords(segment.text, pack, segmentation);
+        const wordList = phraseHighlightTouchesBlock(segmentIndex, highlightedPhrase)
+          ? parts.filter((p) => p.isWord).map((p) => p.text)
+          : [];
+        const phraseSet = computePhraseHighlightSetForBlock(
+          segmentIndex,
+          wordList.length,
+          () => wordList,
+          highlightedPhrase,
+          pack,
+        );
         const source: WordSource = {
           sourceUrl,
           startMs: Math.round(segment.start * 1000),
@@ -109,13 +129,14 @@ function TranscriptReader({
         let wordIndex = -1;
         const isActiveSegment = activeSegmentIndex === segmentIndex;
         const isConcordanceSegment = concordanceSegmentIndex === segmentIndex;
-        const segmentHighlightClass = isActiveSegment && isConcordanceSegment
-          ? 'bg-[color-mix(in_srgb,var(--clay)_12%,transparent)] ring-2 ring-[var(--gold-lip)]'
-          : isConcordanceSegment
-            ? 'bg-[var(--gold-soft)] ring-1 ring-[var(--gold-lip)]'
-            : isActiveSegment
-              ? 'bg-[color-mix(in_srgb,var(--clay)_12%,transparent)]'
-              : '';
+        const segmentHighlightClass =
+          isActiveSegment && isConcordanceSegment
+            ? 'bg-[color-mix(in_srgb,var(--clay)_12%,transparent)] ring-2 ring-[var(--gold-lip)]'
+            : isConcordanceSegment
+              ? 'bg-[var(--gold-soft)] ring-1 ring-[var(--gold-lip)]'
+              : isActiveSegment
+                ? 'bg-[color-mix(in_srgb,var(--clay)_12%,transparent)]'
+                : '';
         return (
           <div
             key={segmentIndex}
@@ -146,7 +167,7 @@ function TranscriptReader({
                     : 'var(--reader-line-height)',
               }}
             >
-              {splitWords(segment.text, pack, segmentation).map((part, partIndex) => {
+              {parts.map((part, partIndex) => {
                 if (!part.isWord) {
                   return (
                     <span key={partIndex} data-leaf="">
@@ -163,6 +184,7 @@ function TranscriptReader({
                     key={partIndex}
                     text={part.text}
                     state={state}
+                    wordIndex={thisIndex}
                     isActive={
                       activeWord?.blockId === segmentIndex && activeWord.wordIndex === thisIndex
                     }
@@ -177,6 +199,7 @@ function TranscriptReader({
                         segment.text,
                         source,
                         `transcript:${segmentIndex}:${thisIndex}`,
+                        { isPhrase: false },
                       );
                     }}
                   />

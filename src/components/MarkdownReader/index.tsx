@@ -18,16 +18,20 @@ import {
   isValidLanguageCode,
   lookupByVocabKeys,
   makeWordSegmentation,
-  splitSentences,
   tokenize,
 } from '@/lib/languages';
 import {
+  extractPhraseCoordsFromRange,
+  extractSentenceAtElement,
   findSelectionAnchorElement,
   parseSegmentWords,
   readableRangeText,
-  readableText,
+  readWordCoord,
   snapToWordBoundaries,
   splitWords,
+  stripEdgePunctuation,
+  type HighlightedPhrase,
+  type PhraseHighlightSpan,
 } from './utils';
 import { usePhraseTouchSelection } from './usePhraseTouchSelection';
 import { useActiveLanguage, useProseStyleSettings } from '@/utils/hooks';
@@ -64,6 +68,8 @@ export default function MarkdownReader({
   headerAction,
   concordanceJump = null,
   onDismissConcordanceJump,
+  chapterFooter,
+  clearHighlightToken = 0,
 }: MarkdownReaderProps) {
   const t = useTranslations('reader.markdown');
   const router = useRouter();
@@ -105,7 +111,7 @@ export default function MarkdownReader({
   const [readings, setReadings] = useState<Map<string, string> | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const endRef = useRef<HTMLDivElement>(null);
-  const [highlightedPhrase, setHighlightedPhrase] = useState<string[]>([]);
+  const [highlightedPhrase, setHighlightedPhrase] = useState<HighlightedPhrase>(null);
   // The single word the user last clicked (drawer target). Identified by its
   // block's source offset + word index within the block so we highlight the
   // exact instance clicked, not every occurrence of that spelling. Cleared
@@ -145,9 +151,9 @@ export default function MarkdownReader({
   }, [onDismissConcordanceJump]);
 
   const handleReaderWordClick = useCallback<MarkdownReaderProps['onWordClick']>(
-    (word, sentence, source, occurrence) => {
+    (word, sentence, source, occurrence, options) => {
       if (hasConcordanceHighlight) clearConcordanceHighlight();
-      onWordClick(word, sentence, source, occurrence);
+      onWordClick(word, sentence, source, occurrence, options);
     },
     [hasConcordanceHighlight, clearConcordanceHighlight, onWordClick],
   );
@@ -373,15 +379,17 @@ export default function MarkdownReader({
   );
   useEffect(() => () => progressWriter.flush(), [progressWriter]);
 
-  // Save scroll position on scroll
+  // Save scroll position on scroll (skip while a concordance jump highlight is active
+  // so inspecting an occurrence near the bottom does not overwrite real reading progress).
   const handleScroll = useCallback(() => {
     if (!containerRef.current) return;
     const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
     const percentage = Math.round((scrollTop / (scrollHeight - clientHeight)) * 100) || 0;
     setScrollPercentage(percentage);
+    if (hasConcordanceHighlight) return;
     progressWriter(scrollTop, percentage);
     if (!isEditing) onProgress?.(percentage);
-  }, [progressWriter, onProgress, isEditing]);
+  }, [progressWriter, onProgress, isEditing, hasConcordanceHighlight]);
 
   useEffect(() => {
     const root = containerRef.current;
@@ -399,22 +407,7 @@ export default function MarkdownReader({
   }, [isEditing, lesson.id, onProgress]);
 
   const findSentence = useCallback(
-    (element: HTMLElement): string => {
-      const block = element.closest('p, li, blockquote, h1, h2, h3, h4, h5, h6');
-      // readableText, not textContent — see the note on the ReaderArticle copy.
-      // A ruby annotation would interleave and corrupt vocab.sentence (#289 4.4).
-      const spaced = pack.script.kind !== 'cjk-unspaced';
-      const text = block ? readableText(block, spaced) : '';
-      const wordText = readableText(element, spaced);
-
-      const sentences = splitSentences(text, pack);
-      for (const sentence of sentences) {
-        if (sentence.includes(wordText)) {
-          return sentence.trim();
-        }
-      }
-      return text.trim();
-    },
+    (element: HTMLElement): string => extractSentenceAtElement(element, pack),
     [pack],
   );
 
@@ -433,7 +426,7 @@ export default function MarkdownReader({
   );
 
   const clearPhraseHighlight = useCallback(() => {
-    setHighlightedPhrase([]);
+    setHighlightedPhrase(null);
   }, []);
 
   // A drag ends with a click on the common ancestor; it must not undo the phrase it just made.
@@ -470,9 +463,9 @@ export default function MarkdownReader({
   useLayoutEffect(() => {
     if (!wordPanelOpen) {
       setActiveWord(null);
-      setHighlightedPhrase([]);
+      setHighlightedPhrase(null);
     }
-  }, [wordPanelOpen]);
+  }, [wordPanelOpen, clearHighlightToken]);
 
   // Opening the drawer narrows the page, so bring the looked-up word back into view.
   const wasPanelOpen = useRef(false);
@@ -492,8 +485,9 @@ export default function MarkdownReader({
   // A phrase means two or more words. Counted with the tokenizer, not by
   // looking for a space, so the check holds in an unspaced script (#213).
   const lookUpPhrase = useCallback(
-    (text: string, wordElement: HTMLElement | null) => {
-      const words = phraseWords(text);
+    (text: string, wordElement: HTMLElement | null, coords?: PhraseHighlightSpan['coords']) => {
+      const cleaned = stripEdgePunctuation(text) || text.trim();
+      const words = phraseWords(cleaned);
       if (words.length < 2) return;
 
       // Clear browser selection but apply our own visual highlight. The
@@ -501,20 +495,46 @@ export default function MarkdownReader({
       window.getSelection()?.removeAllRanges();
       lastPhraseAt.current = Date.now();
       setActiveWord(null);
-      setHighlightedPhrase(words);
+      setHighlightedPhrase(coords ? { words, coords } : { words });
 
-      handleReaderWordClick(text, wordElement ? findSentence(wordElement) : '');
+      // Resolve merged sentence context & YouTube provenance for transcript phrases.
+      let sentence = wordElement ? findSentence(wordElement) : '';
+      let source: { sourceUrl: string; startMs: number; endMs: number } | undefined;
+      if (transcript && coords) {
+        const startSeg = transcript.segments[coords.startBlockId];
+        const endSeg = transcript.segments[coords.endBlockId];
+        if (startSeg) {
+          const slice = transcript.segments.slice(
+            coords.startBlockId,
+            Math.max(coords.startBlockId, coords.endBlockId) + 1,
+          );
+          const sep = pack.script.kind === 'cjk-unspaced' ? '' : ' ';
+          sentence = slice.map((s) => s.text.trim()).join(sep);
+          source = {
+            sourceUrl: transcript.meta.sourceUrl,
+            startMs: Math.round(startSeg.start * 1000),
+            endMs: Math.round((endSeg ?? startSeg).end * 1000),
+          };
+        }
+      }
+
+      handleReaderWordClick(cleaned, sentence, source, undefined, { isPhrase: true });
     },
-    [handleReaderWordClick, phraseWords, findSentence],
+    [handleReaderWordClick, phraseWords, findSentence, transcript, pack.script.kind],
   );
 
   // Handle text selection for phrases
   const handleMouseUp = useCallback(() => {
+    if (isEditing) return;
     const selection = window.getSelection();
     if (!selection || selection.isCollapsed || selection.rangeCount === 0) return;
 
-    const spaced = pack.script.kind !== 'cjk-unspaced';
     const range = selection.getRangeAt(0);
+    // Ignore selections made in UI chrome (concordance chip, YouTube link, header).
+    const anchorEl = findSelectionAnchorElement(selection, range);
+    if (!anchorEl || !anchorEl.closest('.reader-text')) return;
+
+    const spaced = pack.script.kind !== 'cjk-unspaced';
     // Read via readableRangeText rather than selection.toString() so timestamp
     // buttons are excluded and cross-cue word separation stays consistent
     // across browsers without mutating the live range.
@@ -527,8 +547,9 @@ export default function MarkdownReader({
     const snappedText = snapToWordBoundaries(selection, pack, segmentation);
     if (!snappedText) return;
 
-    lookUpPhrase(snappedText, findSelectionAnchorElement(selection, range));
-  }, [lookUpPhrase, phraseWords, pack, segmentation]);
+    const coords = extractPhraseCoordsFromRange(selection.getRangeAt(0), containerRef.current);
+    lookUpPhrase(snappedText, anchorEl, coords);
+  }, [isEditing, lookUpPhrase, phraseWords, pack, segmentation]);
 
   // The touch gesture reports its endpoint spans, so the phrase text comes from
   // the DOM between them. That keeps the spacing of the rendered text, which a
@@ -539,7 +560,18 @@ export default function MarkdownReader({
       range.setStartBefore(first);
       range.setEndAfter(last);
       const spaced = pack.script.kind !== 'cjk-unspaced';
-      lookUpPhrase(readableRangeText(range, spaced).trim(), first);
+      const startCoord = readWordCoord(first);
+      const endCoord = readWordCoord(last);
+      const coords =
+        startCoord && endCoord
+          ? {
+              startBlockId: startCoord.blockId,
+              startWordIndex: startCoord.wordIndex,
+              endBlockId: endCoord.blockId,
+              endWordIndex: endCoord.wordIndex,
+            }
+          : undefined;
+      lookUpPhrase(readableRangeText(range, spaced).trim(), first, coords);
     },
     [lookUpPhrase, pack.script.kind],
   );
@@ -747,6 +779,7 @@ export default function MarkdownReader({
         )}
 
         {!isEditing && <div ref={endRef} className="h-px" aria-hidden />}
+        {!isEditing && chapterFooter}
         {/* Prev/Next navigation at bottom */}
         {!isEditing && (prevLesson || nextLesson) && (
           <div className="mx-auto flex max-w-[38em] items-center justify-between gap-4 px-4 pb-16 sm:px-8 print:hidden">

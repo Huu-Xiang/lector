@@ -36,7 +36,16 @@
       "transcribingBody": "“{title}”을(를) 백그라운드에서 받아쓰는 중이에요. 보통 몇 분 걸리며, 준비되면 레슨이 자동으로 열려요.",
       "transcriptionFailed": "받아쓰기 실패",
       "retry": "다시 시도",
-      "listenAlong": "들으면서 읽기"
+      "listenAlong": "들으면서 읽기",
+      "askTutorPromptWithSentence": "이 문장에서 \"{word}\"의 뜻과 쓰임을 설명해 주세요: \"{sentence}\"",
+      "askTutorPromptWord": "\"{word}\"의 뜻과 쓰임을 설명해 주세요.",
+      "chapterEndTitle": "챕터 끝",
+      "chapterEndSummary": "미확인 단어 {remaining}개 · 저장됨 {saved}개",
+      "chapterEndAllClear": "모든 단어 정리 완료 · 저장됨 {saved}개",
+      "markRemainingKnown": "남은 단어 아는 단어로 표시 ({count})",
+      "markedRemainingKnown": "{count}개 단어를 아는 단어로 표시했습니다",
+      "undoMarkRemaining": "실행 취소",
+      "reviewChapterWords": "저장한 단어 복습 ({count})"
     },
     "markdown": {
       "saveFailed": "저장하지 못했어요",
@@ -206,7 +215,12 @@
         "symbol": "기호",
         "punct": "문장부호",
         "abbrev": "약어"
-      }
+      },
+      "explainSentence": "문장 분석",
+      "explainSentenceRetry": "문장 분석 다시 시도",
+      "explainingSentence": "분석 중…",
+      "sentenceBreakdownHeading": "문장 분석",
+      "askTutor": "튜터에게 묻기"
     },
     "onboardingTip": {
       "dismiss": "온보딩 팁 닫기"

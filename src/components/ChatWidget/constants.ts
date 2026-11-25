@@ -3,6 +3,14 @@ import { LanguageCode } from '@/types/language';
 /** Dispatched on `window` to open or close the chat, as the app's top bar does. */
 export const CHAT_TOGGLE_EVENT = 'readfox:chat-toggle';
 
+/** Dispatched on `window` from TranslationDrawer to open chat pre-filled with a sentence/word question. */
+export const CHAT_ASK_CONTEXT_EVENT = 'readfox:ask-tutor';
+
+export interface ChatAskContextDetail {
+  prompt: string;
+  language?: string;
+}
+
 // TODO: Scope these to the active language
 export const EXAMPLE_PROMPTS: Record<LanguageCode, string[]> = {
   af: [

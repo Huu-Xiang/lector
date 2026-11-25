@@ -269,7 +269,7 @@ describe('chat route — per-language scoping', () => {
     );
   });
 
-  test('POST enforces a universal 32 KiB UTF-8 message limit before provider use', async () => {
+  test('POST enforces a universal 8 KiB UTF-8 message limit before provider use', async () => {
     const res = await app.request('/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -277,9 +277,81 @@ describe('chat route — per-language scoping', () => {
     });
 
     expect(res.status).toBe(413);
+    expect(await res.json()).toEqual({ error: 'message must be at most 8 KiB' });
     expect(captured.messages).toBeUndefined();
     expect((db.prepare('SELECT COUNT(*) AS n FROM chat_messages').get() as { n: number }).n).toBe(
       0,
     );
+  });
+
+  test('Free BYOK chat forwards bounded client history without storing rows in DB', async () => {
+    useFreeByokEntitlements();
+
+    const res = await app.request('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: 'And give another example',
+        language: 'de',
+        history: [
+          { role: 'user', content: 'What does doch mean?' },
+          { role: 'assistant', content: 'Doch adds emphasis or contradiction.' },
+        ],
+      }),
+    });
+
+    expect(res.status).toBe(200);
+    expect(captured.messages?.map((m) => m.role)).toEqual(['user', 'assistant', 'user']);
+    expect(captured.messages?.[0].content).toContain('What does doch mean?');
+    expect(captured.messages?.[1].content).toContain('Doch adds emphasis');
+    expect(captured.messages?.[2].content).toContain('And give another example');
+    expect((db.prepare('SELECT COUNT(*) AS n FROM chat_messages').get() as { n: number }).n).toBe(
+      0,
+    );
+  });
+
+  test('Free BYOK client history normalizes leading assistant and consecutive same-role turns', async () => {
+    useFreeByokEntitlements();
+
+    const res = await app.request('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: 'Follow-up question',
+        language: 'de',
+        history: [
+          { role: 'assistant', content: 'Orphan leading reply' },
+          { role: 'user', content: 'First failed question' },
+          { role: 'user', content: 'Actual question' },
+          { role: 'assistant', content: 'Actual answer' },
+          { role: 'user', content: 'Trailing unpaired user message' },
+        ],
+      }),
+    });
+
+    expect(res.status).toBe(200);
+    expect(captured.messages?.map((m) => m.role)).toEqual(['user', 'assistant', 'user']);
+    expect(captured.messages?.[0].content).toContain('Actual question');
+    expect(captured.messages?.[1].content).toBe('Actual answer');
+    expect(captured.messages?.[2].content).toContain('Follow-up question');
+  });
+
+  test('POST respects monolingualExplanations in the tutor system prompt', async () => {
+    db.prepare('INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)').run(
+      'monolingualExplanations',
+      JSON.stringify(true),
+    );
+    try {
+      const res = await app.request('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: 'Was bedeutet doch?', language: 'de' }),
+      });
+      expect(res.status).toBe(200);
+      expect(captured.messages?.[0].content).toContain('reply in clear, learner-friendly German');
+      expect(captured.messages?.[0].content).toContain('without switching back to English');
+    } finally {
+      db.prepare("DELETE FROM settings WHERE key = 'monolingualExplanations'").run();
+    }
   });
 });

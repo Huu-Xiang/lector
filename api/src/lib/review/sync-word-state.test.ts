@@ -106,6 +106,19 @@ describe('syncWordState', () => {
     expect(card('quay')!.retiredAt).toBe(new Date(NOW).toISOString());
   });
 
+  test('clearing a word back to new retires its active review card instead of re-seeding it', () => {
+    seedVocab('v1', 'quay');
+    sync('quay', 'level2', 'reader');
+    expect(card('quay')!.retiredAt).toBeNull();
+
+    sync('quay', 'new', 'reader');
+    expect(card('quay')!.retiredAt).toBe(new Date(NOW).toISOString());
+
+    seedVocab('v2', 'untouched', { state: 'new' });
+    sync('untouched', 'new', 'reader');
+    expect(card('untouched')).toBeUndefined();
+  });
+
   test('marking a word ignored retires its card for every source', () => {
     for (const source of ['import', 'anki', 'restore'] as const) {
       clear();

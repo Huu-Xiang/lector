@@ -1536,4 +1536,24 @@ describe('monolingual AI explanations and cache isolation (U3 / AE3 / R7 / R8)',
     expect(provider.calls[0].messages[0].content).toContain('Ukrainian');
     expect(provider.calls[0].messages[0].content).toContain('B1');
   });
+
+  test('enforces phraseSelectionWords on unspaced CJK phrases via language tokenizer', async () => {
+    const provider = new FakeProvider();
+    const { app } = makeApp({
+      engine: makeEngine({ now, compedPlan: null }), // FREE has phraseSelectionWords: 6
+      provider,
+    });
+
+    // Unspaced Chinese clause with > 6 segmented words must be rejected with 429 limit error
+    // instead of passing as spacedCount === 1.
+    const longZh = '我今天早上在公园里和朋友们一起去跑步锻炼身体';
+    const res = await post(app, '/', {
+      word: longZh,
+      sentence: longZh,
+      type: 'phrase',
+      language: 'zh',
+    });
+    expect(res.status).toBe(429);
+    expect(provider.calls).toHaveLength(0);
+  });
 });

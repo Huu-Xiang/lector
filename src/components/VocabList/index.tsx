@@ -88,18 +88,29 @@ export default function VocabList({
   const pack = useActiveLanguage();
   const collator = useMemo(() => new Intl.Collator(pack.script.bcp47), [pack]);
 
+  // Denominator matches the active view's visible pool: "All" excludes ignored
+  // words so the header never claims e.g. "10 of 15" when no filter is active.
+  const visibleBaseTotal = useMemo(
+    () =>
+      stateFilter === 'ignored'
+        ? entries.filter((e) => e.state === 'ignored').length
+        : entries.filter((e) => e.state !== 'ignored').length,
+    [entries, stateFilter],
+  );
+
   // Filter and sort entries
   const filteredEntries = useMemo(() => {
     let result = [...entries];
 
-    // Apply state filter
-    if (stateFilter !== 'all') {
-      if (stateFilter === 'learning') {
-        // "Learning" includes new, level1-4 (not known or ignored)
-        result = result.filter((e) => e.state !== 'known' && e.state !== 'ignored');
-      } else {
-        result = result.filter((e) => e.state === stateFilter);
-      }
+    // Apply state filter: "all" keeps ignored words out of the main list, while
+    // selecting "ignored" explicitly lets the learner inspect and undo ignored words.
+    if (stateFilter === 'all') {
+      result = result.filter((e) => e.state !== 'ignored');
+    } else if (stateFilter === 'learning') {
+      // "Learning" includes new, level1-4 (not known or ignored)
+      result = result.filter((e) => e.state !== 'known' && e.state !== 'ignored');
+    } else {
+      result = result.filter((e) => e.state === stateFilter);
     }
 
     // Apply book filter
@@ -435,10 +446,10 @@ export default function VocabList({
         {someSelected
           ? t('resultsSelected', {
               filtered: filteredEntries.length,
-              total: entries.length,
+              total: visibleBaseTotal,
               selected: selectedIds.size,
             })
-          : t('results', { filtered: filteredEntries.length, total: entries.length })}
+          : t('results', { filtered: filteredEntries.length, total: visibleBaseTotal })}
       </div>
 
       {/* Table */}
@@ -505,7 +516,7 @@ export default function VocabList({
             ) : filteredEntries.length === 0 ? (
               <tr>
                 <td colSpan={7} className="px-4 py-12 text-center text-muted-foreground">
-                  {entries.length === 0 ? t('emptyNoEntries') : t('emptyNoMatches')}
+                  {visibleBaseTotal === 0 ? t('emptyNoEntries') : t('emptyNoMatches')}
                 </td>
               </tr>
             ) : (

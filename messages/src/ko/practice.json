@@ -23,7 +23,9 @@
       "modeType": "입력",
       "modeMc": "객관식",
       "start": "시작",
-      "loading": "불러오는 중..."
+      "loading": "불러오는 중...",
+      "sentenceBankHeading": "예문 뱅크 연습",
+      "sentenceBankHint": "빈도대별로 핵심 어휘 연습"
     },
     "collections": {
       "top500": "상위 500",
@@ -204,7 +206,8 @@
         "noWords": "읽으면서 단어를 저장하면 여기에서 복습할 수 있어요.",
         "failed": "단어를 불러오지 못했어요.",
         "goal": "목표: {goal}"
-      }
+      },
+      "reviewMore": "다음 라운드 복습 ({count})"
     }
   },
   "vocab": {
@@ -302,7 +305,10 @@
       "cancel": "취소",
       "saving": "저장 중...",
       "save": "저장",
-      "edit": "수정"
+      "edit": "수정",
+      "idiomaticMeaning": "관용적 의미",
+      "literalBreakdown": "직역",
+      "usageNotes": "쓰임"
     },
     "page": {
       "title": "단어장",

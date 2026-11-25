@@ -36,7 +36,16 @@
       "transcribingBody": "“{title}”正在后台转写，通常需要几分钟，完成后课文会自动打开。",
       "transcriptionFailed": "转写失败",
       "retry": "重试",
-      "listenAlong": "跟听"
+      "listenAlong": "跟听",
+      "askTutorPromptWithSentence": "请结合这个句子解释一下“{word}”：“{sentence}”",
+      "askTutorPromptWord": "请解释一下“{word}”的意思和用法。",
+      "chapterEndTitle": "本章已读完",
+      "chapterEndSummary": "{remaining} 个未点词 · {saved} 个已收藏",
+      "chapterEndAllClear": "本章词汇已全部整理 · {saved} 个已收藏",
+      "markRemainingKnown": "将剩余词标为已掌握 ({count})",
+      "markedRemainingKnown": "已将 {count} 个词标为已掌握",
+      "undoMarkRemaining": "撤销",
+      "reviewChapterWords": "复习已收藏词汇 ({count})"
     },
     "markdown": {
       "saveFailed": "保存失败",
@@ -206,7 +215,12 @@
         "symbol": "符号",
         "punct": "标点",
         "abbrev": "缩写"
-      }
+      },
+      "explainSentence": "拆解整句",
+      "explainSentenceRetry": "重试整句拆解",
+      "explainingSentence": "正在拆解…",
+      "sentenceBreakdownHeading": "整句拆解",
+      "askTutor": "问 AI 导师"
     },
     "onboardingTip": {
       "dismiss": "关闭新手提示"

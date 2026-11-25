@@ -2060,7 +2060,9 @@
       "modeType": "輸入",
       "modeMc": "選擇題",
       "start": "開始",
-      "loading": "載入中..."
+      "loading": "載入中...",
+      "sentenceBankHeading": "例句庫專項練習",
+      "sentenceBankHint": "依詞頻分層練習常見詞彙"
     },
     "collections": {
       "top500": "前 500",
@@ -2241,7 +2243,8 @@
         "noWords": "閱讀時儲存的單字會出現在這裡，供你複習。",
         "failed": "無法載入你的單字。",
         "goal": "目標：{goal}"
-      }
+      },
+      "reviewMore": "繼續複習下一輪 ({count})"
     }
   },
   "vocab": {
@@ -2339,7 +2342,10 @@
       "cancel": "取消",
       "saving": "儲存中...",
       "save": "儲存",
-      "edit": "編輯"
+      "edit": "編輯",
+      "idiomaticMeaning": "道地含義",
+      "literalBreakdown": "字面拆解",
+      "usageNotes": "用法說明"
     },
     "page": {
       "title": "詞彙",
@@ -2412,7 +2418,16 @@
       "transcribingBody": "「{title}」正在背景轉錄，通常需要幾分鐘，完成後課文會自動開啟。",
       "transcriptionFailed": "轉錄失敗",
       "retry": "重試",
-      "listenAlong": "跟聽"
+      "listenAlong": "跟聽",
+      "askTutorPromptWithSentence": "請結合這個句子解釋一下「{word}」：「{sentence}」",
+      "askTutorPromptWord": "請解釋一下「{word}」的意思與用法。",
+      "chapterEndTitle": "本章已讀完",
+      "chapterEndSummary": "{remaining} 個未點詞 · {saved} 個已收藏",
+      "chapterEndAllClear": "本章詞彙已全部整理 · {saved} 個已收藏",
+      "markRemainingKnown": "將剩餘詞標為已掌握 ({count})",
+      "markedRemainingKnown": "已將 {count} 個詞標為已掌握",
+      "undoMarkRemaining": "復原",
+      "reviewChapterWords": "複習已收藏詞彙 ({count})"
     },
     "markdown": {
       "saveFailed": "儲存失敗",
@@ -2582,7 +2597,12 @@
         "symbol": "符號",
         "punct": "標點",
         "abbrev": "縮寫"
-      }
+      },
+      "explainSentence": "拆解整句",
+      "explainSentenceRetry": "重試整句拆解",
+      "explainingSentence": "正在拆解…",
+      "sentenceBreakdownHeading": "整句拆解",
+      "askTutor": "問 AI 導師"
     },
     "onboardingTip": {
       "dismiss": "關閉新手提示"

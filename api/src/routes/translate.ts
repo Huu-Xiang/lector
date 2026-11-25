@@ -16,17 +16,13 @@ import { JsonTextExtractor } from '../lib/json-text-stream';
 import { getSpelreelsContext } from '../lib/spelreels';
 import { resolveLanguage } from '../lib/active-language';
 import { getCurrentUserId } from '../lib/user';
-import { getLanguageConfig } from '../lib/languages';
+import { getLanguageConfig, tokenizeWords } from '../lib/languages';
 import {
   getNativeLanguageCode,
   getNativeLanguageName,
   isMonolingualExplanationsEnabled,
 } from '../lib/native-language';
-import {
-  MAX_MONOLINGUAL_GLOSS_CHARS,
-  sharedGlossCache,
-  type GlossCache,
-} from '../lib/gloss-cache';
+import { MAX_MONOLINGUAL_GLOSS_CHARS, sharedGlossCache, type GlossCache } from '../lib/gloss-cache';
 import { readLearnerLevel } from '../lib/review/queue';
 import { sharedEntryCache, type EntryCache } from '../lib/entry-cache';
 import { lookupWord, type ExpandedDictionaryEntry } from '../lib/dictionary-db';
@@ -578,8 +574,14 @@ export function makeTranslateRoutes({
     const freeOnSmallModel = isManagedFree(resolved) && selfManagedFreeAi();
     const managedFree = isManagedFree(resolved) && !freeOnSmallModel;
 
+    const lang = resolveLanguage(language, userId);
+    const langConfig = getLanguageConfig(lang);
+    const langName = langConfig.name;
+
     if (type === 'phrase') {
-      const phraseWords = word.split(/\s+/u).length;
+      const tokenizedCount = tokenizeWords(word, langConfig).length;
+      const spacedCount = word.trim().split(/\s+/u).filter(Boolean).length;
+      const phraseWords = Math.max(tokenizedCount, spacedCount, 1);
       const phraseVerdict = engine.checkLimit(userId, 'phraseSelectionWords', phraseWords);
       if (!phraseVerdict.allowed) return planLimitResponse(c, phraseVerdict);
     }
@@ -587,9 +589,6 @@ export function makeTranslateRoutes({
     const burst = consumeFreeBurst(c, rateLimiter, resolved, userId, 'detail');
     if (burst) return burst;
 
-    const lang = resolveLanguage(language, userId);
-    const langConfig = getLanguageConfig(lang);
-    const langName = langConfig.name;
     const monolingual = isMonolingualExplanationsEnabled(userId);
     const nativeCode = getNativeLanguageCode(userId);
     const nativeName = getNativeLanguageName(userId);
@@ -612,7 +611,14 @@ export function makeTranslateRoutes({
         ? `Use the following official spelling rules to inform your understanding of the ${langName} input:\n\n${spelreels}\n\n---\n\n`
         : '';
       return monolingual
-        ? buildMonolingualPhrasePrompt(langName, spelreelsSection, word, sentence, level, cheapModel)
+        ? buildMonolingualPhrasePrompt(
+            langName,
+            spelreelsSection,
+            word,
+            sentence,
+            level,
+            cheapModel,
+          )
         : buildPhrasePrompt(langName, spelreelsSection, word, sentence, nativeName, cheapModel);
     };
     const wordEntryPrompt = () =>

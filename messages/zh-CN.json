@@ -2060,7 +2060,9 @@
       "modeType": "输入",
       "modeMc": "选择题",
       "start": "开始",
-      "loading": "加载中..."
+      "loading": "加载中...",
+      "sentenceBankHeading": "例句库专项练习",
+      "sentenceBankHint": "按词频分层练习常见词汇"
     },
     "collections": {
       "top500": "前 500",
@@ -2241,7 +2243,8 @@
         "noWords": "阅读时保存的单词会出现在这里，供你复习。",
         "failed": "无法加载你的单词。",
         "goal": "目标：{goal}"
-      }
+      },
+      "reviewMore": "继续复习下一轮 ({count})"
     }
   },
   "vocab": {
@@ -2339,7 +2342,10 @@
       "cancel": "取消",
       "saving": "保存中...",
       "save": "保存",
-      "edit": "编辑"
+      "edit": "编辑",
+      "idiomaticMeaning": "地道含义",
+      "literalBreakdown": "字面拆解",
+      "usageNotes": "用法说明"
     },
     "page": {
       "title": "词汇",
@@ -2412,7 +2418,16 @@
       "transcribingBody": "“{title}”正在后台转写，通常需要几分钟，完成后课文会自动打开。",
       "transcriptionFailed": "转写失败",
       "retry": "重试",
-      "listenAlong": "跟听"
+      "listenAlong": "跟听",
+      "askTutorPromptWithSentence": "请结合这个句子解释一下“{word}”：“{sentence}”",
+      "askTutorPromptWord": "请解释一下“{word}”的意思和用法。",
+      "chapterEndTitle": "本章已读完",
+      "chapterEndSummary": "{remaining} 个未点词 · {saved} 个已收藏",
+      "chapterEndAllClear": "本章词汇已全部整理 · {saved} 个已收藏",
+      "markRemainingKnown": "将剩余词标为已掌握 ({count})",
+      "markedRemainingKnown": "已将 {count} 个词标为已掌握",
+      "undoMarkRemaining": "撤销",
+      "reviewChapterWords": "复习已收藏词汇 ({count})"
     },
     "markdown": {
       "saveFailed": "保存失败",
@@ -2582,7 +2597,12 @@
         "symbol": "符号",
         "punct": "标点",
         "abbrev": "缩写"
-      }
+      },
+      "explainSentence": "拆解整句",
+      "explainSentenceRetry": "重试整句拆解",
+      "explainingSentence": "正在拆解…",
+      "sentenceBreakdownHeading": "整句拆解",
+      "askTutor": "问 AI 导师"
     },
     "onboardingTip": {
       "dismiss": "关闭新手提示"

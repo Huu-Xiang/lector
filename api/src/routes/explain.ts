@@ -3,7 +3,7 @@ import { getProvider } from '../lib/llm';
 import { resolveLanguage } from '../lib/active-language';
 import { getCurrentUserId } from '../lib/user';
 import { getLanguageConfig } from '../lib/languages';
-import { getNativeLanguageName } from '../lib/native-language';
+import { getNativeLanguageName, isMonolingualExplanationsEnabled } from '../lib/native-language';
 import { buildExplainPrompt } from '../lib/translate-prompts';
 import { entitlements, planLimitResponse, type UsageReservation } from '../lib/entitlements';
 
@@ -37,7 +37,8 @@ app.post('/', async (c) => {
 
     const lang = resolveLanguage(language, userId);
     const langName = getLanguageConfig(lang).name;
-    const nativeName = getNativeLanguageName(userId);
+    const monolingual = isMonolingualExplanationsEnabled(userId);
+    const nativeName = monolingual ? langName : getNativeLanguageName(userId);
 
     const provider = getProvider(userId, { byok: reservation.byok });
     const text = await provider.complete({

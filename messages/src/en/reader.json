@@ -36,7 +36,16 @@
       "transcribingBody": "“{title}” is being transcribed in the background. This usually takes a few minutes; the lesson opens automatically when it’s ready.",
       "transcriptionFailed": "Transcription failed",
       "retry": "Retry",
-      "listenAlong": "Listen along"
+      "listenAlong": "Listen along",
+      "askTutorPromptWithSentence": "Explain \"{word}\" in this sentence: \"{sentence}\"",
+      "askTutorPromptWord": "Explain \"{word}\" and how it is used.",
+      "chapterEndTitle": "End of chapter",
+      "chapterEndSummary": "{remaining, plural, one {# untouched word} other {# untouched words}} · {saved, plural, one {# saved} other {# saved}}",
+      "chapterEndAllClear": "All words accounted for · {saved, plural, one {# saved} other {# saved}}",
+      "markRemainingKnown": "Mark remaining known ({count})",
+      "markedRemainingKnown": "{count, plural, one {# word marked as known} other {# words marked as known}}",
+      "undoMarkRemaining": "Undo",
+      "reviewChapterWords": "Review saved words ({count})"
     },
     "markdown": {
       "saveFailed": "Failed to save",
@@ -206,7 +215,12 @@
         "symbol": "symbol",
         "punct": "punct",
         "abbrev": "abbrev"
-      }
+      },
+      "explainSentence": "Break down sentence",
+      "explainSentenceRetry": "Retry sentence breakdown",
+      "explainingSentence": "Breaking down…",
+      "sentenceBreakdownHeading": "Sentence breakdown",
+      "askTutor": "Ask Tutor"
     },
     "onboardingTip": {
       "dismiss": "Dismiss onboarding tip"

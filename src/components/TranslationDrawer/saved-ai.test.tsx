@@ -43,9 +43,7 @@ vi.mock('@/lib/native-app', () => ({
 import TranslationDrawer from './index';
 import type { ExpandedDictionaryEntry, TranslationDrawerProps } from './types';
 
-const enMessages = JSON.parse(
-  readFileSync(join(process.cwd(), 'messages', 'en.json'), 'utf8'),
-);
+const enMessages = JSON.parse(readFileSync(join(process.cwd(), 'messages', 'en.json'), 'utf8'));
 
 const dictEntry: ExpandedDictionaryEntry = {
   word: 'banco',
@@ -245,6 +243,52 @@ describe('TranslationDrawer saved AI meaning & phrase details (AE2)', () => {
     });
     expect(compactHtml).toContain('data-testid="native-lookup-actions"');
   });
+
+  it('uses explicit isPhrase for CJK phrases without spaces and keeps Add to vocabulary available', () => {
+    const html = renderDrawer({
+      word: '一举两得',
+      sentence: '这样做可以一举两得。',
+      isPhrase: true,
+      entry: null,
+      aiTranslation: 'kill two birds with one stone',
+      onSaveWord: () => {},
+    });
+    expect(html).toContain('data-testid="save-looked-up-word"');
+    // Phrases skip the word-only "In context" button.
+    expect(html).not.toContain('data-testid="request-word-context"');
+  });
+
+  it('distinguishes live AI translation from saved AI and surfaces retranslateError with dictionary fallback', () => {
+    const liveHtml = renderDrawer({
+      aiTranslation: 'park bench',
+      liveAiPrimaryTranslation: 'park bench',
+      retranslateError: 'Re-translate failed',
+      onRetranslate: () => {},
+    });
+    expect(liveHtml).toContain('park bench');
+    expect(liveHtml).not.toContain('AI · saved');
+    expect(liveHtml).toContain('Re-translate failed');
+    // Dictionary details remain available as fallback when re-translate fails.
+    expect(liveHtml).toContain('Show dictionary (2)');
+  });
+
+  it('renders Break down sentence and Ask Tutor actions when wired and hides etymology while primary AI is active', () => {
+    const html = renderDrawer({
+      entry: {
+        ...dictEntry,
+        etymology: 'From Italian banco.',
+      },
+      savedAiTranslation: 'park bench (m.)',
+      savedTranslationSource: 'ai_context',
+      savedSentence: 'Me senté en el banco del parque.',
+      onExplainSentence: () => {},
+      onAskTutor: () => {},
+    });
+    expect(html).toContain('data-testid="explain-sentence-btn"');
+    expect(html).toContain('data-testid="ask-tutor-btn"');
+    // Etymology stays collapsed inside dictionary details when primary AI meaning is active.
+    expect(html).not.toContain('From Italian banco.');
+  });
 });
 
 describe('Reader saved AI & phrase persistence state helpers (R2–R4)', () => {
@@ -263,7 +307,12 @@ describe('Reader saved AI & phrase persistence state helpers (R2–R4)', () => {
       translationSource: 'ai_context',
       sentence: 'Me senté en el banco del parque.',
     });
-    const hydratedWord = hydrateExistingVocab(basePanel({ isLoading: true }), savedWord, false, true);
+    const hydratedWord = hydrateExistingVocab(
+      basePanel({ isLoading: true }),
+      savedWord,
+      false,
+      true,
+    );
     expect(hydratedWord.savedAiTranslation).toBe('park bench (m.)');
     expect(hydratedWord.savedTranslationSource).toBe('ai_context');
     expect(hydratedWord.savedSentence).toBe('Me senté en el banco del parque.');
@@ -317,9 +366,9 @@ describe('Reader saved AI & phrase persistence state helpers (R2–R4)', () => {
     expect(shouldPersistAutoPhraseLookup(savedChinesePhrase, savedChinesePhrase, true)).toBe(true);
     // Brand-new phrase auto-saved mid-stream (initialExisting was undefined) still persists phraseDetails.
     expect(shouldPersistAutoPhraseLookup(undefined, savedChinesePhrase, false)).toBe(true);
-    expect(
-      shouldPersistAutoPhraseLookup(undefined, makeVocab({ state: 'new' }), false),
-    ).toBe(false);
+    expect(shouldPersistAutoPhraseLookup(undefined, makeVocab({ state: 'new' }), false)).toBe(
+      false,
+    );
   });
 
   it('builds full update patches for existing state=new rows on re-save and preserves savedSentence on level-only bumps', () => {
@@ -407,5 +456,28 @@ describe('Reader saved AI & phrase persistence state helpers (R2–R4)', () => {
       }),
     ).toEqual({ idiomaticMeaning: 'Joke' });
     expect(normalizePhraseDetails({ idiomaticMeaning: '   ' })).toBeNull();
+  });
+
+  it('preserves manual custom translations on level updates unless explicitly overridden', () => {
+    const manualRow = makeVocab({
+      state: 'level1',
+      translation: 'my custom note',
+      translationSource: 'manual',
+      sentence: 'Me senté en el banco del parque.',
+    });
+    const dictPanel = basePanel({
+      translation: 'bank; bench',
+      translationSource: 'dictionary',
+      aiContextTranslation: null,
+      savedAiTranslation: 'my custom note',
+      savedTranslationSource: 'manual',
+      savedSentence: 'Me senté en el banco del parque.',
+    });
+    expect(buildVocabUpdatePatch(manualRow, dictPanel, 'level2')).toEqual({
+      state: 'level2',
+      translation: 'my custom note',
+      translationLang: 'en',
+      translationSource: 'manual',
+    });
   });
 });

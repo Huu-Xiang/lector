@@ -1146,11 +1146,27 @@ html[data-native-app] [data-slot='button'][class*='h-8']::after {
 }
 
 /* Interface chrome is not text to copy; reading text keeps its own rules above. */
-html[data-native-app] :is(nav, button, [role='button'], [role='tab'], [data-slot='button'], label),
+html[data-native-app]
+  :is(
+    nav,
+    button,
+    [role='button']:not([data-word-state]),
+    [role='tab'],
+    [data-slot='button'],
+    label
+  ),
 html[data-native-app] .native-topbar {
   -webkit-user-select: none;
   user-select: none;
   -webkit-touch-callout: none;
+}
+
+@media screen and (width >= 64rem) {
+  /* Shift the floating AI chat widget clear of the 384px right TranslationDrawer on lg/xl laptops. */
+  html[data-drawer-open='true'] [data-chat-toggle],
+  html[data-drawer-open='true'] [data-testid='chat-panel'] {
+    right: 406px;
+  }
 }
 
 @media screen {

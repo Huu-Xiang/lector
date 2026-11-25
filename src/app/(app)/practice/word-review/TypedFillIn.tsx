@@ -10,6 +10,7 @@ import type { ReviewItem } from '@/types';
 import { blankSentence, isTypedAnswerRight } from './questions';
 import SentenceTranslation from './SentenceTranslation';
 import SourceLine from './SourceLine';
+import ClickableReviewSentence from './ClickableReviewSentence';
 
 export default function TypedFillIn({
   item,
@@ -17,12 +18,14 @@ export default function TypedFillIn({
   showTranslation,
   onShowTranslation,
   onAnswer,
+  onWordClick,
 }: {
   item: ReviewItem;
   locked: boolean;
   showTranslation: boolean;
   onShowTranslation: () => void;
   onAnswer: (answer: 'right' | 'wrong') => Promise<boolean>;
+  onWordClick?: (word: string, contextSentence: string, displaySentence: string) => void;
 }) {
   const t = useTranslations('practice.words');
   const pack = getActivePack();
@@ -42,7 +45,12 @@ export default function TypedFillIn({
   return (
     <div data-testid="typed-fill-in">
       <p className="mb-2 text-center text-sm text-muted-foreground">{t('typedFillIn')}</p>
-      <p className="mb-2 py-4 text-center text-xl leading-relaxed">{blanked}</p>
+      <ClickableReviewSentence
+        text={blanked}
+        contextSentence={item.sentence}
+        onWordClick={onWordClick}
+        className="mb-2 py-4 text-center text-xl leading-relaxed"
+      />
       {!locked && <SourceLine source={item.sentenceSource} />}
       {item.sentenceTranslation
         ? !locked && (

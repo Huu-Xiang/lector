@@ -26,13 +26,6 @@ import {
 } from '@/lib/data-layer';
 import { hasAudio, speak } from '@/lib/tts';
 import { playCorrectSound, playIncorrectSound } from '@/lib/sounds';
-import { translateGloss, translateWord } from '@/lib/claude';
-import {
-  localizeEntrySenses,
-  lookupWordRemote,
-  type ExpandedDictionaryEntry,
-} from '@/lib/dictionary-client';
-import { loadNative } from '@/lib/library-titles';
 import { splitTrailingPunctuation } from '@/lib/words';
 import { isComposing } from '@/lib/keyboard';
 import {
@@ -64,6 +57,7 @@ import type {
   RoundType,
 } from './types';
 import { useClozeRound } from './use-cloze-round';
+import { usePracticeWordLookup } from './use-practice-word-lookup';
 import { PRACTICE_FORMAT_SETTING_KEY, ROUND_SIZES, VISIBLE_COLLECTIONS } from './constants';
 import BlacklistSentence from './components/BlacklistSentence';
 import { Button } from '@/components/ui/button';
@@ -174,16 +168,9 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
     'idle' | 'saving' | 'complete' | 'error'
   >('idle');
 
-  // Word definition tooltip state
-  const [wordTooltip, setWordTooltip] = useState<{
-    word: string;
-    translation: string | null;
-    partOfSpeech: string | null;
-    dictEntry: ExpandedDictionaryEntry | null;
-    isLoading: boolean;
-    isContextLoading: boolean;
-    error: string | null;
-  } | null>(null);
+  // Word definition tooltip state (race-safe lookup + in-context AI explanation)
+  const { wordTooltip, lookupWord, requestContextTranslation, closeWordTooltip } =
+    usePracticeWordLookup();
 
   const inputRef = useRef<HTMLInputElement>(null);
   const submittingRef = useRef(false);
@@ -263,99 +250,16 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
     localStorage.setItem(PRACTICE_FORMAT_SETTING_KEY, format);
   }, []);
 
-  // Handle word click for inline definitions
+  // Handle word click for inline definitions.
+  // The drawer displays the blanked sentence while AI sees the full un-blanked
+  // sentence for accurate context without revealing the cloze answer to the UI.
   const handleWordClick = useCallback(
     async (word: string) => {
       if (!current) return;
-      const [cleanWord] = splitTrailingPunctuation(word);
-      if (!cleanWord) return;
-
-      setWordTooltip({
-        word: cleanWord,
-        translation: null,
-        partOfSpeech: null,
-        dictEntry: null,
-        isLoading: true,
-        isContextLoading: false,
-        error: null,
-      });
-
-      // Try the on-device SQLite dictionary first
-      let dictEntry: ExpandedDictionaryEntry | null = null;
-      try {
-        const native = (await loadNative()) ?? 'en';
-        dictEntry = await lookupWordRemote(cleanWord, native);
-        if (dictEntry?.needsLocalization) {
-          const senses = await localizeEntrySenses(cleanWord, native);
-          if (senses) dictEntry = { ...dictEntry, senses, needsLocalization: false };
-        }
-      } catch {
-        dictEntry = null;
-      }
-
-      if (dictEntry && dictEntry.senses.length > 0) {
-        setWordTooltip({
-          word: cleanWord,
-          translation: dictEntry.senses.map((s) => s.gloss).join('; '),
-          partOfSpeech: dictEntry.senses[0]?.partOfSpeech || null,
-          dictEntry,
-          isLoading: false,
-          isContextLoading: false,
-          error: null,
-        });
-        return;
-      }
-
-      try {
-        const result = await translateGloss(cleanWord, current.sentence.sentence);
-        setWordTooltip({
-          word: cleanWord,
-          translation: result.translation,
-          partOfSpeech: result.partOfSpeech || null,
-          dictEntry: null,
-          isLoading: false,
-          isContextLoading: false,
-          error: null,
-        });
-      } catch {
-        setWordTooltip({
-          word: cleanWord,
-          translation: null,
-          partOfSpeech: null,
-          dictEntry: null,
-          isLoading: false,
-          isContextLoading: false,
-          error: t('wordTooltip.tryAgain'),
-        });
-      }
+      await lookupWord(word, current.sentence.sentence, current.blankedSentence);
     },
-    [current, t],
+    [current, lookupWord],
   );
-
-  // Ask the LLM to retranslate the active word using the full (un-blanked)
-  // sentence as context. Replaces the on-device gloss with a richer in-context
-  // translation. The blanked sentence is still shown in the drawer — the AI
-  // sees the full one for context but never reveals the cloze answer to the UI.
-  const requestContextTranslation = useCallback(async () => {
-    if (!wordTooltip || !current) return;
-    setWordTooltip((prev) => (prev ? { ...prev, isContextLoading: true } : prev));
-    try {
-      const result = await translateWord(wordTooltip.word, current.sentence.sentence);
-      setWordTooltip((prev) =>
-        prev
-          ? {
-              ...prev,
-              translation: result.translation,
-              partOfSpeech: result.partOfSpeech || prev.partOfSpeech,
-              dictEntry: null,
-              isContextLoading: false,
-            }
-          : prev,
-      );
-    } catch {
-      setWordTooltip((prev) => (prev ? { ...prev, isContextLoading: false } : prev));
-    }
-  }, [wordTooltip, current]);
 
   // Generate MC options when current sentence or queue changes
   const generateMcOptionsForSentence = useCallback(
@@ -389,7 +293,7 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
       setDictationResult(null);
       setHintLetters(0);
       setMcFallback(false);
-      setWordTooltip(null);
+      closeWordTooltip();
       submittingRef.current = false;
 
       // Cloze-only setup. Dictation renders its own card, which manages audio
@@ -407,7 +311,7 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
         }
       }
     },
-    [practiceFormat, practiceMode, generateMcOptionsForSentence, clearMcTimer],
+    [practiceFormat, practiceMode, generateMcOptionsForSentence, clearMcTimer, closeWordTooltip],
   );
 
   const presentRound = useCallback(
@@ -891,6 +795,15 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
             ></PageHeader>
 
             {!onboardingMode && <WordReviewEntry onStart={onOpenWordReview} />}
+
+            {!onboardingMode && (
+              <div className="mb-3">
+                <h2 className="text-sm font-semibold text-foreground">
+                  {t('setup.sentenceBankHeading')}
+                </h2>
+                <p className="text-xs text-muted-foreground">{t('setup.sentenceBankHint')}</p>
+              </div>
+            )}
 
             {/* Practice format: Cloze (fill the blank) vs Dictation (hear the
                 sentence, type it back). Both share the collection / round size /
@@ -1653,15 +1566,17 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
         <TranslationDrawer
           isOpen={!!wordTooltip}
           word={wordTooltip?.word ?? ''}
-          sentence={current?.blankedSentence ?? ''}
+          sentence={wordTooltip?.displaySentence ?? current?.blankedSentence ?? ''}
           entry={wordTooltip?.dictEntry ?? null}
           aiTranslation={wordTooltip?.translation ?? null}
           aiPartOfSpeech={wordTooltip?.partOfSpeech ?? null}
+          aiContextTranslation={wordTooltip?.aiContextTranslation ?? null}
           isDictionaryResult={!!wordTooltip?.dictEntry}
           isLoading={wordTooltip?.isLoading ?? false}
           isContextLoading={wordTooltip?.isContextLoading ?? false}
           error={wordTooltip?.error ?? null}
-          onClose={() => setWordTooltip(null)}
+          contextError={wordTooltip?.contextError ?? null}
+          onClose={closeWordTooltip}
           onSpeak={(text) => speak(text)}
           onRequestContextTranslation={requestContextTranslation}
           onLookupWord={handleWordClick}
@@ -1675,13 +1590,7 @@ export default function PracticePage() {
   const [wordReview, setWordReview] = useState(false);
 
   if (wordReview) {
-    return (
-      <div className="flex min-h-0">
-        <main className="native-compact-page mx-auto max-w-2xl min-w-0 flex-1 px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
-          <WordReviewRound onExit={() => setWordReview(false)} />
-        </main>
-      </div>
-    );
+    return <WordReviewRound onExit={() => setWordReview(false)} />;
   }
   return <ClozePractice onOpenWordReview={() => setWordReview(true)} />;
 }

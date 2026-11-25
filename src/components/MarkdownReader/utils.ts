@@ -1,6 +1,7 @@
 import { isValidElement, type ReactNode, type ReactElement } from 'react';
 import {
   tokenize,
+  splitSentences,
   snapToWordBoundaries as snapOffsetsToWordBoundaries,
   foldWord,
   parseStoredSegmentWords,
@@ -103,6 +104,47 @@ export function readableRangeText(range: Range, spaced = true): string {
   return readableText(range.cloneContents(), spaced);
 }
 
+const APOSTROPHE_TEXT = /^['’ʼ]$/;
+
+/** Trim leading and trailing punctuation/symbols around a dragged phrase while keeping interior punctuation. */
+export function stripEdgePunctuation(text: string): string {
+  return text.replace(/^[\p{P}\p{S}\s]+|[\p{P}\p{S}\s]+$/gu, '').trim();
+}
+
+function expandElisionStart(range: Range): void {
+  const startEl = asElement(range.startContainer)?.closest?.('[data-word-state]');
+  if (!startEl) return;
+  const prev = startEl.previousSibling;
+  const prevPrev = prev?.previousSibling;
+  if (
+    prev &&
+    prev.nodeType === ELEMENT_NODE &&
+    APOSTROPHE_TEXT.test(prev.textContent ?? '') &&
+    prevPrev &&
+    prevPrev.nodeType === ELEMENT_NODE &&
+    (prevPrev as Element).hasAttribute('data-word-state')
+  ) {
+    range.setStartBefore(prevPrev);
+  }
+}
+
+function expandElisionEnd(range: Range): void {
+  const endEl = asElement(range.endContainer)?.closest?.('[data-word-state]');
+  if (!endEl) return;
+  const next = endEl.nextSibling;
+  const nextNext = next?.nextSibling;
+  if (
+    next &&
+    next.nodeType === ELEMENT_NODE &&
+    APOSTROPHE_TEXT.test(next.textContent ?? '') &&
+    nextNext &&
+    nextNext.nodeType === ELEMENT_NODE &&
+    (nextNext as Element).hasAttribute('data-word-state')
+  ) {
+    range.setEndAfter(nextNext);
+  }
+}
+
 // Expand a selection to full word boundaries. DOM wrapper around the pure
 // offset-based snapper in languages/tokenizer — per-pack so it follows the
 // active script instead of hardcoded Latin ranges (#289).
@@ -116,31 +158,112 @@ export function snapToWordBoundaries(
   const startContainer = range.startContainer;
   if (startContainer.nodeType === TEXT_NODE) {
     const text = startContainer.textContent || '';
-    const { start } = snapOffsetsToWordBoundaries(
-      text,
-      range.startOffset,
-      range.startOffset,
-      pack,
-      words,
-    );
-    range.setStart(startContainer, start);
+    // Do not swallow an entire preceding word when the drag starts cleanly at its right edge.
+    if (range.startOffset < text.length) {
+      const { start } = snapOffsetsToWordBoundaries(
+        text,
+        range.startOffset,
+        range.startOffset,
+        pack,
+        words,
+      );
+      range.setStart(startContainer, start);
+      if (start === 0) expandElisionStart(range);
+    }
   }
 
   const endContainer = range.endContainer;
   if (endContainer.nodeType === TEXT_NODE) {
     const text = endContainer.textContent || '';
-    const { end } = snapOffsetsToWordBoundaries(
-      text,
-      range.endOffset,
-      range.endOffset,
-      pack,
-      words,
-    );
-    range.setEnd(endContainer, end);
+    // Do not swallow an entire following word when the drag ends cleanly at its left edge.
+    if (range.endOffset > 0) {
+      const { end } = snapOffsetsToWordBoundaries(
+        text,
+        range.endOffset,
+        range.endOffset,
+        pack,
+        words,
+      );
+      range.setEnd(endContainer, end);
+      if (end === text.length) expandElisionEnd(range);
+    }
   }
 
   const spaced = pack.script.kind !== 'cjk-unspaced';
-  return readableRangeText(range, spaced).replace(/\s+/g, ' ').trim();
+  const raw = readableRangeText(range, spaced).replace(/\s+/g, ' ').trim();
+  return stripEdgePunctuation(raw) || raw;
+}
+
+/**
+ * Compute the character offset of `target` inside `root` in the same coordinate
+ * system as `readableText(root, spaced)` (skipping `<rt>`, `<rp>`, `<button>`).
+ */
+function readableOffsetBefore(root: Node, target: Node, spaced: boolean): number {
+  let offset = 0;
+  let found = false;
+
+  const walk = (node: Node) => {
+    if (found) return;
+    if (node === target) {
+      found = true;
+      return;
+    }
+    if (node.nodeType === TEXT_NODE) {
+      offset += (node.textContent ?? '').length;
+      return;
+    }
+    if (node.nodeType === ELEMENT_NODE) {
+      const tagName = (node as Element).tagName;
+      if (typeof tagName === 'string' && SKIP_TAGS.has(tagName.toUpperCase())) return;
+    }
+    let hadChildText = false;
+    for (const child of Array.from(node.childNodes)) {
+      if (found) break;
+      const before = offset;
+      walk(child);
+      if (found) break;
+      if (offset > before) {
+        if (spaced && hadChildText && isBlockElement(child)) offset += 1;
+        hadChildText = true;
+      }
+    }
+  };
+
+  walk(root);
+  return found ? offset : -1;
+}
+
+/**
+ * Extract the exact sentence containing `element` by its character offset in
+ * the block's readable text (avoiding substring collisions like "caterpillar"
+ * matching "cat", or duplicate words in earlier sentences).
+ */
+export function extractSentenceAtElement(element: HTMLElement, pack: LanguageConfig): string {
+  const block = element.closest?.(BLOCK_SELECTOR) as HTMLElement | null;
+  if (!block) return '';
+  const spaced = pack.script.kind !== 'cjk-unspaced';
+  const text = readableText(block, spaced);
+  if (!text.trim()) return '';
+  const sentences = splitSentences(text, pack);
+  if (sentences.length <= 1) return text.trim();
+
+  const offset = readableOffsetBefore(block, element, spaced);
+  if (offset >= 0) {
+    let cursor = 0;
+    for (const sentence of sentences) {
+      const idx = text.indexOf(sentence, cursor);
+      const start = idx >= 0 ? idx : cursor;
+      const end = start + sentence.length;
+      if (offset >= start && offset < end) return sentence.trim();
+      cursor = end;
+    }
+  }
+
+  const wordText = readableText(element, spaced);
+  for (const sentence of sentences) {
+    if (wordText && sentence.includes(wordText)) return sentence.trim();
+  }
+  return text.trim();
 }
 
 function asElement(node: Node | null): HTMLElement | null {
@@ -234,6 +357,138 @@ export function collectWords(
     );
   }
   return [];
+}
+
+export interface PhraseHighlightSpan {
+  /** Folded words of the phrase (fallback if no DOM coordinates are available). */
+  words: string[];
+  /** Exact inclusive coordinate span of the selected phrase in document order. */
+  coords?: {
+    startBlockId: number;
+    startWordIndex: number;
+    endBlockId: number;
+    endWordIndex: number;
+  };
+}
+
+export type HighlightedPhrase = string[] | PhraseHighlightSpan | null;
+
+export function phraseHighlightKey(highlight: HighlightedPhrase): string {
+  if (!highlight) return '';
+  if (Array.isArray(highlight)) return highlight.join('\u0000');
+  const c = highlight.coords;
+  return c
+    ? `c:${c.startBlockId}:${c.startWordIndex}:${c.endBlockId}:${c.endWordIndex}`
+    : highlight.words.join('\u0000');
+}
+
+export function phraseHighlightTouchesBlock(
+  blockId: number,
+  highlight: HighlightedPhrase,
+): boolean {
+  if (!highlight) return false;
+  if (Array.isArray(highlight)) return highlight.length > 0;
+  if (highlight.coords) {
+    return blockId >= highlight.coords.startBlockId && blockId <= highlight.coords.endBlockId;
+  }
+  return highlight.words.length > 0;
+}
+
+export function computePhraseHighlightSetForBlock(
+  blockId: number,
+  blockWordCount: number,
+  getBlockWords: () => string[],
+  highlight: HighlightedPhrase,
+  pack: LanguageConfig,
+): Set<number> {
+  const set = new Set<number>();
+  if (!highlight) return set;
+  if (!Array.isArray(highlight) && highlight.coords) {
+    const { startBlockId, startWordIndex, endBlockId, endWordIndex } = highlight.coords;
+    if (blockId < startBlockId || blockId > endBlockId) return set;
+    const from = blockId === startBlockId ? startWordIndex : 0;
+    const to = blockId === endBlockId ? endWordIndex : blockWordCount - 1;
+    for (let i = Math.max(0, from); i <= Math.min(blockWordCount - 1, to); i++) {
+      set.add(i);
+    }
+    return set;
+  }
+  const words = Array.isArray(highlight) ? highlight : highlight.words;
+  if (words.length === 0) return set;
+  return computePhraseHighlightSet(getBlockWords(), words, pack);
+}
+
+/** Resolve `(blockId, wordIndex)` from a rendered `[data-word-state]` span. */
+export function readWordCoord(el: Element | null): { blockId: number; wordIndex: number } | null {
+  const wordEl = el?.closest?.('[data-word-index]') as HTMLElement | null;
+  if (!wordEl) return null;
+  const wordIndex = Number(wordEl.getAttribute('data-word-index'));
+  const blockEl = wordEl.closest?.('[data-block-id], [data-segment-index]') as HTMLElement | null;
+  if (!blockEl || !Number.isFinite(wordIndex)) return null;
+  const rawBlock =
+    blockEl.getAttribute('data-block-id') ?? blockEl.getAttribute('data-segment-index');
+  const blockId = rawBlock !== null ? Number(rawBlock) : NaN;
+  if (!Number.isFinite(blockId)) return null;
+  return { blockId, wordIndex };
+}
+
+/** Extract exact coordinate span of every rendered `[data-word-index]` intersected by `range`. */
+export function extractPhraseCoordsFromRange(
+  range: Range,
+  container: HTMLElement | null,
+): PhraseHighlightSpan['coords'] | undefined {
+  if (!container || typeof range.intersectsNode !== 'function') return undefined;
+  // Narrow query root to a single block when the selection stays inside one block.
+  const blockScope = asElement(range.commonAncestorContainer)?.closest?.(
+    '[data-block-id], [data-segment-index]',
+  ) as HTMLElement | null;
+  const root = blockScope && container.contains(blockScope) ? blockScope : container;
+  const spans = root.querySelectorAll<HTMLElement>('[data-word-index]');
+  let first: { blockId: number; wordIndex: number } | null = null;
+  let last: { blockId: number; wordIndex: number } | null = null;
+  for (let i = 0; i < spans.length; i++) {
+    const span = spans[i];
+    if (!range.intersectsNode(span)) {
+      if (first) break;
+      continue;
+    }
+    // Ignore boundary-touching spans where the range starts at the span's end or ends at its start,
+    // handling both plain text nodes and <ruby> base text children.
+    if (range.startContainer === span && range.startOffset >= span.childNodes.length) {
+      continue;
+    }
+    if (range.endContainer === span && range.endOffset === 0) {
+      continue;
+    }
+    const firstChild = span.firstChild;
+    const baseText =
+      firstChild?.nodeType === TEXT_NODE
+        ? firstChild
+        : firstChild?.nodeType === ELEMENT_NODE && (firstChild as Element).tagName === 'RUBY'
+          ? firstChild.firstChild
+          : null;
+    if (
+      baseText &&
+      range.startContainer === baseText &&
+      range.startOffset >= (baseText.textContent?.length ?? 0)
+    ) {
+      continue;
+    }
+    if (baseText && range.endContainer === baseText && range.endOffset === 0) {
+      continue;
+    }
+    const coord = readWordCoord(span);
+    if (!coord) continue;
+    if (!first) first = coord;
+    last = coord;
+  }
+  if (!first || !last) return undefined;
+  return {
+    startBlockId: first.blockId,
+    startWordIndex: first.wordIndex,
+    endBlockId: last.blockId,
+    endWordIndex: last.wordIndex,
+  };
 }
 
 /**

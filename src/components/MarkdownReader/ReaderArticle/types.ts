@@ -1,6 +1,7 @@
 import type { LanguageConfig, WordSegmentation } from '@/lib/languages';
 import type { WordState } from '@/types';
 import type { AnnotationMode } from '../annotation';
+import type { HighlightedPhrase } from '../utils';
 import type { ProseStyle } from '@/lib/prose-style';
 
 /** The word the reader has focus on, addressed by its position in the article. */
@@ -20,11 +21,17 @@ export interface ReaderArticleProps {
   knownWordsMap: Map<string, WordState>;
   readings: Map<string, string> | null;
   annotationMode: AnnotationMode;
-  highlightedPhrase: string[];
+  highlightedPhrase: HighlightedPhrase;
   /** Concordance jump target block offset (`data-block-id`), or null when none is highlighted. */
   highlightedBlockId?: number | null;
   activeWord: ActiveReaderWord | null;
-  onWordClick: (word: string, sentence: string, source?: undefined, occurrence?: string) => void;
+  onWordClick: (
+    word: string,
+    sentence: string,
+    source?: undefined,
+    occurrence?: string,
+    options?: { isPhrase?: boolean },
+  ) => void;
   onActivateWord: (word: ActiveReaderWord) => void;
   onClearPhrase: () => void;
 }

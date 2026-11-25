@@ -12,6 +12,8 @@ vi.mock('./data-layer', () => ({
 }));
 vi.mock('./languages', () => ({
   foldWord: (word: string) => word.toLowerCase(),
+  isValidLanguageCode: () => false,
+  getLanguageConfig: () => undefined,
 }));
 
 import {

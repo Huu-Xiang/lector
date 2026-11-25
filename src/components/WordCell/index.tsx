@@ -25,6 +25,8 @@ export interface WordCellProps {
    * no wider than the word, false where it is wider and needs the room.
    */
   readingOverhangs?: boolean;
+  /** Index of this word inside its containing block, used for coordinate phrase highlighting. */
+  wordIndex?: number;
   testId?: string;
 }
 
@@ -45,6 +47,7 @@ export default function WordCell({
   onActivate,
   reading,
   readingOverhangs = false,
+  wordIndex,
   testId = 'reader-word',
 }: WordCellProps) {
   const t = useTranslations('reader.wordCell');
@@ -63,6 +66,7 @@ export default function WordCell({
       // Marks the span as one word: `usePhraseTouchSelection` selects on this
       // attribute, and the e2e suite asserts the state it carries.
       data-word-state={state ?? 'new'}
+      data-word-index={wordIndex}
       role={interactive ? 'button' : undefined}
       tabIndex={interactive ? 0 : undefined}
       aria-label={interactive ? t('lookUp', { text }) : undefined}

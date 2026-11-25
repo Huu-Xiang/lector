@@ -2060,7 +2060,9 @@
       "modeType": "Ввод ответа",
       "modeMc": "Варианты ответа",
       "start": "Начать",
-      "loading": "Загружаем…"
+      "loading": "Загружаем…",
+      "sentenceBankHeading": "Тренировка по банку предложений",
+      "sentenceBankHint": "Практика частой лексики по уровням частотности"
     },
     "collections": {
       "top500": "Первые 500",
@@ -2241,7 +2243,8 @@
         "noWords": "Сохраняйте слова во время чтения, и они появятся здесь для повторения.",
         "failed": "Не удалось загрузить слова.",
         "goal": "Цель: {goal}"
-      }
+      },
+      "reviewMore": "Следующий раунд ({count})"
     }
   },
   "vocab": {
@@ -2339,7 +2342,10 @@
       "cancel": "Отмена",
       "saving": "Сохраняем…",
       "save": "Сохранить",
-      "edit": "Редактировать"
+      "edit": "Редактировать",
+      "idiomaticMeaning": "Идиоматическое значение",
+      "literalBreakdown": "Дословно",
+      "usageNotes": "Употребление"
     },
     "page": {
       "title": "Словарь",
@@ -2412,7 +2418,16 @@
       "transcribingBody": "Идёт расшифровка «{title}». Обычно это занимает несколько минут. Когда текст будет готов, урок откроется автоматически.",
       "transcriptionFailed": "Не удалось расшифровать аудио",
       "retry": "Попробовать снова",
-      "listenAlong": "Слушать и читать"
+      "listenAlong": "Слушать и читать",
+      "askTutorPromptWithSentence": "Объясни «{word}» в этом предложении: «{sentence}»",
+      "askTutorPromptWord": "Объясни значение и употребление «{word}».",
+      "chapterEndTitle": "Конец главы",
+      "chapterEndSummary": "{remaining, plural, one {# новое слово} few {# новых слова} many {# новых слов} other {# новых слов}} · сохранено: {saved}",
+      "chapterEndAllClear": "Все слова учтены · сохранено: {saved}",
+      "markRemainingKnown": "Отметить остальные как известные ({count})",
+      "markedRemainingKnown": "{count, plural, one {# слово отмечено как известное} few {# слова отмечены как известные} many {# слов отмечены как известные} other {# слов отмечены как известные}}",
+      "undoMarkRemaining": "Отменить",
+      "reviewChapterWords": "Повторить сохранённые слова ({count})"
     },
     "markdown": {
       "saveFailed": "Не удалось сохранить",
@@ -2582,7 +2597,12 @@
         "symbol": "символ",
         "punct": "пунктуация",
         "abbrev": "сокр."
-      }
+      },
+      "explainSentence": "Разобрать предложение",
+      "explainSentenceRetry": "Повторить разбор предложения",
+      "explainingSentence": "Разбираю…",
+      "sentenceBreakdownHeading": "Разбор предложения",
+      "askTutor": "Спросить тьютора"
     },
     "onboardingTip": {
       "dismiss": "Закрыть подсказку"

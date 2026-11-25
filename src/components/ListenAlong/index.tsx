@@ -35,7 +35,7 @@ import {
   makeWordSegmentation,
 } from '@/lib/languages';
 import { languageDisplayName } from '@/lib/language-names';
-import { getVoiceForLanguage, waitForVoices } from '@/lib/tts';
+import { getStoredSpeechRate, getVoiceForLanguage, waitForVoices } from '@/lib/tts';
 import { useActiveLanguage } from '@/utils/hooks';
 import { trackProductEvent } from '@/lib/product-analytics';
 import { parseSegmentWords, splitWords } from '@/components/MarkdownReader/utils';
@@ -134,8 +134,9 @@ export default function ListenAlong(props: ListenAlongProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const isPlayingRef = useRef(false);
   const [currentMs, setCurrentMs] = useState(0);
-  const [rate, setRate] = useState(1);
-  const rateRef = useRef(1);
+  const initialRate = isTts ? getStoredSpeechRate() : 1;
+  const [rate, setRate] = useState(initialRate);
+  const rateRef = useRef(initialRate);
   const [activeWord, setActiveWord] = useState<ActiveListenWord | null>(null);
   // Shadow's own pointer in audio mode (continuous derives from the playhead).
   const [shadowIdx, setShadowIdx] = useState(0);
@@ -394,7 +395,16 @@ export default function ListenAlong(props: ListenAlongProps) {
       const segment = segments[target];
       if (segment) audio.currentTime = segment.startMs / 1000;
     },
-    [isTts, playbackMode, playheadIdx, playSegment, rows.length, segments, shadowIdx, speakSentenceAt],
+    [
+      isTts,
+      playbackMode,
+      playheadIdx,
+      playSegment,
+      rows.length,
+      segments,
+      shadowIdx,
+      speakSentenceAt,
+    ],
   );
 
   const skipSeconds = useCallback((delta: number) => {

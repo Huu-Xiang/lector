@@ -461,7 +461,7 @@ export default function VocabPage() {
         <PageOutline variant="list" />
       ) : (
         <VocabList
-          entries={entries.filter((e) => e.state !== 'ignored')}
+          entries={entries}
           collections={collections}
           onEntryClick={handleEntryClick}
           onExportToAnki={handleExportToAnki}

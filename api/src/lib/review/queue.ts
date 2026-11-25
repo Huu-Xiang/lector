@@ -18,6 +18,7 @@ import {
 } from './sentence-sources';
 import { reviewCardOf, type WordCardRow } from './word-card-rows';
 import { getNativeLanguageCode, isMonolingualExplanationsEnabled } from '../native-language';
+import { parsePhraseDetails, type PhraseDetails } from '../storage-limits';
 import { matchesNative } from '../translation-lang';
 import { scheduleMeaningRefresh, type MeaningRefresh, type RefreshTarget } from './meaning-refresh';
 import { sharedExampleSentenceCache, type ExampleSentenceCache } from '../example-sentence-cache';
@@ -107,13 +108,14 @@ interface CardWithVocab extends WordCardRow {
   translation: string;
   translationLang: string | null;
   translationSource: string | null;
+  phraseDetails: string | null;
   vocabCreatedAt: string;
 }
 
 function activeCards(userId: string, language: string): CardWithVocab[] {
   return db
     .prepare(
-      `SELECT c.*, v.text, v.sentence, v.translation, v.translationLang, v.translationSource, v.createdAt AS vocabCreatedAt
+      `SELECT c.*, v.text, v.sentence, v.translation, v.translationLang, v.translationSource, v.phraseDetails, v.createdAt AS vocabCreatedAt
          FROM wordCards c JOIN vocab v ON v.id = c.vocabId AND v.userId = c.userId
         WHERE c.userId = ? AND c.language = ? AND c.retiredAt IS NULL`,
     )
@@ -174,6 +176,7 @@ export interface QueueItem {
   questionType: QuestionType;
   sentence: string;
   translation: string;
+  phraseDetails?: PhraseDetails;
   choices?: string[];
   sentenceSource?: SentenceSource;
   sentenceBlank?: SentenceBlank;
@@ -308,6 +311,8 @@ export function buildRound(
       ? sentenceTranslationFor(found, language, native, caches.translations)
       : null;
     const translated = resolved?.translation;
+    const phraseDetails =
+      card.type === 'phrase' ? parsePhraseDetails(card.phraseDetails) : undefined;
     items.push({
       cardId: card.id,
       word: card.text,
@@ -316,6 +321,7 @@ export function buildRound(
       questionType,
       sentence: fillIn && found ? found.text : card.sentence,
       translation,
+      ...(phraseDetails ? { phraseDetails } : {}),
       ...(choices ? { choices } : {}),
       ...(fillIn && found
         ? {

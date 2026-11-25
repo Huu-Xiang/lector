@@ -71,11 +71,25 @@ export function usePhraseTouchSelection(
     // lesson waits on the main thread. Not bound at the hold instead: a browser
     // marks touchmove non-cancelable once a scroll has started, and by then
     // `preventDefault` is a no-op.
+    let swallowTimer: ReturnType<typeof setTimeout> | null = null;
+    const clearSwallow = () => {
+      swallowClick = false;
+      if (swallowTimer !== null) {
+        clearTimeout(swallowTimer);
+        swallowTimer = null;
+      }
+    };
+
     const armedMove = (event: TouchEvent) => {
       if (!armed) return;
       const touch = event.touches[0];
       if (!touch) return;
-      event.preventDefault();
+      if (event.cancelable) event.preventDefault();
+      // Allow canceling an armed single-word hold by dragging clearly away vertically.
+      if (focus === anchor && Math.abs(touch.clientY - startY) > 80) {
+        reset();
+        return;
+      }
       const word = wordAt(touch.clientX, touch.clientY);
       if (!word || !spans.includes(word) || word === focus) return;
       focus = word;
@@ -144,8 +158,10 @@ export function usePhraseTouchSelection(
         // A hold on one word is a lookup. Click it rather than wait for the
         // click a tap makes: iOS often sends none after a long press.
         reset();
-        event.preventDefault();
-        first.click();
+        if (event.cancelable) {
+          event.preventDefault();
+          first.click();
+        }
         return;
       }
 
@@ -164,14 +180,19 @@ export function usePhraseTouchSelection(
       }, 0);
 
       swallowClick = true;
-      event.preventDefault();
+      if (swallowTimer !== null) clearTimeout(swallowTimer);
+      swallowTimer = setTimeout(() => {
+        swallowClick = false;
+        swallowTimer = null;
+      }, 450);
+      if (event.cancelable) event.preventDefault();
       onPhraseRef.current(first, last);
     };
 
     // Capture, so the event never reaches React's root listener and WordCell.
     const onClick = (event: MouseEvent) => {
       if (!swallowClick) return;
-      swallowClick = false;
+      clearSwallow();
       event.preventDefault();
       event.stopPropagation();
     };
@@ -194,6 +215,7 @@ export function usePhraseTouchSelection(
 
     return () => {
       reset();
+      clearSwallow();
       if (paintTimer !== null) clearTimeout(paintTimer);
       container.removeEventListener('touchstart', onTouchStart);
       container.removeEventListener('touchend', onTouchEnd);

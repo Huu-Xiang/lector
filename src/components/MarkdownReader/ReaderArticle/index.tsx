@@ -16,9 +16,17 @@ import { useTranslations } from 'next-intl';
 import ReactMarkdown, { type Components } from 'react-markdown';
 import remarkBreaks from 'remark-breaks';
 import type { LanguageConfig, WordSegmentation } from '@/lib/languages';
-import { foldWord, lookupByVocabKeys, splitSentences, vocabKeys } from '@/lib/languages';
+import { foldWord, lookupByVocabKeys, vocabKeys } from '@/lib/languages';
 import type { WordState } from '@/types';
-import { collectWords, computePhraseHighlightSet, readableText, splitWords } from '../utils';
+import {
+  collectWords,
+  computePhraseHighlightSetForBlock,
+  extractSentenceAtElement,
+  phraseHighlightKey,
+  phraseHighlightTouchesBlock,
+  splitWords,
+  type HighlightedPhrase,
+} from '../utils';
 import { wordReading, type AnnotationMode } from '../annotation';
 import { readerWrapClass } from '../wrap';
 import { proseStyleVars } from '@/lib/prose-style';
@@ -85,26 +93,18 @@ export interface ReaderBlockProps {
    */
   readings: Map<string, string> | null;
   annotationMode: AnnotationMode;
-  highlightedPhrase: string[];
+  highlightedPhrase: HighlightedPhrase;
   highlightedBlockId?: number | null;
   activeWord: ActiveReaderWord | null;
-  onWordClick: (word: string, sentence: string, source?: undefined, occurrence?: string) => void;
+  onWordClick: (
+    word: string,
+    sentence: string,
+    source?: undefined,
+    occurrence?: string,
+    options?: { isPhrase?: boolean },
+  ) => void;
   onActivateWord: (word: ActiveReaderWord) => void;
   onClearPhrase: () => void;
-}
-
-function findSentence(element: HTMLElement, pack: LanguageConfig): string {
-  const block = element.closest('p, li, blockquote, h1, h2, h3, h4, h5, h6');
-  // readableText, not textContent: a ruby annotation would otherwise interleave
-  // into both strings (#289 4.4), the includes() test below would fail, and the
-  // whole polluted block would be returned and then saved to vocab.sentence.
-  const text = block ? readableText(block) : '';
-  const wordText = readableText(element);
-
-  for (const sentence of splitSentences(text, pack)) {
-    if (sentence.includes(wordText)) return sentence.trim();
-  }
-  return text.trim();
 }
 
 /** Only re-render a body block when its own words or interaction state changed. */
@@ -131,7 +131,13 @@ export function readerBlockPropsEqual(previous: ReaderBlockProps, next: ReaderBl
     return false;
   }
 
-  if (previous.highlightedPhrase.join('\u0000') !== next.highlightedPhrase.join('\u0000')) {
+  const prevTouches = phraseHighlightTouchesBlock(previous.blockId, previous.highlightedPhrase);
+  const nextTouches = phraseHighlightTouchesBlock(next.blockId, next.highlightedPhrase);
+  if (
+    prevTouches !== nextTouches ||
+    (nextTouches &&
+      phraseHighlightKey(previous.highlightedPhrase) !== phraseHighlightKey(next.highlightedPhrase))
+  ) {
     return false;
   }
 
@@ -174,8 +180,13 @@ const ReaderBlock = memo(function ReaderBlock({
   onActivateWord,
   onClearPhrase,
 }: ReaderBlockProps) {
-  const phraseSet = computePhraseHighlightSet(
-    collectWords(children, pack, segmentation),
+  const blockWords = phraseHighlightTouchesBlock(blockId, highlightedPhrase)
+    ? collectWords(children, pack, segmentation)
+    : [];
+  const phraseSet = computePhraseHighlightSetForBlock(
+    blockId,
+    blockWords.length,
+    () => blockWords,
     highlightedPhrase,
     pack,
   );
@@ -205,6 +216,7 @@ const ReaderBlock = memo(function ReaderBlock({
             key={`${keyPrefix}-${index}`}
             text={part.text}
             state={state}
+            wordIndex={wordIndex}
             isActive={isActiveWord}
             isPhraseHighlighted={isPhraseHighlighted}
             reading={wordReading(annotationMode, readings, key, state)}
@@ -214,9 +226,10 @@ const ReaderBlock = memo(function ReaderBlock({
               onActivateWord({ blockId, wordIndex });
               onWordClick(
                 text,
-                findSentence(element, pack),
+                extractSentenceAtElement(element, pack),
                 undefined,
                 `text:${blockId}:${wordIndex}`,
+                { isPhrase: false },
               );
             }}
           />

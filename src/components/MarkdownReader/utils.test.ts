@@ -4,11 +4,15 @@ import {
   splitWords,
   collectWords,
   computePhraseHighlightSet,
+  computePhraseHighlightSetForBlock,
+  extractSentenceAtElement,
   findSelectionAnchorElement,
   parseSegmentWords,
+  phraseHighlightTouchesBlock,
   readableRangeText,
   readableText,
   snapToWordBoundaries,
+  stripEdgePunctuation,
   wordSpansBetween,
 } from './utils';
 import { LANGUAGES } from '@/lib/languages';
@@ -446,5 +450,106 @@ describe('wordSpansBetween', () => {
   it('returns nothing when an endpoint is not in the list', () => {
     expect(wordSpansBetween('die', 'kat', spans)).toEqual([]);
     expect(wordSpansBetween('kat', 'die', spans)).toEqual([]);
+  });
+});
+
+describe('stripEdgePunctuation & edge-offset snapToWordBoundaries', () => {
+  it('strips leading and trailing punctuation while preserving apostrophes inside words', () => {
+    expect(stripEdgePunctuation('«l’homme»,')).toBe('l’homme');
+    expect(stripEdgePunctuation('「日本語」。')).toBe('日本語');
+    expect(stripEdgePunctuation('  (hello world!)  ')).toBe('hello world');
+  });
+
+  it('does not swallow the next word when endOffset is 0 or the previous word when startOffset is at text end', () => {
+    const w1 = { nodeType: 3, textContent: 'bonjour', parentElement: null } as unknown as Text;
+    const w2 = { nodeType: 3, textContent: 'monde', parentElement: null } as unknown as Text;
+
+    let setStartOffset: number | null = null;
+    let setEndOffset: number | null = null;
+    const edgeRange = {
+      startContainer: w1,
+      startOffset: w1.textContent!.length,
+      endContainer: w2,
+      endOffset: 0,
+      setStart: (_node: Node, off: number) => {
+        setStartOffset = off;
+      },
+      setEnd: (_node: Node, off: number) => {
+        setEndOffset = off;
+      },
+      cloneContents: () => ({ nodeType: 11, childNodes: [] }),
+    } as unknown as Range;
+    const edgeSelection = { getRangeAt: () => edgeRange } as unknown as Selection;
+    snapToWordBoundaries(edgeSelection, af);
+    expect(setStartOffset).toBeNull();
+    expect(setEndOffset).toBeNull();
+
+    // Range starting mid-word in w1 and ending mid-word in w2 snaps both boundaries.
+    const midRange = {
+      startContainer: w1,
+      startOffset: 2,
+      endContainer: w2,
+      endOffset: 3,
+      setStart: (_node: Node, off: number) => {
+        setStartOffset = off;
+      },
+      setEnd: (_node: Node, off: number) => {
+        setEndOffset = off;
+      },
+      cloneContents: () => ({ nodeType: 11, childNodes: [w1, w2] }),
+    } as unknown as Range;
+    const midSelection = { getRangeAt: () => midRange } as unknown as Selection;
+    snapToWordBoundaries(midSelection, af);
+    expect(setStartOffset).toBe(0);
+    expect(setEndOffset).toBe(5);
+  });
+});
+
+describe('coordinate-scoped phrase highlight', () => {
+  it('highlights only the selected block and exact word indices, ignoring duplicate words elsewhere', () => {
+    const blockWords = ['die', 'kat', 'sien', 'die', 'kat'];
+    const highlight = {
+      words: ['die', 'kat'],
+      coords: { startBlockId: 42, startWordIndex: 3, endBlockId: 42, endWordIndex: 4 },
+    };
+    expect(phraseHighlightTouchesBlock(42, highlight)).toBe(true);
+    expect(phraseHighlightTouchesBlock(7, highlight)).toBe(false);
+    expect([
+      ...computePhraseHighlightSetForBlock(42, blockWords.length, () => blockWords, highlight, af),
+    ]).toEqual([3, 4]);
+    expect([
+      ...computePhraseHighlightSetForBlock(7, blockWords.length, () => blockWords, highlight, af),
+    ]).toEqual([]);
+  });
+});
+
+describe('extractSentenceAtElement', () => {
+  it('extracts the exact sentence containing a duplicate or substring word using DOM offset', () => {
+    const block = {
+      nodeType: 1,
+      tagName: 'P',
+      childNodes: [] as Node[],
+    } as unknown as HTMLElement;
+    const mkSpan = (txt: string) => {
+      const t = { nodeType: 3, textContent: txt } as unknown as Node;
+      return {
+        nodeType: 1,
+        tagName: 'SPAN',
+        childNodes: [t],
+        closest: () => block,
+      } as unknown as HTMLElement;
+    };
+    const s1 = mkSpan('Dieselfde ');
+    const s2 = mkSpan('dag ');
+    const s3 = mkSpan('was ');
+    const s4 = mkSpan('mooi. ');
+    const s5 = mkSpan('Die ');
+    const s6 = mkSpan('son ');
+    const s7 = mkSpan('skyn.');
+    (block as unknown as { childNodes: Node[] }).childNodes = [s1, s2, s3, s4, s5, s6, s7];
+
+    // Clicking "Die" in the second sentence must NOT match "Die" inside "Dieselfde" in sentence 1!
+    expect(extractSentenceAtElement(s5, af)).toBe('Die son skyn.');
+    expect(extractSentenceAtElement(s2, af)).toBe('Dieselfde dag was mooi.');
   });
 });

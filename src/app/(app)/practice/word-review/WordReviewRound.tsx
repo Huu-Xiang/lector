@@ -1,17 +1,21 @@
 'use client';
 
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useFormatter, useTranslations } from 'next-intl';
+import TranslationDrawer, { TranslationDrawerSlot } from '@/components/TranslationDrawer';
 import { Button } from '@/components/ui/button';
 import { Kbd } from '@/components/ui/kbd';
-import { getActivePack } from '@/lib/data-layer';
+import { getActivePack, getReviewCounts } from '@/lib/data-layer';
 import { trackProductEvent } from '@/lib/product-analytics';
-import { hasAudio } from '@/lib/tts';
+import { hasAudio, speak } from '@/lib/tts';
 import type { ClozeSentence, ReviewItem, ReviewQuestionType } from '@/types';
+import { usePracticeWordLookup } from '../use-practice-word-lookup';
 import DictationCard from '../components/Dictation/DictationCard';
 import { diffDictation, scoreDictation } from '../utils';
 import ChooseMeaning from './ChooseMeaning';
+import ClickableReviewSentence from './ClickableReviewSentence';
 import FillIn from './FillIn';
+import PhraseDetailsCard from './PhraseDetailsCard';
 import RecognitionCard from './RecognitionCard';
 import SentenceTranslation from './SentenceTranslation';
 import SourceLine from './SourceLine';
@@ -48,7 +52,13 @@ export default function WordReviewRound({ onExit }: { onExit: () => void }) {
   const t = useTranslations('practice.words');
   const format = useFormatter();
   const { round, start, answer, undoKnow, advance, loadSentence } = useWordReviewRound();
+  const { wordTooltip, lookupWord, requestContextTranslation, closeWordTooltip } =
+    usePracticeWordLookup();
   const [showTranslation, showTranslationNow] = useShowTranslation();
+  const [remainingAfterRound, setRemainingAfterRound] = useState<{
+    roundId: string;
+    count: number;
+  } | null>(null);
   const started = useRef(false);
   const completed = useRef<string | null>(null);
 
@@ -57,6 +67,33 @@ export default function WordReviewRound({ onExit }: { onExit: () => void }) {
     started.current = true;
     void start();
   }, [start]);
+
+  useEffect(() => {
+    closeWordTooltip();
+  }, [round.step, round.phase, closeWordTooltip]);
+
+  useEffect(() => {
+    if (round.phase !== 'complete') return;
+    let live = true;
+    const finishedRoundId = round.roundId;
+    getReviewCounts()
+      .then((counts) => {
+        if (live) {
+          setRemainingAfterRound({
+            roundId: finishedRoundId,
+            count: counts.dueNow + counts.newAvailable,
+          });
+        }
+      })
+      .catch(() => undefined);
+    return () => {
+      live = false;
+    };
+  }, [round.phase, round.roundId]);
+  const remainingCount =
+    round.phase === 'complete' && remainingAfterRound?.roundId === round.roundId
+      ? remainingAfterRound.count
+      : 0;
 
   useEffect(() => {
     if (round.phase !== 'complete' || completed.current === round.roundId) return;
@@ -78,7 +115,16 @@ export default function WordReviewRound({ onExit }: { onExit: () => void }) {
   );
 
   useEffect(() => {
-    if (current && questionType && questionType !== 'choose_meaning') loadSentence(current);
+    // Do not swap out the sentence lazily mid-dictation: DictationCard autoplays
+    // `current.sentence` on mount, so replacing it in-place causes false Wrong grades.
+    if (
+      current &&
+      questionType &&
+      questionType !== 'choose_meaning' &&
+      questionType !== 'dictation'
+    ) {
+      loadSentence(current);
+    }
   }, [current, questionType, loadSentence]);
 
   useQuestionKeys((event) => {
@@ -110,7 +156,10 @@ export default function WordReviewRound({ onExit }: { onExit: () => void }) {
 
   if (round.phase === 'idle' || round.phase === 'loading') {
     return (
-      <div className="py-6" data-testid="word-review-loading">
+      <div
+        className="native-compact-page mx-auto max-w-2xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8"
+        data-testid="word-review-loading"
+      >
         <Shell>
           <div className="animate-pulse space-y-4 py-6" aria-label={t('loading')} role="status">
             <div className="mx-auto h-8 w-40 rounded bg-muted" />
@@ -124,7 +173,7 @@ export default function WordReviewRound({ onExit }: { onExit: () => void }) {
 
   if (round.phase === 'error' || round.phase === 'empty') {
     return (
-      <div className="py-6">
+      <div className="native-compact-page mx-auto max-w-2xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
         <Shell>
           <p className="py-4 text-center text-sm text-muted-foreground">
             {round.phase === 'error' ? t('loadFailed') : t('nothingDue')}
@@ -146,7 +195,10 @@ export default function WordReviewRound({ onExit }: { onExit: () => void }) {
     const summary = summarizeRound(round);
     const next = formatDue(summary.nextDue);
     return (
-      <div className="py-6" data-testid="word-review-summary">
+      <div
+        className="native-compact-page mx-auto max-w-2xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8"
+        data-testid="word-review-summary"
+      >
         <Shell>
           <h2 className="mb-3 text-base font-semibold text-foreground">{t('complete')}</h2>
           <p className="text-sm text-foreground">{t('answered', { count: summary.answered })}</p>
@@ -172,8 +224,15 @@ export default function WordReviewRound({ onExit }: { onExit: () => void }) {
           {next && (
             <p className="mt-4 text-xs text-muted-foreground">{t('nextDue', { time: next })}</p>
           )}
-          <div className="mt-5 flex items-center justify-between">
-            {back}
+          <div className="mt-5 flex flex-wrap items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              {back}
+              {remainingCount > 0 && (
+                <Button onClick={() => void start()} data-testid="word-review-continue">
+                  {t('reviewMore', { count: remainingCount })}
+                </Button>
+              )}
+            </div>
             {wasWrong}
           </div>
         </Shell>
@@ -201,100 +260,139 @@ export default function WordReviewRound({ onExit }: { onExit: () => void }) {
       };
 
   return (
-    <div className="py-6" data-testid="word-review-round">
-      <div className="mb-4 flex items-center justify-between">
-        {back}
-        <span className="text-xs text-muted-foreground">{t('left', { count: left })}</span>
-      </div>
-      <Shell>
-        {questionType === 'choose_meaning' && (
-          <ChooseMeaning key={card} item={current} locked={locked} onAnswer={submit} />
-        )}
-        {questionType === 'recognition' && (
-          <RecognitionCard
-            key={card}
-            item={current}
-            locked={locked}
-            showTranslation={showTranslation}
-            onShowTranslation={showTranslationNow}
-            onAnswer={submit}
-          />
-        )}
-        {questionType === 'fill_in' && (
-          <FillIn
-            key={card}
-            item={current}
-            roundItems={roundItems}
-            locked={locked}
-            showTranslation={showTranslation}
-            onShowTranslation={showTranslationNow}
-            onAnswer={submit}
-          />
-        )}
-        {questionType === 'typed_fill_in' && (
-          <TypedFillIn
-            key={card}
-            item={current}
-            locked={locked}
-            showTranslation={showTranslation}
-            onShowTranslation={showTranslationNow}
-            onAnswer={submit}
-          />
-        )}
-        {questionType === 'dictation' && !locked && (
-          <DictationCard
-            key={card}
-            current={dictationCurrent(current)}
-            hideMastery
-            onSubmit={(typed) =>
-              void submit(
-                scoreDictation(diffDictation(typed, current.sentence)).isPass ? 'right' : 'wrong',
-              )
-            }
-            onSurrender={() => void submit('wrong')}
-          />
-        )}
-
-        {feedback && (
-          <div className="mt-6 border-t border-border pt-4" data-testid="word-feedback">
-            <div className="flex items-center justify-between gap-2">
-              <span className="text-sm font-medium text-foreground">
-                {feedback.rawAnswer === 'right'
-                  ? t('correct')
-                  : feedback.rawAnswer === 'wrong'
-                    ? t('incorrect')
-                    : feedback.word}
-              </span>
-              <StageBadge stage={feedback.stage} />
-            </div>
-            {(feedback.rawAnswer === 'right' || feedback.rawAnswer === 'wrong') && (
-              <p className="mt-2 text-sm text-foreground">
-                <span className="font-medium">{feedback.word}</span>
-                {current.translation && (
-                  <span className="text-muted-foreground"> — {current.translation}</span>
-                )}
-              </p>
-            )}
-            {shown.text && (
-              <>
-                <p className="mt-2 text-sm text-muted-foreground">{shown.text}</p>
-                <SourceLine source={shown.source} className="mt-1" />
-                <SentenceTranslation
-                  text={shown.translation?.text}
-                  show={showTranslation}
-                  onShow={showTranslationNow}
-                  className="mt-1"
-                />
-              </>
-            )}
-            <Button className="mt-4 w-full" onClick={advance} data-testid="word-next">
-              {t('next')}
-              <Kbd>Enter</Kbd>
-            </Button>
+    <div className="flex min-h-0">
+      <div
+        className={`native-compact-page mx-auto max-w-2xl min-w-0 flex-1 px-4 py-6 sm:px-6 sm:py-8 lg:px-8 ${wordTooltip ? 'pb-[calc(var(--sheet-h)+2rem)] lg:pb-8' : ''}`}
+      >
+        <div className="py-2" data-testid="word-review-round">
+          <div className="mb-4 flex items-center justify-between">
+            {back}
+            <span className="text-xs text-muted-foreground">{t('left', { count: left })}</span>
           </div>
-        )}
-      </Shell>
-      {!locked && <div className="mt-2 flex justify-end">{wasWrong}</div>}
+          <Shell>
+            {questionType === 'choose_meaning' && (
+              <ChooseMeaning key={card} item={current} locked={locked} onAnswer={submit} />
+            )}
+            {questionType === 'recognition' && (
+              <RecognitionCard
+                key={card}
+                item={current}
+                locked={locked}
+                showTranslation={showTranslation}
+                onShowTranslation={showTranslationNow}
+                onAnswer={submit}
+                onWordClick={lookupWord}
+              />
+            )}
+            {questionType === 'fill_in' && (
+              <FillIn
+                key={card}
+                item={current}
+                roundItems={roundItems}
+                locked={locked}
+                showTranslation={showTranslation}
+                onShowTranslation={showTranslationNow}
+                onAnswer={submit}
+                onWordClick={lookupWord}
+              />
+            )}
+            {questionType === 'typed_fill_in' && (
+              <TypedFillIn
+                key={card}
+                item={current}
+                locked={locked}
+                showTranslation={showTranslation}
+                onShowTranslation={showTranslationNow}
+                onAnswer={submit}
+                onWordClick={lookupWord}
+              />
+            )}
+            {questionType === 'dictation' && !locked && (
+              <DictationCard
+                key={card}
+                current={dictationCurrent(current)}
+                hideMastery
+                onSubmit={(typed) =>
+                  void submit(
+                    scoreDictation(diffDictation(typed, current.sentence)).isPass
+                      ? 'right'
+                      : 'wrong',
+                  )
+                }
+                onSurrender={() => void submit('wrong')}
+              />
+            )}
+
+            {feedback && (
+              <div className="mt-6 border-t border-border pt-4" data-testid="word-feedback">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-sm font-medium text-foreground">
+                    {feedback.rawAnswer === 'right'
+                      ? t('correct')
+                      : feedback.rawAnswer === 'wrong'
+                        ? t('incorrect')
+                        : feedback.word}
+                  </span>
+                  <StageBadge stage={feedback.stage} />
+                </div>
+                {(feedback.rawAnswer === 'right' || feedback.rawAnswer === 'wrong') && (
+                  <p className="mt-2 text-sm text-foreground">
+                    <span className="font-medium">{feedback.word}</span>
+                    {current.translation && (
+                      <span className="text-muted-foreground"> — {current.translation}</span>
+                    )}
+                  </p>
+                )}
+                <PhraseDetailsCard details={current.phraseDetails} className="mt-2.5" />
+                {shown.text && (
+                  <>
+                    <ClickableReviewSentence
+                      text={shown.text}
+                      contextSentence={shown.text}
+                      onWordClick={lookupWord}
+                      className="mt-2 text-sm text-muted-foreground"
+                    />
+                    <SourceLine source={shown.source} className="mt-1" />
+                    <SentenceTranslation
+                      text={shown.translation?.text}
+                      show={showTranslation}
+                      onShow={showTranslationNow}
+                      className="mt-1"
+                    />
+                  </>
+                )}
+                <Button className="mt-4 w-full" onClick={advance} data-testid="word-next">
+                  {t('next')}
+                  <Kbd>Enter</Kbd>
+                </Button>
+              </div>
+            )}
+          </Shell>
+          {!locked && <div className="mt-2 flex justify-end">{wasWrong}</div>}
+        </div>
+      </div>
+      <TranslationDrawerSlot>
+        <TranslationDrawer
+          isOpen={!!wordTooltip}
+          word={wordTooltip?.word ?? ''}
+          sentence={wordTooltip?.displaySentence ?? ''}
+          entry={wordTooltip?.dictEntry ?? null}
+          aiTranslation={wordTooltip?.translation ?? null}
+          aiPartOfSpeech={wordTooltip?.partOfSpeech ?? null}
+          aiContextTranslation={wordTooltip?.aiContextTranslation ?? null}
+          isDictionaryResult={!!wordTooltip?.dictEntry}
+          isLoading={wordTooltip?.isLoading ?? false}
+          isContextLoading={wordTooltip?.isContextLoading ?? false}
+          error={wordTooltip?.error ?? null}
+          contextError={wordTooltip?.contextError ?? null}
+          onClose={closeWordTooltip}
+          onSpeak={(text) => speak(text)}
+          onRequestContextTranslation={requestContextTranslation}
+          onLookupWord={(w) =>
+            lookupWord(w, wordTooltip?.contextSentence ?? '', wordTooltip?.displaySentence)
+          }
+        />
+      </TranslationDrawerSlot>
     </div>
   );
 }

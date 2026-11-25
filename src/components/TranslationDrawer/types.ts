@@ -1,3 +1,5 @@
+import type { LanguageConfig } from '@/lib/languages';
+import type { SentenceExplanation } from '@/lib/claude';
 import { AiPhraseDetails, VocabEntry, VocabTranslationSource, WordState } from '@/types';
 
 /**
@@ -30,6 +32,10 @@ export interface ExpandedDictionaryEntry {
 export interface TranslationDrawerProps {
   isOpen: boolean;
   word: string;
+  /** Explicit phrase flag so CJK/unspaced phrases do not rely on ASCII space checks. */
+  isPhrase?: boolean;
+  /** Lesson language pack (overrides activeLang when reading a cross-language lesson). */
+  languagePack?: LanguageConfig;
   sentence: string;
 
   /** Rich definition from local dictionary. Null while loading or when not found. */
@@ -40,6 +46,8 @@ export interface TranslationDrawerProps {
   aiPartOfSpeech?: string | null;
   /** Active AI in-context override from the current click session. */
   aiContextTranslation?: string | null;
+  /** Live non-dictionary AI primary gloss (e.g. monolingual AI gloss) rendered above collapsed dictionary without a false "AI · saved" label. */
+  liveAiPrimaryTranslation?: string | null;
   /** Persisted AI/manual meaning from `vocab` matching the active explanation language.
       Displayed as the primary translation above collapsed dictionary senses. */
   savedAiTranslation?: string | null;
@@ -60,6 +68,15 @@ export interface TranslationDrawerProps {
   /** True while the rich "enrich" lookup is in flight. */
   isEnriching?: boolean;
   error?: string | null;
+  /** Inline error from "Re-translate with AI" so an existing definition stays visible. */
+  retranslateError?: string | null;
+  /** In-reader sentence grammar breakdown from /api/explain (Wave B). */
+  sentenceExplanation?: SentenceExplanation | null;
+  isExplainingSentence?: boolean;
+  sentenceExplainError?: string | null;
+  onExplainSentence?: () => void;
+  /** Handoff to ChatWidget pre-filled with the active word & sentence (Wave B). */
+  onAskTutor?: () => void;
 
   /** Existing vocab record (if word was previously saved). */
   existingEntry?: VocabEntry | null;

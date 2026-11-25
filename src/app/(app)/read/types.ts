@@ -10,6 +10,8 @@ import {
 export interface WordPanelState {
   isOpen: boolean;
   word: string;
+  /** Explicit phrase marker from MarkdownReader so unspaced scripts (zh/ja) work without ASCII spaces. */
+  isPhrase?: boolean;
   sentence: string;
   translation: string | null;
   translationLang?: string | null;
@@ -106,7 +108,8 @@ export function hydrateExistingVocab(
   return {
     ...prev,
     translation: hasTranslation && existingEntry ? existingEntry.translation : null,
-    translationLang: hasTranslation && existingEntry ? (existingEntry.translationLang ?? null) : null,
+    translationLang:
+      hasTranslation && existingEntry ? (existingEntry.translationLang ?? null) : null,
     translationSource:
       hasTranslation && existingEntry ? (existingEntry.translationSource ?? null) : null,
     savedAiTranslation: hasSavedAiWordMeaning && existingEntry ? existingEntry.translation : null,
@@ -144,14 +147,19 @@ export function shouldPersistAutoPhraseLookup(
   return canAutoReplace;
 }
 
+export function isPhrasePanel(panel: Pick<WordPanelState, 'word' | 'isPhrase'>): boolean {
+  return panel.isPhrase ?? panel.word.includes(' ');
+}
+
 export function resolveEffectiveMeaning(panel: WordPanelState): {
   translation: string;
   translationLang: string | null;
   translationSource: VocabTranslationSource | null;
   phraseDetails: AiPhraseDetails | null;
 } {
-  const isPhrase = panel.word.includes(' ');
-  const translation = panel.aiContextTranslation ?? panel.savedAiTranslation ?? panel.translation ?? '';
+  const isPhrase = isPhrasePanel(panel);
+  const translation =
+    panel.aiContextTranslation ?? panel.savedAiTranslation ?? panel.translation ?? '';
   const translationSource: VocabTranslationSource | null = panel.aiContextTranslation
     ? 'ai_context'
     : (panel.savedTranslationSource ??
@@ -177,11 +185,16 @@ export function buildVocabUpdatePatch(
   panel: WordPanelState,
   nextState?: WordState,
 ): VocabUpdatePatch {
-  const isPhrase = panel.word.includes(' ');
+  const isPhrase = isPhrasePanel(panel);
   const effective = resolveEffectiveMeaning(panel);
   const patch: VocabUpdatePatch = {};
   if (nextState !== undefined) patch.state = nextState;
-  if (effective.translation) {
+  const preserveManualMeaning =
+    existing.translationSource === 'manual' &&
+    existing.state !== 'new' &&
+    !panel.aiContextTranslation &&
+    effective.translationSource !== 'manual';
+  if (effective.translation && !preserveManualMeaning) {
     patch.translation = effective.translation;
     if (effective.translationLang !== null) patch.translationLang = effective.translationLang;
     if (effective.translationSource !== null) patch.translationSource = effective.translationSource;

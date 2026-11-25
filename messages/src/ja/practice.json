@@ -23,7 +23,9 @@
       "modeType": "入力",
       "modeMc": "選択",
       "start": "開始",
-      "loading": "読み込み中..."
+      "loading": "読み込み中...",
+      "sentenceBankHeading": "例文バンク演習",
+      "sentenceBankHint": "頻度帯ごとに定番語彙を練習"
     },
     "collections": {
       "top500": "上位 500",
@@ -204,7 +206,8 @@
         "noWords": "読書中に単語を保存すると、ここに表示されて復習できます。",
         "failed": "単語を読み込めませんでした。",
         "goal": "目標：{goal}"
-      }
+      },
+      "reviewMore": "次のラウンドを復習 ({count})"
     }
   },
   "vocab": {
@@ -302,7 +305,10 @@
       "cancel": "キャンセル",
       "saving": "保存中...",
       "save": "保存",
-      "edit": "編集"
+      "edit": "編集",
+      "idiomaticMeaning": "慣用的な意味",
+      "literalBreakdown": "直訳",
+      "usageNotes": "使い方"
     },
     "page": {
       "title": "単語帳",

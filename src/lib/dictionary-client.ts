@@ -7,7 +7,7 @@
  * fall back to the AI translate API when null.
  */
 import { getActiveLanguage, getActivePack } from './data-layer';
-import { foldWord } from './languages';
+import { foldWord, getLanguageConfig, isValidLanguageCode } from './languages';
 import { apiFetch, hasAiRequestGuard } from './api-base';
 import { AI_USAGE_EVENT } from '@/constants/storage';
 
@@ -43,15 +43,16 @@ const sessionCache = new Map<string, ExpandedDictionaryEntry | null>();
 export async function lookupWordRemote(
   word: string,
   native: string,
+  options?: { signal?: AbortSignal; language?: string },
 ): Promise<ExpandedDictionaryEntry | null> {
-  const language = getActiveLanguage();
-  const key = `${language}:${native}:${foldWord(word, getActivePack())}`;
+  const language = options?.language ?? getActiveLanguage();
+  const key = prefetchKey(word, native, language);
   if (sessionCache.has(key)) {
     return sessionCache.get(key) ?? null;
   }
 
   const url = `/api/dictionary/lookup?word=${encodeURIComponent(word)}&language=${language}`;
-  const res = await apiFetch(url);
+  const res = await apiFetch(url, options?.signal ? { signal: options.signal } : undefined);
   if (!res.ok) {
     // Don't cache transport errors — let the next click retry.
     return null;
@@ -98,8 +99,10 @@ const prefetchedSenses = new Map<string, LocalizedSenses>();
 /** Words in a running prefetch request; each settles to the senses, or null on a miss. */
 const inflightPrefetch = new Map<string, Promise<LocalizedSenses | null>>();
 
-function prefetchKey(word: string, native: string): string {
-  return `${getActiveLanguage()}:${native}:${foldWord(word, getActivePack())}`;
+function prefetchKey(word: string, native: string, language?: string): string {
+  const lang = language ?? getActiveLanguage();
+  const pack = isValidLanguageCode(lang) ? getLanguageConfig(lang) : getActivePack();
+  return `${lang}:${native}:${foldWord(word, pack)}`;
 }
 
 function rememberPrefetched(key: string, senses: LocalizedSenses): void {
@@ -164,8 +167,10 @@ export async function localizeEntrySenses(
   word: string,
   native = '',
   onLate?: (senses: LocalizedSenses) => void,
+  options?: { signal?: AbortSignal; language?: string },
 ): Promise<LocalizedSenses | null> {
-  const key = prefetchKey(word, native);
+  const language = options?.language ?? getActiveLanguage();
+  const key = prefetchKey(word, native, language);
   const prefetched = prefetchedSenses.get(key);
   if (prefetched) return prefetched;
   const inflight = inflightPrefetch.get(key);
@@ -180,7 +185,8 @@ export async function localizeEntrySenses(
       const res = await apiFetch('/api/translate/localize', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ word, language: getActiveLanguage() }),
+        signal: options?.signal,
+        body: JSON.stringify({ word, language }),
       });
       if (!res.ok) return null;
       const data = (await res.json()) as { senses: LocalizedSenses | null };

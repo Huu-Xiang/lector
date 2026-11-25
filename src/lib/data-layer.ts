@@ -890,7 +890,12 @@ export async function updateVocabEntry(
   updates: Partial<
     Pick<
       VocabEntry,
-      'state' | 'translation' | 'translationLang' | 'translationSource' | 'phraseDetails' | 'sentence'
+      | 'state'
+      | 'translation'
+      | 'translationLang'
+      | 'translationSource'
+      | 'phraseDetails'
+      | 'sentence'
     >
   >,
 ): Promise<void> {
@@ -1086,11 +1091,12 @@ export async function getAllKnownWords(): Promise<KnownWord[]> {
 
 export async function bulkUpdateWordStates(
   updates: Array<{ word: string; state: WordState }>,
+  language?: string,
 ): Promise<void> {
   const res = await apiFetch('/api/known-words', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ updates, language: getActiveLanguage() }),
+    body: JSON.stringify({ updates, language: language ?? getActiveLanguage() }),
   });
   await requireOk(res, 'Could not update known words');
   invalidateFluencyStats();

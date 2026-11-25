@@ -36,7 +36,16 @@
       "transcribingBody": "「{title}」をバックグラウンドで文字起こししています。通常は数分かかります。完了するとレッスンが自動的に開きます。",
       "transcriptionFailed": "文字起こしに失敗しました",
       "retry": "再試行",
-      "listenAlong": "聞きながら読む"
+      "listenAlong": "聞きながら読む",
+      "askTutorPromptWithSentence": "この文の中での「{word}」の意味と使い方を教えてください：「{sentence}」",
+      "askTutorPromptWord": "「{word}」の意味と使い方を教えてください。",
+      "chapterEndTitle": "章の終わり",
+      "chapterEndSummary": "未確認の単語 {remaining} 語 · 保存済み {saved} 語",
+      "chapterEndAllClear": "すべての単語を確認済み · 保存済み {saved} 語",
+      "markRemainingKnown": "残りを既知にする ({count})",
+      "markedRemainingKnown": "{count} 語を既知にしました",
+      "undoMarkRemaining": "元に戻す",
+      "reviewChapterWords": "保存した単語を復習 ({count})"
     },
     "markdown": {
       "saveFailed": "保存に失敗しました",
@@ -206,7 +215,12 @@
         "symbol": "記号",
         "punct": "句読点",
         "abbrev": "略語"
-      }
+      },
+      "explainSentence": "文を解説",
+      "explainSentenceRetry": "文の解説を再試行",
+      "explainingSentence": "解説中…",
+      "sentenceBreakdownHeading": "文の解説",
+      "askTutor": "チューターに質問"
     },
     "onboardingTip": {
       "dismiss": "ヒントを閉じる"

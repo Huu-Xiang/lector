@@ -23,7 +23,9 @@
       "modeType": "输入",
       "modeMc": "选择题",
       "start": "开始",
-      "loading": "加载中..."
+      "loading": "加载中...",
+      "sentenceBankHeading": "例句库专项练习",
+      "sentenceBankHint": "按词频分层练习常见词汇"
     },
     "collections": {
       "top500": "前 500",
@@ -204,7 +206,8 @@
         "noWords": "阅读时保存的单词会出现在这里，供你复习。",
         "failed": "无法加载你的单词。",
         "goal": "目标：{goal}"
-      }
+      },
+      "reviewMore": "继续复习下一轮 ({count})"
     }
   },
   "vocab": {
@@ -302,7 +305,10 @@
       "cancel": "取消",
       "saving": "保存中...",
       "save": "保存",
-      "edit": "编辑"
+      "edit": "编辑",
+      "idiomaticMeaning": "地道含义",
+      "literalBreakdown": "字面拆解",
+      "usageNotes": "用法说明"
     },
     "page": {
       "title": "词汇",

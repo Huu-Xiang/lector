@@ -26,6 +26,23 @@ export interface PhraseTranslation extends AiPhraseDetails {
   translation: string;
 }
 
+export interface SentenceExplanation {
+  explanation: string;
+}
+
+export interface TranslateRequestOptions {
+  signal?: AbortSignal;
+  language?: string;
+}
+
+/** True when a fetch/stream was deliberately cancelled by an AbortController. */
+export function isAbortError(error: unknown): boolean {
+  return (
+    (error instanceof DOMException && error.name === 'AbortError') ||
+    (error instanceof Error && error.name === 'AbortError')
+  );
+}
+
 /** Error message thrown when the AI provider's moderation refused the passage. */
 export const CONTENT_FILTERED = 'content_filtered';
 
@@ -41,8 +58,9 @@ async function failureMessage(response: Response): Promise<string> {
 async function postTranslate<T>(
   body: Record<string, unknown>,
   onText?: (cumulative: string) => void,
+  signal?: AbortSignal,
 ): Promise<T> {
-  const init = { method: 'POST', headers: { 'Content-Type': 'application/json' } };
+  const init = { method: 'POST', headers: { 'Content-Type': 'application/json' }, signal };
   let response: Response;
   if (onText) {
     try {
@@ -51,7 +69,8 @@ async function postTranslate<T>(
         body: JSON.stringify({ ...body, stream: true }),
       });
     } catch (error) {
-      if (error instanceof TypeError) return postTranslate<T>(body);
+      if (isAbortError(error)) throw error;
+      if (error instanceof TypeError) return postTranslate<T>(body, undefined, signal);
       throw error;
     }
   } else {
@@ -79,21 +98,31 @@ export async function translateWord(
   word: string,
   sentence: string,
   onText?: (cumulative: string) => void,
+  options?: TranslateRequestOptions,
 ): Promise<WordTranslation> {
   return postTranslate<WordTranslation>(
-    { word, sentence, type: 'word', language: getActiveLanguage() },
+    { word, sentence, type: 'word', language: options?.language ?? getActiveLanguage() },
     onText,
+    options?.signal,
   );
 }
 
-export function explainWordInContext(word: string, sentence: string): Promise<WordTranslation> {
-  return postTranslate<WordTranslation>({
-    word,
-    sentence,
-    type: 'word',
-    explainContext: true,
-    language: getActiveLanguage(),
-  });
+export function explainWordInContext(
+  word: string,
+  sentence: string,
+  options?: TranslateRequestOptions,
+): Promise<WordTranslation> {
+  return postTranslate<WordTranslation>(
+    {
+      word,
+      sentence,
+      type: 'word',
+      explainContext: true,
+      language: options?.language ?? getActiveLanguage(),
+    },
+    undefined,
+    options?.signal,
+  );
 }
 
 /**
@@ -109,11 +138,17 @@ export async function streamWordGloss(
   word: string,
   sentence: string,
   onDelta: (cumulative: string) => void,
+  options?: TranslateRequestOptions,
 ): Promise<string> {
   const response = await apiFetch('/api/translate/gloss', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ word, sentence, language: getActiveLanguage() }),
+    signal: options?.signal,
+    body: JSON.stringify({
+      word,
+      sentence,
+      language: options?.language ?? getActiveLanguage(),
+    }),
   });
 
   if (!response.ok || !response.body) {
@@ -149,8 +184,12 @@ export async function streamWordGloss(
  * Practice. It intentionally uses the same cheap `/gloss` operation as the
  * Reader rather than spending an in-context/rich translation allowance.
  */
-export async function translateGloss(word: string, sentence: string): Promise<WordTranslation> {
-  const translation = await streamWordGloss(word, sentence, () => {});
+export async function translateGloss(
+  word: string,
+  sentence: string,
+  options?: TranslateRequestOptions,
+): Promise<WordTranslation> {
+  const translation = await streamWordGloss(word, sentence, () => {}, options);
   return { translation };
 }
 
@@ -159,11 +198,20 @@ export async function translateGloss(word: string, sentence: string): Promise<Wo
  * forms) — the "enrich" action behind the streamed gloss. Same shape as
  * translateWord; hits the dedicated /enrich endpoint.
  */
-export async function enrichWord(word: string, sentence: string): Promise<WordTranslation> {
+export async function enrichWord(
+  word: string,
+  sentence: string,
+  options?: TranslateRequestOptions,
+): Promise<WordTranslation> {
   const response = await apiFetch('/api/translate/enrich', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ word, sentence, language: getActiveLanguage() }),
+    signal: options?.signal,
+    body: JSON.stringify({
+      word,
+      sentence,
+      language: options?.language ?? getActiveLanguage(),
+    }),
   });
 
   if (!response.ok) {
@@ -185,9 +233,41 @@ export async function translatePhrase(
   phrase: string,
   sentence: string,
   onText?: (cumulative: string) => void,
+  options?: TranslateRequestOptions,
 ): Promise<PhraseTranslation> {
   return postTranslate<PhraseTranslation>(
-    { word: phrase, sentence, type: 'phrase', language: getActiveLanguage() },
+    { word: phrase, sentence, type: 'phrase', language: options?.language ?? getActiveLanguage() },
     onText,
+    options?.signal,
   );
+}
+
+/**
+ * Ask `/api/explain` for a concise grammar & usage breakdown of a sentence,
+ * optionally anchored on a target word or phrase.
+ */
+export async function explainSentence(params: {
+  sentence: string;
+  translation: string;
+  clozeWord?: string;
+  language?: string;
+  signal?: AbortSignal;
+}): Promise<SentenceExplanation> {
+  const response = await apiFetch('/api/explain', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    signal: params.signal,
+    body: JSON.stringify({
+      sentence: params.sentence,
+      translation: params.translation,
+      clozeWord: params.clozeWord,
+      language: params.language ?? getActiveLanguage(),
+    }),
+  });
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    throw new Error(error.error || 'Explain failed');
+  }
+  noteAiUsage();
+  return response.json();
 }
