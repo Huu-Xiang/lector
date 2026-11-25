@@ -221,6 +221,42 @@ export function applyRetranslateStart(prev: WordPanelState): WordPanelState {
     savedTranslationSource: null,
     savedSentence: null,
     isLoading: true,
+    isContextLoading: false,
+    isEnriching: false,
     error: null,
+  };
+}
+
+export interface KeyedVocabCoordinator {
+  setEntryPromise: (key: string, promise: Promise<VocabEntry | undefined>) => void;
+  getEntryPromise: (key: string) => Promise<VocabEntry | undefined> | undefined;
+  enqueue: (key: string, task: () => Promise<void>) => Promise<void>;
+}
+
+/**
+ * Coordinates per-word-key vocab entry promises and serialized state mutations.
+ * Prevents a queued action on word A from reading or corrupting word B's entry
+ * when the reader taps word B before word A's in-flight save settles.
+ */
+export function createKeyedVocabCoordinator(): KeyedVocabCoordinator {
+  const entryPromises = new Map<string, Promise<VocabEntry | undefined>>();
+  const mutationQueues = new Map<string, Promise<void>>();
+
+  return {
+    setEntryPromise(key, promise) {
+      entryPromises.set(key, promise);
+    },
+    getEntryPromise(key) {
+      return entryPromises.get(key);
+    },
+    async enqueue(key, task) {
+      const prior = mutationQueues.get(key) ?? Promise.resolve();
+      const next = prior.catch(() => undefined).then(task);
+      const cleanup = next.finally(() => {
+        if (mutationQueues.get(key) === cleanup) mutationQueues.delete(key);
+      });
+      mutationQueues.set(key, cleanup);
+      await next;
+    },
   };
 }

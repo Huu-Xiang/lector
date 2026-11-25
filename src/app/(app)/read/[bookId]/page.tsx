@@ -100,6 +100,7 @@ import { v4 as uuidv4 } from 'uuid';
 import {
   applyRetranslateStart,
   buildVocabUpdatePatch,
+  createKeyedVocabCoordinator,
   hydrateExistingVocab,
   isPhrasePanel,
   isSavedAiTranslationSource,
@@ -302,8 +303,15 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
   } | null>(null);
   const translationRequestId = useRef(0);
   const lookupAbortRef = useRef<AbortController | null>(null);
-  const aiOpSeqRef = useRef(0);
-  const existingEntryLookup = useRef<Promise<VocabEntry | undefined> | null>(null);
+  const contextOpSeqRef = useRef(0);
+  const enrichOpSeqRef = useRef(0);
+  const retranslateOpSeqRef = useRef(0);
+  const cancelAllPanelAiOps = useCallback(() => {
+    contextOpSeqRef.current += 1;
+    enrichOpSeqRef.current += 1;
+    retranslateOpSeqRef.current += 1;
+  }, []);
+  const vocabCoordinator = useRef(createKeyedVocabCoordinator()).current;
   const localizedExpandRequestRef = useRef<number | null>(null);
   // The one lookup whose word may be saved on its own: set for a single word
   // opened from the reader, cleared once it is used.
@@ -756,7 +764,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       // Increment requestId BEFORE any await (including entitlements check on phrases)
       // so a slow phrase entitlement read can never clobber a subsequent word tap.
       const requestId = ++translationRequestId.current;
-      aiOpSeqRef.current += 1;
+      cancelAllPanelAiOps();
 
       // Remember (or clear) the transcript segment this word came from so a
       // subsequent Anki mine can attach the timestamped source link.
@@ -842,10 +850,11 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       trackReaderEvent('word_lookup', isPhrase ? 'phrase' : 'word');
       trackOnboardingLookup(word);
 
+      const wordKey = vocabTextOf(word, isPhrase);
       const lookupPromise = findVocab(
         isPhrase ? [foldWord(word, lessonPack)] : vocabKeys(word, lessonPack),
       );
-      existingEntryLookup.current = lookupPromise;
+      vocabCoordinator.setEntryPromise(wordKey, lookupPromise);
       const [existingEntry, loadedNative, monolingual] = await Promise.all([
         lookupPromise,
         loadNative(),
@@ -889,9 +898,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         updateVocabEntry(existingEntry.id, patch)
           .then(() => {
             const updated: VocabEntry = { ...existingEntry, ...patch };
-            if (requestId === translationRequestId.current) {
-              existingEntryLookup.current = Promise.resolve(updated);
-            }
+            vocabCoordinator.setEntryPromise(wordKey, Promise.resolve(updated));
             setWordPanel((prev) =>
               prev.existingEntry?.id === existingEntry.id
                 ? {
@@ -939,7 +946,8 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
               isStreamingGloss: false,
             }));
             const latestExisting =
-              (await existingEntryLookup.current?.catch(() => undefined)) ?? existingEntry;
+              (await vocabCoordinator.getEntryPromise(wordKey)?.catch(() => undefined)) ??
+              existingEntry;
             if (requestId !== translationRequestId.current) return;
             if (
               shouldPersistAutoPhraseLookup(existingEntry, latestExisting, canAutoReplace) &&
@@ -955,8 +963,8 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
               updateVocabEntry(latestExisting.id, patch)
                 .then(() => {
                   const updated: VocabEntry = { ...latestExisting, ...patch };
+                  vocabCoordinator.setEntryPromise(wordKey, Promise.resolve(updated));
                   if (requestId === translationRequestId.current) {
-                    existingEntryLookup.current = Promise.resolve(updated);
                     setWordPanel((prev) =>
                       prev.existingEntry?.id === latestExisting.id
                         ? { ...prev, existingEntry: updated }
@@ -1188,17 +1196,20 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       trackOnboardingLookup,
       trackReaderEvent,
       trackRepeatLookup,
+      cancelAllPanelAiOps,
+      vocabCoordinator,
+      vocabTextOf,
       t,
     ],
   );
 
   const closeWordPanel = useCallback(() => {
     translationRequestId.current += 1;
-    aiOpSeqRef.current += 1;
+    cancelAllPanelAiOps();
     lookupAbortRef.current?.abort();
     lookupAbortRef.current = null;
     setWordPanel((prev) => ({ ...prev, isOpen: false }));
-  }, []);
+  }, [cancelAllPanelAiOps]);
 
   const handleTextListenWordClick = useCallback(
     (word: string, sentence: string) => {
@@ -1231,15 +1242,20 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     router.push(`/?q=${encodeURIComponent(query)}`);
   }, [router, wordPanel.word]);
 
-  // Resolves the existing vocab entry, awaiting an in-flight lookup or auto-save if needed.
-  // Checking existingEntryLookup.current first ensures we never miss an in-flight autoSaveLookups write.
-  const resolveExistingEntry = useCallback(async (): Promise<VocabEntry | undefined> => {
-    if (existingEntryLookup.current) {
-      const fromLookup = await existingEntryLookup.current;
-      if (fromLookup) return fromLookup;
-    }
-    return wordPanel.existingEntry ?? undefined;
-  }, [wordPanel.existingEntry]);
+  // Resolves the existing vocab entry for a specific panel snapshot, awaiting any
+  // in-flight lookup or auto-save keyed by that word/phrase (never another word's).
+  const resolveExistingEntryForPanel = useCallback(
+    async (panel: WordPanelState): Promise<VocabEntry | undefined> => {
+      const key = vocabTextOf(panel.word, isPhrasePanel(panel));
+      const pending = vocabCoordinator.getEntryPromise(key);
+      if (pending) {
+        const fromLookup = await pending;
+        if (fromLookup) return fromLookup;
+      }
+      return panel.existingEntry ?? undefined;
+    },
+    [vocabCoordinator, vocabTextOf],
+  );
 
   const handleExpandDictionary = useCallback(async () => {
     const requestId = translationRequestId.current;
@@ -1264,15 +1280,17 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
 
   const requestContextTranslation = useCallback(async () => {
     if (wordPanel.isContextLoading || wordPanel.aiContextTranslation) return;
+    const targetPanel = wordPanel;
+    const targetKey = vocabTextOf(targetPanel.word, isPhrasePanel(targetPanel));
     const requestId = translationRequestId.current;
-    const opSeq = ++aiOpSeqRef.current;
+    const opSeq = ++contextOpSeqRef.current;
     const signal = lookupAbortRef.current?.signal;
     setContextError(null);
     setWordPanel((prev) => ({ ...prev, isContextLoading: true }));
     trackReaderEvent('reading_help', 'context', 'started');
     try {
       const [result, loadedNative, monolingual] = await Promise.all([
-        explainWordInContext(wordPanel.word, wordPanel.sentence, {
+        explainWordInContext(targetPanel.word, targetPanel.sentence, {
           signal,
           language: readingLanguage,
         }),
@@ -1280,14 +1298,14 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         monolingualLoadRef.current ?? loadMonolingualSetting(),
       ]);
       trackReaderEvent('reading_help', 'context', 'success');
-      if (requestId !== translationRequestId.current || opSeq !== aiOpSeqRef.current) return;
+      if (requestId !== translationRequestId.current || opSeq !== contextOpSeqRef.current) return;
       const expectedMeaningLang = expectedMeaningLanguage(
         readingLanguage,
         loadedNative ?? 'en',
         monolingual,
       );
       const nextTranslation = result.translation;
-      const nextSentence = wordPanel.sentence;
+      const nextSentence = targetPanel.sentence;
       setWordPanel((prev) => ({
         ...prev,
         aiContextTranslation: nextTranslation,
@@ -1296,8 +1314,8 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         isContextLoading: false,
       }));
 
-      const existing = await resolveExistingEntry().catch(() => undefined);
-      if (requestId !== translationRequestId.current || opSeq !== aiOpSeqRef.current) return;
+      const existing = await resolveExistingEntryForPanel(targetPanel).catch(() => undefined);
+      if (requestId !== translationRequestId.current || opSeq !== contextOpSeqRef.current) return;
       // Never silently overwrite a learner's custom manual translation on "In context".
       if (shouldPersistImmediateAiUpdate(existing) && existing.translationSource !== 'manual') {
         const patch = {
@@ -1309,8 +1327,8 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         try {
           await updateVocabEntry(existing.id, patch);
           const updated: VocabEntry = { ...existing, ...patch };
+          vocabCoordinator.setEntryPromise(targetKey, Promise.resolve(updated));
           if (requestId === translationRequestId.current) {
-            existingEntryLookup.current = Promise.resolve(updated);
             setWordPanel((prev) => ({
               ...prev,
               existingEntry: updated,
@@ -1326,36 +1344,37 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     } catch (err) {
       if (isAbortError(err)) return;
       trackReaderEvent('reading_help', 'context', 'failure');
-      if (requestId !== translationRequestId.current || opSeq !== aiOpSeqRef.current) return;
+      if (requestId !== translationRequestId.current || opSeq !== contextOpSeqRef.current) return;
       setContextError(isContentFiltered(err) ? t('aiDeclined') : t('contextFailed'));
       setWordPanel((prev) => ({ ...prev, isContextLoading: false }));
     }
   }, [
-    wordPanel.word,
-    wordPanel.sentence,
-    wordPanel.isContextLoading,
-    wordPanel.aiContextTranslation,
+    wordPanel,
+    vocabTextOf,
+    vocabCoordinator,
     loadMonolingualSetting,
     readingLanguage,
-    resolveExistingEntry,
+    resolveExistingEntryForPanel,
     trackReaderEvent,
     t,
   ]);
 
   const enrichTranslation = useCallback(async () => {
+    if (wordPanel.isEnriching) return;
+    const targetPanel = wordPanel;
     const requestId = translationRequestId.current;
-    const opSeq = ++aiOpSeqRef.current;
+    const opSeq = ++enrichOpSeqRef.current;
     const signal = lookupAbortRef.current?.signal;
     setWordPanel((prev) => ({ ...prev, isEnriching: true }));
     trackReaderEvent('reading_help', 'enrich', 'started');
     try {
       const [result, loadedNative, monolingual] = await Promise.all([
-        enrichWord(wordPanel.word, wordPanel.sentence, { signal, language: readingLanguage }),
+        enrichWord(targetPanel.word, targetPanel.sentence, { signal, language: readingLanguage }),
         loadNative(),
         monolingualLoadRef.current ?? loadMonolingualSetting(),
       ]);
       trackReaderEvent('reading_help', 'enrich', 'success');
-      if (requestId !== translationRequestId.current || opSeq !== aiOpSeqRef.current) return;
+      if (requestId !== translationRequestId.current || opSeq !== enrichOpSeqRef.current) return;
       const expectedMeaningLang = expectedMeaningLanguage(
         readingLanguage,
         loadedNative ?? 'en',
@@ -1380,7 +1399,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       }));
       // Persist rich senses into the on-device cache when the word is already saved
       // so the paid enrichment isn't discarded when the drawer closes.
-      const existing = await resolveExistingEntry().catch(() => undefined);
+      const existing = await resolveExistingEntryForPanel(targetPanel).catch(() => undefined);
       if (
         structured &&
         !monolingual &&
@@ -1389,28 +1408,27 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         requestId === translationRequestId.current
       ) {
         void cacheAcceptedTranslation({
-          word: wordPanel.word,
+          word: targetPanel.word,
           senses: structured.senses,
           ipa: structured.ipa,
           etymology: structured.etymology,
           relatedForms: structured.relatedForms,
-          sourceSentence: wordPanel.sentence,
+          sourceSentence: targetPanel.sentence,
         });
       }
     } catch (err) {
       if (isAbortError(err)) return;
       trackReaderEvent('reading_help', 'enrich', 'failure');
-      if (requestId !== translationRequestId.current || opSeq !== aiOpSeqRef.current) return;
+      if (requestId !== translationRequestId.current || opSeq !== enrichOpSeqRef.current) return;
       console.error('Enrich error:', err);
       // Keep the gloss on screen; just stop the spinner (non-blocking failure).
       setWordPanel((prev) => ({ ...prev, isEnriching: false }));
     }
   }, [
-    wordPanel.word,
-    wordPanel.sentence,
+    wordPanel,
     loadMonolingualSetting,
     readingLanguage,
-    resolveExistingEntry,
+    resolveExistingEntryForPanel,
     trackReaderEvent,
   ]);
 
@@ -1419,38 +1437,43 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
   // dictionary hits (already canonical), monolingual mode (cached_entries is
   // strictly bilingual per KTD5), and when the AI didn't return structured senses.
   // Fire-and-forget — never blocks the UI action.
-  const persistAcceptedTranslation = useCallback(() => {
-    if (monolingualRef.current) return;
-    if (isPhrasePanel(wordPanel)) return;
-    if (wordPanel.dictEntry) return;
-    const preferredGloss = wordPanel.aiContextTranslation ?? wordPanel.translation;
-    const senses =
-      wordPanel.aiStructured?.senses ??
-      (preferredGloss
-        ? [{ partOfSpeech: wordPanel.partOfSpeech || '', gloss: preferredGloss }]
-        : null);
-    if (!senses) return;
-    void cacheAcceptedTranslation({
-      word: wordPanel.word,
-      senses,
-      ipa: wordPanel.aiStructured?.ipa,
-      etymology: wordPanel.aiStructured?.etymology,
-      relatedForms: wordPanel.aiStructured?.relatedForms,
-      sourceSentence: wordPanel.sentence,
-    });
-  }, [wordPanel]);
+  const persistAcceptedTranslation = useCallback(
+    (panelOverride?: WordPanelState) => {
+      const panel = panelOverride ?? wordPanel;
+      if (monolingualRef.current) return;
+      if (isPhrasePanel(panel)) return;
+      if (panel.dictEntry) return;
+      const preferredGloss = panel.aiContextTranslation ?? panel.translation;
+      const senses =
+        panel.aiStructured?.senses ??
+        (preferredGloss
+          ? [{ partOfSpeech: panel.partOfSpeech || '', gloss: preferredGloss }]
+          : null);
+      if (!senses) return;
+      void cacheAcceptedTranslation({
+        word: panel.word,
+        senses,
+        ipa: panel.aiStructured?.ipa,
+        etymology: panel.aiStructured?.etymology,
+        relatedForms: panel.aiStructured?.relatedForms,
+        sourceSentence: panel.sentence,
+      });
+    },
+    [wordPanel],
+  );
 
   // `auto` is a save the user did not ask for: it never touches a word that
   // already has a state, and a failure shows nothing.
   const saveWordNow = useCallback(
-    async (auto: boolean) => {
-      const effective = resolveEffectiveMeaning(wordPanel);
+    async (auto: boolean, targetPanel: WordPanelState, requestId: number) => {
+      const effective = resolveEffectiveMeaning(targetPanel);
       if (!effective.translation) return;
 
-      const requestId = translationRequestId.current;
+      const isPhrase = isPhrasePanel(targetPanel);
+      const key = vocabTextOf(targetPanel.word, isPhrase);
       let existing: VocabEntry | undefined;
       try {
-        existing = await resolveExistingEntry();
+        existing = await resolveExistingEntryForPanel(targetPanel);
       } catch {
         if (!auto) toast.error(t('saveFailed'));
         return;
@@ -1459,18 +1482,17 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       if (auto) {
         const readerState = lookupByVocabKeys(
           readerWordStatesRef.current,
-          wordPanel.word,
+          targetPanel.word,
           lessonPack,
         );
         const hasState = !!readerState && readerState !== 'new';
         if (existing || hasState || requestId !== translationRequestId.current) return;
       }
-      const isPhrase = isPhrasePanel(wordPanel);
       const entry: VocabEntry = {
         id: existing?.id || uuidv4(),
-        text: vocabTextOf(wordPanel.word, isPhrase),
+        text: key,
         type: isPhrase ? 'phrase' : 'word',
-        sentence: wordPanel.sentence,
+        sentence: targetPanel.sentence,
         translation: effective.translation,
         translationLang: effective.translationLang,
         translationSource: effective.translationSource,
@@ -1484,10 +1506,10 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         ankiNoteId: existing?.ankiNoteId,
       };
       const existingPatch = existing
-        ? buildVocabUpdatePatch(existing, wordPanel, entry.state)
+        ? buildVocabUpdatePatch(existing, targetPanel, entry.state)
         : null;
       const savedPreview: VocabEntry = existing ? { ...existing, ...existingPatch } : entry;
-      const rollbackReaderState = applyReaderWordState(wordPanel.word, entry.state);
+      const rollbackReaderState = applyReaderWordState(targetPanel.word, entry.state);
 
       // A failed save must not paint the word as saved (#232).
       const saving = existing
@@ -1495,10 +1517,11 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
             .then(() => existing.id)
             .catch(() => null)
         : saveVocab(entry, { silentPlanLimit: auto }).catch(() => null);
-      // A K or X pressed while this save runs waits for it instead of adding a second row.
-      if (requestId === translationRequestId.current) {
-        existingEntryLookup.current = saving.then((id) => (id ? savedPreview : existing));
-      }
+      // Keyed by this word so a queued K/X on word A still sees word A's save even if word B is clicked.
+      vocabCoordinator.setEntryPromise(
+        key,
+        saving.then((id) => (id ? savedPreview : existing)),
+      );
       const id = await saving;
       if (!id) {
         rollbackReaderState();
@@ -1506,22 +1529,22 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         return;
       }
       const saved = existing ? savedPreview : { ...entry, id };
+      vocabCoordinator.setEntryPromise(key, Promise.resolve(saved));
       if (!existing) trackReaderEvent('word_saved', saved.type === 'phrase' ? 'phrase' : 'word');
       if (requestId === translationRequestId.current) {
-        existingEntryLookup.current = Promise.resolve(saved);
         setWordPanel((prev) => ({ ...prev, existingEntry: saved }));
       }
       void incrementDailyStat('newWordsSaved', 1, { silentPlanLimit: auto }).catch(() => undefined);
       // The shared dictionary only takes meanings a reader chose to keep.
-      if (!auto) persistAcceptedTranslation();
+      if (!auto) persistAcceptedTranslation(targetPanel);
       await trackOnboardingVocab(saved, saved.state, existing ? uuidv4() : undefined);
       if (requestId === translationRequestId.current) setSavedInLookup({ id, previous: existing });
     },
     [
-      wordPanel,
       lessonId,
       lessonPack,
-      resolveExistingEntry,
+      vocabCoordinator,
+      resolveExistingEntryForPanel,
       applyReaderWordState,
       vocabTextOf,
       persistAcceptedTranslation,
@@ -1531,48 +1554,40 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     ],
   );
 
-  // Per-word serial mutation queue so explicit user actions (K / X / 1-4 / Undo)
-  // always wait for any in-flight save/mutation on the same key and execute in order
-  // instead of being silently dropped. `saveGuard` stays dedicated to dropping duplicate
-  // concurrent auto-save/S-press invocations.
-  const wordMutationQueueRef = useRef<Map<string, Promise<void>>>(new Map());
-  const enqueueWordMutation = useCallback(async (key: string, task: () => Promise<void>) => {
-    const queue = wordMutationQueueRef.current;
-    const prior = queue.get(key) ?? Promise.resolve();
-    const next = prior.catch(() => undefined).then(task);
-    const cleanup = next.finally(() => {
-      if (queue.get(key) === cleanup) queue.delete(key);
-    });
-    queue.set(key, cleanup);
-    await next;
-  }, []);
-
-  // One save per word at a time: an S pressed during an auto-save does not post again.
+  // One save per word at a time: an S pressed during an auto-save does not post again,
+  // while explicit K / X / 1-4 / Undo actions serialize per word key via vocabCoordinator.
   const saveGuard = useRef(createKeyedGuard()).current;
   const saveWordToVocab = useCallback(
     async (auto = false) => {
-      if (!resolveEffectiveMeaning(wordPanel).translation) return;
-      const key = vocabTextOf(wordPanel.word, isPhrasePanel(wordPanel));
-      await saveGuard(key, () => enqueueWordMutation(key, () => saveWordNow(auto)));
+      const targetPanel = wordPanel;
+      if (!resolveEffectiveMeaning(targetPanel).translation) return;
+      const requestId = translationRequestId.current;
+      const key = vocabTextOf(targetPanel.word, isPhrasePanel(targetPanel));
+      await saveGuard(key, () =>
+        vocabCoordinator.enqueue(key, () => saveWordNow(auto, targetPanel, requestId)),
+      );
     },
-    [wordPanel, vocabTextOf, saveWordNow, saveGuard, enqueueWordMutation],
+    [wordPanel, vocabTextOf, saveWordNow, saveGuard, vocabCoordinator],
   );
 
   const undoLookupSave = useCallback(async () => {
     if (!savedInLookup || wordPanel.existingEntry?.id !== savedInLookup.id) return;
+    const targetWord = wordPanel.word;
+    const isPhrase = isPhrasePanel(wordPanel);
+    const snapshotSaved = savedInLookup;
     const requestId = translationRequestId.current;
-    const key = vocabTextOf(wordPanel.word, isPhrasePanel(wordPanel));
-    await enqueueWordMutation(key, async () => {
+    const key = vocabTextOf(targetWord, isPhrase);
+    await vocabCoordinator.enqueue(key, async () => {
       try {
-        const { id, previous } = savedInLookup;
+        const { id, previous } = snapshotSaved;
         if (previous) {
           if (!(await updateVocabState(id, previous.state))) throw new Error('Undo failed');
         } else {
           await deleteVocabEntry(id);
         }
-        applyReaderWordState(wordPanel.word, 'new');
+        vocabCoordinator.setEntryPromise(key, Promise.resolve(previous));
+        applyReaderWordState(targetWord, 'new');
         if (requestId === translationRequestId.current) {
-          existingEntryLookup.current = Promise.resolve(previous);
           setSavedInLookup(null);
           setWordPanel((prev) => ({ ...prev, existingEntry: previous ?? null }));
         }
@@ -1594,7 +1609,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
   }, [
     savedInLookup,
     wordPanel,
-    enqueueWordMutation,
+    vocabCoordinator,
     vocabTextOf,
     applyReaderWordState,
     onboardingActive,
@@ -1617,32 +1632,35 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     void saveWordToVocab(true);
   }, [autoSaveLookups, onboarding, wordPanel, saveWordToVocab]);
 
-  /** Shared serialized upsert for Known / Ignore / Level 1-4 actions. */
+  /** Shared serialized upsert for Known / Ignore / Level 1-4 actions on an explicit panel snapshot. */
   const persistWordPanelState = useCallback(
     async (opts: {
+      panel: WordPanelState;
       requestId: number;
       resolveState: (existing: VocabEntry | undefined) => WordState;
       errorMessage: string;
       syncDrawerEntry?: boolean;
     }): Promise<{ entry: VocabEntry; state: WordState; created: boolean } | null> => {
-      const isPhrase = isPhrasePanel(wordPanel);
+      const { panel } = opts;
+      const isPhrase = isPhrasePanel(panel);
+      const key = vocabTextOf(panel.word, isPhrase);
       let existing: VocabEntry | undefined;
       try {
-        existing = await resolveExistingEntry();
+        existing = await resolveExistingEntryForPanel(panel);
       } catch {
         toast.error(opts.errorMessage);
         return null;
       }
       const state = opts.resolveState(existing);
-      const rollbackReaderState = applyReaderWordState(wordPanel.word, state);
-      const effective = resolveEffectiveMeaning(wordPanel);
+      const rollbackReaderState = applyReaderWordState(panel.word, state);
+      const effective = resolveEffectiveMeaning(panel);
 
       if (!existing) {
         const entry: VocabEntry = {
           id: uuidv4(),
-          text: vocabTextOf(wordPanel.word, isPhrase),
+          text: key,
           type: isPhrase ? 'phrase' : 'word',
-          sentence: wordPanel.sentence,
+          sentence: panel.sentence,
           translation: effective.translation,
           translationLang: effective.translationLang,
           translationSource: effective.translationSource,
@@ -1655,9 +1673,10 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
           pushedToAnki: false,
         };
         const saving = saveVocab(entry).catch(() => null);
-        if (opts.requestId === translationRequestId.current) {
-          existingEntryLookup.current = saving.then((id) => (id ? { ...entry, id } : undefined));
-        }
+        vocabCoordinator.setEntryPromise(
+          key,
+          saving.then((id) => (id ? { ...entry, id } : undefined)),
+        );
         const savedId = await saving;
         if (!savedId) {
           rollbackReaderState();
@@ -1665,57 +1684,56 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
           return null;
         }
         const trackedEntry: VocabEntry = { ...entry, id: savedId };
-        if (opts.requestId === translationRequestId.current) {
-          existingEntryLookup.current = Promise.resolve(trackedEntry);
-          if (opts.syncDrawerEntry) {
-            setWordPanel((prev) => ({ ...prev, existingEntry: trackedEntry }));
-          }
+        vocabCoordinator.setEntryPromise(key, Promise.resolve(trackedEntry));
+        if (opts.requestId === translationRequestId.current && opts.syncDrawerEntry) {
+          setWordPanel((prev) => ({ ...prev, existingEntry: trackedEntry }));
         }
         return { entry: trackedEntry, state, created: true };
       }
 
-      const patch = buildVocabUpdatePatch(existing, wordPanel, state);
+      const patch = buildVocabUpdatePatch(existing, panel, state);
       const updated: VocabEntry = { ...existing, ...patch, state };
       const saving = updateVocabEntry(existing.id, patch)
         .then(() => true)
         .catch(() => false);
-      if (opts.requestId === translationRequestId.current) {
-        existingEntryLookup.current = saving.then((ok) => (ok ? updated : existing));
-      }
+      vocabCoordinator.setEntryPromise(
+        key,
+        saving.then((ok) => (ok ? updated : existing)),
+      );
       if (!(await saving)) {
         rollbackReaderState();
         toast.error(opts.errorMessage);
         return null;
       }
-      if (opts.requestId === translationRequestId.current) {
-        existingEntryLookup.current = Promise.resolve(updated);
-        if (opts.syncDrawerEntry) {
-          setWordPanel((prev) => ({ ...prev, existingEntry: updated }));
-        }
+      vocabCoordinator.setEntryPromise(key, Promise.resolve(updated));
+      if (opts.requestId === translationRequestId.current && opts.syncDrawerEntry) {
+        setWordPanel((prev) => ({ ...prev, existingEntry: updated }));
       }
       return { entry: updated, state, created: false };
     },
-    [wordPanel, lessonId, resolveExistingEntry, applyReaderWordState, vocabTextOf],
+    [lessonId, vocabCoordinator, resolveExistingEntryForPanel, applyReaderWordState, vocabTextOf],
   );
 
   const markAsKnown = useCallback(async () => {
+    const targetPanel = wordPanel;
     const requestId = translationRequestId.current;
-    const key = vocabTextOf(wordPanel.word, isPhrasePanel(wordPanel));
-    await enqueueWordMutation(key, async () => {
+    const key = vocabTextOf(targetPanel.word, isPhrasePanel(targetPanel));
+    await vocabCoordinator.enqueue(key, async () => {
       const result = await persistWordPanelState({
+        panel: targetPanel,
         requestId,
         resolveState: () => 'known',
         errorMessage: t('knownFailed'),
       });
       if (!result) return;
       await incrementDailyStat('wordsMarkedKnown');
-      persistAcceptedTranslation();
+      persistAcceptedTranslation(targetPanel);
       void trackOnboardingVocab(result.entry, 'known');
       if (requestId === translationRequestId.current) closeWordPanel();
     });
   }, [
     wordPanel,
-    enqueueWordMutation,
+    vocabCoordinator,
     vocabTextOf,
     persistWordPanelState,
     closeWordPanel,
@@ -1725,10 +1743,12 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
   ]);
 
   const ignoreWord = useCallback(async () => {
+    const targetPanel = wordPanel;
     const requestId = translationRequestId.current;
-    const key = vocabTextOf(wordPanel.word, isPhrasePanel(wordPanel));
-    await enqueueWordMutation(key, async () => {
+    const key = vocabTextOf(targetPanel.word, isPhrasePanel(targetPanel));
+    await vocabCoordinator.enqueue(key, async () => {
       const result = await persistWordPanelState({
+        panel: targetPanel,
         requestId,
         resolveState: () => 'ignored',
         errorMessage: t('ignoreFailed'),
@@ -1739,7 +1759,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     });
   }, [
     wordPanel,
-    enqueueWordMutation,
+    vocabCoordinator,
     vocabTextOf,
     persistWordPanelState,
     closeWordPanel,
@@ -1749,13 +1769,15 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
 
   const setWordLevel = useCallback(
     async (level: 1 | 2 | 3 | 4) => {
-      if (!resolveEffectiveMeaning(wordPanel).translation) return;
+      const targetPanel = wordPanel;
+      if (!resolveEffectiveMeaning(targetPanel).translation) return;
 
       const requestId = translationRequestId.current;
-      const key = vocabTextOf(wordPanel.word, isPhrasePanel(wordPanel));
+      const key = vocabTextOf(targetPanel.word, isPhrasePanel(targetPanel));
       const pickedState = `level${level}` as 'level1' | 'level2' | 'level3' | 'level4';
-      await enqueueWordMutation(key, async () => {
+      await vocabCoordinator.enqueue(key, async () => {
         const result = await persistWordPanelState({
+          panel: targetPanel,
           requestId,
           // Choosing the level that is already set clears it back to 'new'.
           resolveState: (existing) => (existing?.state === pickedState ? 'new' : pickedState),
@@ -1768,14 +1790,14 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
           trackReaderEvent('word_saved', trackedEntry.type === 'phrase' ? 'phrase' : 'word');
           await incrementDailyStat('newWordsSaved');
         }
-        if (state !== 'new') persistAcceptedTranslation();
+        if (state !== 'new') persistAcceptedTranslation(targetPanel);
         const savedBefore = savedOnboardingWords(onboarding).length;
         const nextOnboarding = await trackOnboardingVocab(trackedEntry, state);
 
         if (onboardingActive && trackedEntry.type === 'word' && nextOnboarding) {
           const savedAfter = savedOnboardingWords(nextOnboarding).length;
           if (savedAfter > savedBefore) {
-            toast.success(t('onboardingWordAdded', { word: wordPanel.word }), {
+            toast.success(t('onboardingWordAdded', { word: targetPanel.word }), {
               id: `onboarding-saved-${trackedEntry.id}`,
               duration: 3500,
             });
@@ -1786,7 +1808,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     },
     [
       wordPanel,
-      enqueueWordMutation,
+      vocabCoordinator,
       vocabTextOf,
       persistWordPanelState,
       onboarding,
@@ -1827,13 +1849,15 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
   // Ensure a vocab entry exists for the current word and return it.
   // Creates a level1 entry if none exists, so the word appears in the vocab list.
   const ensureVocabEntry = useCallback(async (): Promise<VocabEntry> => {
+    const targetPanel = wordPanel;
     const requestId = translationRequestId.current;
-    const existing = await resolveExistingEntry();
-    const isPhrase = isPhrasePanel(wordPanel);
-    const effective = resolveEffectiveMeaning(wordPanel);
+    const existing = await resolveExistingEntryForPanel(targetPanel);
+    const isPhrase = isPhrasePanel(targetPanel);
+    const key = vocabTextOf(targetPanel.word, isPhrase);
+    const effective = resolveEffectiveMeaning(targetPanel);
     if (existing) {
       const nextState = existing.state === 'new' ? 'level1' : undefined;
-      const patch = buildVocabUpdatePatch(existing, wordPanel, nextState);
+      const patch = buildVocabUpdatePatch(existing, targetPanel, nextState);
       const needsUpdate =
         patch.state !== undefined ||
         (patch.translation !== undefined &&
@@ -1845,7 +1869,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
           JSON.stringify(patch.phraseDetails) !== JSON.stringify(existing.phraseDetails ?? null));
       if (!needsUpdate) return existing;
       const rollbackReaderState =
-        nextState !== undefined ? applyReaderWordState(wordPanel.word, nextState) : null;
+        nextState !== undefined ? applyReaderWordState(targetPanel.word, nextState) : null;
       try {
         await updateVocabEntry(existing.id, patch);
       } catch {
@@ -1853,8 +1877,8 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         throw new Error(t('saveFailedShort'));
       }
       const updated: VocabEntry = { ...existing, ...patch };
+      vocabCoordinator.setEntryPromise(key, Promise.resolve(updated));
       if (requestId === translationRequestId.current) {
-        existingEntryLookup.current = Promise.resolve(updated);
         setWordPanel((prev) => ({ ...prev, existingEntry: updated }));
       }
       return updated;
@@ -1862,9 +1886,9 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
 
     const entry: VocabEntry = {
       id: uuidv4(),
-      text: vocabTextOf(wordPanel.word, isPhrase),
+      text: key,
       type: isPhrase ? 'phrase' : 'word',
-      sentence: wordPanel.sentence,
+      sentence: targetPanel.sentence,
       translation: effective.translation,
       translationLang: effective.translationLang,
       translationSource: effective.translationSource,
@@ -1876,28 +1900,29 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       createdAt: new Date(),
       pushedToAnki: false,
     };
-    const rollbackReaderState = applyReaderWordState(wordPanel.word, entry.state);
+    const rollbackReaderState = applyReaderWordState(targetPanel.word, entry.state);
     const savedId = await saveVocab(entry);
     if (!savedId) {
       rollbackReaderState();
       throw new Error(t('saveFailedShort'));
     }
     const saved = { ...entry, id: savedId };
+    vocabCoordinator.setEntryPromise(key, Promise.resolve(saved));
     await incrementDailyStat('newWordsSaved');
     trackReaderEvent('word_saved', isPhrase ? 'phrase' : 'word');
-    persistAcceptedTranslation();
+    persistAcceptedTranslation(targetPanel);
     void trackOnboardingVocab(saved, saved.state);
     if (requestId === translationRequestId.current) {
-      existingEntryLookup.current = Promise.resolve(saved);
       setWordPanel((prev) => ({ ...prev, existingEntry: saved }));
     }
     return saved;
   }, [
     wordPanel,
     lessonId,
+    vocabCoordinator,
     applyReaderWordState,
     vocabTextOf,
-    resolveExistingEntry,
+    resolveExistingEntryForPanel,
     persistAcceptedTranslation,
     trackOnboardingVocab,
     trackReaderEvent,
@@ -1934,12 +1959,14 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         },
       ]);
       if (result.failed.length > 0) throw new Error(result.failed[0].error);
+      const pushedEntry = { ...entry, pushedToAnki: true };
+      vocabCoordinator.setEntryPromise(entry.text, Promise.resolve(pushedEntry));
       if (requestId === translationRequestId.current) {
         setWordPanel((prev) => ({
           ...prev,
           existingEntry: prev.existingEntry
             ? { ...prev.existingEntry, pushedToAnki: true }
-            : { ...entry, pushedToAnki: true },
+            : pushedEntry,
         }));
       }
       return;
@@ -1953,15 +1980,17 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       source ? buildSourceLinkHtml(source) : undefined,
     );
     await markVocabPushedToAnki(entry.id, noteId);
+    const pushedEntry = { ...entry, pushedToAnki: true, ankiNoteId: noteId };
+    vocabCoordinator.setEntryPromise(entry.text, Promise.resolve(pushedEntry));
     if (requestId === translationRequestId.current) {
       setWordPanel((prev) => ({
         ...prev,
         existingEntry: prev.existingEntry
           ? { ...prev.existingEntry, pushedToAnki: true, ankiNoteId: noteId }
-          : { ...entry, pushedToAnki: true, ankiNoteId: noteId },
+          : pushedEntry,
       }));
     }
-  }, [wordPanel, getAnkiDecks, ensureVocabEntry, ankiTransport]);
+  }, [wordPanel, getAnkiDecks, ensureVocabEntry, ankiTransport, vocabCoordinator]);
 
   const addClozeToAnki = useCallback(
     async (blankWord: string) => {
@@ -1995,12 +2024,14 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
           },
         ]);
         if (result.failed.length > 0) throw new Error(result.failed[0].error);
+        const pushedEntry = { ...entry, pushedToAnki: true };
+        vocabCoordinator.setEntryPromise(entry.text, Promise.resolve(pushedEntry));
         if (requestId === translationRequestId.current) {
           setWordPanel((prev) => ({
             ...prev,
             existingEntry: prev.existingEntry
               ? { ...prev.existingEntry, pushedToAnki: true }
-              : { ...entry, pushedToAnki: true },
+              : pushedEntry,
           }));
         }
         return;
@@ -2016,38 +2047,43 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         lessonPack,
       );
       await markVocabPushedToAnki(entry.id, noteId);
+      const pushedEntry = { ...entry, pushedToAnki: true, ankiNoteId: noteId };
+      vocabCoordinator.setEntryPromise(entry.text, Promise.resolve(pushedEntry));
       if (requestId === translationRequestId.current) {
         setWordPanel((prev) => ({
           ...prev,
           existingEntry: prev.existingEntry
             ? { ...prev.existingEntry, pushedToAnki: true, ankiNoteId: noteId }
-            : { ...entry, pushedToAnki: true, ankiNoteId: noteId },
+            : pushedEntry,
         }));
       }
     },
-    [wordPanel, getAnkiDecks, ensureVocabEntry, ankiTransport, lessonPack],
+    [wordPanel, getAnkiDecks, ensureVocabEntry, ankiTransport, lessonPack, vocabCoordinator],
   );
 
   const retranslateWithAi = useCallback(async () => {
     if (wordPanel.isLoading || wordPanel.isStreamingGloss) return;
+    const targetPanel = wordPanel;
+    const isPhrase = isPhrasePanel(targetPanel);
+    const targetKey = vocabTextOf(targetPanel.word, isPhrase);
     const requestId = translationRequestId.current;
-    const opSeq = ++aiOpSeqRef.current;
+    cancelAllPanelAiOps();
+    const opSeq = retranslateOpSeqRef.current;
     const signal = lookupAbortRef.current?.signal;
     const before = {
-      translation: wordPanel.translation,
-      translationLang: wordPanel.translationLang,
-      translationSource: wordPanel.translationSource,
-      aiContextTranslation: wordPanel.aiContextTranslation,
-      savedAiTranslation: wordPanel.savedAiTranslation,
-      savedTranslationSource: wordPanel.savedTranslationSource,
-      savedSentence: wordPanel.savedSentence,
-      phraseDetails: wordPanel.phraseDetails,
-      isDictionaryResult: wordPanel.isDictionaryResult,
+      translation: targetPanel.translation,
+      translationLang: targetPanel.translationLang,
+      translationSource: targetPanel.translationSource,
+      aiContextTranslation: targetPanel.aiContextTranslation,
+      savedAiTranslation: targetPanel.savedAiTranslation,
+      savedTranslationSource: targetPanel.savedTranslationSource,
+      savedSentence: targetPanel.savedSentence,
+      phraseDetails: targetPanel.phraseDetails,
+      isDictionaryResult: targetPanel.isDictionaryResult,
     };
     setContextError(null);
     setRetranslateError(null);
     setWordPanel((prev) => applyRetranslateStart(prev));
-    const isPhrase = isPhrasePanel(wordPanel);
     try {
       const [loadedNative, monolingual] = await Promise.all([
         loadNative(),
@@ -2060,10 +2096,11 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       );
       if (isPhrase) {
         const result = await translatePhrase(
-          wordPanel.word,
-          wordPanel.sentence,
+          targetPanel.word,
+          targetPanel.sentence,
           (cumulative) => {
-            if (requestId !== translationRequestId.current || opSeq !== aiOpSeqRef.current) return;
+            if (requestId !== translationRequestId.current || opSeq !== retranslateOpSeqRef.current)
+              return;
             setWordPanel((prev) => ({
               ...prev,
               translation: cumulative,
@@ -2075,7 +2112,8 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
           },
           { signal, language: readingLanguage },
         );
-        if (requestId !== translationRequestId.current || opSeq !== aiOpSeqRef.current) return;
+        if (requestId !== translationRequestId.current || opSeq !== retranslateOpSeqRef.current)
+          return;
         const phraseDetails = normalizePhraseDetails(result);
         setWordPanel((prev) => ({
           ...prev,
@@ -2093,21 +2131,22 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
           isStreamingGloss: false,
           isDictionaryResult: false,
         }));
-        const existing = await resolveExistingEntry().catch(() => undefined);
-        if (requestId !== translationRequestId.current || opSeq !== aiOpSeqRef.current) return;
+        const existing = await resolveExistingEntryForPanel(targetPanel).catch(() => undefined);
+        if (requestId !== translationRequestId.current || opSeq !== retranslateOpSeqRef.current)
+          return;
         if (shouldPersistImmediateAiUpdate(existing) && result.translation.trim()) {
           const patch = {
             translation: result.translation,
             translationLang: expectedMeaningLang,
             translationSource: 'ai_phrase' as const,
             phraseDetails,
-            sentence: wordPanel.sentence,
+            sentence: targetPanel.sentence,
           };
           try {
             await updateVocabEntry(existing.id, patch);
             const updated: VocabEntry = { ...existing, ...patch };
+            vocabCoordinator.setEntryPromise(targetKey, Promise.resolve(updated));
             if (requestId === translationRequestId.current) {
-              existingEntryLookup.current = Promise.resolve(updated);
               setWordPanel((prev) => ({ ...prev, existingEntry: updated }));
             }
           } catch {
@@ -2116,10 +2155,11 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         }
       } else {
         const result = await translateWord(
-          wordPanel.word,
-          wordPanel.sentence,
+          targetPanel.word,
+          targetPanel.sentence,
           (cumulative) => {
-            if (requestId !== translationRequestId.current || opSeq !== aiOpSeqRef.current) return;
+            if (requestId !== translationRequestId.current || opSeq !== retranslateOpSeqRef.current)
+              return;
             setWordPanel((prev) => ({
               ...prev,
               translation: cumulative,
@@ -2132,7 +2172,8 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
           },
           { signal, language: readingLanguage },
         );
-        if (requestId !== translationRequestId.current || opSeq !== aiOpSeqRef.current) return;
+        if (requestId !== translationRequestId.current || opSeq !== retranslateOpSeqRef.current)
+          return;
         const structured =
           result.senses && result.senses.length > 0
             ? {
@@ -2160,20 +2201,21 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
           isStreamingGloss: false,
           isDictionaryResult: false,
         }));
-        const existing = await resolveExistingEntry().catch(() => undefined);
-        if (requestId !== translationRequestId.current || opSeq !== aiOpSeqRef.current) return;
+        const existing = await resolveExistingEntryForPanel(targetPanel).catch(() => undefined);
+        if (requestId !== translationRequestId.current || opSeq !== retranslateOpSeqRef.current)
+          return;
         if (shouldPersistImmediateAiUpdate(existing) && result.translation.trim()) {
           const patch = {
             translation: result.translation,
             translationLang: expectedMeaningLang,
             translationSource: 'ai_retranslate' as const,
-            sentence: wordPanel.sentence,
+            sentence: targetPanel.sentence,
           };
           try {
             await updateVocabEntry(existing.id, patch);
             const updated: VocabEntry = { ...existing, ...patch };
+            vocabCoordinator.setEntryPromise(targetKey, Promise.resolve(updated));
             if (requestId === translationRequestId.current) {
-              existingEntryLookup.current = Promise.resolve(updated);
               setWordPanel((prev) => ({ ...prev, existingEntry: updated }));
             }
           } catch {
@@ -2183,7 +2225,8 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       }
     } catch (err) {
       if (isAbortError(err)) return;
-      if (requestId !== translationRequestId.current || opSeq !== aiOpSeqRef.current) return;
+      if (requestId !== translationRequestId.current || opSeq !== retranslateOpSeqRef.current)
+        return;
       setRetranslateError(t('retranslateFailed'));
       setWordPanel((prev) => ({
         ...prev,
@@ -2192,7 +2235,16 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         isStreamingGloss: false,
       }));
     }
-  }, [wordPanel, loadMonolingualSetting, readingLanguage, resolveExistingEntry, t]);
+  }, [
+    wordPanel,
+    vocabTextOf,
+    vocabCoordinator,
+    cancelAllPanelAiOps,
+    loadMonolingualSetting,
+    readingLanguage,
+    resolveExistingEntryForPanel,
+    t,
+  ]);
 
   const handleExplainSentence = useCallback(async () => {
     const sentenceText = wordPanel.sentence.trim();

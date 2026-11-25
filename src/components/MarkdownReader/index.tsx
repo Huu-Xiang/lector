@@ -486,7 +486,7 @@ export default function MarkdownReader({
   // looking for a space, so the check holds in an unspaced script (#213).
   const lookUpPhrase = useCallback(
     (text: string, wordElement: HTMLElement | null, coords?: PhraseHighlightSpan['coords']) => {
-      const cleaned = stripEdgePunctuation(text) || text.trim();
+      const cleaned = stripEdgePunctuation(text, pack, segmentation) || text.trim();
       const words = phraseWords(cleaned);
       if (words.length < 2) return;
 
@@ -520,7 +520,7 @@ export default function MarkdownReader({
 
       handleReaderWordClick(cleaned, sentence, source, undefined, { isPhrase: true });
     },
-    [handleReaderWordClick, phraseWords, findSentence, transcript, pack.script.kind],
+    [handleReaderWordClick, phraseWords, findSentence, transcript, pack, segmentation],
   );
 
   // Handle text selection for phrases

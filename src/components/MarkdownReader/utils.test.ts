@@ -454,10 +454,13 @@ describe('wordSpansBetween', () => {
 });
 
 describe('stripEdgePunctuation & edge-offset snapToWordBoundaries', () => {
-  it('strips leading and trailing punctuation while preserving apostrophes inside words', () => {
-    expect(stripEdgePunctuation('«l’homme»,')).toBe('l’homme');
-    expect(stripEdgePunctuation('「日本語」。')).toBe('日本語');
-    expect(stripEdgePunctuation('  (hello world!)  ')).toBe('hello world');
+  it('strips leading and trailing punctuation while preserving apostrophes inside words and Afrikaans n-article', () => {
+    expect(stripEdgePunctuation('«l’homme»,', af)).toBe('l’homme');
+    expect(stripEdgePunctuation('「日本語」。', ja)).toBe('日本語');
+    expect(stripEdgePunctuation('  (hello world!)  ', en)).toBe('hello world');
+    expect(stripEdgePunctuation("'n groot huis", af)).toBe("'n groot huis");
+    expect(stripEdgePunctuation('’n groot huis', af)).toBe('’n groot huis');
+    expect(stripEdgePunctuation('«’n groot huis!»', af)).toBe('’n groot huis');
   });
 
   it('does not swallow the next word when endOffset is 0 or the previous word when startOffset is at text end', () => {

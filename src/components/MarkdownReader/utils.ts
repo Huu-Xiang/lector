@@ -1,6 +1,9 @@
 import { isValidElement, type ReactNode, type ReactElement } from 'react';
 import {
+  DEFAULT_LANGUAGE,
+  getLanguageConfig,
   tokenize,
+  tokenizeWords,
   splitSentences,
   snapToWordBoundaries as snapOffsetsToWordBoundaries,
   foldWord,
@@ -106,9 +109,18 @@ export function readableRangeText(range: Range, spaced = true): string {
 
 const APOSTROPHE_TEXT = /^['’ʼ]$/;
 
-/** Trim leading and trailing punctuation/symbols around a dragged phrase while keeping interior punctuation. */
-export function stripEdgePunctuation(text: string): string {
-  return text.replace(/^[\p{P}\p{S}\s]+|[\p{P}\p{S}\s]+$/gu, '').trim();
+/**
+ * Trim leading and trailing non-word punctuation/symbols around a dragged phrase
+ * while keeping punctuation that belongs to edge word tokens (e.g. Afrikaans `'n` / `’n`).
+ */
+export function stripEdgePunctuation(
+  text: string,
+  pack: LanguageConfig = getLanguageConfig(DEFAULT_LANGUAGE),
+  words?: WordSegmentation | null,
+): string {
+  const tokens = tokenizeWords(text, pack, words);
+  if (tokens.length === 0) return '';
+  return text.slice(tokens[0].start, tokens[tokens.length - 1].end);
 }
 
 function expandElisionStart(range: Range): void {

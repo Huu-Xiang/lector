@@ -9,6 +9,7 @@ import type { VocabEntry } from '@/types';
 import {
   applyRetranslateStart,
   buildVocabUpdatePatch,
+  createKeyedVocabCoordinator,
   hydrateExistingVocab,
   isSavedAiTranslationSource,
   normalizePhraseDetails,
@@ -425,6 +426,8 @@ describe('Reader saved AI & phrase persistence state helpers (R2–R4)', () => {
         savedAiTranslation: 'stale saved meaning',
         savedTranslationSource: 'ai_context',
         savedSentence: 'Old sentence.',
+        isContextLoading: true,
+        isEnriching: true,
         error: 'previous error',
       }),
     );
@@ -433,6 +436,8 @@ describe('Reader saved AI & phrase persistence state helpers (R2–R4)', () => {
     expect(started.savedTranslationSource).toBeNull();
     expect(started.savedSentence).toBeNull();
     expect(started.isLoading).toBe(true);
+    expect(started.isContextLoading).toBe(false);
+    expect(started.isEnriching).toBe(false);
     expect(started.error).toBeNull();
   });
 
@@ -479,5 +484,71 @@ describe('Reader saved AI & phrase persistence state helpers (R2–R4)', () => {
       translationLang: 'en',
       translationSource: 'manual',
     });
+  });
+
+  it('isolates per-word entry promises so queued K on word A never corrupts word B when B is clicked mid-save', async () => {
+    const coordinator = createKeyedVocabCoordinator();
+    const updates: Array<{ id: string; patch: Partial<VocabEntry> }> = [];
+
+    let finishSaveA!: (entry: VocabEntry) => void;
+    const saveAPromise = new Promise<VocabEntry>((resolve) => {
+      finishSaveA = resolve;
+    });
+    const entryA = makeVocab({
+      id: 'id-a',
+      text: 'casa',
+      sentence: 'La casa blanca.',
+      translation: 'house',
+      state: 'level1',
+    });
+    const entryB = makeVocab({
+      id: 'id-b',
+      text: 'perro',
+      sentence: 'El perro ladra.',
+      translation: 'dog',
+      state: 'level2',
+    });
+    const panelA = basePanel({
+      word: 'casa',
+      sentence: 'La casa blanca.',
+      translation: 'house',
+      dictEntry: null,
+    });
+
+    // 1. Auto-save starts on word A.
+    const autoSaveDone = coordinator.enqueue('casa', async () => {
+      coordinator.setEntryPromise('casa', saveAPromise);
+      const saved = await saveAPromise;
+      coordinator.setEntryPromise('casa', Promise.resolve(saved));
+    });
+
+    // 2. While word A's auto-save is still pending, user presses K on word A.
+    const queuedKnownA = coordinator.enqueue('casa', async () => {
+      const existing = await coordinator.getEntryPromise('casa');
+      expect(existing?.id).toBe('id-a');
+      const patch = buildVocabUpdatePatch(existing!, panelA, 'known');
+      updates.push({ id: existing!.id, patch });
+      coordinator.setEntryPromise('casa', Promise.resolve({ ...existing!, ...patch }));
+    });
+
+    // 3. Before word A's save resolves, user taps already-saved word B.
+    coordinator.setEntryPromise('perro', Promise.resolve(entryB));
+
+    // 4. Word A's initial save settles -> queued K must target 'id-a', leaving 'id-b' untouched!
+    finishSaveA(entryA);
+    await Promise.all([autoSaveDone, queuedKnownA]);
+
+    expect(updates).toEqual([
+      {
+        id: 'id-a',
+        patch: {
+          state: 'known',
+          translation: 'house',
+          translationLang: 'en',
+          translationSource: 'dictionary',
+        },
+      },
+    ]);
+    expect(await coordinator.getEntryPromise('perro')).toEqual(entryB);
   });
 });
