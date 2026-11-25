@@ -230,6 +230,11 @@
     "claimBody": "We will switch your active language and open Chapter 1 right away.",
     "claimConfirm": "Add to library & start reading",
     "claimAdding": "Opening book…",
-    "claimBack": "Back to library"
+    "claimBack": "Back to library",
+    "difficultyTitle": "Reading difficulty & vocabulary",
+    "vocab95Label": "95% comprehension (comfortable with dictionary)",
+    "vocab98Label": "98% comprehension (fluent reading)",
+    "vocabFamilies": "~{count} word families",
+    "examEquivalentsLabel": "Approximate exam equivalents"
   }
 }

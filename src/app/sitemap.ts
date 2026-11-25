@@ -8,17 +8,16 @@ import {
   levelSlug,
   listPublicBooks,
 } from '@/lib/public-books';
-import { sitemapLanguages } from '@/lib/public-locale';
+import { publicUrl, sitemapLanguages } from '@/lib/public-locale';
 import { siteLastModified } from '@/lib/site-seo';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = 'https://readfox.app';
   const lastModified = siteLastModified();
   const entry = (
     path: string,
     changeFrequency: 'weekly' | 'monthly' | 'yearly',
   ): MetadataRoute.Sitemap[number] => ({
-    url: `${base}${path}`,
+    url: publicUrl(path),
     lastModified,
     changeFrequency,
     alternates: { languages: sitemapLanguages(path) },
@@ -34,6 +33,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/vocab-test',
     '/vocab-test/fr',
     '/vocab-test/es',
+    '/alternatives',
     ...ALTERNATIVE_COMPETITORS.map((c) => alternativePath(c)),
   ].map((path) => entry(path, 'monthly'));
 

@@ -1,15 +1,19 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { getLocale, getTranslations } from 'next-intl/server';
+import JsonLd from '@/components/JsonLd';
 import { LegalShell, H2 } from '@/components/LegalLinks/shell';
+import PublicLink from '@/components/PublicLink';
 import {
   PUBLIC_BOOK_LANGUAGES,
+  bookListJsonLd,
   levelSlug,
   listPublicBooks,
   pickLocalized,
   type PublicBook,
 } from '@/lib/public-books';
-import { publicAlternatesForRequest } from '@/lib/public-locale.server';
+import { publicUrl } from '@/lib/public-locale';
+import { activePublicLocalePrefix, publicAlternatesForRequest } from '@/lib/public-locale.server';
+import { buildPublicTwitter, withPublicOg } from '@/lib/site-seo';
 
 export async function generateMetadata(): Promise<Metadata> {
   const [t, { alternates, canonicalUrl }] = await Promise.all([
@@ -22,7 +26,14 @@ export async function generateMetadata(): Promise<Metadata> {
     title,
     description,
     alternates,
-    openGraph: { title, description, url: canonicalUrl, siteName: 'Readfox', type: 'website' },
+    openGraph: withPublicOg({
+      title,
+      description,
+      url: canonicalUrl,
+      siteName: 'Readfox',
+      type: 'website',
+    }),
+    twitter: buildPublicTwitter(title, description),
   };
 }
 
@@ -33,23 +44,38 @@ function groupByLevel(books: PublicBook[]): Array<[string, PublicBook[]]> {
 }
 
 export default async function BooksPage() {
-  const t = await getTranslations('publicBooks');
-  const tv = await getTranslations('vocabTest');
-  const locale = await getLocale();
+  const [t, tv, locale, localePrefix] = await Promise.all([
+    getTranslations('publicBooks'),
+    getTranslations('vocabTest'),
+    getLocale(),
+    activePublicLocalePrefix(),
+  ]);
   const languageName = new Intl.DisplayNames([locale], { type: 'language' });
   const books = listPublicBooks();
+  const title = t('indexTitle');
+  const description = t('indexMetaDescription', { count: books.length });
+  const collectionJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: title,
+    description,
+    url: publicUrl('/books', localePrefix),
+    inLanguage: locale,
+  };
 
   return (
-    <LegalShell title={t('indexTitle')} wide>
+    <LegalShell title={title} wide>
+      <JsonLd data={collectionJsonLd} />
+      <JsonLd data={bookListJsonLd(title, '/books', books, localePrefix)} />
       <p className="text-muted-foreground">{t('indexIntro')}</p>
       <p>
-        <Link
+        <PublicLink
           href="/vocab-test"
           data-testid="books-vocab-test-link"
           className="underline hover:text-foreground"
         >
           {tv('booksLink')}
-        </Link>
+        </PublicLink>
       </p>
       {PUBLIC_BOOK_LANGUAGES.map((language) => {
         const own = books.filter((b) => b.language === language);
@@ -57,9 +83,9 @@ export default async function BooksPage() {
         return (
           <section key={language} id={language} className="space-y-3">
             <H2>
-              <Link href={`/books/${language}`} className="hover:underline">
+              <PublicLink href={`/books/${language}`} className="hover:underline">
                 {languageName.of(language)}
-              </Link>{' '}
+              </PublicLink>{' '}
               <span className="text-sm font-normal text-muted-foreground">
                 {t('bookCount', { count: own.length })}
               </span>
@@ -67,17 +93,20 @@ export default async function BooksPage() {
             <p className="flex flex-wrap gap-x-3 text-muted-foreground">
               <span>{t('browseLevels')}:</span>
               {groupByLevel(own).map(([level]) => (
-                <Link
+                <PublicLink
                   key={level}
                   href={`/books/${language}/level/${levelSlug(level)}`}
                   className="underline hover:text-foreground"
                 >
                   {level}
-                </Link>
+                </PublicLink>
               ))}
-              <Link href={`/books/${language}/authors`} className="underline hover:text-foreground">
+              <PublicLink
+                href={`/books/${language}/authors`}
+                className="underline hover:text-foreground"
+              >
                 {t('browseAuthors')}
-              </Link>
+              </PublicLink>
             </p>
             {groupByLevel(own).map(([level, group]) => (
               <div key={level}>
@@ -89,12 +118,12 @@ export default async function BooksPage() {
                     const shown = pickLocalized(book.titles, locale, book.title);
                     return (
                       <li key={book.slug}>
-                        <Link
+                        <PublicLink
                           href={`/books/${book.language}/${book.slug}`}
                           className="hover:underline"
                         >
                           {shown}
-                        </Link>
+                        </PublicLink>
                         {shown !== book.title && (
                           <span className="text-muted-foreground"> · {book.title}</span>
                         )}

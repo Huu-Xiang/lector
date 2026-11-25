@@ -1,6 +1,6 @@
 import Image from 'next/image';
-import Link from 'next/link';
 import LegalLinks from '@/components/LegalLinks';
+import { ClientPublicLink } from '@/components/PublicLink/client';
 import BackButton from './BackButton';
 
 export function LegalShell({
@@ -16,10 +16,10 @@ export function LegalShell({
 }) {
   return (
     <div className="flex min-h-screen w-full flex-col items-center bg-background px-4 py-10">
-      <Link href="/" className="mb-8 flex items-center gap-2" title="Readfox">
+      <ClientPublicLink href="/" className="mb-8 flex items-center gap-2" title="Readfox">
         <Image src="/logo.png" alt="Readfox" width={36} height={36} className="rounded" />
         <span className="text-xl font-extrabold tracking-tight text-foreground">Readfox</span>
-      </Link>
+      </ClientPublicLink>
       <article
         className={`w-full ${wide ? 'max-w-6xl' : 'max-w-2xl'} space-y-5 text-sm leading-relaxed text-foreground`}
       >

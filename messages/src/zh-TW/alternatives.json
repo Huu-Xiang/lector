@@ -1,6 +1,14 @@
 {
   "alternatives": {
     "breadcrumbHome": "Readfox",
+    "hub": {
+      "metaTitle": "Readfox 產品比較：LingQ、Readlang 等語言閱讀工具替代方案",
+      "metaDescription": "將 Readfox 與 LingQ、Readlang 全面比較：{books} 本免費 CEFR 分級原著、FSRS 間隔複習、語境 AI 查詞，Plus 方案低至 {plusPrice}/月。",
+      "title": "Readfox 與同類產品比較",
+      "intro": "從內建分級原著、FSRS 複習、查詞體驗、開源透明與價格等面向，看看 Readfox 與其他外語閱讀學習應用的差異。",
+      "cardCta": "查看完整比較",
+      "breadcrumbAlternatives": "產品比較"
+    },
     "ctaBooks": "瀏覽 {books} 本免費原著",
     "ctaVocabTest": "免費測英語詞彙量",
     "ctaRegister": "免費註冊開始讀",

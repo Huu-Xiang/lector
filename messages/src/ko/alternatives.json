@@ -1,6 +1,14 @@
 {
   "alternatives": {
     "breadcrumbHome": "Readfox",
+    "hub": {
+      "metaTitle": "Readfox 비교 및 대안: LingQ, Readlang 등",
+      "metaDescription": "Readfox와 LingQ, Readlang을 비교해 보세요: CEFR 수준별 무료 원서 {books}권, FSRS 복습, 문맥 AI 사전, 월 {plusPrice}부터 시작하는 요금제.",
+      "title": "Readfox 비교 가이드",
+      "intro": "내장 수준별 원서, FSRS 복습, 사전 품질, 오픈소스 투명성, 요금 측면에서 Readfox와 다른 읽기 기반 언어 학습 앱을 비교해 보세요.",
+      "cardCta": "전체 비교 보기",
+      "breadcrumbAlternatives": "비교"
+    },
     "ctaBooks": "무료 원서 {books}권 보기",
     "ctaVocabTest": "무료 어휘력 테스트",
     "ctaRegister": "무료 계정 만들기",

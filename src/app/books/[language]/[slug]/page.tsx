@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getLocale, getTranslations } from 'next-intl/server';
 import JsonLd from '@/components/JsonLd';
+import PublicLink from '@/components/PublicLink';
 import { authHref, claimBookPath } from '@/lib/auth-return';
 import BookSource, { CreativeCommonsLicenseLink } from '../../BookSource';
 import { LegalShell, H2 } from '@/components/LegalLinks/shell';
@@ -20,7 +21,9 @@ import {
   pickLocalized,
   readingHours,
 } from '@/lib/public-books';
-import { publicAlternatesForRequest } from '@/lib/public-locale.server';
+import { examLabels } from '@/lib/reading-level';
+import { activePublicLocalePrefix, publicAlternatesForRequest } from '@/lib/public-locale.server';
+import { buildPublicTwitter, withPublicOg } from '@/lib/site-seo';
 
 interface Props {
   params: Promise<{ language: string; slug: string }>;
@@ -55,20 +58,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const description = fitText(`${t('bookMetaDescription', values)} ${blurb}`, DESCRIPTION_MAX);
   const url = `/books/${language}/${slug}`;
   const { alternates, canonicalUrl } = await publicAlternatesForRequest(url);
+  const coverImage = book.cover
+    ? { url: book.cover.url, width: 480, height: 640, alt: book.title }
+    : null;
   return {
     title,
     description,
     alternates,
-    openGraph: {
-      title,
-      description,
-      url: canonicalUrl,
-      siteName: 'Readfox',
-      type: 'book',
-      ...(book.cover
-        ? { images: [{ url: book.cover.url, width: 480, height: 640, alt: book.title }] }
-        : {}),
-    },
+    openGraph: withPublicOg(
+      {
+        title,
+        description,
+        url: canonicalUrl,
+        siteName: 'Readfox',
+        type: 'book',
+      },
+      coverImage,
+    ),
+    twitter: buildPublicTwitter(title, description, book.cover?.url),
   };
 }
 
@@ -77,9 +84,14 @@ export default async function BookPage({ params }: Props) {
   const book = findPublicBook(language, slug);
   if (!book) notFound();
 
-  const t = await getTranslations('publicBooks');
-  const tc = await getTranslations('library.freeBooks');
-  const locale = await getLocale();
+  const [t, tc, tr, tv, locale, localePrefix] = await Promise.all([
+    getTranslations('publicBooks'),
+    getTranslations('library.freeBooks'),
+    getTranslations('readingLevel'),
+    getTranslations('vocabTest'),
+    getLocale(),
+    activePublicLocalePrefix(),
+  ]);
   const languageName =
     new Intl.DisplayNames([locale], { type: 'language' }).of(language) ?? language;
   const shown = pickLocalized(book.titles, locale, book.title);
@@ -87,20 +99,32 @@ export default async function BookPage({ params }: Props) {
   const hours = readingHours(book);
   const authorBooks = booksByAuthor(language, authorSlug(book.author)).length;
   const readHref = `/books/${language}/${slug}/read`;
+  const vocabTestHref =
+    language === 'en'
+      ? '/vocab-test'
+      : language === 'fr' || language === 'es'
+        ? `/vocab-test/${language}`
+        : null;
+  const examTags = examLabels(language, book.level, locale, locale, (exam, score) =>
+    tr(`exam.${exam}`, { score }),
+  );
   const related = listPublicBooks()
     .filter((b) => b.language === book.language && b.level === book.level && b.slug !== slug)
     .slice(0, RELATED);
   const jsonLd = {
-    ...bookJsonLd(book),
+    ...bookJsonLd(book, localePrefix),
     ...(blurb ? { description: blurb } : {}),
   };
   const levelPath = `/books/${language}/level/${levelSlug(book.level)}`;
-  const breadcrumb = breadcrumbJsonLd([
-    { name: t('allBooks'), path: '/books' },
-    { name: t('languageBooks', { language: languageName }), path: `/books/${language}` },
-    { name: t('levelTitle', { language: languageName, level: book.level }), path: levelPath },
-    { name: shown, path: `/books/${language}/${slug}` },
-  ]);
+  const breadcrumb = breadcrumbJsonLd(
+    [
+      { name: t('allBooks'), path: '/books' },
+      { name: t('languageBooks', { language: languageName }), path: `/books/${language}` },
+      { name: t('levelTitle', { language: languageName, level: book.level }), path: levelPath },
+      { name: shown, path: `/books/${language}/${slug}` },
+    ],
+    localePrefix,
+  );
 
   return (
     <LegalShell title={shown}>
@@ -111,23 +135,23 @@ export default async function BookPage({ params }: Props) {
           {shown !== book.title && <p className="text-base text-foreground">{book.title}</p>}
           <p>
             {authorBooks >= AUTHOR_PAGE_MIN_BOOKS ? (
-              <Link
+              <PublicLink
                 href={`/books/${language}/author/${authorSlug(book.author)}`}
                 className="hover:underline"
               >
                 {t('byAuthor', { author: book.author })}
-              </Link>
+              </PublicLink>
             ) : (
               t('byAuthor', { author: book.author })
             )}
           </p>
           <p className="flex flex-wrap gap-x-3">
-            <Link
+            <PublicLink
               href={levelPath}
               className="rounded bg-muted px-1.5 font-medium text-foreground hover:underline"
             >
               {t('level', { level: book.level })}
-            </Link>
+            </PublicLink>
             <span>{languageName}</span>
             {book.category && <span>{tc(`categories.${book.category}`)}</span>}
             <span>{t('lessons', { count: book.lessonCount })}</span>
@@ -154,13 +178,13 @@ export default async function BookPage({ params }: Props) {
 
       <div className="rounded-lg border bg-muted/40 p-4">
         <div className="flex flex-wrap gap-2">
-          <Link
+          <PublicLink
             href={readHref}
             className="inline-block rounded-lg bg-primary px-4 py-2 font-semibold text-primary-foreground hover:opacity-90"
             data-testid="book-try-read"
           >
             {t('tryRead')}
-          </Link>
+          </PublicLink>
           <Link
             href={authHref('/register', claimBookPath(language, slug))}
             className="inline-block rounded-lg border border-border bg-card px-4 py-2 font-semibold text-foreground hover:bg-muted"
@@ -171,6 +195,55 @@ export default async function BookPage({ params }: Props) {
         </div>
         <p className="mt-2 text-muted-foreground">{t('ctaNote')}</p>
       </div>
+
+      {(book.vocabNeeds || examTags.length > 0) && (
+        <section data-testid="book-difficulty" className="space-y-2 rounded-lg border bg-card p-4">
+          <H2>{t('difficultyTitle')}</H2>
+          <dl className="grid gap-3 sm:grid-cols-2">
+            {book.vocabNeeds?.n95 !== null && book.vocabNeeds?.n95 !== undefined && (
+              <div>
+                <dt className="text-xs text-muted-foreground">{t('vocab95Label')}</dt>
+                <dd className="font-semibold text-foreground">
+                  {t('vocabFamilies', { count: book.vocabNeeds.n95.toLocaleString(locale) })}
+                </dd>
+              </div>
+            )}
+            {book.vocabNeeds?.n98 !== null && book.vocabNeeds?.n98 !== undefined && (
+              <div>
+                <dt className="text-xs text-muted-foreground">{t('vocab98Label')}</dt>
+                <dd className="font-semibold text-foreground">
+                  {t('vocabFamilies', { count: book.vocabNeeds.n98.toLocaleString(locale) })}
+                </dd>
+              </div>
+            )}
+            {examTags.length > 0 && (
+              <div className="sm:col-span-2">
+                <dt className="text-xs text-muted-foreground">{t('examEquivalentsLabel')}</dt>
+                <dd className="mt-1 flex flex-wrap gap-1.5">
+                  {examTags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-foreground"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </dd>
+                <p className="mt-1 text-xs text-muted-foreground">{tr('approx')}</p>
+              </div>
+            )}
+          </dl>
+          {vocabTestHref && (
+            <p className="pt-1 text-sm">
+              <PublicLink href={vocabTestHref} className="text-primary underline hover:opacity-80">
+                {language === 'en'
+                  ? tv('booksLink')
+                  : tv('langBooksLink', { language: languageName })}
+              </PublicLink>
+            </p>
+          )}
+        </section>
+      )}
 
       {book.hardWords.length > 0 && (
         <section data-testid="book-hard-words">
@@ -195,9 +268,9 @@ export default async function BookPage({ params }: Props) {
         ))}
       </div>
       <p>
-        <Link href={readHref} className="font-medium text-primary hover:underline">
+        <PublicLink href={readHref} className="font-medium text-primary hover:underline">
           {t('readWholeChapter')} →
-        </Link>
+        </PublicLink>
       </p>
 
       <p className="text-xs text-muted-foreground">
@@ -232,21 +305,21 @@ export default async function BookPage({ params }: Props) {
           <ul className="grid gap-1 sm:grid-cols-2">
             {related.map((b) => (
               <li key={b.slug}>
-                <Link href={`/books/${b.language}/${b.slug}`} className="hover:underline">
+                <PublicLink href={`/books/${b.language}/${b.slug}`} className="hover:underline">
                   {pickLocalized(b.titles, locale, b.title)}
-                </Link>
+                </PublicLink>
               </li>
             ))}
           </ul>
         </>
       )}
       <p className="flex flex-wrap gap-x-4">
-        <Link href={`/books/${language}`} className="underline">
+        <PublicLink href={`/books/${language}`} className="underline">
           {t('languageBooks', { language: languageName })}
-        </Link>
-        <Link href="/books" className="underline">
+        </PublicLink>
+        <PublicLink href="/books" className="underline">
           {t('allBooks')}
-        </Link>
+        </PublicLink>
       </p>
     </LegalShell>
   );

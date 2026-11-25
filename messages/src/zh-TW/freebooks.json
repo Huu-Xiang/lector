@@ -230,6 +230,11 @@
     "claimBody": "確認後會自動切換到對應語言並直接打開第一章。",
     "claimConfirm": "加入書庫並開始閱讀",
     "claimAdding": "正在打開書籍…",
-    "claimBack": "返回書庫"
+    "claimBack": "返回書庫",
+    "difficultyTitle": "閱讀難度與詞彙量參考",
+    "vocab95Label": "95% 理解度（搭配詞典可順暢閱讀）",
+    "vocab98Label": "98% 理解度（輕鬆流暢閱讀）",
+    "vocabFamilies": "約 {count} 個詞族",
+    "examEquivalentsLabel": "大致對應考試程度"
   }
 }

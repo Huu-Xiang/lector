@@ -133,6 +133,8 @@
         "held": "We could not confirm the email was sent. Check your inbox.",
         "restored": "This result was restored from your backup."
       }
-    }
+    },
+    "browseBooksHeading": "Practice with free graded books",
+    "browseBooksFor": "{language} books"
   }
 }

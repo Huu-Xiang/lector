@@ -5,12 +5,14 @@ import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import { getLocale, getTranslations } from 'next-intl/server';
 import { H2 } from '@/components/LegalLinks/shell';
+import PublicLink from '@/components/PublicLink';
 import VocabTest from '@/components/VocabTest';
 import ReportResume from '@/components/VocabTest/ReportResume';
 import UiLanguageSelect from '@/i18n/UiLanguageSelect';
 import { SITE_ORIGIN } from '@/lib/public-books';
 import { loadVocabTestBooks, loadVocabTestData } from '@/lib/vocab-test-data';
 import { publicAlternatesForRequest } from '@/lib/public-locale.server';
+import { buildPublicTwitter, withPublicOg } from '@/lib/site-seo';
 
 export async function generateMetadata(): Promise<Metadata> {
   const [t, { alternates, canonicalUrl }] = await Promise.all([
@@ -23,23 +25,29 @@ export async function generateMetadata(): Promise<Metadata> {
     title,
     description,
     alternates,
-    openGraph: {
+    openGraph: withPublicOg({
       title,
       description,
       url: canonicalUrl,
       siteName: 'Readfox',
       type: 'website',
-    },
+    }),
+    twitter: buildPublicTwitter(title, description),
   };
 }
 
 const FAQ_KEYS = ['how', 'accuracy', 'free', 'level'] as const;
+const BOOK_LINK_LANGUAGES = ['en', 'fr', 'es'] as const;
 
 export default async function VocabTestPage() {
-  const t = await getTranslations('vocabTest');
-  const locale = await getLocale();
+  const [t, locale, { canonicalUrl }] = await Promise.all([
+    getTranslations('vocabTest'),
+    getLocale(),
+    publicAlternatesForRequest('/vocab-test'),
+  ]);
   const data = loadVocabTestData(locale === 'ru' ? 'ru' : undefined);
   if (!data) notFound();
+  const displayNames = new Intl.DisplayNames([locale], { type: 'language' });
   const faq = FAQ_KEYS.map((key) => ({
     q: t(`faq.${key}Q`),
     a: key === 'how' ? t('intro') : t(`faq.${key}A`),
@@ -49,7 +57,8 @@ export default async function VocabTestPage() {
       '@context': 'https://schema.org',
       '@type': 'WebApplication',
       name: t('metaTitle'),
-      url: `${SITE_ORIGIN}/vocab-test`,
+      url: canonicalUrl,
+      inLanguage: locale,
       description: t('metaDescription'),
       applicationCategory: 'EducationalApplication',
       operatingSystem: 'Web',
@@ -90,6 +99,20 @@ export default async function VocabTestPage() {
         }}
         books={loadVocabTestBooks()}
       />
+      <section className="space-y-2 pt-2" data-testid="vocab-ssr-book-links">
+        <H2>{t('browseBooksHeading')}</H2>
+        <div className="flex flex-wrap gap-2">
+          {BOOK_LINK_LANGUAGES.map((code) => (
+            <PublicLink
+              key={code}
+              href={`/books/${code}`}
+              className="rounded-lg border border-border bg-card px-3 py-1.5 text-sm font-medium text-foreground hover:bg-muted"
+            >
+              {t('browseBooksFor', { language: displayNames.of(code) ?? code })}
+            </PublicLink>
+          ))}
+        </div>
+      </section>
       <section className="space-y-2 pt-4" data-testid="vocab-faq">
         <H2>{t('faq.title')}</H2>
         {faq.map(({ q, a }) => (

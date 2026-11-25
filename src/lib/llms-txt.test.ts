@@ -24,11 +24,23 @@ describe('llms.txt', () => {
     expect(text).toContain(`Free library: ${listPublicBooks().length} public-domain`);
   });
 
-  it('highlights shipped learning capabilities and LingQ CSV import', () => {
+  it('highlights shipped learning capabilities, plans, iOS support, multilingual vocab tests, and localized URLs', () => {
     expect(text).toContain('FSRS');
     expect(text).toContain('LingQ');
     expect(text).toContain('concordance');
     expect(text).toContain('text-to-speech');
+    expect(text).toContain('Free ($0): 1,000 AI word lookups');
+    expect(text).toContain('Plus (from $3/month): 5,000 AI word lookups');
+    expect(text).toContain('Pro: 10,000 AI word lookups');
+    expect(text).toContain('Max: 30,000 AI word lookups');
+    expect(text).toContain('companion iOS app');
+    expect(text).not.toContain('no app-store download');
+    expect(text).toContain('https://readfox.app/vocab-test/fr');
+    expect(text).toContain('https://readfox.app/vocab-test/es');
+    expect(text).toContain('https://readfox.app/alternatives');
+    for (const prefix of ['/zh-cn', '/zh-tw', '/ja', '/ko', '/ru']) {
+      expect(text).toContain(`https://readfox.app${prefix}`);
+    }
   });
 
   it('names the welcome code only while the offer runs', () => {
@@ -39,5 +51,21 @@ describe('llms.txt', () => {
     vi.setSystemTime(new Date('2026-12-15T16:00:00Z'));
     expect(buildLlmsTxt()).not.toContain('WELCOME123');
     vi.useRealTimers();
+  });
+
+  it('reflects CARD_PAYMENTS_PENDING in payment-method copy', () => {
+    const prev = process.env.CARD_PAYMENTS_PENDING;
+    try {
+      delete process.env.CARD_PAYMENTS_PENDING;
+      expect(buildLlmsTxt()).toContain('card, PayPal, or Alipay');
+
+      process.env.CARD_PAYMENTS_PENDING = '1';
+      const pending = buildLlmsTxt();
+      expect(pending).toContain('Alipay (card and PayPal coming soon)');
+      expect(pending).not.toContain('card, PayPal, or Alipay');
+    } finally {
+      if (prev === undefined) delete process.env.CARD_PAYMENTS_PENDING;
+      else process.env.CARD_PAYMENTS_PENDING = prev;
+    }
   });
 });

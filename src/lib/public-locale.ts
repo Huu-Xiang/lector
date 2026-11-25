@@ -34,6 +34,7 @@ const PUBLIC_SEO_EXACT = new Set([
   '/about',
   '/books',
   '/vocab-test',
+  '/alternatives',
 ]);
 
 const PUBLIC_SEO_PREFIXES = ['/books/', '/alternatives/'] as const;
@@ -79,22 +80,36 @@ export function stripPublicLocalePrefix(pathname: string): string {
   return parsed ? parsed.publicPath : pathname;
 }
 
+export function publicLocalePrefixFromPath(pathname: string | null | undefined): string {
+  if (!pathname) return '';
+  return parsePublicLocalePath(pathname)?.prefix ?? '';
+}
+
 export function publicPrefixForLocale(locale: string): string {
-  return LOCALE_TO_PREFIX[locale] ?? '';
+  if (!locale) return '';
+  if (locale in LOCALE_TO_PREFIX) return LOCALE_TO_PREFIX[locale];
+  if (locale.startsWith('/')) {
+    const slug = locale.slice(1).toLowerCase();
+    if (slug in PUBLIC_LOCALE_PREFIXES) return `/${slug}`;
+  }
+  return '';
 }
 
 export function localizePublicPath(pathname: string, locale: string): string {
-  const basePath = stripPublicLocalePrefix(pathname);
+  const match = /^([^?#]*)(.*)$/.exec(pathname);
+  const rawPath = match ? match[1] : pathname;
+  const suffix = match ? match[2] : '';
+  const basePath = stripPublicLocalePrefix(rawPath);
   if (!isPublicSeoPath(basePath)) return pathname;
   const prefix = publicPrefixForLocale(locale);
-  if (!prefix) return basePath;
-  return basePath === '/' ? prefix : `${prefix}${basePath}`;
+  const localized = !prefix ? basePath : basePath === '/' ? prefix : `${prefix}${basePath}`;
+  return `${localized}${suffix}`;
 }
 
 export function publicUrl(canonicalPath: string, prefix = ''): string {
-  const normalized = canonicalPath === '/' ? '/' : canonicalPath;
+  const normalized = canonicalPath === '/' ? '' : canonicalPath;
   if (!prefix) return `${SITE_ORIGIN}${normalized}`;
-  return normalized === '/' ? `${SITE_ORIGIN}${prefix}` : `${SITE_ORIGIN}${prefix}${normalized}`;
+  return `${SITE_ORIGIN}${prefix}${normalized}`;
 }
 
 export function sitemapLanguages(canonicalPath: string): Record<string, string> {
@@ -104,6 +119,7 @@ export function sitemapLanguages(canonicalPath: string): Record<string, string> 
   for (const [slug, locale] of Object.entries(PUBLIC_LOCALE_PREFIXES)) {
     languages[locale] = publicUrl(canonicalPath, `/${slug}`);
   }
+  languages['x-default'] = publicUrl(canonicalPath, '');
   return languages;
 }
 
@@ -114,9 +130,6 @@ export function buildPublicAlternates(
   const canonical = publicUrl(canonicalPath, activePrefix);
   return {
     canonical,
-    languages: {
-      ...sitemapLanguages(canonicalPath),
-      'x-default': publicUrl(canonicalPath, ''),
-    },
+    languages: sitemapLanguages(canonicalPath),
   };
 }

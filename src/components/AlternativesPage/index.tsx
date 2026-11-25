@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { getLocale, getTranslations } from 'next-intl/server';
 import JsonLd from '@/components/JsonLd';
 import { LegalShell, H2 } from '@/components/LegalLinks/shell';
+import PublicLink from '@/components/PublicLink';
 import {
   ALTERNATIVE_COMPETITORS,
   COMPARISON_ROWS,
@@ -18,10 +19,12 @@ export default async function AlternativesPage({
   competitor,
   prices,
   canonicalUrl,
+  localePrefix = '',
 }: {
   competitor: AlternativeCompetitor;
   prices: PlanPrice[] | null;
   canonicalUrl?: string;
+  localePrefix?: string;
 }) {
   const t = await getTranslations('alternatives');
   const locale = await getLocale();
@@ -50,6 +53,9 @@ export default async function AlternativesPage({
     title: t(`${competitor}.title`),
     description: t(`${competitor}.metaDescription`, { books: bookCount, plusPrice: plusPriceText }),
     allLabel: t('breadcrumbHome'),
+    hubLabel: t('hub.breadcrumbAlternatives'),
+    localePrefix,
+    inLanguage: locale,
     faq,
   });
 
@@ -71,20 +77,20 @@ export default async function AlternativesPage({
       </p>
 
       <div className="flex flex-wrap gap-3">
-        <Link
+        <PublicLink
           href="/books"
           className="inline-block rounded-lg bg-primary px-4 py-2 font-semibold text-primary-foreground hover:opacity-90"
           data-testid="alt-cta-books"
         >
           {t('ctaBooks', { books: bookCount })}
-        </Link>
-        <Link
+        </PublicLink>
+        <PublicLink
           href="/vocab-test"
           className="inline-block rounded-lg border border-border bg-card px-4 py-2 font-semibold text-foreground hover:bg-muted"
           data-testid="alt-cta-vocab"
         >
           {t('ctaVocabTest')}
-        </Link>
+        </PublicLink>
         <Link
           href="/register"
           className="inline-block rounded-lg border border-border bg-card px-4 py-2 font-semibold text-foreground hover:bg-muted"
@@ -169,15 +175,18 @@ export default async function AlternativesPage({
       </section>
 
       <p className="flex flex-wrap gap-x-4 text-xs text-muted-foreground">
-        <Link href={alternativePath(other)} className="underline hover:text-foreground">
+        <PublicLink href="/alternatives" className="underline hover:text-foreground">
+          {t('hub.breadcrumbAlternatives')}
+        </PublicLink>
+        <PublicLink href={alternativePath(other)} className="underline hover:text-foreground">
           {t('compareOther', { competitor: otherName })}
-        </Link>
-        <Link href="/pricing" className="underline hover:text-foreground">
+        </PublicLink>
+        <PublicLink href="/pricing" className="underline hover:text-foreground">
           {t('seePricing')}
-        </Link>
-        <Link href="/books" className="underline hover:text-foreground">
+        </PublicLink>
+        <PublicLink href="/books" className="underline hover:text-foreground">
           {t('browseLibrary')}
-        </Link>
+        </PublicLink>
       </p>
     </LegalShell>
   );

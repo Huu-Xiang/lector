@@ -1,20 +1,31 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { getLocale, getTranslations } from 'next-intl/server';
+import JsonLd from '@/components/JsonLd';
 import { LegalShell, H2 } from '@/components/LegalLinks/shell';
 import { SOURCE_URL } from '@/components/LegalLinks';
+import PublicLink from '@/components/PublicLink';
 import { publicAlternatesForRequest } from '@/lib/public-locale.server';
+import { buildOrganizationJsonLd, buildPublicTwitter, withPublicOg } from '@/lib/site-seo';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const [t, { alternates }] = await Promise.all([
+  const [t, { alternates, canonicalUrl }] = await Promise.all([
     getTranslations('legalPages'),
     publicAlternatesForRequest('/about'),
   ]);
+  const title = t('about.metaTitle');
+  const description = t('about.metaDescription');
   return {
-    title: t('about.metaTitle'),
-    description:
-      'About Readfox: an open-source reader for learning languages from real books, with tap-to-translate, a vocabulary list and spaced-repetition review.',
+    title,
+    description,
     alternates,
+    openGraph: withPublicOg({
+      title,
+      description,
+      url: canonicalUrl,
+      siteName: 'Readfox',
+      type: 'website',
+    }),
+    twitter: buildPublicTwitter(title, description),
   };
 }
 
@@ -29,15 +40,27 @@ function externalLink(href: string) {
 }
 
 export default async function AboutPage() {
-  const [t, ta, locale] = await Promise.all([
+  const [t, ta, locale, { canonicalUrl }] = await Promise.all([
     getTranslations('legalPages'),
     getTranslations('alternatives'),
     getLocale(),
+    publicAlternatesForRequest('/about'),
   ]);
   const isEnglish = locale.startsWith('en');
+  const aboutLd = {
+    '@context': 'https://schema.org',
+    '@type': 'AboutPage',
+    name: t('about.title'),
+    url: canonicalUrl,
+    description: t('about.metaDescription'),
+    inLanguage: locale,
+    mainEntity: { '@id': 'https://readfox.app/#organization' },
+  };
 
   return (
     <LegalShell title={t('about.title')}>
+      <JsonLd data={aboutLd} />
+      <JsonLd data={buildOrganizationJsonLd()} />
       {!isEnglish && <p className="text-xs text-muted-foreground">{t('notice')}</p>}
       <p>{t('about.intro')}</p>
 
@@ -62,12 +85,15 @@ export default async function AboutPage() {
       <p>{t('about.dataSources.readingFeed')}</p>
 
       <p className="flex flex-wrap gap-x-4 pt-2 text-xs text-muted-foreground">
-        <Link href="/alternatives/lingq" className="underline hover:text-foreground">
+        <PublicLink href="/alternatives" className="underline hover:text-foreground">
+          {ta('hub.breadcrumbAlternatives')}
+        </PublicLink>
+        <PublicLink href="/alternatives/lingq" className="underline hover:text-foreground">
           {ta('compareOther', { competitor: 'LingQ' })}
-        </Link>
-        <Link href="/alternatives/readlang" className="underline hover:text-foreground">
+        </PublicLink>
+        <PublicLink href="/alternatives/readlang" className="underline hover:text-foreground">
           {ta('compareOther', { competitor: 'Readlang' })}
-        </Link>
+        </PublicLink>
       </p>
     </LegalShell>
   );

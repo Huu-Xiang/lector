@@ -1,5 +1,5 @@
-import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
+import PublicLink from '@/components/PublicLink';
 import { firstChapter, pickLocalized, type PublicBook } from '@/lib/public-books';
 import { readingMinutes } from '@/lib/reading-time';
 
@@ -62,9 +62,9 @@ export default async function FeaturedReading({
                 <p className="text-xs font-semibold text-muted-foreground">{t('featuredStart')}</p>
               )}
               <h3 className="font-semibold">
-                <Link href={href} className="hover:underline">
+                <PublicLink href={href} className="hover:underline">
                   {title}
-                </Link>
+                </PublicLink>
               </h3>
               <p>{t(`featuredReasons.${book.slug}`)}</p>
               {units > 0 && (
@@ -72,13 +72,13 @@ export default async function FeaturedReading({
                   {t('featuredReadingTime', { minutes: readingMinutes(units, language) })}
                 </p>
               )}
-              <Link
+              <PublicLink
                 href={`${href}/read`}
                 className="mt-auto rounded-md bg-primary px-3 py-2 font-medium text-primary-foreground"
               >
                 {t('featuredRead')}
                 <span className="sr-only"> {title}</span>
-              </Link>
+              </PublicLink>
             </li>
           );
         })}

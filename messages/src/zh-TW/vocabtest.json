@@ -133,6 +133,8 @@
         "held": "暫時無法確認電郵是否寄出，請查看信箱。",
         "restored": "這次結果來自你的備份。"
       }
-    }
+    },
+    "browseBooksHeading": "用免費分級原著繼續練習",
+    "browseBooksFor": "{language}免費書籍"
   }
 }

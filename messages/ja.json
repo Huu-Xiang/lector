@@ -1,6 +1,14 @@
 {
   "alternatives": {
     "breadcrumbHome": "Readfox",
+    "hub": {
+      "metaTitle": "Readfox の比較・代替ガイド：LingQ・Readlang など",
+      "metaDescription": "Readfox と LingQ・Readlang を比較：{books}冊の無料CEFRレベル別洋書、FSRS復習、文脈AI辞書、月額{plusPrice}からのプラン。",
+      "title": "Readfox と他ツールの比較",
+      "intro": "収録されたレベル別洋書、FSRS間隔反復、辞書・解説の精度、オープンソース性、料金プランの観点から Readfox と他の語学読書アプリを比較します。",
+      "cardCta": "詳しい比較を見る",
+      "breadcrumbAlternatives": "比較"
+    },
     "ctaBooks": "{books}冊の無料洋書を見る",
     "ctaVocabTest": "無料語彙力テストを受ける",
     "ctaRegister": "無料アカウント作成",
@@ -205,6 +213,7 @@
     "source": "ソースコード",
     "refunds": "返金",
     "freeBooks": "無料の本",
+    "alternatives": "比較",
     "back": "戻る",
     "contact": "お問い合わせ"
   },
@@ -1567,7 +1576,12 @@
     "claimBody": "学習言語を切り替えて、第1章をすぐに開きます。",
     "claimConfirm": "ライブラリに追加して読み始める",
     "claimAdding": "本を開いています…",
-    "claimBack": "ライブラリへ戻る"
+    "claimBack": "ライブラリへ戻る",
+    "difficultyTitle": "読解の難易度と必要語彙",
+    "vocab95Label": "95% 理解（辞書併用で快適に読める目安）",
+    "vocab98Label": "98% 理解（すらすら読める目安）",
+    "vocabFamilies": "約 {count} 語族",
+    "examEquivalentsLabel": "対応する試験レベルの目安"
   },
   "dailyGoal": {
     "editor": {
@@ -2002,6 +2016,7 @@
     },
     "about": {
       "metaTitle": "概要 – Readfox",
+      "metaDescription": "Readfox について：本物の本で言語を学ぶためのオープンソースリーダー。タップ翻訳、単語帳、間隔反復の復習機能を備えています。",
       "title": "Readfox について",
       "intro": "Readfox では、学んでいる言語で本物の本や記事を読み、単語やフレーズをその場で翻訳し、出会った内容を間隔反復の練習に変えられます。",
       "freeSoftware": {
@@ -2877,6 +2892,8 @@
         "held": "送信を確認できませんでした。受信トレイを確認してください。",
         "restored": "バックアップから復元した結果です。"
       }
-    }
+    },
+    "browseBooksHeading": "無料のレベル別洋書で練習する",
+    "browseBooksFor": "{language}の本"
   }
 }

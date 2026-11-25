@@ -3,12 +3,18 @@ import path from 'node:path';
 import { translationFor } from './display-language';
 import { readingMinutes } from './reading-time';
 import { PUBLIC_BOOK_LANGUAGES, type PublicBookLanguage } from './public-book-languages';
+import { publicUrl } from './public-locale';
 
 /** Server-only: reads the free library from `languages/<code>/content/library`. */
 
 export { PUBLIC_BOOK_LANGUAGES, type PublicBookLanguage };
 
 export const LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'] as const;
+
+export interface BookVocabNeeds {
+  n95: number | null;
+  n98: number | null;
+}
 
 export interface PublicBook {
   language: PublicBookLanguage;
@@ -25,8 +31,15 @@ export interface PublicBook {
   blurbs: Record<string, string>;
   /** Built by scripts/build-hard-words.py; empty for Chinese and Korean. */
   hardWords: string[];
+  /** From `vocab-needs.json` (word families needed for 95% / 98% coverage). */
+  vocabNeeds: BookVocabNeeds | null;
   /** From `covers.json`. `credit` names the edition or the painting; `source` is where it is from. */
   cover: { url: string; credit: string; source: string } | null;
+}
+
+interface VocabNeedsEntry {
+  n95?: number | null;
+  n98?: number | null;
 }
 
 interface CoverEntry {
@@ -84,10 +97,15 @@ export function listPublicBooks(): PublicBook[] {
     if (!fs.existsSync(dir)) continue;
     const translations = readJson<Translations>(path.join(dir, 'translations.json')) ?? {};
     const hardWords = readJson<Record<string, string[]>>(path.join(dir, 'hard-words.json')) ?? {};
+    const vocabNeeds =
+      readJson<Record<string, VocabNeedsEntry>>(path.join(dir, 'vocab-needs.json')) ?? {};
     const covers = readJson<Record<string, CoverEntry>>(path.join(dir, 'covers.json')) ?? {};
     for (const slug of fs.readdirSync(dir).sort()) {
       const manifest = readJson<Manifest>(path.join(dir, slug, 'manifest.json'));
       if (!manifest || manifest.lessons.length === 0) continue;
+      const needs = vocabNeeds[slug];
+      const n95 = typeof needs?.n95 === 'number' ? needs.n95 : null;
+      const n98 = typeof needs?.n98 === 'number' ? needs.n98 : null;
       books.push({
         language,
         slug,
@@ -102,6 +120,7 @@ export function listPublicBooks(): PublicBook[] {
         titles: translations[slug]?.title ?? {},
         blurbs: translations[slug]?.blurb ?? {},
         hardWords: hardWords[slug] ?? [],
+        vocabNeeds: n95 !== null || n98 !== null ? { n95, n98 } : null,
         cover: covers[slug]?.file
           ? {
               url: `/library-covers/${language}/${covers[slug].file}`,
@@ -223,8 +242,8 @@ export function readingHours(book: PublicBook): number {
 
 export const SITE_ORIGIN = 'https://readfox.app';
 
-export function bookUrl(book: PublicBook): string {
-  return `${SITE_ORIGIN}/books/${book.language}/${book.slug}`;
+export function bookUrl(book: PublicBook, localePrefix = ''): string {
+  return publicUrl(`/books/${book.language}/${book.slug}`, localePrefix);
 }
 
 /** schema.org duration, such as `PT3H20M`. */
@@ -235,17 +254,17 @@ export function readingDuration(book: PublicBook): string {
 }
 
 /** schema.org ItemList of book pages, for the level and author lists. */
-export function bookListJsonLd(name: string, path: string, books: PublicBook[]) {
+export function bookListJsonLd(name: string, path: string, books: PublicBook[], localePrefix = '') {
   return {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
     name,
-    url: `${SITE_ORIGIN}${path}`,
+    url: publicUrl(path, localePrefix),
     numberOfItems: books.length,
     itemListElement: books.map((book, i) => ({
       '@type': 'ListItem',
       position: i + 1,
-      url: bookUrl(book),
+      url: bookUrl(book, localePrefix),
       name: book.title,
     })),
   };
@@ -290,7 +309,7 @@ export function fitText(text: string, max: number): string {
 const CEFR_URL = 'https://www.coe.int/en/web/common-european-framework-reference-languages';
 
 /** schema.org Book for one free book. `description` is added by the caller when a blurb exists. */
-export function bookJsonLd(book: PublicBook) {
+export function bookJsonLd(book: PublicBook, localePrefix = '') {
   const ccBySa = /CC BY-SA 4\.0/i.test(book.source.license);
   return {
     '@context': 'https://schema.org',
@@ -299,7 +318,7 @@ export function bookJsonLd(book: PublicBook) {
     author: { '@type': 'Person', name: book.author },
     inLanguage: book.language,
     ...(book.category ? { genre: book.category } : {}),
-    url: bookUrl(book),
+    url: bookUrl(book, localePrefix),
     isAccessibleForFree: true,
     educationalLevel: {
       '@type': 'DefinedTerm',
@@ -319,7 +338,7 @@ export function bookJsonLd(book: PublicBook) {
 }
 
 /** schema.org BreadcrumbList; `path` is the site path of each step. */
-export function breadcrumbJsonLd(steps: Array<{ name: string; path: string }>) {
+export function breadcrumbJsonLd(steps: Array<{ name: string; path: string }>, localePrefix = '') {
   return {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -327,7 +346,7 @@ export function breadcrumbJsonLd(steps: Array<{ name: string; path: string }>) {
       '@type': 'ListItem',
       position: i + 1,
       name: step.name,
-      item: `${SITE_ORIGIN}${step.path}`,
+      item: publicUrl(step.path, localePrefix),
     })),
   };
 }

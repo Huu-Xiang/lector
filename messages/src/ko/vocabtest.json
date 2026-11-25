@@ -133,6 +133,8 @@
         "held": "이메일 전송을 확인하지 못했습니다. 받은 편지함을 확인하세요.",
         "restored": "백업에서 복원한 결과입니다."
       }
-    }
+    },
+    "browseBooksHeading": "무료 수준별 원서로 연습하기",
+    "browseBooksFor": "{language} 도서"
   }
 }

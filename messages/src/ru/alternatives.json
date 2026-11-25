@@ -1,6 +1,14 @@
 {
   "alternatives": {
     "breadcrumbHome": "Readfox",
+    "hub": {
+      "metaTitle": "Сравнение Readfox с альтернативами: LingQ, Readlang и другие",
+      "metaDescription": "Сравните Readfox с LingQ и Readlang: {books} бесплатных книг по уровням CEFR, интервальные повторения FSRS, контекстный ИИ-перевод и тарифы от {plusPrice}/мес.",
+      "title": "Сравнение Readfox с аналогами",
+      "intro": "Посмотрите, чем Readfox отличается от других сервисов для изучения языков через чтение по библиотеке книг, повторению FSRS, качеству перевода, открытому коду и ценам.",
+      "cardCta": "Открыть полное сравнение",
+      "breadcrumbAlternatives": "Сравнения"
+    },
     "ctaBooks": "Открыть {books} бесплатных книг",
     "ctaVocabTest": "Пройти тест словарного запаса",
     "ctaRegister": "Создать бесплатный аккаунт",

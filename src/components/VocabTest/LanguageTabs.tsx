@@ -1,5 +1,5 @@
-import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
+import PublicLink from '@/components/PublicLink';
 import type { VocabTestLanguage } from '@/lib/vocab-test-data';
 
 const ITEMS: Array<{ code: VocabTestLanguage; href: string; label: string }> = [
@@ -19,7 +19,7 @@ export default async function VocabTestLanguageTabs({ active }: { active: VocabT
       {ITEMS.map((item) => {
         const current = item.code === active;
         return (
-          <Link
+          <PublicLink
             key={item.code}
             href={item.href}
             aria-current={current ? 'page' : undefined}
@@ -30,7 +30,7 @@ export default async function VocabTestLanguageTabs({ active }: { active: VocabT
             }
           >
             {item.label}
-          </Link>
+          </PublicLink>
         );
       })}
     </nav>

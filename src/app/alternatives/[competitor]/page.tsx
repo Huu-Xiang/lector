@@ -10,7 +10,8 @@ import {
 import { fetchPlanPricesOnServer } from '@/lib/plan-prices.server';
 import { findPrice, formatMoney } from '@/lib/plan-prices';
 import { listPublicBooks } from '@/lib/public-books';
-import { publicAlternatesForRequest } from '@/lib/public-locale.server';
+import { activePublicLocalePrefix, publicAlternatesForRequest } from '@/lib/public-locale.server';
+import { buildPublicTwitter, withPublicOg } from '@/lib/site-seo';
 
 interface Props {
   params: Promise<{ competitor: string }>;
@@ -41,16 +42,31 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title,
     description,
     alternates,
-    openGraph: { title, description, url: canonicalUrl, siteName: 'Readfox', type: 'website' },
+    openGraph: withPublicOg({
+      title,
+      description,
+      url: canonicalUrl,
+      siteName: 'Readfox',
+      type: 'website',
+    }),
+    twitter: buildPublicTwitter(title, description),
   };
 }
 
 export default async function CompetitorAlternativeRoute({ params }: Props) {
   const { competitor } = await params;
   if (!isAlternativeCompetitor(competitor)) notFound();
-  const [prices, { canonicalUrl }] = await Promise.all([
+  const [prices, localePrefix, { canonicalUrl }] = await Promise.all([
     fetchPlanPricesOnServer(),
+    activePublicLocalePrefix(),
     publicAlternatesForRequest(alternativePath(competitor)),
   ]);
-  return <AlternativesPage competitor={competitor} prices={prices} canonicalUrl={canonicalUrl} />;
+  return (
+    <AlternativesPage
+      competitor={competitor}
+      prices={prices}
+      canonicalUrl={canonicalUrl}
+      localePrefix={localePrefix}
+    />
+  );
 }

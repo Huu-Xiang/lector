@@ -112,6 +112,7 @@
     },
     "about": {
       "metaTitle": "概要 – Readfox",
+      "metaDescription": "Readfox について：本物の本で言語を学ぶためのオープンソースリーダー。タップ翻訳、単語帳、間隔反復の復習機能を備えています。",
       "title": "Readfox について",
       "intro": "Readfox では、学んでいる言語で本物の本や記事を読み、単語やフレーズをその場で翻訳し、出会った内容を間隔反復の練習に変えられます。",
       "freeSoftware": {

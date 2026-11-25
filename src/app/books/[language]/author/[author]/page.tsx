@@ -1,19 +1,22 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getLocale, getTranslations } from 'next-intl/server';
 import JsonLd from '@/components/JsonLd';
 import { LegalShell } from '@/components/LegalLinks/shell';
+import PublicLink from '@/components/PublicLink';
 import {
   AUTHOR_PAGE_MIN_BOOKS,
   authorsOf,
   bookListJsonLd,
   booksByAuthor,
+  breadcrumbJsonLd,
   pickLocalized,
   PUBLIC_BOOK_LANGUAGES,
 } from '@/lib/public-books';
 import BookList from '../../../BookList';
-import { publicAlternatesForRequest } from '@/lib/public-locale.server';
+import { publicUrl } from '@/lib/public-locale';
+import { activePublicLocalePrefix, publicAlternatesForRequest } from '@/lib/public-locale.server';
+import { buildPublicTwitter, withPublicOg } from '@/lib/site-seo';
 
 interface Props {
   params: Promise<{ language: string; author: string }>;
@@ -60,30 +63,60 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title,
     description,
     alternates,
-    openGraph: { title, description, url: canonicalUrl, siteName: 'Readfox', type: 'profile' },
+    openGraph: withPublicOg({
+      title,
+      description,
+      url: canonicalUrl,
+      siteName: 'Readfox',
+      type: 'profile',
+    }),
+    twitter: buildPublicTwitter(title, description),
   };
 }
 
 export default async function AuthorPage({ params }: Props) {
   const { language, slug, name, books, locale, languageName } = await load(params);
-  const t = await getTranslations('publicBooks');
+  const [t, localePrefix] = await Promise.all([
+    getTranslations('publicBooks'),
+    activePublicLocalePrefix(),
+  ]);
   const title = t('authorTitle', { author: name, language: languageName });
+  const authorPath = `/books/${language}/author/${encodeURIComponent(slug)}`;
+  const personJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name,
+    url: publicUrl(authorPath, localePrefix),
+  };
   return (
     <LegalShell title={title} wide>
+      <JsonLd data={personJsonLd} />
+      <JsonLd data={bookListJsonLd(title, authorPath, books, localePrefix)} />
       <JsonLd
-        data={bookListJsonLd(title, `/books/${language}/author/${encodeURIComponent(slug)}`, books)}
+        data={breadcrumbJsonLd(
+          [
+            { name: t('allBooks'), path: '/books' },
+            { name: t('languageBooks', { language: languageName }), path: `/books/${language}` },
+            {
+              name: t('authorsTitle', { language: languageName }),
+              path: `/books/${language}/authors`,
+            },
+            { name, path: authorPath },
+          ],
+          localePrefix,
+        )}
       />
       <p className="text-muted-foreground">
         {t('authorIntro', { author: name, count: books.length })}
       </p>
       <BookList books={books} locale={locale} />
       <p className="flex flex-wrap gap-x-4">
-        <Link href={`/books/${language}/authors`} className="underline">
+        <PublicLink href={`/books/${language}/authors`} className="underline">
           {t('browseAuthors')}
-        </Link>
-        <Link href={`/books#${language}`} className="underline">
+        </PublicLink>
+        <PublicLink href={`/books#${language}`} className="underline">
           {t('allBooks')}
-        </Link>
+        </PublicLink>
       </p>
     </LegalShell>
   );

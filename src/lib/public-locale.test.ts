@@ -6,6 +6,8 @@ import {
   isPublicSeoPath,
   localizePublicPath,
   parsePublicLocalePath,
+  publicLocalePrefixFromPath,
+  sitemapLanguages,
   stripPublicLocalePrefix,
 } from './public-locale';
 
@@ -60,19 +62,28 @@ describe('public-locale', () => {
     expect(stripPublicLocalePrefix('/books/en')).toBe('/books/en');
   });
 
-  it('localizes public paths for switching interface language', () => {
+  it('localizes public paths for switching interface language or using a locale prefix', () => {
     expect(localizePublicPath('/vocab-test', 'zh-CN')).toBe('/zh-cn/vocab-test');
+    expect(localizePublicPath('/vocab-test', '/zh-cn')).toBe('/zh-cn/vocab-test');
+    expect(localizePublicPath('/pricing#plans', '/ja')).toBe('/ja/pricing#plans');
+    expect(localizePublicPath('/books/en?level=A1', '/ru')).toBe('/ru/books/en?level=A1');
     expect(localizePublicPath('/zh-cn/vocab-test', 'en')).toBe('/vocab-test');
+    expect(localizePublicPath('/zh-cn/vocab-test', '')).toBe('/vocab-test');
     expect(localizePublicPath('/zh-cn/vocab-test', 'ja')).toBe('/ja/vocab-test');
     expect(localizePublicPath('/', 'ko')).toBe('/ko');
     expect(localizePublicPath('/ko', 'en')).toBe('/');
+    expect(localizePublicPath('/alternatives', '/zh-tw')).toBe('/zh-tw/alternatives');
+    expect(publicLocalePrefixFromPath('/zh-cn/alternatives')).toBe('/zh-cn');
+    expect(publicLocalePrefixFromPath('/books/en')).toBe('');
+    expect(publicLocalePrefixFromPath(null)).toBe('');
+    expect(isPublicSeoPath('/alternatives')).toBe(true);
     expect(isPublicSeoPath('/alternatives/lingq')).toBe(true);
     expect(isPublicSeoPath('/vocab-test/fr')).toBe(true);
     expect(isPublicSeoPath('/vocab-test/history')).toBe(false);
     expect(isPublicSeoPath('/practice')).toBe(false);
   });
 
-  it('builds self-referencing canonical and all 7 hreflang alternates', () => {
+  it('builds self-referencing canonical and all 7 hreflang alternates including x-default', () => {
     const zh = buildPublicAlternates('/vocab-test', '/zh-cn');
     expect(zh.canonical).toBe('https://readfox.app/zh-cn/vocab-test');
     expect(zh.languages).toEqual({
@@ -84,10 +95,14 @@ describe('public-locale', () => {
       ru: 'https://readfox.app/ru/vocab-test',
       'x-default': 'https://readfox.app/vocab-test',
     });
+    expect(sitemapLanguages('/vocab-test')).toEqual(zh.languages);
 
     const homeEn = buildPublicAlternates('/', '');
-    expect(homeEn.canonical).toBe('https://readfox.app/');
+    expect(homeEn.canonical).toBe('https://readfox.app');
+    expect(homeEn.languages?.en).toBe('https://readfox.app');
+    expect(homeEn.languages?.['x-default']).toBe('https://readfox.app');
     expect(homeEn.languages?.['zh-CN']).toBe('https://readfox.app/zh-cn');
+    expect(sitemapLanguages('/')).toEqual(homeEn.languages);
   });
 
   it('treats localized public routes as auth-exempt in isAuthRoute', () => {

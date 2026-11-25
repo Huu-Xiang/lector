@@ -1,6 +1,14 @@
 {
   "alternatives": {
     "breadcrumbHome": "Readfox",
+    "hub": {
+      "metaTitle": "Readfox の比較・代替ガイド：LingQ・Readlang など",
+      "metaDescription": "Readfox と LingQ・Readlang を比較：{books}冊の無料CEFRレベル別洋書、FSRS復習、文脈AI辞書、月額{plusPrice}からのプラン。",
+      "title": "Readfox と他ツールの比較",
+      "intro": "収録されたレベル別洋書、FSRS間隔反復、辞書・解説の精度、オープンソース性、料金プランの観点から Readfox と他の語学読書アプリを比較します。",
+      "cardCta": "詳しい比較を見る",
+      "breadcrumbAlternatives": "比較"
+    },
     "ctaBooks": "{books}冊の無料洋書を見る",
     "ctaVocabTest": "無料語彙力テストを受ける",
     "ctaRegister": "無料アカウント作成",

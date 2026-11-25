@@ -133,6 +133,8 @@
         "held": "暂时无法确认邮件是否发出，请查看邮箱。",
         "restored": "这次结果来自你的备份。"
       }
-    }
+    },
+    "browseBooksHeading": "用免费分级原著继续练习",
+    "browseBooksFor": "{language}免费书籍"
   }
 }

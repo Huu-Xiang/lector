@@ -2,12 +2,21 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getLocale, getTranslations } from 'next-intl/server';
+import JsonLd from '@/components/JsonLd';
 import { LegalShell } from '@/components/LegalLinks/shell';
+import PublicLink from '@/components/PublicLink';
 import { authHref, claimBookPath } from '@/lib/auth-return';
 import PublicChapterReader from '@/components/PublicChapterReader';
-import { findPublicBook, firstChapter, listPublicBooks, pickLocalized } from '@/lib/public-books';
+import {
+  breadcrumbJsonLd,
+  findPublicBook,
+  firstChapter,
+  listPublicBooks,
+  pickLocalized,
+} from '@/lib/public-books';
 import BookSource from '../../../BookSource';
-import { publicAlternatesForRequest } from '@/lib/public-locale.server';
+import { activePublicLocalePrefix, publicAlternatesForRequest } from '@/lib/public-locale.server';
+import { buildPublicTwitter, withPublicOg } from '@/lib/site-seo';
 
 interface Props {
   params: Promise<{ language: string; slug: string }>;
@@ -36,11 +45,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   });
   const url = `/books/${language}/${slug}/read`;
   const { alternates, canonicalUrl } = await publicAlternatesForRequest(url);
+  const coverImage = book.cover
+    ? { url: book.cover.url, width: 480, height: 640, alt: book.title }
+    : null;
   return {
     title,
     description,
     alternates,
-    openGraph: { title, description, url: canonicalUrl, siteName: 'Readfox', type: 'article' },
+    openGraph: withPublicOg(
+      {
+        title,
+        description,
+        url: canonicalUrl,
+        siteName: 'Readfox',
+        type: 'article',
+      },
+      coverImage,
+    ),
+    twitter: buildPublicTwitter(title, description, book.cover?.url),
   };
 }
 
@@ -49,19 +71,36 @@ export default async function ChapterPage({ params }: Props) {
   const book = findPublicBook(language, slug);
   if (!book) notFound();
 
-  const t = await getTranslations('publicBooks');
-  const locale = await getLocale();
+  const [t, locale, localePrefix] = await Promise.all([
+    getTranslations('publicBooks'),
+    getLocale(),
+    activePublicLocalePrefix(),
+  ]);
+  const languageName =
+    new Intl.DisplayNames([locale], { type: 'language' }).of(language) ?? language;
   const shown = pickLocalized(book.titles, locale, book.title);
   const bookHref = `/books/${language}/${slug}`;
+  const chapterTitle = t('chapterTitle', { title: shown });
   const singleLesson = book.lessonCount === 1;
   const registerHref = authHref('/register', claimBookPath(language, slug));
 
   return (
-    <LegalShell title={t('chapterTitle', { title: shown })}>
+    <LegalShell title={chapterTitle}>
+      <JsonLd
+        data={breadcrumbJsonLd(
+          [
+            { name: t('allBooks'), path: '/books' },
+            { name: t('languageBooks', { language: languageName }), path: `/books/${language}` },
+            { name: shown, path: bookHref },
+            { name: chapterTitle, path: `${bookHref}/read` },
+          ],
+          localePrefix,
+        )}
+      />
       <p className="-mt-3 text-muted-foreground">
-        <Link href={bookHref} className="hover:underline">
+        <PublicLink href={bookHref} className="hover:underline">
           ← {t('backToBook')}
-        </Link>
+        </PublicLink>
         {' · '}
         {t('byAuthor', { author: book.author })} · {t('level', { level: book.level })}
       </p>

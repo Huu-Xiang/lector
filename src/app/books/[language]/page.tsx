@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getLocale, getTranslations } from 'next-intl/server';
 import JsonLd from '@/components/JsonLd';
 import { LegalShell, H2 } from '@/components/LegalLinks/shell';
+import PublicLink from '@/components/PublicLink';
 import {
   PUBLIC_BOOK_LANGUAGES,
   bookListJsonLd,
@@ -20,7 +20,8 @@ import {
 import { UI_LOCALES } from '@/i18n/locales';
 import BookDetailList from '../BookDetailList';
 import BookHubLocaleButton from '../BookHubLocaleButton';
-import { publicAlternatesForRequest } from '@/lib/public-locale.server';
+import { activePublicLocalePrefix, publicAlternatesForRequest } from '@/lib/public-locale.server';
+import { buildPublicTwitter, withPublicOg } from '@/lib/site-seo';
 
 interface Props {
   params: Promise<{ language: string }>;
@@ -66,13 +67,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title,
     description,
     alternates,
-    openGraph: { title, description, url: canonicalUrl, siteName: 'Readfox', type: 'website' },
+    openGraph: withPublicOg({
+      title,
+      description,
+      url: canonicalUrl,
+      siteName: 'Readfox',
+      type: 'website',
+    }),
+    twitter: buildPublicTwitter(title, description),
   };
 }
 
 export default async function LanguageBooksPage({ params }: Props) {
   const { language, books, levels, locale, languageName } = await load(params);
-  const [t, tv] = await Promise.all([getTranslations('publicBooks'), getTranslations('vocabTest')]);
+  const [t, tv, localePrefix] = await Promise.all([
+    getTranslations('publicBooks'),
+    getTranslations('vocabTest'),
+    activePublicLocalePrefix(),
+  ]);
   const title = t('languageTitle', { language: languageName });
   const path = `/books/${language}`;
   const vocabTestHref =
@@ -88,12 +100,15 @@ export default async function LanguageBooksPage({ params }: Props) {
   const others = languagesWithBooks().filter((code) => code !== language);
   return (
     <LegalShell title={title} wide>
-      <JsonLd data={bookListJsonLd(title, path, books)} />
+      <JsonLd data={bookListJsonLd(title, path, books, localePrefix)} />
       <JsonLd
-        data={breadcrumbJsonLd([
-          { name: t('allBooks'), path: '/books' },
-          { name: t('languageBooks', { language: languageName }), path },
-        ])}
+        data={breadcrumbJsonLd(
+          [
+            { name: t('allBooks'), path: '/books' },
+            { name: t('languageBooks', { language: languageName }), path },
+          ],
+          localePrefix,
+        )}
       />
       <p className="text-muted-foreground">
         {t('languageIntro', {
@@ -105,13 +120,13 @@ export default async function LanguageBooksPage({ params }: Props) {
       </p>
       {vocabTestHref && (
         <p>
-          <Link
+          <PublicLink
             href={vocabTestHref}
             data-testid="books-lang-vocab-test-link"
             className="underline hover:text-foreground"
           >
             {language === 'en' ? tv('booksLink') : tv('langBooksLink', { language: languageName })}
-          </Link>
+          </PublicLink>
         </p>
       )}
       <p className="flex flex-wrap gap-x-3 text-muted-foreground">
@@ -120,24 +135,24 @@ export default async function LanguageBooksPage({ params }: Props) {
         )}
         <span>{t('browseLevels')}:</span>
         {levels.map((level) => (
-          <Link
+          <PublicLink
             key={level}
             href={`${path}/level/${levelSlug(level)}`}
             className="underline hover:text-foreground"
           >
             {level}
-          </Link>
+          </PublicLink>
         ))}
-        <Link href={`${path}/authors`} className="underline hover:text-foreground">
+        <PublicLink href={`${path}/authors`} className="underline hover:text-foreground">
           {t('browseAuthors')}
-        </Link>
+        </PublicLink>
       </p>
       {levels.map((level) => (
         <section key={level} id={levelSlug(level)} className="space-y-2">
           <H2>
-            <Link href={`${path}/level/${levelSlug(level)}`} className="hover:underline">
+            <PublicLink href={`${path}/level/${levelSlug(level)}`} className="hover:underline">
               {t('levelTitle', { language: languageName, level })}
-            </Link>{' '}
+            </PublicLink>{' '}
             <span className="text-sm font-normal text-muted-foreground">
               {t('bookCount', { count: booksAtLevel(language, level).length })}
             </span>
@@ -147,15 +162,15 @@ export default async function LanguageBooksPage({ params }: Props) {
       ))}
       <p className="flex flex-wrap gap-x-4">
         {others.map((code) => (
-          <Link key={code} href={`/books/${code}`} className="underline">
+          <PublicLink key={code} href={`/books/${code}`} className="underline">
             {t('languageBooks', {
               language: new Intl.DisplayNames([locale], { type: 'language' }).of(code) ?? code,
             })}
-          </Link>
+          </PublicLink>
         ))}
-        <Link href="/books" className="underline">
+        <PublicLink href="/books" className="underline">
           {t('allBooks')}
-        </Link>
+        </PublicLink>
       </p>
     </LegalShell>
   );

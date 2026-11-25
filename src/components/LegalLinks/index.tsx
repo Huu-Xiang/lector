@@ -1,7 +1,7 @@
-import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import UiLanguageSelect from '@/i18n/UiLanguageSelect';
 import HideInNativeApp from '@/components/HideInNativeApp';
+import { ClientPublicLink } from '@/components/PublicLink/client';
 
 export const SOURCE_URL = 'https://github.com/Huu-Xiang/lector';
 
@@ -21,22 +21,22 @@ export default function LegalLinks({
   const links = (
     <>
       <HideInNativeApp>
-        <Link href="/pricing" className="hover:text-foreground hover:underline">
+        <ClientPublicLink href="/pricing" className="hover:text-foreground hover:underline">
           {t('pricing')}
-        </Link>
+        </ClientPublicLink>
       </HideInNativeApp>
-      <Link href="/privacy" className="hover:text-foreground hover:underline">
+      <ClientPublicLink href="/privacy" className="hover:text-foreground hover:underline">
         {t('privacy')}
-      </Link>
-      <Link href="/terms" className="hover:text-foreground hover:underline">
+      </ClientPublicLink>
+      <ClientPublicLink href="/terms" className="hover:text-foreground hover:underline">
         {t('terms')}
-      </Link>
-      <Link href="/refunds" className="hover:text-foreground hover:underline">
+      </ClientPublicLink>
+      <ClientPublicLink href="/refunds" className="hover:text-foreground hover:underline">
         {t('refunds')}
-      </Link>
-      <Link href="/about" className="hover:text-foreground hover:underline">
+      </ClientPublicLink>
+      <ClientPublicLink href="/about" className="hover:text-foreground hover:underline">
         {t('about')}
-      </Link>
+      </ClientPublicLink>
       <a href="mailto:privacy@readfox.app" className="hover:text-foreground hover:underline">
         {t('contact')}
       </a>
@@ -62,9 +62,14 @@ export default function LegalLinks({
       aria-label={t('nav')}
       className={`flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs text-muted-foreground ${className}`}
     >
-      <Link href="/books" className="hover:text-foreground hover:underline">
+      <ClientPublicLink href="/books" className="hover:text-foreground hover:underline">
         {t('freeBooks')}
-      </Link>
+      </ClientPublicLink>
+      <HideInNativeApp>
+        <ClientPublicLink href="/alternatives" className="hover:text-foreground hover:underline">
+          {t('alternatives')}
+        </ClientPublicLink>
+      </HideInNativeApp>
       {links}
       <UiLanguageSelect />
     </nav>

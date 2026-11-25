@@ -1,5 +1,5 @@
-import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
+import PublicLink from '@/components/PublicLink';
 import { pickLocalized, type PublicBook } from '@/lib/public-books';
 
 /** Book links with the author and the lesson count under each title. */
@@ -17,9 +17,9 @@ export default async function BookDetailList({
         const shown = pickLocalized(book.titles, locale, book.title);
         return (
           <li key={`${book.language}/${book.slug}`}>
-            <Link href={`/books/${book.language}/${book.slug}`} className="hover:underline">
+            <PublicLink href={`/books/${book.language}/${book.slug}`} className="hover:underline">
               {shown}
-            </Link>
+            </PublicLink>
             {shown !== book.title && <span className="text-muted-foreground"> · {book.title}</span>}
             <p className="text-xs text-muted-foreground">
               {t('bookDetail', { author: book.author, lessons: book.lessonCount })}

@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import PublicLink from '@/components/PublicLink';
 import { pickLocalized, type PublicBook } from '@/lib/public-books';
 
 /** Titles in the interface language, with the original title after them. */
@@ -9,9 +9,9 @@ export default function BookList({ books, locale }: { books: PublicBook[]; local
         const shown = pickLocalized(book.titles, locale, book.title);
         return (
           <li key={`${book.language}/${book.slug}`}>
-            <Link href={`/books/${book.language}/${book.slug}`} className="hover:underline">
+            <PublicLink href={`/books/${book.language}/${book.slug}`} className="hover:underline">
               {shown}
-            </Link>
+            </PublicLink>
             {shown !== book.title && <span className="text-muted-foreground"> · {book.title}</span>}
           </li>
         );

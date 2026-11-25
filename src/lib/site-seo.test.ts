@@ -1,8 +1,18 @@
 import { afterEach, describe, expect, it } from 'vitest';
+import { metadata as authLayoutMetadata } from '@/app/(auth)/layout';
+import { metadata as appAuthLayoutMetadata } from '@/app/app-auth/layout';
 import robots from '@/app/robots';
 import sitemap from '@/app/sitemap';
 import { GET as getIndexNowKey } from '@/app/indexnow-key.txt/route';
-import { isNoIndexSite, validIndexNowKey } from './site-seo';
+import {
+  DEFAULT_OG_IMAGE,
+  buildOrganizationJsonLd,
+  buildPublicTwitter,
+  buildWebsiteJsonLd,
+  isNoIndexSite,
+  validIndexNowKey,
+  withPublicOg,
+} from './site-seo';
 
 const ORIGINAL_ENV = {
   READFOX_BETA_NOTICE: process.env.READFOX_BETA_NOTICE,
@@ -57,19 +67,83 @@ describe('site-seo', () => {
     expect(rules[0]?.allow).toContain('/vocab-test');
     expect(rules[0]?.allow).toContain('/alternatives');
     expect(rules[0]?.disallow).toEqual(
-      expect.arrayContaining(['/api/', '/admin', '/checkout', '/claim-book', '/settings']),
+      expect.arrayContaining([
+        '/api/',
+        '/admin',
+        '/checkout',
+        '/claim-book',
+        '/settings',
+        '/subscribe',
+        '/login',
+        '/register',
+        '/reset-password',
+        '/two-factor',
+        '/beta-login',
+        '/welcome',
+        '/app-auth',
+        '/vocab-test/history',
+      ]),
     );
     expect(result.sitemap).toBe('https://readfox.app/sitemap.xml');
   });
 
-  it('attaches lastModified to every sitemap entry without duplicate URLs', () => {
+  it('attaches lastModified, x-default alternates, /alternatives hub, and canonical homepage URL without trailing slash', () => {
     const entries = sitemap();
     expect(entries.length).toBeGreaterThan(200);
     const urls = entries.map((e) => e.url);
     expect(new Set(urls).size).toBe(urls.length);
+    expect(urls).toContain('https://readfox.app');
+    expect(urls).not.toContain('https://readfox.app/');
+    expect(urls).toContain('https://readfox.app/alternatives');
     for (const entry of entries) {
       expect(entry.lastModified).toBeTruthy();
+      expect(entry.alternates?.languages?.['x-default']).toBe(entry.url);
     }
+  });
+
+  it('builds public OpenGraph, Twitter, Organization, and WebSite metadata helpers', () => {
+    const defaultOg = withPublicOg({ title: 'Books', description: 'Free books', type: 'website' });
+    expect(defaultOg.images).toEqual([DEFAULT_OG_IMAGE]);
+
+    const customCover = { url: '/covers/book.jpg', width: 600, height: 900, alt: 'Book' };
+    const customOg = withPublicOg({ title: 'Book', type: 'book' }, customCover);
+    expect(customOg.images).toEqual([customCover]);
+
+    expect(buildPublicTwitter('Title', 'Desc')).toEqual({
+      card: 'summary_large_image',
+      title: 'Title',
+      description: 'Desc',
+      images: ['/og.png'],
+    });
+    expect(buildPublicTwitter('Title', 'Desc', '/covers/book.jpg')).toEqual({
+      card: 'summary_large_image',
+      title: 'Title',
+      description: 'Desc',
+      images: ['/covers/book.jpg'],
+    });
+
+    expect(buildOrganizationJsonLd()).toMatchObject({
+      '@type': 'Organization',
+      '@id': 'https://readfox.app/#organization',
+      name: 'Readfox',
+      url: 'https://readfox.app',
+      logo: 'https://readfox.app/icon.png',
+      sameAs: ['https://github.com/Huu-Xiang/lector'],
+    });
+
+    expect(buildWebsiteJsonLd('https://readfox.app/ja', 'ja')).toMatchObject({
+      '@type': 'WebSite',
+      '@id': 'https://readfox.app/#website',
+      name: 'Readfox',
+      url: 'https://readfox.app/ja',
+      inLanguage: 'ja',
+      publisher: { '@id': 'https://readfox.app/#organization' },
+    });
+  });
+
+  it('marks auth and app-auth layouts as noindex/nofollow', () => {
+    expect(authLayoutMetadata.robots).toEqual({ index: false, follow: false });
+    expect(appAuthLayoutMetadata.robots).toEqual({ index: false, follow: false });
   });
 
   it('serves /indexnow-key.txt only when a valid INDEXNOW_KEY is configured on production', async () => {

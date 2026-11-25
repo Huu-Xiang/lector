@@ -133,6 +133,8 @@
     "introFacts": "Бесплатно · Без регистрации · Первый результат после 8 вопросов",
     "resultReady": "Результат доступен",
     "resultMilestone": "Результат после {count, number} вопросов",
-    "answerBreakdown": "Верно: {right} · Не уверен: {unsure} · Неверно: {wrong}"
+    "answerBreakdown": "Верно: {right} · Не уверен: {unsure} · Неверно: {wrong}",
+    "browseBooksHeading": "Практикуйтесь с бесплатными книгами по уровням",
+    "browseBooksFor": "Книги ({language})"
   }
 }

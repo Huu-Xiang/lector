@@ -133,6 +133,8 @@
         "held": "送信を確認できませんでした。受信トレイを確認してください。",
         "restored": "バックアップから復元した結果です。"
       }
-    }
+    },
+    "browseBooksHeading": "無料のレベル別洋書で練習する",
+    "browseBooksFor": "{language}の本"
   }
 }

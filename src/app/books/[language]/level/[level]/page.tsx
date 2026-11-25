@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getLocale, getTranslations } from 'next-intl/server';
 import JsonLd from '@/components/JsonLd';
 import { LegalShell } from '@/components/LegalLinks/shell';
+import PublicLink from '@/components/PublicLink';
 import {
   bookListJsonLd,
   booksAtLevel,
@@ -15,7 +15,8 @@ import {
 } from '@/lib/public-books';
 import BookDetailList from '../../../BookDetailList';
 import FeaturedReading from '../../../FeaturedReading';
-import { publicAlternatesForRequest } from '@/lib/public-locale.server';
+import { activePublicLocalePrefix, publicAlternatesForRequest } from '@/lib/public-locale.server';
+import { buildPublicTwitter, withPublicOg } from '@/lib/site-seo';
 
 interface Props {
   params: Promise<{ language: string; level: string }>;
@@ -57,13 +58,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title,
     description,
     alternates,
-    openGraph: { title, description, url: canonicalUrl, siteName: 'Readfox', type: 'website' },
+    openGraph: withPublicOg({
+      title,
+      description,
+      url: canonicalUrl,
+      siteName: 'Readfox',
+      type: 'website',
+    }),
+    twitter: buildPublicTwitter(title, description),
   };
 }
 
 export default async function LevelPage({ params }: Props) {
   const { language, level, books, locale, languageName } = await load(params);
-  const t = await getTranslations('publicBooks');
+  const [t, localePrefix] = await Promise.all([
+    getTranslations('publicBooks'),
+    activePublicLocalePrefix(),
+  ]);
   const title = t('levelTitle', { language: languageName, level });
   const path = `/books/${language}/level/${levelSlug(level)}`;
   const { easier, harder } = neighbourLevels(language, level);
@@ -73,13 +84,16 @@ export default async function LevelPage({ params }: Props) {
   ].filter((n): n is { label: string; level: string } => n.level !== null);
   return (
     <LegalShell title={title} wide>
-      <JsonLd data={bookListJsonLd(title, path, books)} />
+      <JsonLd data={bookListJsonLd(title, path, books, localePrefix)} />
       <JsonLd
-        data={breadcrumbJsonLd([
-          { name: t('allBooks'), path: '/books' },
-          { name: t('languageBooks', { language: languageName }), path: `/books/${language}` },
-          { name: title, path },
-        ])}
+        data={breadcrumbJsonLd(
+          [
+            { name: t('allBooks'), path: '/books' },
+            { name: t('languageBooks', { language: languageName }), path: `/books/${language}` },
+            { name: title, path },
+          ],
+          localePrefix,
+        )}
       />
       <p className="text-muted-foreground">
         {t('levelIntro', { count: books.length, language: languageName, level })}
@@ -96,26 +110,26 @@ export default async function LevelPage({ params }: Props) {
       {neighbours.length > 0 && (
         <nav aria-label={t('otherLevels')} className="flex flex-wrap gap-x-4">
           {neighbours.map((n) => (
-            <Link
+            <PublicLink
               key={n.level}
               href={`/books/${language}/level/${levelSlug(n.level)}`}
               className="underline"
             >
               {n.label}: {t('levelTitle', { language: languageName, level: n.level })}
-            </Link>
+            </PublicLink>
           ))}
         </nav>
       )}
       <p className="flex flex-wrap gap-x-4">
-        <Link href={`/books/${language}`} className="underline">
+        <PublicLink href={`/books/${language}`} className="underline">
           {t('languageBooks', { language: languageName })}
-        </Link>
-        <Link href={`/books/${language}/authors`} className="underline">
+        </PublicLink>
+        <PublicLink href={`/books/${language}/authors`} className="underline">
           {t('browseAuthors')}
-        </Link>
-        <Link href="/books" className="underline">
+        </PublicLink>
+        <PublicLink href="/books" className="underline">
           {t('allBooks')}
-        </Link>
+        </PublicLink>
       </p>
     </LegalShell>
   );

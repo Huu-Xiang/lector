@@ -230,6 +230,11 @@
     "claimBody": "학습 언어를 전환하고 1장을 바로 열어 드립니다.",
     "claimConfirm": "서재에 추가하고 읽기 시작",
     "claimAdding": "책을 여는 중…",
-    "claimBack": "서재로 돌아가기"
+    "claimBack": "서재로 돌아가기",
+    "difficultyTitle": "읽기 난이도 및 필요 어휘",
+    "vocab95Label": "95% 이해 (사전과 함께 무리 없이 읽기)",
+    "vocab98Label": "98% 이해 (막힘없이 유창하게 읽기)",
+    "vocabFamilies": "약 {count}개 어휘군",
+    "examEquivalentsLabel": "대략적인 시험 등급 환산"
   }
 }

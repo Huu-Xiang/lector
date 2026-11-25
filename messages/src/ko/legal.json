@@ -112,6 +112,7 @@
     },
     "about": {
       "metaTitle": "소개 – Readfox",
+      "metaDescription": "Readfox 소개: 진짜 책으로 언어를 배우는 오픈소스 리더. 탭 번역, 단어장, 간격 반복 복습 기능을 제공합니다.",
       "title": "Readfox 소개",
       "intro": "Readfox에서는 배우는 언어로 진짜 책과 기사를 읽고, 읽으면서 단어와 구절을 번역하고, 만난 내용을 간격 반복 연습으로 이어갈 수 있어요.",
       "freeSoftware": {

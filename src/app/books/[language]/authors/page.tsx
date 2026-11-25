@@ -1,16 +1,19 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getLocale, getTranslations } from 'next-intl/server';
+import JsonLd from '@/components/JsonLd';
 import { LegalShell } from '@/components/LegalLinks/shell';
+import PublicLink from '@/components/PublicLink';
 import {
   AUTHOR_PAGE_MIN_BOOKS,
   authorsOf,
   booksByAuthor,
+  breadcrumbJsonLd,
   PUBLIC_BOOK_LANGUAGES,
   type PublicBookLanguage,
 } from '@/lib/public-books';
-import { publicAlternatesForRequest } from '@/lib/public-locale.server';
+import { activePublicLocalePrefix, publicAlternatesForRequest } from '@/lib/public-locale.server';
+import { buildPublicTwitter, withPublicOg } from '@/lib/site-seo';
 
 interface Props {
   params: Promise<{ language: string }>;
@@ -51,15 +54,36 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title,
     description,
     alternates,
-    openGraph: { title, description, url: canonicalUrl, siteName: 'Readfox', type: 'website' },
+    openGraph: withPublicOg({
+      title,
+      description,
+      url: canonicalUrl,
+      siteName: 'Readfox',
+      type: 'website',
+    }),
+    twitter: buildPublicTwitter(title, description),
   };
 }
 
 export default async function AuthorsPage({ params }: Props) {
   const { language, authors, languageName } = await load(params);
-  const t = await getTranslations('publicBooks');
+  const [t, localePrefix] = await Promise.all([
+    getTranslations('publicBooks'),
+    activePublicLocalePrefix(),
+  ]);
+  const title = t('authorsTitle', { language: languageName });
   return (
-    <LegalShell title={t('authorsTitle', { language: languageName })} wide>
+    <LegalShell title={title} wide>
+      <JsonLd
+        data={breadcrumbJsonLd(
+          [
+            { name: t('allBooks'), path: '/books' },
+            { name: t('languageBooks', { language: languageName }), path: `/books/${language}` },
+            { name: title, path: `/books/${language}/authors` },
+          ],
+          localePrefix,
+        )}
+      />
       <ul className="grid gap-x-6 gap-y-1 sm:grid-cols-2 lg:grid-cols-3">
         {authors.map((author) => {
           const href =
@@ -68,9 +92,9 @@ export default async function AuthorsPage({ params }: Props) {
               : `/books/${language}/${booksByAuthor(language, author.slug)[0].slug}`;
           return (
             <li key={author.slug}>
-              <Link href={href} className="hover:underline">
+              <PublicLink href={href} className="hover:underline">
                 {author.name}
-              </Link>
+              </PublicLink>
               <span className="text-muted-foreground">
                 {' '}
                 · {t('bookCount', { count: author.count })}
@@ -80,9 +104,9 @@ export default async function AuthorsPage({ params }: Props) {
         })}
       </ul>
       <p>
-        <Link href={`/books#${language}`} className="underline">
+        <PublicLink href={`/books#${language}`} className="underline">
           {t('allBooks')}
-        </Link>
+        </PublicLink>
       </p>
     </LegalShell>
   );

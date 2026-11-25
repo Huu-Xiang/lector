@@ -1,6 +1,14 @@
 {
   "alternatives": {
     "breadcrumbHome": "Readfox",
+    "hub": {
+      "metaTitle": "Readfox 产品对比：LingQ、Readlang 等语言阅读工具替代方案",
+      "metaDescription": "将 Readfox 与 LingQ、Readlang 全面对比：{books} 本免费 CEFR 分级原著、FSRS 间隔复习、语境 AI 查词，Plus 方案低至 {plusPrice}/月。",
+      "title": "Readfox 与同类产品对比",
+      "intro": "从内置分级原著、FSRS 复习、查词体验、开源透明与价格等维度，看看 Readfox 与其他外语阅读学习应用的差异。",
+      "cardCta": "查看完整对比",
+      "breadcrumbAlternatives": "产品对比"
+    },
     "ctaBooks": "浏览 {books} 本免费原著",
     "ctaVocabTest": "免费测英语词汇量",
     "ctaRegister": "免费注册开始读",
@@ -205,6 +213,7 @@
     "source": "源代码",
     "refunds": "退款",
     "freeBooks": "免费书",
+    "alternatives": "产品对比",
     "back": "返回",
     "contact": "联系我们"
   },
@@ -1567,7 +1576,12 @@
     "claimBody": "确认后会自动切换到对应语言并直接打开第一章。",
     "claimConfirm": "加入书库并开始阅读",
     "claimAdding": "正在打开书籍…",
-    "claimBack": "返回书库"
+    "claimBack": "返回书库",
+    "difficultyTitle": "阅读难度与词汇量参考",
+    "vocab95Label": "95% 理解度（配词典可顺畅阅读）",
+    "vocab98Label": "98% 理解度（轻松流畅阅读）",
+    "vocabFamilies": "约 {count} 个词族",
+    "examEquivalentsLabel": "大致对应考试水平"
   },
   "dailyGoal": {
     "editor": {
@@ -2002,6 +2016,7 @@
     },
     "about": {
       "metaTitle": "关于 – Readfox",
+      "metaDescription": "关于 Readfox：一款开源语言阅读器，支持在真实原著中点词翻译、生词本管理与间隔重复复习。",
       "title": "关于 Readfox",
       "intro": "Readfox 让你用所学的语言阅读真实的书籍和文章，边读边翻译单词和短语，并把读到的内容转化为间隔重复练习。",
       "freeSoftware": {
@@ -2877,6 +2892,8 @@
         "held": "暂时无法确认邮件是否发出，请查看邮箱。",
         "restored": "这次结果来自你的备份。"
       }
-    }
+    },
+    "browseBooksHeading": "用免费分级原著继续练习",
+    "browseBooksFor": "{language}免费书籍"
   }
 }

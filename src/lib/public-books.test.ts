@@ -80,6 +80,17 @@ describe('public books', () => {
     expect(korean.hardWords).toEqual([]);
   });
 
+  it('loads vocabNeeds (n95/n98) from vocab-needs.json when available', () => {
+    const princess = findPublicBook('en', 'a-little-princess')!;
+    expect(princess.vocabNeeds).toEqual({ n95: 6000, n98: 13200 });
+    const franklin = findPublicBook('en', 'autobiography-of-benjamin-franklin')!;
+    expect(franklin.vocabNeeds).toEqual({ n95: 7500, n98: null });
+    const withNeeds = listPublicBooks().filter((b) => b.vocabNeeds !== null);
+    expect(withNeeds.length).toBeGreaterThanOrEqual(95);
+    const korean = listPublicBooks().find((b) => b.language === 'ko')!;
+    expect(korean.vocabNeeds).toBeNull();
+  });
+
   it('gives the whole first lesson as the first chapter', () => {
     const walden = findPublicBook('en', 'walden')!;
     expect(firstChapter(walden).join('').length).toBeGreaterThan(
@@ -111,12 +122,19 @@ describe('public book structured data', () => {
     expect(readingDuration({ ...book, wordCount: 100 })).toBe('PT1M');
   });
 
-  it('lists books in order with their page URLs', () => {
+  it('lists books in order with their page URLs and supports locale prefixes', () => {
     const books = booksAtLevel('en', 'b1').slice(0, 2);
     const ld = bookListJsonLd('English B1', '/books/en/level/b1', books);
     expect(ld.url).toBe('https://readfox.app/books/en/level/b1');
     expect(ld.numberOfItems).toBe(2);
     expect(ld.itemListElement[1]).toMatchObject({ position: 2, url: bookUrl(books[1]) });
+
+    const zhLd = bookListJsonLd('English B1', '/books/en/level/b1', books, '/zh-cn');
+    expect(zhLd.url).toBe('https://readfox.app/zh-cn/books/en/level/b1');
+    expect(zhLd.itemListElement[0]).toMatchObject({
+      position: 1,
+      url: `https://readfox.app/zh-cn/books/${books[0].language}/${books[0].slug}`,
+    });
   });
 });
 
@@ -135,9 +153,11 @@ describe('book schema.org data', () => {
       expect(ld.url, name).toBe(`https://readfox.app/books/${book.language}/${book.slug}`);
       expect(JSON.parse(JSON.stringify(ld)), name).toEqual(ld);
     }
+    const walden = findPublicBook('en', 'walden')!;
+    expect(bookJsonLd(walden, '/ja').url).toBe('https://readfox.app/ja/books/en/walden');
   });
 
-  it('writes a breadcrumb list with absolute URLs in order', () => {
+  it('writes a breadcrumb list with absolute URLs in order and supports locale prefixes', () => {
     const ld = breadcrumbJsonLd([
       { name: 'All', path: '/books' },
       { name: 'English', path: '/books/en' },
@@ -146,6 +166,23 @@ describe('book schema.org data', () => {
     expect(ld.itemListElement).toEqual([
       { '@type': 'ListItem', position: 1, name: 'All', item: 'https://readfox.app/books' },
       { '@type': 'ListItem', position: 2, name: 'English', item: 'https://readfox.app/books/en' },
+    ]);
+
+    const ruLd = breadcrumbJsonLd(
+      [
+        { name: 'All', path: '/books' },
+        { name: 'English', path: '/books/en' },
+      ],
+      '/ru',
+    );
+    expect(ruLd.itemListElement).toEqual([
+      { '@type': 'ListItem', position: 1, name: 'All', item: 'https://readfox.app/ru/books' },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'English',
+        item: 'https://readfox.app/ru/books/en',
+      },
     ]);
   });
 });

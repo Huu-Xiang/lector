@@ -112,6 +112,7 @@
     },
     "about": {
       "metaTitle": "關於 – Readfox",
+      "metaDescription": "關於 Readfox：一款開源語言閱讀器，支援在真實原著中點詞翻譯、生字本管理與間隔重複複習。",
       "title": "關於 Readfox",
       "intro": "Readfox 讓你用所學的語言閱讀真實的書籍和文章，邊讀邊翻譯單字和片語，並把讀到的內容轉化為間隔重複練習。",
       "freeSoftware": {

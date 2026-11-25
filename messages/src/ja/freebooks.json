@@ -230,6 +230,11 @@
     "claimBody": "学習言語を切り替えて、第1章をすぐに開きます。",
     "claimConfirm": "ライブラリに追加して読み始める",
     "claimAdding": "本を開いています…",
-    "claimBack": "ライブラリへ戻る"
+    "claimBack": "ライブラリへ戻る",
+    "difficultyTitle": "読解の難易度と必要語彙",
+    "vocab95Label": "95% 理解（辞書併用で快適に読める目安）",
+    "vocab98Label": "98% 理解（すらすら読める目安）",
+    "vocabFamilies": "約 {count} 語族",
+    "examEquivalentsLabel": "対応する試験レベルの目安"
   }
 }

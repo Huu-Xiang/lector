@@ -1,6 +1,14 @@
 {
   "alternatives": {
     "breadcrumbHome": "Readfox",
+    "hub": {
+      "metaTitle": "Readfox Alternatives & Comparisons: LingQ, Readlang & More",
+      "metaDescription": "Compare Readfox with LingQ and Readlang: {books} free CEFR-graded books, FSRS spaced repetition, contextual AI lookup, and plans from {plusPrice}/mo.",
+      "title": "How Readfox compares",
+      "intro": "See how Readfox compares with other reading-based language learning apps on built-in graded books, FSRS review, lookup quality, open-source transparency, and pricing.",
+      "cardCta": "Read full comparison",
+      "breadcrumbAlternatives": "Alternatives"
+    },
     "ctaBooks": "Browse {books} free books",
     "ctaVocabTest": "Take free vocab test",
     "ctaRegister": "Create free account",
