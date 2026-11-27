@@ -8,6 +8,7 @@ import CollectionArtwork from '@/components/CollectionCard/CollectionArtwork';
 import { buttonVariants } from '@/components/ui/button';
 import { getLessonsForCollection, type Collection } from '@/lib/data-layer';
 import { useCollectionDisplay } from '@/lib/library-titles';
+import { resumeReadingLesson } from './resume-reading';
 
 export function hasUnfinishedReading(book: Collection) {
   return book.avgProgress > 0 && book.avgProgress < (book.onlyLessonId ? 95 : 100);
@@ -28,20 +29,7 @@ export default function IPadFeaturedBook({ collection }: { collection: Collectio
     getLessonsForCollection(id, { fresh: true })
       .then((lessons) => {
         if (cancelled) return;
-        const readable = lessons.filter(
-          (lesson) =>
-            lesson.progress_percentComplete < 95 &&
-            (lesson.transcriptionStatus == null || lesson.transcriptionStatus === 'done'),
-        );
-        const lastStarted = readable.reduce<(typeof readable)[number] | undefined>(
-          (latest, lesson) => {
-            if (lesson.progress_percentComplete <= 0 && lesson.progress_scrollPosition <= 0)
-              return latest;
-            return !latest || lesson.lastReadAt > latest.lastReadAt ? lesson : latest;
-          },
-          undefined,
-        );
-        setResumeLesson(lastStarted?.id ?? readable[0]?.id ?? null);
+        setResumeLesson(resumeReadingLesson(lessons));
       })
       .catch(() => {});
 

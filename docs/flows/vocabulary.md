@@ -1,5 +1,7 @@
 # Vocabulary domain
 
+On native iPhone, search has a clear action and status pills. A horizontal swipe reveals Known and Delete; vertical gestures keep scrolling. Edit mode retains checkbox selection. Lookup sheets snap to 34dvh or 78dvh, with velocity-based dismissal and resisted overscroll. Reduce Motion keeps actions available without animated transforms.
+
 On iOS, the word list follows a compact total. Expand the total to see the breakdown by word state.
 
 This domain stores entries that the user owns. It also stores the known-word map. The reader uses `knownWords` for colour. The vocab list uses `vocab`. A save writes both.

@@ -216,6 +216,21 @@ public class NativeTabBarPlugin: CAPPlugin, CAPBridgedPlugin, UITabBarDelegate {
         let bar = UITabBar()
         bar.delegate = self
         bar.tintColor = Self.sage
+        if #available(iOS 26.0, *) {
+        } else {
+            let appearance = UITabBarAppearance()
+            appearance.configureWithDefaultBackground()
+            for item in [appearance.stackedLayoutAppearance, appearance.inlineLayoutAppearance, appearance.compactInlineLayoutAppearance] {
+                item.selected.iconColor = Self.sage
+                item.selected.titleTextAttributes = [.foregroundColor: Self.sage]
+                item.normal.iconColor = .secondaryLabel
+                item.normal.titleTextAttributes = [.foregroundColor: UIColor.secondaryLabel]
+            }
+            bar.standardAppearance = appearance
+            if #available(iOS 15.0, *) {
+                bar.scrollEdgeAppearance = appearance
+            }
+        }
         bar.sizeToFit()
         bar.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(bar)

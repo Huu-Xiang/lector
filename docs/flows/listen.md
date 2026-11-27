@@ -1,5 +1,7 @@
 # Listen domain
 
+ListenAlong publishes Media Session metadata and transport actions when the browser exposes the APIs. Audio seeking clamps to a finite positive duration; TTS exposes track controls without audio seeking. Unmount removes handlers, metadata and playback state.
+
 This domain is speech and audio lessons. YouTube captions share the Reader. They do not share the podcast player.
 
 ## Speak word

@@ -178,6 +178,7 @@
     "vocabGrowth": {
       "trackedWords": "保存した単語と学習状況から集計します。",
       "noTrackedWords": "単語を保存するか、習得済みにすると推移を確認できます。",
+      "growthHint": "読み続けると、語彙の成長を確認できます。",
       "title": "語彙の成長",
       "knownWords": "覚えた単語",
       "learning": "学習中",

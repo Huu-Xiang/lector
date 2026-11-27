@@ -1814,6 +1814,7 @@
     "vocabGrowth": {
       "trackedWords": "保存した単語と学習状況から集計します。",
       "noTrackedWords": "単語を保存するか、習得済みにすると推移を確認できます。",
+      "growthHint": "読み続けると、語彙の成長を確認できます。",
       "title": "語彙の成長",
       "knownWords": "覚えた単語",
       "learning": "学習中",
@@ -2305,6 +2306,7 @@
       "phrase": "フレーズ",
       "confirmBulkDelete": "{count} 件の単語を削除してもよろしいですか？",
       "searchPlaceholder": "単語、翻訳、文を検索...",
+      "searchWords": "単語を検索…",
       "filter": {
         "all": "すべて",
         "learning": "学習中"

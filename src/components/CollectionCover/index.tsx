@@ -37,7 +37,7 @@ export default function CollectionCover({
       >
         <img src={artUrl} alt="" loading="lazy" className="h-full w-full object-cover" />
         {variant === 'card' && (
-          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/45 to-transparent px-2 pt-8 pb-2 text-[#fffdf7] sm:px-3 sm:pt-10 sm:pb-3">
+          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/45 to-transparent px-2 pt-8 pb-2 text-[#fffdf7] max-sm:hidden sm:px-3 sm:pt-10 sm:pb-3">
             <p className="line-clamp-3 font-serif text-sm leading-snug font-bold text-balance sm:text-base">
               {title}
             </p>

@@ -3,6 +3,7 @@ import { useFormatter, useTranslations } from 'next-intl';
 import { ClozeCollection, FluencyStats, WordState } from '@/lib/data-layer';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { haptic } from '@/lib/native-app';
 
 // Time-range options for the stats page. `days: null` means "all time".
 export const RANGE_OPTIONS: { key: 'd30' | 'd90' | 'y1' | 'all'; days: number | null }[] = [
@@ -46,7 +47,10 @@ export function RangeSelector({
               compact && active && 'border-transparent bg-card shadow-xs',
               !active && 'text-muted-foreground',
             )}
-            onClick={() => onChange(opt.days)}
+            onClick={() => {
+              if (compact && value !== opt.days) void haptic();
+              onChange(opt.days);
+            }}
           >
             {t(opt.key)}
           </Button>

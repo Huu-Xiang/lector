@@ -178,6 +178,7 @@
     "vocabGrowth": {
       "trackedWords": "根据词表里已掌握和学习中的词统计。",
       "noTrackedWords": "保存单词或标记为已掌握后，就能看到变化。",
+      "growthHint": "继续阅读，逐步见证词汇量的增长。",
       "title": "词汇增长",
       "knownWords": "已掌握的词",
       "learning": "学习中",

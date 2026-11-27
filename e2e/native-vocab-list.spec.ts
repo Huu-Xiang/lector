@@ -6,6 +6,31 @@ test.use({
   userAgent: 'Mozilla/5.0 (iPhone) AppleWebKit/605.1.15 ReadfoxApp/1',
 });
 
+test.describe('narrow iPad vocabulary', () => {
+  test.use({
+    viewport: { width: 500, height: 852 },
+    userAgent: 'Mozilla/5.0 (iPad) AppleWebKit/605.1.15 ReadfoxApp/1',
+  });
+
+  test('keeps the existing search and state select', async ({ page }) => {
+    await page.goto('/vocab');
+    await expect(page.locator('html')).toHaveAttribute('data-ipad-app', '');
+    await expect(page.getByTestId('native-vocab-filters')).toHaveCount(0);
+    const search = page.getByTestId('vocab-search-input');
+    await expect(search).toHaveAttribute(
+      'placeholder',
+      'Search words, translations, or sentences...',
+    );
+    await search.fill('ipad-search');
+    await expect(page.getByTestId('native-vocab-clear')).toHaveCount(0);
+    await expect(
+      page
+        .getByRole('combobox')
+        .filter({ has: page.getByRole('option', { name: 'All', exact: true }) }),
+    ).toBeVisible();
+  });
+});
+
 test('native vocabulary keeps row details, optional selection and empty search usable', async ({
   page,
 }) => {
@@ -79,6 +104,49 @@ test('native vocabulary keeps row details, optional selection and empty search u
     await search.fill(`${word}missing`);
     await expect(list.getByRole('button', { name: new RegExp(word) })).toHaveCount(0);
     await expect(list).toContainText(/No entries match/i);
+    await page.getByTestId('native-vocab-clear').click();
+    await expect(search).toHaveValue('');
+    await expect(page.getByTestId('native-vocab-clear')).toBeHidden();
+    await search.fill(word);
+    const filters = page.getByTestId('native-vocab-filters');
+    await filters.getByRole('button', { name: 'Known', exact: true }).click();
+    await expect(filters.getByRole('button', { name: 'Known', exact: true })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
+    await expect(list.getByRole('button', { name: new RegExp(word) })).toHaveCount(0);
+    await filters.getByRole('button', { name: 'Learning', exact: true }).click();
+    const row = list.locator('[data-native-vocab-row]').filter({ hasText: word });
+    const swipe = async (deltaX: number, deltaY = 0) => {
+      const box = await row.boundingBox();
+      expect(box).not.toBeNull();
+      const startX = box!.x + box!.width - 30;
+      const startY = box!.y + box!.height / 2;
+      await page.mouse.move(startX, startY);
+      await page.mouse.down();
+      await page.mouse.move(startX + deltaX, startY + deltaY, { steps: 8 });
+      await page.mouse.up();
+    };
+    await swipe(-12, 35);
+    await expect(row).toHaveAttribute('data-swipe-open', 'false');
+    await expect(page.getByRole('dialog')).toBeHidden();
+    await swipe(-180);
+    await expect(row).toHaveAttribute('data-swipe-open', 'true');
+    await expect(page.getByRole('dialog')).toBeHidden();
+    await page.getByRole('heading', { name: 'Vocabulary', exact: true }).click();
+    await expect(row).toHaveAttribute('data-swipe-open', 'false');
+    await swipe(-180);
+    await row.getByTestId('native-vocab-known').click();
+    await expect(row).toHaveCount(0);
+    await filters.getByRole('button', { name: 'Known', exact: true }).click();
+    await expect(row).toBeVisible();
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await swipe(-180);
+    await expect(row.locator('.native-vocab-swipe-content')).toHaveCSS('transform', 'none');
+    await expect(row.locator('.native-vocab-swipe-content')).toHaveCSS('left', '-152px');
+    page.once('dialog', (dialog) => dialog.accept());
+    await row.getByTestId('native-vocab-delete').click();
+    await expect(row).toHaveCount(0);
     expect(ankiRequests).toEqual([]);
   } finally {
     await page.request.delete(apiUrl(`/api/vocab/${id}`));

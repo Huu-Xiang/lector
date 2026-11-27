@@ -239,6 +239,7 @@
       "phrase": "片語",
       "confirmBulkDelete": "確定要刪除 {count} 個詞彙條目嗎？",
       "searchPlaceholder": "搜尋詞、翻譯或句子...",
+      "searchWords": "搜尋單字…",
       "filter": {
         "all": "全部",
         "learning": "學習中"

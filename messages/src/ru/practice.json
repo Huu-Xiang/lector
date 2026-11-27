@@ -239,6 +239,7 @@
       "phrase": "выражение",
       "confirmBulkDelete": "Удалить выбранные записи из словаря ({count})?",
       "searchPlaceholder": "Поиск по словам, переводам и предложениям…",
+      "searchWords": "Поиск слов…",
       "filter": {
         "all": "Все",
         "learning": "Изучаемые"

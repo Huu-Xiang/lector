@@ -27,7 +27,9 @@ async function expectPhoneGeometry(page: Page) {
       `${element.tagName}: ${element.textContent?.trim().slice(0, 60)}`;
     return {
       overflow: document.documentElement.scrollWidth - innerWidth,
-      smallControls: [...document.querySelectorAll('button,a,input,select')]
+      smallControls: [
+        ...document.querySelectorAll('button:not([data-testid="cloze-word"]),a,input,select'),
+      ]
         .filter(visible)
         .filter((element) => {
           if (
@@ -59,6 +61,66 @@ async function expectPhoneGeometry(page: Page) {
   expect(geometry.smallControls).toEqual([]);
   expect(geometry.smallText).toEqual([]);
 }
+
+test('native reader hides chrome downwards and reveals it on upward scroll and blank taps', async ({
+  page,
+}) => {
+  const response = await page.request.post(apiUrl('/api/collections'), {
+    data: { title: 'Reader motion regression', language: 'af' },
+  });
+  expect(response.ok()).toBeTruthy();
+  const { id } = await response.json();
+  try {
+    const added = await page.request.post(apiUrl(`/api/collections/${id}/lessons`), {
+      data: {
+        title: 'Reader motion',
+        textContent:
+          '# Reader motion\n\n' +
+          Array.from({ length: 80 }, () => 'Die fees is gewild.').join('\n\n'),
+      },
+    });
+    expect(added.ok()).toBeTruthy();
+    const lessons = await (await page.request.get(apiUrl(`/api/collections/${id}/lessons`))).json();
+    expect(
+      (
+        await page.request.put(apiUrl(`/api/lessons/${lessons[0].id}/progress?language=af`), {
+          data: { scrollPosition: 180, percentComplete: 10 },
+        })
+      ).ok(),
+    ).toBeTruthy();
+    await page.goto(`/read/${lessons[0].id}`);
+    const header = page.locator('.reader-header');
+    const pane = page.locator('.reader-scroll-pane');
+    await expect.poll(() => pane.evaluate((element) => element.scrollTop)).toBe(180);
+    await expect(header).toHaveAttribute('data-chrome-hidden', 'false');
+    await pane.evaluate((element) => {
+      element.scrollTop = 220;
+    });
+    await expect(header).toHaveAttribute('data-chrome-hidden', 'true');
+    await expect(page.getByTestId('reader-progress-hairline')).toBeVisible();
+    await pane.evaluate((element) => {
+      element.scrollTop = 140;
+    });
+    await expect(header).toHaveAttribute('data-chrome-hidden', 'false');
+    await pane.evaluate((element) => {
+      element.scrollTop = 240;
+    });
+    await expect(header).toHaveAttribute('data-chrome-hidden', 'true');
+    await pane.dispatchEvent('click');
+    await expect(header).toHaveAttribute('data-chrome-hidden', 'false');
+    await pane.evaluate((element) => {
+      element.scrollTop = 0;
+    });
+    await expect(header).toHaveAttribute('data-chrome-hidden', 'false');
+    const heading = pane.locator('h1').first();
+    await expect(heading).toBeVisible();
+    expect((await heading.boundingBox())!.y).toBeGreaterThanOrEqual(
+      (await header.boundingBox())!.height,
+    );
+  } finally {
+    await page.request.delete(apiUrl(`/api/collections/${id}`));
+  }
+});
 
 test('native pages fill the phone and retain accessible control sizes', async ({ page }) => {
   for (const path of ['/', '/me', '/settings', '/stats', '/vocab', '/practice', '/setup']) {

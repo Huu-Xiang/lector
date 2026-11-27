@@ -317,20 +317,26 @@ test.describe('iOS lookup sheet', () => {
         await page.mouse.up();
       }
 
-      await drag(-100);
+      await drag(-180);
       await expect
-        .poll(async () => Math.round((await drawer.boundingBox())!.height - initial))
-        .toBe(100);
-      await drag(55);
+        .poll(async () => Math.round((await drawer.boundingBox())!.height))
+        .toBe(Math.round(667 * 0.78));
+      await expect(handle).toHaveAttribute('aria-expanded', 'true');
+      await drag(180);
       await expect
-        .poll(async () => Math.round((await drawer.boundingBox())!.height - initial))
-        .toBe(45);
+        .poll(async () => Math.round((await drawer.boundingBox())!.height))
+        .toBe(Math.round(initial));
+      await expect(handle).toHaveAttribute('aria-expanded', 'false');
+      await handle.press('Enter');
+      await expect
+        .poll(async () => Math.round((await drawer.boundingBox())!.height))
+        .toBe(Math.round(667 * 0.78));
       await handle.press('Enter');
       await expect
         .poll(async () => Math.round((await drawer.boundingBox())!.height))
         .toBe(Math.round(initial));
-      await handle.press('Enter');
-      await expect.poll(async () => (await drawer.boundingBox())!.height).toBeGreaterThan(500);
+      await drag(180);
+      await expect(drawer).toHaveAttribute('aria-hidden', 'true');
     } finally {
       await page.request.delete(apiUrl(`/api/collections/${collectionId}`));
       await page.request.delete(apiUrl('/api/settings/autoSaveLookups'));

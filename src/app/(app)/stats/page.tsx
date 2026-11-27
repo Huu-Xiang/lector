@@ -3,7 +3,7 @@
 import { useIsNativeApp } from '@/lib/native-app';
 import { useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { Book, BookOpen, CheckCircle, Flame } from 'lucide-react';
+import { BarChart3, Book, BookOpen, CheckCircle, Compass, Flame } from 'lucide-react';
 import Link from 'next/link';
 import { useFormatter, useTranslations } from 'next-intl';
 import {
@@ -380,16 +380,27 @@ export default function StatsPage() {
           data={displayedVocabGrowth}
           compact={nativeApp}
           height={nativeApp ? 155 : undefined}
+          totals={{
+            known: stats.totalKnown,
+            learning: stats.totalLearning,
+            total: stats.totalKnown + stats.totalLearning + stats.fluency.totalNew,
+          }}
           controls={<RangeSelector value={range} onChange={setRange} compact={nativeApp} />}
         />
       </div>
 
       {nativeApp ? (
         <div
-          className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card"
+          className="overflow-hidden rounded-2xl border border-border/60 bg-card sm:divide-y sm:divide-border sm:rounded-xl sm:border-border [&>details]:relative [&>details+details]:before:pointer-events-none [&>details+details]:before:absolute [&>details+details]:before:top-0 [&>details+details]:before:right-0 [&>details+details]:before:left-14 [&>details+details]:before:border-t [&>details+details]:before:border-border/60 sm:[&>details+details]:before:hidden"
           data-testid="iphone-stats-details"
         >
-          <CompactDisclosure name="stats-groups" defer title={t('heatmap.title')}>
+          <CompactDisclosure
+            name="stats-groups"
+            defer
+            title={t('heatmap.title')}
+            icon={Flame}
+            iconClassName="bg-orange-500/12 text-orange-600 dark:text-orange-400 sm:hidden"
+          >
             <ActivityHeatmap
               data={stats.activityData}
               unit="actions"
@@ -397,14 +408,26 @@ export default function StatsPage() {
               compact
             />
           </CompactDisclosure>
-          <CompactDisclosure name="stats-groups" defer title={t('radar.title')}>
+          <CompactDisclosure
+            name="stats-groups"
+            defer
+            title={t('radar.title')}
+            icon={Compass}
+            iconClassName="bg-indigo-500/12 text-indigo-600 dark:text-indigo-400 sm:hidden"
+          >
             <DomainFluencyRadar
               byDomain={stats.fluency.byDomain}
               pending={stats.fluency.pending}
               compact
             />
           </CompactDisclosure>
-          <CompactDisclosure name="stats-groups" defer title={t('details')}>
+          <CompactDisclosure
+            name="stats-groups"
+            defer
+            title={t('details')}
+            icon={BarChart3}
+            iconClassName="bg-emerald-500/12 text-emerald-600 dark:text-emerald-400 sm:hidden"
+          >
             <FluencyBadge fluency={stats.fluency} />
             <WordStateBreakdown byState={stats.byState} />
             <ClozeStats

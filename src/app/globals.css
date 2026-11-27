@@ -660,6 +660,32 @@ html {
 
 /* On phones the onboarding coach sits where the chat button does. */
 @media (width < 40rem) {
+  html[data-native-app]:not([data-ipad-app]) .reader-immersive {
+    position: relative;
+  }
+
+  html[data-native-app]:not([data-ipad-app]) .reader-immersive .reader-header {
+    position: absolute;
+    inset: 0 0 auto;
+    z-index: 30;
+    visibility: visible;
+    transition:
+      transform var(--dur-normal) var(--ease-ios-snappy),
+      visibility 0s;
+  }
+
+  html[data-native-app]:not([data-ipad-app])
+    .reader-immersive
+    .reader-header[data-chrome-hidden='true'] {
+    transform: translateY(-100%);
+    visibility: hidden;
+    transition-delay: 0s, var(--dur-normal);
+  }
+
+  html[data-native-app]:not([data-ipad-app]) .reader-scroll-pane {
+    padding-top: var(--reader-header-height, calc(env(safe-area-inset-top) + 50px));
+  }
+
   body[data-onboarding-coach] [data-chat-toggle] {
     display: none;
   }
@@ -870,6 +896,11 @@ html {
 /* `data-native-app` is set before paint by the script in layout.tsx; `data-native-tabbar`
    when the shell draws a UITabBar over the page. */
 html[data-native-app] {
+  --ease-ios-spring: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-ios-snappy: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --dur-fast: 150ms;
+  --dur-normal: 260ms;
+  --dur-sheet: 380ms;
   --ios-fill: color-mix(in srgb, var(--foreground) 7.5%, transparent);
   --app-bottom-bar: calc(4rem + env(safe-area-inset-bottom));
   -webkit-tap-highlight-color: transparent;
@@ -1560,7 +1591,13 @@ html[data-native-app].dark {
 
 @media (width < 40rem) {
   html[data-native-app]
-    :is(button, a, input:not([type='checkbox'], [type='radio'], [type='range']), select, summary) {
+    :is(
+      button:not([data-testid='cloze-word']),
+      a,
+      input:not([type='checkbox'], [type='radio'], [type='range']),
+      select,
+      summary
+    ) {
     min-height: 44px;
     min-width: 44px;
   }
@@ -1638,6 +1675,138 @@ html[data-native-app].dark {
     background: var(--card);
     color: var(--foreground);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  }
+}
+
+@media (width < 40rem) {
+  html[data-native-app]:not([data-ipad-app])
+    :is(
+      [data-slot='button'],
+      .library-cover-card,
+      [data-testid='native-continue-reading'],
+      [data-testid='native-vocab-list'] li button,
+      .native-vocab-filter,
+      .native-segment-track > button,
+      .native-compact-page summary
+    ) {
+    transition:
+      transform var(--dur-fast) var(--ease-ios-snappy),
+      opacity var(--dur-fast) var(--ease-ios-snappy);
+  }
+
+  html[data-native-app]:not([data-ipad-app])
+    :is(
+      [data-slot='button'],
+      .library-cover-card,
+      [data-testid='native-continue-reading'],
+      [data-testid='native-vocab-list'] li button,
+      .native-vocab-filter,
+      .native-segment-track > button,
+      .native-compact-page summary
+    ):active:not(:disabled) {
+    transform: scale(0.98);
+    opacity: 0.85;
+  }
+
+  html[data-ipad-app] [data-testid='native-continue-reading'] {
+    display: none;
+  }
+
+  html[data-ipad-app] [data-testid='reader-progress-hairline'] {
+    display: none;
+  }
+
+  html[data-ipad-app] [data-testid='iphone-stats-details'] {
+    border-radius: 0.75rem;
+    border-color: var(--border);
+  }
+
+  html[data-ipad-app] [data-testid='iphone-stats-details'] > details + details {
+    border-top: 1px solid var(--border);
+  }
+
+  html[data-ipad-app] [data-testid='iphone-stats-details'] > details + details::before,
+  html[data-ipad-app] [data-testid='iphone-stats-details'] summary > span:first-child {
+    display: none;
+  }
+}
+
+html[data-native-app] .native-lookup-sheet {
+  transition:
+    height var(--dur-sheet) var(--ease-ios-spring),
+    transform var(--dur-sheet) var(--ease-ios-spring),
+    translate var(--dur-sheet) var(--ease-ios-spring);
+}
+
+html[data-native-app] .native-lookup-sheet[data-dragging='true'],
+html[data-native-app] .native-vocab-swipe-content[data-dragging='true'] {
+  transition: none;
+}
+
+html[data-native-app] .native-vocab-swipe-content {
+  transition: transform var(--dur-normal) var(--ease-ios-spring);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  html[data-native-app]
+    :is(
+      .reader-page .reader-header,
+      [data-testid='listen-transport'],
+      .native-lookup-sheet,
+      [data-native-side-drawer],
+      [data-testid='lookup-footer'],
+      [data-testid='setup-start-bar'],
+      [data-testid='chat-panel']
+    ) {
+    background: var(--card);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-native-app]:not([data-ipad-app]) .reader-immersive .reader-header[data-chrome-hidden],
+  html[data-native-app]:not([data-ipad-app])
+    :is(
+      [data-slot='button'],
+      .library-cover-card,
+      [data-testid='native-continue-reading'],
+      [data-testid='native-vocab-list'] li button,
+      .native-vocab-filter,
+      .native-segment-track > button,
+      .native-compact-page summary
+    ),
+  html[data-native-app]:not([data-ipad-app])
+    :is(
+      [data-slot='button'],
+      .library-cover-card,
+      [data-testid='native-continue-reading'],
+      [data-testid='native-vocab-list'] li button,
+      .native-vocab-filter,
+      .native-segment-track > button,
+      .native-compact-page summary
+    ):active:not(:disabled),
+  html[data-native-app]
+    :is(
+      [data-slot='button'],
+      .library-cover-card,
+      [data-testid='native-continue-reading'],
+      [data-testid='native-vocab-list'] li button,
+      .native-vocab-filter,
+      .native-segment-track > button,
+      .native-compact-page summary,
+      .reader-header,
+      .native-lookup-sheet,
+      [data-native-side-drawer],
+      [data-testid='chat-panel']
+    ) {
+    transform: none;
+    transition: none;
+  }
+
+  html[data-native-app] .native-vocab-swipe-content {
+    transform: none;
+    transition: none;
   }
 }
 

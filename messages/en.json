@@ -1814,6 +1814,7 @@
     "vocabGrowth": {
       "trackedWords": "Based on your saved words and their learning states.",
       "noTrackedWords": "Save or mark words as known to see a trend.",
+      "growthHint": "Keep reading to see your growth curve over time.",
       "title": "Vocabulary Growth",
       "knownWords": "Known Words",
       "learning": "Learning",
@@ -2305,6 +2306,7 @@
       "phrase": "phrase",
       "confirmBulkDelete": "Are you sure you want to delete {count} vocab entries?",
       "searchPlaceholder": "Search words, translations, or sentences...",
+      "searchWords": "Search words…",
       "filter": {
         "all": "All",
         "learning": "Learning"

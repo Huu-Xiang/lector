@@ -1,7 +1,9 @@
 'use client';
 
 import { useFormatter, useLocale, useTranslations } from 'next-intl';
-import { useIsDark } from '@/utils/hooks';
+import { useIsDark, useScreenSize } from '@/utils/hooks';
+import { isIPadApp } from '@/components/NativeBridge/ipad-layout';
+import SparseMilestone from './SparseMilestone';
 import {
   XAxis,
   YAxis,
@@ -25,11 +27,13 @@ export default function VocabGrowthChart({
   height = 300,
   controls,
   compact = false,
+  totals,
 }: VocabGrowthChartProps) {
   const t = useTranslations('stats.vocabGrowth');
   const format = useFormatter();
   const locale = useLocale();
   const isDark = useIsDark();
+  const screenSize = useScreenSize();
   const theme = isDark ? darkChartTheme : lightChartTheme;
 
   const formattedData = data.map((d) => ({
@@ -38,8 +42,16 @@ export default function VocabGrowthChart({
   }));
 
   const latest = data.length > 0 ? data[data.length - 1] : null;
+  const snapshot = latest ?? totals;
+  const sparse =
+    compact &&
+    screenSize === 'xs' &&
+    !isIPadApp() &&
+    data.length < 2 &&
+    snapshot &&
+    (snapshot.total > 0 || snapshot.known + snapshot.learning > 0);
 
-  if (compact && !data.some((point) => point.total > 0)) {
+  if (compact && !sparse && !data.some((point) => point.total > 0)) {
     return (
       <section className="panel p-3" data-testid="compact-vocab-growth">
         <h3 className="text-sm font-semibold">{t('title')}</h3>
@@ -66,88 +78,94 @@ export default function VocabGrowthChart({
         {controls}
       </div>
 
-      {compact && <p className="mb-1 text-xs text-muted-foreground">{t('trackedWords')}</p>}
-      <ResponsiveContainer width="100%" height={height}>
-        <AreaChart data={formattedData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-          <defs>
-            <linearGradient id="knownGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor={SERIES_COLORS.known} stopOpacity={0.3} />
-              <stop offset="95%" stopColor={SERIES_COLORS.known} stopOpacity={0} />
-            </linearGradient>
-            <linearGradient id="learningGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor={SERIES_COLORS.learning} stopOpacity={0.3} />
-              <stop offset="95%" stopColor={SERIES_COLORS.learning} stopOpacity={0} />
-            </linearGradient>
-            <linearGradient id="totalGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor={SERIES_COLORS.total} stopOpacity={0.3} />
-              <stop offset="95%" stopColor={SERIES_COLORS.total} stopOpacity={0} />
-            </linearGradient>
-          </defs>
+      {sparse ? (
+        <SparseMilestone {...snapshot} />
+      ) : (
+        <>
+          {compact && <p className="mb-1 text-xs text-muted-foreground">{t('trackedWords')}</p>}
+          <ResponsiveContainer width="100%" height={height}>
+            <AreaChart data={formattedData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+              <defs>
+                <linearGradient id="knownGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor={SERIES_COLORS.known} stopOpacity={0.3} />
+                  <stop offset="95%" stopColor={SERIES_COLORS.known} stopOpacity={0} />
+                </linearGradient>
+                <linearGradient id="learningGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor={SERIES_COLORS.learning} stopOpacity={0.3} />
+                  <stop offset="95%" stopColor={SERIES_COLORS.learning} stopOpacity={0} />
+                </linearGradient>
+                <linearGradient id="totalGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor={SERIES_COLORS.total} stopOpacity={0.3} />
+                  <stop offset="95%" stopColor={SERIES_COLORS.total} stopOpacity={0} />
+                </linearGradient>
+              </defs>
 
-          <CartesianGrid strokeDasharray="3 3" stroke={theme.grid} vertical={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke={theme.grid} vertical={false} />
 
-          <XAxis
-            dataKey="displayDate"
-            stroke={theme.axis}
-            fontSize={12}
-            tickLine={false}
-            axisLine={{ stroke: theme.grid }}
-          />
+              <XAxis
+                dataKey="displayDate"
+                stroke={theme.axis}
+                fontSize={12}
+                tickLine={false}
+                axisLine={{ stroke: theme.grid }}
+              />
 
-          <YAxis
-            stroke={theme.axis}
-            fontSize={12}
-            tickLine={false}
-            axisLine={{ stroke: theme.grid }}
-            width={compact ? 38 : 60}
-            tickFormatter={(value) => format.number(value)}
-          />
+              <YAxis
+                stroke={theme.axis}
+                fontSize={12}
+                tickLine={false}
+                axisLine={{ stroke: theme.grid }}
+                width={compact ? 38 : 60}
+                tickFormatter={(value) => format.number(value)}
+              />
 
-          <Tooltip content={<CustomTooltip />} />
+              <Tooltip content={<CustomTooltip />} />
 
-          {showLegend && (
-            <Legend
-              wrapperStyle={{ paddingTop: compact ? '3px' : '20px' }}
-              formatter={(value: string) => (
-                <span
-                  style={{ color: theme.legend }}
-                  className={compact ? 'text-xs capitalize' : 'text-sm capitalize'}
-                >
-                  {t(`series.${value}`)}
-                </span>
+              {showLegend && (
+                <Legend
+                  wrapperStyle={{ paddingTop: compact ? '3px' : '20px' }}
+                  formatter={(value: string) => (
+                    <span
+                      style={{ color: theme.legend }}
+                      className={compact ? 'text-xs capitalize' : 'text-sm capitalize'}
+                    >
+                      {t(`series.${value}`)}
+                    </span>
+                  )}
+                />
               )}
-            />
-          )}
 
-          <Area
-            type="monotone"
-            dataKey="total"
-            stroke={SERIES_COLORS.total}
-            strokeWidth={2}
-            fill="url(#totalGradient)"
-            dot={false}
-            activeDot={{ r: 4, fill: SERIES_COLORS.total }}
-          />
-          <Area
-            type="monotone"
-            dataKey="known"
-            stroke={SERIES_COLORS.known}
-            strokeWidth={2}
-            fill="url(#knownGradient)"
-            dot={false}
-            activeDot={{ r: 4, fill: SERIES_COLORS.known }}
-          />
-          <Area
-            type="monotone"
-            dataKey="learning"
-            stroke={SERIES_COLORS.learning}
-            strokeWidth={2}
-            fill="url(#learningGradient)"
-            dot={false}
-            activeDot={{ r: 4, fill: SERIES_COLORS.learning }}
-          />
-        </AreaChart>
-      </ResponsiveContainer>
+              <Area
+                type="monotone"
+                dataKey="total"
+                stroke={SERIES_COLORS.total}
+                strokeWidth={2}
+                fill="url(#totalGradient)"
+                dot={false}
+                activeDot={{ r: 4, fill: SERIES_COLORS.total }}
+              />
+              <Area
+                type="monotone"
+                dataKey="known"
+                stroke={SERIES_COLORS.known}
+                strokeWidth={2}
+                fill="url(#knownGradient)"
+                dot={false}
+                activeDot={{ r: 4, fill: SERIES_COLORS.known }}
+              />
+              <Area
+                type="monotone"
+                dataKey="learning"
+                stroke={SERIES_COLORS.learning}
+                strokeWidth={2}
+                fill="url(#learningGradient)"
+                dot={false}
+                activeDot={{ r: 4, fill: SERIES_COLORS.learning }}
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        </>
+      )}
 
       {!compact && latest && (
         <div className="mt-4 grid grid-cols-3 gap-4 border-t border-border pt-4">

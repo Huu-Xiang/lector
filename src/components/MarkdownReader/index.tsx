@@ -22,6 +22,7 @@ import {
   type ConcordanceJumpPayload,
 } from '@/lib/concordance-jump';
 import { createTrailingThrottle } from './throttle';
+import { readerChromeHidden } from './chrome';
 import {
   foldWord,
   getLanguageConfig,
@@ -133,6 +134,25 @@ export default function MarkdownReader({
   const [activeWord, setActiveWord] = useState<ActiveReaderWord | null>(null);
   const [scrollPercentage, setScrollPercentage] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
+  const [chromeHidden, setChromeHidden] = useState(false);
+  const [chromeLesson, setChromeLesson] = useState(lesson.id);
+  if (chromeLesson !== lesson.id) {
+    setChromeLesson(lesson.id);
+    setChromeHidden(false);
+  }
+  const scrollAnchor = useRef(0);
+  const headerRef = useRef<HTMLElement>(null);
+  const hideChrome = inApp && chromeHidden && !isEditing && !wordPanelOpen;
+  useLayoutEffect(() => {
+    const header = headerRef.current;
+    if (!inApp || !header) return;
+    const measure = () =>
+      header.parentElement?.style.setProperty('--reader-header-height', `${header.offsetHeight}px`);
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(header);
+    return () => observer.disconnect();
+  }, [inApp]);
   const [draftContent, setDraftContent] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
@@ -303,6 +323,7 @@ export default function MarkdownReader({
     }
     if (containerRef.current && lesson.progress_scrollPosition > 0) {
       containerRef.current.scrollTop = lesson.progress_scrollPosition;
+      scrollAnchor.current = containerRef.current.scrollTop;
     }
   }, [lesson.id, lesson.progress_scrollPosition, concordanceJump]);
 
@@ -398,12 +419,22 @@ export default function MarkdownReader({
   const handleScroll = useCallback(() => {
     if (!containerRef.current) return;
     const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
-    const percentage = Math.round((scrollTop / (scrollHeight - clientHeight)) * 100) || 0;
+    const percentage = Math.max(
+      0,
+      Math.min(100, Math.round((scrollTop / (scrollHeight - clientHeight)) * 100) || 0),
+    );
     setScrollPercentage(percentage);
+    if (inApp && window.matchMedia('(width < 40rem)').matches) {
+      const delta = scrollTop - scrollAnchor.current;
+      if (delta > 12 || delta < -8 || scrollTop < 32) {
+        setChromeHidden((hidden) => readerChromeHidden(scrollTop, delta, hidden));
+        scrollAnchor.current = scrollTop;
+      }
+    }
     if (hasConcordanceHighlight) return;
     progressWriter(scrollTop, percentage);
     if (!isEditing) onProgress?.(percentage);
-  }, [progressWriter, onProgress, isEditing, hasConcordanceHighlight]);
+  }, [progressWriter, onProgress, isEditing, hasConcordanceHighlight, inApp]);
 
   useEffect(() => {
     const root = containerRef.current;
@@ -447,12 +478,13 @@ export default function MarkdownReader({
   const lastPhraseAt = useRef(0);
   const handleBlankClick = useCallback(
     (event: React.MouseEvent<HTMLDivElement>) => {
-      if ((!onClearSelection && !hasConcordanceHighlight) || isEditing) return;
+      if (isEditing) return;
       if (Date.now() - lastPhraseAt.current < 500) return;
       const selection = window.getSelection();
       if (selection && !selection.isCollapsed) return;
       const target = event.target as HTMLElement;
       if (target.closest('[data-leaf], a, button, input, textarea, video, iframe')) return;
+      setChromeHidden(false);
       if (hasConcordanceHighlight) clearConcordanceHighlight();
       if (onClearSelection) {
         clearPhraseHighlight();
@@ -593,9 +625,11 @@ export default function MarkdownReader({
   usePhraseTouchSelection(containerRef, handleTouchPhrase);
 
   return (
-    <div className="reader-page flex h-full min-h-0 flex-col bg-card print:block print:h-auto">
+    <div className="reader-page reader-immersive flex h-full min-h-0 flex-col bg-card print:block print:h-auto">
       {/* Header */}
       <header
+        ref={headerRef}
+        data-chrome-hidden={hideChrome ? 'true' : 'false'}
         className={`reader-header flex shrink-0 items-center justify-between gap-1 border-b border-border px-2 pb-1.5 sm:px-4 sm:pb-2 print:border-0 print:px-0 ${inApp ? 'bg-card/85 pt-[env(safe-area-inset-top)] backdrop-blur-md max-sm:gap-0 max-sm:px-1' : 'pt-1.5 sm:pt-2'}`}
       >
         <button
@@ -727,12 +761,20 @@ export default function MarkdownReader({
       </header>
 
       {/* Content */}
+      {inApp && (
+        <div
+          data-testid="reader-progress-hairline"
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 top-[env(safe-area-inset-top)] z-40 h-[1.5px] origin-left bg-primary/80 sm:hidden print:hidden"
+          style={{ transform: `scaleX(${scrollPercentage / 100})` }}
+        />
+      )}
       <div
         ref={containerRef}
         onScroll={handleScroll}
         onMouseUp={handleMouseUp}
         onClick={handleBlankClick}
-        className="min-h-0 flex-1 overflow-auto overscroll-y-contain pb-[env(safe-area-inset-bottom)] print:block print:h-auto print:overflow-visible"
+        className="reader-scroll-pane min-h-0 flex-1 overflow-auto overscroll-y-contain pb-[env(safe-area-inset-bottom)] print:block print:h-auto print:overflow-visible"
       >
         {hasConcordanceHighlight && !isEditing && (
           <div

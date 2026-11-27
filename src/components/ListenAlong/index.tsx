@@ -53,6 +53,7 @@ import {
 } from './browser-tts-player';
 import { createAudioUnitPlayer, type UnitPlayer } from './drill-player';
 import { activeSegmentIndex, formatClock, nextPlaybackRate } from './utils';
+import { createListenMediaSession } from './media-session';
 
 const SKIP_SECONDS = 5;
 
@@ -483,6 +484,66 @@ export default function ListenAlong(props: ListenAlongProps) {
     audio.currentTime = valueMs / 1000;
     setCurrentMs(valueMs);
   };
+
+  const mediaActionsRef = useRef<{
+    play: () => void;
+    pause: () => void;
+    previous: () => void;
+    next: () => void;
+    seek: (seconds: number) => void;
+    duration: () => number;
+  }>({
+    play: () => {},
+    pause: () => {},
+    previous: () => {},
+    next: () => {},
+    seek: () => {},
+    duration: () => 0,
+  });
+  const mediaSessionRef = useRef<ReturnType<typeof createListenMediaSession>>(null);
+
+  useEffect(() => {
+    mediaActionsRef.current = {
+      play: () => {
+        if (!isPlayingRef.current) handlePlayPause();
+      },
+      pause: () => {
+        if (isPlayingRef.current) handlePlayPause();
+      },
+      previous: () => stepSentence(-1),
+      next: () => stepSentence(1),
+      seek: (seconds) => handleSeek(seconds * 1000),
+      duration: () => {
+        const duration = audioRef.current?.duration;
+        return duration && Number.isFinite(duration) ? duration : durationMs / 1000;
+      },
+    };
+  });
+
+  useEffect(() => {
+    const media = createListenMediaSession(lesson.title, languageName, {
+      play: () => mediaActionsRef.current.play(),
+      pause: () => mediaActionsRef.current.pause(),
+      previous: () => mediaActionsRef.current.previous(),
+      next: () => mediaActionsRef.current.next(),
+      ...(isTts
+        ? {}
+        : {
+            seek: (seconds: number) => mediaActionsRef.current.seek(seconds),
+            position: () => audioRef.current?.currentTime ?? 0,
+            duration: () => mediaActionsRef.current.duration(),
+          }),
+    });
+    mediaSessionRef.current = media;
+    return () => {
+      media?.dispose();
+      mediaSessionRef.current = null;
+    };
+  }, [isTts, languageName, lesson.title]);
+
+  useEffect(() => {
+    mediaSessionRef.current?.update(isPlaying, durationMs / 1000, currentMs / 1000, rate);
+  }, [currentMs, durationMs, isPlaying, rate]);
 
   const handleExit = useCallback(() => {
     unitPlayerRef.current?.dispose();

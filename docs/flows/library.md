@@ -228,3 +228,5 @@ The lesson starts with `transcriptionStatus = 'pending'`. The worker needs `TRAN
 See [Onboarding](onboarding.md). Seed is `POST /api/starter/seed`.
 
 On native iPhone, the Library uses a large title, one action strip and a search row. Reader chat opens from its toolbar; it has no floating button.
+
+Continue Reading resumes the most recently started readable unfinished chapter. Search and onboarding hide the card. The native phone reader hides its toolbar on downward scroll, reveals it on upward scroll or blank tap, and retains a progress hairline. Reduce Motion removes the slide and press effects.

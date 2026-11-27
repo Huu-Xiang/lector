@@ -4,7 +4,7 @@ import { Fragment, useEffect, useRef, useCallback, useState, useMemo } from 'rea
 import { createPortal } from 'react-dom';
 import { useTranslations } from 'next-intl';
 import clsx from 'clsx';
-import { useIsNativeApp } from '@/lib/native-app';
+import { haptic, useIsNativeApp } from '@/lib/native-app';
 import { useNativeSheetDrag } from './use-native-sheet-drag';
 import type { WordState } from '@/types';
 import { sentenceContainsWord } from '@/lib/words';
@@ -745,6 +745,7 @@ export default function TranslationDrawer({
   const content = (
     <div
       data-testid="translation-drawer"
+      data-dragging={nativeDrag.dragging || undefined}
       aria-hidden={docked ? false : !isOpen}
       inert={!docked && !isOpen}
       className={clsx(
@@ -920,7 +921,10 @@ export default function TranslationDrawer({
               </div>
               {compact && requestContextButton}
               <button
-                onClick={onClose}
+                onClick={() => {
+                  if (nativeSheet) haptic();
+                  onClose();
+                }}
                 className={clsx(
                   'flex-shrink-0 rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground',
                   docked && 'hidden',

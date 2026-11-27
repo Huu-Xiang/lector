@@ -239,6 +239,7 @@
       "phrase": "phrase",
       "confirmBulkDelete": "Are you sure you want to delete {count} vocab entries?",
       "searchPlaceholder": "Search words, translations, or sentences...",
+      "searchWords": "Search words…",
       "filter": {
         "all": "All",
         "learning": "Learning"

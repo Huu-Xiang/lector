@@ -239,6 +239,7 @@
       "phrase": "フレーズ",
       "confirmBulkDelete": "{count} 件の単語を削除してもよろしいですか？",
       "searchPlaceholder": "単語、翻訳、文を検索...",
+      "searchWords": "単語を検索…",
       "filter": {
         "all": "すべて",
         "learning": "学習中"

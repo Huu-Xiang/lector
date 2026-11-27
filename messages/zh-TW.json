@@ -1814,6 +1814,7 @@
     "vocabGrowth": {
       "trackedWords": "依單字表中已掌握和學習中的單字統計。",
       "noTrackedWords": "儲存單字或標記為已掌握後，就能看到變化。",
+      "growthHint": "繼續閱讀，逐步看見詞彙量的成長。",
       "title": "詞彙成長",
       "knownWords": "已掌握的詞",
       "learning": "學習中",
@@ -2305,6 +2306,7 @@
       "phrase": "片語",
       "confirmBulkDelete": "確定要刪除 {count} 個詞彙條目嗎？",
       "searchPlaceholder": "搜尋詞、翻譯或句子...",
+      "searchWords": "搜尋單字…",
       "filter": {
         "all": "全部",
         "learning": "學習中"

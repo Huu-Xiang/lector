@@ -12,6 +12,7 @@ export interface VocabGrowthChartProps {
   showLegend?: boolean;
   height?: number;
   compact?: boolean;
+  totals?: Pick<VocabDataPoint, 'known' | 'learning' | 'total'>;
   /** Optional controls rendered in the card header, e.g. a time-range selector. */
   controls?: ReactNode;
 }

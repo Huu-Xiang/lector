@@ -11,6 +11,7 @@ import PageOutline from '@/components/PageOutline';
 import AddCollectionTile from './components/AddCollectionTile';
 import EmptyState from './components/EmptyState';
 import IPadFeaturedBook, { hasUnfinishedReading } from './components/IPadFeaturedBook';
+import NativeContinueReading from './components/NativeContinueReading';
 import HomeRecommendations from './components/HomeRecommendations';
 import DescriptionToggle from '@/components/DescriptionToggle';
 import LibraryViewToggle from '@/components/LibraryViewToggle';
@@ -463,12 +464,13 @@ export default function Home() {
     ? libraryDestinationId
     : null;
   const libraryImportHandlers = importHandlers(libraryDestination);
+  const unfinishedBook = collections.reduce<Collection | undefined>((latest, book) => {
+    if (!hasUnfinishedReading(book)) return latest;
+    return !latest || book.lastReadAt > latest.lastReadAt ? book : latest;
+  }, undefined);
   const featuredBook =
     regularIPad && onboarding?.progress?.status !== 'in_progress'
-      ? (collections.reduce<Collection | undefined>((latest, book) => {
-          if (!hasUnfinishedReading(book)) return latest;
-          return !latest || book.lastReadAt > latest.lastReadAt ? book : latest;
-        }, undefined) ?? collections.find((book) => book.lessonCount > 0))
+      ? (unfinishedBook ?? collections.find((book) => book.lessonCount > 0))
       : undefined;
 
   return (
@@ -668,6 +670,16 @@ export default function Home() {
             <HomeRecommendations language={activeLanguage} defaultOpen={collections.length < 3} />
           )}
 
+          {nativeApp &&
+            !regularIPad &&
+            !isSearchActive &&
+            unfinishedBook &&
+            onboarding?.progress?.status !== 'in_progress' && (
+              <NativeContinueReading
+                key={`${unfinishedBook.id}:${unfinishedBook.lastReadAt}`}
+                collection={unfinishedBook}
+              />
+            )}
           {!isSearchActive && featuredBook && (
             <IPadFeaturedBook
               key={`${featuredBook.id}:${featuredBook.lastReadAt}`}

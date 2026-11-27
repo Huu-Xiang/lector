@@ -140,7 +140,7 @@
   N("flow:load-library-item", "flow", "Load library item", {
     domain: "library",
     md: "library.md#load-library-item",
-    summary: "Open the library, open a collection, open a lesson. The reader paints each word from the known-word map.",
+    summary: "Open the library or resume the latest unfinished chapter on iPhone. The reader paints word states and hides its phone toolbar while scrolling down.",
     steps: [
       "fn:home-loadData",
       "route:collections-list",
@@ -244,7 +244,7 @@
   N("flow:vocab-list", "flow", "Vocab list", {
     domain: "vocabulary",
     md: "vocabulary.md#vocab-list",
-    summary: "Filter, search, and page in memory. GET /api/vocab has no limit.",
+    summary: "Filter, search, and page in memory. iPhone uses status pills and swipe actions. GET /api/vocab has no limit.",
     steps: ["file:vocab-page", "route:vocab-get", "table:vocab"],
   });
   N("flow:known-word-import", "flow", "Known-word import", {
@@ -335,7 +335,7 @@
   N("flow:listen-along", "flow", "Listen-along", {
     domain: "listen",
     md: "listen.md#listen-along",
-    summary: "Podcast playback after ASR. GET segments and Range audio. Not the YouTube player.",
+    summary: "Podcast playback after ASR. GET segments and Range audio. Media Session publishes playback controls and clamped audio position. Not the YouTube player.",
     steps: ["file:listen-along", "route:lessons-segments", "route:lessons-audio", "table:transcript_segments"],
   });
   N("flow:youtube-captions", "flow", "YouTube captions", {
@@ -560,7 +560,7 @@
   N("file:setup-page", "file", "Setup page", { path: "src/app/setup/page.tsx", domain: "onboarding", summary: "On iPhone, the setup fields use smaller help text below their titles." });
   N("file:setup-guard", "file", "SetupGuard", { path: "src/components/SetupGuard/index.tsx", domain: "onboarding" });
   N("file:onboarding-client", "file", "onboarding.ts", { path: "src/lib/onboarding.ts", domain: "onboarding" });
-  N("file:stats-page", "file", "Stats page", { path: "src/app/stats/page.tsx", domain: "stats", summary: "On iPhone, four totals and the vocabulary trend appear first. Activity, topics, and other charts expand one group at a time with smaller text below the titles." });
+  N("file:stats-page", "file", "Stats page", { path: "src/app/stats/page.tsx", domain: "stats", summary: "On iPhone, totals and vocabulary growth appear first; sparse histories show a count milestone. Activity, topics, and details expand as inset groups." });
   N("file:web-import", "file", "WebImportModal", { path: "src/components/WebImportModal/index.tsx", domain: "library" });
   N("file:youtube-import", "file", "YouTubeImportModal", { path: "src/components/YouTubeImportModal/index.tsx", domain: "library" });
   N("file:paste-import", "file", "PasteImportModal", { path: "src/components/PasteImportModal/index.tsx", domain: "library" });
