@@ -11,16 +11,22 @@ import {
   acceptedCacheIdentity,
   cacheAcceptedEntry,
   lookupWord,
+  lookupWordRanks,
   storedAcceptedCacheContentBytes,
   validateCacheAcceptedInput,
 } from '../lib/dictionary-db';
 import { recordLookupOutcome } from '../lib/ai-timing';
 import { entitlements, planLimitResponse, type AtomicLimitCheck } from '../lib/entitlements';
 import { aggregateGrowthCheck, batchGrowthCheck } from '../lib/storage-limits';
+import { rankFloorForLevel } from '../lib/localize-prefetch';
+import { readLearnerLevel } from '../lib/review/queue';
 
 // The largest valid cache payload is well under this even with four-byte
 // Unicode. Reject unknown/oversized fields before c.req.json() buffers them.
 const MAX_CACHE_BODY_BYTES = 256 * 1024;
+const MAX_SMART_HINTS_BODY_BYTES = 64 * 1024;
+const MAX_SMART_HINTS_CANDIDATES = 400;
+const SMART_HINT_DEFAULT_FLOOR = 1500;
 
 // Record an on-device dictionary hit: the shared session ping (sessionStartedAt
 // on the looked-up language's row) plus a dictionaryLookups bump, so daily lookup
@@ -135,6 +141,62 @@ export function makeDictionaryRoutes(
       } catch (err) {
         console.error('Dictionary cache write error:', err);
         return c.json({ error: err instanceof Error ? err.message : 'Cache write failed' }, 500);
+      }
+    },
+  );
+
+  // POST /api/dictionary/smart-hints — return the subset of candidate lesson words
+  // predicted to be above the learner's CEFR level based on local dictionary rank.
+  // Pure SQLite read, zero AI spend, does not increment lookup stats.
+  app.post(
+    '/smart-hints',
+    bodyLimit({
+      maxSize: MAX_SMART_HINTS_BODY_BYTES,
+      onError: (c) => c.json({ error: 'Word list is too large' }, 413),
+    }),
+    async (c) => {
+      try {
+        const userId = resolveUser(c);
+        let body: unknown;
+        try {
+          body = await c.req.json();
+        } catch {
+          return c.json({ error: 'Malformed JSON body' }, 400);
+        }
+        if (typeof body !== 'object' || body === null || Array.isArray(body)) {
+          return c.json({ error: 'Body must be an object' }, 400);
+        }
+        const record = body as Record<string, unknown>;
+        if (!Array.isArray(record.words)) {
+          return c.json({ error: 'words must be an array of strings' }, 400);
+        }
+        if (record.language !== undefined && typeof record.language !== 'string') {
+          return c.json({ error: 'language must be a string' }, 400);
+        }
+
+        const lang = resolveLanguage(record.language as string | undefined, userId);
+        const level = readLearnerLevel(userId, lang);
+        const rankFloor = level ? rankFloorForLevel(level) : SMART_HINT_DEFAULT_FLOOR;
+
+        const candidates: string[] = [];
+        for (const raw of record.words) {
+          if (candidates.length >= MAX_SMART_HINTS_CANDIDATES) break;
+          if (typeof raw !== 'string') continue;
+          const cleaned = raw.trim();
+          if (!cleaned || cleaned.length > 64) continue;
+          candidates.push(cleaned);
+        }
+
+        const ranks = lookupWordRanks(candidates, lang);
+        const hardWords: string[] = [];
+        for (const [foldedWord, rank] of ranks) {
+          if (rank > rankFloor) hardWords.push(foldedWord);
+        }
+
+        return c.json({ rankFloor, words: hardWords });
+      } catch (err) {
+        console.error('Smart hints error:', err);
+        return c.json({ error: 'Smart hints failed' }, 500);
       }
     },
   );

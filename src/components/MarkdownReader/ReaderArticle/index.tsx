@@ -31,6 +31,7 @@ import { wordReading, type AnnotationMode } from '../annotation';
 import { readerWrapClass } from '../wrap';
 import { proseStyleVars } from '@/lib/prose-style';
 import WordCell from '@/components/WordCell';
+import type { WordHighlightMode } from '../theme';
 import type { ActiveReaderWord, ReaderArticleProps } from './types';
 
 export type { ActiveReaderWord } from './types';
@@ -84,6 +85,8 @@ export interface ReaderBlockProps {
   /** The lesson's stored segmentation (#289 4.2); null falls back to ICU. */
   segmentation: WordSegmentation | null;
   knownWordsMap: Map<string, WordState>;
+  wordHighlightMode?: WordHighlightMode;
+  smartHintWords?: ReadonlySet<string> | null;
   /**
    * Folded word -> pronunciation, for the ruby layer (#289 4.4). Null when the
    * pack declares no annotation source or the fetch is still in flight.
@@ -123,6 +126,8 @@ export function readerBlockPropsEqual(previous: ReaderBlockProps, next: ReaderBl
     // list keeps its old ruby until some unrelated prop moves. `readings` is
     // immutable per lesson, so identity is enough.
     previous.annotationMode !== next.annotationMode ||
+    previous.wordHighlightMode !== next.wordHighlightMode ||
+    previous.smartHintWords !== next.smartHintWords ||
     previous.readings !== next.readings ||
     previous.onWordClick !== next.onWordClick ||
     previous.onActivateWord !== next.onActivateWord ||
@@ -171,6 +176,8 @@ const ReaderBlock = memo(function ReaderBlock({
   pack,
   segmentation,
   knownWordsMap,
+  wordHighlightMode = 'saved',
+  smartHintWords = null,
   readings,
   annotationMode,
   highlightedPhrase,
@@ -208,6 +215,10 @@ const ReaderBlock = memo(function ReaderBlock({
         const wordIndex = context.i++;
         const key = foldWord(part.text, pack);
         const state = lookupByVocabKeys(knownWordsMap, part.text, pack);
+        const isSmartHint =
+          wordHighlightMode === 'smart' &&
+          !!smartHintWords &&
+          (smartHintWords.has(key) || smartHintWords.has(part.text.toLowerCase()));
         const isPhraseHighlighted = phraseSet.has(wordIndex);
         const isActiveWord = activeWord?.blockId === blockId && activeWord.wordIndex === wordIndex;
 
@@ -216,6 +227,8 @@ const ReaderBlock = memo(function ReaderBlock({
             key={`${keyPrefix}-${index}`}
             text={part.text}
             state={state}
+            highlightMode={wordHighlightMode}
+            isSmartHint={isSmartHint}
             wordIndex={wordIndex}
             isActive={isActiveWord}
             isPhraseHighlighted={isPhraseHighlighted}
@@ -353,6 +366,8 @@ function ReaderArticle({
   prose,
   segmentation,
   knownWordsMap,
+  wordHighlightMode = 'saved',
+  smartHintWords = null,
   readings,
   annotationMode,
   highlightedPhrase,
@@ -369,6 +384,8 @@ function ReaderArticle({
       pack,
       segmentation,
       knownWordsMap,
+      wordHighlightMode,
+      smartHintWords,
       readings,
       annotationMode,
       highlightedPhrase,
@@ -384,6 +401,8 @@ function ReaderArticle({
       pack,
       segmentation,
       knownWordsMap,
+      wordHighlightMode,
+      smartHintWords,
       readings,
       annotationMode,
       highlightedPhrase,

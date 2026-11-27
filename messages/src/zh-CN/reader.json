@@ -45,7 +45,23 @@
       "markRemainingKnown": "将剩余词标为已掌握 ({count})",
       "markedRemainingKnown": "已将 {count} 个词标为已掌握",
       "undoMarkRemaining": "撤销",
-      "reviewChapterWords": "复习已收藏词汇 ({count})"
+      "reviewChapterWords": "复习已收藏词汇 ({count})",
+      "displayMenu": "阅读标注与发音",
+      "wordMarking": "正文标注方式",
+      "markingMode": {
+        "saved": "淡标生词",
+        "smart": "智能猜生词",
+        "clean": "纯净纸书"
+      },
+      "markingModeHint": {
+        "saved": "仅用柔和暖底色标记学习中的生词，告别密集下划线。",
+        "smart": "结合你的阅读等级，用淡虚线轻标可能不认识的难词。",
+        "clean": "零正文标注，像读纸质书一样沉浸阅读。"
+      },
+      "audioSection": "查词发音",
+      "autoPronounce": "点击词语时自动发音",
+      "autoPronounceHint": "默认关闭；随时可点词典里的小喇叭听发音。",
+      "settingSaveFailed": "无法保存此设置，请重试。"
     },
     "markdown": {
       "saveFailed": "保存失败",

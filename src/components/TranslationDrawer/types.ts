@@ -75,8 +75,6 @@ export interface TranslationDrawerProps {
   isExplainingSentence?: boolean;
   sentenceExplainError?: string | null;
   onExplainSentence?: () => void;
-  /** Handoff to ChatWidget pre-filled with the active word & sentence (Wave B). */
-  onAskTutor?: () => void;
 
   /** Existing vocab record (if word was previously saved). */
   existingEntry?: VocabEntry | null;

@@ -1,5 +1,6 @@
 'use client';
 
+import { ChevronRight } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import type { ExpandedDictionaryEntry } from '../../types';
 import Gloss from '../Gloss';
@@ -53,7 +54,7 @@ export function SenseGroups({
 }) {
   const posLabel = usePosLabel();
   return (
-    <div className="space-y-3">
+    <div className="space-y-2.5">
       {groupByPartOfSpeech(senses).map((group, g) => (
         <div key={g}>
           {!inlinePartOfSpeech && group.partOfSpeech && (
@@ -61,11 +62,11 @@ export function SenseGroups({
           )}
           <ol
             className={
-              !inlinePartOfSpeech && group.partOfSpeech ? 'mt-1.5 space-y-1.5' : 'space-y-1.5'
+              !inlinePartOfSpeech && group.partOfSpeech ? 'mt-1 space-y-1' : 'space-y-1'
             }
           >
             {group.items.map((sense, i) => (
-              <li key={i} className="flex gap-3">
+              <li key={i} className="flex gap-2.5">
                 <span className="mt-0.5 flex-shrink-0 text-xs font-medium text-muted-foreground tabular-nums">
                   {i + 1}.
                 </span>
@@ -86,48 +87,49 @@ export function SenseGroups({
   );
 }
 
-/** Frequency, exam tags, Collins stars and the Oxford 3000 mark. */
+/** Quiet, single-line metadata strip: frequency rank, Oxford 3000, and exam tags. */
 export function EntryBadges({ entry }: { entry: ExpandedDictionaryEntry }) {
   const t = useTranslations('reader.drawer');
-  const chinese = useLocale().startsWith('zh');
+  const locale = useLocale();
+  const chinese = locale.startsWith('zh');
   const tags = (entry.tags ?? []).filter(
     (tag) => KNOWN_TAGS.includes(tag) && (chinese || !MAINLAND_TAGS.has(tag)),
   );
   if (!entry.collins && !entry.oxford && tags.length === 0 && !entry.rank) return null;
+
+  const metaParts: string[] = [];
+  if (entry.oxford) metaParts.push(t('oxford3000'));
+  for (const tag of tags.slice(0, 3)) {
+    metaParts.push(t(`tags.${tag}`));
+  }
+  if (entry.rank) {
+    metaParts.push(t('frequencyRank', { rank: entry.rank.toLocaleString(locale) }));
+  }
+
   return (
-    <div className="flex flex-wrap items-center gap-1.5" data-testid="entry-badges">
+    <div
+      className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-muted-foreground"
+      data-testid="entry-badges"
+    >
       {entry.collins ? (
         <span
-          className="rounded-md bg-muted px-1.5 py-0.5 text-[11px] text-[var(--gold-strong)]"
+          className="text-[var(--gold-strong)]"
           title={t('collinsTitle', { stars: entry.collins })}
         >
           {'★'.repeat(entry.collins)}
-          <span className="text-muted-foreground/40">{'★'.repeat(5 - entry.collins)}</span>
+          <span className="text-muted-foreground/30">{'★'.repeat(5 - entry.collins)}</span>
         </span>
       ) : null}
-      {entry.oxford ? (
-        <span className="rounded-md bg-[var(--primary-soft)] px-1.5 py-0.5 text-[11px] font-medium text-[var(--primary-text)]">
-          {t('oxford3000')}
-        </span>
-      ) : null}
-      {tags.map((tag) => (
-        <span
-          key={tag}
-          className="rounded-md bg-muted px-1.5 py-0.5 text-[11px] font-medium text-muted-foreground"
-        >
-          {t(`tags.${tag}`)}
-        </span>
-      ))}
-      {entry.rank ? (
-        <span className="text-[11px] text-muted-foreground tabular-nums">
-          {t('frequencyRank', { rank: entry.rank.toLocaleString() })}
-        </span>
-      ) : null}
+      {metaParts.length > 0 && <span className="tabular-nums">{metaParts.join(' · ')}</span>}
     </div>
   );
 }
 
-/** English definitions beside translated senses, then example sentences. */
+/**
+ * Bilingual example sentences first (high utility above the fold), followed by
+ * English definitions collapsed by default so long dictionary prose never
+ * pushes examples out of view.
+ */
 export function EntryExtras({
   entry,
   word,
@@ -150,20 +152,6 @@ export function EntryExtras({
   if (english.length === 0 && examples.length === 0) return null;
   return (
     <>
-      {english.length > 0 && (
-        <section className="border-b border-border px-4 py-3" data-testid="entry-english">
-          <h3 className="mb-2 text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">
-            {t('englishDefinitions')}
-          </h3>
-          <div className="text-sm text-muted-foreground">
-            <SenseGroups
-              senses={english}
-              onLookupWord={onLookupWord}
-              inlinePartOfSpeech={inlinePartOfSpeech}
-            />
-          </div>
-        </section>
-      )}
       {examples.length > 0 && (
         <section className="border-b border-border px-4 py-3" data-testid="entry-examples">
           <h3 className="mb-2 text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">
@@ -179,6 +167,31 @@ export function EntryExtras({
               </li>
             ))}
           </ul>
+        </section>
+      )}
+      {english.length > 0 && (
+        <section className="border-b border-border px-4 py-2.5" data-testid="entry-english">
+          <details key={word} className="group">
+            <summary
+              className="flex min-h-10 cursor-pointer list-none items-center gap-1.5 py-1 text-xs font-medium text-muted-foreground select-none hover:text-foreground sm:min-h-8 [&::-webkit-details-marker]:hidden"
+              data-testid="entry-english-toggle"
+            >
+              <ChevronRight
+                className="size-3.5 shrink-0 transition-transform group-open:rotate-90"
+                aria-hidden="true"
+              />
+              <span>
+                {t('englishDefinitions')} ({english.length})
+              </span>
+            </summary>
+            <div className="mt-2.5 text-sm text-muted-foreground">
+              <SenseGroups
+                senses={english}
+                onLookupWord={onLookupWord}
+                inlinePartOfSpeech={inlinePartOfSpeech}
+              />
+            </div>
+          </details>
         </section>
       )}
     </>

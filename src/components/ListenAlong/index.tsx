@@ -29,11 +29,13 @@ import {
 } from 'lucide-react';
 import type { AudioTranscriptSegment, Lesson, WordState } from '@/types';
 import {
+  foldWord,
   getLanguageConfig,
   isValidLanguageCode,
   lookupByVocabKeys,
   makeWordSegmentation,
 } from '@/lib/languages';
+import type { WordHighlightMode } from '@/components/MarkdownReader/theme';
 import { languageDisplayName } from '@/lib/language-names';
 import { getStoredSpeechRate, getVoiceForLanguage, waitForVoices } from '@/lib/tts';
 import { useActiveLanguage } from '@/utils/hooks';
@@ -53,6 +55,8 @@ const SKIP_SECONDS = 5;
 interface ListenAlongBaseProps {
   lesson: Lesson;
   knownWordsMap: Map<string, WordState>;
+  wordHighlightMode?: WordHighlightMode;
+  smartHintWords?: ReadonlySet<string>;
   wordPanelOpen?: boolean;
   onWordClick: (word: string, sentence: string) => void;
   /** Back to reading mode. */
@@ -558,22 +562,29 @@ export default function ListenAlong(props: ListenAlongProps) {
                     : 'hover:bg-accent/50'
                 }`}
               >
-                {splitWords(row.text, pack, segmentation).map((part, partIndex) =>
-                  part.isWord ? (
+                {splitWords(row.text, pack, segmentation).map((part, partIndex) => {
+                  if (!part.isWord) return <span key={partIndex}>{part.text}</span>;
+                  const smartKey = foldWord(part.text, pack);
+                  const isSmartHint =
+                    props.wordHighlightMode === 'smart' &&
+                    !!props.smartHintWords &&
+                    (props.smartHintWords.has(smartKey) ||
+                      props.smartHintWords.has(part.text.toLowerCase()));
+                  return (
                     <WordCell
                       key={partIndex}
                       text={part.text}
                       state={lookupByVocabKeys(knownWordsMap, part.text, pack)}
+                      highlightMode={props.wordHighlightMode}
+                      isSmartHint={isSmartHint}
                       isActive={
                         effectiveActiveWord?.segmentIdx === row.idx &&
                         effectiveActiveWord.wordIndex === partIndex
                       }
                       onActivate={(text) => handleWordTap(row, partIndex, text)}
                     />
-                  ) : (
-                    <span key={partIndex}>{part.text}</span>
-                  ),
-                )}
+                  );
+                })}
               </p>
             );
           })}

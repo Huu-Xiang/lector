@@ -38,6 +38,20 @@
       "autoSaveOn": "开",
       "autoSaveOff": "关",
       "autoSaveFailed": "无法保存此设置。请重试。",
+      "autoPronounceLabel": "点击词语时自动发音",
+      "autoPronounceHint": "在阅读器中点击单词时自动朗读。默认关闭，随时可点词典里的小喇叭听发音。",
+      "wordHighlightLabel": "阅读正文词汇标注",
+      "wordHighlightHint": "选择阅读时正文中生词的呈现方式。",
+      "wordHighlightMode": {
+        "saved": "淡标生词",
+        "smart": "智能猜生词",
+        "clean": "纯净纸书"
+      },
+      "wordHighlightModeHint": {
+        "saved": "用柔和的暖色背景轻标学习中的生词，不再使用厚重下划线。",
+        "smart": "同时根据你的阅读等级，用淡虚线轻标可能不认识的难词。",
+        "clean": "正文不做任何生词标记，像阅读纸质书一样清爽。"
+      },
       "reviewGoal": {
         "recognize": "认识",
         "recognize_spell": "认识并拼写"

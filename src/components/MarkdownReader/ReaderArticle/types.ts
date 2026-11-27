@@ -1,6 +1,7 @@
 import type { LanguageConfig, WordSegmentation } from '@/lib/languages';
 import type { WordState } from '@/types';
 import type { AnnotationMode } from '../annotation';
+import type { WordHighlightMode } from '../theme';
 import type { HighlightedPhrase } from '../utils';
 import type { ProseStyle } from '@/lib/prose-style';
 
@@ -19,6 +20,8 @@ export interface ReaderArticleProps {
   prose: ProseStyle;
   segmentation: WordSegmentation | null;
   knownWordsMap: Map<string, WordState>;
+  wordHighlightMode?: WordHighlightMode;
+  smartHintWords?: ReadonlySet<string> | null;
   readings: Map<string, string> | null;
   annotationMode: AnnotationMode;
   highlightedPhrase: HighlightedPhrase;

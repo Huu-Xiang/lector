@@ -46,6 +46,8 @@ const PORTABLE_SETTING_KEYS = [
   'reviewGoal',
   'dailyGoal',
   'monolingualExplanations',
+  'autoPronounceOnLookup',
+  'wordHighlightMode',
 ] as const;
 
 function portableValue(value: unknown): unknown {

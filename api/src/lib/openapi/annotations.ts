@@ -2009,6 +2009,40 @@ const dictionaryOps: Record<string, OperationDoc> = {
       },
     },
   },
+  'POST /api/dictionary/smart-hints': {
+    summary: 'Identify likely unfamiliar words for a lesson',
+    description:
+      'Compares candidate words against the built-in frequency dictionary and the learner’s reading level for the language. Runs locally without AI or lookup stats.',
+    tag: 'Dictionary',
+    requestBody: {
+      required: true,
+      schema: {
+        type: 'object',
+        properties: {
+          words: {
+            type: 'array',
+            items: { type: 'string' },
+            maxItems: 400,
+          },
+          language: { type: 'string' },
+        },
+        required: ['words'],
+      },
+    },
+    responses: {
+      '200': {
+        description: 'Candidate words predicted above the learner’s reading level.',
+        schema: {
+          type: 'object',
+          properties: {
+            words: { type: 'array', items: { type: 'string' } },
+            rankFloor: { type: 'integer' },
+          },
+          required: ['words', 'rankFloor'],
+        },
+      },
+    },
+  },
 };
 
 const WORD_ENTRY_RESPONSE: JsonSchema = {

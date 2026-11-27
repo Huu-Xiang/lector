@@ -2,12 +2,20 @@
 
 import { useTranslations } from 'next-intl';
 import type { WordState } from '@/types';
-import { stateClasses } from '@/components/MarkdownReader/theme';
+import {
+  SMART_HINT_CLASS,
+  wordCellHighlightClass,
+  type WordHighlightMode,
+} from '@/components/MarkdownReader/theme';
 
 export interface WordCellProps {
   text: string;
   /** Word state from the known-words map; undefined renders as 'new'. */
   state?: WordState;
+  /** Reader body highlighting mode: 'saved' (default), 'smart', or 'clean'. */
+  highlightMode?: WordHighlightMode;
+  /** True when the server predicted this word is above the learner's CEFR level. */
+  isSmartHint?: boolean;
   /** The currently looked-up word (drawer open) — highlight and underline. */
   isActive?: boolean;
   /** Part of the highlighted phrase selection. */
@@ -42,6 +50,8 @@ export interface WordCellProps {
 export default function WordCell({
   text,
   state,
+  highlightMode = 'saved',
+  isSmartHint = false,
   isActive = false,
   isPhraseHighlighted = false,
   onActivate,
@@ -51,7 +61,8 @@ export default function WordCell({
   testId = 'reader-word',
 }: WordCellProps) {
   const t = useTranslations('reader.wordCell');
-  const colorClass = state ? stateClasses[state] : stateClasses.new;
+  const colorClass = wordCellHighlightClass({ state, mode: highlightMode, isSmartHint });
+  const showSmartAttr = colorClass === SMART_HINT_CLASS;
   const isHighlighted = isPhraseHighlighted || isActive;
   // A word with no handler is decoration — the settings preview (#570) draws the
   // chips to show a typography change, and there is nothing to look up. Button
@@ -66,6 +77,7 @@ export default function WordCell({
       // Marks the span as one word: `usePhraseTouchSelection` selects on this
       // attribute, and the e2e suite asserts the state it carries.
       data-word-state={state ?? 'new'}
+      data-smart-hint={showSmartAttr ? 'true' : undefined}
       data-word-index={wordIndex}
       role={interactive ? 'button' : undefined}
       tabIndex={interactive ? 0 : undefined}

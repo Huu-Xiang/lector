@@ -228,12 +228,13 @@ describe('TranslationDrawer saved AI meaning & phrase details (AE2)', () => {
     expect(html).toContain('colloquial');
   });
 
-  it('renders Find in library in desktop secondary actions and exposes More actions in compact native mobile mode', () => {
+  it('keeps desktop footer compact behind drawer-more-actions and exposes More actions in compact native mobile mode', () => {
     const desktopHtml = renderDrawer({
       onSearchLibrary: () => {},
     });
-    expect(desktopHtml).toContain('data-testid="search-in-library-btn"');
-    expect(desktopHtml).toContain('Find in library');
+    expect(desktopHtml).toContain('data-testid="drawer-more-actions"');
+    // Secondary actions live inside the overflow menu rather than cluttering the sticky footer.
+    expect(desktopHtml).not.toContain('data-testid="search-in-library-btn"');
 
     // In compact native iOS mode, passing ONLY onSearchLibrary must still render the footer
     // and the More actions overflow toggle (hasSecondaryActions + footer guard).
@@ -273,7 +274,7 @@ describe('TranslationDrawer saved AI meaning & phrase details (AE2)', () => {
     expect(liveHtml).toContain('Show dictionary (2)');
   });
 
-  it('renders Break down sentence and Ask Tutor actions when wired and hides etymology while primary AI is active', () => {
+  it('renders Break down sentence without Ask Tutor, omits desktop repeated sentence, and hides etymology while primary AI is active', () => {
     const html = renderDrawer({
       entry: {
         ...dictEntry,
@@ -283,12 +284,57 @@ describe('TranslationDrawer saved AI meaning & phrase details (AE2)', () => {
       savedTranslationSource: 'ai_context',
       savedSentence: 'Me senté en el banco del parque.',
       onExplainSentence: () => {},
-      onAskTutor: () => {},
     });
     expect(html).toContain('data-testid="explain-sentence-btn"');
-    expect(html).toContain('data-testid="ask-tutor-btn"');
+    expect(html).not.toContain('data-testid="ask-tutor-btn"');
+    expect(html).not.toContain('data-testid="lookup-original-sentence"');
     // Etymology stays collapsed inside dictionary details when primary AI meaning is active.
     expect(html).not.toContain('From Italian banco.');
+  });
+
+  it('orders bilingual examples ahead of collapsed English definitions in EntryDetails', () => {
+    const html = renderDrawer({
+      entry: {
+        ...dictEntry,
+        examples: [{ text: 'The train from Geneva will arrive.', translation: '从日内瓦来的火车就要进站了。' }],
+        englishSenses: [{ partOfSpeech: 'prep', gloss: 'Out of the neighborhood of.' }],
+      },
+    });
+    const examplesIdx = html.indexOf('data-testid="entry-examples"');
+    const englishIdx = html.indexOf('data-testid="entry-english"');
+    expect(examplesIdx).toBeGreaterThan(-1);
+    expect(englishIdx).toBeGreaterThan(examplesIdx);
+    expect(html).toContain('data-testid="entry-english-toggle"');
+    expect(html).toContain('data-testid="entry-english"><details class="group">');
+    expect(html).not.toMatch(/data-testid="entry-english"><details[^>]*\bopen\b/);
+  });
+
+  it('allows restoring known/ignored words on desktop, avoids empty overflow menus, and preserves repeatLookup in compact mode', () => {
+    const knownHtml = renderDrawer({
+      wordState: 'known',
+      onSaveWord: () => {},
+      onSetLevel: () => {},
+      onMarkKnown: () => {},
+    });
+    expect(knownHtml).toContain('data-testid="save-looked-up-word"');
+    expect(knownHtml).toContain('data-testid="drawer-more-actions"');
+
+    // Only onMarkKnown (no overflow items) must NOT render an empty drawer-more-actions button.
+    const markKnownOnlyHtml = renderDrawer({
+      wordState: 'level1',
+      onMarkKnown: () => {},
+    });
+    expect(markKnownOnlyHtml).not.toContain('data-testid="drawer-more-actions"');
+
+    // Compact native iOS mode keeps repeatLookup hint when canSaveWord is true.
+    mockState.isNativeApp = true;
+    mockState.screenSize = 'xs';
+    const compactRepeatHtml = renderDrawer({
+      wordState: 'new',
+      onSaveWord: () => {},
+      repeatLookup: true,
+    });
+    expect(compactRepeatHtml).toContain('data-testid="repeat-lookup-hint"');
   });
 });
 

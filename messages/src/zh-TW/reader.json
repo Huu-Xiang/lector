@@ -45,7 +45,23 @@
       "markRemainingKnown": "將剩餘詞標為已掌握 ({count})",
       "markedRemainingKnown": "已將 {count} 個詞標為已掌握",
       "undoMarkRemaining": "復原",
-      "reviewChapterWords": "複習已收藏詞彙 ({count})"
+      "reviewChapterWords": "複習已收藏詞彙 ({count})",
+      "displayMenu": "閱讀標註與發音",
+      "wordMarking": "正文標註方式",
+      "markingMode": {
+        "saved": "淡標生詞",
+        "smart": "智慧猜生詞",
+        "clean": "純淨紙書"
+      },
+      "markingModeHint": {
+        "saved": "僅用柔和暖底色標記學習中的生詞，告別密集底線。",
+        "smart": "結合你的閱讀等級，用淡虛線輕標可能不認識的難詞。",
+        "clean": "零正文標註，像讀紙本書一樣沉浸閱讀。"
+      },
+      "audioSection": "查詞發音",
+      "autoPronounce": "點擊詞語時自動發音",
+      "autoPronounceHint": "預設關閉；隨時可點詞典裡的小喇叭聽發音。",
+      "settingSaveFailed": "無法儲存此設定，請重試。"
     },
     "markdown": {
       "saveFailed": "儲存失敗",

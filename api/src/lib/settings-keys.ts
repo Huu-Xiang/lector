@@ -46,7 +46,10 @@ const SETTING_VALUE_BYTE_LIMITS: Record<string, number> = {
   reviewGoal: 24,
   // true or false.
   autoSaveLookups: 8,
+  autoPronounceOnLookup: 8,
   monolingualExplanations: 8,
+  // 'saved' | 'smart' | 'clean'
+  wordHighlightMode: 12,
   dailyGoal: 48,
   // An ISO timestamp, quoted.
   aiNoticeAcceptedAt: 40,
@@ -72,8 +75,12 @@ export const KNOWN_SETTING_KEYS = new Set([
   'reviewGoal',
   // Reader: save a looked-up word at once. Unset means on.
   'autoSaveLookups',
+  // Reader: auto-speak a word on tap. Unset means off (quiet by default).
+  'autoPronounceOnLookup',
   // Reader: explain words and phrases in the target language instead of native.
   'monolingualExplanations',
+  // Reader: body word marking mode ('saved' | 'smart' | 'clean'). Unset means 'saved'.
+  'wordHighlightMode',
   // Daily goal for the streak: { kind: 'minutes' | 'reviews', target }.
   'dailyGoal',
   'aiNoticeAcceptedAt',
@@ -110,6 +117,7 @@ export const KNOWN_SETTING_KEYS = new Set([
 const ANKI_TRANSPORTS = new Set(['ankiconnect', 'addon']);
 const CEFR_LEVELS = new Set(['A1', 'A2', 'B1', 'B2', 'C1', 'C2']);
 const REVIEW_GOALS = new Set(['recognize', 'recognize_spell']);
+const WORD_HIGHLIGHT_MODES = new Set(['saved', 'smart', 'clean']);
 const READING_INTERESTS = new Set(['news', 'travel', 'science', 'literature']);
 
 export function validateSettingWrite(key: string, value: unknown): string | null {
@@ -158,6 +166,15 @@ export function validateSettingWrite(key: string, value: unknown): string | null
   }
   if (key === 'autoSaveLookups' && typeof value !== 'boolean') {
     return 'autoSaveLookups must be true or false';
+  }
+  if (key === 'autoPronounceOnLookup' && typeof value !== 'boolean') {
+    return 'autoPronounceOnLookup must be true or false';
+  }
+  if (
+    key === 'wordHighlightMode' &&
+    (typeof value !== 'string' || !WORD_HIGHLIGHT_MODES.has(value))
+  ) {
+    return "wordHighlightMode must be 'saved', 'smart', or 'clean'";
   }
   if (key === 'monolingualExplanations' && typeof value !== 'boolean') {
     return 'monolingualExplanations must be true or false';

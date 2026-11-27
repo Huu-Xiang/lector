@@ -383,6 +383,7 @@ type Stmts = {
   /** Lemma order of the pack's `content/lemma-priority.json`; null when the pack ships none. */
   starterPriority: Map<string, number> | null;
   selectReadings: Statement;
+  selectRanks: Statement;
   /** Present only in dictionaries that ship the extra tables (English). */
   selectMeta: Statement | null;
   selectI18n: Statement | null;
@@ -543,6 +544,18 @@ function getStmts(language: string): Stmts | null {
                 ) AS ipa
            FROM json_each(?) k
           WHERE ipa IS NOT NULL`,
+      ),
+      selectRanks: db.prepare(
+        `SELECT k.value AS word,
+                COALESCE(
+                  (SELECT e.rank FROM entries e WHERE e.word = k.value AND e.rank IS NOT NULL),
+                  (SELECT e2.rank FROM inflections i
+                     JOIN entries e2 ON e2.word = i.lemma
+                    WHERE i.inflected_form = k.value AND e2.rank IS NOT NULL
+                    ORDER BY e2.rank, i.rowid LIMIT 1)
+                ) AS rank
+           FROM json_each(?) k
+          WHERE rank IS NOT NULL`,
       ),
     };
     _stmtsByLang.set(language, stmts);
@@ -1162,6 +1175,40 @@ export function lookupReadings(words: readonly string[], language: string): Map<
     console.warn(`[dictionary] batch readings failed for ${language}:`, err);
   }
   return readings;
+}
+
+/**
+ * Batch frequency-rank lookup for smart-hints mode: runs ONE indexed SQLite
+ * query over all folded candidate keys, skipping senses, related forms,
+ * examples, i18n, and user AI cache. Fails soft to an empty Map on missing
+ * or corrupt dictionaries.
+ */
+export function lookupWordRanks(words: readonly string[], language: string): Map<string, number> {
+  const ranks = new Map<string, number>();
+  if (words.length === 0) return ranks;
+
+  const keys = new Set<string>();
+  for (const word of words) {
+    const key = foldKey(word, language);
+    if (!key) continue;
+    keys.add(key);
+  }
+  if (keys.size === 0) return ranks;
+
+  const stmts = getStmts(language);
+  if (!stmts) return ranks;
+  try {
+    const rows = stmts.selectRanks.all(JSON.stringify([...keys])) as Array<{
+      word: string;
+      rank: number;
+    }>;
+    for (const row of rows) {
+      if (typeof row.rank === 'number') ranks.set(row.word, row.rank);
+    }
+  } catch (err) {
+    console.warn(`[dictionary] batch ranks failed for ${language}:`, err);
+  }
+  return ranks;
 }
 
 // kaikki tags a form it could not classify as `error-unrecognized-form`, and a

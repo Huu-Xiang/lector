@@ -598,7 +598,7 @@ test.describe('guided onboarding — selfhost', () => {
       );
 
       const savedEvent = waitForSavedEvent(page);
-      await drawer.getByTestId('word-level-1').click();
+      await drawer.getByTestId('save-looked-up-word').click();
       expect((await savedEvent).status()).toBeLessThan(300);
       await expect(
         page.getByText(`“${GUIDED_WORD}” added. Your practice is ready.`, { exact: true }),

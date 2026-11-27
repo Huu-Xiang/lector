@@ -263,6 +263,32 @@ export async function cacheAcceptedTranslation(
 }
 
 /**
+ * Ask the local dictionary rank index which candidate words in a lesson sit
+ * above the learner's CEFR level for Smart Hint highlighting. Zero AI cost.
+ */
+export async function fetchSmartHintWords(
+  words: string[],
+  language?: string,
+  signal?: AbortSignal,
+): Promise<Set<string>> {
+  const unique = [...new Set(words.map((w) => w.trim()).filter(Boolean))].slice(0, 400);
+  if (unique.length === 0) return new Set();
+  try {
+    const res = await apiFetch('/api/dictionary/smart-hints', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      signal,
+      body: JSON.stringify({ words: unique, language: language ?? getActiveLanguage() }),
+    });
+    if (!res.ok) return new Set();
+    const data = (await res.json()) as { words?: string[] };
+    return new Set(data.words ?? []);
+  } catch {
+    return new Set();
+  }
+}
+
+/**
  * Convenience: collapse an entry's first sense into the legacy
  * `{ translation, partOfSpeech }` shape used by older code paths.
  */

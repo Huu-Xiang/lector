@@ -38,6 +38,20 @@
       "autoSaveOn": "開",
       "autoSaveOff": "關",
       "autoSaveFailed": "無法儲存此設定。請再試一次。",
+      "autoPronounceLabel": "點擊詞語時自動發音",
+      "autoPronounceHint": "在閱讀器中點擊單字時自動朗讀。預設關閉，隨時可點詞典裡的小喇叭聽發音。",
+      "wordHighlightLabel": "閱讀正文詞彙標註",
+      "wordHighlightHint": "選擇閱讀時正文中生詞的呈現方式。",
+      "wordHighlightMode": {
+        "saved": "淡標生詞",
+        "smart": "智慧猜生詞",
+        "clean": "純淨紙書"
+      },
+      "wordHighlightModeHint": {
+        "saved": "用柔和的暖色背景輕標學習中的生詞，不再使用厚重底線。",
+        "smart": "同時根據你的閱讀等級，用淡虛線輕標可能不認識的難詞。",
+        "clean": "正文不做任何生詞標記，像閱讀紙本書一樣清爽。"
+      },
       "reviewGoal": {
         "recognize": "認識",
         "recognize_spell": "認識並拼寫"
