@@ -4,16 +4,20 @@ import JsonLd from '@/components/JsonLd';
 import { LegalShell, H2 } from '@/components/LegalLinks/shell';
 import PublicLink from '@/components/PublicLink';
 import {
-  ALTERNATIVE_COMPETITORS,
   COMPARISON_ROWS,
+  COMPETITOR_DISPLAY_NAMES,
   COMPETITOR_FAQ_KEYS,
   alternativeJsonLd,
   alternativePath,
+  isLingqVariant,
+  isWave3AlternativeCompetitor,
+  relatedAlternatives,
   type AlternativeCompetitor,
 } from '@/lib/alternatives';
+import { getWave3AlternativeContent } from '@/lib/alternatives-wave3';
+import { getToolsUi } from '@/lib/tools';
 import { SITE_ORIGIN, listPublicBooks } from '@/lib/public-books';
-import { findPrice, formatMoney, type PlanPrice } from '@/lib/plan-prices';
-import { TIER_ALLOWANCES } from '@/lib/plan-prices';
+import { findPrice, formatMoney, TIER_ALLOWANCES, type PlanPrice } from '@/lib/plan-prices';
 
 export default async function AlternativesPage({
   competitor,
@@ -31,33 +35,6 @@ export default async function AlternativesPage({
   const bookCount = listPublicBooks().length;
   const plusMonthly = findPrice(prices, 'cloud', 'month')?.unitPrice;
   const plusPriceText = plusMonthly ? formatMoney(plusMonthly, locale) : '$3';
-  const competitorName = competitor === 'lingq' ? 'LingQ' : 'Readlang';
-  const other = ALTERNATIVE_COMPETITORS.find((c) => c !== competitor)!;
-  const otherName = other === 'lingq' ? 'LingQ' : 'Readlang';
-
-  const faqKeys = COMPETITOR_FAQ_KEYS[competitor];
-  const faq = faqKeys.map((key) => ({
-    q: t(`${competitor}.faq.${key}Q`),
-    a: t(`${competitor}.faq.${key}A`, {
-      books: bookCount,
-      plusPrice: plusPriceText,
-      freeLookups: TIER_ALLOWANCES.free.glosses.toLocaleString(locale),
-      freeDetailed: TIER_ALLOWANCES.free.detailed,
-    }),
-  }));
-
-  const pageUrl = canonicalUrl ?? `${SITE_ORIGIN}${alternativePath(competitor)}`;
-  const structured = alternativeJsonLd({
-    competitor,
-    url: pageUrl,
-    title: t(`${competitor}.title`),
-    description: t(`${competitor}.metaDescription`, { books: bookCount, plusPrice: plusPriceText }),
-    allLabel: t('breadcrumbHome'),
-    hubLabel: t('hub.breadcrumbAlternatives'),
-    localePrefix,
-    inLanguage: locale,
-    faq,
-  });
 
   const rowValues = {
     books: bookCount,
@@ -66,24 +43,80 @@ export default async function AlternativesPage({
     freeDetailed: TIER_ALLOWANCES.free.detailed,
   };
 
+  const isWave3 = isWave3AlternativeCompetitor(competitor);
+  const wave3 = isWave3 ? getWave3AlternativeContent(competitor, locale, rowValues) : null;
+
+  const competitorName = wave3 ? wave3.competitorName : COMPETITOR_DISPLAY_NAMES[competitor];
+  const title = wave3 ? wave3.title : t(`${competitor}.title`);
+  const summary = wave3 ? wave3.summary : t(`${competitor}.summary`, rowValues);
+  const metaDescription = wave3
+    ? wave3.metaDescription
+    : t(`${competitor}.metaDescription`, { books: bookCount, plusPrice: plusPriceText });
+
+  const faq = wave3
+    ? wave3.faq
+    : COMPETITOR_FAQ_KEYS[competitor as 'lingq' | 'readlang'].map((key) => ({
+        q: t(`${competitor}.faq.${key}Q`),
+        a: t(`${competitor}.faq.${key}A`, rowValues),
+      }));
+
+  const readfoxWins: [string, string, string] = wave3
+    ? wave3.readfoxWins
+    : [
+        t(`${competitor}.readfoxWins.w1`, rowValues),
+        t(`${competitor}.readfoxWins.w2`, rowValues),
+        t(`${competitor}.readfoxWins.w3`, rowValues),
+      ];
+
+  const competitorWins: [string, string, string] = wave3
+    ? wave3.competitorWins
+    : [
+        t(`${competitor}.competitorWins.w1`),
+        t(`${competitor}.competitorWins.w2`),
+        t(`${competitor}.competitorWins.w3`),
+      ];
+
+  const pageUrl = canonicalUrl ?? `${SITE_ORIGIN}${alternativePath(competitor)}`;
+  const structured = alternativeJsonLd({
+    competitor,
+    url: pageUrl,
+    title,
+    description: metaDescription,
+    allLabel: t('breadcrumbHome'),
+    hubLabel: t('hub.breadcrumbAlternatives'),
+    localePrefix,
+    inLanguage: locale,
+    faq,
+  });
+
+  const related = relatedAlternatives(competitor);
+
   return (
-    <LegalShell title={t(`${competitor}.title`)} wide>
+    <LegalShell title={title} wide>
       {structured.map((entry, idx) => (
         <JsonLd key={idx} data={entry} />
       ))}
 
-      <p className="max-w-3xl text-base text-muted-foreground">
-        {t(`${competitor}.summary`, rowValues)}
-      </p>
+      <p className="max-w-3xl text-base leading-relaxed text-muted-foreground">{summary}</p>
 
       <div className="flex flex-wrap gap-3">
-        <PublicLink
-          href="/books"
-          className="inline-block rounded-lg bg-primary px-4 py-2 font-semibold text-primary-foreground hover:opacity-90"
-          data-testid="alt-cta-books"
-        >
-          {t('ctaBooks', { books: bookCount })}
-        </PublicLink>
+        {wave3?.highlightCta ? (
+          <PublicLink
+            href={wave3.highlightCta.href}
+            className="inline-block rounded-lg bg-primary px-4 py-2 font-semibold text-primary-foreground hover:opacity-90"
+            data-testid="alt-cta-highlight"
+          >
+            {wave3.highlightCta.label}
+          </PublicLink>
+        ) : (
+          <PublicLink
+            href="/books"
+            className="inline-block rounded-lg bg-primary px-4 py-2 font-semibold text-primary-foreground hover:opacity-90"
+            data-testid="alt-cta-books"
+          >
+            {t('ctaBooks', { books: bookCount })}
+          </PublicLink>
+        )}
         <PublicLink
           href="/vocab-test"
           className="inline-block rounded-lg border border-border bg-card px-4 py-2 font-semibold text-foreground hover:bg-muted"
@@ -121,7 +154,7 @@ export default async function AlternativesPage({
                     {t(`rows.${row}.readfox`, rowValues)}
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">
-                    {t(`${competitor}.rows.${row}`)}
+                    {wave3 ? wave3.rows[row] : t(`${competitor}.rows.${row}`)}
                   </td>
                 </tr>
               ))}
@@ -130,7 +163,7 @@ export default async function AlternativesPage({
         </div>
       </section>
 
-      {competitor === 'lingq' && (
+      {isLingqVariant(competitor) && (
         <section
           className="space-y-2 rounded-lg border border-primary/30 bg-muted/40 p-5"
           data-testid="alt-lingq-import"
@@ -149,17 +182,17 @@ export default async function AlternativesPage({
         <section className="space-y-2 rounded-lg border border-border p-5">
           <H2>{t('whenReadfoxHeading')}</H2>
           <ul className="list-disc space-y-1.5 pl-5 text-foreground">
-            <li>{t(`${competitor}.readfoxWins.w1`, rowValues)}</li>
-            <li>{t(`${competitor}.readfoxWins.w2`, rowValues)}</li>
-            <li>{t(`${competitor}.readfoxWins.w3`, rowValues)}</li>
+            {readfoxWins.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
           </ul>
         </section>
         <section className="space-y-2 rounded-lg border border-border p-5">
           <H2>{t('whenCompetitorHeading', { competitor: competitorName })}</H2>
           <ul className="list-disc space-y-1.5 pl-5 text-muted-foreground">
-            <li>{t(`${competitor}.competitorWins.w1`)}</li>
-            <li>{t(`${competitor}.competitorWins.w2`)}</li>
-            <li>{t(`${competitor}.competitorWins.w3`)}</li>
+            {competitorWins.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
           </ul>
         </section>
       </div>
@@ -174,12 +207,21 @@ export default async function AlternativesPage({
         ))}
       </section>
 
-      <p className="flex flex-wrap gap-x-4 text-xs text-muted-foreground">
+      <p className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
         <PublicLink href="/alternatives" className="underline hover:text-foreground">
           {t('hub.breadcrumbAlternatives')}
         </PublicLink>
-        <PublicLink href={alternativePath(other)} className="underline hover:text-foreground">
-          {t('compareOther', { competitor: otherName })}
+        {related.map((other) => (
+          <PublicLink
+            key={other}
+            href={alternativePath(other)}
+            className="underline hover:text-foreground"
+          >
+            {t('compareOther', { competitor: COMPETITOR_DISPLAY_NAMES[other] })}
+          </PublicLink>
+        ))}
+        <PublicLink href="/tools/text-difficulty" className="underline hover:text-foreground">
+          {getToolsUi(locale).diffTitle}
         </PublicLink>
         <PublicLink href="/pricing" className="underline hover:text-foreground">
           {t('seePricing')}

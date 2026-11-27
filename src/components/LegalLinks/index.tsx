@@ -66,6 +66,9 @@ export default function LegalLinks({
         {t('freeBooks')}
       </ClientPublicLink>
       <HideInNativeApp>
+        <ClientPublicLink href="/tools" className="hover:text-foreground hover:underline">
+          {t('tools')}
+        </ClientPublicLink>
         <ClientPublicLink href="/alternatives" className="hover:text-foreground hover:underline">
           {t('alternatives')}
         </ClientPublicLink>

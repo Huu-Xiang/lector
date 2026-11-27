@@ -6,9 +6,11 @@ import {
   ALTERNATIVE_COMPETITORS,
   alternativePath,
   isAlternativeCompetitor,
+  isWave3AlternativeCompetitor,
 } from '@/lib/alternatives';
+import { getWave3AlternativeContent } from '@/lib/alternatives-wave3';
 import { fetchPlanPricesOnServer } from '@/lib/plan-prices.server';
-import { findPrice, formatMoney } from '@/lib/plan-prices';
+import { findPrice, formatMoney, TIER_ALLOWANCES } from '@/lib/plan-prices';
 import { listPublicBooks } from '@/lib/public-books';
 import { activePublicLocalePrefix, publicAlternatesForRequest } from '@/lib/public-locale.server';
 import { buildPublicTwitter, withPublicOg } from '@/lib/site-seo';
@@ -36,8 +38,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const plusMonthly = findPrice(prices, 'cloud', 'month')?.unitPrice;
   const plusPrice = plusMonthly ? formatMoney(plusMonthly, locale) : '$3';
   const books = listPublicBooks().length;
-  const title = t(`${competitor}.metaTitle`);
-  const description = t(`${competitor}.metaDescription`, { books, plusPrice });
+
+  let title: string;
+  let description: string;
+  if (isWave3AlternativeCompetitor(competitor)) {
+    const content = getWave3AlternativeContent(competitor, locale, {
+      books,
+      plusPrice,
+      freeLookups: TIER_ALLOWANCES.free.glosses.toLocaleString(locale),
+      freeDetailed: TIER_ALLOWANCES.free.detailed,
+    });
+    title = content.metaTitle;
+    description = content.metaDescription;
+  } else {
+    title = t(`${competitor}.metaTitle`);
+    description = t(`${competitor}.metaDescription`, { books, plusPrice });
+  }
+
   return {
     title,
     description,

@@ -38,6 +38,11 @@ describe('llms.txt', () => {
     expect(text).toContain('https://readfox.app/vocab-test/fr');
     expect(text).toContain('https://readfox.app/vocab-test/es');
     expect(text).toContain('https://readfox.app/alternatives');
+    expect(text).toContain('https://readfox.app/alternatives/lute');
+    expect(text).toContain('https://readfox.app/alternatives/duolingo');
+    expect(text).toContain('https://readfox.app/alternatives/lingq-for-korean');
+    expect(text).toContain('https://readfox.app/tools/text-difficulty');
+    expect(text).toContain('https://readfox.app/tools/epub-reader-ai-dictionary');
     for (const prefix of ['/zh-cn', '/zh-tw', '/ja', '/ko', '/ru']) {
       expect(text).toContain(`https://readfox.app${prefix}`);
     }

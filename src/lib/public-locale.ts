@@ -35,6 +35,11 @@ const PUBLIC_SEO_EXACT = new Set([
   '/books',
   '/vocab-test',
   '/alternatives',
+  '/tools',
+  '/tools/text-difficulty',
+  '/tools/epub-reader-ai-dictionary',
+  '/tools/youtube-language-reader',
+  '/tools/anki-reading-workflow',
 ]);
 
 const PUBLIC_SEO_PREFIXES = ['/books/', '/alternatives/'] as const;
