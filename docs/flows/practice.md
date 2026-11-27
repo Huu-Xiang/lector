@@ -1,5 +1,7 @@
 # Practice domain
 
+Native phone drills register their exit action with NativeTopBar. Inner Back controls, including empty and completed states, are hidden only while the shared native toolbar owns the exit. Keyboard hint bars are hidden on phones; cloze inputs use one focus outline and Check is a full-width thumb action. Word review retains full-width shells across loading, empty, active, and summary states.
+
 On iOS, the format selector shows only the format names so the next practice action stays closer to the top.
 
 This domain runs word review, cloze and dictation. Word review cards live in `wordCards`. Cloze cards live in `clozeSentences`. Both use FSRS on the server. A Mastered word also writes the Vocabulary domain.

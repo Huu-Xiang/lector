@@ -1,5 +1,7 @@
 # Auth domain
 
+Native phone auth screens use full-width forms, safe-area spacing, and a single screen heading. Web and iPad retain their original heading hierarchy and layout. Welcome places account actions near the bottom; register hides the offer's duplicate signup link. Trust-device selection uses a 20px checkbox inside a 44px label.
+
 Auth is the cloud session gate. Selfhost skips this domain. The root layout mounts AuthGuard first.
 
 ## Sign in

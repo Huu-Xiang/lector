@@ -1,7 +1,10 @@
 import type { Metadata } from 'next';
 import { notFound, permanentRedirect } from 'next/navigation';
 import { getLocale, getTranslations } from 'next-intl/server';
-import VocabTestShell from '@/components/VocabTest/VocabTestShell';
+import VocabTestShell, {
+  VocabVisitorOnly,
+  VocabLanguageTabsVisibility,
+} from '@/components/VocabTest/VocabTestShell';
 import VocabTestLanguageTabs from '@/components/VocabTest/LanguageTabs';
 import VocabTest from '@/components/VocabTest';
 import { H2 } from '@/components/LegalLinks/shell';
@@ -120,7 +123,9 @@ export default async function LanguageVocabTestPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structured).replace(/</g, '\\u003c') }}
       />
-      <VocabTestLanguageTabs active={language} />
+      <VocabLanguageTabsVisibility>
+        <VocabTestLanguageTabs active={language} />
+      </VocabLanguageTabsVisibility>
       <VocabTest
         key={`${language}:${locale}`}
         targetLanguage={language}
@@ -132,31 +137,33 @@ export default async function LanguageVocabTestPage({ params }: Props) {
         }}
         books={loadVocabTestBooks(language)}
       />
-      <section className="space-y-2 pt-2" data-testid="vocab-ssr-book-links">
-        <H2>{t('browseBooksHeading')}</H2>
-        <div className="flex flex-wrap gap-2">
-          {BOOK_LINK_LANGUAGES.map((code) => (
-            <PublicLink
-              key={code}
-              href={`/books/${code}`}
-              className="rounded-lg border border-border bg-card px-3 py-1.5 text-sm font-medium text-foreground hover:bg-muted"
-            >
-              {t('browseBooksFor', { language: displayNames.of(code) ?? code })}
-            </PublicLink>
+      <VocabVisitorOnly>
+        <section className="space-y-2 pt-2" data-testid="vocab-ssr-book-links">
+          <H2>{t('browseBooksHeading')}</H2>
+          <div className="flex flex-wrap gap-2">
+            {BOOK_LINK_LANGUAGES.map((code) => (
+              <PublicLink
+                key={code}
+                href={`/books/${code}`}
+                className="rounded-lg border border-border bg-card px-3 py-1.5 text-sm font-medium text-foreground hover:bg-muted"
+              >
+                {t('browseBooksFor', { language: displayNames.of(code) ?? code })}
+              </PublicLink>
+            ))}
+          </div>
+        </section>
+        <section className="space-y-2 pt-4" data-testid="vocab-faq">
+          <H2>{t('faq.title')}</H2>
+          {faq.map(({ q, a }) => (
+            <details key={q} className="border-b border-border">
+              <summary className="min-h-11 cursor-pointer py-3 text-sm font-semibold focus-visible:outline-2 focus-visible:outline-ring">
+                {q}
+              </summary>
+              <p className="max-w-prose pb-4 text-sm leading-relaxed text-muted-foreground">{a}</p>
+            </details>
           ))}
-        </div>
-      </section>
-      <section className="space-y-2 pt-4" data-testid="vocab-faq">
-        <H2>{t('faq.title')}</H2>
-        {faq.map(({ q, a }) => (
-          <details key={q} className="border-b border-border">
-            <summary className="min-h-11 cursor-pointer py-3 text-sm font-semibold focus-visible:outline-2 focus-visible:outline-ring">
-              {q}
-            </summary>
-            <p className="max-w-prose pb-4 text-sm leading-relaxed text-muted-foreground">{a}</p>
-          </details>
-        ))}
-      </section>
+        </section>
+      </VocabVisitorOnly>
     </VocabTestShell>
   );
 }

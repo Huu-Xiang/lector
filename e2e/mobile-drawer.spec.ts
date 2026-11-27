@@ -197,15 +197,24 @@ test.describe('iOS lookup sheet', () => {
       const previousAutoSave = await (
         await page.request.get(apiUrl('/api/settings/autoSaveLookups'))
       ).json();
-      await page.request.put(apiUrl('/api/settings/autoSaveLookups'), { data: { value: false } });
-      const collectionId = await openLesson(
-        page,
-        'Die Glansfees is baie gewild onder al die mense wat elke jaar van ver af kom om saam met hulle familie die musiek en lekker kos te geniet.',
-      );
+      const previousAiNotice = await (
+        await page.request.get(apiUrl('/api/settings/aiNoticeAcceptedAt'))
+      ).json();
+      let collectionId: string | undefined;
       try {
+        await page.request.put(apiUrl('/api/settings/autoSaveLookups'), { data: { value: false } });
+        const acceptance = await page.request.put(apiUrl('/api/settings/aiNoticeAcceptedAt'), {
+          data: { value: new Date().toISOString() },
+        });
+        expect(acceptance.ok()).toBe(true);
+        collectionId = await openLesson(
+          page,
+          'Die Glansfees is baie gewild onder al die mense wat elke jaar van ver af kom om saam met hulle familie die musiek en lekker kos te geniet.',
+        );
         await page.getByRole('button', { name: 'Look up Glansfees' }).first().click();
         const drawer = page.getByTestId('translation-drawer');
-        await expect(drawer.getByText('A festival.', { exact: true }).first()).toBeInViewport();
+        await expect(drawer.getByText(/A festival\./).first()).toBeInViewport();
+        await expect(page.getByTestId('ai-notice')).toBeHidden();
         const sentence = drawer.getByTestId('lookup-original-sentence');
         await expect(sentence).toBeInViewport();
         await expect(sentence.locator('p')).toHaveCSS('-webkit-line-clamp', '2');
@@ -236,7 +245,14 @@ test.describe('iOS lookup sheet', () => {
         await drawer.getByTestId('translation-drawer-handle').click();
         await expect(sentence.locator('p')).toHaveCSS('-webkit-line-clamp', 'none');
       } finally {
-        await page.request.delete(apiUrl(`/api/collections/${collectionId}`));
+        if (collectionId) await page.request.delete(apiUrl(`/api/collections/${collectionId}`));
+        if (previousAiNotice === null) {
+          await page.request.delete(apiUrl('/api/settings/aiNoticeAcceptedAt'));
+        } else {
+          await page.request.put(apiUrl('/api/settings/aiNoticeAcceptedAt'), {
+            data: { value: previousAiNotice },
+          });
+        }
         if (previousAutoSave === null) {
           await page.request.delete(apiUrl('/api/settings/autoSaveLookups'));
         } else {
@@ -290,6 +306,11 @@ test.describe('iOS lookup sheet', () => {
       await expect(drawer.getByTestId('word-level-1')).toBeVisible();
       await more.click();
       await expect(drawer.getByText(/A festival\./).first()).toBeInViewport();
+      await expect
+        .poll(() =>
+          drawer.getByTestId('lookup-definition-scroll').evaluate((element) => element.scrollTop),
+        )
+        .toBe(0);
 
       const context = drawer.getByTestId('request-word-context');
       await expect(context).toBeVisible();

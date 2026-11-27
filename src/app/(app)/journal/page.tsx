@@ -23,9 +23,11 @@ import { Button } from '@/components/ui/button';
 import PageHeader from '@/components/PageHeader';
 import { useActiveLanguage } from '@/utils/hooks';
 import { countTypedWords } from '@/lib/languages';
+import { useIsNativePhone } from '@/lib/use-native-phone';
 
 export default function JournalPage() {
   const t = useTranslations('journal');
+  const nativePhone = useIsNativePhone();
   const locale = useLocale();
   const activeLang = useActiveLanguage();
   const [bodyText, setBodyText] = useState('');
@@ -168,7 +170,7 @@ export default function JournalPage() {
   const wordCount = countTypedWords(bodyText, activeLang);
 
   return (
-    <main className="native-compact-page mx-auto max-w-3xl px-4 py-8 pb-24 sm:px-6 sm:pb-8 lg:px-8">
+    <main className="native-compact-page mx-auto w-full max-w-3xl px-4 py-8 pb-24 sm:px-6 sm:pb-8 lg:px-8">
       <PageHeader title={t('title')}>
         {!showEditor && (
           <Button onClick={handleNewEntry}>
@@ -178,7 +180,7 @@ export default function JournalPage() {
         )}
       </PageHeader>
       {showEditor && (
-        <section className="mb-10">
+        <section className="native-journal-composer mb-10">
           <div className="mb-3 flex items-center justify-between">
             <h2 className="text-sm font-medium text-muted-foreground">
               {formatDate(new Date().toISOString(), locale)}
@@ -190,7 +192,8 @@ export default function JournalPage() {
                 setEditingId(null);
                 setError(null);
               }}
-              variant="destructive"
+              variant={nativePhone ? 'ghost' : 'destructive'}
+              className={nativePhone ? 'text-muted-foreground' : undefined}
             >
               {t('cancel')}
             </Button>
@@ -201,7 +204,7 @@ export default function JournalPage() {
               value={bodyText}
               onChange={(e) => handleBodyChange(e.target.value)}
               placeholder={t('placeholder', { language: activeLang.native })}
-              className="min-h-[160px] w-full resize-y rounded-lg border border-input bg-background p-4 text-sm leading-relaxed text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none"
+              className={`min-h-[160px] w-full ${nativePhone ? 'resize-none' : 'resize-y'} rounded-lg border border-input bg-background p-4 text-sm leading-relaxed text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none`}
               disabled={isSubmitting}
               autoFocus
             />
@@ -242,7 +245,7 @@ export default function JournalPage() {
           <h2 className="mb-3 text-sm font-medium text-muted-foreground">
             {t('entries', { count: entries.length })}
           </h2>
-          <div className="space-y-2">
+          <div className="native-journal-history space-y-2">
             {entries.map((entry) => (
               <HistoryCard
                 key={entry.id}

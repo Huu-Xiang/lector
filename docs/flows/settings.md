@@ -1,5 +1,7 @@
 # Settings domain
 
+Me retains one semantic page header. Native phone Feedback uses the large-title page shell, touch-specific placeholder, full-width Send action, and chevron WeChat disclosure.
+
 On iOS, the welcome screen links to sign-in and registration. Google sign-in uses the system authentication sheet. The sheet transfers the signed-in session back to Readfox with a short-lived, single-use code.
 
 On iPhone, the default tabs are Library, Statistics, and Me. iPad adds Practice by default. Me opens Vocabulary, the vocabulary test, Practice, Journal, and Settings. In Appearance and navigation, Tab bar lets people choose Practice, Journal, or no extra tab on this device. The app settings page opens one group at a time. It uses dividers and smaller help text inside each group. The Languages group labels the app language, definition language, and languages you study. Links such as `/settings#anki-integration` open the relevant group.

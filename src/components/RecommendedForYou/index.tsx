@@ -25,6 +25,9 @@ import { nativeLanguageFromLocale } from '@/lib/languages';
 import { displayLanguage, translationFor } from '@/lib/display-language';
 import { levelGap, pickNearLevel, recommendationLevel } from '@/lib/recommend';
 import { trackProductEvent } from '@/lib/product-analytics';
+import { haptic, useIsNativeApp } from '@/lib/native-app';
+import { isIPadApp } from '@/components/NativeBridge/ipad-layout';
+import CollectionCover from '@/components/CollectionCover';
 import type { CefrLevel } from '@/lib/reading-level';
 
 const FEED_INTERESTS = ['news', 'travel', 'science'] as const;
@@ -44,6 +47,7 @@ interface Pick {
   bookTitle: string | null;
   bookAuthor: string | null;
   bookSlug?: string;
+  coverUrl?: string;
   add: () => Promise<string>;
 }
 
@@ -68,6 +72,7 @@ function bookPick(
     bookTitle: book.title,
     bookAuthor: book.author,
     bookSlug: book.slug,
+    coverUrl: book.cover?.url,
     add: () => addLibraryBook(language, book.slug),
   };
 }
@@ -118,6 +123,8 @@ export default function RecommendedForYou({
   compact?: boolean;
 }) {
   const t = useTranslations('recommend');
+  const nativeApp = useIsNativeApp();
+  const nativePhone = nativeApp && !isIPadApp();
   const format = useFormatter();
   const locale = useLocale();
   const [books, setBooks] = useState<Pick[] | null>(null);
@@ -205,6 +212,7 @@ export default function RecommendedForYou({
 
   async function start(pick: Pick) {
     if (startingRef.current) return;
+    void haptic();
     startingRef.current = true;
     setStarting(pick.key);
     try {
@@ -277,9 +285,20 @@ export default function RecommendedForYou({
             void start(pick);
           }
         }}
-        className="flex cursor-pointer flex-col gap-3 rounded-xl border border-border bg-card p-4 transition-colors hover:border-primary focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none sm:flex-row sm:items-start sm:justify-between"
+        className="recommendation-card flex cursor-pointer flex-col gap-3 rounded-xl border border-border bg-card p-4 transition-colors hover:border-primary focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none sm:flex-row sm:items-start sm:justify-between"
         data-testid={`recommend-${pick.key}`}
       >
+        {nativePhone && pick.bookSlug && (
+          <div className="aspect-[3/4] w-14 shrink-0 overflow-hidden rounded-lg sm:hidden">
+            <CollectionCover
+              seed={pick.key}
+              title={title}
+              author={pick.bookAuthor ?? undefined}
+              artUrl={pick.coverUrl}
+              variant="thumb"
+            />
+          </div>
+        )}
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
             <h4 className="font-semibold text-foreground">{title}</h4>
@@ -299,7 +318,7 @@ export default function RecommendedForYou({
             {pick.source ? ` · ${pick.source}` : ''}
             {pick.harder ? ` · ${t('harder')}` : ''}
             {pick.bookTitle && pick.bookAuthor && (
-              <>
+              <span className={nativePhone ? 'hidden sm:inline' : undefined}>
                 {' · '}
                 <BookReviewLink
                   native={native}
@@ -307,14 +326,14 @@ export default function RecommendedForYou({
                   author={pick.bookAuthor}
                   nativeTitle={title}
                 />
-              </>
+              </span>
             )}
           </p>
         </div>
         <Button
           size="sm"
           disabled={starting !== null}
-          className="shrink-0 self-start"
+          className={`shrink-0 self-start ${nativePhone ? 'max-sm:min-h-11 max-sm:w-full max-sm:rounded-full' : ''}`}
           data-testid={`recommend-start-${pick.key}`}
         >
           {label}

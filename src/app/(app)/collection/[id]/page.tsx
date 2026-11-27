@@ -53,6 +53,8 @@ import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { Select } from '@/components/ui/select';
 import { useIsNativeApp } from '@/lib/native-app';
+import CollectionArtwork from '@/components/CollectionCard/CollectionArtwork';
+import { useIsNativePhone } from '@/lib/use-native-phone';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -63,6 +65,7 @@ import {
 export default function CollectionPage({ params }: { params: Promise<{ id: string }> }) {
   const t = useTranslations('library');
   const nativeApp = useIsNativeApp();
+  const nativePhone = useIsNativePhone();
   const { id } = use(params);
   const router = useRouter();
   const [collection, setCollection] = useState<Collection | null>(
@@ -263,7 +266,7 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
 
   if (isLoading) {
     return (
-      <main className="native-compact-page mx-auto max-w-4xl px-4 py-8 sm:px-6">
+      <main className="native-compact-page mx-auto w-full max-w-4xl px-4 py-8 sm:px-6">
         {collection && (
           <h1 className="native-page-title mb-8 text-3xl font-bold text-foreground">
             {shownTitle}
@@ -281,7 +284,7 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
   const completedCount = lessons.filter((l) => l.progress_percentComplete >= 95).length;
 
   return (
-    <main className="native-compact-page mx-auto max-w-4xl px-4 py-8 sm:px-6">
+    <main className="native-compact-page mx-auto w-full max-w-4xl px-4 py-8 sm:px-6">
       {/* Back link */}
       <Link
         href="/"
@@ -292,7 +295,12 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
       </Link>
 
       {/* Collection header */}
-      <div className={nativeApp ? 'mb-4 sm:mb-8' : 'mb-8'}>
+      <div className={nativeApp ? 'native-collection-hero mb-4 sm:mb-8' : 'mb-8'}>
+        {nativeApp && (
+          <div className="native-collection-cover hidden" data-testid="native-collection-cover">
+            <CollectionArtwork collection={collection} title={shownTitle} original={null} />
+          </div>
+        )}
         <div className="flex items-center gap-2">
           <h1 className="native-page-title min-w-0 text-3xl font-bold break-words text-foreground">
             {shownTitle}
@@ -332,9 +340,17 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
           {collection.author} &middot; {t('collection.lessonsCount', { count: lessons.length })}
           {completedCount > 0 && ` \u00b7 ${t('collection.completed', { count: completedCount })}`}
         </p>
+        {nativeApp && (
+          <span
+            className="native-collection-progress hidden tabular-nums"
+            data-testid="native-collection-progress"
+          >
+            {Math.round(Math.min(100, Math.max(0, collection.avgProgress)))}%
+          </span>
+        )}
 
         {nativeApp ? (
-          <details className="mt-1">
+          <details className="native-collection-group mt-1">
             <summary className="flex min-h-11 cursor-pointer list-none items-center gap-1 text-sm text-muted-foreground [&::-webkit-details-marker]:hidden">
               <ChevronRight className="size-3" aria-hidden />
               {t('collection.group')}{' '}
@@ -384,7 +400,11 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
         )}
 
         <div
-          className={nativeApp ? 'mt-1 flex items-center gap-3' : 'mt-4 flex items-center gap-3'}
+          className={
+            nativeApp
+              ? 'native-collection-continue mt-1 flex items-center gap-3'
+              : 'mt-4 flex items-center gap-3'
+          }
         >
           {continueLesson && (
             <Link
@@ -410,7 +430,9 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
       {/* Lesson list */}
       <div
         className={
-          nativeApp ? 'divide-y divide-border rounded-xl border border-border bg-card' : 'space-y-2'
+          nativeApp
+            ? 'native-collection-chapters divide-y divide-border rounded-xl border border-border bg-card'
+            : 'space-y-2'
         }
       >
         <DndContext
@@ -436,16 +458,28 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
           </SortableContext>
         </DndContext>
 
-        {/* Add lesson button */}
+        {!nativePhone && (
+          <button
+            onClick={() => setIsAddOpen(true)}
+            data-testid="add-lesson"
+            className="group flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-border bg-transparent px-5 py-4 text-sm font-medium text-muted-foreground transition-all hover:bg-accent hover:text-foreground"
+          >
+            <Plus className="h-4 w-4" />
+            {t('collection.addLesson')}
+          </button>
+        )}
+      </div>
+
+      {nativePhone && (
         <button
           onClick={() => setIsAddOpen(true)}
           data-testid="add-lesson"
-          className="group flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-border bg-transparent px-5 py-4 text-sm font-medium text-muted-foreground transition-all hover:bg-accent hover:text-foreground"
+          className="native-collection-add mt-3 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl border border-dashed border-border bg-transparent px-5 py-4 text-sm font-medium text-muted-foreground transition-all hover:bg-accent hover:text-foreground"
         >
           <Plus className="h-4 w-4" />
           {t('collection.addLesson')}
         </button>
-      </div>
+      )}
 
       <CollectionFormModal
         isOpen={isEditOpen}

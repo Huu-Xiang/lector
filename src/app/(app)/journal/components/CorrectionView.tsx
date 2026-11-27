@@ -2,9 +2,11 @@ import { useTranslations } from 'next-intl';
 import { JournalEntry } from '@/lib/data-layer';
 import CorrectionBadge from './CorrectionBadge';
 import HighlightedText from './HighlightedText';
+import { useIsNativeApp } from '@/lib/native-app';
 
 export default function CorrectionView({ entry }: { entry: JournalEntry }) {
   const t = useTranslations('journal.correction');
+  const nativeApp = useIsNativeApp();
   const corrections = entry.corrections || [];
 
   return (
@@ -16,7 +18,9 @@ export default function CorrectionView({ entry }: { entry: JournalEntry }) {
           <HighlightedText body={entry.body} corrections={corrections} />
         </div>
         {corrections.length > 0 && (
-          <p className="mt-1 text-xs text-muted-foreground">{t('clickHint')}</p>
+          <p className="mt-1 text-xs text-muted-foreground">
+            {t(nativeApp ? 'tapHint' : 'clickHint')}
+          </p>
         )}
       </div>
 

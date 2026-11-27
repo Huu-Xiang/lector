@@ -5,6 +5,7 @@ import { useFormatter, useTranslations } from 'next-intl';
 import TranslationDrawer, { TranslationDrawerSlot } from '@/components/TranslationDrawer';
 import { Button } from '@/components/ui/button';
 import { Kbd } from '@/components/ui/kbd';
+import { useNativeDrillExit } from '@/lib/native-drill';
 import { getActivePack, getReviewCounts } from '@/lib/data-layer';
 import { trackProductEvent } from '@/lib/product-analytics';
 import { hasAudio, speak } from '@/lib/tts';
@@ -45,10 +46,11 @@ function dictationCurrent(item: ReviewItem) {
 }
 
 function Shell({ children }: { children: React.ReactNode }) {
-  return <div className="rounded-2xl border border-border bg-card p-5">{children}</div>;
+  return <div className="w-full rounded-2xl border border-border bg-card p-5">{children}</div>;
 }
 
 export default function WordReviewRound({ onExit }: { onExit: () => void }) {
+  useNativeDrillExit(onExit);
   const t = useTranslations('practice.words');
   const format = useFormatter();
   const { round, start, answer, undoKnow, advance, loadSentence } = useWordReviewRound();
@@ -149,7 +151,7 @@ export default function WordReviewRound({ onExit }: { onExit: () => void }) {
   );
 
   const back = (
-    <Button variant="ghost" size="sm" onClick={onExit}>
+    <Button variant="ghost" size="sm" onClick={onExit} className="native-drill-back">
       {t('back')}
     </Button>
   );
@@ -157,7 +159,7 @@ export default function WordReviewRound({ onExit }: { onExit: () => void }) {
   if (round.phase === 'idle' || round.phase === 'loading') {
     return (
       <div
-        className="native-compact-page mx-auto max-w-2xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8"
+        className="native-word-review native-compact-page mx-auto w-full max-w-2xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8"
         data-testid="word-review-loading"
       >
         <Shell>
@@ -173,7 +175,7 @@ export default function WordReviewRound({ onExit }: { onExit: () => void }) {
 
   if (round.phase === 'error' || round.phase === 'empty') {
     return (
-      <div className="native-compact-page mx-auto max-w-2xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
+      <div className="native-word-review native-compact-page mx-auto w-full max-w-2xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
         <Shell>
           <p className="py-4 text-center text-sm text-muted-foreground">
             {round.phase === 'error' ? t('loadFailed') : t('nothingDue')}
@@ -196,7 +198,7 @@ export default function WordReviewRound({ onExit }: { onExit: () => void }) {
     const next = formatDue(summary.nextDue);
     return (
       <div
-        className="native-compact-page mx-auto max-w-2xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8"
+        className="native-word-review native-compact-page mx-auto w-full max-w-2xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8"
         data-testid="word-review-summary"
       >
         <Shell>
@@ -262,9 +264,9 @@ export default function WordReviewRound({ onExit }: { onExit: () => void }) {
   return (
     <div className="flex min-h-0">
       <div
-        className={`native-compact-page mx-auto max-w-2xl min-w-0 flex-1 px-4 py-6 sm:px-6 sm:py-8 lg:px-8 ${wordTooltip ? 'pb-[calc(var(--sheet-h)+2rem)] lg:pb-8' : ''}`}
+        className={`native-word-review native-compact-page mx-auto w-full max-w-2xl min-w-0 flex-1 px-4 py-6 sm:px-6 sm:py-8 lg:px-8 ${wordTooltip ? 'pb-[calc(var(--sheet-h)+2rem)] lg:pb-8' : ''}`}
       >
-        <div className="py-2" data-testid="word-review-round">
+        <div className="w-full py-2" data-testid="word-review-round">
           <div className="mb-4 flex items-center justify-between">
             {back}
             <span className="text-xs text-muted-foreground">{t('left', { count: left })}</span>

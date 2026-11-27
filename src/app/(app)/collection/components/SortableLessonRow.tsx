@@ -113,7 +113,10 @@ export default function SortableLessonRow({
           {isComplete ? (
             <Check className="h-4 w-4" />
           ) : compact ? (
-            <ChevronRight className="size-3" />
+            <>
+              <span className="native-chapter-number hidden tabular-nums">{index + 1}</span>
+              <ChevronRight className="native-chapter-chevron size-3" />
+            </>
           ) : (
             index + 1
           )}

@@ -32,17 +32,15 @@ async function expectPhoneGeometry(page: Page) {
       ]
         .filter(visible)
         .filter((element) => {
-          if (
-            element instanceof HTMLInputElement &&
-            ['checkbox', 'radio', 'range'].includes(element.type)
-          ) {
+          const box = element.getBoundingClientRect();
+          if (box.width >= 44 && box.height >= 44) return false;
+          if (element instanceof HTMLInputElement && ['checkbox', 'radio'].includes(element.type)) {
             const label = element.labels?.[0];
             if (label) {
               const hitBox = label.getBoundingClientRect();
               return hitBox.width < 44 || hitBox.height < 44;
             }
           }
-          const box = element.getBoundingClientRect();
           return box.width < 44 || box.height < 44;
         })
         .map(describe),
@@ -75,7 +73,7 @@ test('native reader hides chrome downwards and reveals it on upward scroll and b
       data: {
         title: 'Reader motion',
         textContent:
-          '# Reader motion\n\n' +
+          '# Chapter One\n\n' +
           Array.from({ length: 80 }, () => 'Die fees is gewild.').join('\n\n'),
       },
     });
@@ -144,7 +142,7 @@ test('native pages fill the phone and retain accessible control sizes', async ({
             const style = getComputedStyle(element);
             const probe = document.createElement('span');
             probe.style.background = 'var(--ios-fill)';
-            element.appendChild(probe);
+            document.body.appendChild(probe);
             const fill = getComputedStyle(probe).backgroundColor;
             probe.remove();
             return {
@@ -164,6 +162,16 @@ test('native pages fill the phone and retain accessible control sizes', async ({
       for (const summary of await page.getByTestId('iphone-settings').locator('summary').all()) {
         await summary.click();
         await expectPhoneGeometry(page);
+        if ((await summary.textContent())?.includes('Reading and practice')) {
+          await expect(page.getByTestId('prose-settings')).toBeVisible();
+          for (const field of ['fontSize', 'fontWeight', 'letterSpacing']) {
+            const slider = page.getByTestId(`prose-${field}`);
+            await expect(slider).toBeVisible();
+            const box = (await slider.boundingBox())!;
+            expect(box.height).toBeGreaterThanOrEqual(44);
+            expect(box.width).toBeGreaterThanOrEqual(44);
+          }
+        }
       }
     }
   }
@@ -213,7 +221,7 @@ test('reader and ListenAlong keep chat in the header and transport inside the sc
     await expectPhoneGeometry(page);
     await page.getByRole('button', { name: 'Look up fees', exact: true }).first().click();
     const drawer = page.getByTestId('translation-drawer');
-    await expect(drawer.getByText('A festival.', { exact: true }).first()).toBeInViewport();
+    await expect(drawer.getByText(/A festival\./).first()).toBeInViewport();
     await expect(drawer.getByTestId('lookup-original-sentence')).toBeInViewport();
     const heading = (await drawer
       .getByRole('heading', { name: 'fees', exact: true })

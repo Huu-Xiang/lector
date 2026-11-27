@@ -5,6 +5,7 @@
     "intro": "問題点や今後ほしい機能をお聞かせください。すべてのメッセージに目を通しています。",
     "messageLabel": "メッセージ",
     "placeholder": "問題やアイデアを書いてください。スクリーンショットも貼り付けられます。",
+    "placeholderTouch": "起きたことやアイデアをお聞かせください。",
     "counter": "{count} / {max}",
     "addImage": "画像を追加",
     "removeImage": "画像 {name} を削除",

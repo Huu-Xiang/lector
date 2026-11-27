@@ -1,5 +1,7 @@
 # Onboarding domain
 
+Native phone setup uses a bottom action dock, animated step pills, and haptic selection badges. Recommendations show book covers and suppress external review links. The native vocabulary test uses its app shell even without a cloud session; setup entry hides language tabs and public SEO/footer content. Test result actions stack on phones.
+
 Onboarding is the product name for first-run setup. This domain picks a language and seeds starter texts. It then runs a short guided lesson. It also creates 3 cloze cards.
 
 ## Language setup

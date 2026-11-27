@@ -1146,6 +1146,7 @@
     "intro": "問題点や今後ほしい機能をお聞かせください。すべてのメッセージに目を通しています。",
     "messageLabel": "メッセージ",
     "placeholder": "問題やアイデアを書いてください。スクリーンショットも貼り付けられます。",
+    "placeholderTouch": "起きたことやアイデアをお聞かせください。",
     "counter": "{count} / {max}",
     "addImage": "画像を追加",
     "removeImage": "画像 {name} を削除",
@@ -1666,6 +1667,7 @@
     "correction": {
       "yourText": "あなたの文章",
       "clickHint": "ハイライトされた語をクリックすると修正内容が表示されます",
+      "tapHint": "ハイライトされた語をタップすると修正内容が表示されます。",
       "corrected": "修正後",
       "summary": "修正 {count} 件：",
       "perfect": "完璧です！修正の必要はありません。"

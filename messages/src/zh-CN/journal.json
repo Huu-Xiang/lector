@@ -30,6 +30,7 @@
     "correction": {
       "yourText": "你的原文",
       "clickHint": "点击高亮的词查看修改",
+      "tapHint": "轻点高亮的词查看修改。",
       "corrected": "修改后",
       "summary": "{count} 处修改：",
       "perfect": "太棒了！无需修改。"

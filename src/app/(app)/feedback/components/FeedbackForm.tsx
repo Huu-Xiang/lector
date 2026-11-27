@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { authClient } from '@/lib/auth-client';
 import { apiFetch } from '@/lib/api-base';
 import { useLectorMode } from '@/lib/use-env';
+import { useIsNativePhone } from '@/lib/use-native-phone';
 
 const MAX_CHARS = 5000;
 const MAX_IMAGES = 3;
@@ -31,6 +32,7 @@ const ERROR_KEYS: Record<string, string> = {
 
 export default function FeedbackForm() {
   const t = useTranslations('feedback');
+  const nativePhone = useIsNativePhone();
   const locale = useLocale();
   const mode = useLectorMode();
   const { data: session } = authClient.useSession();
@@ -146,8 +148,8 @@ export default function FeedbackForm() {
           onPaste={onPaste}
           maxLength={MAX_CHARS}
           rows={8}
-          placeholder={t('placeholder')}
-          className="w-full resize-y rounded-md border border-input bg-transparent px-2.5 py-2 text-base shadow-xs outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 md:text-sm dark:bg-input/30"
+          placeholder={t(nativePhone ? 'placeholderTouch' : 'placeholder')}
+          className={`w-full ${nativePhone ? 'resize-none' : 'resize-y'} rounded-md border border-input bg-transparent px-2.5 py-2 text-base shadow-xs outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 md:text-sm dark:bg-input/30`}
           data-testid="feedback-message"
         />
         <p className="text-right text-xs text-muted-foreground">
@@ -214,7 +216,12 @@ export default function FeedbackForm() {
 
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-xs text-muted-foreground">{email ? t('replyTo', { email }) : ''}</p>
-        <Button type="submit" disabled={busy} data-testid="feedback-send">
+        <Button
+          className="native-feedback-send"
+          type="submit"
+          disabled={busy}
+          data-testid="feedback-send"
+        >
           {busy ? t('sending') : t('send')}
         </Button>
       </div>

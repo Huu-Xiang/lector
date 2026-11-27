@@ -30,6 +30,7 @@
     "correction": {
       "yourText": "Your text",
       "clickHint": "Click highlighted words to see corrections",
+      "tapHint": "Tap highlighted words to see corrections.",
       "corrected": "Corrected",
       "summary": "{count, plural, one {# correction} other {# corrections}}:",
       "perfect": "Perfect! No corrections needed."

@@ -115,7 +115,7 @@
     md: "stats.md",
   });
   N("domain:auth", "domain", "Auth", {
-    summary: "Cloud session gate. Login, register, Better Auth, and lifecycle mail. Selfhost skips this domain.",
+    summary: "Cloud session gate. Login, register, Better Auth, and lifecycle mail. Native phone forms fill the viewport; web and iPad retain their layout. Selfhost skips account auth.",
     md: "auth.md",
   });
   N("domain:settings", "domain", "Settings", {
@@ -155,7 +155,7 @@
   N("flow:import", "flow", "Import", {
     domain: "library",
     md: "library.md#import",
-    summary: "EPUB, paste, markdown, web URL, YouTube captions, or audio. Readfox and its Beta site show YouTube import as Coming soon. Destination group is importGroupId.",
+    summary: "EPUB, paste, markdown, web URL, YouTube captions, or audio. Native phones use an Import action sheet with the same destinations. Destination group is importGroupId; YouTube can be Coming soon.",
     steps: [
       "file:home-page",
       "fn:importEpub",
@@ -180,7 +180,7 @@
   N("flow:translate-word", "flow", "Translate word", {
     domain: "translation",
     md: "translation.md#translate-word",
-    summary: "Tap a word. Drawer opens. Vocab row, then dictionary lookup, then a gloss stream on a miss.",
+    summary: "Tap a word. Drawer opens at the first definition, including after More actions. Vocab row, then dictionary lookup, then a gloss stream on a miss.",
     steps: [
       "fn:wordcell-activate",
       "fn:reader-onWordClick",
@@ -256,7 +256,7 @@
   N("flow:practice-word", "flow", "Practice word", {
     domain: "practice",
     md: "practice.md#practice-word",
-    summary: "Seed the bank, load due or new cards, grade, persistReview. Mastery 100 writes knownWords.",
+    summary: "Seed the bank, load due or new cards, grade, persistReview. Native phone drills use one toolbar exit and hide keyboard hints. Mastery 100 writes knownWords.",
     steps: [
       "fn:practice-startRoundWith",
       "route:cloze-due",
@@ -359,7 +359,7 @@
   N("flow:language-setup", "flow", "Language setup", {
     domain: "onboarding",
     md: "onboarding.md#language-setup",
-    summary: "SetupGuard, compact language picker on phones, level choice, starter or book pick, guided lesson, cloze practice.",
+    summary: "SetupGuard, native phone step indicators and action dock, level choice, covered book recommendations, app-shell vocabulary test, guided lesson, and cloze practice.",
     steps: ["file:setup-guard", "file:setup-page", "fn:seedStarterContent", "fn:startOnboarding", "route:onboarding-start"],
   });
   N("flow:add-language", "flow", "Add a language", {

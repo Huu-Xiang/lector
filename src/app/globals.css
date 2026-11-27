@@ -1590,6 +1590,10 @@ html[data-native-app].dark {
 }
 
 @media (width < 40rem) {
+  html[data-native-app]:not([data-ipad-app]) [data-testid='prose-settings'] input[type='range'] {
+    min-height: 44px;
+  }
+
   html[data-native-app]
     :is(
       button:not([data-testid='cloze-word']),
@@ -1872,5 +1876,324 @@ html[data-native-app] .native-vocab-swipe-content {
     background: var(--card);
     color: var(--foreground);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  }
+}
+
+@media (width < 40rem) {
+  html[data-native-app]:not([data-ipad-app]) body:has(.native-auth-shell),
+  html[data-native-app]:not([data-ipad-app]) body:has([data-testid='native-welcome']) {
+    padding-top: 0;
+  }
+
+  html[data-native-app]:not([data-ipad-app]) .native-auth-shell h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.2;
+  }
+
+  html[data-native-app]:not([data-ipad-app])
+    .native-auth-shell
+    input:not([type='checkbox'], [type='radio']) {
+    min-height: 48px;
+    border-radius: 12px;
+    background: var(--ios-fill);
+  }
+
+  html[data-native-app]:not([data-ipad-app]) .native-auth-shell [data-slot='button'] {
+    width: 100%;
+    min-height: 48px;
+    border-radius: 12px;
+  }
+
+  html[data-native-app]:not([data-ipad-app]) .native-auth-shell a {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+  }
+
+  html[data-native-app]:not([data-ipad-app]) body:has([data-native-vocab-shell]) .native-topbar {
+    display: none;
+  }
+
+  html[data-native-app]:not([data-ipad-app]) [data-native-vocab-shell] {
+    padding-top: max(1rem, env(safe-area-inset-top));
+  }
+
+  html[data-native-app]:not([data-ipad-app])
+    body:has([data-testid='setup-start-bar'])
+    button[aria-pressed] {
+    transition:
+      transform var(--dur-fast) var(--ease-ios-snappy),
+      opacity var(--dur-fast) var(--ease-ios-snappy);
+  }
+
+  html[data-native-app]:not([data-ipad-app])
+    body:has([data-testid='setup-start-bar'])
+    button[aria-pressed]:active:not(:disabled) {
+    transform: scale(0.98);
+    opacity: 0.85;
+  }
+
+  html[data-native-app]:not([data-ipad-app]) .recommendation-card {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  html[data-native-app]:not([data-ipad-app]) .recommendation-card > .min-w-0 {
+    flex: 1;
+  }
+
+  html[data-native-app]:not([data-ipad-app]) .native-collection-cover {
+    display: block;
+    float: inline-start;
+    width: 88px;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    border-radius: 10px;
+    margin: 0 16px 12px 0;
+  }
+
+  html[data-native-app]:not([data-ipad-app]) .native-collection-hero > div.flex h1 {
+    font-size: 22px;
+    line-height: 1.2;
+  }
+
+  html[data-native-app]:not([data-ipad-app]) .native-collection-progress {
+    display: inline-flex;
+    border-radius: 999px;
+    background: var(--ios-fill);
+    padding: 2px 8px;
+    font-size: 12px;
+  }
+
+  html[data-native-app]:not([data-ipad-app]) .native-collection-group summary {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    background: var(--ios-fill);
+    padding-inline: 10px;
+  }
+
+  html[data-native-app]:not([data-ipad-app]) .native-collection-continue {
+    clear: both;
+  }
+
+  html[data-native-app]:not([data-ipad-app]) .native-collection-continue > a {
+    width: 100%;
+    min-height: 48px;
+    justify-content: center;
+    border-radius: 12px;
+  }
+
+  html[data-native-app]:not([data-ipad-app]) .native-collection-chapters,
+  html[data-native-app]:not([data-ipad-app]) .native-wechat-card {
+    border-radius: 16px;
+    border-color: color-mix(in srgb, var(--border) 60%, transparent);
+  }
+
+  html[data-native-app]:not([data-ipad-app]) .native-chapter-number {
+    display: inline;
+  }
+
+  html[data-native-app]:not([data-ipad-app]) .native-chapter-chevron {
+    display: none;
+  }
+
+  html[data-native-app]:not([data-ipad-app]) .native-collection-chapters a > div[aria-hidden] {
+    background: transparent;
+    font-size: 15px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  html[data-native-app]:not([data-ipad-app])
+    .native-collection-chapters
+    [data-testid='lesson-heading'] {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+
+  html[data-native-app]:not([data-ipad-app]) .native-collection-add {
+    border: 0;
+    background: var(--ios-fill);
+    color: var(--primary);
+  }
+
+  html[data-native-app]:not([data-ipad-app]) .native-journal-composer {
+    border-radius: 16px;
+    background: var(--card);
+    padding: 16px;
+  }
+
+  html[data-native-app]:not([data-ipad-app]) .native-journal-history {
+    overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+    border-radius: 16px;
+    background: var(--card);
+  }
+
+  html[data-native-app]:not([data-ipad-app]) .native-journal-history > .native-journal-history-row {
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+  }
+
+  html[data-native-app]:not([data-ipad-app])
+    .native-journal-history
+    > .native-journal-history-row
+    + .native-journal-history-row {
+    border-top: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+  }
+
+  html[data-native-app]:not([data-ipad-app]) .native-entry-close {
+    width: 44px;
+    height: 44px;
+  }
+
+  html[data-native-app]:not([data-ipad-app]) .native-entry-close-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--ios-fill);
+  }
+
+  html[data-native-app]:not([data-ipad-app]) .native-feedback-send {
+    width: 100%;
+    min-height: 48px;
+    border-radius: 12px;
+  }
+
+  html[data-native-app]:not([data-ipad-app]) [data-slot='dialog-viewport'] {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  html[data-native-app]:not([data-ipad-app]) [data-slot='dialog-content'] {
+    width: 100%;
+    max-width: none;
+    max-height: 90dvh;
+    margin: 0;
+    overflow-y: auto;
+    border-width: 1px 0 0;
+    border-radius: 20px 20px 0 0;
+    padding-top: 0;
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+    transform: none;
+    translate: 0 0;
+    scale: 1;
+    opacity: 1;
+    transition:
+      translate var(--dur-sheet) var(--ease-ios-spring),
+      opacity var(--dur-sheet) var(--ease-ios-spring);
+  }
+
+  html[data-native-app]:not([data-ipad-app])
+    [data-slot='dialog-content']:is([data-starting-style], [data-ending-style], [data-closed]) {
+    translate: 0 100%;
+    opacity: 0;
+  }
+
+  html[data-native-app]:not([data-ipad-app]) [data-slot='dialog-grabber'] {
+    display: flex;
+    height: 24px;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+  }
+
+  html[data-native-app]:not([data-ipad-app]) [data-testid='free-books-tabs'] {
+    gap: 4px;
+    overflow-x: auto;
+    border: 0;
+    border-radius: 12px;
+    margin: 4px 12px;
+    background: var(--ios-fill);
+    padding: 4px;
+  }
+
+  html[data-native-app]:not([data-ipad-app]) [data-testid='free-books-tabs'] > button {
+    flex: 1 0 auto;
+    border: 0;
+    border-radius: 8px;
+  }
+
+  html[data-native-app]:not([data-ipad-app])
+    [data-testid='free-books-tabs']
+    > button[aria-pressed='true'] {
+    background: var(--card);
+    box-shadow: 0 1px 3px rgb(0 0 0 / 8%);
+  }
+
+  html[data-native-app]:not([data-ipad-app]) [data-testid='free-books-search'] {
+    border: 0;
+    border-radius: 12px;
+    background: var(--ios-fill);
+  }
+
+  html[data-native-app]:not([data-ipad-app])
+    :is(.native-practice-page, .native-word-review)
+    :is(.native-drill-back, .native-shortcut-hints, [data-slot='kbd'], [data-slot='kbd-group']) {
+    display: none;
+  }
+
+  html[data-native-app]:not([data-ipad-app]) .native-cloze-input {
+    border-color: var(--primary);
+    outline: none;
+    box-shadow: none;
+  }
+
+  html[data-native-app]:not([data-ipad-app]) .native-practice-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  html[data-native-app]:not([data-ipad-app]) .native-practice-actions > [data-slot='button'] {
+    height: auto;
+    min-height: 48px;
+    white-space: normal;
+    text-wrap: balance;
+  }
+
+  html[data-native-app]:not([data-ipad-app]) .native-practice-check,
+  html[data-native-app]:not([data-ipad-app])
+    .native-word-review
+    [data-testid='typed-fill-in']
+    button[type='submit'] {
+    grid-column: 1 / -1;
+    width: 100%;
+    min-height: 48px;
+    border-radius: 12px;
+  }
+}
+
+@media (width < 40rem) and (prefers-reduced-motion: reduce) {
+  html[data-native-app]:not([data-ipad-app])
+    body:has([data-testid='setup-start-bar'])
+    button[aria-pressed],
+  html[data-native-app]:not([data-ipad-app])
+    body:has([data-testid='setup-start-bar'])
+    button[aria-pressed]:active:not(:disabled) {
+    transition: none;
+    transform: none;
+  }
+
+  html[data-native-app]:not([data-ipad-app]) [data-slot='dialog-content'],
+  html[data-native-app]:not([data-ipad-app]) [data-slot='dialog-backdrop'] {
+    transition: none;
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  html[data-native-app]:not([data-ipad-app]) :is([data-slot='dialog-content'], .setup-action-dock) {
+    background: var(--card);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  html[data-native-app]:not([data-ipad-app]) [data-slot='dialog-backdrop'] {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
   }
 }

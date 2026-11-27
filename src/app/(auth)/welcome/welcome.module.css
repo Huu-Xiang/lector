@@ -145,6 +145,39 @@
   font-size: 0.9375rem;
 }
 
+@media (max-width: 39.999rem) {
+  :global(html[data-native-app]:not([data-ipad-app])) .welcome {
+    min-block-size: 100dvh;
+    grid-template-rows: auto auto 1fr auto;
+    padding-block-start: max(0.875rem, env(safe-area-inset-top));
+  }
+
+  :global(html[data-native-app]:not([data-ipad-app])) .preview {
+    align-self: center;
+  }
+
+  :global(html[data-native-app]:not([data-ipad-app])) .actions a {
+    transition:
+      transform var(--dur-fast, 150ms) var(--ease-ios-snappy, ease-out),
+      opacity var(--dur-fast, 150ms) var(--ease-ios-snappy, ease-out);
+  }
+
+  :global(html[data-native-app]:not([data-ipad-app])) .actions a:active {
+    transform: scale(0.98);
+    opacity: 0.88;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :global(html[data-native-app]:not([data-ipad-app])) .actions a {
+    transition: none;
+  }
+
+  :global(html[data-native-app]:not([data-ipad-app])) .actions a:active {
+    transform: none;
+  }
+}
+
 @media (max-width: 47.999rem) and (max-height: 700px) {
   .welcome {
     gap: 1rem;

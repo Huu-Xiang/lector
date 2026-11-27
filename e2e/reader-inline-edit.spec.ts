@@ -140,6 +140,7 @@ test.describe('Native iPhone reader editing', () => {
       await expect(edit).toBeVisible();
       await edit.click();
       await expect(page.getByTestId('edit-text-textarea')).toHaveValue(ORIGINAL_TEXT);
+      await expect(page.getByTestId('edit-text-textarea')).toBeFocused();
       await page.getByTestId('edit-text-textarea').fill(EDITED_TEXT);
       await page.getByTestId('edit-text-save').click();
       await expect(page.getByTestId('edit-text-textarea')).toHaveCount(0);
@@ -153,20 +154,52 @@ test.describe('Native iPhone reader editing', () => {
     }
   });
 
-  test('cloud reading difficulty lives in Display and submits once', async ({ page }) => {
+  test('cloud reading difficulty lives in Display and submits once', async ({ page, baseURL }) => {
+    if (!baseURL) throw new Error('The reader test requires a UI baseURL');
+    const uiOrigin = new URL(baseURL).origin;
+    const apiOrigin = new URL(apiUrl('/')).origin;
     await page.route('**/__env.js', (route) =>
       route.fulfill({
         contentType: 'application/javascript',
         body: `window.__ENV__ = ${JSON.stringify({ API_URL: new URL(apiUrl('/')).origin, LECTOR_MODE: 'cloud' })};`,
       }),
     );
-    await page.route('**/api/bootstrap', async (route) => {
-      const response = await route.fetch();
-      await route.fulfill({
-        json: { ...(await response.json()), mode: 'cloud', targetLanguage: 'af' },
-      });
-    });
-    await page.route('**/api/product-analytics', (route) => route.fulfill({ json: { ok: true } }));
+    await page.route(
+      (url) => url.origin === apiOrigin && url.pathname.startsWith('/api/'),
+      async (route) => {
+        const request = route.request();
+        const headers = {
+          'access-control-allow-origin': uiOrigin,
+          'access-control-allow-credentials': 'true',
+          'access-control-allow-methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
+          'access-control-allow-headers':
+            request.headers()['access-control-request-headers'] ?? 'content-type',
+        };
+        if (request.method() === 'OPTIONS') {
+          await route.fulfill({ status: 204, headers });
+          return;
+        }
+        const pathname = new URL(request.url()).pathname;
+        if (pathname === '/api/product-analytics') {
+          await route.fulfill({ headers, json: { ok: true } });
+          return;
+        }
+        const response = await route.fetch();
+        const responseHeaders: Record<string, string> = { ...response.headers(), ...headers };
+        if (pathname === '/api/bootstrap') {
+          delete responseHeaders['content-length'];
+          delete responseHeaders['content-encoding'];
+          delete responseHeaders['transfer-encoding'];
+          await route.fulfill({
+            response,
+            headers: responseHeaders,
+            json: { ...(await response.json()), mode: 'cloud', targetLanguage: 'af' },
+          });
+          return;
+        }
+        await route.fulfill({ response, headers: responseHeaders });
+      },
+    );
     const { collectionId, lessonId } = await createLesson(page);
     try {
       await page.goto(`/read/${lessonId}`);

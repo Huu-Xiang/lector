@@ -1146,6 +1146,7 @@
     "intro": "哪里不好用，或者你想要什么功能，都可以告诉我们。每一条我们都会看。",
     "messageLabel": "你的留言",
     "placeholder": "写下问题或想法。可以直接把截图粘贴到这里。",
+    "placeholderTouch": "告诉我们遇到的问题，或分享你的想法。",
     "counter": "{count} / {max}",
     "addImage": "添加图片",
     "removeImage": "移除图片 {name}",
@@ -1666,6 +1667,7 @@
     "correction": {
       "yourText": "你的原文",
       "clickHint": "点击高亮的词查看修改",
+      "tapHint": "轻点高亮的词查看修改。",
       "corrected": "修改后",
       "summary": "{count} 处修改：",
       "perfect": "太棒了！无需修改。"

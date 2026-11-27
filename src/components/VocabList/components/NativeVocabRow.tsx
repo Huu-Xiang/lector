@@ -34,6 +34,7 @@ export default function NativeVocabRow({
   checkbox,
 }: NativeVocabRowProps) {
   const gesture = useRef<{
+    pointerId: number;
     x: number;
     y: number;
     offset: number;
@@ -50,9 +51,79 @@ export default function NativeVocabRow({
       className="relative overflow-hidden border-b border-border/60 last:border-0"
       data-native-vocab-row
       data-swipe-open={swipeEnabled && open && !editing ? 'true' : 'false'}
+      style={{ touchAction: swipeEnabled ? 'pan-y' : undefined }}
+      onPointerDown={(event) => {
+        if (
+          !swipeEnabled ||
+          editing ||
+          event.button !== 0 ||
+          !event.isPrimary ||
+          gesture.current ||
+          !(event.target instanceof Element) ||
+          event.target.closest('[data-native-vocab-actions]')
+        )
+          return;
+        suppressClick.current = false;
+        gesture.current = {
+          pointerId: event.pointerId,
+          x: event.clientX,
+          y: event.clientY,
+          offset: open ? -SWIPE_ACTION_WIDTH : 0,
+          direction: null,
+        };
+        if (!open) onOpenChange(false);
+      }}
+      onPointerMove={(event) => {
+        const drag = gesture.current;
+        if (!drag || drag.pointerId !== event.pointerId) return;
+        const deltaX = event.clientX - drag.x;
+        const deltaY = event.clientY - drag.y;
+        drag.direction ??= swipeDirection(deltaX, deltaY);
+        if (drag.direction) suppressClick.current = true;
+        if (drag.direction !== 'horizontal') return;
+        if (!event.currentTarget.hasPointerCapture(event.pointerId)) {
+          event.currentTarget.setPointerCapture(event.pointerId);
+        }
+        setOffset(swipeOffset(drag.offset, deltaX));
+      }}
+      onPointerUp={(event) => {
+        const drag = gesture.current;
+        if (!drag || drag.pointerId !== event.pointerId) return;
+        gesture.current = null;
+        if (drag.direction === 'horizontal') {
+          const next = swipeStaysOpen(swipeOffset(drag.offset, event.clientX - drag.x));
+          if (next !== open) void haptic();
+          onOpenChange(next);
+        }
+        setOffset(null);
+      }}
+      onPointerCancel={(event) => {
+        if (gesture.current?.pointerId !== event.pointerId) return;
+        gesture.current = null;
+        setOffset(null);
+      }}
+      onPointerLeave={(event) => {
+        if (
+          gesture.current?.pointerId !== event.pointerId ||
+          gesture.current.direction === 'horizontal'
+        )
+          return;
+        gesture.current = null;
+        setOffset(null);
+      }}
+      onLostPointerCapture={(event) => {
+        if (gesture.current?.pointerId !== event.pointerId) return;
+        gesture.current = null;
+        setOffset(null);
+      }}
     >
       {revealed && (
-        <div className="absolute inset-y-0 right-0 flex w-[152px] items-stretch">{actions}</div>
+        <div
+          className="absolute inset-y-0 right-0 flex w-[152px] items-stretch"
+          data-native-vocab-actions
+        >
+          {actions}
+        </div>
       )}
       <div
         className="native-vocab-swipe-content relative flex items-center bg-card"
@@ -64,43 +135,6 @@ export default function NativeVocabRow({
               ? 'none'
               : `translateX(${translation}px)`,
           left: swipeEnabled && reducedMotion ? translation : undefined,
-          touchAction: swipeEnabled ? 'pan-y' : undefined,
-        }}
-        onPointerDown={(event) => {
-          if (!swipeEnabled || editing || event.button !== 0) return;
-          suppressClick.current = false;
-          gesture.current = {
-            x: event.clientX,
-            y: event.clientY,
-            offset: open ? -SWIPE_ACTION_WIDTH : 0,
-            direction: null,
-          };
-          if (!open) onOpenChange(false);
-        }}
-        onPointerMove={(event) => {
-          const drag = gesture.current;
-          if (!drag) return;
-          const deltaX = event.clientX - drag.x;
-          const deltaY = event.clientY - drag.y;
-          drag.direction ??= swipeDirection(deltaX, deltaY);
-          if (drag.direction) suppressClick.current = true;
-          if (drag.direction !== 'horizontal') return;
-          event.currentTarget.setPointerCapture(event.pointerId);
-          setOffset(swipeOffset(drag.offset, deltaX));
-        }}
-        onPointerUp={(event) => {
-          const drag = gesture.current;
-          gesture.current = null;
-          if (drag?.direction === 'horizontal') {
-            const next = swipeStaysOpen(swipeOffset(drag.offset, event.clientX - drag.x));
-            if (next !== open) void haptic();
-            onOpenChange(next);
-          }
-          setOffset(null);
-        }}
-        onPointerCancel={() => {
-          gesture.current = null;
-          setOffset(null);
         }}
       >
         {checkbox}

@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useFormatter, useTranslations } from 'next-intl';
 import { useIsNativeApp } from '@/lib/native-app';
+import { useNativeDrillExit } from '@/lib/native-drill';
 import { CheckCircle, Star } from 'lucide-react';
 import { DeckShuffle } from '@/components/Loaders';
 import TranslationDrawer, { TranslationDrawerSlot } from '@/components/TranslationDrawer';
@@ -780,11 +781,23 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
   const onboardingEncounteredCount = encounteredOnboardingTerms(onboardingSnapshot).length;
   const onboardingSavedCount = savedOnboardingWords(onboardingSnapshot).length;
   const onboardingProgress = onboardingSnapshot?.progress;
+  const exitActiveDrill = useCallback(async () => {
+    clearMcTimer();
+    if (onboardingMode) {
+      const lessonId = onboardingProgress?.recommendedLessonId;
+      router.push(lessonId ? `/read/${lessonId}?onboarding=1` : '/');
+      return;
+    }
+    setState('setup');
+    const counts = await getCollectionCounts();
+    setCollectionCounts(counts);
+  }, [clearMcTimer, onboardingMode, onboardingProgress?.recommendedLessonId, router, setState]);
+  useNativeDrillExit(exitActiveDrill, state !== 'setup');
 
   return (
     <div className="flex min-h-screen">
       <main
-        className={`${state === 'setup' ? 'native-compact-page' : ''} mx-auto max-w-2xl min-w-0 flex-1 px-4 py-8 sm:px-6 lg:px-8 ${wordTooltip ? 'pb-[calc(var(--sheet-h)+2rem)] lg:pb-8' : ''}`}
+        className={`native-practice-page ${state === 'setup' ? 'native-compact-page' : ''} mx-auto w-full max-w-2xl min-w-0 flex-1 px-4 py-8 sm:px-6 lg:px-8 ${wordTooltip ? 'pb-[calc(var(--sheet-h)+2rem)] lg:pb-8' : ''}`}
       >
         {/* Setup screen */}
         {state === 'setup' && (
@@ -1033,18 +1046,8 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
               )}
               <div className="mb-2 flex items-center justify-between">
                 <button
-                  onClick={async () => {
-                    clearMcTimer();
-                    if (onboardingMode) {
-                      const lessonId = onboardingProgress?.recommendedLessonId;
-                      router.push(lessonId ? `/read/${lessonId}?onboarding=1` : '/');
-                      return;
-                    }
-                    setState('setup');
-                    const counts = await getCollectionCounts();
-                    setCollectionCounts(counts);
-                  }}
-                  className="-ml-2 inline-flex min-h-11 items-center px-2 text-sm text-muted-foreground transition-colors hover:text-foreground active:opacity-60"
+                  onClick={exitActiveDrill}
+                  className="native-drill-back -ml-2 inline-flex min-h-11 items-center px-2 text-sm text-muted-foreground transition-colors hover:text-foreground active:opacity-60"
                 >
                   {t('round.back')}
                 </button>
@@ -1200,7 +1203,7 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
                                     placeholder="..."
                                     dir={getActivePack().script.direction}
                                     lang={getActivePack().script.bcp47}
-                                    className={`inline-block w-32 rounded-lg border-2 px-2 py-1 text-center text-xl font-medium transition-all outline-none focus:ring-2 focus:ring-offset-1 ${inputColorClass} ${fuzzyStatus === 'match' ? 'text-primary focus:ring-ring' : ''} ${fuzzyStatus === 'partial' ? 'text-primary focus:ring-ring' : ''} ${fuzzyStatus === 'wrong' ? 'text-destructive focus:ring-destructive' : ''} ${fuzzyStatus === 'empty' ? 'text-foreground focus:ring-ring' : ''} `}
+                                    className={`native-cloze-input inline-block w-32 rounded-lg border-2 px-2 py-1 text-center text-xl font-medium transition-all outline-none focus:ring-2 focus:ring-offset-1 ${inputColorClass} ${fuzzyStatus === 'match' ? 'text-primary focus:ring-ring' : ''} ${fuzzyStatus === 'partial' ? 'text-primary focus:ring-ring' : ''} ${fuzzyStatus === 'wrong' ? 'text-destructive focus:ring-destructive' : ''} ${fuzzyStatus === 'empty' ? 'text-foreground focus:ring-ring' : ''} `}
                                     style={{
                                       minWidth: `${Math.max(graphemeLength(clozeBase) * 0.7, 4)}ch`,
                                     }}
@@ -1301,7 +1304,7 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
                     {/* Multiple-choice shortcut hints (real MC mode only — the
                         number keys aren't wired up for the per-question fallback) */}
                     {practiceMode === 'mc' && (
-                      <div className="mb-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+                      <div className="native-shortcut-hints mb-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
                         <span className="inline-flex items-center gap-1.5">
                           <KbdGroup>
                             <Kbd>1</Kbd>
@@ -1320,7 +1323,7 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
 
                     {/* Type mode buttons */}
                     {practiceMode === 'type' && !mcFallback && (
-                      <div className="flex flex-wrap justify-center gap-2">
+                      <div className="native-practice-actions flex flex-wrap justify-center gap-2">
                         <Button
                           type="button"
                           variant="secondary"
@@ -1346,6 +1349,7 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
                         <Button
                           type="button"
                           size="lg"
+                          className="native-practice-check"
                           onClick={handleSubmit}
                           disabled={!userAnswer.trim()}
                         >
@@ -1356,7 +1360,7 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
 
                     {/* Type mode shortcut hints */}
                     {practiceMode === 'type' && !mcFallback && (
-                      <div className="mt-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+                      <div className="native-shortcut-hints mt-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
                         <span className="inline-flex items-center gap-1.5">
                           <Kbd>Enter</Kbd>
                           {fuzzyStatus === 'match' ? t('question.submit') : t('question.check')}
@@ -1419,6 +1423,7 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
                   <Button
                     variant={'secondary'}
                     type="button"
+                    className="native-drill-back"
                     onClick={async () => {
                       setState('setup');
                       const counts = await getCollectionCounts();
@@ -1560,7 +1565,7 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
                 </p>
                 <Button
                   type="button"
-                  className="mt-6"
+                  className="native-drill-back mt-6"
                   onClick={() => {
                     const lessonId = onboardingProgress?.recommendedLessonId;
                     router.push(lessonId ? `/read/${lessonId}?onboarding=1` : '/');

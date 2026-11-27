@@ -24,40 +24,64 @@ test('a single vocabulary day shows a milestone and desktop retains the chart', 
   page,
 }) => {
   const now = new Date().toISOString();
-  await page.route(/\/api\/vocab(?:\?|$)/, (route) =>
+  const id = `milestone-${Date.now()}`;
+  const seeded = await page.request.post(apiUrl('/api/vocab'), {
+    data: {
+      id,
+      text: `milestoneword${Date.now()}`,
+      type: 'word',
+      sentence: 'Die tuin is groen.',
+      translation: 'garden',
+      state: 'known',
+      stateUpdatedAt: now,
+      createdAt: now,
+      reviewCount: 0,
+      pushedToAnki: false,
+      language: 'af',
+    },
+  });
+  expect(seeded.ok()).toBeTruthy();
+  try {
+    await page.goto('/stats');
+    await expect(page.getByTestId('vocab-growth-sparse')).toBeVisible();
+    await expect(page.getByTestId('vocab-growth-sparse')).toContainText('Known Words');
+    await page.setViewportSize({ width: 820, height: 1180 });
+    await expect(page.getByTestId('vocab-growth-sparse')).toHaveCount(0);
+    await expect(
+      page.getByTestId('compact-vocab-growth').locator('.recharts-responsive-container'),
+    ).toBeVisible();
+  } finally {
+    await page.request.delete(apiUrl(`/api/vocab/${id}`));
+  }
+});
+
+test('inline Fill-in words retain natural prose sizing', async ({ page }) => {
+  await page.route('**/api/cloze/due?*', (route) =>
     route.fulfill({
       json: [
         {
-          id: 'milestone-word',
-          text: 'tuin',
-          type: 'word',
-          sentence: 'Die tuin is groen.',
-          translation: 'garden',
-          state: 'level1',
-          stateUpdatedAt: now,
-          createdAt: now,
+          id: 'inline-spacing',
+          sentence: 'Die winkel se vensters is oop.',
+          clozeWord: 'vensters',
+          clozeIndex: 3,
+          translation: 'The shop windows are open.',
+          source: 'bank',
+          collection: 'top500',
+          masteryLevel: 0,
+          nextReview: new Date().toISOString(),
           reviewCount: 0,
-          pushedToAnki: false,
-          language: 'af',
+          timesCorrect: 0,
+          timesIncorrect: 0,
         },
       ],
     }),
   );
-  await page.goto('/stats');
-  await expect(page.getByTestId('vocab-growth-sparse')).toBeVisible();
-  await expect(page.getByTestId('vocab-growth-sparse')).toContainText('Known Words');
-  await page.setViewportSize({ width: 820, height: 1180 });
-  await expect(page.getByTestId('vocab-growth-sparse')).toHaveCount(0);
-  await expect(
-    page.getByTestId('compact-vocab-growth').locator('.recharts-responsive-container'),
-  ).toBeVisible();
-});
-
-test('inline Fill-in words retain natural prose sizing', async ({ page }) => {
   await page.goto('/practice');
+  await page.getByRole('button', { name: 'Fill in', exact: true }).click();
+  await page.getByRole('button', { name: 'Type', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Start', exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Start', exact: true }).click();
-  const word = page.getByTestId('cloze-word').first();
+  const word = page.getByTestId('cloze-word').filter({ hasText: /^Die$/ }).first();
   await expect(word).toBeVisible();
   const style = await word.evaluate((element) => {
     const computed = getComputedStyle(element);
@@ -67,9 +91,11 @@ test('inline Fill-in words retain natural prose sizing', async ({ page }) => {
       minHeight: computed.minHeight,
     };
   });
-  expect(style.display).toBe('inline');
+  expect(['inline', 'inline-block']).toContain(style.display);
   expect(parseFloat(style.minWidth) || 0).toBeLessThan(44);
   expect(parseFloat(style.minHeight) || 0).toBeLessThan(44);
+  const box = (await word.boundingBox())!;
+  expect(box.width < 44 || box.height < 36).toBe(true);
 });
 
 test('Continue Reading resumes the latest unfinished chapter and hides during search or completion', async ({

@@ -64,7 +64,7 @@ export default function MePage() {
 
   return (
     <main className="native-compact-page mx-auto w-full max-w-xl space-y-5 px-4 pt-5 pb-8">
-      <header className="flex items-center gap-3">
+      <div className="flex items-center gap-3">
         <div className="me-avatar grid size-12 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
           <UserRound size={24} aria-hidden />
         </div>
@@ -74,7 +74,7 @@ export default function MePage() {
             <p className="native-subtitle text-sm break-words text-muted-foreground">{name}</p>
           )}
         </div>
-      </header>
+      </div>
       <ul
         className={
           nativeApp

@@ -16,6 +16,7 @@ function DialogContent({
   className,
   backdropClassName,
   viewportClassName,
+  children,
   ...props
 }: DialogPrimitive.Popup.Props & {
   backdropClassName?: string;
@@ -44,7 +45,12 @@ function DialogContent({
             className,
           )}
           {...props}
-        />
+        >
+          <div data-slot="dialog-grabber" className="hidden" aria-hidden="true">
+            <span className="h-[5px] w-9 rounded-full bg-foreground/20" />
+          </div>
+          {children}
+        </DialogPrimitive.Popup>
       </DialogPrimitive.Viewport>
     </DialogPrimitive.Portal>
   );

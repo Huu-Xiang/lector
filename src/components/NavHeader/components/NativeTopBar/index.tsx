@@ -29,6 +29,7 @@ import { useTabPreference } from '@/components/NativeBridge/use-tab-preference';
 import { navLinks } from '../../constants';
 import AccountMenu from '../AccountMenu';
 import { CHAT_TOGGLE_EVENT } from '@/components/ChatWidget/constants';
+import { useNativeDrillAction } from '@/lib/native-drill';
 
 const tabletIcons = {
   '/': BookOpen,
@@ -49,6 +50,7 @@ export default function NativeTopBar() {
   const tNav = useTranslations('nav');
   const tChat = useTranslations('chat');
   const inApp = useIsNativeApp();
+  const drillExit = useNativeDrillAction();
   const [extra] = useTabPreference();
   const [scrolled, setScrolled] = useState(false);
 
@@ -75,14 +77,16 @@ export default function NativeTopBar() {
     >
       <div className="native-toolbar grid min-h-11 w-full grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center px-2">
         <div className="flex items-center justify-start">
-          {pathname === ME_TAB.href ? null : tab ? (
+          {pathname === ME_TAB.href ? null : tab && !drillExit ? (
             <LanguageSelector compact align="start" />
           ) : (
             <button
               type="button"
               onClick={() => {
                 void haptic();
-                if (pathname.startsWith('/collection/')) {
+                if (drillExit) {
+                  drillExit();
+                } else if (pathname.startsWith('/collection/')) {
                   router.replace('/');
                 } else if (usesAppTabs && selected === ME_TAB.href) {
                   router.replace(ME_TAB.href);

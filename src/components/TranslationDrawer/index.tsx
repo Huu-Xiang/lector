@@ -119,6 +119,7 @@ export default function TranslationDrawer({
   const desktopMoreButtonRef = useRef<HTMLButtonElement>(null);
   const desktopMenuRef = useRef<HTMLDivElement>(null);
   const optionsHeading = useRef<HTMLHeadingElement>(null);
+  const bodyScrollRef = useRef<HTMLDivElement>(null);
   const nativeDrag = useNativeSheetDrag(nativeSheet && rawIsOpen, onClose);
   if (rawIsOpen !== previousOpen) {
     setPreviousOpen(rawIsOpen);
@@ -128,6 +129,11 @@ export default function TranslationDrawer({
   useEffect(() => {
     if (actionsOpen) optionsHeading.current?.focus();
   }, [actionsOpen]);
+  useEffect(() => {
+    if (rawIsOpen && !actionsOpen && bodyScrollRef.current) {
+      bodyScrollRef.current.scrollTop = 0;
+    }
+  }, [actionsOpen, word, rawIsOpen]);
   useEffect(() => {
     if (!desktopMenuOpen || compact) return;
     // Move focus to the first actionable control inside the popover for keyboard users.
@@ -955,6 +961,8 @@ export default function TranslationDrawer({
             </div>
           )}
           <div
+            ref={bodyScrollRef}
+            data-testid="lookup-definition-scroll"
             hidden={compact && actionsOpen}
             className="min-h-0 flex-1 overflow-y-auto overscroll-contain"
           >

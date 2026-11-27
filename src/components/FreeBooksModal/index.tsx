@@ -9,6 +9,8 @@ import { buttonVariants, Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 import { useIsNativeApp } from '@/lib/native-app';
+import { haptic } from '@/lib/native-app';
+import { useIsNativePhone } from '@/lib/use-native-phone';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -91,6 +93,7 @@ export default function FreeBooksModal({
   const [tab, setTab] = useState<TabId>('books');
   const [query, setQuery] = useState('');
   const inApp = useIsNativeApp();
+  const nativePhone = useIsNativePhone();
   const [sort, setSort] = useState<BookSort>('default');
   const [filtersOpen, setFiltersOpen] = useState(false);
 
@@ -286,7 +289,15 @@ export default function FreeBooksModal({
             })}
             aria-label={t('close')}
           >
-            <X className="h-5 w-5" />
+            <span
+              className={
+                nativePhone
+                  ? 'grid size-8 place-items-center rounded-full bg-[var(--ios-fill)]'
+                  : 'contents'
+              }
+            >
+              <X className="h-5 w-5" />
+            </span>
           </DialogClose>
         </div>
         {tabOrder.length > 1 && (
@@ -299,7 +310,10 @@ export default function FreeBooksModal({
                 key={id}
                 type="button"
                 aria-pressed={tab === id}
-                onClick={() => setTab(id)}
+                onClick={() => {
+                  if (nativePhone && tab !== id) void haptic();
+                  setTab(id);
+                }}
                 data-testid={`free-books-tab-${id}`}
                 className={`rounded-t-lg px-3 py-2 text-sm font-medium transition-colors ${inApp ? 'min-h-11' : ''} ${
                   tab === id
@@ -576,17 +590,34 @@ export default function FreeBooksModal({
                             </div>
                             <Button
                               size={inApp ? 'default' : 'sm'}
-                              className={inApp ? 'min-w-11 px-2 text-xs' : 'ml-16 sm:ml-0'}
-                              variant={book.added ? 'outline' : 'default'}
+                              className={
+                                nativePhone
+                                  ? 'native-free-book-add min-h-11 min-w-11 p-0 text-xs'
+                                  : inApp
+                                    ? 'min-w-11 px-2 text-xs'
+                                    : 'ml-16 sm:ml-0'
+                              }
+                              variant={nativePhone ? 'ghost' : book.added ? 'outline' : 'default'}
                               disabled={book.added || adding !== null}
-                              onClick={() => add(book)}
+                              onClick={() => {
+                                if (nativePhone) void haptic();
+                                void add(book);
+                              }}
                               data-testid={`free-book-add-${book.slug}`}
                             >
-                              {book.added
-                                ? t('addedLabel')
-                                : adding === book.slug
-                                  ? t('adding')
-                                  : t('add')}
+                              <span
+                                className={
+                                  nativePhone
+                                    ? 'inline-flex h-8 items-center rounded-full bg-[var(--primary-soft)] px-4 font-semibold text-primary'
+                                    : 'contents'
+                                }
+                              >
+                                {book.added
+                                  ? t('addedLabel')
+                                  : adding === book.slug
+                                    ? t('adding')
+                                    : t('add')}
+                              </span>
                             </Button>
                           </li>
                         );
@@ -664,11 +695,26 @@ export default function FreeBooksModal({
                   </div>
                   <Button
                     size="sm"
+                    variant={nativePhone ? 'ghost' : 'default'}
+                    className={
+                      nativePhone ? 'native-free-book-add min-h-11 min-w-11 p-0' : undefined
+                    }
                     disabled={adding !== null}
-                    onClick={() => addArticle(article)}
+                    onClick={() => {
+                      if (nativePhone) void haptic();
+                      void addArticle(article);
+                    }}
                     data-testid={`reading-feed-add-${article.id}`}
                   >
-                    {adding === article.id ? t('feedAdding') : t('feedAdd')}
+                    <span
+                      className={
+                        nativePhone
+                          ? 'inline-flex h-8 items-center rounded-full bg-[var(--primary-soft)] px-4 text-xs font-semibold text-primary'
+                          : 'contents'
+                      }
+                    >
+                      {adding === article.id ? t('feedAdding') : t('feedAdd')}
+                    </span>
                   </Button>
                 </li>
               ))}
