@@ -4,6 +4,7 @@ import { db } from '../db';
 import { InMemoryExtractionBurstLimiter } from '../lib/rate-limit';
 import { getCurrentUserId } from '../lib/user';
 import { getUserEmail, isEntitledStatus, resolveBillingStatus } from '../lib/billing';
+import { isSuspended } from '../lib/account-flags';
 import { entitlements, type EntitlementsEngine } from '../lib/entitlements';
 import { grantPlan, planRank, type GrantPlan } from '../lib/plan-grants';
 import { recordRefundBaseline, refundStatus, requestRefund } from '../lib/cn-refund';
@@ -143,6 +144,7 @@ export function makeCnBillingRoutes(
   const orderLimiter = new InMemoryExtractionBurstLimiter({
     windowMs: 10 * 60_000,
     userPerWindow: 5,
+    ipPerWindow: 15,
   });
   const pollLimiter = new InMemoryExtractionBurstLimiter({ userPerWindow: 40 });
 
@@ -157,7 +159,9 @@ export function makeCnBillingRoutes(
   app.post('/checkout', async (c) => {
     if (!cfg || !client) return c.json({ error: 'cn_checkout_unavailable' }, 404);
     const userId = getCurrentUserId(c);
-    if (!orderLimiter.tryConsume(userId, null)) return c.json({ error: 'rate_limited' }, 429);
+    if (isSuspended(userId)) return c.json({ error: 'account_suspended' }, 403);
+    const ip = payerIp(c);
+    if (!orderLimiter.tryConsume(userId, ip)) return c.json({ error: 'rate_limited' }, 429);
     const body = (await c.req.json().catch(() => ({}))) as {
       plan?: unknown;
       months?: unknown;
@@ -177,7 +181,6 @@ export function makeCnBillingRoutes(
     if (isPlan(current) && planRank(current) > planRank(plan)) {
       return c.json({ error: 'higher_plan_active' }, 409);
     }
-    const ip = payerIp(c);
     if (!ip) return c.json({ error: 'client_ip_unknown' }, 400);
 
     const outTradeNo = newOutTradeNo();

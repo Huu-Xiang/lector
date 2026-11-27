@@ -24,6 +24,7 @@
 import { createHmac, timingSafeEqual } from 'crypto';
 import { createMiddleware } from 'hono/factory';
 import { db } from '../db';
+import { config } from './config';
 import { isBillingExempt } from './account-flags';
 
 export type BillingMode = 'off' | 'paddle';
@@ -615,6 +616,54 @@ export function refundedSubscriptionId(evt: PaddleEvent): string | null {
   return full || data.action === 'chargeback' ? data.subscription_id : null;
 }
 
+/** True when a verified Paddle adjustment webhook represents a confirmed chargeback. */
+export function isConfirmedChargeback(evt: PaddleEvent): boolean {
+  const data = evt.data;
+  if (!evt.event_type?.startsWith('adjustment.') || !data) return false;
+  return data.action === 'chargeback' && data.status === 'approved';
+}
+
+/**
+ * Resolve the local tenant id that owns a verified Paddle webhook event.
+ * Checks subscription mirror first, then `custom_data.lectorUserId`, and
+ * finally a unique verified `user` row matching `billing_customers.email`.
+ */
+export function resolvePaddleEventUserId(evt: PaddleEvent): string | null {
+  const data = evt.data;
+  if (!data) return null;
+
+  if (typeof data.subscription_id === 'string' && data.subscription_id) {
+    try {
+      const row = db
+        .prepare('SELECT userId FROM billing_subscriptions WHERE paddleSubscriptionId = ?')
+        .get(data.subscription_id) as { userId: string | null } | undefined;
+      if (row?.userId) return row.userId;
+    } catch {
+      /* ignore if table absent */
+    }
+  }
+
+  const customUserId = data.custom_data?.lectorUserId;
+  if (typeof customUserId === 'string' && customUserId) return customUserId;
+
+  if (typeof data.customer_id === 'string' && data.customer_id) {
+    try {
+      const matches = db
+        .prepare(
+          `SELECT u.id, u.emailVerified FROM billing_customers c
+           JOIN user u ON lower(u.email) = c.email
+           WHERE c.paddleCustomerId = ? LIMIT 2`,
+        )
+        .all(data.customer_id) as Array<{ id: string; emailVerified: number }>;
+      if (matches.length === 1 && matches[0].emailVerified === 1) return matches[0].id;
+    } catch {
+      /* selfhost/tests without user table */
+    }
+  }
+
+  return null;
+}
+
 /**
  * Mirror one verified webhook event. Paddle retries deliveries and does not
  * guarantee order, so both upserts only apply when the event is strictly
@@ -732,6 +781,24 @@ export function getUserEmail(userId: string): string | null {
     return row?.email ?? null;
   } catch {
     return null;
+  }
+}
+
+/**
+ * Whether `userId` has a verified email address. Fails closed in cloud mode
+ * (`config.authRequired`) so unverified accounts cannot open a Paddle checkout;
+ * in non-cloud unit tests without a seeded `user` row, falls back to true
+ * unless an explicit row exists with `emailVerified !== 1`.
+ */
+export function isUserEmailVerified(userId: string): boolean {
+  try {
+    const row = db.prepare('SELECT emailVerified FROM user WHERE id = ?').get(userId) as
+      | { emailVerified: number }
+      | undefined;
+    if (!row) return !config.authRequired;
+    return row.emailVerified === 1;
+  } catch {
+    return !config.authRequired;
   }
 }
 

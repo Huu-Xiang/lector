@@ -226,3 +226,91 @@ export const prefetchDailyLimiter = new InMemoryTranslationBurstLimiter({
 });
 export const extractionBurstLimiter = new InMemoryExtractionBurstLimiter();
 export const searchBurstLimiter = new InMemorySearchBurstLimiter();
+
+export interface DeclinedPaymentTracker {
+  recordDecline(userId: string, transactionId?: string): number;
+  clear(userId: string): void;
+  isBlocked(userId: string): { blocked: boolean; retryAfterSeconds: number; strikes: number };
+}
+
+export interface DeclinedPaymentTrackerOptions {
+  now?: () => number;
+  windowMs?: number;
+  maxDeclines?: number;
+  maxKeys?: number;
+}
+
+interface DeclinedEntry {
+  strikes: number;
+  seenTxnIds: Set<string>;
+  expiresAt: number;
+}
+
+/**
+ * Tracks declined Paddle payments per account within a cooldown window (default:
+ * 3 distinct declined transactions in 24h). Stops card-testing scripts from
+ * cycling stolen cards through a single verified account while deduplicating
+ * webhook retries by transaction id.
+ */
+export class InMemoryDeclinedPaymentTracker implements DeclinedPaymentTracker {
+  private readonly entries = new Map<string, DeclinedEntry>();
+  private readonly now: () => number;
+  private readonly windowMs: number;
+  private readonly maxDeclines: number;
+  private readonly maxKeys: number;
+
+  constructor(options: DeclinedPaymentTrackerOptions = {}) {
+    this.now = options.now ?? Date.now;
+    this.windowMs = options.windowMs ?? 24 * 60 * 60 * 1000;
+    this.maxDeclines = options.maxDeclines ?? 3;
+    this.maxKeys = options.maxKeys ?? 20_000;
+  }
+
+  recordDecline(userId: string, transactionId?: string): number {
+    const now = this.now();
+    this.evictExpired(now);
+    let entry = this.entries.get(userId);
+    if (!entry) {
+      if (this.entries.size >= this.maxKeys) {
+        // Evict the oldest entry so new fraud strikes are still recorded under pressure.
+        const oldestKey = this.entries.keys().next().value;
+        if (oldestKey !== undefined) this.entries.delete(oldestKey);
+      }
+      entry = { strikes: 0, seenTxnIds: new Set(), expiresAt: now + this.windowMs };
+      this.entries.set(userId, entry);
+    }
+    if (transactionId) {
+      if (entry.seenTxnIds.has(transactionId)) return entry.strikes;
+      if (entry.seenTxnIds.size < 32) entry.seenTxnIds.add(transactionId);
+    }
+    entry.strikes += 1;
+    entry.expiresAt = now + this.windowMs;
+    return entry.strikes;
+  }
+
+  clear(userId: string): void {
+    this.entries.delete(userId);
+  }
+
+  isBlocked(userId: string): { blocked: boolean; retryAfterSeconds: number; strikes: number } {
+    const now = this.now();
+    this.evictExpired(now);
+    const entry = this.entries.get(userId);
+    if (!entry || entry.strikes < this.maxDeclines) {
+      return { blocked: false, retryAfterSeconds: 0, strikes: entry?.strikes ?? 0 };
+    }
+    const retryAfterSeconds = Math.max(1, Math.ceil((entry.expiresAt - now) / 1000));
+    return { blocked: true, retryAfterSeconds, strikes: entry.strikes };
+  }
+
+  /** Visible only for deterministic unit tests. */
+  sizeForTests(): number {
+    return this.entries.size;
+  }
+
+  private evictExpired(now: number): void {
+    for (const [key, entry] of this.entries) {
+      if (entry.expiresAt <= now) this.entries.delete(key);
+    }
+  }
+}
