@@ -369,8 +369,8 @@ export default function SetupPage() {
         : t('intro');
 
   return (
-    <main className="setup-page min-h-svh bg-background px-4 py-4 sm:py-16">
-      <div className="mx-auto w-full max-w-3xl">
+    <main className="setup-page flex min-h-dvh w-full flex-col bg-background px-4 py-4 sm:block sm:min-h-svh sm:py-16">
+      <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col sm:block">
         <div className="mb-5 sm:mb-8 sm:text-center">
           <Image
             src="/logo.png"
@@ -405,7 +405,7 @@ export default function SetupPage() {
                 <span className="h-1.5 w-6 rounded-full bg-primary" />
                 <span
                   className={`h-1.5 w-6 rounded-full motion-safe:transition-colors ${
-                    showPreferences ? 'bg-primary' : 'bg-muted'
+                    showPreferences ? 'bg-primary' : 'bg-foreground/55'
                   }`}
                 />
               </span>
@@ -723,7 +723,7 @@ export default function SetupPage() {
             )}
 
             <div
-              className="sticky bottom-[env(safe-area-inset-bottom)] z-10 rounded-xl border border-border bg-card p-1.5 shadow-md sm:bottom-3 sm:rounded-2xl sm:px-5 sm:py-4"
+              className="sticky bottom-0 z-10 mt-auto rounded-xl border border-border bg-card p-1.5 pb-[max(0.375rem,env(safe-area-inset-bottom))] shadow-md sm:bottom-3 sm:rounded-2xl sm:px-5 sm:py-4"
               data-testid="setup-start-bar"
             >
               <div className="flex items-center justify-between gap-3">

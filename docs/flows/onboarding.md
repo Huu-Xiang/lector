@@ -122,3 +122,5 @@ sequenceDiagram
 ### Tests
 
 `e2e/language-opt-in.spec.ts`, `api/src/db-enabled-languages.test.ts`, `api/src/routes/settings.test.ts`, `languages/enabled.test.ts`.
+
+The setup form uses a full-height column, visible two-step progress and a bottom action bar with safe-area spacing.

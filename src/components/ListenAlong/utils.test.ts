@@ -51,6 +51,27 @@ describe('nextPlaybackRate', () => {
 });
 
 describe('extractListenSentences', () => {
+  test('keeps numbered headings intact and removes consecutive subset headings', () => {
+    expect(
+      extractListenSentences(
+        '# 1. Chapter 1. Sara\n## Chapter 1. Sara\n\nSara reads. She smiles.',
+        LANGUAGES.en,
+      ),
+    ).toEqual(['1. Chapter 1. Sara', 'Sara reads.', 'She smiles.']);
+  });
+
+  test('deduplicates identical headings but keeps headings separated by prose', () => {
+    expect(
+      extractListenSentences('# Sara\n\n## Sara\n\nShe reads.\n\n# Sara', LANGUAGES.en),
+    ).toEqual(['Sara', 'She reads.', 'Sara']);
+  });
+
+  test('keeps distinct consecutive headings and prefers the more complete heading', () => {
+    expect(
+      extractListenSentences('# Sara\n## Chapter 1. Sara\n## Another chapter.', LANGUAGES.en),
+    ).toEqual(['Chapter 1. Sara', 'Another chapter.']);
+  });
+
   test('strips markdown headings, links, images, emphasis, and drops punctuation-only lines', () => {
     const md = [
       '# Chapitre 1 — *Le départ*',

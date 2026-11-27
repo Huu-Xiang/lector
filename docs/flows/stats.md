@@ -73,3 +73,5 @@ The worker classifies only states `level1` to `level4` and `known`. It does not 
 `knownWords.domain`, `classify_batches`.
 
 Tests: `e2e/domain-fluency-radar.spec.ts`.
+
+Native iPhone pages fill the viewport with 16px insets. Vocabulary chart labels use at least 12px; the range picker sits below its heading.

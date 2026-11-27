@@ -1,6 +1,6 @@
 'use client';
 
-import { useIsNativeApp } from '@/lib/native-app';
+import { isNativeApp, useIsNativeApp } from '@/lib/native-app';
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
@@ -94,7 +94,7 @@ export default function VocabPage() {
     // 'addon' (cloud always; selfhost by choice) export goes through the
     // server-side queue, so there is no localhost connection to check — and
     // from a hosted page the probe is blocked by Local Network Access anyway.
-    if (ankiTransport !== 'ankiconnect') return;
+    if (isNativeApp() || ankiTransport !== 'ankiconnect') return;
     checkAnkiConnection();
     // Load deck names from settings — match the keys the settings page writes
     const savedDeck = localStorage.getItem('lector-anki-deck');
@@ -106,7 +106,7 @@ export default function VocabPage() {
       setAnkiClozeDeck(savedClozeDeck);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ankiTransport]);
+  }, [ankiTransport, nativeApp]);
 
   const loadData = async () => {
     try {
@@ -400,7 +400,7 @@ export default function VocabPage() {
   }, [router]);
 
   return (
-    <main className="native-compact-page mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+    <main className="native-compact-page mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
       <PageHeader title={t('title')}>
         <div className="flex flex-wrap items-center gap-2">
           {ankiTransport === 'addon' ? (
@@ -408,7 +408,7 @@ export default function VocabPage() {
               <button
                 type="button"
                 onClick={openAnkiSetup}
-                className={`inline-flex items-center gap-1.5 rounded-full bg-[color-mix(in_srgb,var(--primary)_14%,var(--card))] px-3 py-1 text-sm font-medium text-primary transition-shadow ${
+                className={`inline-flex min-h-11 min-w-11 items-center gap-1.5 rounded-full bg-[color-mix(in_srgb,var(--primary)_14%,var(--card))] px-3 py-1 text-sm font-medium text-primary transition-shadow sm:min-h-0 sm:min-w-0 ${
                   showAnkiOnboardingTip
                     ? 'relative z-[60] ring-2 ring-[var(--gold-strong)] ring-offset-2 ring-offset-background'
                     : 'hover:ring-2 hover:ring-primary/30'
@@ -429,7 +429,7 @@ export default function VocabPage() {
                 />
               )}
             </div>
-          ) : ankiConnected === null ? (
+          ) : nativeApp ? null : ankiConnected === null ? (
             <span className="text-sm text-muted-foreground">{t('checking')}</span>
           ) : ankiConnected ? (
             <span className="inline-flex items-center gap-1.5 rounded-full bg-[color-mix(in_srgb,var(--primary)_14%,var(--card))] px-3 py-1 text-sm font-medium text-primary">
@@ -469,7 +469,7 @@ export default function VocabPage() {
           onBulkDelete={handleBulkDelete}
           // Pull-sync is the browser→AnkiConnect path; on the addon transport
           // review state pushes itself, so the button would be a dead end.
-          onSyncWithAnki={ankiTransport === 'addon' ? undefined : handleSyncWithAnki}
+          onSyncWithAnki={nativeApp || ankiTransport === 'addon' ? undefined : handleSyncWithAnki}
           showAnkiOnboardingTip={showAnkiOnboardingTip && ankiTransport !== 'addon'}
           onAnkiOnboardingTipDone={finishPostOnboardingTour}
         />

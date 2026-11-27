@@ -224,3 +224,5 @@ The row stays in the table. Due queries exclude it. Undo does not put the card b
 ## Onboarding cloze
 
 See [Onboarding](onboarding.md). Cards use `source = 'mined'`, `collection = 'mined'`, id `onboarding:{vocabId}`.
+
+Native iPhone setup uses segmented format, collection, sentence-count and answer-mode pickers. The Start action is tinted below the primary word-review action.

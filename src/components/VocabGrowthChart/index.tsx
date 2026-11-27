@@ -56,7 +56,7 @@ export default function VocabGrowthChart({
       <div
         className={
           compact
-            ? 'mb-2 flex flex-wrap items-center justify-between gap-1'
+            ? 'mb-2 flex flex-col items-stretch gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-1'
             : 'mb-4 flex items-center justify-between gap-4'
         }
       >
@@ -89,14 +89,14 @@ export default function VocabGrowthChart({
           <XAxis
             dataKey="displayDate"
             stroke={theme.axis}
-            fontSize={compact ? 10 : 12}
+            fontSize={12}
             tickLine={false}
             axisLine={{ stroke: theme.grid }}
           />
 
           <YAxis
             stroke={theme.axis}
-            fontSize={compact ? 10 : 12}
+            fontSize={12}
             tickLine={false}
             axisLine={{ stroke: theme.grid }}
             width={compact ? 38 : 60}

@@ -809,7 +809,13 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
                 sentence, type it back). Both share the collection / round size /
                 review options below. */}
             <div className="mb-3 sm:mb-6">
-              <div className="grid grid-cols-2 gap-2">
+              <div
+                className={
+                  nativeApp
+                    ? 'native-segment-track grid grid-cols-2 gap-2'
+                    : 'grid grid-cols-2 gap-2'
+                }
+              >
                 {/* Explicit aria-labels keep each button's accessible name to
                     just "Cloze"/"Dictation" — the descriptive subtitle stays
                     visible but doesn't leak into role-based locators (e.g. the
@@ -909,7 +915,13 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
 
               {/* Collection */}
               <div className="mb-4">
-                <div className="grid grid-cols-3 gap-2">
+                <div
+                  className={
+                    nativeApp
+                      ? 'native-segment-track grid grid-cols-3 gap-2'
+                      : 'grid grid-cols-3 gap-2'
+                  }
+                >
                   {VISIBLE_COLLECTIONS.map((coll) => {
                     const count = collectionCounts?.[coll];
                     return (
@@ -920,13 +932,13 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
                         variant={selectedCollection === coll ? 'default' : 'secondary'}
                         className={
                           nativeApp
-                            ? 'h-auto min-h-11 flex-col gap-0 px-1.5 py-1.5 whitespace-normal'
+                            ? 'h-auto min-h-11 min-w-0 flex-col gap-0 px-1.5 py-1.5 whitespace-normal'
                             : 'flex h-14 flex-col justify-center gap-0'
                         }
                       >
                         <div>{t(`collections.${coll}`)}</div>
                         {count && count.total > 0 && (
-                          <div className="mt-0.5 text-[11px] font-normal opacity-75">
+                          <div className="mt-0.5 text-xs font-normal opacity-75 sm:text-[11px]">
                             {t('setup.mastered', { mastered: count.mastered, total: count.total })}
                           </div>
                         )}
@@ -942,11 +954,16 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
                   <label className="mb-2 block text-xs font-medium text-muted-foreground">
                     {t('setup.sentences')}
                   </label>
-                  <div className="flex gap-1.5">
+                  <div className={nativeApp ? 'native-segment-track flex gap-1.5' : 'flex gap-1.5'}>
                     {ROUND_SIZES.map((size) => (
                       <Button
                         key={size}
                         size="sm"
+                        className={
+                          nativeApp
+                            ? 'min-h-11 min-w-11 flex-1 px-1 sm:min-h-8 sm:min-w-0 sm:flex-none sm:px-3'
+                            : undefined
+                        }
                         aria-pressed={roundSize === size}
                         variant={roundSize === size ? 'default' : 'secondary'}
                         onClick={() => {
@@ -966,11 +983,14 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
                     <label className="mb-2 block text-xs font-medium text-muted-foreground">
                       {t('setup.mode')}
                     </label>
-                    <div className="flex gap-1.5">
+                    <div
+                      className={nativeApp ? 'native-segment-track flex gap-1.5' : 'flex gap-1.5'}
+                    >
                       <Button
                         onClick={() => handleSetPracticeMode('type')}
                         aria-pressed={practiceMode === 'type'}
                         variant={practiceMode === 'type' ? 'default' : 'secondary'}
+                        className={nativeApp ? 'min-h-11 min-w-11 flex-1 sm:flex-none' : undefined}
                       >
                         {t('setup.modeType')}
                       </Button>
@@ -978,6 +998,7 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
                         onClick={() => handleSetPracticeMode('mc')}
                         aria-pressed={practiceMode === 'mc'}
                         variant={practiceMode === 'mc' ? 'default' : 'secondary'}
+                        className={nativeApp ? 'min-h-11 min-w-11 flex-1 sm:flex-none' : undefined}
                       >
                         {t('setup.modeMc')}
                       </Button>
@@ -990,7 +1011,7 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
               <Button
                 onClick={() => startRoundWith(selectedCollection, 'new', roundSize)}
                 disabled={!seeded}
-                className="w-full"
+                className="native-practice-start min-h-11 w-full sm:min-h-0"
               >
                 {seeded ? t('setup.start') : t('setup.loading')}
               </Button>

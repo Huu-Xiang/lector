@@ -71,7 +71,7 @@ export default function CollectionCover({
         <div className="h-2 w-full shrink-0" style={{ backgroundColor: theme.background }} />
         <div className="flex min-h-0 flex-1 flex-col p-2 sm:p-3">
           {author && (
-            <p className="truncate pr-8 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+            <p className="hidden truncate pr-8 text-xs font-semibold tracking-wide text-muted-foreground uppercase sm:block">
               {author}
             </p>
           )}

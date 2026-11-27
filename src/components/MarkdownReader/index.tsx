@@ -3,7 +3,17 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { ArrowLeft, ChevronLeft, ChevronRight, Languages, SquarePen, X } from 'lucide-react';
+import { haptic, useIsNativeApp } from '@/lib/native-app';
+import { CHAT_TOGGLE_EVENT } from '@/components/ChatWidget/constants';
+import {
+  ArrowLeft,
+  MessageCircle,
+  ChevronLeft,
+  ChevronRight,
+  Languages,
+  SquarePen,
+  X,
+} from 'lucide-react';
 import { getLessonReadings, updateLessonProgress } from '@/lib/data-layer';
 import {
   findMatchingBlockId,
@@ -74,6 +84,8 @@ export default function MarkdownReader({
   smartHintWords = null,
 }: MarkdownReaderProps) {
   const t = useTranslations('reader.markdown');
+  const inApp = useIsNativeApp();
+  const tChat = useTranslations('chat');
   const router = useRouter();
   const activeLang = useActiveLanguage();
   // Tokenize by the LESSON's language, not the active UI language: content
@@ -581,20 +593,28 @@ export default function MarkdownReader({
   usePhraseTouchSelection(containerRef, handleTouchPhrase);
 
   return (
-    <div className="flex h-full min-h-0 flex-col bg-card print:block print:h-auto">
+    <div className="reader-page flex h-full min-h-0 flex-col bg-card print:block print:h-auto">
       {/* Header */}
-      <header className="flex shrink-0 items-center justify-between gap-1 border-b border-border px-2 py-1.5 sm:px-4 sm:py-2 print:border-0 print:px-0">
+      <header
+        className={`reader-header flex shrink-0 items-center justify-between gap-1 border-b border-border px-2 pb-1.5 sm:px-4 sm:pb-2 print:border-0 print:px-0 ${inApp ? 'bg-card/85 pt-[env(safe-area-inset-top)] backdrop-blur-md' : 'pt-1.5 sm:pt-2'}`}
+      >
         <button
           onClick={onClose}
           disabled={isEditing}
           aria-label={t('back')}
           className="flex min-h-11 min-w-11 shrink-0 items-center justify-center gap-2 rounded-lg text-muted-foreground transition-colors hover:bg-accent active:opacity-60 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent sm:px-3 print:hidden"
         >
-          <ArrowLeft className="h-5 w-5" />
+          {inApp ? (
+            <ChevronLeft className="size-7 text-primary" strokeWidth={2.25} />
+          ) : (
+            <ArrowLeft className="h-5 w-5" />
+          )}
           <span className="hidden sm:inline">{t('back')}</span>
         </button>
 
-        <h1 className="reader-text mx-2 flex-1 truncate text-center text-sm font-medium text-foreground sm:text-lg print:mx-0 print:text-left print:text-2xl print:font-bold">
+        <h1
+          className={`reader-text mx-1 min-w-0 flex-1 truncate text-center text-sm font-medium text-foreground sm:mx-2 sm:text-lg print:mx-0 print:text-left print:text-2xl print:font-bold ${inApp ? 'max-sm:text-[17px] max-sm:font-semibold' : ''}`}
+        >
           {(() => {
             if (sectionTitle !== undefined) return sectionTitle;
             let wordIndex = -1;
@@ -652,7 +672,9 @@ export default function MarkdownReader({
           </div>
         ) : (
           <div className="flex shrink-0 items-center gap-1 sm:gap-2 print:hidden">
-            <DailyGoalBadge compact />
+            <div className={inApp ? 'hidden sm:block' : undefined}>
+              <DailyGoalBadge compact />
+            </div>
             <div className="hidden text-sm text-muted-foreground sm:block">{scrollPercentage}%</div>
             {supportsAnnotation && (
               <button
@@ -668,6 +690,20 @@ export default function MarkdownReader({
                 <span className="hidden text-xs sm:inline">
                   {t(`annotation.${annotationMode}`)}
                 </span>
+              </button>
+            )}
+            {inApp && (
+              <button
+                type="button"
+                aria-label={tChat('open')}
+                data-testid="native-chat"
+                className="flex size-11 shrink-0 items-center justify-center text-foreground active:opacity-60"
+                onClick={() => {
+                  void haptic();
+                  window.dispatchEvent(new Event(CHAT_TOGGLE_EVENT));
+                }}
+              >
+                <MessageCircle className="size-[22px]" aria-hidden />
               </button>
             )}
             {headerAction}

@@ -57,6 +57,8 @@ test.describe('Word drawer on small screens', () => {
       await page.setViewportSize(size);
       collectionId = await openLesson(page);
 
+      await expect(page.locator('.web-topbar')).toHaveCount(0);
+
       const word = page.getByRole('button', { name: 'Look up Perdekraal-fees' }).last();
       await word.scrollIntoViewIfNeeded();
       await word.click();
@@ -85,6 +87,7 @@ test.describe('Word drawer on small screens', () => {
         .toBe(true);
 
       await expect(page.getByTestId('translation-drawer-handle')).toBeVisible();
+      await expect(page.locator('[data-chat-toggle]')).toBeHidden();
     });
   }
 

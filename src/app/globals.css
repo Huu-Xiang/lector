@@ -882,7 +882,7 @@ html[data-native-app] {
 html[data-native-app] [data-slot='button'][aria-pressed='true'] {
   background-color: var(--primary-soft);
   color: var(--primary-text);
-  box-shadow: inset 0 0 0 1.5px var(--primary);
+  box-shadow: none;
 }
 
 /* Like an iOS 26 scroll edge: nothing at rest; once content scrolls under the bar it is
@@ -1033,13 +1033,16 @@ html[data-native-app] body:has(.setup-page)::before {
 
 @media screen {
   html[data-native-app] .native-compact-page {
+    width: 100%;
     padding-inline: 1rem;
     padding-block-start: 0.75rem;
   }
 
   html[data-native-app] .native-compact-page .native-page-title {
-    font-size: 1.3125rem;
-    line-height: 1.25;
+    font-size: 1.875rem;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    font-weight: var(--ios-title-weight);
   }
 
   html[data-native-app] .native-compact-page .page-header {
@@ -1123,27 +1126,13 @@ html[data-native-app] {
 
 html[data-native-app] [data-slot='button'] {
   min-height: 44px;
+  min-width: 44px;
   transition: opacity 120ms ease-out;
 }
 
 html[data-native-app] [data-slot='button']:active:not(:disabled) {
   translate: none;
   opacity: 0.6;
-}
-
-html[data-native-app] [data-slot='button'][class*='size-6'],
-html[data-native-app] [data-slot='button'][class*='h-6'],
-html[data-native-app] [data-slot='button'][class*='size-8'],
-html[data-native-app] [data-slot='button'][class*='h-8'] {
-  min-height: 0;
-  position: relative;
-}
-
-html[data-native-app] [data-slot='button'][class*='size-8']::after,
-html[data-native-app] [data-slot='button'][class*='h-8']::after {
-  content: '';
-  position: absolute;
-  inset: -6px;
 }
 
 @media (hover: none) and (pointer: coarse) {
@@ -1537,5 +1526,159 @@ html[data-ios-appearance='glass'] .ipad-tabs [aria-current] {
     grid-template-columns: minmax(0, 1fr) minmax(14rem, 19rem);
     align-items: start;
     gap: clamp(1.5rem, 3vw, 2.5rem);
+  }
+}
+
+html[data-native-app] body:has(.reader-page) {
+  padding-top: 0;
+}
+
+html[data-native-app] .panel {
+  border-bottom-width: 1px;
+  border-radius: 1rem;
+  border-color: color-mix(in srgb, var(--foreground) 8%, transparent);
+}
+
+html[data-native-app] [data-slot='button'] {
+  box-shadow: none;
+}
+
+html[data-native-app].dark {
+  --background: #17140f;
+  --card: #221e17;
+  --popover: #2b261d;
+  --border: rgba(255, 255, 255, 0.09);
+}
+
+@media (width < 64rem) {
+  html:not([data-native-app])[data-drawer-open='true'] [data-chat-toggle] {
+    display: none;
+  }
+}
+
+@media (width < 40rem) {
+  html[data-native-app] :is(button, a, input, select, summary) {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  html[data-native-app] a:not(:is(.flex, .inline-flex, .block, .inline-block, .grid, .hidden)) {
+    display: inline-flex;
+    align-items: center;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  html[data-native-app] :is([class*='text-[10px]'], [class*='text-[11px]'], [class*='text-[9px]']) {
+    font-size: 12px;
+  }
+
+  html[data-native-app] .ipad-library .page-header [data-testid='daily-goal-badge'] > .text-xs {
+    display: none;
+  }
+
+  html[data-native-app] .native-library-actions {
+    flex-wrap: nowrap;
+    gap: 4px;
+  }
+
+  html[data-native-app] .native-library-actions > [data-slot='button'],
+  html[data-native-app] .native-library-actions [data-testid='library-import'] {
+    gap: 4px;
+    padding-inline: 8px;
+    border-radius: 999px;
+  }
+
+  html[data-native-app] .native-library-actions [data-testid='new-group-btn'] {
+    padding: 0;
+    flex-shrink: 0;
+  }
+
+  html[data-native-app] .native-library-actions [data-testid='free-books-btn'] > svg {
+    display: none;
+  }
+
+  html[data-native-app] .native-library-actions [data-testid='free-books-btn'] {
+    display: block;
+    flex: 1 1 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  html[data-native-app] .native-library-actions:has(form) {
+    flex-wrap: wrap;
+  }
+
+  html[data-native-app] [data-testid='library-search-input'] {
+    border: 0;
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--muted) 80%, transparent);
+    box-shadow: none;
+  }
+
+  html[data-native-app] .native-library-view {
+    border: 0;
+    border-radius: 12px;
+    background: var(--muted);
+    padding: 2px;
+  }
+
+  html[data-native-app] .native-library-view [aria-pressed='true'] {
+    background: var(--card);
+    color: var(--foreground);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  html[data-native-app] .native-topbar::before,
+  html[data-native-app] .reader-page > header {
+    background: var(--card);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    mask-image: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-native-app] .native-topbar::before {
+    transition: none;
+  }
+}
+
+@media (width < 40rem) {
+  html[data-native-app] .native-segment-track {
+    gap: 4px;
+    border-radius: 12px;
+    background: var(--muted);
+    padding: 4px;
+  }
+
+  html[data-native-app] .native-segment-track > button {
+    border-color: transparent;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--muted-foreground);
+    box-shadow: none;
+  }
+
+  html[data-native-app] .native-segment-track > button[aria-pressed='true'] {
+    background: var(--card);
+    color: var(--foreground);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  }
+
+  html[data-native-app] .native-practice-start {
+    background: var(--primary-soft);
+    color: var(--primary-text);
+  }
+}
+
+@media (width < 40rem) {
+  html[data-native-app] [data-testid='stats-range-selector'] [aria-pressed='true'] {
+    background: var(--card);
+    color: var(--foreground);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   }
 }

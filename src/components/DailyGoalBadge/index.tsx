@@ -93,7 +93,7 @@ export default function DailyGoalBadge({ compact = false }: { compact?: boolean 
       <span
         aria-hidden="true"
         data-testid="daily-goal-placeholder"
-        className={`block h-9 shrink-0 rounded-full border border-border bg-card ${compact ? 'w-[4.75rem]' : 'w-36'}`}
+        className={`block h-9 shrink-0 rounded-full border border-border bg-card max-sm:min-h-11 ${compact ? 'w-[4.75rem]' : 'w-36'}`}
       />
     );
   }
@@ -120,7 +120,7 @@ export default function DailyGoalBadge({ compact = false }: { compact?: boolean 
     'data-testid': 'daily-goal-badge',
     'data-goal-met': goalMetToday ? 'true' : 'false',
     'aria-label': t('label', { count: streak, amount }),
-    className: `relative flex h-9 shrink-0 items-center gap-1.5 rounded-full border border-border bg-card px-3 text-sm font-semibold text-foreground transition-colors before:absolute before:-inset-1 hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${celebrating ? 'motion-safe:animate-bounce' : ''}`,
+    className: `relative flex h-9 max-sm:min-h-11 shrink-0 items-center gap-1.5 rounded-full border border-border bg-card px-3 text-sm font-semibold text-foreground transition-colors before:absolute before:-inset-1 hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${celebrating ? 'motion-safe:animate-bounce' : ''}`,
   };
   const badgeContent = (
     <>

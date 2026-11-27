@@ -91,3 +91,5 @@ Tests: `e2e/audio-import.spec.ts`.
 Cues live on `lessons.segments` JSON, not `transcript_segments`. Listen-along does not mount.
 
 Tests: `e2e/youtube-transcript.spec.ts`.
+
+ListenAlong preserves numbered Markdown headings and merges consecutive duplicate heading variants. Native playback uses a centered transport dock and toolbar chat.

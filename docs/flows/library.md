@@ -226,3 +226,5 @@ The lesson starts with `transcriptionStatus = 'pending'`. The worker needs `TRAN
 ### Starter texts
 
 See [Onboarding](onboarding.md). Seed is `POST /api/starter/seed`.
+
+On native iPhone, the Library uses a large title, one action strip and a search row. Reader chat opens from its toolbar; it has no floating button.

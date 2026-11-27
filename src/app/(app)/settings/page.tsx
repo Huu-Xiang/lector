@@ -73,7 +73,7 @@ export default function SettingsPage() {
   if (nativeApp) {
     return (
       <main
-        className="native-compact-page mx-auto max-w-3xl px-4 py-8"
+        className="native-compact-page mx-auto w-full max-w-3xl px-4 py-8"
         data-testid="iphone-settings"
       >
         <PageHeader title={t('pageTitle')} />
@@ -146,7 +146,7 @@ export default function SettingsPage() {
   }
 
   return (
-    <main className="native-compact-page mx-auto max-w-3xl px-4 py-8">
+    <main className="native-compact-page mx-auto w-full max-w-3xl px-4 py-8">
       <PageHeader title={t('pageTitle')} />
       <div className="settings-panels space-y-8">
         {accountSettings}
@@ -194,7 +194,7 @@ function SettingsGroups({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <div className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
+    <div className="divide-y divide-border overflow-hidden rounded-2xl border border-border/60 bg-card sm:rounded-xl sm:border-border">
       {children}
     </div>
   );

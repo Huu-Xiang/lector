@@ -16,8 +16,12 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
+import { haptic, useIsNativeApp } from '@/lib/native-app';
+import { CHAT_TOGGLE_EVENT } from '@/components/ChatWidget/constants';
 import {
   ArrowLeft,
+  ChevronLeft,
+  MessageCircle,
   BookOpenText,
   FastForward,
   Pause,
@@ -101,6 +105,8 @@ export default function ListenAlong(props: ListenAlongProps) {
   const sentences = isTts ? props.sentences : null;
 
   const t = useTranslations('reader.listen');
+  const inApp = useIsNativeApp();
+  const tChat = useTranslations('chat');
   const locale = useLocale();
   const activeLang = useActiveLanguage();
   // Tokenize by the LESSON's language, same rule as MarkdownReader.
@@ -498,18 +504,25 @@ export default function ListenAlong(props: ListenAlongProps) {
   }, [isTts, languageName, pack.code, t, ttsError, voiceProbe]);
 
   const transportButton =
-    'flex h-11 w-11 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:opacity-40';
+    'flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:opacity-40';
 
   return (
-    <div className="flex h-full min-h-0 flex-col bg-card" data-testid="listen-along">
+    <div className="reader-page flex h-full min-h-0 flex-col bg-card" data-testid="listen-along">
       {/* Header */}
-      <header className="flex shrink-0 items-center justify-between border-b border-border px-4 py-2">
+      <header
+        className={`reader-header flex shrink-0 items-center justify-between border-b border-border px-2 pb-2 sm:px-4 ${inApp ? 'bg-card/85 pt-[env(safe-area-inset-top)] backdrop-blur-md' : 'pt-2'}`}
+      >
         <button
           onClick={handleExit}
           data-testid="listen-along-exit"
-          className="flex items-center gap-2 rounded-lg px-3 py-2 text-muted-foreground transition-colors hover:bg-accent"
+          aria-label={t('back')}
+          className="flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-lg text-muted-foreground transition-colors hover:bg-accent sm:px-3"
         >
-          <ArrowLeft className="h-5 w-5" />
+          {inApp ? (
+            <ChevronLeft className="size-7 text-primary" strokeWidth={2.25} />
+          ) : (
+            <ArrowLeft className="h-5 w-5" />
+          )}
           <span className="hidden sm:inline">{t('back')}</span>
         </button>
         <h1 className="mx-2 flex-1 truncate text-center text-sm font-medium text-foreground sm:text-lg">
@@ -519,10 +532,24 @@ export default function ListenAlong(props: ListenAlongProps) {
           onClick={handleExit}
           title={t('readAsText')}
           aria-label={t('readAsText')}
-          className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-accent"
+          className="flex min-h-11 min-w-11 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent"
         >
           <BookOpenText className="h-5 w-5" />
         </button>
+        {inApp && (
+          <button
+            type="button"
+            aria-label={tChat('open')}
+            data-testid="native-chat"
+            className="flex size-11 shrink-0 items-center justify-center text-foreground active:opacity-60"
+            onClick={() => {
+              void haptic();
+              window.dispatchEvent(new Event(CHAT_TOGGLE_EVENT));
+            }}
+          >
+            <MessageCircle className="size-[22px]" aria-hidden />
+          </button>
+        )}
       </header>
 
       {/* Segments / Sentences */}
@@ -614,15 +641,24 @@ export default function ListenAlong(props: ListenAlongProps) {
 
           {/* Mode toggle + progress */}
           <div className="flex items-center justify-between gap-2 py-1">
-            <div className="flex rounded-lg border border-border p-0.5 text-xs">
+            <div
+              className={
+                inApp
+                  ? 'flex rounded-xl bg-muted p-1 text-xs'
+                  : 'flex rounded-lg border border-border p-0.5 text-xs'
+              }
+            >
               {(['continuous', 'shadow'] as const).map((m) => (
                 <button
                   key={m}
                   onClick={() => handleModeChange(m)}
                   data-testid={`listen-mode-${m}`}
-                  className={`rounded-md px-3 py-1.5 font-medium capitalize transition-colors ${
+                  aria-pressed={playbackMode === m}
+                  className={`min-h-11 min-w-11 rounded-lg px-3 font-medium capitalize transition-colors ${
                     playbackMode === m
-                      ? 'bg-primary text-primary-foreground'
+                      ? inApp
+                        ? 'bg-card text-foreground shadow-xs'
+                        : 'bg-primary text-primary-foreground'
                       : 'text-muted-foreground hover:text-foreground'
                   }`}
                 >
@@ -630,7 +666,10 @@ export default function ListenAlong(props: ListenAlongProps) {
                 </button>
               ))}
             </div>
-            <div className="text-xs text-muted-foreground" data-testid="listen-progress">
+            <div
+              className="text-xs text-muted-foreground tabular-nums"
+              data-testid="listen-progress"
+            >
               {isTts
                 ? t('sentenceProgress', {
                     current: rows.length ? clampedSentenceIdx + 1 : 0,
@@ -655,78 +694,88 @@ export default function ListenAlong(props: ListenAlongProps) {
               onChange={(event) => handleSeek(Number(event.target.value))}
               aria-label={t('seek')}
               data-testid="listen-scrubber"
-              className="w-full accent-[var(--clay)]"
+              className="min-h-11 w-full accent-[var(--clay)]"
             />
           )}
 
           {/* Controls */}
-          <div className="flex items-center justify-center gap-1 sm:gap-2">
+          <div
+            className={
+              inApp
+                ? 'grid grid-cols-[1fr_auto_1fr] items-center gap-1'
+                : 'flex items-center justify-center gap-1 sm:gap-2'
+            }
+          >
             <button
               onClick={handleRateCycle}
               title={t('playbackSpeed')}
               data-testid="listen-speed"
-              className="flex h-11 min-w-11 items-center justify-center rounded-lg px-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+              className={`flex h-11 min-w-11 items-center justify-center px-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground ${inApp ? 'justify-self-start rounded-full bg-muted' : 'rounded-lg'}`}
             >
               {rate}×
             </button>
-            <button
-              onClick={() => stepSentence(-1)}
-              title={t('previousSentence')}
-              aria-label={t('previousSentence')}
-              data-testid="listen-prev-sentence"
-              className={transportButton}
-            >
-              <SkipBack className="h-5 w-5" />
-            </button>
-            {!isTts && playbackMode === 'continuous' && (
+            <div className={inApp ? 'flex items-center justify-center gap-0 sm:gap-2' : 'contents'}>
               <button
-                onClick={() => skipSeconds(-SKIP_SECONDS)}
-                title={t('backSeconds', { seconds: SKIP_SECONDS })}
-                aria-label={t('backSeconds', { seconds: SKIP_SECONDS })}
+                onClick={() => stepSentence(-1)}
+                title={t('previousSentence')}
+                aria-label={t('previousSentence')}
+                data-testid="listen-prev-sentence"
                 className={transportButton}
               >
-                <Rewind className="h-5 w-5" />
+                <SkipBack className="h-5 w-5" />
               </button>
-            )}
-            <button
-              onClick={handlePlayPause}
-              title={isPlaying ? t('pause') : t('play')}
-              aria-label={isPlaying ? t('pause') : t('play')}
-              data-testid="listen-play-pause"
-              className="flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground transition-colors hover:bg-primary/90"
-            >
-              {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="ml-0.5 h-6 w-6" />}
-            </button>
-            {!isTts && playbackMode === 'continuous' && (
+              {!isTts && playbackMode === 'continuous' && (
+                <button
+                  onClick={() => skipSeconds(-SKIP_SECONDS)}
+                  title={t('backSeconds', { seconds: SKIP_SECONDS })}
+                  aria-label={t('backSeconds', { seconds: SKIP_SECONDS })}
+                  className={transportButton}
+                >
+                  <Rewind className="h-5 w-5" />
+                </button>
+              )}
               <button
-                onClick={() => skipSeconds(SKIP_SECONDS)}
-                title={t('forwardSeconds', { seconds: SKIP_SECONDS })}
-                aria-label={t('forwardSeconds', { seconds: SKIP_SECONDS })}
-                className={transportButton}
+                onClick={handlePlayPause}
+                title={isPlaying ? t('pause') : t('play')}
+                aria-label={isPlaying ? t('pause') : t('play')}
+                data-testid="listen-play-pause"
+                className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground transition-colors hover:bg-primary/90"
               >
-                <FastForward className="h-5 w-5" />
+                {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="ml-0.5 h-6 w-6" />}
               </button>
-            )}
-            {playbackMode === 'shadow' && (
+              {!isTts && playbackMode === 'continuous' && (
+                <button
+                  onClick={() => skipSeconds(SKIP_SECONDS)}
+                  title={t('forwardSeconds', { seconds: SKIP_SECONDS })}
+                  aria-label={t('forwardSeconds', { seconds: SKIP_SECONDS })}
+                  className={transportButton}
+                >
+                  <FastForward className="h-5 w-5" />
+                </button>
+              )}
               <button
-                onClick={() => playSegment(isTts ? clampedSentenceIdx : shadowIdx)}
-                title={t('repeatSentence')}
-                aria-label={t('repeatSentence')}
-                data-testid="listen-repeat"
-                className={transportButton}
+                onClick={() => stepSentence(1)}
+                title={t('nextSentence')}
+                aria-label={t('nextSentence')}
+                data-testid="listen-next-sentence"
+                className={`${transportButton} ${!inApp ? 'order-2' : ''}`}
               >
-                <Repeat2 className="h-5 w-5" />
+                <SkipForward className="h-5 w-5" />
               </button>
-            )}
-            <button
-              onClick={() => stepSentence(1)}
-              title={t('nextSentence')}
-              aria-label={t('nextSentence')}
-              data-testid="listen-next-sentence"
-              className={transportButton}
-            >
-              <SkipForward className="h-5 w-5" />
-            </button>
+            </div>
+            <div className={inApp ? 'flex justify-end' : 'contents'}>
+              {playbackMode === 'shadow' && (
+                <button
+                  onClick={() => playSegment(isTts ? clampedSentenceIdx : shadowIdx)}
+                  title={t('repeatSentence')}
+                  aria-label={t('repeatSentence')}
+                  data-testid="listen-repeat"
+                  className={transportButton}
+                >
+                  <Repeat2 className="h-5 w-5" />
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>

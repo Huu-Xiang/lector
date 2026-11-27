@@ -2521,11 +2521,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
           >
             <SlidersHorizontal className="h-5 w-5" aria-hidden />
           </DropdownMenuTrigger>
-          <DropdownMenuContent
-            align="end"
-            className="w-64 p-1.5"
-            data-testid="reader-display-menu"
-          >
+          <DropdownMenuContent align="end" className="w-64 p-1.5" data-testid="reader-display-menu">
             <DropdownMenuGroup>
               <DropdownMenuLabel>{t('wordMarking')}</DropdownMenuLabel>
               <DropdownMenuRadioGroup
@@ -2542,7 +2538,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
                     className="items-start py-2"
                   >
                     <div className="flex flex-col gap-0.5 pr-2">
-                      <span className="text-sm font-medium leading-tight">
+                      <span className="text-sm leading-tight font-medium">
                         {t(`markingMode.${mode}`)}
                       </span>
                       <span className="text-[11px] leading-snug text-muted-foreground">
@@ -2563,7 +2559,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
                 className="items-start py-2"
               >
                 <div className="flex flex-col gap-0.5 pr-2">
-                  <span className="text-sm font-medium leading-tight">{t('autoPronounce')}</span>
+                  <span className="text-sm leading-tight font-medium">{t('autoPronounce')}</span>
                   <span className="text-[11px] leading-snug text-muted-foreground">
                     {t('autoPronounceHint')}
                   </span>
@@ -2578,7 +2574,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
             title={t('listenAlong')}
             aria-label={t('listenAlong')}
             data-testid="listen-along-toggle"
-            className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-accent"
+            className="flex min-h-11 min-w-11 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent"
           >
             <Headphones className="h-5 w-5" />
           </button>

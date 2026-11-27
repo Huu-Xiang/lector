@@ -317,7 +317,7 @@ export default function StatsPage() {
   );
 
   return (
-    <main className="native-compact-page mx-auto max-w-7xl px-6 py-8">
+    <main className="native-compact-page mx-auto w-full max-w-7xl px-4 py-8 sm:px-6">
       <PageHeader title={t('title')}>
         <p
           className={nativeApp ? 'text-xs text-muted-foreground' : 'text-sm text-muted-foreground'}
@@ -337,7 +337,7 @@ export default function StatsPage() {
         data-testid="stats-top-cards"
         className={
           nativeApp
-            ? 'panel mb-3 grid grid-cols-2 overflow-hidden [&>*]:border-border [&>*:nth-child(-n+2)]:border-b [&>*:nth-child(odd)]:border-e'
+            ? 'panel mb-3 grid grid-cols-2 overflow-hidden rounded-2xl [&>*]:border-border [&>*:nth-child(-n+2)]:border-b [&>*:nth-child(odd)]:border-e'
             : 'mb-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4'
         }
       >

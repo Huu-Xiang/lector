@@ -34,9 +34,11 @@ export default function CollectionCard({ collection }: CollectionCardProps) {
       aria-label={t('details', { title })}
       title={t('details', { title })}
       data-testid="collection-details"
-      className="absolute top-2 right-2 flex size-8 items-center justify-center rounded-md bg-card/90 text-muted-foreground opacity-70 shadow-sm transition-opacity group-hover:opacity-100 before:absolute before:-inset-1.5 hover:text-foreground focus-visible:opacity-100"
+      className="absolute top-0 right-0 flex size-11 items-center justify-center text-muted-foreground transition-opacity hover:text-foreground sm:top-2 sm:right-2 sm:size-8 sm:rounded-md sm:bg-card/90 sm:opacity-70 sm:shadow-sm sm:group-hover:opacity-100 sm:before:absolute sm:before:-inset-1.5 sm:focus-visible:opacity-100"
     >
-      <Ellipsis className="size-4" aria-hidden="true" />
+      <span className="flex size-7 items-center justify-center rounded-full bg-card/85 shadow-sm backdrop-blur-sm sm:contents">
+        <Ellipsis className="size-4" aria-hidden="true" />
+      </span>
     </Link>
   );
 
@@ -104,7 +106,7 @@ export default function CollectionCard({ collection }: CollectionCardProps) {
         data-testid="collection-card"
         className="library-cover-card flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card transition-shadow hover:shadow-lg max-sm:rounded-none max-sm:border-0 max-sm:bg-transparent max-sm:hover:shadow-none"
       >
-        <div className="library-cover-art relative aspect-[3/4] w-full overflow-hidden bg-muted max-sm:rounded-md max-sm:shadow-md max-sm:ring-1 max-sm:ring-border/60">
+        <div className="library-cover-art relative aspect-[3/4] w-full overflow-hidden bg-muted max-sm:rounded-lg max-sm:shadow-sm max-sm:ring-1 max-sm:ring-border/60">
           <CollectionArtwork collection={collection} title={title} original={original} />
           {progressPercent > 0 && (
             <div className="absolute inset-x-0 bottom-0 h-1 bg-black/20">

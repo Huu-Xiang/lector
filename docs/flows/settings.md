@@ -91,3 +91,5 @@ Selfhost has one implicit user. The card does not render.
 ### Tables
 
 `settings`, `user_provider_credentials`, `api_tokens`.
+
+Native iPhone Settings uses inset groups and 44px controls; reading-level headings and descriptions retain 15px and 13px sizes.

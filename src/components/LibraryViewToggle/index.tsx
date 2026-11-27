@@ -16,7 +16,7 @@ export default function LibraryViewToggle() {
     <div
       role="group"
       aria-label={t('label')}
-      className="inline-flex rounded-lg border border-border bg-card p-0.5"
+      className="native-library-view inline-flex rounded-lg border border-border bg-card p-0.5"
     >
       {OPTIONS.map(({ id, Icon }) => (
         <button

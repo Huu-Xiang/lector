@@ -1,6 +1,15 @@
 'use client';
 
-import { Check, ChevronDown, ChevronUp, Loader2, RefreshCw, Trash, Upload } from 'lucide-react';
+import {
+  Check,
+  ChevronDown,
+  ChevronRight,
+  ChevronUp,
+  Loader2,
+  RefreshCw,
+  Trash,
+  Upload,
+} from 'lucide-react';
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import type { WordState } from '@/lib/data-layer';
@@ -16,6 +25,8 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } fr
 import OnboardingTip from '@/components/OnboardingTip';
 import { useLibraryTitleResolver } from '@/lib/library-titles';
 import { Select } from '@/components/ui/select';
+import StateIndicator from '@/components/StateIndicator';
+import { useIsNativeApp } from '@/lib/native-app';
 
 export default function VocabList({
   entries,
@@ -31,6 +42,9 @@ export default function VocabList({
 }: VocabListProps) {
   const t = useTranslations('vocab.list');
   const tState = useTranslations('vocab.states');
+  const tDetail = useTranslations('vocab.detail');
+  const nativeApp = useIsNativeApp();
+  const [editing, setEditing] = useState(false);
 
   // Filter state
   const [stateFilter, setStateFilter] = useState<WordState | 'all' | 'learning'>('all');
@@ -314,12 +328,13 @@ export default function VocabList({
             placeholder={t('searchPlaceholder')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full rounded-lg border border-input bg-background px-4 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none"
+            className="min-h-11 w-full rounded-lg border border-input bg-background px-4 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none sm:min-h-0"
           />
         </div>
 
         {/* State Filter */}
         <Select
+          className="min-h-11 sm:min-h-0"
           wrapperClassName="inline-block max-w-full min-w-0"
           value={stateFilter}
           onChange={(e) => setStateFilter(e.target.value as WordState | 'all' | 'learning')}
@@ -335,6 +350,7 @@ export default function VocabList({
 
         {/* Book Filter */}
         <Select
+          className="min-h-11 sm:min-h-0"
           wrapperClassName="inline-block max-w-full min-w-0"
           value={bookFilter}
           onChange={(e) => setBookFilter(e.target.value)}
@@ -452,8 +468,79 @@ export default function VocabList({
           : t('results', { filtered: filteredEntries.length, total: visibleBaseTotal })}
       </div>
 
+      {nativeApp && (
+        <div className="sm:hidden" data-testid="native-vocab-list">
+          <div className="mb-2 flex items-center justify-end gap-2">
+            {editing && (
+              <input
+                type="checkbox"
+                checked={allSelected}
+                aria-label={t('columns.text')}
+                onChange={(event) => handleSelectAll(event.target.checked)}
+                className="size-11 shrink-0 accent-primary"
+              />
+            )}
+            <Button
+              variant="ghost"
+              aria-pressed={editing}
+              data-testid="native-vocab-edit"
+              onClick={() => {
+                setEditing(!editing);
+                setSelectedIds(new Set());
+              }}
+              className="min-h-11 min-w-11"
+            >
+              {editing ? tDetail('cancel') : tDetail('edit')}
+            </Button>
+          </div>
+          <ul className="overflow-hidden rounded-2xl border border-border/60 bg-card">
+            {paginatedEntries.map((entry) => (
+              <li
+                key={entry.id}
+                className="flex items-center border-b border-border/60 last:border-0"
+              >
+                {editing && (
+                  <input
+                    type="checkbox"
+                    checked={selectedIds.has(entry.id)}
+                    aria-label={entry.text}
+                    onChange={(event) => handleSelect(entry.id, event.target.checked)}
+                    className="ms-2 size-11 shrink-0 accent-primary"
+                  />
+                )}
+                <button
+                  type="button"
+                  onClick={() => onEntryClick(entry)}
+                  className="flex min-h-14 min-w-11 flex-1 items-center gap-3 px-4 py-3 text-start"
+                >
+                  <span className="min-w-0 flex-1">
+                    <span className="flex items-center gap-2">
+                      <span className="min-w-0 text-[17px] font-semibold break-words">
+                        {entry.text}
+                      </span>
+                      <StateIndicator state={entry.state} />
+                    </span>
+                    <span className="mt-1 line-clamp-2 text-[15px] text-muted-foreground">
+                      {entry.translation}
+                    </span>
+                  </span>
+                  <ChevronRight className="size-4 shrink-0 text-muted-foreground" aria-hidden />
+                </button>
+              </li>
+            ))}
+            {filteredEntries.length === 0 && (
+              <li className="px-4 py-10 text-center text-sm text-muted-foreground">
+                {visibleBaseTotal === 0 ? t('emptyNoEntries') : t('emptyNoMatches')}
+              </li>
+            )}
+          </ul>
+        </div>
+      )}
+
       {/* Table */}
-      <div className="overflow-x-auto rounded-lg border border-border">
+      <div
+        className={`${nativeApp ? 'hidden sm:block' : ''} overflow-x-auto rounded-lg border border-border`}
+      >
         <table className="w-full text-left">
           <thead className="bg-muted">
             <tr>

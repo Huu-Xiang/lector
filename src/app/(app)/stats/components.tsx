@@ -29,7 +29,7 @@ export function RangeSelector({
       data-testid="stats-range-selector"
       className={
         compact
-          ? 'flex flex-wrap gap-1 rounded-lg bg-muted p-0.5'
+          ? 'grid w-full grid-cols-4 gap-1 rounded-xl bg-muted p-1 sm:flex sm:w-auto sm:flex-wrap sm:rounded-lg sm:p-0.5'
           : 'inline-flex gap-0.5 rounded-lg bg-muted p-0.5'
       }
     >
@@ -42,7 +42,8 @@ export function RangeSelector({
             variant={active ? 'secondary' : 'ghost'}
             aria-pressed={active}
             className={cn(
-              compact && 'min-h-11 min-w-11 grow px-2 text-xs',
+              compact && 'min-h-11 min-w-11 rounded-lg px-2 text-xs sm:grow',
+              compact && active && 'border-transparent bg-card shadow-xs',
               !active && 'text-muted-foreground',
             )}
             onClick={() => onChange(opt.days)}
@@ -84,7 +85,9 @@ export function StatCard({
   return (
     <div
       className={
-        compact ? 'min-w-0 px-3 py-2' : 'panel p-6 transition-transform hover:scale-[1.02]'
+        compact
+          ? 'min-w-0 px-4 py-3 sm:px-3 sm:py-2'
+          : 'panel p-6 transition-transform hover:scale-[1.02]'
       }
     >
       <div className="flex items-start justify-between">
@@ -93,7 +96,7 @@ export function StatCard({
             {label}
           </p>
           <p
-            className={`mt-1 font-bold ${compact ? 'text-lg leading-tight tabular-nums' : 'text-4xl'} ${textColors[color]}`}
+            className={`mt-1 font-bold ${compact ? 'text-2xl leading-tight tabular-nums sm:text-lg' : 'text-4xl'} ${textColors[color]}`}
           >
             {typeof value === 'number' ? format.number(value) : value}
           </p>
@@ -432,7 +435,7 @@ export function SkeletonCard({ className = '' }: { className?: string }) {
 
 export function StatsSkeleton() {
   return (
-    <main className="mx-auto max-w-7xl px-6 py-8" data-testid="stats-skeleton">
+    <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6" data-testid="stats-skeleton">
       <SkeletonBlock className="mb-6 h-4 w-56" />
 
       {/* Fluency badge skeleton */}

@@ -39,6 +39,10 @@ public class NativeTabBarPlugin: CAPPlugin, CAPBridgedPlugin, UITabBarDelegate {
         center.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
 
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
     @objc private func keyboardWillShow() {
         keyboardUp = true
         updateVisibility()
@@ -109,7 +113,7 @@ public class NativeTabBarPlugin: CAPPlugin, CAPBridgedPlugin, UITabBarDelegate {
             guard #available(iOS 26.0, *),
                   let webView = self.bridge?.webView,
                   let host = self.bridge?.viewController?.view,
-                  host.traitCollection.userInterfaceIdiom == .pad,
+                  host.traitCollection.horizontalSizeClass == .regular,
                   let x = call.getDouble("x"), let y = call.getDouble("y"),
                   let width = call.getDouble("width"), let height = call.getDouble("height"),
                   [x, y, width, height].allSatisfy({ $0.isFinite }),
@@ -188,7 +192,7 @@ public class NativeTabBarPlugin: CAPPlugin, CAPBridgedPlugin, UITabBarDelegate {
             button.addAction(UIAction { [weak self] _ in self?.openTab(item.tag) }, for: .touchUpInside)
             button.configurationUpdateHandler = { button in
                 button.configuration?.background.backgroundColor = button.isSelected
-                    ? Self.sage.withAlphaComponent(0.17)
+                    ? Self.sage.withAlphaComponent(UIAccessibility.isDarkerSystemColorsEnabled ? 0.35 : 0.17)
                     : .clear
             }
             stack.addArrangedSubview(button)
@@ -201,6 +205,7 @@ public class NativeTabBarPlugin: CAPPlugin, CAPBridgedPlugin, UITabBarDelegate {
 
     private func openTab(_ index: Int) {
         guard ids.indices.contains(index) else { return }
+        feedback.prepare()
         feedback.selectionChanged()
         notifyListeners("tabSelected", data: ["id": ids[index]])
     }
@@ -211,13 +216,13 @@ public class NativeTabBarPlugin: CAPPlugin, CAPBridgedPlugin, UITabBarDelegate {
         let bar = UITabBar()
         bar.delegate = self
         bar.tintColor = Self.sage
+        bar.sizeToFit()
         bar.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(bar)
         NSLayoutConstraint.activate([
             bar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             bar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             bar.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            bar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -49),
         ])
         tabBar = bar
         return bar
@@ -242,11 +247,18 @@ public class NativeTabBarPlugin: CAPPlugin, CAPBridgedPlugin, UITabBarDelegate {
         guard let bar = tabBar, show != visible else { return }
         visible = show
         if show { bar.isHidden = false }
+        if UIAccessibility.isReduceMotionEnabled {
+            bar.layer.removeAllAnimations()
+            bar.transform = .identity
+            bar.alpha = show ? 1 : 0
+            bar.isHidden = !show
+            return
+        }
         UIView.animate(withDuration: 0.25, delay: 0, options: [.curveEaseOut, .beginFromCurrentState]) {
             bar.transform = show ? .identity : CGAffineTransform(translationX: 0, y: bar.bounds.height)
             bar.alpha = show ? 1 : 0
-        } completion: { _ in
-            if !self.visible { bar.isHidden = true }
+        } completion: { [weak self] _ in
+            if self?.visible == false { bar.isHidden = true }
         }
     }
 }
