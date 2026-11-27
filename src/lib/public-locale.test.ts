@@ -78,6 +78,11 @@ describe('public-locale', () => {
     expect(publicLocalePrefixFromPath(null)).toBe('');
     expect(isPublicSeoPath('/alternatives')).toBe(true);
     expect(isPublicSeoPath('/alternatives/lingq')).toBe(true);
+    expect(isPublicSeoPath('/tools')).toBe(true);
+    expect(isPublicSeoPath('/tools/text-difficulty')).toBe(true);
+    expect(isPublicSeoPath('/tools/epub-reader-ai-dictionary')).toBe(true);
+    expect(isPublicSeoPath('/tools/text-difficulty/lexicon')).toBe(false);
+    expect(isPublicSeoPath('/tools/unknown')).toBe(false);
     expect(isPublicSeoPath('/vocab-test/fr')).toBe(true);
     expect(isPublicSeoPath('/vocab-test/history')).toBe(false);
     expect(isPublicSeoPath('/practice')).toBe(false);

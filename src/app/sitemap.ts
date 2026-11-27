@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { ALTERNATIVE_COMPETITORS, alternativePath } from '@/lib/alternatives';
+import { ALL_PUBLIC_TOOL_PATHS } from '@/lib/tools';
 import {
   AUTHOR_PAGE_MIN_BOOKS,
   PUBLIC_BOOK_LANGUAGES,
@@ -35,6 +36,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/vocab-test/es',
     '/alternatives',
     ...ALTERNATIVE_COMPETITORS.map((c) => alternativePath(c)),
+    ...ALL_PUBLIC_TOOL_PATHS,
   ].map((path) => entry(path, 'monthly'));
 
   const books = [

@@ -8,7 +8,11 @@ import {
   ALTERNATIVE_COMPETITORS,
   alternativePath,
   alternativesHubJsonLd,
+  isWave3AlternativeCompetitor,
+  type AlternativeCompetitor,
 } from '@/lib/alternatives';
+import { getWave3AlternativeContent } from '@/lib/alternatives-wave3';
+import { getToolsUi } from '@/lib/tools';
 import { findPrice, formatMoney, TIER_ALLOWANCES } from '@/lib/plan-prices';
 import { fetchPlanPricesOnServer } from '@/lib/plan-prices.server';
 import { listPublicBooks } from '@/lib/public-books';
@@ -43,6 +47,18 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+const PLATFORM_COMPARISONS: readonly AlternativeCompetitor[] = [
+  'lingq',
+  'readlang',
+  'lute',
+  'duolingo',
+];
+const LANGUAGE_COMPARISONS: readonly AlternativeCompetitor[] = [
+  'lingq-for-japanese',
+  'lingq-for-korean',
+  'lingq-for-french',
+];
+
 export default async function AlternativesHubPage() {
   const [t, locale, prices, localePrefix, { canonicalUrl }] = await Promise.all([
     getTranslations('alternatives'),
@@ -62,6 +78,25 @@ export default async function AlternativesHubPage() {
     freeDetailed: TIER_ALLOWANCES.free.detailed,
   };
 
+  const cardCopy = (competitor: AlternativeCompetitor) => {
+    if (isWave3AlternativeCompetitor(competitor)) {
+      const content = getWave3AlternativeContent(competitor, locale, rowValues);
+      return {
+        title: content.title,
+        summary: content.summary,
+        description: content.metaDescription,
+      };
+    }
+    return {
+      title: t(`${competitor}.title`),
+      summary: t(`${competitor}.summary`, rowValues),
+      description: t(`${competitor}.metaDescription`, {
+        books: bookCount,
+        plusPrice: plusPriceText,
+      }),
+    };
+  };
+
   const title = t('hub.title');
   const description = t('hub.metaDescription', { books: bookCount, plusPrice: plusPriceText });
 
@@ -73,35 +108,28 @@ export default async function AlternativesHubPage() {
     hubLabel: t('hub.breadcrumbAlternatives'),
     localePrefix,
     inLanguage: locale,
-    items: ALTERNATIVE_COMPETITORS.map((competitor) => ({
-      name: t(`${competitor}.title`),
-      url: publicUrl(alternativePath(competitor), localePrefix),
-      description: t(`${competitor}.metaDescription`, {
-        books: bookCount,
-        plusPrice: plusPriceText,
-      }),
-    })),
+    items: ALTERNATIVE_COMPETITORS.map((competitor) => {
+      const copy = cardCopy(competitor);
+      return {
+        name: copy.title,
+        url: publicUrl(alternativePath(competitor), localePrefix),
+        description: copy.description,
+      };
+    }),
   });
 
-  return (
-    <LegalShell title={title} wide>
-      {structured.map((entry, idx) => (
-        <JsonLd key={idx} data={entry} />
-      ))}
-
-      <p className="max-w-3xl text-base text-muted-foreground">{t('hub.intro')}</p>
-
-      <div className="grid gap-6 sm:grid-cols-2" data-testid="alternatives-hub-cards">
-        {ALTERNATIVE_COMPETITORS.map((competitor) => (
+  const renderGrid = (list: readonly AlternativeCompetitor[], testId: string) => (
+    <div className="grid gap-6 sm:grid-cols-2" data-testid={testId}>
+      {list.map((competitor) => {
+        const copy = cardCopy(competitor);
+        return (
           <section
             key={competitor}
             className="flex flex-col justify-between gap-4 rounded-xl border border-border bg-card p-6"
           >
             <div className="space-y-2">
-              <H2>{t(`${competitor}.title`)}</H2>
-              <p className="text-sm leading-relaxed text-muted-foreground">
-                {t(`${competitor}.summary`, rowValues)}
-              </p>
+              <H2>{copy.title}</H2>
+              <p className="text-sm leading-relaxed text-muted-foreground">{copy.summary}</p>
             </div>
             <div>
               <PublicLink
@@ -113,7 +141,24 @@ export default async function AlternativesHubPage() {
               </PublicLink>
             </div>
           </section>
-        ))}
+        );
+      })}
+    </div>
+  );
+
+  return (
+    <LegalShell title={title} wide>
+      {structured.map((entry, idx) => (
+        <JsonLd key={idx} data={entry} />
+      ))}
+
+      <p className="max-w-3xl text-base text-muted-foreground">{t('hub.intro')}</p>
+
+      {renderGrid(PLATFORM_COMPARISONS, 'alternatives-hub-cards')}
+
+      <div className="space-y-4 pt-2">
+        <H2>{getToolsUi(locale).languageGuidesHeading}</H2>
+        {renderGrid(LANGUAGE_COMPARISONS, 'alternatives-hub-language-cards')}
       </div>
 
       <div className="flex flex-wrap gap-3 pt-2">
@@ -128,6 +173,12 @@ export default async function AlternativesHubPage() {
           className="inline-block rounded-lg border border-border bg-card px-4 py-2 font-semibold text-foreground hover:bg-muted"
         >
           {t('ctaVocabTest')}
+        </PublicLink>
+        <PublicLink
+          href="/tools/text-difficulty"
+          className="inline-block rounded-lg border border-border bg-card px-4 py-2 font-semibold text-foreground hover:bg-muted"
+        >
+          {getToolsUi(locale).diffTitle}
         </PublicLink>
         <PublicLink
           href="/pricing"
