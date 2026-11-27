@@ -50,6 +50,7 @@
       "multipleChoice": "選択式",
       "multipleChoiceTitle": "この問題を選択式に切り替える",
       "hintNone": "ヒント (?)",
+      "hintNoneTouch": "ヒント",
       "hintLetters": "ヒント（{count} 文字）",
       "hintTitle": "次の文字を表示",
       "submit": "送信",

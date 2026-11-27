@@ -50,6 +50,7 @@
       "multipleChoice": "选择题",
       "multipleChoiceTitle": "本题改为选择题",
       "hintNone": "提示（?）",
+      "hintNoneTouch": "提示",
       "hintLetters": "提示（{count} 个字母）",
       "hintTitle": "显示下一个字母",
       "submit": "提交",

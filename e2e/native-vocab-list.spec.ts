@@ -126,6 +126,16 @@ test('native vocabulary keeps row details, optional selection and empty search u
   await expect(page.getByTestId('native-vocab-clear')).toBeHidden();
   await search.fill(word);
   const filters = page.getByTestId('native-vocab-filters');
+  await expect(filters.getByRole('button')).toHaveCount(5);
+  for (const label of ['All', 'Learning', 'New', 'Known', 'Ignored']) {
+    const pill = filters.getByRole('button', { name: label, exact: true });
+    const box = (await pill.boundingBox())!;
+    expect(box.x).toBeGreaterThanOrEqual(0);
+    expect(box.x + box.width).toBeLessThanOrEqual(393);
+    expect(box.width).toBeGreaterThanOrEqual(44);
+    expect(box.height).toBeGreaterThanOrEqual(44);
+  }
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(393);
   await filters.getByRole('button', { name: 'Known', exact: true }).click();
   await expect(filters.getByRole('button', { name: 'Known', exact: true })).toHaveAttribute(
     'aria-pressed',

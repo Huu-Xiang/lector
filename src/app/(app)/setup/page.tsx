@@ -444,6 +444,7 @@ export default function SetupPage() {
                 }}
                 disabled={pending !== null}
                 data-testid="setup-recommend-back"
+                className={nativePhone ? 'text-primary' : undefined}
               >
                 {nativePhone ? (
                   <ChevronLeft className="size-6 text-primary" strokeWidth={2.25} aria-hidden />
@@ -586,7 +587,7 @@ export default function SetupPage() {
                     onClick={backToLanguages}
                     disabled={pending !== null}
                     data-testid="setup-step-back"
-                    className="-ms-2 min-h-11 px-2 text-muted-foreground hover:text-foreground"
+                    className={`-ms-2 min-h-11 px-2 ${nativePhone ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
                   >
                     {nativePhone ? (
                       <ChevronLeft className="size-6 text-primary" strokeWidth={2.25} aria-hidden />

@@ -56,17 +56,52 @@ test('Free books inherits the sheet and Reader Display keeps native menu roles a
   const previousAutoPronounce = await (
     await page.request.get(apiUrl('/api/settings/autoPronounceOnLookup'))
   ).json();
-  await page.request.put(apiUrl('/api/settings/autoPronounceOnLookup'), { data: { value: false } });
-  await page.goto('/');
-  await page.getByTestId('free-books-btn').click();
-  await expectSheet(page.getByRole('dialog'));
-  await page.keyboard.press('Escape');
-  const collection = await page.request.post(apiUrl('/api/collections'), {
-    data: { title: 'Native display sheet', language: 'af' },
-  });
-  expect(collection.ok()).toBeTruthy();
-  const { id } = await collection.json();
+  const previousNativeLanguage = await (
+    await page.request.get(apiUrl('/api/settings/nativeLanguage'))
+  ).json();
+  const previousTargetLanguage = await (
+    await page.request.get(apiUrl('/api/settings/targetLanguage'))
+  ).json();
+  let id: string | undefined;
   try {
+    await page.request.put(apiUrl('/api/settings/autoPronounceOnLookup'), {
+      data: { value: false },
+    });
+    await page.request.put(apiUrl('/api/settings/nativeLanguage'), { data: { value: 'fr' } });
+    await page.request.put(apiUrl('/api/settings/targetLanguage'), { data: { value: 'en' } });
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
+    await page.evaluate(() => localStorage.setItem('lector-target-language', 'en'));
+    await page.reload();
+    await page.getByTestId('free-books-btn').click();
+    const booksSheet = page.getByRole('dialog');
+    await expectSheet(booksSheet);
+    const tabs = booksSheet.getByTestId('free-books-tabs');
+    await expect(tabs).toBeVisible();
+    await expect(tabs.getByRole('button')).toHaveCount(4);
+    const tabsBox = (await tabs.boundingBox())!;
+    const sheetBox = (await booksSheet.boundingBox())!;
+    expect(tabsBox.height).toBeGreaterThanOrEqual(44);
+    expect(tabsBox.y).toBeGreaterThanOrEqual(sheetBox.y);
+    expect(tabsBox.y + tabsBox.height).toBeLessThanOrEqual(sheetBox.y + sheetBox.height);
+    for (const tab of await tabs.getByRole('button').all()) {
+      await expect(tab).toBeVisible();
+      const box = (await tab.boundingBox())!;
+      expect(box.height).toBeGreaterThanOrEqual(44);
+      expect(box.y).toBeGreaterThanOrEqual(tabsBox.y);
+      expect(box.y + box.height).toBeLessThanOrEqual(tabsBox.y + tabsBox.height);
+      expect(box.x).toBeGreaterThanOrEqual(sheetBox.x);
+      expect(box.x + box.width).toBeLessThanOrEqual(sheetBox.x + sheetBox.width);
+      await expect(tab).toBeInViewport({ ratio: 1 });
+    }
+    await page.keyboard.press('Escape');
+    await page.request.put(apiUrl('/api/settings/targetLanguage'), { data: { value: 'af' } });
+    await page.evaluate(() => localStorage.setItem('lector-target-language', 'af'));
+    const collection = await page.request.post(apiUrl('/api/collections'), {
+      data: { title: 'Native display sheet', language: 'af' },
+    });
+    expect(collection.ok()).toBeTruthy();
+    ({ id } = await collection.json());
     expect(
       (
         await page.request.post(apiUrl(`/api/collections/${id}/lessons`), {
@@ -79,6 +114,9 @@ test('Free books inherits the sheet and Reader Display keeps native menu roles a
     await page.getByTestId('reader-display-menu-btn').click();
     await expectSheet(page.getByRole('dialog'));
     const menu = page.getByTestId('reader-display-menu');
+    await expect(menu.getByTestId('toggle-auto-pronounce')).toContainText(
+      'Auto-pronounce on word tap',
+    );
     const edit = menu.getByTestId('native-edit-text-menu-item');
     await expect(edit).toHaveAttribute('role', 'menuitem');
     await edit.focus();
@@ -90,7 +128,14 @@ test('Free books inherits the sheet and Reader Display keeps native menu roles a
     await expect(menu.getByTestId('toggle-auto-pronounce')).toHaveAttribute('aria-checked', 'true');
     await page.keyboard.press('Escape');
   } finally {
-    await page.request.delete(apiUrl(`/api/collections/${id}`));
+    if (id) await page.request.delete(apiUrl(`/api/collections/${id}`));
+    for (const [key, value] of [
+      ['targetLanguage', previousTargetLanguage],
+      ['nativeLanguage', previousNativeLanguage],
+    ] as const) {
+      if (value === null) await page.request.delete(apiUrl(`/api/settings/${key}`));
+      else await page.request.put(apiUrl(`/api/settings/${key}`), { data: { value } });
+    }
     if (previousAutoPronounce === null)
       await page.request.delete(apiUrl('/api/settings/autoPronounceOnLookup'));
     else
@@ -108,6 +153,7 @@ test('active and empty Fill-in rounds use one native exit and hide shortcut chro
   await page.getByRole('button', { name: 'Type', exact: true }).click();
   await page.getByRole('button', { name: 'Start', exact: true }).click();
   await expect(page.getByTestId('cloze-word').first()).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Hint', exact: true })).toBeVisible();
   await expect(page.getByTestId('native-back')).toBeVisible();
   await expect(page.locator('.native-drill-back:visible')).toHaveCount(0);
   await expect(page.locator('kbd:visible')).toHaveCount(0);

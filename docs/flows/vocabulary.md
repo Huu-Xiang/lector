@@ -2,6 +2,8 @@
 
 On native iPhone, search has a clear action and status pills. A horizontal swipe reveals Known and Delete; vertical gestures keep scrolling. Edit mode retains checkbox selection. Lookup sheets snap to 34dvh or 78dvh, with velocity-based dismissal and resisted overscroll. Reduce Motion keeps actions available without animated transforms.
 
+Status pills fit across a 393px English interface; narrower screens and longer labels scroll horizontally to the screen edges without widening the document.
+
 Swipe capture belongs to the stationary row. Action buttons do not start a gesture; the exposed row background remains swipeable while its foreground closes. Canceling or leaving an uncaptured vertical gesture releases its ownership.
 
 On iOS, the word list follows a compact total. Expand the total to see the breakdown by word state.

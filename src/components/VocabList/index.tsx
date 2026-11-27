@@ -436,7 +436,7 @@ export default function VocabList({
       </div>
       {nativePhone && (
         <div
-          className="no-scrollbar flex gap-2 overflow-x-auto sm:hidden"
+          className="-mx-4 no-scrollbar flex gap-1.5 overflow-x-auto px-4 sm:hidden"
           data-testid="native-vocab-filters"
         >
           {(['all', 'learning', 'new', 'known', 'ignored'] as const).map((value) => (
@@ -445,7 +445,7 @@ export default function VocabList({
               type="button"
               aria-pressed={stateFilter === value}
               onClick={() => changeNativeFilter(value)}
-              className={`native-vocab-filter min-h-11 min-w-11 shrink-0 rounded-full px-4 text-sm font-medium ${stateFilter === value ? 'bg-[var(--primary-soft)] text-primary' : 'bg-[var(--ios-fill)] text-muted-foreground'}`}
+              className={`native-vocab-filter min-h-11 min-w-11 shrink-0 rounded-full px-3 text-sm font-medium ${stateFilter === value ? 'bg-[var(--primary-soft)] text-primary' : 'bg-[var(--ios-fill)] text-muted-foreground'}`}
             >
               {value === 'all' || value === 'learning' ? t(`filter.${value}`) : tState(value)}
             </button>

@@ -4,6 +4,8 @@ Native phone drills register their exit action with NativeTopBar. Inner Back con
 
 On iOS, the format selector shows only the format names so the next practice action stays closer to the top.
 
+Native phone Fill-in hints omit the desktop keyboard shortcut suffix.
+
 This domain runs word review, cloze and dictation. Word review cards live in `wordCards`. Cloze cards live in `clozeSentences`. Both use FSRS on the server. A Mastered word also writes the Vocabulary domain.
 
 Intervals in days come from `calculateNextReview`:

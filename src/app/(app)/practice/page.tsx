@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useFormatter, useTranslations } from 'next-intl';
 import { useIsNativeApp } from '@/lib/native-app';
+import { useIsNativePhone } from '@/lib/use-native-phone';
 import { useNativeDrillExit } from '@/lib/native-drill';
 import { CheckCircle, Star } from 'lucide-react';
 import { DeckShuffle } from '@/components/Loaders';
@@ -95,6 +96,7 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
   const router = useRouter();
   const t = useTranslations('practice');
   const nativeApp = useIsNativeApp();
+  const nativePhone = useIsNativePhone();
   const format = useFormatter();
 
   const {
@@ -1344,7 +1346,7 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
                         >
                           {hintLetters > 0
                             ? t('question.hintLetters', { count: hintLetters })
-                            : t('question.hintNone')}
+                            : t(nativePhone ? 'question.hintNoneTouch' : 'question.hintNone')}
                         </Button>
                         <Button
                           type="button"

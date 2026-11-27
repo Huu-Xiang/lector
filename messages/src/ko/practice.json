@@ -50,6 +50,7 @@
       "multipleChoice": "객관식",
       "multipleChoiceTitle": "이 문제를 객관식으로 바꾸기",
       "hintNone": "힌트 (?)",
+      "hintNoneTouch": "힌트",
       "hintLetters": "힌트 ({count}글자)",
       "hintTitle": "다음 글자 보기",
       "submit": "제출",

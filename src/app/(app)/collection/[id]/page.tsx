@@ -282,6 +282,7 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
   const continueLesson = getContinueLesson();
   const bookTitles = [collection.title, shownTitle].filter(Boolean);
   const completedCount = lessons.filter((l) => l.progress_percentComplete >= 95).length;
+  const progressPercent = Math.round(Math.min(100, Math.max(0, collection.avgProgress)));
 
   return (
     <main className="native-compact-page mx-auto w-full max-w-4xl px-4 py-8 sm:px-6">
@@ -340,12 +341,12 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
           {collection.author} &middot; {t('collection.lessonsCount', { count: lessons.length })}
           {completedCount > 0 && ` \u00b7 ${t('collection.completed', { count: completedCount })}`}
         </p>
-        {nativeApp && (
+        {nativeApp && progressPercent > 0 && (
           <span
             className="native-collection-progress hidden tabular-nums"
             data-testid="native-collection-progress"
           >
-            {Math.round(Math.min(100, Math.max(0, collection.avgProgress)))}%
+            {progressPercent}%
           </span>
         )}
 

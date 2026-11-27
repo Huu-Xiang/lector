@@ -2,6 +2,8 @@
 
 Native phone collection details use a cover hero and numbered chapter rows; Add lesson sits outside the chapter group. Import options and the free-book picker use the shared bottom-sheet dialog presentation. Desktop and iPad keep centered dialogs and inline Import menus.
 
+The free-book picker keeps its title and tabs at their full height while the list scrolls. Unread collection heroes omit the progress pill until rounded progress is above zero.
+
 On iOS, saved books and groups come before recommendations. Recommendations still open first in an empty library.
 
 This domain holds collections, groups, lessons, and import. Word colour in the reader comes from the Vocabulary domain. A tap of a word is the Translation domain.

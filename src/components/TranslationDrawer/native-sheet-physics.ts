@@ -22,7 +22,9 @@ export function nativeSheetVelocity(samples: PointerSample[]): number {
 export function nativeSheetDetent(rawHeight: number, velocity: number): number | 'dismiss' {
   if (rawHeight < SHEET_VH_CLOSE_BELOW || (velocity > 0.65 && rawHeight < NATIVE_SHEET_DEFAULT))
     return 'dismiss';
-  return velocity < -0.45 || rawHeight > (NATIVE_SHEET_DEFAULT + NATIVE_SHEET_EXPANDED) / 2
+  if (velocity > 0.45) return NATIVE_SHEET_DEFAULT;
+  if (velocity < -0.45) return NATIVE_SHEET_EXPANDED;
+  return rawHeight > (NATIVE_SHEET_DEFAULT + NATIVE_SHEET_EXPANDED) / 2
     ? NATIVE_SHEET_EXPANDED
     : NATIVE_SHEET_DEFAULT;
 }

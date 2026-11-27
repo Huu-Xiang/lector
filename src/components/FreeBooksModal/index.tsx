@@ -274,11 +274,7 @@ export default function FreeBooksModal({
         className={`flex max-w-2xl flex-col overflow-hidden ${inApp ? 'max-h-[calc(100dvh-env(safe-area-inset-top)-env(safe-area-inset-bottom)-1.5rem)]' : 'max-h-[85vh]'}`}
       >
         <div
-          className={
-            inApp
-              ? 'flex items-center justify-between border-b border-border px-3'
-              : 'flex items-center justify-between border-b border-border px-6 py-4'
-          }
+          className={`flex items-center justify-between border-b border-border ${nativePhone ? 'shrink-0' : ''} ${inApp ? 'px-3' : 'px-6 py-4'}`}
         >
           <DialogTitle className={inApp ? 'text-base' : undefined}>{t('title')}</DialogTitle>
           <DialogClose
@@ -302,7 +298,7 @@ export default function FreeBooksModal({
         </div>
         {tabOrder.length > 1 && (
           <div
-            className={`flex gap-1 border-b border-border ${inApp ? 'px-3' : 'px-6 pt-3'}`}
+            className={`flex gap-1 border-b border-border ${nativePhone ? 'shrink-0' : ''} ${inApp ? 'px-3' : 'px-6 pt-3'}`}
             data-testid="free-books-tabs"
           >
             {tabOrder.map((id) => (
@@ -349,7 +345,9 @@ export default function FreeBooksModal({
               </p>
             )}
             {(books?.length ?? 0) > 0 && (
-              <div className={`mb-3 flex gap-2 ${inApp ? 'items-stretch' : ''}`}>
+              <div
+                className={`mb-3 flex gap-2 ${nativePhone ? 'shrink-0' : ''} ${inApp ? 'items-stretch' : ''}`}
+              >
                 <Input
                   type="search"
                   value={query}

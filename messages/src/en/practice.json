@@ -50,6 +50,7 @@
       "multipleChoice": "Multiple Choice",
       "multipleChoiceTitle": "Switch to multiple choice for this question",
       "hintNone": "Hint (?)",
+      "hintNoneTouch": "Hint",
       "hintLetters": "Hint ({count, plural, one {# letter} other {# letters}})",
       "hintTitle": "Reveal next letter",
       "submit": "Submit",

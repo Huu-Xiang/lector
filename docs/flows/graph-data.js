@@ -180,7 +180,7 @@
   N("flow:translate-word", "flow", "Translate word", {
     domain: "translation",
     md: "translation.md#translate-word",
-    summary: "Tap a word. Drawer opens at the first definition, including after More actions. Vocab row, then dictionary lookup, then a gloss stream on a miss.",
+    summary: "Tap a word. Drawer opens at the first definition, including after More actions. Native downward flicks collapse before dismissal below default height. Vocab row, then dictionary lookup, then a gloss stream on a miss.",
     steps: [
       "fn:wordcell-activate",
       "fn:reader-onWordClick",

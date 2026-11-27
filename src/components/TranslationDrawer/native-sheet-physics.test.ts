@@ -17,7 +17,11 @@ describe('native sheet physics', () => {
   it('uses flick direction without dismissing an expanded sheet above default', () => {
     expect(nativeSheetDetent(40, -0.46)).toBe(78);
     expect(nativeSheetDetent(33, 0.66)).toBe('dismiss');
-    expect(nativeSheetDetent(60, 1)).toBe(78);
+    expect(nativeSheetDetent(60, 1)).toBe(NATIVE_SHEET_DEFAULT);
+    expect(nativeSheetDetent(78, 0.46)).toBe(NATIVE_SHEET_DEFAULT);
+    expect(nativeSheetDetent(60, 0.45)).toBe(NATIVE_SHEET_EXPANDED);
+    expect(nativeSheetDetent(40, -0.45)).toBe(NATIVE_SHEET_DEFAULT);
+    expect(nativeSheetDetent(34, 1)).toBe(NATIVE_SHEET_DEFAULT);
     expect(nativeSheetDetent(15, 0)).toBe('dismiss');
     expect(nativeSheetDetent(20, 0)).toBe(34);
   });

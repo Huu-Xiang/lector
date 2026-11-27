@@ -2119,6 +2119,7 @@
       "multipleChoice": "選択式",
       "multipleChoiceTitle": "この問題を選択式に切り替える",
       "hintNone": "ヒント (?)",
+      "hintNoneTouch": "ヒント",
       "hintLetters": "ヒント（{count} 文字）",
       "hintTitle": "次の文字を表示",
       "submit": "送信",
@@ -2475,6 +2476,7 @@
       },
       "audioSection": "発音",
       "autoPronounce": "単語クリック時に自動発音",
+      "autoPronounceTouch": "単語タップ時に自動発音",
       "autoPronounceHint": "初期設定はオフ。スピーカーアイコンでいつでも聞けます。",
       "settingSaveFailed": "この設定を保存できませんでした。もう一度お試しください。"
     },

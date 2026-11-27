@@ -2119,6 +2119,7 @@
       "multipleChoice": "Multiple Choice",
       "multipleChoiceTitle": "Switch to multiple choice for this question",
       "hintNone": "Hint (?)",
+      "hintNoneTouch": "Hint",
       "hintLetters": "Hint ({count, plural, one {# letter} other {# letters}})",
       "hintTitle": "Reveal next letter",
       "submit": "Submit",
@@ -2475,6 +2476,7 @@
       },
       "audioSection": "Pronunciation",
       "autoPronounce": "Auto-pronounce on word click",
+      "autoPronounceTouch": "Auto-pronounce on word tap",
       "autoPronounceHint": "Off by default. Tap the speaker icon anytime to hear a word.",
       "settingSaveFailed": "Could not save this setting. Try again."
     },

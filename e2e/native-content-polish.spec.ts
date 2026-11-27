@@ -43,6 +43,18 @@ test('native collection uses numbered chapters and keeps Add lesson outside its 
     expect(lesson.ok()).toBeTruthy();
     await page.goto(`/collection/${id}`);
     await expect(page.getByTestId('native-collection-cover')).toBeVisible();
+    await expect(page.getByTestId('native-collection-progress')).toHaveCount(0);
+    const lessons = await (await page.request.get(apiUrl(`/api/collections/${id}/lessons`))).json();
+    const progress = await page.request.put(
+      apiUrl(`/api/lessons/${lessons[0].id}/progress?language=af`),
+      {
+        data: { scrollPosition: 100, percentComplete: 25 },
+      },
+    );
+    expect(progress.ok()).toBeTruthy();
+    await page.reload();
+    await expect(page.getByTestId('native-collection-progress')).toBeVisible();
+    await expect(page.getByTestId('native-collection-progress')).toHaveText('25%');
     await expect(page.locator('.native-chapter-number').first()).toHaveText('1');
     await expect(page.locator('.native-chapter-number').first()).toBeVisible();
     await expect(page.getByTestId('lesson-heading')).toContainText('First chapter');

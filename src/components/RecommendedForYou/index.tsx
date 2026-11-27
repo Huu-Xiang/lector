@@ -289,7 +289,7 @@ export default function RecommendedForYou({
         data-testid={`recommend-${pick.key}`}
       >
         {nativePhone && pick.bookSlug && (
-          <div className="aspect-[3/4] w-14 shrink-0 overflow-hidden rounded-lg sm:hidden">
+          <div className="aspect-[3/4] w-16 shrink-0 self-start overflow-hidden rounded-lg sm:hidden">
             <CollectionCover
               seed={pick.key}
               title={title}
