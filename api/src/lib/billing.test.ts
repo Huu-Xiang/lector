@@ -21,6 +21,8 @@ import {
   type CreateTransaction,
 } from './billing';
 import { makeBillingRoutes } from '../routes/billing';
+import { isSuspended } from './account-flags';
+import { InMemoryDeclinedPaymentTracker, InMemoryExtractionBurstLimiter } from './rate-limit';
 import { isServerTtsConfigured } from '../routes/tts';
 import { makeSessionMiddleware } from './session';
 import type { AuthEngine } from './accounts';
@@ -36,6 +38,7 @@ const NOW = 1_700_000_000;
 function resetBillingTables() {
   db.prepare('DELETE FROM billing_subscriptions').run();
   db.prepare('DELETE FROM billing_customers').run();
+  db.prepare('DELETE FROM admin_account_flags').run();
 }
 
 // These tables are process-global in the Bun suite. Leave no paid mirror row
@@ -1496,6 +1499,218 @@ describe('billing routes', () => {
     );
     status = (await (await app.request('/api/billing/status')).json()) as typeof status;
     expect(status.management.subscription).toMatchObject({ plan: 'plus', cycle: 'year' });
+  });
+
+  test('checkout blocks suspended accounts and unverified emails before calling Paddle', async () => {
+    let called = false;
+    const stubCreate: CreateTransaction = async () => {
+      called = true;
+      return { id: 'txn_blocked', checkoutUrl: null };
+    };
+
+    const suspendedApp = new Hono();
+    suspendedApp.route(
+      '/api/billing',
+      makeBillingRoutes(enforcedCfg, () => 'local@example.com', stubCreate, undefined, () => true),
+    );
+    const resSusp = await suspendedApp.request('/api/billing/checkout', {
+      method: 'POST',
+      body: JSON.stringify({ priceId: 'pri_monthly' }),
+      headers: { 'Content-Type': 'application/json' },
+    });
+    expect(resSusp.status).toBe(403);
+    expect(await resSusp.json()).toEqual({ error: 'account_suspended' });
+
+    const unverifiedApp = new Hono();
+    unverifiedApp.route(
+      '/api/billing',
+      makeBillingRoutes(
+        enforcedCfg,
+        () => 'local@example.com',
+        stubCreate,
+        undefined,
+        () => false,
+        undefined,
+        undefined,
+        Date.now,
+        () => true,
+        { checkEmailVerified: () => false },
+      ),
+    );
+    const resUnverified = await unverifiedApp.request('/api/billing/checkout', {
+      method: 'POST',
+      body: JSON.stringify({ priceId: 'pri_monthly' }),
+      headers: { 'Content-Type': 'application/json' },
+    });
+    expect(resUnverified.status).toBe(403);
+    expect(await resUnverified.json()).toEqual({ error: 'email_not_verified' });
+    expect(called).toBe(false);
+  });
+
+  test('checkout enforces per-user and per-IP burst limits against card-testing floods', async () => {
+    let count = 0;
+    const app = new Hono();
+    app.use('/api/*', async (c, next) => {
+      const user = c.req.header('x-test-user');
+      if (user) c.set('userId', user);
+      return next();
+    });
+    app.route(
+      '/api/billing',
+      makeBillingRoutes(
+        enforcedCfg,
+        () => 'u@example.com',
+        async () => ({ id: `txn_${++count}`, checkoutUrl: null }),
+        undefined,
+        () => false,
+        undefined,
+        undefined,
+        Date.now,
+        () => true,
+        {
+          checkoutLimiter: new InMemoryExtractionBurstLimiter({
+            windowMs: 600_000,
+            userPerWindow: 2,
+            ipPerWindow: 3,
+          }),
+          resolveUser: (c) => c.req.header('x-test-user') || 'local',
+        },
+      ),
+    );
+
+    const postCheckout = (user: string, ip: string) =>
+      app.request('/api/billing/checkout', {
+        method: 'POST',
+        body: JSON.stringify({ priceId: 'pri_monthly' }),
+        headers: {
+          'Content-Type': 'application/json',
+          'x-test-user': user,
+          'x-forwarded-for': ip,
+        },
+      });
+
+    // User limit = 2
+    expect((await postCheckout('alice', '203.0.113.10')).status).toBe(200);
+    expect((await postCheckout('alice', '203.0.113.10')).status).toBe(200);
+    const userBlocked = await postCheckout('alice', '203.0.113.10');
+    expect(userBlocked.status).toBe(429);
+    expect(userBlocked.headers.get('retry-after')).toBe('600');
+    expect(await userBlocked.json()).toMatchObject({ error: 'rate_limited' });
+
+    // IP limit = 3 across rotating accounts (alice used 2, bob uses 1, carol blocked)
+    expect((await postCheckout('bob', '203.0.113.10')).status).toBe(200);
+    expect((await postCheckout('carol', '203.0.113.10')).status).toBe(429);
+    expect(count).toBe(3);
+  });
+
+  test('chargeback webhook auto-suspends the owning account (normal refund does not)', async () => {
+    applyPaddleEvent(subscriptionEvent({ id: 'sub_cb', lectorUserId: 'fraudster', status: 'active' }));
+    applyPaddleEvent(subscriptionEvent({ id: 'sub_rf', lectorUserId: 'honest', status: 'active' }));
+    const app = new Hono();
+    app.use('/api/*', async (c, next) => {
+      const user = c.req.header('x-test-user');
+      if (user) c.set('userId', user);
+      return next();
+    });
+    app.route(
+      '/api/billing',
+      makeBillingRoutes(
+        enforcedCfg,
+        () => 'user@example.com',
+        async () => ({ id: 'txn_ok', checkoutUrl: null }),
+        undefined,
+        isSuspended,
+        operations({ cancelSubscriptionNow: async () => {} }),
+        undefined,
+        Date.now,
+        () => true,
+        { resolveUser: (c) => c.req.header('x-test-user') || 'local' },
+      ),
+    );
+
+    const realNow = Math.floor(Date.now() / 1000);
+    const refundEvt = JSON.stringify(adjustmentEvent({ action: 'refund', subscriptionId: 'sub_rf' }));
+    expect((await postWebhook(app, refundEvt, sign(refundEvt, realNow))).status).toBe(200);
+    expect(isSuspended('honest')).toBe(false);
+
+    const cbEvt = JSON.stringify(
+      adjustmentEvent({ action: 'chargeback', type: 'partial', subscriptionId: 'sub_cb' }),
+    );
+    expect((await postWebhook(app, cbEvt, sign(cbEvt, realNow))).status).toBe(200);
+    expect(isSuspended('fraudster')).toBe(true);
+
+    // Suspended chargeback account is immediately blocked from starting a new checkout.
+    const retry = await app.request('/api/billing/checkout', {
+      method: 'POST',
+      body: JSON.stringify({ priceId: 'pri_monthly' }),
+      headers: { 'Content-Type': 'application/json', 'x-test-user': 'fraudster' },
+    });
+    expect(retry.status).toBe(403);
+    expect(await retry.json()).toEqual({ error: 'account_suspended' });
+  });
+
+  test('declined payment webhooks trip the 24h checkout circuit breaker and clear on completion', async () => {
+    let clock = 1_000_000;
+    const tracker = new InMemoryDeclinedPaymentTracker({
+      now: () => clock,
+      windowMs: 24 * 60 * 60 * 1000,
+      maxDeclines: 3,
+    });
+    const app = new Hono();
+    app.route(
+      '/api/billing',
+      makeBillingRoutes(
+        enforcedCfg,
+        () => 'local@example.com',
+        async () => ({ id: 'txn_next', checkoutUrl: null }),
+        undefined,
+        () => false,
+        undefined,
+        undefined,
+        () => clock,
+        () => true,
+        { declinedTracker: tracker },
+      ),
+    );
+    const realNow = Math.floor(Date.now() / 1000);
+    const failEvent = (txnId: string) =>
+      JSON.stringify({
+        event_type: 'transaction.payment_failed',
+        occurred_at: '2026-07-09T00:00:00Z',
+        data: { id: txnId, custom_data: { lectorUserId: 'local' } },
+      });
+
+    for (const id of ['txn_f1', 'txn_f1', 'txn_f2']) {
+      const body = failEvent(id);
+      expect((await postWebhook(app, body, sign(body, realNow))).status).toBe(200);
+    }
+    // Only 2 distinct declines so far (txn_f1 retry deduplicated) -> checkout still allowed.
+    const beforeTrip = await app.request('/api/billing/checkout', {
+      method: 'POST',
+      body: JSON.stringify({ priceId: 'pri_monthly' }),
+      headers: { 'Content-Type': 'application/json' },
+    });
+    expect(beforeTrip.status).toBe(200);
+
+    // 3rd distinct decline trips the circuit breaker.
+    const third = failEvent('txn_f3');
+    expect((await postWebhook(app, third, sign(third, realNow))).status).toBe(200);
+    const blocked = await app.request('/api/billing/checkout', {
+      method: 'POST',
+      body: JSON.stringify({ priceId: 'pri_monthly' }),
+      headers: { 'Content-Type': 'application/json' },
+    });
+    expect(blocked.status).toBe(429);
+    expect(await blocked.json()).toMatchObject({ error: 'too_many_failed_payments' });
+
+    // A successful payment clears the strikes.
+    const okEvt = JSON.stringify({
+      event_type: 'transaction.completed',
+      occurred_at: '2026-07-09T00:01:00Z',
+      data: { id: 'txn_ok', status: 'completed', custom_data: { lectorUserId: 'local' } },
+    });
+    expect((await postWebhook(app, okEvt, sign(okEvt, realNow))).status).toBe(200);
+    expect(tracker.isBlocked('local').blocked).toBe(false);
   });
 });
 

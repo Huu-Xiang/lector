@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'bun:test';
 import {
+  InMemoryDeclinedPaymentTracker,
   InMemoryExtractionBurstLimiter,
   InMemorySearchBurstLimiter,
   InMemoryTranslationBurstLimiter,
@@ -134,5 +135,45 @@ describe('InMemorySearchBurstLimiter', () => {
     now = 1_000;
     expect(limiter.tryConsume('carol')).toBe(true);
     expect(limiter.sizeForTests()).toBe(1);
+  });
+});
+
+describe('InMemoryDeclinedPaymentTracker', () => {
+  test('blocks after maxDeclines distinct transactions, deduplicates retries, clears on success, and expires', () => {
+    let now = 10_000;
+    const tracker = new InMemoryDeclinedPaymentTracker({
+      now: () => now,
+      windowMs: 60_000,
+      maxDeclines: 3,
+      maxKeys: 2,
+    });
+
+    expect(tracker.recordDecline('alice', 'txn_1')).toBe(1);
+    // Retried webhook for the same transaction does not double-count.
+    expect(tracker.recordDecline('alice', 'txn_1')).toBe(1);
+    expect(tracker.isBlocked('alice').blocked).toBe(false);
+
+    expect(tracker.recordDecline('alice', 'txn_2')).toBe(2);
+    expect(tracker.isBlocked('alice').blocked).toBe(false);
+
+    expect(tracker.recordDecline('alice', 'txn_3')).toBe(3);
+    expect(tracker.isBlocked('alice')).toEqual({
+      blocked: true,
+      retryAfterSeconds: 60,
+      strikes: 3,
+    });
+
+    // Clearing on a successful payment immediately unblocks the account.
+    tracker.clear('alice');
+    expect(tracker.isBlocked('alice').blocked).toBe(false);
+
+    // Cooldown expires cleanly after windowMs.
+    tracker.recordDecline('bob', 'txn_a');
+    tracker.recordDecline('bob', 'txn_b');
+    tracker.recordDecline('bob', 'txn_c');
+    expect(tracker.isBlocked('bob').blocked).toBe(true);
+    now += 60_000;
+    expect(tracker.isBlocked('bob').blocked).toBe(false);
+    expect(tracker.sizeForTests()).toBe(0);
   });
 });

@@ -1,9 +1,14 @@
 import { Hono, type Context } from 'hono';
 import { bodyLimit } from 'hono/body-limit';
+import { isIP } from 'net';
 import { getCurrentUserId } from '../lib/user';
+import { config } from '../lib/config';
 import {
   applyPaddleEvent,
   refundedSubscriptionId,
+  isConfirmedChargeback,
+  isUserEmailVerified,
+  resolvePaddleEventUserId,
   billingConfig,
   findBillingSubscriptions,
   findPaddleCustomerId,
@@ -17,12 +22,18 @@ import {
   type BillingSubscriptionRecord,
   type CreateTransaction,
 } from '../lib/billing';
-import { isBillingExempt, isSuspended } from '../lib/account-flags';
+import { isBillingExempt, isSuspended, setSuspended } from '../lib/account-flags';
 import { entitlements, type EntitlementsEngine } from '../lib/entitlements';
 import { activeGrant } from '../lib/plan-grants';
 import { paddleCheckoutAllowed } from '../lib/admin';
 import { recordPaddleAnalytics } from '../lib/paddle-analytics';
 import { recordProductEvent } from '../lib/product-analytics';
+import {
+  InMemoryDeclinedPaymentTracker,
+  InMemoryExtractionBurstLimiter,
+  type DeclinedPaymentTracker,
+  type ExtractionBurstLimiter,
+} from '../lib/rate-limit';
 import {
   makePaddleBillingOperations,
   PaddleBillingError,
@@ -35,6 +46,25 @@ import {
 
 const MAX_PADDLE_WEBHOOK_BODY_BYTES = 1024 * 1024;
 const MAX_BILLING_ACTION_BODY_BYTES = 4 * 1024;
+const CHECKOUT_RATE_WINDOW_SECONDS = 600;
+
+function billingClientIp(c: Context): string | null {
+  if (config.trustedProxy === 'cloudflare') {
+    const cfIp = c.req.header('cf-connecting-ip')?.trim() ?? '';
+    return isIP(cfIp) ? cfIp : null;
+  }
+  const forwarded = c.req.header('x-forwarded-for')?.split(',')[0]?.trim() ?? '';
+  return isIP(forwarded) ? forwarded : null;
+}
+
+export interface BillingFraudGuards {
+  checkoutLimiter?: ExtractionBurstLimiter;
+  managementLimiter?: ExtractionBurstLimiter;
+  declinedTracker?: DeclinedPaymentTracker;
+  checkEmailVerified?: (userId: string) => boolean;
+  suspendOnChargeback?: (userId: string, reason: string) => void;
+  resolveUser?: (c: Context) => string;
+}
 
 function accountManagementSubscription(
   rows: readonly BillingSubscriptionRecord[],
@@ -86,9 +116,31 @@ export function makeBillingRoutes(
   readPrices: PriceDisplayReader = makePaddlePriceReader(cfg),
   now: () => number = Date.now,
   checkoutAllowed: (userId: string) => boolean = paddleCheckoutAllowed,
+  guards: BillingFraudGuards = {},
 ) {
   const app = new Hono();
   let priceCache: { at: number; prices: PriceDisplay[] } | null = null;
+  const checkoutLimiter =
+    guards.checkoutLimiter ??
+    new InMemoryExtractionBurstLimiter({
+      now,
+      windowMs: CHECKOUT_RATE_WINDOW_SECONDS * 1000,
+      userPerWindow: 5,
+      ipPerWindow: 15,
+    });
+  const managementLimiter =
+    guards.managementLimiter ??
+    new InMemoryExtractionBurstLimiter({
+      now,
+      windowMs: CHECKOUT_RATE_WINDOW_SECONDS * 1000,
+      userPerWindow: 15,
+      ipPerWindow: 45,
+    });
+  const declinedTracker = guards.declinedTracker ?? new InMemoryDeclinedPaymentTracker({ now });
+  const checkEmailVerified = guards.checkEmailVerified ?? isUserEmailVerified;
+  const suspendOnChargeback =
+    guards.suspendOnChargeback ?? ((userId: string, reason: string) => setSuspended(userId, true, reason));
+  const resolveUser = guards.resolveUser ?? getCurrentUserId;
 
   // Shared by every authenticated billing action that takes a JSON body:
   // checkout, and the two plan-change routes. Declared before the routes that
@@ -226,9 +278,33 @@ export function makeBillingRoutes(
       return c.json({ error: 'Billing is not enabled on this deployment' }, 404);
     }
 
-    const userId = getCurrentUserId(c);
+    const userId = resolveUser(c);
+    if (checkSuspended(userId)) {
+      return c.json({ error: 'account_suspended' }, 403);
+    }
+    if (!checkEmailVerified(userId)) {
+      return c.json({ error: 'email_not_verified' }, 403);
+    }
     if (!checkoutAllowed(userId)) {
       return c.json({ error: 'checkout_unavailable' }, 403);
+    }
+    const declineState = declinedTracker.isBlocked(userId);
+    if (declineState.blocked) {
+      c.header('Retry-After', String(declineState.retryAfterSeconds));
+      return c.json(
+        {
+          error: 'too_many_failed_payments',
+          retryAfterSeconds: declineState.retryAfterSeconds,
+        },
+        429,
+      );
+    }
+    if (!checkoutLimiter.tryConsume(userId, billingClientIp(c))) {
+      c.header('Retry-After', String(CHECKOUT_RATE_WINDOW_SECONDS));
+      return c.json(
+        { error: 'rate_limited', retryAfterSeconds: CHECKOUT_RATE_WINDOW_SECONDS },
+        429,
+      );
     }
 
     let body: { priceId?: unknown; promo?: unknown };
@@ -283,7 +359,14 @@ export function makeBillingRoutes(
     if (!cfg.enforced || !cfg.apiKey) {
       return c.json({ error: 'Billing is not enabled on this deployment' }, 404);
     }
-    const userId = getCurrentUserId(c);
+    const userId = resolveUser(c);
+    if (!managementLimiter.tryConsume(userId, billingClientIp(c))) {
+      c.header('Retry-After', String(CHECKOUT_RATE_WINDOW_SECONDS));
+      return c.json(
+        { error: 'rate_limited', retryAfterSeconds: CHECKOUT_RATE_WINDOW_SECONDS },
+        429,
+      );
+    }
     const account = portalAccount(findBillingSubscriptions(userId, resolveEmail(userId)));
     if (!account) return c.json({ error: 'billing_account_not_found' }, 409);
     try {
@@ -348,7 +431,16 @@ export function makeBillingRoutes(
     if (!cfg.enforced || !cfg.apiKey) {
       return c.json({ error: 'Billing is not enabled on this deployment' }, 404);
     }
-    const context = planChangeContext(getCurrentUserId(c), await targetPriceId(c));
+    const userId = resolveUser(c);
+    if (checkSuspended(userId)) return c.json({ error: 'account_suspended' }, 403);
+    if (!managementLimiter.tryConsume(userId, billingClientIp(c))) {
+      c.header('Retry-After', String(CHECKOUT_RATE_WINDOW_SECONDS));
+      return c.json(
+        { error: 'rate_limited', retryAfterSeconds: CHECKOUT_RATE_WINDOW_SECONDS },
+        429,
+      );
+    }
+    const context = planChangeContext(userId, await targetPriceId(c));
     if ('error' in context) return c.json({ error: context.error }, context.status);
     try {
       const preview = await billingOperations.previewSubscriptionChange({
@@ -376,7 +468,16 @@ export function makeBillingRoutes(
     if (!cfg.enforced || !cfg.apiKey) {
       return c.json({ error: 'Billing is not enabled on this deployment' }, 404);
     }
-    const context = planChangeContext(getCurrentUserId(c), await targetPriceId(c));
+    const userId = resolveUser(c);
+    if (checkSuspended(userId)) return c.json({ error: 'account_suspended' }, 403);
+    if (!managementLimiter.tryConsume(userId, billingClientIp(c))) {
+      c.header('Retry-After', String(CHECKOUT_RATE_WINDOW_SECONDS));
+      return c.json(
+        { error: 'rate_limited', retryAfterSeconds: CHECKOUT_RATE_WINDOW_SECONDS },
+        429,
+      );
+    }
+    const context = planChangeContext(userId, await targetPriceId(c));
     if ('error' in context) return c.json({ error: context.error }, context.status);
     try {
       await billingOperations.applySubscriptionChange({
@@ -438,6 +539,39 @@ export function makeBillingRoutes(
       }
       const type = (event as { event_type?: string }).event_type ?? 'unknown';
       console.log(`[billing] webhook ${type}: ${applied}`);
+
+      // Anti-card-testing & chargeback protection:
+      // 1. Confirmed chargeback → automatically suspend the owning account so
+      //    a stolen-card buyer cannot keep using Free or open new checkouts.
+      // 2. Repeated declined card attempts → trigger 24h checkout circuit breaker.
+      // 3. Successful completion → clear prior decline strikes for the account.
+      if (isConfirmedChargeback(paddleEvent)) {
+        const ownerUserId = resolvePaddleEventUserId(paddleEvent);
+        if (ownerUserId) {
+          try {
+            suspendOnChargeback(ownerUserId, 'Automatic suspension: Paddle chargeback');
+            console.warn(
+              `[billing][fraud] auto-suspended user ${ownerUserId} after chargeback (${paddleEvent.data?.subscription_id ?? paddleEvent.data?.id ?? 'unknown'})`,
+            );
+          } catch (error) {
+            console.error('[billing][fraud] could not suspend chargeback user', ownerUserId, error);
+          }
+        }
+      } else if (type === 'transaction.payment_failed') {
+        const ownerUserId = resolvePaddleEventUserId(paddleEvent);
+        if (ownerUserId) {
+          const strikes = declinedTracker.recordDecline(ownerUserId, paddleEvent.data?.id);
+          if (declinedTracker.isBlocked(ownerUserId).blocked) {
+            console.warn(
+              `[billing][fraud] checkout circuit-breaker tripped for user ${ownerUserId} (${strikes} declined payments in 24h)`,
+            );
+          }
+        }
+      } else if (type === 'transaction.completed') {
+        const ownerUserId = resolvePaddleEventUserId(paddleEvent);
+        if (ownerUserId) declinedTracker.clear(ownerUserId);
+      }
+
       // A full refund ends the plan here at once; ending it at Paddle too stops the next charge.
       // A failure answers 502, so Paddle sends the notice again.
       const refunded = applied === 'refund' ? refundedSubscriptionId(paddleEvent) : null;

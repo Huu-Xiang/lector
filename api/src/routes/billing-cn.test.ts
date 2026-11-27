@@ -4,6 +4,7 @@ import { db } from '../db';
 import type { EntitlementsEngine } from '../lib/entitlements';
 import { activeGrant } from '../lib/plan-grants';
 import { decideRefund, listRefundRequests } from '../lib/cn-refund';
+import { setSuspended } from '../lib/account-flags';
 import {
   DEFAULT_CN_PRICES,
   epaySign,
@@ -235,5 +236,17 @@ describe('refund requests', () => {
     );
     expect(await (await get(app)).json()).toMatchObject({ order: null, eligible: false });
     expect(await (await file(app)).json()).toMatchObject({ eligible: false });
+  });
+
+  test('suspended accounts cannot start RMB checkout', async () => {
+    setSuspended('local', true, 'fraud');
+    try {
+      const app = makeCnBillingRoutes(CFG, fakeClient().client, engineOn('free'), () => false);
+      const { res, body } = await checkout(app, 'cloud', 1);
+      expect(res.status).toBe(403);
+      expect(body as unknown).toEqual({ error: 'account_suspended' });
+    } finally {
+      db.prepare('DELETE FROM admin_account_flags').run();
+    }
   });
 });
