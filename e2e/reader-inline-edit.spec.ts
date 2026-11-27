@@ -121,3 +121,74 @@ test.describe('Reader inline editing (issue #67)', () => {
     await expect(backButton).toBeEnabled();
   });
 });
+
+test.describe('Native iPhone reader editing', () => {
+  test.use({
+    viewport: { width: 393, height: 852 },
+    userAgent: 'Mozilla/5.0 (iPhone) AppleWebKit/605.1.15 Mobile/15E148 ReadfoxApp/1',
+  });
+
+  test('Display menu opens the same editor and persists changes', async ({ page }) => {
+    const { collectionId, lessonId } = await createLesson(page);
+    try {
+      await page.goto(`/read/${lessonId}`);
+      await expect(page.getByTestId('edit-text-button')).toBeHidden();
+      await page.getByTestId('reader-display-menu-btn').click();
+      const edit = page
+        .getByTestId('reader-display-menu')
+        .getByRole('menuitem', { name: 'Edit text', exact: true });
+      await expect(edit).toBeVisible();
+      await edit.click();
+      await expect(page.getByTestId('edit-text-textarea')).toHaveValue(ORIGINAL_TEXT);
+      await page.getByTestId('edit-text-textarea').fill(EDITED_TEXT);
+      await page.getByTestId('edit-text-save').click();
+      await expect(page.getByTestId('edit-text-textarea')).toHaveCount(0);
+      await expect(page.locator('article')).toContainText('vannag');
+      const persisted = await (await page.request.get(apiUrl(`/api/lessons/${lessonId}`))).json();
+      expect(persisted.textContent).toBe(EDITED_TEXT);
+      await page.setViewportSize({ width: 820, height: 1180 });
+      await expect(page.getByTestId('edit-text-button')).toBeVisible();
+    } finally {
+      await page.request.delete(apiUrl(`/api/collections/${collectionId}`));
+    }
+  });
+
+  test('cloud reading difficulty lives in Display and submits once', async ({ page }) => {
+    await page.route('**/__env.js', (route) =>
+      route.fulfill({
+        contentType: 'application/javascript',
+        body: `window.__ENV__ = ${JSON.stringify({ API_URL: new URL(apiUrl('/')).origin, LECTOR_MODE: 'cloud' })};`,
+      }),
+    );
+    await page.route('**/api/bootstrap', async (route) => {
+      const response = await route.fetch();
+      await route.fulfill({
+        json: { ...(await response.json()), mode: 'cloud', targetLanguage: 'af' },
+      });
+    });
+    await page.route('**/api/product-analytics', (route) => route.fulfill({ json: { ok: true } }));
+    const { collectionId, lessonId } = await createLesson(page);
+    try {
+      await page.goto(`/read/${lessonId}`);
+      await expect(page.getByTestId('reading-difficulty')).toBeHidden();
+      await page.getByTestId('reader-display-menu-btn').click();
+      const choices = page.getByTestId('native-reading-difficulty');
+      await expect(choices).toBeVisible();
+      const request = page.waitForRequest(
+        (request) =>
+          request.url().endsWith('/api/product-analytics') &&
+          request.postDataJSON()?.data?.event === 'reading_difficulty',
+      );
+      await choices.getByRole('menuitem').nth(1).click();
+      expect((await request).postDataJSON().data).toMatchObject({
+        outcome: 'just_right',
+        lessonId,
+        language: 'af',
+      });
+      await page.getByTestId('reader-display-menu-btn').click();
+      await expect(page.getByTestId('native-reading-difficulty')).toHaveCount(0);
+    } finally {
+      await page.request.delete(apiUrl(`/api/collections/${collectionId}`));
+    }
+  });
+});

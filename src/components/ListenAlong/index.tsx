@@ -525,7 +525,9 @@ export default function ListenAlong(props: ListenAlongProps) {
           )}
           <span className="hidden sm:inline">{t('back')}</span>
         </button>
-        <h1 className="mx-2 flex-1 truncate text-center text-sm font-medium text-foreground sm:text-lg">
+        <h1
+          className={`mx-2 min-w-0 flex-1 truncate text-center text-sm font-medium text-foreground sm:text-lg ${inApp ? 'max-sm:text-[17px] max-sm:font-semibold' : ''}`}
+        >
           {lesson.title}
         </h1>
         <button
@@ -644,7 +646,7 @@ export default function ListenAlong(props: ListenAlongProps) {
             <div
               className={
                 inApp
-                  ? 'flex rounded-xl bg-muted p-1 text-xs'
+                  ? 'native-segment-track flex rounded-xl bg-[var(--ios-fill)] p-1 text-xs'
                   : 'flex rounded-lg border border-border p-0.5 text-xs'
               }
             >

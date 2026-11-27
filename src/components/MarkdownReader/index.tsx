@@ -596,7 +596,7 @@ export default function MarkdownReader({
     <div className="reader-page flex h-full min-h-0 flex-col bg-card print:block print:h-auto">
       {/* Header */}
       <header
-        className={`reader-header flex shrink-0 items-center justify-between gap-1 border-b border-border px-2 pb-1.5 sm:px-4 sm:pb-2 print:border-0 print:px-0 ${inApp ? 'bg-card/85 pt-[env(safe-area-inset-top)] backdrop-blur-md' : 'pt-1.5 sm:pt-2'}`}
+        className={`reader-header flex shrink-0 items-center justify-between gap-1 border-b border-border px-2 pb-1.5 sm:px-4 sm:pb-2 print:border-0 print:px-0 ${inApp ? 'bg-card/85 pt-[env(safe-area-inset-top)] backdrop-blur-md max-sm:gap-0 max-sm:px-1' : 'pt-1.5 sm:pt-2'}`}
       >
         <button
           onClick={onClose}
@@ -671,7 +671,9 @@ export default function MarkdownReader({
             </Button>
           </div>
         ) : (
-          <div className="flex shrink-0 items-center gap-1 sm:gap-2 print:hidden">
+          <div
+            className={`flex shrink-0 items-center gap-1 sm:gap-2 print:hidden ${inApp ? 'max-sm:gap-0' : ''}`}
+          >
             <div className={inApp ? 'hidden sm:block' : undefined}>
               <DailyGoalBadge compact />
             </div>
@@ -697,7 +699,7 @@ export default function MarkdownReader({
                 type="button"
                 aria-label={tChat('open')}
                 data-testid="native-chat"
-                className="flex size-11 shrink-0 items-center justify-center text-foreground active:opacity-60"
+                className="flex size-11 shrink-0 items-center justify-center text-foreground active:opacity-60 max-sm:order-2"
                 onClick={() => {
                   void haptic();
                   window.dispatchEvent(new Event(CHAT_TOGGLE_EVENT));
@@ -706,14 +708,16 @@ export default function MarkdownReader({
                 <MessageCircle className="size-[22px]" aria-hidden />
               </button>
             )}
-            {headerAction}
+            {typeof headerAction === 'function'
+              ? headerAction(inApp && canEdit ? startEdit : undefined)
+              : headerAction}
             {canEdit && (
               <button
                 onClick={startEdit}
                 data-testid="edit-text-button"
                 title={t('editText')}
                 aria-label={t('editText')}
-                className="flex min-h-11 min-w-11 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent active:opacity-60"
+                className={`flex min-h-11 min-w-11 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent active:opacity-60 ${inApp ? 'max-sm:hidden' : ''}`}
               >
                 <SquarePen className="h-5 w-5" />
               </button>

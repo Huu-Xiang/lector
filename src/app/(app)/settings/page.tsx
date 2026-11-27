@@ -78,7 +78,12 @@ export default function SettingsPage() {
       >
         <PageHeader title={t('pageTitle')} />
         <SettingsGroups>
-          <CompactDisclosure name="settings-groups" title={t('groups.languages')} icon={Globe2}>
+          <CompactDisclosure
+            name="settings-groups"
+            title={t('groups.languages')}
+            icon={Globe2}
+            iconClassName="bg-blue-500/12 text-blue-600 dark:text-blue-400 sm:dark:text-primary"
+          >
             <section className="panel space-y-4 p-4" data-testid="language-preferences">
               <InterfaceLanguage compact />
               <NativeLanguage compact />
@@ -91,6 +96,7 @@ export default function SettingsPage() {
             name="settings-groups"
             title={t('groups.reading')}
             icon={BookOpen}
+            iconClassName="bg-emerald-500/12 text-emerald-600 dark:text-emerald-400 sm:dark:text-primary"
             anchors="daily-goal review-goal product-emails"
           >
             <DailyGoalSettings compact />
@@ -102,6 +108,7 @@ export default function SettingsPage() {
             name="settings-groups"
             title={t('groups.appearance')}
             icon={LayoutGrid}
+            iconClassName="bg-indigo-500/12 text-indigo-600 dark:text-indigo-400 sm:dark:text-primary"
           >
             {(isIPadApp() || hasNativeTabBar()) && <MobileTabs />}
             <ThemeSettings />
@@ -110,6 +117,7 @@ export default function SettingsPage() {
             name="settings-groups"
             title={t('groups.account')}
             icon={UserRound}
+            iconClassName="bg-amber-500/12 text-amber-600 dark:text-amber-400 sm:dark:text-primary"
             anchors="plan"
           >
             {cloud && <CloudPlanSettings />}
@@ -121,23 +129,39 @@ export default function SettingsPage() {
             name="settings-groups"
             title={t('groups.integrations')}
             icon={SlidersHorizontal}
+            iconClassName="bg-violet-500/12 text-violet-600 dark:text-violet-400 sm:dark:text-primary"
             anchors="byok anki-integration"
           >
             {cloud ? <BYOKSettings /> : <LLMSettings />}
             <AnkiSettings />
             <TTSSettings />
           </CompactDisclosure>
-          <CompactDisclosure name="settings-groups" title={t('groups.data')} icon={HardDrive}>
+          <CompactDisclosure
+            name="settings-groups"
+            title={t('groups.data')}
+            icon={HardDrive}
+            iconClassName="bg-teal-500/12 text-teal-600 dark:text-teal-400 sm:dark:text-primary"
+          >
             <KnownWordsImport />
             <Export />
             <DataManagement />
           </CompactDisclosure>
-          <CompactDisclosure name="settings-groups" title={t('groups.security')} icon={Shield}>
+          <CompactDisclosure
+            name="settings-groups"
+            title={t('groups.security')}
+            icon={Shield}
+            iconClassName="bg-rose-500/12 text-rose-600 dark:text-rose-400 sm:dark:text-primary"
+          >
             <TwoFactorSettings />
             <APITokens />
             <DeleteAccount />
           </CompactDisclosure>
-          <CompactDisclosure name="settings-groups" title={t('about.title')} icon={Info}>
+          <CompactDisclosure
+            name="settings-groups"
+            title={t('about.title')}
+            icon={Info}
+            iconClassName="bg-slate-500/12 text-slate-600 dark:text-slate-400 sm:dark:text-primary"
+          >
             <VersionInfo hideTitle />
           </CompactDisclosure>
         </SettingsGroups>
@@ -194,7 +218,7 @@ function SettingsGroups({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <div className="divide-y divide-border overflow-hidden rounded-2xl border border-border/60 bg-card sm:rounded-xl sm:border-border">
+    <div className="overflow-hidden rounded-2xl border border-border/60 bg-card sm:divide-y sm:divide-border sm:rounded-xl sm:border-border [&>details]:relative [&>details+details]:before:pointer-events-none [&>details+details]:before:absolute [&>details+details]:before:top-0 [&>details+details]:before:right-0 [&>details+details]:before:left-14 [&>details+details]:before:border-t [&>details+details]:before:border-border/60 sm:[&>details+details]:before:hidden">
       {children}
     </div>
   );

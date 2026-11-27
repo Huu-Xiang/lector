@@ -318,13 +318,14 @@ export default function VocabList({
   const someSelected = selectedIds.size > 0;
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="native-vocab-list-page flex flex-col gap-4" data-testid="vocab-list">
       {/* Filters and Search */}
       <div className="flex flex-wrap items-center gap-4">
         {/* Search */}
         <div className="min-w-[200px] flex-1">
           <input
             type="text"
+            data-testid="vocab-search-input"
             placeholder={t('searchPlaceholder')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -351,7 +352,7 @@ export default function VocabList({
         {/* Book Filter */}
         <Select
           className="min-h-11 sm:min-h-0"
-          wrapperClassName="inline-block max-w-full min-w-0"
+          wrapperClassName="w-full max-w-full min-w-0 sm:inline-block sm:w-auto"
           value={bookFilter}
           onChange={(e) => setBookFilter(e.target.value)}
         >
@@ -458,27 +459,31 @@ export default function VocabList({
 
       {/* Results count — the filtered total (the page footer shows the visible
           range). The page count itself is paginated below. */}
-      <div className="text-sm text-muted-foreground">
-        {someSelected
-          ? t('resultsSelected', {
-              filtered: filteredEntries.length,
-              total: visibleBaseTotal,
-              selected: selectedIds.size,
-            })
-          : t('results', { filtered: filteredEntries.length, total: visibleBaseTotal })}
-      </div>
-
-      {nativeApp && (
-        <div className="sm:hidden" data-testid="native-vocab-list">
-          <div className="mb-2 flex items-center justify-end gap-2">
+      <div
+        className={`${nativeApp ? 'flex min-h-11 items-center justify-between gap-2 sm:block sm:min-h-0' : ''} text-sm text-muted-foreground`}
+        data-testid="vocab-results-bar"
+      >
+        <span>
+          {someSelected
+            ? t('resultsSelected', {
+                filtered: filteredEntries.length,
+                total: visibleBaseTotal,
+                selected: selectedIds.size,
+              })
+            : t('results', { filtered: filteredEntries.length, total: visibleBaseTotal })}
+        </span>
+        {nativeApp && (
+          <div className="flex shrink-0 items-center gap-2 sm:hidden">
             {editing && (
-              <input
-                type="checkbox"
-                checked={allSelected}
-                aria-label={t('columns.text')}
-                onChange={(event) => handleSelectAll(event.target.checked)}
-                className="size-11 shrink-0 accent-primary"
-              />
+              <label className="flex size-11 shrink-0 cursor-pointer items-center justify-center">
+                <input
+                  type="checkbox"
+                  checked={allSelected}
+                  aria-label={t('columns.text')}
+                  onChange={(event) => handleSelectAll(event.target.checked)}
+                  className="size-[20px] accent-primary"
+                />
+              </label>
             )}
             <Button
               variant="ghost"
@@ -493,6 +498,11 @@ export default function VocabList({
               {editing ? tDetail('cancel') : tDetail('edit')}
             </Button>
           </div>
+        )}
+      </div>
+
+      {nativeApp && (
+        <div className="sm:hidden" data-testid="native-vocab-list">
           <ul className="overflow-hidden rounded-2xl border border-border/60 bg-card">
             {paginatedEntries.map((entry) => (
               <li
@@ -500,13 +510,15 @@ export default function VocabList({
                 className="flex items-center border-b border-border/60 last:border-0"
               >
                 {editing && (
-                  <input
-                    type="checkbox"
-                    checked={selectedIds.has(entry.id)}
-                    aria-label={entry.text}
-                    onChange={(event) => handleSelect(entry.id, event.target.checked)}
-                    className="ms-2 size-11 shrink-0 accent-primary"
-                  />
+                  <label className="ms-2 flex size-11 shrink-0 cursor-pointer items-center justify-center">
+                    <input
+                      type="checkbox"
+                      checked={selectedIds.has(entry.id)}
+                      aria-label={entry.text}
+                      onChange={(event) => handleSelect(entry.id, event.target.checked)}
+                      className="size-[20px] accent-primary"
+                    />
+                  </label>
                 )}
                 <button
                   type="button"

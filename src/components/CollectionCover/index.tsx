@@ -75,7 +75,7 @@ export default function CollectionCover({
               {author}
             </p>
           )}
-          <p className="mt-1 line-clamp-5 font-serif text-xs leading-snug font-semibold text-foreground sm:text-sm">
+          <p className="mt-1 line-clamp-5 pr-7 font-serif text-xs leading-snug font-semibold text-foreground sm:pr-0 sm:text-sm">
             {title}
           </p>
           <div className="mt-auto space-y-1.5 pt-3">

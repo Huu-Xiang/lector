@@ -870,6 +870,7 @@ html {
 /* `data-native-app` is set before paint by the script in layout.tsx; `data-native-tabbar`
    when the shell draws a UITabBar over the page. */
 html[data-native-app] {
+  --ios-fill: color-mix(in srgb, var(--foreground) 7.5%, transparent);
   --app-bottom-bar: calc(4rem + env(safe-area-inset-bottom));
   -webkit-tap-highlight-color: transparent;
   /* The root size follows the iOS text size setting (17px at the default), so every rem
@@ -1544,6 +1545,7 @@ html[data-native-app] [data-slot='button'] {
 }
 
 html[data-native-app].dark {
+  --ios-fill: rgba(255, 255, 255, 0.09);
   --background: #17140f;
   --card: #221e17;
   --popover: #2b261d;
@@ -1557,7 +1559,8 @@ html[data-native-app].dark {
 }
 
 @media (width < 40rem) {
-  html[data-native-app] :is(button, a, input, select, summary) {
+  html[data-native-app]
+    :is(button, a, input:not([type='checkbox'], [type='radio'], [type='range']), select, summary) {
     min-height: 44px;
     min-width: 44px;
   }
@@ -1599,8 +1602,15 @@ html[data-native-app].dark {
   }
 
   html[data-native-app] .native-library-actions [data-testid='free-books-btn'] {
-    display: block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     flex: 1 1 0;
+    min-width: 0;
+  }
+
+  html[data-native-app] .native-library-actions [data-testid='free-books-btn'] > span {
+    min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -1613,14 +1623,14 @@ html[data-native-app].dark {
   html[data-native-app] [data-testid='library-search-input'] {
     border: 0;
     border-radius: 12px;
-    background: color-mix(in srgb, var(--muted) 80%, transparent);
+    background: var(--ios-fill);
     box-shadow: none;
   }
 
   html[data-native-app] .native-library-view {
     border: 0;
     border-radius: 12px;
-    background: var(--muted);
+    background: var(--ios-fill);
     padding: 2px;
   }
 
@@ -1633,7 +1643,7 @@ html[data-native-app].dark {
 
 @media (prefers-reduced-transparency: reduce) {
   html[data-native-app] .native-topbar::before,
-  html[data-native-app] .reader-page > header {
+  html[data-native-app] .reader-page .reader-header {
     background: var(--card);
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
@@ -1651,7 +1661,7 @@ html[data-native-app].dark {
   html[data-native-app] .native-segment-track {
     gap: 4px;
     border-radius: 12px;
-    background: var(--muted);
+    background: var(--ios-fill);
     padding: 4px;
   }
 
@@ -1676,6 +1686,19 @@ html[data-native-app].dark {
 }
 
 @media (width < 40rem) {
+  html[data-native-app] [data-testid='stats-range-selector'] {
+    background: var(--ios-fill);
+  }
+
+  html[data-native-app] .native-vocab-list-page :is(input[type='text'], select) {
+    border-radius: 12px;
+  }
+
+  html[data-native-app] .native-vocab-list-page input[type='text'] {
+    border-color: transparent;
+    background: var(--ios-fill);
+  }
+
   html[data-native-app] [data-testid='stats-range-selector'] [aria-pressed='true'] {
     background: var(--card);
     color: var(--foreground);

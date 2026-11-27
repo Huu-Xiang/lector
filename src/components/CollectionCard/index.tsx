@@ -34,9 +34,9 @@ export default function CollectionCard({ collection }: CollectionCardProps) {
       aria-label={t('details', { title })}
       title={t('details', { title })}
       data-testid="collection-details"
-      className="absolute top-0 right-0 flex size-11 items-center justify-center text-muted-foreground transition-opacity hover:text-foreground sm:top-2 sm:right-2 sm:size-8 sm:rounded-md sm:bg-card/90 sm:opacity-70 sm:shadow-sm sm:group-hover:opacity-100 sm:before:absolute sm:before:-inset-1.5 sm:focus-visible:opacity-100"
+      className="absolute top-0 right-0 flex size-11 items-start justify-end p-1.5 text-muted-foreground transition-opacity hover:text-foreground sm:top-2 sm:right-2 sm:size-8 sm:items-center sm:justify-center sm:rounded-md sm:bg-card/90 sm:p-0 sm:opacity-70 sm:shadow-sm sm:group-hover:opacity-100 sm:before:absolute sm:before:-inset-1.5 sm:focus-visible:opacity-100"
     >
-      <span className="flex size-7 items-center justify-center rounded-full bg-card/85 shadow-sm backdrop-blur-sm sm:contents">
+      <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-card/90 shadow-xs ring-1 ring-border/40 sm:contents">
         <Ellipsis className="size-4" aria-hidden="true" />
       </span>
     </Link>

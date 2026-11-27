@@ -30,6 +30,16 @@ async function expectPhoneGeometry(page: Page) {
       smallControls: [...document.querySelectorAll('button,a,input,select')]
         .filter(visible)
         .filter((element) => {
+          if (
+            element instanceof HTMLInputElement &&
+            ['checkbox', 'radio', 'range'].includes(element.type)
+          ) {
+            const label = element.labels?.[0];
+            if (label) {
+              const hitBox = label.getBoundingClientRect();
+              return hitBox.width < 44 || hitBox.height < 44;
+            }
+          }
           const box = element.getBoundingClientRect();
           return box.width < 44 || box.height < 44;
         })
@@ -58,6 +68,36 @@ test('native pages fill the phone and retain accessible control sizes', async ({
       .poll(async () => Math.round((await page.getByRole('main').boundingBox())!.width))
       .toBe(393);
     await expectPhoneGeometry(page);
+    if (path === '/' || path === '/stats' || path === '/practice') {
+      for (const colorScheme of ['light', 'dark'] as const) {
+        await page.evaluate((scheme) => {
+          document.documentElement.classList.toggle('dark', scheme === 'dark');
+        }, colorScheme);
+        const tracks = page.locator(
+          '.native-segment-track, .native-library-view, [data-testid="library-search-input"], [data-testid="stats-range-selector"]',
+        );
+        for (const track of await tracks.all()) {
+          if (!(await track.isVisible())) continue;
+          const surface = await track.evaluate((element) => {
+            const style = getComputedStyle(element);
+            const probe = document.createElement('span');
+            probe.style.background = 'var(--ios-fill)';
+            element.appendChild(probe);
+            const fill = getComputedStyle(probe).backgroundColor;
+            probe.remove();
+            return {
+              background: style.backgroundColor,
+              fill,
+              radius: parseFloat(style.borderRadius),
+            };
+          });
+          expect(surface.background).toBe(surface.fill);
+          expect(surface.background).not.toBe('rgba(0, 0, 0, 0)');
+          expect(surface.radius).toBeGreaterThanOrEqual(12);
+        }
+      }
+      await page.evaluate(() => document.documentElement.classList.remove('dark'));
+    }
     if (path === '/settings') {
       for (const summary of await page.getByTestId('iphone-settings').locator('summary').all()) {
         await summary.click();
@@ -77,7 +117,7 @@ test('reader and ListenAlong keep chat in the header and transport inside the sc
     }),
   );
   const response = await page.request.post(apiUrl('/api/collections'), {
-    data: { title: 'iPhone layout', language: 'af' },
+    data: { title: 'Morning Walk in Kyoto', language: 'af' },
   });
   expect(response.ok()).toBeTruthy();
   const { id } = await response.json();
@@ -90,6 +130,21 @@ test('reader and ListenAlong keep chat in the header and transport inside the sc
     });
     expect(lessonResponse.ok()).toBeTruthy();
     const lessons = await (await page.request.get(apiUrl(`/api/collections/${id}/lessons`))).json();
+    await page.goto('/');
+    const details = page
+      .getByTestId('collection-details')
+      .and(page.getByRole('link', { name: /Morning Walk in Kyoto/ }));
+    await expect(details).toBeVisible();
+    const cover = details.locator('..').getByTestId('collection-cover');
+    const title = cover.locator('p').filter({ hasText: 'Morning Walk in Kyoto' });
+    await expect(title).toBeVisible();
+    const textEdge = await title.evaluate((element) => {
+      const range = document.createRange();
+      range.selectNodeContents(element);
+      return Math.max(...Array.from(range.getClientRects(), (rect) => rect.right));
+    });
+    const circle = (await details.locator('span').boundingBox())!;
+    expect(textEdge).toBeLessThanOrEqual(circle.x);
     await page.goto(`/read/${lessons[0].id}`);
     await expect(page.getByTestId('native-chat')).toBeVisible();
     await expect(page.locator('[data-chat-toggle]')).toHaveCount(0);

@@ -527,7 +527,7 @@ export default function Home() {
             data-testid="free-books-btn"
           >
             <BookMarked size="16" />
-            {t('freeBooks.button')}
+            <span>{t('freeBooks.button')}</span>
           </Button>
 
           <ImportDropdown

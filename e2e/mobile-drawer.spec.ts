@@ -8,13 +8,13 @@ const LONG_TEXT = Array.from(
     `Paragraaf ${n + 1}. Die Perdekraal-fees is baie gewild. Ons gaan na die Klein-Karoo toe.`,
 ).join('\n\n');
 
-async function openLesson(page: Page): Promise<string> {
+async function openLesson(page: Page, textContent = LONG_TEXT): Promise<string> {
   const colRes = await page.request.post(apiUrl('/api/collections'), {
     data: { title: TITLE, language: 'af' },
   });
   const { id: collectionId } = await colRes.json();
   await page.request.post(apiUrl(`/api/collections/${collectionId}/lessons`), {
-    data: { title: 'Hoofstuk 1', textContent: LONG_TEXT },
+    data: { title: 'Hoofstuk 1', textContent },
   });
   const lessons = await (
     await page.request.get(apiUrl(`/api/collections/${collectionId}/lessons`))
@@ -178,6 +178,75 @@ test.describe('iOS lookup sheet', () => {
     viewport: { width: 375, height: 667 },
     userAgent: 'Mozilla/5.0 (iPhone) AppleWebKit/605.1.15 Mobile/15E148 ReadfoxApp/1',
   });
+
+  for (const size of [
+    { width: 375, height: 667 },
+    { width: 393, height: 852 },
+  ]) {
+    test(`${size.width}px: compact capsules and complete context lines fit the lookup sheet`, async ({
+      page,
+    }) => {
+      await page.setViewportSize(size);
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.route('**/api/dictionary/lookup?*', (route) =>
+        route.fulfill({ json: { entry: null } }),
+      );
+      await page.route('**/api/translate/gloss', (route) =>
+        route.fulfill({ contentType: 'text/plain', body: 'A festival.' }),
+      );
+      const previousAutoSave = await (
+        await page.request.get(apiUrl('/api/settings/autoSaveLookups'))
+      ).json();
+      await page.request.put(apiUrl('/api/settings/autoSaveLookups'), { data: { value: false } });
+      const collectionId = await openLesson(
+        page,
+        'Die Glansfees is baie gewild onder al die mense wat elke jaar van ver af kom om saam met hulle familie die musiek en lekker kos te geniet.',
+      );
+      try {
+        await page.getByRole('button', { name: 'Look up Glansfees' }).first().click();
+        const drawer = page.getByTestId('translation-drawer');
+        await expect(drawer.getByText('A festival.', { exact: true }).first()).toBeInViewport();
+        const sentence = drawer.getByTestId('lookup-original-sentence');
+        await expect(sentence).toBeInViewport();
+        await expect(sentence.locator('p')).toHaveCSS('-webkit-line-clamp', '2');
+        const context = drawer.getByTestId('request-word-context');
+        await expect(context).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+        const capsuleHeight = (await context.locator('span').first().boundingBox())!.height;
+        const rem = await page.evaluate(() =>
+          parseFloat(getComputedStyle(document.documentElement).fontSize),
+        );
+        expect(capsuleHeight).toBeCloseTo(rem * 2, 1);
+        const heading = await drawer.locator('h2').boundingBox();
+        expect(Math.abs((await context.boundingBox())!.y - heading!.y)).toBeLessThan(24);
+        if (size.width === 393) {
+          const explain = drawer.getByTestId('explain-sentence-btn');
+          const enrich = drawer.getByTestId('enrich-word-btn');
+          await expect(explain).toBeInViewport({ ratio: 1 });
+          await expect(enrich).toBeInViewport({ ratio: 1 });
+          const explainBox = (await explain.boundingBox())!;
+          const enrichBox = (await enrich.boundingBox())!;
+          const footerBox = (await drawer.getByTestId('lookup-footer').boundingBox())!;
+          expect(Math.abs(explainBox.y - enrichBox.y)).toBeLessThan(1);
+          for (const box of [explainBox, enrichBox]) {
+            expect(box.height).toBeGreaterThanOrEqual(44);
+            expect(box.width).toBeGreaterThanOrEqual(44);
+            expect(box.y + box.height).toBeLessThanOrEqual(footerBox.y);
+          }
+        }
+        await drawer.getByTestId('translation-drawer-handle').click();
+        await expect(sentence.locator('p')).toHaveCSS('-webkit-line-clamp', 'none');
+      } finally {
+        await page.request.delete(apiUrl(`/api/collections/${collectionId}`));
+        if (previousAutoSave === null) {
+          await page.request.delete(apiUrl('/api/settings/autoSaveLookups'));
+        } else {
+          await page.request.put(apiUrl('/api/settings/autoSaveLookups'), {
+            data: { value: previousAutoSave },
+          });
+        }
+      }
+    });
+  }
 
   test('keeps definitions above a compact footer and reveals word actions on demand', async ({
     page,

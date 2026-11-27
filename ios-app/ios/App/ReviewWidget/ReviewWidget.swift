@@ -159,7 +159,7 @@ struct ReviewWidgetView: View {
             }
         }
         .accessibilityElement(children: .combine)
-        .accessibilityLabel(Text("widget.name") + Text(": ") + circularAccessibilityLabel)
+        .accessibilityLabel(Text("\(Text("widget.name")): \(circularAccessibilityLabel)"))
     }
 
     private var circularAccessibilityLabel: Text {

@@ -267,15 +267,22 @@ export default function TranslationDrawer({
         onClick={onRequestContextTranslation}
         data-testid="request-word-context"
         className={clsx(
-          'inline-flex shrink-0 items-center gap-1 rounded-md px-2 text-xs font-semibold text-[var(--clay)] hover:bg-[var(--clay-soft)]',
           compact
-            ? 'min-h-11 max-w-[45%] min-w-11 rounded-full bg-[var(--clay-soft)] whitespace-normal'
-            : 'mt-3 bg-[var(--clay-soft)] py-1',
+            ? 'inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center'
+            : 'mt-3 inline-flex shrink-0 items-center gap-1 rounded-md bg-[var(--clay-soft)] px-2 py-1 text-xs font-semibold text-[var(--clay)] hover:bg-[var(--clay-soft)]',
         )}
         title={t('inContextTitle')}
       >
-        <Zap className="size-3 shrink-0" aria-hidden />
-        {contextError ? t('contextRetry') : t('inContext')}
+        <span
+          className={
+            compact
+              ? 'inline-flex h-8 items-center gap-1 rounded-full bg-[var(--clay-soft)] px-2.5 text-xs font-semibold text-[var(--clay)]'
+              : 'contents'
+          }
+        >
+          <Zap className="size-3 shrink-0" aria-hidden />
+          {contextError ? t('contextRetry') : t('inContext')}
+        </span>
       </button>
     );
   const canSaveWord = onSaveWord && currentState === 'new' && !error && !isLoading;
@@ -656,7 +663,10 @@ export default function TranslationDrawer({
     >
       <div className="flex items-start gap-2">
         <TargetText
-          className="min-w-0 flex-1 text-sm leading-relaxed text-muted-foreground italic"
+          className={clsx(
+            'min-w-0 flex-1 text-sm leading-relaxed text-muted-foreground italic',
+            nativeSheet && !nativeDrag.expanded && 'line-clamp-2',
+          )}
           as="p"
         >
           {compact
@@ -945,7 +955,7 @@ export default function TranslationDrawer({
             className="min-h-0 flex-1 overflow-y-auto overscroll-contain"
           >
             {/* Definition section */}
-            <section className={clsx('border-b border-border px-4', compact ? 'py-2' : 'py-4')}>
+            <section className={clsx('border-b border-border px-4', compact ? 'py-1' : 'py-4')}>
               {isLoading ? (
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <span className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
@@ -1079,7 +1089,12 @@ export default function TranslationDrawer({
               )}
 
               {compact && !isLoading && originalSentence}
-              <div className="mt-2 flex flex-wrap items-center gap-2 empty:hidden">
+              <div
+                className={clsx(
+                  'flex flex-wrap items-center gap-2 empty:hidden',
+                  compact ? 'mt-1' : 'mt-2',
+                )}
+              >
                 {!compact && requestContextButton}
                 {onExplainSentence &&
                   sentence.trim() &&
@@ -1092,12 +1107,21 @@ export default function TranslationDrawer({
                       onClick={onExplainSentence}
                       data-testid="explain-sentence-btn"
                       className={clsx(
-                        'inline-flex items-center gap-1 rounded-full bg-muted px-2.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground',
-                        compact ? 'min-h-11 px-3' : 'mt-3 py-1',
+                        compact
+                          ? 'inline-flex min-h-11 min-w-11 items-center'
+                          : 'mt-3 inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground',
                       )}
                     >
-                      <BookOpen className="size-3 shrink-0" aria-hidden />
-                      {sentenceExplainError ? t('explainSentenceRetry') : t('explainSentence')}
+                      <span
+                        className={
+                          compact
+                            ? 'inline-flex h-8 items-center gap-1.5 rounded-full bg-muted px-3 text-xs font-medium text-muted-foreground'
+                            : 'contents'
+                        }
+                      >
+                        <BookOpen className="size-3 shrink-0" aria-hidden />
+                        {sentenceExplainError ? t('explainSentenceRetry') : t('explainSentence')}
+                      </span>
                     </button>
                   )}
                 {onEnrich &&
@@ -1109,14 +1133,24 @@ export default function TranslationDrawer({
                   !isEnriching && (
                     <button
                       onClick={onEnrich}
+                      data-testid="enrich-word-btn"
                       className={clsx(
-                        'inline-flex items-center gap-1.5 rounded-md bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground',
-                        compact && 'min-h-11 min-w-11 rounded-full px-3',
+                        compact
+                          ? 'inline-flex min-h-11 min-w-11 items-center'
+                          : 'inline-flex items-center gap-1.5 rounded-md bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground',
                       )}
                       title={t('enrichTitle')}
                     >
-                      <Sparkles className="h-3 w-3" />
-                      {t('enrich')}
+                      <span
+                        className={
+                          compact
+                            ? 'inline-flex h-8 items-center gap-1.5 rounded-full bg-muted px-3 text-xs font-medium text-muted-foreground'
+                            : 'contents'
+                        }
+                      >
+                        <Sparkles className="h-3 w-3" />
+                        {t('enrich')}
+                      </span>
                     </button>
                   )}
               </div>
@@ -1339,6 +1373,7 @@ export default function TranslationDrawer({
             onAddToAnki ||
             onAddCloze) && (
             <div
+              data-testid="lookup-footer"
               className={clsx(
                 'relative shrink-0 border-t border-border bg-muted/40',
                 compact ? 'px-3 py-1.5' : 'space-y-2 px-4 py-2.5',

@@ -41,6 +41,22 @@ test('native vocabulary keeps row details, optional selection and empty search u
     await expect(page.getByRole('table')).toBeHidden();
     await expect(page.getByTestId('sync-with-anki')).toBeHidden();
     await expect(page.getByText('Anki Disconnected', { exact: true })).toBeHidden();
+    const resultsBar = page.getByTestId('vocab-results-bar');
+    const editButton = page.getByTestId('native-vocab-edit');
+    const countBox = await resultsBar.locator(':scope > span').boundingBox();
+    const editBox = await editButton.boundingBox();
+    expect(countBox).not.toBeNull();
+    expect(editBox).not.toBeNull();
+    expect(
+      Math.abs(countBox!.y + countBox!.height / 2 - editBox!.y - editBox!.height / 2),
+    ).toBeLessThan(2);
+    const collections = page
+      .getByRole('combobox')
+      .filter({ has: page.getByRole('option', { name: 'All Collections', exact: true }) });
+    const collectionBox = await collections.boundingBox();
+    expect(collectionBox).not.toBeNull();
+    expect(collectionBox!.x).toBe(16);
+    expect(collectionBox!.x + collectionBox!.width).toBe(377);
     await list.getByRole('button', { name: new RegExp(word) }).click();
     await expect(page.getByRole('dialog')).toBeVisible();
     await page.keyboard.press('Escape');
@@ -49,9 +65,14 @@ test('native vocabulary keeps row details, optional selection and empty search u
     const checkbox = list.getByRole('checkbox', { name: word, exact: true });
     await checkbox.check();
     await expect(checkbox).toBeChecked();
-    const box = await checkbox.boundingBox();
-    expect(box?.width).toBeGreaterThanOrEqual(44);
-    expect(box?.height).toBeGreaterThanOrEqual(44);
+    for (const target of [checkbox, resultsBar.getByRole('checkbox')]) {
+      const box = await target.locator('..').boundingBox();
+      expect(box?.width).toBeGreaterThanOrEqual(44);
+      expect(box?.height).toBeGreaterThanOrEqual(44);
+      const inputBox = await target.boundingBox();
+      expect(inputBox?.width).toBe(20);
+      expect(inputBox?.height).toBe(20);
+    }
     await expect(page.getByRole('button', { name: /Mark.*known/i })).toBeVisible();
     await page.getByTestId('native-vocab-edit').click();
     await expect(list.getByRole('checkbox')).toHaveCount(0);
