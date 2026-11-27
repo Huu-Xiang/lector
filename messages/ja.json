@@ -515,6 +515,20 @@
       "autoSaveOn": "オン",
       "autoSaveOff": "オフ",
       "autoSaveFailed": "この設定を保存できませんでした。もう一度お試しください。",
+      "autoPronounceLabel": "単語クリック時に自動発音",
+      "autoPronounceHint": "リーダーで単語をクリックしたときに自動で読み上げます。初期設定はオフで、スピーカーボタンからいつでも発音できます。",
+      "wordHighlightLabel": "リーダー本文の単語マーク",
+      "wordHighlightHint": "読書中に本文の単語をどのように表示するか選びます。",
+      "wordHighlightMode": {
+        "saved": "保存した単語を淡く表示",
+        "smart": "知らない単語を予測",
+        "clean": "マークなし（紙の本）"
+      },
+      "wordHighlightModeHint": {
+        "saved": "下線の代わりに、学習中の単語だけを淡い背景色で示します。",
+        "smart": "読書レベルより難しいと予測される単語にも、さりげない点線を付けます。",
+        "clean": "本文に単語マークを付けず、紙の本のように読めます。"
+      },
       "reviewGoal": {
         "recognize": "見て分かる",
         "recognize_spell": "見て分かり、書ける"
@@ -2442,7 +2456,23 @@
       "markRemainingKnown": "残りを既知にする ({count})",
       "markedRemainingKnown": "{count} 語を既知にしました",
       "undoMarkRemaining": "元に戻す",
-      "reviewChapterWords": "保存した単語を復習 ({count})"
+      "reviewChapterWords": "保存した単語を復習 ({count})",
+      "displayMenu": "表示と発音の設定",
+      "wordMarking": "本文の単語マーク",
+      "markingMode": {
+        "saved": "保存した単語を淡く表示",
+        "smart": "知らない単語を予測",
+        "clean": "マークなし（紙の本）"
+      },
+      "markingModeHint": {
+        "saved": "学習中の単語だけを淡い背景色で示し、下線をなくします。",
+        "smart": "読書レベルを超える単語に、さりげない点線を付けます。",
+        "clean": "本文にマークを付けず、紙の本のように読めます。"
+      },
+      "audioSection": "発音",
+      "autoPronounce": "単語クリック時に自動発音",
+      "autoPronounceHint": "初期設定はオフ。スピーカーアイコンでいつでも聞けます。",
+      "settingSaveFailed": "この設定を保存できませんでした。もう一度お試しください。"
     },
     "markdown": {
       "saveFailed": "保存に失敗しました",

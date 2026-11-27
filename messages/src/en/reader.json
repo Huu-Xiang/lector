@@ -45,7 +45,23 @@
       "markRemainingKnown": "Mark remaining known ({count})",
       "markedRemainingKnown": "{count, plural, one {# word marked as known} other {# words marked as known}}",
       "undoMarkRemaining": "Undo",
-      "reviewChapterWords": "Review saved words ({count})"
+      "reviewChapterWords": "Review saved words ({count})",
+      "displayMenu": "Reading display & audio",
+      "wordMarking": "Word marking",
+      "markingMode": {
+        "saved": "Soft tint on saved",
+        "smart": "Smart unfamiliar hints",
+        "clean": "Clean paper"
+      },
+      "markingModeHint": {
+        "saved": "Light warm tint for words you are learning; no heavy underlines.",
+        "smart": "Gently underline words predicted above your reading level.",
+        "clean": "Plain book text with no word markings."
+      },
+      "audioSection": "Pronunciation",
+      "autoPronounce": "Auto-pronounce on word click",
+      "autoPronounceHint": "Off by default. Tap the speaker icon anytime to hear a word.",
+      "settingSaveFailed": "Could not save this setting. Try again."
     },
     "markdown": {
       "saveFailed": "Failed to save",

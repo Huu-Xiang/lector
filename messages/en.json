@@ -515,6 +515,20 @@
       "autoSaveOn": "On",
       "autoSaveOff": "Off",
       "autoSaveFailed": "Could not save this setting. Try again.",
+      "autoPronounceLabel": "Auto-pronounce on word click",
+      "autoPronounceHint": "Speak words automatically when you click them in the reader. Off by default; you can always tap the speaker button.",
+      "wordHighlightLabel": "Word marking in reader",
+      "wordHighlightHint": "Choose how vocabulary is marked while reading.",
+      "wordHighlightMode": {
+        "saved": "Soft tint on saved words",
+        "smart": "Smart unfamiliar hints",
+        "clean": "Clean paper"
+      },
+      "wordHighlightModeHint": {
+        "saved": "Mark words you are learning with a light warm background tint instead of underlines.",
+        "smart": "Also lightly mark words predicted to be above your reading level.",
+        "clean": "No word markings in the body text — read like a printed book."
+      },
       "reviewGoal": {
         "recognize": "Recognize",
         "recognize_spell": "Recognize and spell"
@@ -2442,7 +2456,23 @@
       "markRemainingKnown": "Mark remaining known ({count})",
       "markedRemainingKnown": "{count, plural, one {# word marked as known} other {# words marked as known}}",
       "undoMarkRemaining": "Undo",
-      "reviewChapterWords": "Review saved words ({count})"
+      "reviewChapterWords": "Review saved words ({count})",
+      "displayMenu": "Reading display & audio",
+      "wordMarking": "Word marking",
+      "markingMode": {
+        "saved": "Soft tint on saved",
+        "smart": "Smart unfamiliar hints",
+        "clean": "Clean paper"
+      },
+      "markingModeHint": {
+        "saved": "Light warm tint for words you are learning; no heavy underlines.",
+        "smart": "Gently underline words predicted above your reading level.",
+        "clean": "Plain book text with no word markings."
+      },
+      "audioSection": "Pronunciation",
+      "autoPronounce": "Auto-pronounce on word click",
+      "autoPronounceHint": "Off by default. Tap the speaker icon anytime to hear a word.",
+      "settingSaveFailed": "Could not save this setting. Try again."
     },
     "markdown": {
       "saveFailed": "Failed to save",

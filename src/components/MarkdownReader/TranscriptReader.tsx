@@ -15,6 +15,7 @@ import {
   type HighlightedPhrase,
 } from './utils';
 import { wordReading, type AnnotationMode } from './annotation';
+import type { WordHighlightMode } from './theme';
 import { readerWrapClass } from './wrap';
 import { proseStyleVars, type ProseStyle } from '@/lib/prose-style';
 import WordCell from '@/components/WordCell';
@@ -42,6 +43,8 @@ interface TranscriptReaderProps {
    */
   segmentation: WordSegmentation | null;
   knownWordsMap: Map<string, WordState>;
+  wordHighlightMode?: WordHighlightMode;
+  smartHintWords?: ReadonlySet<string> | null;
   /** Folded word -> pronunciation for the ruby layer (#289 4.4). */
   readings: Map<string, string> | null;
   annotationMode: AnnotationMode;
@@ -77,6 +80,8 @@ function TranscriptReader({
   prose,
   segmentation,
   knownWordsMap,
+  wordHighlightMode = 'saved',
+  smartHintWords = null,
   readings,
   annotationMode,
   highlightedPhrase,
@@ -179,11 +184,17 @@ function TranscriptReader({
                 const thisIndex = wordIndex;
                 const key = foldWord(part.text, pack);
                 const state = lookupByVocabKeys(knownWordsMap, part.text, pack);
+                const isSmartHint =
+                  wordHighlightMode === 'smart' &&
+                  !!smartHintWords &&
+                  (smartHintWords.has(key) || smartHintWords.has(part.text.toLowerCase()));
                 return (
                   <WordCell
                     key={partIndex}
                     text={part.text}
                     state={state}
+                    highlightMode={wordHighlightMode}
+                    isSmartHint={isSmartHint}
                     wordIndex={thisIndex}
                     isActive={
                       activeWord?.blockId === segmentIndex && activeWord.wordIndex === thisIndex

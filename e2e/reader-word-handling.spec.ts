@@ -133,6 +133,7 @@ test.describe('Reader word handling', () => {
   test('level buttons show the level caption', async ({ page }) => {
     await page.getByRole('button', { name: 'Look up Perdekraal-fees' }).click();
     const drawer = page.getByTestId('translation-drawer');
+    await drawer.getByTestId('drawer-more-actions').click();
     await expect(drawer.getByTestId('word-level-1')).toBeVisible();
     await expect(drawer.getByTestId('word-level-caption')).toBeVisible();
     await expect(drawer.getByTestId('word-level-caption')).toHaveText(
@@ -146,11 +147,12 @@ test.describe('Reader word handling', () => {
     const drawer = page.getByTestId('translation-drawer');
     await expect(drawer.getByText('[translated:')).toBeVisible();
 
+    await drawer.getByTestId('drawer-more-actions').click();
     await drawer.getByTestId('word-level-4').click();
     await expect(drawer.getByTestId('word-level-4')).toHaveClass(/ring-2/);
 
     await drawer.getByTestId('word-level-4').click();
-    await expect(drawer.getByTestId('word-level-4')).not.toHaveClass(/ring-2/);
+    await expect(drawer.getByTestId('save-looked-up-word')).toBeVisible();
     await expect(word).toHaveAttribute('data-word-state', 'new');
   });
 
@@ -244,11 +246,10 @@ test.describe('Reader word handling', () => {
     });
     await page.waitForTimeout(300);
 
-    const levelButton = drawer.locator('button[title="Level 2"]');
-    const classes = await levelButton.getAttribute('class');
-    expect(classes).not.toContain('ring-2');
+    await expect(drawer.getByTestId('save-looked-up-word')).toBeVisible();
 
     await page.keyboard.press('2');
+    const levelButton = drawer.locator('button[title="Level 2"]');
     await expect(levelButton).toHaveClass(/ring-2/, { timeout: 3000 });
   });
 });

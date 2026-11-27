@@ -1,4 +1,4 @@
-import { SCOPE_MAP } from '../auth';
+import { READ_ONLY_POST_PATHS, SCOPE_MAP } from '../auth';
 import { routeMounts, type RouteMount } from '../../routes/registry';
 
 /** One HTTP operation the API serves. */
@@ -60,11 +60,15 @@ export function resourceOf(path: string): string | null {
 }
 
 /** The scope a PAT needs, or null when the resource is not token-accessible. */
-export function scopeFor(resource: string | null, method: string): string | null {
+export function scopeFor(resource: string | null, method: string, path?: string): string | null {
   if (!resource) return null;
   const mapping = SCOPE_MAP[resource];
   if (!mapping) return null;
-  return method === 'GET' || method === 'HEAD' ? mapping.read : mapping.write;
+  const isRead =
+    method === 'GET' ||
+    method === 'HEAD' ||
+    (method === 'POST' && path !== undefined && READ_ONLY_POST_PATHS.has(path));
+  return isRead ? mapping.read : mapping.write;
 }
 
 /**
@@ -98,7 +102,7 @@ export function collectEndpoints(mounts: readonly RouteMount[] = routeMounts): E
         honoPath,
         pathParams: pathParamNames(path),
         resource,
-        scope: scopeFor(resource, method),
+        scope: scopeFor(resource, method, path),
       };
       byKey.set(endpointKey(endpoint), endpoint);
     }

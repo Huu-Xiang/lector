@@ -70,3 +70,25 @@ describe('monolingualExplanations setting', () => {
     expect(validateSettingWrite('monolingualExplanations', null)).not.toBeNull();
   });
 });
+
+describe('autoPronounceOnLookup setting', () => {
+  test('accepts a boolean only', () => {
+    expect(validateSettingWrite('autoPronounceOnLookup', true)).toBeNull();
+    expect(validateSettingWrite('autoPronounceOnLookup', false)).toBeNull();
+    expect(validateSettingWrite('autoPronounceOnLookup', 'true')).not.toBeNull();
+    expect(validateSettingWrite('autoPronounceOnLookup', 0)).not.toBeNull();
+    expect(validateSettingWrite('autoPronounceOnLookup', null)).not.toBeNull();
+  });
+});
+
+describe('wordHighlightMode setting', () => {
+  test('accepts saved, smart, or clean only', () => {
+    expect(validateSettingWrite('wordHighlightMode', 'saved')).toBeNull();
+    expect(validateSettingWrite('wordHighlightMode', 'smart')).toBeNull();
+    expect(validateSettingWrite('wordHighlightMode', 'clean')).toBeNull();
+    expect(validateSettingWrite('wordHighlightMode', 'underline')).not.toBeNull();
+    expect(validateSettingWrite('wordHighlightMode', '')).not.toBeNull();
+    expect(validateSettingWrite('wordHighlightMode', 1)).not.toBeNull();
+    expect(validateSettingWrite('wordHighlightMode', null)).not.toBeNull();
+  });
+});

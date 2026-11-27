@@ -70,6 +70,8 @@ export default function MarkdownReader({
   onDismissConcordanceJump,
   chapterFooter,
   clearHighlightToken = 0,
+  wordHighlightMode = 'saved',
+  smartHintWords = null,
 }: MarkdownReaderProps) {
   const t = useTranslations('reader.markdown');
   const router = useRouter();
@@ -607,11 +609,18 @@ export default function MarkdownReader({
               wordIndex += 1;
               const thisIndex = wordIndex;
               const state = lookupByVocabKeys(knownWordsMap, part.text, pack);
+              const titleKey = foldWord(part.text, pack);
+              const titleSmartHint =
+                wordHighlightMode === 'smart' &&
+                !!smartHintWords &&
+                (smartHintWords.has(titleKey) || smartHintWords.has(part.text.toLowerCase()));
               return (
                 <WordCell
                   key={index}
                   text={part.text}
                   state={state}
+                  highlightMode={wordHighlightMode}
+                  isSmartHint={titleSmartHint}
                   isActive={
                     activeWord?.blockId === TITLE_BLOCK_ID && activeWord.wordIndex === thisIndex
                   }
@@ -747,6 +756,8 @@ export default function MarkdownReader({
               prose={prose}
               segmentation={segmentation}
               knownWordsMap={knownWordsMap}
+              wordHighlightMode={wordHighlightMode}
+              smartHintWords={smartHintWords}
               readings={readings}
               annotationMode={annotationMode}
               highlightedPhrase={highlightedPhrase}
@@ -767,6 +778,8 @@ export default function MarkdownReader({
             prose={prose}
             segmentation={segmentation}
             knownWordsMap={knownWordsMap}
+            wordHighlightMode={wordHighlightMode}
+            smartHintWords={smartHintWords}
             readings={readings}
             annotationMode={annotationMode}
             highlightedPhrase={highlightedPhrase}

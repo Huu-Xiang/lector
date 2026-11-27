@@ -45,7 +45,23 @@
       "markRemainingKnown": "残りを既知にする ({count})",
       "markedRemainingKnown": "{count} 語を既知にしました",
       "undoMarkRemaining": "元に戻す",
-      "reviewChapterWords": "保存した単語を復習 ({count})"
+      "reviewChapterWords": "保存した単語を復習 ({count})",
+      "displayMenu": "表示と発音の設定",
+      "wordMarking": "本文の単語マーク",
+      "markingMode": {
+        "saved": "保存した単語を淡く表示",
+        "smart": "知らない単語を予測",
+        "clean": "マークなし（紙の本）"
+      },
+      "markingModeHint": {
+        "saved": "学習中の単語だけを淡い背景色で示し、下線をなくします。",
+        "smart": "読書レベルを超える単語に、さりげない点線を付けます。",
+        "clean": "本文にマークを付けず、紙の本のように読めます。"
+      },
+      "audioSection": "発音",
+      "autoPronounce": "単語クリック時に自動発音",
+      "autoPronounceHint": "初期設定はオフ。スピーカーアイコンでいつでも聞けます。",
+      "settingSaveFailed": "この設定を保存できませんでした。もう一度お試しください。"
     },
     "markdown": {
       "saveFailed": "保存に失敗しました",

@@ -78,19 +78,26 @@ export const SCOPE_MAP: Record<string, { read: string; write: string }> = {
   llm: { read: 'chat:read', write: 'chat:write' },
 };
 
+// Read-only POST endpoints that send a batch query payload in the body instead
+// of query params (so a `vocab:read` PAT can reach them without write scope).
+export const READ_ONLY_POST_PATHS = new Set(['/api/dictionary/smart-hints']);
+
 function getResourceFromPath(path: string): string | null {
   const segments = path.split('/').filter(Boolean);
   return segments[1] || null; // segments[0] = 'api'
 }
 
-function getRequiredScope(resource: string, method: string): string | null {
+function getRequiredScope(resource: string, method: string, path?: string): string | null {
   const mapping = SCOPE_MAP[resource];
   // Unmapped resources are the caller's problem, not a free pass — the
   // middleware treats null as deny (default-deny, SECURITY-07). A new route
   // must be added to SCOPE_MAP before tokens can reach it.
   if (!mapping) return null;
 
-  const isRead = method === 'GET' || method === 'HEAD';
+  const isRead =
+    method === 'GET' ||
+    method === 'HEAD' ||
+    (method === 'POST' && path !== undefined && READ_ONLY_POST_PATHS.has(path));
   return isRead ? mapping.read : mapping.write;
 }
 
@@ -207,7 +214,7 @@ export function makePatMiddleware(authRequired: boolean) {
     // reachable with a token at all (SECURITY-07). Local/unauthenticated access
     // is unaffected (it never reaches this branch).
     if (resource) {
-      const requiredScope = getRequiredScope(resource, c.req.method);
+      const requiredScope = getRequiredScope(resource, c.req.method, c.req.path);
       if (requiredScope === null) {
         return c.json(
           { error: `Insufficient scope. Resource "${resource}" is not token-accessible.` },

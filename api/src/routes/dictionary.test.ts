@@ -1,6 +1,7 @@
 import '../test-guard';
 import { afterEach, beforeEach, describe, expect, test } from 'bun:test';
 import { db } from '../db';
+import { scopeFor } from '../lib/openapi/endpoints';
 import { makeDictionaryRoutes } from './dictionary';
 
 const app = makeDictionaryRoutes((c) => c?.req.header('x-test-user') || 'alice');
@@ -16,7 +17,7 @@ function reset() {
   db.prepare('DELETE FROM cached_senses').run();
   db.prepare('DELETE FROM cached_related_forms').run();
   db.prepare('DELETE FROM cached_entries').run();
-  db.prepare("DELETE FROM settings WHERE key = 'targetLanguage'").run();
+  db.prepare("DELETE FROM settings WHERE key IN ('targetLanguage', 'readingLevels')").run();
   db.prepare("DELETE FROM dailyStats WHERE userId IN ('alice', 'bob', 'charlie')").run();
 }
 
@@ -151,5 +152,54 @@ describe('dictionary accepted cache routes', () => {
     expect(
       db.prepare("SELECT COUNT(*) AS n FROM cached_entries WHERE userId = 'alice'").get(),
     ).toEqual({ n: 0 });
+  });
+
+  test('smart-hints validates input, respects learner CEFR floor, and never records lookup stats', async () => {
+    const malformed = await request('alice', '/smart-hints', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: '{',
+    });
+    expect(malformed.status).toBe(400);
+
+    const missingWords = await request('alice', '/smart-hints', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ language: 'en' }),
+    });
+    expect(missingWords.status).toBe(400);
+
+    const empty = await request('alice', '/smart-hints', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ language: 'en', words: [] }),
+    });
+    expect(empty.status).toBe(200);
+    expect(await empty.json()).toEqual({ words: [], rankFloor: 1500 });
+
+    db.prepare('INSERT INTO settings (userId, key, value) VALUES (?, ?, ?)').run(
+      'alice',
+      'readingLevels',
+      JSON.stringify({ en: 'B2' }),
+    );
+    const b2Response = await request('alice', '/smart-hints', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        language: 'en',
+        words: ['the', 'ubiquitous', 'the', '  '],
+      }),
+    });
+    expect(b2Response.status).toBe(200);
+    const b2Body = (await b2Response.json()) as { words: string[]; rankFloor: number };
+    expect(b2Body.rankFloor).toBe(5000);
+    expect(b2Body.words).not.toContain('the');
+    // Must not count as dictionary lookups in dailyStats.
+    expect(db.prepare("SELECT COUNT(*) AS n FROM dailyStats WHERE userId = 'alice'").get()).toEqual(
+      { n: 0 },
+    );
+    // Read-only POST uses vocab:read (not vocab:write) so read-only PATs can call it.
+    expect(scopeFor('dictionary', 'POST', '/api/dictionary/smart-hints')).toBe('vocab:read');
+    expect(scopeFor('dictionary', 'POST', '/api/dictionary/cache')).toBe('vocab:write');
   });
 });

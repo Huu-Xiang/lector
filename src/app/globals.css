@@ -96,6 +96,10 @@
   --w-l4-bg: #eee9d6;
   --w-l4-fg: #847644;
   --w-l4-bd: #e2dbc1; /* nearly known -> faint */
+  /* calm paper-wash reader body tints (visible in both light and dark themes) */
+  --w-wash-l1: color-mix(in srgb, var(--w-l1-bg) 55%, transparent);
+  --w-wash-l2: color-mix(in srgb, var(--w-l2-bg) 36%, transparent);
+  --w-wash-l3: color-mix(in srgb, var(--w-l3-bg) 18%, transparent);
   /* known -> no chip (plain text). ignored -> --muted bg, --muted-foreground, .6 opacity */
 }
 
@@ -233,6 +237,10 @@
   --w-l4-bg: rgba(206, 180, 128, 0.07);
   --w-l4-fg: #b3a991;
   --w-l4-bd: rgba(206, 180, 128, 0.2);
+  /* dark-mode paper-wash tints: avoid double-multiplying already translucent --w-l*-bg */
+  --w-wash-l1: rgba(217, 162, 78, 0.24);
+  --w-wash-l2: rgba(217, 162, 78, 0.16);
+  --w-wash-l3: rgba(214, 168, 92, 0.1);
 }
 
 @layer components {

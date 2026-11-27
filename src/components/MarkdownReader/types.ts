@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import type { Lesson, LessonSummary, WordState } from '@/types';
 import type { ConcordanceJumpPayload } from '@/lib/concordance-jump';
+import type { WordHighlightMode } from './theme';
 
 /** Where a clicked word came from, when the lesson is a video transcript
  *  (#334). Threaded to the reader page so a mined card can carry the segment's
@@ -46,4 +47,8 @@ export interface MarkdownReaderProps {
   chapterFooter?: ReactNode;
   /** Increment to force-clear any active word/phrase highlight even while the drawer stays closed. */
   clearHighlightToken?: number;
+  /** How body words are marked: 'saved' (subtle wash), 'smart' (predicted hard words), or 'clean'. */
+  wordHighlightMode?: WordHighlightMode;
+  /** Lowercased folded words predicted above the learner's reading level (used when mode === 'smart'). */
+  smartHintWords?: ReadonlySet<string> | null;
 }

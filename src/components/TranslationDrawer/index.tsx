@@ -16,10 +16,10 @@ import { wordStateColors } from './constants';
 import { LevelCaption } from './LevelCaption';
 import {
   BookOpen,
+  Check,
   ChevronLeft,
   ChevronRight,
   Ellipsis,
-  MessageCircle,
   RefreshCw,
   Search,
   Sparkles,
@@ -72,7 +72,6 @@ export default function TranslationDrawer({
   isExplainingSentence,
   sentenceExplainError,
   onExplainSentence,
-  onAskTutor,
   existingEntry,
   wordState,
   onboardingSaveProgress,
@@ -114,17 +113,55 @@ export default function TranslationDrawer({
   const compact = useIsNativeApp();
   const nativeSheet = compact && ['xs', 'sm', 'md'].includes(screenSize);
   const [actionsOpen, setActionsOpen] = useState(false);
+  const [desktopMenuOpen, setDesktopMenuOpen] = useState(false);
   const [previousOpen, setPreviousOpen] = useState(rawIsOpen);
   const moreButton = useRef<HTMLButtonElement>(null);
+  const desktopMoreButtonRef = useRef<HTMLButtonElement>(null);
+  const desktopMenuRef = useRef<HTMLDivElement>(null);
   const optionsHeading = useRef<HTMLHeadingElement>(null);
   const nativeDrag = useNativeSheetDrag(nativeSheet && rawIsOpen, onClose);
   if (rawIsOpen !== previousOpen) {
     setPreviousOpen(rawIsOpen);
     setActionsOpen(false);
+    setDesktopMenuOpen(false);
   }
   useEffect(() => {
     if (actionsOpen) optionsHeading.current?.focus();
   }, [actionsOpen]);
+  useEffect(() => {
+    if (!desktopMenuOpen || compact) return;
+    // Move focus to the first actionable control inside the popover for keyboard users.
+    const firstFocusable = desktopMenuRef.current?.querySelector<HTMLElement>(
+      'button:not([disabled])',
+    );
+    firstFocusable?.focus();
+
+    const handlePointerDown = (e: PointerEvent) => {
+      const target = e.target as Node | null;
+      if (
+        target &&
+        !desktopMenuRef.current?.contains(target) &&
+        !desktopMoreButtonRef.current?.contains(target)
+      ) {
+        setDesktopMenuOpen(false);
+      }
+    };
+    const handleMenuEscape = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return;
+      e.preventDefault();
+      e.stopPropagation();
+      setDesktopMenuOpen(false);
+      desktopMoreButtonRef.current?.focus();
+    };
+    document.addEventListener('pointerdown', handlePointerDown);
+    // Capture phase on window so Escape closes the overflow menu BEFORE
+    // read/[bookId]/page.tsx's capture listener closes the entire drawer.
+    window.addEventListener('keydown', handleMenuEscape, true);
+    return () => {
+      document.removeEventListener('pointerdown', handlePointerDown);
+      window.removeEventListener('keydown', handleMenuEscape, true);
+    };
+  }, [desktopMenuOpen, compact]);
   // Anki push status for single-word cards
   const [ankiStatus, setAnkiStatus] = useState<'idle' | 'loading' | 'done' | 'error'>('idle');
   // Cloze picker state for phrase selections
@@ -138,6 +175,7 @@ export default function TranslationDrawer({
   if (word !== prevWord) {
     setPrevWord(word);
     setActionsOpen(false);
+    setDesktopMenuOpen(false);
     setRelatedExpanded(false);
     setAnkiStatus('idle');
     setClozePickerOpen(false);
@@ -173,11 +211,13 @@ export default function TranslationDrawer({
       ) {
         return;
       }
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') {
+        if (!desktopMenuOpen) onClose();
+      }
     };
     document.addEventListener('keydown', handleKey);
     return () => document.removeEventListener('keydown', handleKey);
-  }, [isOpen, onClose, docked]);
+  }, [isOpen, onClose, docked, desktopMenuOpen]);
 
   // Click-outside-to-close intentionally omitted: it races with the
   // new-word click handler (mousedown closes the drawer before the click
@@ -238,6 +278,11 @@ export default function TranslationDrawer({
       </button>
     );
   const canSaveWord = onSaveWord && currentState === 'new' && !error && !isLoading;
+  const canRestoreToVocab =
+    onSaveWord &&
+    (currentState === 'known' || currentState === 'ignored') &&
+    !error &&
+    !isLoading;
   const isSavedWord = onSaveWord && currentState.startsWith('level');
 
   const senses = entry?.senses ?? [];
@@ -289,6 +334,31 @@ export default function TranslationDrawer({
     onSearchLibrary ||
     onAddToAnki ||
     onAddCloze
+  );
+
+  const hasDesktopAnkiAction = !!(
+    !isPhrase &&
+    onAddToAnki &&
+    (hasRichEntry ||
+      fallbackTranslation ||
+      aiContextTranslation ||
+      savedAiTranslation ||
+      liveAiPrimaryTranslation) &&
+    !isLoading
+  );
+  const hasDesktopClozeAction = !!(
+    isPhrase &&
+    onAddCloze &&
+    (fallbackTranslation || aiPhraseDetails) &&
+    !isLoading
+  );
+  const hasDesktopOverflowItems = !!(
+    (!isSavedWord && onSetLevel) ||
+    onIgnore ||
+    onRetranslate ||
+    (onSearchLibrary && word.trim()) ||
+    hasDesktopAnkiAction ||
+    hasDesktopClozeAction
   );
 
   const secondaryActions = (
@@ -1013,20 +1083,6 @@ export default function TranslationDrawer({
                       {sentenceExplainError ? t('explainSentenceRetry') : t('explainSentence')}
                     </button>
                   )}
-                {onAskTutor && sentence.trim() && !isLoading && !isStreaming && (
-                  <button
-                    type="button"
-                    onClick={onAskTutor}
-                    data-testid="ask-tutor-btn"
-                    className={clsx(
-                      'inline-flex items-center gap-1 rounded-md bg-muted px-2.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground',
-                      compact ? 'min-h-11 px-3' : 'mt-3 py-1',
-                    )}
-                  >
-                    <MessageCircle className="size-3 shrink-0" aria-hidden />
-                    {t('askTutor')}
-                  </button>
-                )}
               </div>
               {retranslateError && (
                 <p role="status" className="mt-2 text-sm text-destructive">
@@ -1258,10 +1314,9 @@ export default function TranslationDrawer({
                   })()}
               </DictionaryDetails>
             )}
-            {!compact && originalSentence}
           </div>
 
-          {/* Footer — action buttons. */}
+          {/* Footer — single calm primary row + overflow menu on desktop, compact bar on native mobile. */}
           {(onSaveWord ||
             onSetLevel ||
             onMarkKnown ||
@@ -1272,87 +1327,426 @@ export default function TranslationDrawer({
             onAddCloze) && (
             <div
               className={clsx(
-                'shrink-0 border-t border-border bg-muted/50',
-                compact ? 'px-3 py-1.5' : 'space-y-2 px-4 py-3',
+                'relative shrink-0 border-t border-border bg-muted/40',
+                compact ? 'px-3 py-1.5' : 'space-y-2 px-4 py-2.5',
               )}
             >
-              <div className={clsx(compact && 'flex items-center gap-2')}>
-                {(canSaveWord || isSavedWord) && (
-                  <div
-                    className={clsx(
-                      'flex flex-wrap items-center gap-x-3 gap-y-1',
-                      compact && 'min-w-0 flex-1',
+              {!compact && desktopMenuOpen && hasDesktopOverflowItems && (
+                <div
+                  ref={desktopMenuRef}
+                  id="drawer-more-menu"
+                  data-testid="drawer-more-menu"
+                  role="menu"
+                  aria-label={t('moreActions')}
+                  className="absolute right-4 bottom-full z-30 mb-2 max-h-[min(60vh,24rem)] w-[calc(100%-2rem)] space-y-2 overflow-y-auto rounded-xl border border-border bg-popover p-3 shadow-xl"
+                >
+                  {!isSavedWord && onSetLevel && (
+                    <div className="space-y-1.5">
+                      <LevelCaption />
+                      <div className="flex gap-1.5" role="group" aria-label={t('levelCaption')}>
+                        {[1, 2, 3, 4].map((level) => (
+                          <button
+                            key={level}
+                            type="button"
+                            onClick={() => {
+                              onSetLevel(level as 1 | 2 | 3 | 4);
+                              setDesktopMenuOpen(false);
+                            }}
+                            data-testid={`word-level-${level}`}
+                            aria-label={t('saveAtLevel', { level })}
+                            title={t('levelTitle', { level })}
+                            className="h-8 flex-1 rounded-lg bg-muted text-xs font-semibold text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                          >
+                            {level}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="flex flex-col gap-1">
+                    {onIgnore && (
+                      <button
+                        type="button"
+                        role="menuitem"
+                        aria-pressed={currentState === 'ignored'}
+                        onClick={() => {
+                          onIgnore();
+                          setDesktopMenuOpen(false);
+                        }}
+                        data-testid="ignore-word"
+                        title={t('ignoreTitle')}
+                        className={clsx(
+                          'flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left text-xs font-medium transition-colors',
+                          currentState === 'ignored'
+                            ? 'bg-accent text-foreground ring-1 ring-border'
+                            : 'text-foreground hover:bg-accent',
+                        )}
+                      >
+                        <X className="h-3.5 w-3.5 text-muted-foreground" aria-hidden="true" />
+                        {t('ignore')}
+                      </button>
                     )}
-                  >
-                    {canSaveWord ? (
-                      <>
-                        <Button
-                          className={clsx(
-                            'min-h-11',
-                            compact
-                              ? 'h-auto w-full px-2 py-2 whitespace-normal'
-                              : 'w-full sm:w-auto',
-                          )}
-                          onClick={() => onSaveWord()}
-                          data-testid="save-looked-up-word"
+                    {onRetranslate && (
+                      <button
+                        type="button"
+                        role="menuitem"
+                        onClick={() => {
+                          onRetranslate();
+                          setDesktopMenuOpen(false);
+                        }}
+                        disabled={isLoading || isStreaming || isContextLoading}
+                        title={t('retranslateTitle')}
+                        className="flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left text-xs font-medium text-foreground transition-colors hover:bg-accent disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        <RefreshCw
+                          className="h-3.5 w-3.5 text-muted-foreground"
+                          aria-hidden="true"
+                        />
+                        {t('retranslate')}
+                      </button>
+                    )}
+                    {onSearchLibrary && word.trim() && (
+                      <button
+                        type="button"
+                        role="menuitem"
+                        data-testid="search-in-library-btn"
+                        onClick={() => {
+                          onSearchLibrary();
+                          setDesktopMenuOpen(false);
+                        }}
+                        title={t('findInLibraryTitle')}
+                        className="flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left text-xs font-medium text-foreground transition-colors hover:bg-accent"
+                      >
+                        <Search className="h-3.5 w-3.5 text-muted-foreground" aria-hidden="true" />
+                        {t('findInLibrary')}
+                      </button>
+                    )}
+                    {hasDesktopAnkiAction && onAddToAnki && (
+                      <button
+                        type="button"
+                        role="menuitem"
+                        data-testid="add-to-anki-btn"
+                        onClick={async () => {
+                          if (effectiveAnkiStatus === 'loading' || effectiveAnkiStatus === 'done')
+                            return;
+                          const startedForWord = word;
+                          setAnkiStatus('loading');
+                          try {
+                            await onAddToAnki();
+                            if (activeWordRef.current === startedForWord) setAnkiStatus('done');
+                          } catch {
+                            if (activeWordRef.current === startedForWord) setAnkiStatus('error');
+                          }
+                        }}
+                        disabled={
+                          effectiveAnkiStatus === 'loading' || effectiveAnkiStatus === 'done'
+                        }
+                        className="flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left text-xs font-medium text-foreground transition-colors hover:bg-accent disabled:opacity-60"
+                      >
+                        <Sparkles
+                          className="h-3.5 w-3.5 text-muted-foreground"
+                          aria-hidden="true"
+                        />
+                        {effectiveAnkiStatus === 'done'
+                          ? t('ankiAdded')
+                          : effectiveAnkiStatus === 'loading'
+                            ? t('ankiAdding')
+                            : effectiveAnkiStatus === 'error'
+                              ? t('ankiError')
+                              : t('ankiAdd')}
+                      </button>
+                    )}
+                  </div>
+
+                  {hasDesktopClozeAction && onAddCloze && (
+                    <div data-testid="add-cloze-section" className="border-t border-border pt-2">
+                      {!clozePickerOpen ? (
+                        <button
+                          type="button"
+                          role="menuitem"
+                          data-testid="add-cloze-btn"
+                          onClick={() => setClozePickerOpen(true)}
+                          className="flex w-full items-center justify-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
                         >
-                          <span aria-hidden="true">+</span> {t('saveWord')}
-                        </Button>
-                        {!compact && (
-                          <kbd className="hidden rounded border border-border px-1.5 text-xs text-muted-foreground lg:inline">
+                          {t('clozeAdd')}
+                        </button>
+                      ) : (
+                        <div className="space-y-2">
+                          <p className="text-xs text-muted-foreground">{t('clozePick')}</p>
+                          <div className="flex flex-wrap gap-1" data-testid="cloze-word-chips">
+                            {clozeWords.map((w, i) => (
+                              <button
+                                key={i}
+                                type="button"
+                                data-testid={`cloze-chip-${i}`}
+                                onClick={() => setClozeBlankWord(clozeBlankWord === w ? null : w)}
+                                className={`rounded px-2 py-0.5 text-sm font-medium transition-colors ${
+                                  clozeBlankWord === w
+                                    ? 'bg-primary text-primary-foreground'
+                                    : 'bg-muted text-foreground hover:bg-accent'
+                                }`}
+                              >
+                                {w}
+                              </button>
+                            ))}
+                          </div>
+                          {clozeBlankWord && (
+                            <p
+                              className="font-mono text-xs text-muted-foreground"
+                              data-testid="cloze-preview"
+                            >
+                              {clozeWords.map((w, i) => (
+                                <span key={i}>
+                                  {i > 0 && pack.script.kind !== 'cjk-unspaced' && ' '}
+                                  {w === clozeBlankWord ? (
+                                    <span className="font-semibold text-primary">[{w}]</span>
+                                  ) : (
+                                    w
+                                  )}
+                                </span>
+                              ))}
+                            </p>
+                          )}
+                          <div className="flex gap-2">
+                            <button
+                              type="button"
+                              data-testid="cloze-send-btn"
+                              onClick={async () => {
+                                if (
+                                  !clozeBlankWord ||
+                                  clozeStatus === 'loading' ||
+                                  clozeStatus === 'done'
+                                )
+                                  return;
+                                const startedForWord = word;
+                                setClozeStatus('loading');
+                                try {
+                                  await onAddCloze(clozeBlankWord);
+                                  if (activeWordRef.current === startedForWord)
+                                    setClozeStatus('done');
+                                } catch {
+                                  if (activeWordRef.current === startedForWord)
+                                    setClozeStatus('error');
+                                }
+                              }}
+                              disabled={
+                                !clozeBlankWord ||
+                                clozeStatus === 'loading' ||
+                                clozeStatus === 'done'
+                              }
+                              className="flex-1 rounded-md border border-border px-3 py-1.5 text-xs font-medium text-foreground hover:bg-accent disabled:opacity-50"
+                            >
+                              {clozeStatus === 'done'
+                                ? t('clozeSent')
+                                : clozeStatus === 'loading'
+                                  ? t('clozeSending')
+                                  : clozeStatus === 'error'
+                                    ? t('clozeError')
+                                    : t('clozeSend')}
+                            </button>
+                            {clozeStatus !== 'done' && (
+                              <button
+                                type="button"
+                                data-testid="cloze-cancel-btn"
+                                onClick={() => {
+                                  setClozePickerOpen(false);
+                                  setClozeBlankWord(null);
+                                  setClozeStatus('idle');
+                                }}
+                                className="rounded-md border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground hover:bg-accent"
+                              >
+                                {t('cancel')}
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {compact ? (
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    {(canSaveWord || isSavedWord) && (
+                      <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-3 gap-y-1">
+                        {canSaveWord ? (
+                          <Button
+                            className="h-auto min-h-11 w-full px-2 py-2 whitespace-normal"
+                            onClick={() => onSaveWord()}
+                            data-testid="save-looked-up-word"
+                          >
+                            <span aria-hidden="true">+</span> {t('saveWord')}
+                          </Button>
+                        ) : (
+                          <>
+                            <span role="status" className="text-sm font-medium">
+                              {t('wordSaved')}
+                            </span>
+                            {onUndoSave && (
+                              <Button
+                                variant="ghost"
+                                className="min-h-11"
+                                onClick={onUndoSave}
+                                data-testid="undo-lookup-save"
+                              >
+                                {t('undoSave')}
+                              </Button>
+                            )}
+                          </>
+                        )}
+                      </div>
+                    )}
+                    {hasSecondaryActions && (
+                      <Button
+                        ref={moreButton}
+                        variant="outline"
+                        size="icon-lg"
+                        aria-label={actionsOpen ? t('backToDefinition') : t('moreActions')}
+                        aria-expanded={actionsOpen}
+                        data-testid="native-lookup-actions"
+                        className="ml-auto"
+                        onClick={() => {
+                          setActionsOpen(!actionsOpen);
+                          if (actionsOpen) moreButton.current?.focus();
+                        }}
+                      >
+                        {actionsOpen ? (
+                          <ChevronLeft aria-hidden="true" />
+                        ) : (
+                          <Ellipsis aria-hidden="true" />
+                        )}
+                      </Button>
+                    )}
+                  </div>
+                  {canSaveWord && repeatLookup && (
+                    <p
+                      className="text-xs text-muted-foreground"
+                      data-testid="repeat-lookup-hint"
+                    >
+                      {t('repeatLookup')}
+                    </p>
+                  )}
+                </div>
+              ) : (
+                <div className="space-y-1.5">
+                  <div className="flex items-center gap-2">
+                    {canSaveWord || canRestoreToVocab ? (
+                      <Button
+                        className="min-h-10 flex-1"
+                        onClick={() => onSaveWord?.()}
+                        data-testid="save-looked-up-word"
+                      >
+                        <span aria-hidden="true">+</span> {t('saveWord')}
+                        {canSaveWord && (
+                          <kbd className="ml-1.5 hidden rounded border border-primary-foreground/30 px-1 text-[10px] font-medium opacity-80 lg:inline">
                             S
                           </kbd>
                         )}
-                        {repeatLookup && (
-                          <p
-                            className="text-xs text-muted-foreground"
-                            data-testid="repeat-lookup-hint"
-                          >
-                            {t('repeatLookup')}
-                          </p>
+                      </Button>
+                    ) : isSavedWord && onSetLevel ? (
+                      <div
+                        className="flex flex-1 items-center gap-1 rounded-lg bg-muted p-1"
+                        role="group"
+                        aria-label={t('wordSaved')}
+                      >
+                        {[1, 2, 3, 4].map((level) => {
+                          const stateKey = `level${level}` as WordState;
+                          const isActive = currentState === stateKey;
+                          const colors = wordStateColors[stateKey];
+                          return (
+                            <button
+                              key={level}
+                              type="button"
+                              onClick={() => onSetLevel(level as 1 | 2 | 3 | 4)}
+                              data-testid={`word-level-${level}`}
+                              aria-label={t('saveAtLevel', { level })}
+                              aria-pressed={isActive}
+                              title={t('levelTitle', { level })}
+                              className={clsx(
+                                'h-8 flex-1 rounded-md text-xs font-semibold transition-all',
+                                isActive
+                                  ? `${colors.bg} ${colors.text} shadow-xs ring-2 ${colors.ring}`
+                                  : 'text-muted-foreground hover:bg-card hover:text-foreground',
+                              )}
+                            >
+                              {level}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    ) : isSavedWord ? (
+                      <span role="status" className="flex-1 text-sm font-medium text-foreground">
+                        {t('wordSaved')}
+                      </span>
+                    ) : null}
+
+                    {isSavedWord && onUndoSave && (
+                      <button
+                        type="button"
+                        onClick={onUndoSave}
+                        data-testid="undo-lookup-save"
+                        className="h-10 shrink-0 rounded-lg px-2.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                      >
+                        {t('undoSave')}
+                      </button>
+                    )}
+
+                    {onMarkKnown && (
+                      <button
+                        type="button"
+                        onClick={onMarkKnown}
+                        data-testid="mark-word-known"
+                        title={t('markKnownTitle')}
+                        aria-pressed={currentState === 'known'}
+                        className={clsx(
+                          'inline-flex h-10 shrink-0 items-center gap-1 rounded-lg border px-3 text-xs font-medium transition-colors',
+                          currentState === 'known'
+                            ? 'border-primary bg-primary text-primary-foreground ring-2 ring-primary'
+                            : 'border-border bg-card text-foreground hover:bg-[var(--primary-soft)] hover:text-[var(--primary-text)]',
                         )}
-                      </>
-                    ) : (
-                      <>
-                        <span role="status" className="text-sm font-medium">
-                          {t('wordSaved')}
-                        </span>
-                        {onUndoSave && (
-                          <Button
-                            variant="ghost"
-                            className="min-h-11"
-                            onClick={onUndoSave}
-                            data-testid="undo-lookup-save"
-                          >
-                            {t('undoSave')}
-                          </Button>
+                      >
+                        <Check className="size-3.5" aria-hidden="true" />
+                        <span>{t('known')}</span>
+                      </button>
+                    )}
+
+                    {hasDesktopOverflowItems && (
+                      <button
+                        ref={desktopMoreButtonRef}
+                        type="button"
+                        data-testid="drawer-more-actions"
+                        aria-label={t('moreActions')}
+                        aria-expanded={desktopMenuOpen}
+                        aria-haspopup="menu"
+                        aria-controls="drawer-more-menu"
+                        title={t('moreActions')}
+                        onClick={() => setDesktopMenuOpen((open) => !open)}
+                        className={clsx(
+                          'grid size-10 shrink-0 place-items-center rounded-lg border border-border transition-colors',
+                          desktopMenuOpen
+                            ? 'bg-accent text-foreground'
+                            : 'bg-card text-muted-foreground hover:bg-accent hover:text-foreground',
                         )}
-                      </>
+                      >
+                        <Ellipsis className="size-4" aria-hidden="true" />
+                      </button>
                     )}
                   </div>
-                )}
-                {compact && hasSecondaryActions && (
-                  <Button
-                    ref={moreButton}
-                    variant="outline"
-                    size="icon-lg"
-                    aria-label={actionsOpen ? t('backToDefinition') : t('moreActions')}
-                    aria-expanded={actionsOpen}
-                    data-testid="native-lookup-actions"
-                    className="ml-auto"
-                    onClick={() => {
-                      setActionsOpen(!actionsOpen);
-                      if (actionsOpen) moreButton.current?.focus();
-                    }}
-                  >
-                    {actionsOpen ? (
-                      <ChevronLeft aria-hidden="true" />
-                    ) : (
-                      <Ellipsis aria-hidden="true" />
-                    )}
-                  </Button>
-                )}
-              </div>
+
+                  {canSaveWord && repeatLookup && (
+                    <p
+                      className="text-xs text-muted-foreground"
+                      data-testid="repeat-lookup-hint"
+                    >
+                      {t('repeatLookup')}
+                    </p>
+                  )}
+                </div>
+              )}
+
               {onboardingSaveProgress && (
                 <div
                   className="rounded-xl border border-[var(--gold-lip)] bg-[var(--gold-soft)] px-3 py-2 lg:p-3"
@@ -1387,7 +1781,6 @@ export default function TranslationDrawer({
                   </div>
                 </div>
               )}
-              {!compact && secondaryActions}
             </div>
           )}
         </>

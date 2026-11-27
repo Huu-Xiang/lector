@@ -6,6 +6,11 @@ import { Button } from '@/components/ui/button';
 import { Kbd, KbdGroup } from '@/components/ui/kbd';
 import { toast } from 'sonner';
 import { getReviewGoal, getSetting, setReviewGoal, setSetting } from '@/lib/data-layer';
+import {
+  isWordHighlightMode,
+  WORD_HIGHLIGHT_MODES,
+  type WordHighlightMode,
+} from '@/components/MarkdownReader/theme';
 import type { ReviewGoal } from '@/types';
 import { SETTINGS_KEYS } from '../../constants';
 import ProductEmails from './ProductEmails';
@@ -18,6 +23,14 @@ export default function PracticeSettings() {
   const [goal, setGoal] = useState<ReviewGoal>('recognize');
   const [autoSave, setAutoSave] = useState(false);
   const autoSaveTouched = useRef(false);
+  const [autoPronounce, setAutoPronounce] = useState(false);
+  const autoPronounceRef = useRef(false);
+  autoPronounceRef.current = autoPronounce;
+  const autoPronounceVersionRef = useRef(0);
+  const [highlightMode, setHighlightMode] = useState<WordHighlightMode>('saved');
+  const highlightModeRef = useRef<WordHighlightMode>('saved');
+  highlightModeRef.current = highlightMode;
+  const highlightModeVersionRef = useRef(0);
 
   useEffect(() => {
     const load = () =>
@@ -32,6 +45,22 @@ export default function PracticeSettings() {
         if (value !== undefined && !autoSaveTouched.current) setAutoSave(value === true);
       })
       .catch(() => undefined);
+    const pronounceVersion = autoPronounceVersionRef.current;
+    getSetting<boolean | null>('autoPronounceOnLookup')
+      .then((value) => {
+        if (value !== undefined && autoPronounceVersionRef.current === pronounceVersion) {
+          setAutoPronounce(value === true);
+        }
+      })
+      .catch(() => undefined);
+    const highlightVersion = highlightModeVersionRef.current;
+    getSetting<string | null>('wordHighlightMode')
+      .then((value) => {
+        if (value !== undefined && highlightModeVersionRef.current === highlightVersion) {
+          setHighlightMode(isWordHighlightMode(value) ? value : 'saved');
+        }
+      })
+      .catch(() => undefined);
   }, []);
 
   const handleAutoSaveChanged = async (next: boolean) => {
@@ -43,6 +72,38 @@ export default function PracticeSettings() {
     } catch {
       setAutoSave(previous);
       toast.error(t('autoSaveFailed'));
+    }
+  };
+
+  const handleAutoPronounceChanged = async (next: boolean) => {
+    const myVersion = ++autoPronounceVersionRef.current;
+    const previous = autoPronounceRef.current;
+    autoPronounceRef.current = next;
+    setAutoPronounce(next);
+    try {
+      await setSetting('autoPronounceOnLookup', next);
+    } catch {
+      if (autoPronounceVersionRef.current === myVersion) {
+        autoPronounceRef.current = previous;
+        setAutoPronounce(previous);
+        toast.error(t('autoSaveFailed'));
+      }
+    }
+  };
+
+  const handleHighlightModeChanged = async (next: WordHighlightMode) => {
+    const myVersion = ++highlightModeVersionRef.current;
+    const previous = highlightModeRef.current;
+    highlightModeRef.current = next;
+    setHighlightMode(next);
+    try {
+      await setSetting('wordHighlightMode', next);
+    } catch {
+      if (highlightModeVersionRef.current === myVersion) {
+        highlightModeRef.current = previous;
+        setHighlightMode(previous);
+        toast.error(t('autoSaveFailed'));
+      }
     }
   };
 
@@ -140,6 +201,51 @@ export default function PracticeSettings() {
           >
             {t('autoSaveOff')}
           </Button>
+        </div>
+
+        <label className="mt-6 block text-sm font-medium text-foreground">
+          {t('autoPronounceLabel')}
+        </label>
+        <p className="mb-2 text-xs text-muted-foreground">{t('autoPronounceHint')}</p>
+        <div className="flex gap-2" role="group" aria-label={t('autoPronounceLabel')}>
+          <Button
+            aria-pressed={autoPronounce}
+            data-testid="auto-pronounce-on"
+            onClick={() => void handleAutoPronounceChanged(true)}
+            variant={autoPronounce ? 'default' : 'secondary'}
+          >
+            {t('autoSaveOn')}
+          </Button>
+          <Button
+            aria-pressed={!autoPronounce}
+            data-testid="auto-pronounce-off"
+            onClick={() => void handleAutoPronounceChanged(false)}
+            variant={autoPronounce ? 'secondary' : 'default'}
+          >
+            {t('autoSaveOff')}
+          </Button>
+        </div>
+
+        <label className="mt-6 block text-sm font-medium text-foreground">
+          {t('wordHighlightLabel')}
+        </label>
+        <p className="mb-2 text-xs text-muted-foreground">{t('wordHighlightHint')}</p>
+        <div className="mt-2 space-y-3" role="group" aria-label={t('wordHighlightLabel')}>
+          {WORD_HIGHLIGHT_MODES.map((mode) => (
+            <div key={mode}>
+              <Button
+                aria-pressed={highlightMode === mode}
+                data-testid={`word-highlight-mode-${mode}`}
+                onClick={() => void handleHighlightModeChanged(mode)}
+                variant={highlightMode === mode ? 'default' : 'secondary'}
+              >
+                {t(`wordHighlightMode.${mode}`)}
+              </Button>
+              <p className="mt-1.5 text-xs text-muted-foreground">
+                {t(`wordHighlightModeHint.${mode}`)}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
 

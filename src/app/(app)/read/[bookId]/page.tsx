@@ -12,8 +12,14 @@ import TranslationDrawer, { TranslationDrawerSlot } from '@/components/Translati
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
+  DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import ListenAlong from '@/components/ListenAlong';
@@ -42,6 +48,7 @@ import {
   deleteVocabEntry,
   updateVocabEntry,
   getSetting,
+  setSetting,
   getVocabByText,
   updateVocabState,
   updateLesson,
@@ -78,6 +85,7 @@ import {
   localizeEntrySenses,
   prefetchLocalizedSenses,
   cacheAcceptedTranslation,
+  fetchSmartHintWords,
   type ExpandedDictionaryEntry,
 } from '@/lib/dictionary-client';
 import { pickPrefetchCandidates } from '@/lib/prefetch-words';
@@ -93,9 +101,19 @@ import {
   vocabKeys,
 } from '@/lib/languages';
 import { parseSegmentWords } from '@/components/MarkdownReader/utils';
-import { CHAT_ASK_CONTEXT_EVENT } from '@/components/ChatWidget/constants';
+import {
+  isWordHighlightMode,
+  WORD_HIGHLIGHT_MODES,
+  type WordHighlightMode,
+} from '@/components/MarkdownReader/theme';
 import { toast } from 'sonner';
-import { CheckCheck, Headphones, LoaderCircle, MessageSquare } from 'lucide-react';
+import {
+  CheckCheck,
+  Headphones,
+  LoaderCircle,
+  MessageSquare,
+  SlidersHorizontal,
+} from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import {
   applyRetranslateStart,
@@ -554,6 +572,88 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
   }, [loadAutoSaveSetting]);
   useRefreshOnReturn(loadAutoSaveSetting);
 
+  // Reader calm UX preferences:
+  // - autoPronounceOnLookup defaults to false (quiet word taps; speaker button always speaks).
+  // - wordHighlightMode defaults to 'saved' (soft tint on learning words, no heavy underlines).
+  const [autoPronounceOnLookup, setAutoPronounceOnLookup] = useState(false);
+  const autoPronounceRef = useRef(false);
+  autoPronounceRef.current = autoPronounceOnLookup;
+  const autoPronounceVersionRef = useRef(0);
+
+  const [wordHighlightMode, setWordHighlightMode] = useState<WordHighlightMode>('saved');
+  const highlightModeRef = useRef<WordHighlightMode>('saved');
+  highlightModeRef.current = wordHighlightMode;
+  const highlightModeVersionRef = useRef(0);
+  const [smartHintWords, setSmartHintWords] = useState<Set<string> | undefined>(undefined);
+  const [smartHintsRefreshTick, setSmartHintsRefreshTick] = useState(0);
+
+  const loadReaderDisplaySettings = useCallback(() => {
+    const pronounceVersion = autoPronounceVersionRef.current;
+    getSetting<boolean | null>('autoPronounceOnLookup')
+      .then((value) => {
+        if (autoPronounceVersionRef.current !== pronounceVersion) return;
+        if (value !== undefined) setAutoPronounceOnLookup(value === true);
+      })
+      .catch(() => {});
+
+    const highlightVersion = highlightModeVersionRef.current;
+    getSetting<string | null>('wordHighlightMode')
+      .then((value) => {
+        if (highlightModeVersionRef.current !== highlightVersion) return;
+        if (isWordHighlightMode(value)) setWordHighlightMode(value);
+        else if (value === null) setWordHighlightMode('saved');
+      })
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    loadReaderDisplaySettings();
+  }, [loadReaderDisplaySettings]);
+  useRefreshOnReturn(() => {
+    loadReaderDisplaySettings();
+    if (highlightModeRef.current === 'smart') {
+      setSmartHintsRefreshTick((n) => n + 1);
+    }
+  });
+
+  const handleAutoPronounceChange = useCallback(
+    async (next: boolean) => {
+      const myVersion = ++autoPronounceVersionRef.current;
+      const previous = autoPronounceRef.current;
+      autoPronounceRef.current = next;
+      setAutoPronounceOnLookup(next);
+      try {
+        await setSetting('autoPronounceOnLookup', next);
+      } catch {
+        if (autoPronounceVersionRef.current === myVersion) {
+          autoPronounceRef.current = previous;
+          setAutoPronounceOnLookup(previous);
+          toast.error(t('settingSaveFailed'));
+        }
+      }
+    },
+    [t],
+  );
+
+  const handleHighlightModeChange = useCallback(
+    async (next: WordHighlightMode) => {
+      const myVersion = ++highlightModeVersionRef.current;
+      const previous = highlightModeRef.current;
+      highlightModeRef.current = next;
+      setWordHighlightMode(next);
+      try {
+        await setSetting('wordHighlightMode', next);
+      } catch {
+        if (highlightModeVersionRef.current === myVersion) {
+          highlightModeRef.current = previous;
+          setWordHighlightMode(previous);
+          toast.error(t('settingSaveFailed'));
+        }
+      }
+    },
+    [t],
+  );
+
   useRefreshOnReturn(() => {
     getKnownWordsMap()
       .then((map) => {
@@ -813,11 +913,13 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
           ),
       );
 
-      const wordsToSpeak = word.split(/\s+/).slice(0, 15).join(' ');
-      if (options?.browserOnlySpeech) {
-        speakWordWithBrowser(wordsToSpeak, readingLanguage);
-      } else {
-        void speak(wordsToSpeak, undefined, readingLanguage);
+      if (autoPronounceRef.current) {
+        const wordsToSpeak = word.split(/\s+/).slice(0, 15).join(' ');
+        if (options?.browserOnlySpeech) {
+          speakWordWithBrowser(wordsToSpeak, readingLanguage);
+        } else {
+          void speak(wordsToSpeak, undefined, readingLanguage);
+        }
       }
 
       // Open popup immediately in loading state so keyboard shortcuts (K/X) are responsive
@@ -2273,19 +2375,6 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     }
   }, [wordPanel, isExplainingSentence, readingLanguage, t]);
 
-  const handleAskTutor = useCallback(() => {
-    if (typeof window === 'undefined') return;
-    const sentenceText = wordPanel.sentence.trim();
-    const prompt = sentenceText
-      ? t('askTutorPromptWithSentence', { word: wordPanel.word, sentence: sentenceText })
-      : t('askTutorPromptWord', { word: wordPanel.word });
-    window.dispatchEvent(
-      new CustomEvent(CHAT_ASK_CONTEXT_EVENT, {
-        detail: { prompt, language: readingLanguage },
-      }),
-    );
-  }, [wordPanel.word, wordPanel.sentence, readingLanguage, t]);
-
   const handleSaveText = useCallback(
     async (newContent: string) => {
       await updateLesson(lessonId, { textContent: newContent });
@@ -2358,6 +2447,15 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         return;
       }
       if (e.metaKey || e.ctrlKey || e.altKey) return;
+      // Defer to any open menu/popover (reader display dropdown or drawer overflow
+      // menu) so Esc/letter shortcuts never close the drawer or mutate vocab behind it.
+      if (
+        document.querySelector(
+          '[data-slot="dropdown-menu-content"][data-open], [data-testid="drawer-more-menu"]',
+        )
+      ) {
+        return;
+      }
       const key = e.key.toLowerCase();
       if (key === 'escape') {
         e.preventDefault();
@@ -2414,6 +2512,66 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         {cloud && (
           <ReadingDifficulty key={lessonId} lessonId={lessonId} language={readingLanguage} />
         )}
+        <DropdownMenu>
+          <DropdownMenuTrigger
+            aria-label={t('displayMenu')}
+            title={t('displayMenu')}
+            data-testid="reader-display-menu-btn"
+            className="flex min-h-11 min-w-11 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent active:opacity-60"
+          >
+            <SlidersHorizontal className="h-5 w-5" aria-hidden />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            align="end"
+            className="w-64 p-1.5"
+            data-testid="reader-display-menu"
+          >
+            <DropdownMenuGroup>
+              <DropdownMenuLabel>{t('wordMarking')}</DropdownMenuLabel>
+              <DropdownMenuRadioGroup
+                value={wordHighlightMode}
+                onValueChange={(value) => {
+                  if (isWordHighlightMode(value)) void handleHighlightModeChange(value);
+                }}
+              >
+                {WORD_HIGHLIGHT_MODES.map((mode) => (
+                  <DropdownMenuRadioItem
+                    key={mode}
+                    value={mode}
+                    data-testid={`highlight-mode-${mode}`}
+                    className="items-start py-2"
+                  >
+                    <div className="flex flex-col gap-0.5 pr-2">
+                      <span className="text-sm font-medium leading-tight">
+                        {t(`markingMode.${mode}`)}
+                      </span>
+                      <span className="text-[11px] leading-snug text-muted-foreground">
+                        {t(`markingModeHint.${mode}`)}
+                      </span>
+                    </div>
+                  </DropdownMenuRadioItem>
+                ))}
+              </DropdownMenuRadioGroup>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <DropdownMenuLabel>{t('audioSection')}</DropdownMenuLabel>
+              <DropdownMenuCheckboxItem
+                checked={autoPronounceOnLookup}
+                onCheckedChange={(checked) => void handleAutoPronounceChange(checked === true)}
+                data-testid="toggle-auto-pronounce"
+                className="items-start py-2"
+              >
+                <div className="flex flex-col gap-0.5 pr-2">
+                  <span className="text-sm font-medium leading-tight">{t('autoPronounce')}</span>
+                  <span className="text-[11px] leading-snug text-muted-foreground">
+                    {t('autoPronounceHint')}
+                  </span>
+                </div>
+              </DropdownMenuCheckboxItem>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
         {canListenAlong && (
           <button
             onClick={() => setListenMode(true)}
@@ -2427,7 +2585,17 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
         )}
       </>
     ),
-    [cloud, canListenAlong, lessonId, readingLanguage, t],
+    [
+      cloud,
+      canListenAlong,
+      lessonId,
+      readingLanguage,
+      wordHighlightMode,
+      autoPronounceOnLookup,
+      handleHighlightModeChange,
+      handleAutoPronounceChange,
+      t,
+    ],
   );
 
   // Memoize chapter tokenization separately from readerWordStates so word clicks
@@ -2445,6 +2613,86 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     }
     return unique;
   }, [lesson?.textContent, lessonPack, lessonSegmentation]);
+
+  // Smart-hint mode (Kindle Word Wise style): fetch frequency-predicted hard words
+  // from the server's local SQLite dictionary (zero AI cost). Chunked in batches of 400
+  // (up to 1200 unique words per lesson) and cancelled on mode/lesson change.
+  useEffect(() => {
+    if (wordHighlightMode !== 'smart' || !lesson) {
+      setSmartHintWords(undefined);
+      return;
+    }
+    const candidates: string[] = [];
+    const seen = new Set<string>();
+    const pushWord = (folded: string) => {
+      if (!folded || seen.has(folded) || candidates.length >= 1200) return;
+      seen.add(folded);
+      candidates.push(folded);
+    };
+    if (lesson.title) {
+      for (const token of tokenizeWords(lesson.title, lessonPack, lessonSegmentation)) {
+        pushWord(foldWord(token.text, lessonPack));
+      }
+    }
+    for (const { folded } of chapterUniqueWords) {
+      pushWord(folded);
+    }
+    if (chapterUniqueWords.length === 0 && lesson.segments) {
+      try {
+        const parsed = JSON.parse(lesson.segments) as Array<{ text?: string }>;
+        if (Array.isArray(parsed)) {
+          for (const seg of parsed) {
+            if (!seg?.text) continue;
+            for (const token of tokenizeWords(seg.text, lessonPack, lessonSegmentation)) {
+              pushWord(foldWord(token.text, lessonPack));
+            }
+          }
+        }
+      } catch {
+        /* ignore malformed transcript JSON */
+      }
+    }
+    if (candidates.length === 0) {
+      setSmartHintWords(undefined);
+      return;
+    }
+
+    const controller = new AbortController();
+    const run = async () => {
+      const merged = new Set<string>();
+      for (let i = 0; i < candidates.length; i += 400) {
+        if (controller.signal.aborted) return;
+        const batch = candidates.slice(i, i + 400);
+        const hits = await fetchSmartHintWords(batch, readingLanguage, controller.signal);
+        for (const w of hits) merged.add(w);
+      }
+      if (!controller.signal.aborted) {
+        setSmartHintWords((prev) => {
+          if (prev && prev.size === merged.size) {
+            let same = true;
+            for (const w of merged) {
+              if (!prev.has(w)) {
+                same = false;
+                break;
+              }
+            }
+            if (same) return prev;
+          }
+          return merged;
+        });
+      }
+    };
+    void run();
+    return () => controller.abort();
+  }, [
+    wordHighlightMode,
+    lesson,
+    chapterUniqueWords,
+    lessonPack,
+    lessonSegmentation,
+    readingLanguage,
+    smartHintsRefreshTick,
+  ]);
 
   const chapterWordStats = useMemo(() => {
     const untouchedNew: string[] = [];
@@ -2691,6 +2939,8 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
             segments={segments}
             audioUrl={lessonAudioUrl(lesson.id)}
             knownWordsMap={readerWordStates}
+            wordHighlightMode={wordHighlightMode}
+            smartHintWords={wordHighlightMode === 'smart' ? smartHintWords : undefined}
             wordPanelOpen={wordPanel.isOpen}
             onWordClick={handleWordClick}
             onExit={() => setListenMode(false)}
@@ -2702,6 +2952,8 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
             lesson={lesson}
             sentences={textSentences}
             knownWordsMap={readerWordStates}
+            wordHighlightMode={wordHighlightMode}
+            smartHintWords={wordHighlightMode === 'smart' ? smartHintWords : undefined}
             wordPanelOpen={wordPanel.isOpen}
             onWordClick={handleTextListenWordClick}
             onExit={() => setListenMode(false)}
@@ -2718,6 +2970,8 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
             onEditingChange={handleEditingChange}
             onProgress={reportReadingProgress}
             knownWordsMap={readerWordStates}
+            wordHighlightMode={wordHighlightMode}
+            smartHintWords={wordHighlightMode === 'smart' ? smartHintWords : undefined}
             prevLesson={lessonLink(prevLesson)}
             nextLesson={lessonLink(nextLesson)}
             headerAction={listenHeaderAction}
@@ -2758,7 +3012,6 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
           isExplainingSentence={isExplainingSentence}
           sentenceExplainError={sentenceExplainError}
           onExplainSentence={wordPanel.sentence.trim() ? handleExplainSentence : undefined}
-          onAskTutor={wordPanel.sentence.trim() ? handleAskTutor : undefined}
           existingEntry={wordPanel.existingEntry}
           wordState={lookupByVocabKeys(readerWordStates, wordPanel.word, lessonPack)}
           onboardingSaveProgress={

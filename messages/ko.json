@@ -515,6 +515,20 @@
       "autoSaveOn": "켜기",
       "autoSaveOff": "끄기",
       "autoSaveFailed": "이 설정을 저장하지 못했어요. 다시 시도해 주세요.",
+      "autoPronounceLabel": "단어 클릭 시 자동 발음",
+      "autoPronounceHint": "리더에서 단어를 클릭할 때 자동으로 읽어줘요. 기본은 꺼짐이며 스피커 버튼으로 언제든 들을 수 있어요.",
+      "wordHighlightLabel": "리더 본문 단어 표시",
+      "wordHighlightHint": "읽는 동안 본문 단어를 어떻게 표시할지 선택해요.",
+      "wordHighlightMode": {
+        "saved": "저장 단어 은은하게",
+        "smart": "모르는 단어 예측",
+        "clean": "깨끗한 종이책"
+      },
+      "wordHighlightModeHint": {
+        "saved": "밑줄 대신 학습 중인 단어만 부드러운 배경색으로 표시해요.",
+        "smart": "읽기 수준보다 어려울 것 같은 단어에도 은은한 점선을 표시해요.",
+        "clean": "본문에 단어 표시 없이 종이책처럼 깔끔하게 읽어요."
+      },
       "reviewGoal": {
         "recognize": "알아보기",
         "recognize_spell": "알아보고 철자 쓰기"
@@ -2442,7 +2456,23 @@
       "markRemainingKnown": "남은 단어 아는 단어로 표시 ({count})",
       "markedRemainingKnown": "{count}개 단어를 아는 단어로 표시했습니다",
       "undoMarkRemaining": "실행 취소",
-      "reviewChapterWords": "저장한 단어 복습 ({count})"
+      "reviewChapterWords": "저장한 단어 복습 ({count})",
+      "displayMenu": "읽기 표시 및 발음",
+      "wordMarking": "본문 단어 표시",
+      "markingMode": {
+        "saved": "저장 단어 은은하게",
+        "smart": "모르는 단어 예측",
+        "clean": "깨끗한 종이책"
+      },
+      "markingModeHint": {
+        "saved": "학습 중인 단어만 부드러운 배경색으로 표시하고 밑줄은 없애요.",
+        "smart": "읽기 수준보다 어려운 단어에 은은한 점선을 표시해요.",
+        "clean": "본문 표시 없이 종이책처럼 깔끔하게 읽어요."
+      },
+      "audioSection": "발음",
+      "autoPronounce": "단어 클릭 시 자동 발음",
+      "autoPronounceHint": "기본은 꺼짐이에요. 스피커 아이콘을 눌러 언제든 들을 수 있어요.",
+      "settingSaveFailed": "이 설정을 저장하지 못했어요. 다시 시도해 주세요."
     },
     "markdown": {
       "saveFailed": "저장하지 못했어요",

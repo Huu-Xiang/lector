@@ -162,8 +162,10 @@ test.describe('Reader → Anki pipeline', () => {
     const drawer = page.getByTestId('translation-drawer');
     await expect(drawer).toHaveClass(/translate-x-0/, { timeout: 5000 });
 
-    // Wait for translation to resolve (loading spinner disappears)
-    await expect(drawer.getByTestId('add-to-anki-btn')).toBeVisible({ timeout: 8000 });
+    // Wait for translation to resolve, then open the overflow menu
+    await expect(drawer.getByTestId('save-looked-up-word')).toBeVisible({ timeout: 8000 });
+    await drawer.getByTestId('drawer-more-actions').click();
+    await expect(drawer.getByTestId('add-to-anki-btn')).toBeVisible({ timeout: 5000 });
 
     expect(ankiCalls.length).toBe(0); // not yet clicked
   });
@@ -179,8 +181,10 @@ test.describe('Reader → Anki pipeline', () => {
     const drawer = page.getByTestId('translation-drawer');
     await expect(drawer).toHaveClass(/translate-x-0/, { timeout: 5000 });
 
+    await expect(drawer.getByTestId('save-looked-up-word')).toBeVisible({ timeout: 8000 });
+    await drawer.getByTestId('drawer-more-actions').click();
     const addBtn = drawer.getByTestId('add-to-anki-btn');
-    await expect(addBtn).toBeVisible({ timeout: 8000 });
+    await expect(addBtn).toBeVisible({ timeout: 5000 });
     await addBtn.click();
 
     // Button should change to success state
@@ -209,8 +213,10 @@ test.describe('Reader → Anki pipeline', () => {
     await wordSpan.click();
 
     const drawer = page.getByTestId('translation-drawer');
+    await expect(drawer.getByTestId('save-looked-up-word')).toBeVisible({ timeout: 8000 });
+    await drawer.getByTestId('drawer-more-actions').click();
     const addBtn = drawer.getByTestId('add-to-anki-btn');
-    await expect(addBtn).toBeVisible({ timeout: 8000 });
+    await expect(addBtn).toBeVisible({ timeout: 5000 });
     await addBtn.click();
 
     // Wait for the full round-trip to complete (done state, not just loading)
@@ -242,8 +248,10 @@ test.describe('Reader → Anki pipeline', () => {
     const drawer = page.getByTestId('translation-drawer');
     await expect(drawer).toHaveClass(/translate-x-0/, { timeout: 5000 });
 
-    // Phrase drawer: cloze button, NOT the basic "Add to Anki" button
-    await expect(drawer.getByTestId('add-cloze-btn')).toBeVisible({ timeout: 8000 });
+    // Phrase drawer: cloze button in overflow menu, NOT the basic "Add to Anki" button
+    await expect(drawer.getByTestId('save-looked-up-word')).toBeVisible({ timeout: 8000 });
+    await drawer.getByTestId('drawer-more-actions').click();
+    await expect(drawer.getByTestId('add-cloze-btn')).toBeVisible({ timeout: 5000 });
     await expect(drawer.getByTestId('add-to-anki-btn')).not.toBeVisible();
   });
 
@@ -264,9 +272,11 @@ test.describe('Reader → Anki pipeline', () => {
     const drawer = page.getByTestId('translation-drawer');
     await expect(drawer).toHaveClass(/translate-x-0/, { timeout: 5000 });
 
-    // Open the cloze picker
+    // Open the overflow menu, then the cloze picker
+    await expect(drawer.getByTestId('save-looked-up-word')).toBeVisible({ timeout: 8000 });
+    await drawer.getByTestId('drawer-more-actions').click();
     const clozeBtn = drawer.getByTestId('add-cloze-btn');
-    await expect(clozeBtn).toBeVisible({ timeout: 8000 });
+    await expect(clozeBtn).toBeVisible({ timeout: 5000 });
     await clozeBtn.click();
 
     // Word chips should appear
@@ -301,6 +311,8 @@ test.describe('Reader → Anki pipeline', () => {
     const drawer = page.getByTestId('translation-drawer');
     await expect(drawer).toHaveClass(/translate-x-0/, { timeout: 5000 });
 
+    await expect(drawer.getByTestId('save-looked-up-word')).toBeVisible({ timeout: 8000 });
+    await drawer.getByTestId('drawer-more-actions').click();
     const clozeSection = drawer.getByTestId('add-cloze-section');
     await clozeSection.getByTestId('add-cloze-btn').click();
 
@@ -363,8 +375,10 @@ test.describe('Reader → Anki pipeline', () => {
     await wordSpan.click();
 
     const drawer = page.getByTestId('translation-drawer');
+    await expect(drawer.getByTestId('save-looked-up-word')).toBeVisible({ timeout: 8000 });
+    await drawer.getByTestId('drawer-more-actions').click();
     const addBtn = drawer.getByTestId('add-to-anki-btn');
-    await expect(addBtn).toBeVisible({ timeout: 8000 });
+    await expect(addBtn).toBeVisible({ timeout: 5000 });
     await addBtn.click();
 
     // Should show error state
