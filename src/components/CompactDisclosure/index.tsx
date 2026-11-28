@@ -7,6 +7,7 @@ export default function CompactDisclosure({
   name,
   title,
   icon: Icon,
+  iconClassName = 'bg-primary/12 text-primary',
   anchors,
   defer = false,
   children,
@@ -14,6 +15,7 @@ export default function CompactDisclosure({
   name: string;
   title: string;
   icon?: LucideIcon;
+  iconClassName?: string;
   anchors?: string;
   defer?: boolean;
   children: ReactNode;
@@ -36,16 +38,22 @@ export default function CompactDisclosure({
         if (defer) setOpen(detail.open);
       }}
     >
-      <summary className="flex min-h-11 cursor-pointer list-none items-center gap-2.5 px-3 py-2 text-base leading-snug font-semibold focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring active:bg-accent [&::-webkit-details-marker]:hidden">
-        {Icon && <Icon className="size-4 shrink-0 text-primary" aria-hidden />}
+      <summary className="flex min-h-12 cursor-pointer list-none items-center gap-2.5 px-3 py-2 text-base leading-snug font-semibold focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring active:bg-accent sm:min-h-11 [&::-webkit-details-marker]:hidden">
+        {Icon && (
+          <span
+            className={`grid size-7 shrink-0 place-items-center rounded-[7px] sm:size-4 sm:rounded-none sm:bg-transparent sm:text-primary ${iconClassName}`}
+          >
+            <Icon className="size-4" aria-hidden />
+          </span>
+        )}
         <span className="min-w-0 flex-1">{title}</span>
         <ChevronRight
-          className="size-4 shrink-0 text-muted-foreground group-open:rotate-90"
+          className="size-4 shrink-0 text-muted-foreground group-open:rotate-90 motion-safe:transition-transform"
           aria-hidden
         />
       </summary>
       {(!defer || open) && (
-        <div className="compact-disclosure-body border-t border-border">{children}</div>
+        <div className="compact-disclosure-body border-t border-border/60">{children}</div>
       )}
     </details>
   );

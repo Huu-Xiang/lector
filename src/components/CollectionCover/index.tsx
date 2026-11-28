@@ -37,7 +37,7 @@ export default function CollectionCover({
       >
         <img src={artUrl} alt="" loading="lazy" className="h-full w-full object-cover" />
         {variant === 'card' && (
-          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/45 to-transparent px-2 pt-8 pb-2 text-[#fffdf7] sm:px-3 sm:pt-10 sm:pb-3">
+          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/45 to-transparent px-2 pt-8 pb-2 text-[#fffdf7] max-sm:hidden sm:px-3 sm:pt-10 sm:pb-3">
             <p className="line-clamp-3 font-serif text-sm leading-snug font-bold text-balance sm:text-base">
               {title}
             </p>
@@ -71,11 +71,11 @@ export default function CollectionCover({
         <div className="h-2 w-full shrink-0" style={{ backgroundColor: theme.background }} />
         <div className="flex min-h-0 flex-1 flex-col p-2 sm:p-3">
           {author && (
-            <p className="truncate pr-8 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+            <p className="hidden truncate pr-8 text-xs font-semibold tracking-wide text-muted-foreground uppercase sm:block">
               {author}
             </p>
           )}
-          <p className="mt-1 line-clamp-5 font-serif text-xs leading-snug font-semibold text-foreground sm:text-sm">
+          <p className="mt-1 line-clamp-5 pr-7 font-serif text-xs leading-snug font-semibold text-foreground sm:pr-0 sm:text-sm">
             {title}
           </p>
           <div className="mt-auto space-y-1.5 pt-3">

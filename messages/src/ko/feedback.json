@@ -5,6 +5,7 @@
     "intro": "불편한 점이나 바라는 기능을 알려 주세요. 모든 메시지를 읽고 있어요.",
     "messageLabel": "메시지",
     "placeholder": "문제나 아이디어를 적어 주세요. 스크린샷을 붙여넣을 수도 있어요.",
+    "placeholderTouch": "어떤 일이 있었는지 알려 주거나 아이디어를 공유해 주세요.",
     "counter": "{count} / {max}",
     "addImage": "이미지 추가",
     "removeImage": "이미지 {name} 삭제",

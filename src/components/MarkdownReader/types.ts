@@ -38,7 +38,7 @@ export interface MarkdownReaderProps {
   prevLesson?: Pick<LessonSummary, 'id' | 'title'> | null;
   nextLesson?: Pick<LessonSummary, 'id' | 'title'> | null;
   /** Extra header button(s), e.g. the listen-along toggle on audio lessons (#185). */
-  headerAction?: ReactNode;
+  headerAction?: ReactNode | ((startEdit?: () => void) => ReactNode);
   /** One-shot concordance jump target from library search (KTD8). */
   concordanceJump?: ConcordanceJumpPayload | null;
   /** Called when the learner dismisses or clears the concordance highlight. */

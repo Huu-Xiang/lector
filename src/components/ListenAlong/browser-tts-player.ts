@@ -1,9 +1,4 @@
-import {
-  splitSentences,
-  stripMarkdown,
-  tokenizeWords,
-  type LanguageConfig,
-} from '@/lib/languages';
+import { splitSentences, stripMarkdown, tokenizeWords, type LanguageConfig } from '@/lib/languages';
 import {
   createBrowserUtterance,
   isTTSAvailable,
@@ -14,16 +9,7 @@ import {
 export const SPACED_CHUNK_LIMIT = 220;
 export const CJK_CHUNK_LIMIT = 70;
 
-const DIRECT_CLAUSE_DELIMITERS = new Set([
-  '—',
-  '–',
-  '，',
-  '；',
-  '：',
-  '、',
-  '،',
-  '؛',
-]);
+const DIRECT_CLAUSE_DELIMITERS = new Set(['—', '–', '，', '；', '：', '、', '،', '؛']);
 
 const SPACED_CLAUSE_DELIMITERS = new Set([',', ';', ':']);
 
@@ -65,27 +51,40 @@ export interface BrowserTtsPlayerOptions {
   watchdogTimeoutMs?: (chunkText: string, rate: number, pack: LanguageConfig) => number;
 }
 
-/**
- * Extract readable sentences from a lesson's Markdown source using the shared
- * linear-time `stripMarkdown` (preserving headings) and per-pack `splitSentences`.
- * Drops empty or punctuation-only fragments so speech synthesis never stalls on
- * non-word rows.
- */
 export function extractListenSentences(markdown: string, pack: LanguageConfig): string[] {
-  const stripped = stripMarkdown(markdown, { keepHeadings: true });
-  if (!stripped) return [];
-
   const sentences: string[] = [];
-  for (const paragraph of stripped.split(/\n\s*\n/)) {
-    const cleanParagraph = paragraph.trim();
-    if (!cleanParagraph) continue;
-    for (const raw of splitSentences(cleanParagraph, pack)) {
-      const sentence = raw.replace(/\s+/g, ' ').trim();
-      if (!sentence) continue;
-      if (tokenizeWords(sentence, pack).length === 0) continue;
-      sentences.push(sentence);
+  const prose: string[] = [];
+  let previousHeading: string | null = null;
+  const flushProse = () => {
+    const stripped = stripMarkdown(prose.join('\n'));
+    prose.length = 0;
+    if (!stripped) return;
+    previousHeading = null;
+    for (const paragraph of stripped.split(/\n\s*\n/)) {
+      for (const raw of splitSentences(paragraph, pack)) {
+        const sentence = raw.replace(/\s+/g, ' ').trim();
+        if (sentence && tokenizeWords(sentence, pack).length > 0) sentences.push(sentence);
+      }
     }
+  };
+
+  for (const line of markdown.replace(/\r\n?/g, '\n').split('\n')) {
+    if (!/^\s{0,3}#{1,6}\s+/.test(line)) {
+      prose.push(line);
+      continue;
+    }
+    flushProse();
+    const heading = stripMarkdown(line, { keepHeadings: true }).replace(/\s+/g, ' ').trim();
+    if (!heading || tokenizeWords(heading, pack).length === 0) continue;
+    const key = heading.toLocaleLowerCase().replace(/^\d+[.)]\s*/, '');
+    if (previousHeading && (previousHeading === key || previousHeading.endsWith(` ${key}`))) {
+      continue;
+    }
+    if (previousHeading && key.endsWith(` ${previousHeading}`)) sentences.pop();
+    sentences.push(heading);
+    previousHeading = key;
   }
+  flushProse();
   return sentences;
 }
 
@@ -316,10 +315,7 @@ export function createBrowserTtsPlayer({
           if (activeUtterance === utterance) activeUtterance = null;
           activeCallbacks = null;
           generation += 1;
-          callbacks?.onError?.(
-            'speech_error',
-            err instanceof Error ? err.message : undefined,
-          );
+          callbacks?.onError?.('speech_error', err instanceof Error ? err.message : undefined);
         }
       };
 

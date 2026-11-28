@@ -8,13 +8,15 @@ import {
   configureNativeTabBar,
   hasNativeTabBar,
   onNativeTabSelected,
-  selectNativeTab,
+  onNativeTabReselected,
+  setNativeTabBadge,
   setNativeTabBarVisible,
   setNativeGlassTabFrame,
 } from '@/lib/native-app';
 import { coversTabBar, hasOwnHeader, ME_TAB, nativeTabs, selectedNativeTab } from './tab-bar';
 import { useTabPreference } from './use-tab-preference';
 import { iosAppearance, useIPadTopTabs } from './ipad-layout';
+import { useReviewReady } from '@/components/NavHeader/useReviewReady';
 
 /** Drives the shell's UITabBar from the web routes. Mounted only inside the app. */
 export default function NativeTabBarSync() {
@@ -35,26 +37,41 @@ export default function NativeTabBarSync() {
     [extra, tNav],
   );
   const selected = selectedNativeTab(pathname, extra);
+  const dueCount = useReviewReady();
   const openTab = useEffectEvent((id: string) => {
     if (id !== pathname && tabs.some((tab) => tab.id === id)) {
       router.replace(id, { scroll: id === ME_TAB.href });
     }
   });
+  const reselectTab = useEffectEvent((id: string) => {
+    if (id !== selected || !tabs.some((tab) => tab.id === id)) return;
+    window.scrollTo({
+      top: 0,
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+    });
+  });
 
   useEffect(() => {
     if (!ready) return;
     document.documentElement.dataset.nativeTabbar = '';
-    return onNativeTabSelected((id) => openTab(id));
+    const stopSelected = onNativeTabSelected((id) => openTab(id));
+    const stopReselected = onNativeTabReselected((id) => reselectTab(id));
+    return () => {
+      stopSelected();
+      stopReselected();
+    };
   }, [ready]);
 
   useEffect(() => {
     if (!ready) return;
-    void configureNativeTabBar(tabs, null);
-  }, [ready, tabs]);
+    void configureNativeTabBar(tabs, selected);
+  }, [ready, tabs, selected]);
 
   useEffect(() => {
-    if (ready) void selectNativeTab(selected);
-  }, [ready, selected, tabs]);
+    if (!ready) return;
+    const target = tabs.some((tab) => tab.id === '/practice') ? '/practice' : ME_TAB.href;
+    for (const tab of tabs) void setNativeTabBadge(tab.id, tab.id === target ? dueCount : 0);
+  }, [ready, selected, tabs, dueCount]);
 
   useEffect(() => {
     if (!ready) return;

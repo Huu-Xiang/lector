@@ -5,6 +5,7 @@
     "intro": "Tell us what is wrong, or what you want next. We read every message.",
     "messageLabel": "Your message",
     "placeholder": "Describe the problem or idea. You can paste screenshots here.",
+    "placeholderTouch": "Tell us what happened or share an idea.",
     "counter": "{count} / {max}",
     "addImage": "Add image",
     "removeImage": "Remove image {name}",

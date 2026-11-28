@@ -18,6 +18,7 @@ import OfflineSync from './OfflineSync';
 import NativeTabBarSync from './NativeTabBarSync';
 import { iosAppearance, isIPadApp, supportsIPadTopTabs } from './ipad-layout';
 import ReviewWidgetSync from './ReviewWidgetSync';
+import NativeRefreshSync from './NativeRefreshSync';
 
 /** Connects the web app to the iPhone shell. Renders nothing and does nothing on the web. */
 export default function NativeBridge() {
@@ -82,6 +83,7 @@ export default function NativeBridge() {
   return (
     <>
       <NativeTabBarSync />
+      <NativeRefreshSync />
       <ReviewWidgetSync />
       {mode === 'cloud' && <OfflineSync />}
     </>

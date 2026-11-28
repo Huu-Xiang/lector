@@ -163,7 +163,7 @@ export default function DictationCard({
       </div>
 
       {/* Actions: give up and reveal the answer, or submit the attempt */}
-      <div className="flex justify-center gap-2">
+      <div className="native-practice-actions flex justify-center gap-2">
         <Button
           type="button"
           variant="secondary"
@@ -172,13 +172,19 @@ export default function DictationCard({
         >
           {t('surrender')}
         </Button>
-        <Button type="button" size="lg" onClick={handleSubmit} disabled={!typed.trim()}>
+        <Button
+          type="button"
+          size="lg"
+          className="native-practice-check"
+          onClick={handleSubmit}
+          disabled={!typed.trim()}
+        >
           {t('check')}
         </Button>
       </div>
 
       {/* Shortcut hint */}
-      <div className="mt-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+      <div className="native-shortcut-hints mt-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
         <span className="inline-flex items-center gap-1.5">
           <Kbd>Enter</Kbd>
           {t('check')}

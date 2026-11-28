@@ -3,7 +3,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
-import { Check, CircleHelp, X } from 'lucide-react';
+import { Check, ChevronRight, CircleHelp, X } from 'lucide-react';
+import { haptic, useIsNativeApp } from '@/lib/native-app';
+import { isIPadApp } from '@/components/NativeBridge/ipad-layout';
 import { buttonVariants, Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import {
@@ -182,6 +184,8 @@ export default function VocabTest({
   wordsUrl?: string;
 }) {
   const t = useTranslations('vocabTest');
+  const nativeApp = useIsNativeApp();
+  const nativePhone = nativeApp && !isIPadApp();
   const locale = useLocale();
   const answerLanguage = meta.answerLanguage;
   const russian = answerLanguage === 'ru';
@@ -359,6 +363,7 @@ export default function VocabTest({
   const answer = useCallback(
     (choice: number | null) => {
       if (phase !== 'asking' || !current) return;
+      void haptic();
       setEstimateBeforeAnswer(live ? (live.low + live.high) / 2 : null);
       const all = [...answersRef.current, { item: current, choice }];
       answersRef.current = all;
@@ -532,13 +537,15 @@ export default function VocabTest({
                         'h-auto min-h-12 w-full items-start justify-start gap-2.5 px-3 py-2 text-left text-base font-normal whitespace-normal transition-colors motion-reduce:transition-none sm:px-4',
                         option.rows === null && 'items-center',
                         OPTION_STYLES[state],
+                        nativePhone &&
+                          'max-sm:rounded-2xl max-sm:border-border/70 max-sm:shadow-xs motion-safe:max-sm:active:scale-[0.98]',
                       )}
                       onClick={() => answer(index)}
                       data-testid="vocab-option"
                       data-state={state}
                     >
                       <kbd
-                        className="flex size-6 shrink-0 items-center justify-center border-r border-border pr-2 font-sans text-xs font-semibold text-muted-foreground"
+                        className={`flex size-6 shrink-0 items-center justify-center border-r border-border pr-2 font-sans text-xs font-semibold text-muted-foreground ${nativePhone ? 'max-sm:hidden' : ''}`}
                         aria-hidden="true"
                       >
                         {index + 1}
@@ -703,7 +710,9 @@ export default function VocabTest({
             })}
           </p>
         </div>
-        <div className="flex flex-wrap gap-2 border-t border-border pt-3">
+        <div
+          className={`flex flex-wrap gap-2 border-t border-border pt-3 ${nativePhone ? 'max-sm:flex-col max-sm:[&>*]:w-full' : ''}`}
+        >
           {fromSetup && (
             <Link
               href="/setup"
@@ -760,10 +769,21 @@ export default function VocabTest({
       )}
 
       {missed.length > 0 && (
-        <details data-testid="vocab-missed" className="border-b border-border">
-          <summary className="min-h-11 cursor-pointer py-2 text-sm font-semibold focus-visible:outline-2 focus-visible:outline-ring">
+        <details
+          data-testid="vocab-missed"
+          className={`group border-b border-border ${nativePhone ? 'max-sm:rounded-2xl max-sm:border max-sm:border-border/60 max-sm:bg-card max-sm:px-4' : ''}`}
+        >
+          <summary
+            className={`min-h-11 cursor-pointer py-2 text-sm font-semibold focus-visible:outline-2 focus-visible:outline-ring ${nativePhone ? 'max-sm:flex max-sm:list-none max-sm:items-center max-sm:gap-2 max-sm:[&::-webkit-details-marker]:hidden' : ''}`}
+          >
             {t('missedTitle')}{' '}
             <span className="font-normal text-muted-foreground">({missed.length})</span>
+            {nativePhone && (
+              <ChevronRight
+                className="ml-auto size-4 transition-transform group-open:rotate-90 motion-reduce:transition-none sm:hidden"
+                aria-hidden
+              />
+            )}
           </summary>
           <p className="native-subtitle text-sm text-muted-foreground">{t('missedHint')}</p>
           <ul className="mt-2 mb-3 flex flex-wrap gap-2">

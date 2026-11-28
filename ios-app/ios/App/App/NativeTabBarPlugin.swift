@@ -14,10 +14,13 @@ public class NativeTabBarPlugin: CAPPlugin, CAPBridgedPlugin, UITabBarDelegate {
         CAPPluginMethod(name: "hide", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "setAppearance", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "setGlassFrame", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "setBadge", returnType: CAPPluginReturnPromise),
     ]
 
     private var tabBar: UITabBar?
     private var ids: [String] = []
+    private var selectedID: String?
+    private var badges: [String: String] = [:]
     private var glassBar: UIVisualEffectView?
     private var glassStack: UIStackView?
     /// What the page asked for; the keyboard hides the bar on top of that.
@@ -39,6 +42,10 @@ public class NativeTabBarPlugin: CAPPlugin, CAPBridgedPlugin, UITabBarDelegate {
         center.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
 
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
     @objc private func keyboardWillShow() {
         keyboardUp = true
         updateVisibility()
@@ -57,7 +64,9 @@ public class NativeTabBarPlugin: CAPPlugin, CAPBridgedPlugin, UITabBarDelegate {
             self.ids = tabs.compactMap { $0["id"] as? String }
             bar.items = tabs.enumerated().map { index, tab in
                 let image = (tab["icon"] as? String).flatMap { UIImage(systemName: $0) }
-                return UITabBarItem(title: tab["title"] as? String, image: image, tag: index)
+                let item = UITabBarItem(title: tab["title"] as? String, image: image, tag: index)
+                item.badgeValue = (tab["id"] as? String).flatMap { self.badges[$0] }
+                return item
             }
             if #available(iOS 26.0, *) { self.rebuildGlassTabs() }
             self.applySelection(selected)
@@ -69,6 +78,19 @@ public class NativeTabBarPlugin: CAPPlugin, CAPBridgedPlugin, UITabBarDelegate {
         let selected = call.getString("selected")
         DispatchQueue.main.async {
             self.applySelection(selected)
+            call.resolve()
+        }
+    }
+
+    @objc func setBadge(_ call: CAPPluginCall) {
+        guard let id = call.getString("id") else { return call.reject("Missing tab id") }
+        let value = call.getString("value")
+        DispatchQueue.main.async {
+            let badge = value.flatMap { $0.isEmpty || $0 == "0" ? nil : $0 }
+            self.badges[id] = badge
+            if let index = self.ids.firstIndex(of: id) {
+                self.tabBar?.items?[index].badgeValue = badge
+            }
             call.resolve()
         }
     }
@@ -109,7 +131,7 @@ public class NativeTabBarPlugin: CAPPlugin, CAPBridgedPlugin, UITabBarDelegate {
             guard #available(iOS 26.0, *),
                   let webView = self.bridge?.webView,
                   let host = self.bridge?.viewController?.view,
-                  host.traitCollection.userInterfaceIdiom == .pad,
+                  host.traitCollection.horizontalSizeClass == .regular,
                   let x = call.getDouble("x"), let y = call.getDouble("y"),
                   let width = call.getDouble("width"), let height = call.getDouble("height"),
                   [x, y, width, height].allSatisfy({ $0.isFinite }),
@@ -188,7 +210,7 @@ public class NativeTabBarPlugin: CAPPlugin, CAPBridgedPlugin, UITabBarDelegate {
             button.addAction(UIAction { [weak self] _ in self?.openTab(item.tag) }, for: .touchUpInside)
             button.configurationUpdateHandler = { button in
                 button.configuration?.background.backgroundColor = button.isSelected
-                    ? Self.sage.withAlphaComponent(0.17)
+                    ? Self.sage.withAlphaComponent(UIAccessibility.isDarkerSystemColorsEnabled ? 0.35 : 0.17)
                     : .clear
             }
             stack.addArrangedSubview(button)
@@ -201,8 +223,15 @@ public class NativeTabBarPlugin: CAPPlugin, CAPBridgedPlugin, UITabBarDelegate {
 
     private func openTab(_ index: Int) {
         guard ids.indices.contains(index) else { return }
+        feedback.prepare()
         feedback.selectionChanged()
-        notifyListeners("tabSelected", data: ["id": ids[index]])
+        let id = ids[index]
+        if selectedID == id {
+            notifyListeners("tabReselected", data: ["id": id])
+        } else {
+            applySelection(id)
+            notifyListeners("tabSelected", data: ["id": id])
+        }
     }
 
     private func ensureBar() -> UITabBar? {
@@ -211,19 +240,34 @@ public class NativeTabBarPlugin: CAPPlugin, CAPBridgedPlugin, UITabBarDelegate {
         let bar = UITabBar()
         bar.delegate = self
         bar.tintColor = Self.sage
+        if #unavailable(iOS 26.0) {
+            let appearance = UITabBarAppearance()
+            appearance.configureWithDefaultBackground()
+            for item in [appearance.stackedLayoutAppearance, appearance.inlineLayoutAppearance, appearance.compactInlineLayoutAppearance] {
+                item.selected.iconColor = Self.sage
+                item.selected.titleTextAttributes = [.foregroundColor: Self.sage]
+                item.normal.iconColor = .secondaryLabel
+                item.normal.titleTextAttributes = [.foregroundColor: UIColor.secondaryLabel]
+            }
+            bar.standardAppearance = appearance
+            if #available(iOS 15.0, *) {
+                bar.scrollEdgeAppearance = appearance
+            }
+        }
+        bar.sizeToFit()
         bar.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(bar)
         NSLayoutConstraint.activate([
             bar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             bar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             bar.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            bar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -49),
         ])
         tabBar = bar
         return bar
     }
 
     private func applySelection(_ id: String?) {
+        selectedID = id
         guard let bar = tabBar else { return }
         let index = id.flatMap { ids.firstIndex(of: $0) }
         bar.selectedItem = index.flatMap { bar.items?[$0] }
@@ -242,11 +286,18 @@ public class NativeTabBarPlugin: CAPPlugin, CAPBridgedPlugin, UITabBarDelegate {
         guard let bar = tabBar, show != visible else { return }
         visible = show
         if show { bar.isHidden = false }
+        if UIAccessibility.isReduceMotionEnabled {
+            bar.layer.removeAllAnimations()
+            bar.transform = .identity
+            bar.alpha = show ? 1 : 0
+            bar.isHidden = !show
+            return
+        }
         UIView.animate(withDuration: 0.25, delay: 0, options: [.curveEaseOut, .beginFromCurrentState]) {
             bar.transform = show ? .identity : CGAffineTransform(translationX: 0, y: bar.bounds.height)
             bar.alpha = show ? 1 : 0
-        } completion: { _ in
-            if !self.visible { bar.isHidden = true }
+        } completion: { [weak self] _ in
+            if self?.visible == false { bar.isHidden = true }
         }
     }
 }

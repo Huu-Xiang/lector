@@ -1,26 +1,26 @@
 import { useEffect, useRef, useState, type PointerEvent } from 'react';
+import { haptic } from '@/lib/native-app';
+import { applySheetVh, readStoredSheetVh, SHEET_VH_DEFAULT } from './sheet-height';
+
 import {
-  applySheetVh,
-  readStoredSheetVh,
-  SHEET_VH_CLOSE_BELOW,
-  SHEET_VH_DEFAULT,
-} from './sheet-height';
-
-export const NATIVE_SHEET_DEFAULT = 34;
-const MIN_HEIGHT = 25;
-const MAX_HEIGHT = 86;
-const TAP_DISTANCE = 5;
-
-function bound(height: number) {
-  return Math.min(MAX_HEIGHT, Math.max(MIN_HEIGHT, height));
-}
+  NATIVE_SHEET_DEFAULT,
+  NATIVE_SHEET_EXPANDED,
+  nativeSheetDetent,
+  nativeSheetVelocity,
+  nativeSheetVisualHeight,
+  type PointerSample,
+} from './native-sheet-physics';
+export { NATIVE_SHEET_DEFAULT, NATIVE_SHEET_EXPANDED } from './native-sheet-physics';
+const TAP_DISTANCE = 6;
 
 export function useNativeSheetDrag(active: boolean, onClose?: () => void) {
   const [settledHeight, setSettledHeight] = useState(NATIVE_SHEET_DEFAULT);
   const [wasActive, setWasActive] = useState(active);
+  const [dragging, setDragging] = useState(false);
   if (active !== wasActive) {
     setWasActive(active);
     setSettledHeight(NATIVE_SHEET_DEFAULT);
+    setDragging(false);
   }
   const height = useRef(NATIVE_SHEET_DEFAULT);
   const gesture = useRef<{
@@ -29,9 +29,8 @@ export function useNativeSheetDrag(active: boolean, onClose?: () => void) {
     initial: number;
     viewport: number;
     rawNext: number;
-    next: number;
-    frame: number;
     moved: boolean;
+    samples: PointerSample[];
   } | null>(null);
   const ignoreClick = useRef(false);
 
@@ -43,18 +42,19 @@ export function useNativeSheetDrag(active: boolean, onClose?: () => void) {
   function finish(event: PointerEvent<HTMLButtonElement>, cancel: boolean) {
     const drag = gesture.current;
     if (!drag || drag.pointer !== event.pointerId) return;
-    if (drag.frame) cancelAnimationFrame(drag.frame);
     gesture.current = null;
+    setDragging(false);
     ignoreClick.current = drag.moved;
-    if (!cancel && drag.moved && drag.rawNext < SHEET_VH_CLOSE_BELOW && onClose) {
-      update(NATIVE_SHEET_DEFAULT);
-      setSettledHeight(NATIVE_SHEET_DEFAULT);
-      onClose();
-      return;
-    }
-    const next = cancel ? drag.initial : drag.next;
+    if (!drag.moved) return;
+    drag.samples.push({ clientY: event.clientY, timeStamp: event.timeStamp });
+    const target = cancel
+      ? drag.initial
+      : nativeSheetDetent(drag.rawNext, nativeSheetVelocity(drag.samples));
+    const next = target === 'dismiss' ? NATIVE_SHEET_DEFAULT : target;
     update(next);
     setSettledHeight(next);
+    if (target === 'dismiss' || next !== drag.initial) haptic();
+    if (target === 'dismiss') onClose?.();
   }
 
   useEffect(() => {
@@ -62,7 +62,6 @@ export function useNativeSheetDrag(active: boolean, onClose?: () => void) {
     height.current = NATIVE_SHEET_DEFAULT;
     applySheetVh(NATIVE_SHEET_DEFAULT);
     return () => {
-      if (gesture.current?.frame) cancelAnimationFrame(gesture.current.frame);
       gesture.current = null;
       ignoreClick.current = false;
       applySheetVh(readStoredSheetVh() ?? SHEET_VH_DEFAULT);
@@ -71,6 +70,7 @@ export function useNativeSheetDrag(active: boolean, onClose?: () => void) {
 
   return {
     expanded: active && settledHeight > NATIVE_SHEET_DEFAULT,
+    dragging: active && dragging,
     handle: {
       onClick: (event: React.MouseEvent<HTMLButtonElement>) => {
         if (event.detail > 0 && ignoreClick.current) {
@@ -78,12 +78,13 @@ export function useNativeSheetDrag(active: boolean, onClose?: () => void) {
           return;
         }
         const open = height.current <= NATIVE_SHEET_DEFAULT;
-        const next = open ? MAX_HEIGHT : NATIVE_SHEET_DEFAULT;
+        const next = open ? NATIVE_SHEET_EXPANDED : NATIVE_SHEET_DEFAULT;
         update(next);
         setSettledHeight(next);
+        haptic();
       },
       onPointerDown: (event: PointerEvent<HTMLButtonElement>) => {
-        if (!event.isPrimary || event.button !== 0) return;
+        if (!active || !event.isPrimary || event.button !== 0) return;
         ignoreClick.current = false;
         event.currentTarget.setPointerCapture(event.pointerId);
         gesture.current = {
@@ -92,27 +93,24 @@ export function useNativeSheetDrag(active: boolean, onClose?: () => void) {
           initial: height.current,
           viewport: window.innerHeight,
           rawNext: height.current,
-          next: height.current,
-          frame: 0,
           moved: false,
+          samples: [{ clientY: event.clientY, timeStamp: event.timeStamp }],
         };
       },
       onPointerMove: (event: PointerEvent<HTMLButtonElement>) => {
         const drag = gesture.current;
         if (!drag || drag.pointer !== event.pointerId) return;
         const delta = drag.start - event.clientY;
+        drag.samples.push({ clientY: event.clientY, timeStamp: event.timeStamp });
+        drag.samples = drag.samples.filter((sample) => event.timeStamp - sample.timeStamp <= 150);
         drag.moved ||= Math.abs(delta) >= TAP_DISTANCE;
         if (!drag.moved) return;
+        setDragging(true);
         drag.rawNext = drag.initial + (delta / drag.viewport) * 100;
-        drag.next = bound(drag.rawNext);
-        const visualHeight = Math.min(MAX_HEIGHT, Math.max(8, drag.rawNext));
-        if (drag.frame) return;
-        drag.frame = requestAnimationFrame(() => {
-          update(visualHeight);
-          drag.frame = 0;
-        });
+        update(nativeSheetVisualHeight(drag.rawNext));
       },
       onPointerUp: (event: PointerEvent<HTMLButtonElement>) => finish(event, false),
+      onPointerCancel: (event: PointerEvent<HTMLButtonElement>) => finish(event, true),
       onLostPointerCapture: (event: PointerEvent<HTMLButtonElement>) => finish(event, true),
     },
   };

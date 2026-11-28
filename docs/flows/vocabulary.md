@@ -1,5 +1,13 @@
 # Vocabulary domain
 
+Native pull to refresh invalidates vocabulary and review queries. Single and bulk deletes share the native confirmation helper, falling back to the browser dialog when the shell lacks the plugin.
+
+On native iPhone, search has a clear action and status pills. A horizontal swipe reveals Known and Delete; vertical gestures keep scrolling. Edit mode retains checkbox selection. Lookup sheets snap to 34dvh or 78dvh, with velocity-based dismissal and resisted overscroll. Reduce Motion keeps actions available without animated transforms.
+
+Status pills fit across a 393px English interface; narrower screens and longer labels scroll horizontally to the screen edges without widening the document.
+
+Swipe capture belongs to the stationary row. Action buttons do not start a gesture; the exposed row background remains swipeable while its foreground closes. Canceling or leaving an uncaptured vertical gesture releases its ownership.
+
 On iOS, the word list follows a compact total. Expand the total to see the breakdown by word state.
 
 This domain stores entries that the user owns. It also stores the known-word map. The reader uses `knownWords` for colour. The vocab list uses `vocab`. A save writes both.
@@ -126,3 +134,5 @@ flowchart TD
 The API stores one report for each account and test attempt. The mail path uses a separate record and sends an attachment. An uncertain send uses the same request while the email service can deduplicate it. The reading level action remains separate.
 
 The public test opens with three mid-frequency words, then samples near the adaptive target. The answer bar tracks the 8 questions needed to view a result. The estimate and its precision are shown separately. On iPhone, precision and review notes use smaller text.
+
+Native iPhone vocabulary uses grouped word rows. Edit reveals bulk-selection checkboxes. Native apps skip the desktop AnkiConnect probe; addon export remains available.

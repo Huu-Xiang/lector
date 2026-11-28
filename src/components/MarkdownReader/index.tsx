@@ -3,7 +3,17 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { ArrowLeft, ChevronLeft, ChevronRight, Languages, SquarePen, X } from 'lucide-react';
+import { haptic, useIsNativeApp } from '@/lib/native-app';
+import { CHAT_TOGGLE_EVENT } from '@/components/ChatWidget/constants';
+import {
+  ArrowLeft,
+  MessageCircle,
+  ChevronLeft,
+  ChevronRight,
+  Languages,
+  SquarePen,
+  X,
+} from 'lucide-react';
 import { getLessonReadings, updateLessonProgress } from '@/lib/data-layer';
 import {
   findMatchingBlockId,
@@ -12,6 +22,7 @@ import {
   type ConcordanceJumpPayload,
 } from '@/lib/concordance-jump';
 import { createTrailingThrottle } from './throttle';
+import { readerChromeHidden } from './chrome';
 import {
   foldWord,
   getLanguageConfig,
@@ -74,6 +85,8 @@ export default function MarkdownReader({
   smartHintWords = null,
 }: MarkdownReaderProps) {
   const t = useTranslations('reader.markdown');
+  const inApp = useIsNativeApp();
+  const tChat = useTranslations('chat');
   const router = useRouter();
   const activeLang = useActiveLanguage();
   // Tokenize by the LESSON's language, not the active UI language: content
@@ -121,6 +134,25 @@ export default function MarkdownReader({
   const [activeWord, setActiveWord] = useState<ActiveReaderWord | null>(null);
   const [scrollPercentage, setScrollPercentage] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
+  const [chromeHidden, setChromeHidden] = useState(false);
+  const [chromeLesson, setChromeLesson] = useState(lesson.id);
+  if (chromeLesson !== lesson.id) {
+    setChromeLesson(lesson.id);
+    setChromeHidden(false);
+  }
+  const scrollAnchor = useRef(0);
+  const headerRef = useRef<HTMLElement>(null);
+  const hideChrome = inApp && chromeHidden && !isEditing && !wordPanelOpen;
+  useLayoutEffect(() => {
+    const header = headerRef.current;
+    if (!inApp || !header) return;
+    const measure = () =>
+      header.parentElement?.style.setProperty('--reader-header-height', `${header.offsetHeight}px`);
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(header);
+    return () => observer.disconnect();
+  }, [inApp]);
   const [draftContent, setDraftContent] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
@@ -291,6 +323,7 @@ export default function MarkdownReader({
     }
     if (containerRef.current && lesson.progress_scrollPosition > 0) {
       containerRef.current.scrollTop = lesson.progress_scrollPosition;
+      scrollAnchor.current = containerRef.current.scrollTop;
     }
   }, [lesson.id, lesson.progress_scrollPosition, concordanceJump]);
 
@@ -386,12 +419,22 @@ export default function MarkdownReader({
   const handleScroll = useCallback(() => {
     if (!containerRef.current) return;
     const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
-    const percentage = Math.round((scrollTop / (scrollHeight - clientHeight)) * 100) || 0;
+    const percentage = Math.max(
+      0,
+      Math.min(100, Math.round((scrollTop / (scrollHeight - clientHeight)) * 100) || 0),
+    );
     setScrollPercentage(percentage);
+    if (inApp && window.matchMedia('(width < 40rem)').matches) {
+      const delta = scrollTop - scrollAnchor.current;
+      if (delta > 12 || delta < -8 || scrollTop < 32) {
+        setChromeHidden((hidden) => readerChromeHidden(scrollTop, delta, hidden));
+        scrollAnchor.current = scrollTop;
+      }
+    }
     if (hasConcordanceHighlight) return;
     progressWriter(scrollTop, percentage);
     if (!isEditing) onProgress?.(percentage);
-  }, [progressWriter, onProgress, isEditing, hasConcordanceHighlight]);
+  }, [progressWriter, onProgress, isEditing, hasConcordanceHighlight, inApp]);
 
   useEffect(() => {
     const root = containerRef.current;
@@ -435,12 +478,13 @@ export default function MarkdownReader({
   const lastPhraseAt = useRef(0);
   const handleBlankClick = useCallback(
     (event: React.MouseEvent<HTMLDivElement>) => {
-      if ((!onClearSelection && !hasConcordanceHighlight) || isEditing) return;
+      if (isEditing) return;
       if (Date.now() - lastPhraseAt.current < 500) return;
       const selection = window.getSelection();
       if (selection && !selection.isCollapsed) return;
       const target = event.target as HTMLElement;
       if (target.closest('[data-leaf], a, button, input, textarea, video, iframe')) return;
+      setChromeHidden(false);
       if (hasConcordanceHighlight) clearConcordanceHighlight();
       if (onClearSelection) {
         clearPhraseHighlight();
@@ -581,20 +625,30 @@ export default function MarkdownReader({
   usePhraseTouchSelection(containerRef, handleTouchPhrase);
 
   return (
-    <div className="flex h-full min-h-0 flex-col bg-card print:block print:h-auto">
+    <div className="reader-page reader-immersive flex h-full min-h-0 flex-col bg-card print:block print:h-auto">
       {/* Header */}
-      <header className="flex shrink-0 items-center justify-between gap-1 border-b border-border px-2 py-1.5 sm:px-4 sm:py-2 print:border-0 print:px-0">
+      <header
+        ref={headerRef}
+        data-chrome-hidden={hideChrome ? 'true' : 'false'}
+        className={`reader-header flex shrink-0 items-center justify-between gap-1 border-b border-border px-2 pb-1.5 sm:px-4 sm:pb-2 print:border-0 print:px-0 ${inApp ? 'bg-card/85 pt-[env(safe-area-inset-top)] backdrop-blur-md max-sm:gap-0 max-sm:px-1' : 'pt-1.5 sm:pt-2'}`}
+      >
         <button
           onClick={onClose}
           disabled={isEditing}
           aria-label={t('back')}
           className="flex min-h-11 min-w-11 shrink-0 items-center justify-center gap-2 rounded-lg text-muted-foreground transition-colors hover:bg-accent active:opacity-60 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent sm:px-3 print:hidden"
         >
-          <ArrowLeft className="h-5 w-5" />
+          {inApp ? (
+            <ChevronLeft className="size-7 text-primary" strokeWidth={2.25} />
+          ) : (
+            <ArrowLeft className="h-5 w-5" />
+          )}
           <span className="hidden sm:inline">{t('back')}</span>
         </button>
 
-        <h1 className="reader-text mx-2 flex-1 truncate text-center text-sm font-medium text-foreground sm:text-lg print:mx-0 print:text-left print:text-2xl print:font-bold">
+        <h1
+          className={`reader-text mx-1 min-w-0 flex-1 truncate text-center text-sm font-medium text-foreground sm:mx-2 sm:text-lg print:mx-0 print:text-left print:text-2xl print:font-bold ${inApp ? 'max-sm:text-[17px] max-sm:font-semibold' : ''}`}
+        >
           {(() => {
             if (sectionTitle !== undefined) return sectionTitle;
             let wordIndex = -1;
@@ -651,8 +705,12 @@ export default function MarkdownReader({
             </Button>
           </div>
         ) : (
-          <div className="flex shrink-0 items-center gap-1 sm:gap-2 print:hidden">
-            <DailyGoalBadge compact />
+          <div
+            className={`flex shrink-0 items-center gap-1 sm:gap-2 print:hidden ${inApp ? 'max-sm:gap-0' : ''}`}
+          >
+            <div className={inApp ? 'hidden sm:block' : undefined}>
+              <DailyGoalBadge compact />
+            </div>
             <div className="hidden text-sm text-muted-foreground sm:block">{scrollPercentage}%</div>
             {supportsAnnotation && (
               <button
@@ -670,14 +728,30 @@ export default function MarkdownReader({
                 </span>
               </button>
             )}
-            {headerAction}
+            {inApp && (
+              <button
+                type="button"
+                aria-label={tChat('open')}
+                data-testid="native-chat"
+                className="flex size-11 shrink-0 items-center justify-center text-foreground active:opacity-60 max-sm:order-2"
+                onClick={() => {
+                  void haptic();
+                  window.dispatchEvent(new Event(CHAT_TOGGLE_EVENT));
+                }}
+              >
+                <MessageCircle className="size-[22px]" aria-hidden />
+              </button>
+            )}
+            {typeof headerAction === 'function'
+              ? headerAction(inApp && canEdit ? startEdit : undefined)
+              : headerAction}
             {canEdit && (
               <button
                 onClick={startEdit}
                 data-testid="edit-text-button"
                 title={t('editText')}
                 aria-label={t('editText')}
-                className="flex min-h-11 min-w-11 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent active:opacity-60"
+                className={`flex min-h-11 min-w-11 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent active:opacity-60 ${inApp ? 'max-sm:hidden' : ''}`}
               >
                 <SquarePen className="h-5 w-5" />
               </button>
@@ -687,12 +761,20 @@ export default function MarkdownReader({
       </header>
 
       {/* Content */}
+      {inApp && (
+        <div
+          data-testid="reader-progress-hairline"
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 top-[env(safe-area-inset-top)] z-40 h-[1.5px] origin-left bg-primary/80 sm:hidden print:hidden"
+          style={{ transform: `scaleX(${scrollPercentage / 100})` }}
+        />
+      )}
       <div
         ref={containerRef}
         onScroll={handleScroll}
         onMouseUp={handleMouseUp}
         onClick={handleBlankClick}
-        className="min-h-0 flex-1 overflow-auto overscroll-y-contain pb-[env(safe-area-inset-bottom)] print:block print:h-auto print:overflow-visible"
+        className="reader-scroll-pane min-h-0 flex-1 overflow-auto overscroll-y-contain pb-[env(safe-area-inset-bottom)] print:block print:h-auto print:overflow-visible"
       >
         {hasConcordanceHighlight && !isEditing && (
           <div

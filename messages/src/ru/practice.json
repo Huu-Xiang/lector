@@ -50,6 +50,7 @@
       "multipleChoice": "Варианты ответа",
       "multipleChoiceTitle": "Показать варианты ответа для этого вопроса",
       "hintNone": "Подсказка (?)",
+      "hintNoneTouch": "Подсказка",
       "hintLetters": "Подсказка ({count, plural, one {# буква} few {# буквы} many {# букв} other {# буквы}})",
       "hintTitle": "Показать следующую букву",
       "submit": "Ответить",
@@ -239,6 +240,7 @@
       "phrase": "выражение",
       "confirmBulkDelete": "Удалить выбранные записи из словаря ({count})?",
       "searchPlaceholder": "Поиск по словам, переводам и предложениям…",
+      "searchWords": "Поиск слов…",
       "filter": {
         "all": "Все",
         "learning": "Изучаемые"

@@ -19,7 +19,9 @@ struct ReviewProvider: TimelineProvider {
     }
 
     func getSnapshot(in context: Context, completion: @escaping (ReviewEntry) -> Void) {
-        completion(context.isPreview ? placeholder(in: context) : entries(from: Date()).first!)
+        let now = Date()
+        let entry = entries(from: now).first ?? ReviewEntry(date: now, snapshot: nil, nextDueReached: false)
+        completion(context.isPreview ? placeholder(in: context) : entry)
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<ReviewEntry>) -> Void) {
@@ -41,23 +43,29 @@ struct ReviewProvider: TimelineProvider {
     }
 }
 
-private enum Palette {
-    static let sage = Color(UIColor { $0.userInterfaceStyle == .dark
-        ? UIColor(red: 0x54 / 255, green: 0xab / 255, blue: 0x92 / 255, alpha: 1)
-        : UIColor(red: 0x2f / 255, green: 0x8a / 255, blue: 0x76 / 255, alpha: 1) })
-    static let background = Color(UIColor { $0.userInterfaceStyle == .dark
-        ? UIColor(red: 0x21 / 255, green: 0x1d / 255, blue: 0x16 / 255, alpha: 1)
-        : UIColor(red: 0xff / 255, green: 0xfd / 255, blue: 0xf7 / 255, alpha: 1) })
-}
-
 struct ReviewWidgetView: View {
     @Environment(\.widgetFamily) private var family
+    @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.widgetRenderingMode) private var renderingMode
+    @ScaledMetric(relativeTo: .largeTitle) private var dueCountSize: CGFloat = 44
     let entry: ReviewEntry
+
+    private var sage: Color {
+        colorScheme == .dark
+            ? Color(red: 0x54 / 255, green: 0xab / 255, blue: 0x92 / 255)
+            : Color(red: 0x2f / 255, green: 0x8a / 255, blue: 0x76 / 255)
+    }
+
+    private var background: Color {
+        colorScheme == .dark
+            ? Color(red: 0x21 / 255, green: 0x1d / 255, blue: 0x16 / 255)
+            : Color(red: 0xff / 255, green: 0xfd / 255, blue: 0xf7 / 255)
+    }
 
     var body: some View {
         content
             .widgetURL(URL(string: "readfox://practice"))
-            .containerBackground(for: .widget) { Palette.background }
+            .containerBackground(for: .widget) { background }
     }
 
     @ViewBuilder private var content: some View {
@@ -75,7 +83,7 @@ struct ReviewWidgetView: View {
         HStack {
             Text("widget.name").font(.caption).fontWeight(.semibold).foregroundStyle(.secondary)
             Spacer(minLength: 4)
-            Image("Fox").resizable().frame(width: 16, height: 16).clipShape(RoundedRectangle(cornerRadius: 4))
+            Image("Fox").resizable().frame(width: 16, height: 16).clipShape(.rect(cornerRadius: 4))
                 .accessibilityHidden(true)
         }
     }
@@ -85,18 +93,21 @@ struct ReviewWidgetView: View {
             if snapshot.dueNow > 0 {
                 VStack(alignment: .leading, spacing: 0) {
                     Text(snapshot.dueNow, format: .number)
-                        .font(.system(size: 44, weight: .bold, design: .rounded))
-                        .foregroundStyle(Palette.sage)
+                        .font(.system(size: dueCountSize, weight: .bold, design: .rounded))
+                        .minimumScaleFactor(0.6)
+                        .lineLimit(1)
+                        .widgetAccentable()
+                        .foregroundStyle(sage)
                         .contentTransition(.numericText())
                     Text("widget.due").font(.subheadline).foregroundStyle(.secondary)
                 }
             } else if entry.nextDueReached {
                 Label("widget.ready", systemImage: "rectangle.stack.fill")
-                    .font(.headline).foregroundStyle(Palette.sage)
+                    .font(.headline).foregroundStyle(sage)
             } else {
                 VStack(alignment: .leading, spacing: 4) {
                     Label("widget.done", systemImage: "checkmark.circle.fill")
-                        .font(.headline).foregroundStyle(Palette.sage)
+                        .font(.headline).foregroundStyle(sage)
                     if let next = snapshot.nextDue {
                         Text("widget.next \(next, style: .relative)")
                             .font(.caption).foregroundStyle(.secondary)
@@ -128,9 +139,10 @@ struct ReviewWidgetView: View {
                     }
                     Text("widget.start")
                         .font(.subheadline).fontWeight(.semibold)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(renderingMode == .fullColor ? Color.white : Color.primary)
                         .padding(.horizontal, 14).padding(.vertical, 8)
-                        .background(Capsule().fill(Palette.sage))
+                        .background(Capsule().fill(renderingMode == .fullColor ? sage : Color.primary.opacity(0.12)))
+                        .widgetAccentable()
                 }
             }
         }
@@ -143,9 +155,19 @@ struct ReviewWidgetView: View {
             VStack(spacing: 0) {
                 Image(systemName: due > 0 || entry.nextDueReached ? "rectangle.stack" : "checkmark")
                     .font(.caption)
-                if due > 0 { Text(due, format: .number).font(.headline) }
+                if due > 0 { Text(due, format: .number).font(.headline).widgetAccentable() }
             }
         }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(Text("\(Text("widget.name")): \(circularAccessibilityLabel)"))
+    }
+
+    private var circularAccessibilityLabel: Text {
+        if let snapshot = entry.snapshot, snapshot.dueNow > 0 {
+            return Text("widget.dueCount \(snapshot.dueNow)")
+        }
+        if entry.snapshot == nil { return Text("widget.empty") }
+        return entry.nextDueReached ? Text("widget.ready") : Text("widget.done")
     }
 
     private var rectangular: some View {

@@ -103,6 +103,10 @@ export const QUERY_SCOPES = {
   onboarding: ONBOARDING_QUERY_SCOPE,
 } as const;
 
+export function refreshActiveQueries(): void {
+  for (const scope of Object.values(QUERY_SCOPES)) invalidateActiveScope(scope);
+}
+
 function invalidateCollections(): void {
   invalidateActiveScope(COLLECTIONS_QUERY_SCOPE);
 }

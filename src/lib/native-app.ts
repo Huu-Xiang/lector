@@ -161,27 +161,117 @@ export function setNativeAppearance(style: 'light' | 'dark' | 'system'): Promise
 
 /** Calls `open` with the tab id the user taps. Returns a function that stops listening. */
 export function onNativeTabSelected(open: (id: string) => void): () => void {
-  const addListener = plugin(TAB_BAR)?.addListener;
+  return listenNative(TAB_BAR, 'tabSelected', (event) => {
+    const id = (event as { id?: unknown } | null)?.id;
+    if (typeof id === 'string') open(id);
+  });
+}
+
+function listenNative(
+  name: string,
+  eventName: string,
+  handler: (event: unknown) => void,
+): () => void {
+  const addListener = plugin(name)?.addListener;
   if (!addListener) return () => {};
   let handle: { remove?: () => unknown } | null = null;
   let stopped = false;
   // A plugin registered from Swift alone hands back the handle itself, not a promise.
   Promise.resolve()
     .then(() =>
-      addListener('tabSelected', (event) => {
-        const id = (event as { id?: unknown } | null)?.id;
-        if (typeof id === 'string') open(id);
+      addListener(eventName, (event) => {
+        if (!stopped) handler(event);
       }),
     )
     .then((listener) => {
       handle = listener as { remove?: () => unknown };
-      if (stopped) void handle.remove?.();
+      if (stopped) void Promise.resolve(handle?.remove?.()).catch(() => {});
     })
     .catch(() => {});
   return () => {
     stopped = true;
-    void handle?.remove?.();
+    void Promise.resolve(handle?.remove?.()).catch(() => {});
   };
+}
+
+export function onNativeTabReselected(handler: (id: string) => void): () => void {
+  return listenNative(TAB_BAR, 'tabReselected', (event) => {
+    const id = (event as { id?: unknown } | null)?.id;
+    if (typeof id === 'string') handler(id);
+  });
+}
+
+export function setNativeTabBadge(id: string, count: number): Promise<void> {
+  const value = Number.isFinite(count) && count > 0 ? String(Math.floor(count)) : null;
+  return call(TAB_BAR, 'setBadge', { id, value });
+}
+
+export interface NativeMediaInfo {
+  title: string;
+  artist?: string;
+  album?: string;
+  playing: boolean;
+  elapsed?: number;
+  duration?: number;
+  canNext?: boolean;
+  canPrevious?: boolean;
+  canSeek?: boolean;
+}
+
+export type NativeMediaCommand =
+  | 'play'
+  | 'pause'
+  | 'toggle'
+  | 'next'
+  | 'previous'
+  | 'seekForward'
+  | 'seekBackward';
+
+export function updateNativeMediaControls(info: NativeMediaInfo): Promise<void> {
+  return call('NativeMediaControls', 'update', info);
+}
+
+export function clearNativeMediaControls(): Promise<void> {
+  return call('NativeMediaControls', 'clear');
+}
+
+export function onNativeMediaCommand(handler: (command: NativeMediaCommand) => void): () => void {
+  return listenNative('NativeMediaControls', 'mediaCommand', (event) => {
+    const action = (event as { action?: unknown } | null)?.action;
+    if (
+      typeof action === 'string' &&
+      ['play', 'pause', 'toggle', 'next', 'previous', 'seekForward', 'seekBackward'].includes(
+        action,
+      )
+    ) {
+      handler(action as NativeMediaCommand);
+    }
+  });
+}
+
+export function setNativeRefreshEnabled(enabled: boolean): Promise<void> {
+  return call('NativeRefresh', 'setEnabled', { enabled });
+}
+
+export function endNativeRefreshing(): Promise<void> {
+  return call('NativeRefresh', 'endRefreshing');
+}
+
+export function onNativeRefresh(handler: () => void): () => void {
+  return listenNative('NativeRefresh', 'refresh', handler);
+}
+
+export async function requestNativeConfirmation(options: {
+  title?: string;
+  message: string;
+  confirmLabel: string;
+  cancelLabel?: string;
+  destructive?: boolean;
+}): Promise<boolean | null> {
+  const result = (await callWithResult('NativeActionSheet', 'confirm', options)) as {
+    confirmed?: unknown;
+  } | null;
+  return typeof result?.confirmed === 'boolean' ? result.confirmed : null;
 }
 
 export interface WidgetSnapshot {

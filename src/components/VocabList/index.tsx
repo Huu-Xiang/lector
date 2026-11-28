@@ -1,8 +1,20 @@
 'use client';
 
-import { Check, ChevronDown, ChevronUp, Loader2, RefreshCw, Trash, Upload } from 'lucide-react';
-import { useState, useMemo, useCallback, useEffect } from 'react';
+import {
+  Check,
+  ChevronDown,
+  ChevronRight,
+  ChevronUp,
+  Loader2,
+  RefreshCw,
+  Search,
+  Trash,
+  Upload,
+  X,
+} from 'lucide-react';
+import { useState, useMemo, useCallback, useEffect, useSyncExternalStore } from 'react';
 import { useTranslations } from 'next-intl';
+import { confirmNativeAction } from '@/lib/native-confirm';
 import type { WordState } from '@/lib/data-layer';
 import { getPageCount, clampPage, paginate } from '@/lib/pagination';
 import { SETTINGS_KEYS } from '@/app/(app)/settings/constants';
@@ -16,6 +28,21 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } fr
 import OnboardingTip from '@/components/OnboardingTip';
 import { useLibraryTitleResolver } from '@/lib/library-titles';
 import { Select } from '@/components/ui/select';
+import StateIndicator from '@/components/StateIndicator';
+import { haptic, useIsNativeApp } from '@/lib/native-app';
+import NativeVocabRow from './components/NativeVocabRow';
+import { toast } from 'sonner';
+import { isIPadApp } from '@/components/NativeBridge/ipad-layout';
+
+function subscribePhoneWidth(onChange: () => void) {
+  const query = window.matchMedia('(width < 40rem)');
+  query.addEventListener('change', onChange);
+  return () => query.removeEventListener('change', onChange);
+}
+
+function getPhoneWidth() {
+  return window.matchMedia('(width < 40rem)').matches;
+}
 
 export default function VocabList({
   entries,
@@ -30,7 +57,28 @@ export default function VocabList({
   onBulkDelete,
 }: VocabListProps) {
   const t = useTranslations('vocab.list');
+  const tCommon = useTranslations('library.common');
   const tState = useTranslations('vocab.states');
+  const tDetail = useTranslations('vocab.detail');
+  const tSearch = useTranslations('library.search');
+  const tPage = useTranslations('vocab.page');
+  const nativeApp = useIsNativeApp();
+  const phoneWidth = useSyncExternalStore(subscribePhoneWidth, getPhoneWidth, () => false);
+  const nativePhone = nativeApp && phoneWidth && !isIPadApp();
+  const [editing, setEditing] = useState(false);
+  const [swipedId, setSwipedId] = useState<string | null>(null);
+  const [rowActionPending, setRowActionPending] = useState(false);
+
+  useEffect(() => {
+    if (!swipedId) return;
+    const closeOutside = (event: PointerEvent) => {
+      if (!(event.target instanceof Element) || !event.target.closest('[data-native-vocab-row]')) {
+        setSwipedId(null);
+      }
+    };
+    document.addEventListener('pointerdown', closeOutside);
+    return () => document.removeEventListener('pointerdown', closeOutside);
+  }, [swipedId]);
 
   // Filter state
   const [stateFilter, setStateFilter] = useState<WordState | 'all' | 'learning'>('all');
@@ -266,7 +314,14 @@ export default function VocabList({
   const handleBulkDeleteButtonPressed = async () => {
     if (selectedIds.size === 0) return;
 
-    if (window.confirm(t('confirmBulkDelete', { count: selectedIds.size }))) {
+    if (
+      await confirmNativeAction({
+        message: t('confirmBulkDelete', { count: selectedIds.size }),
+        confirmLabel: tCommon('delete'),
+        cancelLabel: tCommon('cancel'),
+        destructive: true,
+      })
+    ) {
       setIsDeleting(true);
       try {
         await onBulkDelete(Array.from(selectedIds));
@@ -302,25 +357,74 @@ export default function VocabList({
   const allSelected =
     filteredEntries.length > 0 && filteredEntries.every((e) => selectedIds.has(e.id));
   const someSelected = selectedIds.size > 0;
+  const changeNativeFilter = (value: WordState | 'all' | 'learning') => {
+    if (value !== stateFilter) void haptic();
+    setStateFilter(value);
+    setSwipedId(null);
+  };
+  const runRowAction = async (id: string, action: 'known' | 'delete') => {
+    if (rowActionPending) return;
+    if (
+      action === 'delete' &&
+      !(await confirmNativeAction({
+        message: t('confirmBulkDelete', { count: 1 }),
+        confirmLabel: tCommon('delete'),
+        cancelLabel: tCommon('cancel'),
+        destructive: true,
+      }))
+    )
+      return;
+    void haptic();
+    setRowActionPending(true);
+    try {
+      await (action === 'known' ? onMarkAsKnown([id]) : onBulkDelete([id]));
+      setSwipedId(null);
+    } catch {
+      toast.error(tPage(action === 'known' ? 'markKnownFailed' : 'deleteFailed'));
+    } finally {
+      setRowActionPending(false);
+    }
+  };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="native-vocab-list-page flex flex-col gap-4" data-testid="vocab-list">
       {/* Filters and Search */}
       <div className="flex flex-wrap items-center gap-4">
         {/* Search */}
-        <div className="min-w-[200px] flex-1">
+        <div
+          className={`${nativePhone ? 'native-vocab-search relative w-full sm:w-auto' : ''} min-w-[200px] flex-1`}
+        >
+          {nativePhone && (
+            <Search
+              className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground sm:hidden"
+              aria-hidden
+            />
+          )}
           <input
             type="text"
-            placeholder={t('searchPlaceholder')}
+            data-testid="vocab-search-input"
+            placeholder={nativePhone ? t('searchWords') : t('searchPlaceholder')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full rounded-lg border border-input bg-background px-4 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none"
+            className={`${nativePhone ? 'max-sm:pr-11 max-sm:pl-10' : ''} min-h-11 w-full rounded-lg border border-input bg-background px-4 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none sm:min-h-0`}
           />
+          {nativePhone && searchQuery.length > 0 && (
+            <button
+              type="button"
+              data-testid="native-vocab-clear"
+              aria-label={tSearch('clear')}
+              onClick={() => setSearchQuery('')}
+              className="absolute top-0 right-0 flex min-h-11 min-w-11 items-center justify-center text-muted-foreground sm:hidden"
+            >
+              <X className="size-5 rounded-full bg-foreground/10 p-0.5" aria-hidden />
+            </button>
+          )}
         </div>
 
         {/* State Filter */}
         <Select
-          wrapperClassName="inline-block max-w-full min-w-0"
+          className="min-h-11 sm:min-h-0"
+          wrapperClassName={`${nativePhone ? 'hidden sm:inline-block' : 'inline-block'} max-w-full min-w-0`}
           value={stateFilter}
           onChange={(e) => setStateFilter(e.target.value as WordState | 'all' | 'learning')}
         >
@@ -335,7 +439,8 @@ export default function VocabList({
 
         {/* Book Filter */}
         <Select
-          wrapperClassName="inline-block max-w-full min-w-0"
+          className="min-h-11 sm:min-h-0"
+          wrapperClassName="w-full max-w-full min-w-0 sm:inline-block sm:w-auto"
           value={bookFilter}
           onChange={(e) => setBookFilter(e.target.value)}
         >
@@ -347,6 +452,24 @@ export default function VocabList({
           ))}
         </Select>
       </div>
+      {nativePhone && (
+        <div
+          className="-mx-4 no-scrollbar flex gap-1.5 overflow-x-auto px-4 sm:hidden"
+          data-testid="native-vocab-filters"
+        >
+          {(['all', 'learning', 'new', 'known', 'ignored'] as const).map((value) => (
+            <button
+              key={value}
+              type="button"
+              aria-pressed={stateFilter === value}
+              onClick={() => changeNativeFilter(value)}
+              className={`native-vocab-filter min-h-11 min-w-11 shrink-0 rounded-full px-3 text-sm font-medium ${stateFilter === value ? 'bg-[var(--primary-soft)] text-primary' : 'bg-[var(--ios-fill)] text-muted-foreground'}`}
+            >
+              {value === 'all' || value === 'learning' ? t(`filter.${value}`) : tState(value)}
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* Bulk Actions */}
       {(someSelected || onSyncWithAnki) && (
@@ -442,18 +565,123 @@ export default function VocabList({
 
       {/* Results count — the filtered total (the page footer shows the visible
           range). The page count itself is paginated below. */}
-      <div className="text-sm text-muted-foreground">
-        {someSelected
-          ? t('resultsSelected', {
-              filtered: filteredEntries.length,
-              total: visibleBaseTotal,
-              selected: selectedIds.size,
-            })
-          : t('results', { filtered: filteredEntries.length, total: visibleBaseTotal })}
+      <div
+        className={`${nativeApp ? 'flex min-h-11 items-center justify-between gap-2 sm:block sm:min-h-0' : ''} text-sm text-muted-foreground`}
+        data-testid="vocab-results-bar"
+      >
+        <span>
+          {someSelected
+            ? t('resultsSelected', {
+                filtered: filteredEntries.length,
+                total: visibleBaseTotal,
+                selected: selectedIds.size,
+              })
+            : t('results', { filtered: filteredEntries.length, total: visibleBaseTotal })}
+        </span>
+        {nativeApp && (
+          <div className="flex shrink-0 items-center gap-2 sm:hidden">
+            {editing && (
+              <label className="flex size-11 shrink-0 cursor-pointer items-center justify-center">
+                <input
+                  type="checkbox"
+                  checked={allSelected}
+                  aria-label={t('columns.text')}
+                  onChange={(event) => handleSelectAll(event.target.checked)}
+                  className="size-[20px] accent-primary"
+                />
+              </label>
+            )}
+            <Button
+              variant="ghost"
+              aria-pressed={editing}
+              data-testid="native-vocab-edit"
+              onClick={() => {
+                setEditing(!editing);
+                setSelectedIds(new Set());
+                setSwipedId(null);
+              }}
+              className="min-h-11 min-w-11"
+            >
+              {editing ? tDetail('cancel') : tDetail('edit')}
+            </Button>
+          </div>
+        )}
       </div>
 
+      {nativeApp && (
+        <div className="sm:hidden" data-testid="native-vocab-list">
+          <ul className="overflow-hidden rounded-2xl border border-border/60 bg-card">
+            {paginatedEntries.map((entry) => (
+              <NativeVocabRow
+                key={entry.id}
+                swipeEnabled={nativePhone}
+                editing={editing}
+                open={swipedId === entry.id}
+                onOpenChange={(open) => setSwipedId(open ? entry.id : null)}
+                onActivate={() => onEntryClick(entry)}
+                actions={
+                  <>
+                    <button
+                      type="button"
+                      data-testid="native-vocab-known"
+                      disabled={rowActionPending}
+                      onClick={() => void runRowAction(entry.id, 'known')}
+                      className="flex min-h-11 w-[76px] items-center justify-center bg-primary px-2 text-sm font-semibold text-primary-foreground"
+                    >
+                      {tState('known')}
+                    </button>
+                    <button
+                      type="button"
+                      data-testid="native-vocab-delete"
+                      disabled={rowActionPending}
+                      onClick={() => void runRowAction(entry.id, 'delete')}
+                      className="flex min-h-11 w-[76px] items-center justify-center bg-destructive px-2 text-sm font-semibold text-white"
+                    >
+                      {tDetail('delete')}
+                    </button>
+                  </>
+                }
+                checkbox={
+                  editing && (
+                    <label className="ms-2 flex size-11 shrink-0 cursor-pointer items-center justify-center">
+                      <input
+                        type="checkbox"
+                        checked={selectedIds.has(entry.id)}
+                        aria-label={entry.text}
+                        onChange={(event) => handleSelect(entry.id, event.target.checked)}
+                        className="size-[20px] accent-primary"
+                      />
+                    </label>
+                  )
+                }
+              >
+                <span className="min-w-0 flex-1">
+                  <span className="flex items-center gap-2">
+                    <span className="min-w-0 text-[17px] font-semibold break-words">
+                      {entry.text}
+                    </span>
+                    <StateIndicator state={entry.state} />
+                  </span>
+                  <span className="mt-1 line-clamp-2 text-[15px] text-muted-foreground">
+                    {entry.translation}
+                  </span>
+                </span>
+                <ChevronRight className="size-4 shrink-0 text-muted-foreground" aria-hidden />
+              </NativeVocabRow>
+            ))}
+            {filteredEntries.length === 0 && (
+              <li className="px-4 py-10 text-center text-sm text-muted-foreground">
+                {visibleBaseTotal === 0 ? t('emptyNoEntries') : t('emptyNoMatches')}
+              </li>
+            )}
+          </ul>
+        </div>
+      )}
+
       {/* Table */}
-      <div className="overflow-x-auto rounded-lg border border-border">
+      <div
+        className={`${nativeApp ? 'hidden sm:block' : ''} overflow-x-auto rounded-lg border border-border`}
+      >
         <table className="w-full text-left">
           <thead className="bg-muted">
             <tr>

@@ -1146,6 +1146,7 @@
     "intro": "Tell us what is wrong, or what you want next. We read every message.",
     "messageLabel": "Your message",
     "placeholder": "Describe the problem or idea. You can paste screenshots here.",
+    "placeholderTouch": "Tell us what happened or share an idea.",
     "counter": "{count} / {max}",
     "addImage": "Add image",
     "removeImage": "Remove image {name}",
@@ -1666,6 +1667,7 @@
     "correction": {
       "yourText": "Your text",
       "clickHint": "Click highlighted words to see corrections",
+      "tapHint": "Tap highlighted words to see corrections.",
       "corrected": "Corrected",
       "summary": "{count, plural, one {# correction} other {# corrections}}:",
       "perfect": "Perfect! No corrections needed."
@@ -1814,6 +1816,7 @@
     "vocabGrowth": {
       "trackedWords": "Based on your saved words and their learning states.",
       "noTrackedWords": "Save or mark words as known to see a trend.",
+      "growthHint": "Keep reading to see your growth curve over time.",
       "title": "Vocabulary Growth",
       "knownWords": "Known Words",
       "learning": "Learning",
@@ -2116,6 +2119,7 @@
       "multipleChoice": "Multiple Choice",
       "multipleChoiceTitle": "Switch to multiple choice for this question",
       "hintNone": "Hint (?)",
+      "hintNoneTouch": "Hint",
       "hintLetters": "Hint ({count, plural, one {# letter} other {# letters}})",
       "hintTitle": "Reveal next letter",
       "submit": "Submit",
@@ -2305,6 +2309,7 @@
       "phrase": "phrase",
       "confirmBulkDelete": "Are you sure you want to delete {count} vocab entries?",
       "searchPlaceholder": "Search words, translations, or sentences...",
+      "searchWords": "Search words…",
       "filter": {
         "all": "All",
         "learning": "Learning"
@@ -2471,6 +2476,7 @@
       },
       "audioSection": "Pronunciation",
       "autoPronounce": "Auto-pronounce on word click",
+      "autoPronounceTouch": "Auto-pronounce on word tap",
       "autoPronounceHint": "Off by default. Tap the speaker icon anytime to hear a word.",
       "settingSaveFailed": "Could not save this setting. Try again."
     },

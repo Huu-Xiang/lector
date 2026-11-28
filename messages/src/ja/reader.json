@@ -60,6 +60,7 @@
       },
       "audioSection": "発音",
       "autoPronounce": "単語クリック時に自動発音",
+      "autoPronounceTouch": "単語タップ時に自動発音",
       "autoPronounceHint": "初期設定はオフ。スピーカーアイコンでいつでも聞けます。",
       "settingSaveFailed": "この設定を保存できませんでした。もう一度お試しください。"
     },

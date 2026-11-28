@@ -50,6 +50,7 @@
       "multipleChoice": "選択式",
       "multipleChoiceTitle": "この問題を選択式に切り替える",
       "hintNone": "ヒント (?)",
+      "hintNoneTouch": "ヒント",
       "hintLetters": "ヒント（{count} 文字）",
       "hintTitle": "次の文字を表示",
       "submit": "送信",
@@ -239,6 +240,7 @@
       "phrase": "フレーズ",
       "confirmBulkDelete": "{count} 件の単語を削除してもよろしいですか？",
       "searchPlaceholder": "単語、翻訳、文を検索...",
+      "searchWords": "単語を検索…",
       "filter": {
         "all": "すべて",
         "learning": "学習中"

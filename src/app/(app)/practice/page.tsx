@@ -4,6 +4,8 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useFormatter, useTranslations } from 'next-intl';
 import { useIsNativeApp } from '@/lib/native-app';
+import { useIsNativePhone } from '@/lib/use-native-phone';
+import { useNativeDrillExit } from '@/lib/native-drill';
 import { CheckCircle, Star } from 'lucide-react';
 import { DeckShuffle } from '@/components/Loaders';
 import TranslationDrawer, { TranslationDrawerSlot } from '@/components/TranslationDrawer';
@@ -94,6 +96,7 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
   const router = useRouter();
   const t = useTranslations('practice');
   const nativeApp = useIsNativeApp();
+  const nativePhone = useIsNativePhone();
   const format = useFormatter();
 
   const {
@@ -780,11 +783,23 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
   const onboardingEncounteredCount = encounteredOnboardingTerms(onboardingSnapshot).length;
   const onboardingSavedCount = savedOnboardingWords(onboardingSnapshot).length;
   const onboardingProgress = onboardingSnapshot?.progress;
+  const exitActiveDrill = useCallback(async () => {
+    clearMcTimer();
+    if (onboardingMode) {
+      const lessonId = onboardingProgress?.recommendedLessonId;
+      router.push(lessonId ? `/read/${lessonId}?onboarding=1` : '/');
+      return;
+    }
+    setState('setup');
+    const counts = await getCollectionCounts();
+    setCollectionCounts(counts);
+  }, [clearMcTimer, onboardingMode, onboardingProgress?.recommendedLessonId, router, setState]);
+  useNativeDrillExit(exitActiveDrill, state !== 'setup');
 
   return (
     <div className="flex min-h-screen">
       <main
-        className={`${state === 'setup' ? 'native-compact-page' : ''} mx-auto max-w-2xl min-w-0 flex-1 px-4 py-8 sm:px-6 lg:px-8 ${wordTooltip ? 'pb-[calc(var(--sheet-h)+2rem)] lg:pb-8' : ''}`}
+        className={`native-practice-page ${state === 'setup' ? 'native-compact-page' : ''} mx-auto w-full max-w-2xl min-w-0 flex-1 px-4 py-8 sm:px-6 lg:px-8 ${wordTooltip ? 'pb-[calc(var(--sheet-h)+2rem)] lg:pb-8' : ''}`}
       >
         {/* Setup screen */}
         {state === 'setup' && (
@@ -809,7 +824,13 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
                 sentence, type it back). Both share the collection / round size /
                 review options below. */}
             <div className="mb-3 sm:mb-6">
-              <div className="grid grid-cols-2 gap-2">
+              <div
+                className={
+                  nativeApp
+                    ? 'native-segment-track grid grid-cols-2 gap-2'
+                    : 'grid grid-cols-2 gap-2'
+                }
+              >
                 {/* Explicit aria-labels keep each button's accessible name to
                     just "Cloze"/"Dictation" — the descriptive subtitle stays
                     visible but doesn't leak into role-based locators (e.g. the
@@ -909,7 +930,13 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
 
               {/* Collection */}
               <div className="mb-4">
-                <div className="grid grid-cols-3 gap-2">
+                <div
+                  className={
+                    nativeApp
+                      ? 'native-segment-track grid grid-cols-3 gap-2'
+                      : 'grid grid-cols-3 gap-2'
+                  }
+                >
                   {VISIBLE_COLLECTIONS.map((coll) => {
                     const count = collectionCounts?.[coll];
                     return (
@@ -920,13 +947,13 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
                         variant={selectedCollection === coll ? 'default' : 'secondary'}
                         className={
                           nativeApp
-                            ? 'h-auto min-h-11 flex-col gap-0 px-1.5 py-1.5 whitespace-normal'
+                            ? 'h-auto min-h-11 min-w-0 flex-col gap-0 px-1.5 py-1.5 whitespace-normal'
                             : 'flex h-14 flex-col justify-center gap-0'
                         }
                       >
                         <div>{t(`collections.${coll}`)}</div>
                         {count && count.total > 0 && (
-                          <div className="mt-0.5 text-[11px] font-normal opacity-75">
+                          <div className="mt-0.5 text-xs font-normal opacity-75 sm:text-[11px]">
                             {t('setup.mastered', { mastered: count.mastered, total: count.total })}
                           </div>
                         )}
@@ -942,11 +969,16 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
                   <label className="mb-2 block text-xs font-medium text-muted-foreground">
                     {t('setup.sentences')}
                   </label>
-                  <div className="flex gap-1.5">
+                  <div className={nativeApp ? 'native-segment-track flex gap-1.5' : 'flex gap-1.5'}>
                     {ROUND_SIZES.map((size) => (
                       <Button
                         key={size}
                         size="sm"
+                        className={
+                          nativeApp
+                            ? 'min-h-11 min-w-11 flex-1 px-1 sm:min-h-8 sm:min-w-0 sm:flex-none sm:px-3'
+                            : undefined
+                        }
                         aria-pressed={roundSize === size}
                         variant={roundSize === size ? 'default' : 'secondary'}
                         onClick={() => {
@@ -966,11 +998,14 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
                     <label className="mb-2 block text-xs font-medium text-muted-foreground">
                       {t('setup.mode')}
                     </label>
-                    <div className="flex gap-1.5">
+                    <div
+                      className={nativeApp ? 'native-segment-track flex gap-1.5' : 'flex gap-1.5'}
+                    >
                       <Button
                         onClick={() => handleSetPracticeMode('type')}
                         aria-pressed={practiceMode === 'type'}
                         variant={practiceMode === 'type' ? 'default' : 'secondary'}
+                        className={nativeApp ? 'min-h-11 min-w-11 flex-1 sm:flex-none' : undefined}
                       >
                         {t('setup.modeType')}
                       </Button>
@@ -978,6 +1013,7 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
                         onClick={() => handleSetPracticeMode('mc')}
                         aria-pressed={practiceMode === 'mc'}
                         variant={practiceMode === 'mc' ? 'default' : 'secondary'}
+                        className={nativeApp ? 'min-h-11 min-w-11 flex-1 sm:flex-none' : undefined}
                       >
                         {t('setup.modeMc')}
                       </Button>
@@ -990,7 +1026,7 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
               <Button
                 onClick={() => startRoundWith(selectedCollection, 'new', roundSize)}
                 disabled={!seeded}
-                className="w-full"
+                className="native-practice-start min-h-11 w-full sm:min-h-0"
               >
                 {seeded ? t('setup.start') : t('setup.loading')}
               </Button>
@@ -1012,18 +1048,8 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
               )}
               <div className="mb-2 flex items-center justify-between">
                 <button
-                  onClick={async () => {
-                    clearMcTimer();
-                    if (onboardingMode) {
-                      const lessonId = onboardingProgress?.recommendedLessonId;
-                      router.push(lessonId ? `/read/${lessonId}?onboarding=1` : '/');
-                      return;
-                    }
-                    setState('setup');
-                    const counts = await getCollectionCounts();
-                    setCollectionCounts(counts);
-                  }}
-                  className="-ml-2 inline-flex min-h-11 items-center px-2 text-sm text-muted-foreground transition-colors hover:text-foreground active:opacity-60"
+                  onClick={exitActiveDrill}
+                  className="native-drill-back -ml-2 inline-flex min-h-11 items-center px-2 text-sm text-muted-foreground transition-colors hover:text-foreground active:opacity-60"
                 >
                   {t('round.back')}
                 </button>
@@ -1179,7 +1205,7 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
                                     placeholder="..."
                                     dir={getActivePack().script.direction}
                                     lang={getActivePack().script.bcp47}
-                                    className={`inline-block w-32 rounded-lg border-2 px-2 py-1 text-center text-xl font-medium transition-all outline-none focus:ring-2 focus:ring-offset-1 ${inputColorClass} ${fuzzyStatus === 'match' ? 'text-primary focus:ring-ring' : ''} ${fuzzyStatus === 'partial' ? 'text-primary focus:ring-ring' : ''} ${fuzzyStatus === 'wrong' ? 'text-destructive focus:ring-destructive' : ''} ${fuzzyStatus === 'empty' ? 'text-foreground focus:ring-ring' : ''} `}
+                                    className={`native-cloze-input inline-block w-32 rounded-lg border-2 px-2 py-1 text-center text-xl font-medium transition-all outline-none focus:ring-2 focus:ring-offset-1 ${inputColorClass} ${fuzzyStatus === 'match' ? 'text-primary focus:ring-ring' : ''} ${fuzzyStatus === 'partial' ? 'text-primary focus:ring-ring' : ''} ${fuzzyStatus === 'wrong' ? 'text-destructive focus:ring-destructive' : ''} ${fuzzyStatus === 'empty' ? 'text-foreground focus:ring-ring' : ''} `}
                                     style={{
                                       minWidth: `${Math.max(graphemeLength(clozeBase) * 0.7, 4)}ch`,
                                     }}
@@ -1280,7 +1306,7 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
                     {/* Multiple-choice shortcut hints (real MC mode only — the
                         number keys aren't wired up for the per-question fallback) */}
                     {practiceMode === 'mc' && (
-                      <div className="mb-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+                      <div className="native-shortcut-hints mb-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
                         <span className="inline-flex items-center gap-1.5">
                           <KbdGroup>
                             <Kbd>1</Kbd>
@@ -1299,7 +1325,7 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
 
                     {/* Type mode buttons */}
                     {practiceMode === 'type' && !mcFallback && (
-                      <div className="flex flex-wrap justify-center gap-2">
+                      <div className="native-practice-actions flex flex-wrap justify-center gap-2">
                         <Button
                           type="button"
                           variant="secondary"
@@ -1320,11 +1346,12 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
                         >
                           {hintLetters > 0
                             ? t('question.hintLetters', { count: hintLetters })
-                            : t('question.hintNone')}
+                            : t(nativePhone ? 'question.hintNoneTouch' : 'question.hintNone')}
                         </Button>
                         <Button
                           type="button"
                           size="lg"
+                          className="native-practice-check"
                           onClick={handleSubmit}
                           disabled={!userAnswer.trim()}
                         >
@@ -1335,7 +1362,7 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
 
                     {/* Type mode shortcut hints */}
                     {practiceMode === 'type' && !mcFallback && (
-                      <div className="mt-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+                      <div className="native-shortcut-hints mt-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
                         <span className="inline-flex items-center gap-1.5">
                           <Kbd>Enter</Kbd>
                           {fuzzyStatus === 'match' ? t('question.submit') : t('question.check')}
@@ -1398,6 +1425,7 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
                   <Button
                     variant={'secondary'}
                     type="button"
+                    className="native-drill-back"
                     onClick={async () => {
                       setState('setup');
                       const counts = await getCollectionCounts();
@@ -1539,7 +1567,7 @@ function ClozePractice({ onOpenWordReview }: { onOpenWordReview: () => void }) {
                 </p>
                 <Button
                   type="button"
-                  className="mt-6"
+                  className="native-drill-back mt-6"
                   onClick={() => {
                     const lessonId = onboardingProgress?.recommendedLessonId;
                     router.push(lessonId ? `/read/${lessonId}?onboarding=1` : '/');

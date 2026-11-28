@@ -1146,6 +1146,7 @@
     "intro": "불편한 점이나 바라는 기능을 알려 주세요. 모든 메시지를 읽고 있어요.",
     "messageLabel": "메시지",
     "placeholder": "문제나 아이디어를 적어 주세요. 스크린샷을 붙여넣을 수도 있어요.",
+    "placeholderTouch": "어떤 일이 있었는지 알려 주거나 아이디어를 공유해 주세요.",
     "counter": "{count} / {max}",
     "addImage": "이미지 추가",
     "removeImage": "이미지 {name} 삭제",
@@ -1666,6 +1667,7 @@
     "correction": {
       "yourText": "내가 쓴 글",
       "clickHint": "강조된 단어를 누르면 교정 내용을 볼 수 있어요",
+      "tapHint": "강조된 단어를 탭하면 교정 내용을 볼 수 있어요.",
       "corrected": "교정된 글",
       "summary": "교정 {count}개:",
       "perfect": "완벽해요! 고칠 곳이 없어요."
@@ -1814,6 +1816,7 @@
     "vocabGrowth": {
       "trackedWords": "저장한 단어와 학습 상태를 바탕으로 집계합니다.",
       "noTrackedWords": "단어를 저장하거나 아는 단어로 표시하면 추이를 볼 수 있어요.",
+      "growthHint": "계속 읽으면 어휘가 늘어나는 추이를 볼 수 있어요.",
       "title": "어휘 성장",
       "knownWords": "아는 단어",
       "learning": "학습 중",
@@ -2116,6 +2119,7 @@
       "multipleChoice": "객관식",
       "multipleChoiceTitle": "이 문제를 객관식으로 바꾸기",
       "hintNone": "힌트 (?)",
+      "hintNoneTouch": "힌트",
       "hintLetters": "힌트 ({count}글자)",
       "hintTitle": "다음 글자 보기",
       "submit": "제출",
@@ -2305,6 +2309,7 @@
       "phrase": "구절",
       "confirmBulkDelete": "단어장 항목 {count}개를 삭제할까요?",
       "searchPlaceholder": "단어, 번역, 문장 검색...",
+      "searchWords": "단어 검색…",
       "filter": {
         "all": "전체",
         "learning": "학습 중"
@@ -2471,6 +2476,7 @@
       },
       "audioSection": "발음",
       "autoPronounce": "단어 클릭 시 자동 발음",
+      "autoPronounceTouch": "단어 탭 시 자동 발음",
       "autoPronounceHint": "기본은 꺼짐이에요. 스피커 아이콘을 눌러 언제든 들을 수 있어요.",
       "settingSaveFailed": "이 설정을 저장하지 못했어요. 다시 시도해 주세요."
     },

@@ -10,10 +10,7 @@ import {
   type LessonSearchMatch,
   type LessonSearchResponse,
 } from '@/lib/data-layer';
-import {
-  buildConcordanceJumpHref,
-  stashConcordanceJump,
-} from '@/lib/concordance-jump';
+import { buildConcordanceJumpHref, stashConcordanceJump } from '@/lib/concordance-jump';
 import { Button } from '@/components/ui/button';
 import { Select } from '@/components/ui/select';
 import TargetText from '@/components/TargetText';
@@ -90,9 +87,7 @@ export default function LibrarySearch({
 
   // Clear stale group scope if that group was deleted or no longer applies.
   const effectiveScope =
-    scope === '' ||
-    (scope === 'ungrouped' && hasUngrouped) ||
-    groups.some((g) => g.id === scope)
+    scope === '' || (scope === 'ungrouped' && hasUngrouped) || groups.some((g) => g.id === scope)
       ? scope
       : '';
 
@@ -220,7 +215,7 @@ export default function LibrarySearch({
             placeholder={t('placeholder')}
             aria-label={t('ariaLabel')}
             data-testid="library-search-input"
-            className="h-10 w-full rounded-lg border border-input bg-background pr-10 pl-9 text-base text-foreground shadow-xs placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none md:text-sm dark:bg-input/30 [&::-webkit-search-cancel-button]:hidden"
+            className="h-11 w-full rounded-lg border border-input bg-background pr-10 pl-9 text-base text-foreground shadow-xs placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none sm:h-10 md:text-sm dark:bg-input/30 [&::-webkit-search-cancel-button]:hidden"
           />
           {query.length > 0 && (
             <button
@@ -232,7 +227,7 @@ export default function LibrarySearch({
               aria-label={t('clear')}
               title={t('clear')}
               data-testid="library-search-clear"
-              className="absolute top-1/2 right-1.5 grid size-8 -translate-y-1/2 place-items-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+              className="absolute top-1/2 right-0 grid size-11 -translate-y-1/2 place-items-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground sm:right-1.5 sm:size-8"
             >
               <X className="h-4 w-4" aria-hidden="true" />
             </button>
@@ -249,7 +244,7 @@ export default function LibrarySearch({
             aria-label={t('scopeLabel')}
             data-testid="library-search-scope"
             wrapperClassName="sm:w-52 shrink-0"
-            className="h-10 rounded-lg bg-background"
+            className="h-11 rounded-lg bg-background sm:h-10"
           >
             <option value="">{t('allLibrary')}</option>
             {groups.map((group) => (

@@ -7,6 +7,7 @@ import { useTranslations } from 'next-intl';
 import PageOutline from '@/components/PageOutline';
 import { useQueryRefresh } from '@/lib/use-query-refresh';
 import MarkdownReader from '@/components/MarkdownReader';
+import ReaderDisplaySheet from '@/components/MarkdownReader/ReaderDisplaySheet';
 import OnboardingCoach from '@/components/OnboardingCoach';
 import TranslationDrawer, { TranslationDrawerSlot } from '@/components/TranslationDrawer';
 import { Button } from '@/components/ui/button';
@@ -61,6 +62,8 @@ import { addWordCard, addClozeCard, buildSourceLinkHtml } from '@/lib/anki';
 import { queueForAnki } from '@/lib/anki-queue';
 import { useAnkiTransport } from '@/lib/anki-transport';
 import { useLectorMode } from '@/lib/use-env';
+import { useIsNativeApp } from '@/lib/native-app';
+import { useIsNativePhone } from '@/lib/use-native-phone';
 import {
   createKeyedGuard,
   createRepeatLookupTracker,
@@ -164,9 +167,20 @@ function isContentFiltered(err: unknown): boolean {
   return err instanceof Error && err.message === CONTENT_FILTERED;
 }
 
-function ReadingDifficulty({ lessonId, language }: { lessonId: string; language: string }) {
+function ReadingDifficulty({
+  lessonId,
+  language,
+  submitted,
+  onSubmit,
+  menu = false,
+}: {
+  lessonId: string;
+  language: string;
+  submitted: boolean;
+  onSubmit: () => void;
+  menu?: boolean;
+}) {
   const t = useTranslations('reader.page');
-  const [submitted, setSubmitted] = useState(false);
   if (submitted) return null;
 
   const choices = [
@@ -174,6 +188,26 @@ function ReadingDifficulty({ lessonId, language }: { lessonId: string; language:
     { outcome: 'just_right', label: t('analyticsJustRight') },
     { outcome: 'too_hard', label: t('analyticsTooHard') },
   ];
+  const items = choices.map(({ outcome, label }) => (
+    <DropdownMenuItem
+      key={outcome}
+      className={menu ? 'min-h-11' : undefined}
+      onClick={() => {
+        trackProductEvent({ event: 'reading_difficulty', language, lessonId, outcome });
+        onSubmit();
+      }}
+    >
+      {label}
+    </DropdownMenuItem>
+  ));
+  if (menu) {
+    return (
+      <DropdownMenuGroup className="sm:hidden" data-testid="native-reading-difficulty">
+        <DropdownMenuLabel>{t('analyticsDifficulty')}</DropdownMenuLabel>
+        {items}
+      </DropdownMenuGroup>
+    );
+  }
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
@@ -184,19 +218,7 @@ function ReadingDifficulty({ lessonId, language }: { lessonId: string; language:
       >
         <MessageSquare className="size-5" aria-hidden />
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        {choices.map(({ outcome, label }) => (
-          <DropdownMenuItem
-            key={outcome}
-            onClick={() => {
-              trackProductEvent({ event: 'reading_difficulty', language, lessonId, outcome });
-              setSubmitted(true);
-            }}
-          >
-            {label}
-          </DropdownMenuItem>
-        ))}
-      </DropdownMenuContent>
+      <DropdownMenuContent align="end">{items}</DropdownMenuContent>
     </DropdownMenu>
   );
 }
@@ -218,10 +240,15 @@ function keepProgress(current: Lesson | null, next: Lesson): Lesson {
 export default function ReadPage({ params }: { params: Promise<{ bookId: string }> }) {
   const { bookId: lessonId } = use(params);
   const t = useTranslations('reader.page');
+  const tMarkdown = useTranslations('reader.markdown');
   const router = useRouter();
   const activeLang = useActiveLanguage();
   const ankiTransport = useAnkiTransport();
   const cloud = useLectorMode() === 'cloud';
+  const nativeApp = useIsNativeApp();
+  const nativePhone = useIsNativePhone();
+  const [difficultySubmittedFor, setDifficultySubmittedFor] = useState<string | null>(null);
+  const submitDifficulty = useCallback(() => setDifficultySubmittedFor(lessonId), [lessonId]);
 
   const [lesson, setLesson] = useState<Lesson | null>(() => rememberedLesson(lessonId));
   // The LESSON's pack, not the active one — same precedent as MarkdownReader.
@@ -2506,79 +2533,124 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     t,
   ]);
 
-  const listenHeaderAction = useMemo(
-    () => (
+  const listenHeaderAction = useCallback(
+    (startEdit?: () => void) => (
       <>
         {cloud && (
-          <ReadingDifficulty key={lessonId} lessonId={lessonId} language={readingLanguage} />
+          <div className={nativeApp ? 'hidden sm:block' : undefined}>
+            <ReadingDifficulty
+              lessonId={lessonId}
+              language={readingLanguage}
+              submitted={difficultySubmittedFor === lessonId}
+              onSubmit={submitDifficulty}
+            />
+          </div>
         )}
-        <DropdownMenu>
-          <DropdownMenuTrigger
-            aria-label={t('displayMenu')}
-            title={t('displayMenu')}
-            data-testid="reader-display-menu-btn"
-            className="flex min-h-11 min-w-11 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent active:opacity-60"
-          >
-            <SlidersHorizontal className="h-5 w-5" aria-hidden />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            align="end"
-            className="w-64 p-1.5"
-            data-testid="reader-display-menu"
-          >
-            <DropdownMenuGroup>
-              <DropdownMenuLabel>{t('wordMarking')}</DropdownMenuLabel>
-              <DropdownMenuRadioGroup
-                value={wordHighlightMode}
-                onValueChange={(value) => {
-                  if (isWordHighlightMode(value)) void handleHighlightModeChange(value);
-                }}
-              >
-                {WORD_HIGHLIGHT_MODES.map((mode) => (
-                  <DropdownMenuRadioItem
-                    key={mode}
-                    value={mode}
-                    data-testid={`highlight-mode-${mode}`}
-                    className="items-start py-2"
-                  >
-                    <div className="flex flex-col gap-0.5 pr-2">
-                      <span className="text-sm font-medium leading-tight">
-                        {t(`markingMode.${mode}`)}
-                      </span>
-                      <span className="text-[11px] leading-snug text-muted-foreground">
-                        {t(`markingModeHint.${mode}`)}
-                      </span>
-                    </div>
-                  </DropdownMenuRadioItem>
-                ))}
-              </DropdownMenuRadioGroup>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuLabel>{t('audioSection')}</DropdownMenuLabel>
-              <DropdownMenuCheckboxItem
-                checked={autoPronounceOnLookup}
-                onCheckedChange={(checked) => void handleAutoPronounceChange(checked === true)}
-                data-testid="toggle-auto-pronounce"
-                className="items-start py-2"
-              >
-                <div className="flex flex-col gap-0.5 pr-2">
-                  <span className="text-sm font-medium leading-tight">{t('autoPronounce')}</span>
-                  <span className="text-[11px] leading-snug text-muted-foreground">
-                    {t('autoPronounceHint')}
-                  </span>
-                </div>
-              </DropdownMenuCheckboxItem>
-            </DropdownMenuGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        {nativePhone ? (
+          <ReaderDisplaySheet
+            startEdit={startEdit}
+            mode={wordHighlightMode}
+            onModeChange={(mode) => void handleHighlightModeChange(mode)}
+            autoPronounce={autoPronounceOnLookup}
+            onAutoPronounceChange={(value) => void handleAutoPronounceChange(value)}
+            showDifficulty={cloud && difficultySubmittedFor !== lessonId}
+            onDifficulty={(outcome) => {
+              trackProductEvent({
+                event: 'reading_difficulty',
+                language: readingLanguage,
+                lessonId,
+                outcome,
+              });
+              submitDifficulty();
+            }}
+          />
+        ) : (
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              aria-label={t('displayMenu')}
+              title={t('displayMenu')}
+              data-testid="reader-display-menu-btn"
+              className={`flex min-h-11 min-w-11 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent active:opacity-60 ${nativeApp ? 'max-sm:order-3' : ''}`}
+            >
+              <SlidersHorizontal className="h-5 w-5" aria-hidden />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="end"
+              className="w-64 p-1.5"
+              data-testid="reader-display-menu"
+            >
+              {nativeApp && cloud && (
+                <ReadingDifficulty
+                  lessonId={lessonId}
+                  language={readingLanguage}
+                  submitted={difficultySubmittedFor === lessonId}
+                  onSubmit={submitDifficulty}
+                  menu
+                />
+              )}
+              {startEdit && (
+                <DropdownMenuItem
+                  onClick={startEdit}
+                  data-testid="native-edit-text-menu-item"
+                  className="min-h-11 sm:hidden"
+                >
+                  {tMarkdown('editText')}
+                </DropdownMenuItem>
+              )}
+              <DropdownMenuGroup>
+                <DropdownMenuLabel>{t('wordMarking')}</DropdownMenuLabel>
+                <DropdownMenuRadioGroup
+                  value={wordHighlightMode}
+                  onValueChange={(value) => {
+                    if (isWordHighlightMode(value)) void handleHighlightModeChange(value);
+                  }}
+                >
+                  {WORD_HIGHLIGHT_MODES.map((mode) => (
+                    <DropdownMenuRadioItem
+                      key={mode}
+                      value={mode}
+                      data-testid={`highlight-mode-${mode}`}
+                      className="items-start py-2"
+                    >
+                      <div className="flex flex-col gap-0.5 pr-2">
+                        <span className="text-sm leading-tight font-medium">
+                          {t(`markingMode.${mode}`)}
+                        </span>
+                        <span className="text-[11px] leading-snug text-muted-foreground">
+                          {t(`markingModeHint.${mode}`)}
+                        </span>
+                      </div>
+                    </DropdownMenuRadioItem>
+                  ))}
+                </DropdownMenuRadioGroup>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuLabel>{t('audioSection')}</DropdownMenuLabel>
+                <DropdownMenuCheckboxItem
+                  checked={autoPronounceOnLookup}
+                  onCheckedChange={(checked) => void handleAutoPronounceChange(checked === true)}
+                  data-testid="toggle-auto-pronounce"
+                  className="items-start py-2"
+                >
+                  <div className="flex flex-col gap-0.5 pr-2">
+                    <span className="text-sm leading-tight font-medium">{t('autoPronounce')}</span>
+                    <span className="text-[11px] leading-snug text-muted-foreground">
+                      {t('autoPronounceHint')}
+                    </span>
+                  </div>
+                </DropdownMenuCheckboxItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
         {canListenAlong && (
           <button
             onClick={() => setListenMode(true)}
             title={t('listenAlong')}
             aria-label={t('listenAlong')}
             data-testid="listen-along-toggle"
-            className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-accent"
+            className={`flex min-h-11 min-w-11 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent ${nativeApp ? 'max-sm:order-1' : ''}`}
           >
             <Headphones className="h-5 w-5" />
           </button>
@@ -2587,6 +2659,10 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
     ),
     [
       cloud,
+      nativeApp,
+      nativePhone,
+      difficultySubmittedFor,
+      submitDifficulty,
       canListenAlong,
       lessonId,
       readingLanguage,
@@ -2595,6 +2671,7 @@ export default function ReadPage({ params }: { params: Promise<{ bookId: string 
       handleHighlightModeChange,
       handleAutoPronounceChange,
       t,
+      tMarkdown,
     ],
   );
 

@@ -30,6 +30,7 @@
     "correction": {
       "yourText": "你的原文",
       "clickHint": "点击高亮的词查看修改",
+      "tapHint": "轻点高亮的词查看修改。",
       "corrected": "修改后",
       "summary": "{count} 处修改：",
       "perfect": "太棒了！无需修改。"
@@ -178,6 +179,7 @@
     "vocabGrowth": {
       "trackedWords": "根据词表里已掌握和学习中的词统计。",
       "noTrackedWords": "保存单词或标记为已掌握后，就能看到变化。",
+      "growthHint": "继续阅读，逐步见证词汇量的增长。",
       "title": "词汇增长",
       "knownWords": "已掌握的词",
       "learning": "学习中",

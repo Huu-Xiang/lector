@@ -1146,6 +1146,7 @@
     "intro": "哪里不好用，或者你想要什么功能，都可以告诉我们。每一条我们都会看。",
     "messageLabel": "你的留言",
     "placeholder": "写下问题或想法。可以直接把截图粘贴到这里。",
+    "placeholderTouch": "告诉我们遇到的问题，或分享你的想法。",
     "counter": "{count} / {max}",
     "addImage": "添加图片",
     "removeImage": "移除图片 {name}",
@@ -1666,6 +1667,7 @@
     "correction": {
       "yourText": "你的原文",
       "clickHint": "点击高亮的词查看修改",
+      "tapHint": "轻点高亮的词查看修改。",
       "corrected": "修改后",
       "summary": "{count} 处修改：",
       "perfect": "太棒了！无需修改。"
@@ -1814,6 +1816,7 @@
     "vocabGrowth": {
       "trackedWords": "根据词表里已掌握和学习中的词统计。",
       "noTrackedWords": "保存单词或标记为已掌握后，就能看到变化。",
+      "growthHint": "继续阅读，逐步见证词汇量的增长。",
       "title": "词汇增长",
       "knownWords": "已掌握的词",
       "learning": "学习中",
@@ -2116,6 +2119,7 @@
       "multipleChoice": "选择题",
       "multipleChoiceTitle": "本题改为选择题",
       "hintNone": "提示（?）",
+      "hintNoneTouch": "提示",
       "hintLetters": "提示（{count} 个字母）",
       "hintTitle": "显示下一个字母",
       "submit": "提交",
@@ -2305,6 +2309,7 @@
       "phrase": "短语",
       "confirmBulkDelete": "确定要删除 {count} 个词汇条目吗？",
       "searchPlaceholder": "搜索词、翻译或句子...",
+      "searchWords": "搜索单词…",
       "filter": {
         "all": "全部",
         "learning": "学习中"
@@ -2471,6 +2476,7 @@
       },
       "audioSection": "查词发音",
       "autoPronounce": "点击词语时自动发音",
+      "autoPronounceTouch": "轻点词语时自动发音",
       "autoPronounceHint": "默认关闭；随时可点词典里的小喇叭听发音。",
       "settingSaveFailed": "无法保存此设置，请重试。"
     },

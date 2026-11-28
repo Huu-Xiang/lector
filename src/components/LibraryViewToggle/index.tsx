@@ -3,6 +3,7 @@
 import { LayoutGrid, List } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useLibraryView, type LibraryView } from '@/lib/library-view';
+import { haptic, isNativeApp } from '@/lib/native-app';
 
 const OPTIONS: { id: LibraryView; Icon: typeof List }[] = [
   { id: 'grid', Icon: LayoutGrid },
@@ -16,7 +17,7 @@ export default function LibraryViewToggle() {
     <div
       role="group"
       aria-label={t('label')}
-      className="inline-flex rounded-lg border border-border bg-card p-0.5"
+      className="native-library-view inline-flex rounded-lg border border-border bg-card p-0.5"
     >
       {OPTIONS.map(({ id, Icon }) => (
         <button
@@ -25,7 +26,10 @@ export default function LibraryViewToggle() {
           aria-pressed={view === id}
           aria-label={t(id)}
           title={t(id)}
-          onClick={() => setView(id)}
+          onClick={() => {
+            if (view !== id && isNativeApp()) void haptic();
+            setView(id);
+          }}
           data-testid={`library-view-${id}`}
           className={`flex min-h-11 min-w-11 items-center justify-center rounded-md transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none active:opacity-60 sm:min-h-8 sm:min-w-9 ${
             view === id

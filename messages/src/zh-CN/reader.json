@@ -60,6 +60,7 @@
       },
       "audioSection": "查词发音",
       "autoPronounce": "点击词语时自动发音",
+      "autoPronounceTouch": "轻点词语时自动发音",
       "autoPronounceHint": "默认关闭；随时可点词典里的小喇叭听发音。",
       "settingSaveFailed": "无法保存此设置，请重试。"
     },

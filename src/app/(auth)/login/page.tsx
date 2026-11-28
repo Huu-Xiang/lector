@@ -7,6 +7,7 @@ import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import NativeAuthHeading from '@/components/NativeAuthHeading';
 import { Label } from '@/components/ui/label';
 import TurnstileWidget, { turnstileSiteKey } from '@/components/TurnstileWidget';
 import { authClient } from '@/lib/auth-client';
@@ -121,13 +122,13 @@ function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit} className={inApp ? 'space-y-3' : 'space-y-4'}>
-      <h2
+      <NativeAuthHeading
         className={
           inApp ? 'text-2xl font-bold text-foreground' : 'text-lg font-semibold text-foreground'
         }
       >
         {t('title')}
-      </h2>
+      </NativeAuthHeading>
 
       {params.get('deleted') === '1' && (
         <div

@@ -20,10 +20,12 @@ export default function EntryModal({
         <div className="mb-4 flex items-center justify-between">
           <DialogTitle>{formatDateTime(entry.createdAt, locale)}</DialogTitle>
           <DialogClose
-            className="text-muted-foreground hover:text-foreground"
+            className="native-entry-close flex shrink-0 items-center justify-center text-muted-foreground hover:text-foreground"
             aria-label={t('close')}
           >
-            <X className="h-5 w-5" />
+            <span className="native-entry-close-circle flex items-center justify-center">
+              <X className="h-5 w-5" />
+            </span>
           </DialogClose>
         </div>
         {entry.status === 'submitted' ? (

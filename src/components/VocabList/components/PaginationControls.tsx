@@ -46,6 +46,7 @@ export default function PaginationControls({
       <div className="flex items-center gap-2 text-sm text-muted-foreground">
         <label htmlFor="vocab-page-size">{t('rowsPerPage')}</label>
         <Select
+          className="min-h-11 sm:min-h-0"
           wrapperClassName="inline-block"
           id="vocab-page-size"
           value={pageSize}
@@ -72,6 +73,7 @@ export default function PaginationControls({
           <Button
             variant="outline"
             size="icon-sm"
+            className="min-h-11 min-w-11 sm:min-h-0 sm:min-w-0"
             onClick={() => onPageChange(currentPage - 1)}
             disabled={currentPage <= 1}
             aria-label={t('previous')}
@@ -88,6 +90,7 @@ export default function PaginationControls({
           <Button
             variant="outline"
             size="icon-sm"
+            className="min-h-11 min-w-11 sm:min-h-0 sm:min-w-0"
             onClick={() => onPageChange(currentPage + 1)}
             disabled={currentPage >= pageCount}
             aria-label={t('next')}

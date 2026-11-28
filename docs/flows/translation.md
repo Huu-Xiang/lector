@@ -2,6 +2,10 @@
 
 On iPhone and iPad, lookups show a side panel in wide windows and a bottom sheet in narrow windows. Both put the first definition and the original sentence before expandable dictionary details. The state and source are available under More actions.
 
+The definition body returns to the top when a word opens or More actions closes, so expanded dictionary details cannot leave the primary definition scrolled out of view.
+
+A downward flick above the default height collapses the native sheet to 34dvh; a fast downward flick below it dismisses. Upward flicks expand to 78dvh. Slow releases choose the nearest detent. Native reader options describe auto-pronunciation on word tap.
+
 This domain looks up a word or phrase and shows the drawer. The tap starts in the Reader. Save of the gloss is the Vocabulary domain.
 
 The large language model (LLM) path uses a plan meter. A dictionary hit does not. For a word in a sentence, the drawer can request a short explanation of that use. The result displays above the original sentence and leaves the general definition available.

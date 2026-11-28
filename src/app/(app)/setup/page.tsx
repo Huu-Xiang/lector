@@ -5,7 +5,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
-import { ArrowLeft, ArrowRight, Check, Sparkles } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ArrowRight, Check, Sparkles } from 'lucide-react';
+import { haptic } from '@/lib/native-app';
+import { useIsNativePhone } from '@/lib/use-native-phone';
 import {
   addLibraryBook,
   getSetting,
@@ -80,6 +82,7 @@ const POPULAR_LANGUAGES: LanguageCode[] = [
 ];
 
 export default function SetupPage() {
+  const nativePhone = useIsNativePhone();
   const t = useTranslations('setup');
   const locale = useLocale();
   const router = useRouter();
@@ -123,10 +126,12 @@ export default function SetupPage() {
   const level: CefrLevel | null =
     levelPicked || selectedLanguage !== 'en' ? pickedLevel : (vocabResult?.level ?? pickedLevel);
   function pickLevel(next: CefrLevel | null) {
+    void haptic();
     setLevelPicked(true);
     setLevel(next);
   }
   function toggleInterest(id: string) {
+    void haptic();
     setInterests((prev) => (prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]));
   }
   const languageName = (code: string, fallback: string) =>
@@ -369,8 +374,8 @@ export default function SetupPage() {
         : t('intro');
 
   return (
-    <main className="setup-page min-h-svh bg-background px-4 py-4 sm:py-16">
-      <div className="mx-auto w-full max-w-3xl">
+    <main className="setup-page flex min-h-dvh w-full flex-col bg-background px-4 py-4 sm:block sm:min-h-svh sm:py-16">
+      <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col sm:block">
         <div className="mb-5 sm:mb-8 sm:text-center">
           <Image
             src="/logo.png"
@@ -402,16 +407,18 @@ export default function SetupPage() {
                 {showPreferences ? '2 / 2' : '1 / 2'}
               </span>
               <span className="flex items-center gap-1.5" aria-hidden="true">
-                <span className="h-1.5 w-6 rounded-full bg-primary" />
                 <span
-                  className={`h-1.5 w-6 rounded-full motion-safe:transition-colors ${
-                    showPreferences ? 'bg-primary' : 'bg-muted'
-                  }`}
+                  className={`h-1.5 rounded-full ${nativePhone ? `${showPreferences ? 'w-4 bg-foreground/20' : 'w-8 bg-primary'} transition-all duration-[var(--dur-normal)] ease-[var(--ease-ios-spring)] motion-reduce:transition-none` : 'w-6 bg-primary'}`}
+                />
+                <span
+                  className={`h-1.5 rounded-full ${nativePhone ? 'transition-all duration-[var(--dur-normal)] ease-[var(--ease-ios-spring)] motion-reduce:transition-none' : 'w-6 motion-safe:transition-colors'} ${showPreferences ? (nativePhone ? 'w-8 bg-primary' : 'bg-primary') : nativePhone ? 'w-4 bg-foreground/20' : 'bg-foreground/55'}`}
                 />
               </span>
             </div>
           )}
-          <h1 className="mb-1.5 text-2xl font-bold tracking-tight text-foreground sm:mb-3 sm:text-3xl">
+          <h1
+            className={`mb-1.5 font-bold tracking-tight text-foreground sm:mb-3 sm:text-3xl ${nativePhone ? 'text-[28px]' : 'text-2xl'}`}
+          >
             {headerTitle}
           </h1>
           <p className="mx-auto max-w-xl text-sm text-muted-foreground sm:text-lg">{headerIntro}</p>
@@ -437,8 +444,13 @@ export default function SetupPage() {
                 }}
                 disabled={pending !== null}
                 data-testid="setup-recommend-back"
+                className={nativePhone ? 'text-primary' : undefined}
               >
-                <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+                {nativePhone ? (
+                  <ChevronLeft className="size-6 text-primary" strokeWidth={2.25} aria-hidden />
+                ) : (
+                  <ArrowLeft className="size-4" aria-hidden />
+                )}
                 {t('recommendBack')}
               </Button>
               <Button
@@ -500,7 +512,10 @@ export default function SetupPage() {
                         <button
                           key={lang.code}
                           type="button"
-                          onClick={() => setPickedLanguage(lang.code)}
+                          onClick={() => {
+                            void haptic();
+                            setPickedLanguage(lang.code);
+                          }}
                           disabled={pending !== null || soon}
                           data-testid={`setup-language-${lang.code}`}
                           aria-label={t('learn', { name })}
@@ -572,9 +587,13 @@ export default function SetupPage() {
                     onClick={backToLanguages}
                     disabled={pending !== null}
                     data-testid="setup-step-back"
-                    className="-ms-2 min-h-11 px-2 text-muted-foreground hover:text-foreground"
+                    className={`-ms-2 min-h-11 px-2 ${nativePhone ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
                   >
-                    <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+                    {nativePhone ? (
+                      <ChevronLeft className="size-6 text-primary" strokeWidth={2.25} aria-hidden />
+                    ) : (
+                      <ArrowLeft className="size-4" aria-hidden />
+                    )}
                     {t('back')}
                   </Button>
                 </div>
@@ -621,6 +640,12 @@ export default function SetupPage() {
                                 : 'border-border bg-background text-foreground hover:bg-accent'
                             }`}
                           >
+                            {nativePhone && level === option && (
+                              <Check
+                                className="float-right size-4 text-primary sm:hidden"
+                                aria-hidden
+                              />
+                            )}
                             <span className="font-semibold">{option}</span>
                             <span className="ml-1.5 font-medium">{tl(`names.${option}`)}</span>
                             {exams && (
@@ -642,6 +667,12 @@ export default function SetupPage() {
                             : 'border-border bg-background text-foreground hover:bg-accent'
                         }`}
                       >
+                        {nativePhone && level === null && (
+                          <Check
+                            className="float-right size-4 text-primary sm:hidden"
+                            aria-hidden
+                          />
+                        )}
                         {tl('notSure')}
                       </button>
                       {selectedLanguage === 'en' && (
@@ -684,6 +715,12 @@ export default function SetupPage() {
                               : 'border-border bg-background text-foreground hover:bg-accent'
                           }`}
                         >
+                          {nativePhone && interests.includes(id) && (
+                            <Check
+                              className="mr-1 inline size-4 text-primary sm:hidden"
+                              aria-hidden
+                            />
+                          )}
                           {t(`interest.${id}`)}
                         </button>
                       ))}
@@ -703,7 +740,10 @@ export default function SetupPage() {
                             key={goalKey(goal)}
                             type="button"
                             aria-pressed={chosen}
-                            onClick={() => setDailyGoalChoice(goal)}
+                            onClick={() => {
+                              void haptic();
+                              setDailyGoalChoice(goal);
+                            }}
                             data-testid={`setup-goal-${goal.kind}-${goal.target}`}
                             className={`min-h-11 cursor-pointer rounded-xl border px-3 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none ${
                               chosen
@@ -711,6 +751,12 @@ export default function SetupPage() {
                                 : 'border-border bg-background text-foreground hover:bg-accent'
                             }`}
                           >
+                            {nativePhone && chosen && (
+                              <Check
+                                className="mr-1 inline size-4 text-primary sm:hidden"
+                                aria-hidden
+                              />
+                            )}
                             {goalT(`preset.${goal.kind}`, { count: goal.target })}
                           </button>
                         );
@@ -723,7 +769,11 @@ export default function SetupPage() {
             )}
 
             <div
-              className="sticky bottom-[env(safe-area-inset-bottom)] z-10 rounded-xl border border-border bg-card p-1.5 shadow-md sm:bottom-3 sm:rounded-2xl sm:px-5 sm:py-4"
+              className={
+                nativePhone
+                  ? 'setup-action-dock sticky bottom-0 z-10 -mx-4 mt-auto rounded-none border-x-0 border-t border-b-0 border-border/60 bg-card/85 px-4 pt-2.5 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-none backdrop-blur-md'
+                  : 'sticky bottom-0 z-10 mt-auto rounded-xl border border-border bg-card p-1.5 pb-[max(0.375rem,env(safe-area-inset-bottom))] shadow-md sm:bottom-3 sm:rounded-2xl sm:px-5 sm:py-4'
+              }
               data-testid="setup-start-bar"
             >
               <div className="flex items-center justify-between gap-3">

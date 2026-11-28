@@ -1,5 +1,11 @@
 # Library domain
 
+Native pull to refresh invalidates active account query scopes on the library and collection details. Reader, practice, setup, and other bare routes disable the refresh control. The library spaces recommendations below book captions. Collection and lesson deletes use a native action sheet when available, with browser confirmation as fallback.
+
+Native phone collection details use a cover hero and numbered chapter rows; Add lesson sits outside the chapter group. Import options and the free-book picker use the shared bottom-sheet dialog presentation. Desktop and iPad keep centered dialogs and inline Import menus.
+
+The free-book picker keeps its title and tabs at their full height while the list scrolls. Unread collection heroes omit the progress pill until rounded progress is above zero.
+
 On iOS, saved books and groups come before recommendations. Recommendations still open first in an empty library.
 
 This domain holds collections, groups, lessons, and import. Word colour in the reader comes from the Vocabulary domain. A tap of a word is the Translation domain.
@@ -226,3 +232,7 @@ The lesson starts with `transcriptionStatus = 'pending'`. The worker needs `TRAN
 ### Starter texts
 
 See [Onboarding](onboarding.md). Seed is `POST /api/starter/seed`.
+
+On native iPhone, the Library uses a large title, one action strip and a search row. Reader chat opens from its toolbar; it has no floating button.
+
+Continue Reading resumes the most recently started readable unfinished chapter. Search and onboarding hide the card. The native phone reader hides its toolbar on downward scroll, reveals it on upward scroll or blank tap, and retains a progress hairline. Reduce Motion removes the slide and press effects.

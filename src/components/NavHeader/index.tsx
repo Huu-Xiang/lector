@@ -84,15 +84,17 @@ export default function NavHeader() {
       <NewLanguagePrompt />
       {/* Mobile top bar — language selector, visible only on mobile */}
       <NativeTopBar />
-      <div className="web-topbar flex h-[var(--mobile-topbar-h)] shrink-0 items-center justify-between border-b border-border bg-card/80 px-3 py-2 backdrop-blur-sm sm:hidden print:hidden">
-        <AppName />
-        <div className="flex items-center gap-1">
-          <UpgradeLink />
-          <LanguageSelector compact />
-          <WhatsNew variant="topbar" />
-          <AccountMenu compact />
+      {!hasOwnHeader(pathname) && (
+        <div className="web-topbar flex h-[var(--mobile-topbar-h)] shrink-0 items-center justify-between border-b border-border bg-card/80 px-3 py-2 backdrop-blur-sm sm:hidden print:hidden">
+          <AppName />
+          <div className="flex items-center gap-1">
+            <UpgradeLink />
+            <LanguageSelector compact />
+            <WhatsNew variant="topbar" />
+            <AccountMenu compact />
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Desktop left sidebar — hidden on mobile */}
       <aside

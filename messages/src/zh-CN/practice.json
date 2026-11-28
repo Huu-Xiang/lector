@@ -50,6 +50,7 @@
       "multipleChoice": "选择题",
       "multipleChoiceTitle": "本题改为选择题",
       "hintNone": "提示（?）",
+      "hintNoneTouch": "提示",
       "hintLetters": "提示（{count} 个字母）",
       "hintTitle": "显示下一个字母",
       "submit": "提交",
@@ -239,6 +240,7 @@
       "phrase": "短语",
       "confirmBulkDelete": "确定要删除 {count} 个词汇条目吗？",
       "searchPlaceholder": "搜索词、翻译或句子...",
+      "searchWords": "搜索单词…",
       "filter": {
         "all": "全部",
         "learning": "学习中"

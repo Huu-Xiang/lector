@@ -29,7 +29,7 @@ export default function HistoryCard({
           onSelect(entry);
         }
       }}
-      className="cursor-pointer rounded-lg border border-border p-4 transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+      className="native-journal-history-row cursor-pointer rounded-lg border border-border p-4 transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
     >
       <div className="mb-2 flex items-center justify-between">
         <span className="text-sm font-medium text-foreground">

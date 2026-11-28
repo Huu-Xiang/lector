@@ -5,8 +5,9 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useLectorMode } from '@/lib/use-env';
 import { useIsNativeApp } from '@/lib/native-app';
+import { useIsNativePhone } from '@/lib/use-native-phone';
 import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ChevronLeft } from 'lucide-react';
 import { authHref } from '@/lib/auth-return';
 import Image from 'next/image';
 import { Spinner } from '@/components/ui/spinner';
@@ -31,6 +32,7 @@ export default function AuthLayoutClient({ children }: { children: React.ReactNo
   const tAuth = useTranslations('auth');
   const mode = useLectorMode();
   const native = useIsNativeApp();
+  const nativePhone = useIsNativePhone();
   const tLegal = useTranslations('legal');
   const pathname = usePathname();
   const wide = pathname === '/subscribe';
@@ -44,7 +46,13 @@ export default function AuthLayoutClient({ children }: { children: React.ReactNo
 
   if (native && !wide && mode === 'cloud') {
     return (
-      <main className="mx-auto w-full max-w-sm px-5 pt-2 pb-[max(1rem,env(safe-area-inset-bottom))]">
+      <main
+        className={
+          nativePhone
+            ? 'native-auth-shell mx-auto w-full px-4 pt-[max(0.5rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))]'
+            : 'mx-auto w-full max-w-sm px-5 pt-2 pb-[max(1rem,env(safe-area-inset-bottom))]'
+        }
+      >
         <Link
           href="/welcome"
           onClick={(event) => {
@@ -53,9 +61,18 @@ export default function AuthLayoutClient({ children }: { children: React.ReactNo
               authHref('/welcome', new URLSearchParams(window.location.search).get('next')),
             );
           }}
-          className="inline-flex min-h-11 items-center gap-2 text-sm text-muted-foreground"
+          className={
+            nativePhone
+              ? 'inline-flex min-h-11 items-center gap-1 text-[17px] text-primary'
+              : 'inline-flex min-h-11 items-center gap-2 text-sm text-muted-foreground'
+          }
         >
-          <ArrowLeft size={16} aria-hidden="true" /> {tLegal('back')}
+          {nativePhone ? (
+            <ChevronLeft className="size-6 text-primary" strokeWidth={2.25} aria-hidden="true" />
+          ) : (
+            <ArrowLeft size={16} aria-hidden="true" />
+          )}{' '}
+          {tLegal('back')}
         </Link>
         {children}
       </main>

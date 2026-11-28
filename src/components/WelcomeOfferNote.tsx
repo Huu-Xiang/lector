@@ -8,7 +8,13 @@ import { welcomeOfferOpen } from '@/lib/welcome-offer';
 
 const subscribe = () => () => {};
 
-export default function WelcomeOfferNote({ variant = 'card' }: { variant?: 'card' | 'bar' }) {
+export default function WelcomeOfferNote({
+  variant = 'card',
+  hideLink = false,
+}: {
+  variant?: 'card' | 'bar';
+  hideLink?: boolean;
+}) {
   const t = useTranslations('welcomeOffer');
   const open = useSyncExternalStore(subscribe, welcomeOfferOpen, welcomeOfferOpen);
   if (!open) return null;
@@ -26,9 +32,11 @@ export default function WelcomeOfferNote({ variant = 'card' }: { variant?: 'card
         {t.rich('body', {
           b: (chunks) => <span className="font-semibold">{chunks}</span>,
         })}{' '}
-        <Link href="/register" className="font-medium text-primary hover:underline">
-          {t('signUp')}
-        </Link>
+        {!hideLink && (
+          <Link href="/register" className="font-medium text-primary hover:underline">
+            {t('signUp')}
+          </Link>
+        )}
       </p>
     </div>
   );

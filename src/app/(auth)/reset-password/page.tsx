@@ -7,6 +7,7 @@ import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import NativeAuthHeading from '@/components/NativeAuthHeading';
 import { Label } from '@/components/ui/label';
 import TurnstileWidget, { turnstileSiteKey } from '@/components/TurnstileWidget';
 import PasswordMeter from '@/components/PasswordMeter';
@@ -39,7 +40,9 @@ function ResetPasswordInner() {
   if (linkError) {
     return (
       <div className="space-y-4" data-testid="reset-link-invalid">
-        <h2 className="text-lg font-semibold text-foreground">{t('expiredTitle')}</h2>
+        <NativeAuthHeading className="text-lg font-semibold text-foreground">
+          {t('expiredTitle')}
+        </NativeAuthHeading>
         <p className="text-sm text-muted-foreground">{t('expiredBody')}</p>
         <Button
           className="w-full"
@@ -92,7 +95,9 @@ function RequestResetForm({ returnPath }: { returnPath: string | null }) {
   if (sent) {
     return (
       <div className="space-y-4" data-testid="reset-check-email">
-        <h2 className="text-lg font-semibold text-foreground">{t('checkTitle')}</h2>
+        <NativeAuthHeading className="text-lg font-semibold text-foreground">
+          {t('checkTitle')}
+        </NativeAuthHeading>
         <p className="text-sm text-muted-foreground">
           {t.rich('checkBody', {
             email,
@@ -108,7 +113,9 @@ function RequestResetForm({ returnPath }: { returnPath: string | null }) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <h2 className="text-lg font-semibold text-foreground">{t('title')}</h2>
+      <NativeAuthHeading className="text-lg font-semibold text-foreground">
+        {t('title')}
+      </NativeAuthHeading>
       <p className="text-sm text-muted-foreground">{t('intro')}</p>
 
       <div className="space-y-2">
@@ -180,7 +187,9 @@ function NewPasswordForm({ token, returnPath }: { token: string; returnPath: str
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <h2 className="text-lg font-semibold text-foreground">{t('newTitle')}</h2>
+      <NativeAuthHeading className="text-lg font-semibold text-foreground">
+        {t('newTitle')}
+      </NativeAuthHeading>
 
       <div className="space-y-2">
         <Label htmlFor="new-password">{t('newPassword')}</Label>

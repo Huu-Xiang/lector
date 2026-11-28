@@ -7,6 +7,7 @@ import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import NativeAuthHeading from '@/components/NativeAuthHeading';
 import { Label } from '@/components/ui/label';
 import TurnstileWidget, { turnstileSiteKey } from '@/components/TurnstileWidget';
 import PasswordMeter from '@/components/PasswordMeter';
@@ -146,7 +147,9 @@ function RegisterForm() {
   if (sentTo) {
     return (
       <div className="space-y-4" data-testid="register-check-email">
-        <h2 className="text-lg font-semibold text-foreground">{t('checkTitle')}</h2>
+        <NativeAuthHeading className="text-lg font-semibold text-foreground">
+          {t('checkTitle')}
+        </NativeAuthHeading>
         <p className="text-sm text-muted-foreground">
           {t.rich('checkBody', {
             email: sentTo,
@@ -174,8 +177,10 @@ function RegisterForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <h2 className="text-lg font-semibold text-foreground">{t('title')}</h2>
-      <WelcomeOfferNote />
+      <NativeAuthHeading className="text-lg font-semibold text-foreground">
+        {t('title')}
+      </NativeAuthHeading>
+      <WelcomeOfferNote hideLink />
 
       {oidcFirst && (
         <>

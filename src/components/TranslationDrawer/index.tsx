@@ -4,7 +4,7 @@ import { Fragment, useEffect, useRef, useCallback, useState, useMemo } from 'rea
 import { createPortal } from 'react-dom';
 import { useTranslations } from 'next-intl';
 import clsx from 'clsx';
-import { useIsNativeApp } from '@/lib/native-app';
+import { haptic, useIsNativeApp } from '@/lib/native-app';
 import { useNativeSheetDrag } from './use-native-sheet-drag';
 import type { WordState } from '@/types';
 import { sentenceContainsWord } from '@/lib/words';
@@ -119,6 +119,7 @@ export default function TranslationDrawer({
   const desktopMoreButtonRef = useRef<HTMLButtonElement>(null);
   const desktopMenuRef = useRef<HTMLDivElement>(null);
   const optionsHeading = useRef<HTMLHeadingElement>(null);
+  const bodyScrollRef = useRef<HTMLDivElement>(null);
   const nativeDrag = useNativeSheetDrag(nativeSheet && rawIsOpen, onClose);
   if (rawIsOpen !== previousOpen) {
     setPreviousOpen(rawIsOpen);
@@ -129,11 +130,15 @@ export default function TranslationDrawer({
     if (actionsOpen) optionsHeading.current?.focus();
   }, [actionsOpen]);
   useEffect(() => {
+    if (rawIsOpen && !actionsOpen && bodyScrollRef.current) {
+      bodyScrollRef.current.scrollTop = 0;
+    }
+  }, [actionsOpen, word, rawIsOpen]);
+  useEffect(() => {
     if (!desktopMenuOpen || compact) return;
     // Move focus to the first actionable control inside the popover for keyboard users.
-    const firstFocusable = desktopMenuRef.current?.querySelector<HTMLElement>(
-      'button:not([disabled])',
-    );
+    const firstFocusable =
+      desktopMenuRef.current?.querySelector<HTMLElement>('button:not([disabled])');
     firstFocusable?.focus();
 
     const handlePointerDown = (e: PointerEvent) => {
@@ -268,21 +273,27 @@ export default function TranslationDrawer({
         onClick={onRequestContextTranslation}
         data-testid="request-word-context"
         className={clsx(
-          'inline-flex shrink-0 items-center gap-1 rounded-md px-2 text-xs font-semibold text-[var(--clay)] hover:bg-[var(--clay-soft)]',
-          compact ? 'min-h-11 max-w-[45%] whitespace-normal' : 'mt-3 bg-[var(--clay-soft)] py-1',
+          compact
+            ? 'inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center'
+            : 'mt-3 inline-flex shrink-0 items-center gap-1 rounded-md bg-[var(--clay-soft)] px-2 py-1 text-xs font-semibold text-[var(--clay)] hover:bg-[var(--clay-soft)]',
         )}
         title={t('inContextTitle')}
       >
-        <Zap className="size-3 shrink-0" aria-hidden />
-        {contextError ? t('contextRetry') : t('inContext')}
+        <span
+          className={
+            compact
+              ? 'inline-flex h-8 items-center gap-1 rounded-full bg-[var(--clay-soft)] px-2.5 text-xs font-semibold text-[var(--clay)]'
+              : 'contents'
+          }
+        >
+          <Zap className="size-3 shrink-0" aria-hidden />
+          {contextError ? t('contextRetry') : t('inContext')}
+        </span>
       </button>
     );
   const canSaveWord = onSaveWord && currentState === 'new' && !error && !isLoading;
   const canRestoreToVocab =
-    onSaveWord &&
-    (currentState === 'known' || currentState === 'ignored') &&
-    !error &&
-    !isLoading;
+    onSaveWord && (currentState === 'known' || currentState === 'ignored') && !error && !isLoading;
   const isSavedWord = onSaveWord && currentState.startsWith('level');
 
   const senses = entry?.senses ?? [];
@@ -653,12 +664,15 @@ export default function TranslationDrawer({
 
   const originalSentence = sentence && !aiContextTranslation && (
     <section
-      className={clsx('border-b border-border px-4', compact ? 'py-2' : 'py-3')}
+      className={clsx('border-b border-border', compact ? 'py-1' : 'px-4 py-3')}
       data-testid="lookup-original-sentence"
     >
       <div className="flex items-start gap-2">
         <TargetText
-          className="min-w-0 flex-1 text-sm leading-relaxed text-muted-foreground italic"
+          className={clsx(
+            'min-w-0 flex-1 text-sm leading-relaxed text-muted-foreground italic',
+            nativeSheet && !nativeDrag.expanded && 'line-clamp-2',
+          )}
           as="p"
         >
           {compact
@@ -737,6 +751,7 @@ export default function TranslationDrawer({
   const content = (
     <div
       data-testid="translation-drawer"
+      data-dragging={nativeDrag.dragging || undefined}
       aria-hidden={docked ? false : !isOpen}
       inert={!docked && !isOpen}
       className={clsx(
@@ -746,7 +761,7 @@ export default function TranslationDrawer({
           ? 'relative h-full w-full translate-x-0 border-l shadow-none'
           : [
               'fixed z-50 shadow-2xl transition-transform duration-300 ease-out dark:shadow-[0_-10px_32px_rgba(0,0,0,0.55)]',
-              'inset-x-0 bottom-0 h-[var(--sheet-h)] rounded-t-2xl border-t',
+              'inset-x-0 bottom-0 h-[var(--sheet-h)] rounded-t-[20px] border-t',
               'lg:inset-x-auto lg:inset-y-0 lg:right-0 lg:h-auto lg:max-h-screen lg:w-96 lg:rounded-none lg:border-t-0 lg:border-l',
               isOpen
                 ? 'translate-y-0 lg:translate-x-0'
@@ -783,9 +798,9 @@ export default function TranslationDrawer({
               data-testid="translation-drawer-handle"
               aria-label={nativeDrag.expanded ? t('collapseSheet') : t('expandSheet')}
               aria-expanded={nativeDrag.expanded}
-              className="flex min-h-11 shrink-0 cursor-row-resize touch-none items-center justify-center focus-visible:outline focus-visible:outline-ring"
+              className="-mb-4 flex min-h-11 shrink-0 cursor-row-resize touch-none items-center justify-center focus-visible:outline focus-visible:outline-ring"
             >
-              <span className="h-1.5 w-10 rounded-full bg-border" />
+              <span className="h-[5px] w-9 rounded-full bg-foreground/20" />
             </button>
           )}
           {!nativeSheet && !docked && (
@@ -853,7 +868,7 @@ export default function TranslationDrawer({
                     className={clsx(
                       'font-semibold break-words text-foreground',
                       compact
-                        ? 'min-w-0 truncate text-base'
+                        ? 'min-w-0 truncate text-[19px] font-bold tracking-tight'
                         : longTitle
                           ? 'line-clamp-1 min-w-0 flex-1 text-sm lg:line-clamp-none lg:text-xl'
                           : 'text-xl',
@@ -912,7 +927,10 @@ export default function TranslationDrawer({
               </div>
               {compact && requestContextButton}
               <button
-                onClick={onClose}
+                onClick={() => {
+                  if (nativeSheet) haptic();
+                  onClose();
+                }}
                 className={clsx(
                   'flex-shrink-0 rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground',
                   docked && 'hidden',
@@ -921,7 +939,13 @@ export default function TranslationDrawer({
                 aria-label={t('close')}
                 title={t('closeEsc')}
               >
-                <X className="h-5 w-5" />
+                <span
+                  className={
+                    compact ? 'grid size-8 place-items-center rounded-full bg-muted/90' : undefined
+                  }
+                >
+                  <X className="h-5 w-5" />
+                </span>
               </button>
             </div>
           </div>
@@ -937,11 +961,13 @@ export default function TranslationDrawer({
             </div>
           )}
           <div
+            ref={bodyScrollRef}
+            data-testid="lookup-definition-scroll"
             hidden={compact && actionsOpen}
             className="min-h-0 flex-1 overflow-y-auto overscroll-contain"
           >
             {/* Definition section */}
-            <section className={clsx('border-b border-border px-4', compact ? 'py-2' : 'py-4')}>
+            <section className={clsx('border-b border-border px-4', compact ? 'py-1' : 'py-4')}>
               {isLoading ? (
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <span className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
@@ -959,7 +985,7 @@ export default function TranslationDrawer({
                   <p
                     className={clsx(
                       'text-foreground',
-                      compact ? 'text-sm leading-normal' : 'leading-relaxed',
+                      compact ? 'text-[17px] leading-snug font-medium' : 'leading-relaxed',
                     )}
                   >
                     {aiContextTranslation}
@@ -1002,7 +1028,7 @@ export default function TranslationDrawer({
                   <p
                     className={clsx(
                       'text-foreground',
-                      compact ? 'text-sm leading-normal' : 'leading-relaxed',
+                      compact ? 'text-[17px] leading-snug font-medium' : 'leading-relaxed',
                     )}
                   >
                     {savedAiTranslation}
@@ -1014,7 +1040,7 @@ export default function TranslationDrawer({
                   <p
                     className={clsx(
                       'text-foreground',
-                      compact ? 'text-sm leading-normal' : 'leading-relaxed',
+                      compact ? 'text-[17px] leading-snug font-medium' : 'leading-relaxed',
                     )}
                   >
                     {liveAiPrimaryTranslation}
@@ -1028,7 +1054,13 @@ export default function TranslationDrawer({
                   {renderCollapsedDictionary('live-ai-dictionary-toggle')}
                 </div>
               ) : hasRichEntry ? (
-                <div className="space-y-3">
+                <div
+                  className={
+                    compact
+                      ? 'space-y-3 [&_li>span:last-child]:text-[17px] [&_li>span:last-child]:leading-snug [&_li>span:last-child]:font-medium'
+                      : 'space-y-3'
+                  }
+                >
                   {error && (
                     <p role="status" className="text-xs text-destructive">
                       {error}
@@ -1048,7 +1080,13 @@ export default function TranslationDrawer({
                       {posLabel(aiPartOfSpeech)}
                     </span>
                   )}
-                  <span className="leading-relaxed text-foreground">
+                  <span
+                    className={
+                      compact
+                        ? 'text-[17px] leading-snug font-medium text-foreground'
+                        : 'leading-relaxed text-foreground'
+                    }
+                  >
                     {fallbackTranslation}
                     {isStreaming && (
                       <span
@@ -1062,7 +1100,13 @@ export default function TranslationDrawer({
                 <p className="text-sm text-muted-foreground italic">{t('noDefinition')}</p>
               )}
 
-              <div className="flex flex-wrap items-center gap-2 empty:hidden">
+              {compact && !isLoading && originalSentence}
+              <div
+                className={clsx(
+                  'flex flex-wrap items-center gap-2 empty:hidden',
+                  compact ? 'mt-1' : 'mt-2',
+                )}
+              >
                 {!compact && requestContextButton}
                 {onExplainSentence &&
                   sentence.trim() &&
@@ -1075,12 +1119,50 @@ export default function TranslationDrawer({
                       onClick={onExplainSentence}
                       data-testid="explain-sentence-btn"
                       className={clsx(
-                        'inline-flex items-center gap-1 rounded-md bg-muted px-2.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground',
-                        compact ? 'min-h-11 px-3' : 'mt-3 py-1',
+                        compact
+                          ? 'inline-flex min-h-11 min-w-11 items-center'
+                          : 'mt-3 inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground',
                       )}
                     >
-                      <BookOpen className="size-3 shrink-0" aria-hidden />
-                      {sentenceExplainError ? t('explainSentenceRetry') : t('explainSentence')}
+                      <span
+                        className={
+                          compact
+                            ? 'inline-flex h-8 items-center gap-1.5 rounded-full bg-muted px-3 text-xs font-medium text-muted-foreground'
+                            : 'contents'
+                        }
+                      >
+                        <BookOpen className="size-3 shrink-0" aria-hidden />
+                        {sentenceExplainError ? t('explainSentenceRetry') : t('explainSentence')}
+                      </span>
+                    </button>
+                  )}
+                {onEnrich &&
+                  !primaryAiActive &&
+                  !isPhrase &&
+                  !isLoading &&
+                  !isStreaming &&
+                  !isContextLoading &&
+                  !isEnriching && (
+                    <button
+                      onClick={onEnrich}
+                      data-testid="enrich-word-btn"
+                      className={clsx(
+                        compact
+                          ? 'inline-flex min-h-11 min-w-11 items-center'
+                          : 'inline-flex items-center gap-1.5 rounded-md bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground',
+                      )}
+                      title={t('enrichTitle')}
+                    >
+                      <span
+                        className={
+                          compact
+                            ? 'inline-flex h-8 items-center gap-1.5 rounded-full bg-muted px-3 text-xs font-medium text-muted-foreground'
+                            : 'contents'
+                        }
+                      >
+                        <Sparkles className="h-3 w-3" />
+                        {t('enrich')}
+                      </span>
                     </button>
                   )}
               </div>
@@ -1123,28 +1205,6 @@ export default function TranslationDrawer({
                 </div>
               )}
 
-              {/* Enrich — upgrade a fast streamed gloss to the full dictionary entry
-          (senses, IPA, etymology, related forms). Only offered for a bare AI
-          gloss (the page passes onEnrich only when there's no rich entry yet). */}
-              {onEnrich &&
-                !primaryAiActive &&
-                !isPhrase &&
-                !isLoading &&
-                !isStreaming &&
-                !isContextLoading &&
-                !isEnriching && (
-                  <button
-                    onClick={onEnrich}
-                    className={clsx(
-                      'mt-3 ml-2 inline-flex items-center gap-1.5 rounded-md bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground',
-                      compact && 'min-h-11 px-3',
-                    )}
-                    title={t('enrichTitle')}
-                  >
-                    <Sparkles className="h-3 w-3" />
-                    {t('enrich')}
-                  </button>
-                )}
               {isEnriching && (
                 <span className="mt-3 ml-2 inline-flex items-center gap-1.5 text-xs text-muted-foreground">
                   <span className="h-3 w-3 animate-spin rounded-full border-2 border-muted-foreground border-t-transparent" />
@@ -1198,7 +1258,6 @@ export default function TranslationDrawer({
                 </section>
               )}
 
-            {compact && !isLoading && originalSentence}
             {(!compact || hasDictionaryDetails) && (
               <DictionaryDetails>
                 {compact && (
@@ -1326,6 +1385,7 @@ export default function TranslationDrawer({
             onAddToAnki ||
             onAddCloze) && (
             <div
+              data-testid="lookup-footer"
               className={clsx(
                 'relative shrink-0 border-t border-border bg-muted/40',
                 compact ? 'px-3 py-1.5' : 'space-y-2 px-4 py-2.5',
@@ -1607,7 +1667,7 @@ export default function TranslationDrawer({
                         aria-label={actionsOpen ? t('backToDefinition') : t('moreActions')}
                         aria-expanded={actionsOpen}
                         data-testid="native-lookup-actions"
-                        className="ml-auto"
+                        className="ml-auto rounded-full border-0 bg-muted"
                         onClick={() => {
                           setActionsOpen(!actionsOpen);
                           if (actionsOpen) moreButton.current?.focus();
@@ -1622,10 +1682,7 @@ export default function TranslationDrawer({
                     )}
                   </div>
                   {canSaveWord && repeatLookup && (
-                    <p
-                      className="text-xs text-muted-foreground"
-                      data-testid="repeat-lookup-hint"
-                    >
+                    <p className="text-xs text-muted-foreground" data-testid="repeat-lookup-hint">
                       {t('repeatLookup')}
                     </p>
                   )}
@@ -1737,10 +1794,7 @@ export default function TranslationDrawer({
                   </div>
 
                   {canSaveWord && repeatLookup && (
-                    <p
-                      className="text-xs text-muted-foreground"
-                      data-testid="repeat-lookup-hint"
-                    >
+                    <p className="text-xs text-muted-foreground" data-testid="repeat-lookup-hint">
                       {t('repeatLookup')}
                     </p>
                   )}

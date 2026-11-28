@@ -21,7 +21,12 @@ export default function EmptyState({
         {roundType === 'review' ? t('reviewBody') : t('newBody')}
       </p>
       <div className="flex justify-center gap-3">
-        <Button variant="secondary" type="button" onClick={onBackPressed}>
+        <Button
+          variant="secondary"
+          type="button"
+          className="native-drill-back"
+          onClick={onBackPressed}
+        >
           {t('back')}
         </Button>
         {roundType === 'review' && (

@@ -33,7 +33,7 @@ function Welcome() {
   }, [session, next, router]);
 
   return (
-    <main className={styles.welcome}>
+    <main className={styles.welcome} data-testid="native-welcome">
       <div className={styles.brand}>
         <Image src="/logo.png" alt="" width={32} height={32} className="rounded-lg" />
         {common('appName')}

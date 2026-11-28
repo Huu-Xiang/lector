@@ -1,5 +1,9 @@
 # Onboarding domain
 
+Native phone setup uses a bottom action dock, animated step pills, and haptic selection badges. Recommendations show book covers and suppress external review links. The native vocabulary test uses its app shell even without a cloud session; setup entry hides language tabs and public SEO/footer content. Test result actions stack on phones.
+
+Recommendation covers retain a 3:4 aspect ratio, and native setup back actions use the primary tint.
+
 Onboarding is the product name for first-run setup. This domain picks a language and seeds starter texts. It then runs a short guided lesson. It also creates 3 cloze cards.
 
 ## Language setup
@@ -122,3 +126,5 @@ sequenceDiagram
 ### Tests
 
 `e2e/language-opt-in.spec.ts`, `api/src/db-enabled-languages.test.ts`, `api/src/routes/settings.test.ts`, `languages/enabled.test.ts`.
+
+The setup form uses a full-height column, visible two-step progress and a bottom action bar with safe-area spacing.

@@ -115,7 +115,7 @@
     md: "stats.md",
   });
   N("domain:auth", "domain", "Auth", {
-    summary: "Cloud session gate. Login, register, Better Auth, and lifecycle mail. Selfhost skips this domain.",
+    summary: "Cloud session gate. Login, register, Better Auth, and lifecycle mail. Native phone forms fill the viewport; web and iPad retain their layout. Selfhost skips account auth.",
     md: "auth.md",
   });
   N("domain:settings", "domain", "Settings", {
@@ -140,7 +140,7 @@
   N("flow:load-library-item", "flow", "Load library item", {
     domain: "library",
     md: "library.md#load-library-item",
-    summary: "Open the library, open a collection, open a lesson. The reader paints each word from the known-word map.",
+    summary: "Open the library or resume the latest unfinished chapter on iPhone. The reader paints word states and hides its phone toolbar while scrolling down.",
     steps: [
       "fn:home-loadData",
       "route:collections-list",
@@ -155,7 +155,7 @@
   N("flow:import", "flow", "Import", {
     domain: "library",
     md: "library.md#import",
-    summary: "EPUB, paste, markdown, web URL, YouTube captions, or audio. Readfox and its Beta site show YouTube import as Coming soon. Destination group is importGroupId.",
+    summary: "EPUB, paste, markdown, web URL, YouTube captions, or audio. Native phones use an Import action sheet with the same destinations. Destination group is importGroupId; YouTube can be Coming soon.",
     steps: [
       "file:home-page",
       "fn:importEpub",
@@ -180,7 +180,7 @@
   N("flow:translate-word", "flow", "Translate word", {
     domain: "translation",
     md: "translation.md#translate-word",
-    summary: "Tap a word. Drawer opens. Vocab row, then dictionary lookup, then a gloss stream on a miss.",
+    summary: "Tap a word. Drawer opens at the first definition, including after More actions. Native downward flicks collapse before dismissal below default height. Vocab row, then dictionary lookup, then a gloss stream on a miss.",
     steps: [
       "fn:wordcell-activate",
       "fn:reader-onWordClick",
@@ -244,7 +244,7 @@
   N("flow:vocab-list", "flow", "Vocab list", {
     domain: "vocabulary",
     md: "vocabulary.md#vocab-list",
-    summary: "Filter, search, and page in memory. GET /api/vocab has no limit.",
+    summary: "Filter, search, and page in memory. iPhone uses status pills and swipe actions. GET /api/vocab has no limit.",
     steps: ["file:vocab-page", "route:vocab-get", "table:vocab"],
   });
   N("flow:known-word-import", "flow", "Known-word import", {
@@ -256,7 +256,7 @@
   N("flow:practice-word", "flow", "Practice word", {
     domain: "practice",
     md: "practice.md#practice-word",
-    summary: "Seed the bank, load due or new cards, grade, persistReview. Mastery 100 writes knownWords.",
+    summary: "Seed the bank, load due or new cards, grade, persistReview. Native phone drills use one toolbar exit and hide keyboard hints. Mastery 100 writes knownWords.",
     steps: [
       "fn:practice-startRoundWith",
       "route:cloze-due",
@@ -335,7 +335,7 @@
   N("flow:listen-along", "flow", "Listen-along", {
     domain: "listen",
     md: "listen.md#listen-along",
-    summary: "Podcast playback after ASR. GET segments and Range audio. Not the YouTube player.",
+    summary: "Podcast playback after ASR. GET segments and Range audio. Browser Media Session and the iOS NativeMediaControls plugin publish playback controls and clamped audio position. TTS supports native track commands without seeking. Not the YouTube player.",
     steps: ["file:listen-along", "route:lessons-segments", "route:lessons-audio", "table:transcript_segments"],
   });
   N("flow:youtube-captions", "flow", "YouTube captions", {
@@ -359,7 +359,7 @@
   N("flow:language-setup", "flow", "Language setup", {
     domain: "onboarding",
     md: "onboarding.md#language-setup",
-    summary: "SetupGuard, compact language picker on phones, level choice, starter or book pick, guided lesson, cloze practice.",
+    summary: "SetupGuard, native phone step indicators and action dock, level choice, covered book recommendations, app-shell vocabulary test, guided lesson, and cloze practice.",
     steps: ["file:setup-guard", "file:setup-page", "fn:seedStarterContent", "fn:startOnboarding", "route:onboarding-start"],
   });
   N("flow:add-language", "flow", "Add a language", {
@@ -519,7 +519,7 @@
   N("file:home-page", "file", "Home page", {
     path: "src/app/(index)/page.tsx",
     domain: "library",
-    summary: "Header actions and reading recommendations. The iPad library features a book and links to its current chapter. Saved books and recommendations reflow with the window.",
+    summary: "On iPhone, a large title, one action strip, and search lead the library. The iPad library features a book and links to its current chapter. Saved books and recommendations reflow with the window.",
   });
   N("file:collection-page", "file", "Collection page", { path: "src/app/collection/[id]/page.tsx", domain: "library", summary: "On iPhone, author and lesson counts sit below the title in smaller text. Each lesson row opens the reader or a menu of lesson actions. Rows show opening words for repeated library labels." });
   N("file:read-page", "file", "Read page", { path: "src/app/read/[bookId]/page.tsx", domain: "translation" });
@@ -527,7 +527,7 @@
   N("file:reader-article", "file", "ReaderArticle", { path: "src/components/MarkdownReader/ReaderArticle.tsx", domain: "library" });
   N("file:transcript-reader", "file", "TranscriptReader", { path: "src/components/MarkdownReader/TranscriptReader.tsx", domain: "listen" });
   N("file:word-cell", "file", "WordCell", { path: "src/components/WordCell/index.tsx", domain: "library" });
-  N("file:translation-drawer", "file", "TranslationDrawer", { path: "src/components/TranslationDrawer/index.tsx", domain: "translation", summary: "The iOS reader puts the first meaning and sentence in a side panel or bottom sheet, depending on window width." });
+  N("file:translation-drawer", "file", "TranslationDrawer", { path: "src/components/TranslationDrawer/index.tsx", domain: "translation", summary: "The iOS reader puts the first meaning and original sentence before optional actions in a 34dvh phone sheet or a wide-window side panel." });
   N("file:data-layer", "file", "data-layer.ts", { path: "src/lib/data-layer.ts", domain: "library" });
   N("file:api-base", "file", "api-base.ts", { path: "src/lib/api-base.ts" });
   N("file:dictionary-client", "file", "dictionary-client.ts", { path: "src/lib/dictionary-client.ts", domain: "translation" });
@@ -550,7 +550,7 @@
   N("file:vocab-test-sampling", "file", "Adaptive vocabulary sampling", { path: "src/lib/vocab-test.ts", domain: "vocabulary" });
   N("file:route-vocab-test-reports", "file", "Vocabulary test reports API", { path: "api/src/routes/vocab-test-reports.ts", domain: "vocabulary" });
   N("file:vocab-test-delivery", "file", "Vocabulary report email", { path: "api/src/lib/vocab-test-report-delivery.ts", domain: "vocabulary" });
-  N("file:vocab-page", "file", "Vocab page", { path: "src/app/vocab/page.tsx", domain: "vocabulary", summary: "On iOS, vocabulary totals collapse above the word list." });
+  N("file:vocab-page", "file", "Vocab page", { path: "src/app/vocab/page.tsx", domain: "vocabulary", summary: "On iPhone, grouped vocabulary rows open details, with optional selection for bulk actions; AnkiConnect is not probed in the native app." });
   N("file:known-words-import", "file", "KnownWordsImport", { path: "src/app/settings/components/KnownWordsImport/index.tsx", domain: "vocabulary" });
   N("file:listen-along", "file", "ListenAlong", { path: "src/components/ListenAlong/index.tsx", domain: "listen" });
   N("file:youtube-player", "file", "YouTubePlayer", { path: "src/components/YouTubePlayer/index.tsx", domain: "listen" });
@@ -560,7 +560,7 @@
   N("file:setup-page", "file", "Setup page", { path: "src/app/setup/page.tsx", domain: "onboarding", summary: "On iPhone, the setup fields use smaller help text below their titles." });
   N("file:setup-guard", "file", "SetupGuard", { path: "src/components/SetupGuard/index.tsx", domain: "onboarding" });
   N("file:onboarding-client", "file", "onboarding.ts", { path: "src/lib/onboarding.ts", domain: "onboarding" });
-  N("file:stats-page", "file", "Stats page", { path: "src/app/stats/page.tsx", domain: "stats", summary: "On iPhone, four totals and the vocabulary trend appear first. Activity, topics, and other charts expand one group at a time with smaller text below the titles." });
+  N("file:stats-page", "file", "Stats page", { path: "src/app/stats/page.tsx", domain: "stats", summary: "On iPhone, totals and vocabulary growth appear first; sparse histories show a count milestone. Activity, topics, and details expand as inset groups." });
   N("file:web-import", "file", "WebImportModal", { path: "src/components/WebImportModal/index.tsx", domain: "library" });
   N("file:youtube-import", "file", "YouTubeImportModal", { path: "src/components/YouTubeImportModal/index.tsx", domain: "library" });
   N("file:paste-import", "file", "PasteImportModal", { path: "src/components/PasteImportModal/index.tsx", domain: "library" });

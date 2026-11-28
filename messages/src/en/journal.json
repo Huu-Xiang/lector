@@ -30,6 +30,7 @@
     "correction": {
       "yourText": "Your text",
       "clickHint": "Click highlighted words to see corrections",
+      "tapHint": "Tap highlighted words to see corrections.",
       "corrected": "Corrected",
       "summary": "{count, plural, one {# correction} other {# corrections}}:",
       "perfect": "Perfect! No corrections needed."
@@ -178,6 +179,7 @@
     "vocabGrowth": {
       "trackedWords": "Based on your saved words and their learning states.",
       "noTrackedWords": "Save or mark words as known to see a trend.",
+      "growthHint": "Keep reading to see your growth curve over time.",
       "title": "Vocabulary Growth",
       "knownWords": "Known Words",
       "learning": "Learning",

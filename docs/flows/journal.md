@@ -1,5 +1,9 @@
 # Journal domain
 
+Native pull to refresh reloads journal queries. Entry deletion uses the system action sheet when available and browser confirmation on older shells and the web.
+
+Native phone journal history uses inset groups. The composer keeps Cancel quiet and disables textarea resizing. Entry details inherit the shared bottom sheet, circular close control, and touch-specific correction hint.
+
 The journal editor lets its word count and save controls wrap on narrow screens.
 
 This domain stores text that the learner writes in the target language. Correction uses the large language model (LLM) of the Tutor. The page does not translate English into the target language. The user writes in the target language. The tutor returns a corrected body.

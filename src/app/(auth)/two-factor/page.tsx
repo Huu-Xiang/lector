@@ -7,6 +7,7 @@ import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import NativeAuthHeading from '@/components/NativeAuthHeading';
 import { Label } from '@/components/ui/label';
 import { authClient } from '@/lib/auth-client';
 import { authHref, sanitizeAuthReturnPath } from '@/lib/auth-return';
@@ -76,7 +77,9 @@ function TwoFactorForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <h2 className="text-lg font-semibold text-foreground">{t('title')}</h2>
+      <NativeAuthHeading className="text-lg font-semibold text-foreground">
+        {t('title')}
+      </NativeAuthHeading>
       <p className="text-sm text-muted-foreground">
         {useBackup ? t('introBackup') : t('introTotp')}
       </p>
@@ -99,10 +102,10 @@ function TwoFactorForm() {
         />
       </div>
 
-      <label className="flex cursor-pointer items-center gap-2 text-sm text-foreground">
+      <label className="flex min-h-11 cursor-pointer items-center gap-3 text-sm text-foreground">
         <input
           type="checkbox"
-          className="rounded"
+          className="size-[20px] shrink-0 rounded accent-primary"
           checked={trustDevice}
           onChange={(e) => setTrustDevice(e.target.checked)}
           data-testid="twofactor-trust-device"

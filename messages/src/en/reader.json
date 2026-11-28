@@ -60,6 +60,7 @@
       },
       "audioSection": "Pronunciation",
       "autoPronounce": "Auto-pronounce on word click",
+      "autoPronounceTouch": "Auto-pronounce on word tap",
       "autoPronounceHint": "Off by default. Tap the speaker icon anytime to hear a word.",
       "settingSaveFailed": "Could not save this setting. Try again."
     },

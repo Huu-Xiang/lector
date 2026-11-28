@@ -229,7 +229,7 @@ export default function LanguageSelector({
         data-testid="language-selector"
         aria-label={t('current', { language: activeLang.native })}
         title={variant === 'collapsed' ? activeLang.native : undefined}
-        className={triggerClass}
+        className={`${triggerClass} ${isNativeApp() ? 'min-h-11 min-w-11' : ''}`}
       >
         <span
           className={variant === 'full' ? 'language-emoji text-lg' : 'language-emoji'}

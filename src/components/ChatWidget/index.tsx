@@ -329,8 +329,7 @@ export default function ChatWidget() {
   // guards, so hide it itself — chat could only 401/402 there.
   if (isBareRoute(pathname)) return null;
 
-  // In the app the top bar opens the chat; the reader has no top bar, so it keeps the button.
-  const floatingButton = !inApp || hasOwnHeader(pathname);
+  const floatingButton = !inApp;
 
   return (
     <>
