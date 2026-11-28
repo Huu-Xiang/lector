@@ -18,6 +18,7 @@ export const TIMING_LABELS = [
   'context',
   'enrich',
   'chat',
+  'feed',
   'other',
 ] as const;
 export type TimingLabel = (typeof TIMING_LABELS)[number];

@@ -2,7 +2,7 @@ import '../../test-guard';
 import { beforeEach, describe, expect, test } from 'bun:test';
 import path from 'path';
 import { db } from '../../db';
-import { refreshReadingFeed } from './refresh';
+import { readingFeedWarmEnabled, refreshReadingFeed } from './refresh';
 import { listReadingFeed, pruneReadingFeed } from './store';
 import { READING_FEED_SOURCES } from './sources';
 
@@ -151,5 +151,20 @@ describe('refreshReadingFeed', () => {
 
     expect(() => pruneReadingFeed(source.language, source.interest)).not.toThrow();
     expect(await holder.exited).toBe(0);
+  });
+
+  test('readingFeedWarmEnabled defaults to false and requires READING_FEED_WARM=1', () => {
+    const prev = process.env.READING_FEED_WARM;
+    try {
+      delete process.env.READING_FEED_WARM;
+      expect(readingFeedWarmEnabled()).toBe(false);
+      process.env.READING_FEED_WARM = '0';
+      expect(readingFeedWarmEnabled()).toBe(false);
+      process.env.READING_FEED_WARM = '1';
+      expect(readingFeedWarmEnabled()).toBe(true);
+    } finally {
+      if (prev === undefined) delete process.env.READING_FEED_WARM;
+      else process.env.READING_FEED_WARM = prev;
+    }
   });
 });
