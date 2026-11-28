@@ -1,6 +1,7 @@
 import '../../test-guard';
 import { afterEach, beforeEach, describe, expect, test } from 'bun:test';
 import { db } from '../../db';
+import { aiTimingReport, currentTimingLabel, timingRangeEnds } from '../ai-timing';
 import { LLMContentFilterError, type CompletionOptions, type LLMProvider } from '../llm';
 import {
   buildDescribePrompt,
@@ -113,6 +114,30 @@ describe('describeArticles', () => {
     const prompt = buildDescribePrompt(article, 'Simplified Chinese');
     expect(prompt).toContain('Title: Test Article');
     expect(prompt).toContain('English');
+  });
+
+  test('tags AI calls with feed timing label and records hit/miss metrics', async () => {
+    db.prepare('DELETE FROM ai_timing_daily').run();
+    const seenLabels: Array<string | undefined> = [];
+    fake.complete = async (options: CompletionOptions) => {
+      seenLabels.push(currentTimingLabel());
+      fake.calls.push(options);
+      return fake.reply;
+    };
+
+    const article = seed();
+    await describeArticles([article], 'zh-CN');
+    await describeArticles([article], 'zh-CN');
+
+    const { from, to } = timingRangeEnds(1);
+    const feed = aiTimingReport(from, to).total.find((t) => t.label === 'feed');
+    expect(seenLabels).toEqual(['feed']);
+    expect(feed).toMatchObject({ label: 'feed', hits: 1, misses: 1 });
+
+    // Background warmDescriptions keeps the 'feed' timing label without inflating hit/miss counters.
+    await warmDescriptions();
+    const afterWarm = aiTimingReport(from, to).total.find((t) => t.label === 'feed');
+    expect(afterWarm).toMatchObject({ label: 'feed', hits: 1, misses: 1 });
   });
 });
 

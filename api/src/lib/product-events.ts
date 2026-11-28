@@ -57,6 +57,7 @@ const attempts = [
   'context',
   'enrich',
   'chat',
+  'feed',
   'other',
 ];
 const quizEvents = [

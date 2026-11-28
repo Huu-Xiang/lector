@@ -1,4 +1,5 @@
 import { db } from '../../db';
+import { recordLookupOutcome, withTimingLabel } from '../ai-timing';
 import { getSharedContentProvider, LLMContentFilterError, type LLMProvider } from '../llm';
 import { isNativeLanguageCode, nativeLanguageName } from '../languages';
 import type { FeedLanguage, ReadingFeedRow } from './types';
@@ -71,6 +72,7 @@ ${article.text.slice(0, EXCERPT_CHARS)}`;
 async function generate(
   article: ReadingFeedRow,
   native: string,
+  recordMetrics = true,
 ): Promise<ArticleDescription | null> {
   const key = `${article.id}|${native}`;
   const running = inFlight.get(key);
@@ -78,12 +80,15 @@ async function generate(
   if (declined.has(key)) return Promise.resolve(null);
   const job = (async () => {
     try {
-      const text = await providerFactory().complete({
-        messages: [
-          { role: 'user', content: buildDescribePrompt(article, nativeLanguageName(native)) },
-        ],
-        maxTokens: 300,
-      });
+      if (recordMetrics) recordLookupOutcome('feed', 'miss');
+      const text = await withTimingLabel('feed', () =>
+        providerFactory().complete({
+          messages: [
+            { role: 'user', content: buildDescribePrompt(article, nativeLanguageName(native)) },
+          ],
+          maxTokens: 300,
+        }),
+      );
       const description = parseDescription(text);
       if (!description) return null;
       db.prepare(
@@ -111,15 +116,22 @@ async function generate(
 export async function describeArticles(
   articles: ReadingFeedRow[],
   native: string,
+  options: { recordMetrics?: boolean } = {},
 ): Promise<Map<string, ArticleDescription>> {
+  const recordMetrics = options.recordMetrics ?? true;
   const result = cachedDescriptions(
     articles.map((a) => a.id),
     native,
   );
+  if (recordMetrics) {
+    for (let i = 0; i < result.size; i += 1) {
+      recordLookupOutcome('feed', 'hit');
+    }
+  }
   const missing = articles.filter((a) => !result.has(a.id));
   for (let i = 0; i < missing.length; i += MAX_PARALLEL) {
     const batch = missing.slice(i, i + MAX_PARALLEL);
-    const done = await Promise.all(batch.map((a) => generate(a, native)));
+    const done = await Promise.all(batch.map((a) => generate(a, native, recordMetrics)));
     batch.forEach((a, n) => {
       const d = done[n];
       if (d) result.set(a.id, d);
@@ -155,7 +167,7 @@ export async function warmDescriptions(): Promise<number> {
       wanted.map((a) => a.id),
       native,
     ).size;
-    const after = (await describeArticles(wanted, native)).size;
+    const after = (await describeArticles(wanted, native, { recordMetrics: false })).size;
     made += Math.max(0, after - before);
   }
   return made;

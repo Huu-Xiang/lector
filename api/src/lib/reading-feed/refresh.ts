@@ -16,6 +16,11 @@ export function readingFeedEnabled(): boolean {
   return true;
 }
 
+/** Background pre-warming writes descriptions for every historical native language. Off by default; on-demand /api/reading-feed/describe populates and caches on first view. */
+export function readingFeedWarmEnabled(): boolean {
+  return process.env.READING_FEED_WARM === '1';
+}
+
 async function refreshOneSource(
   source: ReadingFeedSource,
   fetchImpl: typeof fetch,
@@ -81,8 +86,10 @@ export function startReadingFeedRefresher(): boolean {
     try {
       const saved = await refreshReadingFeed();
       console.log(`[reading-feed] refreshed ${saved} article(s)`);
-      const described = await warmDescriptions();
-      console.log(`[reading-feed] wrote ${described} description(s)`);
+      if (readingFeedWarmEnabled()) {
+        const described = await warmDescriptions();
+        console.log(`[reading-feed] wrote ${described} description(s)`);
+      }
     } catch (err) {
       console.error('[reading-feed] refresh tick failed:', err);
       Sentry.captureException(err);

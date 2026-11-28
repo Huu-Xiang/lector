@@ -27,6 +27,7 @@ describe('ai timing', () => {
     expect(labelForTask(undefined)).toBe('other');
     expect(withTimingLabel('localize', () => labelForTask('word-gloss'))).toBe('localize');
     expect(withTimingLabel('prefetch', () => labelForTask('word-gloss'))).toBe('prefetch');
+    expect(withTimingLabel('feed', () => labelForTask(undefined))).toBe('feed');
     expect(currentTimingLabel()).toBeUndefined();
   });
 
@@ -107,6 +108,24 @@ describe('ai timing', () => {
       db.run(
         "DELETE FROM product_daily WHERE date = '2026-07-21' AND event IN ('ai_attempt', 'ai_first_token')",
       );
+    }
+  });
+
+  test('records feed label into product_daily via product-events allowlist', () => {
+    const date = new Date('2026-07-22T12:00:00Z');
+    db.run("DELETE FROM product_daily WHERE date = '2026-07-22' AND event = 'ai_attempt'");
+    try {
+      withTimingLabel('feed', () => {
+        recordAiCall({ totalMs: 120, success: true }, date, db);
+      });
+      const row = db
+        .prepare(
+          "SELECT json_extract(dimensions,'$.feature') AS feature, count FROM product_daily WHERE date = '2026-07-22' AND event = 'ai_attempt'",
+        )
+        .get() as { feature: string; count: number } | undefined;
+      expect(row).toEqual({ feature: 'feed', count: 1 });
+    } finally {
+      db.run("DELETE FROM product_daily WHERE date = '2026-07-22' AND event = 'ai_attempt'");
     }
   });
 
