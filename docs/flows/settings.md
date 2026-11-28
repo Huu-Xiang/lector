@@ -1,5 +1,7 @@
 # Settings domain
 
+The native tab bar distinguishes selection from reselecting the current tab. Reselecting scrolls to the top, with Reduce Motion respected. Review counts badge Practice when that tab is present, otherwise Me; zero clears the badge. iOS 26 keeps its default UITabBarAppearance.
+
 Me retains one semantic page header. Native phone Feedback uses the large-title page shell, touch-specific placeholder, full-width Send action, and chevron WeChat disclosure.
 
 On iOS, the welcome screen links to sign-in and registration. Google sign-in uses the system authentication sheet. The sheet transfers the signed-in session back to Readfox with a short-lived, single-use code.

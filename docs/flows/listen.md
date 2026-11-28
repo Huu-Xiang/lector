@@ -2,6 +2,8 @@
 
 ListenAlong publishes Media Session metadata and transport actions when the browser exposes the APIs. Audio seeking clamps to a finite positive duration; TTS exposes track controls without audio seeking. Unmount removes handlers, metadata and playback state.
 
+The iOS shell also receives chapter and book metadata through NativeMediaControls. UIKit remote commands control both audio and TTS; five-second seeking is audio-only. Leaving ListenAlong clears Now Playing, disables commands, and deactivates the playback audio session. Older shells retain browser controls.
+
 This domain is speech and audio lessons. YouTube captions share the Reader. They do not share the podcast player.
 
 ## Speak word

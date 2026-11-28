@@ -55,6 +55,7 @@ import { Select } from '@/components/ui/select';
 import { useIsNativeApp } from '@/lib/native-app';
 import CollectionArtwork from '@/components/CollectionCard/CollectionArtwork';
 import { useIsNativePhone } from '@/lib/use-native-phone';
+import { confirmNativeAction } from '@/lib/native-confirm';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -131,7 +132,15 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
   }, [id, router, reloads]);
 
   async function handleDelete() {
-    if (!confirm(t('collection.deleteConfirm'))) return;
+    if (
+      !(await confirmNativeAction({
+        message: t('collection.deleteConfirm'),
+        confirmLabel: t('common.delete'),
+        cancelLabel: t('common.cancel'),
+        destructive: true,
+      }))
+    )
+      return;
     try {
       await deleteCollection(id);
       router.push('/');
@@ -152,7 +161,15 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
   }
 
   async function handleDeleteLesson(lessonId: string, title: string) {
-    if (!confirm(t('collection.deleteLessonConfirm', { title }))) return;
+    if (
+      !(await confirmNativeAction({
+        message: t('collection.deleteLessonConfirm', { title }),
+        confirmLabel: t('common.delete'),
+        cancelLabel: t('common.cancel'),
+        destructive: true,
+      }))
+    )
+      return;
     try {
       await deleteLesson(lessonId);
       setLessons((prev) => prev.filter((l) => l.id !== lessonId));

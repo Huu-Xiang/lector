@@ -2,6 +2,7 @@
 
 import { useIsNativeApp } from '@/lib/native-app';
 import { useRegularIPadWindow } from '@/components/NativeBridge/ipad-layout';
+import { useIsNativePhone } from '@/lib/use-native-phone';
 import { useEffect, useState, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
@@ -97,6 +98,7 @@ export default function Home() {
   const t = useTranslations('library');
   const nativeApp = useIsNativeApp();
   const regularIPad = useRegularIPadWindow();
+  const nativePhone = useIsNativePhone();
   const router = useRouter();
   const activeLanguage = useActiveLanguage().code;
   const [libraryView] = useLibraryView();
@@ -817,7 +819,7 @@ export default function Home() {
                 />
               )}
               {nativeApp && (collections.length > 0 || hasGroups) && (
-                <div className="library-recommendations min-w-0">
+                <div className={`library-recommendations min-w-0 ${nativePhone ? 'mt-5' : ''}`}>
                   <HomeRecommendations
                     language={activeLanguage}
                     defaultOpen={regularIPad}

@@ -1,5 +1,7 @@
 # Library domain
 
+Native pull to refresh invalidates active account query scopes on the library and collection details. Reader, practice, setup, and other bare routes disable the refresh control. The library spaces recommendations below book captions. Collection and lesson deletes use a native action sheet when available, with browser confirmation as fallback.
+
 Native phone collection details use a cover hero and numbered chapter rows; Add lesson sits outside the chapter group. Import options and the free-book picker use the shared bottom-sheet dialog presentation. Desktop and iPad keep centered dialogs and inline Import menus.
 
 The free-book picker keeps its title and tabs at their full height while the list scrolls. Unread collection heroes omit the progress pill until rounded progress is above zero.

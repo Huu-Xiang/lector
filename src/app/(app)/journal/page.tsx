@@ -24,6 +24,7 @@ import PageHeader from '@/components/PageHeader';
 import { useActiveLanguage } from '@/utils/hooks';
 import { countTypedWords } from '@/lib/languages';
 import { useIsNativePhone } from '@/lib/use-native-phone';
+import { confirmNativeAction } from '@/lib/native-confirm';
 
 export default function JournalPage() {
   const t = useTranslations('journal');
@@ -146,7 +147,15 @@ export default function JournalPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm(t('deleteConfirm'))) return;
+    if (
+      !(await confirmNativeAction({
+        message: t('deleteConfirm'),
+        confirmLabel: t('card.deleteEntry'),
+        cancelLabel: t('cancel'),
+        destructive: true,
+      }))
+    )
+      return;
     try {
       await deleteJournalEntry(id);
       if (editingId === id) {

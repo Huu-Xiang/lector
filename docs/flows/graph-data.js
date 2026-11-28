@@ -335,7 +335,7 @@
   N("flow:listen-along", "flow", "Listen-along", {
     domain: "listen",
     md: "listen.md#listen-along",
-    summary: "Podcast playback after ASR. GET segments and Range audio. Media Session publishes playback controls and clamped audio position. Not the YouTube player.",
+    summary: "Podcast playback after ASR. GET segments and Range audio. Browser Media Session and the iOS NativeMediaControls plugin publish playback controls and clamped audio position. TTS supports native track commands without seeking. Not the YouTube player.",
     steps: ["file:listen-along", "route:lessons-segments", "route:lessons-audio", "table:transcript_segments"],
   });
   N("flow:youtube-captions", "flow", "YouTube captions", {

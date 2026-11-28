@@ -1,5 +1,7 @@
 # Journal domain
 
+Native pull to refresh reloads journal queries. Entry deletion uses the system action sheet when available and browser confirmation on older shells and the web.
+
 Native phone journal history uses inset groups. The composer keeps Cancel quiet and disables textarea resizing. Entry details inherit the shared bottom sheet, circular close control, and touch-specific correction hint.
 
 The journal editor lets its word count and save controls wrap on narrow screens.

@@ -16,6 +16,7 @@ import {
   incrementDailyStat,
   updateLessonProgress,
   updateWordState,
+  refreshActiveQueries,
 } from './data-layer';
 import { clearQueryCache } from './query-cache';
 
@@ -97,5 +98,16 @@ describe('stats query caches', () => {
     await updateLessonProgress('lesson-1', { percentComplete: 100 });
     await expect(getReadingStats()).resolves.toMatchObject({ completedBooks: 1 });
     expect(apiFetch).toHaveBeenCalledTimes(3);
+  });
+  it('refreshes cached aggregates when the native refresh control invalidates active scopes', async () => {
+    apiFetch
+      .mockResolvedValueOnce(jsonResponse({ completedBooks: 0 }))
+      .mockResolvedValueOnce(jsonResponse({ completedBooks: 2 }));
+    await expect(getReadingStats()).resolves.toMatchObject({ completedBooks: 0 });
+    await expect(getReadingStats()).resolves.toMatchObject({ completedBooks: 0 });
+    expect(apiFetch).toHaveBeenCalledOnce();
+    refreshActiveQueries();
+    await expect(getReadingStats()).resolves.toMatchObject({ completedBooks: 2 });
+    expect(apiFetch).toHaveBeenCalledTimes(2);
   });
 });

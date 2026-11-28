@@ -8,7 +8,7 @@ project = Xcodeproj::Project.open(path)
 app = project.targets.find { |t| t.name == 'App' }
 app_group = project.main_group.children.find { |g| g.display_name == 'App' }
 
-APP_SOURCES = %w[MainViewController.swift NativeTabBarPlugin.swift ReviewWidgetPlugin.swift ReviewWidgetShared.swift].freeze
+APP_SOURCES = %w[MainViewController.swift NativeTabBarPlugin.swift NativeMediaControlsPlugin.swift NativeRefreshPlugin.swift NativeActionSheetPlugin.swift ReviewWidgetPlugin.swift ReviewWidgetShared.swift].freeze
 
 def file_ref(group, name)
   group.files.find { |f| f.path == name } || group.new_file(name)

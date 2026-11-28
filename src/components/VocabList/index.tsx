@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { useState, useMemo, useCallback, useEffect, useSyncExternalStore } from 'react';
 import { useTranslations } from 'next-intl';
+import { confirmNativeAction } from '@/lib/native-confirm';
 import type { WordState } from '@/lib/data-layer';
 import { getPageCount, clampPage, paginate } from '@/lib/pagination';
 import { SETTINGS_KEYS } from '@/app/(app)/settings/constants';
@@ -56,6 +57,7 @@ export default function VocabList({
   onBulkDelete,
 }: VocabListProps) {
   const t = useTranslations('vocab.list');
+  const tCommon = useTranslations('library.common');
   const tState = useTranslations('vocab.states');
   const tDetail = useTranslations('vocab.detail');
   const tSearch = useTranslations('library.search');
@@ -312,7 +314,14 @@ export default function VocabList({
   const handleBulkDeleteButtonPressed = async () => {
     if (selectedIds.size === 0) return;
 
-    if (window.confirm(t('confirmBulkDelete', { count: selectedIds.size }))) {
+    if (
+      await confirmNativeAction({
+        message: t('confirmBulkDelete', { count: selectedIds.size }),
+        confirmLabel: tCommon('delete'),
+        cancelLabel: tCommon('cancel'),
+        destructive: true,
+      })
+    ) {
       setIsDeleting(true);
       try {
         await onBulkDelete(Array.from(selectedIds));
@@ -355,7 +364,16 @@ export default function VocabList({
   };
   const runRowAction = async (id: string, action: 'known' | 'delete') => {
     if (rowActionPending) return;
-    if (action === 'delete' && !window.confirm(t('confirmBulkDelete', { count: 1 }))) return;
+    if (
+      action === 'delete' &&
+      !(await confirmNativeAction({
+        message: t('confirmBulkDelete', { count: 1 }),
+        confirmLabel: tCommon('delete'),
+        cancelLabel: tCommon('cancel'),
+        destructive: true,
+      }))
+    )
+      return;
     void haptic();
     setRowActionPending(true);
     try {

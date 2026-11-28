@@ -44,6 +44,7 @@ import { languageDisplayName } from '@/lib/language-names';
 import { getStoredSpeechRate, getVoiceForLanguage, waitForVoices } from '@/lib/tts';
 import { useActiveLanguage } from '@/utils/hooks';
 import { trackProductEvent } from '@/lib/product-analytics';
+import { getCollection } from '@/lib/data-layer';
 import { parseSegmentWords, splitWords } from '@/components/MarkdownReader/utils';
 import WordCell from '@/components/WordCell';
 import {
@@ -54,6 +55,7 @@ import {
 import { createAudioUnitPlayer, type UnitPlayer } from './drill-player';
 import { activeSegmentIndex, formatClock, nextPlaybackRate } from './utils';
 import { createListenMediaSession } from './media-session';
+import { createNativeListenMediaControls } from './native-media-controls';
 
 const SKIP_SECONDS = 5;
 
@@ -116,6 +118,22 @@ export default function ListenAlong(props: ListenAlongProps) {
       ? getLanguageConfig(lesson.language)
       : activeLang;
   const languageName = languageDisplayName(pack.code, locale, pack.name);
+  const [mediaBook, setMediaBook] = useState<{ id: string; title: string } | null>(null);
+  const mediaAlbum =
+    mediaBook && mediaBook.id === lesson.collectionId ? mediaBook.title : languageName;
+  useEffect(() => {
+    if (!inApp || !lesson.collectionId) return;
+    let live = true;
+    const id = lesson.collectionId;
+    getCollection(id)
+      .then((book) => {
+        if (live && book) setMediaBook({ id, title: book.title });
+      })
+      .catch(() => {});
+    return () => {
+      live = false;
+    };
+  }, [inApp, lesson.collectionId]);
   const segmentation = useMemo(
     () => makeWordSegmentation(parseSegmentWords(lesson.segmentWords)),
     [lesson.segmentWords],
@@ -501,6 +519,7 @@ export default function ListenAlong(props: ListenAlongProps) {
     duration: () => 0,
   });
   const mediaSessionRef = useRef<ReturnType<typeof createListenMediaSession>>(null);
+  const nativeMediaRef = useRef<ReturnType<typeof createNativeListenMediaControls>>(null);
 
   useEffect(() => {
     mediaActionsRef.current = {
@@ -521,7 +540,7 @@ export default function ListenAlong(props: ListenAlongProps) {
   });
 
   useEffect(() => {
-    const media = createListenMediaSession(lesson.title, languageName, {
+    const media = createListenMediaSession(lesson.title, mediaAlbum, {
       play: () => mediaActionsRef.current.play(),
       pause: () => mediaActionsRef.current.pause(),
       previous: () => mediaActionsRef.current.previous(),
@@ -535,15 +554,43 @@ export default function ListenAlong(props: ListenAlongProps) {
           }),
     });
     mediaSessionRef.current = media;
+    nativeMediaRef.current = createNativeListenMediaControls(lesson.title, mediaAlbum, {
+      play: () => mediaActionsRef.current.play(),
+      pause: () => mediaActionsRef.current.pause(),
+      previous: () => mediaActionsRef.current.previous(),
+      next: () => mediaActionsRef.current.next(),
+      ...(!isTts ? { seek: (seconds: number) => mediaActionsRef.current.seek(seconds) } : {}),
+      position: () => audioRef.current?.currentTime ?? 0,
+      duration: () => mediaActionsRef.current.duration(),
+    });
     return () => {
       media?.dispose();
       mediaSessionRef.current = null;
+      nativeMediaRef.current?.dispose();
+      nativeMediaRef.current = null;
     };
-  }, [isTts, languageName, lesson.title]);
+  }, [isTts, mediaAlbum, lesson.title]);
 
   useEffect(() => {
     mediaSessionRef.current?.update(isPlaying, durationMs / 1000, currentMs / 1000, rate);
-  }, [currentMs, durationMs, isPlaying, rate]);
+    nativeMediaRef.current?.update(
+      isPlaying,
+      durationMs / 1000,
+      currentMs / 1000,
+      activeIdx < rows.length - 1,
+      activeIdx > 0,
+    );
+  }, [
+    activeIdx,
+    currentMs,
+    durationMs,
+    isPlaying,
+    rate,
+    rows.length,
+    isTts,
+    mediaAlbum,
+    lesson.title,
+  ]);
 
   const handleExit = useCallback(() => {
     unitPlayerRef.current?.dispose();

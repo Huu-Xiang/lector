@@ -7,6 +7,9 @@ class MainViewController: CAPBridgeViewController {
     override func capacitorDidLoad() {
         bridge?.registerPluginInstance(NativeTabBarPlugin())
         bridge?.registerPluginInstance(ReviewWidgetPlugin())
+        bridge?.registerPluginInstance(NativeMediaControlsPlugin())
+        bridge?.registerPluginInstance(NativeRefreshPlugin())
+        bridge?.registerPluginInstance(NativeActionSheetPlugin())
     }
 
     override func webViewConfiguration(for instanceConfiguration: InstanceConfiguration) -> WKWebViewConfiguration {
